@@ -125,6 +125,22 @@ export class ListDataSource extends OdooViewsDataSource {
     }
 
     /**
+     * The currency of a monetary value is a separate record: ask for the parts
+     * the spreadsheet needs to format with.
+     */
+    _addCurrencySpec(spec, currencyField) {
+        spec[currencyField] = {
+            fields: {
+                ...spec[currencyField]?.fields,
+                name: {}, // currency code
+                symbol: {},
+                decimal_places: {},
+                position: {},
+            },
+        };
+    }
+
+    /**
      * Automatically add the currency field if the field is a monetary field.
      */
     _addSpecForFieldPath(spec, pathInfo) {
@@ -134,16 +150,23 @@ export class ListDataSource extends OdooViewsDataSource {
         switch (field.type) {
             case "monetary":
                 spec[field.name] = {};
-                spec[field.currency_field] = {
-                    fields: {
-                        ...spec[field.currency_field]?.fields,
-                        name: {}, // currency code
-                        symbol: {},
-                        decimal_places: {},
-                        position: {},
-                    },
-                };
+                this._addCurrencySpec(spec, field.currency_field);
                 break;
+            case "properties": {
+                // The whole blob comes back in one read, so the properties
+                // field itself is all we ask for. `rest` holds the property
+                // names the columns picked out of it, and a monetary one still
+                // needs its currency, which lives on this record.
+                spec[field.name] = {};
+                const propertyDefs = othersModelsInfo[0]?.fieldDefs ?? {};
+                for (const propertyName of rest) {
+                    const property = propertyDefs[propertyName];
+                    if (property?.type === "monetary") {
+                        this._addCurrencySpec(spec, property.currency_field);
+                    }
+                }
+                break;
+            }
             case "many2one":
             case "many2many":
             case "one2many":
@@ -223,7 +246,11 @@ export class ListDataSource extends OdooViewsDataSource {
         // The last item of fields is the name of the field. As we want to
         // get the record on which the field is defined, we need to iterate until
         // the penultimate item of fields.
-        for (let i = 0; i < fields.length - 1; i++) {
+        // A property is addressed as `<properties_field>.<property>`, so its
+        // two last items both belong to the same record: stop one earlier.
+        const isProperty = this.getFieldFromFieldPath(fieldPath)?.is_property;
+        const stopAt = fields.length - (isProperty ? 2 : 1);
+        for (let i = 0; i < stopAt; i++) {
             if (Array.isArray(record)) {
                 record = record.map((r) => r[fields[i]]).flat();
             } else {
@@ -274,6 +301,13 @@ export class ListDataSource extends OdooViewsDataSource {
         if (!record) {
             return "";
         }
+        if (field.is_property) {
+            const names = fieldPath.split(".");
+            const propertyName = names.at(-1);
+            const properties = record[names.at(-2)] || [];
+            const property = properties.find(({ name }) => name === propertyName);
+            return property ? this._parsePropertyFieldServerValue(field, property) : "";
+        }
         const lastField = fieldPath.split(".").at(-1);
         if (Array.isArray(record)) {
             // remove duplicates?
@@ -311,10 +345,12 @@ export class ListDataSource extends OdooViewsDataSource {
                 return value
                     ? toNumber(this._formatDateTime(value), DEFAULT_LOCALE)
                     : "";
-            case "properties": {
-                const properties = value || [];
-                return properties.map((property) => property.string).join(", ");
-            }
+            case "properties":
+                // Listing the property labels was never useful; a column has to
+                // name the property it wants.
+                return new EvaluationError(
+                    _t("Please specify the property field name"),
+                );
             case "json":
                 return new EvaluationError(
                     _t('Fields of type "%s" are not supported', "json"),
@@ -325,6 +361,37 @@ export class ListDataSource extends OdooViewsDataSource {
                 return value ?? "";
             default:
                 return value || "";
+        }
+    }
+
+    /**
+     * A property is not typed by the `properties` field carrying it but by its
+     * own definition, so it is parsed against that instead.
+     *
+     * @param {object} property the property definition, from `loadPath`
+     * @param {object} serverValue `{ type, value }` as read from the server
+     */
+    _parsePropertyFieldServerValue(property, { type, value }) {
+        if (!value) {
+            return "";
+        }
+        switch (type) {
+            case "date":
+                return toNumber(this._formatDate(value), DEFAULT_LOCALE);
+            case "datetime":
+                return toNumber(this._formatDateTime(value), DEFAULT_LOCALE);
+            case "many2one":
+                return value[1];
+            case "many2many":
+                return value.map(([, displayName]) => displayName).join(", ");
+            case "tags":
+                return value
+                    .map((tagId) => property.tags.find(([id]) => id === tagId)?.[1] ?? "")
+                    .join(", ");
+            case "selection":
+                return property.selection.find(([key]) => key === value)?.[1] ?? "";
+            default:
+                return value;
         }
     }
 

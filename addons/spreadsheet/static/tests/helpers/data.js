@@ -92,10 +92,13 @@ export function getBasicServerData() {
 export function generateListDefinition(model, columns, actionXmlId, orderBy = []) {
     const cols = [];
     for (const name of columns) {
+        // A property column is addressed as `<properties_field>.<property>`,
+        // and only the first segment is a field of the model.
+        const fieldName = name.split(".")[0];
         const PyModel = Object.values(SpreadsheetModels).find((m) => m._name === model);
         cols.push({
             name,
-            type: PyModel._fields[name].type,
+            type: PyModel._fields[fieldName].type,
         });
     }
     return {

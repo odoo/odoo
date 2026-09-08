@@ -115,7 +115,7 @@ test("Numeric/monetary fields are correctly loaded and displayed", async () => {
     expect(getFormattedValueGrid(model, "A2:C6")).toEqual({
         A2: "74.40€",    B2: "10.00",  C2: "1",
         A3: "$74.80",    B3: "11.00",  C3: "2",
-        A4: "4.00€",     B4: "95.00",  C4: "3",      
+        A4: "4.00€",     B4: "95.00",  C4: "3",
         A5: "$1,000.00", B5: "15.00",  C5: "4",
         A6: "$0.00",     B6: "0.00",   C6: "0",
     });
@@ -130,7 +130,7 @@ test("Text fields are correctly loaded and displayed", async () => {
     expect(getCellFormattedValue(model, "A3")).toBe("");
 });
 
-test("properties field displays property display names", async () => {
+test("a properties field on its own asks for the property name", async () => {
     Product._records = [
         {
             id: 1,
@@ -152,7 +152,131 @@ test("properties field displays property display names", async () => {
     const { model } = await createSpreadsheetWithList({
         columns: ["partner_properties"],
     });
-    expect(getCellValue(model, "A2")).toBe("prop 1, prop 2");
+    expect(getEvaluatedCell(model, "A2")).toMatchObject({
+        value: "#ERROR",
+        message: "Please specify the property field name",
+    });
+});
+
+test("a list column can be a single property of a properties field", async () => {
+    Product._records = [
+        {
+            id: 37,
+            name: "My Product",
+            properties_definitions: [
+                { name: "char_property", type: "char", string: "Text" },
+                { name: "date_property", type: "date", string: "Date" },
+                { name: "datetime_property", type: "datetime", string: "Datetime" },
+                { name: "text_property", type: "text", string: "Multiline text" },
+                { name: "boolean_property", type: "boolean", string: "Boolean" },
+                { name: "integer_property", type: "integer", string: "Number" },
+                { name: "float_property", type: "float", string: "Decimal" },
+                {
+                    name: "selection_property",
+                    type: "selection",
+                    string: "Selection",
+                    selection: [
+                        ["3de00497e096656b", "option1"],
+                        ["0ba4dd568840ecd5", "option2"],
+                    ],
+                },
+                {
+                    name: "tags_property",
+                    type: "tags",
+                    string: "Tags",
+                    tags: [
+                        ["a", "A", 1],
+                        ["b", "B", 2],
+                        ["c", "C", 3],
+                    ],
+                },
+                {
+                    name: "m2o_property",
+                    type: "many2one",
+                    string: "Many2one",
+                    domain: false,
+                    comodel: "res.currency",
+                },
+                {
+                    name: "m2m_property",
+                    type: "many2many",
+                    string: "Many2many",
+                    domain: false,
+                    comodel: "res.currency",
+                },
+                {
+                    name: "monetary_property",
+                    type: "monetary",
+                    string: "Monetary",
+                    currency_field: "currency_id",
+                },
+            ],
+        },
+    ];
+    const propertyValues = {
+        char_property: "CHAR",
+        date_property: "2024-01-02",
+        datetime_property: "2026-02-03 11:00:00",
+        text_property: "LINE1\nLINE2",
+        boolean_property: true,
+        integer_property: 42,
+        float_property: 3.14,
+        selection_property: "0ba4dd568840ecd5",
+        tags_property: ["a", "c"],
+        m2o_property: [1, "EUR"],
+        m2m_property: [
+            [2, "USD"],
+            [1, "EUR"],
+        ],
+        monetary_property: 99.99,
+    };
+    Partner._records = [
+        {
+            id: 1,
+            product_id: 37,
+            partner_properties: { ...propertyValues },
+            currency_id: 1,
+        },
+    ];
+
+    const { model } = await createSpreadsheetWithList({
+        columns: Object.keys(propertyValues).map((name) => `partner_properties.${name}`),
+    });
+    await waitForDataLoaded(model);
+
+    // The header is the property's own label, not the properties field's.
+    expect(getEvaluatedGrid(model, "A1:L1").flat()).toEqual([
+        "Text",
+        "Date",
+        "Datetime",
+        "Multiline text",
+        "Boolean",
+        "Number",
+        "Decimal",
+        "Selection",
+        "Tags",
+        "Many2one",
+        "Many2many",
+        "Monetary",
+    ]);
+    expect(getEvaluatedGrid(model, "A2:L2").flat()).toEqual([
+        "CHAR",
+        45293,
+        46056.5,
+        "LINE1\nLINE2",
+        true,
+        42,
+        3.14,
+        "option2",
+        "A, C",
+        "EUR",
+        "USD, EUR",
+        99.99,
+    ]);
+    // Dates and monetaries also get the format their property type implies.
+    expect(getCellFormattedValue(model, "B2")).toBe("1/2/2024");
+    expect(getCellFormattedValue(model, "C2")).toBe("2/3/2026 12:00:00 PM");
+    expect(getCellFormattedValue(model, "L2")).toBe("99.99\u20ac");
 });
 
 test("Can display a field which is not in the columns", async function () {
