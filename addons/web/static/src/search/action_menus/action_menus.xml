@@ -21,7 +21,7 @@
                 </Dropdown>
             </div>
 
-            <div t-if="this.actionItems.length" class="d-inline-block">
+            <div t-if="this.actionItems().length" class="d-inline-block">
                 <Dropdown>
                     <button class="btn btn-secondary" data-hotkey="u" data-available-offline="">
                         <i class="oi oi-filled me-1" data-icon="settings"/>
@@ -29,7 +29,7 @@
                     </button>
                     <t t-set-slot="content">
                         <t t-set="currentGroup" t-value=""/>
-                        <t t-foreach="this.actionItems" t-as="item" t-key="item.key">
+                        <t t-foreach="this.actionItems()" t-as="item" t-key="item.key">
                             <t t-if="currentGroup !== null and currentGroup !== item.groupNumber">
                                 <div role="separator" class="dropdown-divider"/>
                             </t>
