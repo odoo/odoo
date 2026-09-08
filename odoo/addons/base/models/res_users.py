@@ -444,9 +444,12 @@ class ResUsers(models.Model):
     @api.onchange('role')
     def _onchange_role(self):
         group_admin = self.env['res.groups'].new(origin=self.env.ref('base.group_system'))
+        group_regular = self.env['res.groups'].new(origin=self.env.ref('base.group_user_regular'))
         group_user = self.env['res.groups'].new(origin=self.env.ref('base.group_user'))
 
         if self.role == 'regular_user':
+            if group_regular not in self.all_group_ids:
+                self.group_ids += group_regular
             self.group_ids -= group_admin
         elif self.role == 'group_system':
             self.group_ids += group_admin + group_user
