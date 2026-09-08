@@ -156,16 +156,7 @@ export class PartnerList extends Component {
         if (/^\d+$/.test(stripped) && stripped.length >= 3) {
             return ["phone_mobile_search", "barcode", "vat", "zip"];
         }
-        return [
-            "complete_name",
-            "ref",
-            "vat",
-            "street",
-            "zip",
-            "email",
-            "phone_mobile_search",
-            "barcode",
-        ];
+        return ["complete_name", "ref", "vat", "street", "zip", "email", "barcode"];
     }
     get isBalanceDisplayed() {
         return false;
