@@ -7,11 +7,8 @@ services:
     volumes:
       - odoo-web-data:/var/lib/odoo
       - ./custom_addons:/mnt/extra-addons
-    environment:
-      - HOST
-      - PORT
-      - USER
-      - PASSWORD
+    env_file:
+      - .env
     restart: always
 
 volumes:
