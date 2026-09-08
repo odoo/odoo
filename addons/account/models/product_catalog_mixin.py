@@ -45,7 +45,7 @@ class ProductCatalogMixin(models.AbstractModel):
 
     def _get_updated_order_line_info(self, catalog_line, product, uom, **kwargs) -> dict:
         vals = super()._get_updated_order_line_info(catalog_line, product, uom, **kwargs)
-        if self._has_sections():
+        if self._has_sections() and self._show_prices():
             vals["subtotal"] = sum(catalog_line.mapped("price_subtotal")) if catalog_line else 0
         return vals
 
@@ -71,13 +71,14 @@ class ProductCatalogMixin(models.AbstractModel):
         self.ensure_one()
         self = self.with_company(self.company_id)  # noqa: PLW0642
 
-        return {
-            "order_details": {
-                "amount_untaxed": self.amount_untaxed,
-                "name": self.name,
-            },
-            "sections": self._get_sections(child_field),
+        data = {
+            'name': self.name,
+            'sections': self._get_sections(child_field),
         }
+        if self._show_prices():
+            data['amountUntaxed'] = self.amount_untaxed
+
+        return data
 
     def _get_sections(self, child_field) -> list[dict]:
         """Return section data for the product catalog display.
@@ -92,7 +93,11 @@ class ProductCatalogMixin(models.AbstractModel):
                 'id': line.id,
                 'name': line.name,
                 'parent_id': line.parent_id.id,
-                'subtotal': sum(line._get_section_lines().mapped('price_subtotal')),
+                **(
+                    {'subtotal': sum(line._get_section_lines().mapped('price_subtotal'))}
+                    if self._show_prices()
+                    else {}
+                ),
             }
             for line in lines
             if line.display_type in ('line_section', 'line_subsection')
@@ -111,7 +116,11 @@ class ProductCatalogMixin(models.AbstractModel):
                 {
                     'id': False,
                     'name': self.env._("No Section"),
-                    'subtotal': sum(no_section_lines.mapped('price_subtotal')),
+                    **(
+                        {'subtotal': sum(no_section_lines.mapped('price_subtotal'))}
+                        if self._show_prices()
+                        else {}
+                    )
                 },
             )
 

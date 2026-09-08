@@ -782,6 +782,9 @@ class RepairOrder(models.Model):
             'repair_line_type': 'add',
         }
 
+    def _show_prices(self) -> bool:
+        return False
+
     # ------------------------------------------------------------
     # MAIL.THREAD
     # ------------------------------------------------------------

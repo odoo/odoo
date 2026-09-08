@@ -21,6 +21,7 @@ export class AccountProductCatalogSearchPanel extends SearchPanel {
             return;
         }
 
+        this.showPrices = !!this.env.model.config.context.show_prices;
         this.orderModel = this.env.model.config.context.product_catalog_order_model;
         this.childField = this.env.model.config.context.child_field;
         this.orderId = this.env.model.config.context.order_id;
@@ -37,6 +38,7 @@ export class AccountProductCatalogSearchPanel extends SearchPanel {
 
         useSubEnv({
             formatAmount: this.formatAmount.bind(this),
+            showSectionAmounts: this.showPrices,
             setSelectedSection: this.setSelectedSection.bind(this),
             toggleSection: this.toggleSection.bind(this),
             toggleSectionFilter: this.toggleSectionFilter.bind(this),
@@ -53,15 +55,17 @@ export class AccountProductCatalogSearchPanel extends SearchPanel {
         });
 
         onWillStart(async () => {
-            const { order_details, sections } = await this.orm.call(
+            const { name, sections, amountUntaxed } = await this.orm.call(
                 this.orderModel,
                 "get_catalog_section_data",
                 [this.orderId],
                 { child_field: this.childField }
             );
 
-            this.orderName = order_details.name;
-            this.state.totalUntaxedAmount = order_details.amount_untaxed;
+            this.orderName = name;
+            if (this.showPrices) {
+                this.state.totalUntaxedAmount = amountUntaxed;
+            }
 
             this._setSectionsState(sections);
             if (this.state.sections.length) {
@@ -358,6 +362,10 @@ export class AccountProductCatalogSearchPanel extends SearchPanel {
     }
 
     updateSectionSubtotal(sectionId, subtotalDelta) {
+        if (!this.showPrices) {
+            // no section amounts displayed, nothing to update
+            return;
+        }
         this.state.totalUntaxedAmount += subtotalDelta;
 
         const section = this._findSectionById(sectionId);

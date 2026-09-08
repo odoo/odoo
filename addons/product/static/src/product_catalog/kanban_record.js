@@ -64,7 +64,9 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
     }
 
     _updateProductCatalogData(result) {
-        this.productCatalogData.price = parseFloat(result.price);
+        if (result.price) {
+            this.productCatalogData.price = parseFloat(result.price);
+        }
     }
 
     _updateQuantityAndGetPrice() {
