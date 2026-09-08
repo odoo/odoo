@@ -716,6 +716,13 @@ class TestUi(TestPointOfSaleHttpCommon):
                     'account_id': tax_received_account.id,
                 }),
             ],
+            'refund_repartition_line_ids': [
+                (0, 0, {'repartition_type': 'base'}),
+                (0, 0, {
+                    'repartition_type': 'tax',
+                    'account_id': tax_received_account.id,
+                }),
+            ],
             'price_include_override': 'tax_excluded',
         })
         zero_amount_product = self.env['product.product'].create({
@@ -2261,6 +2268,51 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertAlmostEqual(lines[2].balance, 56.41)
         self.assertAlmostEqual(lines[3].balance, 352.59)
         self.assertAlmostEqual(lines[4].balance, 7771.01)
+
+    def test_negative_price_line_tax_grouping_key(self):
+        """ A line with a negative price is not a refund line: it must be rounded together with the
+        other lines of the order, otherwise the order total doesn't match the invoice total.
+        """
+        zero_decimal_currency = self.env['res.currency'].create({
+            'name': 'RoundedCurrency',
+            'symbol': 'RDC',
+            'rounding': 1.0,
+            'decimal_places': 0,
+        })
+        company = self.main_pos_config.company_id
+        company.currency_id = zero_decimal_currency
+        company.tax_calculation_rounding_method = 'round_globally'
+        self.main_pos_config.available_pricelist_ids.write({'currency_id': zero_decimal_currency.id})
+        tax_19_incl = self.env['account.tax'].create({
+            'name': 'Tax 19% Included',
+            'amount': 19,
+            'price_include_override': 'tax_included',
+        })
+        self.env['product.product'].create([{
+            'name': 'Test Product A',
+            'list_price': 1550.0,
+            'taxes_id': False,
+            'available_in_pos': True,
+        }, {
+            'name': 'Test Product B',
+            'list_price': -77.5,
+            'taxes_id': [Command.set(tax_19_incl.ids)],
+            'available_in_pos': True,
+        }])
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_negative_price_line_tax_grouping_key', login="pos_user")
+
+        order = self.main_pos_config.current_session_id.order_ids
+        self.assertEqual(order.amount_total, 1473.0)
+
+        order.partner_id = self.partner_a
+        order.action_pos_order_invoice()
+        self.assertRecordValues(order.account_move, [{
+            'amount_untaxed': 1485.0,
+            'amount_tax': -12.0,
+            'amount_total': 1473.0,
+            'amount_residual': 0.0,
+        }])
 
     def test_ctrl_number_ignored(self):
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_ctrl_number_ignored', login="pos_user")
