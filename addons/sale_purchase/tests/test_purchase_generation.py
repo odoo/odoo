@@ -130,6 +130,41 @@ class TestPurchaseGeneration(TestSalePurchaseCommon):
             "36 Units ordered less the 12 already bought is 24 Units, i.e. 2 Dozen",
         )
 
+    def test_decrease_and_increase_after_confirm_do_not_touch_the_confirmed_line(self):
+        """Once a PO is confirmed, repeated decreases only ever schedule buyer
+        activities -- the confirmed line's own quantity never moves, even across
+        several decreases -- and a later increase still buys the remainder on a
+        new line rather than touching the confirmed one."""
+        service = self._create_service(self.uom_unit, self.uom_unit)
+        order = self._confirm_order(service, 10.0)
+        sale_line = order.line_ids
+        confirmed_line = sale_line.purchase_line_ids
+        purchase_order = confirmed_line.order_id
+        purchase_order.action_confirm()
+
+        sale_line.product_qty = 6.0
+
+        self.assertEqual(confirmed_line.product_qty, 10.0)
+        self.assertEqual(len(purchase_order.activity_ids), 1)
+
+        self.env.invalidate_all()  # a second activity does not refresh the cache
+        sale_line.product_qty = 3.0
+
+        self.assertEqual(confirmed_line.product_qty, 10.0)
+        self.assertEqual(len(purchase_order.activity_ids), 2)
+
+        sale_line.product_qty = 11.0
+
+        self.assertEqual(confirmed_line.product_qty, 10.0)
+        self.assertEqual(
+            len(purchase_order.activity_ids),
+            2,
+            "The increase buys the remainder on a new line, it does not warn the buyer",
+        )
+        new_line = sale_line.purchase_line_ids - confirmed_line
+        self.assertTrue(new_line, "The remainder is bought on a new purchase line")
+        self.assertEqual(new_line.product_qty, 8.0, "11 ordered less the 3 left open")
+
     def test_open_rfq_never_goes_negative(self):
         service = self._create_service(self.uom_unit, self.uom_unit)
         order = self._confirm_order(service, 10.0)
