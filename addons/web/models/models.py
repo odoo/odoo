@@ -2172,14 +2172,14 @@ class ResCompany(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         companies = super().create(vals_list)
-        style_fields = {'external_report_layout_id', 'font', 'primary_color', 'secondary_color'}
+        style_fields = {'external_report_layout_id', 'font', 'primary_color', 'secondary_color', 'report_tables_id'}
         if any(not style_fields.isdisjoint(values) for values in vals_list):
             self._update_asset_style()
         return companies
 
     def write(self, vals):
         res = super().write(vals)
-        style_fields = {'external_report_layout_id', 'font', 'primary_color', 'secondary_color'}
+        style_fields = {'external_report_layout_id', 'font', 'primary_color', 'secondary_color', 'report_tables_id'}
         if not style_fields.isdisjoint(vals):
             self._update_asset_style()
         return res
