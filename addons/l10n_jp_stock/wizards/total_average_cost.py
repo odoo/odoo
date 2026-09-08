@@ -47,12 +47,22 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
                         'The total average cost can only be applied to products valued with the standard cost method.',
                     ),
                 )
+            # the closing that makes an evaluated period final leaves a real time
+            # valuation out of its entry, so nothing would protect what is written here
+            if real_time := products.filtered(lambda p: p.valuation != 'periodic'):
+                raise UserError(
+                    self.env._(
+                        'The total average cost cannot be applied to products valued in real time, '
+                        'as the stock closing that makes a period final leaves them out: %s',
+                        ', '.join(real_time.mapped('display_name')),
+                    ),
+                )
         else:
             if not self.category_id:
                 raise UserError(self.env._('Select a category or products.'))
             products = self.env['product.product'].search(
                 [('categ_id', 'child_of', self.category_id.id)],
-            ).filtered(lambda p: p.cost_method == 'standard')
+            ).filtered(lambda p: p.cost_method == 'standard' and p.valuation == 'periodic')
         if lot_valuated := products.filtered('lot_valuated'):
             raise UserError(
                 self.env._(
