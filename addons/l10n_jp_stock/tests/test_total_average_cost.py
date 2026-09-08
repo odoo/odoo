@@ -146,6 +146,56 @@ class TestTotalAverageCost(TestTotalAverageCostCommon):
         # the order promised 100, the posted bill says 150 (法人税法施行令 32条1項1号)
         self.assertAlmostEqual(self.product.standard_price, (100 * 100 + 10 * 150) / 110, places=2)
 
+    def test_manual_valuation_beats_the_bill(self):
+        line = self._create_po_line(self.env.company.currency_id, 10, 100)
+        self._add_opening_stock()
+        receipt = self._create_move(10, 100, self.today, self.supplier_loc, self.stock_loc, line.id)
+        bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': line.order_id.partner_id.id,
+            'invoice_date': self.today,
+            'invoice_line_ids': [(0, 0, {
+                'product_id': self.product.id,
+                'quantity': 10,
+                'price_unit': 150,
+                'purchase_line_id': line.id,
+                'tax_ids': [],
+            })],
+        })
+        bill.action_post()
+        # someone corrected the receipt on purpose, which outranks the bill the
+        # same way the bill outranks the order (core resolves it in that order)
+        receipt.value_manual = 10 * 180
+        self._run_category_wizard()
+        self.assertAlmostEqual(self.product.standard_price, (100 * 100 + 10 * 180) / 110, places=2)
+
+    def test_landed_cost_is_part_of_the_acquisition_cost(self):
+        self.ensure_installed('stock_landed_costs')
+        self._add_opening_stock()
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            'location_id': self.supplier_loc.id,
+            'location_dest_id': self.stock_loc.id,
+        })
+        self._create_move(
+            10, 100, self.today, self.supplier_loc, self.stock_loc, picking_id=picking.id,
+        )
+        freight = self.env['product.product'].create({
+            'name': 'JP Freight', 'type': 'service', 'landed_cost_ok': True,
+        })
+        landed_cost = self.env['stock.landed.cost'].create({
+            'date': self.today,
+            'picking_ids': [(6, 0, picking.ids)],
+            'cost_lines': [(0, 0, {
+                'product_id': freight.id, 'price_unit': 200, 'split_method': 'equal',
+            })],
+        })
+        landed_cost.compute_landed_cost()
+        landed_cost.button_validate()
+        # 法人税法施行令 32条1項2号 counts the freight of bringing the goods in
+        self._run_category_wizard()
+        self.assertAlmostEqual(self.product.standard_price, (100 * 100 + 10 * 100 + 200) / 110, places=2)
+
     def test_consigned_receipt_ignored(self):
         self._add_opening_stock()
         consigned = self._create_move(50, 200, self.today, self.supplier_loc, self.stock_loc)
