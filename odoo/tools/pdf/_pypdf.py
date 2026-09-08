@@ -26,6 +26,7 @@ def _set_crop_box(self, value):
 
 PageObject.mergePage = lambda self, page2: self.merge_page(page2)
 PageObject.compressContentStreams = lambda self: self.compress_content_streams()
+PageObject.addTransformation = lambda self, ctm, expand = False: self.add_transformation(ctm, expand)
 PageObject.mediaBox = property(lambda self: self.mediabox, _set_media_box)
 PageObject.cropBox = property(lambda self: self.cropbox, _set_crop_box)
 # use lambdas (rather than copying) to allow overrides of the base method
