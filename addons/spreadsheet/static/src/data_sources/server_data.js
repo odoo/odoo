@@ -4,7 +4,7 @@
 import { EvaluationError } from "@odoo/o-spreadsheet";
 import { makeLogger } from "@web/core/debug/debug_logger";
 
-import { isLoadingError, LoadingDataError } from "../o_spreadsheet/errors.js";
+import { LoadingDataError } from "../o_spreadsheet/errors.js";
 
 const log = makeLogger("spreadsheet.server_data");
 
@@ -190,11 +190,7 @@ export class ServerData {
      */
     _getOrThrowCachedResponse(request) {
         const data = this.cache[request.key];
-        if (
-            data instanceof Error ||
-            data instanceof EvaluationError ||
-            isLoadingError({ value: data })
-        ) {
+        if (data instanceof Error || data instanceof EvaluationError) {
             throw data;
         }
         return data;
