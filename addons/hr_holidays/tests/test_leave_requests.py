@@ -552,7 +552,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             "Timezone should be be adapted on the employee leave"
         )
 
-    def test_number_of_hours_display(self):
+    def test_number_of_hours(self):
         # Test that the field number_of_hours_dispay doesn't change
         # after time off validation, as it takes the attendances
         # minus the resource leaves to compute that field.
@@ -620,7 +620,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         leave2.action_approve()
         self.assertEqual(leave2.number_of_hours, 4)
 
-    def test_number_of_hours_display_flexible_calendar(self):
+    def test_number_of_hours_flexible_calendar(self):
         # Test that the field number_of_hours_dispay do change for flexible calendars
         calendar = self.env['resource.calendar'].create({
             'name': 'Full Time 24h/8day',
@@ -735,7 +735,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
         self.assertEqual(leave5.number_of_hours, 10)
 
-    def test_number_of_hours_display_global_leave(self):
+    def test_number_of_hours_global_leave(self):
         # Check that the field number_of_hours
         # takes the global leaves into account, even
         # after validation
@@ -998,13 +998,14 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             leaves.action_approve()
 
             allocation_days = self.employee_emp._get_consumed_leaves(self.holidays_type_2)[0]
+            primary_unit = 'hours' if unit == 'hour' else 'days'
 
             self.assertEqual(
-                allocation_days[self.employee_emp][self.holidays_type_2][allocation_4days]['leaves_taken'],
+                allocation_days[self.employee_emp][self.holidays_type_2][allocation_4days][f'{primary_unit}_leaves_taken'],
                 leave_4days['number_of_%ss' % unit],
                 'As 4 days were available in this allocation, they should have been taken')
             self.assertEqual(
-                allocation_days[self.employee_emp][self.holidays_type_2][allocation_1day]['leaves_taken'],
+                allocation_days[self.employee_emp][self.holidays_type_2][allocation_1day][f'{primary_unit}_leaves_taken'],
                 leave_1day['number_of_%ss' % unit],
                 'As no days were available in previous allocation, they should have been taken in this one')
             leaves.action_refuse()
@@ -1153,10 +1154,12 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 'request_date_to': '2020-09-09',
             })
 
-            self._check_holidays_count(
-                self.employee_emp._get_consumed_leaves(self.holidays_type_2)[0][self.employee_emp][self.holidays_type_2][allocation],
-                ml=5, lt=0, rl=5, vrl=2, vlt=3,
-            )
+            holidays_count_result = self.employee_emp._get_consumed_leaves(self.holidays_type_2)[0][self.employee_emp][self.holidays_type_2][allocation]
+            self.assertEqual(holidays_count_result['days_max_leaves'], 5)
+            self.assertEqual(holidays_count_result['days_remaining_leaves'], 5)
+            self.assertEqual(holidays_count_result['days_virtual_remaining_leaves'], 2)
+            self.assertEqual(holidays_count_result['days_leaves_taken'], 0)
+            self.assertEqual(holidays_count_result['days_virtual_leaves_taken'], 3)
 
     def test_archived_allocation(self):
         with freeze_time('2022-09-15'):
