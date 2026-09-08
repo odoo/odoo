@@ -18,7 +18,7 @@ from odoo.http.stream import STATIC_CACHE_LONG
 from odoo.tools.image import image_process
 from odoo.tools.mimetypes import guess_mimetype
 
-from odoo.addons.web.ms_icons import search_ms_icons
+from odoo.addons.web.icons import search_icons
 
 from ..models.ir_attachment import SUPPORTED_IMAGE_MIMETYPES
 from .svg_utils import get_shape_svg, make_shaped_image, update_svg_colors
@@ -806,9 +806,9 @@ class HTML_Editor(Controller):
         else:
             return {'error': response.status_code}
 
-    @route('/html_editor/material_symbols_search', type='jsonrpc', auth='user', readonly=True)
-    def material_symbols_search(self, needle=''):
-        """Search the Material Symbols icons by name and tags.
+    @route('/html_editor/icons_search', type='jsonrpc', auth='user', readonly=True)
+    def icons_search(self, needle=''):
+        """Search icons by name and tags.
 
         :param str needle: the search term. When empty, every icon is returned,
             which also provides a plain list of all available icons.
@@ -816,5 +816,5 @@ class HTML_Editor(Controller):
         """
         return [
             {'name': name, 'has_fill': has_fill}
-            for name, has_fill in search_ms_icons(needle or '')
+            for name, has_fill in search_icons(needle or '')
         ]

@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
 
 """
-Generate optimized subsets of the Material Symbols icons for Odoo.
+Generate the two icon fonts of Odoo: the Material Symbols subsets and
+``odoo_ui_icons``.
 
-Two-stage pipeline:
+Material Symbols
+================
+
+Optimized subsets of the Material Symbols icons.  Two-stage pipeline:
 
 1. **Download** — fetch a variable WOFF2 subset for the icons listed in
    ``icons_wishlist.txt`` from the Google Fonts API (*Outlined* and *Sharp*).
@@ -30,8 +34,26 @@ Outputs
 * ``static/src/libs/materialsymbols/material_symbols_{outlined,sharp}.css``
 * ``static/src/libs/materialsymbols/material_symbols_backend.woff`` — outlined font for
   wkhtmltopdf and PIL
-* ``web/ms_icons.py`` — icon list with fill-variant flags, codepoints for
+* ``web/icons.py`` — icon list with fill-variant flags, codepoints for
   PIL and search tags
+
+odoo_ui_icons
+=============
+
+The brand and legacy icons Material Symbols does not carry -- the Odoo icons
+(``odoo``, ``studio``, the view switchers), the FontAwesome 4.7 leftovers and the
+brands it predates (``x``, ``threads``, ``tiktok`` …).
+
+The set is declared by ``odoo_ui_icons_config.json``, the Fontello project file
+it is maintained in: one entry per icon, with its name, its codepoint and its
+outline (see :func:`build_odoo_ui_icons_font`).
+
+Outputs
+-------
+* ``static/lib/odoo_ui_icons/fonts/odoo_ui_icons.woff2`` — reachable by ligature
+  only (``oi_odoo``, ``oi_view-kanban`` …)
+* ``static/lib/odoo_ui_icons/fonts/odoo_ui_icons_backend.woff`` — same glyphs
+  plus the Private Use codepoints, for wkhtmltopdf
 
 Usage
 -----
@@ -54,11 +76,13 @@ from io import BytesIO
 from pathlib import Path
 
 try:
+    from fontTools.fontBuilder import FontBuilder
     from fontTools.otlLib.builder import (
         buildLigatureSubstSubtable,
         buildStatTable,
     )
-    from fontTools.pens import recordingPen, transformPen, ttGlyphPen
+    from fontTools.pens import cu2quPen, recordingPen, transformPen, ttGlyphPen
+    from fontTools.svgLib.path import SVGPath
     from fontTools.ttLib import TTFont, newTable, removeOverlaps
     from fontTools.ttLib.tables import otTables
     from fontTools.ttLib.tables._c_m_a_p import CmapSubtable
@@ -733,12 +757,14 @@ def add_cmap_entries(font: TTFont, codepoint_to_glyph: dict[int, str]) -> None:
 
     Format 4 subtables only get the BMP part, being unable to encode anything
     above U+FFFF, and a format 12 subtable is created from the widest existing
-    mapping if the font has none: every fill codepoint needs one, sitting in
-    Plane 16.
+    mapping if a codepoint needs one and the font has none: the Material Symbols
+    fill codepoints sit in Plane 16 (the odoo_ui_icons ones are all in the BMP,
+    and a format 12 subtable would be pure weight there).
     """
     cmap = font['cmap']
     tables = [table for table in cmap.tables if table.isUnicode()]
-    if not any(table.format == 12 for table in tables):
+    supplementary = any(codepoint > 0xFFFF for codepoint in codepoint_to_glyph)
+    if supplementary and not any(table.format == 12 for table in tables):
         table = CmapSubtable.newSubtable(12)
         table.platformID, table.platEncID, table.language = 3, 10, 0
         table.cmap = dict(max(tables, key=lambda t: len(t.cmap)).cmap)
@@ -942,30 +968,36 @@ def write_font_face_css(ms_dir, style_lower: str, font_file: str, backend_font_p
 
 ICON_SEARCH_CODE = '''
 
-_MS_ICONS_INDEX = [
+_ICONS_INDEX = [
     (name, icon['has_fill'], f"{name} {icon['tags']}".lower())
-    for name, icon in MS_ICONS.items()
+    for name, icon in ICONS.items()
 ]
 
 
-def search_ms_icons(needle=''):
+def search_icons(needle=''):
     """Yield the ``(name, has_fill)`` of every icon matching ``needle``.
 
     The needle is matched against the icon name and its search tags; an empty
     needle matches every icon.  The haystacks are lowercased once, at import.
     """
     needle = needle.strip().lower()
-    for name, has_fill, haystack in _MS_ICONS_INDEX:
+    for name, has_fill, haystack in _ICONS_INDEX:
         if not needle or needle in haystack:
             yield name, has_fill
 '''
 
 
-def write_python_icon_list(dst_path, icons: dict[str, dict], codepoints: dict[str, int]) -> None:
-    """Write the icon metadata (``has_fill`` flag, search ``tags`` and cmap
-    ``codepoint``) as a Python dict.
+def write_python_icon_list(
+    dst_path,
+    icons: dict[str, dict],
+    codepoints: dict[str, int],
+    oi_ligatures: dict[str, str],
+    oi_codepoints: dict[int, str],
+    oi_tags: dict[str, str],
+) -> None:
+    """Write Material Symbols and Odoo UI icon metadata as a Python dict.
 
-    The dict is imported server-side by the ``/html_editor/material_symbols_search``
+    The dict is imported server-side by the ``/html_editor/icons_search``
     controller, so the (large) search tags never ship to the browser, and no file
     has to be read at runtime.  Only the outlined codepoints are listed; the
     filled ones are computed the way :func:`fill_codepoint` encodes them.
@@ -980,31 +1012,236 @@ def write_python_icon_list(dst_path, icons: dict[str, dict], codepoints: dict[st
         if icon_data['name'] in icons:
             icons[icon_data['name']]['tags'] = ' '.join(icon_data.get('tags', []))
 
-    entries = '\n'.join(
+    ms_entries = [
         f"    {icon_name!r}: {{'has_fill': {icon['has_fill']}, "
         f"'codepoint': 0x{codepoints[icon_name]:04X}, 'tags': {icon.get('tags', '')!r}}},"
         for icon_name, icon in icons.items()
-    )
+    ]
+    glyph_codepoints = {glyph: codepoint for codepoint, glyph in oi_codepoints.items()}
+    oi_entries = [
+        f"    {name!r}: {{'has_fill': False, "
+        f"'codepoint': 0x{glyph_codepoints[glyph]:04X}, 'tags': {oi_tags.get(name, '')!r}}},"
+        for name, glyph in sorted(oi_ligatures.items())
+    ]
+    entries = '\n'.join(ms_entries + oi_entries)
     dst_path.write_text(
         "# Part of Odoo. See LICENSE file for full copyright and licensing details.\n"
         "\n"
-        '"""Material Symbols icon metadata used by the icon picker.\n'
+        '"""Icon metadata used by the icon picker.\n'
         "\n"
         "Generated by ``odoo/addons/web/tooling/icons/generate_icons.py`` -- do not edit\n"
         "manually.\n"
         "\n"
         "Maps each icon name to its ``has_fill`` flag and the space-separated ``tags``\n"
         "used to search it. The tags are only ever matched server-side (see the\n"
-        "``/html_editor/material_symbols_search`` controller), so they never reach the browser.\n"
-        "Use :func:`search_ms_icons` to match a needle against both.\n"
+        "``/html_editor/icons_search`` controller), so they never reach the browser.\n"
+        "Use :func:`search_icons` to match a needle against both.\n"
         '"""\n'
         "\n"
         "from odoo.tools import frozendict\n"
         "\n"
-        f"MS_ICONS = frozendict({{\n{entries}\n}})\n"
+        f"ICONS = frozendict({{\n{entries}\n}})\n"
         + ICON_SEARCH_CODE,
         encoding='utf-8',
     )
+
+
+# --- Odoo UI Icons ----------------------------------------------------------
+
+def load_oi_config(module_path) -> dict:
+    """Return ``odoo_ui_icons_config.json``, the Fontello project file the icon
+    set is maintained in: the font name, its metrics, the ligature prefix, and one
+    entry per icon with its name, its codepoint and its outline.
+    """
+    path = module_path / 'tooling/icons/odoo_ui_icons_config.json'
+    if not path.is_file():
+        raise SystemExit(f"Icon config not found: {path}")
+    return json.loads(path.read_text(encoding='utf-8'))
+
+
+def draw_config_icon(path_data: str, center: tuple):
+    """Return the outline *path_data* of a config glyph as a font glyph, its grid
+    mapped onto the em box: the 750-unit square a full-size icon spans on the
+    config's 1000-unit grid becomes an 874-unit square centered on *center*.
+
+    Icons are drawn to that square rather than fitted to it, so `odoo` overshoots
+    it a little and `x` stays short of it.  874 is the size the previous build
+    gave its icons, which is what keeps the set on the grid the rest of the UI is
+    calibrated for; the grid is otherwise honoured as it stands, so an icon
+    deliberately drawn small, or off-center like `view-pivot`, keeps its
+    composition.
+
+    The negative vertical scale is what turns the config's y-down coordinates into
+    the font's y-up ones, and the cubics it draws with are converted to the
+    quadratics TrueType outlines are made of -- a quarter of a unit of error,
+    which no rasterizer can show on a 960 em.
+    """
+    scale = 874 / 750
+    half = 1000 * scale / 2
+    tt_pen = ttGlyphPen.TTGlyphPen(None)
+    SVGPath.fromstring(f'<svg><path d="{path_data}"/></svg>', transform=(
+        scale, 0, 0, -scale, center[0] - half, center[1] + half,
+    )).draw(cu2quPen.Cu2QuPen(tt_pen, 0.25))
+    return tt_pen.glyph()
+
+
+def new_gsub_table():
+    """Return an empty but well-formed GSUB for :func:`build_gsub` to fill in.
+
+    Both the ``DFLT`` and the ``latn`` script are declared: HarfBuzz resolves a
+    run of Latin characters -- which every ligature name is -- as ``latn``, and
+    only falls back to ``DFLT`` when the font declares no matching script.
+    """
+    gsub = newTable('GSUB')
+    gsub.table = otTables.GSUB()
+    gsub.table.Version = 0x00010000
+
+    script_records = []
+    for tag in ('DFLT', 'latn'):
+        lang_sys = otTables.DefaultLangSys()
+        lang_sys.LookupOrder = None
+        lang_sys.ReqFeatureIndex = 0xFFFF
+        lang_sys.FeatureIndex = []
+        lang_sys.FeatureCount = 0
+        script = otTables.Script()
+        script.DefaultLangSys = lang_sys
+        script.LangSysRecord = []
+        script.LangSysCount = 0
+        record = otTables.ScriptRecord()
+        record.ScriptTag = tag
+        record.Script = script
+        script_records.append(record)
+
+    gsub.table.ScriptList = otTables.ScriptList()
+    gsub.table.ScriptList.ScriptRecord = script_records
+    gsub.table.ScriptList.ScriptCount = len(script_records)
+    gsub.table.FeatureList = otTables.FeatureList()
+    gsub.table.FeatureList.FeatureRecord = []
+    gsub.table.FeatureList.FeatureCount = 0
+    gsub.table.LookupList = otTables.LookupList()
+    gsub.table.LookupList.Lookup = []
+    gsub.table.LookupList.LookupCount = 0
+    return gsub
+
+
+def build_odoo_ui_icons_font(module_path):
+    """Build ``odoo_ui_icons.woff2`` and ``odoo_ui_icons_backend.woff`` out of
+    :func:`load_oi_config`.
+
+    Both files carry the same glyphs and the same ligatures and differ only in
+    their cmap: the WOFF2 the browsers get is reachable by ligature alone, while
+    the WOFF adds the icon codepoints for wkhtmltopdf and for the Pillow renderer
+    of the mail icons, neither of which can resolve a ligature.
+    """
+    print("Building odoo_ui_icons font…")  # noqa: T201
+    config = load_oi_config(module_path)
+    family = config['name']
+
+    # The metrics are the previous build's, kept as they were so no stylesheet
+    # has to follow.  The descender is the same 11.5% baseline shift Material
+    # Symbols bakes into its outlines (see :data:`BASELINE_SHIFT`), which is what
+    # makes the two sets sit on the text baseline the same way.
+    upem = config['units_per_em']
+    ascent = config['ascent']
+    descent = ascent - upem
+    center = (upem / 2, (ascent + descent) / 2)
+
+    # The prefix the config spells the CSS classes with is also the one the
+    # ligatures carry: unlike the Material Symbols ones, the names here are short,
+    # ordinary words -- "x", "apple", "medium", "magnet" -- that an unprefixed
+    # ligature would happily fire on in the middle of a sentence.
+    prefix = config['css_prefix_text']
+
+    icons = [icon for icon in config['glyphs'] if icon.get('selected', True)]
+    outlines, ligatures, codepoint_to_glyph = {}, {}, {}
+    for icon in sorted(icons, key=lambda icon: icon['code']):
+        name, codepoint = icon['css'], icon['code']
+        glyph_name = re.sub(r'[^A-Za-z0-9_]', '_', f'icon_{name}')
+        if glyph_name in outlines:
+            raise SystemExit(f"{name!r} maps to the glyph name {glyph_name!r} of another icon.")
+        if codepoint in codepoint_to_glyph:
+            raise SystemExit(f"{name!r} reuses the codepoint U+{codepoint:04X}.")
+        outlines[glyph_name] = icon['svg']['path']
+        codepoint_to_glyph[codepoint] = glyph_name
+        ligatures[prefix + name] = glyph_name
+
+    # The characters the ligature names are spelled with must exist as glyphs for
+    # the shaper to have something to substitute.  They are left blank and
+    # zero-width: an icon name that fails to ligate is better swallowed than
+    # spelled out in the middle of the UI.  A letter is named after itself, the
+    # rest after their PostScript name.
+    ascii_names = {
+        '-': 'hyphen', '_': 'underscore',
+        '0': 'zero', '1': 'one', '2': 'two', '3': 'three', '4': 'four',
+        '5': 'five', '6': 'six', '7': 'seven', '8': 'eight', '9': 'nine',
+    }
+    ascii_glyphs = {ascii_names.get(char, char) for name in ligatures for char in name}
+
+    print(f"  Drawing {len(outlines)} glyphs…")  # noqa: T201
+    glyphs = {name: ttGlyphPen.TTGlyphPen(None).glyph() for name in ['.notdef', *ascii_glyphs]}
+    for glyph_name, path_data in outlines.items():
+        glyphs[glyph_name] = draw_config_icon(path_data, center)
+
+    print("  Assembling font…")  # noqa: T201
+    builder = FontBuilder(unitsPerEm=upem, isTTF=True)
+    builder.setupGlyphOrder(['.notdef', *sorted(ascii_glyphs), *outlines])
+    builder.setupCharacterMap({
+        ord(char): ascii_names.get(char, char) for name in ligatures for char in name
+    })
+    builder.setupGlyf(glyphs)
+    builder.setupHorizontalMetrics({
+        name: (0 if name in ascii_glyphs else upem, glyph.xMin)
+        for name, glyph in builder.font['glyf'].glyphs.items()
+    })
+    builder.setupHorizontalHeader(ascent=ascent, descent=descent, lineGap=0)
+    builder.setupNameTable({
+        'familyName': family,
+        'styleName': "Regular",
+        'uniqueFontIdentifier': family,
+        'fullName': family,
+        'psName': family,
+        'version': "2.0",
+    })
+    builder.setupOS2(
+        sTypoAscender=ascent, sTypoDescender=descent, sTypoLineGap=0,
+        usWinAscent=ascent, usWinDescent=-descent,
+        sCapHeight=ascent, sxHeight=ascent, achVendID="Odoo",
+    )
+    builder.setupPost(keepGlyphNames=False)
+
+    font = builder.font
+    font['GSUB'] = new_gsub_table()
+    unencodable = build_gsub(font, ligatures)
+    if unencodable:
+        print(f"  {len(unencodable)} names could not be encoded: {sorted(unencodable)}")  # noqa: T201
+
+    print("  Saving fonts…")  # noqa: T201
+    fonts_dir = module_path / 'static/lib/odoo_ui_icons/fonts'
+    fonts_dir.mkdir(parents=True, exist_ok=True)
+
+    font.flavor = 'woff2'
+    woff2_path = fonts_dir / f'{family}.woff2'
+    save_font(font, woff2_path)
+
+    # Encoded only once the WOFF2 is out, the two fonts differing in nothing else:
+    # in the web font the codepoints would be a second, ligature-free way into
+    # every glyph.  Adding them in place rather than to a clone keeps the glyph
+    # names :func:`add_cmap_entries` is keyed by -- `post` being format 3.0, a
+    # clone comes back from its round-trip with generic ones.
+    add_cmap_entries(font, codepoint_to_glyph)
+    font.flavor = 'woff'
+    woff_path = fonts_dir / f'{family}_backend.woff'
+    save_font(font, woff_path)
+
+    # The name is searched on its own (see the `/html_editor/icons_search`
+    # controller), so it earns nothing as a tag of itself.
+    tags = {
+        prefix + icon['css']: ' '.join(
+            tag for tag in icon.get('search', []) if tag != icon['css']
+        )
+        for icon in icons
+    }
+    return woff2_path, woff_path, ligatures, codepoint_to_glyph, tags
 
 
 def main() -> None:
@@ -1024,8 +1261,12 @@ def main() -> None:
     )
     _, sharp_path, *_ = build_font("Sharp", ms_dir, wishlist)
 
-    icon_list_path = module_path / 'ms_icons.py'
-    write_python_icon_list(icon_list_path, icons, codepoints)
+    oi_woff2, oi_woff, oi_ligatures, oi_codepoints, oi_tags = build_odoo_ui_icons_font(module_path)
+
+    icon_list_path = module_path / 'icons.py'
+    write_python_icon_list(
+        icon_list_path, icons, codepoints, oi_ligatures, oi_codepoints, oi_tags,
+    )
 
     n_filled = sum(1 for icon in icons.values() if icon['has_fill'])
     print(  # noqa: T201
@@ -1033,7 +1274,13 @@ def main() -> None:
         f"   outlined web     → {outline_path}  ({outline_path.stat().st_size // 1000} kb)\n"
         f"   sharp web        → {sharp_path}  ({sharp_path.stat().st_size // 1000} kb)\n"
         f"   outlined backend → {backend_path}  ({backend_path.stat().st_size // 1000} kb)\n"
-        f"   Python metadata  → {icon_list_path}  ({len(codepoints)} codepoints)\n",
+        f"   Python metadata  → {icon_list_path}  "
+        f"({len(codepoints) + len(oi_ligatures)} icons)\n"
+        f"\n✓  Generated odoo_ui_icons with {len(oi_codepoints)} icons "
+        f"({len(oi_ligatures)} names)\n"
+        f"   web              → {oi_woff2}  ({oi_woff2.stat().st_size // 1000} kb)\n"
+        f"   backend          → {oi_woff}  ({oi_woff.stat().st_size // 1000} kb, "
+        f"{len(oi_codepoints)} codepoints)\n",
     )
 
 

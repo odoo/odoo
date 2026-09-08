@@ -7,7 +7,7 @@ from odoo.tests.common import HttpCase
 from odoo.tools.image import binary_to_image
 from odoo.tools.misc import file_open
 
-from odoo.addons.web.ms_icons import MS_ICONS
+from odoo.addons.web.icons import ICONS
 
 
 class TestFontToImg(HttpCase):
@@ -68,7 +68,84 @@ class TestMaterialSymbolsToImg(HttpCase):
                     outlined, filled).getbbox() is not None
                 self.assertEqual(
                     differs,
-                    MS_ICONS[icon]['has_fill'],
-                    f"{icon!r} filled form should{'' if MS_ICONS[icon]['has_fill'] else ' not'} "
+                    ICONS[icon]['has_fill'],
+                    f"{icon!r} filled form should{'' if ICONS[icon]['has_fill'] else ' not'} "
                     "differ from its outlined one",
+                )
+
+
+class TestOdooUiIconsToImg(HttpCase):
+    """
+    The `oi_` icons are named on the route, but mails sent before they were
+    generated carry a raw codepoint instead, and the oldest ones a Font Awesome
+    codepoint that has since been replaced. Every form has to keep rendering
+    the same glyph of `odoo_ui_icons_backend.woff`.
+    """
+    # Icons spread over the codepoint range of the font.
+    TEST_ICONS = ('oi_view-pivot', 'oi_css3', 'oi_google-wallet',
+                  'oi_openid', 'oi_wechat', 'oi_dashcube')
+
+    # Codepoints old mails carry, and the icon each must still render.
+    LEGACY_CODEPOINTS = {
+        '59407': 'oi_strava',
+        '59416': 'oi_threads',
+        '59418': 'oi_x',  # was oi_twitter
+        '59420': 'oi_bluesky',
+        '59464': 'oi_x-square',  # was oi_twitter-square
+    }
+
+    # Font Awesome codepoints, only ever sent through the legacy routes.
+    REPLACED_CODEPOINTS = {
+        '61569': 'oi_x-square',
+        '61593': 'oi_x',
+    }
+
+    def _render(self, url):
+        response = self.url_open(url)
+        self.assertEqual(response.status_code, 200)
+        return binary_to_image(response.content)
+
+    def _render_by_name(self, icon, fill=0):
+        return self._render(
+            f'/mail/font_to_img/{icon}/oi/{fill}/000000ff/00000000/64x64fs64',
+        )
+
+    def test_names_render(self):
+        for icon in self.TEST_ICONS:
+            with self.subTest(icon=icon):
+                image = self._render_by_name(icon)
+                self.assertIsNotNone(
+                    image.getchannel('A').getbbox(),
+                    f"{icon!r} rendered a blank image",
+                )
+                # The font has no fill axis: the axis must not reach it.
+                self.assertIsNone(
+                    ImageChops.difference(
+                        image, self._render_by_name(icon, fill=1)).getbbox(),
+                    f"{icon!r} should ignore the FILL axis",
+                )
+
+    def test_codepoints_render_the_named_icon(self):
+        for codepoint, icon in self.LEGACY_CODEPOINTS.items():
+            expected = self._render_by_name(icon)
+            urls = (
+                f'/mail/font_to_img/{codepoint}/oi/0/000000ff/00000000/64x64fs64',
+                f'/mail/font_to_img/{codepoint}/rgb(0,0,0)/64x64',
+            )
+            for url in urls:
+                with self.subTest(url=url):
+                    self.assertIsNone(
+                        ImageChops.difference(self._render(url), expected).getbbox(),
+                        f"{url} should render {icon!r}",
+                    )
+
+    def test_replaced_codepoints_render_the_named_icon(self):
+        for codepoint, icon in self.REPLACED_CODEPOINTS.items():
+            with self.subTest(codepoint=codepoint):
+                self.assertIsNone(
+                    ImageChops.difference(
+                        self._render(f'/mail/font_to_img/{codepoint}/rgb(0,0,0)/64x64'),
+                        self._render_by_name(icon),
+                    ).getbbox(),
+                    f"the legacy {codepoint} should render {icon!r}",
                 )

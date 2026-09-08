@@ -23,4 +23,11 @@
 // the plain `font-family` they need on top of the rule above.
 .oi[data-icon^="oi_"] {
     font-family: $oi-font-family;
+
+    // wkhtmltopdf breaks the ligature at the hyphen (e.g. for `oi_view-kanban`
+    // it will see `oi_view` and drop `-kanban`), the following prevents it.
+    &:before {
+        white-space: pre;
+        width: 1em;
+    }
 }
