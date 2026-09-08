@@ -317,21 +317,22 @@ Display a sidebar beside the post content.
 <!-- (Option) Post Sidebar: display tags -->
 <template id="opt_blog_post_tags_display" name="Tags" inherit_id="website_blog.blog_post_sidebar" active="False" priority="3">
     <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
-        <div class="o_wblog_sidebar_block mb-2 pb-4">
+        <div t-if="blog_post.tag_ids" class="o_wblog_sidebar_block mb-2 pb-4">
             <h2 class="small mb-3">Tags</h2>
-            <div t-if="blog_post.tag_ids" class="d-flex flex-wrap gap-1 small">
+            <div class="d-flex flex-wrap gap-1 small">
                 <t t-foreach="blog_post.tag_ids" t-as="one_tag">
                     <a t-attf-class="badge post_link text-decoration-none o_tag o_color_#{one_tag.color}" t-attf-href="#{blog_url(tag=slug(one_tag))}" t-out="one_tag.name"/>
                 </t>
             </div>
-            <t t-else="">
-                <div class="bg-light p-3 border rounded o_not_editable" groups="website_blog.group_website_blog_manager">
-                    <h2 class="text-muted h6 mb-0"><em>No tags defined</em></h2>
-                    <p class="css_editable_mode_hidden mt-2 mb-0">
-                        <a role="menuitem" t-attf-href="/odoo/website/{{main_object._name}}/{{main_object.id}}" title='Edit in backend' id="edit-in-backend">Add some</a>
-                    </p>
-                </div>
-            </t>
+        </div>
+        <div t-else="" groups="website_blog.group_website_blog_manager" class="o_wblog_sidebar_block mb-2 pb-4">
+            <h2 class="small mb-3">Tags</h2>
+            <div class="bg-light p-3 border rounded o_not_editable">
+                <h2 class="text-muted h6 mb-0"><em>No tags defined</em></h2>
+                <p class="css_editable_mode_hidden mt-2 mb-0">
+                    <a role="menuitem" t-attf-href="/odoo/website/{{main_object._name}}/{{main_object.id}}" title='Edit in backend' id="edit-in-backend">Add some</a>
+                </p>
+            </div>
         </div>
         <div class="oe_structure" id="oe_structure_blog_post_sidebar_4"/>
     </xpath>
