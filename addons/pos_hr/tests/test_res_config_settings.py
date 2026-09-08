@@ -60,3 +60,28 @@ class TestConfigureShopsPoSHR(TestPosHrHttpCommon, TestConfigureShops):
         self.assertEqual(len(self.main_pos_config.advanced_employee_ids), 1)
         self.assertEqual(self.main_pos_config.advanced_employee_ids.company_id, self.main_pos_config.company_id)
         self.assertEqual(self.main_pos_config.advanced_employee_ids, advanced_employee)
+
+    def test_settings_advanced_employees_from_config_company(self):
+        """Saving the settings of a PoS of another company than the current one
+           must only add the PoS managers' employees of the PoS company."""
+        self._remove_on_payment_taxes()
+        branch = self.env['res.company'].create({
+            'name': 'Branch 1',
+            'parent_id': self.env.company.id,
+            'chart_template': self.env.company.chart_template,
+        })
+        branch_config = self.env['pos.config'].with_company(branch).create({'name': 'Branch Point of Sale'})
+        # PoS manager with an employee in each company; current company stays the main one
+        self.pos_admin.company_ids += branch
+        branch_admin = self.env['hr.employee'].create({
+            'name': 'Branch Admin',
+            'company_id': branch.id,
+            'user_id': self.pos_admin.id,
+        })
+        self.assertEqual(self.manager1.company_id, self.env.company)
+
+        self.env['res.config.settings'].create({'pos_config_id': branch_config.id}).execute()
+
+        self.assertIn(branch_admin, branch_config.advanced_employee_ids)
+        self.assertNotIn(self.manager1, branch_config.advanced_employee_ids)
+        self.assertEqual(branch_config.advanced_employee_ids.company_id, branch)
