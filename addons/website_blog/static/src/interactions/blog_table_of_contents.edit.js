@@ -3,6 +3,16 @@ import { BlogTableOfContents } from "./blog_table_of_contents";
 
 const BlogTableOfContentsEdit = (I) =>
     class extends I {
+        dynamicContent = {
+            ...super.dynamicContent,
+            ".o_wblog_toc": {}, // Do not hide the section in edit mode.
+            ".o_wblog_toc_placeholder": {
+                "t-att-class": () => ({
+                    "d-none": !!this.targets.length,
+                }),
+            },
+        };
+
         isImpactedBy(el) {
             return el.closest(".o_wblog_post_content_field");
         }
