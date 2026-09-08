@@ -198,7 +198,8 @@ const odooDayOfWeekAdapter = {
         return fromLocaleIsZero + 1; // 1-based
     },
     increment(normalizedValue, step) {
-        return (normalizedValue + step) % 7;
+        // day-of-week is 1-based (1-7): shift to 0-based before wrapping, then back.
+        return (((normalizedValue - 1 + step) % 7) + 7) % 7 + 1;
     },
 };
 
@@ -207,7 +208,7 @@ const odooHourNumberAdapter = {
         return Number(readGroupResult[groupBy]);
     },
     increment(normalizedValue, step) {
-        return (normalizedValue + step) % 24;
+        return (((normalizedValue + step) % 24) + 24) % 24;
     },
 };
 const odooMinuteNumberAdapter = {
@@ -215,7 +216,7 @@ const odooMinuteNumberAdapter = {
         return Number(readGroupResult[groupBy]);
     },
     increment(normalizedValue, step) {
-        return (normalizedValue + step) % 60;
+        return (((normalizedValue + step) % 60) + 60) % 60;
     },
 };
 const odooSecondNumberAdapter = {
@@ -223,7 +224,7 @@ const odooSecondNumberAdapter = {
         return Number(readGroupResult[groupBy]);
     },
     increment(normalizedValue, step) {
-        return (normalizedValue + step) % 60;
+        return (((normalizedValue + step) % 60) + 60) % 60;
     },
 };
 
