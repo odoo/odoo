@@ -341,7 +341,7 @@ export class DashboardSearchBar extends Component {
                     loadMore: () => {
                         this.state.subItemsLimits[globalFilter.id] +=
                             SUB_ITEMS_DEFAULT_LIMIT;
-                        const newSubItems = [...this.subItems];
+                        const newSubItems = { ...this.subItems };
                         newSubItems[globalFilter.id] = undefined;
                         this.computeState({ subItems: newSubItems });
                     },
