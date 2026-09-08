@@ -2,9 +2,9 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.MessagingMenuEmpty">
-    <div class="o-mail-MessagingMenuEmpty d-flex flex-column align-items-center justify-content-center py-4 px-3 text-center">
+    <div class="o-mail-MessagingMenuEmpty d-flex flex-column align-items-center justify-content-center text-center" t-attf-class="{{ this.attfClass }}">
         <span class="fw-bold" t-out="this.props.title"/>
-        <span t-if="this.props.subtitle" class="text-muted small mt-2" t-out="this.props.subtitle"/>
+        <span t-if="this.props.subtitle" class="text-muted small mt-2 mx-2 o-text-wrap-balance" t-out="this.props.subtitle"/>
         <button t-if="this.props.action" class="btn btn-primary btn-sm mt-1" t-on-click="() => this.props.action.onClick()" t-out="this.props.action.text"/>
         <t t-call-slot="default"/>
     </div>

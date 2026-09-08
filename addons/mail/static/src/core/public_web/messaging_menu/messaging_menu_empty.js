@@ -6,5 +6,10 @@ export class MessagingMenuEmpty extends Component {
         title: t.string(),
         subtitle: t.string().optional(),
         action: t.object().optional(),
+        padding: t.string().optional("p-3"),
     });
+
+    get attfClass() {
+        return this.props.padding;
+    }
 }
