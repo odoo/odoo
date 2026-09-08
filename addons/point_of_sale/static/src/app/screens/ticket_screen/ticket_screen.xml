@@ -7,21 +7,21 @@
             <div class="screen-full-width d-flex w-100 h-100">
                 <t t-set="usePreset" t-value="pos.config.use_presets and pos.models['pos.preset'].length > 1" />
                 <div t-if="!ui.isSmall || pos.ticket_screen_mobile_pane === 'left'" class="rightpane pane-border d-flex flex-column flex-grow-1 w-100 h-100 h-lg-100 pe-lg-0 bg-view border-end overflow-y-auto">
-                    <div class="controls d-grid d-sm-flex align-items-center justify-content-between gap-2 gap-sm-3 p-2 border-bottom bg-view">
+                    <div class="controls d-flex flex-wrap align-items-center justify-content-between gap-2 p-2 border-bottom bg-view">
                         <SearchBar
                             config="getSearchBarConfig()"
                             placeholder.translate="Search Orders..."
                             onSearch.bind="onSearch"
                             onFilterSelected.bind="onFilterSelected" />
-                        <div class="buttons d-flex gap-1" t-if="usePreset">
+                        <div class="buttons d-flex flex-wrap gap-1 align-items-center" t-if="usePreset">
                             <button t-foreach="pos.models['pos.preset'].getAll()" t-as="preset" t-key="preset.id"
                                 class="btn btn-lg btn-secondary text-nowrap" t-on-click="() => this.onPresetSelected(preset)"
                                 t-attf-class="{{this.state.selectedPreset === preset ? 'active' : ''}}">
                                 <t t-esc="preset.name"/>
                             </button>
                         </div>
-                        <div class="item d-none d-xl-flex align-items-center justify-content-end">
-                            <span class="page me-2" role="button" t-on-click="onClickPageNbr"><t t-esc="getPageNumber()" /></span>
+                        <div class="item d-flex align-items-center text-nowrap flex-shrink-0 ms-auto">
+                            <span class="page me-2 fw-semibold" role="button" t-on-click="onClickPageNbr"><t t-esc="getPageNumber()" /></span>
                             <div class="page-controls d-flex align-items-center gap-1">
                                 <button class="previous btn btn-secondary" t-on-click="() => this.onPrevPage()">
                                     <i class="fa fa-fw fa-caret-left" role="img" aria-label="Previous Order List" title="Previous Order List"></i>
@@ -32,7 +32,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="orders overflow-y-auto flex-grow-1 rounded-bottom-3 bg-view">
+                    <div class="orders overflow-auto flex-grow-1 rounded-bottom-3 bg-view">
                         <t t-if="_filteredOrderList.length !== 0">
                             <table t-if="!ui.isSmall"  class="table table-striped table-hover">
                                 <tbody>
@@ -48,12 +48,12 @@
                                                 <div class="small text-muted"><t t-esc="order.pos_reference"></t></div>
                                             </td>
                                             <td class="align-middle">
-                                                <div class="fw-bolder"><t t-esc="order.partner_id?.name"></t></div>
-                                                <div id="order-tags" t-if="usePreset" t-attf-class="badge rounded o_colorlist_item_color_{{order.preset_id?.color}}" style="font-size: 0.75rem !important;">
+                                                <div class="fw-bolder text-wrap"><t t-esc="order.partner_id?.name"></t></div>
+                                                <div t-if="usePreset" class="order-tags badge rounded" t-attf-class="o_colorlist_item_color_{{order.preset_id?.color}}">
                                                     <t t-esc="order.preset_id?.name"></t>
                                                 </div>
                                             </td>
-                                            <td class="align-middle address-cell">
+                                            <td class="align-middle address-cell text-wrap">
                                                 <span t-if="order.preset_id?.identification === 'address'"
                                                     class="address-text"
                                                     t-out="order.partner_id?.pos_contact_address"/>
@@ -65,7 +65,7 @@
                                                 </t>
                                             </td>
                                             <td t-if="showCardholderName()">
-                                                <div><t t-esc="getCardholderName(order)"></t></div>
+                                                <t t-esc="getCardholderName(order)"></t>
                                             </td>
                                             <td>
                                                 <t t-esc="getCashier(order)"></t>
@@ -74,15 +74,8 @@
                                                 <div class="fw-bolder"><t t-esc="getTotal(order)"></t></div>
                                             </td>
                                             <td class="align-middle text-end">
-                                                <t t-set="status" t-value="getStatus(order)" />
-                                                <div t-attf-class="badge rounded fs-6 text-bg-{{
-                                                    status === 'Ongoing' || status === 'Payment'
-                                                    ? 'info'
-                                                    : status === 'Receipt' || status === 'Paid'
-                                                    ? 'success'
-                                                    : 'secondary'
-                                                }}">
-                                                    <t t-esc="status"></t>
+                                                <div t-attf-class="badge rounded fs-6 text-bg-{{ getStatusColor(order) }}">
+                                                    <t t-esc="getStatus(order)"></t>
                                                 </div>
                                             </td>
                                             <td class="text-end delete-column" name="delete-column">
@@ -108,16 +101,9 @@
                                     </div>
                                     <div class="p-2 d-flex flex-column flex-grow-1 justify-content-center align-items-end">
                                         <div class="fw-bolder"><t t-esc="getTotal(order)"></t></div>
-                                                <t t-set="status" t-value="getStatus(order)" />
-                                                <div t-attf-class="badge rounded fs-6 text-bg-{{
-                                                    status === 'Ongoing' || status === 'Payment'
-                                                    ? 'info'
-                                                    : status === 'Receipt' || status === 'Paid'
-                                                    ? 'success'
-                                                    : 'secondary'
-                                                }}">
-                                                    <t t-esc="status"></t>
-                                                </div>
+                                        <div t-attf-class="badge rounded fs-6 text-bg-{{ getStatusColor(order) }}">
+                                            <t t-esc="getStatus(order)"></t>
+                                        </div>
                                     </div>
                                     <div class="mx-2" name="delete-column">
                                         <div t-if="!shouldHideDeleteButton(order) and this.pos.cashier._role !== 'minimal'" class="d-flex align-items-center justify-content-center h-100" role="button" name="delete" t-on-click.stop="() => this.onDeleteOrder(order)">
