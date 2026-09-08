@@ -466,15 +466,12 @@ export class DomPlugin extends Plugin {
      */
     insertNodesAt(nodes, targetNode, targetOffset) {
         const marker = createMarkerNode(targetNode, targetOffset);
-
-        // Insert the nodes.
         const insertedContent = [];
         for (const [index, item] of nodes.entries()) {
             const insertedNodes = [];
             const previousItem = index > 0 && nodes[index - 1];
             const itemNodes = isFragment(item) ? childNodes(item) : [item];
             for (const [nodeIndex, node] of itemNodes.entries()) {
-                // A root marker may still point into the block on its right.
                 if (!nodeIndex && isFragment(previousItem) && !isBlock(item) && isVisible(item)) {
                     const addedNodes = this.splitBeforeInsertion(marker);
                     insertedNodes.push(...addedNodes);
@@ -482,56 +479,20 @@ export class DomPlugin extends Plugin {
                 if (marker.isConnected) {
                     const next = marker.nextSibling;
                     const wasBeforeFakeLineBreak = next?.nodeName === "BR" && isFakeLineBreak(next);
-                    const isInsertingBlock = isBlock(node);
-                    let target = marker;
-                    const closestPossibleTarget = isInsertingBlock
-                        ? findUpTo(target, this.editable, (position) =>
-                              this.canInsertBlockAt(node, position.parentElement)
-                          )
-                        : target;
-                    if (closestPossibleTarget !== target) {
-                        if (this.isAtAncestorEdge(target, closestPossibleTarget, "start")) {
-                            if (isBlock(closestPossibleTarget)) {
-                                target = closestPossibleTarget;
-                            } else {
-                                // This is a special case where we're inserting a block next to an
-                                // inline node. Inserting the block means we've left the inline
-                                // context so we should not continue inserting in that context.
-                                // eg, `p(a) i([]e) + div(b) c div(d) = p(a) div(b) c    div(d) i(e)
-                                //                                    ≠ p(a) div(b) i(c) div(d) i(e)
-                                closestPossibleTarget.before(marker);
-                            }
-                        } else if (this.isAtAncestorEdge(target, closestPossibleTarget, "end")) {
-                            closestPossibleTarget.after(marker);
-                        } else if (
-                            findUpTo(
-                                target,
-                                closestPossibleTarget.parentElement,
-                                (el) => isElement(el) && this.dependencies.split.isUnsplittable(el)
-                            )
-                        ) {
-                            // We can't insert the node but we also can't split.
-                            target = null;
-                        } else {
-                            target = this.dependencies.split.splitElementUntil(
-                                ...leftPos(marker),
-                                closestPossibleTarget.parentElement
-                            )[1];
-                        }
-                    }
+                    const isNodeBlock = isBlock(node);
+                    const target = isNodeBlock ? this.getBlockInsertTarget(node, marker) : marker;
                     if (target) {
                         target.before(node);
+                        insertedNodes.push(node);
                         if (isBlock(target) && isEmptyBlock(target)) {
                             target.before(marker);
                             target.remove();
                         }
-                    }
-                    insertedNodes.push(node);
-                    const didInsertBlock = isBlock(node);
-                    if (wasBeforeFakeLineBreak && !didInsertBlock) {
-                        // Inserting inline content before a fake line break
-                        // will make it real. Remove it.
-                        next.remove();
+                        if (wasBeforeFakeLineBreak && !isNodeBlock) {
+                            // Inserting inline content before a fake line break
+                            // will make it real. Remove it.
+                            next.remove();
+                        }
                     }
                 }
             }
@@ -568,11 +529,54 @@ export class DomPlugin extends Plugin {
         return [];
     }
 
-    canInsertBlockAt(block, parent) {
-        return (
+    /**
+     * Return the node before which the given block can be inserted, based on
+     * the given marker of insertion. In the process, move the the marker or
+     * split elements if needed. If we have no way to reach an acceptable
+     * position, return `undefined`.
+     *
+     * @param {HTMLElement} block
+     * @param {Node} marker
+     * @returns {Node | undefined} the node before which to insert, if any.
+     */
+    getBlockInsertTarget(block, marker) {
+        // Find the closest ancestor before which it would be possible to insert.
+        const canInsert = (parent) =>
             this.checkPredicates("can_insert_block_in_parent_predicates", block, parent) ??
-            (isBlock(parent) && !isParagraphRelatedElement(parent))
-        );
+            (isBlock(parent) && !isParagraphRelatedElement(parent));
+        const possibleTarget = findUpTo(marker, this.editable, (el) => canInsert(el.parentElement));
+        if (possibleTarget === marker) {
+            return marker;
+        }
+        // The marker is at the start of the target -> insert before it.
+        if (this.isAtAncestorEdge(marker, possibleTarget, "start")) {
+            if (isBlock(possibleTarget)) {
+                // We don't move the marker so as not to lose the inline context.
+                // eg, `p(i([]d))` + `div(a) p(b) p(c)` = `div(a) p(b) p(i(cd))`
+                //                                      ≠ `div(a) p(b) p(ci(d))`
+                return possibleTarget;
+            }
+            // This is a special case where we're inserting a block next to an
+            // inline node. Inserting the block means we've left the inline
+            // context so we should not continue inserting in that context.
+            // eg, `p(a) i([]e)` + `div(b) c div(d)` = `p(a) div(b) c    div(d) i(e)`
+            //                                       ≠ `p(a) div(b) i(c) div(d) i(e)`
+            possibleTarget.before(marker);
+            return marker;
+        }
+        // The marker is at the end of the target -> insert after it.
+        if (this.isAtAncestorEdge(marker, possibleTarget, "end")) {
+            // We move the marker because we don't want to keep the inline context.
+            possibleTarget.after(marker);
+            return marker;
+        }
+        // Split at the left of the marker up until the target if we can, to
+        // insert between the two sides of the split target.
+        const isUnsplittable = (el) => isElement(el) && this.dependencies.split.isUnsplittable(el);
+        const parent = possibleTarget.parentElement;
+        if (!findUpTo(marker, parent, isUnsplittable)) {
+            return this.dependencies.split.splitElementUntil(...leftPos(marker), parent)[1];
+        }
     }
 
     /**
