@@ -65,8 +65,7 @@ class HrEmployee(models.Model):
             work_hours_data_by_calendar = global_leaves._work_time_per_day()
             for global_time_off in global_leaves:
                 calendar = employee.resource_calendar_id
-                resource = employee.resource_id
-                work_hours_list = work_hours_data_by_calendar[calendar.id][global_time_off.id][resource.id if not calendar else False]
+                work_hours_list = work_hours_data_by_calendar[calendar.id][global_time_off.id][False]
                 for index, (day_date, work_hours_count) in enumerate(work_hours_list):
                     lines_vals.append(
                         global_time_off._timesheet_prepare_line_values(

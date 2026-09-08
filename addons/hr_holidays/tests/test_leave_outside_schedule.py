@@ -149,10 +149,16 @@ class TestLeaveOutsideSchedule(TestHrHolidaysCommon):
         """ For a fully flexible employee, a full-duration hour-unit working
         time request is centered around noon rather than anchored at
         midnight (which would always render as a half-day gantt pill). """
+        fully_flexible_calendar = self.env['resource.calendar'].create({
+            'name': 'Fully Flexible Calendar',
+            'company_id': self.company.id,
+            'calendar_type': 'undefined',
+            'attendance_ids': [],
+        })
         flexible_employee = self.env['hr.employee'].create({
             'name': 'Test Fully Flexible Employee',
             'company_id': self.company.id,
-            'resource_calendar_id': False,
+            'resource_calendar_id': fully_flexible_calendar.id,
         })
         leave = self.env['hr.leave'].with_context(tracking_disable=True).create({
             'employee_id': flexible_employee.id,
