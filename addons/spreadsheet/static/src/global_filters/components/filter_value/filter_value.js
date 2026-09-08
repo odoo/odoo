@@ -154,14 +154,6 @@ export class FilterValue extends Component {
         this.props.setGlobalFilterValue(id, newFilterValue);
     }
 
-    onBooleanInput(id, value) {
-        if (Array.isArray(value) && value.length === 0) {
-            this.clear(id);
-            return;
-        }
-        this.props.setGlobalFilterValue(id, value);
-    }
-
     onSelectionInput(id, value) {
         if (Array.isArray(value) && value.length === 0) {
             this.clear(id);
