@@ -419,11 +419,11 @@ class AccountMove(models.Model):
         if (self.l10n_tw_edi_is_print or self.partner_id.vat) and not self.partner_id.address_inline:
             errors.append(self.env._("Please fill in the customer address for printing Ecpay invoice."))
 
-        if not self.partner_id.email and not self.partner_id.phone:
+        if self.l10n_tw_edi_is_b2b:
+            if not (self.partner_id.commercial_partner_id.email or self.partner_id.email):
+                errors.append(self.env._("Please fill in the company email for B2B Ecpay invoice creation."))
+        elif not self.partner_id.email and not self.partner_id.phone:
             errors.append(self.env._("Please fill in the customer email or phone number for Ecpay invoice creation."))
-
-        if self.l10n_tw_edi_is_b2b and not (self.partner_id.commercial_partner_id.email or self.partner_id.email):
-            errors.append(self.env._("Please fill in the company email for B2B Ecpay invoice creation."))
 
         if self.partner_id.phone:
             formatted_phone = self._reformat_phone_number(self.partner_id.phone)
