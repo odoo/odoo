@@ -25,7 +25,7 @@ class PeppolAuthentication(http.Controller):
         state = state or 'success'
         connect_data = request.env['peppol.registration']._decode_connect_token(connect_token)
         if not connect_data:
-            _logger.warning("Invalid request token auth_type=%s connect_token=%s auth_token=%s", auth_type, connect_token, auth_token)
+            _logger.warning("Invalid request token auth_type=%s connect_token=%s", auth_type, connect_token[:6] + '...')
             return redirect('failure')
 
         partner = connect_data['partner']
@@ -39,7 +39,7 @@ class PeppolAuthentication(http.Controller):
             return redirect('pending', partner=partner)
 
         if not auth_token:
-            _logger.warning("Invalid auth token auth_type=%s connect_token=%s auth_token=%s", auth_type, connect_token, auth_token)
+            _logger.warning("Invalid auth token auth_type=%s connect_token=%s", auth_type, connect_token[:6] + '...')
             return redirect('failure', partner=partner)
 
         peppol_identifier = connect_data['peppol_identifier']
@@ -48,7 +48,7 @@ class PeppolAuthentication(http.Controller):
         try:
             request.env['peppol.registration'].sudo()._create_connection(peppol_identifier, db_uuid, company, auth_token=auth_token)
         except UserError as e:
-            _logger.warning("Could not create proxy user auth_type=%s connect_token=%s auth_token=%s", auth_type, connect_token, auth_token)
+            _logger.warning("Could not create proxy user auth_type=%s connect_token=%s", auth_type, connect_token[:6] + '...')
             return redirect('failure', partner=partner, error_message=str(e))
 
         return redirect('success', partner=partner)
@@ -61,7 +61,7 @@ class PeppolAuthentication(http.Controller):
         """
         connect_data = request.env['peppol.registration'].sudo()._decode_connect_token(connect_token)
         if not connect_data or not auth_token:
-            _logger.warning("Invalid peppol auth webhook auth_type=%s connect_token=%s", auth_type, connect_token)
+            _logger.warning("Invalid peppol auth webhook auth_type=%s connect_token=%s", auth_type, connect_token[:6] + '...')
             return request.make_json_response({'error': 'invalid_request'}, status=400)
 
         company = connect_data['company']
@@ -75,7 +75,7 @@ class PeppolAuthentication(http.Controller):
                 connect_data['peppol_identifier'], db_uuid, company, auth_token=auth_token,
             )
         except UserError as e:
-            _logger.warning("Peppol auth webhook could not create proxy user connect_token=%s error=%s", connect_token, e)
+            _logger.warning("Peppol auth webhook could not create proxy user connect_token=%s error=%s", connect_token[:6] + '...', e)
             # the user can still finalize from the emailed callback link.
             return request.make_json_response({'status': 'failed'})
 
