@@ -6,7 +6,7 @@ import { useService } from "@web/core/utils/hooks";
 export const FIELD_NAMES = [
     {
         displayName: _t("X Account"),
-        iconClass: "oi_twitter",
+        iconClass: "oi_x",
         name: "social_twitter",
         placeholder: "https://twitter.com/Odoo",
     },
