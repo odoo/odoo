@@ -60,11 +60,11 @@ export class MessagingMenuTab extends Record {
     setup() {
         super.setup(...arguments);
         this.onChange(
-            () => [this.messagingMenuAsTab],
-            function onChangeMessagingMenuAsTab(messagingMenuAsTab) {
+            () => [this.store.messagingMenu?.initializeCountersFetcher],
+            function onChangeInitializeCountersFetcher(initializeCountersFetcher) {
                 if (
-                    !messagingMenuAsTab ||
-                    messagingMenuAsTab.initializeCountersFetcher.status === "not_fetched"
+                    !initializeCountersFetcher ||
+                    initializeCountersFetcher.status === "not_fetched"
                 ) {
                     return;
                 }
@@ -167,22 +167,6 @@ export class MessagingMenuTab extends Record {
     loadStatusByFilterId = fields.Attr({}, { asProxy: true });
     /** IDs of already loaded records, used to exclude them from `loadMore` requests. */
     loadMoreExcludeIds = this.computed(() => this._computeLoadMoreExcludeIds());
-    messagingMenuAsTab = fields.One("MessagingMenu", {
-        inverse: "allTabs",
-        compute() {
-            return this.store.messagingMenu;
-        },
-    });
-    messagingMenuAsVisibleTabs = fields.One("MessagingMenu", {
-        inverse: "visibleTabs",
-        compute() {
-            if (!this.appWide || !this.canBeShown) {
-                return;
-            }
-            return this.store.messagingMenu;
-        },
-        eager: true,
-    });
     messages = fields.Many("mail.message", { inverse: "messagingMenuTabsAsMessages" });
     sortedMessages = fields.Many("mail.message", {
         compute() {
