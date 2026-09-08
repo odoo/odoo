@@ -1,7 +1,4 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import base64
-import math
-
 from odoo.http import Controller
 from odoo.tests import new_test_user
 
@@ -102,7 +99,8 @@ class TestStoreVersioning(HttpCase, MailCase):
         snapshot = result.pop("__store_version__")["snapshot"]
         self.assertIn("xmin", snapshot)
         self.assertIn("xmax", snapshot)
-        self.assertIn("xip_bitmap", snapshot)
+        self.assertIn("xip_list", snapshot)
+        self.assertEqual(snapshot["xip_bitmap"], "")
         self.assertIn("current_xact_id", snapshot)
         result = self.make_jsonrpc_request(
             "/store/version/read_fields",
@@ -115,7 +113,8 @@ class TestStoreVersioning(HttpCase, MailCase):
         snapshot = result["__store_version__"]["snapshot"]
         self.assertIn("xmin", snapshot)
         self.assertIn("xmax", snapshot)
-        self.assertIn("xip_bitmap", snapshot)
+        self.assertIn("xip_list", snapshot)
+        self.assertEqual(snapshot["xip_bitmap"], "")
 
     def test_store_version_sent_alongside_bus_notifications(self):
         self.authenticate("admin_user", "admin_user")
@@ -129,17 +128,12 @@ class TestStoreVersioning(HttpCase, MailCase):
         snapshot_parts = snapshot.split(":")
         xmin = int(snapshot_parts[0])
         xmax = int(snapshot_parts[1])
-        xip = {int(xid) for xid in snapshot_parts[2].split(",") if xid}
-        bitmap = bytearray(math.ceil((xmax - xmin) / 8))
-        for x in xip:
-            offset = x - xmin
-            byte_idx = offset // 8
-            bit_idx = offset % 8
-            bitmap[byte_idx] |= 1 << bit_idx
+        xip_list = [xid for xid in snapshot_parts[2].split(",") if xid]
         expected_snapshot = {
             "xmin": str(xmin),
             "xmax": str(xmax),
-            "xip_bitmap": base64.b64encode(bitmap),
+            "xip_list": xip_list,
+            "xip_bitmap": "",
             "current_xact_id": current_xact_id,
         }
         with self.assertBus(
