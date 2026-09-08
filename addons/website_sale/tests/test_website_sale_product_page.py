@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import HttpCase, tagged
+from odoo import http
+from odoo.tests import HttpCase, new_test_user, tagged
+from odoo.tools import file_open
 
 from odoo.addons.product.tests.common import ProductVariantsCommon
 from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
@@ -42,6 +44,40 @@ class TestWebsiteSaleProductPage(HttpCase, ProductVariantsCommon, WebsiteSaleCom
         self._add_reaction(message, "😊")
 
         self.start_tour("/", "website_sale_product_reviews_reactions_public", login=None)
+
+    def test_portal_user_can_upload_attachment_on_product_review(self):
+        """
+        A portal user must be able to attach a file when posting a
+        product review once reviews are enabled for the current website.
+        """
+        portal_user = new_test_user(
+            self.env, login='product_review_portal', groups='base.group_portal',
+            password='product_review_portal',
+        )
+        generic_view = self.env['ir.ui.view'].with_context(active_test=False).search([
+            ('key', '=', 'website_sale.product_comment'),
+        ], limit=1)
+        generic_view.with_context(website_id=self.website.id).write({'active': True})
+
+        self.product_template_sofa.website_published = True
+
+        self.authenticate(portal_user.login, 'product_review_portal')
+        with file_open("addons/web/__init__.py") as file:
+            response = self.url_open(
+                url="/mail/attachment/upload",
+                data={
+                    "csrf_token": http.Request.csrf_token(self),
+                    "thread_id": self.product_template_sofa.id,
+                    "thread_model": "product.template",
+                },
+                files={"ufile": file},
+            )
+
+        self.assertEqual(response.status_code, 200)
+        result = response.json()
+        self.assertNotIn('error', result.get('data', {}), result.get('data'))
+        attachment_id = result['data']['ir.attachment'][0]['id']
+        self.assertTrue(self.env['ir.attachment'].sudo().browse(attachment_id).exists())
 
     def _add_reaction(self, message, reaction):
         self.make_jsonrpc_request(
