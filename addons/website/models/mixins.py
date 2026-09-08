@@ -3,6 +3,7 @@
 import re
 import urllib.parse
 from datetime import UTC, date, datetime
+from itertools import pairwise
 
 from odoo import _, api, fields, models
 from odoo.exceptions import AccessError, UserError
@@ -975,6 +976,104 @@ class WebsiteSearchableMixin(models.AbstractModel):
         )
         count = model.search_count(domain) if limit and limit == len(results) else len(results)
         return results, count
+
+    @api.model
+    def _search_fetch_ranked(self, search_detail, search, limit, order):
+        """
+        Same as :meth:`_search_fetch`, but returns the `limit` most relevant results
+
+        :param search_detail: see :meth:`_search_get_detail`
+        :param search: text against which to match results
+        :param limit: maximum number of results
+        :param order: order on which to sort results of equal relevance
+
+        :return: tuple containing:
+
+            - the results, see :meth:`_search_rank`
+            - the relevance of each result
+            - the total number of results
+        """
+        fields = search_detail['search_fields']
+        base_domain = search_detail['base_domain']
+        domain = self._search_build_domain(base_domain, search, fields, search_detail.get('search_extra'))
+        model = self.sudo() if search_detail.get('requires_sudo') else self
+        return model._search_rank(search_detail, search, domain, limit, order)
+
+    @api.model
+    def _search_rank(self, search_detail, search, domain, limit, order):
+        """
+        Fetches the `limit` most relevant records matching `domain`.
+
+        The relevance is made of 3 criteria, compared in this order, the higher the better:
+
+        1. All the terms of the search are found in the name, or all in the tags, or all in the
+           other fields. A term is found in a field if it is a part of its text (e.g. the
+           beginning of a word).
+        2. The terms found in the name count for 3 each, in the tags for 2 each and in the other
+           fields for 1 each. A term found in several fields of the same kind counts once.
+        3. The terms are close to each other in the text of the name and the other fields, in
+           the order of the search.
+
+        The name is the field mapped as `name` in `search_detail`, the tags are the fields of
+        related records (e.g. `tag_ids.name`).
+
+        :param search_detail: see :meth:`_search_get_detail`
+        :param search: text against which to rank results
+        :param domain: domain the records must match
+        :param limit: maximum number of records
+        :param order: order on which to sort records of equal relevance
+
+        :return: tuple containing:
+
+            - the records, most relevant first
+            - the relevance of each record, a list comparable with the ones of other models
+            - the total number of records matching `domain`
+        """
+        terms = search.split()
+        fields = search_detail['search_fields']
+        name_field = search_detail['mapping']['name']['name']
+        # tags are the fields of related records, e.g. 'tag_ids.name'
+        tag_fields = [field for field in fields if '.' in field]
+        other_fields = [field for field in fields if field != name_field and field not in tag_fields]
+        fields_by_weight = {3: [name_field], 2: tag_fields, 1: other_fields}
+        query = self._search(domain, order=search_detail.get('order', order))
+        # not given to _search, which may apply it in Python before the relevance order
+        query.limit = limit
+        table = query.table
+
+        def sum_sql(items):
+            return SQL(" + ").join(items) or SQL("0")
+
+        # for each weight, the number of terms found in one of the fields
+        term_counts = {
+            weight: sum_sql(
+                SQL("CASE WHEN %s THEN 1 ELSE 0 END", Domain.OR(
+                    self._search_get_field_domain(field, escape_like_value(term))
+                    for field in weight_fields
+                ).optimize_full(self)._to_sql(table))
+                for term in terms
+            )
+            for weight, weight_fields in fields_by_weight.items()
+        }
+        has_all_terms = SQL(" OR ").join(SQL("%s = %s", count, len(terms)) for count in term_counts.values())
+        weighted_count = sum_sql(SQL("%s * (%s)", weight, count) for weight, count in term_counts.items())
+
+        text_fields = [self._fields[field] for field in [name_field, *other_fields]]
+        text = SQL("lower(concat_ws(' ', %s))", SQL(", ").join(
+            table[field.name] for field in text_fields if field.store or field.related
+        ))
+        unaccent = self.env.registry.unaccent
+        positions = [
+            SQL("strpos(%s, %s)", unaccent(text), unaccent(SQL("%s", term.lower())))
+            for term in terms
+        ]
+        distance = sum_sql(SQL("abs(%s - %s)", *pair) for pair in pairwise(positions))
+
+        relevance = SQL("ARRAY[(%s)::int, %s, -(%s)]", has_all_terms, weighted_count, distance)
+        query.order = SQL(", ").join(filter(None, [SQL("%s DESC", relevance), query.order]))
+        rows = self.env.execute_query(query.select(table.id, relevance, SQL("count(*) OVER ()")))
+        count = rows[0][2] if rows else 0
+        return self.browse(row[0] for row in rows), [row[1] for row in rows], count
 
     def _search_render_results(self, fetch_fields, mapping, icon, limit):
         results_data = self[:limit].read(fetch_fields)

@@ -10,7 +10,7 @@ import urllib.parse
 import zipfile
 from hashlib import md5, sha256
 from io import BytesIO
-from itertools import islice
+from itertools import islice, repeat
 from textwrap import shorten
 from xml.etree import ElementTree as ET
 
@@ -1218,6 +1218,9 @@ class Website(Home):
             allowFuzzy: enables the fuzzy matching when truthy
             fuzzy (boolean): True when called after finding a name through fuzzy matching
             renderTemplate (bool): If True, returns rendered HTML instead of grouped dict results
+            sortByRelevance (bool): If True, ranks the results of all the groups together by
+                relevance to the term, `order` then only sorts the results of equal relevance.
+                The rendered HTML lists the results in that rank instead of group by group.
 
         :returns: dict (or False if no result) containing
             - 'results' (dict | str):
@@ -1295,6 +1298,7 @@ class Website(Home):
 
         mappings = []
         result = {}
+        ranked_values = []
         for search_result in search_results:
             if not search_result['results_data']:
                 continue
@@ -1303,7 +1307,9 @@ class Website(Home):
             group_key = search_result.get('model').replace('.', '_')
             result_data = []
             model = request.env[search_result['model']]
-            for record in search_result['results_data']:
+            # without ranks (see `_search_by_relevance`), the results stay in the order of the groups
+            ranks = search_result.get('ranks', repeat(0))
+            for rank, record in zip(ranks, search_result['results_data']):
                 mapping = record['_mapping']
                 mapped = {
                     '_icon': record.get('_icon'),
@@ -1339,6 +1345,7 @@ class Website(Home):
                         value = request.env[qweb_field].value_to_html(value, opt)
                     mapped[mapped_name] = escape(value)
                 result_data.append(mapped)
+                ranked_values.append((rank, mapped))
 
             result[group_key] = {
                 'groupName': group_name,
@@ -1348,7 +1355,7 @@ class Website(Home):
             }
 
         if options.get('renderTemplate'):
-            values = [item for group in result.values() for item in group['data']]
+            values = [mapped for _rank, mapped in sorted(ranked_values, key=lambda item: item[0])]
             result = self.env['ir.ui.view']._render_template('website.search_result_items', {'results': values})
 
         return {

@@ -358,8 +358,15 @@ class WebsitePage(models.Model):
             return True
         results = results.filtered(lambda result: filter_page(search, result, results))
         start = offset
-        end = offset + limit
+        end = offset + limit if limit is not None else None
         return results[start:end], len(results)
+
+    @api.model
+    def _search_fetch_ranked(self, search_detail, search, limit, order):
+        # Pages are matched in python (see _search_fetch), so rank those matches only
+        pages, count = self._search_fetch(search_detail, search, 0, None, order)
+        pages, relevances, _count = pages._search_rank(search_detail, search, Domain('id', 'in', pages.ids), limit, order)
+        return pages, relevances, count
 
     def action_page_debug_view(self):
         return {

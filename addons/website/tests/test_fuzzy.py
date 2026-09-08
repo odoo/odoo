@@ -8,6 +8,7 @@ from lxml import etree
 from markupsafe import Markup
 
 import odoo.tests
+from odoo.fields import Domain
 from odoo.tests.common import TransactionCase
 
 from odoo.addons.website.controllers.main import Website
@@ -135,7 +136,7 @@ class TestAutoComplete(TransactionCase):
 
     @classmethod
     def _create_page(cls, name, content, url):
-        cls.env['website.page'].create({
+        return cls.env['website.page'].create({
             'name': name,
             'type': 'qweb',
             'arch': f'<div>{content}</div>',
@@ -214,6 +215,107 @@ class TestAutoComplete(TransactionCase):
             "... brown fox jum...",
             "Should center around first token 'fox' when exact phrase 'fox runs' not found"
         )
+
+    def _website_env(self):
+        """ Provides an env carrying the 'website_id' context key that `env.website` relies on """
+        return self.website.with_context(website_id=self.website.id)
+
+    def _search_detail(self, *extra_base_domain):
+        """ Searches the pages and their tags (the names of their menus) """
+        website = self._website_env()
+        search_detail = website.env['website.page']._search_get_detail(website, 'id desc', {})
+        search_detail['search_fields'].append('menu_ids.name')
+        search_detail['base_domain'] += extra_base_domain
+        return search_detail
+
+    def _search_by_relevance(self, term, search_details, limit=20):
+        # 'id desc' is the opposite of the order the tests create the pages in, the expected one
+        return self._website_env()._search_by_relevance(search_details, term, 0, limit, 'id desc')
+
+    def _ranked_urls(self, term):
+        _count, (search_detail,) = self._search_by_relevance(term, [self._search_detail()])
+        return search_detail['results'].mapped('url')
+
+    def test_relevance_order(self):
+        """ Ranks on all the terms being found, then on where they are found, then on their proximity """
+        filler_x, filler_y = 'x ' * 20, 'y ' * 20
+        big_x, big_y = 'x ' * 200, 'y ' * 200
+        self._create_page('alpha beta gamma', '', '/distance-title-best')
+        self._create_page('alphas beta gamma', '', '/distance-title-best-with-unperfect')
+        self._create_page('alpha x beta y gamma', '', '/distance-title-mid')
+        self._create_page(f'alpha {filler_x}beta {filler_y}gamma', '', '/distance-title-far')
+        self._create_page('alpha beta', f'{big_x}alpha beta gamma {big_y}', '/distance-desc-best-missing-title')
+        self._create_page('generic result', f'{big_x}alpha beta gamma {big_y}', '/distance-desc-best')
+        self._create_page('generic result', f'{big_x}beta alpha gamma {big_y}', '/distance-desc-best-disordered')
+        self._create_page('generic result', f'{big_x}alpha xxxxxx beta xxxxxx gamma {big_y}', '/distance-desc-mid')
+        tagged = self._create_page('alpha beta', '', '/one-word-missing-title-with-tag')
+        self.env['website.menu'].create({'name': 'gamma', 'page_id': tagged.id})
+        self._create_page('alpha beta', '', '/one-word-missing-title')
+        self._create_page(f'alpha {filler_x}gamma', '', '/distance-title-far-missing')
+
+        self.assertEqual(
+            [
+                '/distance-title-best',
+                '/distance-title-best-with-unperfect',
+                '/distance-title-mid',
+                '/distance-title-far',
+                '/distance-desc-best-missing-title',
+                '/distance-desc-best',
+                '/distance-desc-best-disordered',
+                '/distance-desc-mid',
+                '/one-word-missing-title-with-tag',
+                '/one-word-missing-title',
+                '/distance-title-far-missing',
+            ],
+            self._ranked_urls('alpha beta gamma'),
+            "The results order is not correct.",
+        )
+
+    def test_relevance_single_word(self):
+        """ Checks the ranking of a single word: name > tag > description """
+        pages = self._create_page('zzunique result', '', '/name-hit')
+        tagged = self._create_page('generic result', '', '/tag-hit')
+        self.env['website.menu'].create({'name': 'zzunique featured', 'page_id': tagged.id})
+        pages |= tagged
+        pages |= self._create_page('generic result', 'zzunique appears in description only', '/desc-hit')
+
+        results, _relevances, count = self._website_env().env['website.page']._search_rank(
+            self._search_detail(), 'zzunique', Domain('id', 'in', pages.ids), 20, 'id desc',
+        )
+        self.assertEqual(['/name-hit', '/tag-hit', '/desc-hit'], results.mapped('url'))
+        self.assertEqual(3, count)
+
+    def test_relevance_three_term_proximity(self):
+        """ Among results matching every term, the closer the terms are, the higher the rank """
+        self._create_page('alpha beta gamma', '', '/distance-best')
+        self._create_page('alpha x beta y gamma', '', '/distance-mid')
+        self._create_page(f"alpha {'x ' * 20}beta {'y ' * 20}gamma", '', '/distance-far')
+
+        self.assertEqual(['/distance-best', '/distance-mid', '/distance-far'], self._ranked_urls('alpha beta gamma'))
+
+    def test_relevance_missing_terms(self):
+        """ A result matching every term ranks above one missing a term, whatever the distance """
+        self._create_page(f"alpha {'x ' * 20}beta {'y ' * 20}gamma", '', '/all-terms')
+        self._create_page('alpha beta', '', '/missing-one')
+
+        self.assertEqual(['/all-terms', '/missing-one'], self._ranked_urls('alpha beta gamma'))
+
+    def test_relevance_limit_is_global(self):
+        """ The limit applies to the results of all the models together """
+        # The closer the terms, the higher the rank: bucket a gets the ranks 0, 2 and 4, bucket b 1, 3 and 5.
+        for i in range(6):
+            self._create_page(f"alpha {'x ' * i}beta gamma", '', f"/bucket-{'ab'[i % 2]}-{i}")
+        search_details = [
+            self._search_detail([('url', '=like', '/bucket-a-%')]),
+            self._search_detail([('url', '=like', '/bucket-b-%')]),
+        ]
+
+        count, (detail_a, detail_b) = self._search_by_relevance('alpha beta gamma', search_details, limit=3)
+        self.assertEqual(6, count)
+        self.assertEqual(['/bucket-a-0', '/bucket-a-2'], detail_a['results'].mapped('url'))
+        self.assertEqual([0, 2], detail_a['ranks'])
+        self.assertEqual(['/bucket-b-1'], detail_b['results'].mapped('url'))
+        self.assertEqual([1], detail_b['ranks'])
 
     def test_01_few_results(self):
         """ Tests an autocomplete with exact match and less than the maximum number of results """
