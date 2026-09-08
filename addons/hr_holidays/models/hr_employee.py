@@ -534,10 +534,11 @@ class HrEmployee(models.Model):
             return self.browse(ctx.get('default_employee_id'))
         return self.env.user.employee_id
 
-    def _get_consumed_leaves(self, work_entry_types, target_date=False, ignore_future=False, precomputed_allocations={}):
+    def _get_consumed_leaves(self, work_entry_types, target_date=False, ignore_future=False, precomputed_allocations={}, same_year_only=False):
         """ The unit of the value returned in the dict is defined by the matching allocation.work_entry_type.unit_of_measure
             :param precomputed_allocations: this method won't call `_get_additionnal_future_leaves_on` for
             the allocations contained by this variable (they are considered to be already updated for 'target_date')
+            :param same_year_only: only take into account leaves whose `date_from` falls within `target_date`'s year
         """
         employees = self or self._get_contextual_employee()
         leaves_domain = [
@@ -552,6 +553,9 @@ class HrEmployee(models.Model):
             target_date = fields.Date.today()
         if ignore_future:
             leaves_domain.append(('date_from', '<=', target_date))
+        if same_year_only:
+            leaves_domain.append(('date_from', '>=', datetime.combine(date(target_date.year, 1, 1), time.min)))
+            leaves_domain.append(('date_from', '<=', datetime.combine(date(target_date.year, 12, 31), time.max)))
         leaves = self.env['hr.leave'].search(leaves_domain)
         leaves_per_employee_type = defaultdict(lambda: defaultdict(lambda: self.env['hr.leave']))
         for leave in leaves:
