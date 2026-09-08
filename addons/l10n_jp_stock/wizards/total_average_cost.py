@@ -73,9 +73,7 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
         updated_count = 0
         price_precision = self.env['decimal.precision'].precision_get('Product Price')
         unchanged_count = 0
-        tz = self.env.tz
-        period_start = datetime.combine(self.date_from, time.min, tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
-        period_end = datetime.combine(self.date_to, time.max, tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
+        period_start, period_end = self._get_period_bounds()
         # sudo: a product manager does not read the closing entries
         if period_start <= (last_closing := self.env.company.sudo()._get_last_closing_date()):
             raise UserError(
@@ -220,6 +218,14 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
                 'next': {'type': 'ir.actions.act_window_close', 'infos': {'done': True}},
             },
         }
+
+    def _get_period_bounds(self):
+        """Return the two moments the period spans, in UTC, from the dates the user picked."""
+        tz = self.env.tz
+        return (
+            datetime.combine(self.date_from, time.min, tzinfo=tz).astimezone(UTC).replace(tzinfo=None),
+            datetime.combine(self.date_to, time.max, tzinfo=tz).astimezone(UTC).replace(tzinfo=None),
+        )
 
     def _get_evaluation_batches(self, products, moves):
         """

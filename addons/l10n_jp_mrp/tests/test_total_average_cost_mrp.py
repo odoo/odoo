@@ -43,6 +43,15 @@ class TestTotalAverageCostMrp(TestTotalAverageCostCommon):
         mo.button_mark_done()
         mo.move_raw_ids.date = fields.Datetime.to_datetime(self.today)
         mo.move_finished_ids.date = fields.Datetime.to_datetime(self.today)
+        # the labour is logged at the wall clock, which is not the evaluated period
+        self._log_work_at(mo, self.today)
+
+    def _log_work_at(self, mo, date):
+        """Move the time the work orders logged to ``date``, keeping how long it took."""
+        for entry in mo.workorder_ids.time_ids:
+            worked = entry.date_end - entry.date_start
+            entry.date_start = fields.Datetime.to_datetime(date)
+            entry.date_end = entry.date_start + worked
 
     def test_byproduct_recycled_into_its_own_component_refused(self):
         ingot = self.env['product.product'].create({
@@ -161,6 +170,17 @@ class TestTotalAverageCostMrp(TestTotalAverageCostCommon):
         self._run_category_wizard()
         # 労務費 belongs in the cost of what was produced
         self.assertAlmostEqual(self.product.standard_price, (150 + 3 * 60) / 3, places=2)
+
+    def test_workcenter_time_after_the_period_is_not_counted(self):
+        workcenter = self.env['mrp.workcenter'].create({'name': 'JP Workcenter', 'costs_hour': 60})
+        mo, _byproduct = self._create_mo(operation={
+            'workcenter_id': workcenter.id, 'time_cycle_manual': 60,
+        })
+        self._finish_mo(mo)
+        # the hours are worked the day after the period closes, so it did not pay for them
+        self._log_work_at(mo, self.today + timedelta(days=1))
+        self._run_category_wizard()
+        self.assertAlmostEqual(self.product.standard_price, 150 / 3, places=2)
 
     def test_byproduct_share_does_not_depend_on_the_selection(self):
         mo, _byproduct = self._create_mo(byproduct_cost_share=25)
