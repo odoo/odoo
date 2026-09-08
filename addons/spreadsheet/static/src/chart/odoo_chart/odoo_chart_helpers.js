@@ -44,7 +44,7 @@ export function onWaterfallOdooChartItemClick(getters, chart) {
         // Subtotal domain
         if (!domain) {
             const datasetItemDomain = dataset.domains[0];
-            const firstGroupBy = chart.dataSource._metaData.groupBy[0];
+            const firstGroupBy = chart.dataSource.groupBy[0];
             domain = Domain.removeDomainLeaves(datasetItemDomain, [
                 firstGroupBy,
             ]).toList();

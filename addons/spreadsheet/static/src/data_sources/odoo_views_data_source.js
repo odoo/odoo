@@ -97,6 +97,13 @@ export class OdooViewsDataSource extends LoadableDataSource {
     }
 
     /**
+     * @returns {Array<string>} groupBy of the underlying view metadata
+     */
+    get groupBy() {
+        return this._metaData.groupBy;
+    }
+
+    /**
      * @protected
      */
     async _load() {
