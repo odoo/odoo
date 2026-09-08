@@ -15,9 +15,8 @@
  * @property {string} xmax The upper bound of transaction IDs for this snapshot. Greater
  * or equals transaction IDs are invisible by this snapshot.
  *
- * @property {string} xip_bitmap A bitmap representing in progress transactions in the
- * range [xmin, xmax). Each bit corresponds to a transaction ID within this range. If the
- * bit is set, the transaction was in progress at the time this snapshot was taken.
+ * @property {string[]} xip_list The list of transaction ids that were in progress, at
+ * the time this snapshot was taken, in the range [xmin, xmax).
  *
  * @property {string|null} current_xact_id The current transaction ID, assigned when a
  * transaction modify the database.
@@ -68,19 +67,9 @@ export class PgSnapshot {
             : params.current_xact_id;
         this.xmin = BigInt(params.xmin);
         this.xmax = BigInt(params.xmax);
-        const bitmapBinaryStr = atob(params.xip_bitmap);
-        // Bitmap [xmin, xmax) showing which xact_ids are in progress of the time of the snapshot.
-        this.xip_bitmap = new Uint8Array(bitmapBinaryStr.length).map((_, idx) =>
-            bitmapBinaryStr.charCodeAt(idx)
-        );
-        let pendingCount = 0;
-        for (let byte of this.xip_bitmap) {
-            while (byte > 0) {
-                byte &= byte - 1;
-                pendingCount++;
-            }
-        }
-        this.finishedCount = this.xmax - 1n - BigInt(pendingCount);
+        // Set of xact_ids in progress at the time of the snapshot.
+        this.xips = new Set(params.xip_list.map((x) => BigInt(x)));
+        this.finishedCount = this.xmax - 1n - BigInt(this.xips.size);
     }
 
     /**
@@ -91,10 +80,7 @@ export class PgSnapshot {
     knowsTransaction(txid) {
         // tx < xmin are completed. tx between xmin and xmax are completed if not in xip.
         if (txid >= this.xmin && txid < this.xmax) {
-            const offset = Number(txid - this.xmin);
-            const byteIndex = Math.floor(offset / 8);
-            const bitIndex = offset % 8;
-            return !(this.xip_bitmap[byteIndex] & (1 << bitIndex));
+            return !this.xips.has(txid);
         }
         return txid < this.xmin;
     }
@@ -154,7 +140,7 @@ export const SKIP_REVISION = Symbol("SKIP");
  */
 export class SingleFieldVersion {
     lastRevision = {
-        snapshot: new PgSnapshot({ xmin: 0, xmax: 0, xip_bitmap: "" }),
+        snapshot: new PgSnapshot({ xmin: 0, xmax: 0, xip_list: [] }),
         isWrite: false,
     };
 
@@ -196,7 +182,7 @@ export class ManyFieldVersion {
         {
             cmd: ["REPLACE", []],
             revision: {
-                snapshot: new PgSnapshot({ xmin: 0, xmax: 0, xip_bitmap: "" }),
+                snapshot: new PgSnapshot({ xmin: 0, xmax: 0, xip_list: [] }),
                 isWrite: false,
             },
         },
