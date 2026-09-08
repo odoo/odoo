@@ -23,6 +23,10 @@ from .modules import module
 
 _logger = logging.getLogger(__name__)
 
+
+real_time = time.time.__call__  # ensure we have a non patched time when using freezegun
+
+
 def log(logger, level, prefix, msg, depth=None):
     warnings.warn(
         "odoo.netsvc.log is deprecated starting Odoo 18, use normal logging APIs",
@@ -182,6 +186,9 @@ class LogRecord(logging.LogRecord):
     def __init__(self, name, level, pathname, lineno, msg, args, exc_info, func=None, sinfo=None):
         super().__init__(name, level, pathname, lineno, msg, args, exc_info, func, sinfo)
         self.perf_info = ""
+        if time.time.__call__ != real_time:
+            self.faked_created = self.created
+            self.created = real_time()
 
 
 showwarning = None
