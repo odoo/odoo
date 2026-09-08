@@ -8,7 +8,7 @@
             <i t-attf-class="oi #{not _link_classes and 'rounded shadow-sm'} #{_icon_classes} small_social_icon" data-icon="oi_facebook"/>
         </a>
         <a t-if="not _exclude_share_links or not 'twitter' in _exclude_share_links" href="https://twitter.com/intent/tweet?text={title}&amp;url={url}" t-attf-class="s_share_twitter #{_link_classes}" target="_blank" aria-label="X">
-            <i t-attf-class="oi #{not _link_classes and 'rounded shadow-sm'} #{_icon_classes} small_social_icon" data-icon="oi_twitter"/>
+            <i t-attf-class="oi #{not _link_classes and 'rounded shadow-sm'} #{_icon_classes} small_social_icon" data-icon="oi_x"/>
         </a>
         <a t-if="not _exclude_share_links or not 'linkedin' in _exclude_share_links" href="https://www.linkedin.com/sharing/share-offsite/?url={url}" t-attf-class="s_share_linkedin #{_link_classes}" target="_blank" aria-label="LinkedIn">
             <i t-attf-class="oi #{not _link_classes and 'rounded shadow-sm'} #{_icon_classes} small_social_icon" data-icon="oi_linkedin"/>

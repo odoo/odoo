@@ -18,7 +18,7 @@
                                 </a>
                                 <t t-set="_hashtags" t-value="target_type ? (' %23' + target_type) : ''"></t>
                                 <a t-attf-href="https://twitter.com/intent/tweet?text={title}#{_hashtags}&amp;url={url}" class="s_share_twitter" target="_blank" aria-label="Twitter">
-                                    <i class="oi rounded shadow-sm" data-icon="oi_twitter"/>
+                                    <i class="oi rounded shadow-sm" data-icon="oi_x"/>
                                 </a>
                                 <a href="https://www.linkedin.com/sharing/share-offsite/?url={url}" class="s_share_linkedin" target="_blank" aria-label="LinkedIn">
                                     <i class="oi rounded shadow-sm" data-icon="oi_linkedin"/>

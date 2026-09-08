@@ -35,7 +35,7 @@ const socialMediaInfo = new Map(
         twitter: {
             recorded: true,
             label: _t("X"),
-            iconDataIcon: "oi_twitter",
+            iconDataIcon: "oi_x",
             extraHostnameRegex: /(^|\.)x\.com$/,
         },
         linkedin: {
