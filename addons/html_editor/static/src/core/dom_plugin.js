@@ -43,7 +43,6 @@ import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { isFakeLineBreak } from "@html_editor/utils/dom_state";
 import { NATIVE_MUTATION_TYPES } from "./dom_observer_plugin";
-import { SPLIT_OPERATION_TYPES } from "./split_plugin";
 
 const IS_MARKER = Symbol("isMarker");
 /**
@@ -181,6 +180,7 @@ export class DomPlugin extends Plugin {
             ...this.systemAttributes.map((attr) => `[${attr}]`),
             ...this.systemStyleProperties.map((prop) => `[style*="${prop}"]`),
         ].join(",");
+        this.split = this.dependencies.split;
     }
 
     // Shared
@@ -365,7 +365,7 @@ export class DomPlugin extends Plugin {
             // B. Unwrap blocks if we're trying to insert in a context that
             // doesn't allow them.
             else if (wasBlock && !isEditableBlock) {
-                if (this.dependencies.split.isUnsplittable(node)) {
+                if (this.split.isUnsplittable(node)) {
                     shouldSkip = true;
                 } else {
                     makeContentsInline(node);
@@ -424,7 +424,7 @@ export class DomPlugin extends Plugin {
             // eg, `p(a)[] + p(b) = p(a)p(b) ≠ p(ab)`
             return false;
         }
-        if (this.dependencies.split.isUnsplittable(node)) {
+        if (this.split.isUnsplittable(node)) {
             // Don't unwrap an unsplittable block.
             return false;
         }
@@ -439,7 +439,7 @@ export class DomPlugin extends Plugin {
             // eg, `p(a[]d) + p(b)div(c) = p(ab)div(c)p(d) ≠ p(a)p(b)div(c)p(d)`
             return true;
         }
-        if (targetBlock.nodeName === "DIV" && this.dependencies.split.isUnsplittable(targetBlock)) {
+        if (targetBlock.nodeName === "DIV" && this.split.isUnsplittable(targetBlock)) {
             // An unsplittable DIV cannot be split around the inserted block.
             // Unwrapping inserts the edge contents without creating a nested
             // block boundary inside the atomic container.
@@ -473,7 +473,15 @@ export class DomPlugin extends Plugin {
             const itemNodes = isFragment(item) ? childNodes(item) : [item];
             for (const [nodeIndex, node] of itemNodes.entries()) {
                 if (!nodeIndex && isFragment(previousItem) && !isBlock(item) && isVisible(item)) {
-                    insertedContent.push(...this.splitBeforeInsertion(marker));
+                    // Restore a lost split before an item that was unwrapped.
+                    const [targetNode, targetOffset] = leftPos(marker);
+                    const lineBreaks =
+                        this.split.splitBlockNode({ targetNode, targetOffset }).lineBreaks || [];
+                    if (lineBreaks.length > 1 && isFakeLineBreak(lineBreaks.at(-1))) {
+                        // The added fake line break will be made unnecessary by the insertion.
+                        lineBreaks.pop().remove();
+                    }
+                    insertedContent.push(...lineBreaks);
                 }
                 if (marker.isConnected) {
                     const next = marker.nextSibling;
@@ -502,37 +510,12 @@ export class DomPlugin extends Plugin {
     }
 
     /**
-     * Restore a lost split before an item that was unwrapped.
-     *
-     * @see insert
-     * @param {Node} marker
-     * @returns {HTMLBRElement[]} line breaks that were inserted if any
-     */
-    splitBeforeInsertion(marker) {
-        const [targetNode, targetOffset] = leftPos(marker);
-        const split = this.dependencies.split.splitBlockNode({
-            targetNode,
-            targetOffset,
-        });
-        if (split.type === SPLIT_OPERATION_TYPES.LINE) {
-            const trailingBr = split.lineBreaks.at(-1);
-            if (split.lineBreaks.length > 1 && isFakeLineBreak(trailingBr)) {
-                // The fake line break that was created will be
-                // rendered unnecessary with the insertion.
-                trailingBr.remove();
-                split.lineBreaks.pop();
-            }
-            return split.lineBreaks;
-        }
-        return [];
-    }
-
-    /**
      * Return the node before which the given block can be inserted, based on
      * the given marker of insertion. In the process, move the the marker or
      * split elements if needed. If we have no way to reach an acceptable
      * position, return `undefined`.
      *
+     * @see insertNodes
      * @param {HTMLElement} block
      * @param {Node} marker
      * @returns {Node | undefined} the node before which to insert, if any.
@@ -570,10 +553,9 @@ export class DomPlugin extends Plugin {
         }
         // Split at the left of the marker up until the target if we can, to
         // insert between the two sides of the split target.
-        const isUnsplittable = (el) => isElement(el) && this.dependencies.split.isUnsplittable(el);
         const parent = possibleTarget.parentElement;
-        if (!findUpTo(marker, parent, isUnsplittable)) {
-            return this.dependencies.split.splitElementUntil(...leftPos(marker), parent)[1];
+        if (!findUpTo(marker, parent, (el) => isElement(el) && this.split.isUnsplittable(el))) {
+            return this.split.splitElementUntil(...leftPos(marker), parent)[1];
         }
     }
 
@@ -792,7 +774,7 @@ export class DomPlugin extends Plugin {
             return newCandidate;
         };
         let newCandidate = createNewCandidate();
-        this.dependencies.split.splitBlockSegments();
+        this.split.splitBlockSegments();
         const cursors = this.dependencies.selection.preserveSelection();
         let newEl;
         for (const block of this.getBlocksToSet()) {
