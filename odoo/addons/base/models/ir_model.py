@@ -1431,41 +1431,41 @@ class IrModelFields(models.Model):
                 raise ValueError(f"{field} failed to lookup group xmlid {xmlid}")
             assert model == 'res.groups' and res_id, "In"
             return res_id
-        model_ids = []
-        expected = []
-        for model_name in model_names:
-            model_id = self.env['ir.model']._get_id(model_name)
-            model_ids.append(model_id)
-            field_ids = self.env['ir.model.fields']._get_ids(model_name)
-            for field in self.env[model_name]._fields.values():
-                if not field.groups or field.groups == fields.NO_ACCESS:
-                    continue
-                field_id = field_ids[field.name]
-                expected.extend(
-                    (field_id, lookup_group(field, xmlid))
-                    for xmlid in field.groups.split(',')
-                    if xmlid[0] != '!'  # ignore negative group specifications
-                )
-        expected = set(expected)
+
+        model_ids = [self.env['ir.model']._get_id(model_name) for model_name in model_names]
         existing = {
             (field.id, group.id)
             for field in self.sudo().search([('model_id', 'in', model_ids)])
             for group in field.groups
         }
+
+        expected = set()
+        for model_name in model_names:
+            field_ids = self.env['ir.model.fields']._get_ids(model_name)
+            for field in self.env[model_name]._fields.values():
+                if not field.groups or field.groups == fields.NO_ACCESS:
+                    continue
+                field_id = field_ids[field.name]
+                expected.update(
+                    (field_id, lookup_group(field, xmlid))
+                    for xmlid in field.groups.split(',')
+                    if xmlid[0] != '!'  # ignore negative group specifications
+                )
+
         self.invalidate_model(['groups'])
-        if to_add := expected - existing:
+        if to_add := sorted(expected - existing):
             self.env.cr.execute("""
                 INSERT INTO ir_model_fields_group_rel(field_id, group_id)
                 SELECT * FROM UNNEST(%s, %s)
-            """, [*map(list, zip(*to_add))])
-        if to_remove := existing - expected:
+            """, [list(array) for array in zip(*to_add)])
+        if to_remove := sorted(existing - expected):
             self.env.cr.execute("""
             DELETE FROM ir_model_fields_group_rel rel
             WHERE EXISTS (
                 SELECT FROM UNNEST(%s, %s) AS rm(field_id, group_id)
                 WHERE rm.field_id = rel.field_id AND rm.group_id = rel.group_id
             )
-            """, [*map(list, zip(*to_remove))])
+            """, [list(array) for array in zip(*to_remove)])
 
     @api.ormcache(cache='stable')
     def _all_manual_field_data(self):
