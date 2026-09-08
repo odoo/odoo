@@ -10,7 +10,7 @@ from odoo.exceptions import ValidationError
 from odoo.tests.common import tagged
 from odoo.fields import Date
 from odoo.addons.hr_work_entry.tests.common import TestWorkEntryBase
-from odoo.addons.hr_holidays.tests.common import TestHolidayContract
+from odoo.addons.hr_holidays.tests.common import MAIL_OFF, TestHolidayContract
 from odoo.addons.mail.tests.common import mail_new_test_user
 
 
@@ -35,35 +35,39 @@ class TestWorkEntryHolidays(TestWorkEntryBase, TestHolidayContract):
 
         cls.work_entry_type.requires_allocation = False
 
-        cls.work_entry_type_remote = cls.env['hr.work.entry.type'].create({
-            'name': 'Remote Work',
-            'code': 'WORKTEST100',
-            'count_as': 'working_time',
-            'requires_allocation': False,
-            'allow_request_on_top': True,
-            'request_unit': 'day',
-            'unit_of_measure': 'day',
-        })
-
-        cls.half_day_work_entry_type = cls.env['hr.work.entry.type'].create({
-            'name': 'Half-Day Leaves',
-            'code': 'Half-Day Leaves',
-            'count_as': 'absence',
-            'request_unit': 'half_day',
-            'requires_allocation': False,
-        })
-
-        cls.hours_work_entry_type = cls.env['hr.work.entry.type'].create({
-            'name': 'Hours Leaves',
-            'code': 'Hours Leaves',
-            'count_as': 'absence',
-            'request_unit': 'hour',
-            'requires_allocation': False,
-        })
+        (
+            cls.work_entry_type_remote,
+            cls.half_day_work_entry_type,
+            cls.hours_work_entry_type,
+        ) = cls.env['hr.work.entry.type'].create([
+            {
+                'name': 'Remote Work',
+                'code': 'WORKTEST100',
+                'count_as': 'working_time',
+                'requires_allocation': False,
+                'allow_request_on_top': True,
+                'request_unit': 'day',
+                'unit_of_measure': 'day',
+            },
+            {
+                'name': 'Half-Day Leaves',
+                'code': 'Half-Day Leaves',
+                'count_as': 'absence',
+                'request_unit': 'half_day',
+                'requires_allocation': False,
+            },
+            {
+                'name': 'Hours Leaves',
+                'code': 'Hours Leaves',
+                'count_as': 'absence',
+                'request_unit': 'hour',
+                'requires_allocation': False,
+            },
+        ])
 
         cls.external_company = cls.env['res.company'].create({'name': 'External Test company'})
         cls.external_user_employee = mail_new_test_user(cls.env, login='external', password='external', groups='base.group_user')
-        cls.employee_external = cls.env['hr.employee'].create({
+        cls.employee_external = cls.env['hr.employee'].with_context(**MAIL_OFF).create({
             'name': 'external Employee',
             'user_id': cls.external_user_employee.id,
             'company_id': cls.external_company.id,

@@ -7,6 +7,13 @@ from odoo import Command
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase, warmup
 
+MAIL_OFF = {
+    'tracking_disable': True,
+    'mail_create_nosubscribe': True,
+    'mail_create_nolog': True,
+    'mail_notrack': True,
+}
+
 
 @tagged('company_leave')
 class TestCompanyLeave(TransactionCase):
@@ -31,24 +38,25 @@ class TestCompanyLeave(TransactionCase):
             'name': 'Standard 40h/week',
         })
 
-        cls.bank_holiday = cls.env['hr.work.entry.type'].create({
-            'name': 'Bank Holiday',
-            'code': 'Bank Holiday',
-            'requires_allocation': False,
-            'request_unit': 'day',
-            'unit_of_measure': 'day',
-        })
+        cls.bank_holiday, cls.paid_time_off = cls.env['hr.work.entry.type'].create([
+            {
+                'name': 'Bank Holiday',
+                'code': 'Bank Holiday',
+                'requires_allocation': False,
+                'request_unit': 'day',
+                'unit_of_measure': 'day',
+            },
+            {
+                'name': 'Paid Time Off',
+                'code': 'Paid Time Off',
+                'request_unit': 'day',
+                'unit_of_measure': 'day',
+                'leave_validation_type': 'both',
+                'requires_allocation': False,
+            },
+        ])
 
-        cls.paid_time_off = cls.env['hr.work.entry.type'].create({
-            'name': 'Paid Time Off',
-            'code': 'Paid Time Off',
-            'request_unit': 'day',
-            'unit_of_measure': 'day',
-            'leave_validation_type': 'both',
-            'requires_allocation': False,
-        })
-
-        cls.employee = cls.env['hr.employee'].create({
+        cls.employee = cls.env['hr.employee'].with_context(**MAIL_OFF).create({
             'name': 'My Employee',
             'company_id': cls.company.id,
             'tz': "Europe/Brussels",

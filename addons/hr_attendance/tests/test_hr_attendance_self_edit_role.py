@@ -3,6 +3,13 @@ from odoo.exceptions import AccessError
 from datetime import date, datetime
 from odoo.tests import new_test_user
 
+MAIL_OFF = {
+    'tracking_disable': True,
+    'mail_create_nosubscribe': True,
+    'mail_create_nolog': True,
+    'mail_notrack': True,
+}
+
 
 @tagged('hr_attendance_self_edit_role')
 @tagged('at_install', '-post_install')
@@ -19,7 +26,7 @@ class TestHrAttendanceSelfEdit(TransactionCase):
         cls.admin = new_test_user(cls.env, login='user_admin', groups='hr_attendance.group_hr_attendance_manager', company_id=cls.company.id).with_company(cls.company)
 
         cls.user_self_edit = new_test_user(cls.env, login='user_self_edit', groups='hr_attendance.group_hr_attendance_own', company_id=cls.company.id).with_company(cls.company)
-        cls.emp_self_edit = cls.env['hr.employee'].create({
+        cls.emp_self_edit = cls.env['hr.employee'].with_context(**MAIL_OFF).create({
             'name': "Youssef Ahmed",
             'user_id': cls.user_self_edit.id,
             'company_id': cls.company.id,
@@ -29,7 +36,7 @@ class TestHrAttendanceSelfEdit(TransactionCase):
         })
 
         cls.user_other = new_test_user(cls.env, login='user_other', groups='base.group_user', company_id=cls.company.id).with_company(cls.company)
-        cls.emp_other = cls.env['hr.employee'].create({
+        cls.emp_other = cls.env['hr.employee'].with_context(**MAIL_OFF).create({
             'name': "Ali Mohammed",
             'user_id': cls.user_other.id,
             'company_id': cls.company.id,

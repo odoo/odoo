@@ -9,6 +9,13 @@ from odoo.fields import Datetime
 from odoo.addons.hr.tests.test_utils import get_admin_employee
 from odoo.addons.mail.tests.common import mail_new_test_user
 
+MAIL_OFF = {
+    'tracking_disable': True,
+    'mail_create_nosubscribe': True,
+    'mail_create_nolog': True,
+    'mail_notrack': True,
+}
+
 
 class TestHrHolidaysCommon(common.TransactionCase):
 
@@ -88,20 +95,20 @@ class TestHrHolidaysCommon(common.TransactionCase):
         # Hr Data
         Department = cls.env['hr.department']
 
-        cls.hr_dept = Department.create({
+        cls.hr_dept = Department.with_context(**MAIL_OFF).create({
             'name': 'Human Resources',
         })
-        cls.rd_dept = Department.create({
+        cls.rd_dept = Department.with_context(**MAIL_OFF).create({
             'name': 'Research and devlopment',
         })
 
-        cls.employee_responsible = cls.env['hr.employee'].create({
+        cls.employee_responsible = cls.env['hr.employee'].with_context(**MAIL_OFF).create({
             'name': 'David Employee',
             'user_id': cls.user_responsible_id,
             'department_id': cls.rd_dept.id,
         })
 
-        cls.employee_emp = cls.env['hr.employee'].create({
+        cls.employee_emp = cls.env['hr.employee'].with_context(**MAIL_OFF).create({
             'name': 'David Employee',
             'user_id': cls.user_employee_id,
             'leave_manager_id': cls.user_responsible_id,
@@ -110,21 +117,21 @@ class TestHrHolidaysCommon(common.TransactionCase):
         })
         cls.employee_emp_id = cls.employee_emp.id
 
-        cls.employee_external = cls.env['hr.employee'].create({
+        cls.employee_external = cls.env['hr.employee'].with_context(**MAIL_OFF).create({
             'name': 'external Employee',
             'user_id': cls.external_user_employee_id,
             'company_id': cls.external_company.id,
         })
         cls.external_employee_id = cls.employee_external.id
 
-        cls.employee_hruser = cls.env['hr.employee'].create({
+        cls.employee_hruser = cls.env['hr.employee'].with_context(**MAIL_OFF).create({
             'name': 'Armande HrUser',
             'user_id': cls.user_hruser_id,
             'department_id': cls.rd_dept.id,
         })
         cls.employee_hruser_id = cls.employee_hruser.id
 
-        cls.employee_hrmanager = cls.env['hr.employee'].create({
+        cls.employee_hrmanager = cls.env['hr.employee'].with_context(**MAIL_OFF).create({
             'name': 'Bastien HrManager',
             'user_id': cls.user_hrmanager_id,
             'department_id': cls.hr_dept.id,
@@ -215,12 +222,12 @@ class TestHolidayContract(TransactionCase):
         })
         cls.env.ref('base.user_admin').notification_type = 'inbox'
 
-        cls.dep_rd = cls.env['hr.department'].create({
+        cls.dep_rd = cls.env['hr.department'].with_context(**MAIL_OFF).create({
             'name': 'Research & Development - Test',
         })
 
         # I create a new employee "Jules"
-        cls.jules_emp = cls.env['hr.employee'].create({
+        cls.jules_emp = cls.env['hr.employee'].with_context(**MAIL_OFF).create({
             'name': 'Jules',
             'sex': 'male',
             'birthday': '1984-05-01',

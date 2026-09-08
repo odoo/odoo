@@ -3,6 +3,13 @@
 from odoo.addons.hr.tests.common import TestHrCommon
 from odoo.tests.common import tagged
 
+MAIL_OFF = {
+    'tracking_disable': True,
+    'mail_create_nosubscribe': True,
+    'mail_create_nolog': True,
+    'mail_notrack': True,
+}
+
 
 @tagged("post_install", "-at_install")
 class TestChannel(TestHrCommon):
@@ -13,10 +20,10 @@ class TestChannel(TestHrCommon):
 
         cls.channel = cls.env['discuss.channel'].create({'name': 'Test'})
 
-        cls.emp0 = cls.env['hr.employee'].create({
+        cls.emp0 = cls.env['hr.employee'].with_context(**MAIL_OFF).create({
             'user_id': cls.res_users_hr_officer.id,
         })
-        cls.department = cls.env['hr.department'].create({
+        cls.department = cls.env['hr.department'].with_context(**MAIL_OFF).create({
             'name': 'Test Department',
         })
 

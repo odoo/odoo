@@ -3,6 +3,13 @@ from datetime import datetime, date, UTC
 
 from odoo.tests.common import tagged, TransactionCase
 
+MAIL_OFF = {
+    'tracking_disable': True,
+    'mail_create_nosubscribe': True,
+    'mail_create_nolog': True,
+    'mail_notrack': True,
+}
+
 
 class TestFlexibleResourceCalendar(TransactionCase):
 
@@ -21,7 +28,7 @@ class TestFlexibleResourceCalendar(TransactionCase):
             'calendar_id': False,
         }])
 
-        cls.flex_employee, cls.fully_flex_employee = cls.env['hr.employee'].create([{
+        cls.flex_employee, cls.fully_flex_employee = cls.env['hr.employee'].with_context(**MAIL_OFF).create([{
             'name': "flexible employee",
             'date_version': date(2025, 1, 1),
             'contract_date_start': date(2025, 1, 1),

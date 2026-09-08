@@ -3,6 +3,13 @@ from freezegun import freeze_time
 
 from odoo.tests import common, new_test_user
 
+MAIL_OFF = {
+    'tracking_disable': True,
+    'mail_create_nosubscribe': True,
+    'mail_create_nolog': True,
+    'mail_notrack': True,
+}
+
 
 class TestHrEmployeeHomeworking(common.TransactionCase):
 
@@ -28,7 +35,7 @@ class TestHrEmployeeHomeworking(common.TransactionCase):
             },
         ])
 
-        cls.employee_1 = cls.env['hr.employee'].create([{
+        cls.employee_1 = cls.env['hr.employee'].with_context(**MAIL_OFF).create([{
             'name': 'Employee Test',
             'monday_location_id': cls.work_home.id,
             'tuesday_location_id': cls.work_office_1.id,

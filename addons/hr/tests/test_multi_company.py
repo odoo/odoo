@@ -9,6 +9,13 @@ from odoo.tests import tagged
 
 from odoo.exceptions import AccessError
 
+MAIL_OFF = {
+    'tracking_disable': True,
+    'mail_create_nosubscribe': True,
+    'mail_create_nolog': True,
+    'mail_notrack': True,
+}
+
 
 class TestMultiCompanyReport(TestHrCommon):
 
@@ -17,7 +24,7 @@ class TestMultiCompanyReport(TestHrCommon):
         super().setUpClass()
         cls.company_1 = cls.env['res.company'].create({'name': 'Opoo'})
         cls.company_2 = cls.env['res.company'].create({'name': 'Otoo'})
-        cls.employees = cls.env['hr.employee'].create([
+        cls.employees = cls.env['hr.employee'].with_context(**MAIL_OFF).create([
             {'name': 'Bidule', 'company_id': cls.company_1.id},
             {'name': 'Machin', 'company_id': cls.company_2.id},
         ])
@@ -56,25 +63,25 @@ class TestMultiCompany(TestHrCommon):
         cls.user_a = mail_new_test_user(cls.env, login='user_a', company_id=cls.company_a.id, company_ids=(cls.company_a | cls.company_b).ids)
         cls.user_b = mail_new_test_user(cls.env, login='user_b', company_id=cls.company_b.id)
 
-        cls.employee_a = cls.env['hr.employee'].create({
+        cls.employee_a = cls.env['hr.employee'].with_context(**MAIL_OFF).create({
             'name': 'Employee A',
             'company_id': cls.company_a.id,
             'user_id': cls.user_a.id,
         })
 
-        cls.employee_other_a = cls.env['hr.employee'].create({
+        cls.employee_other_a = cls.env['hr.employee'].with_context(**MAIL_OFF).create({
             'name': 'Employee Other A',
             'company_id': cls.company_a.id,
         })
 
-        cls.employee_b = cls.env['hr.employee'].create({
+        cls.employee_b = cls.env['hr.employee'].with_context(**MAIL_OFF).create({
             'name': 'Employee B',
             'company_id': cls.company_b.id,
             'user_id': cls.user_b.id,
             'parent_id': cls.employee_a.id,
         })
 
-        cls.employee_other_b = cls.env['hr.employee'].create({
+        cls.employee_other_b = cls.env['hr.employee'].with_context(**MAIL_OFF).create({
             'name': 'Employee Other B',
             'company_id': cls.company_b.id,
         })

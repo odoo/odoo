@@ -16,47 +16,49 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.calendar_1 = cls.env['resource.calendar'].create({
-            'name': 'Classic 40h/week',
-            'hours_per_day': 8.0,
-            'attendance_ids': [
-                (0, 0, {'dayofweek': '0', 'hour_from': 8, 'hour_to': 12}),
-                (0, 0, {'dayofweek': '0', 'hour_from': 13, 'hour_to': 17}),
-                (0, 0, {'dayofweek': '1', 'hour_from': 8, 'hour_to': 12}),
-                (0, 0, {'dayofweek': '1', 'hour_from': 13, 'hour_to': 17}),
-                (0, 0, {'dayofweek': '2', 'hour_from': 8, 'hour_to': 12}),
-                (0, 0, {'dayofweek': '2', 'hour_from': 13, 'hour_to': 17}),
-                (0, 0, {'dayofweek': '3', 'hour_from': 8, 'hour_to': 12}),
-                (0, 0, {'dayofweek': '3', 'hour_from': 13, 'hour_to': 17}),
-                (0, 0, {'dayofweek': '4', 'hour_from': 8, 'hour_to': 12}),
-                (0, 0, {'dayofweek': '4', 'hour_from': 13, 'hour_to': 17})
-            ]
-        })
+        cls.calendar_1, cls.calendar_2 = cls.env['resource.calendar'].create([
+            {
+                'name': 'Classic 40h/week',
+                'hours_per_day': 8.0,
+                'attendance_ids': [
+                    (0, 0, {'dayofweek': '0', 'hour_from': 8, 'hour_to': 12}),
+                    (0, 0, {'dayofweek': '0', 'hour_from': 13, 'hour_to': 17}),
+                    (0, 0, {'dayofweek': '1', 'hour_from': 8, 'hour_to': 12}),
+                    (0, 0, {'dayofweek': '1', 'hour_from': 13, 'hour_to': 17}),
+                    (0, 0, {'dayofweek': '2', 'hour_from': 8, 'hour_to': 12}),
+                    (0, 0, {'dayofweek': '2', 'hour_from': 13, 'hour_to': 17}),
+                    (0, 0, {'dayofweek': '3', 'hour_from': 8, 'hour_to': 12}),
+                    (0, 0, {'dayofweek': '3', 'hour_from': 13, 'hour_to': 17}),
+                    (0, 0, {'dayofweek': '4', 'hour_from': 8, 'hour_to': 12}),
+                    (0, 0, {'dayofweek': '4', 'hour_from': 13, 'hour_to': 17}),
+                ],
+            },
+            {
+                'name': 'Classic 20h/week',
+                'hours_per_day': 4.0,
+                'attendance_ids': [
+                    (0, 0, {'dayofweek': '0', 'hour_from': 8, 'hour_to': 12}),
+                    (0, 0, {'dayofweek': '1', 'hour_from': 8, 'hour_to': 12}),
+                    (0, 0, {'dayofweek': '2', 'hour_from': 8, 'hour_to': 12}),
+                    (0, 0, {'dayofweek': '3', 'hour_from': 8, 'hour_to': 12}),
+                    (0, 0, {'dayofweek': '4', 'hour_from': 8, 'hour_to': 12}),
+                ],
+            },
+        ])
 
-        cls.calendar_2 = cls.env['resource.calendar'].create({
-            'name': 'Classic 20h/week',
-            'hours_per_day': 4.0,
-            'attendance_ids': [
-                (0, 0, {'dayofweek': '0', 'hour_from': 8, 'hour_to': 12}),
-                (0, 0, {'dayofweek': '1', 'hour_from': 8, 'hour_to': 12}),
-                (0, 0, {'dayofweek': '2', 'hour_from': 8, 'hour_to': 12}),
-                (0, 0, {'dayofweek': '3', 'hour_from': 8, 'hour_to': 12}),
-                (0, 0, {'dayofweek': '4', 'hour_from': 8, 'hour_to': 12}),
-            ]
-        })
-
-        cls.global_leave = cls.env['resource.calendar.leaves'].create({
-            'name': 'Global Time Off',
-            'date_from': date(2022, 3, 7),
-            'date_to': date(2022, 3, 7),
-        })
-
-        cls.calendar_leave = cls.env['resource.calendar.leaves'].create({
-            'name': 'Global Time Off',
-            'date_from': date(2022, 3, 8),
-            'date_to': date(2022, 3, 8),
-            'calendar_id': cls.calendar_1.id,
-        })
+        cls.global_leave, cls.calendar_leave = cls.env['resource.calendar.leaves'].create([
+            {
+                'name': 'Global Time Off',
+                'date_from': date(2022, 3, 7),
+                'date_to': date(2022, 3, 7),
+            },
+            {
+                'name': 'Global Time Off',
+                'date_from': date(2022, 3, 8),
+                'date_to': date(2022, 3, 8),
+                'calendar_id': cls.calendar_1.id,
+            },
+        ])
 
     def test_leave_on_global_leave(self):
         with self.assertRaises(ValidationError):

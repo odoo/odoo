@@ -6,6 +6,13 @@ from odoo import Command, fields
 from odoo.tests.common import new_test_user, tagged, TransactionCase, users
 from odoo.addons.mail.tools.discuss import Store
 
+MAIL_OFF = {
+    'tracking_disable': True,
+    'mail_create_nosubscribe': True,
+    'mail_create_nolog': True,
+    'mail_notrack': True,
+}
+
 
 @tagged('post_install', '-at_install')
 class TestPartner(TransactionCase):
@@ -31,7 +38,7 @@ class TestPartner(TransactionCase):
             'email': 'test1@example.com',
             'partner_id': cls.partner.id,
         })
-        cls.employees = cls.env['hr.employee'].create([{
+        cls.employees = cls.env['hr.employee'].with_context(**MAIL_OFF).create([{
             'user_id': user.id,
         } for user in cls.users])
         cls.work_entry_type = cls.env['hr.work.entry.type'].create({

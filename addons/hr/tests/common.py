@@ -4,6 +4,13 @@
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.tests import common
 
+MAIL_OFF = {
+    'tracking_disable': True,
+    'mail_create_nosubscribe': True,
+    'mail_create_nolog': True,
+    'mail_notrack': True,
+}
+
 
 class TestHrCommon(common.TransactionCase):
 
@@ -41,7 +48,7 @@ class TestHrCommon(common.TransactionCase):
             name='HR Admin',
         )
 
-        cls.employee = cls.env['hr.employee'].create({
+        cls.employee = cls.env['hr.employee'].with_context(**MAIL_OFF).create({
             'name': 'Richard',
             'sex': 'male',
             'country_id': cls.env.ref('base.be').id,

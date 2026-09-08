@@ -8,6 +8,13 @@ from odoo import Command, fields
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.mail.tests.common import mail_new_test_user
 
+MAIL_OFF = {
+    'tracking_disable': True,
+    'mail_create_nosubscribe': True,
+    'mail_create_nolog': True,
+    'mail_notrack': True,
+}
+
 
 class TestExpenseCommon(AccountTestInvoicingCommon):
 
@@ -51,7 +58,7 @@ class TestExpenseCommon(AccountTestInvoicingCommon):
             company_ids=[Command.set(cls.env.companies.ids)],
         )
 
-        cls.expense_employee = cls.env['hr.employee'].sudo().create({
+        cls.expense_employee = cls.env['hr.employee'].sudo().with_context(**MAIL_OFF).create({
             'name': 'expense_employee',
             'user_id': cls.expense_user_employee.id,
             'expense_manager_id': cls.expense_user_manager.id,
@@ -81,7 +88,7 @@ class TestExpenseCommon(AccountTestInvoicingCommon):
         })
 
         # Create product without cost
-        cls.product_c = cls.env['product.product'].create({
+        cls.product_c = cls.env['product.product'].with_context(**MAIL_OFF).create({
             'name': 'product_c with no cost',
             'uom_id': cls.env.ref('uom.product_uom_dozen').id,
             'lst_price': 200.0,

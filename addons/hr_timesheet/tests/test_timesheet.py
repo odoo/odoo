@@ -8,6 +8,13 @@ from odoo.fields import Command
 from odoo.tests import tagged, Form, TransactionCase, new_test_user
 from odoo.exceptions import AccessError, RedirectWarning, UserError, ValidationError
 
+MAIL_OFF = {
+    'tracking_disable': True,
+    'mail_create_nosubscribe': True,
+    'mail_create_nolog': True,
+    'mail_notrack': True,
+}
+
 
 class TestCommonTimesheet(TransactionCase):
 
@@ -37,7 +44,7 @@ class TestCommonTimesheet(TransactionCase):
             rule.active = False
 
         # customer partner
-        cls.partner = cls.env['res.partner'].create({
+        cls.partner = cls.env['res.partner'].with_context(**MAIL_OFF).create({
             'name': 'Customer Task',
             'email': 'customer@task.com',
             'phone': '42',
@@ -54,64 +61,78 @@ class TestCommonTimesheet(TransactionCase):
         })
 
         # project and tasks
-        cls.project_customer = cls.env['project.project'].create({
+        cls.project_customer = cls.env['project.project'].with_context(**MAIL_OFF).create({
             'name': 'Project X',
             'allow_timesheets': True,
             'partner_id': cls.partner.id,
             'account_id': cls.analytic_account.id,
         })
-        cls.task1 = cls.env['project.task'].create({
-            'name': 'Task One',
-            'priority': '0',
-            'state': '01_in_progress',
-            'project_id': cls.project_customer.id,
-            'partner_id': cls.partner.id,
-        })
-        cls.task2 = cls.env['project.task'].create({
-            'name': 'Task Two',
-            'priority': '1',
-            'state': '1_done',
-            'project_id': cls.project_customer.id,
-        })
+        cls.task1, cls.task2 = cls.env['project.task'].with_context(**MAIL_OFF).create([
+            {
+                'name': 'Task One',
+                'priority': '0',
+                'state': '01_in_progress',
+                'project_id': cls.project_customer.id,
+                'partner_id': cls.partner.id,
+            },
+            {
+                'name': 'Task Two',
+                'priority': '1',
+                'state': '1_done',
+                'project_id': cls.project_customer.id,
+            },
+        ])
         # users
-        cls.user_employee = cls.env['res.users'].create({
-            'name': 'User Employee',
-            'login': 'user_employee',
-            'email': 'useremployee@test.com',
-            'group_ids': [(6, 0, [cls.env.ref('hr_timesheet.group_hr_timesheet_user').id])],
-        })
-        cls.user_employee2 = cls.env['res.users'].create({
-            'name': 'User Employee 2',
-            'login': 'user_employee2',
-            'email': 'useremployee2@test.com',
-            'group_ids': [(6, 0, [cls.env.ref('hr_timesheet.group_hr_timesheet_user').id])],
-        })
-        cls.user_approver = cls.env['res.users'].create({
-            'name': 'User Approver',
-            'login': 'user_timesheet_approver',
-            'email': 'userapprover@test.com',
-            'group_ids': [(6, 0, [cls.env.ref('hr_timesheet.group_hr_timesheet_approver').id])],
-        })
-        cls.user_manager = cls.env['res.users'].create({
-            'name': 'User Officer',
-            'login': 'user_manager',
-            'email': 'usermanager@test.com',
-            'group_ids': [(6, 0, [cls.env.ref('hr_timesheet.group_timesheet_manager').id])],
-        })
+        group_timesheet_user = cls.env.ref('hr_timesheet.group_hr_timesheet_user').id
+        group_timesheet_approver = cls.env.ref('hr_timesheet.group_hr_timesheet_approver').id
+        group_timesheet_manager = cls.env.ref('hr_timesheet.group_timesheet_manager').id
+        (
+            cls.user_employee,
+            cls.user_employee2,
+            cls.user_approver,
+            cls.user_manager,
+        ) = cls.env['res.users'].create([
+            {
+                'name': 'User Employee',
+                'login': 'user_employee',
+                'email': 'useremployee@test.com',
+                'group_ids': [(6, 0, [group_timesheet_user])],
+            },
+            {
+                'name': 'User Employee 2',
+                'login': 'user_employee2',
+                'email': 'useremployee2@test.com',
+                'group_ids': [(6, 0, [group_timesheet_user])],
+            },
+            {
+                'name': 'User Approver',
+                'login': 'user_timesheet_approver',
+                'email': 'userapprover@test.com',
+                'group_ids': [(6, 0, [group_timesheet_approver])],
+            },
+            {
+                'name': 'User Officer',
+                'login': 'user_manager',
+                'email': 'usermanager@test.com',
+                'group_ids': [(6, 0, [group_timesheet_manager])],
+            },
+        ])
         # employees
-        cls.empl_employee = cls.env['hr.employee'].create({
-            'name': 'User Empl Employee',
-            'user_id': cls.user_employee.id,
-        })
-        cls.empl_employee2 = cls.env['hr.employee'].create({
-            'name': 'User Empl Employee 2',
-            'user_id': cls.user_employee2.id,
-        })
-        cls.empl_manager = cls.env['hr.employee'].create({
-            'name': 'User Empl Officer',
-            'user_id': cls.user_manager.id,
-        })
-        cls.project = cls.env['project.project'].create({
+        cls.empl_employee, cls.empl_employee2, cls.empl_manager = cls.env['hr.employee'].with_context(**MAIL_OFF).create([
+            {
+                'name': 'User Empl Employee',
+                'user_id': cls.user_employee.id,
+            },
+            {
+                'name': 'User Empl Employee 2',
+                'user_id': cls.user_employee2.id,
+            },
+            {
+                'name': 'User Empl Officer',
+                'user_id': cls.user_manager.id,
+            },
+        ])
+        cls.project = cls.env['project.project'].with_context(**MAIL_OFF).create({
             'name': 'Test Project',
             'privacy_visibility': 'followers',
             'task_ids': [Command.create({
@@ -855,9 +876,10 @@ class TestTimesheet(TestCommonTimesheet):
             })
 
         def create_project_update():
-            update_form = Form(self.env['project.update'].with_context({'default_project_id': self.project_customer.id}))
-            update_form.name = "Test"
-            update_project = update_form.save()
+            update_project = self.env['project.update'].create({
+                'name': 'Test',
+                'project_id': self.project_customer.id,
+            })
 
             return [update_project.allocated_time, update_project.timesheet_time, update_project.timesheet_percentage]
 
