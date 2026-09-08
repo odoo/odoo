@@ -1,83 +1,46 @@
+import { CalendarFilters } from "@calendar/../tests/mock_server/mock_models/calendar_filters";
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { animationFrame, mockDate } from "@odoo/hoot-mock";
-import { changeScale, toggleSectionFilter } from "@web/../tests/views/calendar/calendar_test_helpers";
-import { contains, defineActions, defineModels, fields, getService, models, mountView, mountWebClient, onRpc, serverState, switchView } from "@web/../tests/web_test_helpers";
+import { changeScale } from "@web/../tests/views/calendar/calendar_test_helpers";
+import {
+    contains,
+    defineActions,
+    defineModels,
+    fields,
+    getService,
+    makeMockServer,
+    models,
+    mountView,
+    mountWebClient,
+    onRpc,
+    serverState,
+    switchView,
+} from "@web/../tests/web_test_helpers";
+import { togglePartnerFilter } from "@calendar/../tests/calendar_test_helpers";
 
 class CalendarEvent extends models.Model {
     _name = "calendar.event";
-    _records = [
-        {
-            id: 5,
-            user_id: serverState.userId,
-            partner_id: 4,
-            name: "event 1",
-            start: "2016-12-13 15:55:05",
-            stop: "2016-12-15 18:55:05",
-            allday: false,
-            partner_ids: [4],
-        },
-        {
-            id: 6,
-            user_id: serverState.userId,
-            partner_id: 5,
-            name: "event 2",
-            start: "2016-12-18 08:00:00",
-            stop: "2016-12-18 09:00:00",
-            allday: false,
-            partner_ids: [4],
-        },
-    ];
     _views = {
         calendar: `
-            <calendar js_class="attendee_calendar" date_start="start" date_stop="stop">
+            <calendar js_class="attendee_calendar" date_start="start" date_stop="stop" attendee="partner_ids" mode="month" color="partner_ids">
                 <field name="name"/>
-                <field name="partner_ids" write_model="calendar.filter" write_field="partner_id"/>
+                <field name="partner_ids" write_model="calendar.filters" write_field="partner_id" filter_field="active"/>
             </calendar>
         `,
         list: `<list sample="1"/>`
     };
 
-    user_id = fields.Many2one({ relation: "users" });
-    partner_id = fields.Many2one({ relation: "partner" });
+    user_id = fields.Many2one({ relation: "res.users" });
+    partner_id = fields.Many2one({ relation: "res.partner" });
     name = fields.Char();
     start = fields.Datetime();
     stop = fields.Datetime();
     allday = fields.Boolean();
-    partner_ids = fields.One2many({ relation: "partner" });
+    partner_ids = fields.One2many({ relation: "res.partner" });
 }
 
-class CalendarFilter extends models.Model {
-    _records = [
-        { id: 3, user_id: serverState.userId, partner_id: 4, partner_checked: true },
-    ];
-
-    user_id = fields.Many2one({ relation: "users" });
-    partner_id = fields.Many2one({ relation: "partner" });
-    partner_checked = fields.Boolean();
-}
-
-class Partner extends models.Model {
-    _records = [
-        { id: 4, name: "Partner 4", image_1920: "DDD" },
-        { id: 5, name: "Partner 5", image_1920: "DDD" },
-    ];
-
-    name = fields.Char();
-    image_1920 = fields.Binary();
-}
-
-class Users extends models.Model {
-    _records = [
-        { id: serverState.userId, name: "User 4", partner_id: 4 },
-    ];
-
-    name = fields.Char();
-    partner_id = fields.Many2one({ relation: "partner" });
-    image_1920 = fields.Binary();
-}
-
-defineModels([CalendarEvent, CalendarFilter, Partner, Users]);
+defineModels([CalendarEvent, CalendarFilters]);
 defineMailModels();
 
 onRpc("/google_calendar/sync_data", () => ({ status: "no_new_event_from_google" }));
@@ -89,8 +52,37 @@ onRpc("res.users", "get_calendar_model_data", () => ({
     default_duration: 3.25,
 }))
 
-beforeEach(() => {
+const serverData = {};
+
+beforeEach(async () => {
     mockDate("2016-12-12 08:00:00");
+    const { env: pyEnv } = await makeMockServer();
+    serverData.partnerId = pyEnv["res.partner"].create({ name: "Partner 4" });
+    pyEnv["calendar.event"].create([
+        {
+            user_id: serverState.userId,
+            partner_id: serverState.partnerId,
+            name: "event 1",
+            start: "2016-12-13 15:55:05",
+            stop: "2016-12-15 18:55:05",
+            allday: false,
+            partner_ids: [serverData.partnerId],
+        },
+        {
+            user_id: serverState.userId,
+            partner_id: serverState.partnerId,
+            name: "event 2",
+            start: "2016-12-18 08:00:00",
+            stop: "2016-12-18 09:00:00",
+            allday: false,
+            partner_ids: [serverData.partnerId],
+        },
+    ]);
+    pyEnv["calendar.filters"].create({
+        active: true,
+        user_id: serverState.userId,
+        partner_id: serverData.partnerId,
+    });
 });
 
 test.tags("desktop");
@@ -99,12 +91,12 @@ test(`sync google calendar`, async () => {
         expect.step("sync_data");
         this.env["calendar.event"].create({
             user_id: serverState.userId,
-            partner_id: 4,
+            partner_id: serverState.partnerId,
             name: "event from google",
             start: "2016-12-28 15:55:05",
             stop: "2016-12-29 18:55:05",
             allday: false,
-            partner_ids: [4],
+            partner_ids: [serverData.partnerId],
         });
         return { status: "need_refresh" };
     });
@@ -115,17 +107,11 @@ test(`sync google calendar`, async () => {
     await mountView({
         type: "calendar",
         resModel: 'calendar.event',
-        arch: `
-            <calendar js_class="attendee_calendar" date_start="start" date_stop="stop" attendee="partner_ids" mode="month">
-                <field name="name"/>
-                <field name="partner_ids" write_model="calendar.filter" write_field="partner_id"/>
-            </calendar>
-        `,
     });
     expect.verifySteps(["sync_data", "search_read"]);
 
     // select the partner filter
-    await toggleSectionFilter("partner_ids");
+    await togglePartnerFilter("partner_ids", "Partner 4");
     // sync_data was called a first time without filter, event from google calendar was created twice
     expect(`.fc-event`).toHaveCount(4, { message: "should display 4 events on the month" });
     expect.verifySteps(["sync_data", "search_read"]);

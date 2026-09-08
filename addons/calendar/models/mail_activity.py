@@ -35,6 +35,13 @@ class MailActivity(models.Model):
     def action_create_calendar_event(self):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("calendar.action_calendar_event")
+        # The event default partners should be the current user +
+        # the activity related record "customer" (aka main partner)
+        default_partners = self.user_id.partner_id
+        if self.res_model and self.res_id:
+            record = self.env[self.res_model].browse(self.res_id).exists()
+            if record and record.has_access('read'):
+                default_partners |= record._mail_get_customer()
         action['context'] = {
             'default_activity_type_id': self.activity_type_id.id,
             'default_res_id': self.env.context.get('default_res_id'),
@@ -42,7 +49,7 @@ class MailActivity(models.Model):
             'default_name': self.res_name,
             'default_description': self.note if not is_html_empty(self.note) else '',
             'default_meeting_activity_ids': [(6, 0, self.ids)],
-            'default_partner_ids': self.user_id.partner_id.ids,
+            'default_partner_ids': default_partners.ids,
             'default_user_id': self.user_id.id,
             'initial_date': self.date_deadline,
             'default_calendar_event_id': self.calendar_event_id.id,

@@ -44,13 +44,13 @@ class CalendarEvent extends models.Model {
 
 class CalendarFilter extends models.Model {
     _records = [
-        { id: 1, user_id: serverState.userId, partner_id: serverState.partnerId, partner_checked: true },
-        { id: 2, user_id: 2, partner_id: 2, partner_checked: true },
+        { id: 1, active: true, user_id: serverState.userId, partner_id: serverState.partnerId },
+        { id: 2, active: true, user_id: 2, partner_id: 2 },
     ];
 
+    active = fields.Boolean();
     user_id = fields.Many2one({ relation: "users" });
     partner_id = fields.Many2one({ relation: "partner" });
-    partner_checked = fields.Boolean();
 }
 
 class HrEmployee extends models.Model {
@@ -179,7 +179,7 @@ function mountHomeWorkingView() {
         resModel: "calendar.event",
         arch: `
             <calendar js_class="attendee_calendar" event_open_popup="1" date_start="start" date_stop="stop" all_day="allday">
-                <field name="partner_ids" options="{'block': True, 'icon': 'group'}" filters="1" write_model="calendar.filter" write_field="partner_id" filter_field="partner_checked" avatar_field="avatar_128"/>
+                <field name="partner_ids" options="{'block': True, 'icon': 'group'}" filters="1" write_model="calendar.filter" write_field="partner_id" filter_field="active" avatar_field="avatar_128"/>
                 <field name="partner_id" string="Organizer" options="{'icon': 'person'}"/>
                 <field name="user_id"/>
                 <field name="start"/>
