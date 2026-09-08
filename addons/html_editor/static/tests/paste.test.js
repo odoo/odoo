@@ -4489,7 +4489,7 @@ describe("Paste HTML tables", () => {
                 );
             },
             contentAfter: `<table class="table table-bordered o_table">
-        <colgroup></colgroup>
+        <colgroup><col><col></colgroup>
         
         <tbody><tr>
             <td><i>Italic then also BOLD</i></td>
