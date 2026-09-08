@@ -2785,3 +2785,32 @@ test("Cannot call read-only channels", async () => {
         count: 6,
     });
 });
+
+test("Prevent link interactions in message preview", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Marc" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "chat",
+    });
+    const messageId = pyEnv["mail.message"].create({
+        body: "<a href='https://www.odoo.com'>https://www.odoo.com</a>",
+        model: "discuss.channel",
+        res_id: channelId,
+        message_type: "comment",
+    });
+    const [memberId] = pyEnv["discuss.channel.member"].search([
+        ["channel_id", "=", channelId],
+        ["partner_id", "=", partnerId],
+    ]);
+    pyEnv["discuss.channel.member"].write([memberId], { seen_message_id: messageId });
+    await start();
+    await openDiscuss();
+    await contains("h4:text('No conversation selected.')");
+    await click(".o-mail-NotificationItem-text a");
+    expect(".o-mail-NotificationItem-text").toHaveStyle({ pointerEvents: "none" });
+    await contains(".o-mail-Message:has(:text('https://www.odoo.com'))");
+});
