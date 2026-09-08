@@ -37,7 +37,7 @@ class HrEmployeeDeparture(models.Model):
     departure_date = fields.Date(string="Departure Date", compute="_compute_departure_date",
         store=True, readonly=False, help="Date at which the departure actually takes place.")
     action_date = fields.Date(string="Archive Employee On", compute="_compute_action_date",
-        store=True, help="Date at which the departure actually takes place.")
+        store=True, help="Date at which the departure actually takes place.", readonly=False)
     is_user_employee = fields.Boolean(
         compute='_compute_is_user_employee',
         export_string_translation=False,
@@ -54,15 +54,9 @@ class HrEmployeeDeparture(models.Model):
     @api.depends('departure_date')
     def _compute_action_date(self):
         for departure in self:
-            if not (departure.departure_date and departure.action_date):
+            if not departure.departure_date:
                 continue
-            if departure.action_date < departure.departure_date:
-                departure.action_date = departure.departure_date + relativedelta(days=1)
-
-    @api.onchange("departure_date")
-    def _onchange_departure_date(self):
-        if self.departure_date:
-            self.action_date = self.departure_date + relativedelta(days=1)
+            departure.action_date = departure.departure_date + relativedelta(days=1)
 
     @api.depends('employee_id.user_id')
     def _compute_is_user_employee(self):
@@ -103,6 +97,22 @@ class HrEmployeeDeparture(models.Model):
                 "There is no valid version starting before the departure date for %s.",
                 ', '.join(emps_with_version_conflict.mapped('name')),
             ))
+
+    @api.constrains('departure_date', 'dismissal_date', 'action_date')
+    def _check_dates(self):
+        for departure in self:
+            if departure.departure_date and departure.dismissal_date \
+                    and departure.departure_date < departure.dismissal_date:
+                raise ValidationError(self.env._(
+                    "The departure date cannot be earlier than the dismissal date for %s.",
+                    departure.employee_id.name,
+                ))
+            if departure.action_date and departure.departure_date \
+                    and departure.action_date < departure.departure_date:
+                raise ValidationError(self.env._(
+                    "The archive date must be no earlier than the departure date for %s.",
+                    departure.employee_id.name,
+                ))
 
     @api.model_create_multi
     def create(self, vals_list):
