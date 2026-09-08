@@ -204,10 +204,11 @@ export class Store extends Record {
         if ("__store_version__" in dataByModelName) {
             const versionMeta = dataByModelName.__store_version__;
             delete dataByModelName.__store_version__;
-            this._.currentInsertVersion = {
-                ...versionMeta,
-                snapshot: new PgSnapshot(versionMeta.snapshot),
-            };
+            // Only consider the new "xip_list" format. Older payloads are applied
+            // unversioned.
+            this._.currentInsertVersion = versionMeta.snapshot.xip_list
+                ? { ...versionMeta, snapshot: new PgSnapshot(versionMeta.snapshot) }
+                : null;
         }
         try {
             Record.MAKE_UPDATE(function storeInsert() {
