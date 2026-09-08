@@ -1,6 +1,7 @@
 from collections import defaultdict
 
 from odoo import models
+from odoo.exceptions import UserError
 
 
 class L10nJpTotalAverageCostWizard(models.TransientModel):
@@ -31,15 +32,26 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
                 issued_for[produced] |= issued
 
         depths = {}
+        walked = []
 
         def depth(product):
             if product not in depths:
-                # an order making a product out of itself has no bottom to start from
-                depths[product] = 0
+                if product in walked:
+                    # orders that come out of each other have no level to start from,
+                    # and core only forbids a loop through the components of a BoM,
+                    # never one closed by a by-product
+                    loop = walked[walked.index(product):] + [product]
+                    raise UserError(self.env._(
+                        'The orders of the period make these products out of each other, '
+                        'so their costs cannot be evaluated in order: %s',
+                        ' → '.join(looped.display_name for looped in loop),
+                    ))
+                walked.append(product)
                 depths[product] = 1 + max(
                     (depth(component) for component in issued_for[product]),
                     default=-1,
                 )
+                walked.pop()
             return depths[product]
 
         batches = products.grouped(depth)

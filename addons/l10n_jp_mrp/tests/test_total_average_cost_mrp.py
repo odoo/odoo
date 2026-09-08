@@ -1,6 +1,7 @@
 from datetime import timedelta
 
 from odoo import fields
+from odoo.exceptions import UserError
 from odoo.tests import tagged
 
 from odoo.addons.l10n_jp_stock.tests.common import TestTotalAverageCostCommon
@@ -42,6 +43,36 @@ class TestTotalAverageCostMrp(TestTotalAverageCostCommon):
         mo.button_mark_done()
         mo.move_raw_ids.date = fields.Datetime.to_datetime(self.today)
         mo.move_finished_ids.date = fields.Datetime.to_datetime(self.today)
+
+    def test_byproduct_recycled_into_its_own_component_refused(self):
+        ingot = self.env['product.product'].create({
+            'name': 'JP Ingot', 'categ_id': self.category.id, 'is_storable': True, 'standard_price': 100,
+        })
+        casting = self.env['product.product'].create({
+            'name': 'JP Casting', 'categ_id': self.category.id, 'is_storable': True,
+        })
+        self._create_move(10, 100, self.today, self.supplier_loc, self.stock_loc, product=ingot)
+        craft_bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': self.product.product_tmpl_id.id, 'product_qty': 1, 'type': 'normal',
+        })
+        self.env['mrp.bom.line'].create({'bom_id': craft_bom.id, 'product_id': ingot.id, 'product_qty': 1})
+        # the casting the craft gives off is melted back into the ingot it came from
+        self.env['mrp.bom.byproduct'].create({
+            'bom_id': craft_bom.id, 'product_id': casting.id, 'product_qty': 1, 'cost_share': 20,
+        })
+        ingot_bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': ingot.product_tmpl_id.id, 'product_qty': 1, 'type': 'normal',
+        })
+        self.env['mrp.bom.line'].create({'bom_id': ingot_bom.id, 'product_id': casting.id, 'product_qty': 1})
+        for product, bom in ((self.product, craft_bom), (ingot, ingot_bom)):
+            mo = self.env['mrp.production'].create({
+                'product_id': product.id, 'product_qty': 1, 'bom_id': bom.id,
+                'location_src_id': self.stock_loc.id, 'location_dest_id': self.stock_loc.id,
+            })
+            mo.action_confirm()
+            self._finish_mo(mo)
+        with self.assertRaises(UserError):
+            self._run_category_wizard()
 
     def test_manufacturing_output_real_mo(self):
         mo, _byproduct = self._create_mo()
