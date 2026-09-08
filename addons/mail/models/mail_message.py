@@ -13,7 +13,7 @@ from lxml import html
 from typing import Self
 
 from odoo import _, api, fields, models, modules, tools
-from odoo.exceptions import AccessError, MissingError
+from odoo.exceptions import AccessError, MissingError, UserError
 from odoo.fields import Domain
 from odoo.tools import clean_context, groupby, SQL
 from odoo.tools.constants import IN_MAX
@@ -656,7 +656,10 @@ class MailMessage(models.Model):
             for values in self.env.cr.dictfetchall()
         }
         if len(messages_to_check) == MAX_SEARCH_LIMIT:  # avoid out of memory
-            raise ValueError(self.env._("Cannot search, too many messages"))
+            raise UserError(self.env._(
+                "Too many messages to be processed.\n"
+                "Please apply additional filters to reduce the number of potential messages."
+            ))
         accessible = self.browse(messages_to_check)
         if not messages_to_check:
             return accessible
