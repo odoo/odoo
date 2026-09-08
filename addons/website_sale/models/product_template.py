@@ -82,6 +82,7 @@ class ProductTemplate(models.Model):
         sanitize_overridable=True,
         sanitize_attributes=False,
         sanitize_form=False,
+        index="trigram",
     )
     dropzone_above_price = fields.Html(
         string="Drop Zone Above Price", translate=html_translate, sanitize_overridable=True
@@ -202,6 +203,9 @@ class ProductTemplate(models.Model):
     )
     _description_sale_gist_idx = models.Index(
         lambda registry: get_translated_field_gist_index(registry, "description_sale")
+    )
+    _description_ecommerce_gist_idx = models.Index(
+        lambda registry: get_translated_field_gist_index(registry, "description_ecommerce")
     )
     _default_code_gist_idx = models.Index(
         lambda registry: (
