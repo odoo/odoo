@@ -81,9 +81,9 @@
                             groups="sifnext_ppl.group_ppl_finance" invisible="state != 'approved'"/>
                     <button name="action_done" type="object" string="Selesaikan" class="btn-primary"
                             groups="sifnext_ppl.group_ppl_finance" invisible="state != 'paid'"/>
-                    <button name="action_return_to_draft" type="object" string="Kembalikan ke Draft"
-                            groups="sifnext_ppl.group_ppl_finance" invisible="state not in ('submitted', 'verified')"
-                            context="{'return_reason': 'Dikembalikan Finance untuk revisi'}"/>
+                    <button name="%(action_sifnext_ppl_reject_wizard)d" type="action" string="Revisi / Tolak"
+                            groups="sifnext_ppl.group_ppl_approver,sifnext_ppl.group_ppl_finance" invisible="state not in ('submitted', 'verified')"
+                            context="{'default_ppl_id': id}"/>
                     <button name="action_show_transaction_history" type="object" string="Lihat History Transfer" class="btn-info" invisible="state not in ('paid', 'done')"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,submitted,verified,approved,paid,done"/>
                 </header>
@@ -114,10 +114,11 @@
                     <notebook>
                         <page string="Detail Kebutuhan">
                             <field name="line_ids" invisible="state != 'draft'">
-                                <list editable="bottom" open_form_view="True">
+                                <list editable="bottom" multi_edit="1" open_form_view="True">
                                     <field name="sequence" widget="handle"/>
                                     <field name="description"/>
-                                    <field name="has_ppn"/>
+                                    <field name="tax_type"/>
+                                    <field name="tax_percentage" invisible="tax_type == 'none'"/>
                                     <field name="attachment_count" string="Lampiran" readonly="True" optional="show"/>
                                     <field name="quantity"/>
                                     <field name="unit_price"/>
@@ -135,10 +136,11 @@
                             </field>
                             <field name="line_ids" groups="sifnext_ppl.group_ppl_finance"
                                    invisible="state != 'submitted'">
-                                <list editable="bottom" create="false" delete="false" open_form_view="True">
+                                <list editable="bottom" multi_edit="1" create="false" delete="false" open_form_view="True">
                                     <field name="sequence" readonly="True"/>
                                     <field name="description" readonly="True"/>
-                                    <field name="has_ppn" readonly="True"/>
+                                    <field name="tax_type" readonly="True"/>
+                                    <field name="tax_percentage" readonly="True" invisible="tax_type == 'none'"/>
                                     <field name="attachment_count" string="Lampiran" readonly="True" optional="show"/>
                                     <field name="quantity" readonly="True"/>
                                     <field name="unit_price" readonly="True"/>
@@ -158,7 +160,8 @@
                                 <list create="false" delete="false" edit="false" open_form_view="True">
                                     <field name="sequence"/>
                                     <field name="description"/>
-                                    <field name="has_ppn"/>
+                                    <field name="tax_type"/>
+                                    <field name="tax_percentage" invisible="tax_type == 'none'"/>
                                     <field name="attachment_count" string="Lampiran" optional="show"/>
                                     <field name="quantity"/>
                                     <field name="unit_price"/>
@@ -178,7 +181,8 @@
                                 <list create="false" delete="false" edit="false" open_form_view="True">
                                     <field name="sequence"/>
                                     <field name="description"/>
-                                    <field name="has_ppn"/>
+                                    <field name="tax_type"/>
+                                    <field name="tax_percentage" invisible="tax_type == 'none'"/>
                                     <field name="attachment_count" string="Lampiran" optional="show"/>
                                     <field name="quantity"/>
                                     <field name="unit_price"/>
@@ -188,8 +192,8 @@
                                 </list>
                             </field>
                             <group class="oe_subtotal_footer oe_right">
-                                <field name="ppn_percentage" readonly="state != 'draft'" invisible="ppn_amount == 0"/>
                                 <field name="ppn_amount" invisible="ppn_amount == 0"/>
+                                <field name="pph_amount" invisible="pph_amount == 0"/>
                                 <field name="total_amount"/>
                             </group>
                         </page>

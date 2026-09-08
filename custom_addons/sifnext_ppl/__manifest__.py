@@ -12,6 +12,7 @@
         "data/ir_sequence_data.xml",
         # Local/UAT fixture. Remove this entry from production deployments.
         "data/ppl_uat_users.xml",
+        "wizard/ppl_reject_wizard_views.xml",
         "views/ppl_views.xml",
         "views/unit_views.xml",
         "views/payroll_integration_views.xml",
