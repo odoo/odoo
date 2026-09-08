@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<div
+    t-name="website_sale.s_product_search.filter_dropdown"
+    class="btn-group s_product_search_filter_group w-100"
+    t-att-data-filter-key="key"
+>
+    <button
+        type="button"
+        class="s_product_search_filter_btn form-select d-flex justify-content-between align-items-center gap-2"
+        data-bs-toggle="dropdown"
+        data-bs-display="static"
+        data-bs-auto-close="outside"
+        aria-expanded="false"
+    ><span class="flex-shrink-0" t-out="label"/><span class="s_product_search_filter_selected text-muted text-truncate"/></button>
+    <div class="dropdown-menu s_product_search_filter_menu p-2 w-100">
+        <div t-foreach="items" t-as="item" t-key="item.id" class="form-check d-flex align-items-center gap-2 mb-2">
+            <input
+                type="checkbox"
+                class="form-check-input s_product_search_filter_checkbox mt-0"
+                t-att-value="item.id"
+                t-attf-id="s_product_search_filter_#{key}_#{item.id}"
+            />
+            <label
+                class="form-check-label flex-grow-1"
+                t-attf-for="s_product_search_filter_#{key}_#{item.id}"
+                t-out="item.name"
+            />
+            <i
+                t-if="displayType === 'color'"
+                class="css_attribute_color flex-shrink-0"
+                t-attf-style="--o-wsale-product-search-swatch: #{item.has_image ? ('url(/web/image/product.attribute.value/' + item.id + '/image)') : (item.html_color || item.name)}"
+            />
+            <div
+                t-if="displayType === 'image'"
+                t-attf-class="css_attribute_image size_small flex-shrink-0 rounded #{item.has_image ? '' : 'transparent'}"
+            >
+                <div
+                    t-if="item.has_image"
+                    class="o_bg_img_center w-100 h-100 rounded-1"
+                    t-attf-style="--o-wsale-product-search-swatch-image: url(/web/image/product.attribute.value/#{item.id}/image)"
+                />
+            </div>
+        </div>
+    </div>
+</div>
+
+</templates>
