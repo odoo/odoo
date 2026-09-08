@@ -36,8 +36,8 @@ class IrProfile(models.Model):
 
     init_stack_trace = fields.Text('Initial stack trace', prefetch=False)
 
-    sql = fields.Text('Sql', prefetch=False)
-    sql_count = fields.Integer('Queries Count')
+    query_ids = fields.One2many('ir.profile.query', 'profile_id', string='Queries')
+    sql_count = fields.Integer('Queries Count', compute='_compute_sql_count')
     traces_async = fields.Text('Traces Async', prefetch=False)
     others = fields.Text('others', prefetch=False)
     qweb = fields.Text('Qweb', prefetch=False)
@@ -98,8 +98,29 @@ class IrProfile(models.Model):
         for execution in self:
             execution.speedscope = BinaryBytes(execution._generate_speedscope(params))
 
+    @api.depends('query_ids')
+    def _compute_sql_count(self):
+        counts = dict(self.env['ir.profile.query']._read_group(
+            domain=[('profile_id', 'in', self.ids)],
+            groupby=['profile_id'],
+            aggregates=['__count'],
+        ))
+        for profile in self:
+            profile.sql_count = counts.get(profile, 0)
+
+    def _get_sql_entries(self):
+        return [{
+            'query': query.query,
+            'full_query': query.full_query,
+            'query_preview': query.query_preview,
+            'start': query.start,
+            'time': query.time,
+            'stack': query.stack,
+            'exec_context': query.exec_context,
+        } for query in self.query_ids]
+
     def _default_profile_params(self):
-        has_sql = any(profile.sql for profile in self)
+        has_sql = any(profile.query_ids for profile in self)
         has_traces = any(profile.traces_async for profile in self)
         has_memory = self._has_memory_traces()
         return {
@@ -130,8 +151,8 @@ class IrProfile(models.Model):
                 raise UserError(self.env._('All profiles must have the same initial stack trace to be displayed together.'))
         sp = Speedscope(init_stack_trace=json.loads(init_stack_trace))
         for profile in self:
-            if (params['sql_no_gap_profile'] or params['sql_density_profile'] or params['combined_profile']) and profile.sql:
-                sp.add(f'sql {profile.id}', json.loads(profile.sql))
+            if (params['sql_no_gap_profile'] or params['sql_density_profile'] or params['combined_profile']) and profile.query_ids:
+                sp.add(f'sql {profile.id}', profile._get_sql_entries())
             if (params['frames_profile'] or params['combined_profile'] or params['memory_profile']) and profile.traces_async:
                 sp.add(f'frames {profile.id}', json.loads(profile.traces_async))
             if params['profile_aggregation_mode'] == 'tabs':

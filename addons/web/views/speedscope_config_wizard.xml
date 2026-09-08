@@ -42,7 +42,7 @@
                                 </div>
                                 <hr/>
                                 <h4>Display presets</h4>
-                                <t t-set="has_sql" t-value="any(profile.sql for profile in profiles)"/>
+                                <t t-set="has_sql" t-value="any(profile.sql_count for profile in profiles)"/>
                                 <t t-set="has_traces" t-value="any(profile.traces_async for profile in profiles)"/>
                                 <div class="form-check" t-if="has_sql and has_traces">
                                     <input type="checkbox" class="form-check-input" id="combined_profile" name="combined_profile" value="True" t-att-checked="default_params.get('combined_profile')"/>

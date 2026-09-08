@@ -71,6 +71,33 @@ class TestProfilingWeb(ProfilingHttpCase):
             f'test_profile_test_tool uid:{self.env.uid} warm /web?',
         ])
 
+    def test_profile_query(self):
+        with self.profile():
+            self.env['res.partner'].search([])
+        profile = self.env['ir.profile'].search([], order='id desc', limit=1)
+        self.assertEqual(profile.sql_count, 1)
+        query = profile.query_ids[0]
+        self.assertEqual(
+            query.full_query,
+            'SELECT "res_partner"."id" FROM "res_partner" WHERE "res_partner"."active" IS TRUE ORDER BY "res_partner"."complete_name" ASC , "res_partner"."id" DESC '
+        )
+        self.assertFalse(query.plan)
+        action = query.action_explain_analyse()
+        self.assertTrue(query.plan)
+        self.assertTrue(query.plan_url)
+        self.assertEqual(action['type'], 'ir.actions.act_url')
+        self.assertEqual(action['url'], query.plan_url)
+
+    def test_profile_query_plan_visualizer(self):
+        with self.profile():
+            self.env['res.partner'].search([])
+        profile = self.env['ir.profile'].search([], order='id desc', limit=1)
+        query = profile.query_ids[0]
+        query.action_explain_analyse()
+        response = self.url_open(query.plan_url)
+        response.raise_for_status()
+        self.assertEqual(response.status_code, 200)
+
 
 @tagged('post_install', '-at_install', 'profiling')
 class TestProfilingModes(ProfilingHttpCase):
