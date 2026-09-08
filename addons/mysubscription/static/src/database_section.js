@@ -1,5 +1,4 @@
-import { Component, onWillStart, signal, usePlugin, useProps, t } from "@odoo/owl";
-import { DashboardPlugin } from "./dashboard_plugin";
+import { Component, onWillStart, signal, useProps, t } from "@odoo/owl";
 import { session } from "@web/session";
 import { user } from "@web/core/user";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -21,7 +20,6 @@ export class DatabaseSection extends Component {
 
     setup() {
         this.serverVersion = session.server_version;
-        this.dashboardState = usePlugin(DashboardPlugin).state;
         this.dialog = useService("dialog");
 
         this.currentDbName = signal(session.db);
@@ -33,7 +31,7 @@ export class DatabaseSection extends Component {
     }
 
     get databaseUrl() {
-        return this.dashboardState.baseUrl;
+        return this.props.baseUrl;
     }
 
     get showDatabaseSelector() {
