@@ -264,12 +264,22 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
         """
         Return what a quantity of an incoming move cost to acquire.
 
-        法人税法施行令 32条1項1号 makes the 購入代価 the acquisition cost, so the
-        resolution follows core's own: whatever a posted bill evidences, then what
-        the order priced, then the price the move itself carries. The stored value
-        of the move is not used, as core falls back from it to the standard price,
-        which is the very cost being evaluated.
+        法人税法施行令 32条1項1号 makes the 購入代価 the acquisition cost and 32条1項2号
+        adds what it took to bring the goods in, so the resolution follows core's own
+        order: a correction someone made on the move itself, then whatever a posted
+        bill evidences, then what the order priced, then the price the move carries,
+        and on top of it the landed costs allocated to the receipt. Core's own last
+        resort, the standard price, is skipped: it is the very cost being evaluated.
+
+        A correction and a landed cost are both stated for the move as a whole, so
+        each is taken pro rata of the quantity asked for here.
         """
+        valued_qty = move._get_valued_qty()
+        share = qty / valued_qty if valued_qty else 0.0
+        # a correction states what the move finally cost, incidentals included
+        manual = move._get_manual_value(qty)
+        if manual['quantity']:
+            return manual['value'] * share
         billed = move._get_value_from_account_move(qty)
         value = billed['value']
         remaining_qty = qty - billed['quantity']
@@ -280,7 +290,7 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
             remaining_qty = 0
         if remaining_qty:
             value += remaining_qty * move.price_unit
-        return value
+        return value + move._get_value_from_extra(qty)['value'] * share
 
     def _move_date_local(self, move):
         return fields.Datetime.context_timestamp(self, move.date).date()
