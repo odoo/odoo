@@ -214,9 +214,14 @@ export class PosOrderline extends PosOrderlineAccounting {
                 pos_order_line_id: this,
             });
         }
-
+        const lotsExist = newPackLotLines.length || this.pack_lot_ids.length;
         // Set the qty of the line based on number of pack lots.
-        if (!this.product_id.to_weight && setQuantity && this.product_id.tracking === "serial") {
+        if (
+            !this.product_id.to_weight &&
+            setQuantity &&
+            lotsExist &&
+            this.product_id.tracking === "serial"
+        ) {
             this.setQuantityByLot();
         }
     }
