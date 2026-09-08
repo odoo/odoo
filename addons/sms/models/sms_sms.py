@@ -228,10 +228,9 @@ class SmsSms(models.Model):
     def _send(self, unlink_failed=False, unlink_sent=True, raise_exception=False):
         """Resolve the SMS API and delegate sending to it."""
         sms_api = self.env.context.get("sms_api")
-        if not sms_api:
-            company = self._get_sms_company()
-            company.check_singleton()  # This should always be the case since the grouping is done in `send`
-            sms_api = company._get_sms_api_class()(self.env)
+        assert sms_api, (
+            "sms_api must be set in context: only `send()` calls `_send()`, and it always sets it via `_split_by_api()`."
+        )
 
         return self._send_with_api(
             sms_api,
