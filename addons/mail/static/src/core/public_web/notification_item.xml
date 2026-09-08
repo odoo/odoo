@@ -25,7 +25,7 @@
                 <div class="d-flex flex-column align-items-start"><t t-call-slot="name-after"/></div>
                 <div class="d-flex o-mail-NotificationItem-line">
                     <div class="d-flex flex-column flex-grow-1 overflow-hidden">
-                        <div class="o-mail-NotificationItem-text text-start" t-att-class="{ 'small': !this.ui.isSmall, 'o-muted': this.props.muted }" t-attf-class="{{ this.props.textClassName }}">
+                        <div class="o-mail-NotificationItem-text text-start pe-none" t-att-class="{ 'small': !this.ui.isSmall, 'o-muted': this.props.muted }" t-attf-class="{{ this.props.textClassName }}">
                             <t t-call-slot="body-icon"/>
                             <MessageSeenIndicator t-if="this.message?.showSeenIndicator(this.props.thread)" message="this.message"/>
                             <t name="notificationBody" t-call-slot="body"/>
