@@ -102,8 +102,11 @@
             }
         }
     }
+
     &.horizontal {
-        white-space: nowrap;
+        .nav-item {
+            white-space: nowrap;
+        }
     }
 
     @include media-breakpoint-down(lg) {
