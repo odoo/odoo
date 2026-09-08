@@ -316,6 +316,9 @@ class StockWarehouseOrderpoint(models.Model):
             'lead_horizon_date': format_date(self.env, self.lead_horizon_date),
             'qty_to_order': self._get_qty_to_order(),
         }
+        supplier = self.supplier_id
+        if supplier:
+            action['context']['supplier_id'] = supplier.id
         warehouse = self.warehouse_id
         if warehouse:
             action['context']['warehouse_id'] = warehouse.id

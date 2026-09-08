@@ -56,30 +56,31 @@
         <div class="d-flex flex-wrap pb-1 pt-2 justify-content-end">
             <div class="row">
                 <h6>Time to replenish:
-                    <span data-tooltip-template="LeadTimeTooltip" t-att-data-tooltip-info="this.toJsonString(this.leadTime)">
-                        <span class="text-info" t-out="this.leadTimeShort"/>
-                    </span>
+                    <span class="text-info" t-out="this.leadTimeShort" t-ref="leadTime" t-on-mouseover="openPopover"/>
                 </h6>
             </div>
         </div>
     </t>
-    <t t-name="LeadTimeTooltip">
-        <h6>Lead Time Information</h6>
-        <table>
-            <tr>
-                <td>Today</td>
-                <td><span t-out="today"/></td>
-            </tr>
-            <t t-foreach="details" t-as="detail" t-key="detail[0]">
-                <tr>
-                    <td><span t-out="detail[0]"/></td>
-                    <td><span t-out="detail[1]"/></td>
+
+    <t t-name="stock.LeadDaysPopover">
+        <table class="table table-borderless table-sm mb-0">
+            <tbody>
+                <tr class="table-secondary">
+                    <td class="px-3">Today</td>
+                    <td class="px-3 text-end" t-out="props.leadTime.today"/>
                 </tr>
-            </t>
-            <tr>
-                <td>Earliest Possible Arrival</td>
-                <td><span t-out="earliestPossibleArrival"/></td>
-            </tr>
+                <tr t-foreach="props.leadTime.details" t-key="detail_index" t-as="detail"
+                    t-att-class="{'table-secondary' : detail[2] }">
+                    <td class="px-3" t-out="detail[0]"/>
+                    <td class="px-3 text-end" t-out="detail[1]"/>
+                </tr>
+                <tr class="table-info">
+                    <td class="px-3">Earliest Possible Arrival</td>
+                    <td class="px-3 text-end text-nowrap">
+                        = <t t-out="props.leadTime.earliestPossibleArrival"/>
+                    </td>
+                </tr>
+            </tbody>
         </table>
     </t>
 </templates>
