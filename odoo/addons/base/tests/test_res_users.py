@@ -422,6 +422,93 @@ class TestUsers2(UsersCommonCase):
         self.assertIn(group_user, user.group_ids)
         self.assertEqual(default_group.implied_ids + group_user, user.group_ids)
 
+    def test_role_regular_user_marker_present(self):
+        """ Selecting the "User" role must always leave the regular-user
+        marker (``base.group_user_regular``) somewhere in ``all_group_ids``
+        (either added directly, or already implied by another group). """
+        group_regular = self.env.ref('base.group_user_regular')
+
+        user_form = Form(self.env['res.users'], view='base.view_users_form')
+        user_form.name = "Test Regular"
+        user_form.login = "test_regular_marker"
+        user_form.role = 'regular_user'
+        user = user_form.save()
+
+        self.assertEqual(user.role, 'regular_user')
+        self.assertIn(group_regular, user.all_group_ids)
+
+    def test_role_toggle_regular_light_sequence(self):
+        """ Repeatedly toggling the role between "User" and "Light" (each
+        change saved, as done through the interface) must never leave the
+        user in an inconsistent state where ``role`` reports 'regular_user'
+        while the regular-user marker (``base.group_user_regular``) is
+        missing from ``all_group_ids``. Such a state silently reverts to
+        'light_user' on the next read (e.g. after a reload) since the role
+        is otherwise derived from the actual groups on the user. """
+        group_regular = self.env.ref('base.group_user_regular')
+
+        user_form = Form(self.env['res.users'], view='base.view_users_form')
+        user_form.name = "Toggle"
+        user_form.login = "toggle_user"
+        user_form.role = 'regular_user'
+        user = user_form.save()
+
+        for i in range(5):
+            with Form(user, view='base.view_users_form') as f:
+                f.role = 'light_user'
+            user.invalidate_recordset()
+            self.assertEqual(user.role, 'light_user', f"iteration {i}: role not switched to light")
+
+            with Form(user, view='base.view_users_form') as f:
+                f.role = 'regular_user'
+            user.invalidate_recordset()
+            self.assertEqual(user.role, 'regular_user', f"iteration {i}: role not switched to regular")
+            self.assertIn(
+                group_regular, user.all_group_ids,
+                f"iteration {i}: role is 'regular_user' but the regular-user marker "
+                "is missing from all_group_ids",
+            )
+
+    def test_role_pdf_regular_user_sticks(self):
+        """ Literal repro of the "role reverts to Light after saving User"
+        report: selecting role='regular_user' on a fresh light user must
+        stick, both live in the onchange and after save. """
+        user_form = Form(self.env['res.users'], view='base.view_users_form')
+        user_form.name = "PDF Repro"
+        user_form.login = "pdf_repro_user"
+        user_form.role = "regular_user"
+        self.assertEqual(user_form.role, 'regular_user')
+        user = user_form.save()
+        self.assertEqual(user.role, 'regular_user')
+
+    def test_role_toggle_regular_light_single_session_unsaved(self):
+        """ Same light/regular toggle sequence as
+        test_role_toggle_regular_light_sequence, but WITHOUT saving between
+        each toggle -- a single open Form (one onchange session), several
+        role flips, one final save -- matching a user clicking the Role
+        radio back and forth before ever hitting Save. Each `f.role = ...`
+        re-triggers `_onchange_role` for real (unlike a plain write()),
+        operating each time on whatever NewId-wrapped group_ids the
+        previous onchange in the same session left behind. """
+        group_regular = self.env.ref('base.group_user_regular')
+
+        with Form(self.env['res.users'], view='base.view_users_form') as f:
+            f.name = "Single Session Toggle"
+            f.login = "single_session_toggle_user"
+            for i in range(9):
+                expected = 'regular_user' if i % 2 == 0 else 'light_user'
+                f.role = expected
+                self.assertEqual(f.role, expected, f"iteration {i}: unexpected role in Form")
+            self.assertEqual(f.role, 'regular_user', "sequence must end on regular_user")
+        user = f.save()
+
+        self.assertEqual(user.role, 'regular_user')
+        self.assertIn(
+            group_regular, user.all_group_ids,
+            "role is 'regular_user' after save but the regular-user marker "
+            "is missing from all_group_ids",
+        )
+
     def test_selection_groups(self):
         # create 3 groups that should be in a selection
         app = self.env['res.groups.privilege'].create({'name': 'Foo'})
