@@ -23,6 +23,10 @@ from .modules import module
 
 _logger = logging.getLogger(__name__)
 
+
+real_time = time.time.__call__  # ensure we have a non patched time when using freezegun
+
+
 def log(logger, level, prefix, msg, depth=None):
     indent=''
     indent_after=' '*len(prefix)
@@ -176,6 +180,9 @@ def init_logger():
         record = old_factory(*args, **kwargs)
         record.perf_info = ""
         record.munge_traceback = False
+        if time.time.__call__ != real_time:
+            record.faked_created = record.created
+            record.created = real_time()
         return record
     logging.setLogRecordFactory(record_factory)
 
