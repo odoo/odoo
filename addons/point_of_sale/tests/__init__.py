@@ -26,3 +26,4 @@ from . import test_order_receipt
 from . import test_pos_accounting
 from . import test_pos_accounting_http
 from . import test_pos_accounting_currency
+from . import test_pos_bank_access

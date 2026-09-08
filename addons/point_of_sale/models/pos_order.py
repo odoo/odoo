@@ -735,8 +735,13 @@ class PosOrder(models.Model):
             return bank_ids.filtered(lambda b: b.allow_out_payment)[:1]
 
         # Case 1: refund / negative amount → customer bank
-        if amount_total <= 0 and self.partner_id.bank_ids:
-            partner_bank_id = _first_allowed(self.partner_id.bank_ids)
+
+        # sudo: a POS user has no read access to an arbitrary customer's bank
+        # account and there is no move to grant it, so the x2many read would
+        # otherwise come back empty and drop the recipient bank.
+        customer_banks = self.partner_id.sudo().bank_ids
+        if amount_total <= 0 and customer_banks:
+            partner_bank_id = _first_allowed(customer_banks)
 
         # Case 2: positive amount → payment journal bank
         elif amount_total >= 0 and self.payment_ids:

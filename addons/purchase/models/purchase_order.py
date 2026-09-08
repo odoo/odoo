@@ -985,7 +985,11 @@ class PurchaseOrder(models.Model):
         self.ensure_one()
         move_type = self.env.context.get('default_move_type', 'in_invoice')
 
-        partner_bank_id = self.partner_id.commercial_partner_id.bank_ids.filtered_domain(['|', ('company_id', '=', False), ('company_id', '=', self.company_id.id)])[:1]
+        # sudo: the vendor bank is copied onto a bill that does not exist yet, so
+        # there is no move to grant access through and the vendor is not the user's
+        # company; without sudo() a purchase user's x2many read returns empty and
+        # the vendor bank is silently dropped from the bill.
+        partner_bank_id = self.partner_id.commercial_partner_id.sudo().bank_ids.filtered_domain(['|', ('company_id', '=', False), ('company_id', '=', self.company_id.id)])[:1]
         invoice_vals = {
             'move_type': move_type,
             'narration': self.note,

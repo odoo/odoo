@@ -22,6 +22,7 @@ base_user_account_move_line_rule,Normal User Account Move Line,account.move.line
 hr_expense_team_approver_account_move_line_rule,Expense Team Approver Journal Item,account.move.line,hr_expense.group_hr_expense_team_approver,r,"[('expense_id', '!=', False)]"
 hr_expense_team_approver_account_analytic_line_rule,Expense Team Approver Account Analytic Line,account.analytic.line,hr_expense.group_hr_expense_team_approver,crud,
 access_mail_activity_type_expense_user,mail.activity.type.expense.user,mail.activity.type,hr_expense.group_hr_expense_manager,crud,
+access_res_partner_bank_expense_manager,res.partner.bank.expense.manager,res.partner.bank,hr_expense.group_hr_expense_manager,r,
 access_hr_expense_refuse_wizard,access.hr.expense.refuse.wizard,hr.expense.refuse.wizard,hr_expense.group_hr_expense_team_approver,cru,
 access_hr_expense_approve_duplicate,access.hr.expense.approve.duplicate,hr.expense.approve.duplicate,hr_expense.group_hr_expense_team_approver,cru,
 ir_rule_hr_expense_split_employee,Employee Expense Split,hr.expense.split.wizard,base.group_user,cru,"[
