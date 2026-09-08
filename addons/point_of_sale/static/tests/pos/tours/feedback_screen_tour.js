@@ -20,7 +20,8 @@ registry.category("web_tour.tours").add("FeedbackScreenTour", {
             Dialog.cancel(), // Offline mode after opening register will trigger the offline popup since the device try to sync
             ProductScreen.addOrderline("Letter Tray", "10", "5"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("APartner Full"),
+            // Offline: no server search, the partner is already loaded locally.
+            ProductScreen.clickCustomer("APartner Full", false),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.validateButtonIsHighlighted(true),
