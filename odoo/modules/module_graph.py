@@ -234,17 +234,28 @@ class ModuleGraph:
         names = [name for name in names if name not in self._modules]
 
         for name in names:
-            module = self._modules[name] = ModuleNode(name, self)
-            if not module.manifest.get('installable'):
+            self._modules[name] = ModuleNode(name, self)
+
+        self._update_from_database(names)
+        self._remove_unloadable_modules(names)
+        self._update_depends(names)
+        self._update_depth(names)
+
+    def _remove_unloadable_modules(self, names: Iterable[str]) -> None:
+        for name in names:
+            module = self._modules.get(name)
+            if module and not (
+                module.manifest.get('installable')
+                or (
+                    module.manifest.get('deprecated')
+                    and module.state in ('installed', 'to upgrade', 'to remove')
+                )
+            ):
                 if name in self._imported_modules:
                     self._remove(name, log_dependents=False)
                 else:
                     _logger.warning('module %s: not installable, skipped', name)
                     self._remove(name)
-
-        self._update_depends(names)
-        self._update_depth(names)
-        self._update_from_database(names)
 
     @functools.cached_property
     def _imported_modules(self) -> OrderedSet[str]:

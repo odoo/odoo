@@ -49,6 +49,7 @@ class TestModuleManifest(BaseCase):
             'data': [],
             'demo': [],
             'depends': ['base'],
+            'deprecated': False,
             'description': '',
             'external_dependencies': {},
             'iap_paid_service': False,

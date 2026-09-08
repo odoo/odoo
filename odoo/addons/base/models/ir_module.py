@@ -813,6 +813,8 @@ class IrModuleModule(models.Model):
                         updated_values[key] = values[key]
                 if terp.get('installable', True) and mod.state == 'uninstallable':
                     updated_values['state'] = 'uninstalled'
+                elif not terp.get('installable', True) and mod.state in ('uninstalled', 'to install'):
+                    updated_values['state'] = 'uninstallable'
                 if parse_version(terp.get('version', default_version)) > parse_version(mod.latest_version or default_version):
                     res[0] += 1
                 if updated_values:
