@@ -60,3 +60,12 @@ class TestL10nSaAdditionalIdentifiers(AccountTestInvoicingCommon):
         partner._onchange_populate_sa_tin_from_vat()
         self.assertEqual(partner.additional_identifiers.get('SA_TIN'), '3111111111')
         self.assertEqual(len(partner.additional_identifiers.get('SA_TIN')), 10)
+
+    def test_additional_identifier_metadata_with_unavailable_identifier(self):
+        """Test available additional identifiers when OTHER is set on a SA partner."""
+        self.partner_a.write({
+            'additional_identifiers': {'OTHER': '123456'},
+            'country_id': self.saudi_arabia.id,
+        })
+
+        self.assertNotIn('OTHER', self.partner_a.available_additional_identifiers_metadata)
