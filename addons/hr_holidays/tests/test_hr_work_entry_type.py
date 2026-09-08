@@ -395,9 +395,17 @@ class TestHrWorkEntryType(TestHrHolidaysCommon):
         window over a 24h day: 3 / 24 = 0.125. The custom hours unit means the
         result is left unrounded.
         """
-        employee = self._duration_employee('Flexible', resource_calendar_id=False)
+        flexible_calendar = self.env['resource.calendar'].create({
+            'name': 'Flexible',
+            'company_id': self.company.id,
+            'calendar_type': 'undefined',
+            'attendance_ids': [],
+            'hours_per_week': 0,
+            'hours_per_day': 0,
+        })
+        employee = self._duration_employee('Flexible', resource_calendar_id=flexible_calendar.id)
         self.assertTrue(
-            employee.sudo().is_flexible,
+            employee.sudo()._is_flexible(),
             "This test is only meaningful for an employee without a schedule")
 
         leave = self.env['hr.leave'].create({

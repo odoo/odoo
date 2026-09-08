@@ -461,7 +461,7 @@ class HrAttendance(models.Model):
             [('check_out', '=', False),
              ('employee_id.company_id.auto_check_out', '=', True),
              ('employee_id.company_id.auto_check_out_mode', '=', 'tolerance'),
-             ('employee_id.resource_calendar_id', '!=', False)]
+             ('employee_id.resource_calendar_id.calendar_type', '!=', 'undefined')]
         )
 
         if not to_verify:

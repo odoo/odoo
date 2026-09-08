@@ -155,6 +155,35 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         cls.wednesday = cls.monday + timedelta(days=2)
         cls.thursday = cls.monday + timedelta(days=3)
 
+        cls.calendar_flexible_21_3, cls.calendar_flexible_40_8, cls.calendar_flexible_56_8, cls.calendar_fully_flexible = cls.env['resource.calendar'].create([
+            {
+                'name': 'Flexible Calendar 21h/week',
+                'calendar_type': 'undefined',
+                'attendance_ids': [],
+                'hours_per_week': 21,
+                'hours_per_day': 3,
+            },
+            {
+                'name': 'Flexible Calendar 40h/week',
+                'calendar_type': 'undefined',
+                'attendance_ids': [],
+                'hours_per_week': 40,
+                'hours_per_day': 8,
+            },
+            {
+                'name': 'Flexible Calendar 56h/week',
+                'calendar_type': 'undefined',
+                'attendance_ids': [],
+                'hours_per_week': 56,
+                'hours_per_day': 8,
+            },
+            {
+                'name': 'Fully Flexible Calendar',
+                'calendar_type': 'undefined',
+                'attendance_ids': [],
+            },
+        ])
+
     def _check_holidays_count(self, holidays_count_result, ml, lt, rl, vrl, vlt):
         self.assertEqual(holidays_count_result['max_leaves'], ml)
         self.assertEqual(holidays_count_result['remaining_leaves'], rl)
@@ -480,6 +509,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
     @users('Titus')
     def test_create_differnt_calendars_group_leave_without_hr_right(self):
+        calendar_flexible = self.calendar_flexible_21_3
         employee_1, employee_2 = self.env['hr.employee'].sudo().create([
             {
                 'name': 'Emp1',
@@ -487,9 +517,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             }, {
                 'name': 'Emp2',
                 'leave_manager_id': self.user_responsible_id,
-                'resource_calendar_id': False,
-                'hours_per_week': 21,
-                'hours_per_day': 3,
+                'resource_calendar_id': calendar_flexible.id,
             },
         ])
         leave_wizard = self.env['hr.leave.generate.multi.wizard'].create({
@@ -738,10 +766,9 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
         self.assertAlmostEqual(leave0.number_of_hours, 24, 2)
 
+        calendar_flexible = self.calendar_flexible_40_8
         employee.write({
-            'resource_calendar_id': False,
-            'hours_per_week': 40,
-            'hours_per_day': 8.0,
+            'resource_calendar_id': calendar_flexible.id,
         })
 
         leave1 = self.env['hr.leave'].with_context(leave_fast_create=True).create({
@@ -1559,14 +1586,13 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
     @freeze_time('2024-01-18')
     def test_undefined_working_hours(self):
-        """ Ensure time-off can also be allocated without ResourceCalendar. """
+        """ Ensure time-off can also be allocated with a flexible ResourceCalendar. """
         employee = self.employee_emp
 
         # set a flexible working schedule
+        calendar_flexible = self.calendar_flexible_40_8
         employee.write({
-            'resource_calendar_id': False,
-            'hours_per_week': 40,
-            'hours_per_day': 8
+            'resource_calendar_id': calendar_flexible.id,
         })
         allocation = self.env['hr.leave.allocation'].create({
             'name': 'Annual Time Off',
@@ -1737,10 +1763,9 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         self.assertEqual(modified_leave.request_date_to, two_days_after)
 
     def test_public_holiday_in_the_middle_of_flexible_request(self):
+        calendar_flexible = self.calendar_flexible_56_8
         self.employee_emp.write({
-            'resource_calendar_id': False,
-            'hours_per_week': 56,
-            'hours_per_day': 8
+            'resource_calendar_id': calendar_flexible.id,
         })
         # Create a public holiday for the flexible calendar
         self.env['resource.calendar.leaves'].create({
@@ -1811,10 +1836,9 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             - Single-day leave that falls entirely on a public holiday: duration should be 0.
             - Leave starting before and ending during a public holiday: only non-overlapping portion counts.
         """
+        calendar_flexible = self.calendar_flexible_56_8
         self.employee_emp.write({
-            'resource_calendar_id': False,
-            'hours_per_week': 56,
-            'hours_per_day': 8,
+            'resource_calendar_id': calendar_flexible.id,
         })
         self.env['resource.calendar.leaves'].create([
             {
@@ -2662,7 +2686,8 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         Test that a single-day flexible leave on a public holiday counts
         as 1 day when include_public_holidays_in_duration is True on the leave type.
         """
-        self.employee_emp.resource_calendar_id = False
+        calendar_fully_flexible = self.calendar_fully_flexible
+        self.employee_emp.resource_calendar_id = calendar_fully_flexible
         self.env['resource.calendar.leaves'].create({
             'date_from': datetime(2022, 3, 9, 0, 0, 0),
             'date_to': datetime(2022, 3, 9, 23, 59, 59),
@@ -2682,10 +2707,9 @@ class TestLeaveRequests(TestHrHolidaysCommon):
     def test_flexible_schedule_full_day_off(self):
         """this tests checks that if the morning and afternoon have been selected as time off and the schedule type of
         the employee is flexible, the time considered off is a full day."""
+        calendar_flexible = self.calendar_flexible_40_8
         self.employee_hruser.write({
-            'resource_calendar_id': False,
-            'hours_per_week': 40,
-            'hours_per_day': 8,
+            'resource_calendar_id': calendar_flexible.id,
         })
         flex_leave = self.env['hr.leave'].create({
             'name': "Full Day Leave",
@@ -2702,11 +2726,10 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
     @freeze_time("2025-12-19")
     def test_duration_flexible_employee_different_timezone(self):
+        calendar_flexible = self.calendar_flexible_56_8
         self.employee_emp.write({
             'tz': 'Australia/Darwin',
-            'resource_calendar_id': False,
-            'hours_per_week': 56,
-            'hours_per_day': 8,
+            'resource_calendar_id': calendar_flexible.id,
         })
         self.env.user.tz = 'Europe/Brussels'
 

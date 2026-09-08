@@ -32,7 +32,8 @@ class TestResourcePerformance(TransactionCase):
     @warmup
     def test_performance_attendance_intervals_batch(self):
         # Tests the performance of _attendance_intervals_batch with a batch of 100 resources
-        with self.assertQueryCount(__system__=3):
+        # +1 detecting a flexible resource now requires reading the calendar's attendance_ids
+        with self.assertQueryCount(__system__=4):
             # Generate attendances for a whole year
             start = datetime.now(UTC) + relativedelta(month=1, day=1)
             stop = datetime.now(UTC) + relativedelta(month=12, day=31)
