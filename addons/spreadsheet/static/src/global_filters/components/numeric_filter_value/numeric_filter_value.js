@@ -1,7 +1,7 @@
 /** @odoo-module native */
 /** @ts-check */
 
-import { Component, useRef } from "@odoo/owl";
+import { Component, useEffect, useRef } from "@odoo/owl";
 import { parseFloat } from "@web/core/parsers";
 import { useNumpadDecimal } from "@web/fields/numpad_decimal_hook";
 
@@ -15,6 +15,25 @@ export class NumericFilterValue extends Component {
     setup() {
         useNumpadDecimal();
         this.inputRef = useRef("numpadDecimal");
+        // The template deliberately does not bind the input to the prop. OWL
+        // treats `value` on an input as a DOM property and wraps it in a fresh
+        // `new String(...)` to defeat its own equality check, so a
+        // `t-att-value` rewrites the box on EVERY render and eats whatever the
+        // user is halfway through typing. We push the value in ourselves, and
+        // never over a box that has the focus -- same shape as `useInputField`
+        // in `web/static/src/fields/input_field_hook.js`.
+        useEffect(
+            (el, value) => {
+                if (!el || el === document.activeElement) {
+                    return;
+                }
+                const text = value ?? "";
+                if (el.value !== String(text)) {
+                    el.value = text;
+                }
+            },
+            () => [this.inputRef.el, this.props.value],
+        );
     }
 
     onChange(value) {

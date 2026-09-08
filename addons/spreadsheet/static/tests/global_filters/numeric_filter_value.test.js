@@ -1,5 +1,7 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { keyDown } from "@odoo/hoot-dom";
+import { keyDown, queryOne } from "@odoo/hoot-dom";
+import { animationFrame } from "@odoo/hoot-mock";
+import { Component, useState, xml } from "@odoo/owl";
 import { defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
 import { NumericFilterValue } from "@spreadsheet/global_filters/components/numeric_filter_value/numeric_filter_value";
 import {
@@ -15,7 +17,7 @@ describe.current.tags("desktop");
 defineSpreadsheetModels();
 
 async function mountNumericFilterValue(env, props) {
-    await mountWithCleanup(NumericFilterValue, { props, env, getTemplate });
+    return mountWithCleanup(NumericFilterValue, { props, env, getTemplate });
 }
 
 test("numeric filter with no default value prop", async function () {
@@ -155,4 +157,39 @@ test("default value does not disappear when pressing enter", async function () {
     expect(savedValue).toEqual(2024);
 
     expect(".o_input").toHaveValue(2024);
+});
+
+test("what the user is typing survives a re-render", async function () {
+    const env = await makeMockEnv();
+    const component = await mountNumericFilterValue(env, {
+        value: 1999,
+        onValueChanged: () => {},
+    });
+    // The user is typing: the input is dirty but the prop still holds the
+    // saved value, because no change event fired yet.
+    await contains("input").focus();
+    queryOne("input").value = "42";
+    // Anything at all can re-render us here -- the filter list refreshing, a
+    // message from the session. It must not throw the typing away.
+    component.render();
+    await animationFrame();
+    expect(queryOne("input").value).toBe("42");
+});
+
+test("the input follows the prop when it changes and the input is not focused", async function () {
+    class Parent extends Component {
+        static components = { NumericFilterValue };
+        static props = {};
+        static template = xml`
+            <NumericFilterValue value="state.value" onValueChanged="() => {}"/>`;
+        setup() {
+            this.state = useState({ value: 1999 });
+        }
+    }
+    const env = await makeMockEnv();
+    const parent = await mountWithCleanup(Parent, { env, getTemplate });
+    expect(queryOne("input").value).toBe("1999");
+    parent.state.value = 2000;
+    await animationFrame();
+    expect(queryOne("input").value).toBe("2000");
 });
