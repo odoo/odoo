@@ -405,7 +405,7 @@ class HrTimeRule(models.Model):
                 p_dt_end = datetime.combine(p_stop, time.max, tzinfo=UTC)
                 period = Intervals([(p_dt_start.replace(tzinfo=None), p_dt_end.replace(tzinfo=None), version)])
 
-                if version.is_fully_flexible:
+                if version._is_fully_flexible():
                     # mark the employee as fully flexible for this period
                     result['fully_flexible'][emp] |= period
                     if not schedule_calendar:

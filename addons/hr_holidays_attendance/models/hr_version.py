@@ -149,7 +149,7 @@ class HrVersion(models.Model):
             return False
         # fully-flexible employees have no calendar; compute duration from actual time span
         version = vals.get('version_id')
-        if version and version.is_fully_flexible:
+        if version and version._is_fully_flexible():
             return False
         return super()._generate_work_entries_postprocess_adapt_to_calendar(vals)
 

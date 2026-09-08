@@ -78,8 +78,13 @@ class TestWorkentryAttendance(HrWorkEntryAttendanceCommon):
     def test_attendance_spanning_days(self):
         # Tests that attendances that cross midnight generate work entries that do not cross midnight
         # or conflict. 2 entries for init, 2 for the first attendance, and 4 for the second due to lunch
+        flexible_calendar = self.env['resource.calendar'].create({
+            'name': 'Flexible Calendar',
+            'calendar_type': 'undefined',
+            'attendance_ids': [],
+        })
         self.version.write({
-            'resource_calendar_id': False,
+            'resource_calendar_id': flexible_calendar.id,
             'tz': 'Europe/Brussels',  # The test is wrongly designed with the timezones, attendances should really span two days WITH the tz applied
         })
         self.env['hr.attendance'].create(
@@ -141,10 +146,15 @@ class TestWorkentryAttendance(HrWorkEntryAttendanceCommon):
             'work_entry_type_id': self.work_entry_type_leave.id,
         })
 
-        self.richard_emp.version_id.write({
-            'resource_calendar_id': False,
+        flexible_calendar = self.env['resource.calendar'].create({
+            'name': 'Flexible Calendar',
+            'calendar_type': 'undefined',
+            'attendance_ids': [],
             'hours_per_week': 40,
             'hours_per_day': 8,
+        })
+        self.richard_emp.version_id.write({
+            'resource_calendar_id': flexible_calendar.id,
             'attendance_based': True,
             'tz': 'Europe/Brussels',
         })
@@ -175,13 +185,18 @@ class TestWorkentryAttendance(HrWorkEntryAttendanceCommon):
         """
         Test Fully Flexible employee with overlapping leaves doesn't cause singleton errors.
         """
+        fully_flexible_calendar = self.env['resource.calendar'].create({
+            'name': 'Fully Flexible Calendar',
+            'calendar_type': 'undefined',
+            'attendance_ids': [],
+        })
         fully_flexible_emp = self.env['hr.employee'].create({
             'name': 'Flexible Employee',
             'date_version': datetime(2025, 6, 1).date(),
             'contract_date_start': datetime(2025, 6, 1).date(),
             'wage': 5000.0,
             'attendance_based': True,
-            'resource_calendar_id': False,
+            'resource_calendar_id': fully_flexible_calendar.id,
         })
 
         sick_work_entry_type = self.env['hr.work.entry.type'].search([('code', '=', '013.00')], limit=1)

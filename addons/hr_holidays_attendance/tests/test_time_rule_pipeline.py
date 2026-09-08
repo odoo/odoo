@@ -24,6 +24,11 @@ class TestTimeRulePipeline(TransactionCase):
             ],
         })
         cls.env.company.resource_calendar_id = cls.calendar
+        cls.flex_calendar = cls.env['resource.calendar'].create({
+            'name': 'Flexible Calendar',
+            'calendar_type': 'undefined',
+            'attendance_ids': [],
+        })
         cls.att_type = cls.env.company._get_default_attendance_work_entry_type()
         cls.env.company.attendance_work_entry_type_id = cls.att_type
         cls.overtime_type = cls.env.ref('hr_work_entry.generic_work_entry_type_overtime')
@@ -52,7 +57,7 @@ class TestTimeRulePipeline(TransactionCase):
             'name': 'Flex Employee',
             'tz': 'UTC',
             'attendance_based': True,
-            'resource_calendar_id': False,
+            'resource_calendar_id': cls.flex_calendar.id,
             'date_version': '2020-01-01',
             'contract_date_start': '2020-01-01',
             'wage': 3000,
@@ -427,7 +432,7 @@ class TestTimeRulePipeline(TransactionCase):
             'name': 'Flex Brussels',
             'tz': 'Europe/Brussels',
             'attendance_based': True,
-            'resource_calendar_id': False,
+            'resource_calendar_id': self.flex_calendar.id,
             'date_version': '2018-01-01',
             'contract_date_start': '2018-01-01',
             'wage': 3000,
@@ -463,7 +468,7 @@ class TestTimeRulePipeline(TransactionCase):
             'name': 'Flex Sick',
             'tz': 'Europe/Brussels',
             'attendance_based': True,
-            'resource_calendar_id': False,
+            'resource_calendar_id': self.flex_calendar.id,
             'date_version': '2024-09-01',
             'contract_date_start': '2024-09-01',
             'wage': 5000,
@@ -577,7 +582,7 @@ class TestTimeRulePipeline(TransactionCase):
             'name': 'Tokyo Employee',
             'tz': 'Asia/Tokyo',
             'attendance_based': True,
-            'resource_calendar_id': False,
+            'resource_calendar_id': self.flex_calendar.id,
             'date_version': '2024-10-01',
             'contract_date_start': '2024-10-01',
             'wage': 3500,
@@ -648,7 +653,7 @@ class TestTimeRulePipeline(TransactionCase):
         flex_emp = self.env['hr.employee'].create({
             'name': 'Flex Overlap',
             'attendance_based': True,
-            'resource_calendar_id': False,
+            'resource_calendar_id': self.flex_calendar.id,
             'date_version': '2025-06-01',
             'contract_date_start': '2025-06-01',
             'wage': 5000,
