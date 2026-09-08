@@ -569,7 +569,7 @@ export class OdooPivot {
             .filter(
                 (dimension) =>
                     dimension.fieldName.includes(".") &&
-                    this._fields[dimension.fieldName.split(".")[0]].type === "property",
+                    this._fields[dimension.fieldName.split(".")[0]]?.type === "property",
             );
         await Promise.all(
             properties.map((dimension) =>
