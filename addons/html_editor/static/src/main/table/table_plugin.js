@@ -157,6 +157,7 @@ export class TablePlugin extends Plugin {
         on_selectionchange_handlers: withSequence(5, this.updateSelectionTable.bind(this)),
         on_will_break_line_handlers: this.resetTableSelection.bind(this),
         on_will_split_block_handlers: this.resetTableSelection.bind(this),
+        on_color_requested_handlers: this.applyPendingColorOnSelectedTds.bind(this),
 
         /** Processors */
         before_insert_processors: this.normalizeTableStructure.bind(this),
@@ -1886,6 +1887,22 @@ export class TablePlugin extends Plugin {
             didDeselectTable = true;
         }
         return didDeselectTable;
+    }
+
+    applyPendingColorOnSelectedTds() {
+        const selectedTds = [...this.editable.querySelectorAll(".o_selected_td")].filter(
+            (node) => node.isContentEditable
+        );
+        if (!selectedTds.length) {
+            return;
+        }
+        const activeColorInfo = this.dependencies.color.getActiveColorInfo();
+        for (const [mode, color] of Object.entries(activeColorInfo)) {
+            if (mode === "backgroundColor") {
+                this.applyTableColor(color, mode, new Set(), false);
+                delete activeColorInfo[mode];
+            }
+        }
     }
 
     applyTableColor(color, mode, coloredNodes, previewMode) {
