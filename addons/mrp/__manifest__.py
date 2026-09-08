@@ -64,7 +64,7 @@
             'mrp/static/tests/**/*',
         ],
         'web.report_assets_common': [
-            'mrp/static/src/scss/mrp_report_bom_structure.scss'
+            'mrp/static/src/scss/mrp_report_bom_structure.css'
         ]
     },
     'author': 'Odoo S.A.',

@@ -89,7 +89,7 @@
             ('include', 'web._assets_bootstrap_frontend'),
             ('include', 'web.icons_fonts'),
             'web/static/src/scss/animation.scss',
-            'web/static/src/scss/mimetypes.scss',
+            'web/static/src/scss/mimetypes.css',
             'web/static/src/scss/ui.scss',
         ],
         # Minimal assets for theme selector iframe
@@ -140,7 +140,7 @@
             'mass_mailing/static/src/builder/snippet_viewer/*.scss',
         ],
         'mass_mailing.mailing_assets': [
-            'mass_mailing/static/src/scss/mailing_portal.scss',
+            'mass_mailing/static/src/scss/mailing_portal.css',
             'mass_mailing/static/src/interactions/subscribe.js',
             'mass_mailing/static/src/xml/mailing_portal_subscription_blocklist.xml',
             'mass_mailing/static/src/xml/mailing_portal_subscription_feedback.xml',
@@ -164,13 +164,13 @@
             'mass_mailing/static/src/scss/mass_mailing_mobile_preview.scss',
             'mass_mailing/static/src/js/tours/**/*',
             # Don't include dark mode files in light mode
-            ('remove', 'mass_mailing/static/src/**/*.dark.scss'),
+            ('remove', 'mass_mailing/static/src/**/*.dark.css'),
         ],
         'web.assets_backend_lazy': [
             'mass_mailing/static/src/views/mass_mailing_subscription_graph_renderer.js',
         ],
         'web.assets_web_dark': [
-            'mass_mailing/static/src/**/*.dark.scss',
+            'mass_mailing/static/src/**/*.dark.css',
         ],
         'mass_mailing.assets_mail_themes': [
             'mass_mailing/static/src/scss/themes/**/*',

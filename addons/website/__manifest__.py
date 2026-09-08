@@ -296,7 +296,7 @@
             ('remove', 'website/static/src/snippets/**/*.edit.js'),
             'website/static/src/scss/website.scss',
             'website/static/src/scss/portal.scss',
-            'website/static/src/scss/website_common.scss',
+            'website/static/src/scss/website_common.css',
             'website/static/src/scss/website_controller_page.scss',
             'website/static/src/scss/website.ui.scss',
             'website/static/src/libs/bootstrap/bootstrap.js',
@@ -387,7 +387,7 @@
             'website/static/src/scss/color_palettes.scss',
             'website/static/src/scss/view_hierarchy.scss',
             'website/static/src/scss/website.backend.scss',
-            'website/static/src/scss/website_visitor_views.scss',
+            'website/static/src/scss/website_visitor_views.css',
             'website/static/src/js/backend/**/*',
             'website/static/src/js/tours/tour_utils.js',
             'website/static/src/js/text_processing.js',
@@ -406,7 +406,7 @@
             'web/static/src/core/autocomplete/*',
             'website/static/src/components/autocomplete_with_pages/*',
             'website/static/src/xml/website.xml',
-            'website/static/src/scss/website_controller_page_kanban.scss',
+            'website/static/src/scss/website_controller_page_kanban.css',
             'website/static/src/mail/core/common/**/*',
 
             'website/static/src/xml/website_form_editor.xml',
@@ -417,8 +417,8 @@
         ],
         "web.assets_web_dark": [
             'website/static/src/components/dialog/*.dark.scss',
-            'website/static/src/scss/website.backend.dark.scss',
-            'website/static/src/components/website_loader/website_loader.dark.scss'
+            'website/static/src/scss/website.backend.dark.css',
+            'website/static/src/components/website_loader/website_loader.dark.css'
         ],
         'web.assets_unit_tests': [
             'website/static/src/client_actions/website_preview/website_builder_action_test_mode.js',
@@ -496,7 +496,7 @@
             'web/static/lib/bootstrap/scss/_maps.scss',
             'website/static/src/components/resource_editor/**/*',
             'website/static/src/components/edit_head_body_dialog/edit_head_body_dialog.js',
-            'website/static/src/components/edit_head_body_dialog/edit_head_body_dialog.scss',
+            'website/static/src/components/edit_head_body_dialog/edit_head_body_dialog.css',
             'website/static/src/components/edit_head_body_dialog/edit_head_body_dialog.xml',
             'website/static/src/utils/**/*',
             'website/static/src/components/dialog/*.js',
@@ -520,7 +520,7 @@
         ],
         'website.website_builder_assets': [
             ('include', 'html_builder.assets'),
-            'website/static/src/scss/website_common.scss',
+            'website/static/src/scss/website_common.css',
             'website/static/src/builder/**/*',
             'website/static/src/services/google_maps_service.js',
             'website/static/src/components/googleplaces_autocomplete/*',

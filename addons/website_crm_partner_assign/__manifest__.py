@@ -44,7 +44,7 @@ The automatic assignment is figured from the weight of partner levels and the ge
             'website_crm_partner_assign/static/src/website_builder/**/*',
         ],
         'html_builder.assets_inside_builder_iframe': [
-            'website_crm_partner_assign/static/src/scss/crm_partner_assign.scss',
+            'website_crm_partner_assign/static/src/scss/crm_partner_assign.css',
         ],
     },
     'author': 'Odoo S.A.',

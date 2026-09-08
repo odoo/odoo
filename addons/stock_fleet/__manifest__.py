@@ -23,7 +23,7 @@
     'post_init_hook': '_enable_dispatch_management',
     'assets': {
         'web.report_assets_common': [
-            'stock_fleet/static/src/scss/report_picking_cmr.scss',
+            'stock_fleet/static/src/scss/report_picking_cmr.css',
         ],
     },
 }

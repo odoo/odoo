@@ -35,7 +35,7 @@
             'mrp_subcontracting/static/src/subcontracting_portal/move_list_view.js',
         ],
         'web.assets_frontend': [
-            'mrp_subcontracting/static/src/scss/subcontracting_portal.scss',
+            'mrp_subcontracting/static/src/scss/subcontracting_portal.css',
         ],
         'mrp_subcontracting.webclient': [
             ('include', 'web._assets_helpers'),
@@ -49,7 +49,7 @@
             ('include', 'web.icons_fonts'),
             'web/static/src/webclient/navbar/navbar.scss',
             'web/static/src/scss/animation.scss',
-            'web/static/src/scss/mimetypes.scss',
+            'web/static/src/scss/mimetypes.css',
             'web/static/src/scss/ui.scss',
 
             'web/static/src/module_loader.js',

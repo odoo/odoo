@@ -12,7 +12,7 @@ This module implements reCaptchaV3 so that you can prevent bot spam on your publ
     ],
     'assets': {
         'web.assets_frontend': [
-            'google_recaptcha/static/src/scss/recaptcha.scss',
+            'google_recaptcha/static/src/scss/recaptcha.css',
             'google_recaptcha/static/src/js/recaptcha.js',
             'google_recaptcha/static/src/interactions/**/*',
         ],

@@ -87,14 +87,14 @@ sent mails with personal token for the invitation of the survey.
             'survey/static/src/xml/survey_session_text_answer_template.xml',
         ],
         'web.report_assets_common': [
-            'survey/static/src/scss/survey_reports.scss',
+            'survey/static/src/scss/survey_reports.css',
         ],
         'web.assets_backend': [
             'survey/static/src/question_page/*',
             'survey/static/src/views/**/*.js',
             'survey/static/src/views/**/*.xml',
             'survey/static/src/scss/survey_survey_views.scss',
-            'survey/static/src/scss/survey_question_views.scss',
+            'survey/static/src/scss/survey_question_views.css',
             'survey/static/src/js/tours/survey_tour.js',
         ],
         "web.assets_web_dark": [

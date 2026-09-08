@@ -31,7 +31,7 @@
         ],
         'web.assets_unit_tests_setup': [
             # we don't need css as we aren't testing the UI with hoot
-            ('remove', 'pos_stock/static/src/app/components/popups/select_lot_popup/select_lot_popup.scss'),
+            ('remove', 'pos_stock/static/src/app/components/popups/select_lot_popup/select_lot_popup.css'),
             'pos_stock/static/src/customer_display/**/*',
         ],
         'web.assets_unit_tests': [

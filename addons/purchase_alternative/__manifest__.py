@@ -25,7 +25,7 @@ one vendor and others from another vendor.
     'assets': {
         'web.assets_backend': [
             'purchase_alternative/static/src/*/**.js',
-            'purchase_alternative/static/src/*/**.scss',
+            'purchase_alternative/static/src/*/**.css',
             'purchase_alternative/static/src/*/**.xml',
         ],
     },

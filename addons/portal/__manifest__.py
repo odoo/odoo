@@ -106,7 +106,7 @@ a dependency towards website editing and customization capabilities.""",
             "web/static/lib/bootstrap/scss/_maps.scss",
             "portal/static/src/chatter/portal/scss/primary_variables.scss",  # to force enterprise primary color
             ("include", "web._assets_bootstrap_backend"),
-            "web/static/src/scss/mimetypes.scss",
+            "web/static/src/scss/mimetypes.css",
             'web/static/src/scss/ui.scss',
             ('include', 'web.icons_fonts'),
             "web/static/src/webclient/webclient.scss",

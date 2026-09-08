@@ -22,7 +22,7 @@ This module allows a customer to give rating.
             "rating/static/src/core/web/**/*",
         ],
         'web.assets_frontend': [
-            'rating/static/src/scss/rating_templates.scss',
+            'rating/static/src/scss/rating_templates.css',
         ],
         'web.assets_unit_tests': [
             'rating/static/tests/**/*',
