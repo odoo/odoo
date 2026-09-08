@@ -1080,7 +1080,7 @@ export class OdooPivotModel extends PivotModel {
                     // case field is many2one and used as measure and groupBy simultaneously
                     measurement = 1;
                 }
-                if (measure.type === "boolean" && measurement instanceof Boolean) {
+                if (measure.type === "boolean" && typeof measurement === "boolean") {
                     measurement = measurement ? 1 : 0;
                 }
                 measurements[measurementId] = measurement;
