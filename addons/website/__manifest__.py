@@ -139,6 +139,8 @@
         'views/snippets/s_website_form_info.xml',
         'views/snippets/s_numbers_showcase.xml',
         'views/snippets/s_numbers_charts.xml',
+        'views/snippets/s_text_chart.xml',
+        'views/snippets/s_chart_text.xml',
         'views/snippets/s_accordion_image.xml',
         'views/snippets/s_pricelist_boxed.xml',
         'views/snippets/s_adventure.xml',
