@@ -27,7 +27,7 @@ export class MobileFigureContainer extends Component {
         const sheetId = this.props.spreadsheetModel.getters.getActiveSheetId();
         const sortedFigures = this.props.spreadsheetModel.getters
             .getFigures(sheetId)
-            .sort((f1, f2) => (this.isBefore(f1, f2) ? -1 : 1));
+            .sort((f1, f2) => (this.isBefore(f1, f2) ? -1 : this.isBefore(f2, f1) ? 1 : 0));
 
         const figureRows = [];
         for (let i = 0; i < sortedFigures.length; i++) {
@@ -57,7 +57,7 @@ export class MobileFigureContainer extends Component {
         const sheetId = this.props.spreadsheetModel.getters.getActiveSheetId();
         const fig1 = this.props.spreadsheetModel.getters.getFigureUI(sheetId, f1);
         const fig2 = this.props.spreadsheetModel.getters.getFigureUI(sheetId, f2);
-        return fig1.x < fig2.x ? fig1.y < fig2.y : fig1.y < fig2.y;
+        return fig1.y === fig2.y ? fig1.x < fig2.x : fig1.y < fig2.y;
     }
 
     isScorecard(figure) {
