@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document" primary="True">
+
+        <!-- Switching shipping address and customer address around-->
+        <xpath expr="//t[@t-if='o.partner_shipping_id and (o.partner_shipping_id != o.partner_id)']/parent::div" position="after">
+            <t t-set="temp"><t t-out="address"/></t>
+            <t t-set="address"><t t-out="information_block"/></t>
+            <t t-set="information_block"><t t-out="temp"/></t>
+        </xpath>
+    </template>
+
+        <!-- Workaround for Studio reports, see odoo/odoo#60660 -->
+    <template id="report_invoice" inherit_id="account.report_invoice">
+        <xpath expr='//t[@t-call="account.report_invoice_document"]' position="after">
+            <t t-elif="o._get_name_invoice_report() == 'l10n_de.report_invoice_document'"
+               t-call="l10n_de.report_invoice_document"
+               t-lang="lang"/>
+        </xpath>
+    </template>
+</odoo>

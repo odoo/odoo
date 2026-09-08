@@ -41,6 +41,11 @@
                         </div>
                     </div>
                 </t>
+                <t t-if="o.company_id.account_fiscal_country_id.code == 'DE'">
+                    <t t-set="temp"><t t-out="address"/></t>
+                    <t t-set="address"><t t-out="information_block"/></t>
+                    <t t-set="information_block"><t t-out="temp"/></t>
+                </t>
                 <div class="page">
                     <h2 style="margin-top: 15px;">
                         <span t-out="o.picking_type_id._get_code_report_name()"/>
