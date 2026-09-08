@@ -153,7 +153,7 @@ class ZatcaUblMixin(models.AbstractModel):
             identification_number = vat or identification_number
         elif partner.l10n_sa_edi_additional_identification_scheme == 'TIN':
             # according to ZATCA, the TIN number is always the first 10 digits of the VAT number
-            identification_number = self._l10n_sa_get_tin_from_vat(vat)
+            identification_number = partner._l10n_sa_get_tin_from_vat(vat)
         return identification_number
 
     # -------------------------------------------------------------------------
