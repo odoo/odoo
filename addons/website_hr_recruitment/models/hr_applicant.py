@@ -9,6 +9,9 @@ class Applicant(models.Model):
 
     _inherit = 'hr.applicant'
 
+    def _get_form_signed_fields(self):
+        return super()._get_form_signed_fields() | {'job_id', 'department_id'}
+
     def website_form_input_filter(self, request, values):
         if 'partner_id' in values:
             values.pop('email_from', None)
