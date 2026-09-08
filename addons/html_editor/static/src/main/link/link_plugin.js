@@ -394,6 +394,7 @@ export class LinkPlugin extends Plugin {
         insert_line_break_element_overrides: this.handleInsertLineBreak.bind(this),
         delete_image_overrides: this.deleteImageLink.bind(this),
         delete_backward_overrides: withSequence(15, this.handleDeleteBackward.bind(this)),
+        delete_forward_overrides: withSequence(15, this.handleDeleteForward.bind(this)),
         double_click_overrides: this.doubleClickLinkOverrides.bind(this),
         triple_click_overrides: this.tripleClickButtonOverrides.bind(this),
 
@@ -1504,6 +1505,28 @@ export class LinkPlugin extends Plugin {
         this.dependencies.selection.setSelection({
             anchorNode: startContainer.previousSibling,
             anchorOffset: startContainer.previousSibling.childNodes.length - 1,
+        });
+        return true;
+    }
+
+    handleDeleteForward({ startContainer, startOffset }) {
+        if (
+            startContainer?.nextSibling?.textContent !== "\uFEFF" ||
+            nodeSize(startContainer) !== startOffset
+        ) {
+            return;
+        }
+        const feff = startContainer.nextSibling;
+        if (!feff.nextSibling || feff.nextSibling.nodeName !== "A") {
+            return;
+        }
+        const link = feff.nextSibling;
+        if (!link?.matches(".btn")) {
+            return;
+        }
+        this.dependencies.selection.setSelection({
+            anchorNode: link.firstChild,
+            anchorOffset: 1,
         });
         return true;
     }
