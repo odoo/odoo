@@ -3366,3 +3366,18 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         combo_item_to_delete.unlink()
         with self.assertRaises(UserError):
             self.PosOrder.sync_from_ui([order_data])
+
+    def test_device_sync_product_display_name_without_default_code(self):
+        """ Records synced to the other devices are read with the PoS context. """
+        product = self.env['product.product'].create({
+            'name': 'Synced Tube',
+            'default_code': '100104',
+            'available_in_pos': True,
+        })
+        self.pos_config.open_ui()
+        session = self.pos_config.current_session_id
+
+        with patch.object(self.env.registry['bus.bus'], '_sendone') as mock_send:
+            self.pos_config.notify_synchronisation(session.id, 1, {'product.product': [product.id]})
+        static_products = mock_send.call_args[0][2]['static_records']['product.product']
+        self.assertEqual(static_products[0]['display_name'], 'Synced Tube')
