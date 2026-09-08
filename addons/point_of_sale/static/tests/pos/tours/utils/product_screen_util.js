@@ -227,7 +227,6 @@ export function clickPartnerButton() {
         },
     ];
 }
-
 export function createPartner(partnerData = {}) {
     const steps = [
         clickReview(),
@@ -264,13 +263,15 @@ export function createPartner(partnerData = {}) {
 
     return steps;
 }
-export function clickCustomer(name, pressEnter = false) {
+
+export function clickCustomer(name, pressEnter = true) {
     return [
         ...PartnerList.searchCustomerValue(name, pressEnter),
         PartnerList.clickPartner(name),
         { ...back(), isActive: ["mobile"] },
     ];
 }
+
 export function selectPreset(selectedPreset, presetToSelect, presetPopup = true) {
     const steps = [
         clickReview(),
