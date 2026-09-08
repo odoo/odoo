@@ -41,6 +41,12 @@ class CrmStage(models.Model):
 
     @api.onchange('is_won')
     def _onchange_is_won(self):
+        # The warning describes what saving does to the leads already in the
+        # stage, so it only applies when the stage exists and the flag actually
+        # moves. The first onchange of a new record runs every field's method,
+        # which would otherwise warn about a change nobody made.
+        if not self._origin or self._origin.is_won == self.is_won:
+            return
         return {
             'warning': {
                 'title': _("Do you really want to update this stage?"),
