@@ -43,6 +43,8 @@ export class MailThread extends models.ServerModel {
     ) {
         /** @type {import("mock_models").MailFollowers} */
         const MailFollowers = this.env["mail.followers"];
+        /** @type {import("mock_models").MailMessageSubtype} */
+        const MailMessageSubtype = this.env["mail.message.subtype"];
 
         const followersByThread = (thread) => {
             const domain = [
@@ -51,7 +53,11 @@ export class MailThread extends models.ServerModel {
                 ["partner_id", "!=", this.env.user.partner_id],
             ];
             if (filter_recipients) {
-                // subtype and partner active checks not done here for simplicity
+                domain.push([
+                    "subtype_ids",
+                    "in",
+                    MailMessageSubtype.search([["subtype_xmlid", "=", "mail.mt_comment"]]),
+                ]);
             }
             if (after) {
                 domain.push(["id", ">", after]);
@@ -612,6 +618,8 @@ export class MailThread extends models.ServerModel {
         const MailFollowers = this.env["mail.followers"];
         /** @type {import("mock_models").MailMessage} */
         const MailMessage = this.env["mail.message"];
+        /** @type {import("mock_models").MailMessageSubtype} */
+        const MailMessageSubtype = this.env["mail.message.subtype"];
         /** @type {import("mock_models").MailScheduledMessage} */
         const MailScheduledMessage = this.env["mail.scheduled.message"];
         /** @type {import("mock_models").MailThread} */
@@ -686,7 +694,11 @@ export class MailThread extends models.ServerModel {
                     ["res_id", "=", t.id],
                     ["res_model", "=", this._name],
                     ["partner_id", "!=", this.env.user.partner_id],
-                    // subtype and partner active checks not done here for simplicity
+                    [
+                        "subtype_ids",
+                        "in",
+                        MailMessageSubtype.search([["subtype_xmlid", "=", "mail.mt_comment"]]),
+                    ],
                 ])
             );
             this.env["mail.thread"]._store_message_followers_fields.call(this, res, {
