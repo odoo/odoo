@@ -1,5 +1,6 @@
 import base64
 import os
+import re
 from PIL import Image
 from functools import partial
 
@@ -239,6 +240,7 @@ class TestBaseDocumentLayout(TestBaseDocumentLayoutHelpers):
         self.company.write({'street2': 'street_2_detail'})
         doc_layout_2 = self.env['base.document.layout'].create({'company_id': self.company.id})
         self.assertTrue('street_2_detail' in doc_layout_2.company_details)
+<<<<<<< e9873bdae833be4062fdab3515e1e474ab7e8881
 
     def test_extract_primary_secondary_on_svg(self):
         svg_b64 = base64.b64encode(b'<svg xmlns="http://www.w3.org/2000/svg"/>')
@@ -246,3 +248,34 @@ class TestBaseDocumentLayout(TestBaseDocumentLayoutHelpers):
 
         self.assertFalse(primary)
         self.assertFalse(secondary)
+||||||| 093b55eb9e20fbd81b32396851679b0d1899737f
+=======
+
+    def _get_company_report_styles(self, styles, company):
+        company_marker = f'.o_company_{company.id}_layout'
+        match = re.search(
+            rf'{re.escape(company_marker)}.*?(?=\n\s*\.o_company_\d+_layout|\Z)',
+            styles,
+            re.S,
+        )
+        return match.group() if match else ''
+
+    def test_report_tables_id_change_updates_company_report_styles(self):
+        """Test that changing only the table design must refresh report table colors."""
+        primary_color = '#ff0080'
+        attachment = self.env.ref('web.asset_styles_company_report')
+        self.company.write({
+            'primary_color': primary_color,
+            'report_tables_id': 'light',
+        })
+        styles = (attachment.raw or b'').decode()
+        company_styles = self._get_company_report_styles(styles, self.company)
+        self.assertNotIn('o_report_layout_bubble', company_styles)
+
+        self.company.write({'report_tables_id': 'bubble'})
+        styles = (attachment.raw or b'').decode()
+        company_styles = self._get_company_report_styles(styles, self.company)
+        self.assertIn('o_report_layout_bubble', company_styles)
+        self.assertIn('thead th', company_styles)
+        self.assertIn(primary_color, company_styles)
+>>>>>>> 97d9efd3b669e44abc54700f307503703eec6880
