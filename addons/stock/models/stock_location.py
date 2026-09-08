@@ -362,7 +362,16 @@ class StockLocation(models.Model):
             return
         domain = Domain("location_id", "in", modified_locations.ids)
         if usage != "view":
-            domain &= Domain("quantity", ">", 0)
+            # A bare `> 0` would false-positive on dust left by a raw SQL
+            # writer bypassing the ORM's rounding (see the analogous epsilon
+            # window in `_unlink_zero_quants`).
+            precision_digits = max(
+                6, self.env.ref("uom.decimal_product_uom").sudo().digits * 2
+            )
+            epsilon = 5 * 10 ** -(precision_digits + 1)
+            domain &= Domain("quantity", ">", epsilon) | Domain(
+                "quantity", "<", -epsilon
+            )
         blocking = self.env["stock.quant"].search(domain, limit=1).location_id
         if not blocking:
             return
