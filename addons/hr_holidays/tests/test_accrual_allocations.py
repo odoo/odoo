@@ -1541,7 +1541,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 ("2025-09-07", 25),
                 ("2025-09-08", 25),
             ),
-            ['number_of_hours_display'],
+            ['number_of_hours'],
         )
 
     def test_consistency_between_cap_accrued_time_and_maximum_leave(self):
@@ -2612,8 +2612,8 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             # Max amount of allocated duration is reached (10h)
             self.assertEqual(form.number_of_days, 10 / self.hours_per_day)
 
-            form.number_of_hours_display = 0
-            self.assertEqual(form.number_of_hours_display, 0)
+            form.number_of_hours = 0
+            self.assertEqual(form.number_of_hours, 0)
 
         self.assertEqual(allocation.number_of_days, 0)
 
@@ -2626,8 +2626,8 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             # Max amount of allocated duration is reached (10h)
             self.assertEqual(form.number_of_days, 10 / self.hours_per_day)
 
-            form.number_of_hours_display = 5
-            self.assertEqual(form.number_of_hours_display, 5)
+            form.number_of_hours = 5
+            self.assertEqual(form.number_of_hours, 5)
         self.assertEqual(allocation.number_of_days, 5 / self.hours_per_day)
         allocation.action_approve()
 
