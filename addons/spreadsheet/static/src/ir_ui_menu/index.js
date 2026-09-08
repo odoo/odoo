@@ -66,11 +66,18 @@ export const spreadsheetLinkMenuCellService = {
                 },
                 urlRepresentation(url) {
                     const menuId = parseIrMenuIdLink(url);
-                    return env.services.menu.getMenu(menuId).name;
+                    const menu = env.services.menu.getMenu(menuId);
+                    if (!menu) {
+                        throw new BadOdooLinkError(menuId);
+                    }
+                    return menu.name;
                 },
                 open(url, env, newWindow) {
                     const menuId = parseIrMenuIdLink(url);
                     const menu = env.services.menu.getMenu(menuId);
+                    if (!menu) {
+                        throw new BadOdooLinkError(menuId);
+                    }
                     env.services.action.doAction(menu.actionID, { newWindow });
                 },
             })
