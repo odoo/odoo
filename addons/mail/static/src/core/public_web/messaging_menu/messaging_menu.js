@@ -43,12 +43,11 @@ export class MessagingMenu extends Component {
         );
     });
     messages = computed(() => {
-        if (this.searchTerm()) {
+        if (this.state().searchTerm) {
             return this.messageSearch.results;
         }
         return this.filteredMessages();
     });
-    searchTerm = signal("");
     tabContentRef = signal.ref();
 
     setup() {
@@ -96,7 +95,7 @@ export class MessagingMenu extends Component {
         );
         // On search term change: update the search state.
         useEffect(() => {
-            this.messageSearch.searchTerm = this.searchTerm();
+            this.messageSearch.searchTerm = this.state().searchTerm;
         });
         this.hasTouch = hasTouch;
     }
@@ -115,7 +114,7 @@ export class MessagingMenu extends Component {
     }
 
     get noSearchResultText() {
-        return this.searchTerm() ? _t('No results for "%s".', this.searchTerm()) : "";
+        return this.state().searchTerm ? _t('No results for "%s".', this.state().searchTerm) : "";
     }
 
     get noFilterResultText() {
@@ -129,7 +128,7 @@ export class MessagingMenu extends Component {
     get showNotificationHubExtras() {
         const menu = this.store.messagingMenu;
         return (
-            !this.searchTerm() &&
+            !this.state().searchTerm &&
             !this.state().selectedFilter &&
             this.state().activeTab.eq(menu.odooBotNotificationsTab)
         );

@@ -20,7 +20,7 @@
                         </div>
                         <t t-else="" t-call="mail.MessagingMenu-action"/>
                     </t>
-                    <DiscussSearch autofocus="this.searchInputAutofocus" class="'flex-grow-1 min-w-0'" searchTerm="this.searchTerm"/>
+                    <DiscussSearch autofocus="this.searchInputAutofocus" class="'flex-grow-1 min-w-0'" messagingMenuUiState="this.state"/>
                 </div>
                 <div t-if="this.activeTab().filters.length" class="o-mail-MessagingMenu-filters d-flex align-items-center flex-nowrap gap-1" role="tablist">
                     <button

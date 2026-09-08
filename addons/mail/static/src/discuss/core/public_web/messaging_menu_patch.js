@@ -21,7 +21,7 @@ const messagingMenuPatch = {
             return this.state().activeTab.getSortedChannels(this.state().selectedFilter, channels);
         });
         this.channels = computed(() => {
-            if (this.searchTerm()) {
+            if (this.state().searchTerm) {
                 return this.channelSearch.results;
             }
             return this.filteredChannels();
@@ -41,7 +41,7 @@ const messagingMenuPatch = {
         });
         useEffect(() => {
             if (this.state().activeTab.recordType === "discuss.channel") {
-                this.channelSearch.searchTerm = this.searchTerm();
+                this.channelSearch.searchTerm = this.state().searchTerm;
             }
         });
         // Bound once so `onClickChannel` is a stable (useProps.static) handler.
