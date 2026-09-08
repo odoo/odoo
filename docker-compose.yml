@@ -3,11 +3,11 @@ services:
     image: odoo:19.0
     ports:
       - "8099:8069"
+    command: odoo -c /etc/odoo/odoo.conf
     volumes:
       - odoo-web-data:/var/lib/odoo
       - ./custom_addons:/mnt/extra-addons
-    env_file:
-      - .env
+      - ./docker/odoo.conf:/etc/odoo/odoo.conf:ro
     restart: always
 
 volumes:
