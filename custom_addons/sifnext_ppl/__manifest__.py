@@ -5,7 +5,7 @@
     "version": "19.0.1.0.0",
     "category": "Accounting/Accounting",
     "license": "LGPL-3",
-    "depends": ["account", "mail", "sif_keuangan", "hr_payroll_custom"],
+    "depends": ["account", "mail", "sif_keuangan", "hr_payroll_custom", "sif_rka"],
     "data": [
         "security/ppl_security.xml",
         "security/ir.model.access.csv",
