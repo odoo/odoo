@@ -474,14 +474,12 @@ export class DomPlugin extends Plugin {
             for (const [nodeIndex, node] of itemNodes.entries()) {
                 if (!nodeIndex && isFragment(previousItem) && !isBlock(item) && isVisible(item)) {
                     // Restore a lost split before an item that was unwrapped.
-                    const [targetNode, targetOffset] = leftPos(marker);
-                    const lineBreaks =
-                        this.split.splitBlockNode({ targetNode, targetOffset }).lineBreaks || [];
-                    if (lineBreaks.length > 1 && isFakeLineBreak(lineBreaks.at(-1))) {
+                    const lineBreaks = this.split.splitBlockNode(...leftPos(marker)).lineBreaks;
+                    if (lineBreaks?.length > 1 && isFakeLineBreak(lineBreaks.at(-1))) {
                         // The added fake line break will be made unnecessary by the insertion.
                         lineBreaks.pop().remove();
                     }
-                    insertedContent.push(...lineBreaks);
+                    insertedContent.push(...(lineBreaks || []));
                 }
                 if (marker.isConnected) {
                     const next = marker.nextSibling;
