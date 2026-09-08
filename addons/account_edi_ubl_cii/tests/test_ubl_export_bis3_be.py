@@ -483,6 +483,64 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_invoice_with_discount_and_fixed_tax_emptying_return')
 
+    def test_invoice_fixed_tax_emptying_manual_tax_amount(self):
+        """ Ensure the extra invoice line generated for an emptying tax uses the tax amount edited by the user. """
+        tax_emptying = self.fixed_tax(1.0, name="Vidange")
+        tax_21 = self.percent_tax(21.0)
+        tax_group = self.group_of_taxes(tax_21 + tax_emptying)
+        invoice = self._create_invoice(
+            partner_id=self.partner_be,
+            invoice_line_ids=[
+                self._prepare_invoice_line(
+                    product_id=self.product_a,
+                    price_unit=100.0,
+                    quantity=2.0,
+                    tax_ids=tax_group,
+                ),
+                self._prepare_invoice_line(
+                    product_id=self.product_a,
+                    price_unit=50.0,
+                    quantity=3.0,
+                    tax_ids=tax_group,
+                ),
+            ],
+        )
+        tax_line_emptying = invoice.line_ids.filtered(lambda aml: aml.tax_line_id == tax_emptying)
+        invoice.write({'line_ids': [
+            Command.update(tax_line_emptying.id, {'amount_currency': tax_line_emptying.amount_currency - 2.5}),
+        ]})
+        invoice.action_post()
+        self.assertEqual(invoice.amount_tax, 73.5 + 7.5)
+
+        self._generate_invoice_ubl_file(invoice)
+        self._assert_invoice_ubl_file(invoice, 'test_invoice_fixed_tax_emptying_manual_tax_amount')
+
+    def test_invoice_fixed_tax_emptying_global_rounding(self):
+        """ Ensure the extra invoice line generated for an emptying tax stays consistent with the tax amount when
+        the rounding delta of the 'round_globally' method is dispatched on the tax amounts.
+        Raw emptying tax amount: 0.075 per line, 0.225 in total, rounded as 0.23 (0.07 + 0.08 + 0.08).
+        """
+        tax_emptying = self.fixed_tax(0.05, name="Vidange")
+        tax_21 = self.percent_tax(21.0)
+        invoice = self._create_invoice(
+            partner_id=self.partner_be,
+            invoice_line_ids=[
+                self._prepare_invoice_line(
+                    product_id=self.product_a,
+                    price_unit=10.0,
+                    quantity=1.5,
+                    tax_ids=tax_emptying + tax_21,
+                )
+                for _i in range(3)
+            ],
+            post=True,
+        )
+        tax_line_emptying = invoice.line_ids.filtered(lambda aml: aml.tax_line_id == tax_emptying)
+        self.assertEqual(tax_line_emptying.balance, -0.23)
+
+        self._generate_invoice_ubl_file(invoice)
+        self._assert_invoice_ubl_file(invoice, 'test_invoice_fixed_tax_emptying_global_rounding')
+
     def test_invoice_manual_tax_amount(self):
         tax_12 = self.percent_tax(12.0)
         tax_21 = self.percent_tax(21.0)

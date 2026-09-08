@@ -3559,15 +3559,19 @@ class AccountTax(models.Model):
                 + first_tax_details['delta_total_excluded']
                 + sum(common_tax_data['tax_amount'] for common_tax_data in common_taxes_data)
             )
+            # The removed tax becomes the base of the new line. Its raw amounts are replaced by the rounded ones
+            # because the tax amount may have been adjusted after its computation (global rounding, tax amount
+            # edited manually on the tax lines). Using the raw amounts would make the new line inconsistent with the
+            # tax amount actually booked.
             second_tax_details = {
-                'raw_total_excluded_currency': tax_data_to_remove['raw_tax_amount_currency'],
-                'raw_total_excluded': tax_data_to_remove['raw_tax_amount'],
+                'raw_total_excluded_currency': tax_data_to_remove['tax_amount_currency'],
+                'raw_total_excluded': tax_data_to_remove['tax_amount'],
                 'total_excluded_currency': tax_data_to_remove['tax_amount_currency'],
                 'total_excluded': tax_data_to_remove['tax_amount'],
                 'delta_total_excluded_currency': 0.0,
                 'delta_total_excluded': 0.0,
-                'raw_total_included_currency': tax_data_to_remove['raw_tax_amount_currency'],
-                'raw_total_included': tax_data_to_remove['raw_tax_amount'],
+                'raw_total_included_currency': tax_data_to_remove['tax_amount_currency'],
+                'raw_total_included': tax_data_to_remove['tax_amount'],
                 'total_included_currency': tax_data_to_remove['tax_amount_currency'],
                 'total_included': tax_data_to_remove['tax_amount'],
                 'taxes_data': [],
