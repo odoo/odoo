@@ -19,6 +19,21 @@ patch(ControlButtons.prototype, {
             },
         });
     },
+    roundAndRecomputeBaseLineTaxes(baseLines, company) {
+        const ProductPrice = this.pos.models["decimal.precision"].find(
+            (dp) => dp.name === "Product Price"
+        );
+        for (const baseLine of baseLines) {
+            baseLine.price_unit = ProductPrice.round(baseLine.price_unit || 0);
+            // Clear stale manual overrides computed from the unrounded price_unit,
+            // so the recompute below derives fresh values from the rounded one.
+            baseLine.manual_total_excluded = null;
+            baseLine.manual_total_excluded_currency = null;
+            baseLine.manual_tax_amounts = null;
+        }
+        accountTaxHelpers.add_tax_details_in_base_lines(baseLines, company);
+        accountTaxHelpers.round_base_lines_tax_details(baseLines, company);
+    },
     // FIXME business method in a compoenent, maybe to move in pos_store
     async applyDiscount(percent) {
         const order = this.pos.getOrder();
@@ -62,6 +77,7 @@ patch(ControlButtons.prototype, {
                 grouping_function: groupingFunction,
             }
         );
+        this.roundAndRecomputeBaseLineTaxes(globalDiscountBaseLines, order.company_id);
         for (const baseLine of globalDiscountBaseLines) {
             await this.pos.addLineToCurrentOrder(
                 {
