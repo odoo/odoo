@@ -67,11 +67,11 @@ $oi-fw-ratio: 1.28571429; // Matches .fa-fw
     &[data-icon^="oi_"] {
         --icon-font-family: #{$oi-font-family};
     }
-    @each $icon-name, $icon-content in $oi-custom-icons {
-        // Add "oi_" prefix to avoid conflict with Material Symbols icon names
-        &[data-icon="oi_#{$icon-name}"]::before {
-            content: map-get($oi-custom-icons, $icon-name);
-        }
+    &[data-icon="oi_twitter"]:before {
+        content: "oi_x";
+    }
+    &[data-icon="oi_twitter-square"]:before {
+        content: "oi_x-square";
     }
 }
 
