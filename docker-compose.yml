@@ -36,13 +36,13 @@ services:
       USER: odoo
       PASSWORD: odoo
       UPGRADE_MODULES: prison_jail_master,tnpd_prison_vacancy,tnpd_hr_employee
-      SMTP_HOST: ${SMTP_HOST:-smtp.gmail.com}
-      SMTP_PORT: ${SMTP_PORT:-587}
-      SMTP_USERNAME: ${SMTP_USERNAME:-}
-      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
-      SMTP_FROM_EMAIL: ${SMTP_FROM_EMAIL:-}
-      SMTP_FROM_NAME: ${SMTP_FROM_NAME:-TNPD Prison HRMS}
-      APP_URL: ${APP_URL:-http://localhost}
+      SMTP_HOST: smtp.gmail.com
+      SMTP_PORT: 587
+      SMTP_USERNAME: s.varsha@giggso.com
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+      SMTP_FROM_EMAIL: s.varsha@giggso.com
+      SMTP_FROM_NAME: TNPD Prison HRMS
+      APP_URL: ${APP_URL:-https://dev-tnprisons.giggso.com}
 
 volumes:
   odoo-db-data:
