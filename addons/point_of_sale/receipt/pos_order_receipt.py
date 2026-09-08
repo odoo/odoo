@@ -432,7 +432,7 @@ class PosOrderReceipt(models.AbstractModel):
             "basic_name": product.name if is_restaurant else product.display_name,
             "product_id": product.id,
             "attribute_value_names": attributes.mapped("name"),
-            "quantity": quantity,
+            "quantity": int(quantity) if float(quantity).is_integer() else quantity,
             "note": _get_str_notes(line.note),
             "customer_note": _get_str_notes(line.customer_note),
             "pos_categ_id": first_categ.id,
