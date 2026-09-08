@@ -300,6 +300,47 @@ class ProductProduct(models.Model):
         for record in self:
             record.tax_string = record.product_tmpl_id._construct_tax_string(record.lst_price)
 
+    @api.depends_context('to_date')
+    def _compute_forecasted_without_stock(self):
+        res = super()._compute_forecasted_without_stock()
+        installed_modules = self.env['ir.module.module']._installed()
+        is_sale_installed = 'sale_management' in installed_modules
+        is_purchase_installed = 'purchase' in installed_modules
+        domain = Domain([('parent_state', '=', 'draft'), ('product_id', 'in', self.ids)])
+        if not is_sale_installed:
+            account_sale_domain = Domain.AND([
+                domain,
+                [('move_type', 'in', ('out_invoice', 'out_refund', 'out_receipt'))],
+            ])
+            account_sale_move_line_groups = self.env['account.move.line']._read_group(
+                account_sale_domain,
+                ['product_id', 'move_type'],
+                ['quantity:sum'],
+            )
+            for product, move_type, qty_sum in account_sale_move_line_groups:
+                reverse = 1 if move_type in ('out_invoice', 'out_receipt') else -1
+                res[product.id]['outgoing_qty'] += qty_sum * reverse
+                res[product.id]['virtual_available'] -= qty_sum * reverse
+
+        if not is_purchase_installed:
+            if to_date := self.env.context.get('to_date'):
+                domain = Domain.AND([domain, Domain('invoice_date', '<=', to_date.date())])
+            account_purchase_domain = Domain.AND([
+                domain,
+                [('move_type', 'in', ('in_invoice', 'in_refund', 'in_receipt'))],
+            ])
+            account_purchase_move_line_groups = self.env['account.move.line']._read_group(
+                account_purchase_domain,
+                ['product_id', 'product_uom_id', 'move_type'],
+                ['quantity:sum'],
+            )
+            for product, line_uom, move_type, qty_sum in account_purchase_move_line_groups:
+                qty = line_uom._compute_quantity(qty_sum, product.uom_id)
+                reverse = 1 if move_type in ('in_invoice', 'in_receipt') else -1
+                res[product.id]['incoming_qty'] += qty * reverse
+                res[product.id]['virtual_available'] += qty * reverse
+        return res
+
     # -------------------------------------------------------------------------
     # EDI
     # -------------------------------------------------------------------------
