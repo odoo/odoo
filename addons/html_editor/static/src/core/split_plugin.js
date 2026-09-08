@@ -172,19 +172,15 @@ export class SplitPlugin extends Plugin {
             selection = this.dependencies.selection.getEditableSelection();
         }
 
-        return this.splitBlockNode({
-            targetNode: selection.anchorNode,
-            targetOffset: selection.anchorOffset,
-        });
+        return this.splitBlockNode(selection.anchorNode, selection.anchorOffset);
     }
 
     /**
-     * @param {Object} param0
-     * @param {Node} param0.targetNode
-     * @param {number} param0.targetOffset
+     * @param {Node} targetNode
+     * @param {number} targetOffset
      * @returns {SplitOperationResult<SplitOperationType>}
      */
-    splitBlockNode({ targetNode, targetOffset }) {
+    splitBlockNode(targetNode, targetOffset) {
         if (targetNode.nodeType === Node.TEXT_NODE) {
             targetOffset = splitTextNode(targetNode, targetOffset);
             targetNode = targetNode.parentElement;
