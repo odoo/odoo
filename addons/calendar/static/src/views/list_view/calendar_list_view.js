@@ -1,47 +1,76 @@
 import { listView } from "@web/views/list/list_view";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
+import { SearchModel } from "@web/search/search_model";
 import { CaledarListController } from "./calendar_list_controller";
 
-export class CalendarListModel extends listView.Model {
-    setup(params, { action, dialog, notification, rpc, user, view, company }) {
-        super.setup(...arguments);
+export class CalendarListSearchModel extends SearchModel {
+    /**
+     * @override
+     * Applies Calendar's active attendees as a filter
+     */
+    async load(config = {}) {
+        const filters = user.context.calendar_filters;
+        this.calendarAttendeeQueryElement = null;
+        await super.load(config);
+
+        if (filters && !filters["all"]) {
+            const selectedPartners = await this.orm.call(
+                "res.users",
+                "get_selected_calendars_partners",
+                [[user.userId], filters["user"]]
+            );
+            const selectedPartnerIds = selectedPartners.map((partner) => partner.id);
+            if (selectedPartnerIds.length) {
+                const searchItem = Object.values(this.searchItems).find(
+                    (item) => item.fieldName === "partner_ids"
+                );
+                if (searchItem) {
+                    this.addAutoCompletionValues(searchItem.id, {
+                        label: selectedPartners
+                            .map((partner) => partner.display_name)
+                            .join(` ${_t("or")} `),
+                        operator: "in",
+                        value: selectedPartnerIds,
+                    });
+                    this.calendarAttendeeQueryElement = this.query.find(
+                        (queryElement) =>
+                            queryElement.searchItemId === searchItem.id &&
+                            queryElement.autocompleteValue?.value === selectedPartnerIds
+                    );
+                    if (this.calendarAttendeeQueryElement) {
+                        this.query = [
+                            this.calendarAttendeeQueryElement,
+                            ...this.query.filter(
+                                (queryElement) => queryElement !== this.calendarAttendeeQueryElement
+                            ),
+                        ];
+                    }
+                }
+            }
+        }
     }
 
     /**
      * @override
-     * Add the calendar view's selected attendees to the list view's domain.
+     * Do not transfer the Calendar attendee filter to another view.
      */
-    async load(params = {}) {
-        const filters = params?.context?.calendar_filters;
-        const emptyDomain = Array.isArray(params?.domain) && params.domain.length == 0;
-        if (filters && emptyDomain) {
-            const selectedPartnerIds = await this.orm.call(
-                "res.users",
-                "get_selected_calendars_partner_ids",
-                [[user.userId], filters["user"]]
+    exportState() {
+        const state = super.exportState();
+        if (this.calendarAttendeeQueryElement) {
+            state.query = state.query.filter(
+                (queryElement) => queryElement !== this.calendarAttendeeQueryElement
             );
-            // Filter attendees to be shown if 'everybody' filter isn't active.
-            if (!filters["all"]) {
-                params.domain.push(["partner_ids", "in", selectedPartnerIds]);
-            }
         }
-        return super.load(params);
+        return state;
     }
 }
 
 export const CalendarListView = {
     ...listView,
-    Model: CalendarListModel,
+    SearchModel: CalendarListSearchModel,
     Controller: CaledarListController,
 };
 
-function _mockGetCalendarPartnerIds(params) {
-    /* Mock function for when there aren't records to be shown. */
-    return [];
-}
-
 registry.category("views").add("calendar_list_view", CalendarListView);
-registry
-    .category("sample_server")
-    .add("get_selected_calendars_partner_ids", _mockGetCalendarPartnerIds);
