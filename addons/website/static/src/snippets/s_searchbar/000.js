@@ -294,6 +294,10 @@ publicWidget.registry.searchBar = publicWidget.Widget.extend({
                 }
                 break;
             case "Enter":
+                if (this.searchSubmitted) {
+                    return ev.preventDefault();
+                }
+                this.searchSubmitted = true;
                 this.limit = 0; // prevent autocomplete
                 break;
         }
