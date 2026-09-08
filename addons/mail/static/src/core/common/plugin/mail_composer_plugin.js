@@ -4,6 +4,7 @@ import { isBlock } from "@html_editor/utils/blocks";
 import { isEmptyBlock } from "@html_editor/utils/dom_info";
 import { childNodes } from "@html_editor/utils/dom_traversal";
 import { withSequence } from "@html_editor/utils/resource";
+import { messageUrlRegExp } from "@mail/utils/common/format";
 
 const ALLOWED_TAGS = [
     "A",
@@ -33,7 +34,7 @@ const PRESERVED_CLASSNAMES = new Set([
  */
 export class MailComposerPlugin extends Plugin {
     static id = "mail_composer";
-    static dependencies = ["clipboard", "dom", "hint", "history", "input", "selection"];
+    static dependencies = ["clipboard", "dom", "hint", "history", "input", "link", "selection"];
     resources = {
         on_will_paste_handlers: this.config.composerPluginDependencies.onBeforePaste.bind(this),
         paste_odoo_editor_html_overrides: this.handlePasteHtmlOverride.bind(this),
@@ -59,6 +60,7 @@ export class MailComposerPlugin extends Plugin {
             }
         },
         on_input_handlers: this.config.composerPluginDependencies.onInput.bind(this),
+        paste_text_overrides: this.handlePasteText.bind(this),
     };
 
     setup() {
@@ -111,6 +113,15 @@ export class MailComposerPlugin extends Plugin {
         flattenStructuralDivWrappers(sanitizedFragment);
         this.dependencies.dom.insert(sanitizedFragment);
         this.dependencies.history.addStep();
+        return true;
+    }
+
+    handlePasteText(selection, text) {
+        const messageMatch = messageUrlRegExp.exec(text);
+        if (!messageMatch) {
+            return false;
+        }
+        this.dependencies.link.insertLink(text, text);
         return true;
     }
 }
