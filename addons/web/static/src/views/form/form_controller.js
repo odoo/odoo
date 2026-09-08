@@ -198,28 +198,7 @@ export class FormController extends Component {
         const mountedProm = new Promise((r) => onMounted(r));
         this.onWillDisplayOnchangeWarning = () => mountedProm;
 
-        const beforeFirstLoad = async () => {
-            await loadSubViews(
-                this.archInfo.fieldNodes,
-                this.props.fields,
-                this.props.context,
-                this.props.resModel,
-                this.viewService,
-                this.ui.isSmall
-            );
-            const { activeFields, fields } = extractFieldsFromArchInfo(
-                this.archInfo,
-                this.props.fields
-            );
-            if (this.display.controlPanel) {
-                addFieldDependencies(activeFields, fields, [
-                    { name: "display_name", type: "char", readonly: true },
-                ]);
-            }
-            this.model.config.activeFields = activeFields;
-            this.model.config.fields = fields;
-        };
-        this.model = proxy(useModel(this.props.Model, this.modelParams, { beforeFirstLoad }));
+        this.model = proxy(useModel(this.props.Model, this.modelParams, { beforeFirstLoad: this.beforeFirstLoad.bind(this) }));
         useSubEnv({ model: this.model });
 
         let disposeEffect = () => {};
@@ -364,6 +343,28 @@ export class FormController extends Component {
             discard: () => this.discard(),
         });
     }
+
+    async beforeFirstLoad() {
+        await loadSubViews(
+            this.archInfo.fieldNodes,
+            this.props.fields,
+            this.props.context,
+            this.props.resModel,
+            this.viewService,
+            this.ui.isSmall
+        );
+        const { activeFields, fields } = extractFieldsFromArchInfo(
+            this.archInfo,
+            this.props.fields
+        );
+        if (this.display.controlPanel) {
+            addFieldDependencies(activeFields, fields, [
+                { name: "display_name", type: "char", readonly: true },
+            ]);
+        }
+        this.model.config.activeFields = activeFields;
+        this.model.config.fields = fields;
+    };
 
     get cogMenuProps() {
         return {
@@ -672,10 +673,11 @@ export class FormController extends Component {
 
     // enable the archive feature in Actions menu only if the active field is in the view
     get archiveEnabled() {
-        return "active" in this.model.root.activeFields
-            ? !this.props.fields.active.readonly
-            : "x_active" in this.model.root.activeFields
-            ? !this.props.fields.x_active.readonly
+        const root = this.model.root;
+        return "active" in root.activeFields
+            ? !root.fields.active.readonly
+            : "x_active" in root.activeFields
+            ? !root.fields.x_active.readonly
             : false;
     }
 
