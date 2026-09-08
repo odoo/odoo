@@ -244,6 +244,7 @@
                 <field name="color"/>
                 <field name="code" readonly="1"/>
                 <field name="show_picking_type" invisible="1"/>
+                <field name="open_button_style" invisible="1"/>
                 <templates>
                     <t t-name="menu" t-if="!selection_mode">
                         <div class="container" t-if="record.show_picking_type.raw_value">
@@ -257,6 +258,11 @@
                                     </div>
                                     <div role="menuitem">
                                         <a name="action_detailed_moves" type="object" context="{'picking_type_id': id}">Detailed Moves</a>
+                                    </div>
+                                    <div role="menuitem" groups="stock.group_stock_picking_batch">
+                                        <a name="action_batch" type="object" context="{'view_mode':'form'}">
+                                            Prepare Batch
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -291,8 +297,7 @@
                                         <field name="count_picking_batch"/> Batches
                                     </button>
                                     <button name="get_action_picking_tree_ready" type="object"
-                                            groups="stock.group_stock_picking_batch"
-                                            t-attf-class="btn {{record.count_picking_batch.raw_value > 0 ? 'btn-secondary' : 'btn-primary'}}">
+                                            t-attf-class="btn btn-{{record.open_button_style.raw_value}}">
                                         <span t-if="record.count_picking_ready.raw_value > 0">
                                             <field name="count_picking_ready"/>
                                             <t t-if="record.code.raw_value === 'incoming'"> To Receive</t>
