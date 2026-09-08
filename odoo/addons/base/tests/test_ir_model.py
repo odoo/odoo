@@ -1007,6 +1007,7 @@ class TestFieldGroupsSync(TransactionCase):
         # Using a known static field with group restrictions (e.g., smtp_user = fields(...,groups='base.group_system'))
         field = self.env['ir.mail_server']._fields['smtp_user']
         expected_group = self.env.ref(field.groups)  # just the admin group
+        self.assertNotIn(',', expected_group, "only one group is expected")
         ir_field = self.env['ir.model.fields']._get('ir.mail_server', 'smtp_user')
-        assert ir_field
-        self.assertEqual(ir_field.groups.get_external_id(), {expected_group.id: field.groups}, "system group not found")
+        self.assertTrue(ir_field, "could not field corresponding field")
+        self.assertEqual(ir_field.groups, expected_group, "field.groups not found")

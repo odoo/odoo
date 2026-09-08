@@ -87,7 +87,7 @@ class HrEmployee(models.Model):
 
     contract_template_id = fields.Many2one(
         'hr.version',
-        groups="hr.group_hr_user,hr_payroll.group_hr_payroll_user",
+        groups="hr.group_hr_user",
     )
 
     def _get_hr_responsible_domain(self):
