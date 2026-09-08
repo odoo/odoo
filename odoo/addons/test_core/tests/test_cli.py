@@ -122,6 +122,7 @@ class TestCommand(BaseCase):
             'shell',
             '--shell-interface=python',
             '--shell-file', file_path('test_core/tests/shell_file.txt'),
+            '--database=',
             stdin=main,
             close_fds=True,
         )
