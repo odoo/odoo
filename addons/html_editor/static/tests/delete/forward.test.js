@@ -1743,3 +1743,11 @@ describe("Selection not collapsed", () => {
         });
     });
 });
+
+test("should remove character after unremovable", async () => {
+    await testEditor({
+        contentBefore: `<p>a<span class="oe_unremovable">x[]</span>b</p>`,
+        stepFunction: deleteForward,
+        contentAfter: `<p>a<span class="oe_unremovable">x[]</span></p>`,
+    });
+});
