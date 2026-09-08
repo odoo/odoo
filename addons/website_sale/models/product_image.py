@@ -31,8 +31,10 @@ class ProductImage(models.Model):
     attribute_value_ids = fields.Many2many(
         comodel_name="product.template.attribute.value",
         relation="product_image_attribute_value_rel",
+        copy=False,
     )
     has_attribute_value = fields.Boolean(compute="_compute_has_attribute_value", store=True)
+    type = fields.Selection(selection=[("primary", "Primary"), ("secondary", "Secondary")])
 
     # === COMPUTE METHODS ===#
 
