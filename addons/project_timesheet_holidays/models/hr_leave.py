@@ -38,19 +38,19 @@ class HrLeave(models.Model):
             tz = employee._get_tz(leave.request_date_from)
 
             leave_version_sudo = employee.sudo()._get_version(leave.date_from.date())
-            if leave_version_sudo.is_fully_flexible or not tz:
+            if leave_version_sudo._is_fully_flexible() or not tz:
                 continue
 
             employee_timezone = ZoneInfo(tz)
 
-            if leave_version_sudo.is_flexible and leave.date_from.date() == leave.date_to.date():
+            if leave_version_sudo._is_flexible() and leave.date_from.date() == leave.date_to.date():
                 leave_date = leave.date_from.astimezone(employee_timezone).date()
                 if leave.work_entry_type_request_unit == 'hour':
                     hours = leave.request_hour_to - leave.request_hour_from
                 elif leave.work_entry_type_request_unit == 'half_day' and leave.request_date_from_period == leave.request_date_to_period:
-                    hours = leave_version_sudo.hours_per_day / 2
+                    hours = leave_version_sudo.resource_calendar_id.hours_per_day / 2
                 else:  # Single-day leave
-                    hours = leave_version_sudo.hours_per_day
+                    hours = leave_version_sudo.resource_calendar_id.hours_per_day
                 work_hours_data = [(leave_date, hours)]
             else:
                 ignored_resource_calendar_leaves = ignored_resource_calendar_leaves or []

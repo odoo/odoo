@@ -181,10 +181,6 @@ class HrAttendance(models.Model):
             else:
                 attendance.can_edit = False
 
-    def _get_employee_calendar(self):
-        self.ensure_one()
-        return self.employee_id.resource_calendar_id or self.employee_id.company_id.resource_calendar_id
-
     @api.depends('check_in', 'check_out', 'break_duration')
     def _compute_worked_hours(self):
         """ Computes the worked hours of the attendance record.
@@ -594,7 +590,7 @@ class HrAttendance(models.Model):
             [('check_out', '=', False),
              ('employee_id.company_id.auto_check_out', '=', True),
              ('employee_id.company_id.auto_check_out_mode', '=', 'tolerance'),
-             ('employee_id.resource_calendar_id', '!=', False)]
+             ('employee_id.resource_calendar_id.calendar_type', '!=', 'undefined')]
         )
 
         if not to_verify:

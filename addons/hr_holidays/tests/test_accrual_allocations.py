@@ -1304,9 +1304,14 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'accrued_gain_time': 'start',
             'work_entry_type_id': cls.work_entry_type.id,
         })
+        calendar_without_hours = cls.env['resource.calendar'].create({
+            'name': 'Calendar without working hours',
+            'calendar_type': 'undefined',
+            'attendance_ids': [],
+        })
         cls.employee_without_calendar = cls.env['hr.employee'].create({
             'name': 'employee without calendar',
-            'resource_calendar_id': False,
+            'resource_calendar_id': calendar_without_hours.id,
         })
         cls.accrual_plan_hourly_work_time = _create_accrual_plan(accrual_plan_by_signature, {
             'is_based_on_worked_time': True,

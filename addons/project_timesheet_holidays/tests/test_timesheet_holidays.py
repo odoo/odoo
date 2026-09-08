@@ -30,6 +30,17 @@ class TestTimesheetHolidaysCreate(common.TransactionCase):
 
 class TestTimesheetHolidays(TestCommonTimesheet):
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.calendar_flexible_40_8 = cls.env['resource.calendar'].create({
+            'name': 'Flexible Calendar 40h/week',
+            'calendar_type': 'undefined',
+            'attendance_ids': [],
+            'hours_per_week': 40,
+            'hours_per_day': 8.0,
+        })
+
     def setUp(self):
         super().setUp()
 
@@ -291,10 +302,9 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         self.assertEqual(timesheet_count + 1, new_timesheet_count)
 
     def test_timesheet_timeoff_flexible_employee(self):
+        calendar_flexible = self.calendar_flexible_40_8
         self.empl_employee.write({
-            'resource_calendar_id': False,
-            'hours_per_week': 40,
-            'hours_per_day': 8.0,
+            'resource_calendar_id': calendar_flexible.id,
         })
 
         time_off = self.Requests.with_user(self.user_employee).create({
@@ -367,10 +377,15 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         self.assertEqual(fields.Date.to_string(timesheets[1].date), '2025-05-29')
 
     def test_one_day_timesheet_timeoff_flexible_employee(self):
-        self.empl_employee.write({
-            'resource_calendar_id': False,
+        calendar_flexible = self.env['resource.calendar'].create({
+            'name': 'Flexible Calendar',
+            'calendar_type': 'undefined',
+            'attendance_ids': [],
             'hours_per_week': 10,
             'hours_per_day': 10,
+        })
+        self.empl_employee.write({
+            'resource_calendar_id': calendar_flexible.id,
         })
 
         time_off = self.Requests.with_user(self.user_employee).create({
@@ -392,7 +407,12 @@ class TestTimesheetHolidays(TestCommonTimesheet):
                                                         "should be 10 hours")
 
     def test_timeoff_validation_fully_flexible_employee(self):
-        self.empl_employee.resource_calendar_id = False
+        calendar_fully_flexible = self.env['resource.calendar'].create({
+            'name': 'Fully Flexible Calendar',
+            'calendar_type': 'undefined',
+            'attendance_ids': [],
+        })
+        self.empl_employee.resource_calendar_id = calendar_fully_flexible
 
         time_off = self.Requests.with_user(self.user_employee).create({
             'name': 'Test Fully Flexible Employee Validation',
@@ -468,10 +488,9 @@ class TestTimesheetHolidays(TestCommonTimesheet):
             - A half-day request creates a 4h entry.
             - Multi-day requests aggregate correctly across days.
         """
+        calendar_flexible = self.calendar_flexible_40_8
         self.empl_employee.write({
-            'resource_calendar_id': False,
-            'hours_per_week': 40,
-            'hours_per_day': 8.0,
+            'resource_calendar_id': calendar_flexible.id,
         })
 
         # Create 3 scenarios: Full Day, Single Half Day, and Multi-Day

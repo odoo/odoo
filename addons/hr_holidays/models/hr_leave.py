@@ -901,7 +901,7 @@ class HrLeave(models.Model):
                     hours, days = work_days_data['hours'], work_days_data['days']
 
                     # sudo as is_flexible is on version model and employee does not have access to it.
-                    if not leave.employee_id.sudo().is_flexible:
+                    if not calendar._is_flexible():
                         # Identify workin days
                         work_time_per_day_list = work_time_per_day_mapped[leave.date_from, leave.date_to, include_public, calendar][leave.employee_id.id]
                         working_dates = {interval[0] for interval in work_time_per_day_list}
@@ -937,7 +937,7 @@ class HrLeave(models.Model):
 
             # For flexible employees, if it's a single day leave, we force it to the real duration since the virtual intervals might not match reality on that day, especially for custom hours
             # sudo as is_flexible is on version model and employee does not have access to it.
-            elif leave.employee_id.sudo().is_flexible and leave.request_date_to == leave.request_date_from:
+            elif calendar._is_flexible() and leave.request_date_to == leave.request_date_from:
                 # Only subtract public holidays if the leave type does NOT include public holidays in duration.
                 # When include_public_holidays_in_duration is True ("Public Holiday Included" enabled),
                 # the leave should count the full day even if it falls on a public holiday.
@@ -1275,7 +1275,7 @@ class HrLeave(models.Model):
             expected_attendance_hours = calendar.get_work_hours_count(start_dt, end_dt, compute_leaves=False)
             days_spanned = (leave.request_date_to - leave.request_date_from).days + 1
 
-            if leave.employee_id.sudo().is_flexible:
+            if calendar._is_flexible():
                 base_max_allowed = (24.0 * days_spanned)
             else:
                 base_max_allowed = min(expected_attendance_hours, (24.0 * days_spanned))
