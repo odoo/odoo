@@ -135,8 +135,9 @@ const StorePatch = {
     },
     updateAppBadge() {
         if (window.idbKeyval) {
-            saveUnreadCounter(this.globalCounter);
-            Promise.resolve(navigator.setAppBadge?.(this.globalCounter)).catch(() => {}); // FIXME: Illegal invocation error in HOOT
+            const counter = this.messagingMenu.globalCounter;
+            saveUnreadCounter(counter);
+            Promise.resolve(navigator.setAppBadge?.(counter)).catch(() => {}); // FIXME: Illegal invocation error in HOOT
         }
     },
     /**
