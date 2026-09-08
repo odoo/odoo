@@ -242,6 +242,8 @@ class PosConfig(models.Model):
                 'domain': [('id', 'in', ids)],
             }
 
+        session = self.current_session_id
+        # if len(models) == 0 or not session:
         if len(models) == 0:
             self._notify('SYNCHRONISATION', {
                 'static_records': {},
@@ -251,7 +253,7 @@ class PosConfig(models.Model):
             })
             return
 
-        static_records = self.current_session_id.load_data({
+        static_records = session.load_data({
             'models': models,
             'records': {},
             'search_params': search_params,
