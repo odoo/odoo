@@ -71,6 +71,12 @@
         .o_wblog_split_grid_sticky {
             @include media-breakpoint-up(xl) {
                 height: calc(100vh - var(--wblog-sticky-top, 0px));
+
+                // Prevent having a big space under the blog posts when there
+                // are no cover images and not a lot of blog posts.
+                &:not(:has(> .o_wblog_post_cover)) {
+                    height: auto;
+                }
             }
 
             // Consider text-muted as text-white, so the muted elements are
