@@ -148,12 +148,17 @@ export function removeClass(element, ...classNames) {
     }
 }
 
+/**
+ * Removes the specified CSS properties from an element's inline styles.
+ * If no inline styles remain afterward, the `style` attribute is removed.
+ *
+ * @param {Element} element
+ * @param {...string} styleProperties
+ */
 export function removeStyle(element, ...styleProperties) {
-    const propsToRemoveSet = new Set(styleProperties);
-    if ([...element.style].every((prop) => propsToRemoveSet.has(prop))) {
+    styleProperties.forEach((prop) => element.style.removeProperty(prop));
+    if (element.getAttribute("style") === "") {
         element.removeAttribute("style");
-    } else {
-        styleProperties.forEach((prop) => element.style.removeProperty(prop));
     }
 }
 

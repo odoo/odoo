@@ -1019,7 +1019,7 @@ describe("Toolbar", () => {
         );
         await removeFormatClick();
         expect(getContent(el)).toBe(
-            `<p data-selection-placeholder=""><br></p><table class="table table-bordered o_table o_selected_table"><tbody><tr><td style="" class="o_selected_td"><p>[<br></p></td><td style="" class="o_selected_td"><p>]<br></p></td></tr></tbody></table><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+            `<p data-selection-placeholder=""><br></p><table class="table table-bordered o_table o_selected_table"><tbody><tr><td class="o_selected_td"><p>[<br></p></td><td class="o_selected_td"><p>]<br></p></td></tr></tbody></table><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
     });
 
