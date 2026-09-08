@@ -42,6 +42,8 @@ export class SearchMore extends Interaction {
                 ),
                 options: {
                     renderTemplate: true,
+                    sort_by_relevance: true,
+                    sort_by_model: true,
                 },
             })
         );

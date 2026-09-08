@@ -1150,6 +1150,42 @@ class Website(Home):
         order = order or 'name ASC'
         return 'is_published desc, %s, id desc' % order
 
+    def _search_apply_proportionate_allocation(self, search_results, limit):
+        """
+        Distribute a global result limit proportionally across groups
+        based on their contribution to the total results.
+
+        Example:
+            Total retrieved results across 3 models = 50
+                - M1: 5   (10%)
+                - M2: 10  (20%)
+                - M3: 35  (70%)
+
+            With limit = 30:
+                - M1 → 10% of 30 ≈ 3
+                - M2 → 20% of 30 ≈ 6
+                - M3 → 70% of 30 ≈ 21
+
+        Note:
+            Due to rounding and minimum allocation guarantees,
+            the total number of allocated results may slightly exceed `limit`.
+
+        :param search_results: per-model results, see `_search_exact`/`_search_ranked`,
+            truncated in place down to each model's allocated share
+        :param limit: global limit to distribute across `search_results`
+        """
+        total_obtained_results = sum(len(m.get("results", [])) for m in search_results)
+        for model in search_results:
+            results_data = model.get("results")
+            if results_data:
+                # Calculate proportional allocation for this group
+                allocated_count = math.ceil((len(results_data) / total_obtained_results) * limit)
+                # Ensure at least 1 result per group to maintain visibility
+                allocated_count = max(allocated_count, 1)
+                model["results"] = results_data[:allocated_count]
+                if model.get("ranks") is not None:
+                    model["ranks"] = model["ranks"][:allocated_count]
+
     @http.route('/website/snippet/autocomplete', type='jsonrpc', auth='public', website=True, readonly=True)
     def autocomplete(self, search_type=None, term=None, order=None, offset=0, limit=6, max_nb_chars=999, options=None):
         """
@@ -1167,6 +1203,7 @@ class Website(Home):
             allowFuzzy: enables the fuzzy matching when truthy
             fuzzy (boolean): True when called after finding a name through fuzzy matching
             renderTemplate (bool): If True, returns rendered HTML instead of grouped dict results
+            sort_by_relevance: True if we want to sort results by relevance
 
         :returns: dict (or False if no result) containing
             - 'results' (dict | str):
@@ -1208,36 +1245,7 @@ class Website(Home):
             }
 
         if options.get("proportionateAllocation") and results_count > limit:
-            """
-            Distribute a global result limit proportionally across groups
-            based on their contribution to the total results.
-
-            Example:
-                Total retrieved results across 3 models = 50
-                    - M1: 5   (10%)
-                    - M2: 10  (20%)
-                    - M3: 35  (70%)
-
-                With limit = 30:
-                    - M1 → 10% of 30 ≈ 3
-                    - M2 → 20% of 30 ≈ 6
-                    - M3 → 70% of 30 ≈ 21
-
-            Note:
-                Due to rounding and minimum allocation guarantees,
-                the total number of allocated results may slightly exceed `limit`.
-            """
-            total_obtained_results = sum(len(m.get("results", [])) for m in search_results)
-            for model in search_results:
-                results_data = model.get("results")
-                if results_data:
-                    # Calculate proportional allocation for this group
-                    allocated_count = math.ceil(
-                        (len(results_data) / total_obtained_results) * limit
-                    )
-                    # Ensure at least 1 result per group to maintain visibility
-                    allocated_count = max(allocated_count, 1)
-                    model["results"] = results_data[:allocated_count]
+            self._search_apply_proportionate_allocation(search_results, limit)
 
         term = fuzzy_term or term
         search_results = self.env.website._search_render_results(search_results, limit)
@@ -1294,6 +1302,46 @@ class Website(Home):
                 'data': result_data,
                 'has_more': search_result.get('count') > offset + limit
             }
+        if options.get('sort_by_relevance'):
+            # Flatten (or regroup) the per-model results by their rank in
+            # `_search_ranked()`'s global ordering. When that ranking wasn't
+            # computed (e.g. no search term), fall back to each group's
+            # existing order, concatenated group after group.
+            ranked_results = []
+            fallback_rank = 0
+            for search_result in search_results:
+                group_key = search_result['model'].replace('.', '_')
+                group = result.get(group_key)
+                if not group:
+                    continue
+                ranks = search_result.get('ranks')
+                if ranks is None:
+                    ranks = range(fallback_rank, fallback_rank + len(group['data']))
+                    fallback_rank += len(group['data'])
+                ranked_results += zip(ranks, [group_key] * len(group['data']), group['data'])
+            ranked_results.sort(key=lambda item: item[0])
+            if options.get('sort_by_model'):
+                grouped_result = {}
+                for _rank, group_key, record in ranked_results:
+                    if group_key not in grouped_result:
+                        group = result[group_key]
+                        grouped_result[group_key] = {
+                            'groupName': group['groupName'],
+                            'searchCount': group['searchCount'],
+                            'data': [],
+                            'has_more': group['has_more'],
+                        }
+                    grouped_result[group_key]['data'].append(record)
+                result = grouped_result
+            else:
+                result = {
+                    'all': {
+                        'groupName': _('All'),
+                        'searchCount': results_count,
+                        'data': [record for _rank, _group_key, record in ranked_results],
+                        'has_more': any(group['has_more'] for group in result.values()),
+                    },
+                }
 
         if options.get('renderTemplate'):
             values = [item for group in result.values() for item in group['data']]

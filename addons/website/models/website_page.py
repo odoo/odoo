@@ -313,7 +313,7 @@ class WebsitePage(models.Model):
         }
 
     @api.model
-    def _search_fetch(self, search_detail, search, offset, limit, order):
+    def _search_get_candidate_pages(self, search_detail, search, order):
         # Cannot rely on the super's _search_fetch because the search must be
         # performed among the most specific pages only.
         fields = search_detail['search_fields']
@@ -356,10 +356,22 @@ class WebsitePage(models.Model):
                 pattern = '|'.join([re.escape(search_term) for search_term in search.split()])
                 return re.findall('(%s)' % pattern, text, flags=re.I) if pattern else False
             return True
-        results = results.filtered(lambda result: filter_page(search, result, results))
+        return results.filtered(lambda result: filter_page(search, result, results))
+
+    @api.model
+    def _search_fetch(self, search_detail, search, offset, limit, order):
+        results = self._search_get_candidate_pages(search_detail, search, order)
         start = offset
         end = offset + limit
         return results[start:end], len(results)
+
+    @api.model
+    def _search_get_rank_query(self, search_detail, search):
+        # website.page's matching isn't a plain model.search(), it also
+        # dedupes most-specific pages and filters in Python (see
+        # _search_get_candidate_pages), so rank on that recordset instead.
+        candidates = self._search_get_candidate_pages(search_detail, search, search_detail.get('order'))
+        return self.sudo()._search(Domain('id', 'in', candidates.ids))
 
     def action_page_debug_view(self):
         return {

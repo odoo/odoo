@@ -2230,7 +2230,13 @@ class Website(models.CachedModel):
                     search = fuzzy_term
                 else:
                     fuzzy_term = False
-        count, results = self._search_exact(search_details, search, offset, limit, order)
+        if search and options.get('sort_by_relevance'):
+            count, results = self._search_ranked(
+                search_details, search, offset, limit,
+                per_model_limit=bool(options.get('proportionateAllocation')),
+            )
+        else:
+            count, results = self._search_exact(search_details, search, offset, limit, order)
         return count, results, fuzzy_term
 
     def _search_exact(self, search_details, search, offset, limit, order):
@@ -2259,6 +2265,97 @@ class Website(models.CachedModel):
             search_detail['results'] = results
             total_count += count
             search_detail['count'] = count
+            all_results.append(search_detail)
+        return total_count, all_results
+
+    def _search_ranked(self, search_details, search, offset, limit, per_model_limit=False):
+        """
+        Performs a search with a search text, ranking all `search_details`'
+        results by relevance together (rather than per model) via a single
+        SQL UNION query, so that the global top results are returned instead
+        of the top results of each model taken independently.
+
+        :param search_details: see :meth:`_search_get_details`
+        :param search: text against which to match results
+        :param offset: number of results to skip globally
+        :param limit: maximum number of results globally
+        :param per_model_limit: if True, let every model contribute up to
+            `limit` of its own rank-ordered results instead of cutting to the
+            global top-`limit` (used by `proportionateAllocation`).
+
+        :return: tuple containing:
+
+            - total number of results across all involved models
+            - list of results per model made of:
+                - initial search_detail for the model
+                - count: number of results for the model
+                - results: model list equivalent to a `model.search()`
+                - ranks: global rank (0-based) of each record of `results`
+        """
+        if not search_details:
+            return 0, []
+        branches = []
+        count_branches = []
+        branch_limit = limit if per_model_limit else offset + limit
+        # The per-branch top-K LIMIT below is only a valid subset of the
+        # global top-K if both are ordered the same way, so this is built
+        # once and reused for both the branch and the outer envelope.
+        rank_order = SQL("matched_terms DESC, match_tier ASC, proximity DESC, spread DESC")
+        for model_seq, search_detail in enumerate(search_details):
+            model = self.env[search_detail['model']]
+            query = model._search_get_rank_query(search_detail, search)
+            table = query.table
+            where_clause = query.where_clause or SQL("TRUE")
+            matched_terms, match_tier, proximity, spread = model._search_get_rank_sql(table, query, search_detail, search)
+            branches.append(SQL(
+                "(SELECT %(model_seq)s AS model_seq,"
+                " %(matched_terms)s AS matched_terms, %(match_tier)s AS match_tier,"
+                " %(proximity)s AS proximity, %(spread)s AS spread, %(id)s AS id,"
+                " row_number() OVER (ORDER BY %(order)s) AS branch_rank"
+                " FROM %(from_clause)s WHERE %(where_clause)s"
+                " ORDER BY %(rank_order)s, branch_rank"
+                " LIMIT %(branch_limit)s)",
+                model_seq=model_seq,
+                matched_terms=matched_terms, match_tier=match_tier, proximity=proximity, spread=spread, id=table.id,
+                order=query.order or table.id,
+                from_clause=query.from_clause,
+                where_clause=where_clause,
+                rank_order=rank_order,
+                branch_limit=branch_limit,
+            ))
+            # The exact per-model total (regardless of whether any of its rows
+            # made the global top `limit`) is cheaper computed on its own than
+            # derived from the ranking branch above, and it must be known for
+            # every model, not just the ones visible on this page.
+            count_branches.append(SQL(
+                "SELECT %(model_seq)s AS model_seq, count(*) AS model_count FROM %(from_clause)s WHERE %(where_clause)s",
+                model_seq=model_seq, from_clause=query.from_clause, where_clause=where_clause,
+            ))
+
+        # `per_model_limit` needs every branch's rows, not just the global
+        # top `limit` of them, so the outer envelope drops its LIMIT/OFFSET.
+        global_limit = SQL("") if per_model_limit else SQL(" LIMIT %s OFFSET %s", limit, offset)
+        rows = self.env.execute_query(SQL(
+            "WITH ranked AS (%s) SELECT model_seq, id FROM ranked"
+            " ORDER BY %s, model_seq, branch_rank%s",
+            SQL(" UNION ALL ").join(branches), rank_order, global_limit,
+        ))
+        counts = dict(self.env.execute_query(SQL(" UNION ALL ").join(count_branches)))
+
+        ids_per_branch = defaultdict(list)
+        ranks_per_branch = defaultdict(list)
+        for rank, (model_seq, record_id) in enumerate(rows):
+            ids_per_branch[model_seq].append(record_id)
+            ranks_per_branch[model_seq].append(rank)
+
+        all_results = []
+        total_count = 0
+        for model_seq, search_detail in enumerate(search_details):
+            model = self.env[search_detail['model']]
+            search_detail['results'] = model.browse(ids_per_branch[model_seq]).with_context(search_term=search)
+            search_detail['count'] = counts.get(model_seq, 0)
+            search_detail['ranks'] = ranks_per_branch[model_seq]
+            total_count += search_detail['count']
             all_results.append(search_detail)
         return total_count, all_results
 
