@@ -4,5 +4,6 @@ from . import test_sms_controller
 from . import test_sms_process_queue
 from . import test_sms_template
 from . import test_sms_template_wizards
+from . import test_sms_tools
 from . import test_ir_model_sms_capability
 from . import test_sms_template_dynamic_fields
