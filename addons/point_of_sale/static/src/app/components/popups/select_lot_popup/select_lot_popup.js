@@ -87,6 +87,11 @@ export class SelectLotPopup extends Component {
             },
         ];
     }
+    onInput(ev) {
+        if (ev.target.tagName === "INPUT") {
+            this.state.value = ev.target.value;
+        }
+    }
     onSelect(lot) {
         if (this.state.values.some((item) => item.text == lot.currentInput)) {
             return this.notification.add(_t("The Lot/Serial number is already added."), {
@@ -102,7 +107,7 @@ export class SelectLotPopup extends Component {
         }
         const newItem = lot.currentInput
             ? { text: lot.currentInput, id: lot.id }
-            : { text: lot.label, id: lot.id };
+            : { text: lot.label ?? "", id: lot.id };
         this.state.values = this.props.isSingleItem ? [newItem] : [...this.state.values, newItem];
         this.state.value = this.props.isSingleItem ? newItem.text : "";
     }
@@ -110,6 +115,11 @@ export class SelectLotPopup extends Component {
         this.state.values = this.state.values.filter((item) => item.id !== id);
     }
     confirm() {
+        this.onSelect({
+            currentInput: this.state.value,
+            id: this.state.value,
+            create: true,
+        });
         const validItems = this.state.values.filter((item) => {
             const itemValue = item.text.trim();
             return (
