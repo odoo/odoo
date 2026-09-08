@@ -788,7 +788,10 @@ class TestSaleOrder(SaleCommon):
         ])
 
         group_warning_sale = self.env.ref("sale.group_warning_sale")
-        self.group_user.sudo().implied_ids = [Command.link(group_warning_sale.id)]
+        self.group_user.sudo().implied_ids = [
+            Command.link(group_warning_sale.id),
+            Command.link(self.env.ref("account.group_account_readonly").id),
+        ]
         sale_order2.action_confirm()
         sale_order2._create_invoices()
         invoice = Form(sale_order2.invoice_ids[0])
