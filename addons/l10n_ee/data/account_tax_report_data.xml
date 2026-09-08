@@ -524,11 +524,18 @@
                 <field name="name">12 - Value added tax payable</field>
                 <field name="name@et">12 - Tasumisele kuuluv käibemaks</field>
                 <field name="hierarchy_level">0</field>
+                <field name="code">l10n_ee_vat_12</field>
                 <field name="expression_ids">
                     <record id="tax_report_line_12_formula" model="account.report.expression">
                         <field name="label">balance</field>
                         <field name="engine">aggregation</field>
                         <field name="formula">l10n_ee_vat_4.balance + l10n_ee_vat_4_1.balance - l10n_ee_vat_5.balance + l10n_ee_vat_10.balance - l10n_ee_vat_11.balance</field>
+                        <field name="subformula">if_above(EUR(0))</field>
+                    </record>
+                    <record id="tax_report_line_12_closing_amount" model="account.report.expression">
+                        <field name="label">_closing_amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">l10n_ee_vat_12.balance</field>
                         <field name="subformula">if_above(EUR(0))</field>
                     </record>
                 </field>
@@ -537,11 +544,18 @@
                 <field name="name">13 - Overpaid value added tax</field>
                 <field name="name@et">13 - Enammakstud käibemaks</field>
                 <field name="hierarchy_level">0</field>
+                <field name="code">l10n_ee_vat_13</field>
                 <field name="expression_ids">
                     <record id="tax_report_line_13_formula" model="account.report.expression">
                         <field name="label">balance</field>
                         <field name="engine">aggregation</field>
                         <field name="formula">-(l10n_ee_vat_4.balance + l10n_ee_vat_4_1.balance - l10n_ee_vat_5.balance + l10n_ee_vat_10.balance - l10n_ee_vat_11.balance)</field>
+                        <field name="subformula">if_above(EUR(0))</field>
+                    </record>
+                    <record id="tax_report_line_13_closing_amount" model="account.report.expression">
+                        <field name="label">_closing_amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">l10n_ee_vat_13.balance</field>
                         <field name="subformula">if_above(EUR(0))</field>
                     </record>
                 </field>

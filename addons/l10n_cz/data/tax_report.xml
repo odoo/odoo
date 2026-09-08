@@ -960,6 +960,12 @@
                                 <field name="formula">R62.value - R63.value</field>
                                 <field name="subformula">if_above(CUR(0))</field>
                             </record>
+                            <record id="l10n_cz_vat_declaration_line_64_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">R64.value</field>
+                                <field name="subformula">if_above(CUR(0))</field>
+                            </record>
                         </field>
                     </record>
                     <record id="l10n_cz_vat_declaration_line_65" model="account.report.line">
@@ -971,6 +977,12 @@
                                 <field name="label">value</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">R63.value - R62.value</field>
+                                <field name="subformula">if_above(CUR(0))</field>
+                            </record>
+                            <record id="l10n_cz_vat_declaration_line_65_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">R65.value</field>
                                 <field name="subformula">if_above(CUR(0))</field>
                             </record>
                         </field>

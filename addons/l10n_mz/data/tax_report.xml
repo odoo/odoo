@@ -258,6 +258,13 @@
                         <field name="name">Field 20 - Total payable</field>
                         <field name="code">MZ_TR_F_20</field>
                         <field name="aggregation_formula">MZ_TR_F_18.balance + MZ_TR_F_19.balance</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mz_tax_report_field_20_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">MZ_TR_F_20.balance</field>
+                            </record>
+                        </field>
                     </record>
                 </field>
             </record>
@@ -273,6 +280,12 @@
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">MZ_TR_F_15.balance + MZ_TR_F_16.balance + MZ_TR_F_17.balance - MZ_TR_F_14.balance</field>
+                                <field name="subformula">if_above(MZN(0))</field>
+                            </record>
+                            <record id="l10n_mz_tax_report_field_21_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">MZ_TR_F_21.balance</field>
                                 <field name="subformula">if_above(MZN(0))</field>
                             </record>
                         </field>

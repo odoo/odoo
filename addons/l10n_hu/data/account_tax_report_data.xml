@@ -354,6 +354,14 @@
                 <field name="name@hu">Fizetendő/visszaigényelhető ÁFA</field>
                 <field name="aggregation_formula">VAT_PAYABLE.balance + VAT_RECOVERABLE.balance</field>
                 <field name="hierarchy_level">0</field>
+                <field name="code">HU_VAT_NET</field>
+                <field name="expression_ids">
+                    <record id="tax_report_fizetndo_closing_amount" model="account.report.expression">
+                        <field name="label">_closing_amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">HU_VAT_NET.balance</field>
+                    </record>
+                </field>
                 <field name="children_ids">
                     <record id="tax_report_vat_pay" model="account.report.line">
                         <field name="name">Payable</field>

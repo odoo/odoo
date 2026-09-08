@@ -202,6 +202,12 @@
                         <field name="formula">-Ca113C.balance</field>
                         <field name="subformula">if_above(CAD(0))</field>
                     </record>
+                    <record id="l10n_ca_tr_gsthst_114_closing_amount" model="account.report.expression">
+                        <field name="label">_closing_amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">Ca114.balance</field>
+                        <field name="subformula">if_above(CAD(0))</field>
+                    </record>
                 </field>
             </record>
             <record id="l10n_ca_tr_gsthst_115" model="account.report.line">
@@ -213,6 +219,12 @@
                         <field name="label">balance</field>
                         <field name="engine">aggregation</field>
                         <field name="formula">Ca113C.balance</field>
+                        <field name="subformula">if_above(CAD(0))</field>
+                    </record>
+                    <record id="l10n_ca_tr_gsthst_115_closing_amount" model="account.report.expression">
+                        <field name="label">_closing_amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">Ca115.balance</field>
                         <field name="subformula">if_above(CAD(0))</field>
                     </record>
                 </field>
@@ -373,6 +385,13 @@
                 <field name="name@fr">K - Montant total dû</field>
                 <field name="code">CaBcK</field>
                 <field name="aggregation_formula">CaBcG.balance - CaBcJ.balance</field>
+                <field name="expression_ids">
+                    <record id="l10n_ca_tr_pst_bc_k_closing_amount" model="account.report.expression">
+                        <field name="label">_closing_amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">CaBcK.balance</field>
+                    </record>
+                </field>
             </record>
         </field>
     </record>
@@ -474,6 +493,13 @@
                 <field name="name@fr">4 - Montant total dû</field>
                 <field name="code">CaMb4</field>
                 <field name="aggregation_formula">CaMb1.balance - CaMb2.balance + CaMb3.balance + CaMb35.balance</field>
+                <field name="expression_ids">
+                    <record id="l10n_ca_tr_pst_mb_4_closing_amount" model="account.report.expression">
+                        <field name="label">_closing_amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">CaMb4.balance</field>
+                    </record>
+                </field>
             </record>
         </field>
     </record>
@@ -714,10 +740,20 @@
                         <field name="engine">aggregation</field>
                         <field name="formula">CaQc113213.gsthst + CaQc114214.gsthst + CaQc115.gsthst</field>
                     </record>
+                    <record id="l10n_ca_tr_qst_116_closing_amount" model="account.report.expression">
+                        <field name="label">_closing_amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">CaQc116216.gsthst</field>
+                    </record>
                     <record id="l10n_ca_tr_qst_216_aggr" model="account.report.expression">
                         <field name="label">qst</field>
                         <field name="engine">aggregation</field>
                         <field name="formula">CaQc113213.qst + CaQc114214.qst</field>
+                    </record>
+                    <record id="l10n_ca_tr_qst_216_closing_amount" model="account.report.expression">
+                        <field name="label">_closing_amount_qst</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">CaQc116216.qst</field>
                     </record>
                 </field>
             </record>
@@ -885,6 +921,12 @@
                                 <field name="formula">CaSk8.balance - CaSk9.balance</field>
                                 <field name="subformula">if_above(CAD(0))</field>
                             </record>
+                            <record id="l10n_ca_tr_pst_sk_10_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CaSk10.balance</field>
+                                <field name="subformula">if_above(CAD(0))</field>
+                            </record>
                         </field>
                     </record>
                     <record id="l10n_ca_tr_pst_sk_11" model="account.report.line">
@@ -944,6 +986,12 @@
                                 <field name="formula">CaSk12.balance - CaSk13.balance</field>
                                 <field name="subformula">if_above(CAD(0))</field>
                             </record>
+                            <record id="l10n_ca_tr_pst_sk_14_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CaSk14.balance</field>
+                                <field name="subformula">if_above(CAD(0))</field>
+                            </record>
                         </field>
                     </record>
                     <record id="l10n_ca_tr_pst_sk_15" model="account.report.line">
@@ -955,6 +1003,12 @@
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">CaSk11.balance - CaSk13.balance</field>
+                                <field name="subformula">if_above(CAD(0))</field>
+                            </record>
+                            <record id="l10n_ca_tr_pst_sk_15_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CaSk15.balance</field>
                                 <field name="subformula">if_above(CAD(0))</field>
                             </record>
                         </field>

@@ -214,6 +214,11 @@
                         <field name="engine">aggregation</field>
                         <field name="formula">rw_vat_refund.tax - rw_carry_over.tax</field>
                     </record>
+                    <record id="tax_report_vat_due_credit_closing_amount" model="account.report.expression">
+                        <field name="label">_closing_amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">rw_vat_due_credit.tax</field>
+                    </record>
                 </field>
             </record>
             <record id="tax_report_vat_refund_claim" model="account.report.line">

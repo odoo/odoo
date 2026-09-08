@@ -921,6 +921,12 @@
                                         <field name="formula">GA_TOTAL_GROSS.tax - GA_DEDUCTIBLE.tax</field>
                                         <field name="subformula">if_above(XAF(0))</field>
                                     </record>
+                                    <record id="account_tax_report_line_ga_net_to_pay_closing_amount" model="account.report.expression">
+                                        <field name="label">_closing_amount</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">GA_NET_TO_PAY.tax</field>
+                                        <field name="subformula">if_above(XAF(0))</field>
+                                    </record>
                                 </field>
                             </record>
                             <record id="account_tax_report_line_ga_credit_to_report" model="account.report.line">
@@ -941,6 +947,12 @@
                                         <field name="engine">aggregation</field>
                                         <field name="formula">GA_CREDIT_TO_REPORT.tax</field>
                                         <field name="carryover_target">GA_REPORT_CREDIT._applied_carryover_tax</field>
+                                    </record>
+                                    <record id="account_tax_report_line_ga_credit_to_report_closing_amount" model="account.report.expression">
+                                        <field name="label">_closing_amount</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">GA_CREDIT_TO_REPORT.tax</field>
+                                        <field name="subformula">if_above(XAF(0))</field>
                                     </record>
                                 </field>
                             </record>

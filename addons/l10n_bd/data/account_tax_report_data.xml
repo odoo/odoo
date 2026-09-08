@@ -276,8 +276,13 @@
                             <record id="tr_expression_S_net_tax" model="account.report.expression">
                                 <field name="label">taxbalance</field>
                                 <field name="engine">aggregation</field>
-                                <field name="formula">SAL2.taxbalance + SAL45.taxbalance + SAL5.taxbalance 
+                                <field name="formula">SAL2.taxbalance + SAL45.taxbalance + SAL5.taxbalance
                                                       + SAL75.taxbalance + SAL10.taxbalance + SAL15.taxbalance</field>
+                            </record>
+                            <record id="tr_expression_S_net_tax_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_bd_S_net_vat.taxbalance - l10n_bd_P_net_vat.taxbalance</field>
                             </record>
                         </field>
                     </record>
