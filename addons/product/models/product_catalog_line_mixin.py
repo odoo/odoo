@@ -18,7 +18,7 @@ class ProductCatalogLineMixin(models.AbstractModel):
         quantity_field = self._get_quantity_field()
         catalog_uom = self._get_product_uom()
 
-        return {
+        lines_data = {
             **parent_record._get_product_catalog_uom_data(self.product_id, uom=catalog_uom),
             "readOnly": parent_record._is_readonly() or len(self) > 1,
             "quantity": sum(
@@ -28,8 +28,11 @@ class ProductCatalogLineMixin(models.AbstractModel):
                     )
                 )
             ),
-            "price": self._get_catalog_unit_price(parent_record, **kwargs),
         }
+        if parent_record._show_prices():
+            lines_data["price"] = self._get_catalog_unit_price(parent_record, **kwargs)
+
+        return lines_data
 
     def _consider_in_catalog(self, parent_record, **kwargs) -> bool:  # noqa: ARG002
         """Determine whether the current line has to be considered in the catalog quantities."""
@@ -85,15 +88,11 @@ class ProductCatalogLineMixin(models.AbstractModel):
 
         Note: Self can be a multi-records recordset.
         """
-        price_type = parent_record._get_product_price_type()
-        if not price_type:
-            return 0.0
-
         product = self.product_id
         product.ensure_one()
-        return product._price_compute(
-            price_type, uom=self._get_product_uom(), currency=parent_record._get_catalog_currency()
-        )[product.id]
+        return parent_record._get_product_catalog_default_unit_price(
+            product, uom=self._get_product_uom()
+        )
 
     def _can_be_unlinked_from_catalog(self) -> bool:
         """Determine whether the current line can be deleted (if its quantity becomes zero)."""

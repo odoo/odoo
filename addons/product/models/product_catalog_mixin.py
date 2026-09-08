@@ -38,10 +38,14 @@ class ProductCatalogMixin(models.AbstractModel):
             "product_catalog_order_id": self.id,
             "product_catalog_order_model": self._name,
             "product_catalog_currency_id": self._get_catalog_currency().id,
+            **({"show_prices": True} if self._show_prices() else {}),
         }
 
     def _get_catalog_currency(self):
         return self.env.company.currency_id
+
+    def _show_prices(self) -> bool:
+        return True
 
     def _get_product_catalog_domain(self) -> Domain:
         """Determine the domain to search for products in the catalog."""
@@ -88,29 +92,34 @@ class ProductCatalogMixin(models.AbstractModel):
         """
         res = {}
 
-        price_type = self and self._get_product_price_type()
-        prices = (
-            products._price_compute(price_type, currency=self._get_catalog_currency())
-            if price_type
-            else {}
-        )
+        default_prices = self._get_product_catalog_default_prices(products, **kwargs)
         catalog_is_readonly = bool(self and self._is_readonly())
         for product in products:
             res[product.id] = {
                 "quantity": 0,
                 "readOnly": catalog_is_readonly,
-                **({"price": prices[product.id]} if price_type else {}),
+                **({"price": default_prices[product.id]} if product.id in default_prices else {}),
                 **self._get_product_catalog_product_data(product, **kwargs),
             }
 
         return res
+
+    def _get_product_catalog_default_prices(self, products, *, uom=None, **kwargs) -> dict:  # noqa: ARG002
+        if not self or not self._show_prices():
+            return {}
+
+        return products._price_compute(
+            self._get_product_price_type(), uom=uom, currency=self._get_catalog_currency()
+        )
+
+    def _get_product_catalog_default_unit_price(self, product, uom, **kwargs) -> float:
+        return self._get_product_catalog_default_prices(product, uom=uom, **kwargs)[product.id]
 
     def _is_readonly(self) -> bool:
         """Determine whether the current record can be updated."""
         self.ensure_one()
         return False
 
-    # TODO disable price computation (and display) on model level (see showPrice in js)
     def _get_product_price_type(self) -> str:
         """Specify the price type that should be computed as product 'price' in the catalog."""
         self.ensure_one()
@@ -170,7 +179,7 @@ class ProductCatalogMixin(models.AbstractModel):
         :param str child_field: name of the one2many field holding the catalog lines.
         :param dict kwargs: additional values forwarded to called methods.
 
-        :return: A dictionary containing unit price of the product to display in the catalog.
+        :return: The updated product catalog data.
         """
         self.ensure_one()
         if self._is_readonly():
@@ -209,12 +218,15 @@ class ProductCatalogMixin(models.AbstractModel):
 
     def _get_updated_order_line_info(self, catalog_line, product, uom, **kwargs) -> dict:
         """Return the updated product information to be shown in the catalog."""
-        if catalog_line:
-            unit_price = catalog_line._get_catalog_unit_price(parent_record=self, **kwargs)
-        else:
-            unit_price = self._get_product_catalog_default_unit_price(product, uom, **kwargs)
+        if self._show_prices():
+            if catalog_line:
+                unit_price = catalog_line._get_catalog_unit_price(parent_record=self, **kwargs)
+            else:
+                unit_price = self._get_product_catalog_default_unit_price(product, uom, **kwargs)
 
-        return {"price": unit_price}
+            return {"price": unit_price}
+
+        return {}
 
     def _catalog_create_new_line(self, child_field, product, quantity, uom, **kwargs):
         """Create a new product line according to the provided values."""
@@ -234,8 +246,3 @@ class ProductCatalogMixin(models.AbstractModel):
             Comodel._get_product_uom_field(): uom.id,
             "sequence": (self[child_field][-1:].sequence or 1) + 1,
         }
-
-    def _get_product_catalog_default_unit_price(self, product, uom, **kwargs) -> float:  # noqa: ARG002
-        return product._price_compute(
-            self._get_product_price_type(), uom=uom, currency=self._get_catalog_currency()
-        )[product.id]

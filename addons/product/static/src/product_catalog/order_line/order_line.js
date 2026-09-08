@@ -8,8 +8,8 @@ export class ProductCatalogOrderLine extends Component {
         isSample: { type: Boolean, optional: true },
         productId: Number,
         quantity: Number,
-        price: Number,
         productType: String,
+        price: { type: Number, optional: true },  // only shown if provided
         uomId: { type: Number, optional: true },
         uomDisplayName: { type: String, optional: true },
         availableUoms: { type: Array, optional: true },
@@ -86,7 +86,7 @@ export class ProductCatalogOrderLine extends Component {
     }
 
     get showPrice() {
-        return true;
+        return this.props.price !== undefined;
     }
 
     get displayPriceByProductUoM() {

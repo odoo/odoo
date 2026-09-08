@@ -27,7 +27,7 @@ class ProductCatalogLineMixin(models.AbstractModel):
         """Override of `product` to add the subtotal."""
         vals = super()._get_product_catalog_lines_data(parent_record, **kwargs)
 
-        if parent_record._has_sections():
+        if parent_record._has_sections() and parent_record._show_prices():
             vals["subtotal"] = sum(self.mapped("price_subtotal"))
 
         return vals
