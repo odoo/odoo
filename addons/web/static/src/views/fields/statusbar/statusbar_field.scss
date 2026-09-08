@@ -1,12 +1,10 @@
 .o_field_statusbar {
-    $-btn-secondary-design: map-get($o-btns-bs-override, "secondary");
-
     > .o_statusbar_status {
         @include media-breakpoint-up(md) {
-            border-radius: $border-radius-lg;
+            border-radius: calc(var(--o-statusbar-radius) + var(--o-statusbar-padding));
             border: $border-width solid $border-color;
             padding: var(--o-statusbar-padding);
-            background: #{map-get($-btn-secondary-design, background)};
+            background: $o-view-background-color;
         }
 
         // TODO: replace the following properties with utility classes ?
@@ -17,57 +15,110 @@
         align-self: stretch;
         align-items: stretch;
 
-        --o-statusbar-radius: #{$btn-border-radius-lg};
-        --o-statusbar-border: #{map-get($-btn-secondary-design, background)};
-        --o-statusbar-border-active: #{map-get($-btn-secondary-design, background)};
-
+        --o-statusbar-radius: #{$btn-border-radius};
+        --o-statusbar-caret-width: #{$o-statusbar-arrow-width};
+        --o-statusbar-caret-gap: 2px;
         --o-statusbar-border-width: #{$btn-border-width};
-        --o-statusbar-padding: #{map-get($spacers, 1)};
-        --o-statusbar-button-padding-x: calc(#{$btn-padding-x} - var(--o-statusbar-padding));
-        --o-statusbar-button-padding-y: calc(#{$btn-padding-y} - var(--o-statusbar-padding));
-
+        --o-statusbar-padding: #{$border-width * 2};
+        --o-statusbar-button-padding-x: calc(var(--o-statusbar-caret-width) * 1.25);
+        --o-statusbar-button-padding-y: calc(#{$btn-padding-y} - #{$border-width * 2});
+        --o-statusbar-point-top-left: var(--o-statusbar-caret-gap) 0;
+        --o-statusbar-point-top-right: calc(100% - var(--o-statusbar-caret-width) - var(--o-statusbar-caret-gap)) 0;
+        --o-statusbar-point-middle-left: calc(var(--o-statusbar-caret-width) + var(--o-statusbar-caret-gap)) 50%;
+        --o-statusbar-point-middle-right: calc(100% - var(--o-statusbar-caret-gap)) 50%;
+        --o-statusbar-point-bottom-left: var(--o-statusbar-caret-gap) 100%;
+        --o-statusbar-point-bottom-right:  calc(100% - var(--o-statusbar-caret-width) - var(--o-statusbar-caret-gap)) 100%;
 
         .o_arrow_button:not(.d-none) {
+            --#{$prefix}btn-hover-bg: #{$gray-200};
+            --#{$prefix}btn-active-bg: #{$gray-300};
+            --#{$prefix}btn-disabled-bg: #{$o-component-active-bg};
             --#{$prefix}btn-disabled-color: var(--#{$prefix}btn-active-color);
+            --#{$prefix}btn-focus-box-shadow: 0;
 
             @include media-breakpoint-up(md) {
-                padding: var(--o-statusbar-button-padding-y) var(--o-statusbar-button-padding-x);
+                --#{$prefix}btn-bg: transparent;
+
+                margin-left: calc(-1 * var(--o-statusbar-caret-width) - var(--o-statusbar-border-width) * sqrt(3));
+                border: 0;
+                padding: var(--o-statusbar-button-padding-y) calc(var(--o-statusbar-button-padding-x) * 1.375);
+                clip-path: polygon(
+                    var(--o-statusbar-point-top-left),
+                    var(--o-statusbar-point-top-right),
+                    var(--o-statusbar-point-middle-right),
+                    var(--o-statusbar-point-bottom-right),
+                    var(--o-statusbar-point-bottom-left),
+                    var(--o-statusbar-point-middle-left)
+                );
+
+                &.o_last {
+                    --o-statusbar-point-top-left: 0 0;
+                    --o-statusbar-point-middle-left: 0 50%;
+                    --o-statusbar-point-bottom-left: 0 100%;
+
+                    margin-left: 0;
+                    padding-inline-start: var(--o-statusbar-button-padding-x);
+
+                    &:not(.o_first) {
+                        --#{$prefix}btn-border-radius: var(--o-statusbar-radius) 0 0 var(--o-statusbar-radius);
+                    }
+                }
+
+                &.o_first {
+                    --o-statusbar-point-top-right: 100% 0;
+                    --o-statusbar-point-middle-right: 100% 50%;
+                    --o-statusbar-point-bottom-right: 100% 100%;
+
+                    padding-inline-end: var(--o-statusbar-button-padding-x);
+
+                    &:not(.o_last) {
+                        --#{$prefix}btn-border-radius: 0 var(--o-statusbar-radius) var(--o-statusbar-radius) 0;
+                    }
+                }
+
+                &.o_first.o_last {
+                    --#{$prefix}btn-border-radius: var(--o-statusbar-radius);
+                }
+
+                &.dropdown-toggle::after {
+                    content: normal;
+                }
+
+                &:not(.o_last, .o_first) {
+                    --#{$prefix}btn-border-radius: 0;
+                }
+
+                .o_rtl & {
+                    --o-statusbar-point-top-left: calc(var(--o-statusbar-caret-width) + var(--o-statusbar-caret-gap)) 0;
+                    --o-statusbar-point-top-right: calc(100% - var(--o-statusbar-caret-gap)) 0;
+                    --o-statusbar-point-middle-left: var(--o-statusbar-caret-gap) 50%;
+                    --o-statusbar-point-middle-right: calc(100% - var(--o-statusbar-caret-width) - var(--o-statusbar-caret-gap)) 50%;
+                    --o-statusbar-point-bottom-left: calc(var(--o-statusbar-caret-width) + var(--o-statusbar-caret-gap)) 100%;
+                    --o-statusbar-point-bottom-right: calc(100% - var(--o-statusbar-caret-gap)) 100%;
+
+                    &.o_last {
+                        --o-statusbar-point-top-right: 100% 0;
+                        --o-statusbar-point-middle-right: 100% 50%;
+                        --o-statusbar-point-bottom-right: 100% 100%;
+                        --#{$prefix}btn-border-radius: 0 var(--o-statusbar-radius) var(--o-statusbar-radius) 0;
+                    }
+
+                    &.o_first {
+                        --o-statusbar-point-top-left: 0 0;
+                        --o-statusbar-point-middle-left: 0 50%;
+                        --o-statusbar-point-bottom-left: 0 100%;
+                        --#{$prefix}btn-border-radius: var(--o-statusbar-radius) 0 0 var(--o-statusbar-radius);
+                    }
+
+                    &.o_first.o_last {
+                        --#{$prefix}btn-border-radius: var(--o-statusbar-radius);
+                    }
+                }
             }
 
-            &.o_last {
-                margin-left: 0;
-                border-top-left-radius: var(--o-statusbar-radius);
-                border-bottom-left-radius: var(--o-statusbar-radius);
-                padding-left: var(--o-statusbar-button-padding-x);
-            }
-
-            &.o_first {
-                border-top-right-radius: var(--o-statusbar-radius);
-                border-bottom-right-radius: var(--o-statusbar-radius);
-                padding-right: var(--o-statusbar-button-padding-x);
-            }
-
-            &.dropdown-toggle::after {
-                content: normal;
-            }
-
-            &:hover {
-                background-color: var(--o-statusbar-background-hover, #{map-get($-btn-secondary-design, hover-background)});
-            }
-
-            // Bootstrap's `.btn:first-child:active` and `.btn.show` are less
-            // specific than the `:hover` rule above, so the pressed and opened
-            // states need their own declaration to win the cascade.
-            &:active,
-            &.show {
-                background-color: var(--o-statusbar-background-pressed, #{map-get($-btn-secondary-design, active-background)});
-            }
-
-            // The current step is painted from its own class rather than from
-            // the `disabled` attribute. Declared last so it outranks the states above.
-            &.o_arrow_button_current {
-                background-color: var(--o-statusbar-background-current, #{map-get($-btn-secondary-design, active-background)});
-                border-color: var(--o-statusbar-background-current, #{map-get($-btn-secondary-design, active-border)});
+            &:not(.o_arrow_button_current) {
+                --#{$prefix}btn-disabled-bg: transparent;
+                --#{$prefix}btn-disabled-border-color: transparent;
             }
 
             &:disabled {

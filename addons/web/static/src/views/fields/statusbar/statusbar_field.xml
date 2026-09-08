@@ -29,7 +29,7 @@
                 </t>
             </Dropdown>
             <t t-foreach="this.items.inline" t-as="item" t-key="item.value">
-                <div class="o_arrow_button_wrap d-flex gap-1">
+                <div class="o_arrow_button_wrap d-flex">
                     <button
                         type="button"
                         class="btn btn-secondary o_arrow_button"
@@ -46,9 +46,6 @@
                         t-out="item.label"
                         t-on-click="() => this.selectItem(item)"
                     />
-                    <i t-if="!item_first"
-                        class="oi align-self-center opacity-75 d-none d-md-inline"
-                        data-icon="chevron_forward"/>
                 </div>
             </t>
             <Dropdown position="'bottom-start'">
