@@ -75,6 +75,7 @@ class ProductTemplate(models.Model):
         sanitize_overridable=True,
         sanitize_attributes=False,
         sanitize_form=False,
+        index="trigram",
     )
 
     alternative_product_ids = fields.Many2many(
@@ -177,6 +178,7 @@ class ProductTemplate(models.Model):
     _name_gist_idx = models.Index(lambda registry: get_translated_field_gist_index(registry, "name"))
     _description_gist_idx = models.Index(lambda registry: get_translated_field_gist_index(registry, "description"))
     _description_sale_gist_idx = models.Index(lambda registry: get_translated_field_gist_index(registry, "description_sale"))
+    _description_ecommerce_gist_idx = models.Index(lambda registry: get_translated_field_gist_index(registry, "description_ecommerce"))
     _default_code_gist_idx = models.Index(
         lambda registry: 'USING GIST(unaccent(default_code) gist_trgm_ops)'
         if registry.has_trigram and registry.has_unaccent == FunctionStatus.INDEXABLE
