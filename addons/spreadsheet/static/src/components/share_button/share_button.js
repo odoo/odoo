@@ -53,7 +53,12 @@ export class SpreadsheetShareButton extends Component {
     isChanged(data) {
         const contentsChanged = data.revisionId !== this.lastRevisionId;
         let globalFilterChanged = this.lastGlobalFilters === undefined;
-        const newCells = data.sheets[data.sheets.length - 1].cells;
+        const newCells = {};
+        for (const sheet of data.sheets) {
+            for (const [cellId, cellValue] of Object.entries(sheet.cells)) {
+                newCells[`${sheet.id}:${cellId}`] = cellValue;
+            }
+        }
         if (this.lastGlobalFilters !== undefined) {
             for (const key of Object.keys(newCells)) {
                 if (this.lastGlobalFilters[key] !== newCells[key]) {
