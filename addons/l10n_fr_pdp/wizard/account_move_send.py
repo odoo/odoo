@@ -17,6 +17,20 @@ class AccountMoveSend(models.TransientModel):
             return partners
         return partners.filtered(lambda partner: partner._get_pdp_receiver_identification_info()[0] != 'pdp')
 
+    @api.depends('move_ids')
+    def _compute_enable_ubl_cii_xml(self):
+        super()._compute_enable_ubl_cii_xml()        
+        for wizard in self:
+            if wizard.company_on_pdp and wizard.enable_peppol:
+                wizard.enable_ubl_cii_xml = False
+
+    @api.depends('move_ids')
+    def _compute_checkbox_ubl_cii_xml(self):
+        super()._compute_checkbox_ubl_cii_xml()
+        for wizard in self:
+            if wizard.company_on_pdp and wizard.enable_peppol:
+                wizard.checkbox_ubl_cii_xml = False
+
     @api.depends('company_on_pdp')
     def _compute_peppol_warning(self):
         super()._compute_peppol_warning()
