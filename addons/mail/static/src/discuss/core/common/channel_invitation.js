@@ -139,6 +139,10 @@ export class ChannelInvitation extends Component {
                 search_term: this.searchStr,
                 channel_id: this.props.channel?.id ?? false,
                 limit: this.searchLimit,
+                with_portal_users:
+                    this.props.channel &&
+                    (this.props.channel.channel_type === "group" ||
+                        !this.props.channel.group_public_id),
             });
             this.state.hasPendingRequest = false;
             return res;
