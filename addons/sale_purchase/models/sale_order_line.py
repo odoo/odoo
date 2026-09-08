@@ -205,7 +205,7 @@ class SaleOrderLine(models.Model):
         }
 
     def _purchase_service_prepare_line_values(
-        self, purchase_order, quantity=False, supplierinfo=None
+        self, purchase_order, quantity=None, supplierinfo=None
     ):
         self.check_singleton()
         if supplierinfo is None:
@@ -214,7 +214,7 @@ class SaleOrderLine(models.Model):
             )
         purchase_uom = supplierinfo.product_uom_id or self.product_id.uom_id
         purchase_qty = self.product_uom_id._get_quantity_in_unit(
-            quantity or self.product_qty, purchase_uom
+            quantity if quantity is not None else self.product_qty, purchase_uom
         )
         purchase_line_vals = self.env[
             "purchase.order.line"
@@ -314,7 +314,14 @@ class SaleOrderLine(models.Model):
         if self.order_id.name not in origins:
             purchase_order.origin = ", ".join([*origins, self.order_id.name])
 
-    def _purchase_service_create(self, quantity=False):
+    def _purchase_service_create(self, quantity=None):
+        """Create a purchase order line (and maybe a purchase order) for `quantity` of this sale line.
+        If a line should create a RFQ, it will check for existing PO. If no one is find, the SO line will create one, then adds
+        a new PO line. The created purchase order line will be linked to the SO line.
+        :param quantity: the quantity to force on the PO line, expressed in SO line UoM
+        :return: map of sale.order.line to the created purchase.order.line records
+        :rtype: dict
+        """
         sale_line_purchase_map = {}
         for line in self:
             line = line.with_company(line._purchase_service_get_company())
