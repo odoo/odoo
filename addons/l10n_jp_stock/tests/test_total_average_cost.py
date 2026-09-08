@@ -88,6 +88,17 @@ class TestTotalAverageCost(TestTotalAverageCostCommon):
         self._run_category_wizard()
         self.assertAlmostEqual(self.product.standard_price, (10 * 10 + 20 * 20 - 5 * 20) / 25, places=2)
 
+    def test_real_time_valuated_product_refused(self):
+        # the closing that makes a period final leaves a real time valuation out,
+        # so nothing would protect the cost the wizard writes
+        self._add_opening_stock()
+        self.category.property_valuation = 'real_time'
+        with self.assertRaises(UserError):
+            self._run_wizard(product_ids=[self.product.id])
+        # a category is a selection of what it applies to, so they are left out of it
+        action = self._run_category_wizard()
+        self.assertEqual(action['params']['type'], 'warning')
+
     def test_lot_valuated_product_refused(self):
         # valuing each lot separately is 個別法, a different elected method
         self.product.write({'tracking': 'lot', 'lot_valuated': True})
