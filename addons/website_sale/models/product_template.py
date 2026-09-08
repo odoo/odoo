@@ -363,6 +363,17 @@ class ProductTemplate(models.Model):
 
         return res
 
+    def copy(self, default=None):
+        template_copies = super().copy(default)
+        for template, template_copy in zip(self, template_copies, strict=True):
+            # If the copy has more extra images than the original, it means that the main image was
+            # duplicated in the extra images, so we need to remove it.
+            if len(template.product_template_image_ids) < len(
+                template_copy.product_template_image_ids
+            ):
+                template_copy.product_template_image_ids[0].unlink()
+        return template_copies
+
     @api.ondelete(at_uninstall=False)
     def _unlink_if_not_donation_product(self):
         if self.filtered(lambda p: p._is_donation()):
@@ -794,10 +805,8 @@ class ProductTemplate(models.Model):
 
             if uom_price_enabled:
                 template_price_vals["base_unit_price"] = (
-                    (template.product_variant_id or template)._get_base_unit_price(
-                        template_price_vals["price_reduce"]
-                    )
-                )
+                    template.product_variant_id or template
+                )._get_base_unit_price(template_price_vals["price_reduce"])
 
             res[template.id] = template_price_vals
 
@@ -1404,10 +1413,7 @@ class ProductTemplate(models.Model):
 
     @api.model
     def _get_website_sale_search_fields(self, search_in_description=True):
-        search_fields = [
-            "name",
-            "variants_default_code",
-        ]
+        search_fields = ["name", "variants_default_code"]
         if search_in_description:
             search_fields.append("description_ecommerce")
         search_fields.extend(("attribute_line_ids.value_ids.name", "product_tag_ids.name"))
@@ -1445,7 +1451,9 @@ class ProductTemplate(models.Model):
             domains.append([("list_price", "<=", max_price)])
         if attribute_value_dict:
             domains.extend(self._get_attribute_value_domain(attribute_value_dict))
-        search_fields = self._get_website_sale_search_fields(options.get("displayDescription", True))
+        search_fields = self._get_website_sale_search_fields(
+            options.get("displayDescription", True)
+        )
         fetch_fields = ["id", "name", "website_url", "description_ecommerce", "description_sale"]
         mapping = {
             "name": {"name": "name", "type": "text", "match": True},
