@@ -1164,7 +1164,14 @@ class ProductTemplate(models.Model):
         if (
             message_operation == 'create'
             and not self.env.user._is_internal()
-            and not self.env['website'].is_view_active('website_sale.product_comment')
         ):
+<<<<<<< bc648db175514f7ddddc3aed99c38c1f87132eb5
             return [(Domain.TRUE, 'write')]
+||||||| 16aaaafd7d314c04f39b1f633af3b5e15b46d78b
+            return dict.fromkeys(self, 'write')
+=======
+            website = self.env['website'].get_current_website()
+            if not website.with_context(website_id=website.id).is_view_active('website_sale.product_comment'):
+                return dict.fromkeys(self, 'write')
+>>>>>>> 009ee2575515e03d9d0b33f1a35d2ea37d37d614
         return super()._mail_get_operation_for_mail_message_operation(message_operation)
