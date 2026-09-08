@@ -18,8 +18,9 @@ from odoo.http.stream import STATIC_CACHE_LONG
 from odoo.tools.image import image_process
 from odoo.tools.mimetypes import guess_mimetype
 
+from odoo.addons.web.ms_icons import search_ms_icons
+
 from ..models.ir_attachment import SUPPORTED_IMAGE_MIMETYPES
-from .ms_icons import MS_ICONS
 from .svg_utils import get_shape_svg, make_shaped_image, update_svg_colors
 from odoo.addons.iap.tools import iap_tools
 from odoo.addons.mail.tools import link_preview
@@ -28,11 +29,6 @@ DEFAULT_LIBRARY_ENDPOINT = 'https://media-api.odoo.com'
 DEFAULT_OLG_ENDPOINT = 'https://olg.api.odoo.com'
 DEFAULT_OTS_ENDPOINT = 'https://ots.api.odoo.com'
 API_WEBSITE_IMAGES_URL = 'https://website-image.api.odoo.com/images/'
-
-MS_ICONS_INDEX = [
-    (name, icon['has_fill'], f"{name} {icon['tags']}".lower())
-    for name, icon in MS_ICONS.items()
-]
 
 # Regex definitions to apply speed modification in SVG files
 # Note : These regex patterns are duplicated on the server side for
@@ -818,9 +814,7 @@ class HTML_Editor(Controller):
             which also provides a plain list of all available icons.
         :returns: a list of ``{name, has_fill}`` dicts, tags excluded.
         """
-        needle = (needle or '').strip().lower()
         return [
             {'name': name, 'has_fill': has_fill}
-            for name, has_fill, haystack in MS_ICONS_INDEX
-            if not needle or needle in haystack
+            for name, has_fill in search_ms_icons(needle or '')
         ]

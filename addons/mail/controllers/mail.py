@@ -15,7 +15,7 @@ from odoo.tools import consteq
 from odoo.tools.misc import file_open
 
 from odoo.addons.mail.tools.discuss import add_guest_to_context
-from odoo.addons.html_editor.controllers.ms_icons import MS_ICONS
+from odoo.addons.web.ms_icons import MS_ICONS
 
 try:
     from werkzeug.utils import send_file
