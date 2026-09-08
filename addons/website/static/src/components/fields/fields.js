@@ -3,7 +3,6 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { debounce } from "@web/core/utils/timing";
-import { charField, CharField } from "@web/views/fields/char/char_field";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { UrlField, urlField } from "@web/views/fields/url/url_field";
 import { PageDependencies } from "@website/components/dialog/page_properties";
@@ -143,30 +142,3 @@ export const imageRadioField = {
 };
 
 registry.category("fields").add("image_radio", imageRadioField);
-
-/**
- * A Char field that updates its value on input.
- */
-export class UrlWarningBannerVisibilityCharField extends CharField {
-    static template = "website.UrlWarningBannerVisibilityCharField";
-
-    onFocus(ev) {
-        if (this.props.record.data.is_url_from_exist) {
-            this.props.record.update({ is_url_from_exist: false });
-        }
-    }
-
-    onBlur() {
-        this.props.record.update({ [this.props.name]: this.input().value });
-        super.onBlur();
-    }
-}
-
-export const urlWarningBannerVisibilityCharField = {
-    ...charField,
-    component: UrlWarningBannerVisibilityCharField,
-};
-
-registry
-    .category("fields")
-    .add("url_warning_banner_visibility", urlWarningBannerVisibilityCharField);
