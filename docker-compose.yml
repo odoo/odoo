@@ -1,40 +1,29 @@
 services:
   web:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: odoo:19.0
     depends_on:
-      db:
-        condition: service_healthy
-    command: ["python3", "/opt/odoo-src/odoo-bin", "-c", "/etc/odoo/odoo.conf"]
+      - db
     ports:
       - "8069:8069"
     volumes:
-      - ./:/opt/odoo-src:ro
-      - ./custom_addons:/mnt/extra-addons:ro
-      - ./docker/odoo.conf:/etc/odoo/odoo.conf:ro
       - odoo-web-data:/var/lib/odoo
+      - ./custom_addons:/mnt/extra-addons
     environment:
       - HOST=db
       - USER=odoo
       - PASSWORD=odoo
-    restart: unless-stopped
+    restart: always
 
   db:
     image: postgres:17
     environment:
-      POSTGRES_DB: postgres
-      POSTGRES_USER: odoo
-      POSTGRES_PASSWORD: odoo
-      PGDATA: /var/lib/postgresql/data/pgdata
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=odoo
+      - POSTGRES_PASSWORD=odoo
+      - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
       - odoo-db-data:/var/lib/postgresql/data/pgdata
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U odoo -d postgres"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
-    restart: unless-stopped
+    restart: always
 
 volumes:
   odoo-web-data:

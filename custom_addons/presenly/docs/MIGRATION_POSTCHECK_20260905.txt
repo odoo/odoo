@@ -1,0 +1,100 @@
+PRESENLY -> NATIVE ATTENDANCES MIGRATION POST-CHECK
+Date: 2026-09-05
+Scope: M0-M8 complete; M9 intentionally deferred for one stable release
+
+BACKUP
+BACKUP_FILE backups/presenly-migration/odoo-before-hr-attendance-migration-20260905.dump
+BACKUP_SIZE 7.0M
+
+MODULE
+FINAL_MODULE presenly Presenly Attendance Tools installed 19.0.2.0.0 application=False
+FINAL_CATEGORY Human Resources/Attendances
+FINAL_LEGACY_ROOT_ACTIVE False
+FINAL_CORE_FILES_MODIFIED False
+
+NATIVE ATTENDANCES INTEGRATION
+FINAL_VIEW presenly.view_hr_attendance_form_presenly active inherit=hr_attendance.hr_attendance_view_form
+FINAL_VIEW presenly.view_hr_attendance_list_presenly active inherit=hr_attendance.view_attendance_tree
+FINAL_VIEW presenly.view_hr_attendance_search_presenly active inherit=hr_attendance.hr_attendance_view_filter
+FINAL_VIEW presenly.view_hr_employee_form_presenly active inherit=hr.view_employee_form
+FINAL_FEATURE Attendance form/list/search exposes Unit, Work Location, Source, geofence distance, and Evidence
+FINAL_FEATURE Employee form exposes active units and Unit Assignments smart button
+
+MENUS
+FINAL_MENU presenly.menu_presenly_root inactive compatibility XML ID retained
+FINAL_MENU Attendances/Overview/My Permissions / Dispensations
+FINAL_MENU Attendances/Overview/My Time Off
+FINAL_MENU Attendances/Approvals/Permission Approvals
+FINAL_MENU Attendances/Approvals/Time Off Approvals
+FINAL_MENU Attendances/Reporting/Attendance Evidence
+FINAL_MENU Attendances/Reporting/Permissions / Dispensations
+FINAL_MENU Attendances/Reporting/Time Off
+FINAL_MENU Attendances/Configuration/Units
+FINAL_MENU Attendances/Configuration/Work Locations
+FINAL_MENU Attendances/Configuration/Employee Assignments
+FINAL_MENU Attendances/Configuration/Permission Types
+FINAL_MENU Attendances/Configuration/Approval Levels
+
+DATA PRESERVATION
+BASELINE_COUNT hr.attendance 19
+FINAL_COUNT hr.attendance 19
+BASELINE_COUNT hr.leave 12
+FINAL_COUNT hr.leave 12
+BASELINE_COUNT presenly.attendance.event 0
+FINAL_COUNT presenly.attendance.event 0
+BASELINE_COUNT presenly.permission 4
+FINAL_COUNT presenly.permission 4
+BASELINE_COUNT presenly.unit 1
+FINAL_COUNT presenly.unit 1
+BASELINE_COUNT presenly.work.location 0
+FINAL_COUNT presenly.work.location 0
+BASELINE_COUNT presenly.employee.assignment 0
+FINAL_COUNT presenly.employee.assignment 0
+BASELINE_COUNT presenly.approval.rule 0
+FINAL_COUNT presenly.approval.rule 0
+BASELINE_COUNT presenly.approval.log 0
+FINAL_COUNT presenly.approval.log 0
+FINAL_PENDING_PERMISSION_WITHOUT_APPROVER_SNAPSHOT 0
+FINAL_PENDING_LEAVE_WITHOUT_APPROVER_SNAPSHOT 0
+
+SECURITY
+FINAL_SECURITY Employee assignment/evidence/permission/approval-log restricted to own records
+FINAL_SECURITY Approver permission and Time Off access restricted to pending or historical assignments
+FINAL_SECURITY HR/Manager Presenly data restricted by allowed companies
+FINAL_SECURITY Approval configuration read internally with controlled sudo; no Employee configuration ACL added
+FINAL_SECURITY Workflow status writes and audit append use controlled sudo only after explicit current-approver validation
+FINAL_SECURITY Synthetic role test passed and transaction was rolled back
+
+API
+FINAL_API_PREFIX /api/presenly/v1 retained
+FINAL_API_ROUTE_COUNT 15
+FINAL_API_AUTH standard Odoo auth=user session; no custom JWT
+FINAL_API_HTTP_TEST anonymous rejected
+FINAL_API_HTTP_TEST username/password session accepted
+FINAL_API_HTTP_TEST destroyed session rejected
+
+ODOO 19 COMPATIBILITY
+FINAL_CONSTRAINTS all Presenly _sql_constraints migrated to models.Constraint
+FINAL_ACTIVITY_API activity_schedule uses XML ID strings
+FINAL_LEAVE_WORKFLOW avoids duplicate native confirm state transition
+
+VALIDATION
+FINAL_COMPILE Python compile OK
+FINAL_UPGRADE database=odoo exit=0 Modules loaded Registry loaded
+FINAL_FRESH_INSTALL_DATABASE presenly_test_final created for test and removed after completion
+FINAL_TEST_RESULT 0 failed, 0 error(s) of 10 tests
+FINAL_TEST_SCOPE 9 attendance/leave/permission workflow tests + 1 HTTP/session test
+FINAL_TEST_LOG /tmp/presenly-final-fresh-tests.log
+FINAL_SMOKE inherited views active=4
+FINAL_SMOKE menu hierarchy passed
+FINAL_SMOKE approval queue actions passed
+FINAL_SMOKE role ownership isolation passed
+
+NON-PRESENLY WARNINGS
+WARNING odoo.osv deprecation originates from Odoo/external addon loading, not Presenly
+WARNING om_account_followup translation warning originates from custom_addons/odooapps
+FINAL_PRESENLY_SQL_CONSTRAINT_WARNING False
+
+DEFERRED
+M9 cleanup intentionally deferred until one stable release.
+Compatibility XML IDs remain present but legacy Presenly launcher/root is inactive.
