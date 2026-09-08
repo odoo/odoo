@@ -156,6 +156,135 @@ export class PosOrderline extends PosOrderlineAccounting {
         return {};
     }
 
+<<<<<<< eabb99010544e8f7319c3df26a34a7c651d639ef
+||||||| ba5c23e819e6802568e2e503951561b54b47bea5
+    getPackLotLinesToEdit(isAllowOnlyOneLot) {
+        const currentPackLotLines = this.pack_lot_ids;
+        let nExtraLines = Math.abs(this.qty) - currentPackLotLines.length;
+        nExtraLines = Math.ceil(nExtraLines);
+        nExtraLines = nExtraLines > 0 ? nExtraLines : 1;
+        const tempLines = currentPackLotLines
+            .map((lotLine) => ({
+                id: lotLine.id,
+                text: lotLine.lot_name,
+            }))
+            .concat(
+                Array.from(Array(nExtraLines)).map((_) => ({
+                    text: "",
+                }))
+            );
+        return isAllowOnlyOneLot ? [tempLines[0]] : tempLines;
+    }
+
+    // What if a number different from 1 (or -1) is specified
+    // to an orderline that has product tracked by lot? Lot tracking (based
+    // on the current implementation) requires that 1 item per orderline is
+    // allowed.
+    async editPackLotLines(editedPackLotLines) {
+        if (!editedPackLotLines) {
+            return;
+        }
+        this.setPackLotLines(editedPackLotLines);
+        this.order_id.selectOrderline(this);
+    }
+
+    setPackLotLines({ modifiedPackLotLines, newPackLotLines, setQuantity = true }) {
+        const lotLinesToRemove = [];
+
+        for (const lotLine of this.pack_lot_ids) {
+            const modifiedLotName = modifiedPackLotLines[lotLine.id];
+            if (modifiedLotName) {
+                lotLine.lot_name = modifiedLotName;
+            } else {
+                lotLinesToRemove.push(lotLine);
+            }
+        }
+
+        // Remove those that needed to be removed.
+        for (const lotLine of lotLinesToRemove) {
+            lotLine.delete();
+        }
+
+        for (const newLotLine of newPackLotLines) {
+            this.models["pos.pack.operation.lot"].create({
+                lot_name: newLotLine.lot_name,
+                pos_order_line_id: this,
+            });
+        }
+
+        // Set the qty of the line based on number of pack lots.
+        if (!this.product_id.to_weight && setQuantity && this.product_id.tracking === "serial") {
+            this.setQuantityByLot();
+        }
+    }
+
+=======
+    getPackLotLinesToEdit(isAllowOnlyOneLot) {
+        const currentPackLotLines = this.pack_lot_ids;
+        let nExtraLines = Math.abs(this.qty) - currentPackLotLines.length;
+        nExtraLines = Math.ceil(nExtraLines);
+        nExtraLines = nExtraLines > 0 ? nExtraLines : 1;
+        const tempLines = currentPackLotLines
+            .map((lotLine) => ({
+                id: lotLine.id,
+                text: lotLine.lot_name,
+            }))
+            .concat(
+                Array.from(Array(nExtraLines)).map((_) => ({
+                    text: "",
+                }))
+            );
+        return isAllowOnlyOneLot ? [tempLines[0]] : tempLines;
+    }
+
+    // What if a number different from 1 (or -1) is specified
+    // to an orderline that has product tracked by lot? Lot tracking (based
+    // on the current implementation) requires that 1 item per orderline is
+    // allowed.
+    async editPackLotLines(editedPackLotLines) {
+        if (!editedPackLotLines) {
+            return;
+        }
+        this.setPackLotLines(editedPackLotLines);
+        this.order_id.selectOrderline(this);
+    }
+
+    setPackLotLines({ modifiedPackLotLines, newPackLotLines, setQuantity = true }) {
+        const lotLinesToRemove = [];
+
+        for (const lotLine of this.pack_lot_ids) {
+            const modifiedLotName = modifiedPackLotLines[lotLine.id];
+            if (modifiedLotName) {
+                lotLine.lot_name = modifiedLotName;
+            } else {
+                lotLinesToRemove.push(lotLine);
+            }
+        }
+
+        // Remove those that needed to be removed.
+        for (const lotLine of lotLinesToRemove) {
+            lotLine.delete();
+        }
+
+        for (const newLotLine of newPackLotLines) {
+            this.models["pos.pack.operation.lot"].create({
+                lot_name: newLotLine.lot_name,
+                pos_order_line_id: this,
+            });
+        }
+        const lotsExist = newPackLotLines.length || this.pack_lot_ids.length;
+        // Set the qty of the line based on number of pack lots.
+        if (
+            !this.product_id.to_weight &&
+            setQuantity &&
+            lotsExist &&
+            this.product_id.tracking === "serial"
+        ) {
+            this.setQuantityByLot();
+        }
+    }
+
+>>>>>>> a11a93d4c129f79d89352f9578354a8a02daa431
     setDiscount(discount) {
         const parsed_discount =
             typeof discount === "number"
