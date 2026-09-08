@@ -55,7 +55,7 @@ class TestAllocationRights(TestHrHolidaysCommon):
             'date_from': time.strftime('%Y-01-01'),
             'date_to': time.strftime('%Y-12-31'),
         })
-        return self.env['hr.leave.allocation'].with_user(user).create(values)
+        return self.env['hr.leave.allocation'].with_user(user).with_context(allocation_skip_auto_approve=True).create(values)
 
 
 class TestAccessRightsSimpleUser(TestAllocationRights):

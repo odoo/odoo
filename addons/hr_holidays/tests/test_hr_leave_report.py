@@ -64,7 +64,7 @@ class TestHrLeaveReport(TestHrHolidaysCommon):
                 'date_from': '2026-02-01',
                 'number_of_days': '1.5',
             },
-        ]).action_approve()
+        ])
 
         self.env['hr.leave'].create([
             {
@@ -121,8 +121,6 @@ class TestHrLeaveReport(TestHrHolidaysCommon):
             Allocation A should remain untouched (10 days), and Allocation B
             should have 1 day deducted (9 days), totaling 19 remaining days.
         """
-        self.alloc_a.action_approve()
-        self.alloc_b.action_approve()
         self.env['hr.leave'].create([
             {
                 'employee_id': self.employee_emp.id,
@@ -159,9 +157,6 @@ class TestHrLeaveReport(TestHrHolidaysCommon):
             L2 should deduct from Allocation A, leaving 8 days in Allocation A.
             L3 should deduct 8 days from Allocation A (emptying it) and 3 days from Allocation B.
         """
-        self.alloc_a.action_approve()
-        self.alloc_b.action_approve()
-
         # Leave L1: 2024 (1 day)
         self.env['hr.leave'].create([
             {

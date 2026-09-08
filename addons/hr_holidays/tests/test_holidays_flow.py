@@ -120,7 +120,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
                     'state': 'confirm',
                     'date_from': time.strftime('%Y-%m-01'),
                 }
-            ]).action_approve()
+            ])
 
             def _check_holidays_status(work_entry_type, employee, ml, lt, rl, vrl):
                 result = work_entry_type.get_allocation_data(employee)[employee][0][1]
@@ -155,8 +155,8 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
             })
             HolidaysEmployeeGroup = Requests.with_user(self.user_employee_id)
 
-            # HrUser allocates some leaves to the employee
-            aloc1_user_group = Allocations.with_user(self.user_hruser_id).create({
+            # HrUser allocates some leaves to the employee that are automatically approved
+            Allocations.with_user(self.user_hruser_id).create({
                 'name': 'Days for limited category',
                 'employee_id': self.employee_emp_id,
                 'work_entry_type_id': self.holidays_status_limited.id,
@@ -164,11 +164,8 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
                 'state': 'confirm',
                 'date_from': time.strftime('%Y-%m-01'),
             })
-            # HrUser validates the first step
             self.env.flush_all()
 
-            # HrManager validates the second step
-            aloc1_user_group.with_user(self.user_hrmanager_id).action_approve()
             # Checks Employee has effectively some days left
             hol_status_2_employee_group = self.holidays_status_limited.with_user(self.user_employee_id)
             _check_holidays_status(hol_status_2_employee_group, self.employee_emp, 2.0, 0.0, 2.0, 2.0)
@@ -301,7 +298,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
             'state': 'confirm',
             'date_from': time.strftime('%Y-%m-01'),
             'date_to': time.strftime('%Y-12-31'),
-        }).action_approve()
+        })
 
         leave_vals = {
             'name': 'Sick Time Off',
