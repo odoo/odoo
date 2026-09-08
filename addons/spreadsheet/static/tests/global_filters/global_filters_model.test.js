@@ -2391,7 +2391,7 @@ test("getFiltersMatchingPivot return correctly matching filter according to cell
         '=PIVOT.HEADER(1,"#product_id",1)',
     );
     expect(relationalFiltersWithNoneValue).toEqual([
-        { filterId: "42", value: undefined },
+        { filterId: "42", value: { operator: "not set" } },
     ]);
     const dateFilters1 = getFiltersMatchingPivot(
         model,

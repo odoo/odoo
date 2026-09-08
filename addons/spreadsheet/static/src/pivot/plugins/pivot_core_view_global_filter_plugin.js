@@ -202,11 +202,13 @@ export class PivotCoreViewGlobalFilterPlugin extends OdooCoreViewPlugin {
                                 break;
                             }
                         }
-                        // A group by value of "none"
+                        // A group by value of "none": the records without a
+                        // value are exactly what the "not set" operator selects
                         if (value === false) {
-                            break;
-                        }
-                        if (JSON.stringify(currentValue?.ids) !== `[${value}]`) {
+                            transformedValue = { operator: "not set" };
+                        } else if (
+                            JSON.stringify(currentValue?.ids) !== `[${value}]`
+                        ) {
                             transformedValue = { operator: "in", ids: [value] };
                         }
                         break;
