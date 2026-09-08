@@ -490,8 +490,19 @@ class StockMove(models.Model):
         if self.origin_returned_move_id and self.origin_returned_move_id.is_out:
             origin_move = self.origin_returned_move_id
             origin_valued_qty = origin_move._get_valued_qty()
+            value = (
+                0 if self.product_uom.is_zero(origin_valued_qty)
+                else origin_move.value * quantity / origin_valued_qty
+            )
+            if self.product_id.lot_valuated:
+                returned_qty = self._get_valued_qty()
+                returned_value = sum(
+                    move_line.lot_id.standard_price * move_line.quantity_product_uom
+                    for move_line in self._get_in_move_lines()
+                )
+                value = 0 if self.product_uom.is_zero(returned_qty) else returned_value * quantity / returned_qty
             return {
-                'value': 0 if self.product_uom.is_zero(origin_valued_qty) else origin_move.value * quantity / origin_valued_qty,
+                'value': value,
                 'quantity': quantity,
                 'description': _('Value based on original move %(reference)s', reference=origin_move.reference),
             }
