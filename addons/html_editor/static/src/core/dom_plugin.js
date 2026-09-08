@@ -27,6 +27,7 @@ import {
     children,
     closestElement,
     descendants,
+    findUpTo,
     firstLeaf,
     getConnectedParents,
     lastLeaf,
@@ -483,36 +484,47 @@ export class DomPlugin extends Plugin {
                     const wasBeforeFakeLineBreak = next?.nodeName === "BR" && isFakeLineBreak(next);
                     const isInsertingBlock = isBlock(node);
                     let target = marker;
-                    while (
-                        isInsertingBlock &&
-                        target &&
-                        !this.canInsertBlockAt(node, target.parentElement)
-                    ) {
-                        const parent = marker.parentElement;
-                        if (this.isAtParentEdge(marker, "start")) {
-                            parent.before(marker);
-                        } else if (this.isAtParentEdge(marker, "end")) {
-                            parent.after(marker);
-                        } else if (this.dependencies.split.isUnsplittable(parent)) {
+                    const closestPossibleTarget = isInsertingBlock
+                        ? findUpTo(target, this.editable, (position) =>
+                              this.canInsertBlockAt(node, position.parentElement)
+                          )
+                        : target;
+                    if (closestPossibleTarget !== target) {
+                        if (this.isAtAncestorEdge(target, closestPossibleTarget, "start")) {
+                            if (isBlock(closestPossibleTarget)) {
+                                target = closestPossibleTarget;
+                            } else {
+                                // This is a special case where we're inserting a block next to an
+                                // inline node. Inserting the block means we've left the inline
+                                // context so we should not continue inserting in that context.
+                                // eg, `p(a) i([]e) + div(b) c div(d) = p(a) div(b) c    div(d) i(e)
+                                //                                    ≠ p(a) div(b) i(c) div(d) i(e)
+                                closestPossibleTarget.before(marker);
+                            }
+                        } else if (this.isAtAncestorEdge(target, closestPossibleTarget, "end")) {
+                            closestPossibleTarget.after(marker);
+                        } else if (
+                            findUpTo(
+                                target,
+                                closestPossibleTarget.parentElement,
+                                (el) => isElement(el) && this.dependencies.split.isUnsplittable(el)
+                            )
+                        ) {
                             // We can't insert the node but we also can't split.
                             target = null;
                         } else {
-                            target = this.dependencies.split.splitElement(
-                                parent,
-                                childNodeIndex(target)
+                            target = this.dependencies.split.splitElementUntil(
+                                ...leftPos(marker),
+                                closestPossibleTarget.parentElement
                             )[1];
-                            if (isEmptyBlock(target)) {
-                                target.before(marker);
-                                target.remove();
-                                target = marker;
-                            }
-                        }
-                        if (!parent.contains(target) && isEmptyBlock(parent)) {
-                            parent.remove();
                         }
                     }
                     if (target) {
                         target.before(node);
+                        if (isBlock(target) && isEmptyBlock(target)) {
+                            target.before(marker);
+                            target.remove();
+                        }
                     }
                     insertedNodes.push(node);
                     const didInsertBlock = isBlock(node);
@@ -605,21 +617,26 @@ export class DomPlugin extends Plugin {
      * otherwise.
      *
      * @param {Node} node
+     * @param {HTMLElement} ancestor
      * @param {"start"|"end"} edge
      * @returns {boolean}
      */
-    isAtParentEdge(node, edge) {
-        const index = childNodeIndex(node);
-        // Search for the first/last visible child.
-        let visibleChild = node.parentElement[`${edge === "start" ? "first" : "last"}Child`];
-        while (visibleChild && !isVisible(visibleChild)) {
-            visibleChild = visibleChild[`${edge === "start" ? "next" : "previous"}Sibling`];
-        }
-        if (visibleChild) {
-            const visibleIndex = childNodeIndex(visibleChild);
-            if (edge === "start" ? index > visibleIndex : index < visibleIndex) {
-                return false;
+    isAtAncestorEdge(node, ancestor, edge) {
+        while (node !== ancestor) {
+            const index = childNodeIndex(node);
+            const parent = node.parentElement;
+            // Search for the first/last visible child.
+            let visibleChild = parent[`${edge === "start" ? "first" : "last"}Child`];
+            while (visibleChild && !isVisible(visibleChild)) {
+                visibleChild = visibleChild[`${edge === "start" ? "next" : "previous"}Sibling`];
             }
+            if (visibleChild) {
+                const visibleIndex = childNodeIndex(visibleChild);
+                if (edge === "start" ? index > visibleIndex : index < visibleIndex) {
+                    return false;
+                }
+            }
+            node = parent;
         }
         return true;
     }

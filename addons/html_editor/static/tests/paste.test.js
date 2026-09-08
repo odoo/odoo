@@ -1911,7 +1911,7 @@ describe("Complex html 3 p", () => {
                     pasteHtml(editor, complexHtmlData);
                 },
                 contentAfter:
-                    '<div class="oe_unbreakable">1ab<span class="a">c1<i>X</i>2</span><p>3<i>X</i>4</p><span class="a">5<i>X</i>6[]</span>f</div>',
+                    '<div class="oe_unbreakable">1ab<span class="a">c1<i>X</i>2</span><p>3<i>X</i>4</p>5<i>X</i>6[]f</div>',
             });
         });
 
@@ -1966,7 +1966,7 @@ describe("Complex html 3 p", () => {
                     pasteHtml(editor, complexHtmlData);
                 },
                 contentAfter:
-                    '<div>2a<span class="a">b1<i>X</i>2</span><p>3<i>X</i>4</p><span class="a">5<i>X</i>6[]</span>e<br>f</div>',
+                    '<div>2a<span class="a">b1<i>X</i>2</span><p>3<i>X</i>4</p>5<i>X</i>6[]e<br>f</div>',
             });
         });
     });
@@ -2295,7 +2295,7 @@ describe("Complex html 3p+b", () => {
                     pasteHtml(editor, complexHtmlData);
                 },
                 contentAfter:
-                    '<div class="oe_unbreakable">1ab<span class="a">c1<b>23</b></span><p>zzz</p><span class="a">45<b>6</b>7[]</span>f</div>',
+                    '<div class="oe_unbreakable">1ab<span class="a">c1<b>23</b></span><p>zzz</p>45<b>6</b>7[]f</div>',
             });
         });
 
@@ -2328,7 +2328,7 @@ describe("Complex html 3p+b", () => {
                     pasteHtml(editor, complexHtmlData);
                 },
                 contentAfter:
-                    '<div>2a<span class="a">b1<b>23</b></span><p>zzz</p><span class="a">45<b>6</b>7[]</span>e<br>f</div>',
+                    '<div>2a<span class="a">b1<b>23</b></span><p>zzz</p>45<b>6</b>7[]e<br>f</div>',
             });
         });
     });
