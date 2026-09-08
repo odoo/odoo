@@ -56,6 +56,27 @@ class TestHrSkillsSlides(TransactionCase):
         self.assertEqual(resume_line.channel_id.id, self.channel.id)
         self.assertEqual(resume_line.course_url, self.channel.website_absolute_url)
 
+    def test_no_duplicate_subscribe_message_on_reenroll(self):
+        """
+        Re-adding a partner that is already an active 'joined' member of the channel
+        does not repost any message on the employee's chatter.
+        """
+        def _count_subscribe_messages():
+            return len(self.employee.message_ids.filtered(
+                lambda message: message.body and 'subscribed to the course' in message.body
+            ))
+        channel = self.env['slide.channel'].create({
+            'name': 'Test Channel 1',
+            'enroll': 'public',
+            'user_id': self.user.id,
+        })
+        self.assertIn(self.user.partner_id, channel.partner_ids)
+        self.assertEqual(_count_subscribe_messages(), 1)
+
+        # The partner is already an active 'joined' member: this call is a no-op.
+        channel.enroll_group_ids = self.user.group_ids
+        self.assertEqual(_count_subscribe_messages(), 1)
+
     def test_remove_resume_line_no_readd(self):
         """
         Ensure that a eLearning resume line that is removed is not re-added when the course changes.
