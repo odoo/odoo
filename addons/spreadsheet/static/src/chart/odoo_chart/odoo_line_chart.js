@@ -29,7 +29,6 @@ export class OdooLineChart extends OdooChart {
         this.cumulatedStart = definition.cumulatedStart;
         this.axesDesign = definition.axesDesign;
         this.fillArea = definition.fillArea;
-        this.cumulatedStart = definition.cumulatedStart;
         this.hideDataMarkers = definition.hideDataMarkers;
         this.zoomable = definition.zoomable;
     }
