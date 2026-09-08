@@ -4848,7 +4848,8 @@ class BaseModel(metaclass=MetaModel):
                     # computed stored fields with a column
                     # have to be computed before create
                     # s.t. required and constraints can be applied on those fields.
-                    vals[fname] = field.convert_to_write(record[fname], self)
+                    field_value = record.sudo()[fname] if field.compute_sudo else record[fname]
+                    vals[fname] = field.convert_to_write(field_value, self)
                     precomputed.add(field)
 
     @api.model
