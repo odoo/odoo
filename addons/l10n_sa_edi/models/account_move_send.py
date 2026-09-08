@@ -41,8 +41,8 @@ class AccountMoveSend(models.AbstractModel):
 
     def _hook_invoice_document_after_pdf_report_render(self, invoice, invoice_data):
         # EXTENDS account
-        super()._hook_invoice_document_after_pdf_report_render(invoice, invoice_data)
         if 'sa_edi' not in invoice_data['extra_edis'] and 'sa_edi_test' not in invoice_data['extra_edis']:
+            super()._hook_invoice_document_after_pdf_report_render(invoice, invoice_data)
             return
 
         edi_document = invoice.l10n_sa_edi_document_id
@@ -78,3 +78,10 @@ class AccountMoveSend(models.AbstractModel):
             if "<pdfaid:conformance>B</pdfaid:conformance>" in content:
                 content.replace("<pdfaid:conformance>B</pdfaid:conformance>", "<pdfaid:conformance>A</pdfaid:conformance>")
             pdf_writer.add_file_metadata(content.encode())
+
+        # Replace the current content.
+        writer_buffer = io.BytesIO()
+        pdf_writer.write(writer_buffer)
+        pdf_values['raw'] = writer_buffer.getvalue()
+        reader_buffer.close()
+        writer_buffer.close()
