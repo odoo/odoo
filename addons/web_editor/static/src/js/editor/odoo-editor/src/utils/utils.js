@@ -1258,6 +1258,18 @@ export const formatSelection = (editor, formatName, {applyStyle, formatProps} = 
     const selection = editor.document.getSelection();
     let direction
     let wasCollapsed;
+    if (
+        closestElement(
+            selection.anchorNode,
+            '[data-oe-model]:not([data-oe-type="html"]):not([data-oe-field="arch"]):not([data-oe-translation-source-sha])'
+        ) ||
+        closestElement(
+            selection.focusNode,
+            '[data-oe-model]:not([data-oe-type="html"]):not([data-oe-field="arch"]):not([data-oe-translation-source-sha])'
+        )
+    ) {
+        return;
+    }
     if (editor.editable.querySelector('.o_selected_td')) {
         direction = DIRECTIONS.RIGHT;
     } else {

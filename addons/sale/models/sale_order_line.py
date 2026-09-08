@@ -953,7 +953,14 @@ class SaleOrderLine(models.Model):
         """
         for line in self:
             qty_invoiced = 0.0
-            for invoice_line in line._get_invoice_lines():
+            invoice_lines = line._get_invoice_lines()
+            if line.is_downpayment:
+                if not line.currency_id.is_zero(sum(invoice_lines.filtered(lambda l: l.move_id.state != 'cancel').mapped('balance'))):
+                    line.qty_invoiced = 1
+                else:
+                    line.qty_invoiced = 0
+                continue
+            for invoice_line in invoice_lines:
                 if invoice_line.move_id.state != 'cancel' or invoice_line.move_id.payment_state == 'invoicing_legacy':
                     if invoice_line.move_id.move_type == 'out_invoice':
                         qty_invoiced += invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_uom, round=False)
