@@ -60,4 +60,4 @@ class SmsController(Controller):
                 "Received ill-formatted SMS delivery report event: \n%s",
                 message_statuses,
             )
-            raise UserError(_("Bad parameters"), status=400)
+            raise UserError(_("Bad parameters"))

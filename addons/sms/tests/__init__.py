@@ -1,5 +1,6 @@
 from . import common
 from . import test_sms_composer
+from . import test_sms_controller
 from . import test_sms_process_queue
 from . import test_sms_template
 from . import test_sms_template_wizards
