@@ -1,6 +1,10 @@
 import { Plugin } from "@html_editor/plugin";
 import { closestElement, descendants, selectElements } from "@html_editor/utils/dom_traversal";
-import { mergeAdjacentTextNodes, unwrapContents } from "@html_editor/utils/dom";
+import {
+    cleanEmptyAncestors,
+    mergeAdjacentTextNodes,
+    unwrapContents,
+} from "@html_editor/utils/dom";
 import { findInSelection, callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { _t } from "@web/core/l10n/translation";
 import { LinkPopover } from "./link_popover";
@@ -483,6 +487,12 @@ export class LinkPlugin extends Plugin {
         );
     }
 
+    clearEmptyInlineElements(selection) {
+        const exclude = (node) => isBlock(node);
+        cleanEmptyAncestors(selection.startContainer, null, exclude);
+        cleanEmptyAncestors(selection.endContainer, null, exclude);
+    }
+
     /**
      * open the Link popover to edit links
      *
@@ -591,6 +601,7 @@ export class LinkPlugin extends Plugin {
                         }
                     } else {
                         const content = this.dependencies.selection.extractContent(selection);
+                        this.clearEmptyInlineElements(selection);
                         link.append(content);
                         link.normalize();
                         cursorsToRestore = null;
