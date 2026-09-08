@@ -30,8 +30,10 @@ class SifnextPPL(models.Model):
         required=True, default="manual", tracking=True,
     )
     line_ids = fields.One2many("sifnext.ppl.line", "ppl_id", string="Detail", copy=True)
+    # ponytail: Dibiarkan untuk backward compatibility. Tidak dipakai.
     ppn_percentage = fields.Float(string="Persentase PPN (%)", default=11.0, tracking=True)
     ppn_amount = fields.Monetary(compute="_compute_total_amount", store=True, string="Nominal PPN")
+    pph_amount = fields.Monetary(compute="_compute_total_amount", store=True, string="Nominal PPh")
     total_amount = fields.Monetary(compute="_compute_total_amount", store=True, tracking=True, string="Total Akhir")
     currency_id = fields.Many2one(
         "res.currency", required=True,
@@ -99,13 +101,15 @@ class SifnextPPL(models.Model):
     def _onchange_payment_method(self):
         self.payment_source_account_id = False
 
-    @api.depends("line_ids.subtotal", "line_ids.has_ppn", "ppn_percentage")
+    @api.depends("line_ids.subtotal", "line_ids.tax_type", "line_ids.tax_amount")
     def _compute_total_amount(self):
         for record in self:
             subtotal = sum(record.line_ids.mapped("subtotal"))
-            ppn_base = sum(line.subtotal for line in record.line_ids if line.has_ppn)
-            record.ppn_amount = ppn_base * (record.ppn_percentage / 100.0)
-            record.total_amount = subtotal + record.ppn_amount
+            ppn_amt = sum(line.tax_amount for line in record.line_ids if line.tax_type == 'ppn')
+            pph_amt = sum(line.tax_amount for line in record.line_ids if line.tax_type == 'pph')
+            record.ppn_amount = ppn_amt
+            record.pph_amount = pph_amt
+            record.total_amount = subtotal + ppn_amt - pph_amt
 
     @api.constrains("line_ids")
     def _check_positive_lines(self):
@@ -261,8 +265,11 @@ class SifnextPPL(models.Model):
                 "total_amount": self.total_amount,
                 "ppn": {
                     "has_ppn": self.ppn_amount > 0,
-                    "percentage": self.ppn_percentage,
                     "amount": self.ppn_amount,
+                },
+                "pph": {
+                    "has_pph": self.pph_amount > 0,
+                    "amount": self.pph_amount,
                 },
                 "payment": {
                     "method": self.payment_method,
@@ -356,12 +363,26 @@ class SifnextPPL(models.Model):
                 ('account_type', '=', 'asset')
             ], limit=1)
             if not ppn_account:
-                raise UserError(_("PPL memiliki PPN, tetapi Master COA untuk akun PPN tidak ditemukan."))
+                raise UserError(_("PPL memiliki PPN, tetapi Master COA untuk akun PPN (Asset) tidak ditemukan."))
             jurnal_lines.append({
                 'account_id': ppn_account.id,
-                'name': f"PPN {payload['ppl']['ppn']['percentage']}% - {payload['ppl']['number']}",
+                'name': f"PPN - {payload['ppl']['number']}",
                 'debit': payload['ppl']['ppn']['amount'],
                 'credit': 0.0,
+            })
+
+        if payload['ppl'].get('pph') and payload['ppl']['pph']['has_pph'] and payload['ppl']['pph']['amount'] > 0:
+            pph_account = self.env['sif.coa'].search([
+                ('name', 'ilike', 'pph'),
+                ('account_type', '=', 'liability')
+            ], limit=1)
+            if not pph_account:
+                raise UserError(_("PPL memiliki PPh, tetapi Master COA untuk akun PPh (Liability) tidak ditemukan."))
+            jurnal_lines.append({
+                'account_id': pph_account.id,
+                'name': f"PPh - {payload['ppl']['number']}",
+                'debit': 0.0,
+                'credit': payload['ppl']['pph']['amount'],
             })
         
         source_account = payload['ppl']['payment'].get('source_account')
@@ -482,6 +503,14 @@ class SifnextPPL(models.Model):
             "done_at": fields.Datetime.now(),
         })
 
+    def action_reject(self, reason):
+        if not (self.env.user.has_group("sifnext_ppl.group_ppl_approver") or self.env.user.has_group("sifnext_ppl.group_ppl_finance")):
+            raise AccessError(_("Hanya Direktur atau Keuangan yang dapat menolak PPL."))
+        for record in self:
+            if record.state not in ("submitted", "verified"):
+                raise UserError(_("PPL pada status ini tidak dapat ditolak."))
+        self._workflow_write({"state": "draft", "return_reason": reason})
+
     def action_return_to_draft(self):
         self._check_finance_group()
         reason = self.env.context.get("return_reason")
@@ -501,7 +530,13 @@ class SifnextPPLLine(models.Model):
     sequence = fields.Integer(default=10)
     ppl_id = fields.Many2one("sifnext.ppl", required=True, ondelete="cascade", index=True)
     description = fields.Char(required=True)
-    has_ppn = fields.Boolean(string="Kena PPN", default=False)
+    tax_type = fields.Selection([
+        ('none', 'Tanpa Pajak'),
+        ('ppn', 'PPN'),
+        ('pph', 'PPh')
+    ], string="Pajak", default='none')
+    tax_percentage = fields.Float(string="Persen Pajak (%)")
+    tax_amount = fields.Monetary(compute="_compute_subtotal", store=True, string="Nominal Pajak")
     quantity = fields.Float(required=True, default=1)
     unit_price = fields.Monetary(required=True)
     subtotal = fields.Monetary(compute="_compute_subtotal", store=True)
@@ -558,9 +593,14 @@ class SifnextPPLLine(models.Model):
             line.attachment_count = len(line.attachment_ids)
 
     @api.depends("quantity", "unit_price")
+    @api.depends("quantity", "unit_price", "tax_type", "tax_percentage")
     def _compute_subtotal(self):
         for line in self:
             line.subtotal = line.quantity * line.unit_price
+            if line.tax_type in ('ppn', 'pph'):
+                line.tax_amount = line.subtotal * (line.tax_percentage / 100.0)
+            else:
+                line.tax_amount = 0.0
 
     @api.constrains("quantity", "unit_price")
     def _check_positive_amount(self):
