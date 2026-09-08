@@ -33,7 +33,7 @@ class IrActionsReport(models.Model):
 
             # Generate and attach EDI documents from each builder
             for builder in builders:
-                xml_content = builder._export_order(purchase_order)
+                xml_content = builder._export_order(purchase_order.sudo())
 
                 writer.addAttachment(
                     builder._export_invoice_filename(purchase_order),  # works even if it's a SO or PO
