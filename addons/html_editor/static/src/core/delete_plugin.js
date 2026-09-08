@@ -541,7 +541,11 @@ export class DeletePlugin extends Plugin {
         const nodes = [range.startContainer];
         if (range.endContainer !== range.startContainer) {
             nodes.push(range.endContainer);
+        } else if (range.startOffset !== range.endOffset) {
+            nodes.push(range.startContainer.childNodes[range.startOffset]);
+            nodes.push(range.endContainer.childNodes[range.endOffset - 1]);
         }
+
         for (const node of nodes) {
             // @todo: mind Icons?
             // Probably need to get deepest position's element
@@ -1401,7 +1405,7 @@ export class DeletePlugin extends Plugin {
         return this.deleteCharUnmergeable(startContainer, startOffset, endContainer, endOffset);
     }
 
-    // Trap cursor inside unmergeable element. Remove it if empty.
+    // Trap cursor inside unmergeable block element. Remove it if empty.
     deleteCharUnmergeable(sourceContainer, sourceOffset, destContainer, destOffset) {
         if (!destContainer) {
             return;
@@ -1410,7 +1414,8 @@ export class DeletePlugin extends Plugin {
         const closestUnmergeable = findUpTo(sourceContainer, commonAncestor, (node) =>
             this.isUnmergeable(node)
         );
-        if (!closestUnmergeable) {
+
+        if (!isBlock(closestUnmergeable)) {
             return;
         }
 
