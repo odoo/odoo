@@ -150,6 +150,21 @@ registry.category("web_tour.tours").add("SearchMoreCustomer", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("SearchMoreCustomerMultiWord", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickPartnerButton(),
+            // Words separated by a gap should still match server-side
+            // (e.g. "jose ramirez" -> "Jose Alberto Ramirez Mendoza").
+            ProductScreen.inputCustomerSearchbar("jose ramirez"),
+            Utils.selectButton("Search more"),
+            ProductScreen.clickCustomer("Jose Alberto Ramirez Mendoza"),
+            ProductScreen.isShown(),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("test_tracking_number_closing_session", {
     steps: () =>
         [
