@@ -311,3 +311,25 @@ class TestSaleStockRegressions(TestSaleStockCommon):
             100.0,
             "a return move was counted as an extra on-time delivery",
         )
+
+    def test_delay_report_ignores_a_later_return(self):
+        product = self._storable("DELAY RETURN", 100)
+        order = self._order(
+            [(product, 10)],
+            date_commitment=fields.Datetime.now() + timedelta(days=7),
+        )
+        picking = order.picking_ids
+        picking.move_ids.write({"quantity": 10, "picked": True})
+        picking._action_done()
+        self._return(picking, 3)
+        self.env.invalidate_all()
+
+        row = self.env["customer.delay.report"].search(
+            [("partner_id", "=", self.customer.id), ("product_id", "=", product.id)]
+        )
+        self.assertEqual(row.qty_total, 10.0)
+        self.assertEqual(
+            row.on_time_rate,
+            100.0,
+            "a return move was counted as extra on-time quantity",
+        )
