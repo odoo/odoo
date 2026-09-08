@@ -2690,3 +2690,19 @@ describe("Selection not collapsed", () => {
         });
     });
 });
+
+test("should remove character before unremovable", async () => {
+    await testEditor({
+        contentBefore: `<p>a<span class="oe_unremovable">[]x</span>b</p>`,
+        stepFunction: deleteBackward,
+        contentAfter: `<p><span class="oe_unremovable">[]x</span>b</p>`,
+    });
+});
+
+test("should remove character before unremovable (2)", async () => {
+    await testEditor({
+        contentBefore: `<p>aa<span class="oe_unremovable">[]x</span>b</p>`,
+        stepFunction: deleteBackward,
+        contentAfter: `<p>a[]<span class="oe_unremovable">x</span>b</p>`,
+    });
+});
