@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import models, Command
+from odoo import models, Command, _
 from odoo.addons.account.models.chart_template import template
 
 
@@ -12,7 +12,7 @@ class AccountChartTemplate(models.AbstractModel):
             'property_account_receivable_id': 'lu_2011_account_4011',
             'property_account_payable_id': 'lu_2011_account_44111',
             'property_account_expense_categ_id': 'lu_2011_account_6061',
-            'property_account_income_categ_id': 'lu_2020_account_703001',
+            'property_account_income_categ_id': 'lu_2020_account_703',
             'property_stock_account_input_categ_id': 'lu_2011_account_321',
             'property_stock_account_output_categ_id': 'lu_2011_account_321',
             'property_stock_valuation_account_id': 'lu_2020_account_60761',
@@ -37,6 +37,14 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'lu_2015_tax_AP-PA-17',
             },
         }
+
+    def _get_accounts_data_values(self, company, template_data):
+        account_vals = super()._get_accounts_data_values(company, template_data)
+        if company.sudo().account_fiscal_country_id.code == 'LU':
+            account_vals['transfer_account_id']['code'] = account_vals['transfer_account_id']['prefix'].ljust(account_vals['transfer_account_id']['code_digits'], '0')
+            account_vals['transfer_account_id']['name'] = _("Internal transfers")
+            del account_vals['transfer_account_id']['prefix'], account_vals['transfer_account_id']['code_digits']
+        return account_vals
 
     @template('lu', 'account.journal')
     def _get_lu_account_journal(self):
