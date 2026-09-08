@@ -25,3 +25,14 @@ class TestBatchViewArch(TransactionCase):
         self.assertEqual(names, ["description"])
         field = self.env["stock.picking.batch"]._fields["description"]
         self.assertTrue(field.store, "an unstored field would make the ilike useless")
+
+    def test_the_batch_form_shows_the_responsible_as_an_avatar(self):
+        arch = self._arch("stock_picking_batch.stock_picking_batch_form", "form")
+        nodes = arch.xpath('//field[@name="user_id"]')
+        self.assertTrue(nodes, "the batch form declares no user_id field at all")
+        self.assertEqual(
+            nodes[0].get("widget"),
+            "many2one_avatar_user",
+            "the list and the kanban of this same view file already show the "
+            "responsible as an avatar; the form was the only one left as text",
+        )
