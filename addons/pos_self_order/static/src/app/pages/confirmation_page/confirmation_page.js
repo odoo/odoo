@@ -1,6 +1,7 @@
 import { useLayoutEffect, useState } from "@web/owl2/utils";
 import { Component, onMounted, onWillUnmount } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
+import { browser } from "@web/core/browser/browser";
 import { cookie } from "@web/core/browser/cookie";
 import { useService } from "@web/core/utils/hooks";
 import { rpc } from "@web/core/network/rpc";
@@ -38,8 +39,16 @@ export class ConfirmationPage extends Component {
                 }
 
                 const printReceipts = async () => {
+                    // Avoid reprinting after page reload
+                    const alreadyPrinted =
+                        this.selfOrder.config.self_ordering_mode === "kiosk" &&
+                        Boolean(this.confirmedOrder.nb_print);
+
                     await this.printOrder();
-                    await this.printOrderChanges();
+
+                    if (!alreadyPrinted) {
+                        await this.printOrderChanges();
+                    }
                 };
 
                 printReceipts();
@@ -157,8 +166,16 @@ export class ConfirmationPage extends Component {
     }
 
     backToHome() {
-        if (this.confirmedOrder.uiState.receiptReady && !this.setDefautLanguage()) {
-            this.router.navigate("default");
+        if (!this.confirmedOrder.uiState.receiptReady || this.state.onReload) {
+            return;
+        }
+
+        const needsReload = this.setDefautLanguage();
+
+        this.router.navigate("default");
+
+        if (needsReload) {
+            browser.location.reload();
         }
     }
 
@@ -174,18 +191,16 @@ export class ConfirmationPage extends Component {
         const defaultLanguage = this.selfOrder.config.self_ordering_default_language_id;
 
         if (
-            defaultLanguage &&
-            this.selfOrder.currentLanguage.code !== defaultLanguage.code &&
-            !this.state.onReload &&
-            this.selfOrder.config.self_ordering_mode === "kiosk"
+            !defaultLanguage ||
+            this.selfOrder.config.self_ordering_mode !== "kiosk" ||
+            this.selfOrder.currentLanguage.code === defaultLanguage.code
         ) {
-            cookie.set("frontend_lang", defaultLanguage.code);
-            window.location.reload();
-            this.state.onReload = true;
-            return true;
+            return false;
         }
 
-        return this.state.onReload;
+        cookie.set("frontend_lang", defaultLanguage.code);
+        this.state.onReload = true;
+        return true;
     }
     get orderTimeStr() {
         return this.confirmedOrder.preset_time.toFormat("h:mm a");
