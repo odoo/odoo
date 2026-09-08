@@ -1381,7 +1381,7 @@ ${issueStrings}`);
       return this.add(item.id, item, options);
     }
     add(key, value, options = {}) {
-      if (!options.force && key in this._map()) {
+      if (!options.force && untrack(() => key in this._map())) {
         throw new OwlError(
           `Key "${key}" is already registered (registry '${this._name}'). Use { force: true } to overwrite.`
         );
@@ -1390,7 +1390,9 @@ ${issueStrings}`);
         const info = this._name ? ` (registry '${this._name}', key: '${key}')` : ` (key: '${key}')`;
         assertType(value, this._validation, `Registry entry does not match the type${info}`);
       }
-      this._map()[key] = [options.sequence ?? 50, value];
+      untrack(() => {
+        this._map()[key] = [options.sequence ?? 50, value];
+      });
       return this;
     }
     get(key, defaultValue) {
@@ -1401,7 +1403,9 @@ ${issueStrings}`);
       return hasKey ? this._map()[key][1] : defaultValue;
     }
     delete(key) {
-      delete this._map()[key];
+      untrack(() => {
+        delete this._map()[key];
+      });
       return this;
     }
     clear() {
@@ -1414,7 +1418,7 @@ ${issueStrings}`);
       const scope = useScope();
       this.add(key, value, options);
       scope.onDestroy(() => {
-        if (this._map()[key]?.[1] === value) {
+        if (untrack(() => this._map()[key]?.[1]) === value) {
           this.delete(key);
         }
       });
@@ -1443,11 +1447,13 @@ ${issueStrings}`);
         const info = this._name ? ` (resource '${this._name}')` : "";
         assertType(item, this._validation, `Resource item does not match the type${info}`);
       }
-      this._items().push([options.sequence ?? 50, item]);
+      untrack(() => {
+        this._items().push([options.sequence ?? 50, item]);
+      });
       return this;
     }
     delete(item) {
-      const items = this._items().filter(([seq, val]) => val !== item);
+      const items = untrack(this._items).filter(([seq, val]) => val !== item);
       this._items.set(items);
       return this;
     }
@@ -1767,7 +1773,7 @@ ${issueStrings}`);
   var config = useConfig;
 
   // ../owl-runtime/dist/owl-runtime.es.js
-  var version = "3.0.0-alpha.48";
+  var version = "3.0.0-alpha.49";
   var fibersInError = /* @__PURE__ */ new WeakMap();
   var nodeErrorHandlers = /* @__PURE__ */ new WeakMap();
   function invokeErrorHandlers(node, error, finalize, markFibers) {
@@ -2967,6 +2973,7 @@ ${issueStrings}`);
         }
       };
       Block.prototype.remove = function remove2() {
+        elementRemove.call(this.el);
         if (cbRefs.length) {
           const data = this.data;
           const refs = this.refs;
@@ -2975,7 +2982,6 @@ ${issueStrings}`);
             fn(null, refs[locRefIdxs[cbRef]]);
           }
         }
-        elementRemove.call(this.el);
       };
     }
     return Block;
@@ -4957,8 +4963,8 @@ ${issueStrings}`);
   };
   var __info__ = {
     version: App.version,
-    date: "2026-09-01T15:18:08.148Z",
-    hash: "b22aa413",
+    date: "2026-09-08T12:24:10.035Z",
+    hash: "ca618ce1",
     url: "https://github.com/odoo/owl"
   };
 
