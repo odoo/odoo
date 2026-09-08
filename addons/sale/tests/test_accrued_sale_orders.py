@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from ast import literal_eval
 
 from odoo import fields
 from odoo.exceptions import UserError
@@ -11,6 +12,11 @@ from odoo.addons.sale.tests.common import TestSaleCommon
 @freeze_time('2022-01-01')
 @tagged('post_install', '-at_install')
 class TestAccruedSaleOrders(TestSaleCommon):
+
+    def _get_selectable_accrual_accounts(self, wizard):
+        domain_str = wizard._fields['account_id'].domain
+        domain = literal_eval(domain_str.replace('account_types', str(wizard.account_types)))
+        return self.env['account.account'].search(domain)
 
     @classmethod
     def setUpClass(cls):
@@ -169,6 +175,95 @@ class TestAccruedSaleOrders(TestSaleCommon):
             {'account_id': self.alt_inc_account.id, 'debit': 0, 'credit': 1000},
             {'account_id': self.wizard.account_id.id, 'debit': 6000, 'credit': 0},
         ])
+
+    def test_accrued_account_types_invoice_to_be_issued(self):
+        """ When all lines are delivered ahead of invoicing, only the asset
+        account type should be proposed (invoice to be issued). """
+        self.sale_order.order_line.qty_delivered = 5
+        wizard = self.env['account.accrued.orders.wizard'].with_context({
+            'active_model': 'sale.order',
+            'active_ids': self.sale_order.ids,
+        }).new()
+        selectable_accounts = self._get_selectable_accrual_accounts(wizard)
+        self.assertEqual(set(selectable_accounts.mapped('account_type')), {'asset_current'})
+
+        # Open the wizard from the so lines list view
+        wizard = self.env['account.accrued.orders.wizard'].with_context({
+            'active_model': 'sale.order.line',
+            'active_ids': self.sale_order.order_line.ids,
+        }).new()
+        selectable_accounts = self._get_selectable_accrual_accounts(wizard)
+        self.assertEqual(set(selectable_accounts.mapped('account_type')), {'asset_current'})
+
+    def test_accrued_account_types_deferred_revenue(self):
+        """ When all lines are invoiced ahead of delivery, only the
+        liability account type should be proposed (deferred revenue). """
+        self.sale_order.order_line.qty_delivered = 10
+        invoices = self.sale_order._create_invoices()
+        invoices.invoice_date = fields.Date.today()
+        invoices.action_post()
+        self.sale_order.order_line.qty_delivered = 0
+
+        wizard = self.env['account.accrued.orders.wizard'].with_context({
+            'active_model': 'sale.order',
+            'active_ids': self.sale_order.ids,
+        }).new()
+        selectable_accounts = self._get_selectable_accrual_accounts(wizard)
+        self.assertEqual(set(selectable_accounts.mapped('account_type')), {'liability_current'})
+
+        # Open the wizard from the so lines list view
+        wizard = self.env['account.accrued.orders.wizard'].with_context({
+            'active_model': 'sale.order.line',
+            'active_ids': self.sale_order.order_line.ids,
+        }).new()
+        selectable_accounts = self._get_selectable_accrual_accounts(wizard)
+        self.assertEqual(set(selectable_accounts.mapped('account_type')), {'liability_current'})
+
+    def test_accrued_account_types_mixed_lines(self):
+        """ When having mixed lines, both account types should be proposed. """
+        sale_order_line_a, sale_order_line_b = self.sale_order.order_line
+        self.sale_order.order_line.qty_delivered = 10
+        invoices = self.sale_order._create_invoices()
+        invoices.invoice_date = fields.Date.today()
+        invoices.action_post()
+
+        # invoice to be issued
+        sale_order_line_a.qty_delivered = 15
+        # invoiced not delivered
+        sale_order_line_b.qty_delivered = 5
+
+        wizard = self.env['account.accrued.orders.wizard'].with_context({
+            'active_model': 'sale.order',
+            'active_ids': self.sale_order.ids,
+        }).new()
+        selectable_accounts = self._get_selectable_accrual_accounts(wizard)
+        self.assertEqual(set(selectable_accounts.mapped('account_type')), {'asset_current', 'liability_current'})
+
+        # Open the wizard from the so lines list view
+        wizard = self.env['account.accrued.orders.wizard'].with_context({
+            'active_model': 'sale.order.line',
+            'active_ids': self.sale_order.order_line.ids,
+        }).new()
+        selectable_accounts = self._get_selectable_accrual_accounts(wizard)
+        self.assertEqual(set(selectable_accounts.mapped('account_type')), {'asset_current', 'liability_current'})
+
+    def test_accrued_account_types_default_no_movement(self):
+        """ When nothing has been delivered nor invoiced yet, both account
+        types should be proposed by default. """
+        wizard = self.env['account.accrued.orders.wizard'].with_context({
+            'active_model': 'sale.order',
+            'active_ids': self.sale_order.ids,
+        }).new()
+        selectable_accounts = self._get_selectable_accrual_accounts(wizard)
+        self.assertEqual(set(selectable_accounts.mapped('account_type')), {'asset_current', 'liability_current'})
+
+        # Open the wizard from the so lines list view
+        wizard = self.env['account.accrued.orders.wizard'].with_context({
+            'active_model': 'sale.order.line',
+            'active_ids': self.sale_order.order_line.ids,
+        }).new()
+        selectable_accounts = self._get_selectable_accrual_accounts(wizard)
+        self.assertEqual(set(selectable_accounts.mapped('account_type')), {'asset_current', 'liability_current'})
 
     def test_accrued_entries_with_discount(self):
         sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
