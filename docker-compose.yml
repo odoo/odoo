@@ -2,7 +2,7 @@ services:
   web:
     image: odoo:19.0
     ports:
-      - "8069:8099"
+      - "8099:8069"
     command: odoo -d db_sifnext -i base --proxy-mode
     volumes:
       - odoo-web-data:/var/lib/odoo
