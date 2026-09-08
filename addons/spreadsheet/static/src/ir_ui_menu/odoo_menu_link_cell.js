@@ -33,7 +33,11 @@ export function isMarkdownViewUrl(url) {
  */
 export function parseViewLink(viewLink) {
     if (viewLink.startsWith(VIEW_PREFIX)) {
-        return JSON.parse(viewLink.substring(VIEW_PREFIX.length));
+        try {
+            return JSON.parse(viewLink.substring(VIEW_PREFIX.length));
+        } catch {
+            throw new Error(`${viewLink} is not a valid view link`);
+        }
     }
     throw new Error(`${viewLink} is not a valid view link`);
 }
