@@ -1,4 +1,5 @@
 import logging
+from collections import defaultdict
 from itertools import batched
 from uuid import uuid4
 
@@ -143,7 +144,19 @@ class SmsSms(models.Model):
                 )
 
     def _split_by_api(self):
-        yield SmsApi(self.env), self
+        # group by company: `SmsApi`'s IAP account is resolved via
+        # `iap.account.get()`, which is scoped to `self.env.companies` -- a
+        # single ungrouped batch would resolve to whichever company's account
+        # happens to match the calling env, silently used for every company's
+        # SMS in the batch.
+        sms_by_company = defaultdict(self.browse)
+        for sms in self:
+            sms_by_company[sms._get_sms_company()] += sms
+        for company, company_sms in sms_by_company.items():
+            company_env = self.env(
+                context={**self.env.context, "allowed_company_ids": [company.id]}
+            )
+            yield SmsApi(company_env), company_sms
 
     def resend_failed(self):
         sms_to_send = self.filtered(
