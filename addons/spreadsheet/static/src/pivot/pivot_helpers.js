@@ -4,6 +4,8 @@
 import { EvaluationError, helpers } from "@odoo/o-spreadsheet";
 import { _t } from "@web/core/translation";
 
+import { NO_RECORD_AT_THIS_POSITION } from "./pivot_model.js";
+
 const { isDateOrDatetimeField } = helpers;
 
 /**
@@ -92,7 +94,7 @@ export function parseGroupField(allFields, groupFieldString) {
 }
 
 export function domainHasNoRecordAtThisPosition(domain) {
-    return domain.some((node) => node.value === "NO_RECORD_AT_THIS_POSITION");
+    return domain.some((node) => node.value === NO_RECORD_AT_THIS_POSITION);
 }
 
 export async function getRelationalFieldDefinition(resModel, fieldName, fieldService) {

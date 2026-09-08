@@ -4,6 +4,8 @@ import {
     getFirstListFunction,
     getNumberOfListFormulas,
 } from "@spreadsheet/list/list_helpers";
+import { domainHasNoRecordAtThisPosition } from "@spreadsheet/pivot/pivot_helpers";
+import { NO_RECORD_AT_THIS_POSITION } from "@spreadsheet/pivot/pivot_model";
 import { allowTranslations } from "@web/../tests/web_test_helpers";
 const {
     getFirstPivotFunction,
@@ -286,5 +288,52 @@ describe("pivot time adapters formatted value", () => {
             value: 1997,
             format: "0",
         });
+    });
+});
+
+describe("domainHasNoRecordAtThisPosition", () => {
+    test("detects the real NO_RECORD_AT_THIS_POSITION sentinel", () => {
+        expect(
+            domainHasNoRecordAtThisPosition([
+                { field: "x", value: NO_RECORD_AT_THIS_POSITION },
+            ]),
+        ).toBe(true);
+    });
+
+    test("is false for a domain with no sentinel", () => {
+        expect(domainHasNoRecordAtThisPosition([{ field: "x", value: "some_value" }])).toBe(
+            false,
+        );
+        expect(domainHasNoRecordAtThisPosition([])).toBe(false);
+    });
+});
+
+describe("pivot time adapters increment", () => {
+    test("Day-of-week adapter wraps in both directions (1-based, 1-7)", () => {
+        const adapter = pivotTimeAdapter("day_of_week");
+        expect(adapter.increment(6, 1)).toBe(7);
+        expect(adapter.increment(7, 1)).toBe(1);
+        expect(adapter.increment(1, -1)).toBe(7);
+        expect(adapter.increment(1, -3)).toBe(5);
+    });
+
+    test("Hour-number adapter wraps in both directions (0-based, 0-23)", () => {
+        const adapter = pivotTimeAdapter("hour_number");
+        expect(adapter.increment(23, 1)).toBe(0);
+        expect(adapter.increment(0, -1)).toBe(23);
+        expect(adapter.increment(2, -5)).toBe(21);
+    });
+
+    test("Minute-number adapter wraps in both directions (0-based, 0-59)", () => {
+        const adapter = pivotTimeAdapter("minute_number");
+        expect(adapter.increment(59, 1)).toBe(0);
+        expect(adapter.increment(0, -1)).toBe(59);
+        expect(adapter.increment(3, -10)).toBe(53);
+    });
+
+    test("Second-number adapter wraps in both directions (0-based, 0-59)", () => {
+        const adapter = pivotTimeAdapter("second_number");
+        expect(adapter.increment(59, 1)).toBe(0);
+        expect(adapter.increment(0, -1)).toBe(59);
     });
 });
