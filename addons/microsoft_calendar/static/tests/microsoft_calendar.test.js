@@ -48,12 +48,12 @@ class CalendarEvent extends models.Model {
 
 class CalendarFilter extends models.Model {
     _records = [
-        { id: 3, user_id: serverState.userId, partner_id: 4, partner_checked: true },
+        { id: 3, active: true, user_id: serverState.userId, partner_id: 4 },
     ];
 
+    active = fields.Boolean();
     user_id = fields.Many2one({ relation: "users" });
     partner_id = fields.Many2one({ relation: "partner" });
-    partner_checked = fields.Boolean();
 }
 
 class Partner extends models.Model {

@@ -102,6 +102,18 @@
     }
 }
 
+// Color the attendee tags in the "Meet with" calendar filters to match their event color.
+@for $i from 1 through length($o-colors-complete) {
+    $color: nth($o-colors-complete, $i);
+    $color-subtle: mix($o-white, $color, 55%);
+    .o_calendar_filter[data-name="partner_ids"] .o_tag_color_#{$i - 1} {
+        color: color-contrast($color-subtle) !important;
+        background-color: $color-subtle !important;
+        font-weight: normal !important;
+        border: 0;
+    }
+}
+
 .btn:hover .o_calendar_check {
     display: none;
 }

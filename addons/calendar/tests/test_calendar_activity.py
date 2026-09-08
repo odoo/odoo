@@ -169,10 +169,12 @@ class TestCalendarActivity(ActivityScheduleCase):
             'stop': '2022-07-27 16:30:00',
         })
         # Check that assignation of the activity hasn't changed, and event is having
-        # correct values set in attendee and organizer related fields
+        # correct values set in attendee and organizer related fields.
+        # The event attendees should be the current user + the "customer" (cf _mail_get_customer) of the record the activity is about
         self.assertEqual(activity.user_id, self.user_employee)
-        self.assertEqual(event_from_activity.partner_ids, activity.user_id.partner_id)
-        self.assertEqual(event_from_activity.attendee_ids.partner_id, activity.user_id.partner_id)
+        event_partners = activity.user_id.partner_id | self.env['res.partner'].browse(activity.res_id)
+        self.assertEqual(event_from_activity.partner_ids, event_partners)
+        self.assertEqual(event_from_activity.attendee_ids.partner_id, event_partners)
         self.assertEqual(event_from_activity.user_id, activity.user_id)
 
     @users('employee')

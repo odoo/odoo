@@ -32,7 +32,6 @@ class ResUsers(models.Model):
         self.ensure_one()
         partner_ids = self.env['calendar.filters'].search([
             ('user_id', '=', self.id),
-            ('partner_checked', '=', True)
         ]).partner_id.ids
 
         if include_user:
