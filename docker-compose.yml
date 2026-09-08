@@ -9,7 +9,13 @@ services:
       - ./custom_addons:/mnt/extra-addons
     env_file:
       - .env
+    networks:
+      - dokploy-network
     restart: always
 
 volumes:
   odoo-web-data:
+
+networks:
+  dokploy-network:
+    external: true
