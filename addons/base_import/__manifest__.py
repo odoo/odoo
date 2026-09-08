@@ -30,7 +30,7 @@ Re-implement Odoo's file import system:
     ],
     'assets': {
         'web.assets_backend': [
-            'base_import/static/src/**/*.scss',
+            'base_import/static/src/**/*.*css',
             'base_import/static/src/**/*.js',
             'base_import/static/src/**/*.xml',
         ],

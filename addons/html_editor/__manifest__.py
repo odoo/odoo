@@ -59,7 +59,7 @@ This addon provides an extensible, maintainable editor.
             'html_editor/static/src/others/qweb_plugin*',
             'html_editor/static/src/others/autofocus_plugin*',
             'html_editor/static/src/services/**/*',
-            ('remove', 'html_editor/static/src/**/*.dark.scss'),
+            ('remove', 'html_editor/static/src/**/*.dark.*css'),
         ],
         'html_editor.assets_history_diff': [
             'html_editor/static/lib/diff2html/diff2html.min.css',
@@ -84,7 +84,7 @@ This addon provides an extensible, maintainable editor.
             'html_editor/static/src/others/qweb_plugin.scss',
         ],
         "web.assets_web_dark": [
-            'html_editor/static/src/**/*.dark.scss',
+            'html_editor/static/src/**/*.dark.*css',
         ],
         'web.assets_tests': [
             'html_editor/static/tests/tours/**/*',

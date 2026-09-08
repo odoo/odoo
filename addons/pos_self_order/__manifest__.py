@@ -37,7 +37,7 @@
 
             # Remove CSS files since we're not testing the UI with hoot in PoS self order
             # CSS files make html_editor tests fail
-            ('remove', 'pos_self_order/static/src/**/*.scss'),
+            ('remove', 'pos_self_order/static/src/**/*.*css'),
 
             # Re-include debug and router files that were removed in point_of_sale.base_app
             # but are required for running unit tests

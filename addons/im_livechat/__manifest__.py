@@ -89,13 +89,13 @@ Help your customers with this chat, and analyse their feedback.
             'im_livechat/static/src/core/common/**/*',
             'im_livechat/static/src/core/public_web/**/*',
             'im_livechat/static/src/core/web/**/*',
-            ('remove', 'im_livechat/static/src/**/*.dark.scss'),
+            ('remove', 'im_livechat/static/src/**/*.dark.*css'),
         ],
         'web.assets_backend_lazy': [
             "im_livechat/static/src/views/lazy/**/*",
         ],
         "web.assets_web_dark": [
-            'im_livechat/static/src/**/*.dark.scss',
+            'im_livechat/static/src/**/*.dark.*css',
         ],
         'web.assets_unit_tests': [
             'im_livechat/static/tests/**/*',

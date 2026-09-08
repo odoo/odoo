@@ -56,7 +56,7 @@
     'assets': {
         'web.assets_backend': [
             'hr_recruitment/static/src/**/*.js',
-            'hr_recruitment/static/src/**/*.scss',
+            'hr_recruitment/static/src/**/*.*css',
             'hr_recruitment/static/src/**/*.xml',
             'hr_recruitment/static/src/js/tours/hr_recruitment.js',
         ],
