@@ -6,46 +6,41 @@
         <field name="arch" type="xml">
             <form string="Time Off">
                 <group>
-                    <div class="o_row" id="employee_label">
-                        <i class="oi oi-lg oi-filled ms-2" data-icon="person" title="Employees" name="employee_id"/>
-                        <label for="employee_id" string=""/>
-                    </div>
-                    <div class="o_leave_report_employee_row">
-                        <field name="employee_id" widget="many2one_avatar_employee"/>
-                        <field name="state" widget="badge"
+                    <div class="d-flex align-items-center gap-4 py-1 ps-2" colspan="2" id="employee_label">
+                        <i class="oi oi-lg oi-fw oi-filled flex-shrink-0" data-icon="person" title="Employees" name="employee_id"/>
+                        <field name="employee_id" widget="many2one_avatar_employee" nolabel="1" class="min-w-0"/>
+                        <field name="state" widget="badge" class="w-auto"
                             decoration-success="state == 'validate'"
                             decoration-warning="state in ('confirm','validate1')"
                             decoration-danger="state == 'refuse'"
                         />
                     </div>
 
-                    <div class="o_row" id="work_entry_type_id_label">
-                        <i class="oi oi-lg ms-2" data-icon="label" title="Work Entry Types" name="work_entry_type_id"/>
-                        <label for="work_entry_type_id" string=""/>
-                    </div>
-                    <field name="work_entry_type_id" nolabel="1"/>
-
-                    <div class="o_row" id="dates_label">
-                        <i class="oi oi-lg ms-2" data-icon="schedule" title="Dates" name="date"/>
-                        <label for="request_date_from" string=""/>
-                    </div>
-                    <!-- Do something here for if the leave is in hours on the same day -->
-                    <div id="full_date" class="o_row">
-                        <field
-                            string='dates'
-                            name="request_date_from"
-                            widget="daterange"
-                            readonly='1'
-                            options="{'end_date_field': 'request_date_to'}"
-                            nolabel="1"/>
-                        <span>( <field name="duration_display" readonly="1" class="w-auto"/> )</span>
+                    <div class="d-flex align-items-center gap-4 py-1 ps-2" colspan="2" id="work_entry_type_id_label">
+                        <i class="oi oi-lg oi-fw flex-shrink-0" data-icon="label" title="Work Entry Types" name="work_entry_type_id"/>
+                        <field name="work_entry_type_id" nolabel="1" class="min-w-0"/>
                     </div>
 
-                    <div class="o_row" id="description_label">
-                        <i class="oi oi-lg oi-filled ms-2" data-icon="edit" title="Description" name="description"/>
-                        <label for="description" string=""/>
+                    <div class="d-flex align-items-center gap-4 py-1 ps-2" colspan="2" id="dates_label">
+                        <i class="oi oi-lg oi-fw flex-shrink-0" data-icon="schedule" title="Dates" name="date"/>
+                        <!-- Do something here for if the leave is in hours on the same day -->
+                        <div id="full_date" class="d-flex align-items-center gap-1 min-w-0">
+                            <field
+                                string='dates'
+                                name="request_date_from"
+                                widget="daterange"
+                                readonly='1'
+                                class="w-auto"
+                                options="{'end_date_field': 'request_date_to'}"
+                                nolabel="1"/>
+                            <span>( <field name="duration_display" readonly="1" class="w-auto"/> )</span>
+                        </div>
                     </div>
-                    <field name="description" nolabel="1"/>
+
+                    <div class="d-flex align-items-center gap-4 py-1 ps-2" colspan="2" id="description_label">
+                        <i class="oi oi-lg oi-fw oi-filled flex-shrink-0" data-icon="edit" title="Description" name="description"/>
+                        <field name="description" nolabel="1" class="min-w-0"/>
+                    </div>
                 </group>
             </form>
         </field>
