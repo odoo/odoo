@@ -134,6 +134,10 @@ class StockMoveMerge(models.Model):
 
         return (self | merged_moves) - moves_to_unlink
 
+    def _update_candidate_moves_list(self, candidate_moves_set):
+        for picking in self.mapped("picking_id"):
+            candidate_moves_set.add(picking.move_ids)
+
     def _merge_positive_moves(
         self,
         candidate_moves_set,

@@ -615,10 +615,6 @@ class StockMoveReservation(models.Model):
         )
         moves_to_reserve._action_assign()
 
-    def _update_candidate_moves_list(self, candidate_moves_set):
-        for picking in self.mapped("picking_id"):
-            candidate_moves_set.add(picking.move_ids)
-
     def _prepare_quantity_done_vals(self, qty):
         self.check_singleton()
         res = []
