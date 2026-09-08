@@ -1015,9 +1015,15 @@ export class ListRenderer extends Component {
         return this.columns;
     }
 
+    // a stacked column takes the alignment of its first sub-field
     isNumericColumn(column) {
-        const { type } = this.fields[column.name];
-        return ["float", "integer", "monetary"].includes(type);
+        if (column.type === "column_group") {
+            return this.isNumericColumn(column.fields[0]);
+        }
+        return (
+            column.type === "field" &&
+            ["float", "integer", "monetary"].includes(this.fields[column.name].type)
+        );
     }
 
     isRecordAvailable(record) {
@@ -1101,6 +1107,9 @@ export class ListRenderer extends Component {
                 classNames.push("o_list_button");
             } else if (column.type === "column_group" || column.type === "field") {
                 classNames.push("o_field_cell");
+            }
+            if (column.type === "column_group" && this.isNumericColumn(column)) {
+                classNames.push("o_list_number");
             }
             if (column.type === "field") {
                 if (column.attrs && column.attrs.class && this.canUseFormatter(column, record)) {

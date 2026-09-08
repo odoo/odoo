@@ -21,6 +21,7 @@
                             <CheckBox disabled="!_canSelectRecord" indeterminate="this.someSelected" value="this.selectAll" className="'d-flex m-0'" onChange.bind="this.toggleSelection"/>
                         </th>
                         <t t-foreach="this.columns" t-as="column" t-key="column.id">
+                            <t t-set="isNumeric" t-value="this.isNumericColumn(column)"/>
                             <th t-if="column.type === 'field'"
                                 t-att-data-name="column.name"
                                 t-att-class="this.getColumnClass(column) + ' opacity-trigger-hover w-print-auto'"
@@ -30,7 +31,6 @@
                                 data-tooltip-delay="1000"
                                 tabindex="-1">
                                 <t t-if="column.hasLabel and column.widget !== 'handle'">
-                                <t t-set="isNumeric" t-value="this.isNumericColumn(column)"/>
                                     <div class="d-flex align-items-center"
                                         t-att-data-tooltip-template="this.debugMode.isActive() ? 'web.FieldTooltip' : 'web.ListHeaderTooltip'"
                                         t-att-data-tooltip-info="this.makeTooltip(column)">
@@ -47,12 +47,13 @@
                             </th>
                             <th t-elif="column.type === 'column_group'"
                                 class="align-middle cursor-default opacity-trigger-hover w-print-auto"
+                                t-att-class="{'o_list_number_th': isNumeric}"
                                 t-on-pointerup="this.onColumnTitleMouseUp"
                                 t-on-keydown="(ev) => this.onCellKeydown(ev)"
                                 tabindex="-1">
                                 <t t-if="column.hasLabel">
                                     <div class="d-flex align-items-center">
-                                        <span class="d-block min-w-0 text-truncate flex-grow-1 flex-shrink-1" t-out="column.label"/>
+                                        <span class="d-block min-w-0 text-truncate flex-grow-1 flex-shrink-1" t-att-class="isNumeric ? 'o_list_number_th' : ''" t-out="column.label"/>
                                         <div class="o_list_header_label_spacer"/>
                                     </div>
                                 </t>
@@ -133,7 +134,7 @@
                                 </button>
                             </div>
                         </td>
-                        <td t-foreach="this.getAggregateColumns()" t-as="column" t-key="column.id" t-att-class="(column.type === 'field' ? 'o_list_number': '') + (column.widget ? ' o_' + column.widget + '_cell' : '')">
+                        <td t-foreach="this.getAggregateColumns()" t-as="column" t-key="column.id" t-att-class="(this.isNumericColumn(column) ? 'o_list_number': '') + (column.widget ? ' o_' + column.widget + '_cell' : '')">
                             <t t-set="aggFieldName" t-value="this.getAggregateFieldName(column, this.aggregates)"/>
                             <span t-if="aggFieldName" t-att-data-tooltip="this.aggregates[aggFieldName].help">
                                 <t t-out="this.aggregates[aggFieldName].value"/>
@@ -285,7 +286,7 @@
                     </div>
                 </div>
             </th>
-            <td t-on-keydown="(ev) => this.onCellKeydown(ev, group)" t-foreach="this.getAggregateColumns(group)" t-as="column" t-key="column.id" t-att-class="{'o_list_number': column.type === 'field'}">
+            <td t-on-keydown="(ev) => this.onCellKeydown(ev, group)" t-foreach="this.getAggregateColumns(group)" t-as="column" t-key="column.id" t-att-class="{'o_list_number': this.isNumericColumn(column)}">
                 <t t-if="column.type === 'field' or column.type === 'column_group'">
                     <t t-set="groupAggregate" t-value="this.formatGroupAggregate(group, column)"/>
                     <t t-set="aggFieldName" t-value="this.getAggregateFieldName(column, group.aggregates)"/>
