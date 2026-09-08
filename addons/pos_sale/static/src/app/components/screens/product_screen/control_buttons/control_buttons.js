@@ -9,18 +9,12 @@ patch(ControlButtons.prototype, {
             context["search_default_partner_id"] = this.partner.id;
         }
 
-        let domain = [
+        const domain = [
             ["state", "!=", "cancel"],
             ["invoice_status", "!=", "invoiced"],
             ["currency_id", "=", this.pos.currency.id],
             ["amount_unpaid", ">", 0],
         ];
-        if (this.pos.getOrder()?.getPartner()) {
-            domain = [
-                ...domain,
-                ["partner_id", "any", [["id", "child_of", [this.pos.getOrder().getPartner().id]]]],
-            ];
-        }
 
         this.dialog.add(SelectCreateDialog, {
             resModel: "sale.order",
