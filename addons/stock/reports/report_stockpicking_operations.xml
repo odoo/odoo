@@ -41,6 +41,7 @@
                         class="col-5 ms-auto"
                         name="div_customer_address"
                         t-if="o.picking_type_id.code=='outgoing' and o.partner_id and o.partner_id != o.partner_id.commercial_partner_id">
+                        <t t-set="show_full_address" t-value="True" />
                         <div>
                             <span>
                                 <strong>Customer Address:</strong>
