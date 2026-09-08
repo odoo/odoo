@@ -149,6 +149,32 @@ class TestAccessRights(TestSalePurchaseCommon):
         po.action_confirm()
         self.assertEqual(po.state, "done")
 
+    def test_purchase_user_sees_dest_address_id(self):
+        """
+        A purchase-only user (no sales role) must still see `dest_address_id`
+        on the purchase order form: it is a purchasing field (where goods are
+        shipped to), not a sales-only concern.
+        """
+        group_purchase_user = self.env.ref("purchase.group_purchase_user")
+        user_purchase = (
+            self.env["res.users"]
+            .with_context(no_reset_password=True)
+            .create(
+                {
+                    "name": "Purchase Only User",
+                    "login": "purchase.only",
+                    "email": "purchase.only@supercompany.com",
+                    "group_ids": [(6, 0, [group_purchase_user.id])],
+                }
+            )
+        )
+        arch = (
+            self.env["purchase.order"]
+            .with_user(user_purchase)
+            .get_view(view_type="form")["arch"]
+        )
+        self.assertIn('name="dest_address_id"', arch)
+
     def test_sales_user_can_access_forecast_report(self):
         po = self.env["purchase.order"].create(
             {
