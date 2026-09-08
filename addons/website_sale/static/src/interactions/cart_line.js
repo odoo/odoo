@@ -64,6 +64,10 @@ export class CartLine extends Interaction {
         }));
 
         data['website_sale.cart_lines'] = markup(data['website_sale.cart_lines']);
+        data['website_sale.quick_reorder_history'] = markup(
+            data['website_sale.quick_reorder_history']
+        );
+        data['website_sale.total'] = markup(data['website_sale.total']);
 
         if (data.tracking_info?.length) {
             wSaleUtils.dispatchTrackingEvent("update_cart_event", {

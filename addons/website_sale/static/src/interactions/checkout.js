@@ -2,7 +2,7 @@ import { Interaction } from '@web/public/interaction';
 import { registry } from '@web/core/registry';
 import { _t } from '@web/core/l10n/translation';
 import { rpc } from '@web/core/network/rpc';
-import { setElementContent } from '@web/core/utils/html';
+import { setElementContent, createElementWithContent } from '@web/core/utils/html';
 import { markup } from '@odoo/owl';
 import wSaleUtils from '@website_sale/js/website_sale_utils';
 
@@ -78,12 +78,12 @@ export class Checkout extends Interaction {
             if (this.useDeliveryAsBillingToggle?.checked) {
                 this._selectMatchingBillingAddressCard(selectedPartnerId);
             }
-            const deliveryFormHtml = await this.waitFor(rpc('/shop/delivery_methods'));
+            const deliveryFormHtml = markup(await this.waitFor(rpc('/shop/delivery_methods')));
             // The delivery methods are regenerated below, so we need to stop and start interactions
             // to make sure the regenerated delivery methods are properly handled.
             this.services['public.interactions'].stopInteractions(this.el);
             // Update the available delivery methods.
-            document.getElementById('o_delivery_form').innerHTML = deliveryFormHtml;
+            setElementContent(document.getElementById('o_delivery_form'), deliveryFormHtml);
             this.services['public.interactions'].startInteractions(this.el);
             await this.waitFor(this._prepareDeliveryMethods());
         }
@@ -265,7 +265,7 @@ export class Checkout extends Interaction {
                 // If it's a free delivery (`free_over` field), show 'Free', not '$ 0'.
                 deliveryPriceBadge.textContent = _t("Free");
             } else {
-                deliveryPriceBadge.innerHTML = rateData.amount_delivery;
+                setElementContent(deliveryPriceBadge, rateData.amount_delivery);
             }
             this._toggleDeliveryMethodRadio(radio);
         } else {
@@ -299,12 +299,15 @@ export class Checkout extends Interaction {
             amountDelivery.querySelector('span[name="o_message_no_dm_set"]')?.classList.add('d-none');
             amountDelivery.classList.remove('d-none');
         }
-        amountDelivery.innerHTML = result.amount_delivery;
+        setElementContent(amountDelivery, result.amount_delivery);
         if (amountUntaxed) {
-            setElementContent(amountUntaxed, markup(result.amount_untaxed));
+            setElementContent(amountUntaxed, result.amount_untaxed);
         }
-        amountTax.outerHTML = result.amount_tax_lines;
-        amountTotal.forEach(total => total.innerHTML = result.amount_total);
+        if (amountTax) {
+            const tempDiv = createElementWithContent('div', result.amount_tax_lines);
+            amountTax.replaceWith(tempDiv.firstElementChild);
+        }
+        amountTotal.forEach(total => setElementContent(total, result.amount_total));
     }
 
     /**
@@ -434,7 +437,9 @@ export class Checkout extends Interaction {
      * @return {Object} The delivery rate data.
      */
     async _getDeliveryRate(radio) {
-        return await rpc('/shop/get_delivery_rate', {'dm_id': radio.dataset.dmId});
+        const deliveryRateData = await rpc('/shop/get_delivery_rate', {'dm_id': radio.dataset.dmId});
+        deliveryRateData.amount_delivery = markup(deliveryRateData.amount_delivery);
+        return deliveryRateData;
     }
 
     /**
@@ -445,7 +450,26 @@ export class Checkout extends Interaction {
      * @return {Object} The result values.
      */
     async _setDeliveryMethod(dmId) {
-        return await rpc('/shop/set_delivery_method', {'dm_id': dmId});
+        const deliveryMethodData = await rpc('/shop/set_delivery_method', {'dm_id': dmId});
+
+        const amountKeys = [
+            'amount_delivery',
+            'amount_delivery_discounted',
+            'amount_untaxed',
+            'amount_tax_lines',
+            'amount_total',
+        ];
+        for (const key of amountKeys) {
+            if (deliveryMethodData[key]) {
+                deliveryMethodData[key] = markup(deliveryMethodData[key]);
+            }
+        }
+        if (deliveryMethodData.discount_reward_amounts) {
+            deliveryMethodData.discount_reward_amounts = deliveryMethodData
+                .discount_reward_amounts.map((amount) => markup(amount));
+        }
+
+        return deliveryMethodData;
     }
 
     // #=== GETTERS & SETTERS ===#

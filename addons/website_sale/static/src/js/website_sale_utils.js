@@ -3,7 +3,7 @@ import { _t } from '@web/core/l10n/translation';
 import { rpc } from "@web/core/network/rpc";
 import { createElementWithContent, setElementContent } from '@web/core/utils/html';
 import { redirect } from '@web/core/utils/urls';
-import { markup } from "@odoo/owl";
+import { htmlEscape, markup } from '@odoo/owl';
 
 /**
  * Updates both navbar cart
@@ -30,7 +30,7 @@ function updateCartNavBar(data) {
     }
 
     const cartLines = document.querySelectorAll('.js_cart_lines');
-    cartLines[0]?.insertAdjacentHTML('beforebegin', data['website_sale.cart_lines']);
+    cartLines[0]?.insertAdjacentHTML('beforebegin', htmlEscape(data['website_sale.cart_lines']));
     cartLines.forEach(el => el.remove());
 
     updateCartSummary(data);
@@ -58,7 +58,7 @@ function updateCartSummary(data) {
     }
     if (data['website_sale.total']) {
         document.querySelectorAll('div.o_cart_total').forEach(
-            div => div.innerHTML = data['website_sale.total']
+            div => setElementContent(div, data['website_sale.total'])
         );
     }
 }
@@ -72,9 +72,10 @@ function updateCartSummary(data) {
 function updateQuickReorderSidebar(data) {
     const quickReorderButton  = document.getElementById('quick_reorder_button');
     document.querySelectorAll('.o_wsale_quick_reorder_line_group').forEach(el => el.remove());
-    if (data['website_sale.quick_reorder_history'].trim()) {
+    const reorderHistory = htmlEscape(data['website_sale.quick_reorder_history']);
+    if (reorderHistory.trim()) {
         document.querySelector('#quick_reorder_sidebar .offcanvas-body').insertAdjacentHTML(
-            'afterbegin', data['website_sale.quick_reorder_history']
+            'afterbegin', reorderHistory
         );
         quickReorderButton.removeAttribute('disabled');
         quickReorderButton.parentElement.title = "";
@@ -151,7 +152,9 @@ async function updateShopContent(interaction, {
             paramsObject.category = headerEl.dataset.categoryId;
         }
         const data = await interaction.waitFor(rpc('/shop/reload', paramsObject));
-        const updatedShopPage = createElementWithContent("div", markup(data.html));
+        data.html = markup(data.html);
+        const updatedShopPage = document.createElement('div');
+        setElementContent(updatedShopPage, data.html);
         const shopPageEl = document.querySelector('.o_wsale_products_page');
         interaction.services['public.interactions'].stopInteractions(shopPageEl);
 
