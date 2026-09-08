@@ -66,10 +66,11 @@ class ResPartner(models.Model):
         )
         order_lines.read(["order_id", "partner_id", "product_uom_qty"], load="")
         order_lines.order_id.read(["date_commitment"], load="")
-        moves.read(["sale_line_id", "date"], load="")
+        moves.read(["sale_line_id", "date", "location_dest_id"], load="")
         moves = moves.filtered(
             lambda m: (
-                m.sale_line_id.order_id.date_commitment
+                m.location_dest_id._is_outgoing()
+                and m.sale_line_id.order_id.date_commitment
                 and m.date.date() <= m.sale_line_id.order_id.date_commitment.date()
             ),
         )

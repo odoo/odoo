@@ -28,6 +28,19 @@ class TestSaleStockRegressions(TestSaleStockCommon):
             )
         return product
 
+    def _return(self, picking, quantity):
+        wizard = (
+            self.env["stock.return.picking"]
+            .with_context(active_id=picking.id, active_model="stock.picking")
+            .create({})
+        )
+        for line in wizard.product_return_moves:
+            line.quantity = quantity
+        return_picking = wizard._create_return()
+        return_picking.move_ids.write({"quantity": quantity, "picked": True})
+        return_picking._action_done()
+        return return_picking
+
     def _order(self, lines, **vals):
         order = self.env["sale.order"].create(
             {
@@ -281,3 +294,20 @@ class TestSaleStockRegressions(TestSaleStockCommon):
         line = order.line_ids
         self.assertEqual(line.qty_transferred, 4.0)
         self.assertEqual(line._prepare_qty_transferred()[line], line.qty_transferred)
+
+    def test_on_time_rate_ignores_a_later_return(self):
+        product = self._storable("OTR RETURN", 100)
+        order = self._order(
+            [(product, 10)],
+            date_commitment=fields.Datetime.now() + timedelta(days=7),
+        )
+        picking = order.picking_ids
+        picking.move_ids.write({"quantity": 10, "picked": True})
+        picking._action_done()
+        self._return(picking, 3)
+        self.env.invalidate_all()
+        self.assertEqual(
+            self.customer.customer_on_time_rate,
+            100.0,
+            "a return move was counted as an extra on-time delivery",
+        )
