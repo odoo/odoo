@@ -1,6 +1,12 @@
 import { describe, test, tick } from "@odoo/hoot";
 import { base64Img, testEditor } from "../_helpers/editor";
-import { deleteBackward, deleteImage, simulateArrowKeyPress, undo } from "../_helpers/user_actions";
+import {
+    deleteBackward,
+    deleteForward,
+    deleteImage,
+    simulateArrowKeyPress,
+    undo,
+} from "../_helpers/user_actions";
 
 describe("delete selection involving links", () => {
     test("should remove link", async () => {
@@ -109,5 +115,15 @@ test("Should properly restore selection on undo the delete", async () => {
             undo(editor);
         },
         contentAfter: `<div>ab[]c</div><div><strong>cb</strong></div>`,
+    });
+});
+
+test("should move selection inside link", async () => {
+    await testEditor({
+        contentBefore: '<p>a[]<a href="#" class="btn">hello</a>b</p>',
+        contentBeforeEdit: '<p>a[]\ufeff<a href="#" class="btn">\ufeffhello\ufeff</a>\ufeffb</p>',
+        stepFunction: deleteForward,
+        contentAfterEdit: '<p>a\ufeff<a href="#" class="btn">\ufeff[]hello\ufeff</a>\ufeffb</p>',
+        contentAfter: '<p>a<a href="#" class="btn">[]hello</a>b</p>',
     });
 });

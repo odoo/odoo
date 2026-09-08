@@ -1,9 +1,17 @@
 import { setupHTMLBuilder } from "@html_builder/../tests/helpers";
 import { expect, test, describe, animationFrame } from "@odoo/hoot";
 import { click, manuallyDispatchProgrammaticEvent, queryOne } from "@odoo/hoot-dom";
-import { deleteBackward, pasteText } from "@html_editor/../tests/_helpers/user_actions";
+import {
+    pasteText,
+    deleteBackward,
+    deleteForward,
+} from "@html_editor/../tests/_helpers/user_actions";
 import { nodeSize } from "@html_editor/utils/position";
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
+import { BuilderContentEditablePlugin } from "@html_builder/core/builder_content_editable_plugin";
+import { MonetaryFieldPlugin } from "@html_builder/plugins/monetary_field_plugin";
+import { testEditor } from "@html_editor/../tests/_helpers/editor";
+import { unformat } from "@html_editor/../tests/_helpers/format";
 
 describe.current.tags("desktop");
 
@@ -111,4 +119,84 @@ test("should keep only digits, dot, and comma when pasting into a monetary field
 
     pasteText(editor, "Text: ,25");
     expect(monetaryField).toHaveText("1.234.567.891,25");
+});
+
+test("should make a span inside a monetary field be unremovable (1)", async () => {
+    await testEditor({
+        contentBefore: unformat(`
+            <p>
+                <span data-oe-model="product.template" data-oe-id="9" data-oe-field="list_price" data-oe-type="monetary" data-oe-expression="product.list_price">
+                    $&nbsp;
+                    <span class="oe_currency_value" data-oe-zws-empty-inline="">[]\u200b</span>
+                </span>
+            </p>
+        `),
+        contentBeforeEdit: unformat(`
+                <p>
+                    <span data-oe-model="product.template" data-oe-id="9" data-oe-field="list_price" data-oe-type="monetary" data-oe-expression="product.list_price" contenteditable="false">
+                        $&nbsp;
+                        <span class="oe_currency_value" data-oe-zws-empty-inline="">[]\u200b</span>
+                    </span>
+                </p>
+            `),
+        stepFunction: deleteBackward,
+        contentAfterEdit: unformat(`
+            <p>
+                <span data-oe-model="product.template" data-oe-id="9" data-oe-field="list_price" data-oe-type="monetary" data-oe-expression="product.list_price" contenteditable="false">
+                    $&nbsp;
+                    <span class="oe_currency_value" data-oe-zws-empty-inline="">[]\u200b</span>
+                </span>
+            </p>
+        `),
+        contentAfter: unformat(`
+                <p>
+                    <span data-oe-model="product.template" data-oe-id="9" data-oe-field="list_price" data-oe-type="monetary" data-oe-expression="product.list_price">
+                        $&nbsp;
+                        <span class="oe_currency_value" data-oe-zws-empty-inline="">[]\u200b</span>
+                    </span>
+                </p>
+            `),
+        config: {
+            includePlugins: [MonetaryFieldPlugin, BuilderContentEditablePlugin],
+            cleanEmptyStructuralContainers: false,
+        },
+    });
+});
+
+test("should make a span inside a monetary field be unremovable (2)", async () => {
+    await testEditor({
+        contentBefore: unformat(`
+            <p>
+                <span data-oe-model="product.template" data-oe-id="9" data-oe-field="list_price" data-oe-type="monetary" data-oe-expression="product.list_price">
+                    <span class="oe_currency_value" data-oe-zws-empty-inline="">\u200b[]</span>$&nbsp;
+                </span>
+            </p>
+        `),
+        contentBeforeEdit: unformat(`
+                <p>
+                    <span data-oe-model="product.template" data-oe-id="9" data-oe-field="list_price" data-oe-type="monetary" data-oe-expression="product.list_price" contenteditable="false">
+                        <span class="oe_currency_value" data-oe-zws-empty-inline="">\u200b[]</span>$&nbsp;
+                    </span>
+                </p>
+            `),
+        stepFunction: deleteForward,
+        contentAfterEdit: unformat(`
+            <p>
+                <span data-oe-model="product.template" data-oe-id="9" data-oe-field="list_price" data-oe-type="monetary" data-oe-expression="product.list_price" contenteditable="false">
+                    <span class="oe_currency_value" data-oe-zws-empty-inline="">\u200b[]</span>$&nbsp;
+                </span>
+            </p>
+        `),
+        contentAfter: unformat(`
+                <p>
+                    <span data-oe-model="product.template" data-oe-id="9" data-oe-field="list_price" data-oe-type="monetary" data-oe-expression="product.list_price">
+                        <span class="oe_currency_value" data-oe-zws-empty-inline="">\u200b[]</span>$&nbsp;
+                    </span>
+                </p>
+            `),
+        config: {
+            includePlugins: [MonetaryFieldPlugin, BuilderContentEditablePlugin],
+            cleanEmptyStructuralContainers: false,
+        },
+    });
 });
