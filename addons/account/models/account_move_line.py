@@ -477,7 +477,13 @@ class AccountMoveLine(models.Model):
     tax_calculation_rounding_method = fields.Selection(
         related='company_id.tax_calculation_rounding_method',
         string='Tax calculation rounding method', readonly=True)
-    deductible_percentage = fields.Float("Deductibility Percentage", default=1.0)
+    deductible_percentage = fields.Float(
+        string="Professional Expense Deductibility Percentage",
+        default=1.0,
+        help="The share of this expense used for business purposes. VAT is only deductible on this portion; "
+             "the rest is treated as a private expense. Use this for mixed-use costs (e.g. a home office, "
+             "a car used partly for personal trips)."
+    )
 
     # === Invoice sync fields === #
     term_key = fields.Json(compute='_compute_term_key', exportable=False)
