@@ -334,40 +334,15 @@ class TestPosMrp(CommonPosMrpTest):
         })
         product_1 = product_test.product_variant_ids[0]
         product_2 = product_test.product_variant_ids[1]
-        self.pos_config_usd.open_ui()
-        order = self.env['pos.order'].create({
-            'session_id': self.pos_config_usd.current_session_id.id,
-            'lines': [(0, 0, {
-                'name': product_2.name,
-                'product_id': product_2.id,
-                'price_unit': product_2.lst_price,
-                'qty': 1,
-                'tax_ids': [],
-                'price_subtotal': product_2.lst_price,
-                'price_subtotal_incl': product_2.lst_price,
-            }),
-            (0, 0, {
-                'name': product_1.name,
-                'product_id': product_1.id,
-                'price_unit': product_1.lst_price,
-                'qty': 1,
-                'tax_ids': [],
-                'price_subtotal': product_1.lst_price,
-                'price_subtotal_incl': product_1.lst_price,
-            })],
-            'pricelist_id': self.pos_config_usd.pricelist_id.id,
-            'amount_paid': product_2.lst_price + product_1.lst_price,
-            'amount_total': product_2.lst_price + product_1.lst_price,
-            'amount_tax': 0.0,
-            'amount_return': 0.0,
-            'to_invoice': False,
+        order, _ = self.create_backend_pos_order({
+            'line_data': [
+                {'product_id': product_2.id, 'qty': 1},
+                {'product_id': product_1.id, 'qty': 1},
+            ],
+            'payment_data': [
+                {'payment_method_id': self.cash_payment_method.id}
+            ],
         })
-        payment_context = {"active_ids": order.ids, "active_id": order.id}
-        order_payment = self.env['pos.make.payment'].with_context(**payment_context).create({
-            'amount': order.amount_total,
-            'payment_method_id': self.cash_payment_method.id
-        })
-        order_payment.with_context(**payment_context).check()
         self.pos_config_usd.current_session_id.action_pos_session_closing_control()
         self.assertRecordValues(order.lines, [
             {'product_id': product_2.id, 'total_cost': 20},
