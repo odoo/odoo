@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { queryAll, press, queryAllTexts, pointerDown } from "@odoo/hoot-dom";
+import { drag, queryAll, press, queryAllTexts, queryFirst, pointerDown } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { getBasicData, Product } from "@spreadsheet/../tests/helpers/data";
 import { createSpreadsheetDashboard } from "@spreadsheet_dashboard/../tests/helpers/dashboard_action";
@@ -74,6 +74,17 @@ test("Fold/unfold the search panel", async function () {
     await contains(".o_search_panel_sidebar button").click();
     expect(".o_search_panel_sidebar").toHaveCount(0);
     expect(".o_spreadsheet_dashboard_search_panel").toHaveCount(1);
+});
+
+test("Dashboard search panel is resizable", async function () {
+    await createSpreadsheetDashboard();
+    const searchPanel = queryFirst(".o_spreadsheet_dashboard_search_panel");
+    const resizeHandle = queryFirst(".o_search_panel_resize");
+    const originalWidth = searchPanel.offsetWidth;
+
+    const { drop } = await drag(resizeHandle);
+    await drop(resizeHandle, { position: { x: 500 } });
+    expect(searchPanel.offsetWidth).toBeGreaterThan(originalWidth);
 });
 
 test("Folding dashboard from 'FAVORITES' group shows correct active dashboard group", async function () {
