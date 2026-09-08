@@ -191,6 +191,7 @@ export class Dropdown extends Component {
         };
         onMounted(updateTargetElement);
         onWillDestroy(() => cleanupTarget?.());
+        useEffect(updateTargetElement);
         useEffect(() => {
             if (this.props.disabled) {
                 this.closePopover();
