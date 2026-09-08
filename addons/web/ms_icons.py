@@ -8,9 +8,12 @@ manually.
 Maps each icon name to its ``has_fill`` flag and the space-separated ``tags``
 used to search it. The tags are only ever matched server-side (see the
 ``/html_editor/material_symbols_search`` controller), so they never reach the browser.
+Use :func:`search_ms_icons` to match a needle against both.
 """
 
-MS_ICONS = {
+from odoo.tools import frozendict
+
+MS_ICONS = frozendict({
     'ac_unit': {'has_fill': False, 'codepoint': 0xEB3B, 'tags': 'ac air air conditioning asterisk climate cold condition conditioner control cool cooling crystal flake frost frozen ice point points polygon six pointed star six points snow snowflake star temperature unit weather winter'},
     'accessibility': {'has_fill': False, 'codepoint': 0xE84E, 'tags': 'access accessibility accessible aid assistance barrier-free body disability disabled easy access feature figure handicap help human inclusion inclusive inclusivity mobility navigation options people person pictogram ramp services setting special needs support symbol universal wheelchair'},
     'accessible': {'has_fill': False, 'codepoint': 0xE914, 'tags': 'accessibility accessible assistance body disability disabled easy access facilities figure handicap handicapped healthcare help human information international symbol medical mobility mobility impaired parking people person public access ramp services sign support symbol toilet transport wheelchair'},
@@ -489,4 +492,22 @@ MS_ICONS = {
     'work': {'has_fill': True, 'codepoint': 0xE8F9, 'tags': 'achievement bag baggage briefcase business career case commerce corporate deal document duty economy employee employer employment executive financial folder job manager occupation office portfolio professional projects responsibility success suitcase tasks transaction work'},
     'zoom_in': {'has_fill': False, 'codepoint': 0xE8FF, 'tags': 'action add big bigger button circle command control cross detail enlarge find function glass grow in increase input interface tool lens line look magnifier magnify magnifying magnifying glass plus positive scale search see size tool ui tool view zoom zoom in'},
     'zoom_out': {'has_fill': False, 'codepoint': 0xE900, 'tags': 'action adjust button control decrease decrease size discover document view enlarge explore find glass image view investigate lens look loupe magnify magnifying map view minus negative out pull back reduce view scale scale down search see setting shrink size small smaller telescopic tool view visual zoom zoom out'},
-}
+})
+
+
+_MS_ICONS_INDEX = [
+    (name, icon['has_fill'], f"{name} {icon['tags']}".lower())
+    for name, icon in MS_ICONS.items()
+]
+
+
+def search_ms_icons(needle=''):
+    """Yield the ``(name, has_fill)`` of every icon matching ``needle``.
+
+    The needle is matched against the icon name and its search tags; an empty
+    needle matches every icon.  The haystacks are lowercased once, at import.
+    """
+    needle = needle.strip().lower()
+    for name, has_fill, haystack in _MS_ICONS_INDEX:
+        if not needle or needle in haystack:
+            yield name, has_fill

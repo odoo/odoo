@@ -7,7 +7,7 @@ from odoo.tests.common import HttpCase
 from odoo.tools.image import binary_to_image
 from odoo.tools.misc import file_open
 
-from odoo.addons.html_editor.controllers.ms_icons import MS_ICONS
+from odoo.addons.web.ms_icons import MS_ICONS
 
 
 class TestFontToImg(HttpCase):

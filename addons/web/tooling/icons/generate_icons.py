@@ -30,7 +30,7 @@ Outputs
 * ``static/src/libs/materialsymbols/material_symbols_{outlined,sharp}.css``
 * ``static/src/libs/materialsymbols/material_symbols_backend.woff`` — outlined font for
   wkhtmltopdf and PIL
-* ``html_editor/controllers/ms_icons.py`` — icon list with fill-variant flags, codepoints for
+* ``web/ms_icons.py`` — icon list with fill-variant flags, codepoints for
   PIL and search tags
 
 Usage
@@ -940,6 +940,27 @@ def write_font_face_css(ms_dir, style_lower: str, font_file: str, backend_font_p
     (ms_dir / f'material_symbols_{style_lower}.css').write_text(css, encoding='utf-8')
 
 
+ICON_SEARCH_CODE = '''
+
+_MS_ICONS_INDEX = [
+    (name, icon['has_fill'], f"{name} {icon['tags']}".lower())
+    for name, icon in MS_ICONS.items()
+]
+
+
+def search_ms_icons(needle=''):
+    """Yield the ``(name, has_fill)`` of every icon matching ``needle``.
+
+    The needle is matched against the icon name and its search tags; an empty
+    needle matches every icon.  The haystacks are lowercased once, at import.
+    """
+    needle = needle.strip().lower()
+    for name, has_fill, haystack in _MS_ICONS_INDEX:
+        if not needle or needle in haystack:
+            yield name, has_fill
+'''
+
+
 def write_python_icon_list(dst_path, icons: dict[str, dict], codepoints: dict[str, int]) -> None:
     """Write the icon metadata (``has_fill`` flag, search ``tags`` and cmap
     ``codepoint``) as a Python dict.
@@ -975,9 +996,13 @@ def write_python_icon_list(dst_path, icons: dict[str, dict], codepoints: dict[st
         "Maps each icon name to its ``has_fill`` flag and the space-separated ``tags``\n"
         "used to search it. The tags are only ever matched server-side (see the\n"
         "``/html_editor/material_symbols_search`` controller), so they never reach the browser.\n"
+        "Use :func:`search_ms_icons` to match a needle against both.\n"
         '"""\n'
         "\n"
-        f"MS_ICONS = {{\n{entries}\n}}\n",
+        "from odoo.tools import frozendict\n"
+        "\n"
+        f"MS_ICONS = frozendict({{\n{entries}\n}})\n"
+        + ICON_SEARCH_CODE,
         encoding='utf-8',
     )
 
@@ -999,7 +1024,7 @@ def main() -> None:
     )
     _, sharp_path, *_ = build_font("Sharp", ms_dir, wishlist)
 
-    icon_list_path = module_path.parent / 'html_editor' / 'controllers' / 'ms_icons.py'
+    icon_list_path = module_path / 'ms_icons.py'
     write_python_icon_list(icon_list_path, icons, codepoints)
 
     n_filled = sum(1 for icon in icons.values() if icon['has_fill'])
