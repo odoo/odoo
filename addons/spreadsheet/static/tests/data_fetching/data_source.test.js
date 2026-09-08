@@ -1,9 +1,12 @@
-import { describe, expect, test } from "@odoo/hoot";
+import { after, describe, expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
 import { LoadableDataSource } from "@spreadsheet/data_sources/data_source";
 import { makeServerError } from "@web/../tests/web_test_helpers";
+import { RpcEvent } from "@web/core/events";
+import { rpcBus } from "@web/core/network/rpc";
 import { Deferred } from "@web/core/utils/concurrency";
 
+import { createSpreadsheetWithList } from "../helpers/list.js";
 import { defineSpreadsheetActions, defineSpreadsheetModels } from "../helpers/data.js";
 
 describe.current.tags("headless");
@@ -82,4 +85,25 @@ test("Datasources handle errors thrown at _load", async () => {
     expect(dataSource._isFullyLoaded).toBe(true);
     expect(dataSource._isValid).toBe(false);
     expect(dataSource._loadError.message).toBe("Ya done!");
+});
+
+test("data source requests are visible to the loading indicator", async () => {
+    /** @type {[string, boolean][]} */
+    const calls = [];
+    const onRequest = ({ detail }) => {
+        const params = detail?.data?.params;
+        if (params?.model === "partner") {
+            calls.push([params.method, Boolean(detail.settings?.silent)]);
+        }
+    };
+    rpcBus.addEventListener(RpcEvent.REQUEST, onRequest);
+    after(() => rpcBus.removeEventListener(RpcEvent.REQUEST, onRequest));
+
+    await createSpreadsheetWithList();
+
+    // The list really did go to the server...
+    expect(calls.map(([method]) => method)).toInclude("web_search_read");
+    // ...and none of its calls asked the loading indicator to look away:
+    // `loading_indicator.js` drops every request whose settings say `silent`.
+    expect(calls.filter(([, silent]) => silent)).toEqual([]);
 });

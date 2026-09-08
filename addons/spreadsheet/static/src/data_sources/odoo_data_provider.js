@@ -6,7 +6,11 @@ import { ServerData } from "./server_data.js";
 export class OdooDataProvider extends EventBus {
     constructor(env) {
         super();
-        this.orm = env.services.orm.silent;
+        // Not `orm.silent`: `loading_indicator.js` drops every request whose
+        // settings say `silent`, and a pivot, list or chart fetching its data
+        // is precisely when the user needs to be told the app is busy. The
+        // indicator only shows after 250 ms, so quick loads stay quiet.
+        this.orm = env.services.orm;
         this.fieldService = env.services.field;
         this.serverData = new ServerData(this.orm, {
             whenDataStartLoading: (promise) => this.notifyWhenPromiseResolves(promise),
