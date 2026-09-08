@@ -337,9 +337,14 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
         This tests the following flow for B2B invoices: a buyer is created, then an invoice is successfully sent
         to the ECpay platform, and then pass validation.
         """
+        self.buyer_calls = []
         send_and_print = self.create_send_and_print(self.basic_invoice_b2b)
         with patch(CALL_API_METHOD, new=self._test_10_mock):
             send_and_print.action_send_and_print()
+
+        # An unknown buyer must be created once the update reported it does not exist.
+        self.assertEqual(len(self.buyer_calls), 1)
+        self.assertEqual(self.buyer_calls[0]["Action"], "Add")
 
         # Now that the invoice has been sent successfully, we assert that some info have been saved correctly.
         self.assertRecordValues(
@@ -356,12 +361,21 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
     @freeze_time("2025-01-06 15:00:00")
     def test_11_basic_submission_b2b_partner_exists(self):
         """
-        This tests the following flow for B2B invoices: the buyer already exists, then an invoice is successfully
-        sent to the ECpay platform, and then pass validation.
+        This tests the following flow for B2B invoices: the buyer already exists, so its data is updated, then an
+        invoice is successfully sent to the ECpay platform, and then pass validation.
         """
+        self.buyer_calls = []
+        self.partner_b.ref = "CUST-0042"
         send_and_print = self.create_send_and_print(self.basic_invoice_b2b)
         with patch(CALL_API_METHOD, new=self._test_11_mock):
             send_and_print.action_send_and_print()
+
+        # An existing buyer must be updated, so that the data edited in Odoo is reflected on Ecpay.
+        self.assertEqual(len(self.buyer_calls), 1)
+        self.assertEqual(self.buyer_calls[0]["Identifier"], self.partner_b.vat)
+        self.assertEqual(self.buyer_calls[0]["CustomerNumber"], "CUST-0042")
+        # The invoice is addressed to the company itself, so there is no person in charge to send.
+        self.assertNotIn("SalesName", self.buyer_calls[0])
 
         # Now that the invoice has been sent successfully, we assert that some info have been saved correctly.
         self.assertRecordValues(
@@ -678,6 +692,12 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
                 "CompanyName": "Test Company",
             }
         elif endpoint == "/MaintainMerchantCustomerData":
+            if json_data["Action"] == "Update":
+                return {
+                    "RtnCode": 6160050,
+                    "RtnMsg": "B2B營業人資料+資料不存在",
+                }
+            self.buyer_calls.append(json_data)
             return {
                 "RtnCode": 1,
                 "RtnMsg": "新增成功",
@@ -710,9 +730,12 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
                 "CompanyName": "Test Company",
             }
         elif endpoint == "/MaintainMerchantCustomerData":
+            if json_data["Action"] != "Update":
+                raise UserError('An existing buyer must be updated, not created.')
+            self.buyer_calls.append(json_data)
             return {
-                "RtnCode": 6160052,
-                "RtnMsg": "新增成功",
+                "RtnCode": 1,
+                "RtnMsg": "更新成功",
             }
         else:
             raise UserError('Unexpected endpoint called during a test: %s with params %s.' % (endpoint, json_data))
