@@ -195,7 +195,7 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
         """
         Ensure that a dropship sale order for a kit correctly updates
         the component product's standard_price from the supplier price after validating
-        the dropship transfer.
+        the dropship transfer, and that posting the vendor bill keeps that cost.
         """
         kit_final_prod = self.product_a
         avco_products = avco_product, avco_product_2 = self.env['product.product'].create([{
@@ -238,3 +238,14 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
 
         self.assertEqual(avco_product.standard_price, 100)
         self.assertEqual(avco_product_2.standard_price, 100)
+
+        # Bill 2 of the 4 received units of avco_product_2 at 120: its cost blends to
+        # (2*120 + 2*100)/4 = 110, while avco_product, billed in full, stays at 100.
+        purchase_order.action_create_invoice()
+        bill = purchase_order.invoice_ids
+        bill.invoice_date = fields.Date.today()
+        bill.invoice_line_ids.filtered(lambda line: line.product_id == avco_product_2).write({'quantity': 2, 'price_unit': 120})
+        bill.action_post()
+
+        self.assertEqual(avco_product.standard_price, 100)
+        self.assertEqual(avco_product_2.standard_price, 110)
