@@ -1,6 +1,8 @@
 import json
 import logging
 import sys
+import freezegun
+import time
 
 from odoo.logging import JSONFormatter
 from odoo.tests.common import BaseCase
@@ -68,3 +70,35 @@ class TestJsonFormatter(BaseCase):
         formatted = json.loads(formatter.format(self.record))
         missing_keys = {'msecs', 'relativeCreated'} - set(formatted.keys())
         self.assertFalse(missing_keys, f"Expected keys missing: {sorted(missing_keys)}")
+
+    def test_faketime(self):
+        factory = logging.getLogRecordFactory()
+        start = time.time()
+        with freezegun.freeze_time("2024-01-01 12:00:00"):
+            self.record = factory(
+                name='test',
+                level=logging.INFO,
+                pathname=__file__,
+                lineno=1,
+                msg='test message',
+                args=(),
+                exc_info=None,
+            )
+            formatter = JSONFormatter()
+            formatted = json.loads(formatter.format(self.record))
+        end = time.time()
+        self.assertTrue(start < formatted['created'] < end, f"Log time ({formatted['created']}) should not be impacted by the freeze_time context manager (expected between {start} and {end})")
+        self.assertEqual(formatted['faked_created'], 1704110400.0, f"Expected faked_created to be 1704110400.0, got {formatted['faked_created']}")
+
+        self.record = factory(
+            name='test',
+            level=logging.INFO,
+            pathname=__file__,
+            lineno=1,
+            msg='test message',
+            args=(),
+            exc_info=None,
+        )
+        formatter = JSONFormatter()
+        formatted = json.loads(formatter.format(self.record))
+        self.assertFalse('faked_created' in formatted, "faked_created should not be present when not using freezegun")
