@@ -455,6 +455,18 @@
         }
     }
 
+    // The quick create is a narrow container whatever the viewport, so it never
+    // uses the two columns layout defined above.
+    &.o_kanban_quick_create_form {
+        .o_inner_group {
+            @include form-break-table;
+        }
+
+        &.o_form_editable .o_inner_group {
+            @include editable-form-break-table();
+        }
+    }
+
     .o_group, .o_inner_group {
         .o_field_widget {
             width: 100%;
