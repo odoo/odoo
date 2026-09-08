@@ -117,6 +117,14 @@
                 search="[('model','=','stock.picking.type')]" />
             <field name="domain_force">[('company_id','in', company_ids)]</field>
         </record>
+        <record id="stock_picking_batch_rule" model="ir.rule">
+            <field name="name">Stock Picking Batch multi-company</field>
+            <field
+                name="model_id"
+                model="ir.model"
+                search="[('model','=','stock.picking.batch')]" />
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
         <record id="stock_putaway_rule_rule" model="ir.rule">
             <field name="name">Putaway Rule multi-company</field>
             <field
