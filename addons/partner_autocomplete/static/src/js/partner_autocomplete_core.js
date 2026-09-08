@@ -65,11 +65,16 @@ export function usePartnerAutocomplete() {
 
     async function autocomplete(fieldName, value, queryCountryId) {
         value = value.trim();
-        if (fieldName === 'vat') {
-            if (!isGSTNumber(value) && !isVATNumber(value)) {
-                return [];
-            }
+
+        const isVat = await isVATNumber(value);
+        const isGST = isGSTNumber(value);
+
+        if (fieldName === 'vat' && !isGST && !isVat) {
+            return [];
         }
+
+        fieldName = fieldName === 'name' && (isVat || isGST) ? 'vat' : fieldName;
+
         return await scope.run(getSuggestions, fieldName, value, queryCountryId);
     }
 
