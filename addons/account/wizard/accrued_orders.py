@@ -45,15 +45,33 @@ class AccountAccruedOrdersWizard(models.TransientModel):
     currency_id = fields.Many2one(related='company_id.currency_id', string='Company Currency',
         readonly=True, store=True,
         help='Utility field to express amount currency')
+    account_types = fields.Json(compute='_compute_account_types')
     account_id = fields.Many2one(
         comodel_name='account.account',
         required=True,
         string='Accrual Account',
         check_company=True,
-        domain="[('account_type', '=', 'liability_current')] if context.get('active_model') in ['purchase.order', 'purchase.order.line'] else [('account_type', '=', 'asset_current')]",
+        domain="[('account_type', 'in', account_types)]",
     )
     preview_data = fields.Text(compute='_compute_preview_data')
     display_amount = fields.Boolean(compute='_compute_display_amount')
+
+    @api.depends_context('active_model', 'active_ids')
+    def _compute_account_types(self):
+        orders, lines = self._get_orders_and_lines()
+        account_types = set()
+        sign = 1 if orders._name == 'purchase.order' else -1
+        for line in lines:
+            transferred_qty = line.qty_received_at_date if line._name == 'purchase.order.line' else line.qty_delivered_at_date
+            comparison = line.product_uom_id.compare((line.qty_invoiced_at_date - transferred_qty) * sign, 0)
+            if comparison > 0:
+                account_types |= {'asset_current'}
+            elif comparison < 0:
+                account_types |= {'liability_current'}
+            else:
+                account_types |= {'liability_current', 'asset_current'}
+        for record in self:
+            record.account_types = list(account_types)
 
     @api.depends('date', 'amount')
     def _compute_display_amount(self):
@@ -403,3 +421,11 @@ class AccountAccruedOrdersWizard(models.TransientModel):
     @api.model
     def _get_product_expense_and_stock_var_accounts(self, product):
         return (False, False)
+
+    def _get_orders_and_lines(self):
+        active_model = self.env.context.get('active_model')
+        active_ids = self.env.context.get('active_ids') or []
+        records = self.env[active_model].browse(active_ids)
+        if active_model in ('purchase.order.line', 'sale.order.line'):
+            return records.order_id, records
+        return records, records.order_line.filtered(lambda l: l.product_id)
