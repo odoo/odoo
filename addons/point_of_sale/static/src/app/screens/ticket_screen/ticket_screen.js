@@ -735,9 +735,13 @@ export class TicketScreen extends Component {
             .map((info) => info[0]);
 
         if (idsNotInCacheOrOutdated.length > 0) {
-            await this.pos.data.callRelated("pos.order", "get_ticket_screen_order_data", [
-                Array.from(new Set(idsNotInCacheOrOutdated)),
-            ]);
+            const records = await this.pos.data.callRelated(
+                "pos.order",
+                "get_ticket_screen_order_data",
+                [Array.from(new Set(idsNotInCacheOrOutdated))]
+            );
+            // Reloaded variants come back with available_in_pos = true.
+            await this.pos.processProductAttributesByProducts(records["product.product"]);
         }
     }
 }

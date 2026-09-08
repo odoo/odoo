@@ -539,6 +539,22 @@ export function productIsDisplayed(name, position = -1) {
         },
     ];
 }
+export function productCardCountIs(name, count) {
+    return [
+        {
+            content: `'${name}' should be displayed ${count} time(s)`,
+            trigger: `.product-list .product-name:contains("${name}")`,
+            run: () => {
+                const found = [...document.querySelectorAll(".product-list .product-name")].filter(
+                    (el) => el.textContent.trim() === name
+                ).length;
+                if (found !== count) {
+                    throw new Error(`Expected ${count} '${name}' product card(s), found ${found}`);
+                }
+            },
+        },
+    ];
+}
 export function searchProduct(string) {
     return [
         {
