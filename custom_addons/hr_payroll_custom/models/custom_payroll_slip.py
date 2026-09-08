@@ -2,6 +2,15 @@ from odoo import _, api, fields, models
 from odoo.exceptions import AccessError, UserError
 from datetime import date, datetime
 import calendar
+import re
+
+
+def _presenly_safe_location_suffix(name):
+    """Sanitize work location name untuk suffix sequence."""
+    if not name:
+        return ''
+    cleaned = re.sub(r'[^A-Za-z0-9]+', '-', name).strip('-')
+    return cleaned[:40] or ''
 
 
 class CustomPayrollSlip(models.Model):
@@ -109,6 +118,24 @@ class CustomPayrollSlip(models.Model):
     currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company, required=True)
 
+    work_location_id = fields.Many2one(
+        'hr.work.location', string='Work Location',
+        index=True, check_company=True, ondelete='restrict',
+        help='Lokasi kerja spesifik untuk slip ini. Karyawan yang bekerja '
+             'di beberapa lokasi pada satu periode payroll akan memiliki '
+             'lebih dari satu slip (satu per lokasi).',
+    )
+    work_location_count = fields.Integer(
+        string='Work Locations Used (Period)',
+        compute='_compute_work_location_count',
+        help='Jumlah lokasi unik yang dipakai karyawan dalam periode payroll.',
+    )
+
+    _uniq_slip_per_location = models.Constraint(
+        'UNIQUE(payroll_batch_id, employee_id, work_location_id)',
+        'A payslip already exists for this employee at this work location in this batch.',
+    )
+
     def _check_payroll_officer(self):
         if not self.env.user.has_group('hr_payroll_custom.group_payroll_user'):
             raise AccessError(_('Only Payroll Officers or Administrators can manage payslips.'))
@@ -179,6 +206,28 @@ class CustomPayrollSlip(models.Model):
             )
 
     @api.depends('payroll_batch_id.periode_bulan', 'payroll_batch_id.periode_tahun',
+                 'employee_id')
+    def _compute_work_location_count(self):
+        for rec in self:
+            if not rec.employee_id or not rec.payroll_batch_id.periode_bulan \
+                    or not rec.payroll_batch_id.periode_tahun:
+                rec.work_location_count = 0
+                continue
+            try:
+                year = int(rec.payroll_batch_id.periode_tahun)
+                month = int(rec.payroll_batch_id.periode_bulan)
+                start_date = date(year, month, 1)
+                _, last_day = calendar.monthrange(year, month)
+                end_date = date(year, month, last_day)
+            except (ValueError, TypeError):
+                rec.work_location_count = 0
+                continue
+            locations = rec.employee_id._presenly_work_locations_for_period(
+                start_date, end_date
+            )
+            rec.work_location_count = len(locations)
+
+    @api.depends('payroll_batch_id.periode_bulan', 'payroll_batch_id.periode_tahun',
                  'employee_id', 'overtime_threshold_hours', 'overtime_override')
     def _compute_attendance_overtime(self):
         Attendance = self.env['hr.attendance']
@@ -200,11 +249,16 @@ class CustomPayrollSlip(models.Model):
                 continue
             start_dt = datetime.combine(start_date, datetime.min.time())
             end_dt = datetime.combine(end_date, datetime.max.time())
-            attendances = Attendance.search([
+            attendance_domain = [
                 ('employee_id', '=', rec.employee_id.id),
                 ('check_in', '>=', start_dt),
                 ('check_in', '<=', end_dt),
-            ])
+            ]
+            if rec.work_location_id:
+                attendance_domain.append(
+                    ('presenly_work_location_id', '=', rec.work_location_id.id)
+                )
+            attendances = Attendance.search(attendance_domain)
             overtime = 0.0
             for att in attendances:
                 if att.worked_hours and att.worked_hours > rec.overtime_threshold_hours:
@@ -237,7 +291,16 @@ class CustomPayrollSlip(models.Model):
                 sequence = self.env['ir.sequence'].next_by_code(seq_code)
                 if not sequence and seq_code != 'custom.payroll.slip':
                     sequence = self.env['ir.sequence'].next_by_code('custom.payroll.slip')
-                vals['name'] = sequence or 'New'
+                base_name = sequence or 'New'
+                location_id = vals.get('work_location_id')
+                if location_id:
+                    location = self.env['hr.work.location'].browse(location_id)
+                    if location.exists():
+                        suffix = _presenly_safe_location_suffix(location.name)
+                        if suffix:
+                            vals['name'] = f'{base_name}/{suffix}'
+                            continue
+                vals['name'] = base_name
         return super().create(vals_list)
 
     @api.onchange('employee_id')
@@ -480,4 +543,125 @@ class CustomPayrollSlip(models.Model):
             'view_mode': 'list,form',
             'domain': [('slip_gaji_id', '=', self.id)],
             'context': {'default_slip_gaji_id': self.id},
+        }
+
+    def _get_attendance_summary_by_location(self):
+        """Return list of dict {location_name, days, worked_hours} untuk
+        attendance karyawan di periode payroll. Jika slip punya
+        work_location_id, summary hanya untuk lokasi tsb.
+        """
+        self.ensure_one()
+        if not self.employee_id or not self.payroll_batch_id.periode_bulan \
+                or not self.payroll_batch_id.periode_tahun:
+            return []
+        try:
+            year = int(self.payroll_batch_id.periode_tahun)
+            month = int(self.payroll_batch_id.periode_bulan)
+            start_date = date(year, month, 1)
+            _, last_day = calendar.monthrange(year, month)
+            end_date = date(year, month, last_day)
+        except (TypeError, ValueError):
+            return []
+        start_dt = datetime.combine(start_date, datetime.min.time())
+        end_dt = datetime.combine(end_date, datetime.max.time())
+        domain = [
+            ('employee_id', '=', self.employee_id.id),
+            ('check_in', '>=', start_dt),
+            ('check_in', '<=', end_dt),
+        ]
+        if self.work_location_id:
+            domain.append(
+                ('presenly_work_location_id', '=', self.work_location_id.id)
+            )
+        attendances = self.env['hr.attendance'].search(domain)
+        grouped = {}
+        for att in attendances:
+            loc = att.presenly_work_location_id
+            key = loc.id if loc else 0
+            if key not in grouped:
+                grouped[key] = {
+                    'location_name': loc.name if loc else '(Unassigned)',
+                    'days': 0,
+                    'worked_hours': 0.0,
+                }
+            grouped[key]['days'] += 1
+            grouped[key]['worked_hours'] += att.worked_hours or 0.0
+        return sorted(
+            grouped.values(),
+            key=lambda row: row['location_name'],
+        )
+
+    def action_split_by_location(self):
+        """Untuk slip draft dengan karyawan multi-lokasi, buat slip
+        tambahan untuk lokasi yang belum ada di batch."""
+        self.ensure_one()
+        if self.status != 'draft':
+            raise UserError(_('Only draft slips can be split by location.'))
+        if not self.payroll_batch_id or self.payroll_batch_id.status != 'draft':
+            raise UserError(_('Batch must be in Draft status to split slips.'))
+        if not self.employee_id or not self.payroll_batch_id.periode_bulan \
+                or not self.payroll_batch_id.periode_tahun:
+            raise UserError(_('Slip must have an employee and a valid payroll period.'))
+        try:
+            year = int(self.payroll_batch_id.periode_tahun)
+            month = int(self.payroll_batch_id.periode_bulan)
+            start_date = date(year, month, 1)
+            _, last_day = calendar.monthrange(year, month)
+            end_date = date(year, month, last_day)
+        except (ValueError, TypeError):
+            raise UserError(_('Invalid payroll period on this slip.'))
+        locations = self.employee_id._presenly_work_locations_for_period(
+            start_date, end_date
+        )
+        if not locations:
+            raise UserError(_(
+                'No work locations are configured for this employee in this period.'
+            ))
+        existing_loc_ids = set(
+            self.payroll_batch_id.slip_ids.filtered(
+                lambda s: s.employee_id == self.employee_id
+            ).mapped('work_location_id').ids
+        )
+        new_locations = locations.filtered(
+            lambda l: l.id not in existing_loc_ids
+        )
+        if not new_locations:
+            raise UserError(_(
+                'All work locations for this employee are already represented '
+                'by a slip in this batch.'
+            ))
+        created = self.env['custom.payroll.slip']
+        for loc in new_locations:
+            new_slip = self.create({
+                'payroll_batch_id': self.payroll_batch_id.id,
+                'employee_id': self.employee_id.id,
+                'work_location_id': loc.id,
+                'total_gaji_pokok': self.total_gaji_pokok,
+                'company_id': self.company_id.id,
+            })
+            new_slip._auto_populate_basic_salary_and_bpjs()
+            created |= new_slip
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Split by Location'),
+                'message': _(
+                    '%(count)d additional payslip(s) created for %(employee)s.'
+                ) % {
+                    'count': len(created),
+                    'employee': self.employee_id.name,
+                },
+                'type': 'success',
+                'next': {
+                    'type': 'ir.actions.act_window',
+                    'name': _('Generated Payslips'),
+                    'res_model': 'custom.payroll.slip',
+                    'view_mode': 'list,form',
+                    'domain': [
+                        ('payroll_batch_id', '=', self.payroll_batch_id.id),
+                        ('employee_id', '=', self.employee_id.id),
+                    ],
+                },
+            },
         }

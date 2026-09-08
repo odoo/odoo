@@ -13,14 +13,14 @@
     <record id="mail_template_payroll_slip" model="mail.template">
         <field name="name">Payroll: Payslip</field>
         <field name="model_id" ref="model_custom_payroll_slip"/>
-        <field name="subject">Payslip {{ object.payroll_batch_id.name }} - {{ object.employee_id.name }}</field>
+        <field name="subject">{{ object.payroll_batch_id.name }} - {{ object.employee_id.name }}{{ ' - ' + object.work_location_id.name if object.work_location_id else '' }}</field>
         <field name="email_from">{{ object.company_id.email_formatted or user.email_formatted or '' }}</field>
         <field name="use_default_to" eval="False"/>
         <field name="email_to">{{ object.employee_id.work_email or '' }}</field>
         <field name="auto_delete" eval="False"/>
         <field name="body_html" type="html">
             <p>Dear <t t-out="object.employee_id.name"/>,</p>
-            <p>Please find attached your payslip for <t t-out="object.payroll_batch_id.name"/>.</p>
+            <p>Please find attached your payslip for <t t-out="object.payroll_batch_id.name"/><t t-if="object.work_location_id"> (<t t-out="object.work_location_id.name"/>)</t>.</p>
             <p>Regards,<br/><t t-out="object.company_id.name"/></p>
         </field>
         <field name="report_template_ids" eval="[(4, ref('hr_payroll_custom.action_report_slip_gaji'))]"/>
@@ -41,6 +41,7 @@
                 <t t-call="web.external_layout">
                     <t t-set="earnings" t-value="slip.detail_ids.filtered(lambda d: d.component_type == 'tunjangan' or (d.component_type == 'rule' and d.rule_id.category_id.code == 'ALW'))"/>
                     <t t-set="deductions" t-value="slip.detail_ids.filtered(lambda d: d.component_type in ('potongan', 'bpjs') or (d.component_type == 'rule' and d.rule_id.category_id.code == 'DED'))"/>
+                    <t t-set="attendance_summary" t-value="slip._get_attendance_summary_by_location()"/>
                     <div class="page">
                         <h2 style="text-align: center;">SLIP GAJI</h2>
                         <h3 style="text-align: center;" t-esc="slip.payroll_batch_id.name"/>
@@ -49,7 +50,10 @@
                             <div class="col-6">
                                 <strong>Employee:</strong> <span t-esc="slip.employee_id.name"/><br/>
                                 <strong>Department:</strong> <span t-esc="slip.department_id.name"/><br/>
-                                <strong>Job Position:</strong> <span t-esc="slip.job_id.name"/>
+                                <strong>Job Position:</strong> <span t-esc="slip.job_id.name"/><br/>
+                                <strong>Work Location:</strong>
+                                <span t-if="slip.work_location_id" t-esc="slip.work_location_id.name"/>
+                                <span t-if="not slip.work_location_id"><em>(All locations / Not assigned)</em></span>
                             </div>
                             <div class="col-6">
                                 <strong>Slip Number:</strong> <span t-esc="slip.name"/><br/>
@@ -100,6 +104,24 @@
                                     </td>
                                 </tr>
                             </tfoot>
+                        </table>
+
+                        <h4 t-if="attendance_summary">ATTENDANCE SUMMARY</h4>
+                        <table t-if="attendance_summary" class="table table-sm table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Work Location</th>
+                                    <th class="text-right">Days</th>
+                                    <th class="text-right">Worked Hours</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="attendance_summary" t-as="row">
+                                    <td t-esc="row['location_name']"/>
+                                    <td class="text-right" t-esc="row['days']"/>
+                                    <td class="text-right" t-esc="row['worked_hours']" t-options="{'widget': 'float', 'precision': 2}"/>
+                                </tr>
+                            </tbody>
                         </table>
 
                         <h4>POTONGAN</h4>

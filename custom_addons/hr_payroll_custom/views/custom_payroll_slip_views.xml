@@ -6,25 +6,29 @@
         <field name="model">custom.payroll.slip</field>
         <field name="arch" type="xml">
             <form string="Payslip">
-                <header>
-                    <button name="action_confirm" type="object" string="Confirm"
-                            class="btn-primary" invisible="status != 'draft'"/>
-                    <button name="action_recompute_rules" type="object" string="Re-run Salary Rules"
-                            invisible="status not in ('draft', 'confirmed')"
-                            groups="hr_payroll_custom.group_payroll_manager"/>
-                    <button name="action_paid" type="object" string="Mark as Paid"
-                            class="btn-primary" invisible="status != 'confirmed'"/>
-                    <button name="action_send_email" type="object" string="Send by Email"
-                            invisible="status != 'paid'" groups="hr_payroll_custom.group_payroll_user"/>
-                    <button name="action_resend_email" type="object" string="Resend Email"
-                            invisible="status != 'paid' or email_status not in ('sent', 'failed')"
-                            groups="hr_payroll_custom.group_payroll_user"/>
-                    <button name="action_cancel" type="object" string="Cancel"
-                            invisible="status in ('paid', 'cancelled')"/>
-                    <button name="action_draft" type="object" string="Reset to Draft"
-                            invisible="status != 'cancelled'"/>
+                    <header>
+                        <button name="action_confirm" type="object" string="Confirm"
+                                class="btn-primary" invisible="status != 'draft'"/>
+                        <button name="action_recompute_rules" type="object" string="Re-run Salary Rules"
+                                invisible="status not in ('draft', 'confirmed')"
+                                groups="hr_payroll_custom.group_payroll_manager"/>
+                        <button name="action_paid" type="object" string="Mark as Paid"
+                                class="btn-primary" invisible="status != 'confirmed'"/>
+                        <button name="action_send_email" type="object" string="Send by Email"
+                                invisible="status != 'paid'" groups="hr_payroll_custom.group_payroll_user"/>
+                        <button name="action_resend_email" type="object" string="Resend Email"
+                                invisible="status != 'paid' or email_status not in ('sent', 'failed')"
+                                groups="hr_payroll_custom.group_payroll_user"/>
+                        <button name="action_split_by_location" type="object" string="Split by Location"
+                                class="btn-secondary"
+                                invisible="status != 'draft' or work_location_count &lt;= 1"
+                                groups="hr_payroll_custom.group_payroll_manager"/>
+                        <button name="action_cancel" type="object" string="Cancel"
+                                invisible="status in ('paid', 'cancelled')"/>
+                        <button name="action_draft" type="object" string="Reset to Draft"
+                                invisible="status != 'cancelled'"/>
                             <field name="status" widget="statusbar"/>
-                </header>
+                    </header>
                 <sheet>
                     <div class="oe_title">
                         <h1>
@@ -37,6 +41,11 @@
                             <field name="employee_name" readonly="1"/>
                             <field name="department_id" readonly="1"/>
                             <field name="job_id" readonly="1"/>
+                            <field name="work_location_id"
+                                   readonly="status != 'draft'"
+                                   options="{'no_create_edit': True}"/>
+                            <field name="work_location_count" readonly="1"
+                                   decoration-info="work_location_count > 1"/>
                         </group>
                         <group string="Payroll">
                             <field name="payroll_batch_id"/>
@@ -140,6 +149,7 @@
                 </header>
                 <field name="name"/>
                 <field name="employee_id"/>
+                <field name="work_location_id" optional="show"/>
                 <field name="department_id" optional="show"/>
                 <field name="payroll_batch_id"/>
                 <field name="total_gaji_pokok" widget="monetary"/>
@@ -176,6 +186,7 @@
                     <filter name="group_batch" string="Payroll Batch" context="{'group_by': 'payroll_batch_id'}"/>
                     <filter name="group_status" string="Status" context="{'group_by': 'status'}"/>
                     <filter name="group_department" string="Department" context="{'group_by': 'department_id'}"/>
+                    <filter name="group_work_location" string="Work Location" context="{'group_by': 'work_location_id'}"/>
                 </group>
             </search>
         </field>
