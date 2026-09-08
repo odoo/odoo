@@ -23,6 +23,8 @@
                     autoSelect="true"
                     autofocus="true"
                     input="this.inputRef"
+                    onInput="(ev) => this.onInput(ev)"
+                    inputDebounceDelay="0"
                 />
             </div>
             <t t-set-slot="footer">
