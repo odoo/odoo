@@ -4,11 +4,11 @@ import { _t } from "@web/core/l10n/translation";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { DATE_OPTIONS, DateFilterButton } from "../date_filter_button/date_filter_button";
 
-export const CARD_COLORS_MAPPING = {
-    to_confirm: "orange",
-    to_fulfill: "purple",
-    to_invoice: "cyan",
-    to_upsell: "red",
+export const CARD_O_COLORS_INDEX_MAPPING = {
+    to_confirm: "4",
+    to_fulfill: "12",
+    to_invoice: "8",
+    to_upsell: "2",
 };
 
 export const CARD_FILTERS_MAPPING = {
@@ -161,13 +161,16 @@ export class Dashboard extends Component {
 
     getDashboardCardAdditionalClass(cardName) {
         const dashboardCardClasses = [];
+        const isSelected = this.state.selectedCard === cardName;
+        const colorIndex = CARD_O_COLORS_INDEX_MAPPING[cardName];
+
         if (this.isCardDisabled(cardName)) {
             dashboardCardClasses.push("bg-secondary text-secondary-emphasis disabled");
         } else {
-            dashboardCardClasses.push(`o_dashboard_card_${CARD_COLORS_MAPPING[cardName]}`);
+            dashboardCardClasses.push(`bg-color-${colorIndex} text-color-${colorIndex}-emphasis`);
         }
-        if (this.state.selectedCard === cardName) {
-            dashboardCardClasses.push("active");
+        if (isSelected) {
+            dashboardCardClasses.push(`active border-color-${colorIndex}`);
         }
         return dashboardCardClasses.join(" ");
     }

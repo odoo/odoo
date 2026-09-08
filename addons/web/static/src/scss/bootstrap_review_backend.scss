@@ -113,6 +113,10 @@ $-o-theme-text-colors: map-merge($theme-colors, $o-theme-text-colors);
     @include text-emphasis-variant(".text-#{$-name}", $-value);
 }
 
+@each $-name, $-value in $o-colors-ui {
+    @include text-emphasis-variant(".text-#{$-name}-emphasis", shade-color($-value, 50%));
+}
+
 // 3. Adapt the behaviour of .btn-link buttons when in conjuction with contextual
 //    classes (eg. text-warning). 'muted' is set as default text color, while
 //    the contextual-class color will be used on ':hover'.
