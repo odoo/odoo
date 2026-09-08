@@ -8,6 +8,7 @@ import os
 import platform
 import sys
 import threading
+import time
 import tomllib
 import traceback
 import warnings
@@ -20,6 +21,9 @@ from .logging import ColoredFormatter, PostgreSQLHandler
 _logger = logging.getLogger(__name__)
 
 
+real_time = time.time.__call__  # ensure we have a non patched time when using freezegun
+
+
 class LogRecord(logging.LogRecord):
     def __init__(self, name, level, pathname, lineno, msg, args, exc_info, func=None, sinfo=None, **kwargs):
         super().__init__(name, level, pathname, lineno, msg, args, exc_info, func=func, sinfo=sinfo, **kwargs)
@@ -27,6 +31,9 @@ class LogRecord(logging.LogRecord):
         self.dbname = getattr(threading.current_thread(), 'dbname', '?')
         from . import modules  # noqa: PLC0415
         self.test = None
+        if time.time.__call__ != real_time:
+            self.faked_created = self.created
+            self.created = real_time()
         if modules.module.current_test:
             with contextlib.suppress(Exception):
                 self.test = modules.module.current_test.get_log_metadata(self)
