@@ -121,6 +121,68 @@ class TestAccessRights(SaleCommon, MailCommon):
             composer.action_send_and_print()
 
     @mute_logger('odoo.addons.base.models.ir_access')
+    def test_access_bank_account_on_account_move(self):
+        """A salesperson can read the recipient bank account shown on an
+        account.move they can read (res.partner.bank document rule)."""
+
+        company_bank = self.env["res.partner.bank"].sudo().create({
+            "account_number": "SP-COMP-0001",
+            "partner_id": self.env.company.partner_id.id,
+            "allow_out_payment": True,  # trusted, so posting an inbound invoice doesn't block
+        })
+        customer_bank = self.env["res.partner.bank"].sudo().create({
+            "account_number": "SP-CUST-0001",
+            "partner_id": self.partner.id,
+        })
+
+        # Real flow (done as superuser): SO owned by the salesperson -> invoice
+        # -> post -> reverse. Both partner_bank_id values are set by the real
+        # computes / reversal wizard; we never hand-set them.
+        sale_order = self.sale_order.sudo()
+        sale_order.user_id = self.sale_user2
+        sale_order.action_confirm()
+        invoice = sale_order._create_invoices()
+        invoice.invoice_user_id = self.sale_user2
+        invoice.action_post()
+
+        # On an out_invoice the recipient is the company, so partner_bank_id
+        # computed to the *company* bank, which the salesperson can read.
+        self.assertEqual(invoice.move_type, "out_invoice")
+        self.assertEqual(invoice.partner_bank_id, company_bank)
+        self.assertEqual(invoice.partner_bank_id.partner_id, self.env.company.partner_id)
+        self.env.invalidate_all()
+        invoice.partner_bank_id.with_user(self.sale_user2).read(["account_number"])
+
+        reversal = self.env["account.move.reversal"].sudo().with_context(
+            active_model="account.move", active_ids=invoice.ids,
+        ).create({"journal_id": invoice.journal_id.id})
+        reversal.reverse_moves()
+        credit_note = reversal.new_move_ids
+        credit_note.ensure_one()
+
+        # On an out_refund the recipient is the customer, so partner_bank_id
+        # computed to the *customer* bank.
+        self.assertEqual(credit_note.move_type, "out_refund")
+        self.assertEqual(credit_note.invoice_user_id, self.sale_user2)
+        self.assertEqual(credit_note.partner_bank_id, customer_bank)
+
+        # The salesperson can read the credit note and, through it, the bank.
+        self.env.invalidate_all()
+        credit_note.with_user(self.sale_user2).read(["name"])
+        customer_bank.with_user(self.sale_user2).read(["account_number"])
+
+        # An unrelated customer's bank (on no move the salesperson can read)
+        # stays out of reach.
+        other_bank = self.env["res.partner.bank"].sudo().create({
+            "account_number": "SP-OTHER-0001",
+            "partner_id": self.env["res.partner"].sudo().create({
+                "name": "Unrelated customer",
+            }).id,
+        })
+        with self.assertRaises(AccessError):
+            other_bank.with_user(self.sale_user2).read(["account_number"])
+
+    @mute_logger('odoo.addons.base.models.ir_access')
     def test_access_portal_user(self):
         """Test portal user's access rights."""
         SaleOrder = self.env["sale.order"].with_user(self.user_portal)

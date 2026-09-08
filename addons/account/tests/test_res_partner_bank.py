@@ -2,6 +2,7 @@
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.mail.tests.common import MailCase
+from odoo.exceptions import AccessError, UserError
 from odoo.tests import Form
 from odoo.tests.common import tagged
 
@@ -100,3 +101,79 @@ class TestResPartnerBank(AccountTestInvoicingCommon, MailCase):
                     ('partner_id', 'many2one', self.partner_a, self.partner_b, {'html_string': 'Partner'}),
                 ],
             })
+
+
+@tagged('post_install', '-at_install', 'res_partner_bank')
+class TestResPartnerBankAccess(AccountTestInvoicingCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+    
+        cls.plain_user = cls.env['res.users'].create({
+            'name': 'Plain Internal User',
+            'login': 'plain_internal_bank_access',
+            'company_id': cls.env.company.id,
+            'company_ids': [(6, 0, cls.env.company.ids)],
+            'group_ids': [(6, 0, [cls.env.ref('base.group_user').id])],
+        })
+        cls.readonly_user = cls.env['res.users'].create({
+            'name': 'Read-Only Accountant',
+            'login': 'readonly_bank_access',
+            'company_id': cls.env.company.id,
+            'company_ids': [(6, 0, cls.env.company.ids)],
+            'group_ids': [(6, 0, [
+                cls.env.ref('base.group_user').id,
+                cls.env.ref('account.group_account_readonly').id,
+            ])],
+        })
+        cls.validator_user = cls.env['res.users'].create({
+            'name': 'Bank Validator',
+            'login': 'validator_bank_access',
+            'company_id': cls.env.company.id,
+            'company_ids': [(6, 0, cls.env.company.ids)],
+            'group_ids': [(6, 0, [
+                cls.env.ref('base.group_user').id,
+                cls.env.ref('account.group_validate_bank_account').id,
+            ])],
+        })
+
+        cls.company_bank = cls.env['res.partner.bank'].sudo().create({
+            'account_number': 'COMPANY-OWNED-0001',
+            'partner_id': cls.env.company.partner_id.id,
+        })
+        ordinary_partner = cls.env['res.partner'].sudo().create({
+            'name': 'Ordinary Partner',
+            'is_company': False,
+        })
+        cls.ordinary_bank = cls.env['res.partner.bank'].sudo().create({
+            'account_number': 'ORDINARY-0001',
+            'partner_id': ordinary_partner.id,
+        })
+
+    def test_read_company_bank_account_allowed(self):
+        bank = self.company_bank.with_user(self.plain_user)
+        self.assertEqual(bank.read(['account_number'])[0]['account_number'], 'COMPANY-OWNED-0001')
+
+    def test_read_ordinary_bank_account_denied(self):
+        bank = self.ordinary_bank.with_user(self.plain_user)
+        with self.assertRaises(AccessError):
+            bank.read(['account_number'])
+
+    def test_readonly_accountant_reads_ordinary_bank(self):
+        bank = self.ordinary_bank.with_user(self.readonly_user)
+        self.assertEqual(
+            bank.read(['account_number'])[0]['account_number'], 'ORDINARY-ACCT-0001',
+        )
+
+    def test_validator_reads_and_trusts_ordinary_bank(self):
+        bank = self.ordinary_bank.with_user(self.validator_user)
+        self.assertEqual(
+            bank.read(['account_number'])[0]['account_number'], 'ORDINARY-ACCT-0001',
+        )
+        bank.write({'allow_out_payment': True})
+        self.assertTrue(bank.allow_out_payment)
+
+    def test_readonly_accountant_cannot_trust(self):
+        bank = self.ordinary_bank.with_user(self.readonly_user)
+        with self.assertRaises(UserError):
+            bank.write({'allow_out_payment': True})
