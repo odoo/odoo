@@ -39,15 +39,16 @@ test("price of lot tracked product with and without pricelist", async () => {
 
     await addLotProduct("2");
     order.setOrderPrices();
-    expect(order.lines.length).toBe(1);
-    expect(order.lines[0].qty).toBe(2);
+    expect(order.lines.length).toBe(2);
+    expect(order.lines[1].qty).toBe(1);
     expect(order.amount_total).toBe(40);
 
     order.pricelist_id = false;
     await addLotProduct("3");
     order.setOrderPrices();
-    expect(order.lines.length).toBe(2);
-    expect(order.lines[0].qty).toBe(2);
+    expect(order.lines.length).toBe(3);
+    expect(order.lines[0].qty).toBe(1);
     expect(order.lines[1].qty).toBe(1);
+    expect(order.lines[2].qty).toBe(1);
     expect(order.amount_total).toBe(30);
 });
