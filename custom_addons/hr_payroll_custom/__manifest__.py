@@ -17,6 +17,7 @@ Custom Payroll Module
     'depends': [
         'hr',
         'mail',
+        'presenly'
     ],
     'data': [
         'security/payroll_security.xml',

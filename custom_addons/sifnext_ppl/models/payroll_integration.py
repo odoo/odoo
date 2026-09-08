@@ -13,11 +13,18 @@ class CustomPayrollBatch(models.Model):
             if batch.ppl_id:
                 raise UserError(_("Batch payroll ini sudah memiliki PPL."))
 
-            # Hitung total gaji bersih dari semua slip (Take Home Pay)
-            total_net = sum(slip.total_pendapatan for slip in batch.slip_ids)
+            # Buat baris PPL per pegawai
+            ppl_lines = []
+            for slip in batch.slip_ids:
+                if slip.total_pendapatan > 0:
+                    ppl_lines.append((0, 0, {
+                        'description': f"Gaji {slip.employee_id.name}",
+                        'quantity': 1,
+                        'unit_price': slip.total_pendapatan,
+                    }))
             
-            if total_net <= 0:
-                raise UserError(_("Total gaji bersih untuk batch ini adalah 0 atau negatif. Tidak dapat membuat PPL."))
+            if not ppl_lines:
+                raise UserError(_("Tidak ada slip gaji dengan nilai lebih dari 0 untuk dibuatkan PPL."))
 
             unit = self.env['sifnext.unit'].search([('company_id', '=', batch.company_id.id)], limit=1)
             # Buat dokumen PPL
@@ -26,12 +33,7 @@ class CustomPayrollBatch(models.Model):
                 'source_type': 'pegawai',
                 'unit_id': unit.id if unit else False,
                 'description': f"Tagihan Gaji untuk batch: {batch.name}",
-                'line_ids': [(0, 0, {
-                    'description': f"Total Gaji Bersih {batch.name}",
-                    'quantity': 1,
-                    'unit_price': total_net,
-                    # journal_account_id idealnya diisi akun 'Beban Gaji', tapi user bisa pilih nanti
-                })]
+                'line_ids': ppl_lines
             }
             ppl = self.env['sifnext.ppl'].sudo().create(ppl_vals)
             batch.ppl_id = ppl.id
