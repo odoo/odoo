@@ -21,12 +21,15 @@ class MixinStockReplenish(models.AbstractModel):
 
     @api.depends("product_id", "product_tmpl_id")
     def _compute_allowed_route_ids(self):
-        domain = self._get_domain_allowed_route()
-        route_ids = self.env["stock.route"].search(domain)
-        dbg.logic.debug(
-            "_compute_allowed_route_ids on %s: %s", dbg.rec(self), dbg.rec(route_ids)
-        )
-        self.allowed_route_ids = route_ids
+        for record in self:
+            domain = record._get_domain_allowed_route()
+            route_ids = self.env["stock.route"].search(domain)
+            dbg.logic.debug(
+                "_compute_allowed_route_ids on %s: %s",
+                dbg.rec(record),
+                dbg.rec(route_ids),
+            )
+            record.allowed_route_ids = route_ids
 
     def _get_domain_allowed_route(self):
         inter_company_location = self.env.ref(
