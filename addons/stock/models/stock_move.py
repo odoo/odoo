@@ -718,7 +718,9 @@ Please change the quantity done or the rounding precision in your settings.""",
                     new_ml_quantity = product.uom_id._compute_quantity(quantity_to_reserve, move_line.product_uom_id)
                     move_lines_commands.append(Command.create(move_line.copy_data({'quantity': new_ml_quantity, 'picked': move_line.picked})[0]))
                     extra_uom_qty -= quantity_to_reserve
+            existing_move_lines = move.move_line_ids
             move.write({'move_line_ids': move_lines_commands})
+            (move.move_line_ids - existing_move_lines)._apply_putaway_strategy()
         # When `quantity` is written in the same call as `lot_ids`, the
         # user-set value is kept and the recompute triggered by this
         # inverse rewriting `move_line_ids` does not override it. Force
