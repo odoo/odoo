@@ -16,6 +16,7 @@ export class MessagingMenuUIState extends Record {
             // No tab to show while the menu is still being filled up.
             this.selectedFilter = this.activeTab?.defaultFilter;
             this.pluginFilters = {};
+            this.searchTerm = "";
         },
     });
     /**
@@ -36,6 +37,7 @@ export class MessagingMenuUIState extends Record {
     pluginFilters = fields.Attr({}, { asProxy: true });
     /** @type {string} */
     id;
+    searchTerm = "";
     /**
      * Trigger for the initial tab content load. It recomputes whenever the tab/filter to
      * show changes, or when this state becomes ready to load (see `_isReadyForInitialLoad`).

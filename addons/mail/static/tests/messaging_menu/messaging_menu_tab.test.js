@@ -748,6 +748,9 @@ test("can search messages", async () => {
     await contains(".o-mail-MessagingMenuItem:has(:text('You: This is a message'))");
     await insertText(".o-mail-DiscussSearch input", "something different", { replace: true });
     await contains(".o-mail-MessagingMenuEmpty:text('No results for \"something different\".')");
+    // Switching tabs clears the search.
+    await click(`.o-mail-MessagingMenu-tab[data-id='${MENU_TABS.CHAT}']`);
+    await contains(".o-mail-DiscussSearch input", { value: "" });
 });
 
 test("push notification request stays on the chat tab regardless of user notification preference", async () => {
