@@ -13,6 +13,9 @@ class AccountChartTemplate(models.AbstractModel):
         return res
 
     def _l10n_ec_setup_location_accounts(self, companies):
+        if 'valuation_in_account_id' not in self.env['stock.location']._fields:
+            # stock_account is not installed, the valuation accounts don't exist on stock.location
+            return
         parent_location = self.env.ref('stock.stock_location_locations_virtual', raise_if_not_found=False)
         loss_locs = dict(self.env['stock.location']._read_group(domain=[('location_id', '=', parent_location.id), ('usage', '=', 'inventory'), ('scrap_location', '=', False)], groupby=['company_id', 'id'])) if parent_location else {}
         prod_locs = dict(self.env['stock.location']._read_group(domain=[('location_id', '=', parent_location.id), ('usage', '=', 'production'), ('scrap_location', '=', False)], groupby=['company_id', 'id'])) if parent_location else {}
