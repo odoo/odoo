@@ -38,14 +38,8 @@
         <div id="order_name" position="after">
             <t t-if="events">
                 <section class="card" t-foreach="events" t-as="event">
-                    <t
-                        t-set="attendees"
-                        t-value="attendee_ids_per_event.get(event, [])" />
                     <div
                         class="s_nb_column_fixed s_col_no_bgcolor o_wevent_index o_wevent_sale_event">
-                        <t
-                            t-set="opt_event_description_cover_top"
-                            t-value="is_view_active('website_event.opt_event_description_cover_top')" />
                         <t t-call="website.record_cover">
                             <t t-set="_record" t-value="event" />
                             <t t-set="use_filters" t-value="True" />
@@ -138,7 +132,7 @@
                                             <span t-if="website_visitor_timezone != event.date_tz" class="small">(<t t-out="event.date_tz" />)</span>
                                         </div>
                                     </div>
-                                    <div t-if="event_attendees[slot]">
+                                    <div>
                                         <t
                                             t-call="website_event.registration_ticket_access"
                                             attendees="event_attendees[slot]" />
