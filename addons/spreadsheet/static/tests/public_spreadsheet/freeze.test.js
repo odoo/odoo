@@ -20,7 +20,7 @@ import {
 import { createSpreadsheetWithPivot } from "@spreadsheet/../tests/helpers/pivot";
 import { freezeOdooData, waitForDataLoaded } from "@spreadsheet/helpers/model";
 import { OdooPivot, OdooPivotRuntimeDefinition } from "@spreadsheet/pivot/odoo_pivot";
-import { assignTestEnv, getMockEnv } from "@web/../tests/web_test_helpers";
+import { getMockEnv } from "@web/../tests/web_test_helpers";
 
 const { pivotRegistry } = registries;
 
@@ -360,9 +360,6 @@ test("Lists are purged from the frozen data", async function () {
 });
 
 test("Cannot copy in frozen spreadsheets", async function () {
-    assignTestEnv({
-        isFrozenSpreadsheet: () => true,
-    });
     await makeSpreadsheetMockEnv();
     const env = getMockEnv();
     const model = new Model(
@@ -370,7 +367,7 @@ test("Cannot copy in frozen spreadsheets", async function () {
         {
             custom: {
                 env,
-                isFrozenSpreadsheet: true,
+                isPublicSpreadsheet: true,
             },
         }
     );

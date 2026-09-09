@@ -7,19 +7,19 @@ import * as spreadsheet from "@odoo/o-spreadsheet";
 const { cellMenuRegistry, topbarMenuRegistry, colMenuRegistry, rowMenuRegistry } =
     spreadsheet.registries;
 
-cellMenuRegistry.get("copy").isEnabled = (env) => !env.isFrozenSpreadsheet?.();
+cellMenuRegistry.get("copy").isEnabled = (env) => !env.isPublicSpreadsheet?.();
 
-colMenuRegistry.get("copy").isEnabled = (env) => !env.isFrozenSpreadsheet?.();
+colMenuRegistry.get("copy").isEnabled = (env) => !env.isPublicSpreadsheet?.();
 
-rowMenuRegistry.get("copy").isEnabled = (env) => !env.isFrozenSpreadsheet?.();
+rowMenuRegistry.get("copy").isEnabled = (env) => !env.isPublicSpreadsheet?.();
 
 topbarMenuRegistry.get("edit").children.filter((c) => c.id === "copy")[0].isEnabled = (env) =>
-    !env.isFrozenSpreadsheet?.();
+    !env.isPublicSpreadsheet?.();
 
 export class LoggingUIPlugin extends OdooUIPlugin {
     constructor(config) {
         super(config);
-        this.isFrozenSpreadsheet = config.custom.isFrozenSpreadsheet;
+        this.isPublicSpreadsheet = config.custom.isPublicSpreadsheet;
     }
 
     async log(type, datasources) {
@@ -32,7 +32,7 @@ export class LoggingUIPlugin extends OdooUIPlugin {
     }
 
     allowDispatch(cmd) {
-        if (cmd.type === "COPY" && this.isFrozenSpreadsheet) {
+        if (cmd.type === "COPY" && this.isPublicSpreadsheet) {
             return CommandResult.Readonly;
         }
         return CommandResult.Success;
