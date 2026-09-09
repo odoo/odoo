@@ -88,3 +88,66 @@ class TestDeliveryCost(common.TransactionCase):
         new_delivery_line = so.line_ids.filtered("is_delivery") - delivery_line
         self.assertEqual(len(new_delivery_line), 1)
         self.assertEqual(new_delivery_line.price_unit, bo.carrier_price)
+
+    def test_get_packages_from_order_splits_commodities_without_aliasing(self):
+        partner = self.env["res.partner"].create({"name": "Customs Test Customer"})
+        product = self.env["product.product"].create(
+            {"name": "Consumable widget", "type": "consu", "weight": 1.0}
+        )
+        product_delivery = self.env["product.product"].create(
+            {
+                "name": "Delivery Charges",
+                "type": "service",
+                "categ_id": self.env.ref("delivery.product_category_deliveries").id,
+            }
+        )
+        delivery_carrier = self.env["delivery.carrier"].create(
+            {
+                "name": "Test Carrier",
+                "fixed_price": 10,
+                "delivery_type": "fixed",
+                "product_id": product_delivery.id,
+            }
+        )
+        package_type = self.env["stock.package.type"].create(
+            {"name": "Small Box", "max_weight": 1.0, "base_weight": 0.0}
+        )
+        so = self.env["sale.order"].create(
+            {
+                "partner_id": partner.id,
+                "line_ids": [
+                    (
+                        0,
+                        0,
+                        {
+                            "name": "Consumable widget",
+                            "product_id": product.id,
+                            "product_qty": 5,
+                            "price_unit": 10.0,
+                        },
+                    )
+                ],
+            }
+        )
+
+        packages = delivery_carrier._get_packages_from_order(so, package_type)
+
+        self.assertEqual(
+            len(packages), 5, "5kg of stock at 1kg/package should need 5 packages"
+        )
+        total_qty = sum(
+            commodity.qty for package in packages for commodity in package.commodities
+        )
+        self.assertEqual(
+            total_qty,
+            5,
+            "the commodity quantities across all packages must add up to the "
+            "order's true total, not be floor-divided down",
+        )
+        packages[0].commodities[0].qty = 999
+        self.assertNotEqual(
+            packages[1].commodities[0].qty,
+            999,
+            "each package must get its own commodity objects, not share the same "
+            "ones across packages",
+        )
