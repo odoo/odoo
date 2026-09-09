@@ -332,13 +332,13 @@
         />
         <t t-set="CtaBoxedViews" t-value="['website_sale.cta_wrapper_boxed']"/>
         <BuilderSelect action="'websiteConfig'" id="'o_wsale_product_cta_style'">
-            <BuilderSelectItem id="'cta_default_opt'" actionParam="{ views: [] }">
+            <BuilderSelectItem id="cta_default_opt" actionParam="{ views: [] }">
                 <em>Default</em>
             </BuilderSelectItem>
-            <BuilderSelectItem id="'cta_boxed_opt'" actionParam="{ views: CtaBoxedViews }">
+            <BuilderSelectItem id="cta_boxed_opt" actionParam="{ views: CtaBoxedViews }">
                 Boxed
             </BuilderSelectItem>
-            <BuilderSelectItem id="'cta_large_opt'" actionParam="{ views: CtaLargeViews }">
+            <BuilderSelectItem id="cta_large_opt" actionParam="{ views: CtaLargeViews }">
                 Large
             </BuilderSelectItem>
         </BuilderSelect>
