@@ -8,6 +8,6 @@ class ResGroups(models.Model):
         write_res = super().write(vals)
         if vals.get("user_ids"):
             self.env["slide.channel"].sudo().search(
-                [("enroll_group_ids", "in", self._ids)]
+                [("enroll_group_ids", "in", self.mapped("all_implied_ids").ids)]
             )._add_groups_members()
         return write_res
