@@ -807,7 +807,7 @@ class HrAttendance(models.Model):
         to_verify = self.env['hr.attendance'].search(
             [('check_out', '=', False),
              ('employee_id.company_id.auto_check_out', '=', True),
-             ('employee_id.resource_calendar_id.flexible_hours', '=', False)]
+            ]
         )
 
         if not to_verify:

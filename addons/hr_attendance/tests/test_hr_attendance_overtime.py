@@ -450,9 +450,7 @@ class TestHrAttendanceOvertime(TransactionCase):
         self.assertEqual(attendance_utc_pending_within_allotted_hours.check_out, False)
         self.assertEqual(attendance_utc_done.check_out, datetime(2024, 2, 1, 17, 0))
         self.assertEqual(attendance_jpn_pending.check_out, datetime(2024, 2, 1, 21, 0))
-
-        # Employee with flexible working schedule should not be checked out
-        self.assertEqual(attendance_flexible_pending.check_out, False)
+        self.assertEqual(attendance_flexible_pending.check_out, datetime(2024, 2, 1, 21, 0))
 
     @freeze_time("2024-02-1 23:00:00")
     def test_auto_check_out_more_one_day_delta(self):
