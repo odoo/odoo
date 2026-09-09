@@ -46,9 +46,11 @@ class AccountMove(models.Model):
                             {
                                 "product_id": l.product_id.id,
                                 "name": l.product_id.name,
-                                "account_id": l.product_id.product_tmpl_id._get_product_accounts()[
-                                    "stock_valuation"
-                                ].id,
+                                "account_id": l.product_id.product_tmpl_id.with_company(
+                                    self.company_id
+                                )
+                                ._get_product_accounts()["stock_valuation"]
+                                .id,
                                 "price_unit": sign
                                 * l.currency_id._convert(
                                     l.price_subtotal,
