@@ -1,3 +1,4 @@
+import base64
 import hashlib
 import json
 import logging
@@ -148,6 +149,14 @@ class L10nEsEdiVerifactuDocument(models.Model):
         string="XML Filename",
         compute='_compute_xml_attachment',
     )
+    debug_json_raw = fields.Binary(
+        string="Debug JSON",
+        compute='_compute_debug_json'
+    )
+    debug_json_filename = fields.Char(
+        string="Debug JSON Filename",
+        compute='_compute_debug_json'
+    )
     errors = fields.Html(
         string="Errors",
         copy=False,
@@ -193,6 +202,28 @@ class L10nEsEdiVerifactuDocument(models.Model):
             document_type = 'anulacion' if document.document_type == 'cancellation' else 'alta'
             name = f"verifactu_registro_{document.chain_index}_{document_type}.json"
             document.json_attachment_filename = name
+
+    def _compute_debug_json(self):
+        for document in self:
+            document_type = 'anulacion' if document.document_type == 'cancellation' else 'alta'
+            document.debug_json_filename = f"verifactu_debug_{document_type}.json"
+            if document.chain_index or not document.errors or not document.move_id:
+                document.debug_json_raw = False
+                continue
+            render_vals = None
+            try:
+                record_values = document.move_id._l10n_es_edi_verifactu_get_record_values(
+                    cancellation=document.document_type == 'cancellation',
+                )
+                render_vals = self._render_vals(record_values, debug=True)
+            except Exception:  # noqa: BLE001
+                _logger.info("Could not generate debug JSON for Veri*Factu document %s", document.id)
+
+            if not render_vals:
+                document.debug_json_raw = False
+                continue
+            document_dict = {render_vals['record_type']: render_vals[render_vals['record_type']]}
+            document.debug_json_raw = base64.b64encode(json.dumps(document_dict, indent=4).encode('utf-8')).decode()
 
     @api.ondelete(at_uninstall=False)
     def _never_unlink_chained_documents(self):
@@ -460,6 +491,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
             render_vals = self._render_vals(
                 record_values, previous_record_identifier=previous_document._get_record_identifier(),
             )
+            self._update_render_vals_with_chaining_info(render_vals)
             document_dict = {render_vals['record_type']: render_vals[render_vals['record_type']]}
 
             # We check whether zeep can generate a valid XML (according to the information from the WSDL / XSD)
@@ -547,7 +579,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
         return float_repr(rounded, precision_digits=2)
 
     @api.model
-    def _render_vals(self, vals, previous_record_identifier=None):
+    def _render_vals(self, vals, previous_record_identifier=None, debug=False):
         def remove_None_and_False(value):
             # Remove `None` and `False` from dictionaries
             if isinstance(value, dict):
@@ -581,9 +613,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
             **self._render_vals_monetary_amounts(vals),
             **self._render_vals_SistemaInformatico(vals),
         }
-        render_vals[record_type] = remove_None_and_False(record_type_vals)
-
-        self._update_render_vals_with_chaining_info(render_vals)
+        render_vals[record_type] = record_type_vals if debug else remove_None_and_False(record_type_vals)
 
         return render_vals
 
@@ -595,7 +625,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
         if vals['cancellation']:
             render_vals = {
                 'IDFactura': {
-                    'IDEmisorFacturaAnulada': (vals['record'].partner_id._l10n_es_edi_verifactu_get_values()['NIF'] if vals.get('is_self_billing') else company_values['NIF']),
+                    'IDEmisorFacturaAnulada': (vals['record'].partner_id._l10n_es_edi_verifactu_get_values()['NIF'] if vals.get('is_self_billing') else company_values.get('NIF')),
                     'NumSerieFacturaAnulada': vals['name'],
                     'FechaExpedicionFacturaAnulada': invoice_date,
                 }
@@ -614,14 +644,13 @@ class L10nEsEdiVerifactuDocument(models.Model):
             }
         else:
             render_vals = {
-                'NombreRazonEmisor': company_values['NombreRazon'],
+                'NombreRazonEmisor': company_values.get('NombreRazon'),
                 'IDFactura': {
-                    'IDEmisorFactura': company_values['NIF'],
+                    'IDEmisorFactura': company_values.get('NIF'),
                     'NumSerieFactura': vals['name'],
                     'FechaExpedicionFactura': invoice_date,
                 }
             }
-
         rectified_document = vals['refunded_document'] or vals['substituted_document']
         if vals['verifactu_move_type'] == 'invoice':
             tipo_rectificativa = None
@@ -635,29 +664,30 @@ class L10nEsEdiVerifactuDocument(models.Model):
         elif vals['verifactu_move_type'] == 'correction_substitution':
             tipo_rectificativa = 'S'
             tipo_factura = vals['refund_reason']
-            rectified = rectified_document._get_record_identifier()
-            fecha_operacion = rectified['FechaOperacion'] or rectified['FechaExpedicionFactura']
+            rectified = rectified_document._get_record_identifier() or {}
+            fecha_operacion = rectified.get('FechaOperacion') or rectified.get('FechaExpedicionFactura')
         else:
             # vals['verifactu_move_type'] == 'correction_incremental':
             tipo_rectificativa = 'I'
             tipo_factura = vals['refund_reason']
-            rectified = rectified_document._get_record_identifier()
-            fecha_operacion = rectified['FechaOperacion'] or rectified['FechaExpedicionFactura']
+            rectified = rectified_document._get_record_identifier() or {}
+            fecha_operacion = rectified.get('FechaOperacion') or rectified.get('FechaExpedicionFactura')
 
         # Note: Error [1189]
         # Si TipoFactura es F1 o F3 o R1 o R2 o R3 o R4 el bloque Destinatarios tiene que estar cumplimentado.
 
         if not vals['is_simplified']:
             if not vals.get('is_self_billing'):
-                render_vals['Destinatarios'] = {
-                    'IDDestinatario': [vals['partner']._l10n_es_edi_verifactu_get_values()]
-                }
+                if vals['partner']:
+                    render_vals['Destinatarios'] = {
+                        'IDDestinatario': [vals['partner']._l10n_es_edi_verifactu_get_values()]
+                    }
             else:
                 render_vals['EmitidaPorTerceroODestinatario'] = 'D'
                 render_vals['Destinatarios'] = {
                     'IDDestinatario': {
-                        'NIF': company_values['NIF'],
-                        'NombreRazon': company_values['NombreRazon']
+                        'NIF': company_values.get('NIF'),
+                        'NombreRazon': company_values.get('NombreRazon')
                     }
                 }
 
@@ -669,11 +699,11 @@ class L10nEsEdiVerifactuDocument(models.Model):
         })
 
         if vals['verifactu_move_type'] in ('correction_incremental', 'correction_substitution'):
-            rectified_record_identifier = rectified_document._get_record_identifier()
+            rectified_record_identifier = rectified_document._get_record_identifier() or {}
             render_vals.update({
                 'FacturasRectificadas': [{
                     'IDFacturaRectificada': {
-                        key: rectified_record_identifier[key]
+                        key: rectified_record_identifier.get(key)
                         for key in ['IDEmisorFactura', 'NumSerieFactura', 'FechaExpedicionFactura']
                     }
                 }],
@@ -1316,5 +1346,13 @@ class L10nEsEdiVerifactuDocument(models.Model):
         return {
             'type': 'ir.actions.act_url',
             'url': f'/web/content/{self._name}/{self.id}/xml_attachment_raw/{self.xml_attachment_filename}?download=true',
+            'target': 'self',
+        }
+
+    def action_download_debug_json(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_url',
+            'url': f'/web/content/{self._name}/{self.id}/debug_json_raw/{self.debug_json_filename}?download=true',
             'target': 'self',
         }
