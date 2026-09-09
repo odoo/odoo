@@ -22,7 +22,6 @@ export const DEFAULT_FILTERS = ["sales"];
 
 export class Dashboard extends Component {
     static template = "sale.Dashboard";
-    static props = {};
     static components = { DateFilterButton };
 
     get cardFiltersMapping() {

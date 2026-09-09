@@ -11,16 +11,16 @@
             <attribute name="class" remove="h4" add="h5" separator=" "/>
         </span>
         <button name="sale_combo_configurator_confirm_button" position="attributes">
-            <attribute name="t-if">!this.props.isFrontend</attribute>
+            <attribute name="t-if">!this.websiteSaleProps.isFrontend</attribute>
         </button>
         <button name="sale_combo_configurator_cancel_button" position="attributes">
-            <attribute name="t-if">!this.props.isFrontend</attribute>
+            <attribute name="t-if">!this.websiteSaleProps.isFrontend</attribute>
         </button>
         <button name="sale_combo_configurator_confirm_button" position="after">
             <button
                 name="website_sale_combo_configurator_continue_button"
                 class="btn btn-primary w-100 w-lg-auto"
-                t-if="this.props.isFrontend and !this.props.options.isBuyNow"
+                t-if="this.websiteSaleProps.isFrontend and !this.websiteSaleProps.options.isBuyNow"
                 t-on-click="() => this.confirm({goToCart: false})"
                 t-att-disabled="!this.areAllCombosSelected"
             >
@@ -30,7 +30,7 @@
             <button
                 name="website_sale_combo_configurator_checkout_button"
                 class="btn btn-outline-primary w-100 w-lg-auto"
-                t-if="this.props.isFrontend"
+                t-if="this.websiteSaleProps.isFrontend"
                 t-on-click="() => this.confirm({goToCart: true})"
                 t-att-disabled="!this.areAllCombosSelected"
             >

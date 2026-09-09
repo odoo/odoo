@@ -1,5 +1,5 @@
 import { useSubEnv } from "@web/owl2/utils";
-import { Component, onMounted, onWillUnmount, proxy } from '@odoo/owl';
+import { Component, onMounted, onWillUnmount, proxy, t, useProps } from '@odoo/owl';
 import { formatCurrency } from '@web/core/currency';
 import { Dialog } from '@web/core/dialog/dialog';
 import { _t } from '@web/core/l10n/translation';
@@ -16,31 +16,30 @@ import { QuantityButtons } from '../quantity_buttons/quantity_buttons';
 export class ComboConfiguratorDialog extends Component {
     static template = 'sale.ComboConfiguratorDialog';
     static components = { Dialog, ProductCard, QuantityButtons };
-    static props = {
-        product_tmpl_id: Number,
-        display_name: String,
-        quantity: Number,
-        price: Number,
-        combos: { type: Array, element: ProductCombo },
-        currency_id: Number,
-        company_id: { type: Number, optional: true },
-        pricelist_id: { type: Number, optional: true },
-        date: String,
-        price_info: { type: String, optional: true },
-        edit: { type: Boolean, optional: true },
-        options: {
-            type: Object,
-            optional: true,
-            shape: {
-                showQuantity : { type: Boolean, optional: true },
-                showPrice : { type: Boolean, optional: true },
-            },
-        },
-        save: Function,
-        discard: Function,
-        deleteRecord: { type: Function, optional: true },
-        close: Function,
-    };
+
+    props = useProps({
+        product_tmpl_id: t.number(),
+        display_name: t.string(),
+        quantity: t.number(),
+        price: t.number(),
+        combos: t.array(t.instanceOf(ProductCombo)),
+        currency_id: t.number(),
+        company_id: t.number().optional(),
+        pricelist_id: t.number().optional(),
+        date: t.string(),
+        price_info: t.string().optional(),
+        edit: t.boolean().optional(),
+        options: t
+            .object({
+                showQuantity: t.boolean().optional(),
+                showPrice: t.boolean().optional(),
+            })
+            .optional(),
+        save: t.function(),
+        discard: t.function(),
+        deleteRecord: t.function().optional(),
+        close: t.function(),
+    });
 
     setup() {
         this.dialog = useService('dialog');

@@ -7,46 +7,44 @@ import { ProductList } from "../product_list/product_list";
 import { formatCurrency } from '@web/core/currency';
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 
-export const productConfiguratorDialogOptionsShape = {
-    canChangeVariant: t.boolean().optional(),
-    showQuantity: t.boolean().optional(),
-    showPrice: t.boolean().optional(),
-};
-
-export const productConfiguratorDialogProps = {
-    productTemplateId: t.number(),
-    products: t.array(),
-    optionalProducts: t.array(),
-    customPtavs: t.array(
-        t.object({
-            id: t.number(),
-            value: t.string(),
-        })
-    ),
-    companyId: t.number().optional(),
-    pricelistId: t.number().optional(),
-    currencyId: t.number().optional(),
-    selectedComboItems: t
-        .array(
-            t.object({
-                name: t.string(),
-            })
-        )
-        .optional(),
-    soDate: t.string(),
-    size: t.selection(["sm", "md", "lg", "xl", "fs", "fullscreen"]).optional(),
-    edit: t.boolean().optional(false),
-    options: t.object(productConfiguratorDialogOptionsShape).optional(),
-    save: t.function(),
-    discard: t.function(),
-    close: t.function(), // This is the close from the env of the Dialog Component
-};
-
 export class ProductConfiguratorDialog extends Component {
     static components = { Dialog, ProductList};
     static template = 'sale.ProductConfiguratorDialog';
-    static props = productConfiguratorDialogProps;
-    props = useProps(this.constructor.props);
+
+    props = useProps({
+        productTemplateId: t.number(),
+        products: t.array(),
+        optionalProducts: t.array(),
+        customPtavs: t.array(
+            t.object({
+                id: t.number(),
+                value: t.string(),
+            })
+        ),
+        companyId: t.number().optional(),
+        pricelistId: t.number().optional(),
+        currencyId: t.number().optional(),
+        selectedComboItems: t
+            .array(
+                t.object({
+                    name: t.string(),
+                })
+            )
+            .optional(),
+        soDate: t.string(),
+        size: t.selection(["sm", "md", "lg", "xl", "fs", "fullscreen"]).optional(),
+        edit: t.boolean().optional(false),
+        options: t
+            .object({
+                canChangeVariant: t.boolean().optional(),
+                showQuantity: t.boolean().optional(),
+                showPrice: t.boolean().optional(),
+            })
+            .optional(),
+        save: t.function(),
+        discard: t.function(),
+        close: t.function(), // This is the close from the env of the Dialog Component
+    });
 
     setup() {
         this.title = _t("Configure your product");

@@ -1,17 +1,17 @@
-import { Component } from '@odoo/owl';
+import { Component, t, useProps } from '@odoo/owl';
 import { BadgeExtraPrice } from '../badge_extra_price/badge_extra_price';
 import { ProductProduct } from '../models/product_product';
 
 export class ProductCard extends Component {
     static template = 'sale.ProductCard';
     static components = { BadgeExtraPrice };
-    static props = {
-        product: ProductProduct,
-        extraPrice: { type: Number, optional: true },
-        onClick: Function,
-        isSelected: { type: Boolean, optional: true },
-        isConfigurable: { type: Boolean, optional: true }
-    };
+    props = useProps({
+        product: t.instanceOf(ProductProduct),
+        extraPrice: t.number().optional(),
+        onClick: t.function(),
+        isSelected: t.boolean().optional(),
+        isConfigurable: t.boolean().optional(),
+    });
 
     /**
      * Check whether the provided PTAL should be shown in this card.

@@ -1,37 +1,35 @@
+import { t, useProps } from "@odoo/owl";
+import { ProductConfiguratorDialog } from "@sale/js/product_configurator_dialog/product_configurator_dialog";
+import { _t } from "@web/core/l10n/translation";
+import { patch } from "@web/core/utils/patch";
 import { useSubEnv } from "@web/owl2/utils";
-import { t } from "@odoo/owl";
-import {
-    ProductConfiguratorDialog,
-    productConfiguratorDialogOptionsShape,
-    productConfiguratorDialogProps,
-} from '@sale/js/product_configurator_dialog/product_configurator_dialog';
-import { _t } from '@web/core/l10n/translation';
-import { patch } from '@web/core/utils/patch';
-
-Object.assign(productConfiguratorDialogOptionsShape, {
-    isMainProductConfigurable: t.boolean().optional(),
-    isBuyNow: t.boolean().optional(),
-});
-Object.assign(productConfiguratorDialogProps, {
-    isFrontend: t.boolean().optional(),
-    // Rebuild the `options` entry so that it picks up the extended shape.
-    options: t.object(productConfiguratorDialogOptionsShape).optional(),
-});
 
 patch(ProductConfiguratorDialog.prototype, {
     setup() {
-        super.setup(...arguments);
+        super.setup();
 
-        if (this.props.isFrontend) {
-            this.createProductUrl = '/website_sale/product_configurator/create_product';
-            this.updateCombinationUrl = '/website_sale/product_configurator/update_combination';
-            this.getOptionalProductsUrl = '/website_sale/product_configurator/get_optional_products';
+        this.websiteSaleProps = useProps({
+            isFrontend: t.boolean().optional(),
+            options: t
+                .object({
+                    isMainProductConfigurable: t.boolean().optional(),
+                    isBuyNow: t.boolean().optional(),
+                })
+                .optional(),
+        });
+
+        if (this.websiteSaleProps.isFrontend) {
+            this.createProductUrl = "/website_sale/product_configurator/create_product";
+            this.updateCombinationUrl = "/website_sale/product_configurator/update_combination";
+            this.getOptionalProductsUrl =
+                "/website_sale/product_configurator/get_optional_products";
             this.title = _t("Configure");
         }
 
         useSubEnv({
-            isFrontend: this.props.isFrontend,
-            isMainProductConfigurable: this.props.options?.isMainProductConfigurable ?? true,
+            isFrontend: this.websiteSaleProps.isFrontend,
+            isMainProductConfigurable:
+                this.websiteSaleProps.options?.isMainProductConfigurable ?? true,
             isQuantityAllowed: this._isQuantityInStock.bind(this),
         });
     },
@@ -44,7 +42,7 @@ patch(ProductConfiguratorDialog.prototype, {
         if (!this._isQuantityInStock(product, quantity)) {
             quantity = product.free_qty;
         }
-        return super._setQuantity(productTmplId, quantity)
+        return super._setQuantity(productTmplId, quantity);
     },
 
     /**
@@ -53,7 +51,9 @@ patch(ProductConfiguratorDialog.prototype, {
      * @return {Boolean} - Whether all selected products can be sold.
      */
     canBeSold() {
-        return this.state.products.every(p => p.can_be_sold && this._isQuantityInStock(p, p.quantity));
+        return this.state.products.every(
+            (p) => p.can_be_sold && this._isQuantityInStock(p, p.quantity)
+        );
     },
 
     /**
@@ -62,12 +62,12 @@ patch(ProductConfiguratorDialog.prototype, {
      * @return {Boolean} - Whether to show the "shop" buttons in the dialog footer.
      */
     showShopButtons() {
-        return this.props.isFrontend && !this.props.edit;
+        return this.websiteSaleProps.isFrontend && !this.props.edit;
     },
 
     _handleUnitOfMeasureUpdate(product, combination, uomId) {
         super._handleUnitOfMeasureUpdate(...arguments);
-        if (this.props.isFrontend && combination.strikethrough_price) {
+        if (this.websiteSaleProps.isFrontend && combination.strikethrough_price) {
             product.strikethrough_price = parseFloat(combination.strikethrough_price);
         }
     },
@@ -95,5 +95,4 @@ patch(ProductConfiguratorDialog.prototype, {
         // optional `free_qty`), so the presence of the key can't be used to detect stock tracking.
         return product.free_qty === undefined || product.free_qty >= quantity;
     },
-
 });

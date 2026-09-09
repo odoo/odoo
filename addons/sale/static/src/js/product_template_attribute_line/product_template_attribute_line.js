@@ -1,5 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { formatCurrency } from "@web/core/currency";
 import { BadgeExtraPrice } from "../badge_extra_price/badge_extra_price";
 import { getSelectedCustomPtav } from "../sale_utils";
@@ -7,43 +7,36 @@ import { getSelectedCustomPtav } from "../sale_utils";
 export class ProductTemplateAttributeLine extends Component {
     static components = { BadgeExtraPrice };
     static template = "sale.ProductTemplateAttributeLine";
-    static props = {
-        productTmplId: Number,
-        id: Number,
-        attribute: {
-            type: Object,
-            shape: {
-                id: Number,
-                name: String,
-                display_type: {
-                    type: String,
-                    validate: type => ["color", "multi", "pills", "radio", "select", "image"].includes(type),
-                },
-            },
-        },
-        attribute_values: {
-            type: Array,
-            element: {
-                type: Object,
-                shape: {
-                    id: Number,
-                    name: String,
-                    html_color: [Boolean, String], // backend sends 'false' when there is no color
-                    image: [Boolean, String], // backend sends 'false' when there is no image set
-                    is_custom: Boolean,
-                    price_extra: Number,
-                    excluded: { type: Boolean, optional: true },
-                },
-            },
-        },
-        selected_attribute_value_ids: { type: Array, element: Number },
-        create_variant: {
-            type: String,
-            validate: type => ["always", "dynamic", "no_variant"].includes(type),
-        },
-        customValue: {type: [{value: false}, String], optional: true},
-        show_extra_price: { type: Boolean },
-    };
+    props = useProps({
+        productTmplId: t.number(),
+        id: t.number(),
+        attribute: t.object({
+            id: t.number(),
+            name: t.string(),
+            display_type: t.customValidator(
+                t.string(),
+                (type) => ["color", "multi", "pills", "radio", "select", "image"].includes(type)
+            ),
+        }),
+        attribute_values: t.array(
+            t.object({
+                id: t.number(),
+                name: t.string(),
+                html_color: t.or([t.boolean(), t.string()]), // backend sends 'false' when there is no color
+                image: t.or([t.boolean(), t.string()]), // backend sends 'false' when there is no image set
+                is_custom: t.boolean(),
+                price_extra: t.number(),
+                excluded: t.boolean().optional(),
+            })
+        ),
+        selected_attribute_value_ids: t.array(t.number()),
+        create_variant: t.customValidator(
+            t.string(),
+            (type) => ["always", "dynamic", "no_variant"].includes(type)
+        ),
+        customValue: t.or([t.literal(false), t.string()]).optional(),
+        show_extra_price: t.boolean(),
+    });
 
     //--------------------------------------------------------------------------
     // Handlers

@@ -1,4 +1,4 @@
-import { Component, onWillStart, proxy } from "@odoo/owl";
+import { Component, onWillStart, proxy, t, useProps } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { WarningDialog } from "@web/core/errors/error_dialogs";
 import { useService } from "@web/core/utils/hooks";
@@ -12,11 +12,11 @@ import { QuantityButtons } from "@sale/js/quantity_buttons/quantity_buttons";
 export class ReturnOrderDialog extends Component {
     static components = { Dialog, WarningDialog, QuantityButtons };
     static template = "sale_stock.ReturnOrderDialog";
-    static props = {
-        saleOrderId: Number,
-        accessToken: String,
-        close: Function,
-    };
+    props = useProps({
+        saleOrderId: t.number(),
+        accessToken: t.string(),
+        close: t.function(),
+    });
 
     setup() {
         this.dialog = useService("dialog");
