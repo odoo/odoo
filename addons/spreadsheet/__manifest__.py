@@ -43,6 +43,7 @@
             'web/static/src/core/commands/command_hook.js',
             'web/static/src/webclient/menus/menu_helpers.js',
             ('remove', 'spreadsheet/static/src/ir_ui_menu/spreadsheet_link_service.js'),
+            ('remove', 'spreadsheet/static/src/chart/odoo_link/components/*'),
             'spreadsheet/static/src/o_spreadsheet/o_spreadsheet.css',
             'spreadsheet/static/src/**/*.scss',
             'spreadsheet/static/src/public_spreadsheet/**/*',
