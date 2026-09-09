@@ -9,7 +9,18 @@
         min-height: 0;
         .o_popover_body {
             min-height: 0;
+            
+            > .o_card_record > * > .oi-fw {
+                flex: 0 0 auto;
+                align-self: start;
+                line-height: $line-height-base;
+                text-align: start;
+            }
         }
+    }
+
+    > .o_card_popover_close {
+        margin: map-get($spacers, 3) map-get($spacers, 2);
     }
 
     .o_field_widget:not(.o_field_properties) {
@@ -61,6 +72,8 @@ $o-web-calendar-colors: o-build-web-calendar-colors();
             --#{$variable-prefix}card-border-color: #{map-get($-calendar-colors-map, "color-subtle")};
             background-color: map-get($-calendar-colors-map, "popover-background-color");
             color: map-get($-calendar-colors-map, "popover-color");
+            border-top-left-radius: calc(var(--popover-border-radius) - var(--border-width));
+            border-top-right-radius: calc(var(--popover-border-radius) - var(--border-width));
         }
     }
 }
