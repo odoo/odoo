@@ -4199,3 +4199,46 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             # Second level is used for this accrual
             ('2026-04-01', number_of_days := number_of_days + 2, date(2026, 5, 1)),
         ))
+
+    @freeze_time('2026-09-01')
+    def test_accrual_allocation_from_working_schedule(self):
+        attendances = []
+        for index in range(5):
+            attendances.append((0, 0, {
+                'hour_from': 8,
+                'hour_to': 12,
+                'dayofweek': str(index),
+            }))
+            attendances.append((0, 0, {
+                'hour_from': 13,
+                'hour_to': 18,
+                'dayofweek': str(index),
+            }))
+        calendar_emp = self.env['resource.calendar'].create({
+            'name': '45 Hours',
+            'attendance_ids': attendances,
+            'leave_accrual_plan_id': self.accrual_plan_monthly_end.id,
+        })
+        test_employee = self.env['hr.employee'].create({
+            'name': 'John Doe',
+            'date_version': '2026-01-01',
+            'contract_date_start': '2026-01-01',
+            'resource_calendar_id': calendar_emp.id,
+        })
+        created_allocation = self.env['hr.leave.allocation'].search([
+            ('employee_id', '=', test_employee.id),
+        ])
+        self.assertEqual(len(created_allocation), 1, "An accrual allocation should be created for the employee based on their working schedule.")
+        self.assertEqual(created_allocation.accrual_plan_id, self.accrual_plan_monthly_end)
+        self.assertEqual(created_allocation.number_of_days, 17)
+        self.assertEqual(created_allocation.date_to, False)
+
+        test_employee.contract_date_end = '2026-08-31'
+        test_employee.create_version({
+            'date_version': '2026-09-01',
+        })
+        self.assertEqual(created_allocation.date_to, datetime.date(2026, 8, 31))
+        created_allocation = self.env['hr.leave.allocation'].search([
+            ('employee_id', '=', test_employee.id),
+        ])
+        self.assertEqual(len(created_allocation), 2, "Another accrual allocation should be created for the employee based on their working schedule.")
