@@ -210,7 +210,6 @@ export class ColorPlugin extends Plugin {
                     this.activeColorInfo[mode] = "";
                 }
             }
-            this.skipNextColorClear = true;
             this.trigger("on_color_requested_handlers");
             return;
         }
@@ -265,7 +264,6 @@ export class ColorPlugin extends Plugin {
             } else {
                 this.activeColorInfo[mode] = color;
             }
-            this.skipNextColorClear = true;
             this.trigger("on_color_requested_handlers");
             return;
         }
