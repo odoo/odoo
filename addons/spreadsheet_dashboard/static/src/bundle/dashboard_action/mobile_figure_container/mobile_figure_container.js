@@ -1,6 +1,7 @@
-import { useSubEnv, render } from "@web/owl2/utils";
 import * as spreadsheet from "@odoo/o-spreadsheet";
-import { Component, onMounted, onWillUnmount, signal } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, signal, t, useProps } from "@odoo/owl";
+import { render, useSubEnv } from "@web/owl2/utils";
+
 const { registries, stores, constants, helpers } = spreadsheet;
 const { figureRegistry } = registries;
 const { ModelStore, useStoreProvider } = stores;
@@ -11,9 +12,9 @@ const { DARK_MODE_FILTER_STRING } = constants;
 
 export class MobileFigureContainer extends Component {
     static template = "documents_spreadsheet.MobileFigureContainer";
-    static props = {
-        spreadsheetModel: Object,
-    };
+    props = useProps({
+        spreadsheetModel: t.object(),
+    });
 
     figureContainer = signal.ref();
     containerWidth = signal(0);

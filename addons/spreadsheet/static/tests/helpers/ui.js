@@ -3,7 +3,7 @@ import { loadBundle } from "@web/core/assets";
 
 import { getFixture } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, xml, onMounted, onWillUnmount } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, t, useProps, xml } from "@odoo/owl";
 import { useSpreadsheetNotificationStore } from "@spreadsheet/hooks";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { MainComponentsContainer } from "@web/core/main_components_container";
@@ -14,7 +14,9 @@ const { useStoreProvider, ModelStore } = stores;
 class Parent extends Component {
     static template = xml`<Spreadsheet model="this.props.model"/>`;
     static components = { Spreadsheet, MainComponentsContainer };
-    static props = { model: Model };
+    props = useProps({
+        model: t.instanceOf(Model),
+    });
     setup() {
         useSpreadsheetNotificationStore();
 
