@@ -608,7 +608,7 @@
                 <span class="badge text-bg-primary badge-hide fw-normal m-1">Add Quiz</span>
             </a>
             <a t-if="channel.can_upload" href="#" name="o_wslides_slide_toggle_is_preview" aria-label="Preview">
-                <span t-att-data-slide-id="slide.id" t-attf-class="o_wslides_js_slide_toggle_is_preview badge #{'text-bg-success' if slide.is_preview else 'text-bg-primary badge-hide'} fw-normal m-1"><span>Preview</span></span>
+                <span t-att-data-slide-id="slide.id" t-att-data-is-preview="slide.is_preview" t-attf-class="o_wslides_js_slide_toggle_is_preview badge #{'text-bg-success' if slide.is_preview else 'text-bg-primary badge-hide'} fw-normal m-1"><span>Preview</span></span>
             </a>
             <t t-elif="slide.is_preview and not channel.is_member">
                 <span class="badge text-bg-success fw-normal m-1"><span>Preview</span></span>
