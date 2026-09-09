@@ -1,4 +1,4 @@
-import { Component, onWillStart, proxy } from "@odoo/owl";
+import { Component, onWillStart, proxy, useProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -11,9 +11,7 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 export class AttributeValueSelector extends Component {
     static template = "website_sale.attribute_value_selector";
     static components = { Dropdown, DropdownItem };
-    static props = {
-        ...standardFieldProps,
-    };
+    props = useProps(standardFieldProps);
 
     setup() {
         this.orm = useService("orm");

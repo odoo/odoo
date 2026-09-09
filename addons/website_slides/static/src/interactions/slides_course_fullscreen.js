@@ -11,6 +11,7 @@ import { findSlide, insertHtmlContent } from "@website_slides/js/utils";
 import { markup } from "@odoo/owl";
 import { unhideConditionalElements } from "@website/utils/misc";
 import { TextHighlight } from "@website/interactions/text_highlights";
+import { exprToBoolean } from "@web/core/utils/strings";
 
 // The interactions in this file are only used in fullscreen mode
 
@@ -614,7 +615,10 @@ export class WebsiteSlidesFullscreen extends WebsiteSlidesCommon {
                 embedCode: data.embedCode && markup(data.embedCode),
                 canSelfMarkCompleted: !!data.canSelfMarkCompleted,
                 canSelfMarkUncompleted: !!data.canSelfMarkUncompleted,
-                emailSharing: !!data.emailSharing,
+                emailSharing:
+                    typeof data.emailSharing === "string"
+                        ? exprToBoolean(data.emailSharing)
+                        : Boolean(data.emailSharing),
                 websiteShareUrl: data.websiteShareUrl,
                 ...this.getAdditionalSlidesData(data),
             });

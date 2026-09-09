@@ -1,28 +1,22 @@
-import { Component } from '@odoo/owl';
+import { Component, t, useProps } from '@odoo/owl';
 import { formatCurrency } from '@web/core/currency';
 
 export class ItemAddedNotification extends Component {
     static template = 'website_sale.ItemAddedNotification';
-    static props = {
-        lines: {
-            type: Array,
-            element: {
-                type: Object,
-                shape: {
-                    id: Number,
-                    linked_line_id: { type: Number, optional: true },
-                    image_url: String,
-                    quantity: Number,
-                    uom_name: { type: String, optional: true },
-                    combination_name: { type: String, optional: true },
-                    name: String,
-                    description: { type: String, optional: true },
-                    price_total: Number,
-                },
-            },
-        },
-        currency_id: Number,
-    }
+    props = useProps({
+        lines: t.array(t.object({
+            id: t.number(),
+            linked_line_id: t.number().optional(),
+            image_url: t.string(),
+            quantity: t.number(),
+            uom_name: t.string().optional(),
+            combination_name: t.string().optional(),
+            name: t.string(),
+            description: t.string().optional(),
+            price_total: t.number(),
+        })),
+        currency_id: t.number(),
+    });
 
     /**
      * Return the lines which aren't linked to other lines.

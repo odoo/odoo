@@ -1,4 +1,4 @@
-import { onWillStart } from '@odoo/owl';
+import { onWillStart, t, useProps } from '@odoo/owl';
 import { useService } from '@web/core/utils/hooks';
 
 import {
@@ -9,11 +9,11 @@ import {
 
 export class ProductPageSelectionScreen extends ApplyConfiguratorScreen {
     static template = 'website_sale.Configurator.ProductPageSelectionScreen';
-    static props = {
-        navigate: Function,
-        skip: Function,
-        clearStorage: Function,
-    };
+    props = useProps({
+        navigate: t.function(),
+        skip: t.function(),
+        clearStorage: t.function(),
+    });
 
     setup() {
         super.setup();

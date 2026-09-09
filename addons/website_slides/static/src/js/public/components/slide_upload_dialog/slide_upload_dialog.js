@@ -1,4 +1,4 @@
-import { Component, onMounted, proxy } from "@odoo/owl";
+import { Component, onMounted, proxy, t, useProps } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { redirect } from "@web/core/utils/urls";
@@ -45,19 +45,20 @@ export class SlideUploadDialog extends Component {
         video: "website_slides.SlideCategoryTutorial.Video",
         quiz: "website_slides.SlideCategoryTutorial.Quiz",
     };
-    static props = {
-        canPublish: Boolean,
-        canUpload: Boolean,
-        categoryId: { type: String, optional: true },
-        channelId: Number,
-        close: Function,
-        modulesToInstall: { type: Array, optional: true },
-        openModal: { type: String, optional: true },
-    };
     static template = "website_slides.SlideUploadDialog";
 
+    props = useProps({
+        canPublish: t.boolean(),
+        canUpload: t.boolean(),
+        categoryId: t.number().optional(),
+        channelId: t.number(),
+        close: t.function(),
+        modulesToInstall: t.array().optional(),
+        openModal: t.string().optional(),
+    });
+
     setup() {
-        this.defaultCategoryID = parseInt(this.props.categoryId, 10);
+        this.defaultCategoryID = this.props.categoryId;
         this.modulesToInstallStatus = null;
         this.dialog = useService("dialog");
         this.orm = useService("orm");
