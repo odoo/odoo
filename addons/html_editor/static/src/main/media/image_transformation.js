@@ -34,13 +34,14 @@ const MIN_IMAGE_SIZE = 20;
 
 export class ImageTransformation extends Component {
     static template = "html_editor.ImageTransformation";
+
     props = useProps({
-        document: t.customValidator(t.any(), (p) => p.nodeType === Node.DOCUMENT_NODE),
-        editable: t.customValidator(t.any(), (p) => p.nodeType === Node.ELEMENT_NODE),
-        image: t.customValidator(t.any(), (p) => p.tagName === "IMG"),
         destroy: t.function(),
-        onChange: t.function().optional(),
+        document: t.customValidator(t.object(), (p) => p.nodeType === Node.DOCUMENT_NODE),
+        editable: t.customValidator(t.object(), (p) => p.nodeType === Node.ELEMENT_NODE),
+        image: t.customValidator(t.object(), (p) => p.tagName === "IMG"),
         onApply: t.function().optional(),
+        onChange: t.function().optional(),
         onComponentMounted: t.function().optional(() => () => {}),
     });
 

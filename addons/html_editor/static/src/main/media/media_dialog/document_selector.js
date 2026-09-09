@@ -1,9 +1,14 @@
+import { t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { Attachment, FileSelector, IMAGE_MIMETYPES } from "./file_selector";
 import { renderToElement } from "@web/core/utils/render";
 
 export class DocumentAttachment extends Attachment {
     static template = "html_editor.DocumentAttachment";
+
+    documentAttachmentProps = useProps({
+        selectAttachment: t.function(),
+    });
 }
 
 export class DocumentSelector extends FileSelector {

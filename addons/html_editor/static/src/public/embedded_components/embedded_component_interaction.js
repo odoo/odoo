@@ -8,7 +8,6 @@ import { PUBLIC_EMBEDDINGS } from "@html_editor/public/embedding_sets";
 
 class EmbeddedDummy extends Component {
     static template = xml``;
-    static props = ["*"];
 }
 
 export const getEmbeddingMap = memoize(

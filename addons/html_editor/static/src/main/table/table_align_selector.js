@@ -1,4 +1,4 @@
-import { Component, proxy, signal } from "@odoo/owl";
+import { Component, proxy, signal, t, useProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
 import {
@@ -10,13 +10,13 @@ import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 
 export class TableAlignSelector extends Component {
     static template = "html_editor.TableAlignSelector";
-    static props = {
-        getItems: Function,
-        getDisplay: Function,
-        onSelected: Function,
-        focusEditable: Function,
+    props = useProps({
+        getItems: t.function(),
+        getDisplay: t.function(),
+        onSelected: t.function(),
+        focusEditable: t.function(),
         ...toolbarButtonProps,
-    };
+    });
     static components = { Dropdown, DropdownItem };
 
     tableAlignSelector = signal.ref();

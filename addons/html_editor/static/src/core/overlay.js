@@ -24,22 +24,22 @@ export class EditorOverlay extends Component {
         </div>`;
 
     props = useProps({
-        target: t.customValidator(t.any(), (el) => el.nodeType === Node.ELEMENT_NODE).optional(),
-        initialSelection: t.object().optional(),
-        Component: t.function(),
-        props: t.object().optional(),
-        editable: t.customValidator(t.any(), (el) => el.nodeType === Node.ELEMENT_NODE),
         bus: t.object(),
-        shared: t.object(),
         close: t.function(),
-        isOverlayOpen: t.function(),
+        Component: t.function(),
+        editable: t.customValidator(t.object(), (el) => el.nodeType === Node.ELEMENT_NODE),
         getCustomRect: t.function().optional(),
+        initialSelection: t.object().optional(),
+        isOverlayOpen: t.function(),
+        props: t.object().optional(),
+        shared: t.object(),
+        target: t.customValidator(t.object(), (el) => el.nodeType === Node.ELEMENT_NODE).optional(),
 
         // Props from createOverlay
-        positionOptions: t.object().optional(),
         className: t.string().optional(""),
         closeOnPointerdown: t.boolean().optional(true),
         hasAutofocus: t.boolean().optional(false),
+        positionOptions: t.object().optional(),
     });
 
     rootRef = signal.ref();

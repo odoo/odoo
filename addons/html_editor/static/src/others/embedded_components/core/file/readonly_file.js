@@ -9,17 +9,17 @@ import {
 } from "@html_editor/others/embedded_components/core/embedded_component_toolbar/embedded_component_toolbar";
 import { StateFileModel } from "@html_editor/others/embedded_components/core/file/state_file_model";
 import { getEmbeddedProps } from "@html_editor/others/embedded_component_utils";
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, t, useProps } from "@odoo/owl";
 
 export class ReadonlyEmbeddedFileComponent extends Component {
     static components = {
         EmbeddedComponentToolbar,
         EmbeddedComponentToolbarButton,
     };
-    static props = {
-        fileData: { type: Object },
-        host: { type: Object },
-    };
+    props = useProps({
+        fileData: t.object(),
+        host: t.object(),
+    });
     static template = "html_editor.ReadonlyEmbeddedFile";
 
     setup() {
