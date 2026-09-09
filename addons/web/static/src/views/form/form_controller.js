@@ -43,6 +43,7 @@ import {
     status,
     useComponent,
     useEffect,
+    useExternalListener,
     useRef,
     useState,
 } from "@odoo/owl";
@@ -184,9 +185,30 @@ export class FormController extends Component {
         }
 
         this.formInDialog = 0;
+        this.filePickerOpen = 0;
 
         useBus(this.env.bus, "FORM-CONTROLLER:FORM-IN-DIALOG:ADD", () => this.formInDialog++);
         useBus(this.env.bus, "FORM-CONTROLLER:FORM-IN-DIALOG:REMOVE", () => this.formInDialog--);
+        // Native mobile file pickers hide the tab. Skip the matching autosave so
+        // the file input is not destroyed before a file is chosen.
+        useExternalListener(
+            window,
+            "click",
+            (ev) => {
+                if (ev.target?.type !== "file") {
+                    return;
+                }
+                this.filePickerOpen++;
+                const close = () => {
+                    ev.target.removeEventListener("change", close);
+                    ev.target.removeEventListener("cancel", close);
+                    this.filePickerOpen = Math.max(0, this.filePickerOpen - 1);
+                };
+                ev.target.addEventListener("change", close);
+                ev.target.addEventListener("cancel", close);
+            },
+            { capture: true }
+        );
 
         const beforeFirstLoad = async () => {
             await loadSubViews(
@@ -481,7 +503,15 @@ export class FormController extends Component {
     }
 
     beforeVisibilityChange() {
-        if (document.visibilityState === "hidden" && this.formInDialog === 0) {
+        if (document.visibilityState === "visible") {
+            this.filePickerOpen = 0;
+            return;
+        }
+        if (
+            document.visibilityState === "hidden" &&
+            this.formInDialog === 0 &&
+            this.filePickerOpen === 0
+        ) {
             return this.model.root.save();
         }
     }
