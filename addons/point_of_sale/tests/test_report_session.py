@@ -171,19 +171,25 @@ class TestReportSession(TestPoSCommon):
             'amount_paid': 0.0,
             'amount_return': 0.0,
         })
+        order_report_lines = self.env['report.pos.order'].sudo().search([('order_id', '=', order.id)])
+        self.assertEqual(len(order_report_lines), 2)
+        self.assertFalse(order_report_lines.payment_method_id)
+
         payment_context = {"active_ids": order.ids, "active_id": order.id}
 
         order_payment = self.env['pos.make.payment'].with_context(**payment_context).create([{
             'amount': am,
             'payment_method_id': pm
-        } for am in [65, 100] for pm in [cash_payment_method.id, bank_payment_method.id]])
+        } for am in [65, 100] for pm in [bank_payment_method.id, cash_payment_method.id]])
         for payment in order_payment:
             payment.with_context(**payment_context).check()
 
+        order_report_lines.invalidate_recordset(['payment_method_id'])
         order_report_lines = self.env['report.pos.order'].sudo().search([('order_id', '=', order.id)])
 
         self.assertEqual(len(order_report_lines), 2)
-        self.assertEqual(order_report_lines[0].payment_method_id.id, order_report_lines[1].payment_method_id.id)
+        # The first payment wins, even if its method has a higher id.
+        self.assertEqual(order_report_lines.payment_method_id, bank_payment_method)
 
         for order in order_report_lines:
             self.assertEqual(order.price_total, 165.0)
