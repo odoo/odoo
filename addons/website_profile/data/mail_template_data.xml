@@ -113,7 +113,7 @@
                                         style="opacity: 0.7;">
                                         <t t-out="user.company_id.phone_ids._primary().number or ''">+1 650-123-4567</t>
                                         <t t-if="user.company_id.email">
-                                            | <a t-attf-href="'mailto:%s' % {{ user.company_id.email }}" style="text-decoration:none; color: #454748;" t-out="user.company_id.email or ''">info@yourcompany.com</a>
+                                            | <a t-attf-href="mailto:{{ user.company_id.email }}" style="text-decoration:none; color: #454748;" t-out="user.company_id.email or ''">info@yourcompany.com</a>
                                         </t>
                                         <t t-if="user.company_id.website">
                                             | <a t-attf-href="{{ user.company_id.website }}" style="text-decoration:none; color: #454748;" t-out="user.company_id.website or ''">http://www.example.com</a>
