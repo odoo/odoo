@@ -17,6 +17,7 @@ export class BuilderSlidingPanel extends Component {
         fullHeight: t.boolean().optional(false),
         darkBackground: t.boolean().optional(false),
         openByDefault: t.boolean().optional(false),
+        onClose: t.function().optional(),
     });
 
     slidingPanelRef = signal.ref();
@@ -74,6 +75,7 @@ export class BuilderSlidingPanel extends Component {
         this.updateDisplayTimeout = setTimeout(() => {
             this.updateDisplay("d-none");
             this.openButtonRef().focus();
+            this.props.onClose?.();
         }, 180);
     }
 

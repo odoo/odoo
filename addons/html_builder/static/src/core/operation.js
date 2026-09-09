@@ -48,9 +48,10 @@ export class OperationMutex extends Mutex {
 }
 
 export class Operation {
-    constructor(editableDocument = document) {
+    constructor(editableDocument = document, config = {}) {
         this.mutex = new OperationMutex();
         this.editableDocument = editableDocument;
+        this.config = config;
     }
 
     /**
@@ -165,21 +166,26 @@ export class Operation {
      * @returns {Function}
      */
     addLoadingElement(withLoadingEffect, loadingEffectDelay, shouldInterceptClick) {
-        this.loadingScreenEl = document.createElement("div");
+        const getOperationLoadingDocument = this.config.getOperationLoadingDocument;
+        const customLoadingDocument = getOperationLoadingDocument?.();
+        const loadingDocument =
+            customLoadingDocument === undefined ? this.editableDocument : customLoadingDocument;
+        if (!loadingDocument?.body) {
+            return () => {};
+        }
+
+        this.loadingScreenEl = loadingDocument.createElement("div");
         this.loadingScreenEl.classList.add(
             ...["o_loading_screen", "d-flex", "justify-content-center", "align-items-center"]
         );
-        const spinnerEl = document.createElement("img");
+        const spinnerEl = loadingDocument.createElement("img");
         spinnerEl.setAttribute("src", "/web/static/img/spin.svg");
         this.loadingScreenEl.appendChild(spinnerEl);
 
         let removeClickListener = () => {};
         if (shouldInterceptClick) {
             const onClick = (ev) => {
-                const trueTargetEls = this.editableDocument.elementsFromPoint(
-                    ev.clientX,
-                    ev.clientY
-                );
+                const trueTargetEls = loadingDocument.elementsFromPoint(ev.clientX, ev.clientY);
                 this.next(() => {
                     for (const trueTargetEl of trueTargetEls) {
                         if (trueTargetEl.isConnected) {
@@ -189,14 +195,14 @@ export class Operation {
                     }
                 });
             };
-            this.editableDocument.addEventListener("click", onClick);
-            removeClickListener = () => this.editableDocument.removeEventListener("click", onClick);
+            loadingDocument.addEventListener("click", onClick);
+            removeClickListener = () => loadingDocument.removeEventListener("click", onClick);
         }
         if (this.isUIBlocked) {
             this.loadingScreenEl.classList.add("d-none");
         }
 
-        this.editableDocument.body.appendChild(this.loadingScreenEl);
+        loadingDocument.body.appendChild(this.loadingScreenEl);
 
         // If specified, add a loading effect on that element after a delay.
         let loadingTimeout;
