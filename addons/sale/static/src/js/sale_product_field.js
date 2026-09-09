@@ -18,7 +18,7 @@ import { ComboConfiguratorDialog } from "./combo_configurator_dialog/combo_confi
 import { ProductCombo } from "./models/product_combo";
 import { getLinkedSaleOrderLines, serializeComboItem, getSelectedCustomPtav } from "./sale_utils";
 
-async function applyProduct(record, product) {
+async function applyProduct(record, product, extraValues = {}) {
     // handle custom values & no variants
     const customAttributesCommands = [
         x2ManyCommands.set([]),  // Command.clear isn't supported in static_list/_applyCommands
@@ -46,7 +46,9 @@ async function applyProduct(record, product) {
         product_uom_qty: product.quantity,
         product_no_variant_attribute_value_ids: [x2ManyCommands.set(noVariantPTAVIds)],
         product_custom_attribute_value_ids: customAttributesCommands,
+        ...extraValues,
     });
+    Object.assign(record._changes, extraValues);
 };
 
 
@@ -274,8 +276,12 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
             soDate: serializeDateTime(saleOrderRecord.data.date_order),
             edit: edit,
             save: async (mainProduct, optionalProducts) => {
+                // Keep the line's UoM when editing, as the configurator works in that UoM.
+                const mainProductValues = edit && saleOrderLine.product_uom
+                    ? { product_uom: saleOrderLine.product_uom }
+                    : {};
                 await Promise.all([
-                    applyProduct(this.props.record, mainProduct),
+                    applyProduct(this.props.record, mainProduct, mainProductValues),
                     ...optionalProducts.map(async product => {
                         const line = await saleOrderRecord.data.order_line.addNewRecord({
                             position: 'bottom', mode: 'readonly'
