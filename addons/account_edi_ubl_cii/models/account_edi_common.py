@@ -1603,6 +1603,13 @@ class AccountEdiCommon(models.AbstractModel):
             if account := line_collected_values.get('predicted_vals', {}).get('account_id'):
                 account_values['account'] = account
 
+    def _import_invoice_retrieve_analytic_distribution(self, collected_values):
+        lines_collected_values = collected_values['lines_collected_values']
+        for line_collected_values in lines_collected_values:
+            to_write = line_collected_values['to_write']
+            if analytic_distribution := line_collected_values.get('predicted_vals', {}).get('analytic_distribution'):
+                to_write['analytic_distribution'] = analytic_distribution
+
     def _import_retrieve_taxes_search_plan(self, collected_values):
         AccountTax = self.env['account.tax']
         return [
@@ -1770,6 +1777,8 @@ class AccountEdiCommon(models.AbstractModel):
 
         if name := to_write.get('name'):
             base_line_kwargs['_create_values']['name'] = name
+        if analytic_distribution := to_write.get('analytic_distribution'):
+            base_line_kwargs['_create_values']['analytic_distribution'] = analytic_distribution
         if vehicle_id := to_write.get('vehicle_id'):
             base_line_kwargs['_create_values']['vehicle_id'] = vehicle_id
 
