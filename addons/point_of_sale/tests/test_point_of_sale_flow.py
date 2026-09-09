@@ -233,6 +233,305 @@ class TestPointOfSaleFlow(CommonPosTest):
         self.assertEqual(parent_partner.pos_order_count, 2, "Parent partner should see 2 orders including child’s")
         self.assertEqual(child_partner.pos_order_count, 1, "Child partner should see only their own order")
 
+<<<<<<< afed3c16b57a9e18edd4c1c870701221b49a6017
+||||||| 38387c3cd3dd4d5aded7212e6e4677e15ba2211a
+    def test_order_to_picking(self):
+        """
+            In order to test the Point of Sale in module, I will do three orders
+            from the sale to the payment, invoicing + picking, but will only
+            check the picking consistency in the end.
+
+            TODO: Check the negative picking after changing the picking relation
+            to One2many (also for a mixed use case), check the quantity, the
+            locations and return picking logic
+        """
+        order_1, _ = self.create_backend_pos_order({
+            'order_data': {
+                'partner_id': self.partner_jcb.id,
+                'pricelist_id': self.partner_jcb.property_product_pricelist.id,
+            },
+            'line_data': [
+                {'product_id': self.twenty_dollars_with_15_incl.product_variant_id.id},
+                {'product_id': self.ten_dollars_with_10_incl.product_variant_id.id},
+            ],
+            'payment_data': [
+                {'payment_method_id': self.credit_payment_method.id, 'amount': 30},
+            ],
+        })
+        order_2, _ = self.create_backend_pos_order({
+            'order_data': {
+                'partner_id': self.partner_lowe.id,
+                'pricelist_id': self.partner_lowe.property_product_pricelist.id,
+            },
+            'line_data': [
+                {'product_id': self.ten_dollars_with_10_incl.product_variant_id.id},
+                {'product_id': self.twenty_dollars_with_15_incl.product_variant_id.id},
+            ],
+            'payment_data': [
+                {'payment_method_id': self.credit_payment_method.id, 'amount': 30},
+            ],
+        })
+        order_3, order_refund_3 = self.create_backend_pos_order({
+            'order_data': {
+                'partner_id': self.partner_vlst.id,
+                'pricelist_id': self.partner_vlst.property_product_pricelist.id,
+            },
+            'line_data': [
+                {'product_id': self.ten_dollars_with_10_incl.product_variant_id.id},
+                {'product_id': self.twenty_dollars_with_15_incl.product_variant_id.id},
+            ],
+            'payment_data': [
+                {'payment_method_id': self.cash_payment_method.id, 'amount': 30},
+            ],
+            'refund_data': [
+                {'payment_method_id': self.cash_payment_method.id, 'amount': -30},
+            ],
+        })
+
+        self.assertEqual(order_1.state, 'paid', 'Order should be in paid state.')
+        self.assertEqual(order_1.picking_ids[0].state, 'done')
+        self.assertEqual(order_1.picking_ids[0].move_ids.mapped('state'), ['done', 'done'])
+        self.assertEqual(order_2.state, 'paid', 'Order should be in paid state.')
+        self.assertEqual(order_2.picking_ids[0].state, 'done')
+        self.assertEqual(order_2.picking_ids[0].move_ids.mapped('state'), ['done', 'done'])
+        self.assertEqual(order_3.state, 'paid', 'Order should be in paid state.')
+        self.assertEqual(order_3.picking_ids[0].state, 'done')
+        self.assertEqual(order_3.picking_ids[0].move_ids.mapped('state'), ['done', 'done'])
+
+        order_refund_3.action_pos_order_invoice()
+        legal_documents = order_refund_3.account_move._get_invoice_legal_documents('pdf', allow_fallback=True)
+        self.assertEqual(len(legal_documents), 1)
+        invoice_pdf_content = str(legal_documents[0]['content'])
+        self.assertTrue("using Cash" in invoice_pdf_content)
+        self.assertEqual(order_refund_3.picking_count, 1)
+        self.pos_config_usd.current_session_id.action_pos_session_closing_control()
+
+    def test_order_to_picking02(self):
+        """
+            This test is similar to test_order_to_picking except that this time,
+            there are two products:
+                - One tracked by lot (ten_dollars_with_10_incl)
+                - One untracked (twenty_dollars_with_15_incl)
+                - Both are in a sublocation of the main warehouse
+        """
+        wh_location = self.company_data['default_warehouse'].lot_stock_id
+        shelf1_location = self.env['stock.location'].create({
+            'name': 'shelf1',
+            'usage': 'internal',
+            'location_id': wh_location.id,
+        })
+        self.ten_dollars_with_10_incl.product_variant_id.write({
+            'tracking': 'lot',
+            'is_storable': True,
+        })
+        self.twenty_dollars_with_15_incl.product_variant_id.write({
+            'tracking': 'none',
+            'is_storable': True,
+        })
+        lot = self.env['stock.lot'].create({
+            'name': 'SuperLot',
+            'product_id': self.ten_dollars_with_10_incl.product_variant_id.id,
+        })
+
+        quantity_1 = self.env['stock.quant']._update_available_quantity(
+            self.ten_dollars_with_10_incl.product_variant_id, shelf1_location, 2, lot_id=lot)
+        quantity_2 = self.env['stock.quant']._update_available_quantity(
+            self.twenty_dollars_with_15_incl.product_variant_id, shelf1_location, 2)
+
+        self.assertEqual(quantity_1[0], 2)
+        self.assertEqual(quantity_2[0], 2)
+        self.pos_config_usd.open_ui()
+        self.pos_config_usd.current_session_id.update_stock_at_closing = False
+        order, _ = self.create_backend_pos_order({
+            'order_data': {
+                'partner_id': self.partner_manv.id,
+                'pricelist_id': self.partner_manv.property_product_pricelist.id,
+            },
+            'line_data': [
+                {'product_id': self.ten_dollars_with_10_incl.product_variant_id.id},
+                {'product_id': self.twenty_dollars_with_15_incl.product_variant_id.id},
+            ],
+            'payment_data': [
+                {'payment_method_id': self.cash_payment_method.id, 'amount': 30},
+            ],
+        })
+
+        self.assertEqual(order.state, 'paid')
+        tracked_line = self.env['stock.move.line'].search(
+            [('product_id', '=', self.ten_dollars_with_10_incl.product_variant_id.id)])
+        untracked_line = order.picking_ids.move_line_ids - tracked_line
+        self.assertEqual(tracked_line.lot_id, lot)
+        self.assertFalse(untracked_line.lot_id)
+        self.assertEqual(tracked_line.location_id, shelf1_location)
+        self.assertEqual(untracked_line.location_id, shelf1_location)
+
+        res = order.action_pos_order_invoice()
+        invoice_test = self.env['account.move'].browse(res['res_id'])
+        self.assertEqual(invoice_test.ref, invoice_test.pos_order_ids.display_name)
+
+        self.pos_config_usd.current_session_id.action_pos_session_closing_control()
+
+=======
+    def test_backend_order_refund_flow(self):
+        """ The purpose of this test is to test the basic flow of
+        refunding orders from the backend. More precisely making sure:
+        - We do not refund more than the initial order's quantity"""
+        self.pos_config_usd.open_ui()
+
+        order, _ = self.create_backend_pos_order({
+            'line_data': [
+                {'product_id': self.ten_dollars_with_10_incl.product_variant_id.id},
+            ],
+            'payment_data': [
+                {'payment_method_id': self.cash_payment_method.id, 'amount': 10},
+            ]
+        })
+
+        refund_action = order.refund()
+        refund = self.env['pos.order'].browse(refund_action['res_id'])
+
+        with Form(refund) as refund_form:
+            with refund_form.lines.edit(0) as line:
+                with self.assertRaises(ValidationError, msg="You cannot refund more than the original order."):
+                    line.qty = -3
+
+    def test_order_to_picking(self):
+        """
+            In order to test the Point of Sale in module, I will do three orders
+            from the sale to the payment, invoicing + picking, but will only
+            check the picking consistency in the end.
+
+            TODO: Check the negative picking after changing the picking relation
+            to One2many (also for a mixed use case), check the quantity, the
+            locations and return picking logic
+        """
+        order_1, _ = self.create_backend_pos_order({
+            'order_data': {
+                'partner_id': self.partner_jcb.id,
+                'pricelist_id': self.partner_jcb.property_product_pricelist.id,
+            },
+            'line_data': [
+                {'product_id': self.twenty_dollars_with_15_incl.product_variant_id.id},
+                {'product_id': self.ten_dollars_with_10_incl.product_variant_id.id},
+            ],
+            'payment_data': [
+                {'payment_method_id': self.credit_payment_method.id, 'amount': 30},
+            ],
+        })
+        order_2, _ = self.create_backend_pos_order({
+            'order_data': {
+                'partner_id': self.partner_lowe.id,
+                'pricelist_id': self.partner_lowe.property_product_pricelist.id,
+            },
+            'line_data': [
+                {'product_id': self.ten_dollars_with_10_incl.product_variant_id.id},
+                {'product_id': self.twenty_dollars_with_15_incl.product_variant_id.id},
+            ],
+            'payment_data': [
+                {'payment_method_id': self.credit_payment_method.id, 'amount': 30},
+            ],
+        })
+        order_3, order_refund_3 = self.create_backend_pos_order({
+            'order_data': {
+                'partner_id': self.partner_vlst.id,
+                'pricelist_id': self.partner_vlst.property_product_pricelist.id,
+            },
+            'line_data': [
+                {'product_id': self.ten_dollars_with_10_incl.product_variant_id.id},
+                {'product_id': self.twenty_dollars_with_15_incl.product_variant_id.id},
+            ],
+            'payment_data': [
+                {'payment_method_id': self.cash_payment_method.id, 'amount': 30},
+            ],
+            'refund_data': [
+                {'payment_method_id': self.cash_payment_method.id, 'amount': -30},
+            ],
+        })
+
+        self.assertEqual(order_1.state, 'paid', 'Order should be in paid state.')
+        self.assertEqual(order_1.picking_ids[0].state, 'done')
+        self.assertEqual(order_1.picking_ids[0].move_ids.mapped('state'), ['done', 'done'])
+        self.assertEqual(order_2.state, 'paid', 'Order should be in paid state.')
+        self.assertEqual(order_2.picking_ids[0].state, 'done')
+        self.assertEqual(order_2.picking_ids[0].move_ids.mapped('state'), ['done', 'done'])
+        self.assertEqual(order_3.state, 'paid', 'Order should be in paid state.')
+        self.assertEqual(order_3.picking_ids[0].state, 'done')
+        self.assertEqual(order_3.picking_ids[0].move_ids.mapped('state'), ['done', 'done'])
+
+        order_refund_3.action_pos_order_invoice()
+        legal_documents = order_refund_3.account_move._get_invoice_legal_documents('pdf', allow_fallback=True)
+        self.assertEqual(len(legal_documents), 1)
+        invoice_pdf_content = str(legal_documents[0]['content'])
+        self.assertTrue("using Cash" in invoice_pdf_content)
+        self.assertEqual(order_refund_3.picking_count, 1)
+        self.pos_config_usd.current_session_id.action_pos_session_closing_control()
+
+    def test_order_to_picking02(self):
+        """
+            This test is similar to test_order_to_picking except that this time,
+            there are two products:
+                - One tracked by lot (ten_dollars_with_10_incl)
+                - One untracked (twenty_dollars_with_15_incl)
+                - Both are in a sublocation of the main warehouse
+        """
+        wh_location = self.company_data['default_warehouse'].lot_stock_id
+        shelf1_location = self.env['stock.location'].create({
+            'name': 'shelf1',
+            'usage': 'internal',
+            'location_id': wh_location.id,
+        })
+        self.ten_dollars_with_10_incl.product_variant_id.write({
+            'tracking': 'lot',
+            'is_storable': True,
+        })
+        self.twenty_dollars_with_15_incl.product_variant_id.write({
+            'tracking': 'none',
+            'is_storable': True,
+        })
+        lot = self.env['stock.lot'].create({
+            'name': 'SuperLot',
+            'product_id': self.ten_dollars_with_10_incl.product_variant_id.id,
+        })
+
+        quantity_1 = self.env['stock.quant']._update_available_quantity(
+            self.ten_dollars_with_10_incl.product_variant_id, shelf1_location, 2, lot_id=lot)
+        quantity_2 = self.env['stock.quant']._update_available_quantity(
+            self.twenty_dollars_with_15_incl.product_variant_id, shelf1_location, 2)
+
+        self.assertEqual(quantity_1[0], 2)
+        self.assertEqual(quantity_2[0], 2)
+        self.pos_config_usd.open_ui()
+        self.pos_config_usd.current_session_id.update_stock_at_closing = False
+        order, _ = self.create_backend_pos_order({
+            'order_data': {
+                'partner_id': self.partner_manv.id,
+                'pricelist_id': self.partner_manv.property_product_pricelist.id,
+            },
+            'line_data': [
+                {'product_id': self.ten_dollars_with_10_incl.product_variant_id.id},
+                {'product_id': self.twenty_dollars_with_15_incl.product_variant_id.id},
+            ],
+            'payment_data': [
+                {'payment_method_id': self.cash_payment_method.id, 'amount': 30},
+            ],
+        })
+
+        self.assertEqual(order.state, 'paid')
+        tracked_line = self.env['stock.move.line'].search(
+            [('product_id', '=', self.ten_dollars_with_10_incl.product_variant_id.id)])
+        untracked_line = order.picking_ids.move_line_ids - tracked_line
+        self.assertEqual(tracked_line.lot_id, lot)
+        self.assertFalse(untracked_line.lot_id)
+        self.assertEqual(tracked_line.location_id, shelf1_location)
+        self.assertEqual(untracked_line.location_id, shelf1_location)
+
+        res = order.action_pos_order_invoice()
+        invoice_test = self.env['account.move'].browse(res['res_id'])
+        self.assertEqual(invoice_test.ref, invoice_test.pos_order_ids.display_name)
+
+        self.pos_config_usd.current_session_id.action_pos_session_closing_control()
+
+>>>>>>> d870d028876bd2fb87379fee94cfc3c19fbf9d30
     def test_order_to_payment_currency(self):
         """
             In order to test the Point of Sale in module, I will do a full flow
