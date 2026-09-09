@@ -303,7 +303,7 @@
             <t t-out="slide.embed_code"/>
         </div>
         <div t-if="slide.slide_category == 'article'">
-            <div t-if="is_html_empty(slide.html_content)" class="alert alert-info o_not_editable">
+            <div t-if="is_html_empty(slide.html_content) and slide.channel_id.can_upload" class="alert alert-info o_not_editable">
                 Click on the "Edit" button in the top corner of the screen to edit your slide content.
             </div>
             <div class="bg-white p-3">
