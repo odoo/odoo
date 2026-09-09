@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from unittest.mock import patch
 
 from odoo import fields
 from odoo.tests.common import HttpCase, users
@@ -143,6 +144,75 @@ class TestEventMenus(OnlineEventCase, HttpCase):
             new_page_url.lstrip("/"), sections_arch="<section>Injected</section>"
         )
         self.assertTrue(new_page.get("view_id"))
+
+    @users("admin")
+    def test_create_menu_skip_when_nothing_changed(self):
+        """Round-1 fix WEM-05: when a website.menu parent group has no
+        new (string-id) menu among its children, WebsiteMenu.save() must
+        skip straight to the next group instead of still querying
+        website.event.menu for it - materializing new_menus to a list so
+        the `if not new_menus` check actually short-circuits (a `filter`
+        object is always truthy and never would)."""
+        event = self.env["event.event"].create(
+            {
+                "name": "TestEvent",
+                "date_begin": fields.Datetime.to_string(
+                    datetime.today() + timedelta(days=1)
+                ),
+                "date_end": fields.Datetime.to_string(
+                    datetime.today() + timedelta(days=15)
+                ),
+                "website_menu": True,
+            }
+        )
+        home_menu = event.introduction_menu_ids.menu_id
+        data = {
+            "data": [
+                {
+                    "id": home_menu.id,
+                    "name": home_menu.name,
+                    "url": home_menu.url,
+                    "new_window": False,
+                    "sequence": home_menu.sequence,
+                    "parent_id": home_menu.parent_id.id,
+                },
+                # An unrelated, genuinely new top-level menu so save()'s
+                # outer has_new_menus gate is True - home_menu's own group
+                # (the one under test) has no new menu of its own.
+                {
+                    "id": "new-1",
+                    "name": "Unrelated New Menu",
+                    "url": "/unrelated-new-menu",
+                    "new_window": False,
+                    "sequence": 100,
+                    "parent_id": self.env.ref("website.main_menu").id,
+                },
+            ],
+        }
+
+        WebsiteEventMenu = type(self.env["website.event.menu"])
+        original_search = WebsiteEventMenu.search
+        search_domains = []
+
+        def counting_search(self_, domain, *args, **kwargs):
+            search_domains.append(domain)
+            return original_search(self_, domain, *args, **kwargs)
+
+        with patch.object(WebsiteEventMenu, "search", counting_search):
+            self.env["website.menu"].save(
+                self.env.ref("website.default_website").id, data
+            )
+
+        home_menu_parent_searches = [
+            domain
+            for domain in search_domains
+            if domain == [("menu_id.parent_id", "=", home_menu.parent_id.id)]
+        ]
+        self.assertFalse(
+            home_menu_parent_searches,
+            "A group with no new menu must never trigger a "
+            "website.event.menu search for it.",
+        )
 
     @users("user_eventmanager")
     def test_menu_management(self):
