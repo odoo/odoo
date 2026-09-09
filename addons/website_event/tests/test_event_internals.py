@@ -309,6 +309,46 @@ class TestEventData(EventCase, MockVisitor):
             f"Falsy string ids should be False, not {registrations[0]['event_ticket_id']}",
         )
 
+    def test_process_attendees_form_missing_ticket_key(self):
+        """A POST that never sends the '<idx>-event_ticket_id' key at all (as
+        opposed to sending it empty/falsy) must not silently produce a
+        registration with a missing 'event_ticket_id' key that would later
+        crash a bare dict subscript in registration_confirm()."""
+        event = self.env["event.event"].create(
+            {
+                "name": "Test Event",
+                "event_type_id": self.event_type_questions.id,
+                "date_begin": FieldsDatetime.to_string(
+                    datetime.today() + timedelta(days=1)
+                ),
+                "date_end": FieldsDatetime.to_string(
+                    datetime.today() + timedelta(days=15)
+                ),
+            }
+        )
+
+        name_question, email_question = event.question_ids.filtered(
+            lambda q: q.question_type in ("name", "email")
+        )
+
+        form_details = {
+            "1-name-%s" % name_question.id: "Attendee Name",
+            "1-email-%s" % email_question.id: "attendee@example.com",
+        }
+
+        with MockRequest(self.env):
+            registrations = WebsiteEventController()._process_attendees_form(
+                event, form_details
+            )
+
+        self.assertEqual(len(registrations), 1)
+        self.assertNotIn(
+            "event_ticket_id",
+            registrations[0],
+            "A registration missing its ticket key must stay detectable "
+            "downstream, not silently default to a key that isn't there.",
+        )
+
     def test_registration_answer_search(self):
 
         event = self.env["event.event"].create(
