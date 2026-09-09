@@ -46,11 +46,11 @@
             'purchase/static/src/js/tours/purchase.js',
             'purchase/static/src/js/tours/purchase_steps.js',
             'purchase/static/src/**/*.xml',
-            'purchase/static/src/**/*.scss',
+            'purchase/static/src/**/*.*css',
         ],
         'web.assets_frontend': [
             'purchase/static/src/interactions/**/*',
-            'purchase/static/src/scss/purchase_portal.scss',
+            'purchase/static/src/scss/purchase_portal.css',
         ],
         'web.assets_tests': [
             'purchase/static/tests/tours/**/*',

@@ -57,7 +57,7 @@ This module provides the core of the Odoo Web Client.
             ('include', 'web.icons_fonts'),
             'web/static/src/webclient/navbar/navbar.scss',
             'web/static/src/scss/animation.scss',
-            'web/static/src/scss/mimetypes.scss',
+            'web/static/src/scss/mimetypes.css',
             'web/static/src/scss/ui.scss',
 
             'web/static/src/polyfills/clipboard.js',
@@ -112,11 +112,11 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/webclient/actions/reports/*.js',
             'web/static/src/webclient/actions/reports/*.xml',
 
-            'web/static/src/scss/ace.scss',
+            'web/static/src/scss/ace.css',
             'web/static/src/scss/base_document_layout.scss',
 
             'base/static/src/scss/res_partner.scss',
-            'base/static/src/scss/res_users.scss',
+            'base/static/src/scss/res_users.css',
 
             # Form style should be computed before
             'web/static/src/views/form/button_box/*.scss',
@@ -178,8 +178,8 @@ This module provides the core of the Odoo Web Client.
             ('include', 'web.icons_fonts'),
             'web/static/src/webclient/navbar/navbar.scss',
             'web/static/src/scss/animation.scss',
-            'web/static/src/scss/base_frontend.scss',
-            'web/static/src/scss/mimetypes.scss',
+            'web/static/src/scss/base_frontend.css',
+            'web/static/src/scss/mimetypes.css',
             'web/static/src/scss/ui.scss',
             'web/static/src/views/fields/signature/signature_field.scss',
 

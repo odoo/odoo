@@ -53,7 +53,7 @@ This module contains all the common features of Sales Management and eCommerce.
     "demo": ["data/product_demo.xml", "data/sale_demo.xml"],
     "assets": {
         "web.assets_backend": [
-             "sale/static/src/scss/sale_onboarding.scss",
+             "sale/static/src/scss/sale_onboarding.css",
             "sale/static/src/scss/services_and_material.scss",
             "sale/static/src/js/badge_extra_price/*",
             "sale/static/src/js/sale_action_helper/*",
@@ -88,7 +88,7 @@ This module contains all the common features of Sales Management and eCommerce.
         ],
         'web.assets_web_dark': [
             "sale/static/src/js/dashboard/**/*.dark.scss",
-            "sale/static/src/scss/services_and_material.dark.scss",
+            "sale/static/src/scss/services_and_material.dark.css",
         ],
         "web.assets_frontend": [
             "sale/static/src/interactions/**/*",
@@ -105,7 +105,7 @@ This module contains all the common features of Sales Management and eCommerce.
             "sale/static/tests/sale_test_helpers.js",
             "sale/static/tests/**/*.test.js",
         ],
-        "web.report_assets_common": ["sale/static/src/scss/sale_report.scss"],
+        "web.report_assets_common": ["sale/static/src/scss/sale_report.css"],
     },
     "post_init_hook": "_post_init_hook",
     "author": "Odoo S.A.",

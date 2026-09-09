@@ -96,19 +96,19 @@ You could use this simplified accounting in case you work with an (external) acc
     'post_init_hook': '_account_post_init',
     'assets': {
         'web._assets_primary_variables': [
-            'account/static/src/scss/variables.scss',
+            'account/static/src/scss/variables.css',
         ],
         'web.assets_backend': [
             'account/static/src/css/account_bank_and_cash.css',
             'account/static/src/css/account.css',
-            'account/static/src/css/account_payment.scss',
+            'account/static/src/css/account_payment.css',
             'account/static/src/scss/account.scss',
             'account/static/src/scss/account_journal_dashboard.scss',
             'account/static/src/scss/account_searchpanel.scss',
             'account/static/src/scss/account_payment_term.scss',
             'account/static/src/scss/account_reconcile_model.scss',
             'account/static/src/scss/account_multi_ledger.scss',
-            'account/static/src/scss/account_move_send_wizard.scss',
+            'account/static/src/scss/account_move_send_wizard.css',
             'account/static/src/scss/account_type_selection.scss',
             'account/static/src/components/**/*',
             'account/static/src/services/*.js',

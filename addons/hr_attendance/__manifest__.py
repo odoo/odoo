@@ -92,7 +92,7 @@ actions(Check in/Check out) performed by them.
             # Barcode reader utils
             "barcodes/static/src/components/barcode_scanner.js",
             "barcodes/static/src/components/barcode_scanner.xml",
-            "barcodes/static/src/components/barcode_scanner.scss",
+            "barcodes/static/src/components/barcode_scanner.css",
             "barcodes/static/src/barcode_service.js",
 
         ],

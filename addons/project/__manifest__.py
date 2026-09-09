@@ -123,7 +123,7 @@
             ('include', 'web.icons_fonts'),
             'web/static/src/webclient/navbar/navbar.scss',
             'web/static/src/scss/animation.scss',
-            'web/static/src/scss/mimetypes.scss',
+            'web/static/src/scss/mimetypes.css',
             'web/static/src/scss/ui.scss',
 
             'web/static/src/module_loader.js',
@@ -220,7 +220,7 @@
             'project/static/src/components/project_task_name_with_subtask_count_char_field/*',
             'project/static/src/components/project_task_state_selection/*',
             'project/static/src/components/project_many2one_field/*',
-            'project/static/src/views/project_task_form/*.scss',
+            'project/static/src/views/project_task_form/*.css',
             'project/static/src/views/project_task_kanban/*.scss',
             'project/static/src/views/project_task_control_panel/*',
             'project/static/src/views/project_task_model_mixin.js',

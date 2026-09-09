@@ -25,7 +25,7 @@
     ],
     'assets': {
         'web.assets_backend': [
-            'l10n_es_edi_verifactu/static/src/css/warning.scss',
+            'l10n_es_edi_verifactu/static/src/css/warning.css',
         ],
     },
     'author': 'Odoo S.A.',

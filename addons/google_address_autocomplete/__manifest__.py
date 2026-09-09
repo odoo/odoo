@@ -16,13 +16,13 @@ This module Auto complete the address data.
     'assets': {
         'web.assets_backend': [
             'google_address_autocomplete/static/src/**/*',
-            ('remove', "google_address_autocomplete/static/src/address_autocomplete/google_address_autocomplete_dark.scss"),
+            ('remove', "google_address_autocomplete/static/src/address_autocomplete/google_address_autocomplete_dark.css"),
         ],
         "web.assets_web_dark": [
-            "google_address_autocomplete/static/src/address_autocomplete/google_address_autocomplete_dark.scss",
+            "google_address_autocomplete/static/src/address_autocomplete/google_address_autocomplete_dark.css",
         ],
         'web._assets_core': [
-            'google_address_autocomplete/static/src/address_autocomplete/google_address_autocomplete.scss',
+            'google_address_autocomplete/static/src/address_autocomplete/google_address_autocomplete.css',
         ],
         'web.assets_tests': [
             'google_address_autocomplete/static/tests/tours/*.js'
