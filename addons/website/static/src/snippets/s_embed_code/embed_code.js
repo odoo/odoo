@@ -16,10 +16,10 @@ export class EmbedCode extends Interaction {
 
     destroy() {
         log.lifecycle("destroy: restore saved template");
-        const templateContent = this.el.querySelector(
-            "template.s_embed_code_saved",
-        ).content;
-        this.embedCodeEl.replaceChildren(cloneContentEls(templateContent));
+        const templateEl = this.el.querySelector("template.s_embed_code_saved");
+        if (templateEl) {
+            this.embedCodeEl.replaceChildren(cloneContentEls(templateEl.content));
+        }
     }
 }
 
