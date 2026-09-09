@@ -278,6 +278,7 @@ class SaleOrder(models.Model):
         comodel_name="res.currency",
         compute="_compute_currency_id",
         store=True,
+        readonly=False,
         precompute=True,
         ondelete="restrict",
     )
@@ -1358,6 +1359,11 @@ class SaleOrder(models.Model):
         # would trigger unwanted recomputations as the orm recomputes all depending fields
         # regardless of whether the field was effectively modified.
         if self.order_line and not self.env.context.get("sale_onchange_first_call"):
+            self._recompute_prices()
+
+    @api.onchange("currency_id")
+    def _onchange_currency_id_recompute_prices(self):
+        if self.order_line:
             self._recompute_prices()
 
     @api.onchange("prepayment_amount")

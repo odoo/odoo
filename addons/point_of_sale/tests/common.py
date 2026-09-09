@@ -406,6 +406,7 @@ class TestPoSCommon(AccountTestInvoicingCommon):
         # sometimes company_currency is different from USD, so handle appropriately.
         cls.other_currency = cls.setup_other_currency("EUR", rounding=0.001)
 
+        cls._enable_pricelists()
         cls.currency_pricelist = cls.env['product.pricelist'].create({
             'name': 'Public Pricelist',
             'currency_id': cls.company_currency.id,
