@@ -14,10 +14,10 @@ export class SearchModal extends Interaction {
         },
     };
     destroy() {
-        log.lifecycle("SearchModal destroy: hide modal", () => ({
+        log.lifecycle("SearchModal destroy: dispose modal", () => ({
             hasInstance: !!Modal.getInstance(this.el),
         }));
-        Modal.getInstance(this.el)?.hide();
+        Modal.getInstance(this.el)?.dispose();
     }
 }
 
