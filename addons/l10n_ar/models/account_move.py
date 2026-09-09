@@ -503,8 +503,6 @@ class AccountMove(models.Model):
                 or (self._l10n_ar_is_transparency_document() and self._l10n_ar_is_tax_group_iibb_perception(tax_group))
             )).ids
         if tax_group_ids_to_exclude:
-            if self._l10n_ar_is_refund_invoice():
-                self._apply_refund_adjustments(tax_totals)
             tax_totals = self.env['account.tax']._exclude_tax_groups_from_tax_totals_summary(tax_totals, tax_group_ids_to_exclude)
 
         return tax_totals

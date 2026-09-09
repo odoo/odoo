@@ -512,6 +512,28 @@ class TestArManual(common.TestArCommon):
             'Pre-printed Invoice warning should not be included.',
         )
 
+    def test_l10n_ar_get_invoice_totals_for_report_refund_with_same_code_vat_included(self):
+        """Same as above but with document type 188 (letter B): VAT is not detailed on the report and is folded
+        into the base amount. The sign must be applied only once so the totals stay negative on this path too."""
+        doc_188_lp_b = self.env.ref('l10n_ar.dc_liq_cd_sp_b')
+
+        credit_note = self._create_invoice_ar(
+            ref='test_credit_note_refund: Credit note with document type 188 for refund test',
+            move_type='out_refund',
+            partner_id=self.res_partner_adhoc,
+            company_id=self.company_ri,
+            invoice_date="2021-03-20",
+            l10n_latam_document_type_id=doc_188_lp_b,
+        )
+
+        self.assertTrue(credit_note._l10n_ar_is_refund_invoice())
+        self.assertTrue(credit_note._l10n_ar_include_vat())
+
+        tax_totals = credit_note._l10n_ar_get_invoice_totals_for_report()
+        self.assertEqual(tax_totals['base_amount_currency'], -121.0)
+        self.assertEqual(tax_totals['tax_amount_currency'], 0.0)
+        self.assertEqual(tax_totals['total_amount_currency'], -121.0)
+
     def test_foreign_partner_without_expo_journal(self):
         """ Test that if there is no active export journal, creating an invoice for a foreign partner doesn't
         block the user but set a regular (non-expo) sales journal and default the document type to Invoice B."""
