@@ -9,7 +9,6 @@ const cogMenuRegistry = registry.category("cogMenu");
 class ConvertProjectToTemplateCogMenu extends Component {
     static template = "project.ConvertProjectToTemplateCogMenu";
     static components = { DropdownItem };
-    static props = {};
 
     setup() {
         this.action = useService("action");

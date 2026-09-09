@@ -6,7 +6,6 @@ import { ActionContainer } from "@web/webclient/actions/action_container";
 import { Component, onMounted, proxy, useListener } from "@odoo/owl";
 
 export class ProjectSharingWebClient extends Component {
-    static props = {};
     static components = { ActionContainer, MainComponentsContainer };
     static template = "project.ProjectSharingWebClient";
 

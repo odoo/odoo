@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
 import { omit } from "@web/core/utils/objects";
@@ -10,10 +10,10 @@ import { ProjectTaskStateSelection } from "../project_task_state_selection";
 export class TaskStageWithStateSelection extends Component {
     static template = "project.TaskStageWithStateSelection";
 
-    static props = {
+    props = useProps({
         ...standardFieldProps,
-        viewType: { type: String },
-    };
+        viewType: t.string(),
+    });
 
     static components = {
         ProjectTaskStateSelection,

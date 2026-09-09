@@ -1,13 +1,13 @@
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { ConfirmationDialog, deleteConfirmationMessage } from "@web/core/confirmation_dialog/confirmation_dialog";
 
 export class ProjectTemplateButtons extends Component {
     static template = "project.ProjectTemplateButtons";
-    static props = {
-        resModel: String,
-        resId: Number,
-    };
+    props = useProps({
+        resModel: t.string(),
+        resId: t.number(),
+    });
 
     setup() {
         this.orm = useService("orm");
