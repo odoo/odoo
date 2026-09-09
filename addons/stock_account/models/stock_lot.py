@@ -25,7 +25,8 @@ class StockLot(models.Model):
         company_id = self.env.company
         self.company_currency_id = company_id.currency_id
         at_date = fields.Datetime.to_datetime(self.env.context.get('to_date'))
-        for lot in self:
+        lots = self.with_context(owners=[False, self.env.company.partner_id.id])
+        for lot in lots:
             if not lot.lot_valuated:
                 lot.total_value = 0.0
                 lot.avg_cost = 0.0
@@ -74,7 +75,8 @@ class StockLot(models.Model):
 
     def _update_standard_price(self):
         # TODO: Add extra value and extra quantity kwargs to avoid total recomputation
-        for lot in self:
+        lots = self.with_context(owners=[False, self.env.company.partner_id.id])
+        for lot in lots:
             lot = lot.with_context(disable_auto_revaluation=True)
             if not lot.product_id.lot_valuated:
                 continue
