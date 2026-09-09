@@ -49,6 +49,12 @@ registerWebsitePreviewTour(
         clickOnElement("add to cart", ":iframe .modal button:contains(Add to Cart)"),
         checkQuanityInCart("2"),
 
+        // Product with 2 variants with a variant selected in the snippet option.
+        // WARNING: this section does NOT assert that the configured variant is
+        // pre-selected in the add-to-cart modal. It pins the opposite, known-broken
+        // behaviour (see the regression note further down) and then re-selects the
+        // configured variant by hand just to reach the cart. When that bug is fixed,
+        // the "known bug" step below must be inverted and the manual re-click dropped.
         ...editAddToCartSnippet(),
         ...changeOptionInPopover(
             "Add to Cart Button",
@@ -67,12 +73,19 @@ registerWebsitePreviewTour(
         ),
         ...clickOnSave(),
         clickOnElement("add to cart button", ":iframe .s_add_to_cart_btn"),
+        // Since 18.2, even if a specific variant is selected, the product configuration modal is displayed
+        // The variant set on the modal used the default variants attributes (so will not correspond to the selected variant)
+        // TODO: fix this misbehavior by setting the variant attributes based on the chosen variant
+        // https://github.com/odoo/odoo/pull/201217#issuecomment-2721871718
         {
-            content: "Check if the red variant is selected",
+            content:
+                "KNOWN BUG: the default (Red) variant is pre-selected instead of the" +
+                " configured (Pink) one — invert this step once the bug above is fixed",
             trigger: ":iframe .modal li:contains(Red) input:checked",
         },
         {
-            content: "Click the pink variant",
+            content:
+                "Work around the known bug: manually select the configured Pink variant",
             trigger: ":iframe .modal li:contains(Pink) input",
             run: "click",
         },
