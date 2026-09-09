@@ -323,7 +323,7 @@ export class ProductPageImageGridColumnsAction extends BaseProductPageAction {
         return (parseInt(this.productPageGrid?.dataset.grid_columns) || 1) === value;
     }
     getValue() {
-        parseInt(this.productPageGrid?.dataset.grid_columns) || 1;
+        return parseInt(this.productPageGrid?.dataset.grid_columns) || 1;
     }
     async apply({ value }) {
         this.productPageGrid.dataset.grid_columns = value;
