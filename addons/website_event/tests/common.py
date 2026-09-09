@@ -41,6 +41,8 @@ class OnlineEventCase(EventCase):
 
         if menus_in is None:
             menus_in = list(self._get_menus())
+        if menus_out is None:
+            menus_out = [name for name in self._get_menus() if name not in menus_in]
 
         menus = self.env["website.menu"].search([("parent_id", "=", event.menu_id.id)])
         menus |= menus.child_id
