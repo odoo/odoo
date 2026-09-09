@@ -63,8 +63,10 @@ class SlidesCase(MailCase):
             {
                 "country_id": cls.env.ref("base.be").id,
                 "email": "customer@customer.example.com",
+                "phone_ids": [
+                    Command.create({"number": "0456001122", "type": "landline"})
+                ],
                 "name": "Caroline Customer",
-                "phone_ids": [Command.create({"number": "0456001122"})],
             }
         )
 
