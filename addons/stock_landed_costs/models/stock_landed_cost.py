@@ -1,8 +1,11 @@
+import logging
 from collections import defaultdict
 
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
+
+_logger = logging.getLogger(__name__)
 
 SPLIT_METHOD = [
     ("equal", "Equal"),
@@ -277,6 +280,15 @@ class StockLandedCost(models.Model):
                             per_unit = line.price_unit / total_cost
                             value = valuation.former_cost * per_unit
                         else:
+                            if line.split_method != "equal":
+                                _logger.warning(
+                                    "Landed cost %s: split method %r could not be "
+                                    "applied on cost line %s (its total was zero); "
+                                    "falling back to an equal split.",
+                                    cost.id,
+                                    line.split_method,
+                                    line.id,
+                                )
                             value = line.price_unit / total_line
 
                         if rounding:
