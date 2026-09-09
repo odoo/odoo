@@ -31,20 +31,14 @@ class TestPricelistAutoCreation(ProductCommon):
         cls.env['product.pricelist'].search([]).unlink()
 
     def test_inactive_curr_set_on_company(self):
-        """Make sure that when setting an inactive currency on a company, the activation of the
-        multi-currency group won't
+        """Make sure that setting an inactive currency on a company activates the multi-currency
+        group without enabling the pricelist feature.
         """
         self.env.company.sudo().currency_id = self.currency_usd
-        self.assertFalse(
-            self.env['product.pricelist'].search([
-                ('currency_id.name', '=', 'EUR'),
-                ('company_id', '=', self.env.company.id),
-            ])
-        )
+
         self.assertTrue(self.currency_usd.active)
-        self.assertTrue(
-            self.env['product.pricelist'].search([
-                ('currency_id.name', '=', 'USD'),
-                ('company_id', '=', self.env.company.id),
-            ])
+        self.assertTrue(self.env.user.has_group('base.group_multi_currency'))
+        self.assertFalse(self.env.user.has_group('product.group_product_pricelist'))
+        self.assertFalse(
+            self.env['product.pricelist'].search([('company_id', '=', self.env.company.id)])
         )
