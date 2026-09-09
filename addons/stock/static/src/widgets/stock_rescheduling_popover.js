@@ -40,7 +40,7 @@ export class StockReschedulingPopover extends PopoverWidgetField {
     static defaultIcon = "fa-triangle-exclamation";
 
     showPopup(ev) {
-        if (!this.jsonValue.late_elements) {
+        if (!this.jsonValue.late_elements?.length) {
             return;
         }
         super.showPopup(ev);
