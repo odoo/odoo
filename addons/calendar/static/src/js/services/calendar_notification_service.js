@@ -2,6 +2,7 @@ import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 import { ConnectionLostError, rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
+import { markup } from "@odoo/owl";
 
 export const calendarNotificationService = {
     dependencies: ["action", "bus_service", "notification"],
@@ -34,7 +35,7 @@ export const calendarNotificationService = {
                     return;
                 }
                 calendarNotifTimeouts[key] = browser.setTimeout(function () {
-                    const notificationRemove = notification.add(notif.message, {
+                    const notificationRemove = notification.add(markup(notif.message), {
                         title: notif.title,
                         type: "warning",
                         sticky: true,
