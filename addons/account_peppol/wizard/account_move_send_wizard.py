@@ -50,7 +50,7 @@ class AccountMoveSendWizard(models.TransientModel):
                     addendum_mode = _(' (Test)')
                 elif peppol_proxy_mode == 'demo':
                     addendum_mode = _(' (Demo)')
-                if addendum_disable_reason or addendum_mode:
+                if peppol_label != peppol_checkbox['label'] or addendum_disable_reason or addendum_mode:
                     wizard.sending_method_checkboxes = {
                         **wizard.sending_method_checkboxes,
                         'peppol': {
