@@ -103,6 +103,17 @@ class TestEventListFilters(HttpCase, TestEventOnlineCommon):
             "unrelated page key that merely differs by one character.",
         )
 
+    def test_event_tags_page_non_slug_tag(self):
+        """A single, non-comma tag on /event/tags/<slug> stays a GET (no
+        redirect) and must not crash the search when the tag doesn't parse
+        as a slug (e.g. no trailing '-<id>')."""
+        resp = self.url_open("/event/tags/abc")
+        self.assertEqual(
+            resp.status_code,
+            200,
+            "A bare non-slug tag must not crash /event/tags/<slug_tags>.",
+        )
+
 
 @tagged("post_install", "-at_install")
 class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
