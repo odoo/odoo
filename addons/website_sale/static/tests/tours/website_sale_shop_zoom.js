@@ -35,7 +35,6 @@ registry.category("web_tour.tours").add("shop_zoom", {
         {
             content: "wait for variant to be loaded",
             trigger: '.oe_currency_value:contains("21.00")',
-            run: "click",
         },
         {
             content: "click on the image",
