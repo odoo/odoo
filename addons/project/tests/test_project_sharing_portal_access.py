@@ -85,6 +85,79 @@ class TestProjectSharingPortalAccess(TestProjectSharingCommon):
             "Non collaborator portal user should not have access to mention suggestions",
         )
 
+    def test_recipient_suggestions(self):
+        """ Check recipient suggestions available to a portal collaborator. """
+        same_company_partner = self.env['res.partner'].create({
+            'name': 'Same Company Contact',
+            'email': 'same.company@example.com',
+            'parent_id': self.user_portal.partner_id.commercial_partner_id.id,
+        })
+        self.env['project.collaborator'].create({
+            'project_id': self.project_portal.id,
+            'partner_id': self.partner_1.id,
+        })
+        read_access_partner = self.env['res.partner'].create({
+            'name': 'Read Access Contact',
+            'email': 'read.access@example.com',
+        })
+        self.project_portal.message_subscribe(self.partner_1.ids + read_access_partner.ids)
+
+        data = (
+            self.task_portal.with_user(self.user_portal)
+            .get_recipient_suggestions(search="")
+            ._build_result()
+        )
+        partners_data = {partner["id"]: partner for partner in data["res.partner"]}
+        self.assertNotIn(
+            self.user_portal.partner_id.id,
+            partners_data,
+            "Current user should not be suggested as a recipient",
+        )
+        self.assertIn(
+            self.partner_1.id,
+            partners_data,
+            "Other project collaborators should be suggested",
+        )
+        self.assertIn(
+            same_company_partner.id,
+            partners_data,
+            "Partners of the same commercial company should be suggested",
+        )
+        self.assertIn(
+            read_access_partner.id,
+            partners_data,
+            "Partners with read access (project followers) should be suggested",
+        )
+        self.assertNotIn(
+            self.partner_2.id,
+            partners_data,
+            "Unrelated partners should not be suggested",
+        )
+        self.assertEqual(
+            partners_data[self.partner_1.id]["mention_token"],
+            self.partner_1._get_mention_token(),
+        )
+
+        filtered_suggestions = (
+            self.task_portal.with_user(self.user_portal)
+            .get_recipient_suggestions(search="Same Company")
+            ._build_result()
+        )
+        self.assertEqual(
+            {partner.get("id") for partner in filtered_suggestions.get("res.partner")},
+            {same_company_partner.id},
+            "Search should narrow the recipient allow-list by name/email",
+        )
+
+        self.project_portal.collaborator_ids.filtered(
+            lambda rec: rec.partner_id == self.user_portal.partner_id
+        ).unlink()
+        self.assertEqual(
+            {},
+            self.task_portal.with_user(self.user_portal).get_recipient_suggestions(search=""),
+            "Non collaborator portal user should not have access to recipient suggestions",
+        )
+
     def test_readonly_fields(self):
         """ The fields are not writeable should not be editable by the portal user. """
         view_infos = self.task_portal.get_view(self.env.ref(self.project_sharing_form_view_xml_id).id)
