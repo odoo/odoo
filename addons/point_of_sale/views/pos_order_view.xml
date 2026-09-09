@@ -125,10 +125,11 @@
                         <group class="oe_subtotal_footer border-0 mt-4 mt-md-0" name="order_total">
                             <field name="amount_tax"
                                    force_save="1"
+                                   class="mb-3 mb-md-0"
                                    widget="monetary"/>
                             <field name="amount_total"
                                    force_save="1"
-                                   class="h3"
+                                   class="h3 mb-3 mb-md-0"
                                    widget="monetary"/>
                             <div class="oe_inline o_td_label">
                                 <label class="o_form_label_readonly" for="amount_paid" string="Total Paid (with rounding)"/>
@@ -136,7 +137,7 @@
                             <field name="amount_paid"
                                 nolabel="1"
                                 widget="monetary"
-                                class="h3"
+                                class="h3 mb-3 mb-md-0"
                                 invisible="amount_paid == 'amount_total'"
                                 readonly="state != 'draft'"/>
                             <label for="margin"/>
@@ -167,8 +168,8 @@
                             </list>
                         </field>
                         <group class="oe_subtotal_footer" colspan="2" name="order_total">
-                            <field name="amount_total" class="h3" widget="monetary"/>
-                            <field name="amount_paid" widget="monetary" class="h3" readonly="1" />
+                            <field name="amount_total" class="h3 mb-3 mb-md-0" widget="monetary"/>
+                            <field name="amount_paid" widget="monetary" class="h3 mb-3 mb-md-0" readonly="1" />
                             <field name="amount_difference" widget="monetary" force_save="1" />
                         </group>
                     </page>
