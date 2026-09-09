@@ -138,6 +138,10 @@ export class SurveySessionManage extends Interaction {
         // Show the page and start the timer
         this.el.classList.remove("invisible");
         this.setupIntervals();
+        this.registerCleanup(() => {
+            clearInterval(this.attendeesRefreshInterval);
+            clearInterval(this.resultsRefreshInterval);
+        });
     }
 
     async willStart() {
