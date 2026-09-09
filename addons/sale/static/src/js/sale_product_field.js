@@ -267,10 +267,14 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
             selectedComboItems: selectedComboItems,
             edit: edit,
             save: async (mainProduct, optionalProducts) => {
+                // When editing, the UoM is set back after the product change (see below)
+                const productUom = edit && mainProduct.uom;
                 // Don't add main product if it's a combo product as it has already been added
                 // from combo configurator
                 const proms = !selectedComboItems.length
-                    ? [applyProduct(this.props.record, mainProduct)]
+                    ? [applyProduct(
+                        this.props.record, productUom ? { ...mainProduct, uom: undefined } : mainProduct
+                    )]
                     : [];
 
                 for (const [i, product] of optionalProducts.entries()) {
@@ -286,6 +290,11 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
                 }
 
                 await Promise.all(proms);
+                // The product change resets the UoM to the product's default one. Setting it back
+                // as a real change makes sure it is also saved, otherwise the server recomputes it.
+                if (productUom && productUom.id !== this.props.record.data.product_uom_id.id) {
+                    await this.props.record.update({ product_uom_id: productUom });
+                }
                 this._onProductUpdate();
                 saleOrderRecord.data.order_line.leaveEditMode();
             },
