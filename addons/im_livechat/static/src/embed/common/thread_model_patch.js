@@ -17,18 +17,15 @@ patch(Thread.prototype, {
          */
         this.readyToSwapPromise = promise;
         this.resolveReadyToSwap = resolve;
-        this._prevComposerDisabled = false;
     },
-    /** @returns {Promise<import("models").Message} */
     async post(body, postData, extraData = {}) {
-        if (
-            this.channel?.chatbot &&
-            !this.channel.livechat_agent_history_ids.length &&
-            this.channel.chatbot.currentStep?.step_type !== "free_input_multi"
-        ) {
-            this.channel.chatbot.isProcessingAnswer = true;
-        }
         if (this.channel?.channel_type === "livechat" && this.isTransient) {
+            if (
+                this.channel?.chatbot &&
+                this.channel.chatbot.currentStep?.step_type !== "free_input_multi"
+            ) {
+                this.channel.chatbot.isProcessingAnswer = true;
+            }
             // For smoother transition: post the temporary message and set the
             // selected chat bot answer if any. Then, simulate the chat bot is
             // typing (2 ** 31 - 1 is the greatest value supported by
@@ -63,40 +60,6 @@ patch(Thread.prototype, {
             return channel.post(...arguments).then(() => channel.resolveReadyToSwap());
         }
         const message = await super.post(...arguments);
-        await this.channel?.chatbot?.processAnswer(message);
         return message;
-    },
-
-    computeComposerDisabled() {
-        if (this.channel?.channel_type !== "livechat") {
-            return super.computeComposerDisabled(...arguments);
-        }
-        if (this.channel?.livechat_agent_history_ids.length && !this.channel.livechat_end_dt) {
-            return false;
-        }
-        const step = this.channel?.chatbot?.currentStep;
-        return (
-            this.channel?.chatbot?.isProcessingAnswer ||
-            (step &&
-                !step.operatorFoundEver &&
-                (step.completed || !step.expectAnswer || step.answer_ids.length > 0))
-        );
-    },
-
-    composerDisabledonUpdate() {
-        if (!this.composerDisabled && this._prevComposerDisabled) {
-            this.composer.autofocus++;
-        }
-        this._prevComposerDisabled = this.composerDisabled;
-    },
-    get shouldTranslateNewMessages() {
-        if (
-            this.channel?.channel_type === "livechat" &&
-            this.channel.self_member_id?.livechat_member_type === "visitor" &&
-            this.store.hasMessageTranslationFeature
-        ) {
-            return this.autoTranslateEnabled === undefined ? true : this.autoTranslateEnabled;
-        }
-        return super.shouldTranslateNewMessages;
     },
 });
