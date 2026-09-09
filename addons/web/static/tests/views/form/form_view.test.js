@@ -12276,7 +12276,7 @@ test(`only re-render necessary fields after change (with onchange)`, async () =>
     ]);
 
     await contains(`.o_field_widget[name=int_field] input`).edit("5846");
-    expect.verifySteps(["[Field int_field] onPatched", "[IntegerField int_field] onPatched"]);
+    expect.verifySteps(["[IntegerField int_field] onPatched", "[Field int_field] onPatched"]);
 });
 
 test(`widget update several fields including an x2m`, async () => {
