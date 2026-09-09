@@ -11,7 +11,7 @@ export class RadioSelectionFieldWithFilter extends RadioField {
 
     get items() {
         const allowedItems = this.props.record.data[this.props.allowedSelectionField];
-        return super.items.filter(([value]) => allowedItems.includes(value));
+        return super.items.filter(([value]) => (allowedItems || []).includes(value));
     }
 }
 
