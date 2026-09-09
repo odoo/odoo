@@ -44,15 +44,19 @@ class TestWebsiteResUsers(TransactionCase):
             (user_1 | user_2).write({"website_id": False})
 
     def test_null_and_website(self):
-        new_test_user(
+        user_with_website = new_test_user(
             self.env,
             login="Pou",
             website_id=self.website_1.id,
             groups="base.group_portal",
         )
-        new_test_user(
+        user_without_website = new_test_user(
             self.env, login="Pou", website_id=False, groups="base.group_portal"
         )
+        self.assertEqual(user_with_website.login, "Pou")
+        self.assertEqual(user_with_website.website_id, self.website_1)
+        self.assertEqual(user_without_website.login, "Pou")
+        self.assertFalse(user_without_website.website_id)
 
     def test_change_login(self):
         new_test_user(
