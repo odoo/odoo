@@ -68,6 +68,9 @@ class Web_Unsplash(HTML_Editor):
 
         for key, value in unsplashurls.items():
             url = value.get("url")
+            if not url:
+                logger.error("ERROR: Unknown Unsplash URL!: %s", url)
+                continue
             try:
                 if (
                     not url.startswith(
@@ -88,7 +91,7 @@ class Web_Unsplash(HTML_Editor):
 
                 image = image_process(image, verify_resolution=True)
                 mimetype = guess_mimetype(image)
-            except requests.exceptions.RequestException, UserError:
+            except requests.exceptions.RequestException, UserError, ValueError:
                 logger.exception("Failed to fetch or process Unsplash image")
                 continue
 
