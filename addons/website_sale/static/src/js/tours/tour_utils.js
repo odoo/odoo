@@ -94,6 +94,47 @@ export function assertCartContains({
     return steps;
 }
 
+/**
+ * Asserts the add-to-cart toast notification shows the given product, qty
+ * and price (and, optionally, a selected no-variant/custom attribute line).
+ */
+export function assertToastNotification({ productName, qty, price, combinationName = false }) {
+    const steps = [
+        {
+            content: `check that ${qty} ${productName} was added`,
+            trigger: `.toast-body span:contains("${productName}")`,
+        },
+        {
+            content: `check that ${qty} ${productName} was added`,
+            trigger: `.toast-body span:contains("${qty}")`,
+        },
+    ];
+
+    if (combinationName) {
+        steps.push({
+            content: "check that the novariants/custom attributes are displayed.",
+            trigger: `.toast-body span.text-muted.small:contains("${combinationName}")`,
+        });
+    }
+
+    steps.push({
+        content: `check the price of ${qty} ${productName}`,
+        trigger: `.toast-body div:contains("${price}")`,
+    });
+
+    return steps;
+}
+
+/**
+ * The `aria-label` each price carries in `product_tile_templates.xml`.
+ *
+ * This used to select on `data-oe-expression`, which is the template's own
+ * source expression -- emitted into every page by `ir.qweb._get_widget`, edit
+ * mode or not. That attribute is branding: it now appears only when
+ * `inherit_branding` is set, as it already did for `t-field`. The accessibility
+ * label is the better hook regardless: it is a contract with the reader, where
+ * the expression was an implementation detail of the template.
+ */
 const PRICE_ARIA_LABELS = {
     price_reduce: "Sale price",
     base_price: "Original price",
