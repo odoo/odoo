@@ -30,7 +30,7 @@ patch(ComboConfiguratorDialog.prototype, {
         if (this.props.isFrontend) {
             return _t("Total: %s", this.formattedTotalPrice);
         }
-        return super.totalMessage(...arguments);
+        return super.totalMessage;
     },
 
     get _comboProductData() {
