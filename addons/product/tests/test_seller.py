@@ -166,21 +166,46 @@ class TestSeller(TransactionCase):
             "Setting the product_id to False shouldn't affect seller_ids.")
 
     def test_51_seller_ids(self):
-        """Test vendor selection when using select_seller with Partner_id False"""
-
+        """
+        Check that, with no vendor set, the cheapest offer of the first vendor having an
+        offer for the requested quantity is chosen, even when a vendor further down the
+        list is cheaper.
+        """
+        last_vendor = self.env['res.partner'].create({'name': 'Deco Addict'})
         self.env['product.supplierinfo'].create([
             {
                 'partner_id': self.asustec.id,
                 'product_tmpl_id': self.product_consu.product_tmpl_id.id,
                 'price': 170,
+                'min_qty': 100,
                 'sequence': 1,
+            }, {
+                'partner_id': self.asustec.id,
+                'product_tmpl_id': self.product_consu.product_tmpl_id.id,
+                'price': 150,
+                'min_qty': 100,
+                'sequence': 2,
             }, {
                 'partner_id': self.camptocamp.id,
                 'product_tmpl_id': self.product_consu.product_tmpl_id.id,
+                'price': 90,
+                'sequence': 3,
+            }, {
+                'partner_id': self.camptocamp.id,
+                'product_tmpl_id': self.product_consu.product_tmpl_id.id,
+                'price': 60,
+                'sequence': 4,
+            }, {
+                'partner_id': last_vendor.id,
+                'product_tmpl_id': self.product_consu.product_tmpl_id.id,
                 'price': 10,  # Wow so cheap
-                'sequence': 2,
+                'sequence': 5,
             }
         ])
 
-        price = self.product_consu._select_seller(partner_id=False, quantity=1).price
-        self.assertEqual(price, 10, "Should select cheapest vendor with partner_id false")
+        seller = self.product_consu._select_seller(partner_id=False, quantity=100)
+        self.assertRecordValues(seller, [{'partner_id': self.asustec.id, 'price': 150}])
+
+        # The first vendor has no offer for a single unit, the next one in line takes over.
+        seller = self.product_consu._select_seller(partner_id=False, quantity=1)
+        self.assertRecordValues(seller, [{'partner_id': self.camptocamp.id, 'price': 60}])

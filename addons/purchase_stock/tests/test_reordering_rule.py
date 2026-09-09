@@ -27,15 +27,13 @@ class TestReorderingRule(TransactionCase):
         cls.buy_route = cls.env.ref('purchase_stock.route_warehouse0_buy')
         cls.buy_route.product_selectable = True
         # create product and set the vendor
-        product_form = Form(cls.env['product.product'])
-        product_form.name = 'Product A'
-        product_form.tracking = 'none'
-        product_form.description = 'Internal Notes'
-        with product_form.seller_ids.new() as seller:
-            seller.partner_id = cls.partner
-            seller.uom_id = product_form.uom_id
-        product_form.route_ids.add(cls.buy_route)
-        cls.product_01 = product_form.save()
+        cls.product_01 = cls.env['product.product'].create({
+            'name': 'Product A',
+            'is_storable': True,
+            'description': 'Internal Notes',
+            'seller_ids': [Command.create({'partner_id': cls.partner.id})],
+            'route_ids': [Command.link(cls.buy_route.id)],
+        })
 
     def test_reordering_rule_1(self):
         """
@@ -368,23 +366,18 @@ class TestReorderingRule(TransactionCase):
         route_buy = self.env.ref('purchase_stock.route_warehouse0_buy')
         route_mto = self.env.ref('stock.route_warehouse0_mto')
 
-        product_form = Form(self.env['product.product'])
-        product_form.name = 'Simple Product'
-        product_form.tracking = 'none'
-        with product_form.seller_ids.new() as s:
-            s.partner_id = partner
-            s.uom_id = product_form.uom_id
-        product = product_form.save()
-
-        product_form = Form(self.env['product.product'])
-        product_form.name = 'Product BUY + MTO'
-        product_form.tracking = 'none'
-        product_form.route_ids.add(route_buy)
-        product_form.route_ids.add(route_mto)
-        with product_form.seller_ids.new() as s:
-            s.partner_id = partner
-            s.uom_id = product_form.uom_id
-        product_buy_mto = product_form.save()
+        product, product_buy_mto = self.env['product.product'].create([
+            {
+                'name': 'Simple Product',
+                'is_storable': True,
+                'seller_ids': [Command.create({'partner_id': partner.id})],
+            }, {
+                'name': 'Product BUY + MTO',
+                'is_storable': True,
+                'seller_ids': [Command.create({'partner_id': partner.id})],
+                'route_ids': [Command.link(route_buy.id), Command.link(route_mto.id)],
+            },
+        ])
 
         # Create Delivery Order of 20 product and 10 buy + MTO
         picking_form = Form(self.env['stock.picking'])
@@ -468,23 +461,18 @@ class TestReorderingRule(TransactionCase):
         route_buy = self.env.ref('purchase_stock.route_warehouse0_buy')
         route_mto = self.env.ref('stock.route_warehouse0_mto')
 
-        product_form = Form(self.env['product.product'])
-        product_form.name = 'Simple Product'
-        product_form.tracking = 'none'
-        with product_form.seller_ids.new() as s:
-            s.partner_id = partner
-            s.uom_id = product_form.uom_id
-        product = product_form.save()
-
-        product_form = Form(self.env['product.product'])
-        product_form.name = 'Product BUY + MTO'
-        product_form.tracking = 'none'
-        product_form.route_ids.add(route_buy)
-        product_form.route_ids.add(route_mto)
-        with product_form.seller_ids.new() as s:
-            s.partner_id = partner
-            s.uom_id = product_form.uom_id
-        product_buy_mto = product_form.save()
+        product, product_buy_mto = self.env['product.product'].create([
+            {
+                'name': 'Simple Product',
+                'is_storable': True,
+                'seller_ids': [Command.create({'partner_id': partner.id})],
+            }, {
+                'name': 'Product BUY + MTO',
+                'is_storable': True,
+                'seller_ids': [Command.create({'partner_id': partner.id})],
+                'route_ids': [Command.link(route_buy.id), Command.link(route_mto.id)],
+            },
+        ])
 
         # Create Delivery Order of 20 product and 10 buy + MTO
         picking_form = Form(self.env['stock.picking'])
@@ -1181,6 +1169,37 @@ class TestReorderingRule(TransactionCase):
         self.assertEqual(orderpoint.supplier_id, product.seller_ids, 'The supplier should be set in the orderpoint')
         self.assertEqual(orderpoint.uom_id, product.uom_id, 'The orderpoint uom should be the same as the product uom')
         self.assertEqual(orderpoint.qty_to_order, 6000)
+
+    def test_replenish_orderpoint_keeps_first_vendor(self):
+        """
+        Check that replenishing a reordering rule orders from the first vendor of
+        the product at its best price, even when a lower-priority vendor is cheaper.
+        """
+        cheaper_vendor = self.env['res.partner'].create({'name': 'Jones'})
+        product = self.env['product.product'].create({
+            'name': 'Storable Product',
+            'is_storable': True,
+            'seller_ids': [
+                Command.create({'partner_id': self.partner.id, 'sequence': 1, 'price': 100}),
+                Command.create({'partner_id': cheaper_vendor.id, 'sequence': 2, 'price': 50}),
+                Command.create({'partner_id': self.partner.id, 'sequence': 3, 'price': 80}),
+            ],
+        })
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'warehouse_id': warehouse.id,
+            'location_id': warehouse.lot_stock_id.id,
+            'product_id': product.id,
+            'product_min_qty': 0,
+            'product_max_qty': 10,
+        })
+
+        orderpoint.action_replenish()
+
+        po_line = self.env['purchase.order.line'].search([('product_id', '=', product.id)])
+        self.assertRecordValues(po_line, [
+            {'partner_id': self.partner.id, 'product_qty': 10, 'price_unit': 80},
+        ])
 
     def test_tax_po_line_reordering_rule_with_branch_company(self):
         """

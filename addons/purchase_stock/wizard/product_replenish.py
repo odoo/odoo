@@ -110,5 +110,5 @@ class ProductReplenish(models.TransientModel):
             partner=self.partner_id,
             qty=self.quantity,
             uom=self.uom_id,
-            params={"force_uom": True},
+            params={"force_uom": True, "any_vendor": True},
         )

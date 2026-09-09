@@ -1103,6 +1103,30 @@ class ProductProduct(models.Model):
         return sellers
 
     def _select_seller(self, partner_id=False, quantity=0.0, date=None, uom_id=False, ordered_by='price_discounted', params=False):
+        """ Return the best pricelist of the product for the given constraints.
+
+        By default only the pricelists of the first vendor still matching those
+        constraints are kept, so that the vendor order set on the product drives the
+        automatic selections (reordering rules, lead times, purchase suggestions,
+        ...). Use `any_vendor` to let every vendor compete on price instead.
+
+        :param partner_id: only keep the pricelists of that vendor, or of its parent
+            company. Falsy to select regardless of the vendor.
+        :param quantity: quantity to purchase, used to discard the pricelists whose
+            `min_qty` is not reached. `None` keeps them all.
+        :param date: date the pricelists must be valid at, today if not set.
+        :param uom_id: unit `quantity` is expressed in, the product one if not set.
+        :param ordered_by: field taking precedence over the discounted price when
+            sorting the remaining pricelists.
+        :param params: optional keys refining the selection. Other modules may handle
+            their own, the ones handled here are:
+            * `any_vendor`: keep the pricelists of every vendor instead of only those
+              of the first one.
+            * `force_uom`: discard the pricelists whose unit is neither `uom_id` nor
+              the product one.
+        :return: the best matching pricelist, empty if none matches.
+        :rtype: product.supplierinfo
+        """
         # Always sort by discounted price but another field can take the primacy through the `ordered_by` param.
         sort_key = ('price_discounted', 'sequence', 'id')
         if ordered_by != 'price_discounted':
@@ -1120,6 +1144,9 @@ class ProductProduct(models.Model):
             }
             return [vals.get(key, record[key]) for key in sort_key]
         sellers = self._get_filtered_sellers(partner_id=partner_id, quantity=quantity, date=date, uom_id=uom_id, params=params)
+        if sellers and not partner_id and not (params and params.get('any_vendor')):
+            first_vendor = sellers[0].partner_id
+            sellers = sellers.filtered(lambda seller: seller.partner_id == first_vendor)
         return sellers.sorted(sort_function)[:1]
 
     def _get_product_price_context(self, combination):
