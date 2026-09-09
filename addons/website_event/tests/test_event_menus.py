@@ -100,6 +100,50 @@ class TestEventMenus(OnlineEventCase, HttpCase):
             bool(self.env["website.menu"].search([("id", "=", website_menu_id)]))
         )
 
+    @users("admin")
+    def test_new_page_section_outside_wrap(self):
+        """new_page() must not crash when the event's base layout template
+        contains a <section> outside the #wrap container (WEM-02): the
+        section-relocation logic must only look at sections that are direct
+        children of #wrap, not any <section> anywhere in the document."""
+        event = self.env["event.event"].create(
+            {
+                "name": "TestEvent",
+                "date_begin": fields.Datetime.to_string(
+                    datetime.today() + timedelta(days=1)
+                ),
+                "date_end": fields.Datetime.to_string(
+                    datetime.today() + timedelta(days=15)
+                ),
+                "website_menu": True,
+            }
+        )
+        new_page_url = f"{event.website_url}/newpage-section"
+        website_menu = self.env["website.menu"].create(
+            {
+                "name": "New Menu With Section",
+                "url": new_page_url,
+                "parent_id": event.introduction_menu_ids[0].menu_id.parent_id.id,
+            }
+        )
+        self.env["website.event.menu"].create(
+            {
+                "event_id": event.id,
+                "menu_id": website_menu.id,
+                "menu_type": "community",
+            }
+        )
+
+        layout_view = self.env.ref("website_event.layout")
+        layout_view.arch = layout_view.arch.replace(
+            "</t>", '<section id="o_outside_wrap_section"/></t>', 1
+        )
+
+        new_page = self.env["website"].new_page(
+            new_page_url.lstrip("/"), sections_arch="<section>Injected</section>"
+        )
+        self.assertTrue(new_page.get("view_id"))
+
     @users("user_eventmanager")
     def test_menu_management(self):
         event = self.env["event.event"].create(
