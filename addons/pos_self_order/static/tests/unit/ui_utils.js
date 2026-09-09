@@ -1,5 +1,5 @@
 import { expect } from "@odoo/hoot";
-import { animationFrame, waitFor } from "@odoo/hoot-dom";
+import { animationFrame, queryAll, waitFor } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 
 export async function clickOrderNow() {
@@ -32,4 +32,15 @@ export async function checkPaymentPage() {
 
 export async function checkIsNoBtn(text) {
     expect(`.btn:contains('${text}')`).toHaveCount(0);
+}
+
+export async function checkSlotDisabled(slotValue) {
+    await waitFor(".select_popup_preset_info");
+    const slots = queryAll(".select_popup_preset_info .slot-select option");
+    expect(slots.some((slot) => slot.textContent.trim() === slotValue && slot.disabled)).toBe(true);
+}
+
+export async function clickCartButton(buttonName) {
+    await contains(`.cart.btn:contains('${buttonName}')`).click();
+    await animationFrame();
 }
