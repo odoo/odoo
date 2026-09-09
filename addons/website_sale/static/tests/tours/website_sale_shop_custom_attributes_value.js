@@ -48,7 +48,7 @@ registry.category("web_tour.tours").add("a_shop_custom_attribute_value", {
                         "Conference Chair (TEST) (Aluminium)",
                     );
                 if (newOptionVariantImage === optionVariantImage) {
-                    console.error("The variant image wasn't updated");
+                    throw new Error("The variant image wasn't updated");
                 }
             },
         },
