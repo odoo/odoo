@@ -72,7 +72,7 @@ export class CourseTagAddDialog extends Component {
             return;
         }
         const values = this._getSelectMenuValues();
-        if (this.props.defaultTag && !this.channelId) {
+        if (this.props.defaultTag && !this.props.channelId) {
             this._createNewTag(values);
         } else {
             this._addTagToChannel(values);
