@@ -975,11 +975,10 @@ class PosSession(models.Model):
         today = fields.Date.context_today(self)
         # All orders are refunds or not
         move_type = 'out_refund' if orders[0].is_refund_or_negative() else 'out_invoice'
-
         return {
             'move_type': move_type,
             'company_id': self.company_id.id,
-            'journal_id': self.config_id.journal_id.id,
+            'journal_id': self.config_id._get_closing_journal().id,
             'partner_id': self.config_id.default_partner_id.id,
             'date': today,
             'invoice_date_due': today,
@@ -1013,14 +1012,6 @@ class PosSession(models.Model):
             return self.env['account.move']
 
         refund = orders[0].is_refund_or_negative()  # All orders are refunds or not
-        AccountJournal = self.env['account.journal'].with_company(
-            self.company_id,
-        )
-        journal = AccountJournal._ensure_company_account_journal()
-        config_journal = self.config_id.journal_id
-        if self.config_id.journal_id != journal and config_journal.type != 'sale':
-            self.config_id.journal_id = journal
-
         payment_methods = orders.payment_ids.payment_method_id
         cash_payment_method = payment_methods.filtered(
             lambda pm: pm.type == 'cash',
