@@ -53,7 +53,20 @@ export class HierarchyNode {
         }
     }
 
-    /** @returns {Boolean} */
+    /**
+     * Get ancestor node
+     *
+     * @returns {HierarchyNode} ancestor node
+     */
+    get ancestorNode() {
+        return this.parentNode ? this.parentNode.ancestorNode : this;
+    }
+
+    /**
+     * Is leaf?
+     *
+     * @returns {Boolean} False if the current node has node as child nodes, otherwise True.
+     */
     get isLeaf() {
         return !this.nodes.length;
     }
