@@ -533,6 +533,10 @@ This module provides the core of the Odoo Web Client.
             '/web/static/src/libs/materialsymbols/material_symbols_outlined_subset.woff2',
             '/web/static/src/libs/materialsymbols/material_symbols_outlined.css',
         ],
+        'web.material_symbols_rounded': [
+            '/web/static/src/libs/materialsymbols/material_symbols_rounded_subset.woff2',
+            '/web/static/src/libs/materialsymbols/material_symbols_rounded.css',
+        ],
         'web.material_symbols_sharp': [
             '/web/static/src/libs/materialsymbols/material_symbols_sharp_subset.woff2',
             '/web/static/src/libs/materialsymbols/material_symbols_sharp.css',
@@ -543,6 +547,7 @@ This module provides the core of the Odoo Web Client.
         ],
         'web.icons_fonts': [
             ('include', 'web.material_symbols_outlined'),
+            ('include', 'web.material_symbols_rounded'),
             ('include', 'web.material_symbols_sharp'),
             ('include', 'web.odoo_ui_icons'),
             'web/static/src/webclient/icons_mappings/**',
