@@ -100,7 +100,6 @@ export class EditWebsiteSystrayItem extends Component {
             path: defaultLanguagePathname + search + hash,
             lang: "default",
             edition: true,
-            htmlBuilder: true,
         });
     }
 
@@ -113,7 +112,6 @@ export class EditWebsiteSystrayItem extends Component {
         this.websiteService.goToWebsite({
             path: pathname + `?${searchParams.toString() + hash}`,
             translation: true,
-            htmlBuilder: true,
         });
     }
 
