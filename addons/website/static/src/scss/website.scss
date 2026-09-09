@@ -817,7 +817,9 @@ font[class*='bg-'] {
             }
         }
         // Default, if no color or background-color already selected
-        color: $gray-900;
+        &:not([class*='bg-']) {
+            color: $gray-900;
+        }
         background-color: $gray-100;
     }
     &.img-thumbnail {
