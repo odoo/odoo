@@ -56,6 +56,15 @@ class TestTaskTemplates(TestProjectCommon, MailCase):
         child_task = task.child_ids
         self.assertEqual(child_task.partner_id, self.partner_3, "The child of the created task should have the same partner as the project.")
 
+        other_project = self.env["project.project"].create({
+            "name": "Other Project",
+        })
+        self.child_task.project_id = other_project
+        task_id = self.template_task.action_create_from_template()
+        task = self.env["project.task"].browse(task_id)
+        child_task = task.child_ids
+        self.assertEqual(child_task.project_id, other_project, "The child task should keep its own project instead of following the new parent's project.")
+
     def test_copy_template(self):
         """
         A copy of a template should be a template
