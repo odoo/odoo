@@ -23,6 +23,9 @@ Module holding mail improvements for website. It holds the follow widget.
         "web.assets_inside_builder_iframe": [
             "website_mail/static/src/interactions/follow.edit.js",
         ],
+        "web.assets_unit_tests_setup": [
+            "website_mail/static/src/interactions/follow.js",
+        ],
         "web.assets_unit_tests": [
             "website_mail/static/tests/**/*.test.js",
         ],
