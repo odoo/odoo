@@ -60,7 +60,7 @@ class QuestionPageOneToManyField extends X2ManyField {
                 // In case of error occurring when saving.
                 // Remove erroneous question row added to the embedded list
                 await this.list.delete(record);
-                throw new SurveySaveError(error.data.message);
+                throw new SurveySaveError(error?.data?.message ?? error.message);
             }
         };
 
@@ -69,7 +69,7 @@ class QuestionPageOneToManyField extends X2ManyField {
             try {
                 await self.props.record.save();
             } catch (error) {
-                throw new SurveySaveError(error.data.message);
+                throw new SurveySaveError(error?.data?.message ?? error.message);
             }
         };
 
