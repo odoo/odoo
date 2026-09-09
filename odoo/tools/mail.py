@@ -241,13 +241,13 @@ def html_normalize(src, filter_callback=None):
     src = ustr(src, errors='replace')
     src = INVALID_XML_CHARS.sub('', src)
     # html: remove encoding attribute inside tags
-    doctype = re.compile(r'(<[^>]*\s)(encoding=(["\'][^"\']*?["\']|[^\s\n\r>]+)(\s[^>]*|/)?>)', re.IGNORECASE | re.DOTALL)
+    doctype = re.compile(r'(<(?=[^<>]*>)[^<>]*\s)(encoding=(["\'][^"\'<>]*?["\']|[^\s\n\r<>]+)(\s[^<>]*|/)?>)', re.IGNORECASE | re.DOTALL)
     src = doctype.sub(u"", src)
 
     try:
         # On the specific case of Outlook desktop it adds unnecessary '<o:.*></o:.*>' tags which are parsed
         # in '<p></p>' which may alter the appearance (eg. spacing) of the mail body
-        src = re.sub(r'</?o:.*?>', '', src)
+        src = re.sub(r'</?o:[^<>\n]*?>', '', src)
         src = src.replace('--!>', '-->')
         src = re.sub(r'(<!-->|<!--->)', '<!-- -->', src)
         doc = html.fromstring(src)
