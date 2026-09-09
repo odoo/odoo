@@ -18,10 +18,11 @@ from odoo.tools import OrderedSet, float_compare, float_is_zero, float_repr
 
 KSEF_CURRENT_WINDOW = 3
 KSEF_WINDOW = 30
-KSEF_INTERVAL = 1
+KSEF_INTERVAL = 5
 KSEF_FIRST_DAY = fields.Date.from_string('2026-01-31')
 
 _logger = logging.getLogger(__name__)
+KSEF_LOG_HEADER = "KSeF download:"
 
 
 def today_datetime():
@@ -745,8 +746,8 @@ class AccountMove(models.Model):
             info['to_delete'].unlink()
 
         if info['retrigger']:
-            seconds = info.get('retry_after') or (KSEF_INTERVAL * 60)
-            _logger.info("Retriggering (%ss)...", seconds)
+            seconds = info.get('retry_after') or KSEF_INTERVAL
+            _logger.info("%s Retriggering (%ss)...", KSEF_LOG_HEADER, seconds)
             self.env.ref('l10n_pl_edi.cron_l10n_pl_edi_ksef_download_bills')._trigger(
                 at=fields.Datetime.now() + relativedelta(seconds=seconds)
             )
@@ -754,26 +755,27 @@ class AccountMove(models.Model):
     def _l10n_pl_edi_download_batches(self, company, batches):
         for batch in batches:
             batch_name = batch.name
-            _logger.info("Downloading batch %s ...", batch_name)
-            # Commit every download
+            _logger.info("%s Downloading batch: %s ...", KSEF_LOG_HEADER, batch_name)
             batch_data = json.loads(batch.raw)
             batch._l10n_pl_edi_download_parts(company, batch_data, commit=True)
-            # download_parts returns only the new parts
             parts = batch._l10n_pl_edi_get_parts(extra_domain=[('description', '=', batch_data['number'])])
             dest_name = batch_name.replace('json', 'zip')
-            _logger.info("Creating %s", dest_name)
-            if not self.env['ir.attachment'].sudo().search([('name', '=', dest_name)]):
-                parts.merge(
-                    dest_name=dest_name,
-                    res_model=parts[0].res_model,
-                    res_id=parts[0].res_id,
-                    delete=True,
-                    mimetype='application/zip',
-                )
-            else:
-                _logger.info("Already there %s", dest_name)
+            if parts:
+                if not self.env['ir.attachment'].sudo().search([('name', '=', dest_name)]):
+                    _logger.info("%s: Creating merged batch: %s", KSEF_LOG_HEADER, dest_name)
+                    parts.merge(
+                        dest_name=dest_name,
+                        res_model=parts[0].res_model,
+                        res_id=parts[0].res_id,
+                        mimetype='application/zip',
+                    )
+                    for part in parts:
+                        _logger.info("%s Deleted part: %s", KSEF_LOG_HEADER, part.name)
+                    parts.unlink()
+                else:
+                    _logger.info("%s Batch zip already exists: %s", KSEF_LOG_HEADER, dest_name)
+            _logger.info("%s Deleting batch: %s", KSEF_LOG_HEADER, batch_name)
             batch.unlink()
-            _logger.info("Deleted batch %s", batch_name)
             if self._can_commit():
                 self.env.cr.commit()
 
@@ -797,6 +799,7 @@ class AccountMove(models.Model):
                 batch_number = batch_ticket['number']
                 if batch_status := service.download_batch_status(batch_number, date_from, date_to, encryption_data):
                     batch_status_json = json.dumps(batch_status, indent=4)
+                    _logger.info("%s Creating batch: %s", KSEF_LOG_HEADER, f'ksef_batch_{batch_number}.json')
                     self.env['ir.attachment']._l10n_pl_edi_create_batch(batch_number, batch_status_json)
                 if self._can_commit():
                     self.env.cr.commit()
@@ -819,8 +822,9 @@ class AccountMove(models.Model):
         retriggered, retrigger = False, info['retrigger']
         for batch in Attachment._l10n_pl_edi_get_batches():
             batch_data = json.loads(batch.raw.decode())
-            # Remove stale batches, files are not there anymore
-            if (date_expiry := batch_data.get('date_expiry')) and date_expiry < today_datetime:
+            # Remove expired batches, files are not there anymore
+            date_expiry = batch_data.get('date_expiry') and fields.Datetime.from_string(batch_data['date_expiry'])
+            if date_expiry and date_expiry < fields.Datetime.now():
                 batch.unlink()
                 continue
             encryption_data = batch_data['encryption_data']
@@ -847,7 +851,7 @@ class AccountMove(models.Model):
                 case _:
                     # Warn the user and then delete
                     date_from, date_to, error = batch_data['date_from'], batch_data['date_to'], batch_data.get('error')
-                    _logger.error("KSeF batch %s..%s has failed download: %s", date_from, date_to, error)
+                    _logger.error("%s Batch %s..%s has failed download: %s", KSEF_LOG_HEADER, date_from, date_to, error)
                     to_delete |= batch
         return info.update({
             'to_delete': to_delete,

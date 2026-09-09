@@ -398,7 +398,6 @@ class KsefApiService:
                 },
                 'encryption_data': encryption_data,
             }
-            _logger.info("download_batch_status(%s): %s", number, json.dumps(batch_data, indent=4))
             return batch_data
 
         except KSeFRateLimitError as e:
@@ -419,9 +418,6 @@ class KsefApiService:
         try:
             response = self._make_request('POST', f"{self.api_url}/invoices/exports", json=payload)
             json_response = response.json()
-
-            _logger.info("download_batch_request(%s, %s): %s", date_from, date_to, json.dumps(json_response, indent=4))
-
             return {
                 'number': json_response.get('referenceNumber', False),
                 'encryption_data': encryption_data,

@@ -8,6 +8,7 @@ from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 
 from odoo import models
 from odoo.osv import expression
+from odoo.addons.l10n_pl_edi.models.account_move import KSEF_LOG_HEADER
 from odoo.addons.l10n_pl_edi.tools import u64
 from odoo.addons.l10n_pl_edi.tools.ksef_api_service import KsefApiService
 
@@ -41,11 +42,12 @@ class IrAttachment(models.Model):
             ('res_id', '=', self.env.ref(CRON_NAME).id),
         ], order="create_date desc")
 
-    def merge(self, dest_name, delete=False, **kwargs):
+    def merge(self, dest_name, **kwargs):
         if not self:
             raise ValueError("No attachments to merge.")
         if len(self) == 1:
             return self
+
         dest = self.create({'name': dest_name, 'type': 'binary', 'raw': b' ', **kwargs})
         if self[0].db_datas:
             att_ids = tuple(self.ids)
@@ -80,8 +82,6 @@ class IrAttachment(models.Model):
             file_size, checksum = dest_path.stat().st_size, sha1.hexdigest()
         dest.write({'file_size': file_size, 'checksum': checksum})
         dest.invalidate_recordset(['db_datas'])
-        if delete:
-            self.unlink()
         return dest
 
     def _l10n_pl_edi_download_parts(self, company, batch_data, commit=False):
@@ -99,7 +99,7 @@ class IrAttachment(models.Model):
             extra_domain=[('description', '=', batch_data['number'])]
         ).mapped("name")
         for existing_part_name in existing_parts_names:
-            _logger.info("Existing part : %s", existing_part_name)
+            _logger.info("%s Existing part : %s", KSEF_LOG_HEADER, existing_part_name)
         to_download = [
             (name, batch_data['parts'][name])
             for name in batch_data['parts']
@@ -121,8 +121,7 @@ class IrAttachment(models.Model):
                 'res_id': self.env.ref(CRON_NAME).id,
                 'raw': decrypted_bytes,
             })
-            _logger.info("Downloaded %s (%s)", filename, part_name)
-            _logger.info("Created part %s/%s", batch_data['number'], filename)
+            _logger.info("%s Downloaded part %s", KSEF_LOG_HEADER, filename)
             if commit:
                 self.env.cr.commit()
         return new_parts.with_env(self.env)
