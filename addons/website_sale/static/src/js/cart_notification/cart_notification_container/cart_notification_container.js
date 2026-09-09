@@ -1,4 +1,4 @@
-import { Component, onMounted, onWillUnmount, proxy } from '@odoo/owl';
+import { Component, onMounted, onWillUnmount, proxy, t, useProps } from '@odoo/owl';
 import { useService } from "@web/core/utils/hooks";
 import { ItemAddedNotification } from '@website_sale/js/cart_notification/item_added_notification/item_added_notification';
 import { WarningNotification } from '@website_sale/js/cart_notification/warning_notification/warning_notification';
@@ -6,9 +6,9 @@ import { WarningNotification } from '@website_sale/js/cart_notification/warning_
 export class CartNotificationContainer extends Component {
     static components = { ItemAddedNotification, WarningNotification };
     static template = 'website_sale.CartNotificationContainer';
-    static props = {
-        notifications: Set,
-    }
+    props = useProps({
+        notifications: t.instanceOf(Set),
+    });
 
     setup() {
         this.state = proxy({

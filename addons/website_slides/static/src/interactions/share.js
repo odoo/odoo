@@ -1,13 +1,14 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
+import { exprToBoolean } from "@web/core/utils/strings";
 
-import { SlideShareDialog } from '../js/public/components/slide_share_dialog/slide_share_dialog';
+import { SlideShareDialog } from "../js/public/components/slide_share_dialog/slide_share_dialog";
 
 export class Share extends Interaction {
     static selector = ".o_wslides_share";
     dynamicContent = {
         _root: { "t-on-click.prevent.stop": this.onClick },
-    }
+    };
 
     setup() {
         if (this.isFullscreen()) {
@@ -17,7 +18,7 @@ export class Share extends Interaction {
     }
 
     isFullscreen() {
-        return document.querySelector('.o_wslides_fs_main');
+        return document.querySelector(".o_wslides_fs_main");
     }
 
     getDocumentMaxPage() {
@@ -32,30 +33,36 @@ export class Share extends Interaction {
     onClick(ev) {
         const slide = this.isFullscreen() ? this.slide : ev.currentTarget.dataset;
         const isDocumentSlide = slide.category === "document";
-        const embedUrl = isDocumentSlide && slide.embedCode ?
-            this.isFullscreen() ? slide.embedUrl : slide.embedCode.slice(
-                slide.embedCode.indexOf('src="') + 5,
-                slide.embedCode.indexOf('"', slide.embedCode.indexOf('src="') + 5)
-            )
-            : undefined;
+        const embedUrl =
+            isDocumentSlide && slide.embedCode
+                ? this.isFullscreen()
+                    ? slide.embedUrl
+                    : slide.embedCode.slice(
+                          slide.embedCode.indexOf('src="') + 5,
+                          slide.embedCode.indexOf('"', slide.embedCode.indexOf('src="') + 5)
+                      )
+                : undefined;
         this.services.dialog.add(SlideShareDialog, {
             category: slide.category,
             documentMaxPage:
-                isDocumentSlide &&
-                embedUrl &&
-                new URL(embedUrl, window.location.href).origin === window.location.origin &&
-                this.getDocumentMaxPage(),
-            emailSharing: slide.emailSharing || slide.emailSharing === 'True',
+                Number(
+                    isDocumentSlide &&
+                        embedUrl &&
+                        new URL(embedUrl, window.location.href).origin === window.location.origin &&
+                        this.getDocumentMaxPage()
+                ) || 0,
+            emailSharing:
+                typeof slide.emailSharing === "string"
+                    ? exprToBoolean(slide.emailSharing)
+                    : Boolean(slide.emailSharing),
             embedCode: slide.embedCode || "",
             id: parseInt(slide.id),
-            isChannel: slide.isChannel === 'True',
+            isChannel: slide.isChannel === "True",
             name: slide.name,
             url: slide.websiteShareUrl || slide.url,
-            ...(this.isFullscreen() && { isFullscreen: true })
+            ...(this.isFullscreen() && { isFullscreen: true }),
         });
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website_slides.share", Share);
+registry.category("public.interactions").add("website_slides.share", Share);

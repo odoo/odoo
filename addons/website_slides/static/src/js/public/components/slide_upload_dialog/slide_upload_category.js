@@ -1,4 +1,4 @@
-import { Component, onMounted, onWillStart, proxy } from "@odoo/owl";
+import { Component, onMounted, onWillStart, proxy, t, useProps } from "@odoo/owl";
 import { getDataURLFromFile } from "@web/core/utils/urls";
 import { rpc } from "@web/core/network/rpc";
 import { uniqueId } from "@web/core/utils/functions";
@@ -9,16 +9,6 @@ import { SlideUploadSourceTypes } from "./slide_upload_source_types";
 
 export class SlideUploadCategory extends Component {
     static components = { DropdownItem, SelectMenu, SlideUploadSourceTypes };
-    static props = {
-        alertMsg: { type: String, optional: true },
-        channelId: Number,
-        categoryId: { type: String, optional: true },
-        slideCategory: String,
-        canPublish: Boolean,
-        canUpload: Boolean,
-        upload: Function,
-        slots: Object,
-    };
     static sourceSettings = {
         document: {
             sourceTypeLabel: _t("Document Source"),
@@ -40,6 +30,17 @@ export class SlideUploadCategory extends Component {
         },
     };
     static template = "website_slides.SlideUploadCategory";
+
+    props = useProps({
+        alertMsg: t.string().optional(),
+        channelId: t.number(),
+        categoryId: t.number().optional(),
+        slideCategory: t.string(),
+        canPublish: t.boolean(),
+        canUpload: t.boolean(),
+        upload: t.function(),
+        slots: t.object(),
+    });
 
     setup() {
         this.sourceSettings = SlideUploadCategory.sourceSettings;
@@ -65,13 +66,13 @@ export class SlideUploadCategory extends Component {
             },
             choices: {
                 categories: [],
-                categoryId: "",
+                categoryId: null,
                 tags: [],
                 tagIds: [],
             },
         });
         this.canSubmitForm = false;
-        this.defaultCategoryId = parseInt(this.props.categoryId, 10);
+        this.defaultCategoryId = this.props.categoryId;
         this.file = {};
         this.isValidUrl = true;
 

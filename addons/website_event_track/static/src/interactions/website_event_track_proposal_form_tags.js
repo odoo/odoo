@@ -1,4 +1,4 @@
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { SelectMenu } from "@web/core/select_menu/select_menu";
@@ -8,10 +8,10 @@ import { registry } from "@web/core/registry";
 class WebsiteEventTrackProposalFormTagsWrapper extends Component {
     static template = "website_event_track.WebsiteEventTrackProposalFormTagsWrapper";
     static components = { SelectMenu };
-    static props = {
-        placeholder: { optional: true, type: String },
-        defaultChoices: { optional: true, type: Array },
-    };
+    props = useProps({
+        placeholder: t.string().optional(),
+        defaultChoices: t.array().optional(),
+    });
 
     setup() {
         this.state = proxy({

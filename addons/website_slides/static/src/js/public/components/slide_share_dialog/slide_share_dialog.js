@@ -4,23 +4,24 @@ import { CopyButton } from "@web/core/copy_button/copy_button";
 import { Dialog } from "@web/core/dialog/dialog";
 import { EmailSharingInput } from "./email_sharing_input";
 
-import { Component, signal } from "@odoo/owl";
+import { Component, signal, t, useProps } from "@odoo/owl";
 
 export class SlideShareDialog extends Component {
     static template = "website_slides.SlideShareDialog";
     static components = { Dialog, CopyButton, EmailSharingInput };
-    static props = {
-        category: { type: String, optional: true },
-        close: { type: Function },
-        documentMaxPage: { type: Number, optional: true },
-        emailSharing: { type: Boolean, optional: true },
-        embedCode: { type: String, optional: true },
-        id: { type: Number },
-        isChannel: { type: Boolean, optional: true },
-        isFullscreen: { type: Boolean, optional: true },
-        name: { type: String },
-        url: { type: String },
-    };
+
+    props = useProps({
+        category: t.string().optional(),
+        close: t.function(),
+        documentMaxPage: t.number().optional(),
+        emailSharing: t.boolean().optional(),
+        embedCode: t.string().optional(),
+        id: t.number(),
+        isChannel: t.boolean().optional(),
+        isFullscreen: t.boolean().optional(),
+        name: t.string(),
+        url: t.string(),
+    });
 
     codeInputRef = signal.ref();
 

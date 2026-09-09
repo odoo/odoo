@@ -1,16 +1,16 @@
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 
 export class SlidesCourseJoinPopup extends Component {
     static template = "slide.course.join.popupContent";
-    static props = {
-        text: { type: String, optional: true },
-        channelId: { type: Number, optional: true },
-        courseUrl: { type: String, optional: true },
-        errorSignupAllowed: { type: Boolean, optional: true },
-        invitePreview: { type: Boolean, optional: true },
-        inviteHash: { type: String, optional: true },
-        invitePartnerId: { type: Number, optional: true },
-        isPartnerWithoutUser: { type: Boolean, optional: true },
-        close: Function,
-    };
+    props = useProps({
+        text: t.string().optional(),
+        channelId: t.number().optional(),
+        courseUrl: t.string().optional(),
+        errorSignupAllowed: t.boolean().optional(),
+        invitePreview: t.boolean().optional(),
+        inviteHash: t.string().optional(),
+        invitePartnerId: t.number().optional(),
+        isPartnerWithoutUser: t.boolean().optional(),
+        close: t.function(),
+    });
 }

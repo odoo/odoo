@@ -1,4 +1,4 @@
-import { Component, onWillStart, markup } from "@odoo/owl";
+import { Component, onWillStart, markup, t, useProps } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { rpc } from "@web/core/network/rpc";
 import { formatDuration, deserializeDateTime } from "@web/core/l10n/dates";
@@ -7,10 +7,10 @@ const { DateTime } = luxon;
 export class ExhibitorConnectClosedDialog extends Component {
     static template = "website_event_exhibitor.ExhibitorConnectClosedDialog";
     static components = { Dialog };
-    static props = {
-        sponsorId: Number,
-        close: Function,
-    };
+    props = useProps({
+        sponsorId: t.number(),
+        close: t.function(),
+    });
 
     setup() {
         onWillStart(() => this.fetchSponsor());

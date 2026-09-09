@@ -2,7 +2,7 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { CopyButton } from "@web/core/copy_button/copy_button";
 import { useService } from "@web/core/utils/hooks";
-import { Component } from "@odoo/owl";
+import { Component, useProps } from "@odoo/owl";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 export class CopyButtonJob extends CopyButton {
@@ -20,7 +20,7 @@ export class CopyButtonJob extends CopyButton {
 export class CopyClipboardCharField extends Component {
     static components = { CopyButtonJob };
     static template = "website_hr_recruitment.CopyJobLinkButton";
-    static props = { ...standardFieldProps }
+    props = useProps(standardFieldProps);
 
     setup() {
         this.copyText = _t("Share Job");

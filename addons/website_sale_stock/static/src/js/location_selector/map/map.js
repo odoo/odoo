@@ -1,38 +1,29 @@
 /*global L*/
 
 import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, onMounted, onWillUnmount, signal } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, signal, t, useProps } from "@odoo/owl";
 import { renderToString } from '@web/core/utils/render';
 
 export class Map extends Component {
     static template = 'website_sale_stock.locationSelector.map';
-    static props = {
-        locations: {
-            type: Array,
-            element: {
-                type: Object,
-                shape: {
-                    id: [String, Number],
-                    name: String,
-                    opening_hours: {
-                        type: Object,
-                        values: { type: Array, element: String },
-                    },
-                    street: String,
-                    city: String,
-                    zip_code: String,
-                    state: { type: String, optional: true },
-                    country_code: String,
-                    additional_data: { type: Object, optional: true },
-                    distance: { type: Number, optional: true },
-                    latitude: [String, Number],
-                    longitude: [String, Number],
-                },
-            },
-        },
-        selectedLocationId: [String, { value: false }],
-        setSelectedLocation: Function,
-    };
+    props = useProps({
+        locations: t.array(t.object({
+            id: t.or([t.string(), t.number()]),
+            name: t.string(),
+            opening_hours: t.record(t.array(t.string())),
+            street: t.string(),
+            city: t.string(),
+            zip_code: t.string(),
+            state: t.string().optional(),
+            country_code: t.string(),
+            additional_data: t.object().optional(),
+            distance: t.number().optional(),
+            latitude: t.or([t.string(), t.number()]),
+            longitude: t.or([t.string(), t.number()]),
+        })),
+        selectedLocationId: t.or([t.string(), t.literal(false)]),
+        setSelectedLocation: t.function(),
+    });
 
     mapRef = signal.ref();
 
