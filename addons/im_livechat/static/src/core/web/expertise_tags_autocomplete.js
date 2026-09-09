@@ -1,4 +1,4 @@
-import { Component, signal } from "@odoo/owl";
+import { Component, signal, t, useProps } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
@@ -15,8 +15,11 @@ import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
  */
 export class ExpertiseTagsAutocomplete extends Component {
     static template = "im_livechat.ExpertiseTagsAutocomplete";
-    static props = ["channel", "disabled?"];
     static components = { BadgeTag, Many2XAutocomplete };
+    props = useProps({
+        channel: t.object(),
+        disabled: t.boolean().optional(),
+    });
 
     rootRef = signal.ref();
 

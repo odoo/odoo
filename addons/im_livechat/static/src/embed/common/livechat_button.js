@@ -6,7 +6,6 @@ import { debounce } from "@web/core/utils/timing";
 
 export class LivechatButton extends Component {
     static template = "im_livechat.LivechatButton";
-    static props = {};
     static DEBOUNCE_DELAY = 500;
 
     buttonRef = signal.ref();

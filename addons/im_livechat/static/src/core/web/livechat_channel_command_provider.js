@@ -1,17 +1,17 @@
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
 class LivechatChannelCommand extends Component {
     static template = "im_livechat.LivechatChannelCommand";
-    static props = {
-        executeCommand: Function,
-        icon: String,
-        iconClass: String,
-        name: String,
-        searchValue: String,
-        slots: Object,
-    };
+    props = useProps({
+        executeCommand: t.function(),
+        icon: t.string(),
+        iconClass: t.string(),
+        name: t.string(),
+        searchValue: t.string(),
+        slots: t.object(),
+    });
 }
 
 registry.category("command_provider").add("im_livechat.channel_join_leave", {

@@ -1,7 +1,7 @@
 import { RATING } from "@im_livechat/embed/common/livechat_service";
 import { TranscriptSender } from "@im_livechat/core/common/transcript_sender";
 
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, t, useProps } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 import { session } from "@web/session";
@@ -16,8 +16,12 @@ import { rpc } from "@web/core/network/rpc";
  */
 export class FeedbackPanel extends Component {
     static template = "im_livechat.FeedbackPanel";
-    static props = ["onClickClose?", "onClickNewSession", "thread"];
     static components = { TranscriptSender };
+    props = useProps({
+        onClickClose: t.function().optional(),
+        onClickNewSession: t.function(),
+        thread: t.object(),
+    });
 
     STEP = Object.freeze({
         RATING: "rating",

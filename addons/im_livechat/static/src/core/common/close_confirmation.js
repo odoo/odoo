@@ -1,10 +1,14 @@
-import { Component, signal } from "@odoo/owl";
+import { Component, signal, t, useProps } from "@odoo/owl";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
 
 export class CloseConfirmation extends Component {
     static template = "im_livechat.CloseConfirmation";
-    static props = ["onCloseConfirmationDialog", "onClickLeaveConversation", "channelName?"];
+    props = useProps({
+        onCloseConfirmationDialog: t.function(),
+        onClickLeaveConversation: t.function(),
+        channelName: t.string().optional(),
+    });
 
     confirmRef = signal.ref();
 
