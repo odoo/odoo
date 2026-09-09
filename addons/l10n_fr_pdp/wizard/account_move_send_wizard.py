@@ -32,3 +32,44 @@ class AccountMoveSendWizard(models.TransientModel):
         if reason:
             return f" ({reason})"
         return ""
+
+    # -------------------------------------------------------------------------
+    # COMPUTES
+    # -------------------------------------------------------------------------
+
+    def _compute_sending_method_checkboxes(self):
+        # EXTENDS 'account'
+        for wizard in self:
+            move = wizard.move_id
+            partner = move.partner_id.commercial_partner_id
+
+            if (
+                not move or move.company_id._get_peppol_proxy_type() != 'pdp'
+                or (partner.peppol_eas == '0225' and partner.peppol_endpoint)
+                or not (siren := partner._l10n_fr_pdp_get_siren())
+            ):
+                continue
+
+            lookup_result = self.env['res.partner']._fetch_active_annuaire_lines(siren)
+
+            if identifiers := lookup_result.get('identifiers', []):
+                if len(identifiers) == 1:
+                    updated_identifier = identifiers[0]
+                else:
+                    id_type, id_value = partner._l10n_fr_pdp_get_base_identifier()
+                    siren_siret = f"{siren}_{id_value}" if id_type == 'siret' else None
+
+                    if siren_siret and (siren_siret_identifiers := [identifier for identifier in identifiers if identifier.startswith(siren_siret)]):
+                        updated_identifier = min(siren_siret_identifiers, key=len)
+                    elif siren in identifiers:
+                        updated_identifier = siren
+                    else:
+                        updated_identifier = min(identifiers, key=len)
+
+                partner.write({
+                    'peppol_eas': '0225',
+                    'peppol_endpoint': updated_identifier,
+                    'invoice_edi_format': 'ubl_21_fr',
+                })
+
+        super()._compute_sending_method_checkboxes()
