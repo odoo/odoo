@@ -58,7 +58,15 @@ export class SurveyQuestionTriggerWidget extends Component {
                 this.state.surveyIconWarning = false;
                 this.state.triggerTooltip = "";
             }
-        });
+        }, () => [
+            this.props.record.data.triggering_question_ids.records.map((r) => r.resId).join(","),
+            this.props.record.data.questions_selection,
+            this.props.record.data.sequence,
+            this.props.record.resId,
+            this.props.record.model.root.data.question_and_page_ids.records
+                .map((r) => `${r.resId}:${r.data.sequence}`)
+                .join(","),
+        ]);
     }
 
     /**
