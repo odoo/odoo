@@ -67,7 +67,8 @@
             }
         }
 
-        .o_inner_group {
+        // Subtotals are already visually grouped by the footer itself, no box needed
+        .o_inner_group:not(.oe_subtotal_footer) {
             :is(.o_cell,.o_cell_custom):not(.o_wrap_label):not(.o_no_box):not(:has(.o_outlined)) {
                 @extend %-o-field-box;
 
