@@ -117,7 +117,7 @@ registry.category("web_tour.tours").add("test_survey_prefill", {
             trigger: `div.js_question-wrapper:contains("When is your date of birth?") input:value(05/05/1980)`,
         },
         {
-            trigger: `div.js_question-wrapper:contains("How frequently do you buy products online?) label:contains("Once a week") input:hidden:checked`,
+            trigger: `div.js_question-wrapper:contains("How frequently do you buy products online?") label:contains("Once a week") input:hidden:checked`,
         },
         {
             trigger: ".o_survey_title",
