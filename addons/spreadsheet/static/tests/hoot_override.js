@@ -14,7 +14,7 @@ const { RendererStore } = stores;
  */
 patch(RendererStore.prototype, {
     drawLayer(ctx, layer) {
-        if (__debug__.debug) {
+        if (__debug__().debug) {
             return super.drawLayer(ctx, layer);
         }
     },
