@@ -332,7 +332,9 @@
         <field name="model">calendar.event</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
-            <form string="Meetings" class="o_calendar_event_form_quick_create" js_class="calendar_quick_create_form_view">
+            <form string="Meetings"
+                class="o_calendar_event_form_quick_create o_calendar_event_form_quick_create_width"
+                js_class="calendar_quick_create_form_view">
                 <div class="o_unavailability_alert alert alert-warning border-0 d-flex flex-wrap m-0 mb-3" role="alert"
                     invisible="not unavailable_partner_ids or allday">
                     <span class="me-1">Not available at the selected time:</span>
