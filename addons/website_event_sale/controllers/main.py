@@ -79,7 +79,12 @@ class WebsiteEventSaleController(WebsiteEventController):
                 order_sudo.action_confirm()  # tde notsure: email sending ?
                 request.website.sale_reset()
             elif order_sudo:
-                if order_sudo._is_anonymous_cart():
+                signup_required = (
+                    request.env.user._is_public()
+                    and request.website.account_on_checkout == 'mandatory'
+                )
+                # Skip pre-creating a partner when signup will create one itself.
+                if order_sudo._is_anonymous_cart() and not signup_required:
                     booked_by_partner, feedback_dict = CustomerPortal()._create_or_update_address(
                         request.env['res.partner'].sudo(),
                         order_sudo=order_sudo,
