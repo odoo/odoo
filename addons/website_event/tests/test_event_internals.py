@@ -2,16 +2,16 @@ from datetime import datetime, timedelta
 
 from odoo.exceptions import UserError
 from odoo.fields import Command
-from odoo.fields import Datetime as FieldsDatetime
 from odoo.tests.common import users
 
 from odoo.addons.event.tests.common import EventCase
 from odoo.addons.http_routing.tests.common import MockRequest
 from odoo.addons.website.tests.test_website_visitor import MockVisitor
 from odoo.addons.website_event.controllers.main import WebsiteEventController
+from odoo.addons.website_event.tests.common import DefaultEventMixin
 
 
-class TestEventData(EventCase, MockVisitor):
+class TestEventData(DefaultEventMixin, EventCase, MockVisitor):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -34,17 +34,9 @@ class TestEventData(EventCase, MockVisitor):
         )
 
     def test_process_attendees_form(self):
-        event = self.env["event.event"].create(
-            {
-                "name": "Event Update Type",
-                "event_type_id": self.event_type_questions.with_user(self.env.user).id,
-                "date_begin": FieldsDatetime.to_string(
-                    datetime.today() + timedelta(days=1)
-                ),
-                "date_end": FieldsDatetime.to_string(
-                    datetime.today() + timedelta(days=15)
-                ),
-            }
+        event = self._create_default_event(
+            name="Event Update Type",
+            event_type_id=self.event_type_questions.with_user(self.env.user).id,
         )
         ticket_id_1 = self.env["event.event.ticket"].create(
             [
@@ -250,17 +242,9 @@ class TestEventData(EventCase, MockVisitor):
         )
 
     def test_process_attendees_form_no_tickets(self):
-        event = self.env["event.event"].create(
-            {
-                "name": "Test Event",
-                "event_type_id": self.event_type_questions.id,
-                "date_begin": FieldsDatetime.to_string(
-                    datetime.today() + timedelta(days=1)
-                ),
-                "date_end": FieldsDatetime.to_string(
-                    datetime.today() + timedelta(days=15)
-                ),
-            }
+        """Check that registering with no ticket works."""
+        event = self._create_default_event(
+            event_type_id=self.event_type_questions.id,
         )
 
         name_question, email_question = event.question_ids.filtered(
@@ -315,17 +299,8 @@ class TestEventData(EventCase, MockVisitor):
         opposed to sending it empty/falsy) must not silently produce a
         registration with a missing 'event_ticket_id' key that would later
         crash a bare dict subscript in registration_confirm()."""
-        event = self.env["event.event"].create(
-            {
-                "name": "Test Event",
-                "event_type_id": self.event_type_questions.id,
-                "date_begin": FieldsDatetime.to_string(
-                    datetime.today() + timedelta(days=1)
-                ),
-                "date_end": FieldsDatetime.to_string(
-                    datetime.today() + timedelta(days=15)
-                ),
-            }
+        event = self._create_default_event(
+            event_type_id=self.event_type_questions.id,
         )
 
         name_question, email_question = event.question_ids.filtered(
@@ -354,29 +329,10 @@ class TestEventData(EventCase, MockVisitor):
         """A posted event_slot_id that doesn't belong to the event must raise
         a friendly UserError (caught by the framework as a normal error page)
         instead of reaching event.slot's model-level ValidationError."""
-        event = self.env["event.event"].create(
-            {
-                "name": "Test Event",
-                "event_type_id": self.event_type_questions.id,
-                "date_begin": FieldsDatetime.to_string(
-                    datetime.today() + timedelta(days=1)
-                ),
-                "date_end": FieldsDatetime.to_string(
-                    datetime.today() + timedelta(days=15)
-                ),
-            }
+        event = self._create_default_event(
+            event_type_id=self.event_type_questions.id,
         )
-        other_event = self.env["event.event"].create(
-            {
-                "name": "Other Event",
-                "date_begin": FieldsDatetime.to_string(
-                    datetime.today() + timedelta(days=1)
-                ),
-                "date_end": FieldsDatetime.to_string(
-                    datetime.today() + timedelta(days=15)
-                ),
-            }
-        )
+        other_event = self._create_default_event(name="Other Event")
         self.env["event.slot"].create(
             {
                 "event_id": event.id,
@@ -406,17 +362,7 @@ class TestEventData(EventCase, MockVisitor):
         """A posted 'nb_register-<id>' value that is zero or negative must be
         dropped, not returned as an order with a negative/zero quantity that
         would understate the displayed ordered_seats count."""
-        event = self.env["event.event"].create(
-            {
-                "name": "Test Event",
-                "date_begin": FieldsDatetime.to_string(
-                    datetime.today() + timedelta(days=1)
-                ),
-                "date_end": FieldsDatetime.to_string(
-                    datetime.today() + timedelta(days=15)
-                ),
-            }
-        )
+        event = self._create_default_event()
         ticket = self.env["event.event.ticket"].create(
             {
                 "name": "Regular",
@@ -440,17 +386,7 @@ class TestEventData(EventCase, MockVisitor):
         """_filter_open_slots must batch seat-availability lookups per
         EVENT, not per slot: the query count for filtering N slots on one
         event must not grow with N."""
-        event = self.env["event.event"].create(
-            {
-                "name": "Multi-slot event",
-                "date_begin": FieldsDatetime.to_string(
-                    datetime.today() + timedelta(days=1)
-                ),
-                "date_end": FieldsDatetime.to_string(
-                    datetime.today() + timedelta(days=15)
-                ),
-            }
-        )
+        event = self._create_default_event(name="Multi-slot event")
         one_slot = self.env["event.slot"].create(
             {
                 "event_id": event.id,
@@ -493,17 +429,8 @@ class TestEventData(EventCase, MockVisitor):
 
     def test_registration_answer_search(self):
 
-        event = self.env["event.event"].create(
-            {
-                "name": "Test Event",
-                "event_type_id": self.event_type_questions.id,
-                "date_begin": FieldsDatetime.to_string(
-                    datetime.today() + timedelta(days=1)
-                ),
-                "date_end": FieldsDatetime.to_string(
-                    datetime.today() + timedelta(days=15)
-                ),
-            }
+        event = self._create_default_event(
+            event_type_id=self.event_type_questions.id,
         )
 
         [registration_1, registration_2, registration_3] = self.env[

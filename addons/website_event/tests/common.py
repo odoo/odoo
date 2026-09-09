@@ -1,10 +1,30 @@
 from datetime import datetime, time, timedelta
 
+from odoo import fields
+
 from odoo.addons.event.tests.common import EventCase
 from odoo.addons.mail.tests.common import mail_new_test_user
 
 
-class OnlineEventCase(EventCase):
+class DefaultEventMixin:
+    """Shared factory for the begin+1d/end+15d event window this test
+    suite standardizes on, to avoid re-typing it in every test method."""
+
+    def _create_default_event(self, **vals):
+        vals = {
+            "name": "Test Event",
+            "date_begin": fields.Datetime.to_string(
+                datetime.today() + timedelta(days=1)
+            ),
+            "date_end": fields.Datetime.to_string(
+                datetime.today() + timedelta(days=15)
+            ),
+            **vals,
+        }
+        return self.env["event.event"].create(vals)
+
+
+class OnlineEventCase(DefaultEventMixin, EventCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

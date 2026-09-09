@@ -11,18 +11,7 @@ class TestEventMenus(OnlineEventCase, HttpCase):
     @users("admin")
     def test_menu_copy(self):
 
-        event = self.env["event.event"].create(
-            {
-                "name": "TestEvent",
-                "date_begin": fields.Datetime.to_string(
-                    datetime.today() + timedelta(days=1)
-                ),
-                "date_end": fields.Datetime.to_string(
-                    datetime.today() + timedelta(days=15)
-                ),
-                "website_menu": True,
-            }
-        )
+        event = self._create_default_event(name="TestEvent", website_menu=True)
         self.assertTrue(event.website_menu)
         self.assertTrue(event.introduction_menu)
         self.env["ir.ui.view"].create(
@@ -61,18 +50,7 @@ class TestEventMenus(OnlineEventCase, HttpCase):
     @users("admin")
     def test_menu_deletion(self):
 
-        event = self.env["event.event"].create(
-            {
-                "name": "TestEvent",
-                "date_begin": fields.Datetime.to_string(
-                    datetime.today() + timedelta(days=1)
-                ),
-                "date_end": fields.Datetime.to_string(
-                    datetime.today() + timedelta(days=15)
-                ),
-                "website_menu": True,
-            }
-        )
+        event = self._create_default_event(name="TestEvent", website_menu=True)
 
         new_page_url = f"{event.website_url}/newpage"
 
@@ -107,18 +85,7 @@ class TestEventMenus(OnlineEventCase, HttpCase):
         contains a <section> outside the #wrap container (WEM-02): the
         section-relocation logic must only look at sections that are direct
         children of #wrap, not any <section> anywhere in the document."""
-        event = self.env["event.event"].create(
-            {
-                "name": "TestEvent",
-                "date_begin": fields.Datetime.to_string(
-                    datetime.today() + timedelta(days=1)
-                ),
-                "date_end": fields.Datetime.to_string(
-                    datetime.today() + timedelta(days=15)
-                ),
-                "website_menu": True,
-            }
-        )
+        event = self._create_default_event(name="TestEvent", website_menu=True)
         new_page_url = f"{event.website_url}/newpage-section"
         website_menu = self.env["website.menu"].create(
             {
@@ -153,18 +120,7 @@ class TestEventMenus(OnlineEventCase, HttpCase):
         website.event.menu for it - materializing new_menus to a list so
         the `if not new_menus` check actually short-circuits (a `filter`
         object is always truthy and never would)."""
-        event = self.env["event.event"].create(
-            {
-                "name": "TestEvent",
-                "date_begin": fields.Datetime.to_string(
-                    datetime.today() + timedelta(days=1)
-                ),
-                "date_end": fields.Datetime.to_string(
-                    datetime.today() + timedelta(days=15)
-                ),
-                "website_menu": True,
-            }
-        )
+        event = self._create_default_event(name="TestEvent", website_menu=True)
         home_menu = event.introduction_menu_ids.menu_id
         data = {
             "data": [
@@ -216,18 +172,8 @@ class TestEventMenus(OnlineEventCase, HttpCase):
 
     @users("user_eventmanager")
     def test_menu_management(self):
-        event = self.env["event.event"].create(
-            {
-                "name": "TestEvent",
-                "date_begin": fields.Datetime.to_string(
-                    datetime.today() + timedelta(days=1)
-                ),
-                "date_end": fields.Datetime.to_string(
-                    datetime.today() + timedelta(days=15)
-                ),
-                "website_menu": True,
-                "community_menu": False,
-            }
+        event = self._create_default_event(
+            name="TestEvent", website_menu=True, community_menu=False
         )
         self.assertTrue(event.website_menu)
         self.assertTrue(event.introduction_menu)
@@ -238,18 +184,8 @@ class TestEventMenus(OnlineEventCase, HttpCase):
         event.community_menu = True
         self._assert_website_menus(event, ["Home", "Rooms", "Practical"])
 
-        event = self.env["event.event"].create(
-            {
-                "name": "TestEvent",
-                "date_begin": fields.Datetime.to_string(
-                    datetime.today() + timedelta(days=1)
-                ),
-                "date_end": fields.Datetime.to_string(
-                    datetime.today() + timedelta(days=15)
-                ),
-                "website_menu": False,
-            }
-        )
+        # test create without any requested menus
+        event = self._create_default_event(name="TestEvent", website_menu=False)
         self.assertFalse(event.website_menu)
         self.assertFalse(event.introduction_menu)
         self.assertFalse(event.register_menu)
@@ -261,18 +197,8 @@ class TestEventMenus(OnlineEventCase, HttpCase):
 
     @users("user_event_web_manager")
     def test_menu_management_frontend(self):
-        event = self.env["event.event"].create(
-            {
-                "name": "TestEvent",
-                "date_begin": fields.Datetime.to_string(
-                    datetime.today() + timedelta(days=1)
-                ),
-                "date_end": fields.Datetime.to_string(
-                    datetime.today() + timedelta(days=15)
-                ),
-                "website_menu": True,
-                "community_menu": False,
-            }
+        event = self._create_default_event(
+            name="TestEvent", website_menu=True, community_menu=False
         )
         self._assert_website_menus(event, ["Home", "Practical"], menus_out=["Rooms"])
 
