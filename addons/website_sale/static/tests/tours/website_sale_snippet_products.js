@@ -59,5 +59,10 @@ registerWebsitePreviewTour(
                 ":iframe .s_dynamic_snippet_products .o_carousel_product_card .js_remove",
             run: "click",
         },
+        {
+            content: "check that the removed card is gone from the carousel",
+            trigger:
+                ':iframe .s_dynamic_snippet_products:not(:has(.o_carousel_product_card[aria-label="Storage Box"]))',
+        },
     ],
 );
