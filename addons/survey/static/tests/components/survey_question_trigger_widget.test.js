@@ -158,3 +158,42 @@ test("dynamic rendering of surveyQuestionTriggerError rows", async () => {
         },
     );
 });
+
+test("deleting the trigger question does not flip the icon to normal before save", async () => {
+    await mountView({
+        type: "form",
+        resModel: "survey",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="question_and_page_ids">
+                    <list editable="bottom">
+                        <field name="sequence" widget="handle"/>
+                        <field name="title"/>
+                        <field name="triggering_question_ids" invisible="1"/>
+                        <field name="triggering_answer_ids" invisible="1" widget="many2many_tags"/>
+                        <widget name="survey_question_trigger"/>
+                    </list>
+                </field>
+            </form>
+        `,
+    });
+
+    const firstDataRow = ".o_data_row:eq(0)";
+    // Question 1 is the trigger of Question 2; delete it without saving.
+    await contains(`${firstDataRow} .o_list_record_remove`).click();
+
+    // Only Question 2 remains, now re-indexed to row 0.
+    const q2TriggerDiv = ".o_data_row:eq(0) td.o_data_cell div.o_widget_survey_question_trigger";
+
+    expect(".o_data_row").toHaveCount(1);
+    // The trigger reference on Question 2 now points to a deleted, unsaved
+    // record: this is the MISSING_TRIGGER_ERROR case, which must leave the
+    // icon in its previous ("normal") state rather than flipping it, to
+    // avoid a flicker before the ORM removes the trigger on save.
+    expect(`${q2TriggerDiv} button i`).not.toHaveClass("text-warning");
+    expect(`${q2TriggerDiv} button i`).toHaveAttribute(
+        "data-tooltip",
+        'Displayed if "Question 1: Answer 1".',
+    );
+});

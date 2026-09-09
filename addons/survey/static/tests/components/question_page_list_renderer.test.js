@@ -6,6 +6,7 @@ import {
     fields,
     models,
     mountView,
+    onRpc,
 } from "@web/../tests/web_test_helpers";
 
 class Partner extends models.Model {
@@ -27,6 +28,7 @@ class LinesSections extends models.Model {
     random_questions_count = fields.Integer({ string: "Question Count" });
     sequence = fields.Integer();
     question_type = fields.Char();
+    triggering_question_ids = fields.Many2many({ relation: "lines_sections" });
 
     _records = [
         {
@@ -44,6 +46,7 @@ class LinesSections extends models.Model {
             question_type: "simple_choice",
             title: "recordTitle",
             random_questions_count: 5,
+            triggering_question_ids: [1],
         },
     ];
     _views = {
@@ -182,4 +185,33 @@ test("list view with random and question_type at the beginning of row", async ()
 
     await contains(SELECTORS.numberQuestions).click();
     expect(SELECTORS.numberQuestions + " div").toHaveCount(1);
+});
+
+test("deleting a question used as a trigger elsewhere saves the whole form", async () => {
+    onRpc("web_save", () => expect.step("web_save"));
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `
+                <form>
+                    <field name="lines" widget="question_page_one2many">
+                        <list>
+                            <field name="sequence" widget="handle"/>
+                            <field name="title" widget="survey_description_page"/>
+                            <field name="question_type" />
+                            <field name="is_page" column_invisible="1"/>
+                            <field name="triggering_question_ids" column_invisible="1"/>
+                        </list>
+                    </field>
+                </form>
+            `,
+    });
+
+    // record 1 (firstSectionTitle) is used as a trigger by record 2 (recordTitle)
+    await contains(".o_data_row:eq(0) .o_list_record_remove").click();
+
+    expect(".o_data_row").toHaveCount(1);
+    expect.verifySteps(["web_save"]);
 });
