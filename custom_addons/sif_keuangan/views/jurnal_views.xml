@@ -2,7 +2,7 @@
 <odoo>
 
     <!-- ================================================================= -->
-    <!-- 1. POPUP WIZARD FILTER TANGGAL AWAL & AKHIR BUKU BESAR             -->
+    <!-- 1. POPUP WIZARD FILTER BUKU BESAR                                 -->
     <!-- ================================================================= -->
     <record id="view_sif_buku_besar_wizard_form" model="ir.ui.view">
         <field name="name">sif.buku.besar.wizard.form</field>
@@ -14,13 +14,13 @@
                         <h2>Filter Periode Buku Besar</h2>
                     </div>
                     <group>
-                        <group string="Rentang Tanggal">
-                            <field name="date_from" string="Tanggal Awal"/>
-                            <field name="date_to" string="Tanggal Akhir"/>
+                        <group string="Rentang Tanggal (Opsional)">
+                            <field name="date_from" string="Tanggal Awal" placeholder="Kosongkan jika semua tanggal"/>
+                            <field name="date_to" string="Tanggal Akhir" placeholder="Kosongkan jika semua tanggal"/>
                         </group>
                         <group string="Filter Tambahan (Opsional)">
-                            <field name="account_id" string="Account"/>
-                            <field name="unit_name" string="Unit Kerja"/>
+                            <field name="account_id" string="Account" options="{'no_create': True}" placeholder="Kosongkan jika semua akun"/>
+                            <field name="unit_name" string="Unit Kerja" placeholder="Kosongkan jika semua unit"/>
                         </group>
                     </group>
                     <footer>
@@ -40,23 +40,22 @@
     </record>
 
     <!-- ================================================================= -->
-    <!-- 2. VIEW BUKU BESAR (FLAT VIEW STANDAR SISKEU SIF)                -->
+    <!-- 2. VIEW BUKU BESAR (REKAP 8 KOLOM FORMAT SISKEU)                  -->
     <!-- ================================================================= -->
     <record id="view_sif_buku_besar_list" model="ir.ui.view">
-        <field name="name">sif.jurnal.line.list</field>
-        <field name="model">sif.jurnal.line</field>
+        <field name="name">sif.buku.besar.list</field>
+        <field name="model">sif.buku.besar</field>
         <field name="arch" type="xml">
-            <list string="Buku Besar" create="false" edit="false">
+            <list string="Buku Besar" create="false" edit="false" delete="false">
                 <header>
                     <button name="%(action_sif_buku_besar_wizard)d" string="Ganti Periode Tanggal" type="action" class="btn-primary"/>
                 </header>
                 <field name="date" string="Tanggal"/>
                 <field name="unit_name" string="Unit Kerja"/>
                 <field name="entry_number" string="Bukti / Nomer"/>
-                <field name="kwitansi_ref" string="Kwitansi" optional="show"/>
+                <field name="kwitansi_ref" string="Kwitansi"/>
                 <field name="name" string="Keterangan"/>
                 <field name="account_code" string="Account"/>
-                <field name="account_name" string="Nama Account" optional="show"/>
                 <field name="debit" string="Debet" sum="Total Debet"/>
                 <field name="credit" string="Kredit" sum="Total Kredit"/>
             </list>
@@ -64,17 +63,14 @@
     </record>
 
     <record id="view_sif_buku_besar_search" model="ir.ui.view">
-        <field name="name">sif.jurnal.line.search</field>
-        <field name="model">sif.jurnal.line</field>
+        <field name="name">sif.buku.besar.search</field>
+        <field name="model">sif.buku.besar</field>
         <field name="arch" type="xml">
             <search string="Pencarian Buku Besar">
                 <field name="entry_number" string="Bukti / Nomer"/>
                 <field name="unit_name" string="Unit Kerja"/>
                 <field name="account_id" string="Account"/>
                 <field name="name" string="Keterangan"/>
-                <separator/>
-                <filter string="Bulan Ini" name="this_month" 
-                        domain="[('date', '&gt;=', context_today().strftime('%Y-%m-01'))]"/>
                 <separator/>
                 <filter string="Per Akun (Buku Besar)" name="group_by_account" context="{'group_by':'account_id'}"/>
                 <filter string="Per Unit Kerja" name="group_by_unit" context="{'group_by':'unit_name'}"/>
@@ -85,14 +81,15 @@
 
     <record id="action_sif_buku_besar" model="ir.actions.act_window">
         <field name="name">Buku Besar</field>
-        <field name="res_model">sif.jurnal.line</field>
+        <field name="res_model">sif.buku.besar</field>
         <field name="view_mode">list</field>
         <field name="search_view_id" ref="view_sif_buku_besar_search"/>
+        <field name="domain">[('state', '=', 'posted')]</field>
         <field name="context">{}</field>
     </record>
 
     <!-- ================================================================= -->
-    <!-- 3. VIEW JURNAL TRANSAKSI (HEADER DOKUMEN ENTRY)                  -->
+    <!-- 3. VIEW JURNAL TRANSAKSI (TETAP MENYIMPAN RINCIAN LENGKAP)        -->
     <!-- ================================================================= -->
     <record id="view_sif_jurnal_entry_list" model="ir.ui.view">
         <field name="name">sif.jurnal.entry.list</field>

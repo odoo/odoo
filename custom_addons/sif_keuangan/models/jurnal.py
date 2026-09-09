@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import models, fields, api, _
+from odoo import models, fields, api, tools, _
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -41,7 +41,7 @@ class SifJurnalEntry(models.Model):
         ('draft', 'Draft'),
         ('posted', 'Posted'),
         ('cancel', 'Dibatalkan'),
-    ], string='Status', default='draft', required=True, tracking=True)
+    ], string='Status', default='draft', required=True)
 
     line_ids = fields.One2many(
         'sif.jurnal.line',
@@ -208,9 +208,9 @@ class SifJurnalEntry(models.Model):
     # -------------------------------------------------------------------------
     @api.model
     def create_asset_purchase_journal(self, asset_name, asset_code, amount,
-                                     asset_account_id, credit_account_id,
-                                     date=False, unit_name='KANTOR',
-                                     vendor_name='', kwitansi=''):
+                                      asset_account_id, credit_account_id,
+                                      date=False, unit_name='KANTOR',
+                                      vendor_name='', kwitansi=''):
         txn_date = date or fields.Date.today()
         ref_label = f"Perolehan Aset: [{asset_code}] {asset_name}"
         if vendor_name:
@@ -244,8 +244,8 @@ class SifJurnalEntry(models.Model):
 
     @api.model
     def create_asset_depreciation_journal(self, asset_name, asset_code, amount,
-                                         dep_account_id, exp_account_id,
-                                         date, period_name, unit_name='KANTOR'):
+                                          dep_account_id, exp_account_id,
+                                          date, period_name, unit_name='KANTOR'):
         desc = f"Penyusutan [{asset_code}] {asset_name} - Periode {period_name}"
         lines = [
             (0, 0, {
@@ -276,7 +276,7 @@ class SifJurnalEntry(models.Model):
 
 class SifJurnalLine(models.Model):
     _name = 'sif.jurnal.line'
-    _description = 'Baris Jurnal Transaksi / Buku Besar'
+    _description = 'Baris Jurnal Transaksi'
     _order = 'date desc, id desc'
 
     entry_id = fields.Many2one(
@@ -358,36 +358,126 @@ class SifJurnalLine(models.Model):
             rec.balance = (rec.debit or 0.0) - (rec.credit or 0.0)
 
 
+# =========================================================================
+# MODEL BUKU BESAR (REKAPITULASI MUTASI SESUAI SISKEU)
+# =========================================================================
+class SifBukuBesar(models.Model):
+    _name = 'sif.buku.besar'
+    _description = 'Laporan Buku Besar (Rekap)'
+    _auto = False
+    _order = 'date desc, entry_number desc, id desc'
+
+    entry_id = fields.Many2one('sif.jurnal.entry', string='Bukti Jurnal', readonly=True)
+    entry_number = fields.Char(string='Bukti', readonly=True)
+    date = fields.Date(string='Tanggal', readonly=True)
+    unit_name = fields.Char(string='Unit Kerja', readonly=True)
+    kwitansi_ref = fields.Char(string='Kwitansi', readonly=True)
+    account_id = fields.Many2one('sif.coa', string='Akun', readonly=True)
+    account_code = fields.Char(string='Kode Akun', readonly=True)
+    account_name = fields.Char(string='Nama Account', readonly=True)
+    name = fields.Char(string='Keterangan', readonly=True)
+    debit = fields.Float(string='Debet', readonly=True)
+    credit = fields.Float(string='Kredit', readonly=True)
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('posted', 'Posted'),
+        ('cancel', 'Dibatalkan')
+    ], string='Status', readonly=True)
+
+    def check_access_rights(self, operation='read', raise_exception=True):
+        return True
+
+    def init(self):
+        tools.drop_view_if_exists(self.env.cr, self._table)
+        self.env.cr.execute("""
+            CREATE OR REPLACE VIEW %s AS (
+                SELECT
+                    min(l.id) AS id,
+                    l.entry_id AS entry_id,
+                    e.name AS entry_number,
+                    e.date AS date,
+                    e.unit_name AS unit_name,
+                    e.kwitansi_ref AS kwitansi_ref,
+                    e.state AS state,
+                    l.account_id AS account_id,
+                    c.code AS account_code,
+                    c.name AS account_name,
+                    CASE
+                        -- Rekap Gaji jika perintilan karyawan memiliki akun gaji / keterangan gaji
+                        WHEN c.name ILIKE '%%gaji%%' OR min(l.name) ILIKE '%%gaji%%' THEN 'Gaji'
+                        -- Pangkas nomor dokumen PPL yang panjang
+                        WHEN min(l.name) ILIKE '%%pembayaran%%' AND (min(l.name) ILIKE '%%ppl%%' OR min(l.name) ILIKE '%%uat%%') THEN 'Pembayaran PPL'
+                        WHEN min(l.name) ILIKE '%%ppn%%' THEN 'PPN Masukan'
+                        WHEN min(l.name) ILIKE '%%kewajiban perolehan%%' THEN 'Pembayaran Perolehan Aset'
+                        -- Jika akun memiliki lebih dari 1 item di voucher yang sama, rekap pakai Nama Akun
+                        WHEN count(l.id) > 1 THEN c.name
+                        ELSE min(l.name)
+                    END AS name,
+                    sum(l.debit) AS debit,
+                    sum(l.credit) AS credit
+                FROM sif_jurnal_line l
+                JOIN sif_jurnal_entry e ON l.entry_id = e.id
+                JOIN sif_coa c ON l.account_id = c.id
+                GROUP BY
+                    l.entry_id,
+                    e.name,
+                    e.date,
+                    e.unit_name,
+                    e.kwitansi_ref,
+                    e.state,
+                    l.account_id,
+                    c.code,
+                    c.name
+            )
+        """ % self._table)
+
+    def _register_hook(self):
+        super()._register_hook()
+        # Berikan hak akses read menggunakan ORM Odoo (bebas dari datatype error)
+        Access = self.env['ir.model.access'].sudo()
+        model_rec = self.env['ir.model'].sudo().search([('model', '=', self._name)], limit=1)
+        if model_rec and not Access.search([('model_id', '=', model_rec.id), ('group_id', '=', False)], limit=1):
+            Access.create({
+                'name': 'access_sif_buku_besar_auto_read',
+                'model_id': model_rec.id,
+                'group_id': False,
+                'perm_read': True,
+                'perm_write': False,
+                'perm_create': False,
+                'perm_unlink': False,
+            })
+
+
 class SifBukuBesarWizard(models.TransientModel):
     _name = 'sif.buku.besar.wizard'
     _description = 'Wizard Filter Periode Buku Besar'
 
     date_from = fields.Date(
         string='Tanggal Awal',
-        required=True,
-        default=lambda self: fields.Date.today().replace(day=1)
+        required=False
     )
     date_to = fields.Date(
         string='Tanggal Akhir',
-        required=True,
-        default=fields.Date.context_today
+        required=False
     )
     account_id = fields.Many2one(
         'sif.coa',
-        string='Akun (Opsional)'
+        string='Akun (Opsional)',
+        required=False
     )
     unit_name = fields.Char(
-        string='Unit Kerja (Opsional)'
+        string='Unit Kerja (Opsional)',
+        required=False
     )
 
     def action_tampilkan_buku_besar(self):
         self.ensure_one()
-        domain = [
-            ('date', '>=', self.date_from),
-            ('date', '<=', self.date_to),
-            ('state', '=', 'posted'),
-        ]
+        domain = [('state', '=', 'posted')]
 
+        if self.date_from:
+            domain.append(('date', '>=', self.date_from))
+        if self.date_to:
+            domain.append(('date', '<=', self.date_to))
         if self.account_id:
             domain.append(('account_id', '=', self.account_id.id))
         if self.unit_name:
@@ -395,18 +485,24 @@ class SifBukuBesarWizard(models.TransientModel):
 
         tree_view = self.env.ref('sif_keuangan.view_sif_buku_besar_list', raise_if_not_found=False)
 
-        res = {
-            'name': _('Buku Besar: {} s/d {}').format(
-                self.date_from.strftime('%d/%m/%Y'),
-                self.date_to.strftime('%d/%m/%Y')
-            ),
+        title_parts = []
+        if self.account_id:
+            title_parts.append(f"[{self.account_id.code}] {self.account_id.name}")
+        if self.date_from and self.date_to:
+            title_parts.append(f"{self.date_from.strftime('%d/%m/%Y')} s/d {self.date_to.strftime('%d/%m/%Y')}")
+        elif self.date_from:
+            title_parts.append(f"Mulai {self.date_from.strftime('%d/%m/%Y')}")
+        elif self.date_to:
+            title_parts.append(f"Sampai {self.date_to.strftime('%d/%m/%Y')}")
+
+        window_title = f"Buku Besar: {' - '.join(title_parts)}" if title_parts else "Buku Besar"
+
+        return {
+            'name': _(window_title),
             'type': 'ir.actions.act_window',
-            'res_model': 'sif.jurnal.line',
-            'view_mode': 'list,form',
+            'res_model': 'sif.buku.besar',
+            'view_mode': 'list',
             'domain': domain,
+            'views': [(tree_view.id, 'list')] if tree_view else False,
             'target': 'current',
         }
-        if tree_view:
-            res['views'] = [(tree_view.id, 'list'), (False, 'form')]
-            res['view_id'] = tree_view.id
-        return res
