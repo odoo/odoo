@@ -1,7 +1,7 @@
 // @ts-check
 
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { queryAllTexts } from "@odoo/hoot-dom";
+import { queryAllTexts, queryRect } from "@odoo/hoot-dom";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import {
     contains,
@@ -185,13 +185,18 @@ test("show confirm and reset buttons only when selection has changed", async () 
     expect(".o_switch_company_menu_buttons").toHaveCount(0);
 });
 
-test("No collapse and no search input when less that 10 companies", async () => {
+test("no collapse, and the search row is on screen, when less that 10 companies", async () => {
     await mountWithCleanup(MobileSwitchCompanyMenu);
     expect(".o_burger_menu_companies .fa-caret-right").toHaveCount(0);
-    expect(".o_burger_menu_companies .visually-hidden input").toHaveCount(1);
+    expect(".o_burger_menu_companies [role=searchbox]").toHaveCount(1);
+    expect(".o_burger_menu_companies .visually-hidden").toHaveCount(0);
+    // `visually-hidden` collapses the row to 1x1: assert it really takes room
+    expect(
+        queryRect(".o_burger_menu_companies div:has(> [role=search])").height,
+    ).toBeGreaterThan(1);
 });
 
-test("Show search input when more that 10 companies & search filters items but ignore case and spaces", async () => {
+test("the search input filters items, ignoring case and spaces", async () => {
     serverState.companies = [
         { id: 3, name: "Hermit", sequence: 1, parent_id: false, child_ids: [] },
         { id: 2, name: "Herman's", sequence: 2, parent_id: false, child_ids: [] },

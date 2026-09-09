@@ -7,6 +7,7 @@ import {
     press,
     queryAllAttributes,
     queryAllTexts,
+    queryRect,
 } from "@odoo/hoot-dom";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import {
@@ -303,14 +304,22 @@ test("show confirm and reset buttons only when selection has changed", async () 
     expect(".o_switch_company_menu_buttons").toHaveCount(0);
 });
 
-test("no search input when less that 10 companies", async () => {
+test("the search row is on screen in any multi-company environment", async () => {
     await createSwitchCompanyMenu();
 
     await openCompanyMenu();
-    expect(".o-dropdown--menu .visually-hidden input").toHaveCount(1);
+    expect(".o-dropdown--menu [role=searchbox]").toHaveCount(1);
+    expect(
+        ".o-dropdown--menu div:has(> [role=search]) [role=menuitemcheckbox]",
+    ).toHaveCount(1);
+    expect(".o-dropdown--menu .visually-hidden").toHaveCount(0);
+    // `visually-hidden` collapses the row to 1x1: assert it really takes room
+    expect(
+        queryRect(".o-dropdown--menu div:has(> [role=search])").height,
+    ).toBeGreaterThan(1);
 });
 
-test("show search input when more that 10 companies & search filters items but ignore case and spaces", async () => {
+test("the search input filters items, ignoring case and spaces", async () => {
     serverState.companies = [
         { id: 3, name: "Hermit", sequence: 1, parent_id: false, child_ids: [] },
         { id: 2, name: "Herman's", sequence: 2, parent_id: false, child_ids: [] },
@@ -346,21 +355,6 @@ test("show search input when more that 10 companies & search filters items but i
         "Random Company aa",
         "Random Company ab",
     ]);
-});
-
-test("when less than 10 companies, typing key makes the search input visible", async () => {
-    await createSwitchCompanyMenu();
-    await openCompanyMenu();
-
-    expect(".o-dropdown--menu input").toHaveCount(1);
-    expect(".o-dropdown--menu input").toBeFocused();
-    expect(".o-dropdown--menu .visually-hidden input").toHaveCount(1);
-
-    await edit("a");
-    await animationFrame();
-
-    expect(".o-dropdown--menu input").toHaveValue("a");
-    expect(".o-dropdown--menu :not(.visually-hidden) input").toHaveCount(1);
 });
 
 test.tags("focus required");
@@ -443,9 +437,6 @@ test("navigation with search input", async () => {
 test("select and de-select all", async () => {
     await createSwitchCompanyMenu();
     await openCompanyMenu();
-
-    await edit(" ");
-    await animationFrame();
 
     expect("[role=menuitemcheckbox][title='Deselect all'] i").toHaveClass(
         "fa-square-minus",

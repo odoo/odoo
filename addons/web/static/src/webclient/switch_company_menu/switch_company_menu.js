@@ -74,7 +74,7 @@ export class SwitchCompanyMenu extends Component {
 
         this.searchInputRef = useRef("inputRef");
         this.state = useState(
-            /** @type {{ searchFilter: string, showFilter: boolean, visibleCompanies: any[] }} */ ({}),
+            /** @type {{ searchFilter: string, visibleCompanies: any[] }} */ ({}),
         );
         this.resetState();
 
@@ -207,13 +207,11 @@ export class SwitchCompanyMenu extends Component {
 
     resetState() {
         this.state.searchFilter = "";
-        this.state.showFilter = this.hasLotsOfCompanies;
         this.state.visibleCompanies = this.computeVisibleCompanies();
     }
 
     onSearch(ev) {
         this.state.searchFilter = ev.target.value;
-        this.state.showFilter = true;
         this.state.visibleCompanies = this.computeVisibleCompanies();
     }
 
