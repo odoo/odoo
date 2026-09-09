@@ -1,7 +1,7 @@
 /** @odoo-module native */
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { AddToCartOption, addToCartValues } from "./add_to_card_option.js";
+import { AddToCartOption, addToCartValues } from "./add_to_cart_option.js";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
 class AddToCartOptionPlugin extends Plugin {
