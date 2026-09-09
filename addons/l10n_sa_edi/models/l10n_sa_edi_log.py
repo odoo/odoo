@@ -25,9 +25,17 @@ class L10nSaEdiLog(models.Model):
         self.ensure_one()
         resource = self.l10n_sa_edi_document_id.resource
         if resource._l10n_sa_get_alerts() or not resource._l10n_sa_is_phase_2_applicable():
-            return self.l10n_sa_edi_document_id.resource._l10n_sa_handle_alerts()
+            return resource._l10n_sa_handle_alerts()
 
-        return self.l10n_sa_edi_document_id._l10n_sa_post_zatca_edi(True)
+        return self.env['account.move.send']._generate_and_send_invoices(
+            resource,
+            sending_methods={'email'},
+            extra_edis={
+                "sa_edi"
+                if resource.company_id.l10n_sa_api_mode == "prod"
+                else "sa_edi_test"
+            },
+        )
 
     def action_open_chain_head(self):
         self.ensure_one()
