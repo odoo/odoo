@@ -173,7 +173,7 @@ def rotate_pdf(pdf):
     writer = PdfFileWriter()
     reader = PdfFileReader(io.BytesIO(pdf), strict=False)
     for page in reader.pages:
-        page.rotate_clockwise(90)
+        page.rotate(90)
         writer.add_page(page)
     with io.BytesIO() as _buffer:
         writer.write(_buffer)
