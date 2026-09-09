@@ -1,9 +1,9 @@
+import { Component, Portal, proxy } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
-
-import { Component, proxy } from "@odoo/owl";
 
 export class DashboardMobileSearchPanel extends Component {
     static template = "spreadsheet_dashboard.DashboardMobileSearchPanel";
+    static components = { Portal };
     static props = {
         /**
          * (dashboardId: number) => void

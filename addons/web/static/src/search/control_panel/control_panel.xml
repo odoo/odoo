@@ -26,7 +26,7 @@
                     <t t-elif="this.uiService.isSmall">
                         <!--
                             Here be dragons...
-                            REFACTORME: this `t-portal` introduces an implicit
+                            REFACTORME: this `Portal` introduces an implicit
                             dependency between the ControlPanel and the NavBar,
                             which the impact is only mitigated by the fallback
                             below. This is a call to refactor the breadcrumbs
@@ -34,9 +34,9 @@
                             Breadcrumbs component in the NavBar.
                         -->
                         <div class="o_fallback_breadcrumbs d-contents"/>
-                        <t t-custom-portal="'.o_navbar_breadcrumbs, .o_fallback_breadcrumbs'">
+                        <Portal target="this.portalTarget">
                             <Breadcrumbs breadcrumbs="this.breadcrumbs"/>
-                        </t>
+                        </Portal>
                         <section class="o_control_panel_breadcrumbs_actions d-contents">
                             <t t-call-slot="control-panel-additional-actions"/>
                             <t t-call-slot="control-panel-status-indicator" />

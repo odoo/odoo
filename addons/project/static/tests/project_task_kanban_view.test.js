@@ -161,15 +161,14 @@ test("delete just created stage", async () => {
 
     let clickColumnAction = await toggleKanbanColumnActions(0);
     await clickColumnAction("Delete");
-    await click("button[special=cancel]");
+    await contains("button[special=cancel]").click();
     expect(".o_column_title").toHaveCount(1, {
         message: "The stage should not have been deleted.",
     });
 
     clickColumnAction = await toggleKanbanColumnActions(0);
     await clickColumnAction("Delete");
-    await click("button[name=action_unlink]");
-    await animationFrame();
+    await contains("button[name=action_unlink]").click();
     expect(".o_column_title").toHaveCount(0, { message: "The stage should have been deleted." });
 });
 
@@ -192,14 +191,13 @@ test("delete existing stage", async () => {
 
     let clickColumnAction = await toggleKanbanColumnActions(0);
     await clickColumnAction("Delete");
-    await click("button[special=cancel]");
+    await contains("button[special=cancel]").click();
     expect(".o_column_title").toHaveCount(1, {
         message: "The stage should not have been deleted.",
     });
 
     clickColumnAction = await toggleKanbanColumnActions(0);
     await clickColumnAction("Delete");
-    await click("button[name=action_unlink]");
-    await animationFrame();
+    await contains("button[name=action_unlink]").click();
     expect(".o_column_title").toHaveCount(0, { mesage: "The stage should have been deleted." });
 });

@@ -18,6 +18,8 @@ import {
     signal,
     t,
     useProps,
+    Portal,
+    computed,
 } from "@odoo/owl";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { EmbeddedActionsPanel, useEmbeddedActions } from "./embedded_actions";
@@ -31,17 +33,22 @@ const DEFAULT_DISPLAY = {
 export class ControlPanel extends Component {
     static template = "web.ControlPanel";
     static components = {
-        Pager,
+        Breadcrumbs,
         Dropdown,
         DropdownItem,
-        Breadcrumbs,
         EmbeddedActionsPanel,
+        Pager,
+        Portal,
     };
     props = useProps({
         display: t.object().optional(DEFAULT_DISPLAY),
     });
 
     root = signal.ref();
+    portalTarget = computed(
+        () =>
+            this.root() && document.querySelector(".o_navbar_breadcrumbs, .o_fallback_breadcrumbs")
+    );
 
     setup() {
         this.embeddedPanelState = useEmbeddedActions();
