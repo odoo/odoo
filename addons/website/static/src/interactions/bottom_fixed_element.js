@@ -10,8 +10,8 @@ export class BottomFixedElement extends Interaction {
     static selector = "#wrapwrap";
     dynamicContent = {
         _window: {
-            "t-on-resize": this.hideBottomFixedElements,
-            "t-on-scroll": this.hideBottomFixedElements,
+            "t-on-resize": this.throttled(this.hideBottomFixedElements),
+            "t-on-scroll": this.throttled(this.hideBottomFixedElements),
         },
     };
 
