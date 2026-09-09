@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="sfu_client_source" model="ir.attachment" context="{'not_force_website_id': True}">
+            <field name="name">SFU client source</field>
+            <field name="type">binary</field>
+            <field name="url">/mail/static/lib/odoo_sfu/odoo_sfu/index.js</field>
+            <field name="mimetype">application/javascript</field>
+        </record>
+
+        <asset id="sfu_client_asset" name="Alternative SFU client" active="False">
+            <bundle directive="replace">mail.assets_odoo_sfu</bundle>
+            <path>/mail/static/lib/odoo_sfu/odoo_sfu/index.js</path>
+            <field name="target">mail/static/lib/odoo_sfu/odoo_sfu.js</field>
+        </asset>
+    </data>
+</odoo>

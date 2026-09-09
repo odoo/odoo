@@ -3,6 +3,8 @@
 
 import datetime
 
+import requests
+
 from odoo import _, fields, models
 from odoo.exceptions import UserError
 
@@ -52,6 +54,11 @@ class ResConfigSettings(models.TransientModel):
     )
     sfu_server_url = fields.Char("SFU Server URL", config_parameter="mail.sfu_server_url")
     sfu_server_key = fields.Char("SFU Server key", config_parameter="mail.sfu_server_key", help="Base64 encoded key")
+    sfu_client_url = fields.Char(
+        "SFU Client URL",
+        config_parameter="mail.sfu_client_url",
+        help="URL of the alternative SFU client bundle. The built-in client is used when empty.",
+    )
     email_primary_color = fields.Char(related='company_id.email_primary_color', readonly=False)
     email_secondary_color = fields.Char(related='company_id.email_secondary_color', readonly=False)
 
@@ -76,6 +83,19 @@ class ResConfigSettings(models.TransientModel):
         help="A valid Google API key is required to enable message translation. https://cloud.google.com/translate/docs/setup",
         config_parameter="mail.google_translate_api_key",
     )
+
+    def set_values(self):
+        client_url = (self.sfu_client_url or "").strip()
+        current_url = self.env["ir.config_parameter"].sudo().get_str("mail.sfu_client_url") or ""
+        if client_url != current_url:
+            client_source = False
+            if client_url:
+                response = requests.get(client_url, timeout=5)
+                response.raise_for_status()
+                client_source = response.content
+            self.env.ref("mail.sfu_client_source").sudo().raw = client_source
+            self.env.ref("mail.sfu_client_asset").sudo().active = bool(client_url)
+        return super().set_values()
 
     def _compute_fail_counter(self):
         previous_date = fields.Datetime.now() - datetime.timedelta(days=30)
