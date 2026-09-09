@@ -472,6 +472,14 @@ class StockValuationAdjustmentLines(models.Model):
             or cost_product._get_product_accounts()["expense"].id
         )
 
+        if not debit_account_id:
+            raise UserError(
+                _(
+                    "Please configure Stock Valuation Account for product: %s.",
+                    self.product_id.name,
+                )
+            )
+
         if not credit_account_id:
             raise UserError(
                 _(
