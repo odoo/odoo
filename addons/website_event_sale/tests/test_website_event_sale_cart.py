@@ -173,6 +173,54 @@ class TestWebsiteEventSaleCartSeats(TestWebsiteEventSaleCommon):
         self.assertEqual(res["quantity"], 2)
         self.assertIn("only 2 seats", res["warning"])
 
+    def test_cart_add_respects_event_level_cap(self):
+        """A capped event limits the cart even when its ticket is uncapped."""
+        self.event.write({"seats_limited": True, "seats_max": 2})
+        self.assertFalse(self.ticket.seats_limited)
+
+        res = self.empty_cart._cart_add(
+            self.product_event.id,
+            5,
+            event_ticket_id=self.ticket.id,
+        )
+        self.assertEqual(res["quantity"], 2)
+        self.assertIn("only 2 seats", res["warning"])
+
+    def test_cart_add_uses_tightest_of_event_and_ticket_cap(self):
+        """With both caps set, the tighter one (here the event) applies."""
+        self.event.write({"seats_limited": True, "seats_max": 2})
+        ticket = self.env["event.event.ticket"].create(
+            {
+                "event_id": self.event.id,
+                "name": "Loose",
+                "product_id": self.product_event.id,
+                "price": 100,
+                "seats_max": 100,
+                "seats_limited": True,
+            }
+        )
+
+        res = self.empty_cart._cart_add(
+            self.product_event.id,
+            5,
+            event_ticket_id=ticket.id,
+        )
+        self.assertEqual(res["quantity"], 2)
+        self.assertIn("only 2 seats", res["warning"])
+
+    def test_cart_add_uncapped_event_and_ticket_is_unlimited(self):
+        """With no cap anywhere the helper returns None and nothing is clamped."""
+        self.assertFalse(self.event.seats_limited)
+        self.assertFalse(self.ticket.seats_limited)
+
+        res = self.empty_cart._cart_add(
+            self.product_event.id,
+            5,
+            event_ticket_id=self.ticket.id,
+        )
+        self.assertEqual(res["quantity"], 5)
+        self.assertFalse(res["warning"])
+
     def test_cart_manual_quantity_raise_blocked(self):
         res_add = self.empty_cart._cart_add(
             self.product_event.id,
