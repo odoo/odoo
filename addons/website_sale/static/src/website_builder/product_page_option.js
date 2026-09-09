@@ -23,13 +23,12 @@ export class ProductPageOption extends BaseOptionComponent {
                 hasImages &&
                 productDetailMainEl.querySelector(".o_wsale_product_images")?.dataset
                     .imageAmount > 1;
-            const isGrid = !!productDetailMainEl.querySelector("#o-grid-product");
             const hasCarousel = !!productPageCarouselEl;
             const hasGrid = !!productPageGridEl;
             return {
                 hasImages,
                 multipleImages,
-                isGrid,
+                isGrid: hasGrid,
                 hasCarousel,
                 hasGrid,
             };
