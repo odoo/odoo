@@ -108,6 +108,10 @@ export class ServerData {
         this.batchEndpoints = {};
     }
 
+    clearCache() {
+        this.cache = {};
+    }
+
     /**
      * @returns {{get: (resModel:string, method: string, args: unknown) => any}}
      */

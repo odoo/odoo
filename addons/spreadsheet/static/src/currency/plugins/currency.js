@@ -12,17 +12,10 @@ export class CurrencyPlugin extends OdooEvaluationPlugin {
         super(config);
         /** @type {string | undefined} */
         this.currentCompanyCurrency = config.defaultCurrency;
-        /** @type {import("@spreadsheet/data_sources/server_data").ServerData} */
-        this._serverData = config.custom.odooDataProvider?.serverData;
     }
 
     get serverData() {
-        if (!this._serverData) {
-            throw new Error(
-                "'serverData' is not defined, please make sure a 'OdooDataProvider' instance is provided to the model."
-            );
-        }
-        return this._serverData;
+        return this.getters.getServerData();
     }
 
     // -------------------------------------------------------------------------
