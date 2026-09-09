@@ -27,12 +27,12 @@
                 <h6 class="pt-3 mb-0">Notes</h6>
                 <textarea class="form-control" t-att-disabled="!this.store.has_access_livechat" rows="3" placeholder="Add your notes here..." t-model.proxy="this.props.thread.channel.livechatNoteText" t-on-blur="this.onBlurNote"></textarea>
             </div>
-            <div t-if="this.expectAnswerSteps.length" class="d-flex flex-column bg-inherit gap-1">
+            <div t-if="this.answeredChatbotMessages.length" class="d-flex flex-column bg-inherit gap-1">
                 <h6 class="pt-3 mb-0">Chatbot answers</h6>
-                <t t-foreach="this.expectAnswerSteps" t-as="step" t-key="step.id">
+                <t t-foreach="this.answeredChatbotMessages" t-as="chatbotMessage" t-key="chatbotMessage.id">
                     <div class="d-flex align-items-center gap-1 bg-inherit rounded-3">
                         <i class="oi me-1" data-icon="chat_bubble"/>
-                        <span class="text-truncate" t-out="step.answer"/>
+                        <span class="o-livechat-ChannelInfoList-chatbotAnswer text-truncate" t-out="chatbotMessage.answer"/>
                     </div>
                 </t>
             </div>

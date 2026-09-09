@@ -73,7 +73,25 @@ export class DiscussChannel extends mailModels.DiscussChannel {
         ];
     }
 
-    _store_livechat_extra_fields(res) {}
+    _store_livechat_extra_fields(res) {
+        /** @type {import("mock_models").ChatbotMessage} */
+        const ChatbotMessage = this.env["chatbot.message"];
+
+        // sudo - chatbot.message: can access chatbot answers of accessible channels.
+        res.many("chatbot_message_ids", "_store_chatbot_message_fields", {
+            predicate: isLivechatChannel,
+            sudo: true,
+            value: (channel) =>
+                ChatbotMessage.browse(
+                    ChatbotMessage.search([["discuss_channel_id", "=", channel.id]]).filter(
+                        (id) => {
+                            const [message] = ChatbotMessage.browse(id);
+                            return message.user_script_answer_id || message.user_raw_answer;
+                        }
+                    )
+                ),
+        });
+    }
 
     _store_channel_fields(res) {
         super._store_channel_fields(res);

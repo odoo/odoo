@@ -14,5 +14,15 @@ export class ChatbotScriptStep extends Record {
     step_type;
     isLast = false;
     answer_ids = fields.Many("chatbot.script.answer");
+
+    get expectAnswer() {
+        return [
+            "free_input_multi",
+            "free_input_single",
+            "question_selection",
+            "question_email",
+            "question_phone",
+        ].includes(this.step_type);
+    }
 }
 ChatbotScriptStep.register();

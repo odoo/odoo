@@ -35,10 +35,10 @@ export class LivechatChannelInfoList extends Component {
         });
     }
 
-    get expectAnswerSteps() {
-        return this.props.thread.messages
-            .filter((m) => m.chatbotStep?.expectAnswer && m.chatbotStep.answer)
-            .map((m) => m.chatbotStep);
+    get answeredChatbotMessages() {
+        return this.props.thread.channel.sortedChatbotMessages.filter(
+            (m) => m.expectAnswer && m.answer
+        );
     }
 
     onBlurNote() {
