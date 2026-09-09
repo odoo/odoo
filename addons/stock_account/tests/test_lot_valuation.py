@@ -710,3 +710,42 @@ class TestLotValuation(TestStockValuationCommon):
         self.assertEqual(self.product.qty_available, 1)
         self.assertEqual(in_move_lot1.remaining_qty, 0)
         self.assertEqual(in_move_lot2.remaining_qty, 1)
+
+    def test_lot_fifo_partially_consigned_product_total_value(self):
+        """ Check that when a fifo product is valued by lot and
+        some of the quantities are consigned, the total value of
+        the product and its standard price are correct
+        """
+        self.product.categ_id = self.category_fifo
+        self._make_in_move(self.product, 1, 10, lot_ids=[self.lot1], owner_id=self.vendor)
+        self._make_in_move(self.product, 1, 200, lot_ids=[self.lot1])
+        self.assertEqual(self.product.total_value, 200)
+        self.assertEqual(self.product.standard_price, 200)
+
+    def test_lot_avco_partially_consigned_quant_value(self):
+        """ Check that when an avco product is valued by lot and
+        some of the quantities are consigned, the quant value for
+        the not consigned quant is correct
+        """
+        self.product.categ_id = self.category_avco
+        quants_pre_moves = self.env['stock.quant'].search([('product_id', '=', self.product.id)])
+        self.assertEqual(len(quants_pre_moves), 0)
+        self._make_in_move(self.product, 1, 10, lot_ids=[self.lot1], owner_id=self.vendor)
+        self._make_in_move(self.product, 2, 20, lot_ids=[self.lot1])
+        quants_post_moves = self.env['stock.quant'].search([('product_id', '=', self.product.id)])
+        unconsigned_quant = quants_post_moves.filtered(lambda q: q.lot_id == self.lot1 and not q.owner_id and q.location_id == self.stock_location)
+        self.assertEqual(unconsigned_quant.value, 40)
+
+    def test_lot_fifo_partially_consigned_valuation(self):
+        """Check that when a fifo product is valued by lot and
+        some of the quantities are consigned, the total value of
+        the lot, avg_cost of the lot and standard_price of the lot
+        are correct
+        """
+        self.product.categ_id = self.category_fifo
+        self._make_in_move(self.product, 1, 10, lot_ids=[self.lot1], owner_id=self.vendor)
+        self._make_in_move(self.product, 1, 20, lot_ids=[self.lot1])
+        self._make_in_move(self.product, 1, 40, lot_ids=[self.lot1])
+        self.assertEqual(self.lot1.total_value, 60)
+        self.assertEqual(self.lot1.avg_cost, 30)
+        self.assertEqual(self.lot1.standard_price, 30)
