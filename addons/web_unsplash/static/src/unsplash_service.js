@@ -42,13 +42,17 @@ export const unsplashService = {
                         query: records[0].query,
                     });
 
-                    if (attachments.error) {
+                    // The route silently skips any image it fails to fetch or
+                    // process (per-image failures never fail the batch), so a
+                    // shorter result than the request is the only signal that
+                    // some images did not make it in.
+                    if (attachments.length < records.length) {
                         file.hasError = true;
-                        file.errorMessage = attachments.error;
+                        file.errorMessage = _t("Some images could not be uploaded.");
                     } else {
                         file.uploaded = true;
-                        await onUploaded(attachments);
                     }
+                    await onUploaded(attachments);
                     setTimeout(() => upload.deleteFile(file.id), AUTOCLOSE_DELAY);
                 } catch (error) {
                     file.hasError = true;
