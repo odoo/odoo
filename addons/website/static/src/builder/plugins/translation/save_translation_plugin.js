@@ -30,11 +30,20 @@ export class SaveTranslationPlugin extends Plugin {
             return { group: getGroup(el.dataset), content: { [sourceSha]: cleanedEl.innerHTML } };
         });
 
+        // This is not a good way to handle characters that needs escaping, but
+        // this keeps the previous behavior. TODO: remove this, once confident
+        // of a good solution to handle characters that need escaping
+        const escapeTextNodesInHTML = (html) => {
+            const spanEl = document.createElement("span");
+            spanEl.innerHTML = html;
+            return prepareElementForSave(this, spanEl).innerHTML;
+        };
+
         const attrTranslation = this.dependencies.translation
             .getDirtyTranslationsInfo()
             .map((data) => ({
                 group: getGroup(data),
-                content: { [data.oeTranslationSourceSha]: data.translation },
+                content: { [data.oeTranslationSourceSha]: escapeTextNodesInHTML(data.translation) },
             }));
 
         const lang = this.services.website.currentWebsite.metadata.lang;
