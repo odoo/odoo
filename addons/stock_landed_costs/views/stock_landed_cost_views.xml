@@ -36,16 +36,10 @@
                             <group>
                                 <field name="date" readonly="state == 'done'" />
                                 <field
-                                    name="target_model"
-                                    widget="radio"
-                                    invisible="1"
-                                    readonly="state == 'done'" />
-                                <field
                                     name="picking_ids"
                                     widget="many2many_tags"
                                     domain="[('company_id', '=', company_id), '|', ('move_ids.is_in', '!=', False), ('move_ids.is_out', '!=', False)]"
                                     options="{'no_create_edit': True}"
-                                    invisible="target_model != 'picking'"
                                     readonly="state == 'done'" />
                             </group>
                             <group>

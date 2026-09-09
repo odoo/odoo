@@ -43,13 +43,6 @@ class StockLandedCost(models.Model):
         required=True,
         tracking=True,
     )
-    target_model = fields.Selection(
-        selection=[("picking", "Transfers")],
-        string="Apply On",
-        default="picking",
-        copy=False,
-        required=True,
-    )
     picking_ids = fields.Many2many(
         comodel_name="stock.picking",
         string="Transfers",
@@ -111,11 +104,6 @@ class StockLandedCost(models.Model):
     def _compute_amount_total(self):
         for cost in self:
             cost.amount_total = sum(line.price_unit for line in cost.cost_lines)
-
-    @api.onchange("target_model")
-    def _onchange_target_model(self):
-        if self.target_model != "picking":
-            self.picking_ids = False
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -217,13 +205,9 @@ class StockLandedCost(models.Model):
             lines.append(vals)
 
         if not lines:
-            target_model_descriptions = dict(
-                self._fields["target_model"]._description_selection(self.env)
-            )
             raise UserError(
                 _(
-                    "You cannot apply landed costs on the chosen %s(s). Landed costs can only be applied for products with FIFO or average costing method.",
-                    target_model_descriptions[self.target_model],
+                    "You cannot apply landed costs on the chosen Transfer(s). Landed costs can only be applied for products with FIFO or average costing method."
                 )
             )
         return lines
@@ -319,13 +303,9 @@ class StockLandedCost(models.Model):
             raise UserError(_("Only draft landed costs can be validated"))
         for cost in self:
             if not cost._get_targeted_move_ids():
-                target_model_descriptions = dict(
-                    self._fields["target_model"]._description_selection(self.env)
-                )
                 raise UserError(
                     _(
-                        "Please define %s on which those additional costs should apply.",
-                        target_model_descriptions[cost.target_model],
+                        "Please define Transfer(s) on which those additional costs should apply."
                     )
                 )
 
