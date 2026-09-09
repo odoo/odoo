@@ -149,6 +149,10 @@ class StockMoveLine(models.Model):
             domain_list.append(Domain('picking_ids.carrier_id', 'in', self.carrier_id.ids))
         return domain_list
 
-    def _is_new_potential_line_extra(self, potential_line, picking_type):
-        res = super()._is_new_potential_line_extra(potential_line, picking_type)
+    def _is_existing_wave_incompatible(self, wave):
+        res = super()._is_existing_wave_incompatible(wave)
+        return res or (self.picking_type_id.batch_group_by_carrier and self.carrier_id != wave.picking_ids.carrier_id)
+
+    def _is_new_wave_line_incompatible(self, potential_line, picking_type):
+        res = super()._is_new_wave_line_incompatible(potential_line, picking_type)
         return res or (picking_type.batch_group_by_carrier and self.carrier_id != potential_line.carrier_id)
