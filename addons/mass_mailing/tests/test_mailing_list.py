@@ -6,7 +6,7 @@ from datetime import datetime
 from freezegun import freeze_time
 from unittest.mock import patch
 
-from odoo import exceptions
+from odoo import Command, exceptions
 from odoo.addons.mass_mailing.tests.common import MassMailCommon
 from odoo.tests import Form, tagged, users
 
@@ -154,6 +154,12 @@ class TestMailingListMerge(MassMailCommon):
             contact = contact_form.save()
         self.assertEqual(contact.subscription_ids.filtered(lambda s: s.list_id == self.mailing_list_1).opt_out_datetime, datetime(2022, 1, 1, 12, 0, 0))
         self.assertFalse(contact.subscription_ids.filtered(lambda s: s.list_id == self.mailing_list_2).opt_out_datetime)
+
+        contact = self.env['mailing.contact'].create({
+            'name': 'Subscriber',
+            'list_ids': [Command.set(self.mailing_list_1.ids)],
+        })
+        self.assertTrue(contact.subscription_ids.create_date, "Should have a create_date for the subscription")
 
     @users('user_marketing')
     def test_mailing_list_action_send_mailing(self):
