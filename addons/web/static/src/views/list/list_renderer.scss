@@ -550,6 +550,17 @@
     .o_optional_columns_dropdown .dropdown-item .o-checkbox .text-truncate {
         max-width: 30em;
     }
+
+    .o_optional_columns_dropdown .o_invalid_optional_columns_button {
+        color: o-text-color("danger");
+        background-color: #{$o-input-invalid-bg};
+    }
+}
+
+// The Dropdown renders its menu through usePopover, outside .o_list_renderer,
+// so this rule cannot be nested with the button one above.
+.o_optional_columns_menu .o_invalid_dropdown_item {
+    color: o-text-color("danger");
 }
 
 @include media-breakpoint-down(md) {

@@ -838,6 +838,45 @@ export class ListRenderer extends Component {
         return Object.values(propertyGroups);
     }
 
+    /**
+     * True when the edited record is invalid *because of* a column the
+     * optional-columns gear is currently hiding. The generic "Missing required
+     * fields" notification cannot point at those: they are not on screen.
+     *
+     * @returns {boolean}
+     */
+    get hasInvalidOptionalFields() {
+        return this.visibleOptionalColumns.some((col) =>
+            this.isOptionalFieldInvalid(col.name),
+        );
+    }
+
+    /**
+     * Read live rather than off a per-render cache: the dropdown menu is a
+     * popover, so its content renders outside this component's render pass and
+     * a cached set would answer with the previous pass's value.
+     *
+     * @param {string} fieldName
+     * @returns {boolean}
+     */
+    isOptionalFieldInvalid(fieldName) {
+        const record = this.props.list.editedRecord;
+        return Boolean(
+            record &&
+            !record.isValid &&
+            !this.optionalActiveFields[fieldName] &&
+            record.isFieldInvalid(fieldName),
+        );
+    }
+
+    /**
+     * @param {{ name: string }} field
+     * @returns {string}
+     */
+    getOptionalDropdownItemClass(field) {
+        return this.isOptionalFieldInvalid(field.name) ? "o_invalid_dropdown_item" : "";
+    }
+
     get hasOptionalFields() {
         return this.visibleOptionalColumns.length > 0;
     }
