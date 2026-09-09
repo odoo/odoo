@@ -42,16 +42,31 @@ class PosOrderReport(models.Model):
 
     def _select(self):
         return """
-            -- The purpose of this CTE is to map each "pos_order_line" to the "payment_method_id" corresponding to its "pos_order"
-            -- considering we always show the first "payment_method_id"
-            WITH payment_method_by_order_line AS (
+            -- This view is used to generate the pos order report. It is based on the
+            -- pos_order_line table, and it aggregates the data by order and payment method.
+            WITH payment_by_method AS (
                 SELECT
-                    pol.id AS pos_order_line_id,
-                    (array_agg(pm.payment_method_id ORDER BY pm.id ASC))[1] AS payment_method_id
-                FROM pos_order_line pol
-                LEFT JOIN pos_order po ON (po.id = pol.order_id)
-                LEFT JOIN pos_payment pm ON (pm.pos_order_id=po.id)
-                GROUP BY pol.id
+                    pay.pos_order_id,
+                    pay.payment_method_id,
+                    SUM(pay.amount) AS amount
+                FROM pos_payment pay
+                GROUP BY pay.pos_order_id, pay.payment_method_id
+            ),
+            -- The payment_share CTE calculates the share of each payment method for each
+            -- order. It also identifies the main payment method for each order.
+            payment_share AS (
+                SELECT
+                    pos_order_id,
+                    payment_method_id,
+                    CASE
+                        WHEN SUM(amount) OVER (PARTITION BY pos_order_id) = 0
+                            THEN 1.0 / COUNT(*) OVER (PARTITION BY pos_order_id)
+                        ELSE amount / SUM(amount) OVER (PARTITION BY pos_order_id)
+                    END AS share,
+                    ROW_NUMBER() OVER (
+                        PARTITION BY pos_order_id ORDER BY amount DESC, payment_method_id
+                    ) = 1 AS is_main_method
+                FROM payment_by_method
             ),
             first_pos_category AS (
                 SELECT
@@ -63,14 +78,14 @@ class PosOrderReport(models.Model):
                 GROUP BY pt.id
             )
             SELECT
-                l.id AS id,
-                1 AS nbr_lines, -- number of lines in order line is always 1
+                ROW_NUMBER() OVER (ORDER BY l.id, pay.payment_method_id) AS id,
+                CASE WHEN COALESCE(pay.is_main_method, TRUE) THEN 1 ELSE 0 END AS nbr_lines, -- a line is counted on one method only
                 s.date_order AS date,
-                ROUND((l.price_subtotal) / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END, cu.decimal_places) AS price_subtotal_excl,
-                l.qty AS product_qty,
-                l.qty * l.price_unit / COALESCE(NULLIF(s.currency_rate, 0), 1.0) AS price_sub_total,
-                ROUND((l.price_subtotal_incl) / COALESCE(NULLIF(s.currency_rate, 0), 1.0), cu.decimal_places) AS price_total,
-                (l.qty * l.price_unit) * (l.discount / 100) / COALESCE(NULLIF(s.currency_rate, 0), 1.0) AS total_discount,
+                ROUND((l.price_subtotal * COALESCE(pay.share, 1.0)) / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END, cu.decimal_places) AS price_subtotal_excl,
+                CASE WHEN COALESCE(pay.is_main_method, TRUE) THEN l.qty ELSE 0 END AS product_qty,
+                (l.qty * l.price_unit * COALESCE(pay.share, 1.0)) / COALESCE(NULLIF(s.currency_rate, 0), 1.0) AS price_sub_total,
+                ROUND((l.price_subtotal_incl * COALESCE(pay.share, 1.0)) / COALESCE(NULLIF(s.currency_rate, 0), 1.0), cu.decimal_places) AS price_total,
+                (l.qty * l.price_unit * COALESCE(pay.share, 1.0)) * (l.discount / 100) / COALESCE(NULLIF(s.currency_rate, 0), 1.0) AS total_discount,
                 CASE
                     WHEN l.qty * u.factor = 0 THEN NULL
                     ELSE (l.qty*l.price_unit / COALESCE(NULLIF(s.currency_rate, 0), 1.0))/(l.qty * u.factor)::decimal
@@ -89,8 +104,8 @@ class PosOrderReport(models.Model):
                 s.pricelist_id,
                 s.session_id,
                 s.account_move IS NOT NULL AS invoiced,
-                (l.price_subtotal - COALESCE(l.total_cost,0)) / COALESCE(NULLIF(s.currency_rate, 0), 1.0) AS margin,
-                pm.payment_method_id AS payment_method_id,
+                ((l.price_subtotal - COALESCE(l.total_cost,0)) * COALESCE(pay.share, 1.0)) / COALESCE(NULLIF(s.currency_rate, 0), 1.0) AS margin,
+                pay.payment_method_id AS payment_method_id,
                 fpc.id AS pos_categ_id
 
         """
@@ -105,8 +120,7 @@ class PosOrderReport(models.Model):
                 LEFT JOIN pos_session ps ON (s.session_id=ps.id)
                 LEFT JOIN res_company co ON (s.company_id=co.id)
                 LEFT JOIN res_currency cu ON (co.currency_id=cu.id)
-                LEFT JOIN payment_method_by_order_line pm ON (pm.pos_order_line_id=l.id)
-                LEFT JOIN pos_payment_method ppm ON (pm.payment_method_id=ppm.id)
+                LEFT JOIN payment_share pay ON (pay.pos_order_id=s.id)
                 LEFT JOIN first_pos_category fpc ON (pt.id = fpc.product_template_id)
         """
 
