@@ -1,10 +1,10 @@
 .o_stock_forecast {
-    button[data-bs-toggle="collapse"] i::before {
-        content: "\f078"; 
+    button[aria-expanded="true"] i::before {
+        content: "\f078";
     }
 
-    button[data-bs-toggle="collapse"].collapsed i::before {
-        content: "\f054"; 
+    button[aria-expanded="false"] i::before {
+        content: "\f054";
     }
 
     thead.o_forecasted_details_main_header tr th {
