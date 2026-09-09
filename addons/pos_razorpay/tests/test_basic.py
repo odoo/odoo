@@ -1,158 +1,170 @@
-import time
-
-from requests import Response
 from unittest.mock import patch
 
-from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
-from odoo.tests.common import tagged
+from requests import Response
+
+from odoo.exceptions import UserError
+from odoo.tests.common import TransactionCase, tagged
+
+DEMO_P2P_URL = 'https://demo.ezetap.com/api/3.0/p2padapter/'
+DEMO_PAYMENT_URL = 'https://demo.ezetap.com/api/2.0/payment/'
 
 
-@tagged("post_install_l10n", "post_install", "-at_install")
-class TestRazorPayPoS(TestPointOfSaleHttpCommon):
-    _test_user_groups = None  # FIXME list needed groups
-
-    external_ref_number = ""
-    is_cancel_payment_test = False
-
+@tagged('post_install', '-at_install')
+class TestRazorpayPosRequest(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env.company.currency_id = cls.env.ref('base.INR')
+        cls.payment_method = cls.env['pos.payment.method'].create({
+            'name': 'RazorPay',
+            'type': 'bank',
+            'payment_method_type': 'terminal',
+            'payment_provider': 'razorpay',
+            'razorpay_tid': 'my_razorpay_device_serial_no',
+            'razorpay_allowed_payment_modes': 'card',
+            'razorpay_username': 'my_razorpay_username',
+            'razorpay_api_key': 'my_razorpay_api_key',
+            'razorpay_test_mode': True,
+        })
 
-        cls.env.company.currency_id = cls.env.ref("base.INR")
-        cls.main_pos_config.use_pricelist = False
-        payment_method = cls.env["pos.payment.method"].create(
-            {
-                "name": "RazorPay",
-                "type": "bank",
-                "payment_method_type": "terminal",
-                "payment_provider": "razorpay",
-                "razorpay_tid": "my_razorpay_device_serial_no",
-                "razorpay_allowed_payment_modes": "card",
-                "razorpay_username": "my_razorpay_username",
-                "razorpay_api_key": "my_razorpay_api_key",
-                "razorpay_test_mode": True,
-                "journal_id": cls.bank_journal.id,
-            }
+    def _mock_razorpay(self, payload):
+        """ Patch the razorpay session and record the calls it makes. """
+        calls = []
+
+        def mock_post(session, url, **kwargs):
+            calls.append({'url': url, 'json': kwargs.get('json', {})})
+            response = Response()
+            response.status_code = 200
+            response._content = b'ok'
+            response.json = lambda: payload
+            return response
+
+        return calls, patch(
+            'odoo.addons.pos_razorpay.models.razorpay_pos_request.requests.Session.post', mock_post
         )
-        cls.main_pos_config.write({"payment_method_ids": [(4, payment_method.id)]})
 
-    def _on_razorpay_payment_line_added(self, response, **kwargs):
-        json_data = kwargs.get("json", {})
-        if not json_data or "externalRefNumber" not in json_data:
-            response.json = lambda: {
-                "success": False,
-                "errorCode": "EZETAP_0000387",
-                "errorMessage": "`externalRefNumber` field is empty.",
-            }
-            return response
+    def test_payment_request_sends_device_and_mode(self):
+        calls, mocked = self._mock_razorpay({'success': True, 'p2pRequestId': 12345})
+        with mocked:
+            result = self.payment_method.razorpay_make_payment_request({
+                'amount': 100,
+                'referenceId': 'Hoot/ORDER0001',
+            })
 
-        response.json = lambda: {
-            "success": True,
-            "p2pRequestId": "250102070607078E010040377",
-        }
-        return json_data.get("externalRefNumber")
+        self.assertEqual(result, {'success': True, 'p2pRequestId': '12345'})
+        self.assertEqual(calls[0]['url'], f'{DEMO_P2P_URL}pay')
+        self.assertEqual(calls[0]['json'], {
+            'pushTo': {'deviceId': 'my_razorpay_device_serial_no|ezetap_android'},
+            'mode': 'CARD',
+            'username': 'my_razorpay_username',
+            'appKey': 'my_razorpay_api_key',
+            'amount': 100,
+            'externalRefNumber': 'Hoot/ORDER0001',
+        })
 
-    def _is_origP2pRequestId_present(self, json_data, response):
-        if not json_data or "origP2pRequestId" not in json_data:
-            response.json = lambda: {
-                "success": False,
-                "errorCode": "MISSING_REQUIRED_PARAMETER",
-                "errorMessage": "The 'origP2pRequestId' field is required in the JSON payload.",
-            }
-            return response
+    def test_payment_request_reports_error_message(self):
+        _calls, mocked = self._mock_razorpay({
+            'success': False,
+            'errorCode': 'EZETAP_0000387',
+            'errorMessage': '`externalRefNumber` field is empty.',
+        })
+        with mocked:
+            result = self.payment_method.razorpay_make_payment_request({'amount': 100})
 
-    def _send_status_response(self, response: Response, **kwargs):
-        json_data = kwargs.get("json", {})
-        res = self._is_origP2pRequestId_present(json_data, response)
-        if res:
-            return res
-        if self.is_cancel_payment_test:
-            response.json = lambda: {
-                "success": True,
-                "messageCode": "P2P_DEVICE_RECEIVED",
-            }
-        else:
-            response.json = lambda: {
-                "success": True,
-                "status": "AUTHORIZED",
-                "messageCode": "P2P_DEVICE_TXN_DONE",
-                "authCode": "D12345",
-                "cardLastFourDigit": "1234",
-                "externalRefNumber": self.external_ref_number,
-                "reverseReferenceNumber": "RR6A55BBEA34E2",
-                "txnId": "250102070624795E020088174",
-                "paymentMode": "CARD",
-                "paymentCardBrand": "VISA",
-                "paymentCardType": "DEBIT",
-                "nameOnCard": "John Doe",
-                "acquirerCode": "HDFC",
-                "createdTime": int(time.time() * 1000),
-                "p2pRequestId": json_data.get("origP2pRequestId"),
-                "settlementStatus": "PENDING",
-            }
+        self.assertEqual(result, {'error': '`externalRefNumber` field is empty.'})
 
-    def _cancel_response(self, response: Response, **kwargs):
-        res = self._is_origP2pRequestId_present(kwargs.get("json", {}), response)
-        if res:
-            return res
-        response.json = lambda: {"success": True}
+    def test_fetch_payment_status_authorized(self):
+        calls, mocked = self._mock_razorpay({
+            'success': True,
+            'status': 'AUTHORIZED',
+            'messageCode': 'P2P_DEVICE_TXN_DONE',
+            'authCode': 'D12345',
+            'cardLastFourDigit': '1234',
+            'externalRefNumber': 'Hoot/ORDER0001',
+            'txnId': '250102070624795E020088174',
+            'paymentMode': 'CARD',
+            'settlementStatus': 'PENDING',
+        })
+        with mocked:
+            result = self.payment_method.razorpay_fetch_payment_status({'p2pRequestId': '250102'})
 
-    def _refund_response(self, response: Response, **kwargs):
-        response.json = lambda: {
-            "success": True,
-            "authCode": "D12345",
-            "cardLastFourDigit": "1234",
-            "externalRefNumber": self.external_ref_number,
-            "txnId": "250102070624795E020088174",
-            "paymentMode": "CARD",
-            "paymentCardBrand": "VISA",
-            "paymentCardType": "DEBIT",
-            "nameOnCard": "John Doe",
-            "acquirerCode": "HDFC",
-            "postingDate": int(time.time() * 1000),
-        }
+        self.assertEqual(calls[0]['url'], f'{DEMO_P2P_URL}status')
+        self.assertEqual(calls[0]['json']['origP2pRequestId'], '250102')
+        self.assertEqual(result['status'], 'AUTHORIZED')
+        self.assertEqual(result['txnId'], '250102070624795E020088174')
+        self.assertEqual(result['settlementStatus'], 'PENDING')
 
-    def _not_found_response(self, response: Response):
-        response.status_code = 404
-        response.json = lambda: {
-            "success": False,
-            "errorCode": "ERR404",
-            "errorMessage": "Endpoint not found",
-        }
+    def test_fetch_payment_status_still_on_device(self):
+        _calls, mocked = self._mock_razorpay({'success': True, 'messageCode': 'P2P_DEVICE_RECEIVED'})
+        with mocked:
+            result = self.payment_method.razorpay_fetch_payment_status({'p2pRequestId': '250102'})
 
-    def _mock_post(self, url, **kwargs):
-        response = Response()
-        response.status_code = 200
-        response._content = "ok"
+        self.assertEqual(result, {'status': 'RECEIVED'})
 
-        if url == "https://demo.ezetap.com/api/3.0/p2padapter/pay":
-            self.external_ref_number = self._on_razorpay_payment_line_added(response, **kwargs)
+    def test_fetch_payment_status_cancelled_on_device(self):
+        _calls, mocked = self._mock_razorpay({
+            'success': True,
+            'messageCode': 'P2P_DEVICE_CANCELED',
+            'message': 'Transaction cancelled on the terminal',
+        })
+        with mocked:
+            result = self.payment_method.razorpay_fetch_payment_status({'p2pRequestId': '250102'})
 
-        elif url == "https://demo.ezetap.com/api/3.0/p2padapter/status":
-            self._send_status_response(response, **kwargs)
-            self.is_cancel_payment_test = False
+        self.assertEqual(result, {
+            'error': 'Transaction cancelled on the terminal',
+            'payment_messageCode': 'P2P_DEVICE_CANCELED',
+        })
 
-        elif url == "https://demo.ezetap.com/api/3.0/p2padapter/cancel":
-            self._cancel_response(response, **kwargs)
+    def test_cancel_request_reports_success_as_error(self):
+        calls, mocked = self._mock_razorpay({'success': True})
+        with mocked:
+            result = self.payment_method.razorpay_cancel_payment_request({'p2pRequestId': '250102'})
 
-        elif url == "https://demo.ezetap.com/api/2.0/payment/void":
-            self._refund_response(response, **kwargs)
+        self.assertEqual(calls[0]['url'], f'{DEMO_P2P_URL}cancel')
+        self.assertNotIn('mode', calls[0]['json'])
+        self.assertEqual(result, {'error': 'Razorpay POS transaction canceled successfully'})
 
-        else:
-            self._not_found_response(response)
+    def test_refund_request_uses_void_endpoint(self):
+        calls, mocked = self._mock_razorpay({
+            'success': True,
+            'status': 'VOIDED',
+            'authCode': 'D12345',
+            'txnId': '250102070624795E020088174',
+        })
+        with mocked:
+            result = self.payment_method.razorpay_make_refund_request({
+                'refund_type': 'void',
+                'transaction_id': '250102070624795E020088174',
+            })
 
-        return response
+        self.assertEqual(calls[0]['url'], f'{DEMO_PAYMENT_URL}void')
+        self.assertEqual(calls[0]['json']['txnId'], '250102070624795E020088174')
+        self.assertEqual(result['status'], 'VOIDED')
 
-    def test_razorpay_basic_order(self):
-        with patch("odoo.addons.pos_razorpay.models.razorpay_pos_request.requests.Session.post", self._mock_post):
-            self.start_pos_tour("PosRazorpayTour")
+    def test_refund_request_uses_refund_endpoint(self):
+        calls, mocked = self._mock_razorpay({
+            'success': True,
+            'status': 'REFUNDED',
+            'externalRefNumber': 'Hoot/ORDER0001',
+        })
+        with mocked:
+            result = self.payment_method.razorpay_make_refund_request({
+                'refund_type': 'refund',
+                'amount': 100,
+                'transaction_id': '250102070624795E020088174',
+                'externalRefNumber': 'Hoot/ORDER0001',
+            })
 
-    def test_razorpay_cancel_payment(self):
-        self.is_cancel_payment_test = True
+        self.assertEqual(calls[0]['url'], f'{DEMO_PAYMENT_URL}unified/refund')
+        self.assertEqual(calls[0]['json']['originalTransactionId'], '250102070624795E020088174')
+        self.assertEqual(result['status'], 'REFUNDED')
 
-        with patch("odoo.addons.pos_razorpay.models.razorpay_pos_request.requests.Session.post", self._mock_post):
-            self.start_pos_tour("PosRazorpayCancelTour")
-
-    def test_razorpay_refund_order(self):
-        with patch("odoo.addons.pos_razorpay.models.razorpay_pos_request.requests.Session.post", self._mock_post):
-            self.start_pos_tour("PosRazorpayRefundTour")
+    def test_terminal_requires_inr_company_currency(self):
+        self.env.company.currency_id = self.env.ref('base.EUR')
+        with self.assertRaises(UserError):
+            self.env['pos.payment.method'].create({
+                'name': 'RazorPay EUR',
+                'type': 'bank',
+                'payment_method_type': 'terminal',
+                'payment_provider': 'razorpay',
+            })
