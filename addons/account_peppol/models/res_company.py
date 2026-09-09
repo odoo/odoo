@@ -5,6 +5,7 @@ import requests
 from lxml import etree
 
 from odoo import _, api, fields, models
+from odoo.addons.base.models.res_country import FR_AND_OVERSEAS_TERRITORIES
 from odoo.exceptions import ValidationError
 from odoo.tools.urls import urljoin
 
@@ -145,7 +146,7 @@ class ResCompany(models.Model):
     def _peppol_is_french_company(self):
         self.ensure_one()
         return (
-            self.account_fiscal_country_id.code in {'FR', 'GP', 'MQ', 'RE'}
+            self.account_fiscal_country_id.code in FR_AND_OVERSEAS_TERRITORIES
             or self.routing_scheme in {'0225', '0009', '9957', '0002'}
         )
 
