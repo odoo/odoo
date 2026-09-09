@@ -8,6 +8,7 @@ from urllib.parse import urlencode, urlsplit
 import requests
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
+from psycopg import IntegrityError
 
 from odoo import _, api, fields, models
 from odoo.exceptions import AccessError, UserError
@@ -1154,12 +1155,26 @@ class SlideSlide(models.Model):
             embed_entry._increment_fields_skiplock("count_views")
             embed_entry.invalidate_recordset(["count_views"])
         else:
-            embed_entry = self.env["slide.embed"].create(
-                {
-                    "slide_id": self.id,
-                    "url": url_entry,
-                }
-            )
+            # The search above can race: two concurrent embeds of a URL with
+            # no existing row can both miss it and both try to create one.
+            # The (slide_id, url) unique constraint on slide.embed turns the
+            # loser's create() into an IntegrityError instead of a silent
+            # duplicate row; fall back to incrementing the row the winner
+            # created.
+            try:
+                with self.env.cr.savepoint():
+                    embed_entry = self.env["slide.embed"].create(
+                        {
+                            "slide_id": self.id,
+                            "url": url_entry,
+                        }
+                    )
+            except IntegrityError:
+                embed_entry = self.env["slide.embed"].search(
+                    [("url", "=", url_entry), ("slide_id", "=", self.id)], limit=1
+                )
+                embed_entry._increment_fields_skiplock("count_views")
+                embed_entry.invalidate_recordset(["count_views"])
 
         return embed_entry
 
