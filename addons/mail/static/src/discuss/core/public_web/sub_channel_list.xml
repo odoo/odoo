@@ -19,7 +19,7 @@
                     </p>
                 </div>
                 <div class="d-flex flex-column flex-grow-1 gap-2">
-                    <SubChannelPreview t-foreach="this.subChannels" t-as="channel" t-key="channel.localId" channel="channel" onClick="this.onClickSubChannel"/>
+                    <SubChannelPreview t-foreach="this.subChannels" t-as="channel" t-key="channel.localId" channel="channel" searchTerm="this.search.searchTerm" onClick="this.onClickSubChannel"/>
                     <!-- keyed on the channel, so that the threads of another opened channel load -->
                     <span t-if="!this.search.searchTerm" class="pt-1" t-key="this.props.channel.localId" t-ref="this.loadMoreRef"/>
                 </div>
