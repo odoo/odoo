@@ -316,3 +316,40 @@ class TestUblImportBis3InvoiceBERetrieveTax(TestUblImportBis3InvoiceBE):
                 'amount_total': 81.07,
             }],
         )
+
+    def test_import_invoice_discount_correction(self):
+        """
+        Test that tax amount correction works when the allowance line receives a different tax than
+        the base lines.
+        """
+        tax_21_m = self.percent_tax(21.0, type_tax_use='purchase', name='VAT 21% M')
+        tax_21_s = self.percent_tax(21.0, type_tax_use='purchase', name='VAT 21% S')
+
+        def mocked_import_retrieve_tax(self, search_plan, company, tax_values_list):
+            for tax_values in tax_values_list:
+                if tax_values.get('invoice_predictive'):
+                    tax_values['tax'] = tax_21_m
+                elif tax_values.get('_tax_key'):
+                    tax_values['tax'] = tax_21_s
+
+        self.patch(self.env.registry['account.tax'], '_import_retrieve_tax', mocked_import_retrieve_tax)
+
+        invoice = self._import_invoice_as_attachment_on(
+            test_name='test_import_invoice_discount_correction',
+            journal=self.company_data['default_journal_purchase'],
+        )
+
+        tax_lines = invoice.line_ids.filtered(lambda line: line.display_type == 'tax').sorted('balance')
+        self.assertRecordValues(
+            tax_lines,
+            [
+                {
+                    'tax_line_id': tax_21_s.id,
+                    'balance': -0.17,
+                },
+                {
+                    'tax_line_id': tax_21_m.id,
+                    'balance': 6.56,
+                },
+            ],
+        )
