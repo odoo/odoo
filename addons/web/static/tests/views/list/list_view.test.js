@@ -21523,6 +21523,89 @@ test(`column tag: invalid styling is applied to the invalid sub-field`, async ()
     expect(`.o_selected_row .o_invalid_cell`).toHaveCount(0);
 });
 
+test.tags("desktop");
+test(`column tag: readonly styling is applied to the readonly sub-field`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list editable="bottom">
+                <field name="date"/>
+                <column>
+                    <field name="int_field" readonly="1"/>
+                    <field name="foo"/>
+                </column>
+            </list>
+        `,
+    });
+
+    await contains(`.o_data_row:eq(0) td[name='int_field']`).click();
+    expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
+
+    const groupFields = queryAll(`.o_selected_row td[name='int_field'] .o_column_group_field`);
+    expect(groupFields[0]).toHaveClass(["o_readonly_modifier", "text-muted"]);
+    expect(groupFields[1]).not.toHaveClass("o_readonly_modifier");
+    expect(groupFields[1]).not.toHaveClass("text-muted");
+    expect(`.o_selected_row td.o_readonly_modifier`).toHaveCount(0, {
+        message: "the cell itself is never marked, only its sub-fields",
+    });
+});
+
+test.tags("desktop");
+test(`column tag: Tab navigation skips a column group only if all its fields are readonly`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list editable="bottom">
+                <field name="foo"/>
+                <column>
+                    <field name="m2o" readonly="1"/>
+                    <field name="bar" readonly="1"/>
+                </column>
+                <column>
+                    <field name="date" readonly="1"/>
+                    <field name="int_field"/>
+                </column>
+            </list>
+        `,
+    });
+
+    await contains(`.o_data_row:eq(0) td[name='foo']`).click();
+    expect(`.o_selected_row [name='foo'] input`).toBeFocused();
+
+    // the readonly many2one renders a tabable link
+    await press("Tab");
+    await animationFrame();
+    expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
+    expect(`.o_selected_row td[name='date'] [name='int_field'] input`).toBeFocused();
+});
+
+test.tags("desktop");
+test(`column tag: Tab navigation ignores the readonly fields of a column group`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list editable="bottom">
+                <field name="int_field"/>
+                <column>
+                    <field name="m2o" readonly="1"/>
+                    <field name="foo"/>
+                </column>
+            </list>
+        `,
+    });
+
+    await contains(`.o_data_row:eq(0) td[name='int_field']`).click();
+    expect(`.o_selected_row [name='int_field'] input`).toBeFocused();
+
+    // the link of the readonly many2one must not take the focus
+    await press("Tab");
+    await animationFrame();
+    expect(`.o_selected_row [name='foo'] input`).toBeFocused();
+});
+
 test(`x2many list: create control supports hotkey`, async () => {
     Foo._records[0].o2m = [1];
 
