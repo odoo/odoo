@@ -18,6 +18,10 @@ class AccountJournal(models.Model):
             'name': self.env._("Invoices to send for E-Invoicing"),
             'res_model': 'account.move',
             'view_mode': 'list,form',
+            'views': [
+                (self.env.ref('account.view_out_invoice_tree').id, 'list'),
+                (self.env.ref('account.view_move_form').id, 'form')
+            ],
             'domain': [
                 ('journal_id', '=', self.id),
                 ('l10n_in_edi_status', '=', 'to_send'),
