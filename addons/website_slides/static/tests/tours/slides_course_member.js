@@ -150,8 +150,7 @@ registry.category("web_tour.tours").add("course_member", {
             trigger: "body:not(:has(.modal:visible))",
         },
         {
-            trigger:
-                'button[data-bs-target="#ratingpopupcomposer"]:contains("Edit Review")',
+            trigger: "span:contains(Edit Review)",
             run: "click",
         },
         {
