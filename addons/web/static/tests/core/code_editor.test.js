@@ -373,6 +373,7 @@ test("qweb mode readonly attributes", async () => {
         <form lock-id="0" name="some_name" >
         <div />
         </form>
+        <span lock-id="1" t-field="o.some_field"/>
         `.replace(/^\s*/gm, ""); // simple dedent;
 
     const state = reactive({
@@ -393,7 +394,7 @@ test("qweb mode readonly attributes", async () => {
     const editor = window.ace.edit(queryOne(".ace_editor"));
     expect(document.activeElement).toBe(editor.textInput.getElement());
 
-    expect(".ace_editor .ace_odoo_attr_readonly").toHaveCount(5);
+    expect(".ace_editor .ace_odoo_attr_readonly").toHaveCount(10);
 
     for (let i = 0; i < 'lock-id="0"'.length; i++) {
         editor.commands.commands.backspace.exec(editor);
@@ -417,6 +418,7 @@ test("qweb mode readonly attributes", async () => {
         <form lol="5" lock-id="0" name="some_name" >
         <div />
         </form>
+        <span lock-id="1" t-field="o.some_field"/>
         `.replace(/^\s*/gm, "")
     );
 
@@ -426,6 +428,17 @@ test("qweb mode readonly attributes", async () => {
         `
         <div />
         </form>
+        <span lock-id="1" t-field="o.some_field"/>
         `.replace(/^\s*/gm, "")
     );
+
+    editor.moveCursorTo(2, 0);
+    editor.getSelection().selectLine();
+    editor.commands.commands.backspace.exec(editor);
+    expect(editor.getValue()).toBe(
+        `
+        <div />
+        </form>
+        `.replace(/^\s*/gm, "")
+    )
 });
