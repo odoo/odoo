@@ -863,11 +863,12 @@ export class Store {
         Object.values(this.features)
             .filter((feature) => feature.module_state !== "installed")
             .forEach((feature) => {
-                feature.selected |=
-                    id &&
-                    feature.website_config_preselection.includes(
-                        WEBSITE_PURPOSES[id].name,
-                    );
+                feature.selected =
+                    feature.selected ||
+                    (id &&
+                        feature.website_config_preselection.includes(
+                            WEBSITE_PURPOSES[id].name,
+                        ));
             });
         this.selectedPurpose = id;
     }
