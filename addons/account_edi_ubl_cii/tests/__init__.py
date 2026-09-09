@@ -11,6 +11,7 @@ from . import test_cii_import_facturx_fr
 from . import test_cii_import_facturx_fr_cash_rounding
 from . import test_cii_import_facturx_fr_group_lines_by_tax
 from . import test_cii_import_facturx_fr_retrieve_account
+from . import test_cii_import_facturx_fr_retrieve_analytic_distribution
 from . import test_cii_import_facturx_fr_retrieve_partner
 from . import test_cii_import_facturx_fr_retrieve_product
 from . import test_cii_import_facturx_fr_retrieve_tax
@@ -26,6 +27,7 @@ from . import test_ubl_import_bis3_invoice_be_decode_invoice_line
 from . import test_ubl_import_bis3_invoice_be_group_lines_by_tax
 from . import test_ubl_import_bis3_invoice_be_optional_fields
 from . import test_ubl_import_bis3_invoice_be_retrieve_account
+from . import test_ubl_import_bis3_invoice_be_retrieve_analytic_distribution
 from . import test_ubl_import_bis3_invoice_be_retrieve_partner
 from . import test_ubl_import_bis3_invoice_be_retrieve_product
 from . import test_ubl_import_bis3_invoice_be_retrieve_tax
