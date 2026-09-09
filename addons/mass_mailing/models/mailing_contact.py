@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models, tools
+from odoo import _, api, Command, fields, models, tools
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 
@@ -111,10 +111,29 @@ class MailingContact(models.Model):
             if vals.get('list_ids') and vals.get('subscription_ids'):
                 raise UserError(_('You should give either list_ids, either subscription_ids to create new contacts.'))
 
-        if default_list_ids:
-            for vals in vals_list:
-                if vals.get('list_ids'):
-                    continue
+        for vals in vals_list:
+            if vals.get('list_ids'):
+                # Many2many commands insert raw rows in mailing_subscription, skipping
+                # its ORM defaults fields such as create_date: create subscriptions instead
+                list_ids = []
+                for command in vals['list_ids']:
+                    if isinstance(command, int):
+                        list_ids.append(command)
+                    elif not isinstance(command, (list, tuple)) or not command:
+                        break
+                    elif command[0] == Command.LINK:
+                        list_ids.append(command[1])
+                    elif command[0] == Command.SET:
+                        list_ids = list(command[2])
+                    else:  # Let ORM handle other commands (unlink, clear, ...)
+                        break
+                else:
+                    del vals['list_ids']
+                    vals['subscription_ids'] = [
+                        Command.create({'list_id': list_id})
+                        for list_id in tools.OrderedSet(list_ids)
+                    ]
+            elif default_list_ids:
                 current_list_ids = []
                 subscription_ids = vals.get('subscription_ids') or []
                 for subscription in subscription_ids:
