@@ -354,7 +354,7 @@ class TestConcealDebugTraceback(TestHttpBase):
             ('AccessDenied', True),  # always concealed
             ('UserError', False),  # not listed
         ]:
-            with self.assertLogs('odoo.http') as log_capture:
+            with self.assertLogs('odoo.http', 'ERROR') as log_capture:
                 res = self.url_open(f'/test_http/suppress-traceback/{exception}')
                 self.assertNotEqual(res.status_code, 200)
 
@@ -367,7 +367,6 @@ class TestConcealDebugTraceback(TestHttpBase):
             # The traceback is always logged
             self.assertEqual(log_capture.output, [
                 Like(f'...Traceback...\n{exception}: error message'),
-                Like('...GET /test_http/suppress-traceback...'),
             ])
 
         s = conceal_debug_traceback(ZeroDivisionError)
