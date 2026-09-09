@@ -300,10 +300,16 @@ class TestWebsiteForm(TransactionCase):
         with self.assertRaises(AccessError):
             IrModel.with_user(public).get_fields_authorized("res.partner", {})
 
+        self.env.ref("base.model_res_partner").website_form_access = True
         fields = IrModel.with_user(SUPERUSER_ID).get_fields_authorized(
             "res.partner", {}
         )
         self.assertIn("name", fields)
+
+    def test_get_authorized_fields_requires_form_access(self):
+        IrModel = self.env["ir.model"]
+        with self.assertRaises(AccessError):
+            IrModel.with_user(SUPERUSER_ID).get_fields_authorized("res.country", {})
 
     def test_mail_form_signature_binds_cc_recipients(self):
         from odoo.addons.website.tools import website_form_signature_payload

@@ -85,6 +85,11 @@ class IrModel(models.Model):
             raise AccessError(
                 _("Only website editors can introspect form model fields.")
             )
+        model_record = self.sudo().search(
+            [("model", "=", model_name), ("website_form_access", "=", True)], limit=1
+        )
+        if not model_record:
+            raise AccessError(_("This model cannot be used in website forms."))
         model = self.env[model_name]
         fields_get = model.fields_get()
 
