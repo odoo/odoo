@@ -1,9 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from unittest.mock import patch
+from datetime import timedelta
+from freezegun import freeze_time
 
 from odoo.addons.sms.models.mail_thread import MailThread
 from odoo.addons.sms.tests.common import SMSCommon, SMSCase
+from odoo.fields import Datetime
 from odoo.tests import tagged
 
 
@@ -82,3 +85,61 @@ class TestSMSComposerComment(SMSCommon, SMSCase):
                     [{'partner': self.partner_employee}], sms_content, messages,
                     mail_message_values={"body": expected_notification_content},
                 )
+
+    def test_sms_composer_action_create_template(self):
+        """ Test to save new SMS template """
+        composer = self.env['sms.composer'].with_context(
+            active_model='res.partner',
+            active_id=self.partner_employee.id,
+        ).create({
+            'body': 'SMS Template new body',
+            'template_name': 'Test SMS Template',
+        })
+
+        composer.action_create_sms_template()
+
+        template = self.env['sms.template'].search([('name', '=', 'Test SMS Template')], limit=1)
+        self.assertTrue(template, 'New SMS Template must be created')
+        self.assertEqual(template.body, 'SMS Template new body')
+        self.assertEqual(template.model_id.model, 'res.partner')
+
+    def test_sms_composer_schedule_action(self):
+        """ Test that simulates the correct working of the 'Schedule' button in the wizard """
+        test_partner = self.env['res.partner'].create({
+            'name': 'Test User',
+            'phone': '+393331234567',
+        })
+        future_date = Datetime.now() + timedelta(days=1)
+
+        composer = self.env['sms.composer'].with_context(
+            active_model='res.partner',
+            active_id=test_partner.id,
+        ).create({
+            'body': "See our promo here:\nhttps://odoo.com\nEnjoy!",
+            'composition_mode': 'comment',
+            'scheduled_date': future_date,
+        })
+
+        composer.action_schedule_message()
+
+        scheduled_msg = self.env['mail.scheduled.message'].search([
+            ('model', '=', 'res.partner'),
+            ('res_id', '=', test_partner.id),
+        ], limit=1)
+
+        self.assertTrue(scheduled_msg, "The wizard should have created a 'mail.scheduled.message' record.")
+        self.assertEqual(
+            scheduled_msg.body,
+            '<p>See our promo here:<br><a href="https://odoo.com" target="_blank" rel="noreferrer noopener">https://odoo.com</a><br>Enjoy!</p>',
+            "The scheduled message body should be formatted into exact HTML."
+        )
+
+        with self.mockSMSGateway():
+            with freeze_time(future_date + timedelta(hours=1)):
+                self.env.ref('mail.ir_cron_post_scheduled_message').method_direct_trigger()
+
+            self.assertSMSNotification(
+                [{'partner': test_partner, 'number': '+393331234567'}],
+                "See our promo here:\nhttps://odoo.com\nEnjoy!",
+                sent_unlink=True
+            )

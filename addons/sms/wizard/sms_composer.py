@@ -5,7 +5,9 @@ from ast import literal_eval
 from uuid import uuid4
 
 from odoo import api, fields, models, _
+from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.sms.tools.sms_tools import sms_content_to_rendered_html
+from odoo.tools import html2plaintext, plaintext2html
 from odoo.exceptions import UserError
 
 
@@ -17,14 +19,29 @@ class SmsComposer(models.TransientModel):
     def default_get(self, fields):
         result = super().default_get(fields)
 
-        result['res_model'] = result.get('res_model') or self.env.context.get('active_model')
+        scheduled_message_id = result.get('mail_scheduled_message_id') or self.env.context.get('default_mail_scheduled_message_id')
+        if scheduled_message_id:
+            scheduled_message = self.env['mail.scheduled.message'].browse(scheduled_message_id)
+            values = {
+                'composition_mode': 'comment',
+                'mail_scheduled_message_id': scheduled_message.id,
+                'res_id': scheduled_message.res_id,
+                'res_model': scheduled_message.model,
+                'scheduled_date': scheduled_message.scheduled_date,
+            }
+        else:
+            values = {
+                'res_model': result.get('res_model') or self.env.context.get('active_model'),
+            }
+            active_ids = self.env.context.get('active_ids') or []
+            if len(active_ids) > 1:
+                values['res_ids'] = repr(active_ids)
+            elif active_id := self.env.context.get('active_id'):
+                values['res_id'] = active_id
 
-        if not result.get('res_ids'):
-            if not result.get('res_id') and self.env.context.get('active_ids') and len(self.env.context.get('active_ids')) > 1:
-                result['res_ids'] = repr(self.env.context.get('active_ids'))
-        if not result.get('res_id'):
-            if not result.get('res_ids') and self.env.context.get('active_id'):
-                result['res_id'] = self.env.context.get('active_id')
+        for field, value in values.items():
+            if not fields or field in fields:
+                result[field] = value
 
         return result
 
@@ -72,6 +89,14 @@ class SmsComposer(models.TransientModel):
     body = fields.Text(
         'Message', compute='_compute_body',
         precompute=True, readonly=False, store=True, required=True)
+    scheduled_date = fields.Char(
+        'Scheduled Date',
+        compute='_compute_scheduled_date', readonly=False, store=True, compute_sudo=False)
+    mail_scheduled_message_id = fields.Many2one(
+        'mail.scheduled.message',
+        string='Scheduled Message'
+    )
+    template_name = fields.Char(string='Template Name')
 
     @api.depends('res_ids_count')
     @api.depends_context('sms_composition_mode')
@@ -170,18 +195,127 @@ class SmsComposer(models.TransientModel):
             else:
                 composer.sanitized_numbers = False
 
-    @api.depends('composition_mode', 'res_model', 'res_id', 'template_id')
+    @api.depends('composition_mode', 'res_model', 'res_id', 'template_id', 'mail_scheduled_message_id')
     def _compute_body(self):
         for record in self:
-            if record.template_id and record.composition_mode == 'comment' and record.res_id:
+            if record.mail_scheduled_message_id:
+                record.body = html2plaintext(record.mail_scheduled_message_id.body)
+            elif record.template_id and record.composition_mode == 'comment' and record.res_id:
                 additional_context = record._get_additional_render_context().get('body', {})
                 record.body = record.template_id._render_field('body', [record.res_id], compute_lang=True, add_context=additional_context)[record.res_id]
             elif record.template_id:
                 record.body = record.template_id.body
 
+    @api.depends('composition_mode', 'res_model', 'res_ids', 'template_id', 'mail_scheduled_message_id')
+    def _compute_scheduled_date(self):
+        for composer in self:
+            if composer.mail_scheduled_message_id:
+                composer.scheduled_date = composer.mail_scheduled_message_id.scheduled_date
+            else:
+                composer.scheduled_date = False
+
+    def open_template_creation_wizard(self):
+        self.ensure_one()
+        return {
+            'context': {'dialog_size': 'medium'},
+            'name': _('Create an SMS Template'),
+            'res_id': self.id,
+            'res_model': 'sms.composer',
+            'target': 'new',
+            'type': 'ir.actions.act_window',
+            'view_id': self.env.ref('sms.sms_composer_view_form_template_save').id,
+            'view_mode': 'form',
+        }
+
     # ------------------------------------------------------------
     # Actions
     # ------------------------------------------------------------
+
+    def action_create_sms_template(self):
+        self.ensure_one()
+
+        if not self.template_name:
+            raise UserError(_("Please provide a name for the template."))
+
+        model_id = self.env['ir.model']._get_id(self.res_model)
+        if not model_id:
+            raise UserError(_("Impossible to determine the model for the template."))
+
+        template = self.env['sms.template'].create({
+            'name': self.template_name,
+            'body': self.body,
+            'model_id': model_id,
+        })
+
+        self.template_id = template.id
+
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'sms.composer',
+            'res_id': self.id,
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {**self.env.context, 'default_model': self.res_model},
+        }
+
+    def action_schedule_message(self):
+        self.ensure_one()
+
+        scheduled_msg = self._action_schedule_message()
+
+        if self._get_records() and scheduled_msg:
+            store = Store()
+            store.add(
+                self._get_records(),
+                '_store_thread_fields',
+                as_thread=True,
+                fields_params={
+                    'request_list': ['scheduledMessages'],
+                    'scheduledMessages': True,
+                }
+            )
+            return store.get_client_action(next_action={'type': 'ir.actions.act_window_close'})
+
+        return {'type': 'ir.actions.act_window_close'}
+
+    def _prepare_schedule_message_post_values(self):
+        self.ensure_one()
+
+        return {
+            'attachment_ids': [],
+            'author_id': self.env.user.partner_id.id,
+            'body': plaintext2html(self.body),
+            'composition_comment_option': False,
+            'is_note': False,
+            'model': self.res_model,
+            'notification_parameters': '{}',
+            'partner_ids': [],
+            'res_id': self.res_id,
+            'scheduled_date': self.scheduled_date,
+            'send_method': 'sms',
+        }
+
+    def _action_schedule_message(self):
+        self.ensure_one()
+
+        if not self.res_model or not isinstance(self.env[self.res_model], self.env['mail.thread'].__class__):
+            raise UserError(_("Scheduling messages is only supported on mail.thread models."))
+
+        if self.composition_mode != 'comment' or not self.comment_single_recipient:
+            raise UserError(_("A message can only be scheduled in comment mode"))
+
+        if not self.scheduled_date:
+            raise UserError(_("A scheduled date is needed to schedule a message"))
+
+        vals = self._prepare_schedule_message_post_values()
+
+        if self.mail_scheduled_message_id:
+            vals.pop('model', False)
+            vals.pop('res_id', False)
+            self.mail_scheduled_message_id.write(vals)
+            return self.mail_scheduled_message_id
+
+        return self.env['mail.scheduled.message'].create(vals)
 
     def action_send_sms(self):
         if self.composition_mode in ('numbers', 'comment'):
@@ -238,20 +372,28 @@ class SmsComposer(models.TransientModel):
 
     def _action_send_sms_comment(self, records=None):
         records = records if records is not None else self._get_records()
-        subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
 
         messages = self.env['mail.message']
         all_bodies = self._prepare_body_values(records)
 
         for record in records:
-            messages += record._message_sms(
-                all_bodies[record.id],
-                subtype_id=subtype_id,
+            messages += self._action_send_sms_comment_record(
+                record=record,
+                body=all_bodies[record.id],
+                is_note=True,
                 number_field=self.number_field_name,
                 sms_numbers=self.sanitized_numbers.split(',') if self.sanitized_numbers else None,
                 sms_type=self.sms_type,
             )
         return messages
+
+    def _action_send_sms_comment_record(self, record, body, is_note=False, **kwargs):
+        subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note') if is_note else False
+        return record._message_sms(
+            body=body,
+            subtype_id=subtype_id,
+            **kwargs,
+        )
 
     def _action_send_sms_mass(self, records=None):
         records = records if records is not None else self._get_records()
