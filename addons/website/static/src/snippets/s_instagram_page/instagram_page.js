@@ -50,7 +50,12 @@ export class InstagramPage extends Interaction {
         ) {
             return;
         }
-        const evDataJSON = JSON.parse(ev.data);
+        let evDataJSON;
+        try {
+            evDataJSON = JSON.parse(ev.data);
+        } catch {
+            return;
+        }
         if (evDataJSON.type !== "MEASURE") {
             return;
         }
