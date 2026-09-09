@@ -68,6 +68,19 @@ class TestEventRegisterUTM(HttpCase, TestEventOnlineCommon):
         )
 
 
+class TestEventListFilters(HttpCase, TestEventOnlineCommon):
+    def test_malformed_type_and_country_query_params(self):
+        """A malformed 'type'/'country' query param on the event list must
+        not crash the controller with an unhandled ValueError."""
+        for param in ("type", "country"):
+            resp = self.url_open(f"/event?{param}=abc")
+            self.assertEqual(
+                resp.status_code,
+                200,
+                f"A non-numeric '{param}' query param must not crash /event.",
+            )
+
+
 @tagged("post_install", "-at_install")
 class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
     def test_website_event_tour_admin(self):
