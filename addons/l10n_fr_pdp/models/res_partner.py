@@ -272,3 +272,27 @@ class ResPartner(models.Model):
             # The CPRO_INVOICE_IDENTIFIER acts as a general placeholder and does not indicate the actually
             # supported documents (i.e. credit notes and CDAR lifecycles are possible too ofc.).
             partner.peppol_supported_documents = [CPRO_INVOICE_IDENTIFIER]
+
+    @api.model
+    @handle_demo
+    def _fetch_active_annuaire_lines(self, siren):
+        edi_mode = self.env.company._get_peppol_edi_mode()
+        origin = self.env['account_edi_proxy_client.user']._get_proxy_urls()['pdp'][edi_mode]
+        query = parse.urlencode({'pdp_endpoint': siren, 'active_only': True})
+        endpoint = f'{origin}/api/pdp/1/pdp_annuaire_lookup?{query}'
+
+        try:
+            response = requests.get(endpoint, timeout=10)
+            decoded_response = response.json()
+        except requests.exceptions.RequestException as e:
+            _logger.debug("failed to query active annuaire lines for identifier %s: %s", siren, e)
+            return {}
+
+        lines = decoded_response.get('annuaire_lines', [])
+        identifiers = list({line['identifier'] for line in lines})
+
+        return {
+            'in_annuaire': bool(identifiers),
+            'identifiers': identifiers,
+            'count': len(identifiers),
+        }
