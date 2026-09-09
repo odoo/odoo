@@ -1,5 +1,5 @@
 import { useSubEnv } from "@web/owl2/utils";
-import { Component, EventBus, onWillStart, proxy } from "@odoo/owl";
+import { Component, EventBus, onWillStart, proxy, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { Layout } from "@web/search/layout";
@@ -16,7 +16,7 @@ export class MoOverview extends Component {
         MoOverviewDisplayFilter,
         MoOverviewComponentsBlock,
     };
-    static props = { ...standardActionServiceProps };
+    props = useProps(standardActionServiceProps);
 
     static template = "mrp.MoOverview";
 

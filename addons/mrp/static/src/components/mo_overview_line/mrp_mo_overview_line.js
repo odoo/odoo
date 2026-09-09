@@ -1,60 +1,53 @@
 import { _t } from "@web/core/l10n/translation";
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { formatFloat, formatFloatTime, formatMonetary } from "@web/views/fields/formatters";
 import { getStateDecorator } from "./mo_overview_colors";
 import { SHOW_OPTIONS } from "../mo_overview_display_filter/mrp_mo_overview_display_filter";
 
 export class MoOverviewLine extends Component {
-    static props = {
-        data: {
-            type: Object,
-            shape: {
-                level: Number,
-                index: { type: String, optional: true },
-                id: { type: Number, optional: true },
-                model: { type: String, optional: true },
-                name: String,
-                product_model: { type: String, optional: true },
-                product: { type: String, optional: true },
-                product_id: { type: Number, optional: true },
-                state: { type: String, optional: true },
-                formatted_state: { type: String, optional: true },
-                has_bom: { type: Boolean, optional: true },
-                quantity: Number,
-                replenish_quantity: { type: Number, optional: true },
-                uom: { type: String, optional: true },
-                uom_name: { type: String, optional: true },
-                uom_precision: { type: Number, optional: true },
-                quantity_free: { type: [Number, Boolean], optional: true },
-                quantity_on_hand: { type: [Number, Boolean], optional: true },
-                quantity_reserved: { type: Number, optional: true },
-                receipt: {
-                    type: Object,
-                    shape: {
-                        display: String,
-                        type: String,
-                        decorator: [String, Boolean],
-                        date: [String, Boolean],
-                    },
-                    optional: true,
-                },
-                unit_cost: { type: Number, optional: true },
-                mo_cost: { type: [Number, Boolean], optional: true },
-                mo_cost_decorator: { type: [String, Boolean], optional: true },
-                bom_cost: { type: [Number, Boolean], optional: true },
-                real_cost: { type: [Number, Boolean], optional: true },
-                real_cost_decorator: { type: [String, Boolean], optional: true },
-                currency_id: Number,
-                currency: { type: String, optional: true },
-                production_id: { type: Number, optional: true },
-            },
-        },
+    props = useProps({
+        data: t.object({
+            level: t.number(),
+            index: t.string().optional(),
+            id: t.number().optional(),
+            model: t.string().optional(),
+            name: t.string(),
+            product_model: t.string().optional(),
+            product: t.string().optional(),
+            product_id: t.number().optional(),
+            state: t.string().optional(),
+            formatted_state: t.string().optional(),
+            has_bom: t.boolean().optional(),
+            quantity: t.number(),
+            replenish_quantity: t.number().optional(),
+            uom: t.string().optional(),
+            uom_name: t.string().optional(),
+            uom_precision: t.number().optional(),
+            quantity_free: t.or([t.number(), t.boolean()]).optional(),
+            quantity_on_hand: t.or([t.number(), t.boolean()]).optional(),
+            quantity_reserved: t.number().optional(),
+            receipt: t.object({
+                display: t.string(),
+                type: t.string(),
+                decorator: t.or([t.string(), t.boolean()]),
+                date: t.or([t.string(), t.boolean()]),
+            }).optional(),
+            unit_cost: t.number().optional(),
+            mo_cost: t.or([t.number(), t.boolean()]).optional(),
+            mo_cost_decorator: t.or([t.string(), t.boolean()]).optional(),
+            bom_cost: t.or([t.number(), t.boolean()]).optional(),
+            real_cost: t.or([t.number(), t.boolean()]).optional(),
+            real_cost_decorator: t.or([t.string(), t.boolean()]).optional(),
+            currency_id: t.number(),
+            currency: t.string().optional(),
+            production_id: t.number().optional(),
+        }),
         showOptions: SHOW_OPTIONS,
-        hasFoldButton: { type: Boolean, optional: true },
-        isFolded: { type: Boolean, optional: true },
-        toggleFolded: { type: Function, optional: true },
-    };
+        hasFoldButton: t.boolean().optional(),
+        isFolded: t.boolean().optional(),
+        toggleFolded: t.function().optional(),
+    });
 
     static template = "mrp.MoOverviewLine";
 

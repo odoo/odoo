@@ -1,6 +1,6 @@
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 
 export class BomOverviewDisplayFilter extends Component {
     static template = "mrp.BomOverviewDisplayFilter";
@@ -8,12 +8,10 @@ export class BomOverviewDisplayFilter extends Component {
         Dropdown,
         DropdownItem,
     };
-    static props = {
-        showOptions: {
-            type: Object,
-        },
-        changeDisplay: Function,
-    };
+    props = useProps({
+        showOptions: t.object(),
+        changeDisplay: t.function(),
+    });
 
     setup() {
         this.displayOptions = {};
