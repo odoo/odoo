@@ -13,10 +13,15 @@
     }
 }
 
-.options-container:has(.o_wsale_products_list_page_options) {
-    div[data-label="Style"].hb-row-sublevel-1 .hb-row-label::after {
-        height: $o-hb-row-min-height * 1.5;
-    }
+.o_wsale_categories_style_row::after {
+    height: $o-hb-row-min-height + $o-hb-row-spacing;
+}
+
+// "Collapse Category Recursive" directly follows "Style". Its connector should
+// only be extended when the "Style" row is visible. The adjacent sibling
+// selector is used to avoid using :has().
+.hb-row:not(.d-none) + .hb-row > .o_wsale_categories_collapse_row::after {
+    --o-hb-row-sublevel-top: #{-($o-hb-row-min-height + $o-hb-row-spacing)};
 }
 
 .o_wsale_soptions_menu_sizes {
