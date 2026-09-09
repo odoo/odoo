@@ -13,3 +13,4 @@ from . import test_project_sharing
 from . import test_task_analysis
 from . import test_update
 from . import test_project_task_display_name
+from . import test_task_progress
