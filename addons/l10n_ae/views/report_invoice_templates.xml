@@ -2,7 +2,7 @@
 <odoo>
     <template id="report_invoice_document" inherit_id="account.report_invoice_document">
         <xpath expr="//span[@name='payment_term']" position="after">
-            <p t-if="o.company_id.country_id.code == 'AE' and o.partner_id.country_id.code != 'AE' and o.env.ref('l10n_ae.gcc_countries_group') in o.partner_id.country_id.country_group_ids">
+            <p t-if="o.company_id.vat and o.company_id.country_id.code == 'AE' and o.partner_id.country_id.code != 'AE' and o.env.ref('l10n_ae.gcc_countries_group') in o.partner_id.country_id.country_group_ids">
                 Supply between <b>United Arab Emirates</b> and
                 <b>
                     <span t-field="o.partner_id.country_id.name"/>
@@ -11,76 +11,76 @@
         </xpath>
 
         <t name="invoice_title" position="before">
-            <t name="tax_invoice_title" t-if="o.company_id.country_id.code == 'AE'">Tax Invoice</t>
+            <t name="tax_invoice_title" t-if="o.company_id.vat and o.company_id.country_id.code == 'AE'">Tax Invoice</t>
         </t>
         <t name="invoice_title" position="attributes">
             <attribute name="t-else"> </attribute>
         </t>
         <t name="draft_invoice_title" position="before">
-            <t name="draft_tax_invoice_title" t-if="o.company_id.country_id.code == 'AE'">Draft Tax Invoice</t>
+            <t name="draft_tax_invoice_title" t-if="o.company_id.vat and o.company_id.country_id.code == 'AE'">Draft Tax Invoice</t>
         </t>
         <t name="draft_invoice_title" position="attributes">
             <attribute name="t-else"> </attribute>
         </t>
         <t name="cancelled_invoice_title" position="before">
-            <t name="cancelled_tax_invoice_title" t-if="o.company_id.country_id.code == 'AE'">Cancelled Tax Invoice</t>
+            <t name="cancelled_tax_invoice_title" t-if="o.company_id.vat and o.company_id.country_id.code == 'AE'">Cancelled Tax Invoice</t>
         </t>
         <t name="cancelled_invoice_title" position="attributes">
             <attribute name="t-else"> </attribute>
         </t>
 
         <t name="credit_note_title" position="before">
-            <t name="tax_credit_note_title" t-if="o.company_id.country_id.code == 'AE'">Tax Credit Note</t>
+            <t name="tax_credit_note_title" t-if="o.company_id.vat and o.company_id.country_id.code == 'AE'">Tax Credit Note</t>
         </t>
         <t name="credit_note_title" position="attributes">
             <attribute name="t-else"> </attribute>
         </t>
         <t name="draft_credit_note_title" position="before">
-            <t name="draft_tax_credit_note_title" t-if="o.company_id.country_id.code == 'AE'">Draft Tax Credit Note</t>
+            <t name="draft_tax_credit_note_title" t-if="o.company_id.vat and o.company_id.country_id.code == 'AE'">Draft Tax Credit Note</t>
         </t>
         <t name="draft_credit_note_title" position="attributes">
             <attribute name="t-else"> </attribute>
         </t>
         <t name="cancelled_credit_note_title" position="before">
-            <t name="cancelled_tax_credit_note_title" t-if="o.company_id.country_id.code == 'AE'">Cancelled Tax Credit Note</t>
+            <t name="cancelled_tax_credit_note_title" t-if="o.company_id.vat and o.company_id.country_id.code == 'AE'">Cancelled Tax Credit Note</t>
         </t>
         <t name="cancelled_credit_note_title" position="attributes">
             <attribute name="t-else"> </attribute>
         </t>
 
         <t name="proforma_invoice_title" position="before">
-            <t name="proforma_tax_invoice_title" t-if="o.company_id.country_id.code == 'AE'">Proforma Tax Invoice</t>
+            <t name="proforma_tax_invoice_title" t-if="o.company_id.vat and o.company_id.country_id.code == 'AE'">Proforma Tax Invoice</t>
         </t>
         <t name="proforma_invoice_title" position="attributes">
             <attribute name="t-else"> </attribute>
         </t>
         <t name="draft_proforma_invoice_title" position="before">
-            <t name="draft_proforma_tax_invoice_title" t-if="o.company_id.country_id.code == 'AE'">Draft Proforma Tax Invoice</t>
+            <t name="draft_proforma_tax_invoice_title" t-if="o.company_id.vat and o.company_id.country_id.code == 'AE'">Draft Proforma Tax Invoice</t>
         </t>
         <t name="draft_proforma_invoice_title" position="attributes">
             <attribute name="t-else"> </attribute>
         </t>
         <t name="cancelled_proforma_invoice_title" position="before">
-            <t name="cancelled_proforma_tax_invoice_title" t-if="o.company_id.country_id.code == 'AE'">Cancelled Proforma Tax Invoice</t>
+            <t name="cancelled_proforma_tax_invoice_title" t-if="o.company_id.vat and o.company_id.country_id.code == 'AE'">Cancelled Proforma Tax Invoice</t>
         </t>
         <t name="cancelled_proforma_invoice_title" position="attributes">
             <attribute name="t-else"> </attribute>
         </t>
 
         <t name="proforma_credit_note_title" position="before">
-            <t name="proforma_tax_credit_note_title" t-if="o.company_id.country_id.code == 'AE'">Proforma Tax Credit Note</t>
+            <t name="proforma_tax_credit_note_title" t-if="o.company_id.vat and o.company_id.country_id.code == 'AE'">Proforma Tax Credit Note</t>
         </t>
         <t name="proforma_credit_note_title" position="attributes">
             <attribute name="t-else"> </attribute>
         </t>
         <t name="draft_proforma_credit_note_title" position="before">
-            <t name="draft_proforma_tax_credit_note_title" t-if="o.company_id.country_id.code == 'AE'">Draft Proforma Tax Credit Note</t>
+            <t name="draft_proforma_tax_credit_note_title" t-if="o.company_id.vat and o.company_id.country_id.code == 'AE'">Draft Proforma Tax Credit Note</t>
         </t>
         <t name="draft_proforma_credit_note_title" position="attributes">
             <attribute name="t-else"> </attribute>
         </t>
         <t name="cancelled_proforma_credit_note_title" position="before">
-            <t name="cancelled_proforma_tax_credit_note_title" t-if="o.company_id.country_id.code == 'AE'">Cancelled Proforma Tax Credit Note</t>
+            <t name="cancelled_proforma_tax_credit_note_title" t-if="o.company_id.vat and o.company_id.country_id.code == 'AE'">Cancelled Proforma Tax Credit Note</t>
         </t>
         <t name="cancelled_proforma_credit_note_title" position="attributes">
             <attribute name="t-else"> </attribute>
@@ -89,29 +89,29 @@
         <xpath expr="//thead//th[@name='th_taxes']" position="replace">
             <th name="th_taxes"
                 t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
-                <span t-if="o.company_id.country_id.code == 'AE'">VAT</span>
+                <span t-if="o.company_id.vat and o.company_id.country_id.code == 'AE'">VAT</span>
                 <span t-else="">Taxes</span>
             </th>
-            <th t-if="o.company_id.country_id.code == 'AE'" name="tax_amount"
+            <th t-if="o.company_id.vat and o.company_id.country_id.code == 'AE'" name="tax_amount"
                 t-attf-class="text-start {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
                 <span>VAT Amount</span>
             </th>
         </xpath>
 
         <xpath expr="//span[@id='line_tax_ids']/.." position="after">
-            <td t-if="o.company_id.country_id.code == 'AE'">
+            <td t-if="o.company_id.vat and o.company_id.country_id.code == 'AE'">
                 <span t-field="line.l10n_ae_vat_amount" id="line_tax_amount"/>
             </td>
         </xpath>
 
         <xpath expr="//th[@name='th_subtotal']" position="after">
-            <th class="text-end" t-if="o.company_id.country_id.code == 'AE' and o.currency_id != o.company_currency_id">
+            <th class="text-end" t-if="o.company_id.vat and o.company_id.country_id.code == 'AE' and o.currency_id != o.company_currency_id">
                 <span>Amount (<span t-field="o.company_currency_id"/>)</span>
             </th>
         </xpath>
 
         <xpath expr="//td[@name='td_subtotal']" position="after">
-            <td class="text-end o_price_total" t-if="o.company_id.country_id.code == 'AE' and o.currency_id != o.company_currency_id">
+            <td class="text-end o_price_total" t-if="o.company_id.vat and o.company_id.country_id.code == 'AE' and o.currency_id != o.company_currency_id">
                 <span class="text-nowrap" t-if="o.company_price_include == 'tax_excluded'" t-out="line.currency_id._convert(line.price_subtotal, o.company_currency_id, o.company_id, o.invoice_date or datetime.date.today())" t-options="{'widget': 'monetary', 'display_currency': o.company_currency_id}"/>
                 <span class="text-nowrap" t-if="o.company_price_include == 'tax_included'" t-out="line.currency_id._convert(line.price_total, o.company_currency_id, o.company_id, o.invoice_date or datetime.date.today())" t-options="{'widget': 'monetary', 'display_currency': o.company_currency_id}"/>
             </td>
@@ -120,7 +120,7 @@
 
     <template id="document_tax_totals_company_currency_template" inherit_id="account.document_tax_totals_company_currency_template">
         <xpath expr="//p[hasclass('tax_computation_company_currency')]" position="after">
-            <tr t-if="o.company_id.country_id.code == 'AE'">
+            <tr t-if="o.company_id.vat and o.company_id.country_id.code == 'AE'">
                 <t t-set="exchange_rate" t-if="o.amount_total" t-value="abs(o.amount_total_signed) / o.amount_total"/>
                 <t t-set="exchange_rate" t-else="" t-value="o.env['res.currency']._get_conversion_rate(o.currency_id, o.company_id.currency_id, o.company_id, o.invoice_date or datetime.date.today())"/>
                 <td>Exchange Rate</td>
