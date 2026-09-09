@@ -1,10 +1,15 @@
 import { after, before, describe, expect, test } from "@odoo/hoot";
 import { setupEditor, testEditor } from "./_helpers/editor";
 import { unformat } from "./_helpers/format";
-import { deleteBackward, insertText, setColor } from "./_helpers/user_actions";
+import {
+    deleteBackward,
+    insertText,
+    setColor,
+    simulateArrowKeyPress,
+} from "./_helpers/user_actions";
 import { execCommand } from "./_helpers/userCommands";
 import { getContent } from "./_helpers/selection";
-import { animationFrame, press } from "@odoo/hoot-dom";
+import { animationFrame, press, tick } from "@odoo/hoot-dom";
 import { QWebPlugin } from "@html_editor/others/qweb_plugin";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 
@@ -152,6 +157,17 @@ test("should get ready to type without color after removing format on empty colo
     execCommand(editor, "removeFormat");
     await insertText(editor, "x");
     expect(getContent(el)).toBe("<p>x[]</p>");
+});
+
+test("removeFormat should not remove color when typing after a cursor movement", async () => {
+    const { el, editor } = await setupEditor(
+        '<p><font style="color: rgb(255, 0, 0);">a[]b</font></p>'
+    );
+    execCommand(editor, "removeFormat");
+    await simulateArrowKeyPress(editor, "ArrowRight");
+    await tick();
+    await insertText(editor, "x");
+    expect(getContent(el)).toBe('<p><font style="color: rgb(255, 0, 0);">abx[]</font></p>');
 });
 
 test("collapsed remove-format defers color removal when the color is on an ancestor", async () => {
