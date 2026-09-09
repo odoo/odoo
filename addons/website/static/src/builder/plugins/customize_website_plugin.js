@@ -103,6 +103,8 @@ export class CustomizeWebsitePlugin extends Plugin {
                 reset_view_arch: false,
             });
             endSaveViews();
+            this.viewsToEnableOnSave.clear();
+            this.viewsToDisableOnSave.clear();
         }
     }
     cache = {};
