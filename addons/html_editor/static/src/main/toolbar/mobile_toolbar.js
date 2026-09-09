@@ -1,18 +1,19 @@
-import { Component, onMounted, signal, useListener } from "@odoo/owl";
+import { Component, onMounted, signal, t, useListener, useProps } from "@odoo/owl";
 import { Toolbar } from "./toolbar";
 
 export class ToolbarMobile extends Component {
-    static template = "html_editor.MobileToolbar";
-    static props = {
-        editable: { validate: (el) => el.nodeType === Node.ELEMENT_NODE },
-        class: { type: String, optional: true },
-        state: Object,
-        getSelection: Function,
-        focusEditable: Function,
-    };
     static components = {
         Toolbar,
     };
+    static template = "html_editor.MobileToolbar";
+
+    props = useProps({
+        class: t.string().optional(),
+        editable: t.customValidator(t.object(), (el) => el.nodeType === Node.ELEMENT_NODE),
+        focusEditable: t.function(),
+        getSelection: t.function(),
+        state: t.object(),
+    });
 
     toolbarRef = signal.ref();
 

@@ -7,7 +7,7 @@ import {
     hover,
     manuallyDispatchProgrammaticEvent,
 } from "@odoo/hoot-dom";
-import { Component, xml, proxy } from "@odoo/owl";
+import { Component, proxy, t, useProps, xml } from "@odoo/owl";
 import { defineStyle, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { ColorPicker, DEFAULT_COLORS } from "@html_editor/components/color_picker/color_picker";
 import { CustomColorPicker } from "@html_editor/components/color_picker/custom_color_picker/custom_color_picker";
@@ -149,7 +149,10 @@ class AdditionalTab extends Component {
             </button>
         </div>
     `;
-    static props = ["*"];
+    props = useProps({
+        onColorPointerOver: t.function(),
+        onColorPointerOut: t.function(),
+    });
 }
 
 test.tags("desktop");
@@ -280,7 +283,6 @@ test("should preserve color slider when picking max lightness color", async () =
                 <CustomColorPicker selectedColor="this.state.color" onColorPreview.bind="this.onColorChange" onColorSelect.bind="this.onColorChange"/>
             </div>`;
         static components = { CustomColorPicker };
-        static props = ["*"];
         setup() {
             this.state = proxy({
                 color: "#FFFF00",
@@ -323,7 +325,6 @@ test("custom color picker change color on click in hue slider", async () => {
 
 class ExtraTab extends Component {
     static template = xml`<p>Color picker extra tab</p>`;
-    static props = ["*"];
 }
 
 test("can register an extra tab", async () => {

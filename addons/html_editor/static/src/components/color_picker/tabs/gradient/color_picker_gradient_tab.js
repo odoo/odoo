@@ -1,5 +1,5 @@
 import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, proxy, signal } from "@odoo/owl";
+import { Component, proxy, signal, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { applyOpacityToGradient, isColorGradient } from "@web/core/utils/colors";
@@ -19,22 +19,21 @@ const DEFAULT_GRADIENT_COLORS = [
 export class ColorPickerGradientTab extends Component {
     static template = "html_editor.ColorPickerGradientTab";
     static components = { GradientPicker };
-    static props = {
-        applyColor: Function,
-        onColorClick: Function,
-        onColorPreview: Function,
-        onColorPointerOver: Function,
-        onColorPointerOut: Function,
-        onFocusin: Function,
-        onFocusout: Function,
-        setOnCloseCallback: { type: Function, optional: true },
-        setOperationCallbacks: { type: Function, optional: true },
-        defaultOpacity: { type: Number, optional: true },
-        noTransparency: { type: Boolean, optional: true },
-        selectedColor: { type: String, optional: true },
-        currentColorPreview: { type: String, optional: true },
-        "*": { optional: true },
-    };
+    props = useProps({
+        applyColor: t.function(),
+        onColorClick: t.function(),
+        onColorPreview: t.function(),
+        onColorPointerOver: t.function(),
+        onColorPointerOut: t.function(),
+        onFocusin: t.function(),
+        onFocusout: t.function(),
+        setOnCloseCallback: t.function().optional(),
+        setOperationCallbacks: t.function().optional(),
+        defaultOpacity: t.number().optional(),
+        noTransparency: t.boolean().optional(),
+        selectedColor: t.string().optional(),
+        currentColorPreview: t.string().optional(),
+    });
 
     customGradientButton = signal.ref();
 

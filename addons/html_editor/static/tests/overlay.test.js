@@ -406,11 +406,9 @@ test("Toolbar should keep stable while extending down the selection", async () =
 test("overlay don't close when click on child overlay", async () => {
     class MySubOverlay extends Component {
         static template = xml`<button class="my-suboverlay">Overlay</button>`;
-        static props = {};
     }
     class MyOverlay extends Component {
         static template = xml`<div class="my-overlay">Overlay</div>`;
-        static props = {};
 
         setup() {
             const overlayService = usePlugin(OverlayPlugin);

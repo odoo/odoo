@@ -1,12 +1,12 @@
-import { Component, signal } from "@odoo/owl";
+import { Component, signal, t, useProps } from "@odoo/owl";
 import { useNavigation } from "@web/core/navigation/navigation";
 
 export class SuggestionList extends Component {
-    static props = {
-        state: Object,
-        onSelect: Function,
-        overlay: Object,
-    };
+    props = useProps({
+        state: t.object(),
+        onSelect: t.function(),
+        overlay: t.object(),
+    });
     static template = "html_editor.SuggestionList";
 
     suggestionListRef = signal.ref();

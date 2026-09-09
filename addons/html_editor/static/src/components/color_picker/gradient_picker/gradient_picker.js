@@ -1,4 +1,4 @@
-import { Component, proxy, signal } from "@odoo/owl";
+import { Component, proxy, signal, t, useProps } from "@odoo/owl";
 import { CustomColorPicker as ColorPicker } from "@html_editor/components/color_picker/custom_color_picker/custom_color_picker";
 import {
     isColorGradient,
@@ -16,16 +16,16 @@ export class GradientPicker extends Component {
     static components = { ColorPicker, CheckBox, Dropdown, DropdownItem, IframeInput };
     static template = "html_editor.GradientPicker";
     knobRef = signal.ref();
-    static props = {
-        onGradientChange: { type: Function, optional: true },
-        onGradientPreview: { type: Function, optional: true },
-        setOnCloseCallback: { type: Function, optional: true },
-        setOperationCallbacks: { type: Function, optional: true },
-        selectedGradient: { type: String, optional: true },
-        noTransparency: { type: Boolean, optional: true },
-        onColorPointerOver: { type: Function, optional: true },
-        onColorPointerOut: { type: Function, optional: true },
-    };
+    props = useProps({
+        onGradientChange: t.function().optional(),
+        onGradientPreview: t.function().optional(),
+        setOnCloseCallback: t.function().optional(),
+        setOperationCallbacks: t.function().optional(),
+        selectedGradient: t.string().optional(),
+        noTransparency: t.boolean().optional(),
+        onColorPointerOver: t.function().optional(),
+        onColorPointerOut: t.function().optional(),
+    });
 
     setup() {
         this.state = proxy({
