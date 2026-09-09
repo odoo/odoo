@@ -10,9 +10,6 @@ class ProductTemplateAttributeValue(models.Model):
             return 0.0
 
         price_extra = self.price_extra
-        if not price_extra:
-            return price_extra
-
         product_template = self.product_tmpl_id
         currency = combination_info["currency"]
         if currency != product_template.currency_id:
