@@ -115,7 +115,7 @@ export class SlotDetails extends Interaction {
             rpc(formEl.action.replace("slot_id", this.selectedSlotId)),
         );
         const modalEl = new DOMParser().parseFromString(modal, "text/html").body
-            .firstChild;
+            .firstElementChild;
         this.insert(modalEl, document.body);
     }
 

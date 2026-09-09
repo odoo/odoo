@@ -108,7 +108,7 @@ export class TicketDetails extends Interaction {
         );
 
         const modalEl = new DOMParser().parseFromString(modal, "text/html").body
-            .firstChild;
+            .firstElementChild;
         this.insert(modalEl, document.body);
     }
 }
