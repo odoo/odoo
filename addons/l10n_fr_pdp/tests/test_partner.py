@@ -239,3 +239,109 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
             'peppol_supported_documents': [CPRO_INVOICE_IDENTIFIER],
         }])
         self.assertTrue(self.env['account.edi.xml.ubl_21_fr']._pdp_is_b2g(partner))
+
+    def test_account_move_send_annuaire_single_match(self):
+        self.env.company.write({
+            'account_peppol_proxy_state': 'receiver',
+        })
+
+        self.partner_a.write({
+            'peppol_eas': False,
+            'peppol_endpoint': False,
+        })
+
+        self.assertEqual(self.partner_a.peppol_verification_state, 'not_valid')
+        self.assertEqual(self.partner_a.pdp_verification_display_state, 'peppol_not_valid')
+
+        invoice = self._create_french_invoice()
+        invoice.action_post()
+
+        def _request_handler(s: requests.Session, r: requests.PreparedRequest, /, **kwargs):
+            self.assertEqual(r.method, "GET")
+            origin = self.env['account_edi_proxy_client.user']._get_proxy_urls()['pdp']['test']
+
+            if r.url.startswith(f"{origin}/api/pdp/1/pdp_annuaire_lookup"):
+                response = requests.Response()
+                response.status_code = 200
+                response._content = b'{"annuaire_lines": [{"identifier": "123456789_12345678900012"}]}'
+                return response
+            elif r.url.startswith(f"{origin}/api/pdp/1/annuaire_lookup?pdp_identifier="):
+                pdp_identifier = parse_qs(r.path_url.rsplit('?')[1])['pdp_identifier'][0]
+                return self._get_annuaire_lookup_response(pdp_identifier, "123456789_12345678900012")
+            elif r.url.startswith(f"{origin}/api/pdp/1/lookup?peppol_identifier="):
+                peppol_identifier = parse_qs(r.path_url.rsplit('?')[1])['peppol_identifier'][0]
+                return self._get_peppol_lookup_response(peppol_identifier, "0225:123456789_12345678900012")
+
+            return requests.Response()
+
+        with (
+            mock.patch.object(self.env.registry['res.company'], 'search', lambda *args, **kwargs: self.env.company),
+            mock.patch.object(requests.sessions.Session, 'send', _request_handler),
+        ):
+            wizard = self.env['account.move.send.wizard'].with_context(
+                active_model='account.move',
+                active_ids=invoice.ids
+            ).create({})
+            peppol_box = wizard.sending_method_checkboxes.get('peppol', {})
+
+            self.assertRecordValues(self.partner_a, [{
+                'peppol_eas': '0225',
+                'peppol_endpoint': '123456789_12345678900012',
+                'peppol_verification_state': 'valid',
+                'pdp_verification_display_state': 'pdp_valid',
+            }])
+            self.assertNotIn('l10n_fr_pdp_ambiguous_annuaire', wizard.alerts or {})
+            self.assertTrue(peppol_box.get('checked'))
+
+    def test_account_move_send_annuaire_multiple_matches(self):
+        self.env.company.write({
+            'account_peppol_proxy_state': 'receiver',
+        })
+
+        self.partner_a.write({
+            'peppol_eas': '9957',
+            'peppol_endpoint': 'FR123456789',
+            'invoice_edi_format': 'ubl_bis3',
+        })
+
+        self.assertEqual(self.partner_a.peppol_verification_state, 'not_valid')
+        self.assertEqual(self.partner_a.pdp_verification_display_state, 'peppol_not_valid')
+
+        invoice = self._create_french_invoice()
+        invoice.action_post()
+
+        def _request_handler(s: requests.Session, r: requests.PreparedRequest, /, **kwargs):
+            self.assertEqual(r.method, "GET")
+            origin = self.env['account_edi_proxy_client.user']._get_proxy_urls()['pdp']['test']
+
+            if r.url.startswith(f"{origin}/api/pdp/1/pdp_annuaire_lookup"):
+                response = requests.Response()
+                response.status_code = 200
+                response._content = b'{"annuaire_lines": [{"identifier": "123456789_12345678900012"}, {"identifier": "123456789_12345678900034"}]}'
+                return response
+            elif r.url.startswith(f"{origin}/api/pdp/1/lookup?peppol_identifier="):
+                peppol_identifier = parse_qs(r.path_url.rsplit('?')[1])['peppol_identifier'][0]
+                return self._get_peppol_lookup_response(peppol_identifier, "9957:fr123456789")
+
+            return requests.Response()
+
+        with (
+            mock.patch.object(self.env.registry['res.company'], 'search', lambda *args, **kwargs: self.env.company),
+            mock.patch.object(requests.sessions.Session, 'send', _request_handler),
+        ):
+            wizard = self.env['account.move.send.wizard'].with_context(
+                active_model='account.move',
+                active_ids=invoice.ids
+            ).create({})
+
+            peppol_box = wizard.sending_method_checkboxes.get('peppol', {})
+
+            self.assertRecordValues(self.partner_a, [{
+                'peppol_eas': '9957',
+                'peppol_endpoint': 'FR123456789',
+                'peppol_verification_state': 'valid',
+                'pdp_verification_display_state': 'peppol_valid',
+            }])
+            self.assertTrue(peppol_box.get('disabled'))
+            self.assertTrue(peppol_box.get('l10n_fr_pdp_ambiguous'))
+            self.assertIn('l10n_fr_pdp_ambiguous_annuaire', wizard.alerts)
