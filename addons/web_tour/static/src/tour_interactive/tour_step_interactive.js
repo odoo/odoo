@@ -1,6 +1,5 @@
 import * as hoot from "@odoo/hoot-dom";
 import { TourStep } from "@web_tour/tour_step";
-import { pointerState } from "@web_tour/tour_pointer/tour_pointer";
 
 export class TourStepInteractive extends TourStep {
     /**
@@ -129,23 +128,25 @@ export class TourStepInteractive extends TourStep {
         if (this.tour.config.stepDelay > 0) {
             await hoot.delay(this.tour.config.stepDelay);
         }
-        if (!pointerState.trigger?.isConnected) {
+        if (!this.tour.pointer.trigger?.isConnected) {
             this.tour.robotStep = null;
             this.tour.anchorEl = undefined;
             this.tour.updatePointer();
             return;
         }
-        if (pointerState.trigger.disabled) {
+        if (this.tour.pointer.trigger.disabled) {
             try {
-                await hoot.waitUntil(() => !pointerState.trigger?.disabled, { timeout: 10000 });
+                await hoot.waitUntil(() => !this.tour.pointer.trigger?.disabled, {
+                    timeout: 10000,
+                });
             } catch {
                 this.tour.robotStep = null;
                 return;
             }
-            if (this.tour.currentAction.step !== this || !pointerState.trigger?.isConnected) {
+            if (this.tour.currentAction.step !== this || !this.tour.pointer.trigger?.isConnected) {
                 return;
             }
         }
-        await super.doAction(pointerState.trigger);
+        await super.doAction(this.tour.pointer.trigger);
     }
 }
