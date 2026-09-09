@@ -67,6 +67,19 @@ class SlideSlidePartner(models.Model):
 
         return res
 
+    def unlink(self):
+        channel_ids = self.channel_id.ids
+        partner_ids = self.partner_id.ids
+        res = super().unlink()
+        self.env["slide.channel.partner"].search(
+            [
+                ("channel_id", "in", channel_ids),
+                ("partner_id", "in", partner_ids),
+                ("member_status", "not in", ("completed", "invited")),
+            ]
+        )._recompute_completion()
+        return res
+
     def _recompute_completion(self):
         self.env["slide.channel.partner"].search(
             [
