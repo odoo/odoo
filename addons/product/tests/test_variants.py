@@ -1050,6 +1050,27 @@ class TestVariantsImages(ProductVariantsCommon):
         # last update changed for the variant without image
         self.assertLess(old_last_update, new_last_update)
 
+    def test_batch_create_variants_with_image(self):
+        """Creating several variants with an image in one batch keeps the image."""
+        template = self.env['product.template'].create({'name': 'batch template'})
+        size = self.env['product.attribute'].create({
+            'name': 'Size', 'create_variant': 'dynamic',
+            'value_ids': [Command.create({'name': 'S'}), Command.create({'name': 'M'})],
+        })
+        ptal = self.env['product.template.attribute.line'].create({
+            'attribute_id': size.id,
+            'product_tmpl_id': template.id,
+            'value_ids': [Command.set(size.value_ids.ids)],
+        })
+        template.product_variant_ids.unlink()
+        variants = self.env['product.product'].create([{
+            'product_tmpl_id': template.id,
+            'product_template_attribute_value_ids': [Command.set(ptav.ids)],
+            'image_1920': self.images['red'],
+        } for ptav in ptal.product_template_value_ids])
+        self.assertEqual(template.image_1920.content, self.images['red'].content)
+        self.assertTrue(all(v.image_1920 for v in variants))
+
     def test_update_images_with_archived_variants(self):
         """Update images after variants have been archived"""
         self.variants[1:].write({'active': False})
