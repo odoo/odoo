@@ -176,6 +176,7 @@ class PurchaseRequisitionLine(models.Model):
         ('line_note', "Note"),
     ], default=False, help="Technical field for UX purpose.")
     name = fields.Text(string='Line Description')
+    translated_product_name = fields.Text(compute='_compute_translated_product_name')
     product_id = fields.Many2one('product.product', string='Product', domain=[('purchase_ok', '=', True)])
     uom_id = fields.Many2one(
         'uom.uom', 'Unit',
@@ -196,6 +197,13 @@ class PurchaseRequisitionLine(models.Model):
         string="Parent Section Line",
         compute='_compute_parent_id',
     )
+
+    @api.depends('product_id')
+    def _compute_translated_product_name(self):
+        for line in self:
+            line.translated_product_name = line.product_id.with_context(
+                lang=line.requisition_id.vendor_id.lang,
+            ).display_name
 
     @api.constrains('display_type', 'product_id')
     def _check_line_type(self):
