@@ -14,6 +14,48 @@ const CLIENT_SETTLE_TIMEOUT = 10000;
 const EXPIRED = Symbol("expired");
 const SETTLED = Symbol("settled");
 
+/**
+ * Silence errors raised after a tour has finished, and un-silence them when
+ * the next one starts.
+ *
+ * `end()` used to install this pair as two inline arrows, which nothing could
+ * remove afterwards -- no reference to them existed. Every finished automatic
+ * tour therefore left another capturing `error`/`unhandledrejection` listener
+ * behind for the lifetime of the page, each one calling
+ * `stopImmediatePropagation()`, so a second tour in the same page ran blind
+ * and any handler registered *after* a finished tour (a later test's own error
+ * assertion, an error reporter mounted after an onboarding tour) could have
+ * its detection eaten by a leftover. There is exactly one pair now, and it
+ * only lives between the end of one tour and the start of the next.
+ *
+ * A named function also makes the install idempotent on its own:
+ * `addEventListener` drops a duplicate (same target, type, callback, capture).
+ * The flag is kept so removal is symmetric and cheap to reason about.
+ */
+const swallowError = (ev) => {
+    ev.preventDefault();
+    ev.stopImmediatePropagation();
+};
+let postTourErrorsSwallowed = false;
+
+function swallowPostTourErrors() {
+    if (postTourErrorsSwallowed) {
+        return;
+    }
+    window.addEventListener("error", swallowError, true);
+    window.addEventListener("unhandledrejection", swallowError, true);
+    postTourErrorsSwallowed = true;
+}
+
+function stopSwallowingPostTourErrors() {
+    if (!postTourErrorsSwallowed) {
+        return;
+    }
+    window.removeEventListener("error", swallowError, true);
+    window.removeEventListener("unhandledrejection", swallowError, true);
+    postTourErrorsSwallowed = false;
+}
+
 export class TourAutomatic {
     mode = "auto";
     allowUnload = true;
@@ -83,6 +125,9 @@ export class TourAutomatic {
     }
 
     start() {
+        // Whatever the tour before this one left silenced, this one needs to
+        // see.
+        stopSwallowingPostTourErrors();
         setupEventActions(document.createElement("div"), { allowSubmit: true });
         enableEventLogs(this.debugMode);
         const onRPCRequest = (ev) => this.pendingRPCs.add(ev.detail.data.id);
@@ -176,22 +221,11 @@ export class TourAutomatic {
             delete window[hootNameSpace];
             transitionConfig.disabled = false;
             tourState.clear();
-            window.addEventListener(
-                "error",
-                (ev) => {
-                    ev.preventDefault();
-                    ev.stopImmediatePropagation();
-                },
-                true,
-            );
-            window.addEventListener(
-                "unhandledrejection",
-                (ev) => {
-                    ev.preventDefault();
-                    ev.stopImmediatePropagation();
-                },
-                true,
-            );
+            // The tour is over: an error the page raises from here on belongs
+            // to nobody and must not fail a run that already reported its
+            // result. Owned by the module rather than by this closure -- see
+            // `swallowPostTourErrors`.
+            swallowPostTourErrors();
         };
 
         this.macro = new Macro({

@@ -955,3 +955,93 @@ ERROR during find trigger:
 Failed to execute 'querySelectorAll' on 'Element': '.button1:brol(:machin)' is not a valid selector.`,
     ]);
 });
+
+test("the error silencing a finished tour installs is dropped when the next tour starts", async () => {
+    // `end()` silences `error`/`unhandledrejection` on purpose: the tour has
+    // reported its result and an error the page raises afterwards belongs to
+    // nobody. What was not on purpose is that the pair was installed as two
+    // inline arrows and never removed -- nothing held a reference to remove.
+    // Every finished tour left another capturing pair behind, each calling
+    // `stopImmediatePropagation()`, so the NEXT tour in the same page ran with
+    // its errors already eaten, and any handler registered after a finished
+    // tour could have its own detection eaten too. 15 of the tests in this
+    // very file run an auto tour, in one page, with no reload between them.
+    //
+    // Tracked by listener identity, not by counting: the page registers and
+    // drops `error` listeners of its own during a test, so a count says
+    // nothing about whose listener it was.
+    const calls = [];
+    const nativeAdd = window.addEventListener.bind(window);
+    const nativeRemove = window.removeEventListener.bind(window);
+    const isTracked = (type) => type === "error" || type === "unhandledrejection";
+    patchWithCleanup(window, {
+        addEventListener(type, listener, options) {
+            if (isTracked(type)) {
+                calls.push({ op: "add", type, listener });
+            }
+            return nativeAdd(type, listener, options);
+        },
+        removeEventListener(type, listener, options) {
+            if (isTracked(type)) {
+                calls.push({ op: "remove", type, listener });
+            }
+            return nativeRemove(type, listener, options);
+        },
+    });
+    const lastInstalledPair = () =>
+        calls.filter((call) => call.op === "add").slice(-2);
+    // Scoped to the calls made after `mark`: an earlier test in this page has
+    // already been through an install/remove cycle of the very same pair (the
+    // silencing is page-scoped, which is the point), so an unscoped search
+    // answers "removed" before this test has removed anything.
+    const removedSince = (mark, { type, listener }) =>
+        calls
+            .slice(mark)
+            .some(
+                (call) =>
+                    call.op === "remove" &&
+                    call.type === type &&
+                    call.listener === listener,
+            );
+
+    class Root extends Component {
+        static components = {};
+        static template = xml /*html*/ `<t><button class="button0">Button 0</button></t>`;
+        static props = ["*"];
+    }
+    await mountWithCleanup(Root);
+
+    const steps = () => [{ trigger: ".button0", run: "click" }];
+    tourRegistry.add("silencer_tour_1", { steps });
+    tourRegistry.add("silencer_tour_2", { steps });
+
+    await odoo.startTour("silencer_tour_1", { mode: "auto" });
+    await waitForMacro();
+    const firstPair = lastInstalledPair();
+    expect(firstPair.map(({ type }) => type)).toEqual([
+        "error",
+        "unhandledrejection",
+    ]);
+    const installed = calls.length;
+    expect(firstPair.map((entry) => removedSince(installed, entry))).toEqual([
+        false,
+        false,
+    ]);
+
+    await odoo.startTour("silencer_tour_2", { mode: "auto" });
+    // The assertion that bites: before the fix nothing was ever removed and
+    // the second tour ran behind the first one's listeners.
+    expect(firstPair.map((entry) => removedSince(installed, entry))).toEqual([
+        true,
+        true,
+    ]);
+
+    await waitForMacro();
+    // Silencing is back on now that this tour is over too -- with the SAME
+    // pair, which is what makes it removable. Two inline arrows would be two
+    // new references here, and the page would now carry two pairs.
+    const secondPair = lastInstalledPair();
+    expect(secondPair.map(({ listener }) => listener)).toEqual(
+        firstPair.map(({ listener }) => listener),
+    );
+});
