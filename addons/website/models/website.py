@@ -1380,8 +1380,8 @@ class Website(models.CachedModel):
             page_key = 'home'
 
         website = self.env.website
-        template_record = self.env.ref(template).with_context(website_id=website.id)
-        arch = template_record.arch
+        template_record = self.env['ir.ui.view'].with_context(website_id=website.id)._get_template_view(template)
+        arch = template_record.with_context(lang=None).arch
         if sections_arch:
             tree = html.fromstring(arch)
             wrap = tree.xpath('//div[@id="wrap"]')[0]
