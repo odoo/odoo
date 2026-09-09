@@ -7,6 +7,7 @@ from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.cloud_storage.tests.tools import filter_by_expected
 from odoo.addons.cloud_storage_google.tests.test_cloud_storage_google import TestCloudStorageGoogleCommon
 from odoo.addons.mail.tests.common import MailCommon
+from odoo.addons.bus.tests.common import pop_store_version
 
 
 @odoo.tests.tagged("-at_install", "post_install", "mail_controller")
@@ -39,6 +40,7 @@ class TestCloudStorageAttachmentController(HttpCaseWithUserDemo, TestCloudStorag
                     res.content.decode("utf-8"),
                 )
             )
+            pop_store_version(content["data"]["store_data"])
             content_expected = {
                 "data": {
                     "attachment_id": attachment.id,

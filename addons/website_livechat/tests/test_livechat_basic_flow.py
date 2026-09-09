@@ -3,6 +3,7 @@
 from freezegun import freeze_time
 
 from odoo import fields, _
+from odoo.addons.bus.tests.common import pop_store_version
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.website_livechat.tests.common import TestLivechatCommon
 from odoo.tests.common import HttpCase, new_test_user
@@ -161,8 +162,10 @@ class TestLivechatBasicFlowHttpCase(HttpCase, TestLivechatCommon):
         guest = self.env["mail.guest"].search([], order="id desc", limit=1)
         operator_member = channel.with_user(self.operator).self_member_id
         guest_member = channel.channel_member_ids.filtered(lambda m: m.guest_id == guest)
+        data = Store().add(channel, "_store_channel_fields")._build_result()
+        pop_store_version(data)
         self.assertEqual(
-            Store().add(channel, "_store_channel_fields")._build_result(),
+            data,
             {
                 "discuss.channel": self._filter_channels_fields(
                     {
@@ -344,6 +347,7 @@ class TestLivechatBasicFlowHttpCase(HttpCase, TestLivechatCommon):
         self.assertFalse(channel.with_user(self.operator).self_member_id)
         channel_w_user = channel.with_user(self.user_public).with_context(guest=guest)
         data = Store().add(channel_w_user, "_store_channel_fields")._build_result()
+        pop_store_version(data)
         self.assertEqual(
             data["discuss.channel"],
             self._filter_channels_fields(

@@ -35,7 +35,7 @@ export class ChatbotStep extends Record {
     operatorFound;
 
     /**
-     * ChatbotStep isn't a real server model, so `__store_version__` can't order its writes:
+     * ChatbotStep isn't a real server model, so `__version__` can't order its writes:
      * a stale `false` can be applied after the real `true`. This field can only move from
      * `false` to `true`, never back, so it stays correct regardless of which one lands last.
      */
