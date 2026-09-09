@@ -3,46 +3,13 @@
     <data>
         <template id="report_invoice_document_inherit_debit_note" inherit_id="account.report_invoice_document">
 
-            <xpath expr="//t[@name='invoice_title']" position="replace">
-                <t name="invoice_title">
-                    <t t-if="o.debit_origin_id">Debit Note</t>
-                    <t t-else="">Invoice</t>
-                </t>
-            </xpath>
-
-            <xpath expr="//t[@name='draft_invoice_title']" position="replace">
-                <t name="draft_invoice_title">
-                    <t t-if="o.debit_origin_id">Draft Debit Note</t>
-                    <t t-else="">Draft Invoice</t>
-                </t>
-            </xpath>
-
-            <xpath expr="//t[@name='cancelled_invoice_title']" position="replace">
-                <t name="cancelled_invoice_title">
-                    <t t-if="o.debit_origin_id">Cancelled Debit Note</t>
-                    <t t-else="">Cancelled Invoice</t>
-                </t>
-            </xpath>
-
-            <xpath expr="//t[@name='proforma_invoice_title']" position="replace">
-                <t name="proforma_invoice_title">
-                    <t t-if="o.debit_origin_id">Proforma Debit Note</t>
-                    <t t-else="">Proforma Invoice</t>
-                </t>
-            </xpath>
-
-            <xpath expr="//t[@name='draft_proforma_invoice_title']" position="replace">
-                <t name="draft_proforma_invoice_title">
-                    <t t-if="o.debit_origin_id">Draft Proforma Debit Note</t>
-                    <t t-else="">Draft Proforma Invoice</t>
-                </t>
-            </xpath>
-
-            <xpath expr="//t[@name='cancelled_proforma_invoice_title']" position="replace">
-                <t name="cancelled_proforma_invoice_title">
-                    <t t-if="o.debit_origin_id">Cancelled Proforma Debit Note</t>
-                    <t t-else="">Cancelled Proforma Invoice</t>
-                </t>
+            <xpath expr="//t[@name='document_title']" position="attributes">
+                <attribute name="t-out">
+                    o._get_document_title(
+                        proforma=proforma,
+                        is_debit_note=o.debit_origin_id,
+                    )
+                </attribute>
             </xpath>
 
             <xpath expr="//div[@name='invoice_date']/t[@t-if=&quot;o.move_type == 'out_invoice'&quot;]" position="replace">

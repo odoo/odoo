@@ -12,13 +12,6 @@
             <span t-out="o.partner_id.l10n_th_branch_name"/>
         </xpath>
 
-        <xpath expr="//t[@name='invoice_title']" position="replace">
-            <t name="invoice_title">
-                <t t-if="'debit_origin_id' in o._fields and o.debit_origin_id">Debit Note</t>
-                <t t-else="">Tax Invoice</t>
-            </t>
-        </xpath>
-
         <xpath expr="//t[@t-call='account.document_tax_totals']" position="before">
             <t t-foreach="o._l10n_th_get_credit_debit_note_amounts()" t-as="amount_info">
                 <tr>

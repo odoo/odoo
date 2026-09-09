@@ -50,3 +50,16 @@ class AccountMove(models.Model):
                 'amount': corrected_amount,
             },
         ]
+
+    def _get_document_title(self, proforma=False, is_debit_note=False):
+        self.ensure_one()
+
+        if (
+            self.company_id.account_fiscal_country_id.code == 'TH'
+            and self.move_type == 'out_invoice'
+            and self.state == 'posted'
+            and not is_debit_note
+        ):
+            return self.env._("Tax Invoice")
+
+        return super()._get_document_title(proforma=proforma, is_debit_note=is_debit_note)

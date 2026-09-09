@@ -613,21 +613,42 @@ class AccountMove(models.Model):
         # we set the section on the invoice lines
         moves.line_ids._set_l10n_in_gstr_section(tax_tags_dict)
 
-    def _get_l10n_in_invoice_label(self):
+    def _get_document_title(self, proforma=False, is_debit_note=False):
         self.ensure_one()
+
+        if (
+            self.company_id.account_fiscal_country_id.code != 'IN'
+            or is_debit_note
+            or self.move_type not in {'out_invoice', 'in_invoice'}
+            or (
+                self.move_type == 'in_invoice'
+                and (not self.l10n_in_is_self_invoice or self.is_self_billing)
+            )
+        ):
+            return super()._get_document_title(proforma=proforma, is_debit_note=is_debit_note)
+
+        if self.move_type == 'in_invoice':
+            return self.env._("Tax Invoice")
+
+        doc_name = ""
+
         exempt_types = {'exempt', 'nil_rated', 'non_gst'}
-        if self.country_code != 'IN' or not self.is_sale_document(include_receipts=False):
-            return
         gst_treatment = self.l10n_in_gst_treatment
         company = self.company_id
         tax_types = set(self.invoice_line_ids.tax_ids.mapped('l10n_in_tax_type'))
         if company.l10n_in_is_gst_registered and tax_types:
             if gst_treatment in ['overseas', 'special_economic_zone']:
-                return 'Tax Invoice'
+                doc_name = self.env._('Tax Invoice')
             elif tax_types.issubset(exempt_types):
-                return 'Bill of Supply'
+                doc_name = self.env._('Bill of Supply')
             elif tax_types.isdisjoint(exempt_types):
-                return 'Tax Invoice'
+                doc_name = self.env._('Tax Invoice')
             elif gst_treatment in ['unregistered', 'consumer']:
-                return 'Invoice-cum-Bill of Supply'
-        return 'Invoice'
+                doc_name = self.env._('Invoice-cum-Bill of Supply')
+            else:
+                doc_name = self.env._('Invoice')
+
+        if proforma:
+            doc_name = self.env._("Proforma %(doc_name)s", doc_name=doc_name)
+
+        return doc_name
