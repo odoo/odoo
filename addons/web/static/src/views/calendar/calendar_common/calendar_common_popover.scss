@@ -48,6 +48,15 @@
         }
     }
 
+    .o_card_popover_close {
+        margin: map-get($spacers, 3) map-get($spacers, 2);
+    }
+
+    .o_popover_header {
+        border-top-left-radius: $popover-inner-border-radius;
+        border-top-right-radius: $popover-inner-border-radius;
+    }
+
     .o_field_widget:not(.o_field_properties) {
         @include o-text-overflow(block);
     }
