@@ -3,7 +3,7 @@
 import { MultiRecordSelector } from "@web/core/record_selectors/multi_record_selector";
 import { DateFilterValue } from "../date_filter_value/date_filter_value";
 
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, t, useProps } from "@odoo/owl";
 import { components } from "@odoo/o-spreadsheet";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -31,15 +31,15 @@ export class FilterValue extends Component {
         ValidationMessages,
         NumberInput,
     };
-    static props = {
-        filter: Object,
-        model: Object,
-        setGlobalFilterValue: Function,
-        globalFilterValue: { optional: true },
-        showTitle: { type: Boolean, optional: true },
-        showClear: { type: Boolean, optional: true },
-        rangesOfAllowedValues: { type: Array, optional: true },
-    };
+    props = useProps({
+        filter: t.object(),
+        model: t.object(),
+        setGlobalFilterValue: t.function(),
+        globalFilterValue: t.any().optional(),
+        showTitle: t.boolean().optional(),
+        showClear: t.boolean().optional(),
+        rangesOfAllowedValues: t.array().optional(),
+    });
 
     setup() {
         this.getters = this.props.model.getters;

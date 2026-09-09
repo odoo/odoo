@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import {
     globalFilterDateRegistry,
     getDateGlobalFilterTypes,
@@ -14,10 +14,10 @@ import { _t } from "@web/core/l10n/translation";
 export class DefaultDateValue extends Component {
     static template = "spreadsheet.DefaultDateValue";
     static components = { Dropdown, DropdownItem };
-    static props = {
-        value: { type: String, optional: true },
-        update: Function,
-    };
+    props = useProps({
+        value: t.string().optional(),
+        update: t.function(),
+    });
 
     get currentFormattedValue() {
         return (

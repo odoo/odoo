@@ -1,4 +1,4 @@
-import { Component, onWillUpdateProps } from "@odoo/owl";
+import { Component, onWillUpdateProps, t, useProps } from "@odoo/owl";
 import {
     dateFilterValueToString,
     getDateRange,
@@ -20,11 +20,11 @@ const { DateTime } = luxon;
 export class DateFilterDropdown extends Component {
     static template = "spreadsheet.DateFilterDropdown";
     static components = { DropdownItem, DateTimeInput };
-    static props = {
-        value: { type: Object, optional: true },
-        update: Function,
-        model: Object,
-    };
+    props = useProps({
+        value: t.object().optional(),
+        update: t.function(),
+        model: t.object(),
+    });
 
     setup() {
         this._computeDefaultSelectedValues();

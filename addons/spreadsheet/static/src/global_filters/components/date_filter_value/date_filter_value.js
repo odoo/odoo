@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DateFilterDropdown } from "../date_filter_dropdown/date_filter_dropdown";
 import { dateFilterValueToString } from "@spreadsheet/global_filters/helpers";
@@ -12,11 +12,11 @@ import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 export class DateFilterValue extends Component {
     static template = "spreadsheet.DateFilterValue";
     static components = { Dropdown, DateFilterDropdown };
-    static props = {
-        value: { type: Object, optional: true },
-        update: Function,
-        model: Object,
-    };
+    props = useProps({
+        value: t.object().optional(),
+        update: t.function(),
+        model: t.object(),
+    });
 
     setup() {
         this.dropdownState = useDropdownState();

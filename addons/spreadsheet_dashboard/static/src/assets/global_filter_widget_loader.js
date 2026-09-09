@@ -1,4 +1,4 @@
-import { Component, xml } from "@odoo/owl";
+import { Component, t, useProps, xml } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { LazyComponent } from "@web/core/lazy_component";
@@ -13,10 +13,10 @@ class GlobalFilterWidgetLoader extends Component {
             props="this.props"
         />
     `;
-    static props = {
+    props = useProps({
         ...standardFieldProps,
-        dashboard: { type: String, optional: true },
-    };
+        dashboard: t.string().optional(),
+    });
 }
 
 registry.category("fields").add("global_filters", {

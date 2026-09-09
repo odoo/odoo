@@ -1,4 +1,4 @@
-import { Component, onWillStart, proxy } from "@odoo/owl";
+import { Component, onWillStart, proxy, t, useProps } from "@odoo/owl";
 import { useLayoutEffect } from "@web/owl2/utils";
 import { useService } from "@web/core/utils/hooks";
 import { deepEqual } from "@web/core/utils/objects";
@@ -26,10 +26,10 @@ export class DashboardSearchBarMenu extends Component {
         DropdownItem,
     };
 
-    static props = {
-        close: Function,
-        model: Object,
-    };
+    props = useProps({
+        close: t.function(),
+        model: t.object(),
+    });
 
     setup() {
         this.orm = useService("orm");

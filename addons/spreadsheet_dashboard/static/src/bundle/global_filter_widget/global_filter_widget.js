@@ -1,4 +1,4 @@
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, t, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { useRecordObserver } from "@web/model/relational_model/utils";
@@ -13,10 +13,10 @@ import { DashboardFilterList } from "../dashboard_action/dashboard_filter_list/d
 export class GlobalFilterWidget extends Component {
     static template = "spreadsheet_dashboard.GlobalFilterWidget";
     static components = { DashboardFilterList };
-    static props = {
+    props = useProps({
         ...standardFieldProps,
-        dashboard: { type: String, optional: true },
-    };
+        dashboard: t.string().optional(),
+    });
 
     setup() {
         this.orm = useService("orm");

@@ -23,7 +23,7 @@ import { FilterValue } from "@spreadsheet/global_filters/components/filter_value
 import { user } from "@web/core/user";
 
 import { OdooDataProvider } from "@spreadsheet/data_sources/odoo_data_provider";
-import { Component, onWillUnmount, xml } from "@odoo/owl";
+import { Component, onWillUnmount, t, useProps, xml } from "@odoo/owl";
 
 describe.current.tags("headless");
 defineSpreadsheetModels();
@@ -35,7 +35,15 @@ class FilterValueWrapper extends Component {
             globalFilterValue="this.globalFilterValue"
         />`;
     static components = { FilterValue };
-    static props = FilterValue.props;
+    props = useProps({
+        filter: t.object(),
+        model: t.object(),
+        setGlobalFilterValue: t.function(),
+        globalFilterValue: t.any().optional(),
+        showTitle: t.boolean().optional(),
+        showClear: t.boolean().optional(),
+        rangesOfAllowedValues: t.array().optional(),
+    });
 
     setup() {
         this.props.model.on("update", this, () => render(this, true));

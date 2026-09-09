@@ -1,11 +1,12 @@
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 
 export class DashboardFacet extends Component {
     static template = "spreadsheet_dashboard.DashboardFacet";
     static components = {};
-    static props = {
-        facet: Object,
-        clearFilter: Function,
-        onClick: Function,
-    };
+
+    props = useProps({
+        facet: t.object(),
+        clearFilter: t.function(),
+        onClick: t.function(),
+    });
 }

@@ -1,4 +1,4 @@
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, t, useProps } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 
@@ -14,11 +14,11 @@ import { Model } from "@odoo/o-spreadsheet";
 export class SpreadsheetShareButton extends Component {
     static template = "spreadsheet.ShareButton";
     static components = { Dropdown, DropdownItem, CopyButton };
-    static props = {
-        model: { type: Model, optional: true },
-        onSpreadsheetShared: Function,
-        togglerClass: { type: String, optional: true },
-    };
+    props = useProps({
+        model: t.instanceOf(Model).optional(),
+        onSpreadsheetShared: t.function(),
+        togglerClass: t.string().optional(),
+    });
 
     setup() {
         this.copiedText = _t("Copied");
