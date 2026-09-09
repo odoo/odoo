@@ -474,7 +474,7 @@ class TestWebsiteAccess(HttpCaseWithUserDemo, OnlineEventCase):
         )
         result = ret["search_extra"](self.env, "Turlock")[0][-1].get_result_ids()
         self.assertEqual(
-            *result, self.events[0].id, "Event should exist for the searched term"
+            result, [self.events[0].id], "Event should exist for the searched term"
         )
 
         with self.assertRaises(AccessError):
