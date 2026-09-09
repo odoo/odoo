@@ -7,7 +7,7 @@
         groups="base.group_user">
         <section class="s_mega_menu_thumbnails pt24 o_colored_level o_cc o_cc1">
             <div class="container">
-                <div class="row ustify-content-center">
+                <div class="row justify-content-center">
                     <t t-set="counter" t-value="0" />
                     <t
                         t-foreach="request.env['product.public.category'].search([                             ('parent_id', '=', False), ('has_published_products', '=', True),                         ], limit=10)"
