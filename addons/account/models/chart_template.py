@@ -809,12 +809,14 @@ class AccountChartTemplate(models.AbstractModel):
 
     def _get_chart_template_model_data(self, template_code, model):
         """Lightweight version of `_get_chart_template_data` targeting only one model."""
-        data = defaultdict(dict)
+        model_data = defaultdict(dict)
         for code in [None] + self._get_parent_template(template_code):
             for func in self._template_register[code].get(model, []):
-                for xmlid, values in func(self, template_code).items():
-                    data[xmlid].update(values)
-        return dict(data)
+                data = func(self, template_code)
+                if data is not None:
+                    for xmlid, values in data.items():
+                        model_data[xmlid].update(values)
+        return dict(model_data)
 
     def _get_chart_template_data(self, template_code):
         template_data = defaultdict(lambda: defaultdict(dict))
