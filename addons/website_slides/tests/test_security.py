@@ -732,4 +732,6 @@ class TestReview(common.SlidesCase, HttpCase):
                 },
             },
         )
-        self.assertIn("odoo.exceptions.ValidationError", res2.text)
+        self.assertEqual(
+            res2.json()["error"]["data"]["name"], "odoo.exceptions.ValidationError"
+        )
