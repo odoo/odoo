@@ -24,6 +24,7 @@ class ResConfigSettings(models.TransientModel):
         comodel_name='account.payment.method.line',
         check_company=True,
         related='company_id.company_expense_allowed_payment_method_line_ids',
+        domain="[('payment_type', '=', 'outbound'), ('journal_id', '!=', False), ('journal_id.active', '=', True)]",
         readonly=False,
     )
 
