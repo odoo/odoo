@@ -1,4 +1,4 @@
-import { Component, markup, onMounted, onWillStart, proxy } from "@odoo/owl";
+import { Component, markup, onMounted, onWillStart, proxy, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { download } from "@web/core/network/download";
 import { registry } from "@web/core/registry";
@@ -22,7 +22,7 @@ function sendCustomNotification(type, message) {
 }
 
 export class ProductPricelistReport extends Component {
-    static props = { ...standardActionServiceProps };
+    props = useProps(standardActionServiceProps);
     static components = { Layout, DateTimeInput };
     static template = "product.ProductPricelistReport";
 

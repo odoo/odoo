@@ -1,20 +1,21 @@
 import { Dialog } from "@web/core/dialog/dialog";
 import { formatMonetary } from "@web/views/fields/formatters";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
-import { Component, onMounted, markup, signal } from "@odoo/owl";
+import { Component, markup, onMounted, signal, t, useProps } from "@odoo/owl";
 
 export class ProductMatrixDialog extends Component {
     static template = "product_matrix.dialog";
-    static props = {
-        header: { type: Object },
-        rows: { type: Object },
-        dialogTitle: { type: String },
-        editedCellAttributes: { type: String },
-        product_template_id: { type: Number },
-        record: { type: Object },
-        close: { type: Function },
-    };
     static components = { Dialog };
+
+    props = useProps({
+        header: t.array(t.object()),
+        rows: t.array(t.array(t.object())),
+        dialogTitle: t.string(),
+        editedCellAttributes: t.string(),
+        product_template_id: t.number(),
+        record: t.object(),
+        close: t.function(),
+    });
 
     productMatrixRef = signal.ref();
 

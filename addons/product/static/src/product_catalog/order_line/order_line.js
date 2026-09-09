@@ -1,26 +1,27 @@
 import { onWillRender } from "@web/owl2/utils";
-import { Component, onMounted, Portal, signal } from "@odoo/owl";
+import { Component, onMounted, Portal, signal, t, useProps } from "@odoo/owl";
 import { formatFloat, formatMonetary } from "@web/views/fields/formatters";
 
 export class ProductCatalogOrderLine extends Component {
     static template = "product.ProductCatalogOrderLine";
-    static props = {
-        isSample: { type: Boolean, optional: true },
-        productId: Number,
-        quantity: Number,
-        productType: String,
-        price: { type: Number, optional: true },  // only shown if provided
-        uomId: { type: Number, optional: true },
-        uomDisplayName: { type: String, optional: true },
-        availableUoms: { type: Array, optional: true },
-        productUomFactor: { type: Number, optional: true },
-        productUomDisplayName: { type: String, optional: true },
-        sellerUomFactor: { type: Number, optional: true },
-        readOnly: { type: Boolean, optional: true },
-        warning: { type: String, optional: true },
-        subtotal: { type: Number, optional: true },
-    };
     static components = { Portal };
+
+    props = useProps({
+        isSample: t.boolean().optional(),
+        productId: t.number(),
+        quantity: t.number(),
+        price: t.number().optional(),
+        productType: t.string(),
+        uomId: t.number().optional(),
+        uomDisplayName: t.string().optional(),
+        availableUoms: t.array().optional(),
+        productUomFactor: t.number().optional(),
+        productUomDisplayName: t.string().optional(),
+        sellerUomFactor: t.number().optional(),
+        readOnly: t.boolean().optional(),
+        warning: t.string().optional(),
+        subtotal: t.number().optional(),
+    });
 
     portalTarget = signal(null);
     rev = 0;
