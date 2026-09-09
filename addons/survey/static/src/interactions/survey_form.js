@@ -112,7 +112,7 @@ export class SurveyForm extends Interaction {
         };
         this.readonly = this.options.readonly;
         this.selectedAnswers = this.options.selectedAnswers;
-        this.imgZoomer = false;
+        this.imgZoomerEl = null;
         this.listenOnKeydown = !this.readonly;
         this.nextScreenResult;
         this.showBreadcrumb = false;
@@ -234,7 +234,7 @@ export class SurveyForm extends Interaction {
             return;
         }
         // Disable all navigation keys when zoom modal is open, except the ESC.
-        if (this.imgZoomer && !this.imgZoomer.isDestroyed() && ev.key !== "Escape") {
+        if (this.imgZoomerEl && this.imgZoomerEl.isConnected && ev.key !== "Escape") {
             return;
         }
 
@@ -440,11 +440,12 @@ export class SurveyForm extends Interaction {
             // We don't do it on small device as it can be hard to click outside the picture to select the answer.
             ev.preventDefault();
         }
-        this.renderAt(
+        const [zoomerEl] = this.renderAt(
             "survey.survey_image_zoomer",
             { sourceImage: ev.currentTarget.src },
             document.body,
         );
+        this.imgZoomerEl = zoomerEl;
     }
 
     async onSaveLaterClick(ev) {
