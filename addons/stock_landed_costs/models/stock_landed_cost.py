@@ -408,6 +408,7 @@ class StockValuationAdjustmentLines(models.Model):
     cost_line_id = fields.Many2one(
         comodel_name="stock.landed.cost.lines",
         readonly=True,
+        ondelete="cascade",
     )
     move_id = fields.Many2one(
         comodel_name="stock.move",
