@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
+<<<<<<< HEAD
 from odoo import models, fields, api, tools, _
+=======
+from odoo import models, fields, api, _
+>>>>>>> origin/sif-main-19
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -41,7 +45,11 @@ class SifJurnalEntry(models.Model):
         ('draft', 'Draft'),
         ('posted', 'Posted'),
         ('cancel', 'Dibatalkan'),
+<<<<<<< HEAD
     ], string='Status', default='draft', required=True)
+=======
+    ], string='Status', default='draft', required=True, tracking=True)
+>>>>>>> origin/sif-main-19
 
     line_ids = fields.One2many(
         'sif.jurnal.line',
@@ -208,9 +216,15 @@ class SifJurnalEntry(models.Model):
     # -------------------------------------------------------------------------
     @api.model
     def create_asset_purchase_journal(self, asset_name, asset_code, amount,
+<<<<<<< HEAD
                                       asset_account_id, credit_account_id,
                                       date=False, unit_name='KANTOR',
                                       vendor_name='', kwitansi=''):
+=======
+                                     asset_account_id, credit_account_id,
+                                     date=False, unit_name='KANTOR',
+                                     vendor_name='', kwitansi=''):
+>>>>>>> origin/sif-main-19
         txn_date = date or fields.Date.today()
         ref_label = f"Perolehan Aset: [{asset_code}] {asset_name}"
         if vendor_name:
@@ -244,8 +258,13 @@ class SifJurnalEntry(models.Model):
 
     @api.model
     def create_asset_depreciation_journal(self, asset_name, asset_code, amount,
+<<<<<<< HEAD
                                           dep_account_id, exp_account_id,
                                           date, period_name, unit_name='KANTOR'):
+=======
+                                         dep_account_id, exp_account_id,
+                                         date, period_name, unit_name='KANTOR'):
+>>>>>>> origin/sif-main-19
         desc = f"Penyusutan [{asset_code}] {asset_name} - Periode {period_name}"
         lines = [
             (0, 0, {
@@ -276,7 +295,11 @@ class SifJurnalEntry(models.Model):
 
 class SifJurnalLine(models.Model):
     _name = 'sif.jurnal.line'
+<<<<<<< HEAD
     _description = 'Baris Jurnal Transaksi'
+=======
+    _description = 'Baris Jurnal Transaksi / Buku Besar'
+>>>>>>> origin/sif-main-19
     _order = 'date desc, id desc'
 
     entry_id = fields.Many2one(
@@ -358,6 +381,7 @@ class SifJurnalLine(models.Model):
             rec.balance = (rec.debit or 0.0) - (rec.credit or 0.0)
 
 
+<<<<<<< HEAD
 # =========================================================================
 # MODEL BUKU BESAR (REKAPITULASI MUTASI SESUAI SISKEU)
 # =========================================================================
@@ -448,12 +472,15 @@ class SifBukuBesar(models.Model):
             })
 
 
+=======
+>>>>>>> origin/sif-main-19
 class SifBukuBesarWizard(models.TransientModel):
     _name = 'sif.buku.besar.wizard'
     _description = 'Wizard Filter Periode Buku Besar'
 
     date_from = fields.Date(
         string='Tanggal Awal',
+<<<<<<< HEAD
         required=False
     )
     date_to = fields.Date(
@@ -468,16 +495,41 @@ class SifBukuBesarWizard(models.TransientModel):
     unit_name = fields.Char(
         string='Unit Kerja (Opsional)',
         required=False
+=======
+        required=True,
+        default=lambda self: fields.Date.today().replace(day=1)
+    )
+    date_to = fields.Date(
+        string='Tanggal Akhir',
+        required=True,
+        default=fields.Date.context_today
+    )
+    account_id = fields.Many2one(
+        'sif.coa',
+        string='Akun (Opsional)'
+    )
+    unit_name = fields.Char(
+        string='Unit Kerja (Opsional)'
+>>>>>>> origin/sif-main-19
     )
 
     def action_tampilkan_buku_besar(self):
         self.ensure_one()
+<<<<<<< HEAD
         domain = [('state', '=', 'posted')]
 
         if self.date_from:
             domain.append(('date', '>=', self.date_from))
         if self.date_to:
             domain.append(('date', '<=', self.date_to))
+=======
+        domain = [
+            ('date', '>=', self.date_from),
+            ('date', '<=', self.date_to),
+            ('state', '=', 'posted'),
+        ]
+
+>>>>>>> origin/sif-main-19
         if self.account_id:
             domain.append(('account_id', '=', self.account_id.id))
         if self.unit_name:
@@ -485,6 +537,7 @@ class SifBukuBesarWizard(models.TransientModel):
 
         tree_view = self.env.ref('sif_keuangan.view_sif_buku_besar_list', raise_if_not_found=False)
 
+<<<<<<< HEAD
         title_parts = []
         if self.account_id:
             title_parts.append(f"[{self.account_id.code}] {self.account_id.name}")
@@ -506,3 +559,20 @@ class SifBukuBesarWizard(models.TransientModel):
             'views': [(tree_view.id, 'list')] if tree_view else False,
             'target': 'current',
         }
+=======
+        res = {
+            'name': _('Buku Besar: {} s/d {}').format(
+                self.date_from.strftime('%d/%m/%Y'),
+                self.date_to.strftime('%d/%m/%Y')
+            ),
+            'type': 'ir.actions.act_window',
+            'res_model': 'sif.jurnal.line',
+            'view_mode': 'list,form',
+            'domain': domain,
+            'target': 'current',
+        }
+        if tree_view:
+            res['views'] = [(tree_view.id, 'list'), (False, 'form')]
+            res['view_id'] = tree_view.id
+        return res
+>>>>>>> origin/sif-main-19
