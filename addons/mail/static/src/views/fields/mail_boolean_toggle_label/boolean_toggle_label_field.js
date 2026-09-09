@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
@@ -6,12 +6,12 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 /** Toggle button for boolean values, with a custom label and custom classes for each state. */
 export class BooleanToggleLabelField extends Component {
     static template = "mail.BooleanToggleLabelField";
-    static props = {
+    props = useProps({
         ...standardFieldProps,
-        btnClassOn: { type: String },
-        btnClassOff: { type: String },
-        label: { type: String },
-    };
+        btnClassOn: t.string(),
+        btnClassOff: t.string(),
+        label: t.string(),
+    });
 
     update() {
         this.props.record.update({ [this.props.name]: !this.props.record.data[this.props.name] });

@@ -1602,7 +1602,6 @@ test("observers of a record created by a component outlive that component", asyn
     const store = await start();
     let persona;
     class Creator extends Component {
-        static props = {};
         static template = xml`<t/>`;
         setup() {
             persona = store.Persona.insert("John");
@@ -1615,7 +1614,6 @@ test("observers of a record created by a component outlive that component", asyn
     }
     class Parent extends Component {
         static components = { Creator };
-        static props = {};
         static template = xml`<Creator t-if="this.state.hasCreator"/>`;
         setup() {
             this.state = proxy({ hasCreator: true });
@@ -1644,7 +1642,6 @@ test("computed field first read by a component outlives that component", async (
     const store = await start();
     const channel = store.Channel.insert(1);
     class Reader extends Component {
-        static props = {};
         static template = xml`<t/>`;
         setup() {
             expect.step(`read:${channel.multiplicity}`);
@@ -1652,7 +1649,6 @@ test("computed field first read by a component outlives that component", async (
     }
     class Parent extends Component {
         static components = { Reader };
-        static props = {};
         static template = xml`<Reader t-if="this.state.hasReader"/>`;
         setup() {
             this.state = proxy({ hasReader: true });
