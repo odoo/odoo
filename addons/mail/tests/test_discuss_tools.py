@@ -1,10 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import timedelta
+
+from odoo import fields
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.mail.tests.common import MailCase
 from odoo.tests.common import new_test_user
-from odoo.addons.bus.tests.common import BusResult
+from odoo.addons.bus.tests.common import BusResult, pop_store_version
 
 
 class TestDiscussTools(MailCase):
@@ -73,8 +76,10 @@ class TestDiscussTools(MailCase):
                 res.one("partner_id", ["country_id"]),
             ),
         )
+        data = store._build_result()
+        pop_store_version(data)
         self.assertEqual(
-            store._build_result(),
+            data,
             {
                 "res.partner": [
                     {
@@ -416,6 +421,17 @@ class TestDiscussTools(MailCase):
         data = store._build_result()
         self.assertEqual({"res.users": [{"id": user_a.id, "_DELETE": True}]}, data)
 
+    def test_398_add_explicit_version_overrides_write_date(self):
+        user_a = new_test_user(self.env, "test_user_398@example.com")
+        explicit_version = fields.Datetime.now() - timedelta(days=1)
+        store = Store()
+        store.add(user_a, {"name": "Explicit"}, version=explicit_version)
+        data = store._build_result()
+        self.assertEqual(
+            data["res.users"][0]["__version__"],
+            explicit_version.isoformat(timespec="microseconds"),
+        )
+
     # 4xx Tests many command modes
 
     def test_450_replace_clear_existing_data(self):
@@ -454,6 +470,7 @@ class TestDiscussTools(MailCase):
             ),
         )
         data = store._build_result()
+        pop_store_version(data)
         self.assertEqual(
             data["discuss.channel"][0]["messages"],
             [("REPLACE", general.message_ids.ids), ("DELETE", general.message_ids[2].ids)],
@@ -465,6 +482,7 @@ class TestDiscussTools(MailCase):
         store.add(general, lambda res: res.many("messages", [], value=[1], mode="DELETE"))
         store.add(general, lambda res: res.many("messages", [], value=[2], mode="ADD"))
         data = store._build_result()
+        pop_store_version(data)
         self.assertEqual(
             data["discuss.channel"][0]["messages"],
             [("DELETE", [1]), ("ADD", [2])],
@@ -479,6 +497,7 @@ class TestDiscussTools(MailCase):
             lambda res: res.many("messages", [], value=lambda m: [m.id], mode="DELETE"),
         )
         data = store._build_result()
+        pop_store_version(data)
         channels = data["discuss.channel"]
         self.assertEqual(channels[0]["messages"], [("DELETE", [general.id])])
         self.assertEqual(channels[1]["messages"], [("DELETE", [holiday.id])])

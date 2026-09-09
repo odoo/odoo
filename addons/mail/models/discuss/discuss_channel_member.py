@@ -402,13 +402,16 @@ class DiscussChannelMember(models.Model):
             :param is_typing: (boolean) tells whether the members are typing or not
         """
         for member in self:
+            Store(bus_channel=member.channel_id).add(member, "_store_member_fields")
             Store(bus_channel=member.channel_id).add(
                 member,
                 lambda res: (
-                    res.from_method("_store_member_fields"),
                     res.attr("isTyping", is_typing),
                     res.attr("is_typing_dt", fields.Datetime.now()),
                 ),
+                # Replacement for the write_date isTyping doesn't have. Fine since one
+                # client at a time updates a given member's typing state.
+                version=self.env.cr.now(),
             )
 
     def _set_cron_for_unmute(self):

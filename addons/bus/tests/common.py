@@ -83,6 +83,50 @@ if websocket:
                 return super().close(*args, **kwargs)
 
 
+def pop_store_version(source: dict | list | None):
+    """Deep pop of the versioning from a store payload: either the source itself or a dict
+    containing the store payload alongside other data.
+    """
+    if not source:
+        return source
+
+    def _recursive_pop(value):
+        if isinstance(value, dict):
+            had_version = "__version__" in value
+            value.pop("__version__", None)
+            if had_version and set(value) == {"id"}:
+                return value["id"]
+            for key in list(value):
+                value[key] = _recursive_pop(value[key])
+            return value
+        if isinstance(value, (list, tuple)):
+            is_replace = (
+                len(value) == 1
+                and isinstance(value[0], (list, tuple))
+                and value[0]
+                and value[0][0] == "REPLACE"
+            )
+            if is_replace:
+                return _recursive_pop(list(value[0][1]))
+            if isinstance(value, tuple):
+                return tuple(_recursive_pop(item) for item in value)
+            for index, item in enumerate(value):
+                value[index] = _recursive_pop(item)
+            return value
+        return value
+
+    if isinstance(source, list):
+        return _recursive_pop(source)
+    store_data = source.get("store_data", source)
+    for records in store_data.values():
+        for record in records if isinstance(records, list) else [records]:
+            if isinstance(record, dict):
+                record.pop("__version__", None)
+                for field, val in record.items():
+                    record[field] = _recursive_pop(val)
+    return source
+
+
 class BusResult:
     """Descriptor for an expected bus notification.
     :param channel: the bus channel
@@ -155,16 +199,8 @@ class BusResult:
     def to_tuple(self, *, show_store_versioning):
         payload = json.loads(json_dump(self.payload)) if self.payload is not None else None
         if not show_store_versioning:
-            BusResult._pop_store_version(payload)
+            pop_store_version(payload)
         return (self._normalized_channel(), self.type, payload)
-
-    @staticmethod
-    def _pop_store_version(data):
-        if not isinstance(data, dict):
-            return
-        data.pop("__store_version__", False)
-        for value in data.values():
-            BusResult._pop_store_version(value)
 
     def _normalized_channel(self):
         if isinstance(self.channel, str):
@@ -178,7 +214,7 @@ class BusResult:
         if self.payload is not None:
             message["payload"] = self.payload
             if not show_store_versioning:
-                BusResult._pop_store_version(message["payload"])
+                pop_store_version(message["payload"])
         return json.loads(json_dump(message)) if message else None
 
 

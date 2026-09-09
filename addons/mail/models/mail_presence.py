@@ -101,13 +101,18 @@ class MailPresence(models.Model):
         stores = Store.Stores()
         for presence in self:
             persona = presence.guest_id or presence.user_id
+            # Only invoked from create/write/unlink. `cr.now()`` would be the write date
+            # if the model wasn't _log_access=False.
+            version = self.env.cr.now()
             stores[persona, "presence"].add(
                 persona,
                 {"im_status": im_status or persona.im_status},
+                version=version,
             )
             stores[persona].add(
                 persona,
                 {"presence_status": im_status or presence.status},
+                version=version,
             )
 
     @api.autovacuum
