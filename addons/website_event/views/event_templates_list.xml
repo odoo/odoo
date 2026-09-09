@@ -168,11 +168,12 @@
                                                         <input
                                                             class="form-check-input pe-none"
                                                             type="checkbox"
+                                                            t-attf-id="tag_#{tag.id}"
                                                             t-attf-name="#{tag.color}"
                                                             t-att-checked="tag in search_tags" />
                                                         <label
                                                             class="form-check-label"
-                                                            t-attf-for="#{tag.color}"
+                                                            t-attf-for="tag_#{tag.id}"
                                                             t-out="tag.name" />
                                                     </div>
                                                 </span>
@@ -274,11 +275,12 @@
                                             <input
                                                 class="form-check-input pe-none"
                                                 type="radio"
+                                                t-attf-id="date_#{date[0]}"
                                                 t-attf-name="#{date[1]}"
                                                 t-att-checked="is_active" />
                                             <label
                                                 class="form-check-label"
-                                                t-attf-for="#{date[1]}"
+                                                t-attf-for="date_#{date[0]}"
                                                 t-out="date[1]" />
                                         </div>
                                         <span
@@ -385,11 +387,12 @@
                                             <input
                                                 class="form-check-input pe-none"
                                                 type="radio"
+                                                t-attf-id="country_#{country['country_id'][0]}"
                                                 t-attf-name="#{country['country_id'][1]}"
                                                 t-att-checked="is_active" />
                                             <label
                                                 class="form-check-label"
-                                                t-attf-for="#{country['country_id'][1]}"
+                                                t-attf-for="country_#{country['country_id'][0]}"
                                                 t-out="country['country_id'][1]" />
                                         </div>
                                         <span
@@ -408,9 +411,10 @@
                                             <input
                                                 class="form-check-input pe-none"
                                                 type="radio"
+                                                id="country_online"
                                                 name="Online Events"
                                                 t-att-checked="is_active" />
-                                            <label class="form-check-label" for="Online Events">Online Events</label>
+                                            <label class="form-check-label" for="country_online">Online Events</label>
                                         </div>
                                         <span
                                             t-out="country['country_id_count']"
