@@ -322,11 +322,24 @@ export const tourService = {
             const paramsTourName = new URLSearchParams(browser.location.search).get(
                 "tour",
             );
+            // `else if`, not a second `if`: a `?tour=` param already owns the
+            // resume, and this block used to run it a SECOND time for the same
+            // tour, concurrently. `startTour` only reaches an `await` before it
+            // writes the tour state when tours are *disabled* for the user (the
+            // `switch_tour_enabled` call above); with them already enabled its
+            // body runs synchronously through `tourState.setCurrentTour(...)`
+            // and into `resumeTour()`, which itself returns at its own first
+            // `await`. So control came back here with `getCurrentTour()`
+            // already set, and -- `toursEnabled` being true -- this block
+            // called `resumeTour()` again in the same task, with nothing in
+            // `resumeTour` guarding re-entrancy: two `TourInteractive`
+            // instances and two `overlay.add(TourPointer, ...)` for one tour.
+            // Chaining the branches also settles which tour wins when a
+            // `?tour=` link is opened while a stale `current_tour` sits in
+            // localStorage: the URL, whose state `startTour` overwrites anyway.
             if (paramsTourName) {
                 startTour(paramsTourName, { mode: "manual", fromDB: true });
-            }
-
-            if (tourState.getCurrentTour()) {
+            } else if (tourState.getCurrentTour()) {
                 if (tourState.getCurrentConfig().mode === "auto" || toursEnabled) {
                     resumeTour();
                 } else {
