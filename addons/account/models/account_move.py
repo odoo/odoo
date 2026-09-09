@@ -799,7 +799,7 @@ class AccountMove(models.Model):
     # used in <account.journal>._query_has_sequence_holes
     _made_gaps = models.Index('(journal_id, state, payment_state, move_type, date) WHERE (made_sequence_gap IS TRUE)')
     _duplicate_bills_idx = models.Index("(ref) WHERE (move_type IN ('in_invoice', 'in_refund'))")
-    _account_move_sanitize_payment_ref_idx = models.Index("(regexp_replace(COALESCE(payment_reference, ''), '[^a-zA-Z0-9]', '', 'g'))")
+    _account_move_sanitize_payment_ref_idx = models.Index("(regexp_replace(COALESCE(payment_reference, ref, ''), '[^a-zA-Z0-9]', '', 'g'))")
 
     def _auto_init(self):
         super()._auto_init()
@@ -849,10 +849,10 @@ class AccountMove(models.Model):
             move.payment_reference = move._get_invoice_computed_reference()
         self._inverse_payment_reference()
 
-    @api.depends('payment_reference')
+    @api.depends('payment_reference', 'ref')
     def _compute_sanitize_payment_reference(self):
         for move in self:
-            move.sanitize_payment_reference = re.sub(r'[^a-zA-Z0-9]', '', move.payment_reference or '')
+            move.sanitize_payment_reference = re.sub(r'[^a-zA-Z0-9]', '', move.payment_reference or move.ref or '')
 
     def _compute_sql_sanitize_payment_reference(self, table):
         return SQL("regexp_replace(COALESCE(%s, ''), '[^a-zA-Z0-9]', '', 'g')", table.payment_reference)
@@ -1345,6 +1345,7 @@ class AccountMove(models.Model):
             if not move.status_in_payment:
                 move.status_in_payment = move.state
 
+<<<<<<< 4f27913c8c791ce39e58336ebba7aec49d0cde02
     def _compute_sql_status_in_payment(self, table):
         # TODO not the same logic as the compute?
         state = table.state
@@ -1354,6 +1355,51 @@ class AccountMove(models.Model):
             WHEN %s = 'cancel' THEN 'cancel'
             ELSE %s
             END""", state, state, payment_state)
+||||||| 47d4dc8e48bff9ece8ea048bd340ddbe789a37ea
+    def _field_to_sql(self, alias: str, fname: str, query=None) -> SQL:
+        if fname == 'status_in_payment':
+            return SQL(
+                "CASE "
+                f"WHEN {alias}.state = 'draft' THEN 'draft' "
+                f"WHEN {alias}.state = 'cancel' THEN 'cancel' "
+                f"ELSE {alias}.payment_state "
+                "END"
+            )
+        elif fname == 'move_sent_values':
+            return SQL(
+                "CASE "
+                f"WHEN {alias}.is_move_sent THEN 'sent' "
+                f"ELSE 'not_sent' "
+                "END"
+            )
+        elif fname == 'sanitize_payment_reference':
+            return SQL("regexp_replace(COALESCE(%s, ''), '[^a-zA-Z0-9]', '', 'g')", super()._field_to_sql(alias, "payment_reference", query))
+        return super()._field_to_sql(alias, fname, query=query)
+=======
+    def _field_to_sql(self, alias: str, fname: str, query=None) -> SQL:
+        if fname == 'status_in_payment':
+            return SQL(
+                "CASE "
+                f"WHEN {alias}.state = 'draft' THEN 'draft' "
+                f"WHEN {alias}.state = 'cancel' THEN 'cancel' "
+                f"ELSE {alias}.payment_state "
+                "END"
+            )
+        elif fname == 'move_sent_values':
+            return SQL(
+                "CASE "
+                f"WHEN {alias}.is_move_sent THEN 'sent' "
+                f"ELSE 'not_sent' "
+                "END"
+            )
+        elif fname == 'sanitize_payment_reference':
+            return SQL(
+                "regexp_replace(COALESCE(%(payment_ref)s, %(ref)s, ''), '[^a-zA-Z0-9]', '', 'g')",
+                payment_ref=super()._field_to_sql(alias, "payment_reference", query),
+                ref=super()._field_to_sql(alias, "ref", query),
+            )
+        return super()._field_to_sql(alias, fname, query=query)
+>>>>>>> de879e032778649580c7135e2d62bc2132ea16a5
 
     @api.depends('reconciled_payment_ids')
     def _compute_payment_count(self):
