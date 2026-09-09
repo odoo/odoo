@@ -1,16 +1,16 @@
-import { Component, proxy, signal } from "@odoo/owl";
+import { Component, proxy, signal, t, useProps } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useAutofocus } from "@web/core/utils/hooks";
 
 export class SubtaskCreate extends Component {
     static template = "project.SubtaskCreate";
-    static props = {
-        name: String,
-        isReadonly: { type: Boolean, optional: true },
-        onSubtaskCreateNameChanged: { type: Function },
-        onBlur: { type: Function },
-    };
+    props = useProps({
+        name: t.string(),
+        isReadonly: t.boolean().optional(),
+        onSubtaskCreateNameChanged: t.function(),
+        onBlur: t.function(),
+    });
 
     input = signal.ref();
 
