@@ -492,6 +492,8 @@ class StockPickingType(models.Model):
             action["view_mode"] = self.env.context["view_mode"]
         if action["view_mode"] == "gantt":
             action["context"].pop("group_by", None)
+        if action["context"].get("search_default_group_by_picking_type_id") and len(self) == 1:
+            action["context"]["search_default_group_by_picking_type_id"] = False
         return action
 
     def action_detailed_moves(self):
