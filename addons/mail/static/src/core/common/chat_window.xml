@@ -35,7 +35,7 @@
                 </div>
                 <AutoresizeInput
                     t-if="this.editingName()"
-                    className="'text-truncate fw-bold flex-shrink-1 me-1 py-0 ' + (this.ui.isSmall ? 'fs-4' : 'fs-5')"
+                    className="'fw-bold flex-shrink-1 me-1 py-0 ' + (this.ui.isSmall ? 'fs-4' : 'fs-5')"
                     enabled="true"
                     autofocus="true"
                     onValidate.bind="this.renameChannel"

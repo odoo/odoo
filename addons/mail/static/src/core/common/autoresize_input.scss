@@ -1,25 +1,38 @@
-.o-mail-AutoresizeInput {
+.o-mail-AutoresizeInput-box {
     --o-input-border-color: transparent;
-    border:$input-border-width solid var(--o-input-border-color);
+    --o-input-padding-x: #{map-get($spacers, 1)};
+    padding-inline: var(--o-input-padding-x);
+    border: $input-border-width solid var(--o-input-border-color);
     background-color: var(--o-input-background-color, #{$input-bg});
 
-    &:where(:not([disabled])):where(:not(:focus)) {
-        &::placeholder {
-            font-style: italic;
-        }
+    // Invisible copy of the value, used for sizing.
+    &::after {
+        content: attr(data-value);
+        visibility: hidden;
+        white-space: pre;
     }
 
-    &:not([disabled]) {
-        &:hover {
-            --o-input-border-color: #{$border-color};
-        }
-        &:focus {
-            --o-input-border-color: #{$o-component-active-border};
-            color: $body-color !important; // Reset eventual text-muted.
-        }
+    &:where(:has(.o-mail-AutoresizeInput:enabled)):hover {
+        --o-input-border-color: #{$border-color};
     }
 
-    &:where([disabled]) {
+    &:focus-within {
+        --o-input-border-color: #{$o-component-active-border};
+        color: $body-color !important; // Reset eventual text-muted.
+    }
+
+    &:where(:has(.o-mail-AutoresizeInput[disabled])) {
         color: $body-color;
+    }
+}
+
+.o-mail-AutoresizeInput {
+    // Out of flow so it can't influence the box's size. Only ::after does.
+    padding-inline: var(--o-input-padding-x);
+    color: inherit;
+    font: inherit;
+
+    &:where(:not([disabled], :focus))::placeholder {
+        font-style: italic;
     }
 }

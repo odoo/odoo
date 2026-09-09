@@ -2,20 +2,26 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.AutoresizeInput">
-    <input
-        class="o-mail-AutoresizeInput px-1 border-1 text-truncate rounded"
+    <label
+        class="o-mail-AutoresizeInput-box rounded position-relative d-inline-block mw-100 overflow-hidden min-w-0"
         t-attf-class="{{ this.props.className }}"
-        t-att-class="{'o-focused': this.isFocused()}"
-        t-att-placeholder="this.props.placeholder"
-        t-att-disabled="!this.props.enabled"
-        t-att-title="this.value()"
-        t-model="this.value"
-        t-on-keydown="this.onKeydownInput"
-        t-on-focus="() => this.isFocused.set(true)"
-        t-on-blur="this.onBlurInput"
-        t-ref="this.inputRef"
-        type="text"
-    />
+        t-att-data-value="this.mirrorValue"
+    >
+        <input
+            class="o-mail-AutoresizeInput text-truncate position-absolute o-inset-0 min-w-0 m-0 border-0 bg-transparent"
+            t-attf-class="{{ this.props.inputClassName }}"
+            t-att-class="{'o-focused': this.isFocused()}"
+            t-att-placeholder="this.props.placeholder"
+            t-att-disabled="!this.props.enabled"
+            t-att-title="this.value()"
+            t-model="this.value"
+            t-on-keydown="this.onKeydownInput"
+            t-on-focus="() => this.isFocused.set(true)"
+            t-on-blur="this.onBlurInput"
+            t-ref="this.inputRef"
+            type="text"
+        />
+    </label>
 </t>
 
 </templates>
