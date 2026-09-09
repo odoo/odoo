@@ -546,6 +546,35 @@ class TestEventData(EventCase, MockVisitor):
         self.assertNotIn(self.event_link_only, visible_events)
         self.assertIn(self.event_logged_users, visible_events)
 
+    @users("portal_test")
+    def test_website_visibility_portal_user_unrelated_registration(self):
+        """A logged-in user with no visitor must only be considered
+        participating in events tied to their OWN partner, never in every
+        event that happens to have any registration at all (WEE-01: the
+        heuristic must seed with Domain.FALSE, not Domain.TRUE)."""
+        other_partner = self.env["res.partner"].sudo().create({"name": "Someone Else"})
+        self.env["event.registration"].sudo().create(
+            {
+                "name": "Unrelated registration",
+                "event_id": self.event_link_only.id,
+                "partner_id": other_partner.id,
+                "state": "open",
+            }
+        )
+
+        visible_events = self.env["event.event"].search(
+            [
+                ("id", "in", self.events_visibility_test.ids),
+                ("is_visible_on_website", "=", True),
+            ]
+        )
+        self.assertNotIn(
+            self.event_link_only,
+            visible_events,
+            "An unrelated partner's registration must not make this event "
+            "participating for the current user.",
+        )
+
     @users("public_test")
     def test_website_visibility_public_user(self):
         visible_events = self.env["event.event"].search(
