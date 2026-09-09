@@ -871,24 +871,24 @@ class TestStockQuant(TestStockCommon):
         quant.invalidate_recordset(['quantity'])
         self.assertEqual(quant.quantity, 11)
 
-    def test_scheduler_respects_skip_quant_tasks_param(self):
-        """ StockQuant._get_quants_action and .action_view_inventory already skip the
-        (expensive, full-table) quant merge when the 'stock.skip_quant_tasks' system
-        parameter is set (see opw-2574152 / opw-4226821). StockRule._run_scheduler_tasks
-        has its own unconditional call to the same merge and should honor it too, since
-        on a large stock.quant table this query is a full scan/aggregate with no
-        supporting index and can time out when the scheduler runs frequently. """
-        IrConfigParameter = self.env['ir.config_parameter'].sudo()
+    def test_skip_quant_tasks_keeps_scheduled_maintenance(self):
+        """Skipping cleanup when opening quant views must retain scheduled upkeep."""
+        for skip in (True, False):
+            with self.subTest(skip_quant_tasks=skip):
+                self.env['ir.config_parameter'].sudo().set_param('stock.skip_quant_tasks', skip)
+                for action in ('action_view_quants', 'action_view_inventory'):
+                    with self.subTest(action=action), patch.object(
+                        self.env.registry['stock.quant'], '_quant_tasks',
+                    ) as quant_tasks:
+                        getattr(self.env['stock.quant'], action)()
+                        if skip:
+                            quant_tasks.assert_not_called()
+                        else:
+                            quant_tasks.assert_called_once()
 
-        IrConfigParameter.set_param('stock.skip_quant_tasks', True)
-        with patch.object(self.env.registry['stock.quant'], '_quant_tasks') as mocked_quant_tasks:
-            self.env['stock.rule']._run_scheduler_tasks()
-            mocked_quant_tasks.assert_not_called()
-
-        IrConfigParameter.set_param('stock.skip_quant_tasks', False)
-        with patch.object(self.env.registry['stock.quant'], '_quant_tasks') as mocked_quant_tasks:
-            self.env['stock.rule']._run_scheduler_tasks()
-            mocked_quant_tasks.assert_called_once()
+                with patch.object(self.env.registry['stock.quant'], '_quant_tasks') as quant_tasks:
+                    self.env['stock.rule']._run_scheduler_tasks()
+                    quant_tasks.assert_called_once()
 
     def test_quant_display_name(self):
         """ Check the display name of a quant. """

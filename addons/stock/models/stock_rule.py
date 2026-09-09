@@ -719,8 +719,7 @@ class StockRule(models.Model):
             self.env['ir.cron']._commit_progress(1)
 
         # Merge duplicated quants
-        if not self.env['ir.config_parameter'].sudo().get_param('stock.skip_quant_tasks'):
-            self.env['stock.quant']._quant_tasks()
+        self.env['stock.quant']._quant_tasks()
 
         if use_new_cursor:
             self.env['ir.cron']._commit_progress(1)
