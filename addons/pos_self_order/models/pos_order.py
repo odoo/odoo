@@ -88,8 +88,9 @@ class PosOrder(models.Model):
         on its payment status and the config's payment method configuration
         or the pay-after setting.
         """
-        if self.config_id.self_ordering_pay_after == 'meal' and self.source in ['mobile', 'kiosk']:
+        if self.config_id.self_ordering_pay_after != 'each' and self.source == 'mobile':
             return True
+
         return not self.config_id.has_valid_self_payment_method() or super()._should_send_to_preparation()
 
     def _send_payment_result(self, payment_result):

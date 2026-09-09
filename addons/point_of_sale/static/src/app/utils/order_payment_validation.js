@@ -152,7 +152,9 @@ export default class OrderPaymentValidation {
 
         this.pos.customerDisplay.send({ processingValidation: true });
         try {
-            // 1. Save order to server.
+            // 1. Ensure pos is set as the source when paid from the PoS.
+            // If the order came from Self Order and was paid from the PoS.
+            this.order.source = "pos";
             const syncOrderResult = await this.pos.syncAllOrders({ throw: true });
             if (!syncOrderResult) {
                 return false;

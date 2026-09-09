@@ -58,7 +58,7 @@
                             <span class="o_pos_order_due_amount mb-2 fs-1 fw-bolder lh-1" t-out="this.selfOrder.formatMonetary(this.confirmedOrder.amount_total || 0)"/>
                         </div>
                     </t>
-                    <t t-if="this.selfOrder.showDownloadButton(this.confirmedOrder) and this.confirmedOrder.uiState.receiptReady">
+                    <t t-if="this.selfOrder.showDownloadButton(this.confirmedOrder)">
                         <hr class="o_pos_order_divider mt-3 mb-2 border mx-n3"/>
                         <button t-on-click="() => this.selfOrder.downloadReceipt(this.confirmedOrder)" class="btn btn-link text-reset fw-bold border-0">
                             <i class="oi me-2" data-icon="download"/>Download receipt
@@ -68,9 +68,8 @@
             </div>
             <!-- Base -->
             <div class="o_pos_status_base d-flex flex-column flex-shrink-0 align-items-center w-100">
-                <button class="btn btn-lg btn-primary w-100" t-on-click="this.backToHome">
-                    <span t-if="!this.confirmedOrder?.uiState?.receiptReady" class="spinner-border"/>
-                    <t t-elif="this.selfOrder.config.self_ordering_mode === 'kiosk'">Close</t>
+                <button class="btn btn-lg btn-primary w-100" t-on-click="this.backToHome" t-att-disabled="this.state.continueDisabled">
+                    <t t-if="this.selfOrder.config.self_ordering_mode === 'kiosk'">Close</t>
                     <t t-else="">Ok</t>
                 </button>
             </div>

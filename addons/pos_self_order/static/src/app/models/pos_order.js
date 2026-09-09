@@ -10,7 +10,6 @@ patch(PosOrder.prototype, {
         this.uiState = {
             ...this.uiState,
             lineChanges: this.uiState.lineChanges || {},
-            receiptReady: false,
         };
     },
     get unsentLines() {
