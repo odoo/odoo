@@ -920,7 +920,6 @@ class MrpProduction(models.Model):
             return NotImplemented
         delayed_productions = (
             Domain([
-                ('state', 'in', ['confirmed', 'progress', 'to_close']),
                 ('date_deadline', '!=', False),
             ])
             & (
