@@ -34,6 +34,13 @@ export class SaveTranslationPlugin extends Plugin {
                 log.logic("saveDelayTranslations: skip dirty group", { key });
                 continue;
             }
+            for (const el of els) {
+                const sha = el.dataset["oeTranslationSourceSha"];
+                if (sha) {
+                    translations[currentWebsiteLang][sha] =
+                        this.getEscapedElement(el).innerHTML;
+                }
+            }
             updateTranslationProms.push(
                 rpc("/website/field/translation/update", {
                     model: els[0].dataset["oeModel"],
