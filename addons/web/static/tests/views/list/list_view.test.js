@@ -21465,6 +21465,64 @@ test(`column tag: class attribute combines with field decorations on sub-field w
     expect(firstRowGroupFields[1]).not.toHaveClass("text-danger");
 });
 
+test.tags("desktop");
+test(`column tag: required styling is applied to the required sub-field`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list editable="bottom">
+                <field name="int_field"/>
+                <column>
+                    <field name="foo" required="1"/>
+                    <field name="bar"/>
+                </column>
+            </list>
+        `,
+    });
+
+    // select from another cell, as :focus-within hides the styling
+    await contains(`.o_data_row:eq(0) td[name='int_field']`).click();
+    expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
+
+    const groupFields = queryAll(`.o_selected_row td[name='foo'] .o_column_group_field`);
+    expect(groupFields[0]).toHaveClass("o_required_modifier");
+    expect(groupFields[1]).not.toHaveClass("o_required_modifier");
+    expect(groupFields[0]).toHaveStyle({ "border-bottom-width": "1px" });
+    expect(groupFields[1]).toHaveStyle({ "border-bottom-width": "0px" });
+});
+
+test.tags("desktop");
+test(`column tag: invalid styling is applied to the invalid sub-field`, async () => {
+    Foo._records[0].foo = "";
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list editable="bottom">
+                <field name="int_field"/>
+                <column>
+                    <field name="foo" required="1"/>
+                    <field name="bar"/>
+                </column>
+            </list>
+        `,
+    });
+
+    await contains(`.o_data_row:eq(0) td[name='foo']`).click();
+    expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
+
+    const groupFields = queryAll(`.o_selected_row td[name='foo'] .o_column_group_field`);
+    expect(groupFields[0]).toHaveClass("o_invalid_cell");
+    expect(groupFields[1]).not.toHaveClass("o_invalid_cell");
+    expect(`.o_selected_row td.o_invalid_cell`).toHaveCount(0, {
+        message: "the cell itself is never marked, only its sub-fields",
+    });
+
+    await contains(`.o_selected_row [name='foo'] input`).edit("abc");
+    expect(`.o_selected_row .o_invalid_cell`).toHaveCount(0);
+});
+
 test(`x2many list: create control supports hotkey`, async () => {
     Foo._records[0].o2m = [1];
 

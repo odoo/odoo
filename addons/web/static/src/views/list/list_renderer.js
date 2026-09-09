@@ -1196,12 +1196,18 @@ export class ListRenderer extends Component {
      * @param {RelationalRecord} record
      */
     getColumnGroupFieldClasses(fieldInfo, record) {
-        if (!this.canUseFormatter(fieldInfo, record)) {
-            return "";
+        const classNames = [];
+        if (evaluateBooleanExpr(fieldInfo.required, record.evalContextWithVirtualIds)) {
+            classNames.push("o_required_modifier");
         }
-        const classNames = this.getDecorationClassNames(fieldInfo, record);
-        if (this.getFieldClass(fieldInfo)) {
-            classNames.push(this.getFieldClass(fieldInfo));
+        if (record.isFieldInvalid(fieldInfo.name)) {
+            classNames.push("o_invalid_cell");
+        }
+        if (this.canUseFormatter(fieldInfo, record)) {
+            classNames.push(...this.getDecorationClassNames(fieldInfo, record));
+            if (this.getFieldClass(fieldInfo)) {
+                classNames.push(this.getFieldClass(fieldInfo));
+            }
         }
         return classNames.join(" ");
     }
