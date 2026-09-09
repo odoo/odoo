@@ -1,4 +1,4 @@
-import { Component, onWillDestroy, proxy, signal } from "@odoo/owl";
+import { Component, onWillDestroy, proxy, signal, t, useProps } from "@odoo/owl";
 import { normalizedMatch } from "@web/core/l10n/utils";
 import { useService } from "@web/core/utils/hooks";
 import { isVisible } from "@web/core/utils/ui";
@@ -47,31 +47,25 @@ const DEFAULT_LANG_FLAG_URL = "/base/static/img/country_flags/us.png";
 const RE_MISSING_SOURCE = /^MISSING_SOURCE_\d{8}$/;
 
 export class TranslationModeSidePanel extends Component {
-    static props = {
-        translations: {
-            type: Array,
-            element: {
-                type: Object,
-                shape: {
-                    context: String,
-                    link: String,
-                    source: String,
-                    targets: {
-                        type: Array,
-                        element: {
-                            type: Array,
-                            element: {
-                                validate: (el) =>
-                                    typeof el === "string" || el?.nodeType === Node.ELEMENT_NODE,
-                            },
-                        },
-                    },
-                    isTranslated: Boolean,
-                    translation: String,
-                },
-            },
-        },
-    };
+    props = useProps({
+        translations: t.array(
+            t.object({
+                context: t.string(),
+                link: t.string(),
+                source: t.string(),
+                targets: t.array(
+                    t.array(
+                        t.customValidator(
+                            t.any(),
+                            (el) => typeof el === "string" || el?.nodeType === Node.ELEMENT_NODE
+                        )
+                    )
+                ),
+                isTranslated: t.boolean(),
+                translation: t.string(),
+            })
+        ),
+    });
     static template = "test_translation_mode.TranslationModeSidePanel";
 
     isMissingSource = isMissingSource;
