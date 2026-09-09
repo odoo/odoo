@@ -1,9 +1,9 @@
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
-import { Component } from "@odoo/owl";
+import { Component, useProps } from "@odoo/owl";
 
 class MatchingTag extends Component {
-    static props = { ...standardFieldProps };
+    props = useProps(standardFieldProps);
     static template = "purchase.MatchingTag";
 
     get colorClass() {

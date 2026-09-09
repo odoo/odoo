@@ -5,15 +5,15 @@ import { FileUploader } from "@web/views/fields/file_handler";
 import { WarningDialog } from "@web/core/errors/error_dialogs";
 import { _t } from "@web/core/l10n/translation";
 
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 
 export class PurchaseFileUploader extends Component {
     static template = "purchase.DocumentFileUploader";
-    static props = {
+    props = useProps({
         ...standardWidgetProps,
-        record: { type: Object, optional: true },
-        list: { type: Object, optional: true },
-    };
+        record: t.object().optional(),
+        list: t.object().optional(),
+    });
     static components = { FileUploader };
 
     setup() {
