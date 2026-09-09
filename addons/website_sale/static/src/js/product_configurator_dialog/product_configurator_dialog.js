@@ -58,6 +58,6 @@ patch(ProductConfiguratorDialog.prototype, {
         if (this.env.isFrontend) {
             return _t("Total: %s", this.getFormattedTotal());
         }
-        return super.totalMessage(...arguments);
+        return super.totalMessage;
     },
 });
