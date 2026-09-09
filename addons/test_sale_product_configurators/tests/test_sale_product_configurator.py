@@ -125,6 +125,8 @@ class TestProductConfiguratorUi(TestProductConfiguratorCommon):
                 'compute_price': 'formula'
             })]
         })
+        self.salesman.group_ids += self.group_uom
+        self.product_product_custo_desk.uom_ids += self.uom_dozen
         self.start_tour("/odoo", 'sale_product_configurator_edition_tour', login='salesman')
 
     def test_04_product_configurator_single_custom_value(self):
