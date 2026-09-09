@@ -85,7 +85,6 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                     "chatbotStep": {
                         "message": chatbot_message.id,
                         "operatorFound": False,
-                        "rawAnswer": False,
                         "scriptStep": self.step_email.id,
                         "selectedAnswer": False,
                     },

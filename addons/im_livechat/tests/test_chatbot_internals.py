@@ -541,6 +541,77 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
         self.assertFalse(step_2.triggering_answer_ids, "Step 2 still has stale triggering answers.")
         self.assertFalse(step_3.triggering_answer_ids, "Step 3 still has stale triggering answers.")
 
+    def test_store_chatbot_answers_batched(self):
+        channels = self.env["discuss.channel"].create([
+            {"name": f"Livechat {i}", "channel_type": "livechat"}
+            for i in range(4)
+        ])
+        selection_answer, raw_answer, *_ = self.env["chatbot.message"].create([
+            {
+                "discuss_channel_id": channels[0].id,
+                "script_step_id": self.step_dispatch.id,
+                "user_script_answer_id": self.step_dispatch_buy_software.id,
+            },
+            {
+                "discuss_channel_id": channels[1].id,
+                "script_step_id": self.step_email.id,
+                "user_raw_answer": "<p>test@example.com</p>",
+            },
+            {
+                "discuss_channel_id": channels[2].id,
+                "script_step_id": self.step_email.id,
+            },
+            {
+                "discuss_channel_id": channels[3].id,
+                "script_step_id": self.step_email.id,
+                "user_raw_answer": "<p>unrelated@example.com</p>",
+            },
+        ])
+        # Warm related fields to isolate the answer lookup.
+        Store().add(channels[:3], "_store_livechat_extra_fields")._build_result()
+        with self.assertQueryCount(1):
+            data = Store().add(channels[:3], "_store_livechat_extra_fields")._build_result()
+        self.assertEqual(
+            {channel["id"]: channel["chatbot_message_ids"] for channel in data["discuss.channel"]},
+            {
+                channels[0].id: [selection_answer.id],
+                channels[1].id: [raw_answer.id],
+                channels[2].id: [],
+            },
+        )
+        self.assertEqual(
+            {message["id"] for message in data["chatbot.message"]},
+            {selection_answer.id, raw_answer.id},
+        )
+
+    def test_chatbot_answers_shown_in_info_panel_even_when_messages_not_loaded(self):
+        operator = new_test_user(
+            self.env,
+            login="operator_chatbot_test",
+            groups="base.group_user,im_livechat.im_livechat_group_manager",
+        )
+        data = self.make_jsonrpc_request(
+            "/im_livechat/get_session",
+            {
+                "chatbot_script_id": self.chatbot_script.id,
+                "channel_id": self.livechat_channel.id,
+            },
+        )
+        discuss_channel = self.env["discuss.channel"].browse(data["channel_id"])
+        self._post_answer_and_trigger_next_step(
+            discuss_channel, chatbot_script_answer=self.step_dispatch_buy_software
+        )
+        self._post_answer_and_trigger_next_step(discuss_channel, email="test@example.com")
+        # Fill the channel so the chatbot answer messages are not part of the initially
+        # loaded messages.
+        for i in range(100):
+            discuss_channel.sudo().message_post(body=f"filler {i}", message_type="comment")
+        self.start_tour(
+            f"/odoo/discuss?active_id={discuss_channel.id}",
+            "im_livechat_info_panel_tour",
+            login=operator.login,
+        )
+
     def test_chatbot_without_operator(self):
         chatbot_script = self.env["chatbot.script"].create({"title": "Question bot"})
         self.env["chatbot.script.step"].create([

@@ -12,6 +12,9 @@ import {
     patchWithCleanup,
     MockServer,
 } from "@web/../tests/web_test_helpers";
+import { ChatbotMessage } from "./mock_server/mock_models/chatbot_message";
+import { ChatbotScriptAnswer } from "./mock_server/mock_models/chatbot_script_answer";
+import { ChatbotScriptStep } from "./mock_server/mock_models/chatbot_script_step";
 import { DiscussChannel } from "./mock_server/mock_models/discuss_channel";
 import { DiscussChannelMember } from "./mock_server/mock_models/discuss_channel_member";
 import { LivechatChannel } from "./mock_server/mock_models/im_livechat_channel";
@@ -45,6 +48,9 @@ export async function postLivechatMessage(text) {
 
 export const livechatModels = {
     ...mailModels,
+    ChatbotMessage,
+    ChatbotScriptAnswer,
+    ChatbotScriptStep,
     DiscussChannel,
     DiscussChannelMember,
     LivechatChannel,

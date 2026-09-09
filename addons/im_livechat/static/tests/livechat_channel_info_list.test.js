@@ -41,6 +41,62 @@ test("livechat note is loaded when opening the channel info list", async () => {
     await contains(".o-livechat-ChannelInfoList textarea", { value: "Initial note\nSecond line" });
 });
 
+test("chatbot answers are listed in channel info list", async () => {
+    const pyEnv = await startServer();
+    const guestId = pyEnv["mail.guest"].create({ name: "Visitor #20" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
+            Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
+        ],
+        channel_type: "livechat",
+    });
+    const selectionStepId = pyEnv["chatbot.script.step"].create({
+        step_type: "question_selection",
+    });
+    const emailStepId = pyEnv["chatbot.script.step"].create({ step_type: "question_email" });
+    const answerId = pyEnv["chatbot.script.answer"].create({ name: "I have a technical issue" });
+    pyEnv["chatbot.message"].create([
+        {
+            discuss_channel_id: channelId,
+            script_step_id: selectionStepId,
+            user_script_answer_id: answerId,
+        },
+        {
+            discuss_channel_id: channelId,
+            script_step_id: emailStepId,
+            user_raw_answer: "<p>test@example.com</p>",
+        },
+    ]);
+    await start();
+    await openDiscuss(channelId);
+    await contains("h6:text('Chatbot answers')");
+    await contains(".o-livechat-ChannelInfoList-chatbotAnswer:text('I have a technical issue')");
+    await contains(".o-livechat-ChannelInfoList-chatbotAnswer:text('test@example.com')");
+});
+
+test("free input chatbot answer is rendered as plain text", async () => {
+    const pyEnv = await startServer();
+    const guestId = pyEnv["mail.guest"].create({ name: "Visitor #20" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
+            Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
+        ],
+        channel_type: "livechat",
+    });
+    const stepId = pyEnv["chatbot.script.step"].create({ step_type: "free_input_single" });
+    pyEnv["chatbot.message"].create({
+        discuss_channel_id: channelId,
+        script_step_id: stepId,
+        user_raw_answer: "<p>Ticket 344</p>",
+    });
+    await start();
+    await openDiscuss(channelId);
+    // markup would add a block element, breaking centering with the icon and truncation
+    await contains(".o-livechat-ChannelInfoList-chatbotAnswer:text('Ticket 344'):not(:has(*))");
+});
+
 test("shows country and language in channel info list", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Batman" });
