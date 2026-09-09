@@ -11,6 +11,7 @@ export class CalendarCommonPopover extends Component {
     static template = "web.CalendarCommonPopover";
     static components = { CardPopover };
     static defaultFooterButtonsTemplate = "web.CalendarCommonPopover.DefaultFooterButtons";
+    static closeButtonTemplate = "web.CalendarCommonPopover.CloseButton";
 
     props = useProps({
         close: t.function(),
@@ -59,6 +60,7 @@ export class CalendarCommonPopover extends Component {
             popoverNode: meta.popoverNode,
             readonly: this.readonly,
             rootClass: `o_cw_popover o_calendar_color_${typeof color === "number" ? color : 0}`,
+            closeButtonTemplate: this.constructor.closeButtonTemplate,
             context: meta.context,
             reloadOnClose: () => this.props.model.load(),
             openRecord: this.props.openRecord,
@@ -138,8 +140,8 @@ export class CalendarCommonPopover extends Component {
                 ? ` <small class="fw-bold">${this.dateDuration}</small>`
                 : "";
             items.push(`
-                <div class="d-flex align-items-center gap-2">
-                    <i class="oi oi-fw oi-filled text-400" data-icon="calendar_today"/>
+                <div class="d-flex gap-2">
+                    <i class="oi oi-fw oi-filled text-muted flex-grow-0 flex-shrink-0 align-self-start lh-base text-start" data-icon="calendar_today"/>
                     <span class="fw-bold">${this.date}</span>${duration}
                 </div>
             `);
@@ -149,8 +151,8 @@ export class CalendarCommonPopover extends Component {
                 ? ` <small class="fw-bold">(${this.timeDuration})</small>`
                 : "";
             items.push(`
-                <div class="d-flex align-items-center gap-2">
-                    <i class="oi oi-fw text-400" data-icon="schedule"/>
+                <div class="d-flex gap-2">
+                    <i class="oi oi-fw text-muted flex-grow-0 flex-shrink-0 align-self-start lh-base text-start" data-icon="schedule"/>
                     <span class="fw-bold">${this.time}</span>${duration}
                 </div>
             `);
@@ -168,12 +170,12 @@ export class CalendarCommonPopover extends Component {
             let label = "";
             if (!fieldNode.options.noLabel && fieldNode.type !== "properties") {
                 label = fieldNode.options.icon
-                    ? `<i class="oi oi-fw text-400" title="${fieldNode.string}" data-icon="${fieldNode.options.icon}"/>`
+                    ? `<i class="oi oi-fw text-muted flex-grow-0 flex-shrink-0 align-self-start lh-base text-start" title="${fieldNode.string}" data-icon="${fieldNode.options.icon}"/>`
                     : `<span class="fw-bold">${fieldNode.string}</span>`;
             }
             const invisible = fieldNode.invisible ? `invisible="${fieldNode.invisible}"` : "";
             items.push(
-                `<div class="d-flex align-items-center gap-2" ${invisible}>${label}${field}</div>`
+                `<div class="d-flex gap-2" ${invisible}>${label}${field}</div>`
             );
         }
         return parseXML(`<t t-name="${CARD_ATTRIBUTE}" class="gap-3">${items.join("")}</t>`);

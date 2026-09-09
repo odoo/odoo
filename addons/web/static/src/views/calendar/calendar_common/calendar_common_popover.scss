@@ -61,6 +61,8 @@ $o-web-calendar-colors: o-build-web-calendar-colors();
             --#{$variable-prefix}card-border-color: #{map-get($-calendar-colors-map, "color-subtle")};
             background-color: map-get($-calendar-colors-map, "popover-background-color");
             color: map-get($-calendar-colors-map, "popover-color");
+            border-top-left-radius: var(--popover-inner-border-radius);
+            border-top-right-radius: var(--popover-inner-border-radius);
         }
     }
 }

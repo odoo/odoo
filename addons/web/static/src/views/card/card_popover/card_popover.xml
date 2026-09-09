@@ -19,12 +19,16 @@
         </div>
     </t>
 
+    <t t-name="web.CardPopover.CloseButton">
+        <div class="o_card_popover_close p-1 cursor-pointer d-flex justify-content-center position-absolute top-0 end-0"
+            t-on-click.stop="this.props.close">
+            <i class="oi" data-icon="close"></i>
+        </div>
+    </t>
+
     <t t-name="web.CardPopover">
         <div t-att-class="this.props.rootClass">
-            <div class="o_card_popover_close p-1 cursor-pointer d-flex justify-content-center position-absolute top-0 end-0"
-                t-on-click.stop="this.props.close">
-                <i class="oi" data-icon="close"></i>
-            </div>
+            <t t-call="{{ this.props.closeButtonTemplate }}"/>
             <CardPopoverCard t-props="this.cardProps">
                 <t t-set-slot="defaultFooter">
                     <t t-if="this.displayDefaultFooter" t-call-slot="footer"/>

@@ -93,6 +93,7 @@ export class CardPopover extends Component {
         popoverNode: t.instanceOf(Element).optional(() => parseXML("<t/>")),
         readonly: t.boolean().optional(false),
         rootClass: t.string().optional(),
+        closeButtonTemplate: t.string().optional("web.CardPopover.CloseButton"),
         context: t.object().optional(() => ({})),
         reloadOnClose: t.function().optional(() => () => {}),
         openRecord: t.function().optional(() => () => {}),
