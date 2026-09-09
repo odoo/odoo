@@ -108,11 +108,14 @@ class Task(models.Model):
         if aggregate_spec == 'progress:avg':
             # Weigh each task by its allocated time, instead of giving the same
             # weight to a task of one hour and a task of one hundred hours.
+            # A task without allocated time has no progress to speak of, so it
+            # is left out of both sums rather than counted as 0%.
             allocated = self._field_to_sql(self._table, 'allocated_hours', query)
             spent = self._field_to_sql(self._table, 'total_hours_spent', query)
             sql_expr = SQL(
-                """CASE WHEN SUM(%(allocated)s) > 0
-                        THEN 100.0 * SUM(%(spent)s) / SUM(%(allocated)s)
+                """CASE WHEN SUM(%(allocated)s) FILTER (WHERE %(allocated)s > 0) > 0
+                        THEN 100.0 * SUM(%(spent)s) FILTER (WHERE %(allocated)s > 0)
+                                   / SUM(%(allocated)s) FILTER (WHERE %(allocated)s > 0)
                         ELSE 0.0
                    END""",
                 allocated=allocated, spent=spent,

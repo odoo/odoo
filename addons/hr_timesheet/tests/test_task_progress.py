@@ -32,3 +32,19 @@ class TestTaskProgress(TestCommonTimesheet):
             self._get_average_progress(), 1.0,
             "The average progress should weigh each task by its allocated time, not count every task equally",
         )
+
+    def test_progress_average_ignores_tasks_without_allocated_hours(self):
+        self.env['account.analytic.line'].create({
+            'name': 'Timesheet on a task with no allocated time',
+            'project_id': self.project_customer.id,
+            'task_id': self.env['project.task'].create({
+                'name': 'Task Without Allocated Time',
+                'project_id': self.project_customer.id,
+            }).id,
+            'unit_amount': 5.0,
+            'employee_id': self.empl_employee.id,
+        })
+        self.assertEqual(
+            self._get_average_progress(), 1.0,
+            "A task without allocated time has no progress and should not weigh on the average",
+        )
