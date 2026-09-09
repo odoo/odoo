@@ -119,9 +119,12 @@
                         <group class="ps-md-0">
                             <field
                                 name="user_id"
-                                widget="many2one_avatar_user"
-                                domain="[('share', '=', False)]" />
-                            <field name="category_id" placeholder="No category" />
+                                domain="[('share', '=', False)]"
+                                widget="many2one_avatar_user" />
+                            <field
+                                name="category_id"
+                                placeholder="No category"
+                                options="{'no_create': True}" />
                             <field name="active" invisible="1" />
                             <field name="has_conditional_questions" invisible="1" />
                             <field
