@@ -18,6 +18,13 @@ class WebsiteEventSaleController(WebsiteEventController):
         return res
 
     def _create_attendees_from_registration_post(self, event, registration_data):
+        # `registration_confirm` below needs this very list, which the parent
+        # has already parsed out of the POST. Stash it on `request`, which is
+        # per-request state: controllers are instantiated once per registry
+        # (odoo/http/routing.py), so caching it on `self` would leak one
+        # visitor's names, emails and phone numbers into another's request.
+        request.website_event_sale_registrations = registration_data
+
         if not any(info.get("event_ticket_id") for info in registration_data):
             _debug.logic(
                 "attendees_without_tickets",
@@ -104,9 +111,18 @@ class WebsiteEventSaleController(WebsiteEventController):
 
     @route()
     def registration_confirm(self, event, **post):
+        request.website_event_sale_registrations = None
         res = super().registration_confirm(event, **post)
 
-        registrations = self._process_attendees_form(event, post)
+        # Reuse the parse `_create_attendees_from_registration_post` stashed
+        # instead of running `_process_attendees_form` on the same POST a
+        # second time: it re-validates every posted ticket and slot id and
+        # re-parses every attendee field and answer. The stash is absent when
+        # the parent redirected before creating any attendee, and we then
+        # parse as before rather than change what those paths answer.
+        registrations = request.website_event_sale_registrations
+        if registrations is None:
+            registrations = self._process_attendees_form(event, post)
         order_sudo = request.cart
         if not any(line.event_ticket_id for line in order_sudo.line_ids):
             _debug.logic("confirm_without_ticket_lines", event=event, order=order_sudo)

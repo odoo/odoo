@@ -1,8 +1,11 @@
+from unittest.mock import patch
+
 from odoo import http
 from odoo.fields import Command
 from odoo.tests import tagged
 
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal
+from odoo.addons.website_event.controllers.main import WebsiteEventController
 from odoo.addons.website_event_sale.tests.common import TestWebsiteEventSaleCommon
 
 
@@ -151,3 +154,41 @@ class TestRegistrationSaleBranches(HttpCaseWithUserPortal, TestWebsiteEventSaleC
         self.assertEqual(len(order), 1)
         self.assertEqual(order.amount_total, 0)
         self.assertEqual(order.state, "done")
+
+    def test_registration_confirm_parses_the_form_once(self):
+        """The POST must be parsed once, not once by the parent and once here."""
+        self.authenticate(None, None)
+        calls = []
+        original = WebsiteEventController._process_attendees_form
+
+        def counting(controller, event, form_details):
+            calls.append(event.id)
+            return original(controller, event, form_details)
+
+        with patch.object(WebsiteEventController, "_process_attendees_form", counting):
+            res = self.url_open(
+                f"/event/{self.event.id}/registration/confirm",
+                data={
+                    **self._questions(),
+                    "1-event_ticket_id": self.ticket.id,
+                    "csrf_token": http.Request.csrf_token(self),
+                },
+            )
+
+        self.assertEqual(res.status_code, 200)
+        self.assertIn("/shop/", res.url)
+        self.assertEqual(
+            len(calls), 1, "the posted form was parsed more than once: %s" % calls
+        )
+
+    def test_registration_confirm_keeps_the_parent_error_redirect(self):
+        """A POST the parent rejects still answers with the parent's redirect."""
+        self.authenticate(None, None)
+        res = self.url_open(
+            f"/event/{self.event.id}/registration/confirm",
+            data={
+                **self._questions(),
+                "csrf_token": http.Request.csrf_token(self),
+            },
+        )
+        self.assertIn("registration_error_code=missing_ticket", res.url)
