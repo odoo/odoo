@@ -222,43 +222,6 @@
         </field>
     </record>
 
-    <record id="view_stock_move_list_receipt_picking" model="ir.ui.view">
-        <field name="name">stock.move.tree2</field>
-        <field name="model">stock.move</field>
-        <field name="priority" eval="6" />
-        <field name="arch" type="xml">
-            <list
-                string="Moves"
-                default_order="date, picking_id, sequence"
-                create="0"
-                decoration-muted="state == 'cancel'">
-                <field name="date" column_invisible="True" />
-                <field name="date_deadline" optional="hide" />
-                <field
-                    name="picking_id"
-                    string="Reference"
-                    column_invisible="True"
-                    readonly="state == 'done'" />
-                <field name="sequence" column_invisible="True" />
-                <field name="origin" optional="show" />
-                <field name="product_id" readonly="state == 'done'" />
-                <field name="product_uom_qty" readonly="state == 'done'" />
-                <field
-                    name="product_uom_id"
-                    widget="many2one_uom"
-                    options="{'no_open': True, 'no_create': True}"
-                    groups="uom.group_uom" />
-                <field
-                    name="location_id"
-                    options="{'no_create': True}"
-                    column_invisible="True" />
-                <field name="location_dest_id" column_invisible="True" />
-                <field name="state" optional="show" />
-                <field name="company_id" column_invisible="True" />
-            </list>
-        </field>
-    </record>
-
     <record id="view_stock_move_kanban" model="ir.ui.view">
         <field name="name">stock.move.kanban</field>
         <field name="model">stock.move</field>
