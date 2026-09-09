@@ -768,6 +768,8 @@ class SaleOrder(models.Model):
                 and not line.combo_item_id
                 and line.price_unit == 0
                 and line.product_id.service_tracking not in allowed_types
+                # Free products from loyalty rewards can have unit_price = 0
+                and not line.is_reward_line
         )
 
     def _is_cart_ready(self):
