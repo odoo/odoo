@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- ================================================================= -->
-<<<<<<< HEAD
-    <!-- 1. POPUP WIZARD FILTER BUKU BESAR                                 -->
-=======
-    <!-- 1. POPUP WIZARD FILTER TANGGAL AWAL & AKHIR BUKU BESAR             -->
->>>>>>> origin/sif-main-19
-    <!-- ================================================================= -->
+    <!-- 1. POPUP WIZARD FILTER BUKU BESAR -->
     <record id="view_sif_buku_besar_wizard_form" model="ir.ui.view">
         <field name="name">sif.buku.besar.wizard.form</field>
         <field name="model">sif.buku.besar.wizard</field>
@@ -18,7 +12,6 @@
                         <h2>Filter Periode Buku Besar</h2>
                     </div>
                     <group>
-<<<<<<< HEAD
                         <group string="Rentang Tanggal (Opsional)">
                             <field name="date_from" string="Tanggal Awal" placeholder="Kosongkan jika semua tanggal"/>
                             <field name="date_to" string="Tanggal Akhir" placeholder="Kosongkan jika semua tanggal"/>
@@ -26,15 +19,6 @@
                         <group string="Filter Tambahan (Opsional)">
                             <field name="account_id" string="Account" options="{'no_create': True}" placeholder="Kosongkan jika semua akun"/>
                             <field name="unit_name" string="Unit Kerja" placeholder="Kosongkan jika semua unit"/>
-=======
-                        <group string="Rentang Tanggal">
-                            <field name="date_from" string="Tanggal Awal"/>
-                            <field name="date_to" string="Tanggal Akhir"/>
-                        </group>
-                        <group string="Filter Tambahan (Opsional)">
-                            <field name="account_id" string="Account"/>
-                            <field name="unit_name" string="Unit Kerja"/>
->>>>>>> origin/sif-main-19
                         </group>
                     </group>
                     <footer>
@@ -53,40 +37,21 @@
         <field name="target">new</field>
     </record>
 
-    <!-- ================================================================= -->
-<<<<<<< HEAD
-    <!-- 2. VIEW BUKU BESAR (REKAP 8 KOLOM FORMAT SISKEU)                  -->
-    <!-- ================================================================= -->
+    <!-- 2. VIEW BUKU BESAR (REKAP 8 KOLOM FORMAT SISKEU) -->
     <record id="view_sif_buku_besar_list" model="ir.ui.view">
         <field name="name">sif.buku.besar.list</field>
         <field name="model">sif.buku.besar</field>
         <field name="arch" type="xml">
             <list string="Buku Besar" create="false" edit="false" delete="false">
-=======
-    <!-- 2. VIEW BUKU BESAR (FLAT VIEW STANDAR SISKEU SIF)                -->
-    <!-- ================================================================= -->
-    <record id="view_sif_buku_besar_list" model="ir.ui.view">
-        <field name="name">sif.jurnal.line.list</field>
-        <field name="model">sif.jurnal.line</field>
-        <field name="arch" type="xml">
-            <list string="Buku Besar" create="false" edit="false">
->>>>>>> origin/sif-main-19
                 <header>
                     <button name="%(action_sif_buku_besar_wizard)d" string="Ganti Periode Tanggal" type="action" class="btn-primary"/>
                 </header>
                 <field name="date" string="Tanggal"/>
                 <field name="unit_name" string="Unit Kerja"/>
                 <field name="entry_number" string="Bukti / Nomer"/>
-<<<<<<< HEAD
                 <field name="kwitansi_ref" string="Kwitansi"/>
                 <field name="name" string="Keterangan"/>
                 <field name="account_code" string="Account"/>
-=======
-                <field name="kwitansi_ref" string="Kwitansi" optional="show"/>
-                <field name="name" string="Keterangan"/>
-                <field name="account_code" string="Account"/>
-                <field name="account_name" string="Nama Account" optional="show"/>
->>>>>>> origin/sif-main-19
                 <field name="debit" string="Debet" sum="Total Debet"/>
                 <field name="credit" string="Kredit" sum="Total Kredit"/>
             </list>
@@ -94,13 +59,8 @@
     </record>
 
     <record id="view_sif_buku_besar_search" model="ir.ui.view">
-<<<<<<< HEAD
         <field name="name">sif.buku.besar.search</field>
         <field name="model">sif.buku.besar</field>
-=======
-        <field name="name">sif.jurnal.line.search</field>
-        <field name="model">sif.jurnal.line</field>
->>>>>>> origin/sif-main-19
         <field name="arch" type="xml">
             <search string="Pencarian Buku Besar">
                 <field name="entry_number" string="Bukti / Nomer"/>
@@ -108,12 +68,6 @@
                 <field name="account_id" string="Account"/>
                 <field name="name" string="Keterangan"/>
                 <separator/>
-<<<<<<< HEAD
-=======
-                <filter string="Bulan Ini" name="this_month" 
-                        domain="[('date', '&gt;=', context_today().strftime('%Y-%m-01'))]"/>
-                <separator/>
->>>>>>> origin/sif-main-19
                 <filter string="Per Akun (Buku Besar)" name="group_by_account" context="{'group_by':'account_id'}"/>
                 <filter string="Per Unit Kerja" name="group_by_unit" context="{'group_by':'unit_name'}"/>
                 <filter string="Per Tanggal" name="group_by_date" context="{'group_by':'date:month'}"/>
@@ -123,26 +77,14 @@
 
     <record id="action_sif_buku_besar" model="ir.actions.act_window">
         <field name="name">Buku Besar</field>
-<<<<<<< HEAD
         <field name="res_model">sif.buku.besar</field>
         <field name="view_mode">list</field>
         <field name="search_view_id" ref="view_sif_buku_besar_search"/>
         <field name="domain">[('state', '=', 'posted')]</field>
-=======
-        <field name="res_model">sif.jurnal.line</field>
-        <field name="view_mode">list</field>
-        <field name="search_view_id" ref="view_sif_buku_besar_search"/>
->>>>>>> origin/sif-main-19
         <field name="context">{}</field>
     </record>
 
-    <!-- ================================================================= -->
-<<<<<<< HEAD
-    <!-- 3. VIEW JURNAL TRANSAKSI (TETAP MENYIMPAN RINCIAN LENGKAP)        -->
-=======
-    <!-- 3. VIEW JURNAL TRANSAKSI (HEADER DOKUMEN ENTRY)                  -->
->>>>>>> origin/sif-main-19
-    <!-- ================================================================= -->
+    <!-- 3. VIEW JURNAL TRANSAKSI -->
     <record id="view_sif_jurnal_entry_list" model="ir.ui.view">
         <field name="name">sif.jurnal.entry.list</field>
         <field name="model">sif.jurnal.entry</field>
@@ -171,18 +113,14 @@
         <field name="arch" type="xml">
             <form string="Entri Jurnal">
                 <header>
-                    <button name="action_post" string="Posting" type="object" class="oe_highlight" 
-                            invisible="state == 'posted'"/>
-                    <button name="action_draft" string="Set to Draft" type="object" 
-                            invisible="state == 'draft'"/>
+                    <button name="action_post" string="Posting" type="object" class="oe_highlight" invisible="state == 'posted'"/>
+                    <button name="action_draft" string="Set to Draft" type="object" invisible="state == 'draft'"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,posted"/>
                 </header>
                 <sheet>
                     <div class="oe_title">
                         <label for="name" string="Nomor Bukti Jurnal"/>
-                        <h1>
-                            <field name="name" readonly="1"/>
-                        </h1>
+                        <h1><field name="name" readonly="1"/></h1>
                     </div>
                     <group>
                         <group>
