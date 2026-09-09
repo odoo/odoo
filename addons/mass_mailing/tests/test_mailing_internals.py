@@ -147,6 +147,29 @@ class TestMassMailValues(MassMailCommon):
         # Verify that the MSO comment wrapper itself wasn't completely scrubbed out
         self.assertIn("Fake url, in text:", mailing.body_html)
 
+    def test_mailing_body_inline_image_huge_body(self):
+        """ A body over the parser buffer limit keeps all of its images.
+
+        The editor turns webp images into inline base64 png ones, which makes
+        the body big enough for the parser to give back a truncated document.
+        """
+        payloads = [base64.b64encode(bytes([i]) + b'x' * 1500000).decode() for i in range(6)]
+        images = ''.join(f'<img src="data:image/png;base64,{payload}">' for payload in payloads)
+        body = f'<div>{images}<p>Last line of the body</p></div>'
+        self.assertGreater(len(body), 10000000, "the body has to be over the parser limit")
+
+        mailing = self.env['mailing.mailing'].create({
+            'name': 'Test',
+            'subject': 'Test',
+            'state': 'draft',
+            'mailing_model_id': self.env['ir.model']._get('res.partner').id,
+        })
+        mailing.write({'body_html': body})
+
+        found_urls = re.findall(r'/web/image/\d+\?access_token=[a-zA-Z0-9\-_=]+', mailing.body_html)
+        self.assertEqual(len(found_urls), 6, "every image should have become an attachment")
+        self.assertIn('Last line of the body', mailing.body_html, "the end of the body should be kept")
+
     @users('user_marketing')
     def test_mailing_body_responsive(self):
         """ Testing mail mailing responsive mail body
