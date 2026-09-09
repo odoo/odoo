@@ -154,10 +154,6 @@ class TestEventSecurity(TestEventFullCommon):
         """ Check that a user without read access on 'event.event' and 'event.slot' can still find
         its own registrations when searching on the computed 'event_begin_date' field
         (computed from 'event_id.date_begin' or 'event_slot_id.start_datetime').
-
-        '_search_event_begin_date' uses the 'any!' operator to bypass the need for read access on
-        'event.event'/'event.slot' models when performing the search.
-        Relevant when a user filters its registrations from portal.
         """
         slot = self.env['event.slot'].with_user(self.admin_user).create({
             'event_id': self.test_event.id,
