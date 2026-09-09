@@ -42,13 +42,36 @@ class AccountMoveSend(models.AbstractModel):
                 # Also skip the invoices that another transaction is working on, otherwise they get submitted to ZATCA even as draft.
                 if not self.env['res.company']._with_locked_records(records=invoice, allow_raising=False):
                     continue
-                invoice.l10n_sa_edi_document_id._l10n_sa_post_zatca_edi(len(invoices_data.keys()) == 1)
+
+                document = invoice.l10n_sa_edi_document_id
+                document._l10n_sa_post_zatca_edi(len(invoices_data.keys()) == 1)
+                if document.state not in ('accepted', 'warning'):
+                    invoice_data['error'] = {
+                        'failed_zatca_submission': True,
+                    }
+
+    @api.model
+    def _hook_if_errors(self, moves_data, allow_raising=True):
+        # EXTENDS 'account'
+        # We only use the 'error' key to skip PDF/email generation for failed ZATCA
+        # submissions. We don't want _hook_if_errors to process these errors, as
+        # ZATCA already handles the failure through l10n_sa_edi logs and notifications.
+        non_zatca_errors = {
+            move: move_data
+            for move, move_data in moves_data.items()
+            if not move_data['error'].get('failed_zatca_submission')
+        }
+        if non_zatca_errors:
+            super()._hook_if_errors(non_zatca_errors, allow_raising=allow_raising)
 
     def _hook_invoice_document_after_pdf_report_render(self, invoice, invoice_data):
         # EXTENDS account
         if not (edi_document := invoice.l10n_sa_edi_document_id):
             super()._hook_invoice_document_after_pdf_report_render(invoice, invoice_data)
             return
+
+        if config['test_enable'] and not self.env.context.get('force_report_rendering'):
+            return   # since no PDF is generated in test environment.
 
         attachment = edi_document.sudo().attachment_id
         if not attachment or not attachment.raw:
