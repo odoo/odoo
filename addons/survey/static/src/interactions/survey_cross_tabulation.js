@@ -36,7 +36,7 @@ export class SurveyCrossTabulation extends Interaction {
             });
 
             if (data.error) {
-                container.innerHTML = `<div class="alert alert-danger">${data.error}</div>`;
+                container.innerHTML = `<div class="alert alert-danger">${this._escapeHtml(String(data.error))}</div>`;
                 return;
             }
 
@@ -58,8 +58,8 @@ export class SurveyCrossTabulation extends Interaction {
         let html = `<div class="table-responsive">
             <table class="table table-bordered table-sm">
             <caption class="caption-top text-muted">
-                Rows: <strong>${data.question_row.title}</strong> &times;
-                Columns: <strong>${data.question_col.title}</strong>
+                Rows: <strong>${this._escapeHtml(String(data.question_row.title))}</strong> &times;
+                Columns: <strong>${this._escapeHtml(String(data.question_col.title))}</strong>
                 &mdash; ${data.grand_total} responses
             </caption>
             <thead class="table-light">
