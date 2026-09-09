@@ -30,7 +30,7 @@ describe("data_service", () => {
     test("getRelatedModels for product.product includes its direct dependencies and reverse", async () => {
         const store = await setupPosEnv();
         const data = store.data;
-        // product.product → ['product.template.attribute.value', 'product.template']
+        // product.product → ['product.template.attribute.value', 'product.template', 'pos.order.line']
         let related = data.getRelatedModels("product.product");
         expect(related).toInclude("product.product");
         expect(related).toInclude("product.template");

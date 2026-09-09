@@ -943,6 +943,8 @@ class PosOrder(models.Model):
             'pos.order': self._load_pos_data_read(self, config) if config else [],
             'pos.payment': self.env['pos.payment']._load_pos_data_read(self.payment_ids, config) if config else [],
             'pos.order.line': self.env['pos.order.line']._load_pos_data_read(self.lines, config) if config else [],
+            'product.product': self.env['product.product']._load_pos_data_read(self.lines.product_id, config) if config else [],
+            'product.template': self.env['product.template']._load_pos_data_read(self.lines.product_id.product_tmpl_id.with_context(bin_size=True), config) if config else [],
             'product.attribute.custom.value': self.env['product.attribute.custom.value']._load_pos_data_read(self.lines.custom_attribute_value_ids, config) if config else [],
             'account.move': self.env['account.move'].sudo()._load_pos_data_read(account_moves, config) if config else [],
             'pos.prep.order': self.env['pos.prep.order']._load_pos_data_read(self.prep_order_ids, config) if config else [],

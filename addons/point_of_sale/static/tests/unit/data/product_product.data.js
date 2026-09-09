@@ -25,7 +25,7 @@ export class ProductProduct extends models.ServerModel {
     }
 
     _load_pos_data_dependencies() {
-        return ["product.template.attribute.value", "product.template"];
+        return ["product.template.attribute.value", "product.template", "pos.order.line"];
     }
 
     _load_pos_data_read(data) {
