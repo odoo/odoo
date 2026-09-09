@@ -80,6 +80,29 @@ class TestEventListFilters(HttpCase, TestEventOnlineCommon):
                 f"A non-numeric '{param}' query param must not crash /event.",
             )
 
+    def test_event_page_exact_slug_match(self):
+        """A page lookup must match the view key exactly, not via SQL ilike
+        wildcards ('%'/'_') smuggled through the requested slug."""
+        self.event_0.write({"website_menu": True, "is_published": True})
+        page_view = self.event_0.introduction_menu_ids.view_id.copy(
+            {"key": "website_event.testXsecret"}
+        )
+        self.env["website.event.menu"].create(
+            {
+                "event_id": self.event_0.id,
+                "view_id": page_view.id,
+                "menu_type": "other",
+            }
+        )
+
+        resp = self.url_open(f"/event/{self.event_0.id}/page/test_secret")
+        self.assertEqual(
+            resp.status_code,
+            404,
+            "A slug containing a literal '_' must not ilike-match an "
+            "unrelated page key that merely differs by one character.",
+        )
+
 
 @tagged("post_install", "-at_install")
 class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
