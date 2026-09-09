@@ -54,6 +54,6 @@ registry.category("fields").add("pick_from", {
         { name: "lot_id", type: "relation" },
         { name: "lot_name", type: "char" },
         { name: "owner_id", type: "relation" },
-        { name: "state", type: "char" },
+        { name: "state", type: "selection" },
     ],
 });
