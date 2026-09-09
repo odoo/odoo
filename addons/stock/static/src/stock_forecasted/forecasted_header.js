@@ -1,10 +1,13 @@
 import { useService } from "@web/core/utils/hooks";
 import { formatFloat } from "@web/views/fields/formatters";
-import { Component, markup } from "@odoo/owl";
+import { Component, markup, t, useProps } from "@odoo/owl";
 
 export class ForecastedHeader extends Component {
     static template = "stock.ForecastedHeader";
-    static props = { docs: Object, openView: Function };
+    props = useProps({
+        docs: t.object(),
+        openView: t.function(),
+    });
 
     setup(){
         this.orm = useService("orm");
