@@ -15,6 +15,12 @@
                 <cbc:ID t-att-schemeID="is_vkn and 'VKN' or 'TCKN'" t-out="partner.vat"/>
             </t>
         </cac:PartyIdentification>
+        <t t-foreach="[('TR_MERSIS', 'MERSISNO'), ('TR_TICARET_SICIL', 'TICARETSICILNO'), ('TR_SUBE', 'SUBENO')]" t-as="id_info">
+            <t t-set="id_value" t-value="partner._get_additional_identifier(id_info[0])"/>
+            <cac:PartyIdentification t-if="id_value">
+                <cbc:ID t-att-schemeID="id_info[1]" t-out="id_value"/>
+            </cac:PartyIdentification>
+        </t>
         <t t-if="is_vkn">
             <cac:PartyName>
                 <cbc:Name t-out="partner.name"/>
