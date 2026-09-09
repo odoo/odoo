@@ -1,7 +1,8 @@
 import typing
 
 from pypdf import errors, filters, generic, PageObject, PdfReader as _Reader, PdfWriter as _Writer
-from pypdf.generic import create_string_object
+from pypdf.annotations import Link
+from pypdf.generic import create_string_object, Fit
 from pypdf import __version__  # noqa: F401
 
 from odoo.tools.func import deprecated
@@ -18,6 +19,13 @@ __all__ = [
 
 
 deprecate = deprecated("PyPDF2 1.x compatibility shims are deprecated, switch to modern API")
+
+
+def _get_fit(fit, *args):
+    return {
+        '/Fit': Fit.fit,
+        '/XYZ': Fit.xyz,
+    }[fit](*args)
 
 
 class PdfReader(_Reader):
@@ -69,8 +77,8 @@ class PdfWriter(_Writer):
         return self.add_page(page)
 
     @deprecate
-    def appendPagesFromReader(self, reader):
-        return self.append_pages_from_reader(reader)
+    def appendPagesFromReader(self, reader, after_page_append=None):
+        return self.append_pages_from_reader(reader, after_page_append)
 
     @deprecate
     def addBlankPage(self, width=None, height=None):
@@ -95,3 +103,32 @@ class PdfWriter(_Writer):
     @deprecate
     def _addObject(self, *args, **kwargs):
         return self._add_object(*args, **kwargs)
+
+    @deprecate
+    def addLink(self, pagenum, pagedest, rect, border=None, fit='/Fit', *args):
+        return self.add_annotation(
+            page_number=pagenum,
+            annotation=Link(
+                rect=rect,
+                border=border,
+                target_page_index=pagedest,
+                fit=_get_fit(fit, *args),
+            ),
+        )
+
+    @deprecate
+    def addBookmark(
+        self, title, pagenum, parent=None, color=None, bold=False, italic=False, fit='/Fit', *args,
+    ):
+        return self.add_outline_item(
+            title,
+            pagenum,
+            parent=parent,
+            color=color,
+            bold=bold,
+            italic=italic,
+            fit=_get_fit(fit, *args),
+        )
+
+    def setPageMode(self, mode):
+        self.page_mode = mode
