@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 from odoo.libs.debug_log import DebugLog
 
 _debug = DebugLog(__name__)
@@ -36,14 +36,13 @@ class SaleOrder(models.Model):
             sol.update(
                 {
                     "price_unit": 0,
-                    "name": _(
+                    "name": self.with_context(**context).env._(
                         "%(name)s (Estimated Cost: %(cost)s)",
                         name=sol["name"],
                         cost=self.currency_id.format(price_unit),
                     ),
                 }
             )
-        del context
         return sol
 
     def _format_currency_amount(self, amount):
