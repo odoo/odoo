@@ -52,13 +52,18 @@ def migrate(cr, version):
             100.0,
             'one_page',
             'all',
-            'public',
+            -- A channel restricted to its enrolled attendees ('members')
+            -- should not give its quiz survey a public/link-only access
+            -- mode; every other visibility (public/connected/link) maps to
+            -- the survey's own "public" (i.e. "anyone with the link").
+            CASE WHEN sc.visibility = 'members' THEN 'token' ELSE 'public' END,
             false,
             true,
             ss.id,
             ss.create_uid, NOW(), ss.write_uid, NOW()
         FROM slide_slide ss
         JOIN slide_question sq ON sq.slide_id = ss.id
+        LEFT JOIN slide_channel sc ON sc.id = ss.channel_id
         WHERE ss.survey_id IS NULL
     """)
     surveys_created = cr.rowcount
@@ -124,6 +129,32 @@ def migrate(cr, version):
           AND sqa._marin_from_slide_answer_id = imd.res_id
     """)
 
+    # Guard: step 3 only migrates questions for slides whose survey THIS
+    # migration created (`sv._marin_from_slide_id IS NOT NULL`) -- a slide
+    # that already had its own survey_id before this ran (e.g. a
+    # certification slide with pre-existing questions) is skipped there, so
+    # its slide_question rows are never copied. The cleanup below would
+    # orphan them (their model registration disappears even though the
+    # rows themselves are never dropped). Abort loudly rather than silently
+    # losing that content.
+    cr.execute("""
+        SELECT COUNT(*)
+        FROM slide_question sq
+        JOIN slide_slide ss ON sq.slide_id = ss.id
+        LEFT JOIN survey_survey sv
+            ON ss.survey_id = sv.id AND sv._marin_from_slide_id IS NOT NULL
+        WHERE sv.id IS NULL
+    """)
+    orphaned_question_count = cr.fetchone()[0]
+    if orphaned_question_count:
+        raise RuntimeError(
+            f"Quiz migration would orphan {orphaned_question_count} "
+            "slide_question row(s) belonging to a slide that already had "
+            "its own survey_id before this migration ran. Migrate those "
+            "rows into their existing survey manually before re-running."
+        )
+
+    # Clean up remaining XML IDs that weren't remapped
     cr.execute(
         "DELETE FROM ir_model_data WHERE model IN ('slide.question', 'slide.answer')"
     )
