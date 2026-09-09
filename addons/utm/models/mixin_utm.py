@@ -137,19 +137,24 @@ class MixinUtm(models.AbstractModel):
         # Avoid conflicting with itself, otherwise each check at update automatically
         # increments counters
         skip_record_ids = self.env.context.get("utm_check_skip_record_ids") or []
-        # Remove potential counter part in each names
-        names_without_counter = {self._split_name_and_count(name)[0] for name in names}
+        # Remove potential counter part in each names, skipping falsy names
+        # (an "ilike" domain on an empty name would match every record)
+        names_without_counter = {
+            self._split_name_and_count(name)[0] for name in names if name
+        }
 
         # Retrieve existing similar names
-        search_domain = Domain.OR(
-            Domain("name", "ilike", name) for name in names_without_counter
-        )
-        if skip_record_ids:
-            search_domain &= Domain("id", "not in", skip_record_ids)
-        existing_names = {
-            vals["name"]
-            for vals in self.env[model_name].search_read(search_domain, ["name"])
-        }
+        existing_names = set()
+        if names_without_counter:
+            search_domain = Domain.OR(
+                Domain("name", "ilike", name) for name in names_without_counter
+            )
+            if skip_record_ids:
+                search_domain &= Domain("id", "not in", skip_record_ids)
+            existing_names = {
+                vals["name"]
+                for vals in self.env[model_name].search_read(search_domain, ["name"])
+            }
 
         # Counter for each names, based on the names list given in argument
         # and the record names in database
