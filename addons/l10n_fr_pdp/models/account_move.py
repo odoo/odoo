@@ -686,7 +686,12 @@ class AccountMove(models.Model):
 
     def button_draft(self):
         for move in self:
-            if move.l10n_fr_pdp_sent_in_flow_ids and move.state == 'posted':
+            # Keep the sent moves of a rejected flow so it can be corrected and resent.
+            if (
+                move.l10n_fr_pdp_sent_in_flow_ids
+                and move.state == 'posted'
+                and move.l10n_fr_pdp_last_flow_id.state != 'error'
+            ):
                 # When a flow is sent it compares the moves it sends vs the moves of the previous
                 # flow to avoid sending the data twice if it's strictly the same.
                 # Setting "l10n_fr_pdp_sent_in_flow_ids" to None will ensure the move is not already
