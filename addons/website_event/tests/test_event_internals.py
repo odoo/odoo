@@ -436,6 +436,61 @@ class TestEventData(EventCase, MockVisitor):
             "A negative registration count must not produce a ticket order.",
         )
 
+    def test_filter_open_slots_query_count(self):
+        """_filter_open_slots must batch seat-availability lookups per
+        EVENT, not per slot: the query count for filtering N slots on one
+        event must not grow with N."""
+        event = self.env["event.event"].create(
+            {
+                "name": "Multi-slot event",
+                "date_begin": FieldsDatetime.to_string(
+                    datetime.today() + timedelta(days=1)
+                ),
+                "date_end": FieldsDatetime.to_string(
+                    datetime.today() + timedelta(days=15)
+                ),
+            }
+        )
+        one_slot = self.env["event.slot"].create(
+            {
+                "event_id": event.id,
+                "date": datetime.today() + timedelta(days=2),
+                "start_hour": 9.0,
+                "end_hour": 10.0,
+            }
+        )
+        more_slots = self.env["event.slot"].create(
+            [
+                {
+                    "event_id": event.id,
+                    "date": datetime.today() + timedelta(days=hour),
+                    "start_hour": 9.0,
+                    "end_hour": 10.0,
+                }
+                for hour in range(3, 7)
+            ]
+        )
+
+        self.env.invalidate_all()
+        self.env.flush_all()
+        count0 = self.env.cr.sql_statement_count
+        one_slot._filter_open_slots()
+        queries_for_one = self.env.cr.sql_statement_count - count0
+
+        self.env.invalidate_all()
+        self.env.flush_all()
+        count0 = self.env.cr.sql_statement_count
+        (one_slot | more_slots)._filter_open_slots()
+        queries_for_five = self.env.cr.sql_statement_count - count0
+
+        self.assertEqual(
+            queries_for_one,
+            queries_for_five,
+            "Filtering 5 slots on the same event must cost the same "
+            "number of queries as filtering 1 - one availability lookup "
+            "per event, not per slot.",
+        )
+
     def test_registration_answer_search(self):
 
         event = self.env["event.event"].create(
