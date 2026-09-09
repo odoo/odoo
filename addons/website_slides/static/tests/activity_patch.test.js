@@ -25,6 +25,7 @@ test("grant course access", async () => {
     await openFormView("slide.channel", channelId);
     await contains(".o-mail-Activity");
     await click("button", { text: "Grant Access" });
+    await contains(".o-mail-Activity", { count: 0 });
 });
 
 test("refuse course access", async () => {
@@ -41,4 +42,5 @@ test("refuse course access", async () => {
     await openFormView("slide.channel", channelId);
     await contains(".o-mail-Activity");
     await click("button", { text: "Refuse Access" });
+    await contains(".o-mail-Activity", { count: 0 });
 });
