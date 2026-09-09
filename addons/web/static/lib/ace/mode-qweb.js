@@ -164,7 +164,7 @@ define("ace/mode/qweb",["require","exports","module","ace/lib/oop","ace/lib/lang
                 }
                 currentTagRo = [];
             }
-            if (token.type === "meta.tag.punctuation.tag-close.xml") {
+            if (token.type === "meta.tag.punctuation.tag-close.xml" || token.type === "meta.tag.punctuation.end-tag-close.xml") {
                 currentTagRo = null;
             }
             if (token.type?.includes(".odoo_attr_readonly")) {
