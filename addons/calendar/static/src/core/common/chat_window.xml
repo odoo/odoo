@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.ChatWindow.headerContent" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o-mail-ChatWindow-displayName')]" position="replace">
+            <div t-if="!this.editingName()" class="d-flex flex-column min-w-0 text-start o-mx-0_5" t-att-class="{ 'lh-sm': this.channel.correspondentPartner?.meetingStatus }">
+                <div class="o-mail-ChatWindow-displayName text-truncate fw-bold border border-transparent my-0" t-att-title="this.props.chatWindow.channel.displayName" t-out="this.props.chatWindow.channel.displayName" t-att-class="{ 'fs-4': this.ui.isSmall, 'fs-5': !this.ui.isSmall, 'py-1': !this.channel.correspondentPartner?.meetingStatus }"/>
+                <span t-if="this.channel.correspondentPartner?.meetingStatus" class="text-warning smaller fw-bold" t-out="this.channel.correspondentPartner.meetingStatus"/>
+            </div>
+        </xpath>
+    </t>
+</templates>
