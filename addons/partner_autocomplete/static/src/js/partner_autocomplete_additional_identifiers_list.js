@@ -69,7 +69,7 @@ export class PartnerAutoCompleteAdditionalIdentifiersList extends AdditionalIden
                     if (!config.isValid) {
                         return [];
                     }
-                    const suggestions = await this.partnerAutocomplete.autocomplete(fieldName, request, config.country_id);
+                    const suggestions = await this.partnerAutocomplete.autocomplete(fieldName, request, config.countryId);
                     return suggestions.map((suggestion) => ({
                         cssClass: "partner_autocomplete_dropdown_char",
                         data: suggestion,
