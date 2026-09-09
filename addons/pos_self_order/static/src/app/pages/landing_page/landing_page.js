@@ -107,6 +107,11 @@ export class LandingPage extends Component {
     }
 
     showMyOrderBtn() {
+        if (this.selfOrder.config.self_ordering_mode === "kiosk") {
+            // A kiosk order belongs to the customer who just left, never to the next one
+            return false;
+        }
+
         const ordersNotDraft = this.selfOrder.models["pos.order"].find((o) => o.access_token);
         return this.selfOrder.ordering && ordersNotDraft;
     }

@@ -168,6 +168,9 @@ export const mockRouterNavigate = () => {
             this.historyPage = pathName;
             window.history.replaceState(historyState, "");
         },
+        load(routeName, routeParams = {}) {
+            this.navigate(routeName, routeParams);
+        },
     });
 };
 
