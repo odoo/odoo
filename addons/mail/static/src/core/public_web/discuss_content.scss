@@ -48,6 +48,12 @@
     color: $text-muted;
 }
 
-.o-mail-DiscussContent-threadName {
-    max-width: 75%;
+.o-mail-DiscussContent-headerInfo {
+    // headerBox can't be the reference for the width below. Its own width depends on the
+    // name's size, which would be circular.
+    container-type: inline-size;
+}
+
+.o-mail-DiscussContent-threadNameBox {
+    max-width: 75cqi;
 }

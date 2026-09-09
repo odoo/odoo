@@ -33,13 +33,11 @@ import { describe, expect, test } from "@odoo/hoot";
 import {
     animationFrame,
     press,
-    queryFirst,
     queryRect,
     rightClick,
     tick,
     waitFor,
     waitForNone,
-    waitUntil,
 } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
 
@@ -201,12 +199,7 @@ test("can change the thread description of #general", async () => {
     await contains("input.o-mail-DiscussContent-threadDescription:value(I want a burger today!)");
 });
 
-/** @typedef {void} NudgeRegressionTest */
 test("header card resizes to fit the thread description after switching channels", async () => {
-    // NOTE: this test still passes even with header box's nudge removed.
-    // The race it guards against only shows up under real browser timing
-    // (hard reload, rapid switches), not this suite's.
-    // Don't take a green run here as license to remove the nudge.
     const pyEnv = await startServer();
     const longDescription =
         "A place to connect and exchange news with colleagues across the company. ".repeat(5);
@@ -217,19 +210,12 @@ test("header card resizes to fit the thread description after switching channels
     await start();
     await openDiscuss(shortChannelId);
     await contains("input.o-mail-DiscussContent-threadDescription:value(Hi)");
-    // Width adjustment is asynchronous. Wait for computed inline width to be set.
-    await waitUntil(() => queryFirst(".o-mail-DiscussContent-headerBox[style*=width]"));
     const shortCardWidth = queryRect(".o-mail-DiscussContent-headerBox").width;
+    // The box hugs the short description instead of spanning the whole header.
+    expect(shortCardWidth).toBeLessThan(queryRect(".o-mail-DiscussContent-headerInfo").width);
 
     await click(".o-mail-NotificationItem:has(:text('Long'))");
     await contains(`input.o-mail-DiscussContent-threadDescription:value(${longDescription})`);
-    await waitUntil(() => {
-        // Width recomputation is asynchronous still. Waits for header that should nudge ActionList.
-        const headerBoxRect = queryRect(".o-mail-DiscussContent-headerBox");
-        const actionsRect = queryRect(".o-mail-DiscussContent-header .o-mail-ActionList");
-        // This assumes up to 10px spacing. As of writing comment, they are separated by gap-1 so 4px.
-        return actionsRect.x - headerBoxRect.right <= 10;
-    });
     const longCardWidth = queryRect(".o-mail-DiscussContent-headerBox").width;
     expect(longCardWidth).toBeGreaterThan(shortCardWidth);
 });

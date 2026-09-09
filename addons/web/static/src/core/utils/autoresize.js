@@ -103,13 +103,6 @@ function flushResizes() {
 // ── Public API ───────────────────────────────────────────────────────────────
 
 /**
- * Event type to force a re-measure from outside, without using a real
- * `"input"` event: `t-model` also listens to that one, so dispatching it
- * artificially can clobber an in-flight reactive value update.
- */
-export const AUTORESIZE_NUDGE_EVENT = "o-autoresize-nudge";
-
-/**
  * @param {Ref} ref
  */
 export function useAutoresize(ref, options = {}) {
@@ -131,7 +124,6 @@ export function useAutoresize(ref, options = {}) {
                 };
                 const onInput = () => resize(true);
                 el.addEventListener("input", onInput);
-                el.addEventListener(AUTORESIZE_NUDGE_EVENT, onInput);
                 const resizeObserver = new ResizeObserver(() => {
                     if (wasProgrammaticallyResized) {
                         wasProgrammaticallyResized = false;
@@ -142,7 +134,6 @@ export function useAutoresize(ref, options = {}) {
                 resizeObserver.observe(el);
                 return () => {
                     el.removeEventListener("input", onInput);
-                    el.removeEventListener(AUTORESIZE_NUDGE_EVENT, onInput);
                     resizeObserver.unobserve(el);
                     resizeObserver.disconnect();
                     resize = null;
