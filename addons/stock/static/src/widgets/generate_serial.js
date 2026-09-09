@@ -126,6 +126,10 @@ export class GenerateDialog extends Component {
             this.state.error = _t("Generate at least one serial number.");
             return null;
         }
+        if (this.isGenerating && this.isLot && !(count.value > 0)) {
+            this.state.error = _t("Quantity per lot must be greater than 0.");
+            return null;
+        }
 
         let qtyToProcess = move.product_uom_qty;
         if (this.isLot) {
