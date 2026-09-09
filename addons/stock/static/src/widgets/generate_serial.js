@@ -5,18 +5,18 @@ import { useService, useAutofocus } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { parseInteger } from "@web/views/fields/parsers";
 import { getId } from "@web/model/relational_model/utils";
-import { Component, onMounted, onWillStart, signal } from "@odoo/owl";
+import { Component, onMounted, onWillStart, signal, t, useProps } from "@odoo/owl";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 import { user } from "@web/core/user";
 
 export class GenerateDialog extends Component {
     static template = "stock.generate_serial_dialog";
     static components = { Dialog };
-    static props = {
-        mode: { type: String },
-        move: { type: Object },
-        close: { type: Function },
-    };
+    props = useProps({
+        mode: t.string(),
+        move: t.object(),
+        close: t.function(),
+    });
 
     nextSerial = signal.ref();
     nextSerialCount = signal.ref();
@@ -147,7 +147,7 @@ export class GenerateDialog extends Component {
 
 class GenerateSerials extends Component {
     static template = "stock.GenerateSerials";
-    static props = { ...standardWidgetProps };
+    props = useProps(standardWidgetProps);
 
     setup() {
         this.dialog = useService("dialog");
@@ -163,7 +163,7 @@ class GenerateSerials extends Component {
 
 class ImportLots extends Component {
     static template = "stock.ImportLots";
-    static props = { ...standardWidgetProps };
+    props = useProps(standardWidgetProps);
     setup() {
         this.dialog = useService("dialog");
     }

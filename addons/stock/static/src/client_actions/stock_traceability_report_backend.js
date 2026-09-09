@@ -1,4 +1,4 @@
-import { Component, onWillStart, proxy } from "@odoo/owl";
+import { Component, onWillStart, proxy, useProps } from "@odoo/owl";
 import { download } from "@web/core/network/download";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
@@ -42,7 +42,7 @@ function extractPrintData(lines) {
 export class TraceabilityReport extends Component {
     static template = "stock.TraceabilityReport";
     static components = { Layout };
-    static props = { ...standardActionServiceProps };
+    props = useProps(standardActionServiceProps);
 
     setup() {
         this.actionService = useService("action");

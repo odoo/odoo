@@ -1,11 +1,16 @@
 import { formatFloat } from "@web/views/fields/formatters";
 import { useService } from "@web/core/utils/hooks";
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 
 export class ForecastedDetails extends Component {
     static template = "stock.ForecastedDetails";
-    static props = { docs: Object, openView: Function, reloadReport: Function };
+
+    props = useProps({
+        docs: t.object(),
+        openView: t.function(),
+        reloadReport: t.function(),
+    });
 
     setup() {
         this.orm = useService("orm");

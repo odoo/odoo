@@ -39,7 +39,13 @@ test("forecast detail sameDocument receipt date", async () => {
     const line2 = { receipt_date: "2024-01-01", product: { id: 1 }, document_in };
     const doc1 = { lines: [line1, line2], product: [1] };
 
-    const forecast1 = await mountWithCleanup(ForecastedDetails, { props: { docs: doc1 }})
+    const forecast1 = await mountWithCleanup(ForecastedDetails, {
+        props: {
+            docs: doc1,
+            openView: () => {},
+            reloadReport: () => {},
+        },
+    });
     forecast1.OnHandLinesPerProduct = {};
     forecast1.NotAvailableLinesPerProduct = {};
     forecast1._mergeLines();
@@ -49,7 +55,13 @@ test("forecast detail sameDocument receipt date", async () => {
     const line4 = { receipt_date: "2024-01-03", product: { id: 1 }, document_in };
     const doc2 = { lines: [line3, line4], product: [1] };
 
-    const forecast2 = await mountWithCleanup(ForecastedDetails, { props: { docs: doc2 }})
+    const forecast2 = await mountWithCleanup(ForecastedDetails, {
+        props: {
+            docs: doc2,
+            openView: () => {},
+            reloadReport: () => {},
+        },
+    });
     forecast2.OnHandLinesPerProduct = {};
     forecast2.NotAvailableLinesPerProduct = {};
     forecast2._mergeLines();

@@ -5,7 +5,6 @@ import { formatDate } from "@web/core/l10n/dates";
 
 export class StockValuationReportFilters extends Component {
     static template = "account.StockValuationReport.Filters";
-    static props = {};
 
     dateFilterRef = signal.ref();
 
