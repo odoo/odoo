@@ -596,16 +596,8 @@ export class CollaborationOdooPlugin extends Plugin {
 
         const content =
             record[this.config.collaboration.collaborationChannel.collaborationFieldName];
-        const lastHistoryId = content && this.getLastHistoryCommitId(content);
-        // If a change was made in the document while retrieving it, the
-        // lastHistoryId will be different if the odoo bus did not have time to
-        // notify the user.
-        if (this.serverLastCommitId !== lastHistoryId) {
-            // todo: instrument it to ensure it never happens
-            throw new Error(
-                "Concurency detected while recovering from a stale document. The last history id of the server is different from the history id received by the html_field_write event."
-            );
-        }
+        // Reset the server id, as the html_field_write event can lag behind the record.
+        this.serverLastCommitId = content && this.getLastHistoryCommitId(content);
 
         this.isDocumentStale = false;
         if (content) {
