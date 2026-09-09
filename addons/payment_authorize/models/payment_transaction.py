@@ -2,6 +2,8 @@
 
 import pprint
 
+import requests
+
 from odoo import _, models
 
 from odoo.addons.payment import utils as payment_utils
@@ -157,9 +159,19 @@ class PaymentTransaction(models.Model):
         if self.provider_code != 'authorize':
             return super()._extract_amount_data(payment_data)
 
-        tx_details = AuthorizeAPI(self.provider_id).get_transaction_details(
-            payment_data.get('response', {}).get('x_trans_id')
-        )
+        try:
+            tx_details = AuthorizeAPI(self.provider_id).get_transaction_details(
+                payment_data.get('response', {}).get('x_trans_id')
+            )
+        except requests.exceptions.RequestException as error:
+            # Transport failures (timeout, DNS, connection reset) never become an `err_code` dict.
+            _logger.warning(
+                "Could not retrieve the transaction details to validate the amount of transaction"
+                " %s: %s. Skipping the amount validation.",
+                self.reference,
+                error,
+            )
+            return None  # Skip the validation
         if 'err_code' in tx_details:  # Transaction details are missing when an API error occurs.
             return None  # Skip the validation
 
