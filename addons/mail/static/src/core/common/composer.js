@@ -545,6 +545,10 @@ export class Composer extends Component {
         return !this.compact && this.props.sidebar;
     }
 
+    get showComposerAvatarImage() {
+        return true;
+    }
+
     get thread() {
         return this.props.composer.targetThread;
     }

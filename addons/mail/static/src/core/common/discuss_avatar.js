@@ -102,6 +102,10 @@ export class DiscussAvatar extends Component {
         return this.channelMember?.imStatusUI || this.persona?.imStatusUI;
     }
 
+    get showIconMask() {
+        return this.showIcon;
+    }
+
     /** @returns {ResUsers|undefined} */
     get user() {
         const record = this.props.record;
