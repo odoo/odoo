@@ -1,5 +1,6 @@
 // This file is compiled separately (not as part of the main bundle) to extract
-// the Google/local font URLs that should be loaded via <link> tags.
+// the values the server needs to know to build the <head>: the Google/local
+// font URLs to load and the icon font the page renders with.
 
 .o-website-font-urls {
     $-i: 1;
@@ -19,4 +20,8 @@
             }
         }
     }
+}
+
+.o-website-icon-font {
+    --o-icon-font-family: "#{o-website-value('icon-font-family')}";
 }

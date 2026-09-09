@@ -1337,10 +1337,9 @@ class Website(models.CachedModel):
             cache='assets',
         ),
     )
-    def _get_font_urls(self):
-        """Return the list of font URLs to emit as <link> tags in <head>."""
-
-        # 1. Compile the font_urls_export bundle using Odoo's asset system.
+    def _get_scss_exports(self):
+        """Return the CSS of the export bundle, which prints the scss values the
+        server needs to build the <head> as custom properties."""
         try:
             bundle = self.env['ir.qweb']._get_asset_bundle(
                 'website.font_urls_export',
@@ -1348,13 +1347,20 @@ class Website(models.CachedModel):
                 css=True,
                 assets_params=self.env['ir.asset']._get_asset_params(),
             )
-            compiled = bundle.preprocess_css()
+            return bundle.preprocess_css()
         except Exception as e:
-            logger.warning("Font URL bundle compilation failed: %s", e)
+            logger.warning("Scss export bundle compilation failed: %s", e)
             raise
 
-        # 2. Parse --o-font-url-N: "..." custom properties
-        return re.findall(r'--o-font-url-\d+:\s*"([^"]*)"', compiled)
+    def _get_font_urls(self):
+        """Return the list of font URLs to emit as <link> tags in <head>."""
+        return re.findall(r'--o-font-url-\d+:\s*"([^"]*)"', self._get_scss_exports())
+
+    def _get_icon_font_family(self):
+        """Return the icon font the website renders with, empty if the default
+        one is used."""
+        match = re.search(r'--o-icon-font-family:\s*"([^"]*)"', self._get_scss_exports())
+        return match[1] if match else ''
 
     def copy_menu_hierarchy(self, top_menu):
         def copy_menu(menu, t_menu):

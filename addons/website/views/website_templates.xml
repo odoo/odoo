@@ -438,6 +438,15 @@
     </t>
 </template>
 
+<template id="icons_fonts_preload" name="Icons fonts preload" inherit_id="web.frontend_layout">
+    <xpath expr="//t[@t-call-assets='web.material_symbols_outlined']" position="replace">
+        <t t-set="icon_font_family" t-value="website and website._get_icon_font_family()"/>
+        <t t-if="icon_font_family == 'Material Symbols Rounded'" t-call-assets="web.material_symbols_rounded" t-binary="True"/>
+        <t t-elif="icon_font_family == 'Material Symbols Sharp'" t-call-assets="web.material_symbols_sharp" t-binary="True"/>
+        <t t-else="" t-call-assets="web.material_symbols_outlined" t-binary="True"/>
+    </xpath>
+</template>
+
 <template id="custom_code_layout" name="Custom Code Layout" inherit_id="website.layout" priority="55">
     <xpath expr="//head" position="inside">
         <t t-out="website._control_third_party_trackers_in_html(website.custom_code_head)"/>

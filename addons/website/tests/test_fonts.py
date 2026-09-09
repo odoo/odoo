@@ -178,3 +178,43 @@ class TestWebsiteFontUrls(odoo.tests.HttpCase):
         page = self.url_open('/').text
         self.assertNotIn('<link rel="preconnect" href="https://fonts.googleapis.com"/>', page)
         self.assertNotIn('<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>', page)
+
+
+@odoo.tests.common.tagged('post_install', '-at_install')
+class TestWebsiteIconFont(odoo.tests.HttpCase):
+    """
+    Tests for `website._get_icon_font_family` and the
+    `website.icons_fonts_preload` template.
+
+    Only the icon font the website renders with is preloaded, the other Material
+    Symbols variants are never fetched by the visitor's browser.
+    """
+
+    def setUp(self):
+        super().setUp()
+        self.website = self.env['website'].browse(self.ref('base.default_website'))
+
+    def _set_icon_font(self, value):
+        self.env['website.assets'].with_context(website_id=self.website.id).make_scss_customization(
+            '/website/static/src/scss/options/user_values.scss', {'icon-font-family': value})
+
+    def _preloaded_icon_fonts(self):
+        head = self.url_open('/').text.partition('</head>')[0]
+        return re.findall(r'web\.(material_symbols_\w+)\.min\.woff2', head)
+
+    def _get_icon_font_family(self):
+        return self.website.with_context(website_id=self.website.id)._get_icon_font_family()
+
+    def test_default_website_preloads_the_outlined_font(self):
+        self.assertFalse(self._get_icon_font_family())
+        self.assertEqual(self._preloaded_icon_fonts(), ['material_symbols_outlined'])
+
+    def test_website_preloads_the_selected_font_only(self):
+        for variant in ('Rounded', 'Sharp'):
+            with self.subTest(variant=variant):
+                self._set_icon_font(f"'Material Symbols {variant}'")
+                self.assertEqual(self._get_icon_font_family(), f'Material Symbols {variant}')
+                self.assertEqual(
+                    self._preloaded_icon_fonts(),
+                    [f'material_symbols_{variant.lower()}'],
+                )
