@@ -1051,6 +1051,7 @@ export class OptimizeSEODialog extends Component {
         this.website = useService("website");
         this.dialogs = useService("dialog");
         this.orm = useService("orm");
+        this.notification = useService("notification");
 
         this.title = _t("Search Engine Optimization");
         this.saveButton = _t("Save");
@@ -1072,10 +1073,20 @@ export class OptimizeSEODialog extends Component {
                 id: this.object.id,
                 seoObject: Boolean(seoObject),
             }));
-            this.data = await rpc("/website/get_seo_data", {
-                res_id: this.object.id,
-                res_model: this.object.model,
-            });
+            try {
+                this.data = await rpc("/website/get_seo_data", {
+                    res_id: this.object.id,
+                    res_model: this.object.model,
+                });
+            } catch {
+                endData();
+                this.notification.add(
+                    _t("Could not load the SEO data for this page."),
+                    { type: "danger" },
+                );
+                this.props.close();
+                return;
+            }
             endData();
 
             this.canEditSeo = this.data.can_edit_seo;
