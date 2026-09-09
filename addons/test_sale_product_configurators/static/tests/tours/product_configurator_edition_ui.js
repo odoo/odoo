@@ -69,6 +69,27 @@ registry.category("web_tour.tours").add('sale_product_configurator_edition_tour'
         },
         // make sure the custom value was removed on product change
         tourUtils.checkSOLDescriptionContains("Customizable Desk (TEST) (Steel, Black)", ""),
+        // make sure the line's UoM is kept on product change
+        tourUtils.editLineMatching("Customizable Desk (TEST) (Steel, Black)", ""),
+        {
+            trigger: '.o_selected_row div[name="product_uom"] input',
+            run: "edit Dozens",
+        },
+        {
+            trigger: 'ul.ui-autocomplete a:contains("Dozens")',
+            run: "click",
+        },
+        tourUtils.editConfiguration(),
+        {
+            trigger:
+                'tr:has(div[name="o_sale_product_configurator_name"]:contains("Customizable Desk")) label[style="background-color:#FFFFFF"] input:not(:visible)',
+            run: "click",
+        },
+        configuratorTourUtils.assertProductNameContains("Customizable Desk (TEST) (Steel, White)"),
+        ...configuratorTourUtils.saveConfigurator(),
+        {
+            trigger: '.o_data_row:has(span:contains("Customizable Desk (TEST) (Steel, White)")) td[name="product_uom"]:contains("Dozens")',
+        },
         ...stepUtils.saveForm(),
     ],
 });

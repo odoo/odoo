@@ -274,6 +274,8 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
             soDate: serializeDateTime(saleOrderRecord.data.date_order),
             edit: edit,
             save: async (mainProduct, optionalProducts) => {
+                // Keep the line's UoM when editing, as the configurator works in that UoM.
+                const productUom = edit && saleOrderLine.product_uom;
                 await Promise.all([
                     applyProduct(this.props.record, mainProduct),
                     ...optionalProducts.map(async product => {
@@ -283,6 +285,9 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
                         await applyProduct(line, product);
                     }),
                 ]);
+                if (productUom && productUom[0] !== this.props.record.data.product_uom[0]) {
+                    await this.props.record.update({ product_uom: productUom });
+                }
                 this._onProductUpdate();
                 saleOrderRecord.data.order_line.leaveEditMode();
             },
