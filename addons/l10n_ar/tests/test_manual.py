@@ -498,6 +498,28 @@ class TestArManual(common.TestArCommon):
         debit_note_wizard.create_debit()
         self.assertTrue(invoice.reversal_move_ids.debit_note_ids)
 
+    def test_l10n_ar_get_invoice_totals_for_report_refund_with_same_code_vat_included(self):
+        """Same as above but with document type 188 (letter B): VAT is not detailed on the report and is folded
+        into the base amount. The sign must be applied only once so the totals stay negative on this path too."""
+        doc_188_lp_b = self.env.ref('l10n_ar.dc_liq_cd_sp_b')
+
+        credit_note = self._create_invoice_ar(
+            ref='test_credit_note_refund: Credit note with document type 188 for refund test',
+            move_type='out_refund',
+            partner_id=self.res_partner_adhoc,
+            company_id=self.company_ri,
+            invoice_date="2021-03-20",
+            l10n_latam_document_type_id=doc_188_lp_b,
+        )
+
+        self.assertTrue(credit_note._l10n_ar_is_refund_invoice())
+        self.assertTrue(credit_note._l10n_ar_include_vat())
+
+        tax_totals = credit_note._l10n_ar_get_invoice_totals_for_report()
+        self.assertEqual(tax_totals['base_amount_currency'], -121.0)
+        self.assertEqual(tax_totals['tax_amount_currency'], 0.0)
+        self.assertEqual(tax_totals['total_amount_currency'], -121.0)
+
     def test_pre_printed_invoice_warning(self):
         """Test that a warning is included when at an Invoice using a 'Pre-printed Invoice' Journal."""
         invoice = self._create_invoice_ar()  # Created with 'Pre-printed Invoice' Journal
