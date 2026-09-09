@@ -153,6 +153,37 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         self.assertEqual(specific_view.website_meta_title, "Hello, world!")
         self.assertEqual(event.website_meta_title, False)
 
+    def test_s_events_snippet_real_render(self):
+        """The s_events dynamic snippet must render real event data through
+        the actual /website/snippet/filters controller - not just wire up
+        correctly against a hand-written mock, as the hoot unit test for
+        this snippet does."""
+        event = self.env["event.event"].create(
+            {
+                "name": "Snippet Test Event",
+                "date_begin": fields.Datetime.now() + relativedelta(days=10),
+                "date_end": fields.Datetime.now() + relativedelta(days=13),
+                "website_published": True,
+            }
+        )
+        result = self.call_jsonrpc(
+            "/website/snippet/filters",
+            params={
+                "filter_id": self.env.ref(
+                    "website_event.website_snippet_filter_event_list"
+                ).id,
+                "template_key": (
+                    "website_event.dynamic_filter_template_event_event_picture"
+                ),
+                "limit": 4,
+            },
+        )
+        self.assertTrue(
+            any(event.name in card_html for card_html in result),
+            "The real controller must render the actual event name, not a "
+            "mocked/sample placeholder.",
+        )
+
     def test_website_event_questions(self):
 
         self.design_fair_event = self.env["event.event"].create(
