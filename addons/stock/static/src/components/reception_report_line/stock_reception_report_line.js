@@ -15,6 +15,7 @@ export class ReceptionReportLine extends Component {
         showUom: Boolean,
         precision: Number,
         busyState: { type: Object, optional: true },
+        hasMovesIn: Boolean,
     };
 
     setup() {

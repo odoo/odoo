@@ -9,21 +9,23 @@
                 title="Forecast Report" aria-label="Forecast Report"
                 t-on-click="onClickForecast" name="forecasted_report_link"/>
         </td>
-        <td t-if="data.is_qty_assignable">
-            <button t-if="!data.is_assigned"
-                t-on-click="onClickAssign"
-                t-att-disabled="opGuard.busy"
-                class="btn btn-sm btn-primary"
-                name="assign_link">
-                Assign
-            </button>
-            <button t-else=""
-                t-on-click="onClickUnassign"
-                t-att-disabled="opGuard.busy"
-                class="btn btn-sm btn-primary"
-                name="unassign_link">
-                Unassign
-            </button>
+        <td t-if="props.hasMovesIn">
+            <t t-if="data.is_qty_assignable">
+                <button t-if="!data.is_assigned"
+                    t-on-click="onClickAssign"
+                    t-att-disabled="opGuard.busy"
+                    class="btn btn-sm btn-primary"
+                    name="assign_link">
+                    Assign
+                </button>
+                <button t-else=""
+                    t-on-click="onClickUnassign"
+                    t-att-disabled="opGuard.busy"
+                    class="btn btn-sm btn-primary"
+                    name="unassign_link">
+                    Unassign
+                </button>
+            </t>
         </td>
         <td>
             <button t-if="data.is_qty_assignable &amp;&amp; data.source"
