@@ -625,7 +625,7 @@ class EventEvent(models.Model):
         domain = [website.website_domain()]
         domain.append([("is_visible_on_website", "=", True)])
 
-        if event_type != "all":
+        if event_type != "all" and str(event_type).isdigit():
             domain.append([("event_type_id", "=", int(event_type))])
         search_tags = self.env["event.tag"]
         if tags:
@@ -655,7 +655,7 @@ class EventEvent(models.Model):
         if country:
             if country == "online":
                 domain.append([("country_id", "=", False)])
-            elif country != "all":
+            elif country != "all" and str(country).isdigit():
                 domain.append([("country_id", "=", int(country))])
 
         no_date_domain = domain.copy()
