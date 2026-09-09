@@ -700,20 +700,25 @@ export function makeActionManager(env, router = _router) {
      */
     function _getViewInfo(view, action, views, props = {}) {
         const target = action.target;
-        const viewSwitcherEntries = views
-            .filter((v) => v.multiRecord === view.multiRecord)
-            .map((v) => {
-                const viewSwitcherEntry = {
-                    icon: v.icon,
-                    name: v.display_name,
-                    type: v.type,
-                    multiRecord: v.multiRecord,
-                };
-                if (view.type === v.type) {
-                    viewSwitcherEntry.active = true;
-                }
-                return viewSwitcherEntry;
-            });
+        // switching view isn't supported in a dialog (see switchView), so we
+        // don't display the view switcher in that case
+        const viewSwitcherEntries =
+            target === "new"
+                ? []
+                : views
+                      .filter((v) => v.multiRecord === view.multiRecord)
+                      .map((v) => {
+                          const viewSwitcherEntry = {
+                              icon: v.icon,
+                              name: v.display_name,
+                              type: v.type,
+                              multiRecord: v.multiRecord,
+                          };
+                          if (view.type === v.type) {
+                              viewSwitcherEntry.active = true;
+                          }
+                          return viewSwitcherEntry;
+                      });
         const context = action.context || {};
         let groupBy = context.group_by || [];
         if (typeof groupBy === "string") {
@@ -800,8 +805,10 @@ export function makeActionManager(env, router = _router) {
         viewProps.noBreadcrumbs =
             "_noBreadcrumbs" in action ? action._noBreadcrumbs : target === "new";
 
+        // selecting an embedded action replaces the current action, which isn't
+        // the action of the dialog, so we don't display them in a dialog either
         const embeddedActions =
-            view.type === "form"
+            view.type === "form" || target === "new"
                 ? []
                 : context.parent_action_embedded_actions || action.embedded_action_ids;
         const parentActionId = (view.type !== "form" && context.parent_action_id) || false;
