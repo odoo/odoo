@@ -101,6 +101,12 @@ class SifnextPPL(models.Model):
     def _onchange_payment_method(self):
         self.payment_source_account_id = False
 
+    mass_coa_id = fields.Many2one(
+        "sif.coa",
+        string="COA Massal",
+        domain="[('active', '=', True), ('parent_id', '!=', False), ('account_type', '=', 'expense')]",
+    )
+
     @api.depends("line_ids.subtotal", "line_ids.tax_type", "line_ids.tax_amount")
     def _compute_total_amount(self):
         for record in self:
@@ -155,7 +161,7 @@ class SifnextPPL(models.Model):
             operation, line_id, values = command[0], command[1], command[2]
             if operation != Command.UPDATE or line_id not in line_ids:
                 return False
-            classification_fields = {"journal_account_id", "rka_id"}
+            classification_fields = {"journal_account_id", "rka_id", "is_selected"}
             if not isinstance(values, dict) or not values or set(values) - classification_fields:
                 return False
         return bool(commands)
@@ -522,11 +528,23 @@ class SifnextPPL(models.Model):
         self._workflow_write({"state": "draft", "return_reason": reason})
 
 
+    def action_apply_mass_coa(self):
+        for rec in self:
+            selected_lines = rec.line_ids.filtered(lambda l: l.is_selected)
+            if not selected_lines:
+                raise UserError(_("Centang minimal satu baris (kolom [x]) untuk menerapkan COA."))
+            if not rec.mass_coa_id:
+                raise UserError(_("Pilih COA pada kolom 'Set COA Massal' terlebih dahulu."))
+            selected_lines.write({'journal_account_id': rec.mass_coa_id.id, 'is_selected': False})
+            rec.mass_coa_id = False
+
+
 class SifnextPPLLine(models.Model):
     _name = "sifnext.ppl.line"
     _description = "Detail Permintaan Pembayaran Langsung"
     _order = "sequence, id"
 
+    is_selected = fields.Boolean(string="[x]", default=False)
     sequence = fields.Integer(default=10)
     ppl_id = fields.Many2one("sifnext.ppl", required=True, ondelete="cascade", index=True)
     description = fields.Char(required=True)
@@ -642,6 +660,10 @@ class SifnextPPLLine(models.Model):
         if any(line.ppl_id.state != "draft" for line in self):
             raise UserError(_("Detail hanya dapat dihapus pada status Draft."))
         return super().unlink()
+
+    def action_dummy(self):
+        # Dummy action untuk memancing Odoo memunculkan checkbox multi-edit
+        return True
 
 
 class IrAttachment(models.Model):
