@@ -14,7 +14,6 @@ export class LivechatRoot extends Component {
         <OverlayContainer/>
     `;
     static components = { ChatHub, LivechatButton, OverlayContainer };
-    static props = {};
 
     setup() {
         useSubEnv({ embedLivechat: true });

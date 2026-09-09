@@ -1,13 +1,13 @@
 import { registry } from "@web/core/registry";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 
 export class ColorsResetButton extends Component {
     static template = `im_livechat.ColorsResetButton`;
-    static props = {
+    props = useProps({
         ...standardWidgetProps,
-        default_colors: { type: Object },
-    };
+        default_colors: t.object(),
+    });
 
     onColorsResetButtonClick() {
         this.props.record.update(this.props.default_colors);
