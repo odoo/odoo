@@ -227,14 +227,14 @@ according to the enabled options.
 <template id="blog_post_list_card" name="Blog Post List Card">
     <div class="col-12 pb-3">
         <article class="o_wblog_post position-relative d-flex flex-column h-100" name="blog_post">
-            <div t-attf-class="row #{opt_posts_loop_show_cover and opt_blog_large_list_view and 'flex-md-row-reverse'}">
+            <div t-attf-class="row">
                 <!-- Cover image -->
-                <div t-if="opt_posts_loop_show_cover" t-attf-class="#{opt_blog_list_view and 'col-4 pe-0 pe-lg-3' or 'col-4 col-md-6 col-lg-5 offset-lg-2'}">
+                <div t-if="opt_posts_loop_show_cover" t-attf-class="#{opt_blog_list_view and 'col-md-4 mb-3 mb-md-0' or 'col-md-6 col-lg-5 offset-lg-1 mt-3 mt-md-0 order-last'}">
                     <t t-call="website_blog.post_cover_image" _cover_classes.f="h-auto ratio ratio-16x9 rounded" _badge_classes.f="d-none d-md-inline"/>
                 </div>
                 <!-- Contents -->
-                <t t-if="opt_posts_loop_show_cover" t-set="contentClasses" t-valuef="#{opt_blog_sidebar_show and opt_blog_list_view and 'col-8 px-3' or 'col-8 col-md-6 col-lg-5 px-3'}"/>
-                <t t-else="" t-set="contentClasses" t-value="'col-md-6 px-3'"/>
+                <t t-if="opt_posts_loop_show_cover" t-set="contentClasses" t-valuef="#{opt_blog_list_view and 'col-md-8' or 'col-md-6'} #{opt_blog_list_view and not opt_blog_sidebar_show and 'col-lg-6'}"/>
+                <t t-else="" t-set="contentClasses" t-valuef="col-lg-8 #{not opt_blog_sidebar_show and 'offset-lg-2'}"/>
                 <div t-att-class="contentClasses">
                     <!-- 'Unpublished' badge -->
                     <t t-call="website_blog.post_unpublished_badge" _badge_classes.f="mb-2 #{opt_posts_loop_show_cover and 'd-md-none'}"/>
@@ -242,13 +242,11 @@ according to the enabled options.
                     <t t-if="posts_list_show_parent_blog">
                         <a t-attf-href="/blog/#{slug(blog_post.blog_id)}" t-field="blog_post.blog_id" class="d-block small fw-bold"/>
                     </t>
-                    <div class="d-flex flex-grow-1 justify-content-between flex-wrap gap-1">   
-                        <t t-call="website_blog.post_heading"
-                            _link_classes.f="flex-grow-1"
-                            _heading_classes.f="#{not opt_posts_loop_show_cover and 'o_wblog_heading_list_no_cover'}"/>
-                    </div>
+                    <t t-call="website_blog.post_heading"
+                        _link_classes.f="flex-grow-1"
+                        _heading_classes.f="#{not opt_posts_loop_show_cover and 'o_wblog_list_no_cover'}"/>
                     <!-- Teaser, tags, stats, author, date -->
-                    <t t-if="opt_posts_loop_show_teaser" t-call="website_blog.post_teaser" _teaser_classes.f="o_wblog_teaser_list #{not opt_posts_loop_show_cover and 'o_wblog_teaser_list_no_cover'}"/>
+                    <t t-if="opt_posts_loop_show_teaser" t-call="website_blog.post_teaser"/>
                     <t t-if="opt_posts_loop_show_tags" t-call="website_blog.post_tags" _tags_classes.f="#{not opt_posts_loop_show_stats and 'mb-3'}"/>
                     <t t-if="opt_posts_loop_show_stats" t-call="website_blog.post_info" _info_classes.f="#{opt_blog_list_view and 'flex-grow-0 w-auto mw-100 mb-2 mt-md-2'}"/>
                     <t t-if="show_author_or_date" t-call="website_blog.post_published_info"
@@ -260,7 +258,7 @@ according to the enabled options.
         </article>
     </div>
     <!-- Separator after each blog post except the last one -->
-    <div t-if="not blog_post_last" class="o_not_editable mt-0">
+    <div t-if="not blog_post_last" t-attf-class="o_not_editable mt-0 #{not opt_blog_sidebar_show and not opt_posts_loop_show_cover and 'col-lg-8 offset-lg-2'}">
         <hr/>
     </div>
 </template>
