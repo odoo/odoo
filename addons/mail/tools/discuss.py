@@ -6,6 +6,7 @@ from collections import UserList, defaultdict
 from contextlib import suppress
 from datetime import date, datetime
 from functools import partial, wraps
+from hmac import digest as hmac_digest
 from itertools import product
 from typing import Generic, TypeVar
 
@@ -19,6 +20,7 @@ from odoo.tools import OrderedSet
 from odoo.tools.misc import hmac
 
 from odoo.addons.bus.websocket import wsrequest
+from odoo.addons.mail.tools.jwt import base64_decode_with_padding
 
 T = TypeVar("T")
 
@@ -153,6 +155,7 @@ def get_sfu_url(env) -> str | None:
 
 
 def get_sfu_key(env) -> str | None:
+    """Return the shared SFU key for provisioning and channel-key derivation."""
     sfu_key = env['ir.config_parameter'].sudo().get_str('mail.sfu_server_key')
     if not sfu_key:
         return os.getenv("ODOO_SFU_KEY")
@@ -160,8 +163,40 @@ def get_sfu_key(env) -> str | None:
 
 
 def get_derived_sfu_key(env, channel_id) -> str:
+    """Return a channel key derived from the database secret and channel ID.
+
+    Base64-encode the hexadecimal HMAC text for the SFU's direct ``key``
+    contract. With ``keySeed``, this value is the seed for a second derivation
+    using the shared SFU key.
+    """
     digest = hmac(env(su=True), "discuss-sfu-channel-key", channel_id).encode()
     return base64.b64encode(digest).decode()
+
+
+def derive_sfu_channel_key(sfu_key: str, channel_seed: str) -> str:
+    """Return the SFU's Base64-encoded HMAC-SHA256 of the decoded channel seed.
+
+    Decode both inputs as Base64 and use the shared SFU key as the HMAC key.
+    Accept standard or URL-safe input with optional padding and return standard
+    padded Base64. Invalid Base64 can raise ``binascii.Error`` or ``ValueError``.
+    """
+    key = hmac_digest(
+        base64_decode_with_padding(sfu_key),
+        base64_decode_with_padding(channel_seed),
+        "sha256",
+    )
+    return base64.b64encode(key).decode()
+
+
+def get_sfu_channel_key(env, channel_id) -> str | None:
+    """Return the channel's signing key derived from its seed and the SFU key.
+
+    Return ``None`` without an SFU key. Malformed configured keys can raise
+    ``binascii.Error`` or ``ValueError`` during Base64 decoding.
+    """
+    if not (sfu_key := get_sfu_key(env)):
+        return None
+    return derive_sfu_channel_key(sfu_key, get_derived_sfu_key(env, channel_id))
 
 
 ids_by_model = defaultdict(lambda: ("id",))

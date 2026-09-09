@@ -23,6 +23,7 @@ class TestChannelRTC(MailCommon, HttpCase):
         super().setUpClass()
         # clean up before test to avoid unexpected side effects
         cls.env["discuss.channel.rtc.session"].sudo().search([]).unlink()
+        cls.env["ir.config_parameter"].set_str("mail.sfu_server_key", "u6bsUQEWrHdKIuYplirRnbBmLbrKV5PxKG7DtA71mng=")
         cls.env["mail.presence"]._update_presence(cls.guest)
         # ensure the pre-created records have the right env because all tests
         # are executed as employee and setUpClass as admin
@@ -82,6 +83,12 @@ class TestChannelRTC(MailCommon, HttpCase):
         channel_key = discuss.get_derived_sfu_key(self.env, 42)
         self.assertEqual(channel_key, discuss.get_derived_sfu_key(self.env, 42))
         self.assertNotEqual(channel_key, discuss.get_derived_sfu_key(self.env, 43))
+
+    @users("employee")
+    def test_00_get_sfu_channel_key(self):
+        channel_key = discuss.get_sfu_channel_key(self.env, 42)
+        self.assertEqual(channel_key, discuss.get_sfu_channel_key(self.env, 42))
+        self.assertNotEqual(channel_key, discuss.get_sfu_channel_key(self.env, 43))
 
     @users("employee")
     @mute_logger("odoo.models.unlink")
