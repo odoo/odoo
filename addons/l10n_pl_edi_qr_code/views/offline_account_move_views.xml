@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_move_form_l10n_pl_offline_mode" model="ir.ui.view">
+        <field name="name">account.move.form.l10n.pl.offline.mode</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="l10n_pl_edi.view_move_form_l10n_pl_edi"/>
+        <field name="arch" type="xml">
+            <field name="l10n_pl_edi_number" position="after">
+                <field name="l10n_pl_edi_offline_deadline"/>
+                <field name="l10n_pl_edi_offline_prepared_at"/>
+                <field name="l10n_pl_edi_offline_error" invisible="not l10n_pl_edi_offline_error"/>
+            </field>
+        </field>
+    </record>
+</odoo>

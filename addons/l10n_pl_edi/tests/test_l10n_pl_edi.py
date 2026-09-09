@@ -712,11 +712,9 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
             ).ids,
         )
 
-        created_move_attachment = self.env['ir.attachment'].search([
-            ('res_model', '=', 'account.move'),
-            ('res_id', '=', created_move.id),
-        ], limit=1)
+        created_move_attachment = created_move.l10n_pl_edi_attachment_id
         self.assertTrue(created_move_attachment)
+        self.assertIn(created_move_attachment, created_move.message_ids.attachment_ids)
         with tools.file_open('l10n_pl_edi/tests/export_xmls/fa3_bill.xml', mode='rb') as file:
             self.assertEqual(created_move_attachment.raw, file.read())
 
@@ -758,10 +756,7 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
 
         bill_1 = self.env['account.move'].search([('l10n_pl_edi_status', '=', 'fetched')])
         self.assertTrue(bill_1)
-        bill_1_attachment = self.env['ir.attachment'].search([
-            ('res_model', '=', 'account.move'),
-            ('res_id', '=', bill_1.id),
-        ], limit=1)
+        bill_1_attachment = bill_1.l10n_pl_edi_attachment_id
         self.assertTrue(bill_1_attachment)
         with tools.file_open('l10n_pl_edi/tests/export_xmls/fa3_bill.xml', mode='rb') as file:
             self.assertEqual(bill_1_attachment.raw, file.read())
@@ -802,10 +797,7 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
             self.env['account.move'].with_company(self.company)._l10n_pl_edi_download_bills_from_ksef()
 
         bills = self.env['account.move'].search([('l10n_pl_edi_number', 'in', ('KSEF-BILL-001', 'KSEF-BILL-002'))])
-        bills_attachments = self.env['ir.attachment'].search([
-            ('res_model', '=', 'account.move'),
-            ('res_id', 'in', bills.ids),
-        ])
+        bills_attachments = bills.l10n_pl_edi_attachment_id
         self.assertEqual(len(bills), 2)
         self.assertEqual(len(bills_attachments), 2)
         self.assertTrue(bills.filtered(lambda b: b.l10n_pl_edi_status == 'fetch_failed'))

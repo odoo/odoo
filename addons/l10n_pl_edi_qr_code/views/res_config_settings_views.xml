@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_l10n_pl_offline_mode" model="ir.ui.view">
+        <field name="name">res.config.settings.form.l10n.pl.offline.mode</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="l10n_pl_edi.res_config_settings_view_form_l10n_pl_edi"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='l10n_pl_edi_certificate']/.." position="after">
+                <div class="row" invisible="not l10n_pl_edi_register">
+                    <label for="l10n_pl_edi_offline_certificate" class="col-lg-4 o_light_label"/>
+                    <field name="l10n_pl_edi_offline_certificate" placeholder="offline-certificate.pem"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -795,7 +795,7 @@ class AccountMove(models.Model):
                 bill.message_post(body=self.env._("KSeF XML failed. Something went wrong"))
             finally:
                 if response.get('xml_content'):
-                    self.env['ir.attachment'].sudo().create({
+                    attachment = self.env['ir.attachment'].sudo().create({
                         'description': self.env._('KSeF Fetched Invoice XML'),
                         'name': f"KSeF-{bill.l10n_pl_edi_number.replace('/', '_')}.xml",
                         'type': 'binary',
@@ -803,7 +803,16 @@ class AccountMove(models.Model):
                         'raw': response['xml_content'],
                         'res_id': bill.id,
                         'res_model': bill._name,
+                        'res_field': 'l10n_pl_edi_attachment_file',
                     })
+                    bill.invalidate_recordset(fnames=[
+                        'l10n_pl_edi_attachment_id',
+                        'l10n_pl_edi_attachment_file',
+                    ])
+                    bill.sudo().with_context(no_new_invoice=True).message_post(
+                        body=self.env._("The fetched KSeF XML has been attached."),
+                        attachment_ids=attachment.ids,
+                    )
 
     def _decode_fa3_ksef(self, invoice, file_data, new):
         xml_content = file_data.get('content')
