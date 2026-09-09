@@ -17,7 +17,7 @@ class WebsiteEventSale(WebsiteSale):
             )
         )
         values["attendee_ids_per_event"] = {
-            event: regs.grouped("event_slot_id") if event.is_multi_slots else regs
+            event.id: regs.grouped("event_slot_id") if event.is_multi_slots else regs
             for event, regs in attendee_per_event_read_group
         }
         values["urls_per_event"] = {

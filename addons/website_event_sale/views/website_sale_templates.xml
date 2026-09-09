@@ -91,7 +91,7 @@
                         </t>
                         <t
                             t-set="event_attendees"
-                            t-value="attendee_ids_per_event.get(event, [])" />
+                            t-value="attendee_ids_per_event.get(event.id, [])" />
                         <div
                             t-if="event_attendees or not event.is_multi_slots"
                             class="m-3">
