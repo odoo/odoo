@@ -402,23 +402,29 @@
         </t>
     </template>
 
+    <template id="s_title_parallax_section">
+        <section
+            class="s_title parallax s_parallax_is_fixed bg-black-50 pt24 pb24"
+            data-vcss="001"
+            data-snippet="s_title"
+            data-scroll-background-ratio="1">
+            <span
+                class="s_parallax_bg oe_img_bg"
+                style="background-image: url('/web/image/website.s_parallax_default_image'); background-position: 50% 0;" />
+            <div class="o_we_bg_filter bg-black-50" />
+            <div class="container">
+                <h1><t t-out="title_parallax_heading" /></h1>
+            </div>
+        </section>
+    </template>
+
     <template id="website.aboutus" name="About Us">
         <t t-call="website.layout">
             <div id="wrap">
                 <div class="oe_structure">
-                    <section
-                        class="s_title parallax s_parallax_is_fixed bg-black-50 pt24 pb24"
-                        data-vcss="001"
-                        data-snippet="s_title"
-                        data-scroll-background-ratio="1">
-                        <span
-                            class="s_parallax_bg oe_img_bg"
-                            style="background-image: url('/web/image/website.s_parallax_default_image'); background-position: 50% 0;" />
-                        <div class="o_we_bg_filter bg-black-50" />
-                        <div class="container">
-                            <h1>About us</h1>
-                        </div>
-                    </section>
+                    <t t-call="website.s_title_parallax_section">
+                        <t t-set="title_parallax_heading">About us</t>
+                    </t>
                 </div>
                 <div class="oe_structure" />
             </div>
@@ -429,19 +435,9 @@
         <t t-call="website.layout">
             <div id="wrap">
                 <div class="oe_structure">
-                    <section
-                        class="s_title parallax s_parallax_is_fixed bg-black-50 pt24 pb24"
-                        data-vcss="001"
-                        data-snippet="s_title"
-                        data-scroll-background-ratio="1">
-                        <span
-                            class="s_parallax_bg oe_img_bg"
-                            style="background-image: url('/web/image/website.s_parallax_default_image'); background-position: 50% 0;" />
-                        <div class="o_we_bg_filter bg-black-50" />
-                        <div class="container">
-                            <h1>Services</h1>
-                        </div>
-                    </section>
+                    <t t-call="website.s_title_parallax_section">
+                        <t t-set="title_parallax_heading">Services</t>
+                    </t>
                 </div>
                 <div class="oe_structure" />
             </div>
@@ -452,19 +448,9 @@
         <t t-call="website.layout">
             <div id="wrap">
                 <div class="oe_structure">
-                    <section
-                        class="s_title parallax s_parallax_is_fixed bg-black-50 pt24 pb24"
-                        data-vcss="001"
-                        data-snippet="s_title"
-                        data-scroll-background-ratio="1">
-                        <span
-                            class="s_parallax_bg oe_img_bg"
-                            style="background-image: url('/web/image/website.s_parallax_default_image'); background-position: 50% 0;" />
-                        <div class="o_we_bg_filter bg-black-50" />
-                        <div class="container">
-                            <h1>Pricing</h1>
-                        </div>
-                    </section>
+                    <t t-call="website.s_title_parallax_section">
+                        <t t-set="title_parallax_heading">Pricing</t>
+                    </t>
                 </div>
                 <div class="oe_structure" />
             </div>
@@ -475,19 +461,9 @@
         <t t-call="website.layout">
             <div id="wrap">
                 <div class="oe_structure">
-                    <section
-                        class="s_title parallax s_parallax_is_fixed bg-black-50 pt24 pb24"
-                        data-vcss="001"
-                        data-snippet="s_title"
-                        data-scroll-background-ratio="1">
-                        <span
-                            class="s_parallax_bg oe_img_bg"
-                            style="background-image: url('/web/image/website.s_parallax_default_image'); background-position: 50% 0;" />
-                        <div class="o_we_bg_filter bg-black-50" />
-                        <div class="container">
-                            <h1>Privacy Policy</h1>
-                        </div>
-                    </section>
+                    <t t-call="website.s_title_parallax_section">
+                        <t t-set="title_parallax_heading">Privacy Policy</t>
+                    </t>
                 </div>
                 <div class="oe_structure" />
             </div>
