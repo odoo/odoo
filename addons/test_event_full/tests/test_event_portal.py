@@ -13,6 +13,7 @@ class TestEventPortal(TestEventFullCommon):
         """
         sale_order = self.env['sale.order'].with_user(self.user_sales_salesman).create({
             'partner_id': self.partner_portal.id,
+            'user_id': self.user_sales_salesman.id,
         })
         base_values = {
             'event_id': self.test_event.id,
