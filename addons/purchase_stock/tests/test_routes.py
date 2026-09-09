@@ -68,6 +68,24 @@ class TestRoutes(TransactionCase):
         wh.reception_steps = 'two_steps'
         self.assertEqual(wh.reception_steps, 'two_steps')
 
+    def test_toggling_warehouse_ids_syncs_global_route_rules(self):
+        """
+        Check that modifying the warehouses of a global route (Buy, Manufacture,...)
+        adapts the associated rules accordingly.
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        route = warehouse.buy_pull_id.route_id
+        self.assertTrue(warehouse.buy_pull_id.active)
+        self.assertIn(warehouse, route.warehouse_ids)
+
+        route.warehouse_ids = False
+        self.assertFalse(warehouse.buy_pull_id.active)
+
+        # clear cache to fetch updated values
+        warehouse.invalidate_recordset()
+        route.warehouse_ids = warehouse
+        self.assertTrue(warehouse.buy_pull_id.active)
+
     def test_buy_to_resupply_unchecks_and_unlinks_warehouse(self):
         """Unchecking Buy to Resupply should keep buy_to_resupply disabled."""
         wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
