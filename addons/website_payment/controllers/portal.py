@@ -68,7 +68,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
             )
         use_public_partner = request.env.user._is_public() or not partner_id
         if use_public_partner:
-            details = kwargs["partner_details"]
+            details = kwargs.get("partner_details") or {}
             if not details.get("name"):
                 _debug.logic("donation_refused", reason="no_name")
                 raise ValidationError(_("Name is required."))
