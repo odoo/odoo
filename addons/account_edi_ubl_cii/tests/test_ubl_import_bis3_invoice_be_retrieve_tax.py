@@ -72,6 +72,62 @@ class TestUblImportBis3InvoiceBERetrieveTax(TestUblImportBis3InvoiceBE):
             ],
         )
 
+    def test_partial_import_tax_reverse_charge(self):
+        # Fail to retrieve the tax: no reverse charge tax configured yet.
+        invoice = self._import_invoice_as_attachment_on(
+            test_name='test_partial_import_tax_reverse_charge',
+            journal=self.company_data['default_journal_sale'],
+        )
+        self.assertRecordValues(invoice.line_ids, [
+            {
+                'balance': -500.0,
+                'tax_ids': [],
+            },
+            {
+                'balance': 500.0,
+                'tax_ids': [],
+            },
+        ])
+
+        # The reverse charge tax is reported as 0% in the document, but the
+        # tax matching it (same category code) is not 0%.
+        tax_21_reverse_charge = self.percent_tax(
+            21.0,
+            ubl_cii_tax_category_code='AE',
+            invoice_repartition_line_ids=[
+                Command.create({'repartition_type': 'base', 'tag_ids': []}),
+                Command.create({'repartition_type': 'tax', 'tag_ids': [], 'factor_percent': 100}),
+                Command.create({'repartition_type': 'tax', 'tag_ids': [], 'factor_percent': -100}),
+            ],
+            refund_repartition_line_ids=[
+                Command.create({'repartition_type': 'base', 'tag_ids': []}),
+                Command.create({'repartition_type': 'tax', 'tag_ids': [], 'factor_percent': 100}),
+                Command.create({'repartition_type': 'tax', 'tag_ids': [], 'factor_percent': -100}),
+            ],
+        )
+        invoice = self._import_invoice_as_attachment_on(
+            test_name='test_partial_import_tax_reverse_charge',
+            journal=self.company_data['default_journal_sale'],
+        )
+        self.assertRecordValues(invoice.line_ids, [
+            {
+                'balance': -500.0,
+                'tax_ids': tax_21_reverse_charge.ids,
+            },
+            {
+                'balance': -105.0,
+                'tax_ids': [],
+            },
+            {
+                'balance': 105.0,
+                'tax_ids': [],
+            },
+            {
+                'balance': 500.0,
+                'tax_ids': [],
+            },
+        ])
+
     def test_partial_import_tax_charge_to_fixed_tax(self):
         tax_21 = self.percent_tax(21.0)
 
@@ -178,6 +234,74 @@ class TestUblImportBis3InvoiceBERetrieveTax(TestUblImportBis3InvoiceBE):
                 },
             ],
         )
+
+    @freeze_time('2020-01-01')
+    def test_partial_import_tax_reverse_charge_invoice_predictive(self):
+        self.ensure_installed('account_accountant')
+
+        reverse_charge_repartition = {
+            'invoice_repartition_line_ids': [
+                Command.create({'repartition_type': 'base', 'tag_ids': []}),
+                Command.create({'repartition_type': 'tax', 'tag_ids': [], 'factor_percent': 100}),
+                Command.create({'repartition_type': 'tax', 'tag_ids': [], 'factor_percent': -100}),
+            ],
+            'refund_repartition_line_ids': [
+                Command.create({'repartition_type': 'base', 'tag_ids': []}),
+                Command.create({'repartition_type': 'tax', 'tag_ids': [], 'factor_percent': 100}),
+                Command.create({'repartition_type': 'tax', 'tag_ids': [], 'factor_percent': -100}),
+            ],
+        }
+        self.percent_tax(0, ubl_cii_tax_category_code='E')  # See that we prefer the reverse charge over the exempt 0% because of the code set in the XML
+        tax_21_reverse_charge = self.percent_tax(21.0, ubl_cii_tax_category_code='AE', **reverse_charge_repartition)
+        tax_21_reverse_charge_other = self.percent_tax(21.0, ubl_cii_tax_category_code='AE', **reverse_charge_repartition)
+
+        invoice = self._import_invoice_as_attachment_on(
+            test_name='test_partial_import_tax_reverse_charge',
+            journal=self.company_data['default_journal_sale'],
+        )
+        self.assertRecordValues(invoice.line_ids, [
+            {
+                'balance': -500.0,
+                'tax_ids': tax_21_reverse_charge.ids,
+            },
+            {
+                'balance': -105.0,
+                'tax_ids': [],
+            },
+            {
+                'balance': 105.0,
+                'tax_ids': [],
+            },
+            {
+                'balance': 500.0,
+                'tax_ids': [],
+            },
+        ])
+        invoice.invoice_line_ids.tax_ids = tax_21_reverse_charge_other
+        invoice.action_post()
+
+        invoice = self._import_invoice_as_attachment_on(
+            test_name='test_partial_import_tax_reverse_charge',
+            journal=self.company_data['default_journal_sale'],
+        )
+        self.assertRecordValues(invoice.line_ids, [
+            {
+                'balance': -500.0,
+                'tax_ids': tax_21_reverse_charge_other.ids,
+            },
+            {
+                'balance': -105.0,
+                'tax_ids': [],
+            },
+            {
+                'balance': 105.0,
+                'tax_ids': [],
+            },
+            {
+                'balance': 500.0,
+                'tax_ids': [],
+            },
+        ])
 
     def test_import_foreign_tax(self):
         domestic = self.env['account.chart.template'].ref('template_generic_domestic_fiscal_position')
