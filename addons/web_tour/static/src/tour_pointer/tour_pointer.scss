@@ -110,8 +110,35 @@
     height: 1px;
 }
 
+@keyframes breath {
+    0% {
+        box-shadow: 0px 0px 10px rgba(var(--link-color-rgb), 1);
+    }
+    50% {
+        box-shadow: 0px 0px 1px rgba(var(--link-color-rgb), 1);
+    }
+    100% {
+        box-shadow: 0px 0px 10px rgba(var(--link-color-rgb), 1);
+    }
+}
+
+.o_tour_pointer_content {
+    line-height: $line-height-base;
+    @include font-size($font-size-base);
+    font-family: $font-family-sans-serif;
+    font-weight: normal;
+    max-width: 270px;
+}
+
+.o_tour_overlay {
+    border-radius: 0.25rem;
+    animation: breath 1.5s linear infinite;
+    position: fixed;
+    pointer-events: none;
+}
+
 @media print {
-    .o_tour_anchor, .o_tour_pointer {
+    .o_tour_anchor, .o_tour_pointer, .o_tour_overlay {
         display: none !important;
     }
 }

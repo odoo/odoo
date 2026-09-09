@@ -1,16 +1,19 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, useProps, proxy, signal, t } from "@odoo/owl";
-import { useBus, useService } from "@web/core/utils/hooks";
+import { Component, useEffect, signal, t, useProps } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
-import { usePosition } from "@web/core/position/position_hook";
 import { _t } from "@web/core/l10n/translation";
-import { usePopover } from "@web/core/popover/popover_hook";
 
 const oppositeSides = {
     left: "right",
     right: "left",
     top: "bottom",
     bottom: "top",
+};
+
+const correspondingAction = {
+    left: "left",
+    right: "right",
+    top: "up",
+    bottom: "down",
 };
 
 /**
@@ -39,284 +42,60 @@ function getScrollParent(element) {
     }
 }
 
-function isInPage(element) {
-    if (!element || !element.isConnected) {
-        return false;
-    }
-    const doc = element.ownerDocument;
-    if (doc === document) {
-        return document.body.contains(element);
-    }
-    if (doc.defaultView && doc.defaultView.frameElement) {
-        const iframe = doc.defaultView.frameElement;
-        return document.body.contains(iframe);
-    }
-    return false;
-}
-
-/**
- * @typedef TourPointerState
- * @property {HTMLElement} [trigger]
- * @property {string} [content]
- * @property {boolean} [isZone]
- * @property {Direction} [position]
- */
-export const pointerState = proxy({
-    trigger: undefined,
-    content: "",
-    isZone: false,
-    position: "bottom",
-});
-
-class TourPointerPopover extends Component {
-    static template = "web_tour.TourPointer.Content";
-
-    props = useProps({
-        content: t.string(),
-        close: t.function(),
-        onClick: t.function().optional(),
-        closeContent: t.function().optional(),
-        openContent: t.function().optional(),
-    });
-
-    setup() {
-        this.orm = useService("orm");
-    }
-
-    async onStopClicked() {
-        await this.orm.call("res.users", "switch_tour_enabled", [false]);
-        browser.location.reload();
-    }
-}
-
-/**
- * @typedef TourPointerProps
- * @property {TourPointerState} pointerState
- * @property {boolean} bounce
- */
-
-/** @extends {Component<TourPointerProps, any>} */
-export class TourPointer extends Component {
-    props = useProps({
-        pointerState: t.object({
-            trigger: t.instanceOf(HTMLElement).optional(),
-            content: t.string().optional(),
-            isZone: t.boolean().optional(),
-            position: t.selection(["left", "right", "top", "bottom"]).optional(),
-        }),
-        bounce: t.boolean().optional(true),
-    });
-
-    static template = "web_tour.TourPointer";
-    static width = 28; // in pixels
-    static height = 28; // in pixels
-
-    anchorRef = signal.ref();
-    pointerRef = signal.ref();
-    dropzoneRef = signal.ref();
-
-    setup() {
-        this.closeTimeout = null;
-        this.state = proxy({
-            showContent: false,
-            direction: "bottom", //The side towards which the ball hangs
-            triggerPosition: "unknow",
-            scrollParent: undefined,
-            triggerBelow: false,
+export class TourPointer {
+    /**
+     *
+     * @param {Object} env
+     * @param {Object} env.services has to contains overlay, popover, ui and orm services
+     * @param {Boolean} env.autoScroll Will automatically scroll to the pointed element if outside the view
+     */
+    constructor(env) {
+        this.env = env;
+        this.anchor = document.createElement("div");
+        this.anchor.classList.add("o_tour_anchor");
+        document.body.append(this.anchor);
+        this.removePopover = () => {};
+        this.removeOverlay = () => {};
+        this.removeScrollListener = () => {};
+        this._trigger = false;
+        this.lastTriggerPosition = false;
+        this.currentAction = {};
+        this.overlayProps = signal.Object({
+            width: 0,
+            height: 0,
+            top: 0,
+            left: 0,
         });
-
-        const anchorPositionOptions = {
-            margin: -10,
-        };
-
-        Object.defineProperty(anchorPositionOptions, "position", {
-            get: () => `${this.anchorPosition}-middle`,
-            set: () => {},
-            enumerable: true,
-        });
-
-        this.anchorUsePosition = usePosition(
-            this.anchorRef,
-            () => this.scrollParent,
-            anchorPositionOptions
-        );
-
-        /**
-         * The pointer is the little ball that follows either the trigger if
-         * it is visible on the screen or the anchor element otherwise.
-         */
-
-        const pointerPositionOptions = {
-            onPositioned: (pointer, position) => {
-                // When trigger position changes (in <=> out)
-                const triggerPosition = this.triggerPosition;
-                if (triggerPosition !== this.state.triggerPosition) {
-                    this.popover.close();
-                    this.state.triggerPosition = triggerPosition;
-                }
-                // Set direction of baball
-                if (this.triggerPosition.startsWith("out-")) {
-                    this.state.direction = this.pointerPosition;
-                } else {
-                    this.state.direction = position.direction;
-                }
-            },
-        };
-
-        Object.defineProperty(pointerPositionOptions, "position", {
-            get: () => {
-                if (this.props.pointerState.isZone) {
-                    return `top-start`;
-                }
-                return `${this.pointerPosition}-middle`;
-            },
-            set: () => {},
-            enumerable: true,
-        });
-
-        Object.defineProperty(pointerPositionOptions, "margin", {
-            get: () => (this.props.pointerState.isZone ? 0 : 10),
-            set: () => {},
-            enumerable: true,
-        });
-
-        this.pointerUsePosition = usePosition(
-            this.pointerRef,
-            () => {
-                if (this.triggerPosition === "in") {
-                    return this.trigger;
-                } else {
-                    return this.anchorRef();
-                }
-            },
-            pointerPositionOptions
-        );
-
-        const uiService = useService("ui");
-        const onActiveElementChanged = () => {
-            const activeEl = uiService.activeElement;
-            const pointerAnchor = this.trigger;
-            if (pointerAnchor) {
-                const frameEl =
-                    pointerAnchor.ownerDocument !== document
-                        ? pointerAnchor.ownerDocument.defaultView?.frameElement
-                        : pointerAnchor;
-                this.state.triggerBelow = frameEl ? !activeEl.contains(frameEl) : true;
-            }
-        };
-        useBus(uiService.bus, "active-element-changed", onActiveElementChanged);
-
-        useLayoutEffect(
-            () => {
-                const trigger = this.trigger;
-                if (!trigger) {
-                    return;
-                }
-
-                onActiveElementChanged();
-                this.popover.close();
-                if (this.props.pointerState.isZone && this.dropzoneRef()) {
-                    const triggerRect = this.trigger.getBoundingClientRect();
-                    this.dropzoneRef().style.width = `${triggerRect.width}px`;
-                    this.dropzoneRef().style.height = `${triggerRect.height}px`;
-                }
-                this.state.scrollParent = getScrollParent(trigger);
-                this.anchorUsePosition.unlock();
-                this.pointerUsePosition.unlock();
-
-                const openContentHandler = () => this.openContent();
-                const closeContentHandler = () => this.closeContent();
-
-                trigger.addEventListener("mouseenter", openContentHandler);
-                trigger.addEventListener("mouseleave", closeContentHandler);
-
-                return () => {
-                    trigger.removeEventListener("mouseenter", openContentHandler);
-                    trigger.removeEventListener("mouseleave", closeContentHandler);
-                };
-            },
-            () => [this.props.pointerState.trigger]
-        );
-
-        const popoverOptions = {
-            setActiveElement: false,
-            onClose: () => {
-                this.state.showContent = false;
-            },
-        };
-
-        Object.defineProperty(popoverOptions, "position", {
-            get: () => `${this.pointerPosition}-middle`,
-            set: () => {},
-            enumerable: true,
-        });
-
-        this.popover = usePopover(TourPointerPopover, popoverOptions);
-    }
-
-    get content() {
-        const triggerPosition = this.triggerPosition;
-        if (triggerPosition === "out-bottom") {
-            return _t("Scroll down to reach the next step.");
-        } else if (triggerPosition === "out-top") {
-            return _t("Scroll up to reach the next step.");
-        } else if (triggerPosition === "out-left") {
-            return _t("Scroll left to reach the next step.");
-        } else if (triggerPosition === "out-right") {
-            return _t("Scroll right to reach the next step.");
-        }
-        return this.props.pointerState.content || "";
-    }
-
-    get isVisible() {
-        return (
-            this.trigger &&
-            isInPage(this.trigger) &&
-            this.triggerPosition !== "unknow" &&
-            !this.state.triggerBelow
-        );
     }
 
     /**
-     * Position where the anchor is anchored. Always at middle
-     * @returns {"top"|"bottom"|"right"|"left"}
+     * The element currently pointed to.
+     * @returns {HTMLElement|false}
      */
-    get anchorPosition() {
-        if (this.triggerPosition.startsWith("out-")) {
-            return this.triggerPosition.split("-").at(-1);
-        }
-        return "top";
-    }
-
-    /**
-     * Position where the ball is anchored. Always at middle
-     * @returns {"top"|"bottom"|"right"|"left"}
-     */
-    get pointerPosition() {
-        if (this.triggerPosition.startsWith("out-")) {
-            return oppositeSides[this.anchorPosition];
-        }
-        return this.props.pointerState.position || "bottom";
-    }
-
-    get scrollParent() {
-        return this.state.scrollParent || document.body;
-    }
-
     get trigger() {
-        return this.props.pointerState.trigger;
+        return this._trigger;
+    }
+
+    set trigger(el) {
+        this._trigger = el;
+        this.removeScrollListener();
+        if (el) {
+            this.parentScroll = getScrollParent(el);
+            const onScroll = () => this._checkOutsideScreen();
+            this.parentScroll.addEventListener("scroll", onScroll);
+            this.removeScrollListener = () =>
+                this.parentScroll.removeEventListener("scroll", onScroll);
+        }
     }
 
     /**
-     * Where is the trigger in the scrollParent ?
+     * Where {@link trigger} currently is on the view.
+     * @private
      * @returns {"out-top"|"out-bottom"|"out-left"|"out-right"|"in"}
      */
-    get triggerPosition() {
-        if (!this.trigger || !this.scrollParent) {
-            return "unknown";
-        }
+    get _triggerPosition() {
         const rect = this.trigger.getBoundingClientRect();
-        const containerRect = this.scrollParent.getBoundingClientRect();
+        const containerRect = getScrollParent(this.trigger).getBoundingClientRect();
         if (rect.bottom <= containerRect.top) {
             return "out-top";
         } else if (rect.top >= containerRect.bottom) {
@@ -330,42 +109,195 @@ export class TourPointer extends Component {
         }
     }
 
-    openContent() {
-        clearTimeout(this.closeTimeout);
-        if (!this.trigger) {
-            return;
-        }
-        this.state.showContent = true;
-        if (this.popover.isOpen) {
-            return;
-        }
-        const triggerPosition = this.triggerPosition;
-        let target = this.trigger;
-        if (this.trigger && triggerPosition !== "in") {
-            target = this.anchorRef();
-        }
-        this.popover.open(target, {
-            content: this.content,
-            closeContent: () => this.closeContent(),
-            openContent: () => this.openContent(),
-            onClick: () => {
-                if (
-                    this.triggerPosition === "in" &&
-                    typeof this.props.pointerState.onClick === "function"
-                ) {
-                    this.props.pointerState.onClick();
-                } else {
-                    this.closeContent();
-                    this.trigger.scrollIntoView({ behavior: "smooth", block: "nearest" });
-                }
-            },
+    /**
+     * Point to a given HTML element or the part of the sreen
+     * where to scroll to get to the element.
+     *
+     * @param {HTMLElement} el
+     * @param {Object} action The action of an interactive tour steps
+     */
+    pointTo(el, action) {
+        const { width, height, top, left } = el.getBoundingClientRect();
+        this.overlayProps.set({
+            width,
+            height,
+            top,
+            left,
         });
+        this.currentAction = action;
+
+        if (el && this.trigger !== el && this.env.services.ui.activeElement().contains(el)) {
+            this.trigger = el;
+            this._remove();
+            this.lastTriggerPosition = this._triggerPosition;
+
+            if (this.lastTriggerPosition.startsWith("out-")) {
+                if (this.env.autoScroll) {
+                    this.trigger.scrollIntoView({ behavior: "smooth", block: "center" });
+                } else {
+                    this._openScroller();
+                }
+            } else {
+                this._openPopover();
+            }
+        }
     }
 
-    closeContent() {
-        clearTimeout(this.closeTimeout);
-        this.closeTimeout = setTimeout(() => {
-            this.popover.close();
-        }, 500);
+    /**
+     * Removes the pointer and forgets about the current trigger, so that a
+     * later call to {@link pointTo}, even for the same element, is not a
+     * no-op.
+     */
+    hide() {
+        this._remove();
+        this.trigger = false;
+        this.lastTriggerPosition = false;
+    }
+
+    /**
+     * Removes the pointer and its anchor element from the DOM. Call this
+     * once the engine is no longer needed (e.g. when the tour finishes or
+     * chains into another one).
+     */
+    destroy() {
+        this.hide();
+        this.anchor.remove();
+    }
+
+    /** @private */
+    _openScroller() {
+        const position = this.lastTriggerPosition.split("-")[1];
+        const direction = oppositeSides[position];
+        this._setAnchorPosition(direction);
+
+        this.removePopover = this.env.services.popover.add(
+            this.anchor,
+            TourPointerContent,
+            {
+                content: _t("Scroll %s to reach the next step.", correspondingAction[position]),
+                onClick: () => this.trigger.scrollIntoView({ behavior: "smooth", block: "center" }),
+                hideButton: true,
+                cursor: "pointer",
+            },
+            {
+                closeOnClickAway: false,
+                popoverClass: "m-3 o_tour_scroller",
+                position: direction,
+                setActiveElement: false,
+                sequence: 1100, // sequence based on bootstrap z-index values.
+            }
+        );
+    }
+
+    /** @private */
+    _openPopover() {
+        const popoverProps = {
+            onEnd: () => this._onStopClicked(),
+            content: this.currentAction.content,
+            hideButton: this.currentAction.hideButton,
+        };
+
+        this.removePopover = this.env.services.popover.add(
+            this.trigger,
+            TourPointerContent,
+            popoverProps,
+            {
+                closeOnClickAway: false,
+                popoverClass: "m-1 o_tour_pointer",
+                position: this.currentAction.tooltipPosition,
+                setActiveElement: false,
+                sequence: 1100, // sequence based on bootstrap z-index values.
+            }
+        );
+
+        this.removeOverlay = this.env.services.overlay.add(
+            TourPointerOverlay,
+            {
+                boundingRect: this.overlayProps,
+            },
+            { sequence: 1100 } // sequence based on bootstrap z-index values.
+        );
+    }
+
+    /** @private */
+    _remove() {
+        this.removePopover();
+        this.removeOverlay();
+    }
+
+    /** @private */
+    _setAnchorPosition(direction) {
+        const parentRect = this.parentScroll.getBoundingClientRect();
+        const triggerRect = this.trigger.getBoundingClientRect();
+        switch (direction) {
+            case "top":
+                this.anchor.style.top = `${parentRect.top + parentRect.height}px`;
+                this.anchor.style.left = `${triggerRect.left + triggerRect.width / 2}px`;
+                break;
+            case "bottom":
+                this.anchor.style.top = `${parentRect.top}px`;
+                this.anchor.style.left = `${triggerRect.left + triggerRect.width / 2}px`;
+                break;
+            case "left":
+                this.anchor.style.top = `${triggerRect.top + triggerRect.height / 2}px`;
+                this.anchor.style.left = `${parentRect.left + parentRect.width}px`;
+                break;
+            case "right":
+                this.anchor.style.top = `${triggerRect.top + triggerRect.height / 2}px`;
+                this.anchor.style.left = "0px";
+                break;
+        }
+    }
+
+    /** @private */
+    async _onStopClicked() {
+        await this.env.services.orm.call("res.users", "switch_tour_enabled", [false]);
+        browser.location.reload();
+    }
+
+    /** @private */
+    _checkOutsideScreen() {
+        if (this.trigger && this._triggerPosition !== this.lastTriggerPosition) {
+            this._remove();
+            this.lastTriggerPosition = this._triggerPosition;
+            if (this.lastTriggerPosition.startsWith("out-")) {
+                this._openScroller();
+            } else {
+                this._openPopover();
+            }
+        }
+    }
+}
+
+class TourPointerContent extends Component {
+    props = useProps({
+        onEnd: t.function().optional(() => {}),
+        onClick: t.function().optional(() => {}),
+        content: t.string(),
+        hideButton: t.boolean().optional(),
+        cursor: t.string().optional(),
+    });
+
+    static template = "web_tour.TourPointer.Content";
+}
+
+class TourPointerOverlay extends Component {
+    props = useProps({
+        boundingRect: t.function(),
+    });
+    static template = "web_tour.TourPointer.Overlay";
+
+    tourOverlayRef = signal.ref();
+
+    setup() {
+        useEffect(() => {
+            const tourOverlay = this.tourOverlayRef();
+            if (tourOverlay) {
+                tourOverlay.style.width = this.props.boundingRect().width + "px";
+                tourOverlay.style.height = this.props.boundingRect().height + "px";
+                tourOverlay.style.top = this.props.boundingRect().top + "px";
+                tourOverlay.style.left = this.props.boundingRect().left + "px";
+            }
+        });
     }
 }

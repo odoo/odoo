@@ -4,7 +4,7 @@ import * as hoot from "@odoo/hoot-dom";
 import { utils } from "@web/core/ui/ui_utils";
 import { TourStepInteractive } from "@web_tour/tour_interactive/tour_step_interactive";
 import { TourInteractiveObserver } from "@web_tour/tour_interactive/tour_interactive_observer";
-import { TourPointer, pointerState } from "@web_tour/tour_pointer/tour_pointer";
+import { TourPointer } from "@web_tour/tour_pointer/tour_pointer";
 
 /**
  * @typedef ConsumeEvent
@@ -15,7 +15,7 @@ import { TourPointer, pointerState } from "@web_tour/tour_pointer/tour_pointer";
 
 export class TourInteractive {
     static observer = null;
-    static removePointer = () => {};
+    static pointer = null;
     mode = "manual";
     currentAction;
     currentActionIndex;
@@ -28,12 +28,16 @@ export class TourInteractive {
      * @param {import("@web/core/network/orm_service").ORM} deps.orm
      * @param {import("@web/core/effects/effect_plugin").EffectPlugin} deps.effect
      * @param {import("@web/core/overlay/overlay_plugin").OverlayPlugin} deps.overlay
+     * @param {import("@web/core/popover/popover_plugin").PopoverPlugin} deps.popover
+     * @param {import("services").ServiceFactories["ui"]} deps.ui
      * @param {(nextTour: Object) => void} deps.onChainNextTour
      */
-    constructor(data, { orm, effect, overlay, onChainNextTour }) {
+    constructor(data, { orm, effect, overlay, popover, ui, onChainNextTour }) {
         this.orm = orm;
         this.effect = effect;
         this.overlay = overlay;
+        this.popover = popover;
+        this.ui = ui;
         this.onChainNextTour = onChainNextTour;
         Object.assign(this, data);
         this.steps = this.steps.map((step) => new TourStepInteractive(step, this));
@@ -47,17 +51,21 @@ export class TourInteractive {
      * @param {import("@web/env").OdooEnv} env
      */
     start(env) {
-        TourInteractive.removePointer();
+        TourInteractive.pointer?.destroy();
         if (TourInteractive.observer) {
             TourInteractive.observer.disconnect();
         }
         TourInteractive.observer = new TourInteractiveObserver(() => this._onMutation());
         TourInteractive.observer.observe(document.body);
-        TourInteractive.removePointer = this.overlay.add(
-            TourPointer,
-            { pointerState },
-            { sequence: 1100 } // sequence based on bootstrap z-index values.
-        );
+        this.pointer = TourInteractive.pointer = new TourPointer({
+            services: {
+                overlay: this.overlay,
+                popover: this.popover,
+                ui: this.ui,
+                orm: this.orm,
+            },
+            autoScroll: this.config.robot,
+        });
         this.currentActionIndex = tourState.getCurrentIndex();
         if (this.config.debug && this.currentActionIndex === 0) {
             // eslint-disable-next-line no-debugger
@@ -119,7 +127,7 @@ export class TourInteractive {
             if (!this.currentAction.findTrigger()) {
                 return;
             }
-            console.log(`Step '${this.currentAction.anchor}' ignored.`);
+            console.warn(`Step '${this.currentAction.anchor}' ignored.`);
             this.currentActionIndex++;
             this.play();
             return;
@@ -139,7 +147,10 @@ export class TourInteractive {
     }
 
     async finish() {
-        TourInteractive.removePointer();
+        this.pointer.destroy();
+        if (TourInteractive.pointer === this.pointer) {
+            TourInteractive.pointer = null;
+        }
         tourState.clear();
         let message = this.config.rainbowManMessage || this.rainbowManMessage;
         if (message && window.DOMPurify) {
@@ -166,15 +177,12 @@ export class TourInteractive {
 
     updatePointer() {
         if (this.anchorEl) {
-            pointerState.trigger = this.anchorEl;
-            pointerState.content = this.currentAction.content;
-            pointerState.position = this.currentAction.tooltipPosition;
-            pointerState.isZone = this.currentAction.event === "drop";
+            this.pointer.pointTo(this.anchorEl, this.currentAction);
             if (this.config.robot) {
                 this.playRobot();
             }
         } else {
-            pointerState.trigger = undefined;
+            this.pointer.hide();
         }
     }
 
@@ -439,7 +447,7 @@ export class TourInteractive {
                 ) {
                     this.backward();
                 } else {
-                    pointerState.trigger = undefined;
+                    this.pointer.hide();
                 }
                 return;
             }

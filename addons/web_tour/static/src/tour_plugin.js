@@ -4,8 +4,10 @@ import { browser } from "@web/core/browser/browser";
 import { EffectPlugin } from "@web/core/effects/effect_plugin";
 import { ORM } from "@web/core/orm_plugin";
 import { OverlayPlugin } from "@web/core/overlay/overlay_plugin";
+import { PopoverPlugin } from "@web/core/popover/popover_plugin";
 import { registry } from "@web/core/registry";
 import { services } from "@web/core/services";
+import { UIPlugin } from "@web/core/ui/ui_plugin";
 import { redirect } from "@web/core/utils/urls";
 import { useEnv } from "@web/owl2/utils";
 import { session } from "@web/session";
@@ -63,6 +65,8 @@ export class TourPlugin extends Plugin {
     orm = usePlugin(ORM);
     effect = usePlugin(EffectPlugin);
     overlay = usePlugin(OverlayPlugin);
+    popover = usePlugin(PopoverPlugin);
+    ui = usePlugin(UIPlugin);
     recorder = usePlugin(TourRecorderPlugin);
 
     toursEnabled = session?.tour_enabled;
@@ -216,6 +220,8 @@ export class TourPlugin extends Plugin {
                 orm: this.orm,
                 effect: this.effect,
                 overlay: this.overlay,
+                popover: this.popover,
+                ui: this.ui,
                 onChainNextTour: (nextTour) =>
                     this.startTour(nextTour.name, {
                         mode: "manual",
