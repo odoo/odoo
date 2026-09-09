@@ -304,6 +304,7 @@ class PosOrder(models.Model):
             'lines': lines,
             'payment_ids': payment_lines,
             'relations_uuid_mapping': order.get('relations_uuid_mapping', {}),
+            'course_ids': order.get('course_ids'),
         }
 
         if (table and pos_config.self_ordering_service_mode == 'table'):
