@@ -1,31 +1,19 @@
 Website Snippet & Blocks
 ========================
 
-The building blocks appear in the edit bar website. These prebuilt html block
-allowing the designer to easily generate content on a page (drag and drop).
-Snippets bind javascript object on custom part html code according to their
-selector (jQuery) and javascript object. The snippets is also used to create
-the drop zone.
-
-
-Building Blocks
-+++++++++++++++
-
-Overwrite ``_getSnippetURL`` to set an other file to load the snippets (use by
-website_mail for example)
-Overwrite ``_computeSelectorFunctions`` to enable or disable other snippets. By default
-the builder check if the node or his parent have the attribute data-oe-model
-
-Trigger:
-- ``snippet-dropped`` is triggered on ``#oe_snippets`` with $target as attribute when a snippet is dropped
-- ``snippet-activated`` is triggered on ``#oe_snippets`` (and on snippet) when a snippet is activated
+The building blocks appear in the edit bar of the website builder. These
+prebuilt HTML blocks allow the designer to easily generate content on a page
+(drag and drop). Snippets bind an OWL-based runtime on custom parts of the
+HTML code according to their selector, both on the public-facing page
+(``Interaction``) and inside the page-builder/editor (``BuilderAction``). The
+snippets are also used to create the drop zone.
 
 
 Blocks
 ++++++
 
-The ``blocks`` are the HTML code that can be drop in the page. The blocks consist
-of a body and a thumbnail:
+The ``blocks`` are the HTML code that can be dropped in the page. The blocks
+consist of a body and a thumbnail:
  - thumbnail:
    (have class ``oe_snippet_thumbnail``) contains a picture and a text used to
    display a preview in the edit bar that contains all the block list
@@ -47,91 +35,57 @@ e.g.:
     </div>
 
 
-Editor
-++++++
+Public-site runtime: Interaction
++++++++++++++++++++++++++++++++
 
-The ``editor`` is the frame placed above the block being edited who contains buttons
-(move, delete, clone) and customize menu. The ``editor`` load ``options`` based on
-selectors defined in snippets
+Each snippet's public-facing (non-editor) behaviour is implemented as an
+``Interaction`` (``@web/public/interaction``), registered in the
+``public.interactions`` registry category. An ``Interaction`` subclass
+declares:
 
+- ``static selector``: the CSS selector on which the interaction is
+  instantiated (one instance per matching element).
+- ``dynamicSelectors``: named lazy selectors (evaluated per-instance),
+  usable as keys in ``dynamicContent``.
+- ``dynamicContent``: a declarative map from a selector (or one of the
+  ``dynamicSelectors`` names) to ``t-on-*``/``t-att-*``-style bindings,
+  the interaction's equivalent of an OWL template.
+- ``setup()``: called once, before ``start()``, to initialize instance state.
+- ``start()``: called when the interaction is mounted on a matching element.
+- ``destroy()``: called when the interaction is torn down (element removed,
+  edit-mode toggle, preview restart); any listener/observer registered
+  outside of ``dynamicContent`` (e.g. a ``ResizeObserver``) must be released
+  here or via ``this.registerCleanup(...)``.
 
-Options
-+++++++
-
-The ``option`` is the javascript object used to customize the HTML code.
-
-Object:
- - this.``$target``:
-   block html inserted inside the page
- - this.``$el``:
-   html li list of this options
- - this.``$overlay``:
-   html editor overlay who content resize bar, customize menu...
-
-Methods:
- - ``_setActive``:
-   highlight the customize menu item when the user click on customize, and click on
-   an item.
- - ``start``:
-   called when the editor is created on the DOM
- - ``onFocus``:
-   called when the user click inside the block inserted in page and when the
-   user drop on block into the page
- - ``onBlur``:
-   called when the user click outside the block inserted in page, if the block
-   is focused
- - ``onClone``:
-   called when the snippet is duplicate
- - ``onRemove``:
-   called when the snippet is removed (dom is removing after this trigger)
- - ``onBuilt:
-   called just after that a thumbnail is drag and dropped into a drop zone.
-   The content is already inserted in the page.
- - ``cleanForSave``:
-   is called just before to save the vue. Sometime it's important to remove or add
-   some datas (contentEditable, added classes to a running animation...)
-
-Customize Methods:
-All javascript option can defined method call from the template on mouse over, on
-click or to reset the default value (<li data-your_js_method="your_value"><a>...</a></li>).
-The method receive the variable type (``over``, ``click`` or ``reset``), the method
-value and the jQuery object of the HTML li item. (can be use for multi methods)
-
-By default to custom method are defined:
-
- - ``check_class(type, className, $li)``:
-   li must have data-check_class="a_classname_for_test" to call this method. This method
-   toggle the className on $target
- - ``selectClass(type, className, $li)``:
-   This method remove all other selectClass value (for this option) and add this current ClassName
+See ``static/src/interactions/`` for examples, and
+``static/src/js/content/`` for content-only interactions.
 
 
+Page-builder/editor: BuilderAction
++++++++++++++++++++++++++++++++++
 
-Snippet
-+++++++
+Inside the page-builder/editor, a snippet's customization options are
+implemented as one or more ``BuilderAction`` subclasses (``@html_builder/core/
+builder_action``), registered per plugin via the ``builder_actions`` resource
+and driven by ``BuilderComponents`` declared in the option's XML template
+(``BuilderSelect``, ``BuilderButtonGroup``, ``BuilderCheckbox``,
+``BuilderTextInput``, ...). A ``BuilderAction`` subclass implements:
 
-The ``snippets`` are the HTML code to defined the drop zone and the linked javascript object.
-All HTML li tag defined inside the snippets HTML are insert into the customize menu. All
-data attributes is optional:
+- ``setup()``: called once, after dependencies/services are assigned.
+- ``apply(context)``: applies the action to ``context.editingElement``; called
+  on preview, on confirm, and (unless ``clean`` is defined) on cancel/undo.
+- ``getValue(context)``: returns the action's current value, for
+  input-like components.
+- ``isApplied(context)``: whether the action is currently active, for
+  toggle-like components.
+- ``prepare(context)``: optional async data-loading hook, called before the
+  component mounts/updates.
 
-- ``data-selector``:
-  Apply options on all The part of html who match with this jQuery selector.
-  E.g.: If the selector is div, all div will be selected and can be highlighted and assigned an editor.
-- ``data-js``:
-  javascript to call when the ``editor`` is loaded
-- ``data-drop-in``:
-  The html part can be insert or move beside the selected html block (jQuery selector)
-- ``data-drop-near``:
-  The html part can be insert or move inside the selected html block (jQuery selector)
-- HTML content like <li data-your_js_method="your_value"><a>...</a></li>:
-  List of HTML li menu items displayed in customize menu. If the li tag have datas the methods are
-  automatically called
-- ``no-check``:
-  The selectors are automatically compute to have elements inside the branding. If you use this option
-  the check is not apply (for e.g.: to have a snippet for the grid view of website_sale)
+See ``static/src/builder/plugins/options/`` for examples.
+
 
 t-snippet and data-snippet
-++++++++++++++++++++++++++
++++++++++++++++++++++++++
 
 User can call a snippet template with qweb or inside a demo page.
 
@@ -146,8 +100,3 @@ The container of the snippet became not editable (with branding)
 
 Inside a demo page call the snippet with: ``<div data-oe-call="website.name_of_the_template"/>``
 The snippets are loaded in one time by js and the page stay editable.
-
-More
-++++
-
-- Use the class ``o_not_editable`` to prevent the editing of an area.
