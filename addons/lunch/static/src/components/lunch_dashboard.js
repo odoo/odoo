@@ -3,12 +3,15 @@ import { user } from "@web/core/user";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 import { DateTimeInput } from '@web/core/datetime/datetime_input';
-import { Component, onWillStart, markup, xml, proxy } from "@odoo/owl";
+import { Component, onWillStart, markup, xml, proxy, t, useProps } from "@odoo/owl";
 const { DateTime } = luxon;
 
 export class LunchCurrency extends Component {
     static template = "lunch.LunchCurrency";
-    static props = ["currency", "amount"];
+    props = useProps({
+        currency: t.any(),
+        amount: t.any(),
+    });
 
     get amount() {
         return parseFloat(this.props.amount).toFixed(2);
@@ -17,7 +20,14 @@ export class LunchCurrency extends Component {
 
 export class LunchOrderLine extends Component {
     static template = "lunch.LunchOrderLine";
-    static props = ["line", "currency", "onUpdateQuantity", "openOrderLine", "infos", "isToOrder"];
+    props = useProps({
+        line: t.any(),
+        currency: t.any(),
+        onUpdateQuantity: t.any(),
+        openOrderLine: t.any(),
+        infos: t.any(),
+        isToOrder: t.any(),
+    });
     static components = {
         LunchCurrency,
     };
@@ -63,7 +73,9 @@ export class LunchOrderLine extends Component {
 }
 
 export class LunchAlert extends Component {
-    static props = ["message"];
+    props = useProps({
+        message: t.any(),
+    });
     static template = xml`<t t-out="this.message"/>`;
     get message() {
         return markup(this.props.message);
@@ -74,7 +86,9 @@ export class LunchAlerts extends Component {
     static components = {
         LunchAlert,
     };
-    static props = ["alerts"];
+    props = useProps({
+        alerts: t.any(),
+    });
     static template = "lunch.LunchAlerts";
 }
 
@@ -82,7 +96,11 @@ export class LunchUser extends Component {
     static components = {
         Many2XAutocomplete,
     };
-    static props = ["username", "isManager", "onUpdateUser"];
+    props = useProps({
+        username: t.any(),
+        isManager: t.any(),
+        onUpdateUser: t.any(),
+    });
     static template = "lunch.LunchUser";
     getDomain() {
         return [['share', '=', false]];
@@ -93,7 +111,10 @@ export class LunchLocation extends Component {
     static components = {
         Many2XAutocomplete,
     };
-    static props = ["location", "onUpdateLunchLocation"];
+    props = useProps({
+        location: t.any(),
+        onUpdateLunchLocation: t.any(),
+    });
     static template = "lunch.LunchLocation";
     getDomain() {
         return [];
@@ -110,7 +131,9 @@ export class LunchDashboard extends Component {
         Many2XAutocomplete,
         DateTimeInput,
     };
-    static props = ["openOrderLine"];
+    props = useProps({
+        openOrderLine: t.any(),
+    });
     static template = "lunch.LunchDashboard";
     setup() {
         super.setup();
