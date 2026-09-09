@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 
+from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.fields import Datetime as FieldsDatetime
 from odoo.tests.common import users
@@ -348,6 +349,58 @@ class TestEventData(EventCase, MockVisitor):
             "A registration missing its ticket key must stay detectable "
             "downstream, not silently default to a key that isn't there.",
         )
+
+    def test_check_posted_ids_are_offered_slot(self):
+        """A posted event_slot_id that doesn't belong to the event must raise
+        a friendly UserError (caught by the framework as a normal error page)
+        instead of reaching event.slot's model-level ValidationError."""
+        event = self.env["event.event"].create(
+            {
+                "name": "Test Event",
+                "event_type_id": self.event_type_questions.id,
+                "date_begin": FieldsDatetime.to_string(
+                    datetime.today() + timedelta(days=1)
+                ),
+                "date_end": FieldsDatetime.to_string(
+                    datetime.today() + timedelta(days=15)
+                ),
+            }
+        )
+        other_event = self.env["event.event"].create(
+            {
+                "name": "Other Event",
+                "date_begin": FieldsDatetime.to_string(
+                    datetime.today() + timedelta(days=1)
+                ),
+                "date_end": FieldsDatetime.to_string(
+                    datetime.today() + timedelta(days=15)
+                ),
+            }
+        )
+        self.env["event.slot"].create(
+            {
+                "event_id": event.id,
+                "date": datetime.today() + timedelta(days=2),
+                "start_hour": 9.0,
+                "end_hour": 10.0,
+            }
+        )
+        foreign_slot = self.env["event.slot"].create(
+            {
+                "event_id": other_event.id,
+                "date": datetime.today() + timedelta(days=2),
+                "start_hour": 9.0,
+                "end_hour": 10.0,
+            }
+        )
+
+        with MockRequest(self.env), self.assertRaises(UserError):
+            WebsiteEventController()._check_posted_ids_are_offered(
+                {"1-event_slot_id": str(foreign_slot.id)},
+                "event_slot_id",
+                event.event_slot_ids.ids,
+                "This slot is not available for this event",
+            )
 
     def test_registration_answer_search(self):
 
