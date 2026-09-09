@@ -777,8 +777,17 @@ Please change the quantity done or the rounding precision in your settings.""",
     def _compute_show_info(self):
         for move in self:
             move.show_quant = move.picking_code != 'incoming'\
+<<<<<<< f8263306055d06290a9bc8e6b950287b96a2f3bc
                            and move.product_id.is_storable
             move.show_lots_text = move.product_id.tracking in ['lot', 'serial']\
+||||||| 4837c4aedd8bfd5d0f3b8ac29c574440a4f5afe2
+                           and move.product_id.is_storable
+            move.show_lots_text = move.has_tracking != 'none'\
+=======
+                           and move.product_id.is_storable\
+                           and not (move.has_tracking != 'none' and move.picking_type_id.use_create_lots and not move.picking_type_id.use_existing_lots)
+            move.show_lots_text = move.has_tracking != 'none'\
+>>>>>>> 8d0e701276c5af280cf8856dbc1722a5b97c325e
                 and move.picking_type_id.use_create_lots\
                 and not move.picking_type_id.use_existing_lots\
                 and move.state != 'done' \

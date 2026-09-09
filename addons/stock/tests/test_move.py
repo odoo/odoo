@@ -7032,3 +7032,64 @@ class TestStockMove(TestStockCommon):
         self.assertEqual(picking.date_deadline, move1.date_deadline, 'Picking deadline should be the earliest move deadline')
         move1._action_cancel()
         self.assertEqual(picking.date_deadline, move2.date_deadline, 'Picking deadline should update to the remaining move after cancellation')
+<<<<<<< f8263306055d06290a9bc8e6b950287b96a2f3bc
+||||||| 4837c4aedd8bfd5d0f3b8ac29c574440a4f5afe2
+
+    def test_open_reference_opens_picking_for_inventory_loss(self):
+        """Inventory loss moves without scrap_id should open the picking, not scrap."""
+        self.picking_type_out.default_location_dest_id = self.env['stock.location'].create({
+            'name': 'Office supplies consumption',
+            'usage': 'inventory',
+        })
+        view = self.env['stock.picking'].create({
+            'picking_type_id': self.picking_type_out.id,
+            'partner_id': self.partner_1.id,
+            'move_ids': [
+                Command.create({
+                    'product_id': self.productA.id,
+                    'product_uom_qty': 1.0,
+                }),
+            ],
+        }).move_ids.action_open_reference()
+        self.assertTrue(view['res_id'])
+        self.assertEqual(view['res_model'], 'stock.picking')
+=======
+
+    def test_open_reference_opens_picking_for_inventory_loss(self):
+        """Inventory loss moves without scrap_id should open the picking, not scrap."""
+        self.picking_type_out.default_location_dest_id = self.env['stock.location'].create({
+            'name': 'Office supplies consumption',
+            'usage': 'inventory',
+        })
+        view = self.env['stock.picking'].create({
+            'picking_type_id': self.picking_type_out.id,
+            'partner_id': self.partner_1.id,
+            'move_ids': [
+                Command.create({
+                    'product_id': self.productA.id,
+                    'product_uom_qty': 1.0,
+                }),
+            ],
+        }).move_ids.action_open_reference()
+        self.assertTrue(view['res_id'])
+        self.assertEqual(view['res_model'], 'stock.picking')
+
+    def test_show_quant_create_lots_only(self):
+        """
+        On a create-lots-only delivery, `show_quant` is False for a
+        lot-tracked product and True for a non-tracked one.
+        """
+        picking_type_out = self.env.ref('stock.picking_type_out')
+        picking_type_out.use_create_lots = True
+        picking_type_out.use_existing_lots = False
+        untracked_move, tracked_move = self.env['stock.move'].create([{
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+            'picking_type_id': picking_type_out.id,
+        } for product in (self.productA, self.product_lot)])
+        self.assertTrue(untracked_move.show_quant)
+        self.assertFalse(tracked_move.show_quant)
+>>>>>>> 8d0e701276c5af280cf8856dbc1722a5b97c325e
