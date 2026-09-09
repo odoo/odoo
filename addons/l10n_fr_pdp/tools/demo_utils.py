@@ -91,6 +91,14 @@ def _mock_button_trigger_authentication(func, self):
     return self._action_open_pdp_form()
 
 
+def _mock_fetch_active_annuaire_lines(func, self, siren):
+    return {
+            'in_annuaire': False,
+            'identifiers': [],
+            'count': 0,
+        }
+
+
 _demo_behaviour = {
     'button_account_peppol_check_partner_endpoint': _mock_button_verify_partner_endpoint,
     '_register_proxy_user': _mock_register_proxy_user,  # account_edi_proxy_client.user
@@ -99,6 +107,7 @@ _demo_behaviour = {
     '_pdp_annuaire_lookup_participant': _mock_pdp_annuaire_lookup_participant,  # res.partner
     '_get_peppol_verification_state': _mock_get_peppol_verification_state,  # res.partner
     'button_trigger_authentication': _mock_button_trigger_authentication,  # pdp.registration
+    '_fetch_active_annuaire_lines': _mock_fetch_active_annuaire_lines,  # res.partner
 }
 
 # -------------------------------------------------------------------------
