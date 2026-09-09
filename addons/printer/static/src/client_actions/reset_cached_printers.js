@@ -1,11 +1,11 @@
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
-import { Component, onWillStart, proxy } from "@odoo/owl";
+import { Component, onWillStart, proxy, useProps } from "@odoo/owl";
 
 class ReportPrintersLocalStorage extends Component {
     static template = "printer.ReportPrintersLocalStorage";
-    static props = { ...standardActionServiceProps };
+    props = useProps(standardActionServiceProps);
 
     setup() {
         this.orm = useService("orm");
