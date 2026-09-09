@@ -5,7 +5,7 @@ import pprint
 
 from werkzeug.exceptions import Forbidden
 
-from odoo import _, http
+from odoo import http
 from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.tools import consteq, str2bool
@@ -21,21 +21,6 @@ class XenditController(http.Controller):
     _webhook_url = '/payment/xendit/webhook'
     _return_url = '/payment/xendit/return'
 
-    @http.route('/payment/xendit/payment', type='json', auth='public')
-    def xendit_payment(self, reference, token_ref, access_token, auth_id=None):
-        """ Make a payment by token request and handle the response.
-
-        :param str reference: The reference of the transaction.
-        :param str token_ref: The reference of the Xendit token to use to make the payment.
-        :param str access_token: The access token used to verify the provided values
-        :param str auth_id: The authentication id to use to make the payment.
-        :return: None
-        """
-        tx_sudo = request.env['payment.transaction'].sudo().search([('reference', '=', reference)])
-        if not payment_utils.check_access_token(access_token, reference):
-            raise ValidationError(_("The access token doesn't match the transaction reference."))
-        tx_sudo._xendit_create_charge(token_ref, auth_id=auth_id)
-
     @http.route(_webhook_url, type='http', methods=['POST'], auth='public', csrf=False)
     def xendit_webhook(self):
         """ Process the notification data sent by Xendit to the webhook.
@@ -46,6 +31,12 @@ class XenditController(http.Controller):
         _logger.info("Notification received from Xendit with data:\n%s", pprint.pformat(data))
 
         try:
+            # Real webhooks are wrapped in an envelope; unwrap before processing.
+            event = None
+            if 'event' in data and 'data' in data:
+                event = data.get('event')
+                data = data['data']
+
             # Check the integrity of the notification.
             received_token = request.httprequest.headers.get('x-callback-token')
             tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
@@ -53,8 +44,14 @@ class XenditController(http.Controller):
             )
             self._verify_notification_token(received_token, tx_sudo)
 
-            # Handle the notification data.
-            tx_sudo._handle_notification_data('xendit', data)
+            if event == 'payment_token.activation':
+                # Provides the masked card number inline, sparing the extra API call otherwise
+                # needed to tokenize from a payment notification.
+                if tx_sudo.tokenize:
+                    tx_sudo._xendit_tokenize_from_notification_data(data)
+            else:
+                # Handle the notification data.
+                tx_sudo._handle_notification_data('xendit', data)
         except ValidationError:
             _logger.exception("Unable to handle notification data; skipping to acknowledge.")
 
@@ -62,15 +59,21 @@ class XenditController(http.Controller):
 
     @http.route(_return_url, type='http', methods=['GET'], auth='public')
     def xendit_return(self, tx_ref=None, success=False, access_token=None, **data):
-        """Set draft transaction to pending after successfully returning from Xendit."""
+        """Check the transaction status with Xendit after returning from checkout, falling back
+        to pending if the webhook notification hasn't come in yet."""
         if access_token and str2bool(success, default=False):
+            # A checkout redirect leaves the transaction in `draft` until this return or the
+            # webhook processes it, but a token charge requiring 3DS authentication is already
+            # `pending` by the time the customer comes back from the challenge.
             tx_sudo = request.env['payment.transaction'].sudo().search([
                 ('provider_code', '=', 'xendit'),
                 ('reference', '=', tx_ref),
-                ('state', '=', 'draft'),
+                ('state', 'in', ('draft', 'pending')),
             ], limit=1)
             if tx_sudo and payment_utils.check_access_token(access_token, tx_ref, tx_sudo.amount):
-                tx_sudo._set_pending()
+                tx_sudo._xendit_sync_from_provider()
+                if tx_sudo.state == 'draft':
+                    tx_sudo._set_pending()
         return request.redirect('/payment/status')
 
     def _verify_notification_token(self, received_token, tx_sudo):

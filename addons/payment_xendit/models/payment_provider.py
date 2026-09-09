@@ -20,9 +20,10 @@ class PaymentProvider(models.Model):
     code = fields.Selection(
         selection_add=[('xendit', "Xendit")], ondelete={'xendit': 'set default'}
     )
-    xendit_public_key = fields.Char(
-        string="Xendit Public Key", groups='base.group_system', required_if_provider='xendit'
-    )
+    # Kept for backward compatibility with existing databases; no longer used or shown in the
+    # provider form since the inline card flow it configured was replaced by hosted redirect
+    # flows. Not removed, as dropping a field is not allowed in stable versions.
+    xendit_public_key = fields.Char(string="Xendit Public Key", groups='base.group_system')
     xendit_secret_key = fields.Char(
         string="Xendit Secret Key", groups='base.group_system', required_if_provider='xendit'
     )
@@ -55,13 +56,32 @@ class PaymentProvider(models.Model):
             return default_codes
         return const.DEFAULT_PAYMENT_METHOD_CODES
 
-    def _xendit_make_request(self, endpoint, payload=None):
+    def _get_validation_currency(self):
+        """ Override of `payment` to prefer the company's currency for validation operations.
+
+        Xendit's payment channels are activated per country, and picking an arbitrary supported
+        currency unrelated to the merchant's own country (as the base implementation would for a
+        company whose currency isn't the first found) can make Xendit reject the request.
+
+        Note: `self.ensure_one()`
+
+        :return: The validation currency.
+        :rtype: recordset of `res.currency`
+        """
+        self.ensure_one()
+        if self.code == 'xendit' and self.company_id.currency_id.name in const.SUPPORTED_CURRENCIES:
+            return self.company_id.currency_id
+        return super()._get_validation_currency()
+
+    def _xendit_make_request(self, endpoint, payload=None, api_version=None, method='POST'):
         """ Make a request to Xendit API and return the JSON-formatted content of the response.
 
         Note: self.ensure_one()
 
         :param str endpoint: The endpoint to be reached by the request.
         :param dict payload: The payload of the request.
+        :param str api_version: The API version to be used for the request, if any.
+        :param str method: The HTTP method of the request.
         :return The JSON-formatted content of the response.
         :rtype: dict
         :raise ValidationError: If an HTTP error occurs.
@@ -70,8 +90,14 @@ class PaymentProvider(models.Model):
 
         url = f'https://api.xendit.co/{endpoint}'
         auth = (self.xendit_secret_key, '')
+        headers = {}
+        if api_version:
+            headers['api-version'] = api_version
         try:
-            response = requests.post(url, json=payload, auth=auth, timeout=10)
+            if method == 'GET':
+                response = requests.get(url, auth=auth, headers=headers, timeout=10)
+            else:
+                response = requests.post(url, json=payload, auth=auth, headers=headers, timeout=10)
             response.raise_for_status()
         except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
             _logger.exception("Unable to reach endpoint at %s", url)
@@ -88,25 +114,3 @@ class PaymentProvider(models.Model):
                 )
             )
         return response.json()
-
-    # === BUSINESS METHODS - GETTERS === #
-
-    def _get_redirect_form_view(self, is_validation=False):
-        """ Override of `payment` to avoid rendering the form view for validation operations.
-
-        Unlike other compatible payment methods in Xendit, `Card` is implemented using a direct
-        flow. To avoid rendering a useless template, and also to avoid computing wrong values, this
-        method returns `None` for Xendit's validation operations (Card is and will always be the
-        sole tokenizable payment method for Xendit).
-
-        Note: `self.ensure_one()`
-
-        :param bool is_validation: Whether the operation is a validation.
-        :return: The view of the redirect form template or None.
-        :rtype: ir.ui.view | None
-        """
-        self.ensure_one()
-
-        if self.code == 'xendit' and is_validation:
-            return None
-        return super()._get_redirect_form_view(is_validation)
