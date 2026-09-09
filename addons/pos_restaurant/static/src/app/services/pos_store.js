@@ -59,7 +59,7 @@ patch(PosStore.prototype, {
         this.syncAllOrders();
         return true;
     },
-    createNewOrder() {
+    createNewOrder(data = {}, opt = {}) {
         const order = super.createNewOrder(...arguments);
 
         if (order.table_id) {
@@ -442,20 +442,20 @@ patch(PosStore.prototype, {
         return data;
     },
     //@override
-    addNewOrder(data = {}) {
+    addNewOrder(data = {}, opt = {}) {
         const order = super.addNewOrder(...arguments);
         if (this.config.module_pos_restaurant) {
             this.addPendingOrder([order.id]);
         }
         return order;
     },
-    createOrderIfNeeded(data) {
+    createOrderIfNeeded(data, opt = {}) {
         if (this.config.module_pos_restaurant && !data["table_id"]) {
             let order = this.models["pos.order"].find(
                 (order) => order.isDirectSale && !order.isSynced
             );
             if (!order) {
-                order = this.createNewOrder(data);
+                order = this.createNewOrder(data, opt);
             }
             return order;
         }
