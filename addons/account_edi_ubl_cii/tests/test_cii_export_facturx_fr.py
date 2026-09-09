@@ -28,6 +28,17 @@ class CiiExportFacturXFR(TestCiiFacturXCommon, TestUblCiiFRCommon):
             'phone': '+33 499 65 43 21',
             'additional_identifiers': False,
         })
+        company.partner_id.name = 'company_1_data'  # expected by this suite's reference XML files
+        # routing_scheme/routing_endpoint are stored+readonly=False, and _get_all_identifiers()
+        # re-injects them into its own result when already set - so the SIRET-based routing
+        # TestUblCiiFRCommon set feeds right back into its own recompute unless cleared first.
+        company.partner_id.routing_scheme = False
+        company.partner_id.routing_endpoint = False
+        identifier_vals = company.partner_id._get_preferred_routing_identifier_vals(force_recompute=True)
+        company.partner_id.write({
+            'routing_scheme': identifier_vals.get('scheme') or False,
+            'routing_endpoint': identifier_vals.get('value') or False,
+        })
         return company
 
     @classmethod

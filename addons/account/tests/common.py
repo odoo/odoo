@@ -234,18 +234,33 @@ class AccountTestInvoicingCommon(ProductCommon):
     def setup_other_company(cls, name='company_2', **kwargs):
         company = None
         if not kwargs:
+            # A specific country/chart may have been requested (e.g. via setup_country()): resolve
+            # what chart an existing candidate would need so we don't reuse one already committed to
+            # a different chart (switching it mid-test is the kind of reuse that leaks stale
+            # payment-provider/journal state - see test_change_coa) and don't silently keep whatever
+            # chart it happens to already have (e.g. base.test_company's generic_coa from unrelated
+            # tests) when a specific one was asked for.
+            target_chart_template = cls.chart_template
+            if not target_chart_template and cls.country_code:
+                country = cls.env['res.country'].search([('code', '=', cls.country_code.upper())], limit=1)
+                target_chart_template = cls.env['account.chart.template']._guess_chart_template(country)
             for test_company_xmlid in 'base.test_company', 'base.test_company_with_branch', 'base.test_company_template':
                 # we may check it a specific country or chart template was requested before returning an existing company
                 candidate_company = cls.env.ref(test_company_xmlid)
-                if candidate_company not in cls.env.user.company_ids:
-                    _logger.info('Selecting existing company %s as other company', test_company_xmlid)
-                    company = candidate_company
-                    if not company.chart_template:
-                        cls._use_chart_template(company, cls.chart_template)
-                    company.name = name  # maybe not the best idea but the easiest solution to avoid adapting multiple test for now.
-                    cls.env.user.company_ids += company
-                    cls.registry._assertion_report.custom_test_stats['res.company.create'].add_avoided()
-                    break
+                if candidate_company in cls.env.user.company_ids:
+                    continue
+                if target_chart_template and candidate_company.chart_template not in (False, target_chart_template):
+                    continue
+                _logger.info('Selecting existing company %s as other company', test_company_xmlid)
+                company = candidate_company
+                if cls.country_code and not company.country_id:
+                    company.country_id = cls.env['res.country'].search([('code', '=', cls.country_code.upper())], limit=1)
+                if not company.chart_template:
+                    cls._use_chart_template(company, cls.chart_template)
+                company.name = name  # maybe not the best idea but the easiest solution to avoid adapting multiple test for now.
+                cls.env.user.company_ids += company
+                cls.registry._assertion_report.custom_test_stats['res.company.create'].add_avoided()
+                break
 
         if not company:
             _logger.info('No eligibile company found, creating a new one')
