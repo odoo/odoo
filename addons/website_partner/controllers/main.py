@@ -24,7 +24,6 @@ class WebsitePartnerPage(http.Controller):
                 values = {
                     "main_object": partner_sudo,
                     "partner": partner_sudo,
-                    "edit_page": False,
                 }
                 return request.render("website_partner.partner_page", values)
         _debug.logic("partner_page_refused", reason="not_published")
