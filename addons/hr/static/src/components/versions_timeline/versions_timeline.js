@@ -125,6 +125,20 @@ export class VersionsTimeline extends StatusBarField {
             };
         });
     }
+
+    /** @override **/
+    getSortedItems() {
+        const sorted = super.getSortedItems();
+
+        sorted.inline.sort((a, b) => {
+            const dateA = luxon.DateTime.fromFormat(a.label, "MMM d, yyyy");
+            const dateB = luxon.DateTime.fromFormat(b.label, "MMM d, yyyy");
+
+            return dateB.toMillis() - dateA.toMillis();
+        });
+
+        return sorted;
+    }
 }
 
 export const versionsTimeline = {

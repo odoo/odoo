@@ -7,6 +7,7 @@ export class HrEmployee extends models.ServerModel {
     active = fields.Boolean({ related: false });
     department_id = fields.Many2one({ relation: "hr.department" });
     name = fields.Char();
+    version_id = fields.Many2one({ relation: "hr.version" });
     user_id = fields.Many2one({ relation: "res.users" });
     work_email = fields.Char();
     work_phone = fields.Char();
