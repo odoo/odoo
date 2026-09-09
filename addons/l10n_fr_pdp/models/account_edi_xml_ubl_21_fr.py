@@ -55,8 +55,22 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
             if not id_type or not id_value:
                 constraints[f"ubl_21_fr_{partner_type}_identifier_required"] = self.env._("The following partner's SIREN or SIRET is missing: %s", commercial_partner.display_name)
 
-        if vals['document_type'] == 'credit_note' and not (invoice.reversed_entry_id.name or invoice.reversed_entry_id.invoice_date):
+        if (
+            vals['document_type'] == 'credit_note'
+            and not invoice._l10n_fr_pdp_is_document_type_262()
+            and not (invoice.reversed_entry_id.name or invoice.reversed_entry_id.invoice_date)
+        ):
             constraints[f"ubl_21_fr_{partner_type}_refund_invoice_reference"] = self.env._("You cannot create a Credit Note without an original invoice: %s", vals['invoice'].name)
+        if invoice._l10n_fr_pdp_is_document_type_262():
+            if not invoice._l10n_fr_pdp_get_contract_reference():
+                constraints['ubl_21_fr_262_contract'] = self.env._(
+                    "A contract reference (BT-12) is required for a standalone commercial credit note (262).",
+                )
+            start, end = invoice._l10n_fr_pdp_get_invoicing_period()
+            if not start or not end:
+                constraints['ubl_21_fr_262_period'] = self.env._(
+                    "An invoicing period (BG-14) is required for a standalone commercial credit note (262).",
+                )
 
         customer = vals['customer'].commercial_partner_id
         if self._pdp_is_b2g(customer) and not self._pdp_can_invoice_b2g(customer):
@@ -90,14 +104,17 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
                 '_text': f"#{code}#{default_content}",
             })
 
-        # Règles de gestion G1.52
-        if vals['document_type'] == 'credit_note':
+        # Règles de gestion G1.52 — skipped for UNTDID 262 (BR-FR-CO-03: no BT-25)
+        if vals['document_type'] == 'credit_note' and not invoice._l10n_fr_pdp_is_document_type_262():
             document_node['cac:BillingReference'] = {
                 'cac:InvoiceDocumentReference': {
                     'cbc:ID': {'_text': invoice.reversed_entry_id.name},
                     'cbc:IssueDate': {'_text': invoice.reversed_entry_id.invoice_date},
                 }
             }
+        elif invoice._l10n_fr_pdp_is_document_type_262():
+            document_node.pop('cac:BillingReference', None)
+            self._l10n_fr_pdp_add_262_header_nodes(document_node, invoice)
 
         # [BR-FR-CO-09/BT-23] : Si le cadre de facturation (BT-23) est B2, S2 ou M2, alors la date d'échéance (BT-9) doit être renseignée et correspondre à la date de paiement.
         # For credit notes, this is handled in `_add_invoice_payment_means_nodes` instead, as `cac:PaymentMeans` is
@@ -158,7 +175,9 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
         # Override account_edi_ubl: [BR-FR-04] Downpayment code for credit note is 503
         invoice = vals['invoice']
         vals['document_node']['cbc:CreditNoteTypeCode'] = {'_text': None}
-        if self._is_document(vals, 'credit_note') and invoice._is_downpayment():
+        if self._is_document(vals, 'credit_note') and invoice._l10n_fr_pdp_is_document_type_262():
+            vals['document_node']['cbc:CreditNoteTypeCode']['_text'] = 262
+        elif self._is_document(vals, 'credit_note') and invoice._is_downpayment():
             vals['document_node']['cbc:CreditNoteTypeCode']['_text'] = 503
         else:
             super()._ubl_add_credit_note_type_code_node(vals)
