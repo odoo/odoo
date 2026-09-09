@@ -11,7 +11,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 
-import { describe, expect, test, waitFor } from "@odoo/hoot";
+import { describe, expect, test, waitFor, waitForNone } from "@odoo/hoot";
 import { markup } from "@odoo/owl";
 
 import { serverState } from "@web/../tests/web_test_helpers";
@@ -246,4 +246,21 @@ test("Display highlighted with escaped character must ignore them", async () => 
     await insertText(".o-mail-SearchInput input", "test hello");
     await waitFor(`.o-mail-SearchMessageResult .o-mail-Message span.${HIGHLIGHT_CLASS}:count(2)`);
     await waitFor(`.o-mail-Message-body:has(:text("<strong>test</strong> hello")):count(1)`);
+});
+
+test("Display highlighted search in threads panel", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["discuss.channel"].create({ name: "Dunder Mifflin", parent_channel_id: channelId });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Threads']");
+    await waitFor(".o-mail-SubChannelPreview-name:text('Dunder Mifflin'):count(1)");
+    await insertText(".o-mail-ActionPanel .o-mail-SearchInput input", "Mifflin");
+    await waitFor(
+        `.o-mail-SubChannelPreview-name span.${HIGHLIGHT_CLASS}:text('Mifflin'):count(1)`
+    );
+    await insertText(".o-mail-ActionPanel .o-mail-SearchInput input", "", { replace: true });
+    await waitFor(".o-mail-SubChannelPreview-name:text('Dunder Mifflin'):count(1)");
+    await waitForNone(`.o-mail-SubChannelPreview-name span.${HIGHLIGHT_CLASS}`);
 });
