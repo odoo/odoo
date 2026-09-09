@@ -363,7 +363,8 @@ class TestViewSaving(TestViewSavingCommon):
         self.assertEqual(company.website, "+00 00 000 00 0 000")
 
     @unittest.skip(
-        "save conflict for embedded (saved by third party or previous version in page) not implemented"
+        "save conflict for embedded (saved by third party or previous version in "
+        "page) not implemented - tracked in task 32036"
     )
     def test_embedded_conflict(self):
         e1 = h.SPAN("My Company", attrs(model="res.company", id=1, field="name"))
