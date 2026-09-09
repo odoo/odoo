@@ -178,6 +178,7 @@ class HrVersion(models.Model):
     country_code = fields.Char(related='company_country_id.code', depends=['company_country_id'], readonly=True)
     contract_type_id = fields.Many2one('hr.contract.type', "Contract Type", tracking=True,
                                        groups="hr.group_hr_user")
+    is_first_version = fields.Boolean(compute="_compute_is_first_version", store=True, groups="hr.group_hr_user")
 
     def _get_hr_responsible_domain(self):
         return "[('share', '=', False), ('company_ids', 'in', company_id), ('all_group_ids', 'in', %s)]" % self.env.ref('hr.group_hr_user').id
@@ -196,6 +197,31 @@ class HrVersion(models.Model):
         '(employee_id, date_version) WHERE active = TRUE AND employee_id IS NOT NULL',
         'An employee cannot have multiple active versions sharing the same effective date.',
     )
+
+    def _get_first_version(self):
+        # Many versions might have same contract_date_start
+        # is_first_version is True means it is has the earliest date_start among versions with same contract_date_start
+        self.ensure_one()
+        if self.is_first_version:
+            return self
+
+        return self.env['hr.version'].search([('employee_id', '=', self.employee_id.id), ('is_first_version', '=', True)], limit=1)
+
+    @api.depends('contract_date_start', 'date_start', 'employee_id')
+    def _compute_is_first_version(self):
+        versions_without_contract = self.filtered(lambda v: not v.contract_date_start)
+        for version in versions_without_contract:
+            version.is_first_version = False
+        employee_contract_date_start_mapping = set()
+        versions_with_contract = self - versions_without_contract
+        sorted_versions = versions_with_contract.sorted(key=lambda v: v.date_start or fields.Date.to_date('1970-01-01'))
+        for version in sorted_versions:
+            group_key = (version.employee_id.id, version.contract_date_start)
+            if group_key not in employee_contract_date_start_mapping:
+                employee_contract_date_start_mapping.add(group_key)
+                version.is_first_version = True
+            else:
+                version.is_first_version = False
 
     @api.depends('employee_id.company_id')
     def _compute_company_id(self):
