@@ -59,7 +59,9 @@ export const isRequiredMark = (el) => el.classList.contains("o_mark_required");
  */
 export function getDefaultFormat(el) {
     return {
-        labelWidth: el.querySelector(".s_website_form_label").style.width,
+        // Degraded forms may not have a label anymore: fall back to the
+        // stock template's width instead of crashing.
+        labelWidth: el.querySelector(".s_website_form_label")?.style.width || "200px",
         labelPosition: "left",
         multiPosition: "horizontal",
         requiredMark: isRequiredMark(el),
@@ -287,6 +289,24 @@ export function setActiveProperties(fieldEl, field) {
     field.propertyValue = input && input.value;
     field.description = description;
     field.rows = textarea && textarea.rows;
+    // Slider display of number fields.
+    field.inputDisplay = fieldEl.dataset.inputDisplay;
+    const rangeInputEl = fieldEl.querySelector("input[type=range]");
+    if (rangeInputEl) {
+        field.value = rangeInputEl.getAttribute("value") || rangeInputEl.value;
+        field.rangeMin = rangeInputEl.getAttribute("min");
+        field.rangeMax = rangeInputEl.getAttribute("max");
+        field.rangeStep = rangeInputEl.getAttribute("step");
+    }
+    // Computed field configuration.
+    if (fieldEl.dataset.type === "computed") {
+        field.formula = fieldEl.dataset.formula;
+        field.formulaBase = fieldEl.dataset.formulaBase;
+        field.formulaPrefix = fieldEl.dataset.formulaPrefix;
+        field.formulaSuffix = fieldEl.dataset.formulaSuffix;
+        field.formulaDecimals = fieldEl.dataset.formulaDecimals;
+        field.value = fieldEl.querySelector(".s_website_form_input")?.getAttribute("value");
+    }
     field.required = classList.contains("s_website_form_required");
     field.modelRequired = classList.contains("s_website_form_model_required");
     field.hidden = classList.contains("s_website_form_field_hidden");
@@ -567,6 +587,10 @@ export function getListItems(fieldEl) {
         };
         if (opt.dataset.countryId) {
             res.country_id = [parseInt(opt.dataset.countryId), ""];
+        }
+        if (opt.dataset.formValue) {
+            // Numeric weight of the option, used by computed fields.
+            res.weight = parseFloat(opt.dataset.formValue);
         }
         return res;
     });

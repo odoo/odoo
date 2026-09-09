@@ -22,6 +22,23 @@
         <BuilderTextInput action="'setMark'" default="''"/>
         <BuilderColorPicker enabledTabs="['solid', 'custom']" action="'markColor'"/>
     </BuilderRow>
+    <BuilderRow t-if="this.canChangeFieldsLayout" label.translate="Layout">
+        <BuilderSelect preview="false">
+            <BuilderSelectItem action="'toggleFormSteps'" actionValue="'page'">One Page</BuilderSelectItem>
+            <BuilderSelectItem action="'toggleFormSteps'" actionValue="'steps'" id="'form_steps_opt'">Steps</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Progress Indicator" level="1" t-if="this.isActiveItem('form_steps_opt')">
+        <BuilderSelect preview="false">
+            <BuilderSelectItem dataAttributeAction="'stepsIndicator'" dataAttributeActionValue="'dots'">Dots</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeAction="'stepsIndicator'" dataAttributeActionValue="'bar'">Progress Bar</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeAction="'stepsIndicator'" dataAttributeActionValue="'none'" id="'steps_indicator_none_opt'">None</BuilderSelectItem>
+        </BuilderSelect>
+        <BuilderColorPicker t-if="!this.isActiveItem('steps_indicator_none_opt')" enabledTabs="['solid', 'custom']" action="'stepsIndicatorColor'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Steps" level="1" t-if="this.isActiveItem('form_steps_opt')">
+        <BuilderButton action="'addFormStep'" preview="false" title.translate="Add a new step at the end of the form">Add Step</BuilderButton>
+    </BuilderRow>
     <BuilderRow t-if="this.canChangeFieldsLayout" label.translate="Labels Position">
         <BuilderButtonGroup action="'selectLabelsPosition'">
             <BuilderButton title.translate="Hide" actionValue="'none'" id="'label_position_hide_opt'">
@@ -130,6 +147,7 @@
                 <BuilderSelectItem actionValue="'date'">Date</BuilderSelectItem>
                 <BuilderSelectItem actionValue="'datetime'">Date &amp; Time</BuilderSelectItem>
                 <BuilderSelectItem actionValue="'binary'">File Upload</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'computed'">Computed Value</BuilderSelectItem>
             </BuilderContext>
             <t t-if="this.state.availableFields.length">
                 <div class="o-hb-select-dropdown-category py-2 ps-2 fst-italic">Existing fields</div>
@@ -164,15 +182,60 @@
         >
             <BuilderSelectItem action="'multiCheckboxDisplay'" actionValue="'horizontal'">Horizontal</BuilderSelectItem>
             <BuilderSelectItem action="'multiCheckboxDisplay'" actionValue="'vertical'">Vertical</BuilderSelectItem>
+            <BuilderSelectItem action="'multiCheckboxDisplay'" actionValue="'buttons'">Buttons</BuilderSelectItem>
+            <BuilderSelectItem action="'multiCheckboxDisplay'" actionValue="'boxed'">Boxed</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
+    <BuilderRow label.translate="Display" t-if="['integer', 'float'].includes(this.domState.elDataset.type)">
+        <BuilderSelect preview="false">
+            <BuilderSelectItem action="'setNumberInputDisplay'" actionValue="'input'">Input</BuilderSelectItem>
+            <BuilderSelectItem action="'setNumberInputDisplay'" actionValue="'slider'" id="'number_slider_opt'">Slider</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <t t-if="this.isActiveItem('number_slider_opt')">
+        <BuilderRow label.translate="Minimum" level="1">
+            <BuilderNumberInput attributeAction="'min'" default="0" applyTo="`input[type='range']`"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Maximum" level="1">
+            <BuilderNumberInput attributeAction="'max'" default="100" applyTo="`input[type='range']`"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Step" level="1">
+            <BuilderNumberInput attributeAction="'step'" default="1" applyTo="`input[type='range']`"/>
+        </BuilderRow>
+    </t>
+    <t t-if="this.domState.elDataset.type === 'computed'">
+        <BuilderRow label.translate="Base Value" tooltip.translate="Fixed amount the computed value starts from">
+            <BuilderNumberInput dataAttributeAction="'formulaBase'" default="0"/>
+        </BuilderRow>
+        <BuilderRow>
+            <div class="d-flex flex-column w-100">
+                <p class="hb-row-label mb-0 flex-grow-0 flex-shrink-0 flex-basis-auto">Formula</p>
+                <BuilderList
+                    action="'setComputedFormula'"
+                    addItemTitle.translate="Add a term"
+                    itemShape="{ display_name: 'text', coef: 'number', multiplier: 'text' }"
+                    defaultNewValue="{ display_name: '', coef: 1, multiplier: '' }"
+                    records="this.formulaSources.json"
+                    sortable="false"/>
+            </div>
+        </BuilderRow>
+        <BuilderRow label.translate="Prefix" level="1">
+            <BuilderTextInput dataAttributeAction="'formulaPrefix'"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Suffix" level="1">
+            <BuilderTextInput dataAttributeAction="'formulaSuffix'"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Decimals" level="1">
+            <BuilderNumberInput dataAttributeAction="'formulaDecimals'" default="0" min="0" step="1"/>
+        </BuilderRow>
+    </t>
     <BuilderRow label.translate="Height" level="1" applyTo="'textarea'">
         <BuilderNumberInput unit.translate="rows" saveUnit="''" step="1" attributeAction="'rows'" default="3"/>
     </BuilderRow>
     <BuilderRow label.translate="Hide Label" t-if="this.isActiveItem('custom_field_boolean_opt')">
         <BuilderCheckbox action="'toggleCheckboxLabel'"/>
     </BuilderRow>
-    <BuilderRow label.translate="Required">
+    <BuilderRow label.translate="Required" t-if="this.domState.elDataset.type !== 'computed'">
         <BuilderCheckbox t-if="!this.domState.elClassList.includes('s_website_form_model_required')"
             id="'required_opt'" preview="false"
             action="'toggleRequired'" actionParam="'s_website_form_required'"
@@ -253,7 +316,7 @@
                 t-key="this.getFieldKey"
                 action="'setFormCustomFieldValueList'"
                 addItemTitle="this.state.valueList.addItemTitle"
-                itemShape="{ display_name: 'text', selected: this.state.valueList.checkType }"
+                itemShape="this.state.valueList.withWeight ? { display_name: 'text', weight: 'number', selected: this.state.valueList.checkType } : { display_name: 'text', selected: this.state.valueList.checkType }"
                 default="{ display_name: this.state.valueList.defaultItemName, selected: false }"
                 defaultNewValue="{ id: this.state.valueList.defaultItemName }"
                 forbidLastItemRemoval="true"
