@@ -237,6 +237,14 @@ const actions = [
         ],
     },
     {
+        id: 5,
+        xml_id: "action_5",
+        name: "Ponies in dialog",
+        res_model: "pony",
+        target: "new",
+        views: [[false, "list"]],
+    },
+    {
         id: 102,
         xml_id: "embedded_action_2",
         name: "Embedded Action 2",
@@ -263,6 +271,14 @@ const actions = [
         user_id: user.userId,
         parent_action_id: 4,
         action_id: 4,
+    },
+    {
+        id: 105,
+        name: "Embedded Action 5",
+        parent_res_model: "pony",
+        type: "ir.embedded.actions",
+        parent_action_id: 5,
+        action_id: 3,
     },
 ];
 
@@ -295,6 +311,18 @@ test("can display embedded actions linked to the current action", async () => {
             res_model: "partner",
         },
     });
+});
+
+test("don't display embedded actions in a dialog", async () => {
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    expect(".o_control_panel_navigation > button > i[data-icon='tune']").toHaveCount(1);
+
+    // execute an action in target="new" with embedded actions: selecting one
+    // would replace the action in background, so they aren't displayed
+    await getService("action").doAction(5);
+    expect(".modal .o_list_view").toHaveCount(1);
+    expect(".modal .o_control_panel_navigation > button > i[data-icon='tune']").toHaveCount(0);
 });
 
 test("can toggle visibility of embedded actions", async () => {
