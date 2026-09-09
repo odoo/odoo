@@ -402,6 +402,40 @@ class TestEventData(EventCase, MockVisitor):
                 "This slot is not available for this event",
             )
 
+    def test_process_tickets_form_negative_quantity(self):
+        """A posted 'nb_register-<id>' value that is zero or negative must be
+        dropped, not returned as an order with a negative/zero quantity that
+        would understate the displayed ordered_seats count."""
+        event = self.env["event.event"].create(
+            {
+                "name": "Test Event",
+                "date_begin": FieldsDatetime.to_string(
+                    datetime.today() + timedelta(days=1)
+                ),
+                "date_end": FieldsDatetime.to_string(
+                    datetime.today() + timedelta(days=15)
+                ),
+            }
+        )
+        ticket = self.env["event.event.ticket"].create(
+            {
+                "name": "Regular",
+                "event_id": event.id,
+                "seats_max": 200,
+            }
+        )
+
+        with MockRequest(self.env):
+            tickets = WebsiteEventController()._process_tickets_form(
+                event, {"nb_register-%s" % ticket.id: "-5"}
+            )
+
+        self.assertEqual(
+            tickets,
+            [],
+            "A negative registration count must not produce a ticket order.",
+        )
+
     def test_registration_answer_search(self):
 
         event = self.env["event.event"].create(
