@@ -302,11 +302,6 @@ class StockRuleSelection(models.Model):
         return self._get_intercomp_transit_location().id in locations.ids
 
     @api.model
-    def _get_domain_rule(self, locations, values):
-        return self._get_domain_rule_location(
-            locations,
-        ) & self._get_domain_rule_scope(values)
-
     @api.model
     def _get_domain_rule_location(self, locations):
         location_ids = locations.ids
