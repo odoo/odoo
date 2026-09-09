@@ -578,6 +578,7 @@ export class AddPageDialog extends Component {
                 path: data.url,
                 edition: true,
                 websiteId: this.props.websiteId,
+                lang: "default",
             });
         }
         this.props.onAddPage({ createdUrl: data.url });
