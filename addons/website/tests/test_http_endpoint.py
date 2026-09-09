@@ -33,4 +33,5 @@ class TestHttpEndPoint(HttpCase):
         self.assertURLEqual(res.headers.get("Location"), "/test_http/greeting")
 
     def test_404(self):
-        self.url_open("/not_found")
+        res = self.url_open("/not_found")
+        self.assertEqual(res.status_code, 404)
