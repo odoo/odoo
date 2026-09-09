@@ -510,14 +510,6 @@ class StockMoveLineQuant(models.Model):
                 ]
         return {"quants": quants, "move_lines": lines}
 
-    def _get_similar_move_lines(self):
-        self.check_singleton()
-        picking = self.move_id.picking_id or self.picking_id
-        others = picking.move_line_ids - self - self._origin
-        return others.filtered(
-            lambda ml: ml.product_id == self.product_id and (ml.lot_id or ml.lot_name)
-        )
-
     def action_revert_inventory(self):
         revertable = self.filtered(
             lambda ml: ml.is_inventory and not ml.product_uom_id.is_zero(ml.quantity)

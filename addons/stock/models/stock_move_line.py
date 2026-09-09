@@ -707,6 +707,14 @@ class StockMoveLine(models.Model):
         self.check_singleton()
         return self.lot_id.name or self.lot_name
 
+    def _get_similar_move_lines(self):
+        self.check_singleton()
+        picking = self.move_id.picking_id or self.picking_id
+        others = picking.move_line_ids - self - self._origin
+        return others.filtered(
+            lambda ml: ml.product_id == self.product_id and (ml.lot_id or ml.lot_name)
+        )
+
     @api.onchange("quantity", "product_uom_id")
     def _onchange_quantity(self):
         if self.quantity and self.product_id.tracking == "serial":
