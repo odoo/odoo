@@ -151,6 +151,16 @@
                     invisible="not id or state != 'posted' or not l10n_fr_pdp_sent_in_flow_ids"
                 />
             </button>
+            <xpath expr="//page[@name='other_info']//group[@name='sale_info_group']" position="inside">
+                <field name="l10n_fr_pdp_is_commercial_credit_note" invisible="move_type != 'out_refund'"/>
+                <field name="l10n_fr_pdp_contract_reference"
+                       invisible="not l10n_fr_pdp_is_commercial_credit_note"
+                       readonly="state != 'draft'"/>
+                <field name="l10n_fr_pdp_invoicing_period_start"
+                       invisible="not l10n_fr_pdp_is_commercial_credit_note"/>
+                <field name="l10n_fr_pdp_invoicing_period_end"
+                       invisible="not l10n_fr_pdp_is_commercial_credit_note"/>
+            </xpath>
         </field>
     </record>
 
