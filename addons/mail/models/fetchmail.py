@@ -201,7 +201,12 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
         connection_type = self._get_connection_type()
         if connection_type == 'imap':
             connection = IMAP4Connection(self.server, int(self.port), self.is_ssl)
-            self._imap_login(connection)
+            try:
+                self._imap_login(connection)
+            except IMAP4.error as error:
+                raise UserError(self._imap_login_error_message(error)) from error
+            except Exception as error:
+                raise UserError(_('Connection failed: %(error)s', error=str(error))) from error
         elif connection_type == 'pop':
             connection = POP3Connection(self.server, int(self.port), self.is_ssl)
             #TODO: use this to remove only unread messages
@@ -219,6 +224,10 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
         """
         self.ensure_one()
         connection.login(self.user, self.password)
+
+    def _imap_login_error_message(self, error):
+        """Return the user-facing error message for IMAP login failures."""
+        return _("Server replied with following exception:\n %s", exception_to_unicode(error))
 
     def button_confirm_login(self):
         for server in self:

@@ -45,6 +45,17 @@ class FetchmailServer(models.Model):
         else:
             super(FetchmailServer, self)._imap_login(connection)
 
+    def _imap_login_error_message(self, error):
+        self.ensure_one()
+        if self.server_type == 'gmail':
+            return _(
+                'Gmail authentication failed for server "%(server_name)s". '
+                'Please reconnect your Gmail account.\n%(error)s',
+                server_name=self.name,
+                error=error,
+            )
+        return super()._imap_login_error_message(error)
+
     def _get_connection_type(self):
         """Return which connection must be used for this mail server (IMAP or POP).
         The Gmail mail server used an IMAP connection.
