@@ -23,8 +23,6 @@ if (odoo.loader.modules.has("@website_sale/interactions/tracking")) {
     patchTracking();
 }
 
-let itemId;
-
 registry.category("web_tour.tours").add("google_analytics_view_item", {
     url: "/shop?search=Colored T-Shirt",
     steps: () => [
@@ -38,8 +36,15 @@ registry.category("web_tour.tours").add("google_analytics_view_item", {
             content: "wait until `_getCombinationInfo()` rpc is done",
             trigger: "body[view-event-id]",
             timeout: 25000,
+            // Clear the attribute so that the wait further down can only be
+            // satisfied by a *new* view event. Stashing the current id in a
+            // module variable and interpolating it into that trigger does not
+            // work: `steps()` is invoked once, eagerly, before any step runs,
+            // so the template literal captures `undefined` and the trigger
+            // degrades to `body[view-event-id]:not([view-event-id="undefined"])`
+            // — which the id set right here already satisfies.
             run: () => {
-                itemId = document.body.getAttribute("view-event-id");
+                document.body.removeAttribute("view-event-id");
             },
         },
         {
@@ -50,7 +55,9 @@ registry.category("web_tour.tours").add("google_analytics_view_item", {
         },
         {
             content: "wait until `_getCombinationInfo()` rpc is done (2)",
-            trigger: `body[view-event-id]:not([view-event-id="${itemId}"])`,
+            // The attribute was removed above, so it can only be back if a new
+            // view event was generated for the variant selected in between.
+            trigger: "body[view-event-id]",
             timeout: 25000,
         },
     ],
