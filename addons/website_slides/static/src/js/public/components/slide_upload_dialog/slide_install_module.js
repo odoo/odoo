@@ -34,7 +34,7 @@ export class SlideInstallModule extends Component {
                 [this.props.moduleData.id],
             ]);
         } catch {
-            this.state.hasFailed = "failure";
+            this.state.status = "failure";
             this.state.message = _t(
                 'Failed to install "%s"',
                 this.props.moduleData.name,
