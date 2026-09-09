@@ -805,8 +805,10 @@ export function makeActionManager(env, router = _router) {
         viewProps.noBreadcrumbs =
             "_noBreadcrumbs" in action ? action._noBreadcrumbs : target === "new";
 
+        // selecting an embedded action replaces the current action, which isn't
+        // the action of the dialog, so we don't display them in a dialog either
         const embeddedActions =
-            view.type === "form"
+            view.type === "form" || target === "new"
                 ? []
                 : context.parent_action_embedded_actions || action.embedded_action_ids;
         const parentActionId = (view.type !== "form" && context.parent_action_id) || false;
