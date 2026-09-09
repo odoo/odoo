@@ -166,6 +166,14 @@
                         t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
                     />
                 </del>
+                <t t-if="data.get('has_discounted_price') and data.get('list_price')">
+                    <t
+                        t-set="product_discount_percent"
+                        t-value="round((data['list_price'] - data['price']) / data['list_price'] * 100)"
+                    />
+                    <span name="product_discount_badge" class="badge text-bg-success ms-1"
+                        ><t t-out="'-%s' % product_discount_percent"/>%</span>
+                </t>
                 <t
                     t-if="data.get('base_unit_price')"
                     t-call="website_sale.base_unit_price"

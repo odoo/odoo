@@ -85,6 +85,15 @@
                                         t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
                                     />
                                 </del>
+                                <t
+                                    t-set="product_discount_percent"
+                                    t-value="round(
+                                        (template_price_vals['base_price'] - template_price_vals['price_reduce'])
+                                        / template_price_vals['base_price'] * 100
+                                    )"
+                                />
+                                <span name="product_discount_badge" class="badge text-bg-success"
+                                    ><t t-out="'-%s' % product_discount_percent"/>%</span>
                             </t>
                             <t
                                 t-if="template_price_vals.get('base_unit_price')"
