@@ -23,7 +23,13 @@ export class Chart extends Interaction {
 
     start() {
         const endParse = log.perf("start parse data and convert colors");
-        const data = JSON.parse(this.el.dataset.data);
+        let data;
+        try {
+            data = JSON.parse(this.el.dataset.data);
+        } catch {
+            endParse();
+            return;
+        }
         data.datasets.forEach((el) => {
             el.backgroundColor = this.convertToCSS(el.backgroundColor);
             el.borderColor = this.convertToCSS(el.borderColor);
