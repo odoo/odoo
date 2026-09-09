@@ -283,12 +283,13 @@ class MrpWorkorder(models.Model):
     @api.depends_context('prefix_product')
     def _compute_display_name(self):
         for wo in self:
-            wo.display_name = f"{wo.production_id.name} - {wo.name}"
+            product_name = wo.product_id.name
+            if variant := wo.product_id.product_template_attribute_value_ids._get_combination_name():
+                product_name = f"{product_name}({variant})"
+            product_name_qty_prefix = f"{product_name} - {wo.qty_remaining:g} {wo.uom_id.name}"
+            wo.display_name = product_name_qty_prefix
             if self.env.context.get('prefix_product'):
-                product_name = wo.product_id.name
-                if variant := wo.product_id.product_template_attribute_value_ids._get_combination_name():
-                    product_name = f"{product_name}({variant})"
-                wo.display_name = f"{product_name} - {wo.production_id.name} - {wo.name}"
+                wo.display_name = f"{product_name_qty_prefix} - {wo.production_id.name} - {wo.name}"
 
     @api.depends('duration_expected', 'duration', 'state')
     def _compute_remaining_time(self):
