@@ -237,8 +237,10 @@ class AddPageTemplatePreview extends Component {
             for (const imgEl of lazyLoadedImgEls) {
                 imgEl.setAttribute("loading", "eager");
             }
-            mainEl.appendChild(wrapEl);
             const endImages = log.perf("AddPageTemplatePreview images loaded");
+            // A single broken image must not reject and abort the rest of the
+            // setup (fonts.ready, o_loading removal, adjustHeight), which would
+            // leave the preview stuck loading.
             await onceAllImagesLoaded(wrapEl).catch(() => {});
             endImages();
             for (const imgEl of lazyLoadedImgEls) {
