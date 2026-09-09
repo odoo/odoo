@@ -31,3 +31,21 @@ class TestSnippets(HttpCase):
             "snippet_newsletter_block_with_edit",
             login='admin'
         )
+
+    def test_website_form_public_subscription(self):
+        mailing_list = self.env['mailing.list'].create({
+            'name': 'Public website form list',
+            'is_public': True,
+        })
+
+        self.authenticate(None, None)
+        response = self.url_open('/website/form/mailing.contact', data={
+            'name': 'Public Subscriber',
+            'email': 'public.subscriber@example.com',
+            'list_ids': mailing_list.id,
+        })
+
+        contact = self.env['mailing.contact'].browse(response.json().get('id'))
+        self.assertTrue(contact.exists())
+        self.assertEqual(contact.list_ids, mailing_list)
+        self.assertTrue(contact.subscription_ids.create_date)
