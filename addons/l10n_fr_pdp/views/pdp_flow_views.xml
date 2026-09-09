@@ -36,7 +36,7 @@
                             type="object"
                             class="btn-secondary"
                             string="Build Payload"
-                            invisible="state not in ['pending', 'error']"/>
+                            invisible="state != 'pending'"/>
                     <button name="action_open_send_wizard"
                             type="object"
                             class="btn-primary"
@@ -47,7 +47,7 @@
                     <widget name="web_ribbon" title="Sent" bg_color="text-bg-success"
                             invisible="state not in ['sent', 'completed']"/>
                     <widget name="web_ribbon" title="Error" bg_color="text-bg-danger"
-                            invisible="state != 'error' or not transport_status or transport_status not in ['ERROR', 'REFUSED']"/>
+                            invisible="state != 'error'"/>
                     <div class="oe_button_box" name="button_box">
                         <button type="object"
                                 name="action_view_moves"
