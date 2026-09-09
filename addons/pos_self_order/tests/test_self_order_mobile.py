@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
+
 import odoo.tests
 
 from urllib.parse import urlparse
@@ -141,3 +143,24 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.pos_config.current_session_id.set_opening_control(0, "")
         self.start_tour(self.pos_config._get_self_order_route(), 'test_self_order_meal_do_not_change_tracking_number_on_sync')
+
+    def test_self_order_mobile_order_not_sent_to_preparation(self):
+        """A mobile order is sent to the kitchen by the cashier from the POS, so
+        it must not be recorded as already sent."""
+        self.pos_config.write({
+            'takeaway': True,
+            'self_ordering_takeaway': True,
+            'self_ordering_mode': 'mobile',
+            'self_ordering_pay_after': 'each',
+            'self_ordering_service_mode': 'counter',
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+        self_route = self.pos_config._get_self_order_route()
+        self.start_tour(self_route, "self_mobile_each_counter_takeaway_in")
+
+        orders = self.env['pos.order'].search([('config_id', '=', self.pos_config.id)])
+        self.assertTrue(orders)
+        for order in orders:
+            sent_lines = json.loads(order.last_order_preparation_change or '{}').get('lines', {})
+            self.assertFalse(sent_lines, "a mobile order must stay unsent until the cashier sends it")

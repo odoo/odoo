@@ -626,6 +626,12 @@ export class SelfOrder extends Reactive {
         }
     }
 
+    shouldUpdateLastOrderChange() {
+        // The kiosk sends its own orders to the preparation tools (see
+        // printKioskChanges), whereas a mobile order is still sent by the cashier.
+        return this.config.self_ordering_mode === "kiosk";
+    }
+
     async sendDraftOrderToServer(to_pay_on_kiosk = false) {
         if (
             Object.keys(this.currentOrder.changes).length === 0 ||
@@ -637,6 +643,9 @@ export class SelfOrder extends Reactive {
         try {
             const uuid = this.currentOrder.uuid;
             this.currentOrder.recomputeOrderData();
+            if (this.shouldUpdateLastOrderChange()) {
+                this.currentOrder.updateLastOrderChange();
+            }
             const data = await rpc(
                 `/pos-self-order/process-order-args/${this.config.self_ordering_mode}`,
                 {

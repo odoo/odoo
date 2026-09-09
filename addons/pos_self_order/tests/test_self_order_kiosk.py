@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
+
 import odoo.tests
 from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCommonTest
 from odoo import Command
@@ -154,3 +156,24 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
         self.pos_config.current_session_id.set_opening_control(0, "")
         self_route = self.pos_config._get_self_order_route()
         self.start_tour(self_route, 'self_order_pricelist')
+
+    def test_self_order_kiosk_order_sent_to_preparation(self):
+        """The kiosk prints its own kitchen tickets, so the order it creates
+        must already carry its lines in last_order_preparation_change:
+        otherwise the POS treats them as unsent and prints them again as new."""
+        self.pos_config.write({
+            'self_ordering_takeaway': False,
+            'self_ordering_mode': 'kiosk',
+            'self_ordering_pay_after': 'each',
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+        self_route = self.pos_config._get_self_order_route()
+        self.start_tour(self_route, "self_simple_order")
+
+        order = self.env['pos.order'].search([('config_id', '=', self.pos_config.id)], order='id desc', limit=1)
+        self.assertEqual(order.lines.product_id, self.cola)
+        sent_lines = json.loads(order.last_order_preparation_change or '{}').get('lines', {})
+        self.assertEqual(list(sent_lines), [order.lines.uuid], "the kiosk line must be recorded as sent to the kitchen")
+        self.assertEqual(sent_lines[order.lines.uuid]['product_id'], self.cola.id)
+        self.assertEqual(sent_lines[order.lines.uuid]['quantity'], 1)

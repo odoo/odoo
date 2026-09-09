@@ -727,7 +727,7 @@ export class PosStore extends Reactive {
             ...opts,
         };
 
-        if ("price_unit" in vals) {
+        if ("price_unit" in vals || opts.merge === false) {
             merge = false;
         }
 

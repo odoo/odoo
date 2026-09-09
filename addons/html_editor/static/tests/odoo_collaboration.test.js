@@ -982,6 +982,31 @@ describe("Stale detection & recovery", () => {
                     message: "p2 resetFromPeer should have been called twice",
                 });
             });
+            test("should recover from server when the record is newer than the notified step id", async () => {
+                const pool = await createPeers(["p1", "p2"]);
+                const peers = pool.peers;
+
+                await peers.p1.focus();
+                await peers.p2.focus();
+
+                // Simulate a notification received after the next write.
+                peers.p2.setOffline();
+
+                await insertEditorText(peers.p1.editor, "b");
+                await peers.p1.writeToServer();
+                await insertEditorText(peers.p1.editor, "c");
+                pool.lastRecordSaved = peers.p1.editor.getContent();
+
+                expect(peers.p2.getValue()).toBe(`<p>a[]</p>`, {
+                    message: "p2 should not have the same document as p1",
+                });
+
+                await peers.p2.setOnline();
+
+                expect(peers.p2.getValue()).toBe(`[]<p>abc</p>`, {
+                    message: "p2 should have the document last written to the server",
+                });
+            });
         });
     });
 });
