@@ -56,15 +56,28 @@ class PaymentPortal(payment_portal.PaymentPortal):
     def donation_transaction(
         self, amount, currency_id, partner_id, access_token, minimum_amount=0, **kwargs
     ):
-        if float(amount) < float(minimum_amount):
+        """Override of `payment` to not use `partner_id`/`access_token` for authorization.
+
+        Unlike the parent route, the donor's partner is always re-derived server-side (the
+        current user's partner if logged in, otherwise the website's public partner), and
+        `access_token` is not checked against `payment_utils.check_access_token`: the donation
+        amount can be changed by the visitor after the token was generated (see the recompute
+        below), so validating it against the current amount would reject legitimate amount
+        changes as if they were tampering.
+        """
+        amount = self._cast_as_float(amount)
+        minimum_amount = self._cast_as_float(minimum_amount)
+        if amount is None or minimum_amount is None:
+            raise ValidationError(_("Invalid donation amount."))
+        if amount < minimum_amount:
             _debug.logic(
                 "donation_refused",
                 reason="below_minimum",
-                amount=float(amount),
-                minimum=float(minimum_amount),
+                amount=amount,
+                minimum=minimum_amount,
             )
             raise ValidationError(
-                _("Donation amount must be at least %.2f.", float(minimum_amount))
+                _("Donation amount must be at least %.2f.", minimum_amount)
             )
         use_public_partner = request.env.user._is_public() or not partner_id
         if use_public_partner:
@@ -99,18 +112,25 @@ class PaymentPortal(payment_portal.PaymentPortal):
         )
         tx_sudo.is_donation = True
         if use_public_partner:
+            country_id = self._cast_as_int(details["country_id"])
+            if not country_id:
+                raise ValidationError(_("Country is required."))
             tx_sudo.update(
                 {
                     "partner_name": details["name"],
                     "partner_email": details["email"],
-                    "partner_country_id": int(details["country_id"]),
+                    "partner_country_id": country_id,
                 }
             )
         elif not tx_sudo.partner_country_id:
-            country_id = kwargs.get("partner_details", {}).get("country_id")
+            country_id = self._cast_as_int(
+                kwargs.get("partner_details", {}).get("country_id")
+            )
             if not country_id:
                 raise ValidationError(_("Country is required."))
-            tx_sudo.partner_country_id = int(country_id)
+            tx_sudo.partner_country_id = country_id
+        # the user can change the donation amount on the payment page,
+        # therefor we need to recompute the access_token
         access_token = payment_utils.generate_access_token(
             tx_sudo.partner_id.id, tx_sudo.amount, tx_sudo.currency_id.id
         )
