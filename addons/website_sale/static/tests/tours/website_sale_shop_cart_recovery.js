@@ -17,8 +17,7 @@ registry.category("web_tour.tours").add("shop_cart_recovery", {
             content: "check product is in cart, get cart id, logout, go to login",
             trigger: 'div:has(a>h6:contains("Acoustic Bloc Screens"))',
             run: function () {
-                const orderId =
-                    document.querySelector(".my_cart_quantity").dataset["orderId"];
+                const orderId = tourUtils.getCartOrderId();
                 browser.localStorage.setItem(orderIdKey, orderId);
                 window.location.href = "/web/session/logout?redirect=/web/login";
             },

@@ -198,6 +198,14 @@ export function goToCart({
     };
 }
 
+/**
+ * Reads the current cart's order id off the cart-quantity badge's dataset,
+ * where the cart icon widget publishes it.
+ */
+export function getCartOrderId() {
+    return document.querySelector(".my_cart_quantity").dataset["orderId"];
+}
+
 export function goToCheckout() {
     return {
         content: "Checkout your order",

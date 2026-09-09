@@ -15,8 +15,7 @@ registry.category("web_tour.tours").add("shop_mail", {
             content: "check product is in cart, get cart id, go to backend",
             trigger: 'div:has(a>h6:contains("Acoustic Bloc Screens"))',
             run: function () {
-                const orderId =
-                    document.querySelector(".my_cart_quantity").dataset["orderId"];
+                const orderId = tourUtils.getCartOrderId();
                 redirect("/odoo/action-sale.action_sale_order/" + orderId);
             },
             expectUnloadPage: true,
