@@ -370,13 +370,13 @@ def html_normalize(src, filter_callback=None, output_method="html"):
         return src
 
     # html: remove encoding attribute inside tags
-    src = re.sub(r'(<[^>]*\s)(encoding=(["\'][^"\']*?["\']|[^\s\n\r>]+)(\s[^>]*|/)?>)', "", src)
+    src = re.sub(r'(<(?=[^<>]*>)[^<>]*\s)(encoding=(["\'][^"\'<>]*?["\']|[^\s\n\r<>]+)(\s[^<>]*|/)?>)', "", src)
     # html: remove charset declarations from meta tags, the source is already decoded
-    src = re.sub(r'(<meta\b[^>]*?)\bcharset\s*=\s*(?:"[^"]*"|\'[^\']*\'|[^\s"\'>;]+)', r'\1', src, flags=re.IGNORECASE)
+    src = re.sub(r'(<meta\b[^<>]*?)\bcharset\s*=\s*(?:"[^"<>]*"|\'[^\'<>]*\'|[^\s"\'<>;]+)', r'\1', src, flags=re.IGNORECASE)
 
     # On the specific case of Outlook desktop it adds unnecessary '<o:.*></o:.*>' tags which are parsed
     # in '<p></p>' which may alter the appearance (eg. spacing) of the mail body
-    src = re.sub(r'</?o:.*?>', '', src)
+    src = re.sub(r'</?o:[^<>\n]*?>', '', src)
 
     src = src.replace('--!>', '-->')
     src = re.sub(r'(<!-->|<!--->)', '<!-- -->', src)
