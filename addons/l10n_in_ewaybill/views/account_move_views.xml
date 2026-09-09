@@ -6,9 +6,8 @@
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
             <xpath expr="//button[@name='button_request_cancel']" position="after">
-                <button name="action_l10n_in_ewaybill_create" 
+                <button name="action_l10n_in_ewaybill_create"
                         string="Create e-Waybill"
-                        class="oe_highlight"
                         type="object"
                         invisible="
                             country_code != 'IN'
