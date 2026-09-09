@@ -113,8 +113,16 @@
                     </group>
                     <notebook>
                         <page string="Detail Kebutuhan">
+                            <group class="oe_right" groups="sifnext_ppl.group_ppl_finance" invisible="state not in ('draft', 'submitted')">
+                                <div class="o_row">
+                                    <strong>Set COA Massal: </strong>
+                                    <field name="mass_coa_id" placeholder="Pilih COA..."/>
+                                    <button name="action_apply_mass_coa" type="object" string="Terapkan ke Baris Terpilih" class="btn-primary"/>
+                                </div>
+                            </group>
                             <field name="line_ids" invisible="state != 'draft'">
-                                <list editable="bottom" multi_edit="1" open_form_view="True">
+                                <list editable="bottom" open_form_view="True">
+                                    <field name="is_selected"/>
                                     <field name="sequence" widget="handle"/>
                                     <field name="description"/>
                                     <field name="tax_type"/>
@@ -136,7 +144,8 @@
                             </field>
                             <field name="line_ids" groups="sifnext_ppl.group_ppl_finance"
                                    invisible="state != 'submitted'">
-                                <list editable="bottom" multi_edit="1" create="false" delete="false" open_form_view="True">
+                                <list editable="bottom" create="false" delete="false" open_form_view="True">
+                                    <field name="is_selected"/>
                                     <field name="sequence" readonly="True"/>
                                     <field name="description" readonly="True"/>
                                     <field name="tax_type" readonly="True"/>
