@@ -44,12 +44,7 @@ class SaleOrderLine(models.Model):
                 line.product_id.route_ids + line.product_id.categ_id.total_route_ids
             )
             for pull_rule in product_routes.mapped("rule_ids"):
-                if (
-                    pull_rule.picking_type_id.sudo().default_location_src_id.usage
-                    == "supplier"
-                    and pull_rule.picking_type_id.sudo().default_location_dest_id.usage
-                    == "customer"
-                ):
+                if pull_rule.picking_type_id.sudo().code == "dropship":
                     line.is_mto = True
                     break
 
@@ -87,8 +82,7 @@ class SaleOrderLine(models.Model):
         dropship_operation = self.env["stock.picking.type"].search(
             [
                 ("company_id", "=", res["company_id"]),
-                ("default_location_src_id.usage", "=", "supplier"),
-                ("default_location_dest_id.usage", "=", "customer"),
+                ("code", "=", "dropship"),
             ],
             limit=1,
             order="sequence",
