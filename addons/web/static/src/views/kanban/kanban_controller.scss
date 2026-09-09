@@ -231,7 +231,9 @@
         }
 
         .o_kanban_counter {
-            min-height: calc(var(--body-font-size) * var(--body-line-height));
+            // Reserve one line of text so the row doesn't grow once
+            // the progressbar data is loaded.
+            min-height: 1lh;
         }
     }
 
