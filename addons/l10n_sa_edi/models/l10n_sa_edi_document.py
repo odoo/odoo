@@ -384,7 +384,7 @@ class L10nSaEdiDocument(models.Model):
             subtitle = self.env._("Please check the details below and retry after addressing them:")
             content = response_data['error']
             self.state = 'rejected'
-            self.journal_id.l10n_sa_latest_submission_hash = self.env['account.edi.xml.ubl_21.zatca']._l10n_sa_generate_invoice_xml_hash(xml_content)
+            self.journal_id.sudo().l10n_sa_latest_submission_hash = self.env['account.edi.xml.ubl_21.zatca']._l10n_sa_generate_invoice_xml_hash(xml_content)
             self.l10n_sa_chain_index = False
             self.env['l10n_sa_edi.document'].search([('l10n_sa_edi_chain_head_id', '=', self.id)]).l10n_sa_edi_chain_head_id = False  # Reset invoices blocked by this since rejections aren't blocking
 
@@ -406,7 +406,7 @@ class L10nSaEdiDocument(models.Model):
 
         # Set 'l10n_sa_edi_is_production' to True upon the first invoice submission in Production mode
         if not self.resource.company_id.l10n_sa_edi_is_production:
-            self.resource.company_id.l10n_sa_edi_is_production = self.resource.company_id.l10n_sa_api_mode == 'prod'
+            self.resource.company_id.sudo().l10n_sa_edi_is_production = self.resource.company_id.l10n_sa_api_mode == 'prod'
 
         # Invoice already reported.
         if status_code == 409:
@@ -446,7 +446,7 @@ class L10nSaEdiDocument(models.Model):
             self.state = 'accepted'
 
         self.env['l10n_sa_edi.document'].search([('l10n_sa_edi_chain_head_id', '=', self.id)]).l10n_sa_edi_chain_head_id = False  # Reset invoices blocked by this invoice
-        self.journal_id.l10n_sa_latest_submission_hash = self.env['account.edi.xml.ubl_21.zatca']._l10n_sa_generate_invoice_xml_hash(cleared_xml.encode())
+        self.journal_id.sudo().l10n_sa_latest_submission_hash = self.env['account.edi.xml.ubl_21.zatca']._l10n_sa_generate_invoice_xml_hash(cleared_xml.encode())
         self.attachment_id = self._l10n_sa_generate_attachment(cleared_xml.encode())
         self._l10n_sa_create_log(notify)
 

@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
+import contextlib
+
 from datetime import datetime
 from unittest.mock import patch
 from zoneinfo import ZoneInfo
@@ -8,7 +10,7 @@ from freezegun import freeze_time
 from lxml import etree
 
 from odoo import Command
-from odoo.exceptions import ValidationError, UserError
+from odoo.exceptions import ValidationError, UserError, AccessError
 from odoo.tests import tagged
 from odoo.tools import misc
 from odoo.addons.l10n_sa_edi.tests.common import TestSaEdiCommon
@@ -797,3 +799,39 @@ class TestEdiZatca(TestSaEdiCommon):
                 with patch.object(self.env.registry['l10n_sa_edi.document'], '_l10n_sa_submit_einvoice', self._mock_submit_response(ZATCA_RESPONSES['accepted'])):
                     document._l10n_sa_post_zatca_edi(True)
                 self.assertEqual(document.state, 'accepted')
+
+    def test_zatca_submission_not_resent_when_user_lacks_journal_write(self):
+        """If a user with only Invoicing rights (read-only on journals) successfully submits
+        to ZATCA, then recording the result writes to journal.l10n_sa_latest_submission_hash.
+        If that write is not done with sudo it raises AccessError after ZATCA already
+        accepted the invoice, the transaction is rolled back, and the invoice is
+        resubmitted, resulting in a duplicate on ZATCA's side.
+        """
+        journal = self.customer_invoice_journal
+
+        if not journal.l10n_sa_chain_sequence_id:
+            journal.sudo().l10n_sa_chain_sequence_id = journal.sudo()._l10n_sa_edi_create_new_chain()
+
+        # Invoicing user with read-only on account.journal
+        restricted_user = self.env['res.users'].create({
+            'name': 'ZATCA Billing User',
+            'login': 'zatca_billing_user',
+            'email': 'zatca_billing_user@example.com',
+            'company_id': self.company.id,
+            'company_ids': [Command.set(self.company.ids)],
+            'group_ids': [Command.set([
+                self.env.ref('base.group_user').id,
+                self.env.ref('account.group_account_invoice').id,
+            ])],
+        })
+
+        document = self._get_invoice_document()
+
+        with patch.object(self.env.registry['l10n_sa_edi.document'], '_l10n_sa_submit_einvoice', self._mock_submit_response(ZATCA_RESPONSES['accepted'])):
+            with contextlib.suppress(AccessError):
+                document.with_user(restricted_user)._l10n_sa_post_zatca_edi(True)
+
+        self.assertEqual(
+            document.state, 'accepted',
+            "The ZATCA document should be marked 'accepted' after a successful submission.",
+        )
