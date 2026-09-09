@@ -19,6 +19,10 @@ class TestTheme(common.TransactionCase):
         website = self.env["website"].get_current_website()
         website.theme_id = theme_common_module.id
         self.env["ir.module.module"]._theme_remove(website)
+        self.assertFalse(
+            website.theme_id,
+            "The website's theme_id should be cleared after _theme_remove.",
+        )
 
     def test_02_disable_view(self):
         website_id = self.env["website"].browse(1)
