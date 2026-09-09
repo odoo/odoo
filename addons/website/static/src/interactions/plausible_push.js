@@ -19,7 +19,13 @@ export class PlausiblePush extends Interaction {
         window.plausible ||= function () {
             (window.plausible.q = window.plausible.q || []).push(arguments);
         };
-        window.plausible(eventName, { props: JSON.parse(eventParams) || {} });
+        let props;
+        try {
+            props = JSON.parse(eventParams) || {};
+        } catch {
+            props = {};
+        }
+        window.plausible(eventName, { props });
     }
 }
 
