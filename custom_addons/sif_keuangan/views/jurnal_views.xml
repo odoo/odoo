@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- 1. POPUP WIZARD FILTER BUKU BESAR -->
+    <!-- ================================================================= -->
+    <!-- 1. POPUP WIZARD FILTER BUKU BESAR                                 -->
+    <!-- ================================================================= -->
     <record id="view_sif_buku_besar_wizard_form" model="ir.ui.view">
         <field name="name">sif.buku.besar.wizard.form</field>
         <field name="model">sif.buku.besar.wizard</field>
@@ -37,7 +39,9 @@
         <field name="target">new</field>
     </record>
 
-    <!-- 2. VIEW BUKU BESAR (REKAP 8 KOLOM FORMAT SISKEU) -->
+    <!-- ================================================================= -->
+    <!-- 2. VIEW BUKU BESAR (REKAP 8 KOLOM FORMAT SISKEU)                  -->
+    <!-- ================================================================= -->
     <record id="view_sif_buku_besar_list" model="ir.ui.view">
         <field name="name">sif.buku.besar.list</field>
         <field name="model">sif.buku.besar</field>
@@ -84,7 +88,9 @@
         <field name="context">{}</field>
     </record>
 
-    <!-- 3. VIEW JURNAL TRANSAKSI -->
+    <!-- ================================================================= -->
+    <!-- 3. VIEW JURNAL TRANSAKSI (TETAP MENYIMPAN RINCIAN LENGKAP)        -->
+    <!-- ================================================================= -->
     <record id="view_sif_jurnal_entry_list" model="ir.ui.view">
         <field name="name">sif.jurnal.entry.list</field>
         <field name="model">sif.jurnal.entry</field>
@@ -113,14 +119,18 @@
         <field name="arch" type="xml">
             <form string="Entri Jurnal">
                 <header>
-                    <button name="action_post" string="Posting" type="object" class="oe_highlight" invisible="state == 'posted'"/>
-                    <button name="action_draft" string="Set to Draft" type="object" invisible="state == 'draft'"/>
+                    <button name="action_post" string="Posting" type="object" class="oe_highlight" 
+                            invisible="state == 'posted'"/>
+                    <button name="action_draft" string="Set to Draft" type="object" 
+                            invisible="state == 'draft'"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,posted"/>
                 </header>
                 <sheet>
                     <div class="oe_title">
                         <label for="name" string="Nomor Bukti Jurnal"/>
-                        <h1><field name="name" readonly="1"/></h1>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
                     </div>
                     <group>
                         <group>
