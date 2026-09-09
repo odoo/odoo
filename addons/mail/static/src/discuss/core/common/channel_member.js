@@ -1,9 +1,8 @@
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { useChannelMemberActions } from "@mail/discuss/core/common/channel_member_actions";
-import { propComputed } from "@mail/utils/common/hooks";
 
-import { Component, signal, t } from "@odoo/owl";
+import { Component, signal, t, useProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 
@@ -19,8 +18,10 @@ export class ChannelMember extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.member = propComputed("member", t.instanceOf(this.store["discuss.channel.member"]));
-        this.actions = useChannelMemberActions({ member: this.member });
+        this.props = useProps({
+            member: t.signal(t.instanceOf(this.store["discuss.channel.member"])),
+        });
+        this.actions = useChannelMemberActions({ member: () => this.props.member() });
         this.showingActions = useDropdownState();
     }
 
@@ -31,8 +32,8 @@ export class ChannelMember extends Component {
 
     get attClass() {
         return {
-            "cursor-pointer": this.isClickable(this.member()),
-            "o-offline": this.member().imStatusUI === "offline",
+            "cursor-pointer": this.isClickable(this.props.member()),
+            "o-offline": this.props.member().imStatusUI === "offline",
             "o-showingActions": this.showingActions.isOpen,
         };
     }

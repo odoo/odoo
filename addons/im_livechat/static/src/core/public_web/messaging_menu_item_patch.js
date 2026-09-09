@@ -11,7 +11,7 @@ const messagingMenuItemPatch = {
         super.setup(...arguments);
         this.helpTime = computedUntilStale(
             () => {
-                const dt = this.channel?.livechat_looking_for_help_since_dt;
+                const dt = this.props.channel?.livechat_looking_for_help_since_dt;
                 if (!dt) {
                     return { text: "" };
                 }

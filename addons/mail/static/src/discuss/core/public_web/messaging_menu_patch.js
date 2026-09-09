@@ -11,14 +11,18 @@ const messagingMenuPatch = {
     setup() {
         super.setup(...arguments);
         this.filteredChannels = computed(() => {
-            const filters = [...this.state().activePluginFilters];
-            if (this.state().selectedFilter) {
-                filters.push(this.state().selectedFilter);
+            const filters = [...this.props.state().activePluginFilters];
+            if (this.props.state().selectedFilter) {
+                filters.push(this.props.state().selectedFilter);
             }
-            const channels = this.state().activeTab.channels.filter((c) =>
-                filters.every((f) => !f.includesChannel || f.includesChannel(c))
-            );
-            return this.state().activeTab.getSortedChannels(this.state().selectedFilter, channels);
+            const channels = this.props
+                .state()
+                .activeTab.channels.filter((c) =>
+                    filters.every((f) => !f.includesChannel || f.includesChannel(c))
+                );
+            return this.props
+                .state()
+                .activeTab.getSortedChannels(this.props.state().selectedFilter, channels);
         });
         this.channels = computed(() => {
             if (this.searchTerm()) {
@@ -28,9 +32,9 @@ const messagingMenuPatch = {
         });
         this.channelSearch = useSearch({
             fetch: (searchTerm) =>
-                this.state().activeTab.loadMore({
-                    filter: this.state().selectedFilter,
-                    pluginFilters: this.state().activePluginFilters,
+                this.props.state().activeTab.loadMore({
+                    filter: this.props.state().selectedFilter,
+                    pluginFilters: this.props.state().activePluginFilters,
                     searchTerm,
                 }),
             filter: (term) =>
@@ -40,11 +44,11 @@ const messagingMenuPatch = {
             deps: () => [this.filteredChannels()],
         });
         useEffect(() => {
-            if (this.state().activeTab.recordType === "discuss.channel") {
+            if (this.props.state().activeTab.recordType === "discuss.channel") {
                 this.channelSearch.searchTerm = this.searchTerm();
             }
         });
-        // Bound once so `onClickChannel` is a stable (useProps.static) handler.
+        // Bound once so `onClickChannel` is a stable (propStatic) handler.
         this.onClickChannel = this.onClickChannel.bind(this);
     },
     get isEmpty() {
@@ -53,7 +57,7 @@ const messagingMenuPatch = {
     /** @param {import("models").DiscussChannel} channel */
     onClickChannel(channel) {
         channel.open({ focus: true, fromMessagingMenu: true, bypassCompact: true });
-        this.close?.();
+        this.props.close?.();
     },
 };
 patch(MessagingMenu.prototype, messagingMenuPatch);

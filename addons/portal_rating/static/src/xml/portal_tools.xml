@@ -72,7 +72,7 @@
 
     <t t-name="portal_rating.actions">
         <button
-            t-if="this.props.composer"
+            t-if="this.props.composer()"
             class="btn btn-primary"
             t-on-click="() => this.state.showReviewComposer = true"
         >

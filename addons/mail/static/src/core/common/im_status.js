@@ -1,7 +1,6 @@
-import { Component, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { Typing } from "@mail/discuss/typing/common/typing";
 import { attClassObjectToString } from "@mail/utils/common/format";
-import { propComputed } from "@mail/utils/common/hooks";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -55,49 +54,51 @@ export class ImStatus extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.className = propComputed("className", t.string().optional(""));
-        this.member = propComputed(
-            "member",
-            t.instanceOf(this.store["discuss.channel.member"]).optional()
-        );
-        this.personaProp = propComputed(
-            "persona",
-            t
-                .or([
-                    t.instanceOf(this.store["res.partner"]),
-                    t.instanceOf(this.store["mail.guest"]),
-                ])
-                .optional()
-        );
-        this.size = propComputed("size", t.string().optional("lg"));
-        this.style = propComputed("style", t.string().optional(""));
-        this.typing = propComputed("typing", t.boolean().optional(true));
-        this.userProp = propComputed("user", t.instanceOf(this.store["res.users"]).optional());
+        this.props = useProps({
+            className: t.signal(t.string()).optional(""),
+            member: t.signal(t.instanceOf(this.store["discuss.channel.member"])).optional(),
+            persona: t
+                .signal(
+                    t.or([
+                        t.instanceOf(this.store["res.partner"]),
+                        t.instanceOf(this.store["mail.guest"]),
+                    ])
+                )
+                .optional(),
+            size: t.signal(t.string()).optional("lg"),
+            style: t.signal(t.string()).optional(""),
+            typing: t.signal(t.boolean()).optional(true),
+            user: t.signal(t.instanceOf(this.store["res.users"])).optional(),
+        });
         this.attClassObjectToString = attClassObjectToString;
     }
 
     get persona() {
-        return this.userProp()?.partner_id || this.personaProp() || this.member()?.persona;
+        return (
+            this.props.user()?.partner_id || this.props.persona() || this.props.member()?.persona
+        );
     }
 
     get showTypingIndicator() {
-        return this.typing() && this.member()?.isTypingUi;
+        return this.props.typing() && this.props.member()?.isTypingUi;
     }
 
     get class() {
         return attClassObjectToString({
-            [`o-mail-ImStatus d-flex ${this.colorClass} ${this.className()}`]: true,
+            [`o-mail-ImStatus d-flex ${this.colorClass} ${this.props.className()}`]: true,
             [`rounded-circle bg-transparent ${this.iconClass}`]: !this.showTypingIndicator,
             "rounded-pill": this.showTypingIndicator,
         });
     }
 
     get activeImStatusData() {
-        return imStatusDataRegistry
-            .getAll()
-            .find((r) =>
-                r.condition({ member: this.member(), persona: this.persona, user: this.user })
-            );
+        return imStatusDataRegistry.getAll().find((r) =>
+            r.condition({
+                member: this.props.member(),
+                persona: this.persona,
+                user: this.user,
+            })
+        );
     }
 
     get icon() {
@@ -132,6 +133,6 @@ export class ImStatus extends Component {
     }
 
     get user() {
-        return this.userProp() || this.persona?.main_user_id;
+        return this.props.user() || this.persona?.main_user_id;
     }
 }

@@ -5,7 +5,7 @@ import { patch } from "@web/core/utils/patch";
 /** @type {import("@mail/core/web/activity").Activity } */
 const ActivityPatch = {
     async onGrantAccess() {
-        const activity = this.activity();
+        const activity = this.props.activity();
         await this.env.services.orm.call(
             "slide.channel",
             "action_grant_access",
@@ -13,10 +13,10 @@ const ActivityPatch = {
             { partner_id: activity.request_partner_id.id }
         );
         activity.remove();
-        this.reloadParentView();
+        this.props.reloadParentView();
     },
     async onRefuseAccess() {
-        const activity = this.activity();
+        const activity = this.props.activity();
         await this.env.services.orm.call(
             "slide.channel",
             "action_refuse_access",
@@ -24,7 +24,7 @@ const ActivityPatch = {
             { partner_id: activity.request_partner_id.id }
         );
         activity.remove();
-        this.reloadParentView();
+        this.props.reloadParentView();
     },
 };
 

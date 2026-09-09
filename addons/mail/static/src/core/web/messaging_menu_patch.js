@@ -33,7 +33,7 @@ const messagingMenuPatch = {
             this.openThread(message.thread, options);
         } else {
             this.openFailureView(failure, options);
-            this.close?.();
+            this.props.close?.();
         }
     },
     /**
@@ -43,7 +43,7 @@ const messagingMenuPatch = {
      */
     async openThread(thread, { isMiddleClick } = {}) {
         thread.open({ focus: true, fromMessagingMenu: true, newWindow: isMiddleClick });
-        this.close?.();
+        this.props.close?.();
     },
     /**
      * @param {import("models").Failure} failure

@@ -1,5 +1,4 @@
 import {
-    computed,
     onMounted,
     onPatched,
     onWillUnmount,
@@ -920,38 +919,4 @@ export class UseForwardRefsToParent {
  */
 export function useForwardRefsToParent(propName, getRefIdFn, ref) {
     new UseForwardRefsToParent(propName, getRefIdFn, ref);
-}
-
-/**
- * Single read-only signal derived from one plain-value prop. The result is a signal tracking prop
- * changes, but it is less efficient than `propSignal` as a prop change always triggers an
- * unnecessary render of the parent. To be used only when the parent does not pass a signal and it
- * is not possible to update all parents to pass signals.
- *
- * @template S
- * @param {string} name
- * @param {S} shape shape of the final value (e.g. `t.number()`)
- * @returns {import("@odoo/owl").ReactiveValue<import("@odoo/owl").StripBrands<S>>} the resulting
- *   (read-only) signal, which always exists (never `undefined`), even when the prop is optional.
- */
-export function propComputed(name, shape) {
-    const rawProps = useProps({ [name]: shape });
-    return computed(() => rawProps[name]);
-}
-
-/**
- * Single signal for one prop that is itself a signal: a thin wrapper over `useProps.static` that adds
- * the `t.signal(...)` typing. The parent must pass a stable signal reference (but its inner value
- * may change).
- *
- * @template S
- * @param {string} name
- * @param {S} shape shape of the final value (e.g. `t.number()`)
- * @param {object} [options]
- * @param {boolean} [options.optional]
- * @returns {import("@odoo/owl").ReactiveValue<import("@odoo/owl").StripBrands<S>>}
- */
-export function propSignal(name, shape, { optional = false } = {}) {
-    const type = t.signal(shape);
-    return useProps.static(name, optional ? type.optional() : type);
 }
