@@ -18,7 +18,7 @@ class IrHttp(models.AbstractModel):
             "mixin.utm"
         ].tracking_fields():
             if (
-                url_parameter in request.params
+                request.params.get(url_parameter)
                 and request.cookies.get(cookie_name) != request.params[url_parameter]
             ):
                 response.set_cookie(
