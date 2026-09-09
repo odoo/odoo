@@ -246,6 +246,30 @@ export function getFieldType(fieldEl) {
 }
 
 /**
+ * Returns the custom type matching the type of the given field the closest.
+ *
+ * @param {HTMLElement} fieldEl
+ * @returns {string}
+ */
+export function getClosestCustomFieldType(fieldEl) {
+    if (fieldEl.querySelector("input[type=file]")) {
+        return "binary";
+    }
+    const type = getFieldType(fieldEl);
+    switch (type) {
+        case "html":
+            return "text";
+        case "monetary":
+            return "float";
+        case "many2many":
+        case "tags":
+            return "one2many";
+        default:
+            return type;
+    }
+}
+
+/**
  * Set the active field properties on the field Object
  *
  * @param {HTMLElement} fieldEl

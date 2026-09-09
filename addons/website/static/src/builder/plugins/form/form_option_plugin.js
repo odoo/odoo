@@ -12,6 +12,7 @@ import {
     deleteConditionalVisibility,
     findCircular,
     getActiveField,
+    getClosestCustomFieldType,
     getCustomField,
     getDefaultFieldType,
     getDefaultFormat,
@@ -42,7 +43,7 @@ import { SyncCache } from "@html_builder/utils/sync_cache";
 import { _t } from "@web/core/l10n/translation";
 import { omit } from "@web/core/utils/objects";
 import { renderToElement } from "@web/core/utils/render";
-import { selectElements } from "@html_editor/utils/dom_traversal";
+import { closestElement, selectElements } from "@html_editor/utils/dom_traversal";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { isSmallInteger } from "@html_builder/utils/utils";
 import { getParsedDataFor } from "@website/js/utils";
@@ -89,6 +90,7 @@ export class FormOptionPlugin extends Plugin {
         "savePlugin",
         "websiteBridge",
         "history",
+        "domReferenceMap",
     ];
     static shared = [
         "prepareFormModel",
@@ -208,6 +210,7 @@ export class FormOptionPlugin extends Plugin {
         clean_for_save_processors: [
             this.removeSuccessMessagePreviews.bind(this),
             this.removeIncompleteRequirements.bind(this),
+            this.removeUserModifiedMarkers.bind(this),
             // Early in sequence to run before the plugin removing empty nodes
             withSequence(5, this.writeDefaultLabels.bind(this)),
         ],
@@ -228,7 +231,7 @@ export class FormOptionPlugin extends Plugin {
                 dropLockWithin: "form",
             },
         ],
-        system_attributes: ["data-default-label-content"],
+        system_attributes: ["data-default-label-content", "data-user-modified"],
         so_content_addition_selectors: [
             ".s_website_form, .s_website_form_field, .s_website_form_inner_content",
         ],
@@ -242,6 +245,7 @@ export class FormOptionPlugin extends Plugin {
         is_unremovable_selectors: ".s_website_form_send, .s_website_form_submit",
         immutable_link_selectors: [".s_website_form_send"],
         normalize_processors: this.normalizeFieldName.bind(this),
+        on_pending_mutations_staged_handlers: this.markUserModifiedFields.bind(this),
     };
     setup() {
         this.modelsCache = new SyncCache(this._fetchModels.bind(this));
@@ -433,9 +437,8 @@ export class FormOptionPlugin extends Plugin {
             if (oldFormKey) {
                 oldFormInfo = this.getRegistryFormInfo(oldFormKey);
             }
-            for (const fieldEl of el.querySelectorAll(".s_website_form_field")) {
-                fieldEl.remove();
-            }
+            this.removeObsoleteFields(el);
+            this.convertModelFieldsToCustom(el);
             activeForm = this.getModelsCache(el).find((model) => model.id === modelId);
         }
         // Success page
@@ -460,14 +463,14 @@ export class FormOptionPlugin extends Plugin {
         // Load template
         if (formInfo) {
             const formatInfo = getDefaultFormat(el);
+            const locationEl = el.querySelector(
+                ".s_website_form_submit, .s_website_form_recaptcha"
+            );
             formInfo.formFields?.forEach((field) => {
                 // Create a shallow copy of field to prevent unintended
                 // mutations to the original field stored in the registry
                 const _field = { ...field, formatInfo };
                 _field.type = getDefaultFieldType(_field);
-                const locationEl = el.querySelector(
-                    ".s_website_form_submit, .s_website_form_recaptcha"
-                );
                 locationEl.insertAdjacentElement("beforebegin", renderField(_field));
             });
             // Special case: handle hidden fields separately.
@@ -572,6 +575,7 @@ export class FormOptionPlugin extends Plugin {
         const field = getCustomField("char", this.dependencies.websiteBridge._t("Custom Text"));
         field.formatInfo = getDefaultFormat(formEl);
         const fieldEl = renderField(field);
+        this.markFieldAsUserModified(fieldEl);
         let locationEl = formEl.querySelector(".s_website_form_submit, .s_website_form_recaptcha");
         if (!locationEl) {
             locationEl = formEl.querySelector(".s_website_form_rows");
@@ -591,6 +595,7 @@ export class FormOptionPlugin extends Plugin {
             field.formatInfo.optionalMark = isOptionalMark(formEl);
             field.formatInfo.mark = getMark(formEl);
             newSnippetEl = renderField(field);
+            this.markFieldAsUserModified(newSnippetEl);
         } else {
             newSnippetEl = document.createElement("div");
             newSnippetEl.className =
@@ -915,6 +920,13 @@ export class FormOptionPlugin extends Plugin {
         // Re-render the fields to ensure each field gets a unique ID.
         await this.rerenderFieldsInElement(snippetEl);
         await this.applyDefaultValues(snippetEl);
+
+        // The re-rendering above marks the fields as modified by the user, but
+        // they are not.
+        this.removeUserModifiedMarkers(snippetEl);
+        if (snippetEl.matches(".s_website_form_field")) {
+            this.markFieldAsUserModified(snippetEl);
+        }
     }
     /**
      * Called when the snippet is dragged over a dropzone.
@@ -1192,6 +1204,101 @@ export class FormOptionPlugin extends Plugin {
         );
         return root;
     }
+
+    /**
+     * Removes the fields that are leftovers of the previous action: the fields
+     * the user modified are kept.
+     *
+     * @param {HTMLElement} formEl
+     */
+    removeObsoleteFields(formEl) {
+        for (const fieldEl of formEl.querySelectorAll(".s_website_form_field")) {
+            if (fieldEl.classList.contains("s_website_form_dnone")) {
+                fieldEl.remove();
+                continue;
+            }
+
+            if (fieldEl.dataset.userModified === "true") {
+                continue;
+            }
+
+            // Drop the visibility conditions that depend on the removed field.
+            for (const dependentEl of formEl.querySelectorAll(
+                `[data-visibility-dependency="${CSS.escape(getFieldName(fieldEl))}"]`
+            )) {
+                deleteConditionalVisibility(dependentEl);
+            }
+            fieldEl.remove();
+        }
+    }
+
+    /**
+     * Transforms the kept fields that were linked to a field of the previous
+     * model into generic custom fields of an equivalent type.
+     *
+     * @param {HTMLElement} formEl
+     */
+    convertModelFieldsToCustom(formEl) {
+        const fieldEls = [...formEl.querySelectorAll(".s_website_form_field")].filter(
+            (fieldEl) => !isFieldCustom(fieldEl)
+        );
+        for (const fieldEl of fieldEls) {
+            fieldEl.dataset.type = getClosestCustomFieldType(fieldEl);
+            fieldEl.classList.add("s_website_form_custom");
+            // The field is not required by the model anymore.
+            fieldEl.classList.replace("s_website_form_model_required", "s_website_form_required");
+
+            // The value of the field cannot be prefilled from the model
+            // anymore.
+            delete fieldEl.querySelector("[data-fill-with]")?.dataset.fillWith;
+
+            const labelEl = fieldEl.querySelector(".s_website_form_label_content");
+            if (labelEl) {
+                this.updateFieldName({ fieldEl, name: labelEl.textContent });
+            }
+        }
+    }
+
+    /**
+     * @param {HTMLElement} el - The field element or one of its descendants.
+     */
+    markFieldAsUserModified(el) {
+        const fieldEl = el.closest(".s_website_form_field");
+        if (fieldEl) {
+            fieldEl.dataset.userModified = "true";
+        }
+    }
+
+    /**
+     * @param {import("@html_editor/core/dom_observer_plugin").SerializedMutation[]} mutations
+     */
+    markUserModifiedFields(mutations) {
+        if (this.dependencies.history.getIsPreviewing()) {
+            return;
+        }
+        for (const mutation of mutations) {
+            // Nodes are looked for from their parent: adding or removing a
+            // whole field is not a modification of that field.
+            const node = this.dependencies.domReferenceMap.getNodeById(
+                mutation.parentNodeId ?? mutation.nodeId
+            );
+            const fieldEl = closestElement(node, ".s_website_form_field");
+            if (fieldEl) {
+                fieldEl.dataset.userModified = "true";
+            }
+        }
+    }
+
+    /**
+     * @param {HTMLElement} rootEl
+     * @returns {HTMLElement}
+     */
+    removeUserModifiedMarkers(rootEl) {
+        for (const fieldEl of selectElements(rootEl, "[data-user-modified]")) {
+            delete fieldEl.dataset.userModified;
+        }
+        return rootEl;
+    }
 }
 
 // Form actions
@@ -1218,6 +1325,10 @@ export class SelectAction extends BuilderAction {
         const models = this.dependencies.websiteFormOption.getModelsCache(el);
         const targetModelName = getModelName(el);
         const activeForm = models.find((m) => m.model === targetModelName);
+        if (activeForm.id === parseInt(modelId)) {
+            // Re-applying the same action would duplicate its fields.
+            return;
+        }
         await this.dependencies.websiteFormOption.applyFormModel(
             el,
             activeForm,

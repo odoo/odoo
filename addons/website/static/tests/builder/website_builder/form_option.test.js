@@ -509,7 +509,7 @@ test("Form using the Outgoing Mails model includes hidden email_to field", async
     onRpc("res.company", "read", () => [{ email: "company@mail.com" }]);
     await setupWebsiteBuilder(
         `<section class="s_website_form">
-            <form data-model_name="mail.mail">
+            <form data-model_name="res.partner">
                 <div class="s_website_form_submit">
                     <div class="s_website_form_label"/>
                     <a>Submit</a>
@@ -539,7 +539,7 @@ test("Saving outgoing mail form without company email uses editor email fallback
     });
     await setupWebsiteBuilder(
         `<section class="s_website_form">
-            <form data-model_name="mail.mail">
+            <form data-model_name="res.partner">
                 <div class="s_website_form_submit">
                     <div class="s_website_form_label"/>
                     <a>Submit</a>
@@ -1625,4 +1625,137 @@ test("field added by the form action is displayed as a dropdown when it has more
     // More than five options: the selection is turned into a dropdown.
     expect(":iframe .s_website_form_field[data-type='many2one']").toHaveCount(1);
     expect(":iframe select[name='long_selection'] option").toHaveCount(6);
+});
+
+test("change action of form keeps the fields modified by the user and replaces the rest", async () => {
+    onRpc("get_authorized_fields", () => ({}));
+    function withIframeRegistry(registry) {
+        registry.category("website.form_editor_actions").add("apply_job", {
+            formFields: [
+                {
+                    type: "char",
+                    modelRequired: true,
+                    fillWith: "name",
+                    name: "partner_name",
+                    string: "Your Name",
+                },
+                {
+                    type: "email",
+                    modelRequired: true,
+                    fillWith: "email",
+                    name: "email_from",
+                    string: "Your Email",
+                },
+            ],
+        });
+    }
+
+    const { getEditor } = await setupWebsiteBuilderWithSnippet("s_website_form", {
+        withIframeRegistry,
+    });
+    const editor = getEditor();
+
+    await contains(":iframe section").click();
+    await contains("button[title='Add a new field at the end']").click();
+    expect(":iframe input[name='Custom Text']").toHaveCount(1);
+
+    for (const [label, newLabel] of [
+        ["Your Name", "Full Name"],
+        ["Phone Number", "Mobile"],
+    ]) {
+        const labelEl = queryOne(`:iframe span.s_website_form_label_content:contains('${label}')`);
+        await contains(labelEl).click();
+        setSelectionOnNodeContent(labelEl);
+        await insertText(editor, newLabel);
+    }
+
+    await contains(":iframe section").click();
+    await contains(".hb-row[data-label='Action'] button").click();
+    await contains("div.o-dropdown-item:contains('Apply for a Job')").click();
+    await animationFrame();
+
+    expect(":iframe form").toHaveAttribute("data-model_name", "hr.applicant");
+    // The fields modified by the user are kept, the other ones are replaced by
+    // the fields of the new action.
+    expect(queryAllTexts(":iframe .s_website_form_label_content")).toEqual([
+        "Full Name",
+        "Mobile",
+        "Custom Text",
+        "Your Name",
+        "Your Email",
+    ]);
+
+    // The kept fields are custom fields named after their label.
+    expect(":iframe input[name='Full Name']").toHaveCount(1);
+    expect(":iframe input[name='name']").toHaveCount(0);
+    expect(":iframe .s_website_form_field:has(input[name='Full Name'])").toHaveClass(
+        "s_website_form_custom"
+    );
+    // The fields of the new action are added at the end of the form.
+    expect(":iframe .s_website_form_field:has(input[name='partner_name'])").toHaveClass(
+        "s_website_form_model_required"
+    );
+    expect(":iframe input[name='email_from']").toHaveCount(1);
+    // The hidden field of the previous action is removed.
+    expect(":iframe input[name='email_to']").toHaveCount(0);
+});
+
+test("previewing form options does not mark untouched fields as modified", async () => {
+    onRpc("get_authorized_fields", () => ({}));
+    function withIframeRegistry(registry) {
+        registry
+            .category("website.form_editor_actions")
+            .add("apply_job", {
+                formFields: [
+                    {
+                        type: "char",
+                        modelRequired: true,
+                        fillWith: "name",
+                        name: "partner_name",
+                        string: "Your Name",
+                    },
+                    {
+                        type: "email",
+                        modelRequired: true,
+                        fillWith: "email",
+                        name: "email_from",
+                        string: "Your Email",
+                    },
+                ],
+            })
+            .add("create_customer", {
+                formFields: [
+                    {
+                        type: "char",
+                        modelRequired: true,
+                        fillWith: "name",
+                        name: "name",
+                        string: "Customer Name",
+                    },
+                ],
+            });
+    }
+
+    await setupWebsiteBuilderWithSnippet("s_website_form", { withIframeRegistry });
+
+    await contains(":iframe section").click();
+    await contains(".hb-row[data-label='Action'] button").click();
+    await contains("div.o-dropdown-item:contains('Apply for a Job')").click();
+    expect(":iframe input[name='partner_name']").toHaveCount(1);
+
+    await contains("[data-label='Labels Position'] button[data-action-value='top']").hover();
+    await contains("[data-label='Labels Position'] button[data-action-value='right']").hover();
+    await contains(":iframe section").hover();
+
+    expect(":iframe .s_website_form_field:has(input[name='partner_name'])").not.toHaveAttribute(
+        "data-user-modified"
+    );
+
+    await contains(".hb-row[data-label='Action'] button").click();
+    await contains("div.o-dropdown-item:contains('Create a Customer')").click();
+    await waitFor(":iframe .s_website_form_label_content:contains('Customer Name')");
+
+    expect(":iframe form").toHaveAttribute("data-model_name", "res.partner");
+    expect(queryAllTexts(":iframe .s_website_form_label_content")).toEqual(["Customer Name"]);
+    expect(":iframe input[name='partner_name']").toHaveCount(0);
 });
