@@ -1573,6 +1573,100 @@ class TestSaleToInvoice(TestSaleCommon):
 
         self.assertEqual(so.amount_to_invoice, 180.0, "The amount to invoice should be 180.0")
 
+    def test_amount_to_invoice_down_payment(self):
+        """Test that amount_to_invoice is correct after a down payment is created and
+        the final invoice is posted."""
+        so = self.env["sale.order"].create({
+            "partner_id": self.partner_a.id,
+            "order_line": [
+                Command.create({
+                    "product_id": self.company_data["product_order_no"].id,
+                    "product_uom_qty": 2,
+                    "price_unit": 100,
+                })
+            ],
+        })
+        so.action_confirm()
+
+        downpayment_wizard = self.env["sale.advance.payment.inv"].create({
+            "advance_payment_method": "percentage",
+            "amount": 20,
+            "sale_order_ids": [Command.set(so.ids)],
+        })
+        downpayment_wizard.create_invoices()
+        downpayment_invoice = so.invoice_ids
+
+        self.assertTrue(downpayment_invoice._is_downpayment())
+        downpayment_invoice.action_post()
+
+        self.assertEqual(
+            so.amount_to_invoice, 160.0, "Amount to invoice should be 160 after 20% down payment"
+        )
+
+        final_wizard = self.env["sale.advance.payment.inv"].create({
+            "sale_order_ids": [Command.set(so.ids)],
+        })
+        final_wizard.create_invoices()
+        final_invoice = so.invoice_ids.filtered(lambda m: not m._is_downpayment())
+        final_invoice.action_post()
+
+        self.assertEqual(
+            so.amount_to_invoice,
+            0.0,
+            "Amount to invoice should be 0 after final invoice is posted.",
+        )
+
+    def test_amount_to_invoice_upsell(self):
+        """Test that amount_to_invoice correctly handles Services & Materials upsell lines."""
+        product_to_upsell = self.env["product.product"].create({
+            "name": "Upsell Product",
+            "type": "consu",
+            "is_storable": True,
+            "invoice_policy": "delivery",
+            "reinvoice_policy": "sales_price",
+            "list_price": 100.0,
+        })
+
+        so = self.env["sale.order"].create({
+            "partner_id": self.partner_a.id,
+            "order_line": [
+                Command.create({
+                    "product_id": self.company_data["product_order_no"].id,
+                    "product_uom_qty": 1,
+                    "price_unit": 500,
+                    "tax_ids": [Command.set(self.company_data["default_tax_sale"].ids)],
+                })
+            ],
+        })
+        so.action_confirm()
+
+        aal = (
+            self
+            .env["account.analytic.line"]
+            .with_context(from_services_and_material=True)
+            .create({
+                "name": "Upsell Product",
+                "unit_amount": 5,
+                "product_id": product_to_upsell.id,
+                "order_id": so.id,
+            })
+        )
+
+        upsell_sol = aal.so_line
+
+        self.assertTrue(upsell_sol)
+        self.assertEqual(upsell_sol.product_uom_qty, 0)
+        self.assertEqual(upsell_sol.qty_delivered, 5)
+
+        self.assertEqual(upsell_sol.amount_to_invoice, 575.0)
+        self.assertEqual(so.amount_to_invoice, 1150.0)
+
+        invoice = so._create_invoices()
+        invoice.action_post()
+
+        self.assertEqual(upsell_sol.amount_to_invoice, 0.0)
+        self.assertEqual(so.amount_to_invoice, 0.0)
+
     def test_invoice_line_name_has_product_name(self):
         """Testing that when invoicing a sales order, the invoice line name ALWAYS contains the
         product name."""
