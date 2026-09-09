@@ -50,8 +50,8 @@ registerWebsitePreviewTour(
     },
     () => [
         {
-            content: "Click on first product",
-            trigger: ":iframe .oe_product:first",
+            content: "Click on the test product",
+            trigger: ':iframe .oe_product:has(.oe_product_cart[aria-label="Test Product"])',
             run: "click",
         },
         {
@@ -67,7 +67,8 @@ registerWebsitePreviewTour(
         ...clickOnSave(),
         {
             content: "Check that the ribbon was properly saved",
-            trigger: ':iframe .oe_product:first .o_ribbons:contains("Sale")',
+            trigger:
+                ':iframe .oe_product:has(.oe_product_cart[aria-label="Test Product"]) .o_ribbons:contains("Sale")',
         },
     ],
 );
