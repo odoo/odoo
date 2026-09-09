@@ -102,16 +102,10 @@ export class ConfirmationPage extends Component {
     }
 
     /**
-     * Two call are performed to update-last-changes.
-     *
-     * The first one is to get the last changes from the server and to
-     * be sure that the customer doesn't already try to order something
-     * to the kitchen.
-     *
-     * The second one is to update the last changes with the current
-     * status of the order. Since this application is public, we cannot
-     * fully trust the client data, and we need the server to validate
-     * the changes before sending them to the printer.
+     * The ticket is printed from the changes computed when the order was sent
+     * (see `sendDraftOrderToServer`): the server creates the preparation lines on its
+     * side, so there is no quantity difference left to compute here. They are consumed
+     * before printing, so that the ticket cannot be printed twice.
      */
     async printOrderChanges() {
         if (this.selfOrder.config.self_ordering_mode === "mobile") {
@@ -119,7 +113,18 @@ export class ConfirmationPage extends Component {
         }
 
         const order = this.confirmedOrder;
-        await this.selfOrder.ticketPrinter.printOrderChanges({ order, webFallback: false });
+        const orderChange = order?.uiState.preparationChanges;
+
+        if (!orderChange) {
+            return;
+        }
+        delete order.uiState.preparationChanges;
+        this.selfOrder.data.debouncedSynchronizeLocalDataInIndexedDB();
+        await this.selfOrder.ticketPrinter.printOrderChanges({
+            order,
+            opts: { orderChange },
+            printers: this.selfOrder.ticketPrinter.localPreparationPrinters,
+        });
     }
 
     async printOrder() {

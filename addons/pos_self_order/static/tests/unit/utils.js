@@ -61,7 +61,17 @@ export function initMockRpc() {
             params.order.state = "paid";
         }
         checkPosOrder(deviceType, params.order);
-        const response = MockServer.env["pos.order"].sync_from_ui([params.order]);
+        const orderIds = MockServer.env["pos.order"]
+            .sync_from_ui([params.order])
+            ["pos.order"].map((order) => order.id);
+
+        // The controller sends the order to preparation: the preparation lines are
+        // created server side and returned along with the order.
+        for (const orderId of orderIds) {
+            MockServer.env["pos.order"]._send_order(orderId);
+        }
+
+        const response = MockServer.env["pos.order"].read_pos_data(orderIds);
         const models = MockServer.env["pos.session"]._load_self_data_models();
         return Object.fromEntries(Object.entries(response).filter(([key]) => models.includes(key)));
     };
