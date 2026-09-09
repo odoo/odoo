@@ -10,7 +10,8 @@ Material Symbols
 Optimized subsets of the Material Symbols icons.  Two-stage pipeline:
 
 1. **Download** — fetch a variable WOFF2 subset for the icons listed in
-   ``icons_wishlist.txt`` from the Google Fonts API (*Outlined* and *Sharp*).
+   ``icons_wishlist.txt`` from the Google Fonts API (*Outlined*, *Rounded*, and
+   *Sharp*).
 
 2. **Process** — instantiate two static builds (FILL=0 and FILL=1), detect which
    icons have a distinct filled shape, strip unused glyphs with fontext, and
@@ -30,8 +31,8 @@ Optimized subsets of the Material Symbols icons.  Two-stage pipeline:
 
 Outputs
 -------
-* ``static/src/libs/materialsymbols/material_symbols_{outlined,sharp}_subset.woff2``
-* ``static/src/libs/materialsymbols/material_symbols_{outlined,sharp}.css``
+* ``static/src/libs/materialsymbols/material_symbols_{outlined,rounded,sharp}_subset.woff2``
+* ``static/src/libs/materialsymbols/material_symbols_{outlined,rounded,sharp}.css``
 * ``static/src/libs/materialsymbols/material_symbols_backend.woff`` — outlined font for
   wkhtmltopdf and PIL
 * ``web/icons.py`` — icon list with fill-variant flags, codepoints for
@@ -1259,6 +1260,7 @@ def main() -> None:
     icons, outline_path, backend_path, codepoints = build_font(
         "Outlined", ms_dir, wishlist, with_backend_font=True,
     )
+    _, rounded_path, *_ = build_font("Rounded", ms_dir, wishlist)
     _, sharp_path, *_ = build_font("Sharp", ms_dir, wishlist)
 
     oi_woff2, oi_woff, oi_ligatures, oi_codepoints, oi_tags = build_odoo_ui_icons_font(module_path)
@@ -1272,6 +1274,7 @@ def main() -> None:
     print(  # noqa: T201
         f"\n✓  Generated fonts with {len(icons)} icons ({n_filled} with filled variant)\n"
         f"   outlined web     → {outline_path}  ({outline_path.stat().st_size // 1000} kb)\n"
+        f"   rounded web      → {rounded_path}  ({rounded_path.stat().st_size // 1000} kb)\n"
         f"   sharp web        → {sharp_path}  ({sharp_path.stat().st_size // 1000} kb)\n"
         f"   outlined backend → {backend_path}  ({backend_path.stat().st_size // 1000} kb)\n"
         f"   Python metadata  → {icon_list_path}  "

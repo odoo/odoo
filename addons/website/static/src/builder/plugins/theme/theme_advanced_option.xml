@@ -10,6 +10,13 @@
                 }"
             />
         </BuilderRow>
+        <BuilderRow label.translate="Icons" tooltip.translate="Shape of the corners of the icons used across the website">
+            <BuilderButtonGroup action="'customizeWebsiteVariable'" actionParam="'icon-font-family'">
+                <BuilderButton actionValue="''" title.translate="Default style, with a mix of rounded and sharp corners">Outlined</BuilderButton>
+                <BuilderButton actionValue="`Material Symbols Rounded`" title.translate="Softer shape, with fully rounded corners">Rounded</BuilderButton>
+                <BuilderButton actionValue="`Material Symbols Sharp`" title.translate="Angular shape, with sharp corners">Sharp</BuilderButton>
+            </BuilderButtonGroup>
+        </BuilderRow>
         <BuilderRow label.translate="Code Injection" tooltip.translate="Enter code that will be added into every page of your site">
             <BuilderButton title.translate="&lt;Head&gt; and &lt;body&gt;" action="'editCustomCode'">&lt;head&gt; and &lt;/body&gt;</BuilderButton>
         </BuilderRow>
