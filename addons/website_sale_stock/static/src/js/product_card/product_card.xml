@@ -6,26 +6,26 @@
                 name="t-attf-class"
                 remove="cursor-pointer"
                 add="{{
-                    this.props.product.isQuantityAllowed(this.props.quantity)
+                    this.props.product.isQuantityAllowed(this.stockProps.quantity)
                     ? 'cursor-pointer' : 'unselectable-card border'
                 }}"
                 separator=" "
             />
             <attribute
                 name="t-att-tabindex"
-                add="this.props.product.isQuantityAllowed(this.props.quantity) ? '0' : '-1'"
+                add="this.props.product.isQuantityAllowed(this.stockProps.quantity) ? '0' : '-1'"
             />
         </article>
         <h6 name="product_card_title" position="after">
             <span
-                t-if="!this.props.product.isQuantityAllowed(this.props.quantity)"
+                t-if="!this.props.product.isQuantityAllowed(this.stockProps.quantity)"
                 class="badge text-bg-danger"
             >
                 <i class="oi oi-filled me-2" data-icon="circle"/>
                 <span>Out of Stock</span>
             </span>
             <span
-                t-elif="this.props.isSelected &amp;&amp; !this.props.product.isQuantityAllowed(this.props.quantity + 1)"
+                t-elif="this.props.isSelected &amp;&amp; !this.props.product.isQuantityAllowed(this.stockProps.quantity + 1)"
                 class="text-warning"
             >
                 <i
@@ -39,21 +39,21 @@
         <img name="product_card_image" position="attributes">
             <attribute
                 name="t-att-class"
-                add="{'opacity-50': !this.props.product.isQuantityAllowed(this.props.quantity)}"
+                add="{'opacity-50': !this.props.product.isQuantityAllowed(this.stockProps.quantity)}"
                 separator=" "
             />
         </img>
         <h6 name="product_card_title" position="attributes">
             <attribute
                 name="t-att-class"
-                add="{'opacity-50': !this.props.product.isQuantityAllowed(this.props.quantity)}"
+                add="{'opacity-50': !this.props.product.isQuantityAllowed(this.stockProps.quantity)}"
                 separator=" "
             />
         </h6>
         <xpath expr="//div[hasclass('text-muted')]" position="attributes">
             <attribute
                 name="t-att-class"
-                add="{'d-none': !this.props.product.isQuantityAllowed(this.props.quantity)}"
+                add="{'d-none': !this.props.product.isQuantityAllowed(this.stockProps.quantity)}"
                 separator=" "
             />
         </xpath>
