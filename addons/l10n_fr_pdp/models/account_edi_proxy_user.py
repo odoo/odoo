@@ -61,6 +61,13 @@ PROCESS_CONDITION_CODE_TO_RESPONSE_CODE = MappingProxyType({
     **PROCESS_CONDITION_CODE_TO_RESPONSE_CODE_PPF,
 })
 
+FLOW_10_PPF_STATUS = MappingProxyType({
+    '300': ('completed', _lt("Deposited")),
+    '301': ('error', _lt("Rejected")),
+    '500': ('sent', _lt("Admissible")),
+    '501': ('error', _lt("Inadmissible")),
+})
+
 STATUS_TO_PROCESS_CONDITION_CODE_PDP = MappingProxyType({status: code for code, status in PROCESS_CONDITION_CODE_TO_RESPONSE_CODE_PDP.items()})
 
 PAYMENT_TYPE_CODES = MappingProxyType({
@@ -496,7 +503,7 @@ class AccountEdiProxyClientUser(models.Model):
             return
         document = self._peppol_get_decoded_document(content)
 
-        flow.payload_id = self.env['ir.attachment'].create({
+        self.env['ir.attachment'].create({
             'name': f'message.{uuid}.xml',
             'raw': document,
             'res_model': flow._name,
@@ -504,6 +511,31 @@ class AccountEdiProxyClientUser(models.Model):
             'type': 'binary',
             'mimetype': 'application/xml',
         })
+
+        response_info = self._pdp_extract_response_info(document)
+        status_code = response_info['process_condition_code']
+        status_details = self._pdp_status_infos_to_details(response_info['status_infos'])
+        state, status_label = FLOW_10_PPF_STATUS.get(status_code, ('error', _lt("Unknown")))
+        flow.write({
+            'state': state,
+            'transport_status': status_code,
+            'transport_message': '\n\n'.join(status_details) or False,
+        })
+
+        message = self.env._(
+            "PPF Flow 10 response: %(status)s (%(status_code)s).",
+            status=status_label,
+            status_code=status_code or self.env._("unknown"),
+        )
+        if status_details:
+            message = Markup("%s<br/>%s") % (
+                message,
+                Markup("<br/><br/>").join(
+                    self._pdp_format_multiline_value(detail)
+                    for detail in status_details
+                ),
+            )
+        flow._message_post_once(message)
 
     def _pdp_import_tax_extract(self, uuid, content, origin_move):
         if not origin_move:
