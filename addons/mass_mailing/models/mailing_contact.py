@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models, tools
+from odoo import _, api, Command, fields, models, tools
 from odoo.exceptions import UserError
 from odoo.osv import expression
 
@@ -93,12 +93,12 @@ class MassMailingContact(models.Model):
             if vals.get('list_ids') and vals.get('subscription_ids'):
                 raise UserError(_('You should give either list_ids, either subscription_ids to create new contacts.'))
 
-        if default_list_ids:
-            for vals in vals_list:
-                if vals.get('list_ids'):
-                    continue
+        for vals in vals_list:
+            list_ids = vals.get('list_ids') or []
+            subscription_ids = vals.get('subscription_ids') or []
+
+            if default_list_ids and not list_ids:
                 current_list_ids = []
-                subscription_ids = vals.get('subscription_ids') or []
                 for subscription in subscription_ids:
                     if len(subscription) == 3:
                         current_list_ids.append(subscription[2]['list_id'])
@@ -106,6 +106,18 @@ class MassMailingContact(models.Model):
                     subscription_ids.append((0, 0, {'list_id': list_id}))
                 vals['subscription_ids'] = subscription_ids
 
+            if list_ids:
+                if isinstance(list_ids[0], (list, tuple)):
+                    # Only unpack a single SET command; leave other commands to the ORM
+                    # instead of treating them as list IDs.
+                    if len(list_ids) != 1 or list_ids[0][0] != Command.SET:
+                        continue
+                    list_ids = list_ids[0][2]
+                vals.pop('list_ids')
+                vals['subscription_ids'] = [
+                    Command.create({'list_id': list_id})
+                    for list_id in dict.fromkeys(list_ids)
+                ]
         return super(MassMailingContact, self.with_context(default_list_ids=False)).create(vals_list)
 
     @api.returns('self', lambda value: value.id)
