@@ -416,8 +416,17 @@ class FleetVehicle(models.Model):
             future_driver = vals['future_driver_id']
             state_waiting_list = self.env.ref('fleet.fleet_vehicle_state_waiting_list', raise_if_not_found=False)
             state_new_request = self.env.ref('fleet.fleet_vehicle_state_new_request', raise_if_not_found=False)
-            vehicle_types = set(self.filtered(lambda vehicle: not state_waiting_list or\
-                                vals.get('state_id', vehicle.state_id.id) not in [state_waiting_list.id, state_new_request.id]).mapped('vehicle_type'))
+            excluded_state_ids = {
+                state.id
+                for state in (state_waiting_list, state_new_request)
+                if state
+            }
+            vehicle_types = set(
+            self.filtered(
+                    lambda vehicle: vals.get("state_id", vehicle.state_id.id)
+                    not in excluded_state_ids
+                ).mapped("vehicle_type")
+            )
             if vehicle_types:
                 vehicle_read_group = dict(self.env['fleet.vehicle']._read_group(
                     domain=[('driver_id', '=', future_driver), ('vehicle_type', 'in', vehicle_types), ('id', 'not in', self.ids)],
