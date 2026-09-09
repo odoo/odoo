@@ -28,7 +28,7 @@ from odoo.tests.common import (
 )
 
 from odoo.addons.bus.bus_dispatcher import BusDispatcher
-from odoo.addons.bus.models.bus import channel_with_db, json_dump
+from odoo.addons.bus.models.bus import ODOO_NOTIFY_FUNCTION, channel_with_db, json_dump
 from odoo.addons.bus.websocket import CloseCode, WebsocketConnectionHandler
 
 
@@ -413,6 +413,11 @@ class WebsocketCase(HttpCase, BusCase):
                 self.wait_for_event(dispatch_bus_notification_done)
 
     def trigger_notification_dispatching(self):
+        if ODOO_NOTIFY_FUNCTION != "pg_notify":
+            raise unittest.SkipTest(
+                "Custom ODOO_NOTIFY_FUNCTION is configured, skipping test as `listen "
+                "imbus` cannot be relied upon to receive the notification."
+            )
         self.env.cr.precommit.run()  # Trigger the creation of bus.bus records
         self.env.cr.postcommit.run()  # PostgreSQL NOTIFY happens after commit
 
