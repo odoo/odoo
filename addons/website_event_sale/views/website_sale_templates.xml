@@ -96,9 +96,9 @@
                             t-if="event_attendees or not event.is_multi_slots"
                             class="m-3">
                             <t t-if="event_attendees and not event.is_multi_slots">
-                                <t t-call="website_event.registration_ticket_access">
-                                    <t t-set="attendees" t-value="event_attendees" />
-                                </t>
+                                <t
+                                    t-call="website_event.registration_ticket_access"
+                                    attendees="event_attendees" />
                             </t>
                             <div
                                 t-elif="event_attendees"
@@ -138,24 +138,16 @@
                                             attendees="event_attendees[slot]" />
                                     </div>
                                 </div>
-                                <t t-call="website_event.event_calendar_links">
-                                    <t
-                                        t-set="iCal_url"
-                                        t-value="urls_per_event.get(event.id, {}).get(slot.id, {}).get('iCal_url', '')" />
-                                    <t
-                                        t-set="google_url"
-                                        t-value="urls_per_event.get(event.id, {}).get(slot.id, {}).get('google_url', '')" />
-                                </t>
+                                <t
+                                    t-call="website_event.event_calendar_links"
+                                    iCal_url="urls_per_event.get(event.id, {}).get(slot.id, {}).get('iCal_url', '')"
+                                    google_url="urls_per_event.get(event.id, {}).get(slot.id, {}).get('google_url', '')" />
                             </div>
                             <div t-if="not event.is_multi_slots" class="row my-3">
-                                <t t-call="website_event.event_calendar_links">
-                                    <t
-                                        t-set="iCal_url"
-                                        t-value="urls_per_event.get(event.id, {}).get('iCal_url', '')" />
-                                    <t
-                                        t-set="google_url"
-                                        t-value="urls_per_event.get(event.id, {}).get('google_url', '')" />
-                                </t>
+                                <t
+                                    t-call="website_event.event_calendar_links"
+                                    iCal_url="urls_per_event.get(event.id, {}).get('iCal_url', '')"
+                                    google_url="urls_per_event.get(event.id, {}).get('google_url', '')" />
                             </div>
                             <t
                                 t-call="website_event.event_confirmation_end_page_hook" />
