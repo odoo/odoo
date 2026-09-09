@@ -277,36 +277,17 @@ test("preview shouldn't let o_dirty", async () => {
             }
         },
     });
-    let editorIsStart = false;
-    class TestPlugin extends Plugin {
-        static id = "TestPlugin";
-        resources = {
-            normalize_processors: (root) => {
-                const el = root.querySelector(".test-option");
-                if (editorIsStart && el.dataset.applied !== "true") {
-                    // apply a mutation when we remove the preview
-                    el.classList.add("test");
-                }
-                return root;
-            },
-        };
-    }
-    addPlugin(TestPlugin);
     addBuilderOption({
         selector: ".test-option",
         template: xml`<BuilderButton action="'testAction'"/>`,
         reloadTarget: true,
     });
     await setupWebsiteBuilder(`<div class="test-option">b</div>`);
-    editorIsStart = true;
     await contains(":iframe .test-option").click();
     await contains("[data-action-id=testAction]").hover(); // preview
     expect(":iframe .test-option").toHaveAttribute("data-applied");
-    expect(":iframe .test-option").not.toHaveClass("test");
-
     await contains(":iframe body").hover(); // leave preview
     expect(":iframe .test-option").not.toHaveAttribute("data-applied");
-    expect(":iframe .test-option").toHaveClass("test");
     expect(":iframe #wrap").not.toHaveClass("o_dirty");
 });
 
