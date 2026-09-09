@@ -1,4 +1,4 @@
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, t, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { ListRenderer } from "@web/views/list/list_renderer";
@@ -6,7 +6,9 @@ import { listView } from "@web/views/list/list_view";
 
 export class LoyaltyActionHelper extends Component {
     static template = "loyalty.LoyaltyActionHelper";
-    static props = ["noContentHelp"];
+    props = useProps({
+        noContentHelp: t.any(),
+    });
     setup() {
         this.orm = useService("orm");
         this.action = useService("action");
