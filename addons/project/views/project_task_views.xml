@@ -869,8 +869,14 @@
             <field name="priority">2</field>
             <field name="arch" type="xml">
                 <list position="attributes">
+                    <attribute name="default_order">sequence, priority desc, state, date_deadline asc, id desc</attribute>
                     <attribute name="default_group_by">stage_id</attribute>
                 </list>
+                <field name="sequence" position="attributes">
+                     <attribute name="widget">handle</attribute>
+                     <attribute name="readonly">0</attribute>
+                     <attribute name="column_invisible">0</attribute>
+                </field>
             </field>
         </record>
 
