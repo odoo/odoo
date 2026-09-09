@@ -206,7 +206,7 @@ function triggerEvent(el, selector, eventType, eventInit, options = {}) {
     const event = new Constructor(eventType, processParams(eventInit));
     target.dispatchEvent(event);
 
-    if (__debug__.debug) {
+    if (__debug__().debug) {
         const group = `%c[${event.type.toUpperCase()}]`;
         console.groupCollapsed(group, "color: #b52c9b");
         console.log(target, event);
