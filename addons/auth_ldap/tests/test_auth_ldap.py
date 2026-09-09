@@ -1,12 +1,12 @@
 import re
-import time
 from unittest.mock import Mock, patch
 
 import ldap
 
 from odoo.exceptions import AccessDenied
 from odoo.http import request_var
-from odoo.http.session import Session
+from odoo.http.requestlib import HTTPRequest, Request
+from odoo.http.session import Session, get_default_session
 from odoo.tests import Form, tagged, users
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
@@ -52,6 +52,11 @@ class TestAuthLDAP(HttpCaseWithUserDemo):
 
     def setUp(self):
         super().setUp()
+        request = Request(HTTPRequest(environ={"REMOTE_ADDR": "127.0.0.1"}))
+        request.env = self.env
+        request.session = Session(get_default_session(), "auth_ldap_test")
+        request_reset = request_var.set(request)
+        self.addCleanup(request_var.reset, request_reset)
 
         # Reset the LDAP users between unit tests, so each unit test does not have to take care of the users cleanup
         self.ldap_connection_mock._users = {
@@ -73,13 +78,10 @@ class TestAuthLDAP(HttpCaseWithUserDemo):
             },
         }
 
-    def mock_check_identity(self):
-        fake_req = Mock(
-            httprequest=Mock(environ={"REMOTE_ADDR": "123.123.123.123"}),
-            session=Session({"identity-check-last": time.time()}, "foo"),
-        )
-        request_reset = request_var.set(fake_req)
-        self.addCleanup(request_var.reset, request_reset)
+    def resolve_identity_check(self, env, action, password):
+        self.assertEqual(action["res_model"], "res.users.identitycheck")
+        identity_check = env[action["res_model"]].browse(action["res_id"])
+        return identity_check.with_context(password=password).run_check()
 
     def test_auth_ldap(self):
         def _get_ldap_dicts(self):
@@ -155,9 +157,8 @@ class TestAuthLDAP(HttpCaseWithUserDemo):
         )
         self.assertEqual(result["uid"], self.env.uid)
 
-        # Bypass the check identity dialog
-        # When a user tries to change its password, he gets presented with the check identity dialog
-        self.mock_check_identity()
+        action = self.env.user.preference_change_password()
+        self.resolve_identity_check(self.env, action, "foo")
 
         # User changes his password through the preferences menu / change password wizard form
         with Form(self.env["change.password.own"]) as form:
@@ -193,6 +194,35 @@ class TestAuthLDAP(HttpCaseWithUserDemo):
         [password] = self.env.cr.fetchone()
         self.assertFalse(password, "The local password should not have been set")
 
+    def test_local_user_change_own_password(self):
+        # Simulate a locally authenticated user created through signup whose login matches an LDAP entry.
+        # Changing the local password must not change the LDAP entry's password.
+        other_user = self.env["res.users"].sudo().create({
+            "login": "other_user",
+            "name": "Other User",
+            "password": "local-password",
+        })
+        self.ldap_connection_mock._users["uid=other_user,dc=example,dc=org"] = {
+            "uid": "other_user",
+            "password": "ldap-password",
+        }
+        local_env = self.env(user=other_user)
+        action = local_env.user.preference_change_password()
+        self.resolve_identity_check(local_env, action, "local-password")
+
+        with Form(local_env["change.password.own"]) as form:
+            form.new_password = "new-local-password"
+            form.confirm_password = "new-local-password"
+        form.record.change_password()
+
+        self.env.cr.execute("SELECT password FROM res_users WHERE id = %s", [other_user.id])
+        [hashed] = self.env.cr.fetchone()
+        self.assertTrue(self.env["res.users"]._crypt_context().verify("new-local-password", hashed))
+        self.assertEqual(
+            self.ldap_connection_mock._users["uid=other_user,dc=example,dc=org"]["password"],
+            "ldap-password",
+        )
+
     @users("admin")
     def test_admin_change_users_password(self):
         """Tests that, when an admin changes the password of users linked to LDAP accounts,
@@ -207,13 +237,9 @@ class TestAuthLDAP(HttpCaseWithUserDemo):
             )
             self.assertEqual(result["uid"], user.id)
 
-        # Bypass the check identity dialog.
-        # When an admin loads the action to change the password of users,
-        # he gets presented with the check identity dialog.
-        self.mock_check_identity()
-
         # Trigger the change password action on multiple users
         action = (self.user_demo + self.user_admin).action_change_password_wizard()
+        action = self.resolve_identity_check(self.env, action, "xyz")
         self.assertEqual(
             action["res_model"],
             "change.password.wizard",

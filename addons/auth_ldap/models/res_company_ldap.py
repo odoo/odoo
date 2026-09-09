@@ -3,12 +3,18 @@
 
 import ldap
 import logging
+import time
 from ldap.filter import filter_format
 
 from odoo import _, fields, models, tools
 from odoo.exceptions import AccessDenied
+from odoo.http import request
 
 _logger = logging.getLogger(__name__)
+
+LDAP_IDENTITY_CHECK_LAST = 'identity-check-last-ldap'
+LDAP_IDENTITY_CHECK_ENTRY = 'identity-check-ldap-entry'
+LDAP_IDENTITY_CHECK_TIMEOUT = 10 * 60
 
 
 class LDAPWrapper:
@@ -161,6 +167,13 @@ class ResCompanyLdap(models.Model):
         except ldap.LDAPError as e:
             _logger.error('An LDAP exception occurred: %s', e)
             return False
+        if request:
+            request.session[LDAP_IDENTITY_CHECK_LAST] = time.time()  # nosemgrep: requests-in-models
+            request.session[LDAP_IDENTITY_CHECK_ENTRY] = {  # nosemgrep: requests-in-models
+                'db': self.env.cr.dbname,
+                'ldap_id': conf['id'],
+                'dn': dn,
+            }
         return entry
 
     def _query(self, conf, filter, retrieve_attributes=None):
@@ -252,6 +265,16 @@ class ResCompanyLdap(models.Model):
         changed = False
         dn, entry = self._get_entry(conf, login)
         if not dn:
+            return False
+        if not self.env.user._is_admin() and (
+            not request
+            or request.session.get(LDAP_IDENTITY_CHECK_LAST, 0) <= time.time() - LDAP_IDENTITY_CHECK_TIMEOUT  # nosemgrep: requests-in-models
+            or request.session.get(LDAP_IDENTITY_CHECK_ENTRY) != {  # nosemgrep: requests-in-models
+                'db': self.env.cr.dbname,
+                'ldap_id': conf['id'],
+                'dn': dn,
+            }
+        ):
             return False
         ldap_password = conf["ldap_password"] or ""
         ldap_binddn = conf["ldap_binddn"] or ""
