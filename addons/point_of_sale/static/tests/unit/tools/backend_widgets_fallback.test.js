@@ -26,7 +26,6 @@ test("unknown <widget> arch node degrades to an empty widget instead of crashing
 test("known <widget> arch node still resolves from the registry", async () => {
     class DummyWidget extends Component {
         static template = xml`<span>dummy</span>`;
-        static props = ["*"];
     }
     viewWidgetRegistry.add("dummy_test_widget", { component: DummyWidget });
 

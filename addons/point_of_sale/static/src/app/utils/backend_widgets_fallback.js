@@ -15,7 +15,6 @@ import { Field } from "@web/views/fields/field";
  */
 class UnavailableWidget extends Component {
     static template = xml`<t/>`;
-    static props = ["*"];
 }
 
 const viewWidgetRegistry = registry.category("view_widgets");
