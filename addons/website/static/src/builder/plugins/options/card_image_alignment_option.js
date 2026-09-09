@@ -59,7 +59,12 @@ export class CardImageAlignmentOption extends BaseOptionComponent {
                 if (!imageEl.complete) {
                     promises.push(
                         new Promise((resolve) => {
-                            imageEl.addEventListener("load", () => resolve());
+                            imageEl.addEventListener("load", () => resolve(), {
+                                once: true,
+                            });
+                            imageEl.addEventListener("error", () => resolve(), {
+                                once: true,
+                            });
                         }),
                     );
                 }
