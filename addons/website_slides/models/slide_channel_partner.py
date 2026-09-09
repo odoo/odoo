@@ -191,6 +191,13 @@ class SlideChannelPartner(models.Model):
 
     def unlink(self):
         if self:
+            self.filtered(
+                lambda membership: membership.member_status == "completed"
+            )._post_completion_update_hook(completed=False)
+            # One clause per (channel, partners) pair rather than per record,
+            # and the channel side expressed as a relation instead of an
+            # inlined list of slide ids: unlinking 1000 members of a 500-slide
+            # course used to build a domain with half a million terms in it.
             removed_slide_partner_domain = Domain.OR(
                 Domain("channel_id", "=", channel.id)
                 & Domain("partner_id", "in", channel_partners.partner_id.ids)
