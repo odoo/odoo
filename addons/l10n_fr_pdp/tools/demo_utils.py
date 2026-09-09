@@ -16,6 +16,7 @@ def _mock_call_peppol_proxy(func, self, endpoint, params=None):
     if self.proxy_type != 'pdp':
         return func(self, endpoint, params=params)
 
+    endpoint = endpoint.split('/')[-1]
     if endpoint not in ('register_receiver', 'cancel_pdp_registration', 'get_all_ppf_documents', 'get_ppf_document', 'pilot_phase', 'send_response'):
         return func(self, endpoint, params=params)
 
