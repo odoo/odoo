@@ -98,7 +98,9 @@ class SifJurnalEntry(models.Model):
     def create(self, vals_list):
         for vals in vals_list:
             if vals.get('name', _('New')) == _('New'):
-                seq = self.env['ir.sequence'].next_by_code('sif.jurnal.entry')
+                seq = self.env['ir.sequence'].next_by_code('sif.jurnal.number')
+                while seq and self.search_count([('name', '=', seq)]):
+                    seq = self.env['ir.sequence'].next_by_code('sif.jurnal.number')
                 if seq:
                     vals['name'] = seq
                 else:
@@ -106,7 +108,7 @@ class SifJurnalEntry(models.Model):
                     prefix = f"J{date_val.strftime('%y%m')}"
                     last_rec = self.search([('name', '=like', f"{prefix}%")], order='id desc', limit=1)
                     next_num = 1
-                    if last_rec and len(last_rec.name) >= 10:
+                    if last_rec and len(last_rec.name) >= 9:
                         try:
                             next_num = int(last_rec.name[-4:]) + 1
                         except ValueError:
