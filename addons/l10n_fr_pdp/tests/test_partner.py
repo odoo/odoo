@@ -274,3 +274,89 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon, MailCase):
             'peppol_supported_documents': [CPRO_INVOICE_IDENTIFIER],
         }])
         self.assertTrue(self.env['account.edi.xml.ubl_21_fr']._pdp_is_b2g(partner))
+
+    def test_account_move_send_annuaire_single_match(self):
+        self.env.company.write({
+            'account_peppol_proxy_state': 'receiver',
+        })
+
+        self.partner_a.write({
+            'routing_scheme': False,
+            'routing_endpoint': False,
+        })
+
+        self.assertEqual(self.partner_a.peppol_verification_state, 'not_verified')
+        self.assertEqual(self.partner_a.pdp_verification_display_state, 'not_verified')
+
+        invoice = self._create_french_invoice()
+        invoice.action_post()
+
+        mocked_lookup_result = {
+            'in_annuaire': True,
+            'identifiers': ["123456789_12345678900012"],
+            'lines': [{"identifier": "123456789_12345678900012"}],
+            'count': 1,
+        }
+
+        with (
+            mock.patch.object(self.env.registry['res.company'], 'search', lambda *args, **kwargs: self.env.company),
+            mock.patch.object(type(self.env['res.partner']), '_fetch_active_annuaire_lines', return_value=mocked_lookup_result),
+            mock_pdp_annuaire_lookup('123456789_12345678900012'),
+            mock_pdp_peppol_lookup_success(['0225:123456789_12345678900012']),
+        ):
+            wizard = self.env['account.move.send.wizard'].with_context(
+                active_model='account.move',
+                active_ids=invoice.ids
+            ).create({})
+            peppol_box = wizard.sending_method_checkboxes.get('peppol', {})
+
+            self.assertRecordValues(self.partner_a, [{
+                'routing_scheme': '0225',
+                'routing_endpoint': '123456789_12345678900012',
+                'peppol_verification_state': 'valid',
+                'pdp_verification_display_state': 'pdp_valid',
+            }])
+            self.assertNotIn('l10n_fr_pdp_ambiguous_annuaire', wizard.alerts or {})
+            self.assertTrue(peppol_box.get('checked'))
+
+    def test_account_move_send_annuaire_multiple_matches(self):
+        self.env.company.write({
+            'account_peppol_proxy_state': 'receiver',
+        })
+
+        self.partner_a.write({
+            'routing_scheme': '9957',
+            'routing_endpoint': 'FR23334175221',
+        })
+
+        self.assertEqual(self.partner_a.peppol_verification_state, 'not_verified')
+        self.assertEqual(self.partner_a.pdp_verification_display_state, 'not_verified')
+
+        invoice = self._create_french_invoice()
+        invoice.action_post()
+
+        mocked_lookup_result = {
+            'in_annuaire': True,
+            'identifiers': ["968515759_96851575900034", "968515759", "968515759_96851575905823"],
+            'lines': [{"identifier": "968515759_96851575900034"}, {"identifier": "968515759"},
+                      {"identifier": "968515759_96851575905823"}],
+            'count': 3,
+        }
+
+        with (
+            mock.patch.object(self.env.registry['res.company'], 'search', lambda *args, **kwargs: self.env.company),
+            mock.patch.object(type(self.env['res.partner']), '_fetch_active_annuaire_lines', return_value=mocked_lookup_result),
+            mock_pdp_annuaire_lookup('968515759'),
+            mock_pdp_peppol_lookup_success(['0225:968515759']),
+        ):
+            self.env['account.move.send.wizard'].with_context(
+                active_model='account.move',
+                active_ids=invoice.ids
+            ).create({})
+
+            self.assertRecordValues(self.partner_a, [{
+                'routing_scheme': '0225',
+                'routing_endpoint': '968515759',
+                'peppol_verification_state': 'valid',
+                'pdp_verification_display_state': 'pdp_valid',
+            }])
