@@ -23,7 +23,7 @@ import { parseHTML } from "@html_editor/utils/html";
 import { DIRECTIONS, leftPos, rightPos, nodeSize } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
 import { findInSelection } from "@html_editor/utils/selection";
-import { getColumnIndex, getRowIndex, getTableCells } from "@html_editor/utils/table";
+import { getRowIndex, getTableCells } from "@html_editor/utils/table";
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
@@ -228,10 +228,11 @@ export class TablePlugin extends Plugin {
             return false;
         }
 
-        // Source table size.
-        const sourceRows = sourceTable.rows;
-        const sourceRowCount = sourceRows.length;
-        const sourceColumnCount = sourceRows[0]?.cells.length || 0;
+        // Source table size. A row's cell count is not its width as soon as
+        // spans are involved, so the logical grid is used throughout.
+        const sourceGrid = this.buildTableGrid(sourceTable);
+        const sourceRowCount = sourceTable.rows.length;
+        const sourceColumnCount = Math.max(0, ...sourceGrid.map((row) => row.length));
         if (!sourceRowCount || !sourceColumnCount) {
             return false;
         }
@@ -246,7 +247,8 @@ export class TablePlugin extends Plugin {
             targetTable.querySelector(".o_selected_td") ||
             closestElement(selection.anchorNode, isTableCell);
         const anchorRowIndex = getRowIndex(anchorCell);
-        const anchorColumnIndex = getColumnIndex(anchorCell);
+        const anchorColumnIndex =
+            this.buildTableGrid(targetTable)[anchorRowIndex].indexOf(anchorCell);
 
         // Ensure target table has enough rows.
         const targetRows = targetTable.rows;
@@ -257,58 +259,114 @@ export class TablePlugin extends Plugin {
         }
 
         // Ensure target table has enough columns.
-        const targetCells = targetRows[0].cells;
-        const columnsToAdd = anchorColumnIndex + sourceColumnCount - targetCells.length;
+        let targetGrid = this.buildTableGrid(targetTable);
+        const targetColumnCount = Math.max(0, ...targetGrid.map((row) => row.length));
+        const columnsToAdd = anchorColumnIndex + sourceColumnCount - targetColumnCount;
 
         if (columnsToAdd > 0) {
-            this.addColumn("after", targetCells[targetCells.length - 1], columnsToAdd);
+            const lastColumnIndex = targetColumnCount - 1;
+            const rightmostCell = targetGrid.find((row) => row[lastColumnIndex])?.[lastColumnIndex];
+            this.addColumn("after", rightmostCell, columnsToAdd);
         }
 
-        for (let sourceRowIndex = 0; sourceRowIndex < sourceRowCount; sourceRowIndex++) {
-            const sourceCells = sourceRows[sourceRowIndex].cells;
-            const targetCells = targetTable.rows[anchorRowIndex + sourceRowIndex].cells;
+        // A target cell merged over the pasted area covers several grid
+        // positions, which therefore cannot receive distinct content: split it
+        // back into individual cells before writing.
+        targetGrid = this.buildTableGrid(targetTable);
+        const mergedTargetCells = new Set();
+        for (
+            let rowIndex = anchorRowIndex;
+            rowIndex < anchorRowIndex + sourceRowCount;
+            rowIndex++
+        ) {
             for (
-                let sourceColumnIndex = 0;
-                sourceColumnIndex < sourceColumnCount;
-                sourceColumnIndex++
+                let columnIndex = anchorColumnIndex;
+                columnIndex < anchorColumnIndex + sourceColumnCount;
+                columnIndex++
             ) {
-                const sourceCell = sourceCells[sourceColumnIndex];
-                const targetCell = targetCells[anchorColumnIndex + sourceColumnIndex];
-                const clonedCell = sourceCell.cloneNode(true);
-                targetCell.replaceChildren(...clonedCell.childNodes);
-                // Remove any existing bg-* classes on the target cell.
-                const targetBgClasses = [...targetCell.classList].filter((cls) =>
-                    BG_CLASSES_REGEX.test(cls)
-                );
-                if (targetBgClasses.length) {
-                    removeClass(targetCell, ...targetBgClasses);
+                const cell = targetGrid[rowIndex]?.[columnIndex];
+                if (cell && ((cell.rowSpan || 1) > 1 || (cell.colSpan || 1) > 1)) {
+                    mergedTargetCells.add(cell);
                 }
-                // Apply bg-* classes from the source cell.
-                const sourceBgClasses = [...sourceCell.classList].filter((cls) =>
-                    BG_CLASSES_REGEX.test(cls)
-                );
-                if (sourceBgClasses.length) {
-                    targetCell.classList.add(...sourceBgClasses);
-                }
-                // Apply source background if any else remove target background
-                const { backgroundColor, backgroundImage } = sourceCell.style;
-                if (backgroundColor) {
-                    targetCell.style.backgroundColor = backgroundColor;
-                } else {
-                    removeStyle(targetCell, "background-color");
-                }
-                if (backgroundImage) {
-                    targetCell.style.backgroundImage = backgroundImage;
-                } else {
-                    removeStyle(targetCell, "background-image");
+            }
+        }
+        for (const cell of mergedTargetCells) {
+            this.splitMergedCell(cell);
+        }
+
+        // Position of each source cell in the source grid. Cells covered by a
+        // span are not origins: they are absorbed by the merge below.
+        const sourceOrigins = new Map();
+        for (const [rowIndex, gridRow] of sourceGrid.entries()) {
+            for (const [columnIndex, cell] of gridRow.entries()) {
+                if (cell && !sourceOrigins.has(cell)) {
+                    sourceOrigins.set(cell, { rowIndex, columnIndex });
                 }
             }
         }
 
-        const selectionStartNode =
-            targetTable.rows[anchorRowIndex].cells[anchorColumnIndex].firstChild;
+        targetGrid = this.buildTableGrid(targetTable);
+        const targetCellAt = (rowIndex, columnIndex) =>
+            targetGrid[anchorRowIndex + rowIndex]?.[anchorColumnIndex + columnIndex];
+        const cellsToRemove = new Set();
+        for (const [sourceCell, { rowIndex, columnIndex }] of sourceOrigins) {
+            const targetCell = targetCellAt(rowIndex, columnIndex);
+            if (!targetCell) {
+                continue;
+            }
+            const clonedCell = sourceCell.cloneNode(true);
+            targetCell.replaceChildren(...clonedCell.childNodes);
+            // Remove any existing bg-* classes on the target cell.
+            const targetBgClasses = [...targetCell.classList].filter((cls) =>
+                BG_CLASSES_REGEX.test(cls)
+            );
+            if (targetBgClasses.length) {
+                removeClass(targetCell, ...targetBgClasses);
+            }
+            // Apply bg-* classes from the source cell.
+            const sourceBgClasses = [...sourceCell.classList].filter((cls) =>
+                BG_CLASSES_REGEX.test(cls)
+            );
+            if (sourceBgClasses.length) {
+                targetCell.classList.add(...sourceBgClasses);
+            }
+            // Apply source background if any else remove target background
+            const { backgroundColor, backgroundImage } = sourceCell.style;
+            if (backgroundColor) {
+                targetCell.style.backgroundColor = backgroundColor;
+            } else {
+                removeStyle(targetCell, "background-color");
+            }
+            if (backgroundImage) {
+                targetCell.style.backgroundImage = backgroundImage;
+            } else {
+                removeStyle(targetCell, "background-image");
+            }
+            // Reproduce the source merge on the target: every target cell
+            // covered by the source span is absorbed into the target cell.
+            // Spans overflowing the source table are clamped to it.
+            const rowSpan = Math.min(sourceCell.rowSpan || 1, sourceRowCount - rowIndex);
+            const colSpan = Math.min(sourceCell.colSpan || 1, sourceColumnCount - columnIndex);
+            for (let row = rowIndex; row < rowIndex + rowSpan; row++) {
+                for (let column = columnIndex; column < columnIndex + colSpan; column++) {
+                    const coveredCell = targetCellAt(row, column);
+                    if (coveredCell && coveredCell !== targetCell) {
+                        cellsToRemove.add(coveredCell);
+                    }
+                }
+            }
+            rowSpan > 1 ? (targetCell.rowSpan = rowSpan) : targetCell.removeAttribute("rowspan");
+            colSpan > 1 ? (targetCell.colSpan = colSpan) : targetCell.removeAttribute("colspan");
+        }
+        for (const cell of cellsToRemove) {
+            cell.remove();
+        }
+        this.tableGridMap?.delete(targetTable);
+
+        targetGrid = this.buildTableGrid(targetTable);
+        const selectionStartNode = targetGrid[anchorRowIndex][anchorColumnIndex].firstChild;
         const selectionEndNode =
-            targetTable.rows[anchorRowIndex + sourceRowCount - 1].cells[
+            targetGrid[anchorRowIndex + sourceRowCount - 1][
                 anchorColumnIndex + sourceColumnCount - 1
             ].lastChild;
         // Select from the first source cell to the last source cell.
@@ -964,51 +1022,21 @@ export class TablePlugin extends Plugin {
 
     /**
      * Splits a merged table cell (using either `rowspan` or `colspan`) back
-     * into individual cells by inserting new empty `<td>` elements
+     * into individual cells by inserting new empty `<td>/<th>` elements
      */
     unmergeSelectedCell() {
         const selectedCells = Array.from(this.editable.querySelectorAll(".o_selected_td"));
-        const { anchorNode, isCollapsed } = this.dependencies.selection.getEditableSelection();
-        if (isCollapsed && anchorNode && closestElement(anchorNode, isTableCell)) {
-            selectedCells.push(closestElement(anchorNode, isTableCell));
-        }
         if (!selectedCells.length) {
-            return;
+            const { anchorNode } = this.dependencies.selection.getEditableSelection();
+            const cell = anchorNode && closestElement(anchorNode, isTableCell);
+            if (!cell) {
+                return;
+            }
+            selectedCells.push(cell);
         }
         for (const cell of selectedCells) {
-            if (cell.hasAttribute("rowspan")) {
-                let tr = closestElement(cell, "tr");
-                const colIndex = getColumnIndex(cell);
-                for (let i = 1; i < cell.rowSpan; i++) {
-                    const nextTr = tr.nextElementSibling;
-                    if (nextTr) {
-                        const newTd = this.document.createElement("td");
-                        const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-                        newTd.append(baseContainer);
-                        const targetTd = nextTr.childNodes[colIndex];
-                        if (targetTd) {
-                            nextTr.insertBefore(newTd, targetTd);
-                        } else {
-                            nextTr.appendChild(newTd);
-                        }
-                        tr = nextTr;
-                    }
-                }
-                cell.removeAttribute("rowspan");
-            } else if (cell.hasAttribute("colspan")) {
-                for (let i = 1; i < cell.colSpan; i++) {
-                    const newCell = this.document.createElement(cell.nodeName);
-                    if (cell.classList.contains("o_table_header")) {
-                        newCell.classList.add("o_table_header");
-                    }
-                    const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-                    newCell.append(baseContainer);
-                    cell.after(newCell);
-                }
-                cell.removeAttribute("colspan");
-            }
+            this.splitMergedCell(cell);
         }
-        this.tableGridMap.delete(closestElement(selectedCells[0], "table"));
         this.updateSelectionTable(this.dependencies.selection.getSelectionData());
     }
 
@@ -1877,20 +1905,118 @@ export class TablePlugin extends Plugin {
                 (table.parentElement && !!closestElement(table.parentElement, ".o_selected_td")) ||
                 getTableCells(table).every((td) => td.classList.contains("o_selected_td"));
             if (!isTableFullySelected) {
-                for (const td of tableClone.querySelectorAll(":is(td, th):not(.o_selected_td)")) {
-                    if (closestElement(td, "table") === tableClone) {
-                        // ignore nested
-                        td.remove();
+                const rows = [...tableClone.rows];
+                const grid = this.buildTableGrid(tableClone) || [];
+
+                // Phase 1: find which columns hold a selected cell, and which
+                // rows have a selected cell (their own, or via an incoming
+                // rowSpan). Rows with none are dropped right away.
+                const cellMeta = new Map(); // cell -> { rowIndex, columnIndex, colSpan, rowSpan, isSelected }
+                const keptColumns = new Set();
+                const rowSurvives = [];
+                for (const [rowIndex, gridRow] of grid.entries()) {
+                    let hasSelection = false;
+                    for (const [columnIndex, cell] of (gridRow || []).entries()) {
+                        if (!cell) {
+                            continue;
+                        }
+                        let meta = cellMeta.get(cell);
+                        if (!meta) {
+                            meta = {
+                                rowIndex,
+                                columnIndex,
+                                colSpan: cell.colSpan || 1,
+                                rowSpan: cell.rowSpan || 1,
+                                isSelected: cell.classList.contains("o_selected_td"),
+                            };
+                            cellMeta.set(cell, meta);
+                        }
+                        if (meta.isSelected) {
+                            hasSelection = true;
+                            keptColumns.add(columnIndex);
+                        }
+                    }
+                    rowSurvives[rowIndex] = hasSelection;
+                    if (!hasSelection) {
+                        rows[rowIndex]?.remove();
                     }
                 }
-                const trsWithoutTd = Array.from(tableClone.querySelectorAll("tr")).filter(
-                    (row) => !row.querySelector("td, th")
-                );
-                for (const tr of trsWithoutTd) {
-                    if (closestElement(tr, "table") === tableClone) {
-                        // ignore nested
-                        tr.remove();
+
+                // Phase 2: keep only the selected part of each surviving cell
+                // by updating its spans. Cells that are no longer needed are
+                // removed, while unselected cells that must remain for the
+                // layout are emptied.
+                for (const [cell, meta] of cellMeta) {
+                    if (!rowSurvives[meta.rowIndex]) {
+                        continue;
                     }
+                    let keptColSpan = 0;
+                    for (let i = 0; i < meta.colSpan; i++) {
+                        if (keptColumns.has(meta.columnIndex + i)) {
+                            keptColSpan++;
+                        }
+                    }
+                    if (!keptColSpan) {
+                        cell.remove();
+                        continue;
+                    }
+                    let keptRowSpan = 0;
+                    for (let i = 0; i < meta.rowSpan; i++) {
+                        if (rowSurvives[meta.rowIndex + i]) {
+                            keptRowSpan++;
+                        }
+                    }
+                    keptColSpan > 1
+                        ? (cell.colSpan = keptColSpan)
+                        : cell.removeAttribute("colspan");
+                    keptRowSpan > 1
+                        ? (cell.rowSpan = keptRowSpan)
+                        : cell.removeAttribute("rowspan");
+                    if (!meta.isSelected) {
+                        cell.replaceChildren(this.dependencies.baseContainer.createBaseContainer());
+                    }
+                }
+
+                // Phase 3: a kept column whose covering cell was dropped along
+                // with its row leaves a hole: fill it with an empty cell.
+                const sortedKeptColumns = [...keptColumns].sort((a, b) => a - b);
+                for (const [rowIndex, row] of rows.entries()) {
+                    if (!rowSurvives[rowIndex]) {
+                        continue;
+                    }
+                    for (const columnIndex of sortedKeptColumns) {
+                        const originCell = grid[rowIndex]?.[columnIndex];
+                        if (originCell && tableClone.contains(originCell)) {
+                            continue;
+                        }
+                        const newCell = this.document.createElement(originCell?.tagName || "td");
+                        newCell.append(this.dependencies.baseContainer.createBaseContainer());
+                        const nextCell = [...row.cells].find(
+                            (other) => cellMeta.get(other).columnIndex > columnIndex
+                        );
+                        nextCell ? nextCell.before(newCell) : row.append(newCell);
+                        cellMeta.set(newCell, {
+                            rowIndex,
+                            columnIndex,
+                            colSpan: 1,
+                            rowSpan: 1,
+                            isSelected: false,
+                        });
+                    }
+                }
+
+                const colGroup = tableClone.querySelector(":scope > colgroup");
+                if (colGroup) {
+                    const originalCols = [...table.querySelector(":scope > colgroup").children];
+                    let width = 0;
+                    for (const [index, col] of [...colGroup.children].entries()) {
+                        if (keptColumns.has(index)) {
+                            width += parseFloat(getComputedStyle(originalCols[index]).width) || 0;
+                        } else {
+                            col.remove();
+                        }
+                    }
+                    tableClone.style.width = `${width}px`;
                 }
             }
             // If it is fully selected, clone the whole table rather than
@@ -1960,5 +2086,61 @@ export class TablePlugin extends Plugin {
         }
         this.tableGridMap.set(table, grid);
         return grid;
+    }
+
+    /**
+     * Splits a merged cell back into individual cells: the cell keeps its
+     * content at its origin position, and every other grid position it used
+     * to cover receives a new empty cell.
+     *
+     * @param {HTMLTableCellElement} cell
+     */
+    splitMergedCell(cell) {
+        if ((cell.rowSpan || 1) === 1 && (cell.colSpan || 1) === 1) {
+            // Nothing to split: skip the grid work, but still drop a
+            // redundant span attribute.
+            cell.removeAttribute("rowspan");
+            cell.removeAttribute("colspan");
+            return;
+        }
+
+        const table = closestElement(cell, "table");
+        if (!table) {
+            return;
+        }
+        const grid = this.buildTableGrid(table);
+        const cellRowIndex = grid.findIndex((row) => row.includes(cell));
+        const cellColumnIndex = grid[cellRowIndex].indexOf(cell);
+        const rowSpan = Math.min(cell.rowSpan || 1, table.rows.length - cellRowIndex);
+        const colSpan = cell.colSpan || 1;
+        cell.removeAttribute("rowspan");
+        cell.removeAttribute("colspan");
+
+        for (let rowIndex = cellRowIndex; rowIndex < cellRowIndex + rowSpan; rowIndex++) {
+            for (
+                let columnIndex = cellColumnIndex;
+                columnIndex < cellColumnIndex + colSpan;
+                columnIndex++
+            ) {
+                if (rowIndex === cellRowIndex && columnIndex === cellColumnIndex) {
+                    continue;
+                }
+                const newCell = this.document.createElement(
+                    rowIndex > cellRowIndex ? "td" : cell.tagName
+                );
+                if (newCell.tagName === "TH") {
+                    newCell.classList.add("o_table_header");
+                }
+                newCell.append(this.dependencies.baseContainer.createBaseContainer());
+                const row = table.rows[rowIndex];
+                const nextCell = [...row.cells].find(
+                    (other) => grid[rowIndex].indexOf(other) > columnIndex
+                );
+                nextCell ? nextCell.before(newCell) : row.append(newCell);
+                // Keep the local grid coherent for the next insertions.
+                grid[rowIndex][columnIndex] = newCell;
+            }
+        }
+        this.tableGridMap?.delete(table);
     }
 }

@@ -1,3 +1,5 @@
+$o-table-cell-padding: 0.5rem;
+
 th.o_table_header {
     background-color: #F7F7F7;
     font-weight: 900;
@@ -8,6 +10,12 @@ th.o_table_header {
         > *:last-child {
             margin-bottom: 0;
         }
+    }
+
+    // A row spanned over by a rowspan has no content of its own to give it
+    // height, which makes the merge look like it spans nothing.
+    :has([rowspan]) tr{
+        height: calc(1em * #{$line-height-base} + #{$o-table-cell-padding} * 2);
     }
 }
 
