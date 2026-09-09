@@ -18,6 +18,7 @@ class ProductTemplate(models.Model):
     )
 
     def write(self, vals):
+        forced_off = self.browse()
         for product in self:
             if (
                 (
@@ -39,6 +40,11 @@ class ProductTemplate(models.Model):
                             "You cannot change the product type or disable landed cost option because the product is used in an account move line."
                         )
                     )
-                vals["landed_cost_ok"] = False
+                forced_off |= product
+
+        if forced_off:
+            super(ProductTemplate, forced_off).write({**vals, "landed_cost_ok": False})
+            remaining = self - forced_off
+            return remaining.write(vals) if remaining else True
 
         return super().write(vals)
