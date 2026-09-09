@@ -3,6 +3,7 @@
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
 from odoo.addons.sale_stock.tests.common import TestSaleStockCommon
 from odoo import fields
+from odoo.fields import Command
 from odoo.tests import tagged
 
 from datetime import timedelta
@@ -199,6 +200,38 @@ class TestSaleStockLeadTime(TestSaleStockCommon, ValuationReconciliationTestComm
         self.assertEqual(pack.date_deadline, new_deadline)
         new_deadline -= timedelta(days=pick.move_ids.rule_id.delay)
         self.assertEqual(pick.date_deadline, new_deadline)
+
+    def test_change_commitment_date_updates_pick_deadline(self):
+        """
+        Ensure date deadline propagation when in two step delivery.
+        """
+        warehouse = self.company_data['default_warehouse']
+        warehouse.delivery_steps = 'pick_ship'
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'commitment_date': '2025-01-10 09:00:00',
+            'order_line': [Command.create({
+                'product_id': self.test_product_delivery.id,
+                'product_uom_qty': 10,
+            })],
+        })
+        so.action_confirm()
+
+        new_commitment_date = so.commitment_date + timedelta(days=10)
+        so.commitment_date = new_commitment_date
+        pick = so.picking_ids
+
+        self.assertEqual(len(pick), 1)
+        self.assertEqual(pick.date_deadline, new_commitment_date)
+
+        pick.move_ids.quantity = 10
+        pick.move_ids.picked = True
+        pick._action_done()
+        self.assertEqual(pick.state, 'done')
+
+        ship = pick.move_ids.move_dest_ids.picking_id
+        self.assertEqual(ship.date_deadline, new_commitment_date)
 
     def test_03_product_company_level_delays(self):
         """Partial duplicate of test_02 to make sure there is no default value specified in sale
