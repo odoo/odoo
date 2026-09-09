@@ -192,6 +192,49 @@ class TestHrWorkEntryType(TestHrHolidaysCommon):
         self.assertEqual(days, 7, "Duration should include all 7 days even with public holiday")
         self.assertEqual(hours, 56, "Duration should be 7 * 8 hours when including public holidays")
 
+    def test_calendar_duration_without_employee(self):
+        """Duration of a 'calendar days' leave that has no employee yet
+
+        This is the state of the form view when it is opened: no employee is set
+        yet, so the leave is not part of the batched per-employee mappings and the
+        calendar branch used to raise a KeyError. It has to fall back on the
+        company calendar computation instead.
+        """
+        calendar_work_entry_type = self.env['hr.work.entry.type'].create({
+            'name': 'Test Time Off (No Employee)',
+            'code': 'Test Time Off 5',
+            'requires_allocation': False,
+            'count_days_as': 'calendar',
+            'request_unit': 'hour',
+        })
+        working_work_entry_type = calendar_work_entry_type.copy({
+            'name': 'Test Time Off (No Employee, Working)',
+            'code': 'Test Time Off 6',
+            'count_days_as': 'working',
+        })
+
+        values = {
+            'request_date_from': date(2024, 6, 3),
+            'request_date_to': date(2024, 6, 3),
+            'request_hour_from': 8,
+            'request_hour_to': 12,
+        }
+        # this simulates opening a form with new employee ,
+        # because here .new() creates an unsaved record with a NewId, the same thing the web client works with when you open the form before filling anything in.
+        calendar_leave = self.env['hr.leave'].new(
+            dict(values, work_entry_type_id=calendar_work_entry_type.id))
+
+        working_leave = self.env['hr.leave'].new(
+            dict(values, work_entry_type_id=working_work_entry_type.id))
+
+        # in case of traceback this would fail first
+        days, hours = calendar_leave._get_durations()[calendar_leave.id]
+        self.assertTrue(hours, "Duration should be computed from the company calendar")
+        self.assertEqual(
+            (days, hours),
+            working_leave._get_durations()[working_leave.id],
+            "Without an employee, the duration falls back on the company calendar in both modes")
+
     def test_count_days_as_working_days(self):
         """Test duration calculation when count_days_as is worked days"""
         working_work_entry_type = self.env['hr.work.entry.type'].create({
