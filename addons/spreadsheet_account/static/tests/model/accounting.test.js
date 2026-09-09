@@ -442,3 +442,28 @@ test("parseAccountingDate", () => {
         day: 23,
     });
 });
+
+test("Function results are updated when refreshing the data sources", async () => {
+    let values = { debit: 42, credit: 16 };
+    const { model } = await createModelWithDataSource({
+        mockRPC: async function (route, args) {
+            if (args.method === "spreadsheet_fetch_debit_credit") {
+                return [values];
+            }
+        },
+    });
+    setCellContent(model, "A1", `=ODOO.CREDIT("100", "2022")`);
+    setCellContent(model, "A2", `=ODOO.DEBIT("100", "2022")`);
+    setCellContent(model, "A3", `=ODOO.BALANCE("100", "2022")`);
+    await waitForDataLoaded(model);
+    expect(getCellValue(model, "A1")).toBe(16);
+    expect(getCellValue(model, "A2")).toBe(42);
+    expect(getCellValue(model, "A3")).toBe(26);
+
+    values = { debit: 100, credit: 50 };
+    model.dispatch("REFRESH_ALL_DATA_SOURCES");
+    await waitForDataLoaded(model);
+    expect(getCellValue(model, "A1")).toBe(50);
+    expect(getCellValue(model, "A2")).toBe(100);
+    expect(getCellValue(model, "A3")).toBe(50);
+});
