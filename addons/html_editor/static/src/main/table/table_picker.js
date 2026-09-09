@@ -1,21 +1,21 @@
-import { Component, proxy, useListener } from "@odoo/owl";
+import { Component, proxy, t, useListener, useProps } from "@odoo/owl";
 
 export class TablePicker extends Component {
     static template = "html_editor.TablePicker";
-    static props = {
-        insertTable: Function,
-        editable: {
-            validate: (el) => el.nodeType === Node.ELEMENT_NODE,
-        },
-        overlay: Object,
-        direction: String,
-    };
+
+    props = useProps({
+        direction: t.string(),
+        editable: t.customValidator(t.object(), (el) => el.nodeType === Node.ELEMENT_NODE),
+        insertTable: t.function(),
+        overlay: t.object(),
+    });
+
+    state = proxy({
+        cols: 3,
+        rows: 3,
+    });
 
     setup() {
-        this.state = proxy({
-            cols: 3,
-            rows: 3,
-        });
         useListener(
             this.props.editable.ownerDocument,
             "keydown",

@@ -6,7 +6,7 @@ import { htmlReplaceAll } from "@web/core/utils/html";
 import { Wysiwyg } from "@html_editor/wysiwyg";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { advanceTime, animationFrame, tick, waitUntil } from "@odoo/hoot-dom";
-import { Component, xml, markup } from "@odoo/owl";
+import { Component, markup, t, useProps, xml } from "@odoo/owl";
 import { mountWithCleanup, onRpc } from "@web/../tests/web_test_helpers";
 import { Mutex } from "@web/core/utils/concurrency";
 import { patch } from "@web/core/utils/patch";
@@ -135,11 +135,11 @@ class Wysiwygs extends Component {
         </div>
     `;
     static components = { Wysiwyg };
-    static props = {
-        peerIds: Array,
-        pool: Object,
-        content: String,
-    };
+    props = useProps({
+        peerIds: t.array(),
+        pool: t.object(),
+        content: t.string(),
+    });
     setup() {
         this.peerResolvers = {};
         this.peerPromises = Promise.all(

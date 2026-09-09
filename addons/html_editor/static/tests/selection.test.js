@@ -329,7 +329,6 @@ test("should focus the nearest editable ancestor when selection is inside a non-
 test("restore a selection when you are not in the editable shouldn't move the focus", async () => {
     class TestInput extends Component {
         static template = xml`<input t-ref="this.inputRef" t-att-value="'eee'" class="test"/>`;
-        static props = ["*"];
 
         inputRef = signal.ref();
 

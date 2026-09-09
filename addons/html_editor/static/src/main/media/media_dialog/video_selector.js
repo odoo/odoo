@@ -31,15 +31,15 @@ class VideoOption extends Component {
     static components = {
         Switch,
     };
-    static props = {
-        description: { type: String, optional: true },
-        label: { type: String, optional: true },
-        isActive: { type: Boolean, optional: true },
-        value: { type: String, optional: true },
-        onOptionToggled: Function,
-        onTextInputed: Function,
-        onTextChanged: Function,
-    };
+    props = useProps({
+        description: t.string().optional(),
+        label: t.string().optional(),
+        isActive: t.boolean().optional(),
+        value: t.string().optional(),
+        onOptionToggled: t.function(),
+        onTextInputed: t.function(),
+        onTextChanged: t.function(),
+    });
 
     get isInputVisible() {
         return this.props.isActive && this.props.value !== undefined;
@@ -48,9 +48,9 @@ class VideoOption extends Component {
 
 class VideoIframe extends Component {
     static template = "html_editor.VideoIframe";
-    static props = {
-        src: { type: String },
-    };
+    props = useProps({
+        src: t.string(),
+    });
 }
 
 export class VideoSelector extends Component {
@@ -63,12 +63,13 @@ export class VideoSelector extends Component {
         VideoIframe,
         VideoOption,
     };
+
     props = useProps({
-        selectMedia: t.function(),
         errorMessages: t.function(),
-        vimeoPreviewIds: t.array().optional([]),
         isForBgVideo: t.boolean().optional(false),
-        media: t.customValidator(t.any(), (p) => p.nodeType === Node.ELEMENT_NODE).optional(),
+        media: t.customValidator(t.object(), (p) => p.nodeType === Node.ELEMENT_NODE).optional(),
+        selectMedia: t.function(),
+        vimeoPreviewIds: t.array().optional([]),
     });
 
     urlInputRef = signal.ref();

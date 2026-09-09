@@ -5,24 +5,25 @@ import {
     useEditableDescendants,
     useEmbeddedState,
 } from "@html_editor/others/embedded_component_utils";
-import { Component, proxy, signal, xml } from "@odoo/owl";
+import { Component, computed, signal, t, useProps, xml } from "@odoo/owl";
 
 export class Counter extends Component {
-    static props = ["*"];
     static template = xml`
-        <span t-ref="this.ref" class="counter" t-on-click="this.increment">Counter:<t t-out="this.state.value"/></span>`;
+        <span class="counter" t-on-click="this.increment">Counter:<t t-out="this.value()"/></span>
+    `;
 
-    state = proxy({ value: 0 });
-    ref = signal.ref();
+    value = signal(0);
 
     increment() {
-        this.state.value++;
+        this.value.set(this.value() + 1);
     }
 }
 
 export const EmbeddedWrapperMixin = (editableDescendantName) =>
     class extends Component {
-        static template = xml`<t><div class="${editableDescendantName}" t-ref="this.descendantRefs.${editableDescendantName}"/></t>`;
+        static template = xml`
+            <div class="${editableDescendantName}" t-ref="this.descendantRefs.${editableDescendantName}" />
+        `;
 
         setup() {
             this.descendantRefs = useEditableDescendants().refs;
@@ -33,7 +34,7 @@ export class EmbeddedWrapper extends Component {
     static template = xml`
         <t>
             <div t-if="this.editableDescendants.shallow" class="shallow" t-ref="this.descendantRefs.shallow"/>
-            <div t-if="!this.state.switch">
+            <div t-if="!this.switch()">
                 <div class="deep" t-ref="this.descendantRefs.deep"/>
             </div>
             <div t-else="">
@@ -41,36 +42,36 @@ export class EmbeddedWrapper extends Component {
                     <div class="deep" t-ref="this.descendantRefs.deep"/>
                 </div>
             </div>
-        </t>`;
+        </t>
+    `;
+
+    switch = signal(false);
 
     setup() {
         const { descendants, refs } = useEditableDescendants();
         this.editableDescendants = descendants;
         this.descendantRefs = refs;
-        this.state = proxy({
-            switch: false,
-        });
     }
 }
 
 export class OffsetCounter extends Component {
-    static props = ["*"];
     static template = xml`
-        <span class="counter" t-on-click="this.increment">Counter:<t t-out="this.counterValue"/></span>`;
+        <span class="counter" t-on-click="this.increment">Counter:<t t-out="this.counterValue()"/></span>
+    `;
+
+    props = useProps({
+        host: t.object(),
+    });
+
+    value = signal(0);
+    counterValue = computed(() => this.value() + this.embeddedState.baseValue);
 
     setup() {
         this.embeddedState = useEmbeddedState(this.props.host);
-        this.state = proxy({
-            value: 0,
-        });
-    }
-
-    get counterValue() {
-        return this.state.value + this.embeddedState.baseValue;
     }
 
     increment() {
-        this.state.value++;
+        this.value.set(this.value() + 1);
     }
 }
 
@@ -92,16 +93,18 @@ export const offsetCounter = {
 };
 
 export class SavedCounter extends Component {
-    static props = ["*"];
     static template = xml`
-        <span class="counter" t-on-click="this.increment">Counter:<t t-out="this.counterValue"/></span>`;
+        <span class="counter" t-on-click="this.increment">Counter:<t t-out="this.counterValue()"/></span>
+    `;
+
+    props = useProps({
+        host: t.object(),
+    });
+
+    counterValue = computed(() => this.embeddedState.value || 0);
 
     setup() {
         this.embeddedState = useEmbeddedState(this.props.host);
-    }
-
-    get counterValue() {
-        return this.embeddedState.value || 0;
     }
 
     increment() {
@@ -120,18 +123,22 @@ export const savedCounter = {
 };
 
 export class CollaborativeObject extends Component {
-    static props = ["*"];
     static template = xml`
-        <div class="obj"><t t-out="this.collaborativeObject"/></div>`;
+        <div class="obj" t-out="this.collaborativeObject()" />
+    `;
+
+    props = useProps({
+        host: t.object(),
+    });
+
+    collaborativeObject = computed(() =>
+        Object.entries(this.embeddedState.obj || {})
+            .map(([key, value]) => `${key}_${value}`)
+            .join(",")
+    );
 
     setup() {
         this.embeddedState = useEmbeddedState(this.props.host);
-    }
-
-    get collaborativeObject() {
-        return Object.entries(this.embeddedState.obj || {})
-            .map(([key, value]) => `${key}_${value}`)
-            .join(",");
     }
 }
 
@@ -152,16 +159,22 @@ export const collaborativeObject = {
 };
 
 export class NamedCounter extends Component {
-    static props = ["*"];
     static template = xml`
-        <span class="counter" t-on-click="this.increment"><t t-out="this.props.name"/>:<t t-out="this.counterValue"/></span>`;
+        <span class="counter" t-on-click="this.increment">
+            <t t-out="this.props.name" />:<t t-out="this.counterValue()" />
+        </span>
+    `;
+
+    props = useProps({
+        host: t.object(),
+        name: t.string(),
+        value: t.number(),
+    });
+
+    counterValue = computed(() => this.embeddedState.value + this.embeddedState.baseValue);
 
     setup() {
         this.embeddedState = useEmbeddedState(this.props.host);
-    }
-
-    get counterValue() {
-        return this.embeddedState.value + this.embeddedState.baseValue;
     }
 
     increment() {

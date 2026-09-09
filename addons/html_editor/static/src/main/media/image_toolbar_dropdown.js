@@ -1,4 +1,4 @@
-import { Component, proxy, signal } from "@odoo/owl";
+import { Component, proxy, signal, t, useProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
@@ -10,15 +10,15 @@ import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 
 export class ImageToolbarDropdown extends Component {
     static components = { Dropdown, DropdownItem };
-    static props = {
+    props = useProps({
         ...toolbarButtonProps,
-        name: String,
-        icon: { type: String, optional: true },
-        focusEditable: Function,
-        onSelected: Function,
-        items: Array,
-        getDisplay: { type: Function, optional: true },
-    };
+        name: t.string(),
+        icon: t.string().optional(),
+        focusEditable: t.function(),
+        onSelected: t.function(),
+        items: t.array(),
+        getDisplay: t.function().optional(),
+    });
     static template = "html_editor.ImageToolbarDropdown";
 
     imageToolbarBtn = signal.ref();

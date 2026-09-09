@@ -9,19 +9,26 @@ import { READONLY_MAIN_EMBEDDINGS } from "@html_editor/others/embedded_component
 import { normalizeHTML, parseHTML } from "@html_editor/utils/html";
 import { canRenderAsHTML } from "@html_editor/utils/sanitize";
 import { Wysiwyg } from "@html_editor/wysiwyg";
-import { beforeEach, describe, expect, microTick, test } from "@odoo/hoot";
 import {
+    advanceTime,
+    after,
+    animationFrame,
+    beforeEach,
     click,
+    describe,
+    expect,
+    hover,
+    manuallyDispatchProgrammaticEvent,
+    microTick,
+    mockSendBeacon,
     press,
     queryAll,
     queryAllTexts,
     queryOne,
+    test,
+    tick,
     waitFor,
-    hover,
-    manuallyDispatchProgrammaticEvent,
-    advanceTime,
-} from "@odoo/hoot-dom";
-import { animationFrame, mockSendBeacon, tick } from "@odoo/hoot-mock";
+} from "@odoo/hoot";
 import { onWillDestroy, proxy, signal, xml } from "@odoo/owl";
 import {
     clickSave,
@@ -33,16 +40,19 @@ import {
     mountView,
     mountViewInDialog,
     onRpc,
-    patchWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
 import { assets } from "@web/core/assets";
 import { location } from "@web/core/browser/browser";
-import { patch } from "@web/core/utils/patch";
 import { delay } from "@web/core/utils/concurrency";
+import { patch } from "@web/core/utils/patch";
 import { FormController } from "@web/views/form/form_controller";
+import { PLUGINS_TO_EXCLUDE } from "./_helpers/editor";
 import { Counter, EmbeddedWrapperMixin } from "./_helpers/embedded_component";
+import { unformat } from "./_helpers/format";
 import { moveSelectionOutsideEditor, setSelection } from "./_helpers/selection";
+import { expandToolbar } from "./_helpers/toolbar";
+import { expectElementCount } from "./_helpers/ui_expectations";
 import {
     ensureDistinctHistoryCommit,
     insertText,
@@ -51,10 +61,6 @@ import {
     pasteText,
     undo,
 } from "./_helpers/user_actions";
-import { unformat } from "./_helpers/format";
-import { expandToolbar } from "./_helpers/toolbar";
-import { expectElementCount } from "./_helpers/ui_expectations";
-import { PLUGINS_TO_EXCLUDE } from "./_helpers/editor";
 
 class Partner extends models.Model {
     txt = fields.Html({ trim: true });
@@ -138,7 +144,7 @@ defineModels([Partner, IrAttachment, User]);
 
 let htmlEditor;
 beforeEach(() => {
-    patchWithCleanup(HtmlField.prototype, {
+    patch(HtmlField.prototype, {
         onEditorLoad(editor) {
             htmlEditor = editor;
             return super.onEditorLoad(...arguments);
@@ -208,19 +214,14 @@ test("html field in readonly updated by onchange", async () => {
 });
 
 test("html field in readonly with embedded components", async () => {
-    patchWithCleanup(Counter, {
+    patch(Counter, {
         template: xml`
-            <span t-ref="this.ref" class="counter" t-on-click="this.increment"><t t-out="this.props.name || ''"/>:<t t-out="this.state.value"/></span>`,
+            <span t-ref="this.ref" class="counter" t-on-click="this.increment"><t t-out="this.props.name || ''"/>:<t t-out="this.value()"/></span>`,
     });
-    const unpatch = patch(Counter.prototype, {
+    patch(Counter.prototype, {
         setup() {
             super.setup();
-            onWillDestroy(() => {
-                this.testOnWillDestroy?.();
-            });
-        },
-        testOnWillDestroy() {
-            expect.step("destroyed");
+            onWillDestroy(() => expect.step("destroyed"));
         },
     });
     // patchWithCleanup Array => cleanup keeps the last array entry set to undefined,
@@ -232,6 +233,7 @@ test("html field in readonly with embedded components", async () => {
             ...getEmbeddedProps(host),
         }),
     });
+    after(() => READONLY_MAIN_EMBEDDINGS.pop());
     Partner._records = [
         {
             id: 1,
@@ -271,8 +273,6 @@ test("html field in readonly with embedded components", async () => {
     expect(`[name="txt"] .o_readonly`).toHaveInnerHTML(
         `<div><span data-embedded="counter"><span class="counter">:0</span></div>`
     );
-    unpatch();
-    READONLY_MAIN_EMBEDDINGS.pop();
 });
 
 test("html field in readonly with embedded components and editable descendants", async () => {
@@ -291,6 +291,10 @@ test("html field in readonly with embedded components and editable descendants",
             Component: Counter,
         }
     );
+    after(() => {
+        READONLY_MAIN_EMBEDDINGS.pop();
+        READONLY_MAIN_EMBEDDINGS.pop();
+    });
     Partner._records = [
         {
             id: 1,
@@ -318,8 +322,6 @@ test("html field in readonly with embedded components and editable descendants",
     expect(`[name="txt"] .o_readonly`).toHaveInnerHTML(
         `<div data-embedded="wrapper"><div class="editable"><div data-embedded-editable="editable"><span data-embedded="counter"><span class="counter">Counter:1</span></span></div></div></div>`
     );
-    READONLY_MAIN_EMBEDDINGS.pop();
-    READONLY_MAIN_EMBEDDINGS.pop();
 });
 
 test("only external links should always open on a new tab in readonly", async () => {
@@ -460,7 +462,7 @@ test("edit and save a html field", async () => {
 });
 
 test("edit and save a html field containing JSON as some attribute values should keep the same wysiwyg", async () => {
-    patchWithCleanup(Wysiwyg.prototype, {
+    patch(Wysiwyg.prototype, {
         setup() {
             super.setup();
             expect.step("Setup Wysiwyg");
@@ -615,13 +617,13 @@ test("create new record and load it correctly", async () => {
 });
 
 test("edit a html field with `o-contenteditable-true` or `o-contenteditable-false` in its content should not reset the editable value when saving", async () => {
-    patchWithCleanup(HtmlField.prototype, {
+    patch(HtmlField.prototype, {
         updateValue() {
             expect.step("update_value");
             super.updateValue(...arguments);
         },
     });
-    patchWithCleanup(Wysiwyg.prototype, {
+    patch(Wysiwyg.prototype, {
         setup() {
             super.setup();
             // This should not be called again after the edit (if it is, it
@@ -677,7 +679,7 @@ test("edit a html field with `o-contenteditable-true` or `o-contenteditable-fals
 });
 
 test("blurring an inner contenteditable field by clicking outside should trigger update_value", async () => {
-    patchWithCleanup(HtmlField.prototype, {
+    patch(HtmlField.prototype, {
         updateValue() {
             expect.step("update_value");
             super.updateValue(...arguments);
@@ -904,7 +906,7 @@ test("undo after discard html field changes in form", async () => {
 });
 
 test("A new MediaDialog after switching record in a Form view should have the correct resId", async () => {
-    patchWithCleanup(MediaDialog.prototype, {
+    patch(MediaDialog.prototype, {
         setup() {
             expect.step(`${this.props.resModel} : ${this.props.resId}`);
             this.size = "xl";
@@ -1051,7 +1053,7 @@ test("isDirty should not be reset to false if onChange fired between getEditorCo
     const { promise: firstStep, resolve: resolveFirst } = Promise.withResolvers();
     const { promise: secondStep, resolve: resolveSecond } = Promise.withResolvers();
     const { promise: thirdStep, resolve: resolveThird } = Promise.withResolvers();
-    patchWithCleanup(HtmlField.prototype, {
+    patch(HtmlField.prototype, {
         setup() {
             super.setup();
             htmlField = this;
@@ -1644,7 +1646,7 @@ test("edit and enable/disable codeview with editor toolbar", async () => {
 });
 
 test("edit and save a html field in collaborative should keep the same wysiwyg", async () => {
-    patchWithCleanup(Wysiwyg.prototype, {
+    patch(Wysiwyg.prototype, {
         setup() {
             super.setup();
             expect.step("Setup Wysiwyg");
@@ -2131,7 +2133,7 @@ describe("sandbox", () => {
             },
         ];
 
-        patchWithCleanup(assets, {
+        patch(assets, {
             async getBundle(name) {
                 expect.step(name);
                 return {
@@ -2291,7 +2293,7 @@ describe("save image", () => {
 
         let formController;
         // Patch to get the controller instance.
-        patchWithCleanup(FormController.prototype, {
+        patch(FormController.prototype, {
             setup() {
                 super.setup(...arguments);
                 formController = this;

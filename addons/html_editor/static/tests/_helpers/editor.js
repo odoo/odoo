@@ -2,7 +2,7 @@ import { EmbeddedComponentPlugin } from "@html_editor/others/embedded_component_
 import { fixInvalidHTML } from "@html_editor/utils/sanitize";
 import { Wysiwyg } from "@html_editor/wysiwyg";
 import { animationFrame, expect, getFixture, queryOne, tick } from "@odoo/hoot";
-import { Component, markup, onWillDestroy, useApp, xml } from "@odoo/owl";
+import { Component, markup, onWillDestroy, t, useApp, useProps, xml } from "@odoo/owl";
 import { toExplicitString } from "@web/../lib/hoot/hoot_utils";
 import { destroyApp, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { processThroughCleanForSave } from "./dispatch";
@@ -33,7 +33,13 @@ class TestEditor extends Component {
         </t>
         <Wysiwyg t-props="this.wysiwygProps" />`;
     static components = { Wysiwyg };
-    static props = ["wysiwygProps", "content", "styleContent?", "onMounted?", "onWillDestroy?"];
+    props = useProps({
+        wysiwygProps: t.any(),
+        content: t.any(),
+        styleContent: t.any().optional(),
+        onMounted: t.any().optional(),
+        onWillDestroy: t.any().optional(),
+    });
 
     app = useApp();
 

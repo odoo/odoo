@@ -1,7 +1,7 @@
-import { SearchMedia } from "./search_media";
-import { Component, onWillStart, proxy } from "@odoo/owl";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
+import { Component, onWillStart, proxy, t, useProps } from "@odoo/owl";
 import { rpc } from "@web/core/network/rpc";
+import { SearchMedia } from "./search_media";
 
 /**
  * Search icons, matched against their name and tags in the backend.
@@ -32,7 +32,13 @@ export class IconSelector extends Component {
     static components = {
         SearchMedia,
     };
-    static props = ["*"];
+    props = useProps({
+        selectedMedia: t.object(),
+        id: t.string(),
+        media: t.any().optional(),
+        selectMedia: t.function(),
+        save: t.function(),
+    });
 
     setup() {
         this.state = proxy({

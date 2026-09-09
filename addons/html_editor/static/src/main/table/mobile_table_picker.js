@@ -1,14 +1,13 @@
-import { Component, signal, useEffect, useListener } from "@odoo/owl";
+import { Component, signal, t, useEffect, useListener, useProps } from "@odoo/owl";
 
 export class MobileTablePicker extends Component {
     static template = "html_editor.MobileTablePicker";
-    static props = {
-        insertTable: Function,
-        close: Function,
-        editable: {
-            validate: (el) => el.nodeType === Node.ELEMENT_NODE,
-        },
-    };
+
+    props = useProps({
+        close: t.function(),
+        editable: t.customValidator(t.object(), (el) => el.nodeType === Node.ELEMENT_NODE),
+        insertTable: t.function(),
+    });
 
     rowCountRef = signal.ref();
     columnCountRef = signal.ref();

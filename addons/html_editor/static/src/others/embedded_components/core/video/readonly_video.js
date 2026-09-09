@@ -1,20 +1,20 @@
 import { getEmbeddedProps } from "@html_editor/others/embedded_component_utils";
-import { Component, signal } from "@odoo/owl";
+import { Component, signal, t, useProps } from "@odoo/owl";
 import { PLATFORMS } from "@html_editor/main/media/media_dialog/video_selector";
 
 export class ReadonlyEmbeddedVideoComponent extends Component {
     static template = "html_editor.EmbeddedVideo";
-    static props = {
+    props = useProps({
         // The emebedded video can be initialized either with:
         // the platform and videoId props
         //  OR
         // the src prop
-        platform: { type: String, optional: true },
-        videoId: { type: String, optional: true },
-        src: { type: String, optional: true },
-        baseUrl: { type: String, optional: true }, // optional for retro compatibility reason
-        params: { type: Object, optional: true },
-    };
+        platform: t.string().optional(),
+        videoId: t.string().optional(),
+        src: t.string().optional(),
+        baseUrl: t.string().optional(), // optional for retro compatibility reason
+        params: t.object().optional(),
+    });
 
     iframeRef = signal.ref();
 

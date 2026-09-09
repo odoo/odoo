@@ -1,4 +1,4 @@
-import { Component, onPatched, signal, useEffect, useListener } from "@odoo/owl";
+import { Component, onPatched, signal, t, useEffect, useListener, useProps } from "@odoo/owl";
 
 /**
  * @todo @phoenix i think that most of the "control" code in this component
@@ -6,13 +6,13 @@ import { Component, onPatched, signal, useEffect, useListener } from "@odoo/owl"
  */
 export class Powerbox extends Component {
     static template = "html_editor.Powerbox";
-    static props = {
-        document: { validate: (doc) => doc.constructor.name === "HTMLDocument" },
-        close: Function,
-        state: Object,
-        activateCommand: Function,
-        applyCommand: Function,
-    };
+    props = useProps({
+        document: t.customValidator(t.any(), (doc) => doc.constructor.name === "HTMLDocument"),
+        close: t.function(),
+        state: t.object(),
+        activateCommand: t.function(),
+        applyCommand: t.function(),
+    });
 
     setup() {
         this.root = signal.ref();

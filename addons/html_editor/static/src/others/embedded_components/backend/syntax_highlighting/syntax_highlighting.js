@@ -3,7 +3,7 @@ import {
     StateChangeManager,
     useEmbeddedState,
 } from "@html_editor/others/embedded_component_utils";
-import { Component, onWillStart, signal, useEffect, types as t } from "@odoo/owl";
+import { Component, onWillStart, signal, types as t, useEffect, useProps } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
 import { cookie } from "@web/core/browser/cookie";
 import {
@@ -17,15 +17,15 @@ export class EmbeddedSyntaxHighlightingComponent extends Component {
     static template = "html_editor.EmbeddedSyntaxHighlighting";
 
     static components = { CodeToolbar };
-    static props = {
-        value: { type: String },
-        languageId: { type: String },
-        codeWrap: { type: Boolean, optional: true },
-        onTextareaFocus: { type: Function },
-        convertToParagraph: { type: Function },
-        setSelection: { type: Function },
-        host: { type: Object },
-    };
+    props = useProps({
+        value: t.string(),
+        languageId: t.string(),
+        codeWrap: t.boolean().optional(),
+        onTextareaFocus: t.function(),
+        convertToParagraph: t.function(),
+        setSelection: t.function(),
+        host: t.object(),
+    });
 
     highlightedValue = signal("");
     preRef = signal(null, { type: t.ref() });

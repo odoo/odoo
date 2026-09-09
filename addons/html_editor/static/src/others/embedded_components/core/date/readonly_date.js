@@ -1,14 +1,14 @@
 import { getEmbeddedProps } from "@html_editor/others/embedded_component_utils";
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 const { DateTime } = luxon;
 
 export class ReadonlyEmbeddedDateComponent extends Component {
     static template = "html_editor.ReadonlyEmbeddedDate";
-    static props = {
-        host: { type: Object },
-        date: { type: String },
-        type: { type: String },
-    };
+    props = useProps({
+        host: t.object(),
+        date: t.string(),
+        type: t.string(),
+    });
 
     setup() {
         this.DATE_FORMATS = {
