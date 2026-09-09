@@ -5096,17 +5096,20 @@ class AccountTax(models.Model):
             tax_domain = (
                Domain('amount_type', '=', tax_values['amount_type'])
                & Domain('type_tax_use', '=', tax_values['type_tax_use'])
-               & Domain('amount', '=', tax_values['amount'])
             )
+            ubl_cii_tax_category_code = 'ubl_cii_tax_category_code' in self._fields and tax_values.get('ubl_cii_tax_category_code')
+            if tax_values['amount'] or ubl_cii_tax_category_code != 'AE':
+                tax_domain &= Domain('amount', '=', tax_values['amount'])
+            else:
+                # Reverse charge taxes can be reported as 0% in the document even though the
+                # tax itself isn't, so ignore the amount and rely on the category code instead.
+                tax_domain &= Domain('ubl_cii_tax_category_code', '=', 'AE')
             orders = ['sequence', 'id']
             if name := tax_values.get('name'):
                 tax_domain &= Domain('name', '=', name)
             if tax_exigibility := tax_values.get('tax_exigibility'):
                 tax_domain &= Domain('tax_exigibility', '=', tax_exigibility)
-            if (
-                (ubl_cii_tax_category_code := tax_values.get('ubl_cii_tax_category_code'))
-                and 'ubl_cii_tax_category_code' in self._fields
-            ):
+            if ubl_cii_tax_category_code:
                 tax_domain &= Domain('ubl_cii_tax_category_code', 'in', (ubl_cii_tax_category_code, False))
                 orders.insert(0, 'ubl_cii_tax_category_code')
             if extra_domain := tax_values.get("extra_domain"):
