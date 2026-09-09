@@ -1,6 +1,5 @@
 import { addBuilderOption } from "@html_builder/../tests/helpers";
 import { beforeEach, expect, test } from "@odoo/hoot";
-import { advanceTime } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
@@ -8,6 +7,8 @@ import {
     defineWebsiteModels,
     setupWebsiteBuilder,
 } from "@website/../tests/builder/website_helpers";
+import { advanceTime, queryAllTexts } from "@odoo/hoot-dom";
+import { browser } from "@web/core/browser/browser";
 
 defineWebsiteModels();
 
@@ -93,6 +94,20 @@ test("opens dropdown when typing /", async () => {
     expect(document.querySelector(".o_website_ui_autocomplete")).toBeVisible();
 });
 
+test("does not remember an unfinished URL while typing", async () => {
+    browser.localStorage.setItem("website.recently_used_url", "/previous");
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderUrlPicker dataAttributeAction="'url'"/>`,
+    });
+    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await contains(":iframe .test-options-target").click();
+
+    await contains(".we-bg-options-container input").edit("/draft", { confirm: false });
+
+    expect(browser.localStorage.getItem("website.recently_used_url")).toBe("/previous");
+});
+
 test("selects and commits value from dropdown", async () => {
     mockGetSuggestedLinks();
     addBuilderOption({
@@ -106,8 +121,72 @@ test("selects and commits value from dropdown", async () => {
     await advanceTime(250);
     await contains(document.querySelector(".o_website_ui_autocomplete > li:first-child a")).click();
     expect(document.querySelector(".o_website_ui_autocomplete")).toBe(null);
-    expect(".we-bg-options-container input").toHaveValue("/page1");
-    expect(":iframe .test-options-target").toHaveAttribute("data-url", "/page1");
+    // The last modified page is now the first suggestion.
+    expect(".we-bg-options-container input").toHaveValue("/page3");
+    expect(":iframe .test-options-target").toHaveAttribute("data-url", "/page3");
+});
+
+test("suggests the recently used URL on top when nothing was typed yet", async () => {
+    mockGetSuggestedLinks();
+    browser.localStorage.setItem("website.recently_used_url", "/app1");
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderUrlPicker dataAttributeAction="'url'"/>`,
+    });
+    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await contains(":iframe .test-options-target").click();
+
+    await contains(".we-bg-options-container input").edit("/", { confirm: false });
+    await advanceTime(250);
+
+    expect(queryAllTexts(".o_website_ui_autocomplete > li a")).toEqual([
+        "/app1 (App 1)",
+        "/page3 (Page 3)",
+        "/page1 (Page 1)",
+        "/page2 (Page 2)",
+    ]);
+});
+
+test("the recently used URL matching what is typed comes first", async () => {
+    mockGetSuggestedLinks();
+    browser.localStorage.setItem("website.recently_used_url", "/page1");
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderUrlPicker dataAttributeAction="'url'"/>`,
+    });
+    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await contains(":iframe .test-options-target").click();
+
+    await contains(".we-bg-options-container input").edit("/page", { confirm: false });
+    await advanceTime(250);
+
+    expect(queryAllTexts(".o_website_ui_autocomplete > li a")).toEqual([
+        "/page1 (Page 1)",
+        "/page3 (Page 3)",
+        "/page2 (Page 2)",
+        "/app1 (App 1)",
+    ]);
+});
+
+test("the recently used URL is not suggested when it does not match", async () => {
+    mockGetSuggestedLinks();
+    browser.localStorage.setItem("website.recently_used_url", "/contactus");
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderUrlPicker dataAttributeAction="'url'"/>`,
+    });
+    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await contains(":iframe .test-options-target").click();
+
+    await contains(".we-bg-options-container input").edit("/page", { confirm: false });
+    await advanceTime(250);
+
+    expect(queryAllTexts(".o_website_ui_autocomplete > li a")).toEqual([
+        "/page3 (Page 3)",
+        "/page1 (Page 1)",
+        "/page2 (Page 2)",
+        "/app1 (App 1)",
+    ]);
 });
 
 test("collects anchors in current page and suggests them", async () => {
