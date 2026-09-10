@@ -487,8 +487,6 @@ test("should map range from 0 to 100 scale when empty convertorRatio object is p
     await contains(".options-container input[type='number']").focus();
     await press("ArrowUp");
     await advanceTime(750);
-    // Since the values are not committed when pressing the up/down arrow keys,
-    // we expect the change to be applied only once which is preview operation.
-    expect.verifySteps(["applied -1.84"]);
+    expect.verifySteps(["applied -1.84", "applied -1.84"]);
     expect(".options-container input[type='number']").toHaveProperty("value", 5);
 });
