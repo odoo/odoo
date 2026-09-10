@@ -30,6 +30,11 @@ class BlogPost extends models.Model {
         related: "blog_id.website_id",
     });
     is_published = fields.Boolean();
+    tag_ids = fields.Many2many({ relation: "blog.tag" });
+}
+class BlogTag extends models.Model {
+    _name = "blog.tag";
+    name = fields.Char();
 }
 defineWebsiteModels();
 
@@ -49,7 +54,7 @@ function getBlogPostMarkup(postId, pyEnv) {
         <main>
             <section id="o_wblog_post_main">
                 <div id="wrap" class="js_blog website_blog">
-                    <div class="o_record_cover_container" data-res-model="blog.post" data-res-id="${
+                    <div class="o_wblog_post_page_cover o_record_cover_container" data-res-model="blog.post" data-res-id="${
                         post.id
                     }">
                         <h1>${post.name}</h1>
@@ -105,7 +110,7 @@ test("Change contact oe-many2one-id of a blog author changes other instance of s
 });
 
 test("Editing the recommended next post option updates recommended_next_post_id", async () => {
-    defineModels([BlogBlog, BlogPost]);
+    defineModels([BlogBlog, BlogPost, BlogTag]);
     onRpc("/website/theme_customize_data_get", () => ["website_blog.opt_blog_post_read_next"]);
     onRpc("blog.post", "write", ({ args }) => {
         expect.step(`write ${args[1].recommended_next_post_id}`);
@@ -122,7 +127,7 @@ test("Editing the recommended next post option updates recommended_next_post_id"
     const pyEnv = await startServer();
     const websiteId = pyEnv["website"].create({});
     const blogId = pyEnv["blog.blog"].create({ name: "Blog Test", website_id: websiteId });
-    const blogData = { blog_id: blogId, is_published: true };
+    const blogData = { blog_id: blogId, is_published: true, tag_ids: [] };
     const [post1, post2, post3] = pyEnv["blog.post"].create([
         { name: "Post 1", ...blogData },
         { name: "Post 2", ...blogData },
