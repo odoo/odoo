@@ -4,7 +4,7 @@ import { animationFrame, tick, advanceTime } from "@odoo/hoot-mock";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
-import { getContent } from "../_helpers/selection";
+import { getContent, setSelection } from "../_helpers/selection";
 import {
     bold,
     insertText,
@@ -170,19 +170,24 @@ test("should remove a bold tag that was redondant with different tags while perf
                 a
                 <span style="font-weight: bolder;">
                     b
-                    <strong>c<b>[d]</b>e</strong>
+                    <strong>c<b>d</b>e</strong>
                     f
                 </span>
                 g
             </p>`),
-        stepFunction: bold,
-        contentAfter: unformat(`<p>
-                a
-                <span style="font-weight: bolder;">b<strong>c</strong></span>
-                [d]
-                <span style="font-weight: bolder;"><strong>e</strong>f</span>
-                g
-            </p>`),
+        contentBeforeEdit: `<p>a<span style="font-weight: bolder;">bcdef</span>g</p>`,
+        stepFunction: (editor) => {
+            const span = queryOne("span[style*='font-weight: bolder']");
+            const dNode = span.childNodes[2];
+            setSelection({
+                anchorNode: dNode,
+                anchorOffset: 0,
+                focusNode: dNode,
+                focusOffset: 1,
+            });
+            bold(editor);
+        },
+        contentAfter: `<p>a<span style="font-weight: bolder;">bc</span>[d]<span style="font-weight: bolder;">ef</span>g</p>`,
     });
 });
 
@@ -338,8 +343,19 @@ describe("inside container or inline with class already bold", () => {
     test("should force the font-weight to normal while removing redundant tag. (1)", async () => {
         await testEditor({
             styleContent: styleContentBold,
-            contentBefore: `<p class="boldClass">a<strong>[b]</strong>c</p>`,
-            stepFunction: bold,
+            contentBefore: `<p class="boldClass">a<strong>b</strong>c</p>`,
+            contentBeforeEdit: `<p class="boldClass">abc</p>`,
+            stepFunction: (editor) => {
+                const p = queryOne("p.boldClass");
+                const bNode = p.childNodes[1];
+                setSelection({
+                    anchorNode: bNode,
+                    anchorOffset: 0,
+                    focusNode: bNode,
+                    focusOffset: 1,
+                });
+                bold(editor);
+            },
             contentAfter: `<p class="boldClass">a<span style="font-weight: normal;">[b]</span>c</p>`,
         });
     });
@@ -347,8 +363,19 @@ describe("inside container or inline with class already bold", () => {
     test("should force the font-weight to normal while removing redundant tag. (2)", async () => {
         await testEditor({
             styleContent: styleContentBold,
-            contentBefore: `<p class="boldClass">a<span style="font-weight: bolder;">[b]</span>c</p>`,
-            stepFunction: bold,
+            contentBefore: `<p class="boldClass">a<span style="font-weight: bolder;">b</span>c</p>`,
+            contentBeforeEdit: `<p class="boldClass">abc</p>`,
+            stepFunction: (editor) => {
+                const p = queryOne("p.boldClass");
+                const bNode = p.childNodes[1];
+                setSelection({
+                    anchorNode: bNode,
+                    anchorOffset: 0,
+                    focusNode: bNode,
+                    focusOffset: 1,
+                });
+                bold(editor);
+            },
             contentAfter: `<p class="boldClass">a<span style="font-weight: normal;">[b]</span>c</p>`,
         });
     });
@@ -356,8 +383,19 @@ describe("inside container or inline with class already bold", () => {
     test("should force the font-weight to normal while removing redundant tag. (3)", async () => {
         await testEditor({
             styleContent: styleContentBold,
-            contentBefore: `<p class="boldClass">a<b>[b]</b>c</p>`,
-            stepFunction: bold,
+            contentBefore: `<p class="boldClass">a<b>b</b>c</p>`,
+            contentBeforeEdit: `<p class="boldClass">abc</p>`,
+            stepFunction: (editor) => {
+                const p = queryOne("p.boldClass");
+                const bNode = p.childNodes[1];
+                setSelection({
+                    anchorNode: bNode,
+                    anchorOffset: 0,
+                    focusNode: bNode,
+                    focusOffset: 1,
+                });
+                bold(editor);
+            },
             contentAfter: `<p class="boldClass">a<span style="font-weight: normal;">[b]</span>c</p>`,
         });
     });

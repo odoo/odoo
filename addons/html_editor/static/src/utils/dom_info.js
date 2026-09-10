@@ -1,7 +1,35 @@
 import { baseContainerGlobalSelector } from "./base_container";
 import { closestBlock, isBlock } from "./blocks";
+import { BG_CLASSES_REGEX, COLOR_COMBINATION_CLASSES_REGEX, TEXT_CLASSES_REGEX } from "./color";
 import { childNodes, closestElement, firstLeaf, lastLeaf } from "./dom_traversal";
 import { DIRECTIONS, nodeSize } from "./position";
+
+const styleCache = new WeakMap();
+
+/**
+ * Returns the computed style property of a node, caching the underlying
+ * CSSStyleDeclaration object to prevent synchronous layout recalculations
+ * on subsequent calls for the same node.
+ *
+ * @param {Element} node
+ * @param {string} property
+ * @returns {string}
+ */
+export function getCachedStyleProperty(node, property) {
+    if (!node || node.nodeType !== Node.ELEMENT_NODE) {
+        return "";
+    }
+
+    let computedStyle = styleCache.get(node);
+    if (!computedStyle) {
+        computedStyle = (node.ownerDocument.defaultView ?? window).getComputedStyle(node);
+        styleCache.set(node, computedStyle);
+    }
+
+    return property.includes("-")
+        ? computedStyle.getPropertyValue(property)
+        : computedStyle[property];
+}
 
 export function isEmpty(el) {
     if (isProtecting(el) || isProtected(el)) {
@@ -27,8 +55,30 @@ export function isEmptyTextNode(node) {
  * @returns {boolean}
  */
 export function isBold(node) {
-    const fontWeight = +getComputedStyle(closestElement(node)).fontWeight;
-    return fontWeight > 500 || fontWeight > +getComputedStyle(closestBlock(node)).fontWeight;
+    const element = closestElement(node);
+    if (!element) {
+        return false;
+    }
+    let regularFontWeightVariable = "--font-weight-normal";
+    if (element.closest(".btn")) {
+        regularFontWeightVariable = "--btn-font-weight";
+    } else if (element.closest(".display-1, .display-2, .display-3, .display-4")) {
+        regularFontWeightVariable = "--display-font-weight";
+    } else if (element.closest("h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6")) {
+        regularFontWeightVariable = "--headings-font-weight";
+    }
+
+    const fontWeight = +getCachedStyleProperty(element, "fontWeight");
+    const regularFontWeight = +getCachedStyleProperty(element, regularFontWeightVariable) || 500;
+
+    const referenceElement = closestElement(
+        node,
+        (el) => isBlock(el) || +getCachedStyleProperty(el, "fontWeight") !== fontWeight
+    );
+    return (
+        fontWeight > regularFontWeight ||
+        fontWeight > +getCachedStyleProperty(referenceElement, "fontWeight")
+    );
 }
 
 /**
@@ -38,7 +88,7 @@ export function isBold(node) {
  * @returns {boolean}
  */
 export function isItalic(node) {
-    return getComputedStyle(closestElement(node)).fontStyle === "italic";
+    return getCachedStyleProperty(closestElement(node), "fontStyle") === "italic";
 }
 
 /**
@@ -50,7 +100,7 @@ export function isItalic(node) {
 export function isUnderline(node) {
     let parent = closestElement(node);
     while (parent) {
-        if (getComputedStyle(parent).textDecorationLine.includes("underline")) {
+        if (getCachedStyleProperty(parent, "textDecorationLine").includes("underline")) {
             return true;
         }
         parent = parent.parentElement;
@@ -67,7 +117,10 @@ export function isUnderline(node) {
 export function isStrikeThrough(node) {
     let parent = closestElement(node);
     while (parent) {
-        if (getComputedStyle(parent).textDecorationLine.includes("line-through")) {
+        if (
+            !parent.classList.contains("o_checked") &&
+            getCachedStyleProperty(parent, "textDecorationLine").includes("line-through")
+        ) {
             return true;
         }
         parent = parent.parentElement;
@@ -763,71 +816,121 @@ function hasClassesSubset(node, node2) {
 }
 
 /**
- * Checks if all styles in node are present in node2 (subset check)
- */
-function hasStylesSubset(node, node2) {
-    const getNodeStyles = (n) =>
-        (n || "")
-            .split(";")
-            .map((s) => s.trim())
-            .filter(Boolean);
-    const [nodeStyles, node2Styles] = [node, node2].map(getNodeStyles);
-    return nodeStyles.every((style) => node2Styles.includes(style));
-}
-
-/**
- * Checks if a node is redundant based on its closest element with same tag.
- *
- * A node is considered redundant if:
- * - It is an Element node with a parent.
- * - There is a closest element with the same tag name.
- * - All of the node's attributes are present in that closest element:
- *   - All classes exist in the closest element's class list (subset check).
- *   - All inline styles are present in the closest element's style attribute (subset check).
- *   - All other attributes must have identical values.
+ * Checks if a node is redundant based on its closest element with same tag,
+ * or based on its parent's visual formatting / styles.
  *
  * @param {Node} node - The DOM node to evaluate.
  * @returns {boolean} True if the node is redundant, false otherwise.
  */
 export function isRedundantElement(node) {
-    // Check for valid element node and existence of a parent.
+    // Ignore invalid nodes, non-elements, or detached nodes without a parent.
     if (!node || node.nodeType !== Node.ELEMENT_NODE || !node.parentElement) {
         return false;
     }
 
-    // Find the closest element with the same tag name.
-    const closestEl = closestElement(node.parentElement, node.tagName);
-    if (!closestEl) {
+    // Do not unwrap elements inside QWeb directive elements (e.g. <t t-out="...">).
+    if (closestElement(node.parentElement, `t, ${PROTECTED_QWEB_SELECTOR}`)) {
         return false;
     }
 
-    // Check each attribute from node.
-    for (const { name: attrName, value: nodeAttrVal } of node.attributes) {
-        const closestElAttrVal = closestEl.getAttribute(attrName);
+    const tagName = node.tagName;
 
-        if (!closestElAttrVal) {
-            return false; // Attribute missing in closest element.
-        }
-
-        if (attrName === "class") {
-            // All classes on the node must exist in closest element.
-            if (!hasClassesSubset(nodeAttrVal, closestElAttrVal)) {
-                return false;
-            }
-        } else if (attrName === "style") {
-            // All inline styles on the node must exist in closest element.
-            if (!hasStylesSubset(nodeAttrVal, closestElAttrVal)) {
-                return false;
-            }
-        } else {
-            // For other attributes, values must match exactly.
-            if (nodeAttrVal !== closestElAttrVal) {
-                return false;
-            }
-        }
+    // Semantic formatting tags without attributes whose visual formatting is
+    // already inherited from their parent.
+    const checkIfParentHasFormat = {
+        B: isBold,
+        STRONG: isBold,
+        I: isItalic,
+        EM: isItalic,
+        U: isUnderline,
+        S: isStrikeThrough,
+        STRIKE: isStrikeThrough,
+        SMALL: (parent) => !!closestElement(parent, "SMALL"),
+    };
+    if (checkIfParentHasFormat[tagName] && node.attributes.length === 0) {
+        return checkIfParentHasFormat[tagName](node.parentElement);
     }
 
-    return true;
+    // Check if inline styles or color classes are already provided by ancestors.
+    if (tagName === "SPAN" || tagName === "FONT") {
+        // Nodes without attributes are only redundant if nested in the same tag.
+        if (node.attributes.length === 0) {
+            return node.parentElement?.tagName === tagName;
+        }
+
+        const hasStyle = node.hasAttribute("style");
+        const hasClass = node.hasAttribute("class");
+
+        // Only handle nodes with style or class, not exotic attributes (e.g. id).
+        const expectedAttrCount = (hasStyle ? 1 : 0) + (hasClass ? 1 : 0);
+        if (node.attributes.length !== expectedAttrCount) {
+            return false;
+        }
+
+        // Check if inline styles match the parent's computed styles.
+        // Bolder font weights stack numerically, so judge boldness as boolean
+        // only when the node itself is bold.
+        let styleRedundant = !hasStyle;
+        if (hasStyle) {
+            const parentElement = node.parentElement;
+            styleRedundant = [...node.style].every((styleKey) => {
+                if (styleKey === "font-weight") {
+                    return isBold(node) && isBold(parentElement);
+                }
+                const nodeStyleValue = getCachedStyleProperty(node, styleKey);
+                const parentStyleValue = getCachedStyleProperty(parentElement, styleKey);
+                return nodeStyleValue && nodeStyleValue === parentStyleValue;
+            });
+        }
+
+        // Check if color classes are covered by a closer ancestor span/font.
+        let classRedundant = !hasClass;
+        if (hasClass) {
+            const COLOR_CLASS_REGEXES = [
+                TEXT_CLASSES_REGEX,
+                BG_CLASSES_REGEX,
+                COLOR_COMBINATION_CLASSES_REGEX,
+            ];
+            const nodeClasses = [...node.classList];
+            // All classes must be recognized color classes.
+            if (
+                !nodeClasses.every((nodeClass) =>
+                    COLOR_CLASS_REGEXES.some((colorRegex) => colorRegex.test(nodeClass))
+                )
+            ) {
+                return false;
+            }
+            const blockBoundary = closestBlock(node);
+            let ancestor = node.parentElement;
+            while (ancestor && ancestor !== blockBoundary) {
+                if (ancestor.tagName === "SPAN" || ancestor.tagName === "FONT") {
+                    const ancestorClasses = [...ancestor.classList];
+                    // Check if an intermediate ancestor overrides this class.
+                    const isOverridden = nodeClasses.some((nodeClass) => {
+                        const sameTypeRegex = COLOR_CLASS_REGEXES.find((colorRegex) =>
+                            colorRegex.test(nodeClass)
+                        );
+                        return ancestorClasses.some(
+                            (ancestorClass) =>
+                                ancestorClass !== nodeClass && sameTypeRegex?.test(ancestorClass)
+                        );
+                    });
+                    if (isOverridden) {
+                        return false;
+                    } else if (
+                        hasClassesSubset(node.getAttribute("class"), ancestor.getAttribute("class"))
+                    ) {
+                        classRedundant = true;
+                        break;
+                    }
+                }
+                ancestor = ancestor.parentElement;
+            }
+        }
+        return styleRedundant && classRedundant;
+    }
+
+    return false;
 }
 
 // Selector for QWeb-specific attributes

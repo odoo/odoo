@@ -1,5 +1,4 @@
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { isElement } from "./dom_info";
 
 export const COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES = [
     "primary",
@@ -229,6 +228,7 @@ export function isColorGradient(value) {
 export const TEXT_CLASSES_REGEX =
     /\btext-(primary|secondary|success|danger|warning|info|light|dark|body|muted|white|black|reset|gradient|opacity-\d{1,3}|o-[^\s]+|\d+)\b/;
 export const BG_CLASSES_REGEX = /\bbg-[^\s]*\b/;
+export const COLOR_COMBINATION_CLASSES_REGEX = /\bo_cc[0-9]+\b/;
 
 /**
  * Returns true if the given element has a visible color applied
@@ -239,7 +239,7 @@ export const BG_CLASSES_REGEX = /\bbg-[^\s]*\b/;
  * @returns {boolean}
  */
 export function hasTextColorClass(element, mode) {
-    if (!element || !isElement(element)) {
+    if (!element || element.nodeType !== Node.ELEMENT_NODE) {
         return false;
     }
     const classRegex = mode === "color" ? TEXT_CLASSES_REGEX : BG_CLASSES_REGEX;
