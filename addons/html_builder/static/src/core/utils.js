@@ -287,9 +287,12 @@ export function useGetItemValue() {
 
 /**
  * @param {DefaultBuilderProps} props
- * @param {{ onItemChange?: (item: any) => any }} [options]
+ * @param {{
+ *  onItemChange?: (item: any) => any;
+ *  extraContext?: Object;
+ * }} [options]
  */
-export function useSelectableComponent(props, { onItemChange } = {}) {
+export function useSelectableComponent(props, { onItemChange, extraContext = {} } = {}) {
     useBuilderComponent(props);
     const selectableItems = [];
     const ltrRtlMappedItems = new Map();
@@ -438,6 +441,7 @@ export function useSelectableComponent(props, { onItemChange } = {}) {
                     mappedItems.splice(index, 1);
                 }
             },
+            ...extraContext,
         },
     });
 }
@@ -772,6 +776,7 @@ export function useClickableBuilderComponent(props) {
 
     async function callApply(applySpecs, isPreviewing) {
         await env.selectableContext?.cleanSelectedItem(applySpecs, isPreviewing);
+        await env.selectableContext?.cleanCustomInput?.(isPreviewing);
         const cleans = inheritedActionIds
             .map((actionId) => env.dependencyManager.get(actionId).cleanSelectedItem)
             .filter(Boolean);
@@ -1016,6 +1021,9 @@ export function useInputBuilderComponent(
      */
     async function callApply(applySpecs, isPreviewing) {
         const proms = [];
+        // In some cases, an input can clear its linked selection when adding a
+        // custom value (see `BuilderNumberSelect`).
+        await env.selectableContext?.cleanSelectedItem(applySpecs, isPreviewing);
         for (const applySpec of applySpecs) {
             proms.push(
                 applySpec.action.apply({
@@ -1164,6 +1172,9 @@ export function useInputBuilderComponent(
             { onReady }
         );
     }
+    // Specifies the actions to clean up when the input is used to set a custom
+    // value for other components.
+    env.selectableContext?.addCustomInputConfig?.(getAllActions());
 
     return {
         state,
