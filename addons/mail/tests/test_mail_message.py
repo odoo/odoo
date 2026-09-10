@@ -37,6 +37,33 @@ class TestMailMessage(common.MailCommon, HttpCase):
         self.assertTrue(inexisting_message.browse().has_access('read'))
         self.assertFalse(inexisting_message.has_access('read'))
 
+    def test_web_push_attachment_body(self):
+        image = self.env["ir.attachment"].create(
+            {"mimetype": "image/png", "name": "picture.png", "raw": b"image"}
+        )
+        voice = self.env["ir.attachment"].create(
+            {"mimetype": "audio/mpeg", "name": "recording.mp3", "raw": b"voice"}
+        )
+        voice._set_voice_metadata()
+        pdf = self.env["ir.attachment"].create(
+            {"mimetype": "application/pdf", "name": "quote.pdf", "raw": b"pdf"}
+        )
+        cases = [
+            ([image], "📷\N{NO-BREAK SPACE} picture.png"),
+            ([voice], "🎤\N{NO-BREAK SPACE} Voice Message"),
+            ([pdf], "📄\N{NO-BREAK SPACE} quote.pdf"),
+            ([image, voice], "📷\N{NO-BREAK SPACE} picture.png and Voice Message"),
+            ([image, voice, pdf], "📷\N{NO-BREAK SPACE} picture.png and 2 other attachments"),
+        ]
+        for attachments, expected_body in cases:
+            with self.subTest(count=len(attachments), first=attachments[0].name):
+                message = self.env.user.partner_id.message_post(
+                    body="",
+                    attachment_ids=[a.id for a in attachments],
+                )
+                payload = self.env.user.partner_id._notify_by_web_push_prepare_payload(message)
+                self.assertEqual(payload["options"]["body"], expected_body)
+
     def test_mail_message_read_access(self):
         self.env['res.company'].invalidate_model(['name'])
         message_c1 = self._add_messages(self.env.company, "Company Note 1", author=self.user_employee.partner_id)
