@@ -115,7 +115,8 @@ class ProjectProject(models.Model):
     tasks = fields.One2many('project.task', 'project_id', string="Task Activities")
     resource_calendar_id = fields.Many2one(
         'resource.calendar', string='Working Time', compute='_compute_resource_calendar_id', export_string_translation=False)
-    type_ids = fields.Many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', string='Tasks Stages', export_string_translation=False)
+    type_ids = fields.Many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', string='Tasks Stages',
+        default=lambda self: self._default_type_ids(), export_string_translation=False)
     task_count = fields.Integer(compute='_compute_task_count', string="Task Count", export_string_translation=False)
     open_task_count = fields.Integer(compute='_compute_open_task_count', string="Open Task Count", export_string_translation=False)
     task_ids = fields.One2many('project.task', 'project_id', string='Tasks', export_string_translation=False,
@@ -637,12 +638,16 @@ class ProjectProject(models.Model):
             ('stage_id.fold', '=', False),
         ])
 
-    @api.model
-    def name_create(self, name):
-        res = super().name_create(name)
-        # We create a default stage `new` for projects created on the fly.
-        self.browse(res[0]).type_ids += self.env['project.task.type'].sudo().create({'name': _('New')})
-        return res
+    def _default_type_ids(self):
+        return [
+            Command.create({'name': name, 'sequence': sequence, 'fold': fold})
+            for sequence, (name, fold) in enumerate([
+                (self.env._('New'), False),
+                (self.env._('In Progress'), False),
+                (self.env._('Done'), False),
+                (self.env._('Cancelled'), True),
+            ], start=1)
+        ]
 
     @api.model_create_multi
     def create(self, vals_list):
