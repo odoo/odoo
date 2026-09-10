@@ -70,6 +70,14 @@
             <field name="binding_model_id" ref="model_stock_package_history"/>
             <field name="binding_type">report</field>
         </record>
+        <record id="action_report_package_type_barcode" model="ir.actions.report">
+            <field name="name">Package Type Barcode (PDF)</field>
+            <field name="model">stock.package.type</field>
+            <field name="report_name">stock.report_generic_barcode</field>
+            <field name="paperformat_id" ref="product.paperformat_label_sheet"/>
+            <field name="print_report_name">'Package Type - %s' % object.name</field>
+            <field name="binding_model_id" ref="model_stock_package_type"/>
+        </record>
         <record id="action_report_location_barcode" model="ir.actions.report">
             <field name="name">Location Barcode (PDF)</field>
             <field name="model">stock.location</field>
@@ -137,6 +145,13 @@
             <field name="report_name">stock.label_package_history_template_view</field>
             <field name="binding_model_id" ref="model_stock_package_history"/>
             <field name="binding_type">report</field>
+        </record>
+        <record id="label_package_type_template" model="ir.actions.report">
+            <field name="name">Package Type Barcode (ZPL)</field>
+            <field name="model">stock.package.type</field>
+            <field name="report_type">qweb-text</field>
+            <field name="report_name">stock.label_package_type_view</field>
+            <field name="binding_model_id" ref="model_stock_package_type"/>
         </record>
         <record id="label_packaging_barcode" model="ir.actions.report">
             <field name="name">Packaging Barcodes (ZPL)</field>
