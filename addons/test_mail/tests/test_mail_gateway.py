@@ -197,6 +197,23 @@ class TestEmailParsing(MailCommon):
         res = self.env['mail.thread'].message_parse(self.from_string(mail))
         self.assertIn('<pre>\nPlease call me as soon as possible this afternoon!\n\n--\nSylvie\n</pre>', res['body'])
 
+    def test_message_parse_without_content_type(self):
+        received_mail = self.from_string(
+            self.format(
+                test_mail_data.MAIL_TEMPLATE_WITHOUT_CONTENT_TYPE,
+                email_from='"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>',
+                to=f'generic@{self.alias_domain}',
+            ),
+        )
+        with self.assertLogs("odoo.addons.mail.models.mail_thread", level="WARNING") as log_catcher:
+            res = self.env['mail.thread'].message_parse(received_mail)
+
+        [attachment] = res['attachments']
+        self.assertEqual(attachment.content, test_mail_data.PDF_PARSED)
+        self.assertEqual(log_catcher.output, [
+            Like("...Message has no Content-Type, assuming 'application/octet-stream'"),
+        ])
+
     def test_message_parse_xhtml(self):
         # Test that the parsing of XHTML mails does not fail
         self.env['mail.thread'].message_parse(self.from_string(test_mail_data.MAIL_XHTML))
