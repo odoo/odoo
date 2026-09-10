@@ -88,14 +88,18 @@ export class BuilderRange extends Component {
             }
             if (!this.convertorObject.ratioStep) {
                 this.convertorObject.ratioStep = Math.round(
-                    (this.props.step / (this.props.max - this.props.min)) * (this.maxRatio - this.minRatio)
+                    (this.props.step / (this.props.max - this.props.min)) *
+                        (this.maxRatio - this.minRatio)
                 );
             }
         }
 
         if (this.props.withNumberInput) {
             this.inputRefNumber = useChildRef();
-            this.debouncedCommitNumberValue = useInputDebouncedCommit(this.inputRefNumber);
+            this.debouncedCommitNumberValue = useInputDebouncedCommit(
+                this.inputRefNumber,
+                this.commitInput.bind(this)
+            );
         }
 
         const { formatRawValue, parseDisplayValue, clampValue } = useBuilderNumberInputUnits();
