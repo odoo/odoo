@@ -34,6 +34,32 @@
             <widget name="section_state" position="attributes">
                 <attribute name="options">{'is_optional': 'radio_button_checked'}</attribute>
             </widget>
+
+            <xpath
+                expr="//field[@name='order_line']/list/column[@name='price_unit']"
+                position="inside"
+            >
+                <field
+                    name="margin"
+                    widget="labeled_float_field"
+                    invisible="display_type"
+                    readonly="qty_invoiced &gt; 0"
+                    optional="hide"
+                />
+                <field
+                    name="margin_percent"
+                    widget="labeled_percentage_field"
+                    readonly="purchase_price == 0 or qty_invoiced &gt; 0"
+                    invisible="display_type or price_subtotal == 0"
+                    optional="hide"
+                />
+            </xpath>
+            <xpath
+                expr="//field[@name='order_line']//list//field[@name='discount']"
+                position="after"
+            >
+                <field name="purchase_price" optional="hide"/>
+            </xpath>
         </field>
     </record>
 
