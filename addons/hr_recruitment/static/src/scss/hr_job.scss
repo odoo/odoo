@@ -1,11 +1,7 @@
 .o_hr_recruitment_kanban {
     .o_kanban_renderer {
-        padding: 0px;
-        border-top: 0px !important;
-
         &.o_kanban_ungrouped {
             .o_kanban_record {
-                width: 100%;
                 --Card-padding-v: #{map-get($spacers, 2)} !important;
                 --Card-padding-h: 0px !important;
                 --Ribbon-font-size: 0.6rem;
@@ -17,8 +13,6 @@
                 }
 
                 &:not(.o_kanban_ghost) {
-                    border: none;
-                    border-bottom: $border-width solid $border-color;
                     justify-content: center;
                 }
 

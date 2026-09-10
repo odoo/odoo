@@ -34,25 +34,6 @@
 
     // Ungrouped display: whole length (kanban-list)
     &.o_kanban_ungrouped {
-        --Kanban-gap: 0px;
-
-        .o_kanban_record {
-            width: 100%;
-            margin: 0px;
-
-            &:not(:only-of-type) {
-                margin-top: -1px;
-            }
-
-            &:not(:first-of-type) {
-                --Card-border-radius-top: 0;
-            }
-
-            &:not(:last-of-type) {
-                --Card-border-radius-bottom: 0;
-            }
-        }
-
         .o_survey_kanban_card {
             --#{$prefix}gap: #{map-get($spacers, 3)} #{map-get($spacers, 2)};
 

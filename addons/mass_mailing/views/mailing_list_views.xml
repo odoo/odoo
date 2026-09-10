@@ -131,7 +131,7 @@
         <field name="name">mailing.list.view.kanban</field>
         <field name="model">mailing.list</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile o_kanban_mailing_list" sample="1"
+            <kanban class="o_kanban_mobile o_kanban_mailing_list o_kanban_list" sample="1"
                     on_create="mass_mailing.action_mailing_list_quick_create" highlight_color="color"
                     action="action_view_contacts" type="object">
                 <field name="active"/>
