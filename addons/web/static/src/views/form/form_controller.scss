@@ -683,6 +683,18 @@
         direction : ltr;
     }
 
+    // The rule above keeps the amount and its currency symbol reading left-to-right,
+    // but a group also stretches its fields to the full width of the value cell. On a
+    // right-to-left page the label sits at the cell's right edge while the left-to-right
+    // box starts its content at the left one, so the amount ends up a cell-width away
+    // from its own label, unlike every other field type. Letting the box shrink to its
+    // content puts it back beside the label, without touching the direction of the
+    // amount itself. .o_rtl is set on <body> for right-to-left languages, see
+    // web/static/src/start.js.
+    .o_rtl & .o_inner_group .o_cell > .o_field_monetary {
+        width: auto;
+    }
+
     .o_list_monetary {
         /*rtl:ignore*/
         text-align: right;
