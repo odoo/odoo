@@ -78,15 +78,23 @@ class Project(models.Model):
                 ('analytic_distribution', 'in', self.account_id.ids),
             ],
             groupby=['currency_id'],
-            aggregates=['id:array_agg', 'untaxed_amount_currency:sum'],
+            aggregates=['id:array_agg', 'untaxed_amount_currency:array_agg', 'analytic_distribution:array_agg'],
         )
         if not expenses_read_group:
             return {}
         expense_ids = []
         amount_billed = 0.0
-        for currency, ids, untaxed_amount_currency_sum in expenses_read_group:
+        for currency, ids, untaxed_amount_currencies, analytic_distributions in expenses_read_group:
             if can_see_expense:
                 expense_ids.extend(ids)
+            untaxed_amount_currency_sum = sum(
+                untaxed_amount_currency * sum(
+                    percentage for account_ids, percentage in analytic_distribution.items()
+                    if str(self.account_id.id) in account_ids.split(',')
+                ) / 100.
+                for untaxed_amount_currency, analytic_distribution in
+                zip(untaxed_amount_currencies, analytic_distributions)
+            )
             amount_billed += currency._convert(
                 from_amount=untaxed_amount_currency_sum,
                 to_currency=self.currency_id,
