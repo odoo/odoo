@@ -180,16 +180,25 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
                 .o_survey_form_choice[data-question-type='multiple_choice'] input:checked
             `)).map((input) => parseInt(input.value));
             const submitButton = document.querySelector("button[type=submit]");
+            const navSubmitButton = document.querySelector('.o_survey_navigation_submit[value="next"], .o_survey_navigation_submit[value="finish"]');
             if (currentSelectedAnswers.some((answerId) => surveyLastTriggeringAnswers.includes(answerId))) {
                 // change to continue
                 submitButton.value = "next";
                 submitButton.textContent = _t("Continue");
                 submitButton.classList.replace("btn-secondary", "btn-primary");
+                if (navSubmitButton) {
+                    navSubmitButton.value = "next";
+                    navSubmitButton.replaceChildren(navSubmitButton.querySelector("i"));
+                }
             } else {
                 // change to submit
                 submitButton.value = "finish";
                 submitButton.textContent = _t("Submit");
                 submitButton.classList.replace("btn-primary", "btn-secondary");
+                if (navSubmitButton) {
+                    navSubmitButton.value = "finish";
+                    navSubmitButton.replaceChildren(document.createTextNode(_t("Submit")), navSubmitButton.querySelector("i"));
+                }
             }
         }
 
