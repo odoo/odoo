@@ -108,9 +108,9 @@ class ProductTemplate(models.Model):
         compute_sudo=True,
     )
 
-    # list_price: catalog price, user defined
     list_price = fields.Float(
         'Sales Price', default=1.0,
+        company_dependent=True,
         min_display_digits='Product Price',
         tracking=True,
         help="Price at which the product is sold to customers.",
@@ -319,14 +319,14 @@ class ProductTemplate(models.Model):
             template.product_variant_ids._check_barcode_uniqueness()
 
     @api.depends('company_id')
+    @api.depends_context('company')
     def _compute_currency_id(self):
-        main_company = self.env['res.company']._get_main_company()
+        env_currency_id = self.env.company.currency_id.id
         for template in self:
-            template.currency_id = template.company_id.sudo().currency_id.id or main_company.currency_id.id
+            template.currency_id = template.company_id.sudo().currency_id.id or env_currency_id
 
     def _compute_sql_currency_id(self, table):
-        main_company = self.env['res.company']._get_main_company()
-        return SQL("COALESCE(%s, %s)", table.company_id.currency_id, main_company.currency_id.id)
+        return SQL("COALESCE(%s, %s)", table.company_id.currency_id, self.env.company.currency_id.id)
 
     @api.depends('company_id')
     @api.depends_context('company')
@@ -1031,28 +1031,17 @@ class ProductTemplate(models.Model):
             # write this attribute on every product to make sure we don't lose them
             single_value_lines = lines_without_no_variants.filtered(lambda ptal: len(ptal.product_template_value_ids._only_active()) == 1)
             if single_value_lines:
-                # Writing product_template_attribute_value_ids below invalidates
-                # price_extra, which triggers recompute of the stored lst_price
-                # and wipes user-set overrides. Protect lst_price on variants
-                # whose value diverges from the computed one (= manual override);
-                # non-overridden variants are left to the recompute so they
-                # correctly pick up the new ptav's price_extra.
-                overridden = all_variants.filtered(
-                    lambda v: v.lst_price != v.list_price + v.price_extra,
-                )
-                lst_price_field = self.env['product.product']._fields['lst_price']
-                with self.env.protecting([lst_price_field], overridden):
-                    for variant in all_variants:
-                        combination = variant.product_template_attribute_value_ids | single_value_lines.product_template_value_ids._only_active()
-                        # Do not add single value if the resulting combination would
-                        # be invalid anyway.
-                        if (
-                            len(combination) == len(lines_without_no_variants)
-                            and combination.attribute_line_id == lines_without_no_variants
-                            # Update only if necessary to prevent a cache invalidation
-                            and variant.product_template_attribute_value_ids != combination
-                        ):
-                            variant.product_template_attribute_value_ids = combination
+                for variant in all_variants:
+                    combination = variant.product_template_attribute_value_ids | single_value_lines.product_template_value_ids._only_active()
+                    # Do not add single value if the resulting combination would
+                    # be invalid anyway.
+                    if (
+                        len(combination) == len(lines_without_no_variants)
+                        and combination.attribute_line_id == lines_without_no_variants
+                        # Update only if necessary to prevent a cache invalidation
+                        and variant.product_template_attribute_value_ids != combination
+                    ):
+                        variant.product_template_attribute_value_ids = combination
 
             # Set containing existing `product.template.attribute.value` combination
             existing_variants = {

@@ -527,7 +527,10 @@ class ProductTemplate(models.Model):
         # Return the list of tuples (main_pt_id, recommended_pt_id)
         # for any product.template sharing the conditions:
         # - same order, dated from less than 5 years
-        # - active product, cheaper than the main product, not a combo item, not himself
+        # - active product, not a combo item, not himself
+        # "cheaper than the main product" is filtered afterwards in Python, since list_price
+        # is company_dependent and can't be compared as a plain SQL column here.
+        candidate_pool_size = max(max_products * 5, 20)
         result = self.env.execute_query(
             SQL(
                 """
@@ -551,19 +554,36 @@ class ProductTemplate(models.Model):
                            AND pt2.active    = TRUE
                            AND pt2.sale_ok   = TRUE
                            AND pt2.is_published = TRUE
-                           AND pt2.list_price < pt.list_price
                            AND sol2.combo_item_id IS NULL
                            AND pt2.id        != pt.id
                          GROUP BY pt.id, pt2.id) ranked
-                 WHERE rn <= %(max_products)s
+                 WHERE rn <= %(candidate_pool_size)s
                 """,
                 pt_ids=list(self.ids),
-                max_products=max_products,
+                candidate_pool_size=candidate_pool_size,
             )
         )
-        products_by_sales = defaultdict(list)
+        candidates_by_main = defaultdict(list)
+        recommended_ids = set()
         for main_id, recommended_id in result:
-            products_by_sales[main_id].append(recommended_id)
+            candidates_by_main[main_id].append(recommended_id)
+            recommended_ids.add(recommended_id)
+
+        list_price_by_template = {
+            template.id: template.list_price
+            for template in self.env["product.template"].browse(
+                set(candidates_by_main) | recommended_ids
+            )
+        }
+        products_by_sales = defaultdict(list)
+        for main_id, candidate_ids in candidates_by_main.items():
+            main_price = list_price_by_template.get(main_id, 0.0)
+            cheaper_ids = [
+                recommended_id
+                for recommended_id in candidate_ids
+                if list_price_by_template.get(recommended_id, 0.0) < main_price
+            ]
+            products_by_sales[main_id] = cheaper_ids[:max_products]
 
         return products_by_sales
 
@@ -791,10 +811,8 @@ class ProductTemplate(models.Model):
 
             if uom_price_enabled:
                 template_price_vals["base_unit_price"] = (
-                    (template.product_variant_id or template)._get_base_unit_price(
-                        template_price_vals["price_reduce"]
-                    )
-                )
+                    template.product_variant_id or template
+                )._get_base_unit_price(template_price_vals["price_reduce"])
 
             res[template.id] = template_price_vals
 
@@ -1367,7 +1385,7 @@ class ProductTemplate(models.Model):
         :return: List of service_tracking values that are allowed to have zero price.
         :rtype: list
         """
-        return ['subcontract']  # added from sale_purchase as there is no bridge for website
+        return ["subcontract"]  # added from sale_purchase as there is no bridge for website
 
     # ---------------------------------------------------------
     # Rating Mixin API
@@ -1401,10 +1419,7 @@ class ProductTemplate(models.Model):
 
     @api.model
     def _get_website_sale_search_fields(self, search_in_description=True):
-        search_fields = [
-            "name",
-            "variants_default_code",
-        ]
+        search_fields = ["name", "variants_default_code"]
         if search_in_description:
             search_fields.append("description_ecommerce")
         search_fields.extend((
@@ -1446,7 +1461,9 @@ class ProductTemplate(models.Model):
             domains.append([("list_price", "<=", max_price)])
         if attribute_value_dict:
             domains.extend(self._get_attribute_value_domain(attribute_value_dict))
-        search_fields = self._get_website_sale_search_fields(options.get("displayDescription", True))
+        search_fields = self._get_website_sale_search_fields(
+            options.get("displayDescription", True)
+        )
         fetch_fields = ["id", "name", "website_url", "description_ecommerce", "description_sale"]
         mapping = {
             "name": {"name": "name", "type": "text", "match": True},
