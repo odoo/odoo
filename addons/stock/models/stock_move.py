@@ -1605,6 +1605,7 @@ Please change the quantity done or the rounding precision in your settings.""",
             ('state', 'in', ['draft', 'confirmed', 'waiting', 'partially_available', 'assigned']),
         ])
         if self.partner_id:
+<<<<<<< eb763ff6ed80aaf3bfef6801bed408ec12fd1c2a
             picking_partner_id = self.env.context.get('move_picking_partner_id', self.partner_id).id
             domain = Domain.AND([domain, [('partner_id', '=', picking_partner_id)]])
         if self.env.user.has_group('stock.group_stock_picking_batch'):
@@ -1612,6 +1613,13 @@ Please change the quantity done or the rounding precision in your settings.""",
                 domain,
                 ['|', ('batch_id', '=', False), ('batch_id.is_wave', '=', False)],
             ])
+||||||| 2e2054d4203f6453fb35ec6037cda0e2e9033cc3
+            picking_partner_id = self.env.context.get('move_picking_partner_id', self.partner_id).id
+            domain += [('partner_id', '=', picking_partner_id)]
+=======
+            picking_partner_id = self._get_picking_partner().id
+            domain += [('partner_id', '=', picking_partner_id)]
+>>>>>>> b3c592e27b37b4ac4357d1c4eb33d3afd51c16d4
         return domain
 
     def _search_picking_for_assignation(self):
@@ -1728,6 +1736,10 @@ Please change the quantity done or the rounding precision in your settings.""",
 
     def _get_formating_options(self, strings):
         return {}
+
+    def _get_picking_partner(self):
+        self.ensure_one()
+        return self.picking_id.partner_id or self.env.context.get('move_picking_partner_id') or self.partner_id
 
     def _get_new_picking_values(self):
         """ return create values for new picking that will be linked with group
