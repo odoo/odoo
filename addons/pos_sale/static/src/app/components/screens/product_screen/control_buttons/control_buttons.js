@@ -15,12 +15,7 @@ patch(ControlButtons.prototype, {
             ["currency_id", "=", this.pos.currency.id],
             ["amount_unpaid", ">", 0],
         ];
-        if (this.pos.getOrder()?.getPartner()) {
-            domain = [
-                ...domain,
-                ["partner_id", "any", [["id", "child_of", [this.pos.getOrder().getPartner().id]]]],
-            ];
-        }
+
         const saleOrderIds = this.pos
             .getOrder()
             ?.lines?.map((l) => l.sale_order_origin_id?.id)
