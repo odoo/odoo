@@ -18,7 +18,7 @@ class TestStructure(TransactionCase):
     @mute_logger('odoo.addons.account.models.partner')
     def test_missing_company_country(self):
         company = self.env['res.company'].create({
-            'name': 'Test Company',
+            'name': 'Test Company No Country',
             'country_id': False,
             'vat_check_vies': True,
         })

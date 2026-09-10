@@ -166,10 +166,7 @@ class TestQwebFieldMany2Many(common.TransactionCase):
         self.assertFalse(self.value_to_html(user.group_ids))
 
     def test_many2many_with_values(self):
-        # `res.currency._toggle_group_multi_currency` grants `group_multi_currency` to
-        # `group_user` as soon as 2+ currencies are active (e.g. because of a multi-currency
-        # test company fixture), which would otherwise show up in the new user's group list
-        # below and make the expected values depend on which currencies happen to be in use.
+        # remove group_multi_currency, auto-granted since 2+ currencies are active
         group_user = self.env.ref('base.group_user')
         group_mc = self.env.ref('base.group_multi_currency')
         group_user.sudo()._remove_group(group_mc)

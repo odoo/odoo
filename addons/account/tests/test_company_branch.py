@@ -14,11 +14,7 @@ from odoo.tests import tagged, Form
 class TestCompanyBranch(AccountTestInvoicingCommon):
 
     _test_user_groups = None  # FIXME list needed groups
-
-    @classmethod
-    def setup_independent_company(cls):
-        cls.registry._assertion_report.custom_test_stats['res.company.create'].add_avoided()
-        return cls.env.ref('base.test_company_with_branch')
+    _test_independent_company_xmlid = 'base.test_company_with_branch'
 
     @classmethod
     def setUpClass(cls):
@@ -120,7 +116,6 @@ class TestCompanyBranch(AccountTestInvoicingCommon):
         payment_lines.reconcile()
         self.assertEqual(payment_lines.mapped('amount_residual'), [0, 0])
         self.assertTrue(payment_lines.matched_debit_ids.exchange_move_id)
-
         self.assertTrue(payment_lines.matched_debit_ids.exchange_move_id.journal_id.company_id, invoice.company_id)
 
         # Can still open the invoice with only it's branch accessible

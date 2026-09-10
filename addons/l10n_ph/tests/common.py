@@ -19,7 +19,6 @@ class TestPhCommon(AccountTestInvoicingCommon):
         super().setUpClass()
 
         cls.company_data['company'].write({
-            'name': 'Test Company',
             'street': '8 Super Street',
             'city': 'Super City',
             'zip': '8888',

@@ -1469,8 +1469,7 @@ class TransactionCase(BaseCase):
             if model_name not in cls.registry:
                 raise ValueError(f"Unknown model guarded against create: {model_name}")
             model_class = type(cls.env[model_name])
-            # Registry model classes can be rebuilt during tests, so walk up the MRO to patch
-            # the stable model definition which actually owns `create`.
+            # walk up the MRO to find the class that actually owns `create`
             create_owner = next(
                 base for base in model_class.__mro__
                 if is_model_definition(base) and 'create' in base.__dict__

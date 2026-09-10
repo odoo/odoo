@@ -28,8 +28,7 @@ class TestUblCiiCommon(AccountTestInvoicingCommon):
         create_values.setdefault('currency_id', cls.env.ref('base.EUR').id)
         create_values.setdefault('terms_type', 'plain')
         company = super()._create_company(**create_values)
-        # set currency again because _use_chart_template may have changed it back to USD when loading the generic coa
-        company.currency_id = create_values['currency_id']
+        company.currency_id = create_values['currency_id']  # the coa may have reset it to USD
         company.tax_calculation_rounding_method = 'round_globally'
         return company
 
