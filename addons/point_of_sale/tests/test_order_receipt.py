@@ -490,6 +490,49 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon, CommonPosTest):
         self.assertTrue(data, "the order has one new line, it must produce a ticket")
         return data[0]['extra_data']
 
+    def test_change_receipt_order_note_rides_on_the_change_ticket(self):
+        """
+        An order note belongs to the ticket carrying the changes: it must be rendered on
+        it, and must not spawn a second, empty ticket next to it.
+        """
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        order = self._create_receipt_test_order('2026-08-27 11:16:53')
+        order.general_customer_note = 'NO ONIONS'
+        order.internal_note = 'RUSH'
+
+        changes = order._generate_preparation_change_for_categories(set(self.category.ids))
+        receipts = order._generate_preparation_receipt_data(changes)
+
+        self.assertEqual(len(receipts), 1, "the note must not add an empty ticket next to the NEW one")
+        self.assertEqual(receipts[0]['changes']['title'], 'NEW')
+        self.assertEqual(receipts[0]['extra_data']['general_customer_note'], 'NO ONIONS')
+        self.assertEqual(receipts[0]['extra_data']['internal_note'], 'RUSH')
+
+        html = str(self.env['ir.qweb']._render('point_of_sale.pos_order_change_receipt', receipts[0]))
+        self.assertIn('NO ONIONS', html, "the customer note must reach the printed ticket")
+        self.assertIn('RUSH', html, "the internal note must reach the printed ticket")
+
+    def test_change_receipt_note_only_ticket_carries_the_note(self):
+        """
+        When the notes are the only change, the lone ticket they produce must actually
+        spell them out, otherwise a blank ticket comes out of the printer.
+        """
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        order = self._create_receipt_test_order('2026-08-27 11:16:53')
+        order.general_customer_note = 'NO ONIONS'
+        # Send the lines to preparation so that only the note is left to report
+        self.env['pos.prep.order'].update_last_order_change(order)
+
+        changes = order._generate_preparation_change_for_categories(set(self.category.ids))
+        receipts = order._generate_preparation_receipt_data(changes)
+
+        self.assertEqual(len(receipts), 1)
+        self.assertFalse(receipts[0]['changes']['data'], "no line change is left to print")
+        self.assertEqual(receipts[0]['extra_data']['general_customer_note'], 'NO ONIONS')
+
+        html = str(self.env['ir.qweb']._render('point_of_sale.pos_order_change_receipt', receipts[0]))
+        self.assertIn('NO ONIONS', html, "a note-only ticket that omits the note is a blank ticket")
+
     def test_change_receipt_times_use_shop_timezone(self):
         """
         Preparation ticket times must use the shop timezone, not the acting user's,
