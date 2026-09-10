@@ -13,7 +13,7 @@ import { Operation } from "./operation";
 export class OperationPlugin extends Plugin {
     static id = "operation";
     static dependencies = ["domObserver", "history"];
-    static shared = ["next", "hasTimedOut"];
+    static shared = ["addLoadingElement", "next", "hasTimedOut"];
 
     setup() {
         this._hasTimedOut = false;
@@ -65,6 +65,25 @@ export class OperationPlugin extends Plugin {
         return result;
     }
 
+    /**
+     * Call this.operation's addLoadingElement
+     *
+     * @param {Boolean} withLoadingEffect if true, adds a loading effect
+     * @param {Number} loadingEffectDelay delay after which the loading effect
+     *   should appear
+     * @param {Boolean} shouldInterceptClick - whether to redispatch the click
+     *   under the loading element after the end of the current operation
+     * @returns {Function}
+
+     */
+    addLoadingElement(withLoadingEffect, loadingEffectDelay, shouldInterceptClick) {
+        return this.operation.addLoadingElement(
+            withLoadingEffect,
+            loadingEffectDelay,
+            shouldInterceptClick
+        );
+    }
+
     onTimeout(rollback) {
         rollback();
 
@@ -87,12 +106,9 @@ export class OperationPlugin extends Plugin {
 export function useOperation() {
     const env = useEnv();
     return (apply, ...args) => {
-        env.editor.shared.operation.next(
-            async (...args) => {
-                await apply(...args);
-                env.editor.shared.history.commit();
-            },
-            ...args
-        );
+        env.editor.shared.operation.next(async (...args) => {
+            await apply(...args);
+            env.editor.shared.history.commit();
+        }, ...args);
     };
 }

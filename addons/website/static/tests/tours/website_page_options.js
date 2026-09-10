@@ -10,10 +10,6 @@ import {
 function waitForWebsiteColorOperation() {
     return [
         {
-            content: "Wait for website color operation to start",
-            trigger: ":iframe .o_loading_screen",
-        },
-        {
             content: "Wait for website color operation to complete",
             trigger: ":iframe body:not(:has(.o_loading_screen))",
         },

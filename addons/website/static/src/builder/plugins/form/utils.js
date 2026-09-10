@@ -59,7 +59,7 @@ export const isRequiredMark = (el) => el.classList.contains("o_mark_required");
  */
 export function getDefaultFormat(el) {
     return {
-        labelWidth: el.querySelector(".s_website_form_label").style.width,
+        labelWidth: el.querySelector(".s_website_form_label")?.style.width,
         labelPosition: "left",
         multiPosition: "horizontal",
         requiredMark: isRequiredMark(el),

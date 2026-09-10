@@ -27,7 +27,7 @@ export class FormOption extends BaseOptionComponent {
                 ),
             ]
                 .map((el) => el.name)
-                .filter((name) => !authorizedFields[name]?._property);
+                .filter((name) => authorizedFields[name] && !authorizedFields[name]._property);
             if (fields.length) {
                 services.orm.call("ir.model.fields", "formbuilder_whitelist", [
                     model,

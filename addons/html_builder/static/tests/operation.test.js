@@ -688,3 +688,108 @@ describe("Operations failing on outdated snippets", () => {
         );
     });
 });
+
+describe("Multiple blocks", () => {
+    test("Loading screen should disappear after the last block is removed (two blocks with loading effect)", async () => {
+        const { getEditor } = await setupHTMLBuilder(
+            `<div class="test-options-target">TEST</div>`,
+            {
+                loadIframeBundles: true,
+            }
+        );
+        const editor = getEditor();
+
+        const removeFirst = editor.shared.operation.addLoadingElement(true, 0, false);
+        await animationFrame();
+        expect(":iframe .o_loading_screen.o_we_ui_loading").toHaveCount(1);
+
+        const removeSecond = editor.shared.operation.addLoadingElement(true, 0, false);
+        expect(":iframe .o_loading_screen.o_we_ui_loading").toHaveCount(1);
+        await animationFrame();
+
+        removeFirst();
+        await animationFrame();
+        expect(":iframe .o_loading_screen.o_we_ui_loading").toHaveCount(1);
+
+        removeSecond();
+        await animationFrame();
+        expect(":iframe .o_loading_screen").toHaveCount(0);
+    });
+
+    test("Loading screen should disappear after the last block is removed (one block with loading effect and one without)", async () => {
+        const { getEditor } = await setupHTMLBuilder(
+            `<div class="test-options-target">TEST</div>`,
+            {
+                loadIframeBundles: true,
+            }
+        );
+        const editor = getEditor();
+
+        const removeFirst = editor.shared.operation.addLoadingElement(true, 0, false);
+        await animationFrame();
+        expect(":iframe .o_loading_screen.o_we_ui_loading").toHaveCount(1);
+
+        const removeSecond = editor.shared.operation.addLoadingElement(false, 0, false);
+        await animationFrame();
+        expect(":iframe .o_loading_screen.o_we_ui_loading").toHaveCount(1);
+
+        removeFirst();
+        await animationFrame();
+        expect(":iframe .o_loading_screen").toHaveCount(1);
+        expect(":iframe .o_loading_screen.o_we_ui_loading").toHaveCount(0);
+
+        removeSecond();
+        await animationFrame();
+        expect(":iframe .o_loading_screen").toHaveCount(0);
+
+        const removeThird = editor.shared.operation.addLoadingElement(true, 0, false);
+        await animationFrame();
+        expect(":iframe .o_loading_screen.o_we_ui_loading").toHaveCount(1);
+
+        const removeFourth = editor.shared.operation.addLoadingElement(false, 0, false);
+        expect(":iframe .o_loading_screen.o_we_ui_loading").toHaveCount(1);
+        await animationFrame();
+
+        removeFourth();
+        await animationFrame();
+        expect(":iframe .o_loading_screen.o_we_ui_loading").toHaveCount(1);
+
+        removeThird();
+        await animationFrame();
+        expect(":iframe .o_loading_screen").toHaveCount(0);
+    });
+
+    test("Multiple blocks with waiting times", async () => {
+        const { getEditor } = await setupHTMLBuilder(
+            `<div class="test-options-target">TEST</div>`,
+            {
+                loadIframeBundles: true,
+            }
+        );
+        const editor = getEditor();
+
+        const removeFirst = editor.shared.operation.addLoadingElement(true, 100, false);
+        await animationFrame();
+        expect(":iframe .o_loading_screen.o_we_ui_loading").toHaveCount(0);
+        expect(":iframe .o_loading_screen").toHaveCount(1);
+
+        const removeSecond = editor.shared.operation.addLoadingElement(true, 500, false);
+        await animationFrame();
+        expect(":iframe .o_loading_screen.o_we_ui_loading").toHaveCount(0);
+        expect(":iframe .o_loading_screen").toHaveCount(1);
+
+        await advanceTime(200);
+        expect(":iframe .o_loading_screen.o_we_ui_loading").toHaveCount(1);
+
+        removeFirst();
+        await animationFrame();
+        expect(":iframe .o_loading_screen.o_we_ui_loading").toHaveCount(0);
+
+        await advanceTime(400);
+        expect(":iframe .o_loading_screen.o_we_ui_loading").toHaveCount(1);
+
+        removeSecond();
+        await animationFrame();
+        expect(":iframe .o_loading_screen").toHaveCount(0);
+    });
+});
