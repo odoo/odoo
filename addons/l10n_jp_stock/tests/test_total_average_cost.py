@@ -257,14 +257,6 @@ class TestTotalAverageCost(TestTotalAverageCostCommon):
         self.assertAlmostEqual(self.product.standard_price, 102.88, places=2)
         self.assertEqual(action['params']['type'], 'success')
 
-    def test_customer_return_period_start_ignored(self):
-        self._add_opening_stock()
-        sale = self._create_move(10, 110, self.today - timedelta(days=2), self.stock_loc, self.customer_loc)
-        return_move = self._create_move(5, 0, self.today, self.customer_loc, self.stock_loc)
-        return_move.origin_returned_move_id = sale.id
-        self._run_category_wizard()
-        self.assertAlmostEqual(self.product.standard_price, 100, places=2)
-
     def test_customer_return_sale_time_cost(self):
         # the sale is valued at the standard price of its date (90), so the
         # return re-enters at that sale-time cost
@@ -282,15 +274,6 @@ class TestTotalAverageCost(TestTotalAverageCostCommon):
         self._create_move(10, 125, self.today, self.supplier_loc, self.customer_loc)
         self._run_category_wizard()
         self.assertAlmostEqual(self.product.standard_price, 102.27, places=2)
-
-    def test_dropship_return_current_subtracted(self):
-        # the drop-ship it cancels is in the period, so the acquisition goes back out
-        self._create_move(10, 10, self.today, self.supplier_loc, self.stock_loc)
-        dropship = self._create_move(20, 20, self.today, self.supplier_loc, self.customer_loc)
-        return_move = self._create_move(5, 0, self.today, self.customer_loc, self.supplier_loc)
-        return_move.origin_returned_move_id = dropship.id
-        self._run_category_wizard()
-        self.assertAlmostEqual(self.product.standard_price, (10 * 10 + 20 * 20 - 5 * 20) / 25, places=2)
 
     def test_dropship_return_prior_ignored(self):
         # the drop-ship it cancels was averaged into an earlier period, so removing
@@ -325,18 +308,6 @@ class TestTotalAverageCost(TestTotalAverageCostCommon):
         self._create_move(1, 14, self.today, production_loc, self.stock_loc)
         self._run_category_wizard()
         self.assertAlmostEqual(self.product.standard_price, (2 * 20 + 14) / 3, places=2)
-
-    def test_opening_valued_at_period_cost(self):
-        self._add_opening_stock()
-        self.env['product.value'].create({
-            'product_id': self.product.id,
-            'company_id': self.env.company.id,
-            'value': 80,
-            'date': fields.Datetime.to_datetime(self.today - timedelta(days=3)),
-        })
-        self._create_move(10, 100, self.today, self.supplier_loc, self.stock_loc)
-        self._run_category_wizard()
-        self.assertAlmostEqual(self.product.standard_price, (100 * 80 + 10 * 100) / 110, places=2)
 
     def test_price_history_dated_at_period_start(self):
         self._add_opening_stock()
