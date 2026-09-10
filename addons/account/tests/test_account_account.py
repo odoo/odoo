@@ -909,8 +909,6 @@ class TestAccountAccount(TestAccountMergeCommon):
 
         with Form(account) as account_form:
             # Test that the code mapping gives correct values once the form has been opened (which should call search)
-            # `code_mapping_ids` is auto-populated for every company the (shared) test user has
-            # access to, not just the 3 relevant to this test, so scope the assertion to them.
             expected_company_ids = (self.company_data['company'] + self.company_data_2['company'] + company_3).ids
             self.assertRecordValues(account.code_mapping_ids.filtered(lambda m: m.company_id.id in expected_company_ids), [
                 {'company_id': self.company_data['company'].id, 'code': 'test1'},
@@ -919,8 +917,6 @@ class TestAccountAccount(TestAccountMergeCommon):
             ])
 
             # Test that we are able to set a new code for companies 2 and 3 via the company mapping
-            # The mapping may also contain rows for the test user's other companies, so look up
-            # the row indexes by company instead of assuming positions 1 and 2.
             company_ids_in_form = [vals['company_id'] for vals in account_form.code_mapping_ids._records]
             with account_form.code_mapping_ids.edit(company_ids_in_form.index(self.company_data_2['company'].id)) as code_mapping_form:
                 code_mapping_form.code = 'test2'
@@ -950,8 +946,6 @@ class TestAccountAccount(TestAccountMergeCommon):
                 {'company_id': self.company_data_2['company'].id, 'code': False},
                 {'company_id': company_3.id, 'code': False},
             ]
-            # `code_mapping_ids` is auto-populated for every company the (shared) test user has
-            # access to, not just the 3 relevant to this test, so scope the assertion to them.
             expected_company_ids = {self.company_data['company'].id, self.company_data_2['company'].id, company_3.id}
             actual_code_mapping_vals_list = [
                 vals for vals in account_form.code_mapping_ids._records
@@ -965,8 +959,6 @@ class TestAccountAccount(TestAccountMergeCommon):
             account_form.name = "My Test Account"
             account_form.code = 'test1'
             account_form.account_type = 'asset_current'
-            # The mapping may also contain rows for the test user's other companies, so look up
-            # the row indexes by company instead of assuming positions 1 and 2.
             company_ids_in_form = [vals['company_id'] for vals in account_form.code_mapping_ids._records]
             with account_form.code_mapping_ids.edit(company_ids_in_form.index(self.company_data_2['company'].id)) as code_mapping_form:
                 code_mapping_form.code = 'test2'

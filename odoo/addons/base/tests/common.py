@@ -38,7 +38,6 @@ class BaseCommon(TransactionCase):
         # cls.env, so cls.env must already point to the independent user by
         # then. Otherwise, the company ends up being assigned to the shared
         # superuser instead of the test user.
-
         independent_user = cls.setup_independent_user()
         if independent_user:
             cls.env = cls.env(user=independent_user)
@@ -181,18 +180,17 @@ class BaseCommon(TransactionCase):
         template_company = cls.env.ref(company_xmlid)
         if cls._force_new_company or template_company in cls.env.user.company_ids:
             if not cls._force_new_company:
-                _logger.info("Cannot use %s, company is already in the companies of user %s", company_xmlid, cls.env.user.name)
+                _logger.debug("Cannot use %s, company is already in the companies of user %s", company_xmlid, cls.env.user.name)
             company = cls.env['res.company'].create({
                 'name': "Secondary Test Company",
                 **create_values,
             })
         else:
             cls.registry._assertion_report.custom_test_stats['res.company.create'].add_avoided()
-            _logger.info('Using %s to create a company', company_xmlid)
+            _logger.debug('Using %s to create a company', company_xmlid)
             template_company.write(create_values)
             company = template_company
         cls.env.user.company_ids = [Command.link(company.id)]
-        # cls.env.context['allowed_company_ids'].append(company.id)
         return company
 
     @classmethod

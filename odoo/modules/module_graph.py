@@ -283,11 +283,18 @@ class ModuleGraph:
         if not names:
             return
         # update modules with values from the database (if exist)
-        query = '''
-            SELECT name, id, state, demo, test_data, latest_version AS installed_version
-            FROM ir_module_module
-            WHERE name IN %s
-        '''
+        if column_exists(self._cr, 'ir_module_module', 'test_data'):
+            query = '''
+                SELECT name, id, state, demo, test_data, latest_version AS installed_version
+                FROM ir_module_module
+                WHERE name IN %s
+            '''
+        else:
+            query = '''
+                SELECT name, id, state, demo, FALSE AS test_data, latest_version AS installed_version
+                FROM ir_module_module
+                WHERE name IN %s
+            '''
         self._cr.execute(query, [names])
         for name, id_, state, demo, test_data, installed_version in self._cr.fetchall():
             if state == 'uninstallable':

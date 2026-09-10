@@ -182,17 +182,9 @@ class TestChartTemplate(AccountTestInvoicingCommon):
 
     _test_user_groups = None  # FIXME list needed groups
 
-    # test_change_coa replaces the company's chart of accounts twice (and creates a branch + an unrelated company along the way).
-    # Reusing the shared test_company_template breaks it. The real cause is not identified but it looks related to the
-    # currency activation discrepancy between write and create but not only.
-    # when creating a company, the currency is activated after the create, leading to an empty stripe_currency_id, and no 'Stripe Issuing'
-    # journal is created on the company
-    # but even if we activate the currency before the create, and the 'Stripe Issuing' is present on the company, it is still breaking
+    # test_change_coa breaks with a reused company; root cause not found, needs a fresh one
     _force_new_company = True
 
-    # using template ws wthout template account.journal:
-    # ['Sales', 'Purchases', 'Bank', 'Miscellaneous Operations', 'Cash Basis Taxes', 'Exchange Difference', 'Stripe Issuing']
-    # ['Sales', 'Purchases', 'Bank', 'Miscellaneous Operations', 'Cash Basis Taxes', 'Exchange Difference']
     @classmethod
     def _use_chart_template(cls, company, chart_template_ref=None):
         with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=test_get_data, autospec=True):

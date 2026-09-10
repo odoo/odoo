@@ -181,11 +181,7 @@ class TestAccountJournal(AccountTestInvoicingCommon, HttpCase):
     def test_journal_notifications_unsubscribe(self):
         journal = self.company_data['default_journal_purchase']
         journal.incoming_einvoice_notification_email = 'test@example.com'
-        # website._frontend_pre_dispatch() forces the request's active company to the
-        # website's own company whenever that company is among the user's allowed
-        # companies; restrict to this test's own company to match the original
-        # single-company test assumption, so the journal stays reachable.
-        self.env.user.company_ids = self.env.company
+        self.env.user.company_ids = self.env.company  # keep the journal's company reachable
         self.authenticate(self.env.user.login, self.env.user.login)
         res = self.url_open(
             f'/my/journal/{journal.id}/unsubscribe',
@@ -262,10 +258,7 @@ class TestAccountJournal(AccountTestInvoicingCommon, HttpCase):
 class TestAccountJournalAlias(MailCommon, AccountTestInvoicingCommon):
 
     _test_user_groups = None  # FIXME list needed groups
-    # This suite asserts on journal alias names, which are computed once at journal creation
-    # time from the company name: a reused company's pre-existing journals would keep whatever
-    # alias was baked in when they were first created, not the name this test expects.
-    _force_new_company = True
+    _force_new_company = True  # alias names are set at journal creation, need a fresh company
 
     @classmethod
     def setUpClass(cls):
@@ -577,9 +570,7 @@ class TestAccountJournalAlias(MailCommon, AccountTestInvoicingCommon):
         # Set currency_id to trigger the compute of {in,out}bound_payment_method_line_ids
         bank_journal.currency_id = self.company_data['currency']
 
-        # Check the pre-existing lines specifically (not the journal's current full set): other
-        # payment methods (e.g. online payment providers) may lazily add their own line to the
-        # journal on first access, independently of this recompute.
+        # check the pre-existing lines only: other payment methods may add their own later
         self.assertRecordValues(inbound_method_lines, [
             {
                 'name': name,

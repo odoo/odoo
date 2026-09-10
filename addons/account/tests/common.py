@@ -102,9 +102,7 @@ class AccountTestInvoicingCommon(ProductCommon):
             list_price=1000.0,
             standard_price=800.0,
             uom_id=cls.uom_unit.id,
-            # taxes_id/supplier_taxes_id default to one tax per company the (shared) test user
-            # has access to; pin them explicitly like product_b does below.
-            taxes_id=[Command.set(cls.tax_sale_a.ids)],
+            taxes_id=[Command.set(cls.tax_sale_a.ids)],  # pin explicitly, see product_b
             supplier_taxes_id=[Command.set(cls.tax_purchase_a.ids)],
         )
         cls.product_b = cls._create_product(
@@ -240,10 +238,16 @@ class AccountTestInvoicingCommon(ProductCommon):
         })
         return data
 
+    # xmlid of a fixture company to reuse instead of creating company_1_data
+    _test_independent_company_xmlid = None
+
     @classmethod
-    def setup_independent_company(cls):
+    def setup_independent_company(cls, **kwargs):
         # EXTENDS 'base'
-        company = cls._create_company(name='company_1_data')  # expected by many hardcoded assertions/fixtures
+        if cls._test_independent_company_xmlid:
+            cls.registry._assertion_report.custom_test_stats['res.company.create'].add_avoided()
+            return cls.env.ref(cls._test_independent_company_xmlid)
+        company = cls._create_company(name='company_1_data', **kwargs)  # many tests hardcode this name
         # TODO try to remove this, may be the cause of the failure in test_tax_unit
         cls.env['account.tax.group'].sudo().create({
             'name': 'Test tax group',
@@ -265,20 +269,19 @@ class AccountTestInvoicingCommon(ProductCommon):
 
     @classmethod
     def _create_company(cls, **create_values):
+        create_values.setdefault('terms_type', 'plain')  # avoid an unwanted auto note
+
         if not cls.country_code and not cls.chart_template:
-            # No specific country/chart was requested: no need for a dedicated company created
-            # from scratch, base.test_company (already loaded with generic_coa) will do.
+            # no country/chart needed: reuse base.test_company
             create_values.setdefault('company_xmlid', cls._test_company_xmlid or 'base.test_company')
-            create_values.setdefault('terms_type', 'plain')  # avoid stale terms_type auto-generating a sale/invoice note
+            create_values.setdefault('account_opening_date', False)  # avoid auto-generating returns
             company = super()._create_company(**create_values)
             if not company.chart_template:
-                # base.test_company was already claimed elsewhere: the fallback fresh company
-                # created instead has no chart of accounts yet, unlike base.test_company.
+                # fresh fallback company has no chart yet
                 cls._use_chart_template(company, cls.chart_template)
-                # if the currency_id was defined explicitly, it should override the one from the coa
                 if create_values.get('currency_id'):
-                    company.currency_id = create_values['currency_id']
-            company.account_fiscal_country_id = cls.env.ref('base.us')  # not sure it is needed but replicates _use_chart_template behaviour
+                    company.currency_id = create_values['currency_id']  # keep the explicit currency
+            company.account_fiscal_country_id = cls.env.ref('base.us')  # match _use_chart_template
             return company
 
         if cls.country_code:
@@ -289,8 +292,7 @@ class AccountTestInvoicingCommon(ProductCommon):
                 create_values['country_id'] = country.id
             if 'currency_id' not in create_values:
                 create_values['currency_id'] = country.currency_id.id
-                # country.currency_id.active = True # there is a difference between company create and write
-                # activating the currency could be a solution to lessen this difference in the tests
+
         if 'account_opening_date' not in create_values:
             # To ease tests on returns: don't create the returns by default ; TestAccountReturn assigns that field while patching the return generation
             create_values['account_opening_date'] = False
@@ -594,6 +596,7 @@ class AccountTestInvoicingCommon(ProductCommon):
             cls._prepare_invoice_line(name='test line', price_unit=amount, tax_ids=taxes)
             for amount in (amounts or [])
         ]
+
         return cls._create_invoice(
             move_type=move_type,
             partner_id=partner or cls.partner_a,

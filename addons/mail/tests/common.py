@@ -1633,7 +1633,7 @@ class MailCase(common.TransactionCase, MockEmail, BusCase):
     def assertMailNotifications(self, messages, recipients_info, bus_notif_count=1):
         """Check bus notifications content.
 
-        Mandatory and basic check is about channels being notified. Content check is optional.tagged
+        Mandatory and basic check is about channels being notified. Content check is optional.
 
         **GENERATED INPUT**
 

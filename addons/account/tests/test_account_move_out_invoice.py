@@ -16,11 +16,7 @@ from freezegun import freeze_time
 class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
     _test_user_groups = None  # FIXME list needed groups
-
-    @classmethod
-    def setup_independent_company(cls):
-        cls.registry._assertion_report.custom_test_stats['res.company.create'].add_avoided()
-        return cls.env.ref('base.test_company_with_branch')
+    _test_independent_company_xmlid = 'base.test_company_with_branch'
 
     @classmethod
     def setUpClass(cls):
@@ -5270,9 +5266,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
         self.cr.precommit.run()  # load the CoA
 
-        # create an invoice on the branch (use the shared base.test_company_branch
-        # fixture instead of creating a new one)
-        branch_a, _branch_b = self.env.company.child_ids
+        branch_a, _branch_b = self.env.company.child_ids  # invoice on the branch
 
         # Create invoice - product will auto-apply price_unit from product with tax
         move_form = Form(self.env['account.move'].with_company(branch_a).with_context(default_move_type='out_invoice'))

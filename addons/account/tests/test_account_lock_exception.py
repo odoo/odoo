@@ -17,11 +17,7 @@ from odoo.tools.misc import format_datetime
 class TestAccountLockException(AccountTestInvoicingCommon, MailCase):
 
     _test_user_groups = None  # FIXME list needed groups
-
-    @classmethod
-    def setup_independent_company(cls):
-        cls.registry._assertion_report.custom_test_stats['res.company.create'].add_avoided()
-        return cls.env.ref('base.test_company_with_branch')
+    _test_independent_company_xmlid = 'base.test_company_with_branch'
 
     @classmethod
     def setUpClass(cls):

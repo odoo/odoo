@@ -33,8 +33,7 @@ class ProductCommon(UomCommon):
             'categ_id': cls.product_category.id,
         }])
         if 'taxes_id' in cls.product._fields:
-            # taxes_id/supplier_taxes_id default to one tax per company the (shared) test user
-            # has access to (self.env.companies), not just the current one; pin them explicitly.
+            # pin explicitly: default picks any tax the shared user's companies have
             (cls.product + cls.service_product).write({
                 'taxes_id': [Command.set(cls.env.company.account_sale_tax_id.ids)],
                 'supplier_taxes_id': [Command.set(cls.env.company.account_purchase_tax_id.ids)],

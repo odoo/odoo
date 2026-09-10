@@ -410,16 +410,7 @@ class TestPoSCommon(AccountTestInvoicingCommon):
             'name': 'Public Pricelist',
             'currency_id': cls.company_currency.id,
         })
-        # Remove any pre-existing payment methods not yet tied to any pos.config (e.g.
-        # delivery-provider ones like GoFood/GrabFood from pos_platform_order) so they don't
-        # get silently picked up as "already configured" defaults for the configs below, and
-        # so they can't be loaded client-side and grabbed by code that just picks "the first"
-        # loaded payment method (pos.payment.method's _load_pos_data_domain matches both active
-        # and inactive records, so archiving alone wouldn't hide them from that). Do NOT touch
-        # ones already assigned to a config: classes combining this mixin with
-        # TestPointOfSaleHttpCommon (e.g. TestPoSSaleReport) already have a fully-configured
-        # main_pos_config by the time this runs, and removing its payment method here would
-        # leave it with none.
+        # drop stray payment methods not tied to a config (e.g. leftover delivery-provider ones)
         cls.env['pos.payment.method'].search([
             ('company_id', '=', cls.company.id),
             ('config_ids', '=', False),

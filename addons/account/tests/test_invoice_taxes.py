@@ -946,10 +946,7 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
         has no fiscal position restriction, the tax is correctly applied to
         invoice lines.
         """
-        # restrict to this test's own company to match the original single-company test
-        # assumption: `search([])` below and `taxes_id`'s default otherwise pull in
-        # fiscal positions/taxes from every company the (shared) test user has access to.
-        self.env.user.company_ids = self.env.company
+        self.env.user.company_ids = self.env.company  # limit search([]) below to this company
         self.env['account.fiscal.position'].search([]).action_archive()
         default_tax = self.company_data['default_tax_sale']
         self.env['account.fiscal.position'].create({

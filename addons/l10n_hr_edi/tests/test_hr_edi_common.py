@@ -5,6 +5,7 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 class TestL10nHrEdiCommon(AccountTestInvoicingCommon):
 
     _test_user_groups = None  # FIXME list needed groups
+    country_code = 'hr'
 
     @classmethod
     def setUpClass(cls):

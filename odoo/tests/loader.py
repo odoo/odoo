@@ -143,7 +143,7 @@ def make_suite(module_names, position='at_install'):
 
 
 def run_suite(suite, global_report=None, *, db_name=None):
-    # assert_test_data_loaded(db_name) for a strange reason, triggers a registry reload because of the new environment, to investigate
+    # TODO: assert_test_data_loaded(db_name) triggers a registry reload, needs investigation
     results = OdooTestResult(global_report=global_report)
     suite(results)
     return results
