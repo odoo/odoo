@@ -2069,7 +2069,10 @@ class MrpProduction(models.Model):
             finish_moves = order.move_finished_ids.filtered(lambda m: m.product_id == order.product_id and m.state not in ('done', 'cancel'))
             # the finish move can already be completed by the workorder.
             for move in finish_moves:
-                if move.product_id.tracking in ['lot', 'serial'] and (not move.lot_ids or any(not ml.lot_id for ml in move.move_line_ids)):
+                if move.product_id.tracking in ['lot', 'serial'] and (
+                    order.lot_producing_ids - move.lot_ids
+                    or any(not ml.lot_id for ml in move.move_line_ids)
+                ):
                     move.lot_ids = order.lot_producing_ids.ids
                     if move.product_id.tracking == 'lot' and order.lot_producing_ids:
                         lines_without_lot = move.move_line_ids.filtered(lambda ml: not ml.lot_id)
