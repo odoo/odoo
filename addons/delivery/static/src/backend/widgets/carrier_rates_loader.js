@@ -26,7 +26,7 @@ export class CarrierRatesLoader extends Component {
 
     async loadCarrierRates() {
         // save to get the resId for the wizard
-        if (!this.props.record.resId && this.props.record.save) {
+        if (this.props.record.save) {
             await this.props.record.save();
         }
 
