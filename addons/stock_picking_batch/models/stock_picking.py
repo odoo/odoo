@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from ast import literal_eval
+
 from odoo import _, api, Command, fields, models
 from odoo.osv import expression
 from odoo.exceptions import ValidationError
@@ -45,6 +47,12 @@ class StockPickingType(models.Model):
 
     def action_batch(self):
         action = self.env['ir.actions.act_window']._for_xml_id("stock_picking_batch.stock_picking_batch_action")
+        action_context = literal_eval(action['context']) if action['context'] else {}
+        action_context.update({
+            'default_picking_type_id': self.id,
+            'search_default_picking_type_id': self.id,
+        })
+        action["context"] = action_context
         if self.env.context.get("view_mode"):
             del action["mobile_view_mode"]
             del action["views"]
