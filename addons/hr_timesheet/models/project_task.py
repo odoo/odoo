@@ -4,6 +4,7 @@ import re
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, RedirectWarning
+from odoo.tools import SQL
 from odoo.addons.rating.models.rating_data import OPERATOR_MAPPING
 
 PROJECT_TASK_READABLE_FIELDS = {
@@ -102,6 +103,25 @@ class Task(models.Model):
             else:
                 task.progress = 0.0
                 task.overtime = 0
+
+    def _read_group_select(self, aggregate_spec, query):
+        if aggregate_spec == 'progress:avg':
+            # Weigh each task by its allocated time, instead of giving the same
+            # weight to a task of one hour and a task of one hundred hours.
+            # A task without allocated time has no progress to speak of, so it
+            # is left out of both sums rather than counted as 0%.
+            allocated = self._field_to_sql(self._table, 'allocated_hours', query)
+            spent = self._field_to_sql(self._table, 'total_hours_spent', query)
+            sql_expr = SQL(
+                """CASE WHEN SUM(%(allocated)s) FILTER (WHERE %(allocated)s > 0) > 0
+                        THEN 100.0 * SUM(%(spent)s) FILTER (WHERE %(allocated)s > 0)
+                                   / SUM(%(allocated)s) FILTER (WHERE %(allocated)s > 0)
+                        ELSE 0.0
+                   END""",
+                allocated=allocated, spent=spent,
+            )
+            return sql_expr, ['progress', 'allocated_hours', 'total_hours_spent']
+        return super()._read_group_select(aggregate_spec, query)
 
     @api.depends('allocated_hours', 'remaining_hours')
     def _compute_remaining_hours_percentage(self):
