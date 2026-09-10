@@ -472,8 +472,8 @@ class PaymentTransaction(models.Model):
         # Extract the Stripe objects from the notification data.
         if self.operation == 'online_direct':
             customer_id = notification_data['payment_intent']['customer']
-            charges_data = notification_data['payment_intent']['charges']
-            payment_method_details = charges_data['data'][0].get('payment_method_details')
+            charges_data = notification_data['payment_intent'].get('charges')
+            payment_method_details = charges_data and charges_data['data'][0].get('payment_method_details')
             if payment_method_details:
                 mandate = payment_method_details[payment_method_details['type']].get("mandate")
         else:  # 'validation'
