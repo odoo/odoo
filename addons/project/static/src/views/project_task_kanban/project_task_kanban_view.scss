@@ -18,3 +18,9 @@
         @include o-kanban-css-filter(success-done, rgba(25, 135, 84, 1));
     }
 }
+
+.o_kanban_renderer .o_kanban_group.o_kanban_next_stage {
+    outline: $border-width dashed var(--KanbanColumn__highlight-border);
+    outline-offset: -#{$border-width};
+    border-radius: $border-radius;
+}
