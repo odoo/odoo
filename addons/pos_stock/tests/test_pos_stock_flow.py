@@ -1,7 +1,10 @@
+from unittest.mock import patch
+
 from freezegun import freeze_time
 
 from odoo import fields
 from odoo.fields import Command
+from odoo.addons.point_of_sale.models.pos_session import PosSession
 from odoo.addons.pos_stock.tests.common import CommonPosStockTest
 
 
@@ -1349,3 +1352,25 @@ class TestPosStockFlow(CommonPosStockTest):
         order = self.env['pos.order'].search([('session_id', '=', current_session_b.id)])
         self.assertEqual(len(order), 1)
         self.assertTrue(order.account_move)
+
+    def test_unbalanced_closing_returns_force_close_action(self):
+        """ When the closing entry is unbalanced, point_of_sale returns the
+        'Force Close Session' wizard action; the pos_stock override must pass it
+        on so the session does not end up closed without any journal entry. """
+        self.create_backend_pos_order({
+            'line_data': [
+                {'product_id': self.ten_dollars_with_15_incl.product_variant_id.id},
+            ],
+            'payment_data': [
+                {'payment_method_id': self.bank_payment_method.id, 'amount': 10},
+            ],
+        })
+        session = self.pos_config_usd.current_session_id
+        force_close_action = session._close_session_action(1.0)
+        # The real path also calls cr.rollback(), which breaks the test transaction,
+        # so only the return value of the core method is simulated.
+        with patch.object(PosSession, '_process_session_validation', return_value=force_close_action):
+            result = session.action_pos_session_closing_control()
+        self.assertEqual(result, force_close_action)
+        self.assertEqual(session.state, 'closing_control')
+        self.assertFalse(session.move_id)
