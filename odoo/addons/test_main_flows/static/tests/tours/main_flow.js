@@ -1030,22 +1030,12 @@ stepUtils.autoExpandMoreButtons(true),
     trigger: '.o_navbar_breadcrumbs .o_breadcrumb:contains("S0")',
 },
 {
-    isActive: ["desktop"],
     trigger: 'button[name="action_view_project_ids"].oe_stat_button',
     content: 'See Tasks/Projects',
     run: "click",
 },
 {
-    isActive: ["mobile"],
-    trigger: 'button[name="action_view_project_ids"].oe_stat_button',
-    content: 'See Tasks/Projects',
-    run: "click",
-},
-{
-    isActive: ["mobile"],
-    trigger: '.o_kanban_load_more > button',
-    content: 'Click to load more records',
-    run: 'click',
+    trigger: '.o_kanban_view .o_kanban_group',
 },
 {
     trigger: 'article.o_kanban_record',
