@@ -25,5 +25,9 @@
             <field name="currency_id" ref="base.USD"/>
         </record>
 
+        <function model="mrp.bom" name="action_update_product_cost_from_bom">
+            <value eval="[ref('mrp_subcontracting.mrp_bom_subcontract')]"/>
+        </function>
+
     </data>
 </odoo>
