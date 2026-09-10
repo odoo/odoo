@@ -53,6 +53,7 @@ const stepSchemaDebug = {
 
 const tourSchema = {
     steps: t.function(),
+    url: t.string().optional(),
 };
 
 const tourRegistry = registry.category("web_tour.tours");
