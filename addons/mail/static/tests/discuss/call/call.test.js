@@ -1391,6 +1391,34 @@ test("should not show context menu on participant card when not in a call", asyn
     await contains(".o-discuss-CallContextMenu");
 });
 
+test("participant context menu shows pin and unpin icons", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["discuss.channel.rtc.session"].create({
+        channel_member_id: pyEnv["discuss.channel.member"].create({
+            channel_id: channelId,
+            partner_id: pyEnv["res.partner"].create({ name: "Armstrong" }),
+        }),
+        channel_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("[title='Join the Call']");
+    await hover(".o-discuss-CallParticipantCard[aria-label='Armstrong']");
+    await click(
+        ".o-discuss-CallParticipantCard[aria-label='Armstrong'] button[title='Participant options']"
+    );
+    await click(".o-discuss-CallContextMenu button:text('Pin') [data-icon='push_pin']");
+    await contains(
+        ".o-discuss-CallParticipantCard[aria-label='Armstrong'] [title='Pinned'] [data-icon='push_pin']"
+    );
+    await hover(".o-discuss-CallParticipantCard[aria-label='Armstrong']");
+    await click(
+        ".o-discuss-CallParticipantCard[aria-label='Armstrong'] button[title='Participant options']"
+    );
+    await contains(".o-discuss-CallContextMenu button:text('Unpin') [data-icon='keep_off']");
+});
+
 test("all streams are properly closed when abruptly disconnected", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
@@ -1751,6 +1779,9 @@ test("Escape closes meeting UI layers sequentially", async () => {
 });
 
 test("Access to Pinned Messages from Meeting Chat", async () => {
+    listenStoreFetch("/discuss/channel/pinned_messages", {
+        logParams: ["/discuss/channel/pinned_messages"],
+    });
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.MEETING);
     await click("button:text(Meeting)");
@@ -1766,7 +1797,32 @@ test("Access to Pinned Messages from Meeting Chat", async () => {
     await contains(
         ".o-mail-ActionPanel-header:has(:text('In call messages')) button[title='Pinned Messages'] .badge:text('1')"
     );
+    // Close and reopen Meeting Chat to ensure the pinned message count is fetched again.
+    triggerHotkey("Escape");
+    await click(".o-mail-MeetingSideActions button[title='Chat']");
+    await waitStoreFetch([
+        [
+            "/discuss/channel/pinned_messages",
+            {
+                channel_id: getService("discuss.rtc").channel.id,
+                request_list: ["pinned_message_count"],
+            },
+        ],
+    ]);
+    await contains(
+        ".o-mail-ActionPanel-header:has(:text('In call messages')) button[title='Pinned Messages'] .badge:text('1')"
+    );
+    // Open the pinned messages panel to ensure the full messages are fetched on demand.
     await click(".o-mail-ActionPanel-header button[title='Pinned Messages']");
+    await waitStoreFetch([
+        [
+            "/discuss/channel/pinned_messages",
+            {
+                channel_id: getService("discuss.rtc").channel.id,
+                request_list: ["pinnedMessages"],
+            },
+        ],
+    ]);
     await contains(".o-mail-ActionPanel-header:has(:text('Pinned Messages'))");
 });
 
