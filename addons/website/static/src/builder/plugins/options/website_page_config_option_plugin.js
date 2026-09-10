@@ -114,7 +114,7 @@ export class WebsitePageConfigOptionPlugin extends Plugin {
             const headerItem = this.getVisibilityItem("header");
             Object.assign(pageOptions, {
                 header_overlay: () => headerItem === "overTheContent",
-                header_color: () => this.getColorValue("header", "background-color", "bg-"),
+                header_color: () => this.getColorValue("header", "--header-background-color", "bg-"),
                 header_text_color: () => this.getColorValue("header", "color", "text-"),
                 header_visible: () => headerItem !== "hidden",
             });
