@@ -242,11 +242,11 @@ def html_normalize(src, filter_callback=None):
     src = doctype.sub(u"", src)
 
     try:
-        src = src.replace('--!>', '-->')
-        src = re.sub(r'(<!-->|<!--->)', '<!-- -->', src)
         # On the specific case of Outlook desktop it adds unnecessary '<o:.*></o:.*>' tags which are parsed
         # in '<p></p>' which may alter the appearance (eg. spacing) of the mail body
         src = re.sub(r'</?o:.*?>', '', src)
+        src = src.replace('--!>', '-->')
+        src = re.sub(r'(<!-->|<!--->)', '<!-- -->', src)
         doc = html.fromstring(src)
     except etree.ParserError as e:
         # HTML comment only string, whitespace only..
@@ -259,7 +259,10 @@ def html_normalize(src, filter_callback=None):
         for el in doc.iter(tag=etree.Element):
             tag_quote(el)
 
-    doc = html.fromstring(html.tostring(doc))
+    serialized = html.tostring(doc)
+    serialized = serialized.replace(b'--!>', b'-->')
+    serialized = re.sub(rb'(<!-->|<!--->)', b'<!-- -->', serialized)
+    doc = html.fromstring(serialized)
 
     if filter_callback:
         doc = filter_callback(doc)
