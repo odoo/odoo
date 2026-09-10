@@ -53,6 +53,13 @@ const stepSchemaDebug = {
 
 const tourSchema = {
     steps: t.function(),
+<<<<<<< 6dd4c4d4af086f19ee6b128c26cc7966c2e88864:addons/web_tour/static/src/tour_plugin.js
+||||||| 057d23aec9cc227fb2978f54bbb875db1ebd8977:addons/web_tour/static/src/js/tour_service.js
+    undeterministicTour_doNotCopy: t.boolean().optional(),
+=======
+    undeterministicTour_doNotCopy: t.boolean().optional(),
+    url: t.string().optional(),
+>>>>>>> 313fef36221a405031a037967a13634c8184daca:addons/web_tour/static/src/js/tour_service.js
 };
 
 const tourRegistry = registry.category("web_tour.tours");
