@@ -957,7 +957,7 @@ class AccountEdiCii(models.AbstractModel):
             ('street2', ".//{*}LineTwo"),
             ('city', ".//{*}CityName"),
             ('country_code', ".//{*}CountryID"),
-            ('vat', "./{*}SpecifiedTaxRegistration/{*}ID")
+            ('vat', './{*}SpecifiedTaxRegistration/{*}ID[@schemeID="VA"]'),
         ):
             customer_values[key] = None
             if (node := party_node.find(xpath)) is not None:
