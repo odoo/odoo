@@ -119,6 +119,22 @@ class StockPicking(models.Model):
 
         error_messages = partners._l10n_tr_nilvera_validate_partner_details()
 
+        # When the sending company itself is a registered e-Invoice user, it must have
+        # either a MERSISNO or TICARETSICILNO official code tag assigned
+        PartnerCategory = self.env['res.partner.category']
+        company_partner = self.company_id.partner_id
+        if (
+            company_partner.l10n_tr_nilvera_customer_status == 'einvoice'
+            and hasattr(PartnerCategory, '_get_l10n_tr_official_mandatory_categories')
+        ):
+            mandatory_categories = PartnerCategory._get_l10n_tr_official_mandatory_categories()
+            if mandatory_categories and not (mandatory_categories & company_partner.category_id.parent_id):
+                error_messages['missing_official_codes'] = {
+                    'message': _("Please ensure that your company contact has either the 'MERSISNO' or 'TICARETSICILNO' tag with a value assigned."),
+                    'action_text': _("View %s", company_partner.display_name),
+                    'action': company_partner._get_records_action(name=_("View Partner")),
+                }
+
         if self.l10n_tr_nilvera_dispatch_type == 'MATBUDAN':
             if not self.l10n_tr_nilvera_delivery_date:
                 error_messages['invalid_matbudan_date'] = {
@@ -198,6 +214,34 @@ class StockPicking(models.Model):
         if self.state == 'done':
             return self._l10n_tr_validate_edispatch_on_done()
 
+    def _l10n_tr_get_partner_official_codes(self, partners):
+        """ Return official information codes for the given partners.
+
+        Uses the official code categories defined in l10n_tr_nilvera_einvoice
+        (MERSISNO, TICARETSICILNO, etc.) when available. Returns a dict mapping
+        partner IDs to lists of {'scheme_id': str, 'value': str} dicts.
+        """
+        PartnerCategory = self.env['res.partner.category']
+        if not hasattr(PartnerCategory, '_get_l10n_tr_official_categories'):
+            return {}
+
+        official_categories = PartnerCategory._get_l10n_tr_official_categories()
+        if not official_categories:
+            return {}
+
+        result = {}
+        for partner in partners:
+            codes = []
+            for category in partner.category_id:
+                if category.parent_id in official_categories:
+                    codes.append({
+                        'scheme_id': category.parent_id.name,
+                        'value': category.name,
+                    })
+            if codes:
+                result[partner.id] = codes
+        return result
+
     def _l10n_tr_generate_edispatch_xml(self):
         dispatch_uuid = str(uuid.uuid4())
         drivers = []
@@ -216,6 +260,19 @@ class StockPicking(models.Model):
             self.with_context(tz='Europe/Istanbul'),
             self.date_done,
         )
+
+        # Collect official information codes (MERSISNO, TICARETSICILNO, etc.)
+        # for all parties involved in the dispatch.
+        all_partners = (
+            self.env.company.partner_id
+            | self.partner_id.commercial_partner_id
+            | self.l10n_tr_nilvera_buyer_id
+            | self.l10n_tr_nilvera_seller_supplier_id
+            | self.l10n_tr_nilvera_buyer_originator_id
+            | self.l10n_tr_nilvera_carrier_id
+        )
+        partner_official_codes = self._l10n_tr_get_partner_official_codes(all_partners)
+
         values = {
             'ubl_version_id': 2.1,
             'customization_id': 'TR1.2.1',
@@ -232,6 +289,7 @@ class StockPicking(models.Model):
             'default_tckn': '22222222222',
             'dispatch_scenario': 'TEMELIRSALIYE',
             'copy_indicator': 'false',
+            'partner_official_codes': partner_official_codes,
         }
         xml_content = self.env['ir.qweb']._render(
             'l10n_tr_nilvera_edispatch.l10n_tr_edispatch_format',
