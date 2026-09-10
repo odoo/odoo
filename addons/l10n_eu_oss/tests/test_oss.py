@@ -102,7 +102,7 @@ class TestOSSSpain(AccountTestInvoicingCommon):
         tax_oss = self.env['account.tax'].search([('name', 'ilike', f'%"{another_eu_country_code}"%')], limit=1)
 
         for doc_type, tag_xml_id in (
-                ("invoice", "l10n_es.mod_303_casilla_124_balance"),
+                ("invoice", "l10n_es.mod_303_casilla_123_balance"),
         ):
             with self.subTest(doc_type=doc_type, report_line_xml_id=tag_xml_id):
                 oss_tag_id = tax_oss[f"{doc_type}_repartition_line_ids"]\
