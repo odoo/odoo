@@ -44,7 +44,6 @@ from odoo.tools.misc import submap
 from . import request, request_var
 from .dispatcher import (
     HttpDispatcher,
-    JsonRPCDispatcher,
     _dispatchers,
     conceal_debug_traceback,
 )
@@ -558,11 +557,6 @@ def _set_request_dispatcher(request: Request, rule: werkzeug.routing.Rule):
 def _update_served_exception(request: Request, exc: Exception) -> Exception:
     if isinstance(exc, HTTPException) and exc.code is None:
         return exc  # bubble up to _serve_db
-    if (
-        'werkzeug' in config['dev_mode']
-        and request.dispatcher.routing_type != JsonRPCDispatcher.routing_type
-    ):
-        return exc  # bubble up to werkzeug.debug.DebuggedApplication
     if not hasattr(exc, 'error_response'):
         exc.error_response = request.registry['ir.http']._handle_error(
             conceal_debug_traceback.without_traceback_if_concealed(exc))
