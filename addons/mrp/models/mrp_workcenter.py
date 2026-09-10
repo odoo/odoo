@@ -25,8 +25,14 @@ class MrpWorkcenter(models.Model):
     _inherit = ['mail.thread', 'resource.mixin']
     _check_company_auto = True
 
+    _barcode_company_uniq = models.Constraint(
+        'unique (barcode, company_id)',
+        'The barcode for a workcenter must be unique per company.',
+    )
+
     # resource
     name = fields.Char('Work Center', related='resource_id.name', store=True, readonly=False)
+    barcode = fields.Char('Barcode', help='Scan to select the workcenter in shopfloor.', copy=False)
     time_efficiency = fields.Float('Time Efficiency', related='resource_id.time_efficiency', default=100, store=True, readonly=False)
     active = fields.Boolean('Active', related='resource_id.active', default=True, store=True, readonly=False)
 
