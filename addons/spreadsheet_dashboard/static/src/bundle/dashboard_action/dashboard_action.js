@@ -1,5 +1,5 @@
 import { Registry } from "@odoo/o-spreadsheet";
-import { Component, computed, onWillStart, proxy, useEffect, useListener } from "@odoo/owl";
+import { Component, computed, onWillStart, proxy, signal, useEffect, useListener } from "@odoo/owl";
 import { SpreadsheetComponent } from "@spreadsheet/actions/spreadsheet_component";
 import { SpreadsheetShareButton } from "@spreadsheet/components/share_button/share_button";
 import { _t } from "@web/core/l10n/translation";
@@ -30,6 +30,8 @@ export class SpreadsheetDashboardAction extends Component {
     };
     static props = { ...standardActionServiceProps };
     static displayName = _t("Dashboards");
+
+    searchPanelRef = signal.ref();
 
     activeDashboardId = computed(() => this.loader.activeDashboardId);
     dashboard = computed(() => {
@@ -147,6 +149,30 @@ export class SpreadsheetDashboardAction extends Component {
 
     toggleSidebar() {
         this.state.sidebarExpanded = !this.state.sidebarExpanded;
+    }
+
+    _onStartResize(ev) {
+        if (ev.button !== 0) {
+            return;
+        }
+
+        const panel = this.searchPanelRef();
+        const initialX = ev.pageX;
+        const initialWidth = panel.offsetWidth;
+
+        const resizePanel = (ev) => {
+            ev.preventDefault();
+            ev.stopPropagation();
+            const maxWidth = Math.max(0.5 * window.innerWidth, initialWidth);
+            const newWidth = Math.min(maxWidth, Math.max(220, initialWidth + ev.pageX - initialX));
+            panel.style["min-width"] = `${newWidth}px`;
+        };
+        document.addEventListener("pointermove", resizePanel, true);
+        document.addEventListener(
+            "pointerup",
+            () => document.removeEventListener("pointermove", resizePanel, true),
+            { capture: true, once: true }
+        );
     }
 
     get activeDashboardGroupName() {
