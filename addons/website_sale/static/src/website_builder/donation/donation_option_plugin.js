@@ -32,8 +32,9 @@ export class DonationOptionPlugin extends Plugin {
             SetSliderStepAction,
         },
         submit_button_selectors: [".s_donation_donate_btn"],
-        // s_donation_inline drops standalone (e.g. cart page); s_donation stays content-style.
-        so_content_addition_selectors: [".s_donation:not(.s_donation_inline)"],
+        // s_donation drops content-style, s_donation_inline drops as
+        // both content-style and standalone (e.g. cart page).
+        so_content_addition_selectors: [".s_donation"],
         so_snippet_addition_selectors: [".s_donation_inline"],
     };
 }
