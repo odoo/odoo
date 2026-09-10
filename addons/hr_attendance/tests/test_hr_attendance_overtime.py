@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from freezegun import freeze_time
 
 from odoo import Command
@@ -866,6 +866,46 @@ class TestHrAttendanceOvertime(HttpCase):
         ])
         for att in attendances:
             self.assertEqual(att.overtime_hours, 0)
+
+    def test_expected_hours_flexible_resource_weekly_limit(self):
+        calendar_flex_32h = self.env['resource.calendar'].create({
+            'name': 'Flexible 32 hours/week',
+            'company_id': self.company.id,
+            'hours_per_day': 8,
+            'hours_per_week': 32,
+            'flexible_hours': True,
+            'full_time_required_hours': 40,
+        })
+        base_date = datetime(2024, 4, 1)  # Monday
+        flexible_employee = self.env['hr.employee'].create({
+            'name': 'Weekly Flexi',
+            'company_id': self.company.id,
+            'tz': 'UTC',
+            'date_version': base_date.date(),
+            'contract_date_start': base_date.date(),
+            'resource_calendar_id': calendar_flex_32h.id,
+            'ruleset_id': self.ruleset.id,
+        })
+
+        self.env['hr.attendance'].create([
+            {
+                'employee_id': flexible_employee.id,
+                'check_in': base_date + timedelta(days=i, hours=9),
+                'check_out': base_date + timedelta(days=i, hours=17),
+            }
+            for i in range(1, 5)
+        ])
+        attendances = self.env['hr.attendance'].search([('employee_id', '=', flexible_employee.id)], order='check_in')
+        self.assertEqual(attendances.mapped('expected_hours'), [8, 8, 8, 8])
+
+        self.env['hr.attendance'].create({
+            'employee_id': flexible_employee.id,
+            'check_in': base_date + timedelta(hours=9),
+            'check_out': base_date + timedelta(hours=17),
+        })
+        attendances = self.env['hr.attendance'].search([('employee_id', '=', flexible_employee.id)], order='check_in')
+        self.assertEqual(attendances.mapped('expected_hours'), [8, 8, 8, 8, 0])
+        self.assertEqual(attendances.mapped('overtime_hours'), [0, 0, 0, 0, 8])
 
     def test_refuse_timeoff(self):
         self.company.write({
