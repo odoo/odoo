@@ -19,8 +19,8 @@ class CiiExportFacturXFR(TestCiiFacturXCommon, TestUblCiiFRCommon):
         cls.tax_20 = cls.percent_tax(cls, 20.0)
 
     @classmethod
-    def setup_independent_company(cls):
-        company = super().setup_independent_company()
+    def _create_company(cls, **create_values):
+        company = super()._create_company(**create_values)
 
         # Mandatory fields for Factur-x
         company.partner_id.write({
@@ -28,7 +28,6 @@ class CiiExportFacturXFR(TestCiiFacturXCommon, TestUblCiiFRCommon):
             'phone': '+33 499 65 43 21',
             'additional_identifiers': False,
         })
-        company.partner_id.name = 'company_1_data'  # expected by this suite's reference XML files
         # routing_scheme/routing_endpoint are stored+readonly=False, and _get_all_identifiers()
         # re-injects them into its own result when already set - so the SIRET-based routing
         # TestUblCiiFRCommon set feeds right back into its own recompute unless cleared first.

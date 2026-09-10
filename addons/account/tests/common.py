@@ -232,39 +232,7 @@ class AccountTestInvoicingCommon(ProductCommon):
 
     @classmethod
     def setup_other_company(cls, name='company_2', **kwargs):
-        company = None
-        if not kwargs:
-            # A specific country/chart may have been requested (e.g. via setup_country()): resolve
-            # what chart an existing candidate would need so we don't reuse one already committed to
-            # a different chart (switching it mid-test is the kind of reuse that leaks stale
-            # payment-provider/journal state - see test_change_coa) and don't silently keep whatever
-            # chart it happens to already have (e.g. base.test_company's generic_coa from unrelated
-            # tests) when a specific one was asked for.
-            target_chart_template = cls.chart_template
-            if not target_chart_template and cls.country_code:
-                country = cls.env['res.country'].search([('code', '=', cls.country_code.upper())], limit=1)
-                target_chart_template = cls.env['account.chart.template']._guess_chart_template(country)
-            for test_company_xmlid in 'base.test_company', 'base.test_company_with_branch', 'base.test_company_template':
-                # we may check it a specific country or chart template was requested before returning an existing company
-                candidate_company = cls.env.ref(test_company_xmlid)
-                if candidate_company in cls.env.user.company_ids:
-                    continue
-                if target_chart_template and candidate_company.chart_template not in (False, target_chart_template):
-                    continue
-                _logger.info('Selecting existing company %s as other company', test_company_xmlid)
-                company = candidate_company
-                if cls.country_code and not company.country_id:
-                    company.country_id = cls.env['res.country'].search([('code', '=', cls.country_code.upper())], limit=1)
-                if not company.chart_template:
-                    cls._use_chart_template(company, cls.chart_template)
-                company.name = name  # maybe not the best idea but the easiest solution to avoid adapting multiple test for now.
-                cls.env.user.company_ids += company
-                cls.registry._assertion_report.custom_test_stats['res.company.create'].add_avoided()
-                break
-
-        if not company:
-            _logger.info('No eligibile company found, creating a new one')
-            company = cls._create_company(name=name, **kwargs)
+        company = cls._create_company(name=name, **kwargs)
         data = cls.collect_company_accounting_data(company)
         cls.product_category.with_company(company).write({
             'property_account_income_categ_id': data['default_account_revenue'].id,
@@ -274,20 +242,8 @@ class AccountTestInvoicingCommon(ProductCommon):
 
     @classmethod
     def setup_independent_company(cls):
-        if cls.country_code or cls.chart_template:
-            # else:
-            # A specific country/chart was requested: it needs a dedicated company created from
-            # scratch, not the shared base.test_company (already loaded with generic_coa, with
-            # payment providers linked to its journals). Reusing/mutating one shared company
-            # across different country_code test classes would mean reloading its chart of
-            # accounts each time a different country is requested, which tries to delete the
-            # previous chart's journals/accounts - unsafely, since a payment provider may
-            # already be linked to one of them by then (deletion blocked, UserError).
-            company = cls._create_company()
-        else:
-            company = cls.env.ref(cls._test_company_xmlid or 'base.test_company')
-            cls.registry._assertion_report.custom_test_stats['res.company.create'].add_avoided()
-            company.account_fiscal_country_id = cls.env.ref('base.us')  # not sure it is needed but replicates _use_chart_template behaviour
+        # EXTENDS 'base'
+        company = cls._create_company(name='company_1_data')  # expected by many hardcoded assertions/fixtures
         # TODO try to remove this, may be the cause of the failure in test_tax_unit
         cls.env['account.tax.group'].sudo().create({
             'name': 'Test tax group',
@@ -309,6 +265,22 @@ class AccountTestInvoicingCommon(ProductCommon):
 
     @classmethod
     def _create_company(cls, **create_values):
+        if not cls.country_code and not cls.chart_template:
+            # No specific country/chart was requested: no need for a dedicated company created
+            # from scratch, base.test_company (already loaded with generic_coa) will do.
+            create_values.setdefault('company_xmlid', cls._test_company_xmlid or 'base.test_company')
+            create_values.setdefault('terms_type', 'plain')  # avoid stale terms_type auto-generating a sale/invoice note
+            company = super()._create_company(**create_values)
+            if not company.chart_template:
+                # base.test_company was already claimed elsewhere: the fallback fresh company
+                # created instead has no chart of accounts yet, unlike base.test_company.
+                cls._use_chart_template(company, cls.chart_template)
+                # if the currency_id was defined explicitly, it should override the one from the coa
+                if create_values.get('currency_id'):
+                    company.currency_id = create_values['currency_id']
+            company.account_fiscal_country_id = cls.env.ref('base.us')  # not sure it is needed but replicates _use_chart_template behaviour
+            return company
+
         if cls.country_code:
             country = cls.env['res.country'].search([('code', '=', cls.country_code.upper())])
             if not country:

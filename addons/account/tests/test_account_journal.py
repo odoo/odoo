@@ -262,6 +262,10 @@ class TestAccountJournal(AccountTestInvoicingCommon, HttpCase):
 class TestAccountJournalAlias(MailCommon, AccountTestInvoicingCommon):
 
     _test_user_groups = None  # FIXME list needed groups
+    # This suite asserts on journal alias names, which are computed once at journal creation
+    # time from the company name: a reused company's pre-existing journals would keep whatever
+    # alias was baked in when they were first created, not the name this test expects.
+    _force_new_company = True
 
     @classmethod
     def setUpClass(cls):
@@ -333,7 +337,7 @@ class TestAccountJournalAlias(MailCommon, AccountTestInvoicingCommon):
         journal.name = 'Test With Form'
         self.assertFalse(journal.alias_name)
         journal.type = 'sale'
-        self.assertEqual(journal.alias_name, 'test-with-form-test-company')
+        self.assertEqual(journal.alias_name, 'test-with-form-company_1_data')
         journal.type = 'cash'
         self.assertFalse(journal.alias_name)
 

@@ -23,29 +23,13 @@ class TestUblCiiCommon(AccountTestInvoicingCommon):
         cls.partner_fr = cls._create_partner_fr()
 
     @classmethod
-    def setup_independent_company(cls):
-        cls.registry._assertion_report.custom_test_stats['res.company.create'].add_avoided()
-        company = cls.env.ref('base.test_company_template')
-        eur = cls.env.ref('base.EUR')
-        company.currency_id = eur
-        cls._use_chart_template(company, cls.chart_template)
-        # set currency again because _use_chart_template may have changed them back to USD when loading the generic coa
-        company.currency_id = eur
-        company.tax_calculation_rounding_method = 'round_globally'
-        company.name = "Secondary Test Company"  # backward compatibility with existing assertions
-        company.terms_type = 'plain'
-        cls.env['account.tax.group'].sudo().create({
-            'name': 'Test tax group',
-            'company_id': company.id,
-        })
-        cls.env.user.company_ids = [Command.link(company.id)]
-        return company
-
-    @classmethod
     def _create_company(cls, **create_values):
         # EXTENDS 'account'
         create_values.setdefault('currency_id', cls.env.ref('base.EUR').id)
+        create_values.setdefault('terms_type', 'plain')
         company = super()._create_company(**create_values)
+        # set currency again because _use_chart_template may have changed it back to USD when loading the generic coa
+        company.currency_id = create_values['currency_id']
         company.tax_calculation_rounding_method = 'round_globally'
         return company
 
@@ -292,8 +276,8 @@ class TestUblCiiBECommon(TestUblCiiCommon):
     _test_user_groups = None  # FIXME list needed groups
 
     @classmethod
-    def setup_independent_company(cls):
-        company = super().setup_independent_company()
+    def _create_company(cls, **create_values):
+        company = super()._create_company(**create_values)
         company.partner_id.write({
             'street': "Chaussée de Namur 40",
             'zip': "1367",
@@ -316,9 +300,8 @@ class TestUblCiiFRCommon(TestUblCiiCommon):
     _test_user_groups = None  # FIXME list needed groups
 
     @classmethod
-    def setup_independent_company(cls):
-        company = super().setup_independent_company()
-
+    def _create_company(cls, **create_values):
+        company = super()._create_company(**create_values)
         company.partner_id.write({
             'street': "Rue Grand Port 1",
             'zip': "35400",
@@ -340,8 +323,8 @@ class TestUblCiiNOCommon(TestUblCiiCommon):
     _test_user_groups = None  # FIXME list needed groups
 
     @classmethod
-    def setup_independent_company(cls):
-        company = super().setup_independent_company()
+    def _create_company(cls, **create_values):
+        company = super()._create_company(**create_values)
         company.partner_id.write({
             'street': "Drammensveien 1",
             'zip': "0271",
