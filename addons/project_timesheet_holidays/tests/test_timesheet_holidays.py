@@ -277,6 +277,8 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         self.empl_employee.write({
             "company_id": company.id,
         })
+        # The new company's time off task is already flagged as a time off task as soon as the company is created.
+        self.assertIn(company.leave_timesheet_task_id, self.env['project.task'].search([('is_timeoff_task', '!=', False)]))
         task_count = self.env['project.task'].search_count([('is_timeoff_task', '!=', False)])
         timesheet_count = self.env['account.analytic.line'].search_count([('holiday_id', '!=', False)])
         leave = self.Requests.with_user(SUPERUSER_ID).create({
@@ -287,8 +289,9 @@ class TestTimesheetHolidays(TestCommonTimesheet):
             'request_date_to': datetime(2024, 6, 24),
         })
         leave.with_user(SUPERUSER_ID).action_approve()
+        # Its timesheet is generated on the existing company task, no new task is created.
         new_task_count = self.env['project.task'].search_count([('is_timeoff_task', '!=', False)])
-        self.assertEqual(task_count + 1, new_task_count)
+        self.assertEqual(task_count, new_task_count)
         new_timesheet_count = self.env['account.analytic.line'].search_count([('holiday_id', '!=', False)])
         self.assertEqual(timesheet_count + 1, new_timesheet_count)
 
