@@ -33,6 +33,7 @@ You need to configure your certificate and the tax agency.
         'security/ir_rule.xml',
 
         'views/account_move_views.xml',
+        'views/account_journal_dashboard_views.xml',
         'views/l10n_es_edi_sii_certificate_views.xml',
         'views/res_config_settings_views.xml',
     ],
