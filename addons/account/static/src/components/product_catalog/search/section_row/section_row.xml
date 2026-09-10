@@ -2,7 +2,7 @@
     <t t-name="account.SectionRow">
         <li
             class="list-group-item border-0 o_section px-0"
-            t-attf-class="{{this.isSubsection &amp;&amp; !this.env.isSmall ? 'o_treeEntry' : ''}}"
+            t-attf-class="{{this.isSubsection &amp;&amp; !this.uiService.isSmall ? 'o_treeEntry' : ''}}"
             t-att-data-id="this.props.id"
         >
 
@@ -42,7 +42,7 @@
                     >
                         <span
                             class="text-truncate me-1"
-                            t-att-style="'max-width: ' + (this.env.isSmall ? '200px' : '130px')"
+                            t-att-style="'max-width: ' + (this.uiService.isSmall ? '200px' : '130px')"
                             t-out="this.props.name"
                         />
                         <span
