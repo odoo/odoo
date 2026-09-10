@@ -27,12 +27,16 @@ class StockMove(models.Model):
         old_extra = self.production_id.extra_cost
         new_extra_cost = (bill_data['value'] + po_data['value']) / quantity
 
-        # Recompute finished_move price based on quotation and invoice
-        value = (self.price_unit - old_extra + new_extra_cost) * self.quantity
+        # Add only the subcontracting cost difference, leaving the quantity for production valuation.
+        value = (new_extra_cost - old_extra) * quantity
+        valued_quantity = 0
+        if self.product_id.cost_method == 'standard':
+            value += self.product_id.standard_price * quantity
+            valued_quantity = quantity
         return {
             'value': value,
-            'quantity': quantity,
+            'quantity': valued_quantity,
             'description': self.env._('%(value)s for %(quantity)s %(unit)s from %(production)s',
-                value=self.company_currency_id.format(self.value), quantity=quantity, unit=self.product_id.uom_id.name,
+                value=self.company_currency_id.format(value), quantity=quantity, unit=self.product_id.uom_id.name,
                 production=self.production_id.display_name),
         }

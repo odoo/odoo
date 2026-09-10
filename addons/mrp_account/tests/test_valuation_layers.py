@@ -69,6 +69,32 @@ class TestMrpValuationStandard(TestBomPriceCommon):
         self._make_out_move(self.dining_table, 1)
         self.assertEqual(self.dining_table.total_value, (2 * PRICE + 10 + 20) / 2)
 
+    def _assert_incoming_component_value_update_revalues_finished_product(self, category):
+        self.glass.sudo().categ_id = category  # setup master-data
+        self.dining_table.sudo().categ_id = category  # setup master-data
+
+        incoming_move = self._make_in_move(self.glass, 1, 10)
+        mo = self._create_mo(self.bom_1, 1)
+        self._produce(mo)
+        mo.button_mark_done()
+
+        component_move = mo.move_raw_ids.filtered(lambda move: move.product_id == self.glass)
+        finished_move = mo.move_finished_ids.filtered(lambda move: move.product_id == self.dining_table)
+        self.assertEqual(component_move.value, -10)
+        self.assertEqual(finished_move.value, PRICE + 10)
+
+        incoming_move.value_manual = 100
+
+        self.assertEqual(component_move.value, -100)
+        self.assertEqual(finished_move.value, PRICE + 100)
+        self.assertEqual(self.dining_table.total_value, PRICE + 100)
+
+    def test_avco_incoming_component_value_update_revalues_finished_product(self):
+        self._assert_incoming_component_value_update_revalues_finished_product(self.category_avco)
+
+    def test_fifo_incoming_component_value_update_revalues_finished_product(self):
+        self._assert_incoming_component_value_update_revalues_finished_product(self.category_fifo)
+
     def test_fifo_unbuild(self):
         """ This test creates an MO and then creates an unbuild
         orders and checks the stock valuation.
