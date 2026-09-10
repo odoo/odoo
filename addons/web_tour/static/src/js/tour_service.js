@@ -64,6 +64,7 @@ const stepSchemaDebug = {
 const tourSchema = {
     steps: t.function(),
     undeterministicTour_doNotCopy: t.boolean().optional(),
+    url: t.string().optional(),
 };
 
 const tourRegistry = registry.category("web_tour.tours");
