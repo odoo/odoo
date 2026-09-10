@@ -38,6 +38,7 @@ class ResConfigSettings(models.TransientModel):
     module_pos_pine_labs = fields.Boolean(string="Pine Labs Payment Terminal", help="The transactions are processed by Pine Labs. Set your Pine Labs credentials on the related payment method.")
     module_pos_qfpay = fields.Boolean(string="QFPay Payment Terminal", help="The transactions are processed by QFPay. Set your QFPay credentials on the related payment method.")
     module_pos_dpopay = fields.Boolean(string="DPO Pay Payment Terminal", help="The transactions are processed by DPO Pay. Set your DPO Pay credentials on the related payment method.")
+    module_pos_sumup = fields.Boolean(string="Sumup Payment Terminal", help="The transactions are processed by SumUp. Set your SumUp credentials on the related payment method.")
     module_pos_pricer = fields.Boolean(string="Pricer electronic price tags", help="Display the price of your products through electronic price tags")
     barcode_nomenclature_id = fields.Many2one('barcode.nomenclature', related='company_id.nomenclature_id', readonly=False)
     use_kiosk_mode = fields.Boolean(string="Is Kiosk Mode", default=False)
