@@ -1210,7 +1210,7 @@ class CalendarEvent(models.Model):
         if partner_commands and isinstance(partner_commands[0], int):
             partner_commands = [Command.set(partner_commands)]
 
-        for command in partner_commands:
+        for command in (partner_commands or []):
             op = command[0]
             if op in (2, 3, Command.delete, Command.unlink):  # Remove partner
                 removed_partner_ids += [command[1]]
