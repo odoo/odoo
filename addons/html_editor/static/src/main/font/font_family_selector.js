@@ -1,4 +1,4 @@
-import { Component, signal } from "@odoo/owl";
+import { Component, signal, t, useProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
@@ -10,15 +10,16 @@ import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 
 export class FontFamilySelector extends Component {
     static template = "html_editor.FontFamilySelector";
-    static props = {
-        document: { optional: true },
-        fontFamilyItems: Object,
-        currentFontFamily: Object,
-        onSelected: Function,
-        focusEditable: Function,
-        ...toolbarButtonProps,
-    };
     static components = { Dropdown, DropdownItem };
+
+    props = useProps({
+        ...toolbarButtonProps,
+        document: t.any().optional(),
+        fontFamilyItems: t.object(),
+        currentFontFamily: t.object(),
+        onSelected: t.function(),
+        focusEditable: t.function(),
+    });
 
     fontFamilySelector = signal.ref();
 

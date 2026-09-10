@@ -1,5 +1,5 @@
 import { Chatter } from "@mail/chatter/web_portal_project/chatter";
-import { Component, proxy, signal } from "@odoo/owl";
+import { Component, proxy, signal, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
@@ -7,9 +7,8 @@ import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 export class TodoChatterPanel extends Component {
     static template = "project_todo.TodoChatterPanel";
     static components = { Chatter };
-    static props = {
-        ...standardWidgetProps,
-    };
+
+    props = useProps(standardWidgetProps);
 
     rootRef = signal.ref();
 

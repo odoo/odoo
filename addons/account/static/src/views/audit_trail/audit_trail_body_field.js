@@ -1,12 +1,11 @@
-import { Component } from "@odoo/owl";
+import { Component, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 export class AuditTrailBodyField extends Component {
     static template = "account.AuditTrailBodyField";
-    static props = {
-        ...standardFieldProps,
-    };
+
+    props = useProps(standardFieldProps);
 
     get isTracking() {
         return this.props.record.data.message_type === "tracking";

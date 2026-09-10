@@ -3,13 +3,12 @@ import { serializeDate } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
-import { Component, signal } from "@odoo/owl";
+import { Component, signal, useProps } from "@odoo/owl";
 
 export class ButtonNewContractWidget extends Component {
     static template = "hr.ButtonNewContract";
-    static props = {
-        ...standardWidgetProps,
-    };
+
+    props = useProps(standardWidgetProps);
 
     datetimePickerTargetRef = signal.ref();
 

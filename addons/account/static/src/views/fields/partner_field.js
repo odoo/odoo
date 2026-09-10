@@ -1,15 +1,14 @@
-import { Component } from "@odoo/owl";
+import { Component, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { Field } from "@web/views/fields/field";
 
 export class PartnerField extends Component {
     static components = { Field };
-    static props = {
-        ...standardFieldProps,
-    };
 
     static template = "account.PartnerField";
+
+    props = useProps(standardFieldProps);
 
     get nameToDisplay() {
         // If the user is mass editing the partner_id on a move list, this will trigger the list_confirmation_dialog.js that will use this widget again.

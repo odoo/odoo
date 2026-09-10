@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, useProps } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -6,9 +6,8 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 export class HrPresenceStatus extends Component {
     static template = "hr.HrPresenceStatus";
-    static props = {
-        ...standardFieldProps,
-    };
+
+    props = useProps(standardFieldProps);
 
     get classNames() {
         return `o_employee_availability oi ${this.iconClass} oi-fw o_button_icon hr_presence align-middle ${this.color}`;

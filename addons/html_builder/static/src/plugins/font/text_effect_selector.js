@@ -1,12 +1,13 @@
-import { useSubEnv } from "@web/owl2/utils";
-import { Component, proxy, useProps, t } from "@odoo/owl";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { useDropdownCloser, useDropdownState } from "@web/core/dropdown/dropdown_hooks";
-import { _t } from "@web/core/l10n/translation";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { DependencyManager } from "@html_builder/core/dependency_manager";
 import { useDomState } from "@html_builder/core/utils";
+import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
+import { Component, proxy, t, useProps } from "@odoo/owl";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { useDropdownCloser, useDropdownState } from "@web/core/dropdown/dropdown_hooks";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { _t } from "@web/core/l10n/translation";
+import { useSubEnv } from "@web/owl2/utils";
 import {
     addShadow,
     applyConfiguredEffects,
@@ -252,10 +253,7 @@ export class TextEffectSelector extends Component {
     static template = "html_builder.TextEffectSelector";
     static components = { Dropdown, TextEffectOption };
     props = useProps({
-        // from toolbarButtonProps
-        title: t.or([t.string(), t.function()]),
-        getSelection: t.function(),
-        isDisabled: t.boolean(),
+        ...toolbarButtonProps,
         config: t.object({ editor: t.object(), editorBus: t.object() }),
         prepareTextEffectSelection: t.function(),
         applyTextEffect: t.function(),

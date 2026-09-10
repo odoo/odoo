@@ -1,5 +1,5 @@
 import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, useProps } from "@odoo/owl";
 import {
     CustomFieldCard
 } from "@sale_pdf_quote_builder/js/custom_content_kanban_like_widget/custom_field_card/custom_field_card";
@@ -11,9 +11,8 @@ import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 export class CustomContentKanbanLikeWidget extends Component {
     static components = { CustomFieldCard };
     static template = "sale_pdf_quote_builder.CustomContentKanbanLike";
-    static props = {
-        ...standardWidgetProps,
-    };
+
+    props = useProps(standardWidgetProps);
 
     setup() {
         this.orm = useService("orm");
