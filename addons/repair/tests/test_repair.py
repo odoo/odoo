@@ -35,12 +35,10 @@ class TestRepairCommon(common.TransactionCase):
         cls.product_storable_no = cls.env['product.product'].create({
             'name': 'Product Storable No Tracking #1',
             'is_storable': True,
-            'tracking': 'none',
         })
         cls.product_storable_no2 = cls.env['product.product'].create({
             'name': 'Product Storable No Tracking #2',
             'is_storable': True,
-            'tracking': 'none',
         })
         cls.product_storable_serial = cls.env['product.product'].create({
             'name': 'Product Storable Serial',

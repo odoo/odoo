@@ -95,14 +95,8 @@ class TestPosStockFlow(CommonPosStockTest):
             'usage': 'internal',
             'location_id': wh_location.id,
         })
-        self.ten_dollars_with_10_incl.product_variant_id.write({
-            'tracking': 'lot',
-            'is_storable': True,
-        })
-        self.twenty_dollars_with_15_incl.product_variant_id.write({
-            'tracking': 'none',
-            'is_storable': True,
-        })
+        self.ten_dollars_with_10_incl.product_variant_id.tracking = 'lot'
+        self.twenty_dollars_with_15_incl.product_variant_id.is_storable = True
         lot = self.env['stock.lot'].create({
             'name': 'SuperLot',
             'product_id': self.ten_dollars_with_10_incl.product_variant_id.id,

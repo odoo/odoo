@@ -14,7 +14,6 @@ class TestPackagingTours(HttpCase):
         product_a = self.env['product.product'].create({
             'name': 'Product A',
             'is_storable': True,
-            'tracking': 'none',
             'uom_id': self.env.ref('uom.product_uom_unit').id,
             'uom_ids': [Command.link(self.env.ref('uom.product_uom_pack_6').id)],
             'product_uom_ids': [Command.create({

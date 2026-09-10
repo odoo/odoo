@@ -49,7 +49,6 @@ class TestConsumeComponentCommon(common.TransactionCase):
         cls.produced_none = cls.env['product.product'].create({
             'name': 'Produced None',
             'is_storable': True,
-            'tracking': 'none',
             'route_ids': [(4, cls.manufacture_route.id, 0)],
         })
 
@@ -66,7 +65,6 @@ class TestConsumeComponentCommon(common.TransactionCase):
         cls.raw_none = cls.env['product.product'].create({
             'name': 'Raw None',
             'is_storable': True,
-            'tracking': 'none',
         })
 
         cls.raws = [cls.raw_none, cls.raw_lot, cls.raw_serial]

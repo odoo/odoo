@@ -15,7 +15,6 @@ class TestPosPickingBackorder(CommonPosStockTest):
         qty_product = self.env['product.product'].create({
             'name': 'POS Qty Product Backorder Test',
             'is_storable': True,
-            'tracking': 'none',
             'available_in_pos': True,
             'list_price': 10.0,
         })
