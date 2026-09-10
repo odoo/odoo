@@ -10,16 +10,18 @@ class PurchaseRequisition(models.Model):
     def _default_picking_type_id(self):
         return self.env['stock.picking.type'].search([('warehouse_id.company_id', '=', self.env.company.id), ('code', '=', 'incoming')], limit=1)
 
-    warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse', domain="[('company_id', '=', company_id)]")
+    warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse', domain="[('company_id', '=', company_id)]",
+                                   check_company=True)
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type', required=True, default=_default_picking_type_id,
-        domain="['|',('warehouse_id', '=', False), ('warehouse_id.company_id', '=', company_id)]")
+        domain="['|',('warehouse_id', '=', False), ('warehouse_id.company_id', '=', company_id)]",
+        check_company=True)
 
 
 class PurchaseRequisitionLine(models.Model):
     _inherit = "purchase.requisition.line"
 
-    move_dest_id = fields.Many2one('stock.move', 'Downstream Move')
+    move_dest_id = fields.Many2one('stock.move', 'Downstream Move', index='btree_not_null')
 
     def _prepare_purchase_order_line(self, name, product_qty=0.0, price_unit=0.0, taxes_ids=False):
         res = super(PurchaseRequisitionLine, self)._prepare_purchase_order_line(name, product_qty, price_unit, taxes_ids)
