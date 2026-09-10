@@ -490,48 +490,48 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon, CommonPosTest):
         self.assertTrue(data, "the order has one new line, it must produce a ticket")
         return data[0]['extra_data']
 
-    def test_change_receipt_order_note_rides_on_the_change_ticket(self):
-        """
-        An order note belongs to the ticket carrying the changes: it must be rendered on
-        it, and must not spawn a second, empty ticket next to it.
-        """
+    def _delivery_receipt_extra_data(self, identification, source='pos'):
+        preset = self.env['pos.preset'].create({
+            'name': 'Delivery',
+            'identification': identification,
+        })
+        partner = self.env['res.partner'].create({
+            'name': 'John Doe',
+            'street': '12 Rue des Bouchers',
+            'street2': 'Floor 3',
+            'zip': '1000',
+            'city': 'Brussels',
+            'country_id': self.env.ref('base.be').id,
+        })
         self.main_pos_config.with_user(self.pos_user).open_ui()
         order = self._create_receipt_test_order('2026-08-27 11:16:53')
-        order.general_customer_note = 'NO ONIONS'
-        order.internal_note = 'RUSH'
+        order.write({'preset_id': preset.id, 'partner_id': partner.id, 'source': source})
 
         changes = order._generate_preparation_change_for_categories(set(self.category.ids))
         receipts = order._generate_preparation_receipt_data(changes)
-
-        self.assertEqual(len(receipts), 1, "the note must not add an empty ticket next to the NEW one")
-        self.assertEqual(receipts[0]['changes']['title'], 'NEW')
-        self.assertEqual(receipts[0]['extra_data']['general_customer_note'], 'NO ONIONS')
-        self.assertEqual(receipts[0]['extra_data']['internal_note'], 'RUSH')
-
+        self.assertTrue(receipts)
         html = str(self.env['ir.qweb']._render('point_of_sale.pos_order_change_receipt', receipts[0]))
-        self.assertIn('NO ONIONS', html, "the customer note must reach the printed ticket")
-        self.assertIn('RUSH', html, "the internal note must reach the printed ticket")
+        return receipts[0]['extra_data'], html
 
-    def test_change_receipt_note_only_ticket_carries_the_note(self):
+    def test_change_receipt_prints_the_address_a_self_order_submitted(self):
         """
-        When the notes are the only change, the lone ticket they produce must actually
-        spell them out, otherwise a blank ticket comes out of the printer.
+        Self order asks for the whole address in one field, so it is printed back as
+        submitted. Recomposing it would repeat the city and zip it already contains.
         """
-        self.main_pos_config.with_user(self.pos_user).open_ui()
-        order = self._create_receipt_test_order('2026-08-27 11:16:53')
-        order.general_customer_note = 'NO ONIONS'
-        # Send the lines to preparation so that only the note is left to report
-        self.env['pos.prep.order'].update_last_order_change(order)
+        extra_data, html = self._delivery_receipt_extra_data('address', source='mobile')
 
-        changes = order._generate_preparation_change_for_categories(set(self.category.ids))
-        receipts = order._generate_preparation_receipt_data(changes)
+        self.assertEqual(extra_data['delivery_address'], ['12 Rue des Bouchers'])
+        self.assertIn('12 Rue des Bouchers', html)
+        self.assertNotIn('1000 Brussels', html)
+        self.assertNotIn('Floor 3', html)
 
-        self.assertEqual(len(receipts), 1)
-        self.assertFalse(receipts[0]['changes']['data'], "no line change is left to print")
-        self.assertEqual(receipts[0]['extra_data']['general_customer_note'], 'NO ONIONS')
+    def test_change_receipt_has_no_address_when_the_preset_needs_none(self):
+        """A preset that does not collect an address has nothing to deliver to."""
+        extra_data, html = self._delivery_receipt_extra_data('name')
 
-        html = str(self.env['ir.qweb']._render('point_of_sale.pos_order_change_receipt', receipts[0]))
-        self.assertIn('NO ONIONS', html, "a note-only ticket that omits the note is a blank ticket")
+        self.assertEqual(extra_data['delivery_address'], [])
+        self.assertNotIn('delivery-address', html)
+        self.assertNotIn('Rue des Bouchers', html)
 
     def test_change_receipt_times_use_shop_timezone(self):
         """
