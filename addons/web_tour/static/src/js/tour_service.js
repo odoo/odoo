@@ -55,6 +55,7 @@ const stepSchemaDebug = {
 const tourSchema = {
     steps: Function,
     undeterministicTour_doNotCopy: { type: Boolean, optional: true },
+    url: { type: String, optional: true },
 };
 
 const tourRegistry = registry.category("web_tour.tours");
@@ -175,8 +176,8 @@ export class TourService {
                     typeof tour.steps === "function"
                         ? tour.steps()
                         : Array.isArray(tour.steps)
-                          ? tour.steps
-                          : [],
+                        ? tour.steps
+                        : [],
             };
         }
         // Automatic tour (come from registry)
