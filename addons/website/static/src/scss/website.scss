@@ -898,10 +898,9 @@ font[class*='bg-'] {
 
         $-color: nth($o-colors, $-size);
 
-        $-is-website-palette-dark: color-contrast($body-color) == $color-contrast-dark;
-        $-bg-lightness-adjusted: if($-is-website-palette-dark, -40%, 0%);
+        $-bg-lightness-adjusted: if($o-website-palette-is-dark, -40%, 0%);
 
-        $-background-color: if($-is-website-palette-dark, adjust-color($-color, $lightness: $-bg-lightness-adjusted, $saturation: 5%), tint-color($-color, 90%));
+        $-background-color: if($o-website-palette-is-dark, adjust-color($-color, $lightness: $-bg-lightness-adjusted, $saturation: 5%), tint-color($-color, 90%));
 
         --background-color: #{$-background-color};
         --color: #{increase-contrast($-color, $-background-color)};
