@@ -25,13 +25,17 @@ class StockMove(models.Model):
                         and self.location_dest_id.usage == "customer"
                     )
                     # Vendor -> subcontractor location
-                    or (
-                        self.partner_id.property_stock_subcontractor.parent_path
-                        in self.location_dest_id.parent_path
-                        and self.location_id.usage == "supplier"
-                    )
+                    or self._is_resupply_dropship()
                 )
             )
+        )
+
+    def _is_resupply_dropship(self):
+        subcontracting_path = self.partner_id.property_stock_subcontractor.parent_path
+        return bool(
+            subcontracting_path
+            and subcontracting_path in self.location_dest_id.parent_path
+            and self.location_id.usage == "supplier"
         )
 
     def _is_dropshipped_returned(self):
