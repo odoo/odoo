@@ -51,7 +51,7 @@ registerWebsitePreviewTour("blog", {}, () => [
     },
     {
         trigger: ":iframe .o_record_cover_container",
-        content: _t("Click on the cover to edit it."),
+        content: markup(_t("Click on the <b>cover</b> to edit it.")),
         tooltipPosition: "top",
         run: "click",
     },
