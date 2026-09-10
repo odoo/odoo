@@ -36,7 +36,7 @@
         <field name="name">mailing.filter.view.kanban</field>
         <field name="model">mailing.filter</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile o_kanban_mailing_list o_kanban_mailing_filter" on_create="mass_mailing.action_mailing_filter_quick_create"
+            <kanban class="o_kanban_mobile o_kanban_mailing_list o_kanban_mailing_filter o_kanban_list" on_create="mass_mailing.action_mailing_filter_quick_create"
                     action="action_view_recipients" type="object" highlight_color="color">
                 <field name="active"/>
                 <templates>
