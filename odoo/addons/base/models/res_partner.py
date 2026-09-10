@@ -1748,6 +1748,10 @@ class ResPartner(models.Model):
         category = self._get_all_identifiers_metadata().get(identifier_key, {}).get('category')
         return not category or category in COMPANY_CATEGORIES
 
+    def _is_geolocalized(self):
+        self.ensure_one()
+        return self.partner_latitude and self.partner_longitude
+
     def _get_preferred_legal_entity_identifier_vals(self):
         """Return a dict {'scheme': scheme, 'value': value, ...metadata} of the preferred legal entity identifier for the given partner.
         The selection is based on the following rules:

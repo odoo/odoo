@@ -62,3 +62,64 @@ class TestPartnerGeoLocalization(TransactionCase):
                 'message': "No match found for Test A, Other address(es).",
             })
             mock_send.reset_mock()
+
+    def test_write_on_mono_record_geolocalizes_synchronously(self):
+        """ Changing an address field on a single already-geolocalized partner
+        re-geolocalizes it right away instead of delegating it to the cron. """
+        partner = self.env['res.partner'].create({
+            'name': 'Test Partner',
+            'street': '1 Test Street',
+            'partner_latitude': 10.0,
+            'partner_longitude': 20.0,
+        })
+
+        with patch.object(self.env.registry['ir.cron'], '_trigger') as mock_trigger, \
+             patch.object(self.env.registry['res.partner'], 'geo_localize') as mock_geo_localize:
+            partner.write({'street': '2 Test Street'})
+            mock_geo_localize.assert_called_once()
+            mock_trigger.assert_not_called()
+
+        self.assertFalse(partner.should_be_geolocalized)
+
+    def test_write_triggers_regeolocalization_on_address_change(self):
+        """ Changing an address field on several already-geolocalized partners at once
+        flags them for re-geolocalization and triggers the cron. Further, partners that
+        were not previously geolocalized should not be geolocalized on address change. """
+        partners = self.env['res.partner'].create([
+            {
+                'name': f'Test Partner {i}',
+                'street': f'{i} Test Street',
+                'partner_latitude': 10.0,
+                'partner_longitude': 20.0,
+            }
+            for i in range(2)
+        ])
+        self.assertFalse(partners.filtered('should_be_geolocalized'))
+
+        with patch.object(self.env.registry['ir.cron'], '_trigger') as mock_trigger:
+            # unrelated field: no flag, no trigger
+            partners.write({'email': 'test@test.example.com'})
+            self.assertFalse(any(partners.mapped('should_be_geolocalized')))
+            mock_trigger.assert_not_called()
+
+            # coordinates written directly: no flag, no trigger
+            partners.write({'partner_latitude': 11.0, 'partner_longitude': 21.0})
+            self.assertFalse(any(partners.mapped('should_be_geolocalized')))
+            mock_trigger.assert_not_called()
+
+            # address field change on already-geolocalized partners: flagged + cron triggered
+            partners.write({'street': 'New Street'})
+            self.assertTrue(all(partners.mapped('should_be_geolocalized')))
+            mock_trigger.assert_called_once()
+
+        # once the cron re-geolocalizes them, the flag is cleared again
+        with patch.object(self.env.registry['res.partner'], '_geo_localize', return_value=(1.0, 2.0)):
+            partners.with_context(force_geo_localize=True).geo_localize()
+
+        self.assertFalse(partners.filtered('should_be_geolocalized'))
+
+    def test_write_address_change_without_coordinates_does_not_flag(self):
+        """ A partner that was never geolocalized must not be re-geolocalized. """
+        partner = self.env['res.partner'].create({'name': 'Test Partner', 'street': '1 Test Street'})
+        partner.write({'street': '2 Test Street'})
+        self.assertFalse(partner.should_be_geolocalized)
