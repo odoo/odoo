@@ -138,6 +138,10 @@ class AccountMove(models.Model):
     # HELPER METHODS
     # -------------------------------------------------------------------------
 
+    def _l10n_es_get_return_type(self):
+        self.ensure_one()
+        return self.l10n_es_tbai_refund_reason or super()._l10n_es_get_return_type()
+
     def _l10n_es_tbai_check_can_send(self):
         # Ensure the move is posted
         if self.state != 'posted':
