@@ -398,18 +398,18 @@ export class ProductScreen extends Component {
             return [];
         }
 
-        const excludedProductIds = [
+        const excludedProductIds = new Set([
             this.pos.config.tip_product_id?.id,
             ...this.pos.hiddenProductIds,
             ...this.pos.session._pos_special_products_ids,
-        ];
+        ]);
 
         const filteredList = [];
         for (const product of list) {
             if (filteredList.length >= 100) {
                 break;
             }
-            if (!excludedProductIds.includes(product.id) && product.canBeDisplayed) {
+            if (!excludedProductIds.has(product.id) && product.canBeDisplayed) {
                 filteredList.push(product);
             }
         }
@@ -424,14 +424,26 @@ export class ProductScreen extends Component {
         const products = this.pos.selectedCategory?.id
             ? this.getProductsByCategory(this.pos.selectedCategory)
             : this.products;
-
-        const filteredProducts = products.filter((p) => unaccent(p.searchString).includes(words));
-        return filteredProducts.sort((a, b) => {
-            const nameA = unaccent(a.searchString);
-            const nameB = unaccent(b.searchString);
-            // Sort by match index, push non-matching items to the end, and use alphabetical order as a tiebreaker
-            return nameA.indexOf(words) - nameB.indexOf(words) || nameA.localeCompare(nameB);
-        });
+        const limit = 100;
+        const startsWithResults = [];
+        const includesResults = [];
+        for (const product of products) {
+            const productSearchStr =
+                product.searchStringNormalized ||
+                unaccent(product.searchString.toLowerCase(), false);
+            if (!productSearchStr) {
+                continue;
+            }
+            if (productSearchStr.startsWith(words)) {
+                startsWithResults.push(product);
+            } else if (productSearchStr.includes(words)) {
+                includesResults.push(product);
+            }
+            if (startsWithResults.length + includesResults.length >= limit) {
+                break;
+            }
+        }
+        return [...startsWithResults, ...includesResults];
     }
 
     addMainProductsToDisplay(products) {
