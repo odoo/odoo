@@ -32,6 +32,7 @@ declare module "plugins" {
     import { so_content_addition_selectors, so_snippet_addition_selectors } from "@html_builder/core/dropzone_selector_plugin";
     import { fontCssVariables } from "@html_builder/plugins/font/font_plugin";
     import { apply_custom_css_style_overrides } from "@html_builder/core/core_builder_action_plugin";
+    import { on_will_apply_style_class_handlers } from "@html_builder/plugins/border_configurator_option_plugin";
     import { on_bg_color_updated_handlers } from "@html_builder/core/color_style_plugin";
     import { reload_context_processors } from "@html_builder/core/utils";
     import { uncrossable_element_selector, ignore_ctrl_a_predicates } from "@html_builder/core/builder_selection_restriction_plugin";
@@ -102,6 +103,7 @@ declare module "plugins" {
         on_will_save_handlers: on_will_save_handlers;
         on_will_setup_editor_handlers: on_will_setup_editor_handlers;
         on_ready_to_save_document_handlers: on_ready_to_save_document_handlers;
+        on_will_apply_style_class_handlers: on_will_apply_style_class_handlers;
 
         // Overrides
         after_setup_editor_overrides: after_setup_editor_overrides;
