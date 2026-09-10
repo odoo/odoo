@@ -1,4 +1,4 @@
-import { Component, proxy, t, useProps } from "@odoo/owl";
+import { Component, proxy, t, useProps, useScope } from "@odoo/owl";
 import { PropertiesGroupByItem } from "@web/search/properties_group_by_item/properties_group_by_item";
 import { SearchBarDropdown } from "../search_bar_dropdown";
 import { dropdownProps } from "@web/core/dropdown/dropdown";
@@ -34,6 +34,8 @@ export class SearchBarMenu extends Component {
         dropdownState: dropdownProps.state,
         popoverWillCloseOnClickAway: t.function().optional(() => () => true),
     });
+
+    scope = useScope();
 
     setup() {
         this.facet_icons = FACET_ICONS;
@@ -203,7 +205,7 @@ export class SearchBarMenu extends Component {
     get otherItems() {
         const registryMenus = [];
         for (const item of favoriteMenuRegistry.getAll()) {
-            if ("isDisplayed" in item ? item.isDisplayed(this.env) : true) {
+            if ("isDisplayed" in item ? this.scope.run(() => item.isDisplayed(this.env)) : true) {
                 registryMenus.push({
                     Component: item.Component,
                     groupNumber: item.groupNumber,

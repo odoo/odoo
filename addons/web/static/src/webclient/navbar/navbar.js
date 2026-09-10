@@ -8,6 +8,7 @@ import {
     useEffect,
     useListener,
     usePlugin,
+    useScope,
 } from "@odoo/owl";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -44,6 +45,8 @@ export class NavBar extends Component {
     menuApps = signal.ref();
 
     debugMode = usePlugin(DebugModePlugin);
+
+    scope = useScope();
 
     setup() {
         this.currentAppSectionsExtra = [];
@@ -144,7 +147,9 @@ export class NavBar extends Component {
         return systrayRegistry
             .getEntries()
             .map(([key, value]) => ({ key, ...value }))
-            .filter((item) => ("isDisplayed" in item ? item.isDisplayed(this.env) : true))
+            .filter((item) =>
+                "isDisplayed" in item ? this.scope.run(() => item.isDisplayed(this.env)) : true
+            )
             .reverse();
     }
 
