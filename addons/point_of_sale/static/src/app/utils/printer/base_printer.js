@@ -19,8 +19,9 @@ export class BasePrinter {
 
     get STYLE_MAPPING() {
         return {
-            58: { fontSize: 22, maxWidth: 360 },
-            80: { fontSize: 22, maxWidth: 512 },
+            58: { fontSize: 22, maxWidth: 420 },
+            80: { fontSize: 22, maxWidth: 576 },
+            label: { fontSize: 22, maxWidth: 512 },
         };
     }
 

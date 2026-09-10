@@ -8,6 +8,8 @@ import { toCanvas } from "../utils/html-to-image";
 import { logPosImage, logPosMessage } from "../utils/pretty_console_log";
 import { waitImages } from "@point_of_sale/utils";
 
+const NARROW_RECEIPT_WIDTH_THRESHOLD = 325;
+
 export const posTicketPrinterService = {
     dependencies: ["dialog", "pos_data", "notification"],
     async start(env, dependencies) {
@@ -392,6 +394,7 @@ export class PosTicketPrinterService {
 
         style.textContent = cssRules;
         iframeHead.appendChild(style);
+        iframeEl.classList.toggle("pos-receipt-narrow", maxWidth < NARROW_RECEIPT_WIDTH_THRESHOLD);
     }
 
     async generateImage(iframe) {
