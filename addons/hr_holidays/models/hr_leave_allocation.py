@@ -245,6 +245,7 @@ class HrLeaveAllocation(models.Model):
     @api.depends('employee_id', 'work_entry_type_id', 'nextcall')
     def _compute_leaves(self):
         date_from = fields.Date.context_today(self)
+<<<<<<< a28bad584bb2b6dd793a37d5817744eb919ec73b
         employee_days_per_allocation = self.employee_id._get_consumed_leaves(self.work_entry_type_id, date_from)[0]
         self._set_leaves_from_consumption_data(employee_days_per_allocation)
 
@@ -252,6 +253,11 @@ class HrLeaveAllocation(models.Model):
         """Assign max_leaves/leaves_taken/virtual_remaining_leaves from an already-fetched
         _get_consumed_leaves() result, so extensions can reuse the same fetch (see
         l10n_be_hr_payroll)."""
+||||||| 58355d8a74a09bb71b2072533de8815a0d1abb84
+        employee_days_per_allocation = self.employee_id._get_consumed_leaves(self.work_entry_type_id, date_from, ignore_future=True)[0]
+=======
+        employee_days_per_allocation = self.employee_id._get_consumed_leaves(self.work_entry_type_id, date_from)[0]
+>>>>>>> 30e4bb3c6d5b4064eefb402786b9f42280e769de
         for allocation in self:
             origin = allocation._origin
             virtual_leave = employee_days_per_allocation[origin.employee_id][origin.work_entry_type_id][origin]
