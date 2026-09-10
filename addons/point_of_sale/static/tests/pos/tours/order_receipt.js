@@ -41,8 +41,9 @@ registry.category("web_tour.tours").add("test_receipt_data", {
                     const configNameOccurrences = Array.from(html.querySelectorAll("td")).filter(
                         (el) => el.textContent.trim() === data.config.name
                     );
-                    if (configNameOccurrences.length > 1) {
-                        throw new Error("Config name appears more than once in generated HTML");
+                    // The regular-width and narrow receipt layouts can each contain the config name.
+                    if (configNameOccurrences.length > 2) {
+                        throw new Error("Config name appears more than twice in generated HTML");
                     }
 
                     try {

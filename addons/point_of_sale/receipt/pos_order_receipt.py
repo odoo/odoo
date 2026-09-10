@@ -18,15 +18,15 @@ _logger = logging.getLogger(__name__)
 
 DOCTYPE = Markup('<!DOCTYPE html>\n')
 PAPER_SIZE_STYLES = {
-    '58': {'width': 360, 'font_size': 22},
-    '80': {'width': 512, 'font_size': 22},
-    'tm_u22_76': {'width': 200, 'font_size': 12},
-    'tm_u22_70': {'width': 180, 'font_size': 12},
-    'tm_u22_58': {'width': 150, 'font_size': 12},
-    'tm_u33_76': {'width': 400, 'font_size': 22},
-    'tm_u33_70': {'width': 380, 'font_size': 22},
-    'tm_p60_60': {'width': 375, 'font_size': 22},
-    'tm_l100_40': {'width': 240, 'font_size': 14},
+    '58': {'width': 420, 'font_size': 22, 'dpi': 203},
+    '80': {'width': 576, 'font_size': 22, 'dpi': 203},
+    'tm_u22_76': {'width': 200, 'font_size': 12, 'dpi': 80},
+    'tm_u22_70': {'width': 180, 'font_size': 12, 'dpi': 80},
+    'tm_u22_58': {'width': 150, 'font_size': 12, 'dpi': 80},
+    'tm_u33_76': {'width': 450, 'font_size': 22, 'dpi': 180},
+    'tm_u33_70': {'width': 405, 'font_size': 22, 'dpi': 180},
+    'tm_p60_60': {'width': 420, 'font_size': 22, 'dpi': 203},
+    'tm_l100_40': {'width': 280, 'font_size': 14, 'dpi': 203},
 }
 LINE_HEIGHT_RATIO = 1.4
 TEMPLATE_FONT_SIZE = 22
@@ -37,6 +37,7 @@ TEXT_CLASS_RATIOS = {
     'text-huge': 2.0,
     'text-insane': 2.3,
 }
+NARROW_WIDTH = 325
 
 
 def _get_str_notes(note):
@@ -276,25 +277,30 @@ class PosOrderReceipt(models.AbstractModel):
             },
         }
 
-    def order_receipt_generate_html(self, basic_receipt=False, printer_style=False):
+    def _order_receipt_generate_paper_data(self, basic_receipt=False, paper_size=False):
+        """Receipt data, with the layout class matching the given paper size."""
+        data = self.order_receipt_generate_data(basic_receipt)
+        data['extra_data']['receipt_class'] = 'pos-receipt-narrow' if self._order_receipt_is_narrow(paper_size) else ''
+        return data
+
+    def order_receipt_generate_html(self, basic_receipt=False, printer_style=False, paper_size=False):
         last_order = self.env['pos.order'].search([], order='id desc', limit=1)
         report_name = 'point_of_sale.pos_order_receipt'
-        html = last_order.env['ir.qweb']._render(report_name, values=self.order_receipt_generate_data(basic_receipt))
+        html = last_order.env['ir.qweb']._render(report_name, values=self._order_receipt_generate_paper_data(basic_receipt, paper_size))
         if printer_style:
             html = html.replace(Markup('</head>'), printer_style + Markup('</head>'))
         return DOCTYPE + html
 
-    def order_receipt_generate_image(self, basic_receipt=False, width=500, height=0, printer_style=False):
-        content = self.order_receipt_generate_html(basic_receipt, printer_style)
-        return self.env['ir.actions.report']._run_image_engine(
-            'wkhtmltopdf',
-            [content],
-            width,
-            height,
-        )[0]
+    def order_receipt_generate_image(self, basic_receipt=False, width=500, height=0, printer_style=False, paper_size=False):
+        content = self.order_receipt_generate_html(basic_receipt, printer_style, paper_size)
+        return self.env['ir.actions.report']._run_image_engine('wkhtmltopdf', [content], width, height)[0]
 
     def _order_receipt_paper_style(self, paper_size):
         return PAPER_SIZE_STYLES.get(paper_size) or PAPER_SIZE_STYLES['80']
+
+    def _order_receipt_is_narrow(self, paper_size):
+        """Mirror of the narrow check in the JS setIframeSizeFromPrinter."""
+        return bool(paper_size) and self._order_receipt_paper_style(paper_size)['width'] < NARROW_WIDTH
 
     def _order_receipt_paper_style_css(self, paper_size):
         """Mirror method of the JS setIframeSizeFromPrinter in pos_ticket_printer_service.js
@@ -317,10 +323,22 @@ class PosOrderReceipt(models.AbstractModel):
 
     def _order_receipt_generate_paper_image(self, paper_size='80'):
         """Render this receipt as an image fitting the given paper size."""
-        return self.order_receipt_generate_image(
-            width=self._order_receipt_paper_style(paper_size)['width'],
+        style = self._order_receipt_paper_style(paper_size)
+        image = self.order_receipt_generate_image(
+            width=style['width'],
             printer_style=self._order_receipt_paper_style_css(paper_size),
+            paper_size=paper_size,
         )
+        return self._order_receipt_set_image_dpi(image, style['dpi'])
+
+    def _order_receipt_set_image_dpi(self, image, dpi):
+        """Set the resolution of the image so its physical size matches the printer's."""
+        if not image:
+            return image
+        buffer = BytesIO()
+        with Image.open(BytesIO(image)) as receipt:
+            receipt.save(buffer, format=receipt.format, dpi=(dpi, dpi))
+        return buffer.getvalue()
 
     def _order_receipt_generate_for_format(self, receipt_format, paper_size='80'):
         """Render this receipt in the format a printer expects.

@@ -661,11 +661,11 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon, CommonPosTest):
             'pos_config': self.main_pos_config,
             'line_data': [{'product_id': self.example_simple_product.product_variant_id.id, 'qty': 1}],
         })
-        self.assertIn('width: 360px', order._order_receipt_paper_style_css('58'))
-        self.assertIn('width: 512px', order._order_receipt_paper_style_css('80'))
-        self.assertIn('width: 240px', order._order_receipt_paper_style_css('tm_l100_40'))
+        self.assertIn('width: 420px', order._order_receipt_paper_style_css('58'))
+        self.assertIn('width: 576px', order._order_receipt_paper_style_css('80'))
+        self.assertIn('width: 280px', order._order_receipt_paper_style_css('tm_l100_40'))
         self.assertIn(
-            'width: 512px', order._order_receipt_paper_style_css(False),
+            'width: 576px', order._order_receipt_paper_style_css(False),
             "An unknown paper size falls back on the size the receipt is designed for",
         )
 
