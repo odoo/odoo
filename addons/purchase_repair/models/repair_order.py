@@ -7,14 +7,18 @@ class RepairOrder(models.Model):
 
     purchase_count = fields.Integer(string="Count of generated POs", compute="_compute_purchase_count", groups="purchase.group_purchase_user")
 
-    @api.depends('move_ids.created_purchase_line_ids.order_id')
+    @api.depends('move_ids.created_purchase_line_ids.order_id', 'reference_ids.purchase_ids')
     def _compute_purchase_count(self):
         for repair in self:
-            repair.purchase_count = len(repair.move_ids.created_purchase_line_ids.order_id)
+            repair.purchase_count = len(repair._get_purchase_orders())
+
+    def _get_purchase_orders(self):
+        self.ensure_one()
+        return self.reference_ids.purchase_ids
 
     def action_view_purchase_orders(self):
         self.ensure_one()
-        purchase_ids = self.move_ids.created_purchase_line_ids.order_id
+        purchase_ids = self._get_purchase_orders()
         action = {
             'type': 'ir.actions.act_window',
             'res_model': 'purchase.order',
