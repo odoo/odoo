@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.tests.common import PaymentCommon
 
 
@@ -30,7 +29,7 @@ class AdyenCommon(PaymentCommon):
             "additionalData": {"hmacSignature": cls.webhook_notification_payload_signature},
             "amount": {
                 "currency": cls.currency.name,
-                "value": payment_utils.to_minor_currency_units(cls.amount, cls.currency),
+                "value": cls.provider._to_minor_currency_units(cls.amount, cls.currency),
             },
             "eventCode": "AUTHORISATION",
             "merchantAccountCode": "DuckSACom123",
