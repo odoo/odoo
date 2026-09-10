@@ -7208,10 +7208,12 @@ class JpegImage {
     if (fileMarker !== 0xffd8) {
       throw new JpegError("SOI not found");
     }
-    fileMarker = readUint16(data, offset);
-    offset += 2;
-    markerLoop: while (fileMarker !== 0xffd9) {
+    markerLoop: while (offset < data.length - 1) {
+      fileMarker = readUint16(data, offset);
+      offset += 2;
       switch (fileMarker) {
+        case 0xffd9:
+          break markerLoop;
         case 0xffc0:
         case 0xffc1:
         case 0xffc2:
@@ -7224,8 +7226,6 @@ class JpegImage {
           break;
       }
       offset = skipData(data, offset);
-      fileMarker = readUint16(data, offset);
-      offset += 2;
     }
     if (numComponents === 4) {
       return false;
