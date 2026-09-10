@@ -29,7 +29,7 @@ export class SaleOrder extends models.ServerModel {
     _views = {
         list: `<list><field name="name"/><field name="partner_id"/><field name="amount_unpaid"/></list>`,
         kanban: `<kanban><templates><div t-name="card"><field name="name"/><field name="amount_unpaid"/></div></templates></kanban>`,
-        search: `<search/>`,
+        search: `<search><field name="partner_id"/></search>`,
     };
 
     _records = [

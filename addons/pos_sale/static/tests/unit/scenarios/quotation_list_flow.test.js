@@ -40,7 +40,7 @@ test("test_selected_partner_quotation_loading: the orders are restricted to the 
     await Utils.selectCustomer("Administrator");
     await Utils.openQuotationList();
 
-    expect(domains.at(-1)).toInclude(["partner_id", "any", [["id", "child_of", [3]]]]);
+    expect(domains.at(-1)).toInclude(["partner_id", "=", 3]);
 
     await press("escape");
     await animationFrame();
@@ -50,7 +50,15 @@ test("test_selected_partner_quotation_loading: the orders are restricted to the 
     await Utils.selectCustomer("User1");
     await Utils.openQuotationList();
 
-    expect(domains.at(-1)).toInclude(["partner_id", "any", [["id", "child_of", [4]]]]);
+    expect(domains.at(-1)).toInclude(["partner_id", "=", 4]);
+
+    await press("escape");
+    await animationFrame();
+    store.addNewOrder();
+    await animationFrame();
+
+    await Utils.openQuotationList();
+    expect(domains.at(-1).some((clause) => clause[0] === "partner_id")).toBe(false);
 });
 
 test("PosOrdersListDifferentCurrency: orders of another currency are not listed", async () => {
