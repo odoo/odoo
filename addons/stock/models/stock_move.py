@@ -2668,26 +2668,30 @@ Please change the quantity done or the rounding precision in your settings.""",
             to_visit.fetch(['move_orig_ids'])
             move_orig_ids = set(to_visit.move_orig_ids.ids)
 
-    def _rollup_move_dests(self, seen=False) -> OrderedSet[int]:
-        return self._rollup_moves(origin=False, seen=seen)
+    def _rollup_move_dests(self, seen=False, boundary=frozenset()) -> OrderedSet[int]:
+        return self._rollup_moves(origin=False, seen=seen, boundary=boundary)
 
-    def _rollup_move_origs(self, seen=False) -> OrderedSet[int]:
-        return self._rollup_moves(seen=seen)
+    def _rollup_move_origs(self, seen=False, boundary=frozenset()) -> OrderedSet[int]:
+        return self._rollup_moves(seen=seen, boundary=boundary)
 
-    def _rollup_moves(self, origin=True, seen=False) -> OrderedSet[int]:
+    def _rollup_moves(self, origin=True, seen=False, boundary=frozenset()) -> OrderedSet[int]:
         """
             Find all moves in chain depending the direction (origin)
 
             origin: if set (default), returns the origin moves, else return the destinations
+            boundary: ids at which to stop the rollup (excluded from the result). Unlike `seen`,
+                this is never copied or mutated, so callers can share one boundary set across many
+                independent calls (e.g. one per record of a big recordset) without paying its size
+                on every call.
         """
         target_field = "move_orig_ids" if origin else "move_dest_ids"
         if not seen:
             seen = OrderedSet()
-        unseen = OrderedSet(self.ids) - seen
+        unseen = (OrderedSet(self.ids) - seen) - boundary
         if not unseen:
             return seen
         seen.update(unseen)
-        self.filtered(lambda m: m.id in unseen)[target_field]._rollup_moves(origin, seen)
+        self.filtered(lambda m: m.id in unseen)[target_field]._rollup_moves(origin, seen, boundary)
         return seen
 
     def _get_forecast_availability_outgoing(self, warehouse, location_id=False):
@@ -2698,7 +2702,9 @@ Please change the quantity done or the rounding precision in your settings.""",
         :rtype: defaultdict
         """
         wh_location_query = self.env['stock.location']._search([('id', 'child_of', warehouse.view_location_id.id)])
-        forecast_lines = self.env['stock.forecasted_product_product']._get_report_lines(False, self.product_id.ids, wh_location_query, location_id or warehouse.lot_stock_id, read=False)
+        # PERF: only the four keys read below are needed, so ask for minimal lines - see
+        # `stock.forecasted_product_product._prepare_report_line_minimal`.
+        forecast_lines = self.env['stock.forecasted_product_product']._get_report_lines(False, self.product_id.ids, wh_location_query, location_id or warehouse.lot_stock_id, read=False, minimal=True)
         result = defaultdict(lambda: (0.0, False))
         for line in forecast_lines:
             move_out = line.get('move_out')
