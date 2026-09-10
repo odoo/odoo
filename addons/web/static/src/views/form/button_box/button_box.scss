@@ -109,18 +109,16 @@
         // For example, when a user starts clicking on one button
         // and then drags to another.
         &.btn-outline-secondary, .o_button_more {
-            z-index: var(--o-stat-button-z-index, auto);
-
             &:hover {
-                --o-stat-button-z-index: 1;
+                z-index: 1;
             }
 
             &:active, &.show {
-                --o-stat-button-z-index: 2;
+                z-index: 2;
             }
 
             &:focus-visible {
-                --o-stat-button-z-index: 3;
+                z-index: 3;
             }
         }
     }
