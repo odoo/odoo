@@ -44,25 +44,73 @@ class TestProcessingFlows(XenditCommon, PaymentHttpCommon):
                 signature_check_mock.call_args[0][0], self.provider.xendit_webhook_token
             )
 
-    def test_set_xendit_transactions_to_pending_on_return(self):
-        def build_return_url(**kwargs):
-            url_params = url_encode(dict(kwargs, tx_ref=self.reference))
-            return self._build_url(f"{XenditController._return_url}?{url_params}")
+    def _build_return_url(self, tx_ref, **kwargs):
+        url_params = url_encode(dict(kwargs, tx_ref=tx_ref))
+        return self._build_url(f"{XenditController._return_url}?{url_params}")
 
-        self.reference = "xendit_tx1"
+    def test_returning_from_payment_triggers_processing(self):
+        """Test that returning from a successful payment with a valid access token triggers the
+        processing of the payment data."""
         tx = self._create_transaction("redirect")
+        with (
+            patch("odoo.addons.payment.utils.check_access_token", return_value=True),
+            patch(
+                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._record"
+            ) as record_mock,
+        ):
+            self._make_http_get_request(
+                self._build_return_url(tx.reference, success="true", access_token="dummy")
+            )
+        self.assertEqual(record_mock.call_count, 1)
 
+    def test_returning_from_payment_triggers_signature_check(self):
+        """Test that returning from a successful payment triggers an access token check."""
+        tx = self._create_transaction("redirect")
+        with patch("odoo.addons.payment.utils.check_access_token") as signature_check_mock:
+            self._make_http_get_request(
+                self._build_return_url(tx.reference, success="true", access_token="dummy")
+            )
+        self.assertEqual(signature_check_mock.call_args[0][0], "dummy")
+
+    def test_return_with_invalid_access_token_does_not_trigger_processing(self):
+        """Test that a return request with an access token that doesn't match the transaction
+        doesn't affect the transaction state."""
+        tx = self._create_transaction("redirect")
+        with (
+            patch("odoo.addons.payment.utils.verify_signature"),
+            patch(
+                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._record"
+            ) as record_mock,
+        ):
+            self._make_http_get_request(
+                self._build_return_url(tx.reference, success="true", access_token="coincoin")
+            )
+        self.assertEqual(record_mock.call_count, 0)
+
+    def test_return_with_failed_payment_does_not_trigger_processing(self):
+        """Test that a return request indicating a failed payment doesn't affect the transaction
+        state."""
+        tx = self._create_transaction("redirect")
+        with (
+            patch("odoo.addons.payment.utils.verify_signature"),
+            patch(
+                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._record"
+            ) as record_mock,
+        ):
+            self._make_http_get_request(
+                self._build_return_url(tx.reference, success="false", access_token="dummy")
+            )
+        self.assertEqual(record_mock.call_count, 0)
+
+    def test_set_xendit_transactions_to_pending_on_return(self):
+        """Test that a valid return request with a successful payment sets the transaction to
+        pending."""
+        tx = self._create_transaction("redirect")
         with patch.object(payment_utils, "generate_access_token", self._generate_test_access_token):
             token = payment_utils.generate_access_token(tx.reference, tx.amount)
 
-            self._make_http_get_request(build_return_url(success="true", access_token="coincoin"))
-            self._run_processing()
-            self.assertEqual(tx.state, "draft", "Random GET requests shouldn't affect tx state")
-
-            self._make_http_get_request(build_return_url(success="false", access_token=token))
-            self._run_processing()
-            self.assertEqual(tx.state, "draft", "Failure returns shouldn't change tx state")
-
-            self._make_http_get_request(build_return_url(success="true", access_token=token))
-            self._run_processing()
-            self.assertEqual(tx.state, "pending", "Successful returns should set state to pending")
+        self._make_http_get_request(
+            self._build_return_url(tx.reference, success="true", access_token=token)
+        )
+        payment_data = self.env["payment.data"].search([("transaction_id", "=", tx.id)])
+        self.assertEqual(payment_data.payload["status"], "PENDING")

@@ -8,6 +8,14 @@ from odoo.addons.payment_razorpay.tests.common import RazorpayCommon
 
 @tagged("post_install", "-at_install")
 class TestPaymentProvider(RazorpayCommon):
+    def test_not_available_for_unsupported_currencies(self):
+        """Test that Razorpay providers are filtered out from compatible providers when the
+        currency is not supported."""
+        available_providers = self.env["payment.provider"]._find_available_providers(
+            self.company_id, self.partner.id, self.amount, currency_id=self.env.ref("base.AFN").id
+        )
+        self.assertNotIn(self.provider, available_providers)
+
     def test_allow_setting_live_if_credentials_are_set(self):
         """Test that setting live a Razorpay provider with credentials succeeds."""
         self._assert_does_not_raise(ValidationError, self.provider.write({"is_live": True}))
@@ -19,10 +27,8 @@ class TestPaymentProvider(RazorpayCommon):
         with self.assertRaises(ValidationError):
             self.provider.is_live = True
 
-    def test_not_available_for_unsupported_currencies(self):
-        """Test that Razorpay providers are filtered out from compatible providers when the
-        currency is not supported."""
-        available_providers = self.env["payment.provider"]._find_available_providers(
-            self.company_id, self.partner.id, self.amount, currency_id=self.env.ref("base.AFN").id
+    def test_validation_amount_and_currency(self):
+        self.assertEqual(self.provider._get_validation_amount(), 1.0)
+        self.assertEqual(
+            self.provider._get_validation_currency(), self.provider.available_currency_ids[0]
         )
-        self.assertNotIn(self.provider, available_providers)

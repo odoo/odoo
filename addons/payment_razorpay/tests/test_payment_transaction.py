@@ -16,6 +16,23 @@ from odoo.addons.payment_razorpay.tests.common import RazorpayCommon
 
 @tagged("post_install", "-at_install")
 class TestPaymentTransaction(RazorpayCommon):
+    def test_no_item_missing_from_processing_values(self):
+        tx = self._create_transaction(flow="direct")
+        with self._mock_send_api_request(return_value={"id": self.customer_id}):
+            processing_values = tx._get_specific_processing_values(None)
+            customer_id = tx._razorpay_create_customer().get("id")
+            order_id = tx._razorpay_create_order(customer_id).get("id")
+        self.assertDictEqual(
+            processing_values,
+            {
+                "razorpay_key_id": tx.provider_id.razorpay_key_id,
+                "razorpay_public_token": tx.provider_id.razorpay_public_token,
+                "razorpay_customer_id": customer_id,
+                "is_tokenize_request": tx.tokenize,
+                "razorpay_order_id": order_id,
+            },
+        )
+
     def test_no_item_missing_from_order_request_payload(self):
         """Test that the request values are conform to the transaction fields."""
         inr_currency = (
@@ -46,11 +63,6 @@ class TestPaymentTransaction(RazorpayCommon):
                 }
             self.assertDictEqual(request_payload, expected_payload)
 
-    def test_void_is_not_supported(self):
-        """Test that trying to void an authorized transaction raises an error."""
-        tx = self._create_transaction("direct", state="authorized")
-        self.assertRaises(UserError, func=tx._void)
-
     def test_prevent_multi_payments_on_recurring_transactions(self):
         """Test that no retry is allowed within the 36 hours of the first attempt using token."""
         shared_token = self._create_token()
@@ -79,17 +91,68 @@ class TestPaymentTransaction(RazorpayCommon):
                 converted_amount = payment_utils.to_minor_currency_units(
                     other_tx.amount, other_tx.currency_id
                 )
-                with patch(
-                    "odoo.addons.payment.models.payment_provider.PaymentProvider._send_api_request",
+                with self._mock_send_api_request(
                     return_value={
                         "status": "created",
                         "id": "12345",
                         "amount": converted_amount,
                         "currency": other_tx.currency_id.name,
-                    },
+                    }
                 ):
                     self._assert_does_not_raise(UserError, other_tx._send_payment_request)
                 self._update_transaction(other_tx, state="draft")
+
+    @mute_logger("odoo.addons.payment_razorpay.models.payment_transaction")
+    def test_refund_creates_refund_tx(self):
+        """Test that refunding a done transaction creates and confirms a refund transaction."""
+        tx = self._create_transaction("direct", state="done", provider_reference=self.payment_id)
+        refund_reference = f"R-{tx.reference}"
+        converted_amount = payment_utils.to_minor_currency_units(tx.amount, tx.currency_id)
+        with self._mock_send_api_request(
+            return_value={
+                "id": self.refund_id,
+                "description": refund_reference,
+                "status": "processed",
+                "amount": converted_amount,
+                "currency": tx.currency_id.name,
+            }
+        ):
+            tx._refund()
+        refund_tx = self.env["payment.transaction"].search([("source_transaction_id", "=", tx.id)])
+        self.assertTrue(refund_tx)
+        self.assertEqual(refund_tx.operation, "refund")
+        self.assertEqual(refund_tx.amount, -tx.amount)
+
+    @mute_logger("odoo.addons.payment_razorpay.models.payment_transaction")
+    def test_capture_confirms_tx(self):
+        """Test that capturing an authorized transaction sets the capture tx to 'done'."""
+        self.provider.capture_manually = True
+        tx = self._create_transaction("direct", state="authorized")
+        capture_reference = f"P-{tx.reference}"
+        converted_amount = payment_utils.to_minor_currency_units(tx.amount, tx.currency_id)
+        with (
+            self._mock_send_api_request(
+                return_value={
+                    "id": self.payment_id,
+                    "description": capture_reference,
+                    "status": "captured",
+                    "amount": converted_amount,
+                    "currency": tx.currency_id.name,
+                }
+            ),
+            patch(
+                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._record"
+            ) as record_mock,
+        ):
+            captured_tx = tx._capture()
+        payload = record_mock.call_args.args[0]
+        captured_tx.with_context(payment_safe_write=True)._apply_updates(payload)
+        self.assertEqual(captured_tx.state, "done")
+
+    def test_void_is_not_supported(self):
+        """Test that trying to void an authorized transaction raises an error."""
+        tx = self._create_transaction("direct", state="authorized")
+        self.assertRaises(UserError, func=tx._void)
 
     def test_search_by_reference_returns_refund_tx(self):
         """Test that the refund transaction is returned if it exists when processing refund
@@ -117,12 +180,11 @@ class TestPaymentTransaction(RazorpayCommon):
         self.assertNotEqual(refund_tx, source_tx)
         self.assertEqual(refund_tx.source_transaction_id, source_tx)
 
-    def test_apply_updates_confirms_transaction(self):
-        """Test that the transaction state is set to 'done' when the payment data indicate a
-        successful payment."""
+    def test_apply_updates_sets_provider_reference(self):
+        """Test that the provider reference is set when processing the payment data."""
         tx = self._create_transaction("direct")
         tx.with_context(payment_safe_write=True)._apply_updates(self.payment_data)
-        self.assertEqual(tx.state, "done")
+        self.assertEqual(tx.provider_reference, self.payment_id)
 
     @mute_logger("odoo.addons.payment.models.payment_transaction")
     @mute_logger("odoo.addons.payment_razorpay.models.payment_transaction")
@@ -144,6 +206,30 @@ class TestPaymentTransaction(RazorpayCommon):
             tx.payment_method_id,
             upi,
             msg="The payment method should not be updated if the transaction is already confirmed.",
+        )
+
+    def test_apply_updates_sets_payment_method(self):
+        """Test that the payment method is set when processing the payment data."""
+        tx = self._create_transaction("direct")
+        tx.with_context(payment_safe_write=True)._apply_updates(self.payment_data)
+        self.assertEqual(tx.payment_method_id, self.provider._get_pm_from_code("upi"))
+
+    def test_apply_updates_confirms_transaction(self):
+        """Test that the transaction state is set to 'done' when the payment data indicate a
+        successful payment."""
+        tx = self._create_transaction("direct")
+        tx.with_context(payment_safe_write=True)._apply_updates(self.payment_data)
+        self.assertEqual(tx.state, "done")
+
+    def test_extract_amount_data_returns_amount_and_currency(self):
+        """Test that the amount and currency are extracted from the payment data."""
+        tx = self._create_transaction("direct")
+        self.assertDictEqual(
+            tx._extract_amount_data({
+                "amount": payment_utils.to_minor_currency_units(self.amount, self.currency),
+                "currency": self.currency.name,
+            }),
+            {"amount": self.amount, "currency_code": self.currency.name},
         )
 
     def test_extract_token_values_maps_fields_correctly(self):

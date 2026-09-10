@@ -17,7 +17,7 @@ class TestPaymentProvider(FlutterwaveCommon):
         )
         self.assertNotIn(self.flutterwave, available_providers)
 
-    def test_available_for_validation_transactions(self):
+    def test_incompatible_with_validation_transactions(self):
         available_providers = self.env["payment.provider"]._find_available_providers(
             self.company_id, self.partner.id, 0.0, is_validation=True
         )

@@ -14,7 +14,7 @@ from odoo.addons.payment_razorpay.tests.common import RazorpayCommon
 @tagged("post_install", "-at_install")
 class TestProcessingFlows(RazorpayCommon, PaymentHttpCommon):
     @mute_logger("odoo.addons.payment_razorpay.controllers.main")
-    def test_redirect_notification_triggers_processing(self):
+    def test_returning_from_payment_triggers_processing(self):
         self._create_transaction("direct")
         url = self._build_url(RazorpayController._return_url)
         with (
@@ -50,7 +50,7 @@ class TestProcessingFlows(RazorpayCommon, PaymentHttpCommon):
         self.assertEqual(record_mock.call_count, 1)
 
     @mute_logger("odoo.addons.payment_razorpay.controllers.main")
-    def test_redirect_notification_triggers_signature_check(self):
+    def test_returning_from_payment_triggers_signature_check(self):
         self._create_transaction("redirect")
         url = self._build_url(RazorpayController._return_url)
         with (

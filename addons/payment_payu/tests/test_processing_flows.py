@@ -48,7 +48,7 @@ class TestProcessingFlows(PayuCommon, PaymentHttpCommon):
         self.assertEqual(signature_check_mock.call_count, 1)
 
     @mute_logger("odoo.addons.payment_payu.controllers.main")
-    def test_webhook_triggers_signature_check(self):
+    def test_webhook_notification_triggers_signature_check(self):
         """Test that receiving a webhook notification triggers a signature check."""
         self._create_transaction("redirect")
         url = self._build_url(const.WEBHOOK_ROUTE)

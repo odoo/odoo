@@ -13,17 +13,14 @@ from odoo.addons.payment_toss_payments.tests.common import TossPaymentsCommon
 @tagged("post_install", "-at_install")
 class TestProcessingFlows(TossPaymentsCommon, PaymentHttpCommon):
     @mute_logger("odoo.addons.payment_toss_payments.controllers.main")
-    def test_returning_from_successful_payment_initiation_triggers_processing(self):
+    def test_returning_from_payment_triggers_processing(self):
         """Test that successfully initiating a payment triggers the processing of the payment
         data."""
         tx = self._create_transaction("direct")
         redirect_success_params = {"orderId": tx.reference, "paymentKey": "test-pk", "amount": 750}
         url = self._build_url(const.PAYMENT_SUCCESS_RETURN_ROUTE)
         with (
-            patch(
-                "odoo.addons.payment.models.payment_transaction.PaymentTransaction"
-                "._send_api_request"
-            ),
+            self._mock_send_api_request(),
             patch(
                 "odoo.addons.payment.models.payment_transaction.PaymentTransaction._record"
             ) as record_mock,
@@ -37,10 +34,7 @@ class TestProcessingFlows(TossPaymentsCommon, PaymentHttpCommon):
         tx = self._create_transaction("direct")
         redirect_success_params = {"orderId": tx.reference, "paymentKey": "test-pk", "amount": 750}
         url = self._build_url(const.PAYMENT_SUCCESS_RETURN_ROUTE)
-        with patch(
-            "odoo.addons.payment.models.payment_transaction.PaymentTransaction._send_api_request",
-            side_effect=ValidationError("dummy response"),
-        ):
+        with self._mock_send_api_request(side_effect=ValidationError("dummy response")):
             self._make_http_get_request(url, params=redirect_success_params)
         self.assertEqual(tx.state, "error")
 
