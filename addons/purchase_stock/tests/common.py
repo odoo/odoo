@@ -3,7 +3,6 @@ from datetime import timedelta
 
 from odoo import Command, fields
 from odoo.addons.stock_account.tests.common import TestStockValuationCommon
-from odoo import tools
 
 
 class PurchaseTestCommon(TestStockValuationCommon):
@@ -12,12 +11,15 @@ class PurchaseTestCommon(TestStockValuationCommon):
         if 'purchase_order' not in kwargs:
             return super()._create_bill(product=product, quantity=quantity, price_unit=price_unit, **kwargs)
         po = kwargs.pop('purchase_order')
+        discount = kwargs.pop('discount', False)
         bill = self.env['account.move'].browse(po.action_create_invoice()['res_id'])
         bill.invoice_date = fields.Date.today()
         if quantity:
             bill.invoice_line_ids.quantity = quantity
         if price_unit:
             bill.invoice_line_ids.price_unit = price_unit
+        if discount:
+            bill.invoice_line_ids.discount = discount
         if post:
             bill.action_post()
         return bill
@@ -26,6 +28,7 @@ class PurchaseTestCommon(TestStockValuationCommon):
         pickings = purchase_order.picking_ids.filtered(lambda p: p.state != 'done')
         if quantity:
             pickings.move_ids.quantity = quantity
+        pickings.move_ids.picked = True
         pickings.with_context(skip_backorder=True).button_validate()
         return pickings.move_ids
 
@@ -39,6 +42,7 @@ class PurchaseTestCommon(TestStockValuationCommon):
                     'product_qty': quantity,
                     'product_uom_id': kwargs.get('uom', product.uom_id).id,
                     'price_unit': price_unit,
+                    'discount': kwargs.get('discount', 0.0),
                     'tax_ids': kwargs.get('tax_ids', [Command.clear()]),
                 })],
         })

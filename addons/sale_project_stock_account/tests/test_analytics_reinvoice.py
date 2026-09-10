@@ -6,26 +6,16 @@ from odoo.addons.project_stock_account.tests.test_analytics import TestAnalytics
 class TestAnalyticsReinvoice(TestAnalytics):
 
     def test_no_analytic_lines_for_reinvoicable_products(self):
-        reinvoicable_product = self.env['product.product'].create({
-            'name': 'product_order_cost',
-            'standard_price': 100.0,
-            'expense_policy': 'cost',
-        })
-        picking_out = self.PickingObj.create({
-            'picking_type_id': self.picking_type_out.id,
-            'location_id': self.stock_location.id,
-            'location_dest_id': self.customer_location.id,
-            'project_id': self.project.id,
-        })
+        self.product.expense_policy = 'cost'
+        self.user_stock_user = self._create_new_internal_user(
+            name='Basic Stock User',
+            login='basic_stock_user',
+            groups='stock.group_stock_user',
+        )
+
+        picking_out = self._make_out_move(self.product, quantity=3, create_picking=True, auto_validate=False).picking_id
+        picking_out.project_id = self.project
         picking_out.picking_type_id.analytic_costs = True
-        self.MoveObj.create({
-            'product_uom': self.uom_unit.id,
-            'picking_id': picking_out.id,
-            'location_id': self.stock_location.id,
-            'location_dest_id': self.customer_location.id,
-            'product_id': reinvoicable_product.id,
-            'product_uom_qty': 3,
-        })
         self.user_stock_user.company_id.anglo_saxon_accounting = True
         picking_out.action_confirm()
         picking_out.with_user(self.user_stock_user).button_validate()
