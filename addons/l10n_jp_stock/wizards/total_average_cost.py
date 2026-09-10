@@ -14,12 +14,17 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
     date_from = fields.Date(
         string='Start Date',
         required=True,
-        default=fields.Date.context_today,
+        default=lambda self: self._default_date_from(),
+        help="First day of the period to evaluate. It opens on the first day the last stock closing does not "
+             "already cover, because the evaluation and the closing that makes it final cover the same "
+             "period; a period the closing reaches into is refused.",
     )
     date_to = fields.Date(
         string='End Date',
         required=True,
         default=fields.Date.context_today,
+        help="Last day of the period to evaluate, and the date the stock closing that makes it final should "
+             "carry. Evaluate again before closing if a stock move of the period changed in the meantime.",
     )
 
     @api.model
@@ -218,6 +223,19 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
                 'next': {'type': 'ir.actions.act_window_close', 'infos': {'done': True}},
             },
         }
+
+    def _default_date_from(self):
+        """Return the day the last closing left off on, which is where this period starts.
+
+        A closing makes everything up to its own date final, so the period to
+        evaluate next is the one that opens the day after. Never later than today,
+        so the default cannot land after the end date it is offered with.
+        """
+        today = fields.Date.context_today(self)
+        # sudo: a product manager does not read the closing entries
+        if (last_closing := self.env.company.sudo()._get_last_closing_date()) == datetime.min:
+            return today
+        return min(fields.Datetime.context_timestamp(self, last_closing).date() + timedelta(days=1), today)
 
     def _get_period_bounds(self):
         """Return the two moments the period spans, in UTC, from the dates the user picked."""
