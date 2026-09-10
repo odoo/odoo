@@ -607,16 +607,12 @@ export class FormatPlugin extends Plugin {
             isTextNode(unformattedNodes[0]) &&
             unformattedNodes[0].textContent === "\u200B"
         ) {
-            const [anchorNode, anchorOffset, focusNode, focusOffset] = [
-                ...leftPos(unformattedNodes[0]),
-                ...rightPos(unformattedNodes[0]),
-            ];
-            this.dependencies.selection.setSelection({
-                anchorNode,
-                anchorOffset,
-                focusNode,
-                focusOffset,
-            });
+            const zws = unformattedNodes[0];
+            this.dependencies.selection.setSelection(
+                { anchorNode: zws, anchorOffset: zws.length },
+                { normalize: false }
+            );
+            this.zwsToRemove = zws;
         }
         if (commit) {
             this.dependencies.history.commit();
@@ -673,6 +669,16 @@ export class FormatPlugin extends Plugin {
     }
 
     normalize(root) {
+        const zws = this.zwsToRemove;
+        if (zws?.isConnected) {
+            this.zwsToRemove = null;
+            const cursor = this.dependencies.selection.preserveSelection();
+            const restore = prepareUpdate(...leftPos(zws), ...rightPos(zws));
+            cleanTextNode(zws, "\u200B", cursor);
+            restore();
+            cursor.restore();
+        }
+
         for (const el of selectElements(root, "[data-oe-zws-empty-inline]")) {
             if (isVisible(el)) {
                 // The element has some meaningful text. Remove the ZWS in it.

@@ -319,21 +319,21 @@ test("should remove bold format on formatting bold twice", () =>
         contentAfterEdit: `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`,
     }));
 
-// This test uses execCommand to reproduce as closely as possible the browser's
-// default behaviour when typing in a contenteditable=true zone.
-test("should type in bold", async () => {
-    async function typeChar(editor, char) {
-        await manuallyDispatchProgrammaticEvent(editor.editable, "keydown", { key: char });
-        await manuallyDispatchProgrammaticEvent(editor.editable, "beforeinput", {
-            inputType: "insertText",
-            data: char,
-        });
-        // Simulate text insertion as done by the contenteditable.
-        editor.document.execCommand("insertText", false, char);
-        // Input event is dispatched and handlers are called synchronously.
-        await manuallyDispatchProgrammaticEvent(editor.editable, "keyup", { key: char });
-    }
+// The tests below use execCommand to reproduce as closely as possible the
+// browser's default behaviour when typing in a contenteditable=true zone.
+async function typeChar(editor, char) {
+    await manuallyDispatchProgrammaticEvent(editor.editable, "keydown", { key: char });
+    await manuallyDispatchProgrammaticEvent(editor.editable, "beforeinput", {
+        inputType: "insertText",
+        data: char,
+    });
+    // Simulate text insertion as done by the contenteditable.
+    editor.document.execCommand("insertText", false, char);
+    // Input event is dispatched and handlers are called synchronously.
+    await manuallyDispatchProgrammaticEvent(editor.editable, "keyup", { key: char });
+}
 
+test("should type in bold", async () => {
     const { editor, el } = await setupEditor("<p>ab[]cd</p>");
 
     /** @todo fix warnings */
@@ -357,6 +357,21 @@ test("should type in bold", async () => {
     expect(getContent(el)).toBe(`<p>ab<strong>xy[]</strong>cd</p>`);
     await typeChar(editor, "z");
     expect(getContent(el)).toBe(`<p>ab<strong>xy</strong>z[]cd</p>`);
+});
+
+test("should type a space after toggling bold off", async () => {
+    const { editor, el } = await setupEditor("<p>ab[]cd</p>");
+
+    /** @todo fix warnings */
+    patchWithCleanup(console, { warn: () => {} });
+
+    bold(editor);
+    await typeChar(editor, "x");
+    expect(getContent(el)).toBe(`<p>ab<strong>x[]</strong>cd</p>`);
+
+    bold(editor);
+    await typeChar(editor, " ");
+    expect(getContent(el)).toBe(`<p>ab<strong>x</strong> []cd</p>`);
 });
 
 test.tags("desktop");
