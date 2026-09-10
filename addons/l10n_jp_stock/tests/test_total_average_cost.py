@@ -125,6 +125,16 @@ class TestTotalAverageCost(TestTotalAverageCostCommon):
         ), self.assertRaises(UserError):
             self._run_category_wizard()
 
+    def test_period_starts_where_the_last_closing_left_off(self):
+        wizard = self.env['l10n_jp_stock.total.average.cost.wizard']
+        closing = fields.Datetime.to_datetime(self.today - timedelta(days=10))
+        with patch.object(ResCompany, '_get_last_closing_date', return_value=closing):
+            self.assertEqual(wizard.create({}).date_from, self.today - timedelta(days=9))
+        # a closing of today would offer tomorrow, which the end date it comes with cannot reach
+        today = fields.Date.context_today(wizard)
+        with patch.object(ResCompany, '_get_last_closing_date', return_value=fields.Datetime.to_datetime(today)):
+            self.assertEqual(wizard.create({}).date_from, today)
+
     def test_bill_price_beats_the_order_price(self):
         line = self._create_po_line(self.env.company.currency_id, 10, 100)
         self._add_opening_stock()
