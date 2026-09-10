@@ -54,3 +54,7 @@
         background-image: url('/html_builder/static/img/options/bring-forward.svg');
     }
 }
+
+.o-overlay-item:has(.o_overlay_options) {
+    z-index: $zindex-modal - 1;
+}
