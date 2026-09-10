@@ -5122,6 +5122,9 @@ class AccountMove(models.Model):
             {
                 **self._prepare_product_base_line_for_taxes_computation(line),
                 'is_refund': True,
+                'manual_total_excluded_currency': None,
+                'manual_total_excluded': None,
+                'manual_tax_amounts': {},
             }
             for line in invoice_lines
         ]
