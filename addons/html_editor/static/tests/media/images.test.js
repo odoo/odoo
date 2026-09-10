@@ -1,7 +1,7 @@
 import { EDITABLE_MEDIA_CLASS } from "@html_editor/utils/dom_info";
 import { describe, expect, test } from "@odoo/hoot";
 import { click, dblclick, press, waitFor, waitForNone } from "@odoo/hoot-dom";
-import { animationFrame, tick } from "@odoo/hoot-mock";
+import { advanceTime, animationFrame, tick } from "@odoo/hoot-mock";
 import { onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { cleanHints } from "../_helpers/dispatch";
 import { base64Img, setupEditor, testEditor } from "../_helpers/editor";
@@ -11,6 +11,7 @@ import { deleteBackward, deleteForward, insertText } from "../_helpers/user_acti
 import { delay } from "@web/core/utils/concurrency";
 import { ImageCrop } from "@html_editor/main/media/image_crop";
 import { ImageSelector } from "@html_editor/main/media/media_dialog/image_selector";
+import { FileSelector } from "@html_editor/main/media/media_dialog/file_selector";
 
 test("Can replace an image", async () => {
     onRpc("ir.attachment", "search_read", () => [
@@ -377,6 +378,65 @@ test("Image cropper disappear on backspace", async () => {
     press("backspace");
     await waitForNone(".o_we_crop_widget", { timeout: 1500 });
     expect("img.o_we_cropper_img").toHaveCount(0);
+});
+
+test.tags("focus required");
+test("URL input is focused when URL upload button is clicked in media dialog", async () => {
+    onRpc("ir.attachment", "search_read", () => []);
+    const { editor } = await setupEditor("<p>a[]bc</p>");
+    await insertText(editor, "/image");
+    await waitFor(".o-we-powerbox");
+    await press("Enter");
+    await animationFrame();
+    await click(".o_upload_media_url_button");
+    await animationFrame();
+    expect(".o_we_url_input").toBeFocused();
+});
+
+test("scroll refresh re-runs when the attachments change", async () => {
+    const makeAttachments = (start, count) =>
+        Array.from({ length: count }, (_, i) => ({
+            id: start + i,
+            name: `image${start + i}`,
+            mimetype: "image/png",
+            image_src: "/web/static/img/logo2.png",
+            access_token: false,
+            public: true,
+        }));
+    let searchCount = 0;
+    onRpc("ir.attachment", "search_read", () => {
+        searchCount++;
+        // First page fills the display limit so the "Load more" button shows;
+        // the second page returns a few more, growing allAttachments.
+        return searchCount === 1 ? makeAttachments(1, 30) : makeAttachments(31, 3);
+    });
+
+    let updateScrollCount = 0;
+    patchWithCleanup(FileSelector.prototype, {
+        updateScroll() {
+            // Count the scroll-refresh re-runs; skip super() so the assertion
+            // stays independent of layout (getBoundingClientRect).
+            updateScrollCount++;
+        },
+    });
+
+    const { editor } = await setupEditor("<p>a[]bc</p>");
+    await insertText(editor, "/image");
+    await waitFor(".o-we-powerbox");
+    await press("Enter");
+    await animationFrame();
+    await waitFor(".o_load_more");
+
+    // Flush the mount-time refresh (debounced 500ms) and take a baseline.
+    await advanceTime(500);
+    const countAfterMount = updateScrollCount;
+    expect(countAfterMount).toBeGreaterThan(0);
+
+    // Loading more grows allAttachments -> the effect must re-run the refresh.
+    await click(".o_load_more");
+    await animationFrame();
+    await advanceTime(500);
+    expect(updateScrollCount).toBeGreaterThan(countAfterMount);
 });
 
 test("double-click on image in Media Dialog executes onClickAttachment only once", async () => {
