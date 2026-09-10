@@ -7,10 +7,10 @@ class Base(models.AbstractModel):
     _inherit = 'base'
 
     @api.model
-    def hierarchy_read(self, domain, specification, parent_field, child_field=None, order=None):
+    def hierarchy_read(self, domain, specification, parent_field, child_field=None, offset=0, limit=None, order=None):
         if parent_field not in specification:
             specification[parent_field] = {"fields": {"display_name": {}}}
-        records = self.search(domain, order=order)
+        records = self.search(domain, offset, limit, order=order)
         fetch_child_ids_for_all_records = False
         if not records:
             return []

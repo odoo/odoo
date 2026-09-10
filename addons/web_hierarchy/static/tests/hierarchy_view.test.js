@@ -17,6 +17,10 @@ import {
     removeFacet,
     toggleMenuItem,
     toggleSearchBarMenu,
+    getPagerLimit,
+    getPagerValue,
+    pagerNext,
+    pagerPrevious,
 } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
 import { WebClient } from "@web/webclient/webclient";
@@ -1558,4 +1562,118 @@ test("Open record on new window", async () => {
         'set current_state-{"actionStack":[{"displayName":"","model":"hr.employee","view_type":"hierarchy"}],"model":"hr.employee"}',
     ]);
 });
+
+
+test("Pagination with no filter functions properly", async () => {
+    Employee._views["hierarchy"] = Employee._views["hierarchy"].replace(
+        "<hierarchy>",
+        "<hierarchy limit='2'>"
+    );
+
+    Employee._records.push(
+        {id: 5, name: "Lisa"},
+        {id: 6, name: "Mike"},
+    );
+
+    await mountView({
+        type: "hierarchy",
+        resModel: "hr.employee",
+    });
+
+    expect(getPagerValue()).toEqual([1, 2]);
+    expect(getPagerLimit()).toBe(3);
+});
+
+test("Pagination navigation works", async () => {
+    Employee._views["hierarchy"] = Employee._views["hierarchy"].replace(
+        "<hierarchy>",
+        "<hierarchy limit='2'>"
+    );
+
+    Employee._records.push(
+        {id: 5, name: "Lisa"},
+        {id: 6, name: "Mike"},
+        {id: 7, name: "Tyler"},
+    );
+
+    await mountView({
+        type: "hierarchy",
+        resModel: "hr.employee",
+    });
+
+    expect(getPagerValue()).toEqual([1, 2]);
+    expect(getPagerLimit()).toBe(4);
+
+    await pagerNext();
+
+    expect(getPagerValue()).toEqual([3, 4]);
+    expect(getPagerLimit()).toBe(4);
+
+    await pagerPrevious();
+
+    expect(getPagerValue()).toEqual([1, 2]);
+    expect(getPagerLimit()).toBe(4);
+})
+
+test("Pagination state remains same when switching views", async () => {
+    Employee._views["hierarchy"] = Employee._views["hierarchy"].replace(
+        "<hierarchy>",
+        "<hierarchy limit='2'>"
+    );
+
+    Employee._records.push(
+        {id: 5, name: "Lisa"},
+        {id: 6, name: "Mike"},
+    );
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        res_model: "hr.employee",
+        type: "ir.actions.act_window",
+        views: [
+            [false, "hierarchy"],
+            [false, "form"],
+        ],
+    });
+
+    await pagerNext();
+    expect(getPagerValue()).toEqual([3,3]);
+    expect(getPagerLimit()).toBe(3);
+
+    // check that the pager info is still the same after navigating between the form and hierarchy view
+    await contains(".o_hierarchy_node").click();
+    expect(".o_hierarchy_view").toHaveCount(0);
+    expect(".o_form_view").toHaveCount(1);
+    await contains(".o_back_button").click();
+
+    expect(getPagerValue()).toEqual([3,3]);
+    expect(getPagerLimit()).toBe(3);
+})
+
+test("Pager counter is correct with filter", async () => {
+    Employee._views["hierarchy"] = Employee._views["hierarchy"].replace(
+        "<hierarchy>",
+        "<hierarchy limit='2'>"
+    );
+
+    Employee._records.push(
+        {id: 5, name: "Lisa"},
+        {id: 6, name: "Mike"},
+    );
+
+    await mountView({
+        type: "hierarchy",
+        resModel: "hr.employee",
+        arch: Employee._views.hierarchy,
+        searchViewArch: `
+            <search>
+                <filter name="test_filter" domain="[['id', '>', 4]]"/>
+            </search>
+        `,
+    });
+    await enableFilters(["test_filter"]);
+
+    expect(getPagerValue()).toEqual([1,2]);
+    expect(getPagerLimit()).toBe(2);
+})
 
