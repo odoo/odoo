@@ -75,6 +75,24 @@ $o-grays: (
 $o-colors: #a2a2a2, #ee2d2d, #dc8534, #e8bb1d, #5794dd, #9f628f, #db8865,
            #41a9a2, #304be0, #ee2f8a, #61c36e, #9872e6 !default;
 
+// Tag and badge palette (o_tag_color_N, o_badge_color_N) Generated from OKLCH.
+// To change a color, edit its OKLCH value and convert it back to hex.
+$o-colors-border:
+    #8f8f8f, #d76a58, #cc7724, #c09910,
+    #179dc5, #b271c6, #af8563, #17a49d,
+    #5d8ee4, #d06792, #4ca65a, #8f7ede
+    !default;
+$o-colors-bg-subtle:
+    #d7d7d7, #fedbd5, #fedec5, #f4dc9d,
+    #c2ecfe, #ebcaf6, #f2e1d4, #aef4ee,
+    #c3d9fe, #fec5d9, #bae5bd, #e4e1fe
+    !default;
+$o-colors-text-emphasis:
+    #3d3d3d, #6b1f15, #5c3003, #4c3b04,
+    #044457, #542662, #4d3827, #034744,
+    #193a76, #671d3f, #044b18, #3e2f72
+    !default;
+
 $o-colors-ui: () !default;
 @for $index from 1 through length($o-colors) {
     $_color-name: "color-#{$index}";
