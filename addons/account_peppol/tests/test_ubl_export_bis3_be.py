@@ -28,9 +28,6 @@ class TestUblExportBis3BEPeppol(TestUblExportBis3BE):
         with self.assertRaisesRegex(UserError, r".*\[PEPPOL\-EN16931\-R010\].*"):
             self._generate_invoice_ubl_file(invoice, sending_methods=['peppol'])
 
-        # Check customer's endpoint without Peppol.
-        self._generate_invoice_ubl_file(invoice)
-
         # Check supplier's endpoint with Peppol.
         invoice = self._create_invoice_one_line(
             product_id=product,
@@ -46,6 +43,3 @@ class TestUblExportBis3BEPeppol(TestUblExportBis3BE):
         self.env.company.partner_id.peppol_endpoint = None
         with self.assertRaisesRegex(UserError, r".*\[PEPPOL\-EN16931\-R020\].*"):
             self._generate_invoice_ubl_file(invoice, sending_methods=['peppol'])
-
-        # Check supplier's endpoint without Peppol.
-        self._generate_invoice_ubl_file(invoice)

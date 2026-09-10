@@ -12,17 +12,21 @@ class AccountEdiUBLCenEn16931(models.AbstractModel):
     # EXPORT: NODES
     # -------------------------------------------------------------------------
 
-    def _ubl_add_line_allowance_charge_nodes(self, vals):
-        super()._ubl_add_line_allowance_charge_nodes(vals)
+    def _ubl_add_invoice_type_code_node(self, vals):
+        super()._ubl_add_invoice_type_code_node(vals)
 
-        # Discount.
-        self._ubl_add_line_allowance_charge_nodes_for_discount(vals)
+        if self._is_document(vals, 'invoice'):
+            vals['document_node']['cbc:InvoiceTypeCode']['_text'] = 380
+        elif self._is_document(vals, 'self_invoice'):
+            vals['document_node']['cbc:InvoiceTypeCode']['_text'] = 389
 
-        # Recycling contribution taxes.
-        self._ubl_add_line_allowance_charge_nodes_for_recycling_contribution_taxes(vals)
+    def _ubl_add_credit_note_type_code_node(self, vals):
+        super()._ubl_add_credit_note_type_code_node(vals)
 
-        # Excise taxes.
-        self._ubl_add_line_allowance_charge_nodes_for_excise_taxes(vals)
+        if self._is_document(vals, 'credit_note'):
+            vals['document_node']['cbc:CreditNoteTypeCode']['_text'] = 381
+        elif self._is_document(vals, 'self_credit_note'):
+            vals['document_node']['cbc:CreditNoteTypeCode']['_text'] = 261
 
     def _line_nodes_filter_base_lines(self, vals, filter_function=None):
         # Early payment discount lines should not appear as lines but as allowances/charges.
@@ -38,19 +42,18 @@ class AccountEdiUBLCenEn16931(models.AbstractModel):
 
         return super()._line_nodes_filter_base_lines(vals, filter_function=new_filter_function)
 
-    def _ubl_add_party_tax_scheme_nodes(self, vals):
-        super()._ubl_add_party_tax_scheme_nodes(vals)
-
+    def _need_party_tax_scheme_nodes(self, vals):
         # [BR-O-03]/[BR-O-04]/[BR-O-05] no party tax scheme with "Not subject to VAT" VAT Category Code
-        base_lines = vals['base_lines']
-        vals['no_party_tax_scheme'] = (
+        if (
             'ubl_cii_tax_category_code' in self.env['account.tax']._fields
             and any(
                 tax_data['tax'].ubl_cii_tax_category_code == 'O'
-                for base_line in base_lines
+                for base_line in vals['base_lines']
                 for tax_data in base_line['tax_details']['taxes_data']
             )
-        )
+        ):
+            return False
+        return super()._need_party_tax_scheme_nodes(vals)
 
     def _ubl_add_allowance_charge_nodes(self, vals):
         super()._ubl_add_allowance_charge_nodes(vals)
@@ -60,6 +63,15 @@ class AccountEdiUBLCenEn16931(models.AbstractModel):
             self._ubl_add_allowance_charge_nodes_early_payment_discount(vals)
             # Global discount lines are treated as allowances/charges.
             self._ubl_add_allowance_charge_nodes_global_discount(vals)
+
+    def _ubl_add_invoice_delivery_nodes(self, vals):
+        # [UBL-SR-24]-Deliver to information shall occur maximum once
+        super()._ubl_add_invoice_delivery_nodes(vals)
+
+        if self._is_document(vals, 'invoice', 'credit_note', 'self_invoice', 'self_credit_note'):
+            delivery_node = vals['document_node']['cac:Delivery']
+            if isinstance(delivery_node, list):
+                vals['document_node']['cac:Delivery'] = delivery_node[0] if delivery_node else None
 
     def _ubl_default_tax_category_grouping_key(self, base_line, tax_data, vals, currency):
         # Recycling contribution taxes / excises should not appear anywhere as taxes but as allowances/charges.
