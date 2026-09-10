@@ -64,6 +64,11 @@ class ResConfigSettings(models.TransientModel):
         if not self.group_stock_multi_locations:
             self.group_stock_adv_location = False
 
+    @api.onchange('group_stock_picking_batch')
+    def _onchange_group_stock_picking_batch(self):
+        if not self.group_stock_picking_batch:
+            self.module_stock_fleet = False
+
     @api.onchange('group_stock_production_lot')
     def _onchange_group_stock_production_lot(self):
         if not self.group_stock_production_lot:
@@ -84,6 +89,11 @@ class ResConfigSettings(models.TransientModel):
     def onchange_module_stock_barcode_barcodelookup(self):
         if self.module_stock_barcode_barcodelookup:
             self.module_product_barcodelookup = True
+
+    @api.onchange('module_stock_fleet')
+    def _onchange_module_stock_fleet(self):
+        if self.module_stock_fleet and not self.group_stock_picking_batch:
+            self.group_stock_picking_batch = True
 
     @api.onchange('group_stock_adv_location')
     def onchange_adv_location(self):
