@@ -41,6 +41,8 @@ class CalendarEvent(models.Model):
         for event in events:
             if event.opportunity_id and not event.meeting_activity_ids:
                 event.opportunity_id.log_meeting(event)
+            if not event.opportunity_id and event.res_id and event.res_model == 'crm.lead':
+                event.opportunity_id = event.res_id
         return events
 
     def _is_crm_lead(self, defaults, ctx=None):
@@ -53,3 +55,8 @@ class CalendarEvent(models.Model):
         res_model_id = defaults.get('res_model_id', False) or ctx and ctx.get('default_res_model_id')
 
         return res_model and res_model == 'crm.lead' or res_model_id and self.env['ir.model'].sudo().browse(res_model_id).model == 'crm.lead'
+
+    def _sync_linked_document(self):
+        super()._sync_linked_document()
+
+        self._sync_linked_model_field('crm.lead', 'opportunity_id')
