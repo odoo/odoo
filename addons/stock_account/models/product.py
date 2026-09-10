@@ -406,7 +406,7 @@ class ProductProduct(models.Model):
         moves_domain = Domain([
             ('product_id', 'in', self._as_query()),
             ('company_id', '=', self.env.company.id),
-            '|', '|', ('is_in', '=', True), ('is_dropship', '=', True), ('is_out', '=', True)
+            '|', ('is_in', '=', True), ('is_out', '=', True)
         ])
         if lot:
             moves_domain &= Domain([
@@ -441,8 +441,9 @@ class ProductProduct(models.Model):
             field_names=['id'],
             order='product_id, date, id'
         )
+
         # PERF avoid memoryerror
-        move_fields = ['date', 'is_dropship', 'is_in', 'is_out', 'location_dest_id', 'location_id', 'move_line_ids', 'picked', 'value', 'product_id']
+        move_fields = ['date', 'is_in', 'is_out', 'location_dest_id', 'location_id', 'move_line_ids', 'picked', 'value', 'product_id']
         move_line_fields = ['company_id', 'location_id', 'location_dest_id', 'lot_id', 'owner_id', 'picked', 'quantity_product_uom']
 
         product, valuation_from_date = False, False
@@ -466,7 +467,6 @@ class ProductProduct(models.Model):
 
         for product, move_ids in move_ids_by_product.items():
             product_moves = self.env['stock.move'].browse(move_ids)
-
             first_move = product_moves[0]
             quantity = quantity_by_product_id.get(product.id, 0)
             average_cost = std_price_by_product_id.get(product.id, first_move.value / first_move._get_valued_qty() if first_move._get_valued_qty() else 0)
@@ -477,10 +477,10 @@ class ProductProduct(models.Model):
                 moves_batch.fetch(move_fields)
                 moves_batch.move_line_ids.fetch(move_line_fields)
                 for move in moves_batch:
-                    if move.is_in or move.is_dropship:
+                    if move.is_in:
                         in_qty = move._get_valued_qty()
                         in_value = move.value
-                        if at_date or move.is_dropship:
+                        if at_date:
                             in_value = move.sudo()._get_value(at_date=at_date, forced_std_price=average_cost)
                         if lot:
                             lot_qty = move._get_valued_qty(lot)
@@ -496,7 +496,7 @@ class ProductProduct(models.Model):
                         elif previous_qty <= 0:
                             average_cost = in_value / in_qty if in_qty else average_cost
                             value = average_cost * quantity
-                    if move.is_out or move.is_dropship:
+                    if move.is_out:
                         out_qty = move._get_valued_qty()
                         out_value = out_qty * average_cost
                         if lot:

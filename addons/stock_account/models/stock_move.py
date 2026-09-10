@@ -309,7 +309,7 @@ class StockMove(models.Model):
         for move in self:
             move = move.with_company(move.company_id)
             # Incoming moves
-            if move.is_dropship or move.is_in:
+            if move.is_in:
                 products_to_recompute.add(move.product_id.id)
                 if move.product_id.lot_valuated:
                     if any(not ml.lot_id for ml in move.move_line_ids):
@@ -317,7 +317,6 @@ class StockMove(models.Model):
                             "A lot/serial number is required for product '%s' as it has lot valuation enabled.",
                             move.product_id.display_name))
                     lots_to_recompute.update(move.move_line_ids.lot_id.ids)
-            if move.is_in:
                 move.value = move.sudo()._get_value()
                 continue
             # Outgoing moves
