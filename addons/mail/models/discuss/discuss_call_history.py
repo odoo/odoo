@@ -130,9 +130,22 @@ class DiscussCallHistory(models.Model):
                 "default_date_deadline": False,
                 "default_res_model_selection": "res.partner",
                 "log_contact_id": self._get_log_contact().id,
+                "log_channel_partner_ids": self._get_log_channel_partners().ids,
                 "log_activity_category": "meeting",
             },
         }
+
+    def _get_log_channel_partners(self):
+        """ Return the partners the call was held with, the user logging it aside: who the
+        document it gets logged on is expected to be about
+        (see `mail.activity.mixin.name_search`).
+
+        :return: a ``res.partner`` recordset"""
+        self.ensure_one()
+        # sudo: discuss.channel: who a call was held with does not depend on the reader
+        # being a member of its channel.
+        partners = self.channel_id.sudo().channel_partner_ids
+        return partners - self.env.user.partner_id
 
     def _link_to_activity(self):
         """ Link the call to the activity that planned it, if any, so that the

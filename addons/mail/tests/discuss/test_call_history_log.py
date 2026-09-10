@@ -49,3 +49,43 @@ class TestCallHistoryLog(MailCommon):
         message = partner.message_ids[0]
         self.assertIn("Meeting done (1h 23m 45s)", message.body)
         self.assertIn(f'data-oe-model="discuss.call.history" data-oe-id="{self.call_history.id}"', message.body)
+
+    def test_log_channel_partners_exclude_the_user_logging_the_call(self):
+        """The user logging the call knows they attended it: the records offered to them
+        are the ones about whoever else was there."""
+        attendee = self.env["res.partner"].create({"name": "Test Attendee"})
+        self.channel._add_members(partners=self.env.user.partner_id | attendee)
+
+        context = self.call_history.action_log_meeting()["context"]
+
+        self.assertEqual(context["log_channel_partner_ids"], attendee.ids)
+
+    def test_log_meeting_offers_the_contacts_of_the_call_first(self):
+        """Whoever was in the call is who the document being logged on is expected to be
+        about: offer their records before any other the wizard allows."""
+        attendee = self.env["res.partner"].create({"name": "AAA Call Attendee"})
+        other = self.env["res.partner"].create({"name": "AAA Other Contact"})
+        self.channel._add_members(partners=attendee)
+        domain = [("id", "in", (attendee | other).ids)]
+
+        # ordered by name, the attendee comes first here only by chance
+        self.assertEqual(
+            [id_ for id_, _name in self.env["res.partner"].name_search("AAA", domain)],
+            (attendee | other).ids,
+        )
+        # ordered by name, the attendee would come last: it is offered first nonetheless
+        other.name = "AAA A Other Contact"
+        context = self.call_history.action_log_meeting()["context"]
+        offered = self.env["res.partner"].with_context(**context).name_search("AAA", domain)
+        self.assertEqual([id_ for id_, _name in offered], (attendee | other).ids)
+
+    def test_log_meeting_offers_every_record_the_wizard_allows(self):
+        """Records unrelated to the call are pushed down the list, never dropped from it."""
+        attendee = self.env["res.partner"].create({"name": "ZZZ Call Attendee"})
+        self.channel._add_members(partners=attendee)
+        context = self.call_history.action_log_meeting()["context"]
+
+        offered = self.env["res.partner"].with_context(**context).name_search()
+
+        self.assertEqual(offered[0][0], attendee.id)
+        self.assertEqual(len(offered), len(self.env["res.partner"].name_search()))

@@ -498,3 +498,37 @@ class MailActivityMixin(models.AbstractModel):
             return False
         self.activity_search(act_type_xmlids, user_id=user_id, only_automated=only_automated).unlink()
         return True
+
+    # ------------------------------------------------------------
+    # CALL LOGGING
+    # ------------------------------------------------------------
+
+    @api.model
+    def name_search(self, name='', domain=None, operator='ilike', limit=100):
+        """ When logging a call (see `mail.activity.schedule`), offer the records about
+        whoever attended it first: they are the ones the user is after. """
+        priority_domain = self._get_call_log_priority_domain()
+        if priority_domain.is_false():
+            return super().name_search(name, domain, operator, limit)
+        domain = Domain(domain if domain is not None else Domain.TRUE)
+        matched = super().name_search(name, domain & priority_domain, operator, limit)
+        if limit and len(matched) >= limit:
+            return matched
+        return matched + super().name_search(
+            name, domain & ~priority_domain, operator, limit and limit - len(matched),
+        )
+
+    @api.model
+    def _get_call_log_priority_domain(self):
+        """ Records about one of the partners named by the ``log_channel_partner_ids``
+        context key, set when logging a call.
+
+        :return: a ``Domain``, ``FALSE`` when no call is being logged, leaving the order
+            of the model alone"""
+        partner_ids = self.env.context.get('log_channel_partner_ids')
+        if not partner_ids:
+            return Domain.FALSE
+        return Domain.OR(
+            Domain(fname, 'in', partner_ids)
+            for fname in self._mail_get_partner_fields()
+        )

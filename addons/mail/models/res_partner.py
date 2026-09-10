@@ -57,6 +57,13 @@ class ResPartner(models.Model):
     def _mail_get_partners(self, introspect_fields=False):
         return dict((partner.id, partner) for partner in self)
 
+    @api.model
+    def _get_call_log_priority_domain(self):
+        """ A contact is not about a partner through a field: it is that partner. """
+        if partner_ids := self.env.context.get('log_channel_partner_ids'):
+            return Domain('id', 'in', partner_ids)
+        return super()._get_call_log_priority_domain()
+
     def _search_commercial_partners(self, active_test=True):
         """Return all partners belonging to self's commercial entity, the
         commercial entity itself included.
