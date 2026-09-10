@@ -9,7 +9,7 @@ import { render } from "@web/owl2/utils";
 import { useSetupAction } from "@web/search/action_hook";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
-import { standardActionServiceProps } from "@web/webclient/actions/action_service";
+import { standardActionServiceProps } from "@web/webclient/actions/action_plugin";
 import { Status } from "./dashboard_loader_service";
 import { DashboardSearchBar } from "./dashboard_search_bar/dashboard_search_bar";
 import { MobileFigureContainer } from "./mobile_figure_container/mobile_figure_container";

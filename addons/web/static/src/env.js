@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 import { App, EventBus } from "@odoo/owl";
 import { isMacOS } from "@web/core/browser/feature_detection";
 import { appTranslateFn } from "@web/core/l10n/translation";
@@ -17,10 +18,8 @@ import { session } from "@web/session";
  * @returns {OdooEnv}
  */
 export function makeEnv() {
-    const bus = new EventBus();
-    return {
-        bus,
-    };
+    // `bus` is set by `EnvBusBridgePlugin` once the app's plugins start.
+    return {};
 }
 
 export const customDirectives = {

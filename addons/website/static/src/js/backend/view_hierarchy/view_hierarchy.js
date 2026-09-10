@@ -5,7 +5,7 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { Component, onWillStart, proxy, useProps } from "@odoo/owl";
 import { router } from "@web/core/browser/router";
-import { standardActionServiceProps } from "@web/webclient/actions/action_service";
+import { standardActionServiceProps } from "@web/webclient/actions/action_plugin";
 
 export class ViewHierarchy extends Component {
     static components = { Layout, HierarchyNavbar };

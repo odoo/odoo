@@ -44,7 +44,7 @@ import { redirect } from "@web/core/utils/urls";
 import { useSetupAction } from "@web/search/action_hook";
 import { listView } from "@web/views/list/list_view";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
-import { clearUncommittedChanges } from "@web/webclient/actions/action_service";
+import { clearUncommittedChanges } from "@web/webclient/actions/action_plugin";
 import { WebClient } from "@web/webclient/webclient";
 
 const { ResCompany, ResPartner, ResUsers } = webModels;
@@ -2296,11 +2296,11 @@ test("Call twice clearUncommittedChanges in a row does not save twice", async ()
     expect(".o_form_view .o_form_editable").toHaveCount(1);
 
     await contains(".o_field_widget[name=foo] input").edit("val");
-    clearUncommittedChanges(getMockEnv());
+    clearUncommittedChanges(getMockEnv().bus);
 
     await animationFrame();
     expect(".modal").toHaveCount(0);
-    clearUncommittedChanges(getMockEnv());
+    clearUncommittedChanges(getMockEnv().bus);
 
     await animationFrame();
     expect(".modal").toHaveCount(0);

@@ -32,7 +32,7 @@ import { useBus, useService } from "@web/core/utils/hooks";
 import { renderToElement } from "@web/core/utils/render";
 import { getScrollingElement } from "@web/core/utils/scrolling";
 import { redirect } from "@web/core/utils/urls";
-import { standardActionServiceProps } from "@web/webclient/actions/action_service";
+import { standardActionServiceProps } from "@web/webclient/actions/action_plugin";
 import { AddPageDialog } from "@website/components/dialog/add_page_dialog";
 import { ResourceEditor } from "@website/components/resource_editor/resource_editor";
 import { CreatePageMessage } from "./create_page_message";
