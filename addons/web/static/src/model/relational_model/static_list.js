@@ -504,6 +504,7 @@ export class StaticList extends DataPoint {
         // For performance reasons, we accumulate removed ids (commands DELETE and UNLINK), and at
         // the end, we filter once this.records and this._currentIds to remove them.
         const removedIds = {};
+        const currentIdsSet = new Set(this._currentIds);
         const recordsToLoad = [];
         for (const command of commands) {
             switch (command[0]) {
@@ -603,6 +604,9 @@ export class StaticList extends DataPoint {
                     } else {
                         record = this._createRecordDatapoint({ ...command[2], id: command[1] });
                     }
+                    if (currentIdsSet.has(record.resId) && !removedIds[record.resId]) {
+                        break;
+                    }
                     if (!this.limit || this.records.length < this.limit || canAddOverLimit) {
                         if (!command[2]) {
                             recordsToLoad.push(record);
@@ -619,6 +623,7 @@ export class StaticList extends DataPoint {
                         }
                     }
                     this._currentIds.push(record.resId);
+                    currentIdsSet.add(record.resId);
                     addOwnCommand([command[0], command[1]]);
                     this.count++;
                     break;
