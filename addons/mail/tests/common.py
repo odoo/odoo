@@ -2035,6 +2035,7 @@ class MailCommon(MailCase):
         for data in channels_data:
             if "ai.agent" not in self.env or data.get("channel_type") == "livechat" and not ai_livechat_installed:
                 data.pop("ai_agent_id", None)
+                data.pop("livechat_channel_has_agents", None)
         return list(channels_data)
 
     def _filter_messages_fields(self, /, *messages_data):
