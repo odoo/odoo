@@ -392,6 +392,15 @@ class AccountEdiCommon(models.AbstractModel):
     def _get_document_type_code_vals(self, invoice, invoice_data):
         return {'attrs': {}, 'value': None}
 
+    @api.model
+    def _vat_is_equal(self, partner_vat, other_vat, country=False):
+        partner_vat = partner_vat.replace(' ', '').upper()
+        vat_to_compare = other_vat.replace(' ', '').replace('.', '').upper()
+        if country and country.code == 'CH':
+            partner_vat = re.sub(r"(TVA|IVA|MWST)?$", "", partner_vat.replace('.', '').replace('-', ''))
+            vat_to_compare = re.sub(r"(TVA|IVA|MWST)?$", "", vat_to_compare.replace('-', ''))
+        return partner_vat == vat_to_compare
+
     # -------------------------------------------------------------------------
     # TAXES
     # -------------------------------------------------------------------------
@@ -815,10 +824,18 @@ class AccountEdiCommon(models.AbstractModel):
     def _import_partner(self, company_id, name, phone, email, vat, *, peppol_eas=False, peppol_endpoint=False, postal_address={}, **kwargs):
         """ Retrieve the partner, if no matching partner is found, create it (only if he has a vat and a name) """
         logs = []
+        domain = False
         if peppol_eas and peppol_endpoint:
             domain = [('peppol_eas', '=', peppol_eas), ('peppol_endpoint', '=', peppol_endpoint)]
-        else:
-            domain = False
+        if account_numbers := kwargs.get('bank_details'):
+            bank_domain = [
+                ('bank_ids', 'any', [
+                    '&',
+                    ('account_number', 'in', account_numbers),
+                    ('allow_out_payment', '=', True),
+                ]),
+            ]
+            domain = Domain.OR([domain, bank_domain])
         partner = self.env['res.partner'] \
             .with_company(company_id) \
             ._retrieve_partner(name=name, phone=phone, email=email, vat=vat, domain=domain)
@@ -829,17 +846,26 @@ class AccountEdiCommon(models.AbstractModel):
             [('country_id', '=', country.id), ('code', '=', state_code)],
             limit=1,
         ) if state_code and country else self.env['res.country.state']
+
+        vat_mismatch = False
+        if vat and partner.vat and not self._vat_is_equal(partner.vat, vat, country):
+            vat_mismatch = True
+            partner = self.env['res.partner']
+
         if not partner and name and vat:
             partner_vals = {'name': name, 'email': email, 'phone': phone, 'is_company': True}
             if peppol_eas and peppol_endpoint:
                 partner_vals.update({'peppol_eas': peppol_eas, 'peppol_endpoint': peppol_endpoint})
             partner = self.env['res.partner'].create(partner_vals)
-            if vat:
-                partner.vat, _country_code = self.env['res.partner']._run_vat_checks(country, vat, validation='setnull')
-            logs.append(_("Could not retrieve a partner corresponding to '%s'. A new partner was created.", name))
+            if vat_mismatch:
+                logs.append(_("Could not retrieve a partner corresponding to '%s' with the same VAT. A new partner was created.", name))
+            else:
+                logs.append(_("Could not retrieve a partner corresponding to '%s'. A new partner was created.", name))
         elif not partner and not logs:
             logs.append(_("Could not retrieve partner with details: Name: %(name)s, Vat: %(vat)s, Phone: %(phone)s, Email: %(email)s",
                   name=name, vat=vat, phone=phone, email=email))
+        if vat and not partner.vat:
+            partner.vat, _country_code = self.env['res.partner']._run_vat_checks(country, vat, validation='setnull')
         if not partner.country_id and not partner.street and not partner.street2 and not partner.city and not partner.zip and not partner.state_id:
             partner.write({
                 'country_id': country.id,
@@ -1500,12 +1526,7 @@ class AccountEdiCommon(models.AbstractModel):
         Should stay consistent with `_get_country_specific_vat_variants`.
         """
         country = self._import_retrieve_country(collected_values) or customer.country_id
-        customer_vat = customer.vat.replace(' ', '').upper()
-        vat_to_compare = vat.replace(' ', '').replace('.', '').upper()
-        if country and country.code == 'CH':
-            customer_vat = re.sub(r"(TVA|IVA|MWST)?$", "", customer_vat.replace('.', '').replace('-', ''))
-            vat_to_compare = re.sub(r"(TVA|IVA|MWST)?$", "", vat_to_compare.replace('-', ''))
-        return customer_vat == vat_to_compare
+        return self._vat_is_equal(customer.vat, vat, country)
 
     def _import_create_missing_customer(self, collected_values):
         customer_values = collected_values['customer_values']
