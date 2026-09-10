@@ -9,14 +9,13 @@
                 <group>
                     <group>
                         <label name="carried_weight_label" for="total_weight" groups="uom.group_uom"/>
-                        <div name="carried_weight" class="d-flex align-items-center" groups="uom.group_uom">
-                            <div style="width: 33%;">
+                        <div name="carried_weight" class="row align-items-center m-0" groups="uom.group_uom">
+                            <div class="col-4 px-0">
                                 <field name="total_weight" string="Total Weight" class="w-100" readonly="is_loading_prices"/>
                             </div>
-                            <div style="width: 33%;">
+                            <div class="col-8 pe-0">
                                 <field name="weight_uom_name" class="w-100"/>
                             </div>
-                            <div style="width: 34%;"></div>
                         </div>
                         <label name="carried_id_label" for="carrier_id"/>
                         <div class="d-flex flex-row gap-1">

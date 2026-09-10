@@ -61,7 +61,8 @@ class ChooseDeliveryCarrier(models.TransientModel):
             and self.order_id.delivery_set
             and self.delivery_type not in ("fixed", "base_on_rule")
         ):
-            vals = self._get_delivery_rate()
+            vals = self._get_carrier_delivery_rate(self.carrier_id)
+            self._set_delivery_vals(vals)
             if vals.get("error_message"):
                 warning = {
                     "title": self.env._("%(carrier)s Error", carrier=self.carrier_id.name),
@@ -92,20 +93,23 @@ class ChooseDeliveryCarrier(models.TransientModel):
         for wizard in self:
             wizard.show_delivery_rates_button = len(wizard.available_carrier_ids) > 1
 
-    def _get_delivery_rate(self):
+    def _set_delivery_vals(self, delivery_vals):
         self.ensure_one()
-        delivery_vals = self._get_carrier_delivery_rate(self.carrier_id)
+
         if "display_price" in delivery_vals:
             self.delivery_message = delivery_vals["delivery_message"]
             self.delivery_price = delivery_vals["delivery_price"]
             self.display_price = delivery_vals["display_price"]
-            return {"no_rate": delivery_vals["no_rate"]}
-        return {"error_message": delivery_vals["error_message"]}
+
+    def _handle_delivery_vals(self, delivery_vals):
+        if delivery_vals.get("error_message"):
+            raise UserError(delivery_vals.get("error_message"))
+
+        self._set_delivery_vals(delivery_vals)
 
     def update_price(self):
-        vals = self._get_delivery_rate()
-        if vals.get("error_message"):
-            raise UserError(vals.get("error_message"))
+        vals = self._get_carrier_delivery_rate(self.carrier_id)
+        self._handle_delivery_vals(vals)
         return {
             "name": self.env._("Add a delivery method"),
             "type": "ir.actions.act_window",
@@ -137,25 +141,14 @@ class ChooseDeliveryCarrier(models.TransientModel):
     def _retrieve_delivery_rate(self):
         self.ensure_one()
 
+        delivery_vals = {}
         if not self.carrier_prices:
             if self.carrier_id:
-                vals = self._get_delivery_rate()
-                if vals.get("error_message"):
-                    raise UserError(vals.get("error_message"))
-            return
-
-        delivery_vals = self.carrier_prices.get(str(self.carrier_id.id), {})
-        if delivery_vals.get("error_message"):
-            raise UserError(delivery_vals.get("error_message"))
-
-        if "display_price" in delivery_vals:
-            self.delivery_message = delivery_vals["delivery_message"]
-            self.delivery_price = delivery_vals["delivery_price"]
-            self.display_price = delivery_vals["display_price"]
+                delivery_vals = self._get_carrier_delivery_rate(self.carrier_id)
         else:
-            self.delivery_message = False
-            self.display_price = 0
-            self.delivery_price = 0
+            delivery_vals = self.carrier_prices.get(str(self.carrier_id.id), {})
+
+        self._handle_delivery_vals(delivery_vals)
 
     def button_confirm(self):
         self.order_id.set_delivery_line(self.carrier_id, self.delivery_price)
@@ -164,9 +157,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
             "delivery_message": self.delivery_message,
         })
 
-    @api.model
-    def get_wizard_carrier_rate(self, wizard_id, carrier_id):
+    def get_wizard_carrier_rate(self, carrier_id):
         """Compute delivery prices for a single carier"""
-        wizard = self.browse(wizard_id)
         carrier = self.env['delivery.carrier'].browse(carrier_id)
-        return wizard._get_carrier_delivery_rate(carrier)
+        return self._get_carrier_delivery_rate(carrier)
