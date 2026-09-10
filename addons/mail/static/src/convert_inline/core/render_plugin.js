@@ -591,6 +591,20 @@ export class RenderPlugin extends Plugin {
             paragraph.append(br);
             template.content.appendChild(paragraph);
         }
+        for (const el of template.content.querySelectorAll(":empty")) {
+            const comments = childNodes(el).filter((node) => node.nodeType === Node.COMMENT_NODE);
+            if (comments.length === 0 && !isSelfClosingElement(el) && el.nodeName !== "T") {
+                el.appendChild(this.config.referenceDocument.createComment(""));
+                if (this.config.debug) {
+                    // Warning when an element is eligible to become an illegal
+                    // self-closing node due to backend parsing
+                    console.warn(
+                        "A comment childNode is expected for the following element to avoid backend XML parsing issues:",
+                        el
+                    );
+                }
+            }
+        }
     }
 
     renderEmailHtml(template) {
