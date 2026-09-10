@@ -226,6 +226,7 @@ export class SocialMediaOptionPlugin extends Plugin {
             if (value !== newHref && value !== "#") {
                 element.href = newHref;
             }
+            element.setAttribute("title", value.replace(/^(https:\/\/)?(www.)?/, ""));
         }
 
         // ensure one '\n' between each element + before and after
