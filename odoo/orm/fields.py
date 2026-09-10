@@ -1243,12 +1243,12 @@ class Field[T]:
 
         # create/update the column, initialize it and not null constraint.
         # The index will be managed by registry.check_indexes().
-        self.update_db_column(model, column)
+        column_initialized = self.update_db_column(model, column)
 
         # initialization of values and null handling
         has_notnull = column and column['is_nullable'] == 'NO'
 
-        if not column or (self.required and not has_notnull):
+        if (not column or (self.required and not has_notnull)) and not column_initialized:
             # either we have a new column or it becomes required
             self._init_column_data(model)
 
@@ -1278,23 +1278,54 @@ class Field[T]:
         elif not self.required and has_notnull:
             sql.drop_not_null(model.env.cr, model._table, self.name)
 
-    def update_db_column(self, model: BaseModel, column: dict[str, typing.Any]):
+    def update_db_column(self, model: BaseModel, column: dict[str, typing.Any] | None) -> bool:
         """ Create/update the column corresponding to ``self``.
 
             :param model: an instance of the field's model
             :param column: the column's configuration (dict) if it exists, or ``None``
+            :return: whether adding the column initialized existing rows
         """
         if not column:
             # the column does not exist, create it
-            sql.create_column(model.env.cr, model._table, self.name, self.stored_sql_column_type, self.string)
-            return
+            column_initialized = False
+            default = None
+            if (
+                not self.init_storage
+                and self.default
+                and model.env.execute_query(SQL('SELECT 1 FROM %s LIMIT 1', SQL.identifier(model._table)))
+            ):
+                value = self.default(model)
+                column_initialized = value is not None
+                if column_initialized:
+                    default = self._convert_default_column_value(model, value)
+            sql.create_column(
+                model.env.cr,
+                model._table,
+                self.name,
+                self.stored_sql_column_type,
+                default,
+                self.string,
+            )
+            return column_initialized
         if column['udt_name'] == self.column_type[0]:
-            return
+            return False
         self._convert_db_column(model, column)
+        return False
 
     def _convert_db_column(self, model: BaseModel, column: dict[str, typing.Any]):
         """ Convert the given database column to the type of the field. """
         sql.convert_column(model.env.cr, model._table, self.name, self.stored_sql_column_type)
+
+    def _convert_default_column_value(self, model: BaseModel, value):
+        """ Convert an ORM default to its PostgreSQL column representation. """
+        value = self.convert_to_write(value, model)
+        value = self.convert_to_column_insert(value, model)
+
+        # Optional booleans expose NULL as False, so leaving existing rows NULL avoids
+        # a table-wide UPDATE. Required booleans must store False to satisfy NOT NULL.
+        if value is False and self.type == 'boolean' and not self.required:
+            value = None
+        return value
 
     def _init_column_data(self, model: BaseModel) -> None:
         """ Initialize null values in the column. """
@@ -1316,18 +1347,12 @@ class Field[T]:
         # fails due to ir.default not being ready
         if self.default:
             value = self.default(model)
-            if value is not None and to_compute == 'default':  # we have a default, do not recompute fields
+            if value is not None and to_compute == 'default':
                 to_compute = False
-            value = self.convert_to_write(value, model)
-            value = self.convert_to_column_insert(value, model)
+            value = self._convert_default_column_value(model, value)
         else:
             value = None
-        # Write value if non-NULL, except for booleans for which False means
-        # the same as NULL - this saves us an expensive query on large tables,
-        # if the boolean is required we still write False to allow NOT NULL constraints.
         cr = model.env.cr
-        if value is False and self.type == 'boolean' and not self.required:
-            value = None
         if value is not None:
             _logger.debug("Table '%s': setting default value of new column %s to %r",
                           model._table, self.name, value)
