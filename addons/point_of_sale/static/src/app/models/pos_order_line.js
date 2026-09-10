@@ -27,7 +27,12 @@ export class PosOrderline extends PosOrderlineAccounting {
             oldQty: this.qty,
             last_internal_note: this.note || "",
             last_customer_note: this.customer_note || "",
+            collapsed: false,
         };
+    }
+
+    toggleCollapse() {
+        this.uiState.collapsed = !this.uiState.collapsed;
     }
 
     setFullProductName() {
