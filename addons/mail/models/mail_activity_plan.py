@@ -16,8 +16,7 @@ class MailActivityPlan(models.Model):
         ]
 
     name = fields.Char('Name', required=True)
-    company_id = fields.Many2one(
-        'res.company', default=lambda self: self.env.company)
+    company_id = fields.Many2one('res.company')
     template_ids = fields.One2many(
         'mail.activity.plan.template', 'plan_id', string='Activities',
         copy=True)
