@@ -177,17 +177,6 @@ span.o_force_ltr {
     max-height: 64px;
 }
 
-// The dropdown action menu in the list views should only be visible if the
-// list view is rendered as a page and not as a modal.
-
-.modal {
-    .o_cp_action_menus {
-        .o-dropdown:has([data-icon="settings"]) {
-            display: none;
-        }
-    }
-}
-
 .o_ui_app_icon {
     width: var(--oi-font-size, 1em);
 
