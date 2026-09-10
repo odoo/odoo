@@ -267,6 +267,28 @@ class TestExpenses(TestExpenseCommon):
         self.assertEqual(440, expense_sheet.total_amount)
         self.assertEqual(expense_sheet.payment_state, 'paid', 'payment_state should be paid')
 
+    def test_expense_no_cost_product_zero_quantity(self):
+        """ A zero quantity on a product without cost must not zero the receipt line """
+        expense_sheet = self.create_expense_report({
+            'expense_line_ids': [Command.create({
+                'employee_id': self.expense_employee.id,
+                'product_id': self.product_c.id,
+                'quantity': 0,
+                'total_amount_currency': 100.0,
+                'tax_ids': [Command.clear()],
+                'date': self.frozen_today,
+            })],
+        })
+        self.assertEqual(expense_sheet.expense_line_ids.price_unit, 100.0)
+
+        expense_sheet.action_submit_sheet()
+        expense_sheet.action_approve_expense_sheets()
+        expense_sheet.action_sheet_move_create()
+        self.assertRecordValues(expense_sheet.account_move_ids.invoice_line_ids, [
+            {'quantity': 1.0, 'price_unit': 100.0, 'price_total': 100.0},
+        ])
+        self.assertEqual(expense_sheet.account_move_ids.amount_total, 100.0)
+
     def test_expense_split_flow(self):
         """ Check Split Expense flow. """
         expense = self.create_expense({'analytic_distribution': {self.analytic_account_1.id: 100}})
