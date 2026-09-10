@@ -35,6 +35,8 @@ import { CompositeAction } from "@html_builder/core/composite_action_plugin";
 
 /**
  * @typedef {((colors: string[]) => void)[]} on_website_color_updated_handlers
+ * @typedef {(() => Promise<void>)[]} discard_handlers
+ * Handler called before discarding changes to revert persisted customizations.
  */
 
 export const NO_IMAGE_SELECTION = Symbol.for("NoImageSelection");
@@ -82,9 +84,11 @@ export class CustomizeWebsitePlugin extends Plugin {
             }
         }),
         save_handlers: this.onSave.bind(this),
+        discard_handlers: this.onDiscard.bind(this),
     };
 
     async onSave() {
+        this.initialSCSSValues = {};
         if (this.viewsToEnableOnSave.size || this.viewsToDisableOnSave.size) {
             await rpc("/website/theme_customize_data", {
                 is_view_data: true,
@@ -116,6 +120,11 @@ export class CustomizeWebsitePlugin extends Plugin {
     pendingThemeRequests = [];
     variablesToCustomize = {};
     colorsToCustomize = {};
+    /**
+     * @type {Object<string, Object<string, string>>} scss file URL -> the
+     *      value each customized key had before the edition started.
+     */
+    initialSCSSValues = {};
     resolves = {};
     getPendingThemeRequests() {
         return this.pendingThemeRequests;
@@ -219,7 +228,28 @@ export class CustomizeWebsitePlugin extends Plugin {
         Object.keys(values).forEach((key) => {
             values[key] = values[key] || defaultValue;
         });
-        await this.services.orm.call("web_editor.assets", "make_scss_customization", [url, values]);
+        const previousValues = await this.services.orm.call(
+            "web_editor.assets",
+            "make_scss_customization",
+            [url, values]
+        );
+        // Only the oldest value of a key is kept as intermediate values are of
+        // no use while discarding to initial state.
+        const initialValues = (this.initialSCSSValues[url] ||= {});
+        for (const [key, value] of Object.entries(previousValues || {})) {
+            if (!(key in initialValues)) {
+                initialValues[key] = value;
+            }
+        }
+    }
+    async onDiscard() {
+        if (!Object.keys(this.initialSCSSValues).length) {
+            return;
+        }
+        await this.services.orm.call("web_editor.assets", "restore_scss_customizations", [
+            this.initialSCSSValues,
+        ]);
+        this.initialSCSSValues = {};
     }
     reloadBundles = debounce(this._reloadBundles.bind(this), 0);
     async _reloadBundles() {
