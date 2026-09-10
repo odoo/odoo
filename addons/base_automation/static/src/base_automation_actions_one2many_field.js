@@ -1,12 +1,13 @@
 import { render, useLayoutEffect } from "@web/owl2/utils";
-import { Component, signal, useListener } from "@odoo/owl";
+import { Component, signal, useListener, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 
 class ActionsOne2ManyField extends Component {
-    static props = ["*"];
     static template = "base_automation.ActionsOne2ManyField";
+
+    props = useProps();
     root = signal.ref();
     setup() {
         let adaptCounter = 0;
