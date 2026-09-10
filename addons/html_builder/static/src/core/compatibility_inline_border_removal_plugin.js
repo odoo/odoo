@@ -23,6 +23,7 @@ export class CompatibilityInlineBorderRemovalPlugin extends Plugin {
             20,
             this.removeInlineBorderIfNecessary.bind(this)
         ),
+        clean_custom_css_style_handlers: this.removeInlineBorderIfNecessary.bind(this),
     };
 
     // The border-width/radius calculation using --box-border-width/radius

@@ -64,7 +64,9 @@ test("set card alignment", async () => {
 });
 
 test("remove/add cover image", async () => {
-    await setupWebsiteBuilderWithSnippet("s_card", { loadIframeBuilderTemplates: true });
+    const { waitSidebarUpdated } = await setupWebsiteBuilderWithSnippet("s_card", {
+        loadIframeBuilderTemplates: true,
+    });
     await contains(":iframe .s_card").click();
     await waitFor("[data-action-id='removeCoverImage']");
     // Button to remove cover image is available
@@ -73,6 +75,7 @@ test("remove/add cover image", async () => {
     expect("[data-action-id='addCoverImage']").toHaveCount(0);
     // Remove cover image
     await click("[data-action-id='removeCoverImage']");
+    await waitSidebarUpdated();
     expect(":iframe .s_card .o_card_img_wrapper").toHaveCount(0);
     expect(":iframe .s_card").not.toHaveClass("o_card_img_top");
     await waitFor("[data-action-id='addCoverImage']");
@@ -82,6 +85,7 @@ test("remove/add cover image", async () => {
     expect("[data-action-id='addCoverImage']").toHaveCount(1);
     // Add cover image back again
     await click("[data-action-id='addCoverImage']");
+    await waitSidebarUpdated();
     expect(":iframe .s_card .o_card_img_wrapper").toHaveCount(1);
 });
 
