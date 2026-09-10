@@ -62,3 +62,20 @@ test("Device identifier is set", async () => {
     const device = store.device;
     expect(device.identifier).not.toBeEmpty();
 });
+
+test("Number is recycled only once the order is gone from IndexedDB", async () => {
+    const store = await setupPosEnv();
+    const device = store.device;
+    await store.deleteOrders(store.models["pos.order"].getAll());
+
+    const order = await getFilledOrder(store);
+    const number = parseInt(order.pos_reference.split("-")[2]);
+
+    store.removeOrder(order, false);
+    // A reload at this point must not find the number on the stack while the
+    // order can still be restored from IndexedDB
+    expect(device.data.unsynced_number_stack).toBeEmpty();
+
+    await store.recycleOrderNumber(order);
+    expect(device.data.unsynced_number_stack).toEqual([number]);
+});
