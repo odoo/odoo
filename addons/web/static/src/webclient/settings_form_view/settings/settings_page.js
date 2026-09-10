@@ -14,6 +14,19 @@ export class SettingsPage extends Component {
         slots: t.object(),
     });
     settingsRef = signal.ref();
+
+    /**
+     * Whether the settings on screen still hold a visible setting. The `d-none`
+     * classes this is measured from are toggled imperatively by SettingsApp and
+     * SettingsBlock, so it cannot be derived from signals; it is re-measured
+     * after every patch, see `setup`.
+     */
+    hasVisibleSetting = signal(true);
+
+    displayNoContent = computed(
+        () => Boolean(this.state.search.value) && !this.hasVisibleSetting()
+    );
+
     setup() {
         this.uiService = useService("ui");
         this.state = proxy({
@@ -65,6 +78,25 @@ export class SettingsPage extends Component {
         };
         onMounted(restoreTabScroll);
         onPatched(restoreTabScroll);
+
+        const measureVisibleSetting = () => {
+            const settingsEl = this.settingsRef();
+            // Reading the search value first keeps the two queries out of every
+            // patch that is not a search: nothing is hidden then, so the answer
+            // is known without touching the DOM.
+            this.hasVisibleSetting.set(
+                !this.state.search.value ||
+                    !settingsEl ||
+                    Boolean(
+                        settingsEl.querySelector(".o_settings_container:not(.d-none)") ||
+                            settingsEl.querySelector(
+                                ".o_settings_container:not(.d-none) .o_setting_box.o_searchable_setting"
+                            )
+                    )
+            );
+        };
+        onMounted(measureVisibleSetting);
+        onPatched(measureVisibleSetting);
     }
 
     selectedModule = computed(() =>
