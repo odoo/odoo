@@ -37,6 +37,8 @@ export class GeneratePrinterData {
             company_state_name: this.company?.state_id?.name || "",
             company_country_name: this.company?.country_id?.name || "",
             vat_label: this.company?.country_id?.vat_label || "Tax ID",
+            receipt_style: false,
+            receipt_class: "",
         };
     }
 

@@ -12,6 +12,15 @@ from odoo import _, api, fields, models, modules
 from odoo.tools.image import image_data_uri
 from odoo.tools.misc import format_datetime, format_time
 
+RECEIPT_TEXT_SIZE_MULTIPLIERS = {
+    'text-small': 0.8,
+    'text-normal': 1.0,
+    'text-large': 1.4,
+    'text-huge': 2.0,
+    'text-insane': 2.3,
+}
+RECEIPT_LINE_HEIGHT_RATIO = 1.4
+
 
 def _get_str_notes(note):
     """
@@ -78,6 +87,7 @@ class PosOrderReceipt(models.AbstractModel):
     def _get_common_extra_data(self):
         company = self.company_id
         receipt_tz = self._order_receipt_tz()
+        receipt_style = self._get_receipt_image_style()
         return {
             'vat_label': company.country_id.vat_label or _("Tax ID"),
             'preset_datetime': format_datetime(self.env, self.preset_time, tz=receipt_tz) if self.preset_time else False,
@@ -88,6 +98,8 @@ class PosOrderReceipt(models.AbstractModel):
             'company_state_name': company.state_id.name if company.state_id else False,
             'company_country_name': company.country_id.name if company.country_id else False,
             'formated_date_order': format_datetime(self.env, self.date_order, tz=receipt_tz),
+            'receipt_style': receipt_style,
+            'receipt_class': 'pos-receipt-narrow' if receipt_style.get('narrow') else '',
         }
 
     def _order_receipt_generate_taxe_data(self):
@@ -204,6 +216,19 @@ class PosOrderReceipt(models.AbstractModel):
         )
         return int(total) if total.is_integer() else total
 
+    def _get_receipt_image_style(self):
+        printer = self.config_id.receipt_printer_ids[:1]
+        style = printer._get_receipt_image_style() if printer else {'width': 500, 'font_size': 22, 'printable_width_mm': 72.0, 'dpi': 203}
+        font_size = style['font_size']
+        style['text_classes'] = {
+            name: {
+                'font_size': font_size * multiplier,
+                'line_height': font_size * multiplier * RECEIPT_LINE_HEIGHT_RATIO,
+            }
+            for name, multiplier in RECEIPT_TEXT_SIZE_MULTIPLIERS.items()
+        }
+        return style
+
     def order_receipt_generate_data(self, basic_receipt=False):
         self.ensure_one()
 
@@ -243,7 +268,9 @@ class PosOrderReceipt(models.AbstractModel):
         report_name = 'point_of_sale.pos_order_receipt'
         return last_order.env['ir.qweb']._render(report_name, values=self.order_receipt_generate_data(basic_receipt))
 
-    def order_receipt_generate_image(self, basic_receipt=False, width=500, height=0):
+    def order_receipt_generate_image(self, basic_receipt=False, width=None, height=0):
+        self.ensure_one()
+        width = width or self._get_receipt_image_style()['width']
         content = self.order_receipt_generate_html(basic_receipt)
         return self.env['ir.actions.report']._run_image_engine(
             'wkhtmltopdf',
@@ -251,6 +278,30 @@ class PosOrderReceipt(models.AbstractModel):
             width,
             height,
         )[0]
+
+    def order_receipt_generate_pdf(self, basic_receipt=False, width=None):
+        """Generate a single-page PDF matching the printer's physical paper width.
+
+        The receipt image keeps its printer-specific raster resolution and is
+        centered on the page without being stretched.
+        """
+        self.ensure_one()
+        style = self._get_receipt_image_style()
+        width = width or style['width']
+        dpi = style['dpi']
+        printable_width_mm = style['printable_width_mm']
+
+        page_width_px = round(printable_width_mm * dpi / 25.4)
+        image = self.order_receipt_generate_image(basic_receipt, width)
+        buffer = io.BytesIO()
+
+        with Image.open(io.BytesIO(image)) as receipt:
+            receipt = receipt.convert('RGB')
+            page = Image.new('RGB', (page_width_px, receipt.height), 'white')
+            page.paste(receipt, ((page_width_px - receipt.width) // 2, 0))
+            page.save(buffer, format='PDF', resolution=dpi)
+
+        return buffer.getvalue()
 
     # Order changes receipt generation
     def _generate_preparation_changes_by_printer(self):

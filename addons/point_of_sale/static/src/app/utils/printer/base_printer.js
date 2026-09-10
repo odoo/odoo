@@ -22,6 +22,7 @@ export class BasePrinter {
         return {
             58: { fontSize: 22, maxWidth: 360 },
             80: { fontSize: 22, maxWidth: 512 },
+            label: { fontSize: 22, maxWidth: 512 },
         };
     }
 

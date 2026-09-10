@@ -36,6 +36,21 @@ EPSON_MODELS = [
     ('tm_l100_40', 'TM-L100 series (40mm)'),
 ]
 
+RECEIPT_IMAGE_STYLE_MAPPING = {
+    '58': {'width': 360, 'font_size': 22, 'printable_width_mm': 48.0, 'dpi': 203},
+    '80': {'width': 512, 'font_size': 22, 'printable_width_mm': 72.0, 'dpi': 203},
+    'label': {'width': 512, 'font_size': 22, 'printable_width_mm': 69.85, 'dpi': 203},
+    'tm_u22_76': {'width': 200, 'font_size': 12, 'printable_width_mm': 63.4, 'dpi': 203},
+    'tm_u22_70': {'width': 176, 'font_size': 12, 'printable_width_mm': 57.0, 'dpi': 203},
+    'tm_u22_58': {'width': 152, 'font_size': 12, 'printable_width_mm': 47.5, 'dpi': 203},
+    'tm_u33_76': {'width': 400, 'font_size': 22, 'printable_width_mm': 63.5, 'dpi': 203},
+    'tm_u33_70': {'width': 384, 'font_size': 22, 'printable_width_mm': 57.15, 'dpi': 203},
+    'tm_p60_60': {'width': 376, 'font_size': 22, 'printable_width_mm': 54.0, 'dpi': 203},
+    'tm_l100_40': {'width': 240, 'font_size': 14, 'printable_width_mm': 35.0, 'dpi': 203},
+}
+DEFAULT_RECEIPT_IMAGE_STYLE = RECEIPT_IMAGE_STYLE_MAPPING['80']
+NARROW_RECEIPT_WIDTH_THRESHOLD = 325
+
 
 class PosPrinter(models.Model):
     _name = 'pos.printer'
@@ -121,3 +136,9 @@ class PosPrinter(models.Model):
         for rec in self:
             if rec.paper_size not in rec.paper_size_keys.split(","):
                 rec.paper_size = '80'
+
+    def _get_receipt_image_style(self):
+        self.ensure_one()
+        style = dict(RECEIPT_IMAGE_STYLE_MAPPING.get(self.paper_size, DEFAULT_RECEIPT_IMAGE_STYLE))
+        style['narrow'] = style['width'] < NARROW_RECEIPT_WIDTH_THRESHOLD
+        return style
