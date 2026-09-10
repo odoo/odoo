@@ -78,13 +78,24 @@ class AccountMoveSend(models.AbstractModel):
 
     def _get_invoice_extra_attachments(self, move):
         # EXTENDS 'account'
-        return super()._get_invoice_extra_attachments(move) + move.ubl_cii_xml_id
+        extra_attachments = super()._get_invoice_extra_attachments(move)
+        if not move.ubl_cii_xml_id:
+            return extra_attachments
+        edi_format = move.commercial_partner_id.with_company(move.company_id)._get_ubl_cii_edi_format() if move.commercial_partner_id else False
+        if edi_format in ('facturx', 'zugferd'):
+            # The XML is already embedded in the PDF for those hybrid formats
+            # (see _hook_invoice_document_after_pdf_report_render), attaching it a second time as a
+            # standalone file makes some recipient systems detect two separate invoices.
+            return extra_attachments
+        return extra_attachments + move.ubl_cii_xml_id
 
     def _get_placeholder_mail_attachments_data(self, move, invoice_edi_format=None, extra_edis=None, pdf_report=None):
         # EXTENDS 'account'
         results = super()._get_placeholder_mail_attachments_data(move, invoice_edi_format=invoice_edi_format, extra_edis=extra_edis, pdf_report=pdf_report)
         sending_method = self.env.context.get('sending_method')
-        if move.with_context(sending_method=sending_method or {})._need_ubl_cii_xml(invoice_edi_format):
+        # For Factur-X/ZUGFeRD, the XML is embedded in the PDF itself and never added as a
+        # separate attachment (see `_get_invoice_extra_attachments`), so no placeholder for it.
+        if invoice_edi_format not in ('facturx', 'zugferd') and move.with_context(sending_method=sending_method or {})._need_ubl_cii_xml(invoice_edi_format):
             builder = move.partner_id.commercial_partner_id._get_edi_builder(invoice_edi_format)
             filename = builder._export_invoice_filename(move)
             results.append({
