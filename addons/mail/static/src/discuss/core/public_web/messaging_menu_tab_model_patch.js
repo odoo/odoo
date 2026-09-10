@@ -51,10 +51,20 @@ const messagingMenuTabPatch = {
         return this.channelsWithCounter.length + unloadedUnreadCount + this.extraCounter;
     },
 
+    /** @override */
     _computeLoadMoreExcludeIds() {
-        return this.recordType === "discuss.channel"
-            ? this.channels.map((c) => c.id)
-            : super._computeLoadMoreExcludeIds();
+        if (this.recordType !== "discuss.channel") {
+            return super._computeLoadMoreExcludeIds();
+        }
+        // Exclude channels whose last message is known or loaded by Discuss.
+        return this.channels
+            .filter(
+                (c) =>
+                    c.last_message_fetched ||
+                    c.thread.eq(this.store.discuss.thread) ||
+                    c.thread.isLoaded
+            )
+            .map((c) => c.id);
     },
 };
 patch(MessagingMenuTab.prototype, messagingMenuTabPatch);
