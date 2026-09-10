@@ -1,5 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import unittest
+
+from odoo.addons.bus.models.bus import ODOO_NOTIFY_FUNCTION
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
 from odoo.addons.pos_viva_com.models.pos_payment_method import PosPaymentMethod
 from unittest.mock import patch
@@ -32,6 +35,13 @@ class TestVivaComHttpCommon(TestPointOfSaleHttpCommon):
         cls.main_pos_config.write({'payment_method_ids': [Command.set(payment_methods.ids)]})
 
     def test_viva_payment_and_refund(self):
+        if ODOO_NOTIFY_FUNCTION != "pg_notify":
+            raise unittest.SkipTest(
+                "Custom ODOO_NOTIFY_FUNCTION is configured: the webhook confirmation bus "
+                "notification cannot be relied upon to reach the client in time, which makes "
+                "the client fall back to polling with a session id the mock doesn't expect."
+            )
+
         viva_session_id = ''
 
         def mocked_call_viva_com_check_post_data(self, endpoint, action, data=None, should_retry=True):
