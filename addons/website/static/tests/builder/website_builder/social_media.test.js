@@ -282,3 +282,31 @@ test("Share snippet options are correct", async () => {
     await contains(".o_we_table_wrapper tr:nth-of-type(1) .o-checkbox input").click();
     expect(":iframe .s_share .s_share_twitter.d-none").toHaveCount(1);
 });
+
+test("Social Media snippets have title attribute", async () => {
+    onRpc("/website/get_suggested_links", () => ({ matching_pages: [], others: [] }));
+    await setupSocialMediaSnippet();
+
+    await click(":iframe h4");
+
+    await animationFrame();
+    expect(":iframe a[href='https://www.facebook.com/your-page']").toHaveAttribute(
+        "title",
+        "facebook.com/your-page"
+    );
+
+    await contains("button[data-action-id='addSocialMediaLink']").click();
+    await contains("tr:last-child input[type=text]").edit("ftp://localhost/test");
+    await contains("button[data-action-id='addSocialMediaLink']").click();
+    expect(":iframe a[href='ftp://localhost/test']").toHaveAttribute(
+        "title",
+        "ftp://localhost/test"
+    );
+
+    await contains("tr:last-child input[type=text]").edit("http://unsecuresite.com");
+    await contains("button[data-action-id='addSocialMediaLink']").click();
+    expect(":iframe a[href='http://unsecuresite.com']").toHaveAttribute(
+        "title",
+        "http://unsecuresite.com"
+    );
+});
