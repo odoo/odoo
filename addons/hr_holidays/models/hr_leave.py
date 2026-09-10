@@ -13,7 +13,7 @@ from odoo import api, fields, models
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.addons.resource.models.utils import HOURS_PER_DAY
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.tools.date_utils import float_to_time
+from odoo.tools.date_utils import float_to_time, localized
 from odoo.fields import Command, Date, Domain
 from odoo.tools.float_utils import float_round, float_compare, float_is_zero
 from odoo.tools.intervals import Intervals
@@ -576,6 +576,96 @@ class HrLeave(models.Model):
             else:
                 leave.work_entry_type_increases_duration = ''
 
+    def _cluster_leaves_by_period(self, max_gap=timedelta(days=31)):
+        """Split ``self`` into groups of leaves whose date ranges are close
+        enough that computing the work intervals once over their union is
+        cheaper than computing them separately.
+
+        Merging every leave of a calendar into a single window is not an option:
+        ``_attendance_intervals_batch`` materialises every working day of the
+        window, and it resolves the resource's calendar at ``start_dt`` only, so
+        stretching the window back before a version started would resolve no
+        calendar and wrongly report the resource as fully flexible.
+
+        :return: list of ``hr.leave`` recordsets, each spanning a bounded period
+        """
+        clusters = []
+        current_ids = []
+        current_end = None
+        for leave in self.sorted('date_from'):
+            if current_ids and leave.date_from > current_end + max_gap:
+                clusters.append(self.browse(current_ids))
+                current_ids, current_end = [], None
+            current_ids.append(leave.id)
+            current_end = max(current_end or leave.date_to, leave.date_to)
+        if current_ids:
+            clusters.append(self.browse(current_ids))
+        return clusters
+
+    def _get_work_intervals_per_leave(self, domain, resource_calendar=None):
+        """Compute the effective work intervals covered by each leave.
+
+        Instead of one ``_work_intervals_batch`` round trip per distinct
+        ``(date_from, date_to)`` pair, the intervals are computed once per
+        ``(calendar, compute_leaves, period)`` and each leave then takes its own
+        slice by intersecting them with its own window.
+
+        ``Intervals.__and__`` keeps the payload of the left operand only, so the
+        resulting intervals still carry their ``resource.calendar.attendance``
+        records and stay usable by ``_get_attendance_intervals_days_data``.
+        Intersecting is also what clips a leave starting mid-day, so partial
+        first/last days keep the exact duration they had before.
+
+        :return: dict of ``{leave_id: (calendar, Intervals)}``, the calendar being
+            the one the intervals were computed on
+        """
+        calendar_per_leave = {}
+        leave_ids_without_calendar = defaultdict(list)
+        for leave in self.filtered('employee_id'):
+            if not leave.date_from or not leave.date_to:
+                continue
+            calendar = resource_calendar or leave.resource_calendar_id
+            if calendar:
+                calendar_per_leave[leave.id] = calendar
+            else:
+                # Fall back on the calendar the employee's version resolves to at
+                # that date, as _get_work_days_data_batch used to do on its own.
+                leave_ids_without_calendar[leave.date_from].append(leave.id)
+        for date_from, leave_ids in leave_ids_without_calendar.items():
+            leaves = self.browse(leave_ids)
+            calendars = leaves.employee_id._get_calendars(date_from)
+            for leave in leaves:
+                calendar_per_leave[leave.id] = calendars[leave.employee_id.id]
+
+        leave_ids_by_calendar = defaultdict(list)
+        for leave in self.browse(calendar_per_leave):
+            calendar = calendar_per_leave[leave.id]
+            if not calendar:
+                if leave.employee_id.sudo().is_flexible:
+                    calendar = self.env['resource.calendar']
+                else:
+                    continue
+            compute_leaves = not leave.work_entry_type_id.include_public_holidays_in_duration
+            leave_ids_by_calendar[calendar, compute_leaves].append(leave.id)
+        leaves_by_calendar = {key: self.browse(ids) for key, ids in leave_ids_by_calendar.items()}
+
+        work_intervals_per_leave = {}
+        for (calendar, compute_leaves), leaves in leaves_by_calendar.items():
+            for cluster in leaves._cluster_leaves_by_period():
+                resources_per_tz = cluster.employee_id._get_resources_per_tz(min(cluster.mapped('request_date_from')))
+                intervals_per_resource = calendar._work_intervals_batch(
+                    localized(min(cluster.mapped('date_from'))),
+                    localized(max(cluster.mapped('date_to'))),
+                    resources_per_tz=resources_per_tz,
+                    domain=domain,
+                    compute_leaves=compute_leaves,
+                )
+                for leave in cluster:
+                    work_intervals_per_leave[leave.id] = (calendar, intervals_per_resource[leave.employee_id.resource_id.id] & Intervals([
+                        (localized(leave.date_from), localized(leave.date_to), leave),
+                    ]))
+        return work_intervals_per_leave
+
     def _get_durations(self, check_work_entry_type=True, resource_calendar=None, additional_domain=None):
         """
         This method is factored out into a separate method from
@@ -585,16 +675,6 @@ class HrLeave(models.Model):
         """
         result = {}
         employee_leaves = self.filtered('employee_id')
-        employees_by_dates_calendar = defaultdict(lambda: self.env['hr.employee'])
-        for leave in employee_leaves:
-            if not leave.date_from or not leave.date_to:
-                continue
-            employees_by_dates_calendar[
-                leave.date_from,
-                leave.date_to,
-                leave.work_entry_type_id.include_public_holidays_in_duration,
-                resource_calendar or leave.resource_calendar_id
-            ] += leave.employee_id
         # We force the company in the domain as we are more than likely in a compute_sudo
         domain = [('count_as', '=', 'absence'),
                   ('company_id', 'in', self.env.companies.ids + self.env.context.get('allowed_company_ids', [])),
@@ -603,16 +683,7 @@ class HrLeave(models.Model):
                   '|', ('holiday_id', '=', False), ('holiday_id', 'not in', employee_leaves.ids)]
         if additional_domain:
             domain = Domain.AND([domain, additional_domain])
-        # Precompute values in batch for performance purposes
-        work_time_per_day_mapped = {
-            (date_from, date_to, include_public_holidays_in_duration, calendar): employees.with_context(
-                    compute_leaves=not include_public_holidays_in_duration)._list_work_time_per_day(date_from, date_to, domain=domain, calendar=calendar)
-            for (date_from, date_to, include_public_holidays_in_duration, calendar), employees in employees_by_dates_calendar.items()
-        }
-        work_days_data_mapped = {
-            (date_from, date_to, include_public_holidays_in_duration, calendar): employees._get_work_days_data_batch(date_from, date_to, compute_leaves=not include_public_holidays_in_duration, domain=domain, calendar=calendar)
-            for (date_from, date_to, include_public_holidays_in_duration, calendar), employees in employees_by_dates_calendar.items()
-        }
+        work_intervals_per_leave = self._get_work_intervals_per_leave(domain, resource_calendar=resource_calendar)
         for leave in self:
             calendar = resource_calendar or leave.resource_calendar_id
             if not leave.date_from or not leave.date_to or (not calendar and not leave.employee_id):
@@ -651,12 +722,12 @@ class HrLeave(models.Model):
                     else:
                         days = hours / 24
                 elif leave.work_entry_type_request_unit == 'day' and check_work_entry_type:
-                    # list of tuples (day, hours)
-                    work_time_per_day_list = work_time_per_day_mapped[leave.date_from, leave.date_to, leave.work_entry_type_id.include_public_holidays_in_duration, calendar][leave.employee_id.id]
-                    days = len(work_time_per_day_list)
-                    hours = sum(map(lambda t: t[1], work_time_per_day_list))
+                    interval_calendar, intervals = work_intervals_per_leave.get(leave.id, (calendar, Intervals()))
+                    work_days_data = interval_calendar._get_attendance_intervals_days_data(intervals)
+                    hours, days = work_days_data['hours'], work_days_data['days']
                 else:
-                    work_days_data = work_days_data_mapped[leave.date_from, leave.date_to, leave.work_entry_type_id.include_public_holidays_in_duration, calendar][leave.employee_id.id]
+                    interval_calendar, intervals = work_intervals_per_leave.get(leave.id, (calendar, Intervals()))
+                    work_days_data = interval_calendar._get_attendance_intervals_days_data(intervals)
                     hours, days = work_days_data['hours'], work_days_data['days']
             else:
                 today_hours = calendar.get_work_hours_count(
@@ -1236,7 +1307,7 @@ class HrLeave(models.Model):
             'LEAVE117',  # Work Accident (Unpaid)
         ]
         return self.filtered(
-            lambda l: l.employee_id and not l.number_of_days and l.work_entry_type_id.count_as == 'absence' and l.work_entry_type_id.code not in bypass_work_entry_types)
+            lambda l: l.employee_id and not l.employee_id.sudo().is_flexible and not l.number_of_days and l.work_entry_type_id.count_as == 'absence' and l.work_entry_type_id.code not in bypass_work_entry_types)
 
     def _split_leaves(self, split_date_from, split_date_to=False):
         """
