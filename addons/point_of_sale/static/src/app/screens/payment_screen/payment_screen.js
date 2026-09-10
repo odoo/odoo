@@ -158,6 +158,14 @@ export class PaymentScreen extends Component {
         const result = this.currentOrder.addPaymentline(paymentMethod);
         if (result.status) {
             this.numberBuffer.set(result.data.amount.toString());
+            if (
+                paymentMethod.type === "pay_later" &&
+                this.currentOrder.hasCabaTax &&
+                !this.currentOrder.isToInvoice() &&
+                this.pos.config.canInvoice
+            ) {
+                this.currentOrder.setToInvoice(true);
+            }
             if (!this.isRefundOrder && paymentMethod.useBankQrCode) {
                 const newPaymentLine = this.paymentLines.at(-1);
                 this.sendPaymentRequest(newPaymentLine);
