@@ -5826,6 +5826,22 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         self.assertEqual(mo.qty_produced, 3)
         self.assertEqual(len(mo.lot_producing_ids), 3)
 
+    def test_reset_to_progress_change_serial(self):
+        """Setting to progress a done MO then changing the serial produces a product with the new sn, not the old one."""
+        mo, __, __, p1, __ = self.generate_mo(tracking_final='serial', qty_final=1, qty_base_1=1)
+        self.env['stock.quant']._update_available_quantity(p1, self.stock_location, 1)
+        mo.action_assign()
+        mo.action_generate_serial()
+        old_sn = mo.lot_producing_ids
+        mo.button_mark_done()
+        mo.action_reset_to_progress()
+        mo.lot_producing_ids = [Command.clear()]
+        mo.action_generate_serial()
+        new_sn = mo.lot_producing_ids
+        self.assertNotEqual(old_sn, new_sn)
+        mo.button_mark_done()
+        self.assertEqual(mo.move_finished_ids.move_line_ids.lot_id, new_sn)
+
 
 class TestMrpOrderPostInstall(TestMrpCommon):
     _test_user_groups = (
