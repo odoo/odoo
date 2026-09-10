@@ -301,7 +301,7 @@ class TestEventNotifications(CalendarMailCommon):
             'interval': 'minutes',
             'duration': 30,
         })
-        now = fields.Datetime.now()
+        now = datetime(2019, 10, 25, 8, 0)
 
         def notifications():
             return [
@@ -341,7 +341,7 @@ class TestEventNotifications(CalendarMailCommon):
             'interval': "minutes",
             'duration': 30,
         })
-        now = fields.Datetime.now()
+        now = datetime(2019, 10, 25, 8, 0)
         admin_partner = self.user_admin.partner_id
         event = self.env['calendar.event'].with_user(self.user_admin).with_context(no_mail_to_attendees=True).create({
             'name': "Admin Meeting",
@@ -373,7 +373,7 @@ class TestEventNotifications(CalendarMailCommon):
                 ),
             ]
 
-        with freeze_time(now):
+        with self.mock_datetime_and_now(now):
             with self.assertBus(notifications):
                 event.with_context(no_mail_to_attendees=True).write({
                     'alarm_ids': [fields.Command.set([alarm.id])],
@@ -659,7 +659,7 @@ class TestEventNotifications(CalendarMailCommon):
             'count': 2,
         })
 
-        now = fields.Datetime.now()
+        now = datetime(2019, 10, 25, 8, 0)
 
         def notifications():
             return [
