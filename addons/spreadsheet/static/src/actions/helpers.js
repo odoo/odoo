@@ -1,5 +1,7 @@
 /** @odoo-module */
 
+import { markup } from "@odoo/owl";
+
 /**
  * @typedef {import("@web/webclient/actions/action_service").ActionOptions} ActionOptions
  */
@@ -48,10 +50,12 @@ export async function navigateTo(env, actionXmlId, actionDescription, options) {
             view_mode,
         };
     } finally {
-        await actionService.doAction(
-            // clear empty keys
-            JSON.parse(JSON.stringify(navigateActionDescription)),
-            options
-        );
+        // clear empty keys
+        const cleanedActionDescription = JSON.parse(JSON.stringify(navigateActionDescription));
+        if (cleanedActionDescription.help) {
+            // JSON.stringify/parse strips the trusted `markup`, so restore it before rendering.
+            cleanedActionDescription.help = markup(cleanedActionDescription.help);
+        }
+        await actionService.doAction(cleanedActionDescription, options);
     }
 }
