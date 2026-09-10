@@ -49,3 +49,17 @@
     --#{$-rule}: RGBA(#{to-rgb($-color)}, var(--#{$-css-opacity-var}, 1));
     #{$-rule}: var(--#{$-rule}) !important;
 }
+
+/// Same as `o-print-color`, for a color given as OKLCH channels.
+/// ---------------------------------------------------------------------------
+/// @param {list} $-oklch
+///     Lightness, chroma and hue, e.g. `(0.92 0.04 27)`
+/// @param {string} $-rule
+///     CSS property to be affected
+/// @param {string} $-css-opacity-var
+///     CSS variable defining the opacity
+/// ---------------------------------------------------------------------------
+@mixin o-print-oklch($-oklch, $-rule, $-css-opacity-var) {
+    --#{$-rule}: oklch(#{$-oklch} / var(--#{$-css-opacity-var}, 1));
+    #{$-rule}: var(--#{$-rule}) !important;
+}
