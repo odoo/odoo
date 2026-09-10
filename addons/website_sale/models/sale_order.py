@@ -973,7 +973,7 @@ class SaleOrder(models.Model):
         if request:
             request.session["website_sale_cart_quantity"] = self.cart_quantity
 
-    def _verify_cart(self, *, force_update_checks=False):
+    def _cleanup_cart(self, *, force_update_checks=False):
         """Check the cart content and clear the lines that are no longer valid.
 
         :param bool force_update_checks: Whether to run the post-update checks even if no line

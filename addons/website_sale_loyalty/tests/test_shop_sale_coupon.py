@@ -455,7 +455,7 @@ class TestWebsiteSaleCoupon(HttpCase, WebsiteSaleCommon):
             "list_price": 100,
             "sale_ok": True,
             "taxes_id": [],
-            "website_published": True,
+            "is_published": True,
         })
 
         order = self._create_so(order_line=[Command.create({"product_id": product.id})])

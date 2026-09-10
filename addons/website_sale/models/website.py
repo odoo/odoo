@@ -857,7 +857,7 @@ class Website(models.Model):
                     # Force the recomputation of the pricelist and fiscal position when resurrecting
                     # an abandoned cart
                     abandoned_cart_sudo._update_address(partner_sudo.id, ["partner_id"])
-                    abandoned_cart_sudo._verify_cart()
+                    abandoned_cart_sudo._cleanup_cart()
                 sale_order_sudo = abandoned_cart_sudo
 
         if (

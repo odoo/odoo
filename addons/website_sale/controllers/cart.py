@@ -64,7 +64,7 @@ class Cart(PaymentPortal):
             "suggested_products": [],
         })
         if order_sudo:
-            order_sudo._verify_cart(force_update_checks=cart_revived)
+            order_sudo._cleanup_cart(force_update_checks=cart_revived)
             values["suggested_products"] = order_sudo._cart_accessories()
             values.update(self._get_express_shop_payment_values(order_sudo))
             if self.env.website.google_analytics_key:
