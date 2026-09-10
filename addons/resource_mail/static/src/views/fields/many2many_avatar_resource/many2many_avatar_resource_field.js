@@ -7,7 +7,7 @@ import {
     listMany2ManyTagsAvatarUserField,
     many2ManyTagsAvatarUserField,
 } from "@mail/views/web/fields/many2many_avatar_user_field/many2many_avatar_user_field";
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { registry } from "@web/core/registry";
@@ -19,15 +19,15 @@ import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 class ResourceTag extends Component {
     static template = "resource_mail.ResourceTag";
     static components = { AvatarTag };
-    static props = {
-        color: { type: Number, optional: true },
-        imageUrl: { type: String, optional: true },
-        onAvatarClick: { type: Function, optional: true },
-        onDelete: { type: Function, optional: true },
-        text: { type: String, optional: true },
-        tooltip: { type: String, optional: true },
-        type: { type: [String, { value: false }] }, // in sample data, the type is false
-    };
+    props = useProps({
+        color: t.number().optional(),
+        imageUrl: t.string().optional(),
+        onAvatarClick: t.function().optional(),
+        onDelete: t.function().optional(),
+        text: t.string().optional(),
+        tooltip: t.string().optional(),
+        type: t.or([t.string(), t.literal(false)]), // in sample data, the type is false
+    });
 }
 
 const WithResourceFieldMixin = (T) => class ResourceFieldMixin extends T {
