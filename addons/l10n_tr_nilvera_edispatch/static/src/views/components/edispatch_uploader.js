@@ -6,9 +6,6 @@ import { useService } from "@web/core/utils/hooks";
 export class EdispatchUploader extends Component {
     static template = "l10n_tr_nilvera_edispatch.EdispatchUploader";
     static components = { FileUploader };
-    static props = {
-        slots: { type: Object, optional: true },
-    };
 
     setup() {
         this.orm = useService("orm");
