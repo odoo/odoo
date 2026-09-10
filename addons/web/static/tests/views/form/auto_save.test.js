@@ -1024,3 +1024,39 @@ test(`doesn't autosave when a x2many is in openned (visibility change) 2`, async
     expect(`.o_form_status_indicator_buttons:not(.invisible)`).toHaveCount(0);
     expect.verifySteps(["web_save"]);
 });
+
+test(`doesn't autosave while a x2many list row is being edited (visibility change)`, async () => {
+    Partner._fields.child_ids = fields.One2many({ string: "one2many field", relation: "partner" });
+    Partner._records[0].child_ids = [1, 2];
+    onRpc("web_save", () => {
+        expect.step("web_save");
+    });
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <field name="child_ids">
+                    <list editable="bottom">
+                        <field name="name"/>
+                    </list>
+                </field>
+            </form>
+        `,
+        resId: 1,
+    });
+    await contains(`.o_data_cell:eq(0)`).click();
+    expect(`.o_selected_row`).toHaveCount(1);
+    await contains(`.o_data_cell .o_field_widget[name=name] input`).edit("abc");
+
+    await hideTab();
+    // should not save while the row is in edition, or its edition would be lost
+    expect.verifySteps([]);
+    expect(`.o_selected_row`).toHaveCount(1);
+
+    await contains(`.o_form_view`).click();
+    expect(`.o_selected_row`).toHaveCount(0);
+
+    await hideTab();
+    expect.verifySteps(["web_save"]);
+});
