@@ -4269,6 +4269,43 @@ class TestRequiredMany2oneTransient(TransactionCase):
             field.setup_nonrelated(Model)
 
 
+@tagged('post_install', '-at_install')
+class TestOne2manyInvalidInverse(TransactionCase):
+
+    @mute_logger("odoo.fields")
+    def test_field_inverses_invalid_inverse_name(self):
+        """Building field_inverses must not crash on a wrong custom One2many inverse."""
+        self.addCleanup(self.registry.reset_changes)
+        self.addCleanup(self.registry.clear_all_caches)
+        # post_install: before the registry is loaded, custom one2many fields
+        # with a missing inverse are simply not added to the model
+        field = self.env['ir.model.fields'].create({
+            'name': 'x_messages',
+            'model_id': self.env.ref('test_orm.model_test_orm_message').id,
+            'field_description': 'Messages',
+            'ttype': 'one2many',
+            'relation': 'test_orm.message',
+            'relation_field': 'discussion',
+            'related': 'discussion.messages',
+            'store': False,
+        })
+        with self.assertRaises(ValidationError):
+            field.relation_field = 'invalid key example'
+
+        # invalid inverse already stored in database
+        self.env.cr.execute(
+            "UPDATE ir_model_fields SET relation_field = 'invalid key example' WHERE id = %s",
+            [field.id],
+        )
+        self.registry.clear_cache('stable')
+        self.registry._setup_models__(self.env.cr, ['test_orm.message'])
+        o2m = self.env['test_orm.message']._fields['x_messages']
+        self.assertEqual(o2m.inverse_name, 'invalid key example')
+
+        self.registry.__dict__.pop('field_inverses', None)
+        self.assertFalse(self.registry.field_inverses[o2m])
+
+
 @tagged('m2oref')
 class TestMany2oneReference(TransactionExpressionCase):
 

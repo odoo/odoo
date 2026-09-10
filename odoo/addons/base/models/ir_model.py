@@ -779,6 +779,21 @@ class IrModelFields(models.Model):
             if rec.relation_table:
                 models.check_pg_name(rec.relation_table)
 
+    @api.constrains('relation', 'relation_field')
+    def _check_relation_field(self):
+        if any(
+            (rec := record).state == 'manual'
+            and rec.ttype == 'one2many'
+            and rec.relation_field
+            and not self._get(rec.relation, rec.relation_field)
+            for record in self
+        ):
+            raise ValidationError(_(
+                "Unknown field “%(field)s” on model “%(model)s” in Relation Field",
+                field=rec.relation_field,
+                model=rec.relation,
+            ))
+
     @api.constrains('currency_field')
     def _check_currency_field(self):
         for rec in self:
