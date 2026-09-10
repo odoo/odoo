@@ -33,6 +33,20 @@ class TestIcons(BaseCase):
             }
             self.assertEqual(set(ICONS), wishlist | odoo_ui_icons)
 
+    def test_icons_search(self):
+        self.assertEqual(
+            [name for name, _has_fill in search_icons()], list(ICONS),
+            "an empty needle matches every icon",
+        )
+        self.assertEqual(
+            next(search_icons('shopping cart')), ('shopping_cart', True),
+            "every word of the needle must match, and has_fill comes along",
+        )
+        self.assertFalse(
+            list(search_icons('shopping zzzz')),
+            "a single unmatched word is enough to discard an icon",
+        )
+
     def test_icons_search_translated(self):
         def translate(tags):
             return 'chariot de marché' if tags == ICONS['shopping_cart']['tags'] else ''
