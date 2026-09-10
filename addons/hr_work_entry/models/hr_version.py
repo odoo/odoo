@@ -79,7 +79,7 @@ class HrVersion(models.Model):
             ('resource_id', 'in', [False] + self.employee_id.resource_id.ids),
             ('date_from', '<=', end_dt.replace(tzinfo=None)),
             ('date_to', '>=', start_dt.replace(tzinfo=None)),
-            ('company_id', 'in', [False] + self.env.companies.ids),
+            ('company_id', 'in', [False] + self.company_id.ids),
         ])
         return domain & self._get_sub_leave_domain()
 
