@@ -930,6 +930,33 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
             test_file='test_invoice_customer_party_identifiers_partner_nl_vat_eas_oin_company_registry',
         )
 
+    def test_invoice_customer_party_identifiers_partner_non_eu_vat(self):
+        test_partner = self.env['res.partner'].create({
+            **self._create_partner_default_values(),
+            'street': "Test Street 1",
+            'zip': "100",
+            'city': "Tórshavn",
+            'country_id': self.env.ref('base.fo').id,
+            'vat': '123456',
+            'peppol_eas': '0088',
+            'peppol_endpoint': '1234567890128',
+        })
+        self.assertEqual(test_partner.vat, '123456', "FO VAT is stored without a country prefix")
+        invoice = self._create_invoice_one_line(
+            product_id=self.product_a,
+            partner_id=test_partner,
+            tax_ids=self.percent_tax(21.0),
+            post=True,
+        )
+        xml_tree = etree.fromstring(self.env['account.edi.xml.ubl_bis3']._export_invoice(invoice)[0])
+        ns = {
+            'cac': "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2",
+            'cbc': "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2",
+        }
+        tax_scheme = xml_tree.find(
+            './/cac:AccountingCustomerParty/cac:Party/cac:PartyTaxScheme/cac:TaxScheme/cbc:ID', ns)
+        self.assertEqual(tax_scheme.text, 'NOT_EU_VAT')
+
     def test_invoice_BR_E_08_line_extension_amount(self):
         """ [BR-E-08] In a VAT breakdown (BG-23) where the VAT category code (BT-118) is "Exempt from VAT"
             the VAT category taxable amount (BT-116) shall equal the sum of Invoice line net amounts (BT-131)
