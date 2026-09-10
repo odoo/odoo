@@ -127,6 +127,10 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
                             purchases_qty += qty
                             purchases_val += self._get_acquisition_value(move, qty)
                         elif returned_move and self._move_date_local(returned_move) >= self.date_from:
+                            # unlike a return of stock below, one with nothing to return to is left
+                            # alone: the goods never entered stock, so the pool gained them from the
+                            # drop-ship alone, and without it there is neither a period to place them
+                            # in nor a price to take them out at
                             returns_qty += qty
                             returns_val += self._get_acquisition_value(returned_move, qty)
                     elif (origin_usage in ('supplier', 'transit') and dest_usage == 'internal'):
