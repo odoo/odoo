@@ -239,7 +239,8 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
         }
 
     def _default_date_from(self):
-        """Return the day the last closing left off on, which is where this period starts.
+        """
+        Return the day the last closing left off on, which is where this period starts.
 
         A closing makes everything up to its own date final, so the period to
         evaluate next is the one that opens the day after. Never later than today,
