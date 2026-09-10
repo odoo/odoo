@@ -4,6 +4,7 @@ import re
 
 from markupsafe import Markup
 import logging
+import warnings
 import werkzeug
 
 from odoo import api, fields, Command, models, _
@@ -485,7 +486,8 @@ class HrExpense(models.Model):
     def _compute_from_employee_id(self):
         for expense in self:
             expense.department_id = expense.employee_id.department_id
-            expense.manager_id = expense.sudo()._get_default_responsible_for_approval()
+            if not expense.manager_id:
+                expense.manager_id = expense.employee_id.expense_manager_id or self.env['res.users']
 
     @api.depends('quantity', 'price_unit', 'tax_ids')
     def _compute_total_amount_currency(self):
@@ -994,12 +996,11 @@ class HrExpense(models.Model):
         expenses_submitted_to_review = self.env['hr.expense']
         for expense in self:
             if expense.state == 'submitted':
-                expense.with_context(mail_activity_quick_update=True).activity_schedule(
-                    'hr_expense.mail_act_expense_approval',
-                    user_id=expense.manager_id.id or
-                    expense.sudo()._get_default_responsible_for_approval().id or
-                    self.env.user.id
-                )
+                if expense.manager_id and expense.manager_id != self.env.user:
+                    expense.with_context(mail_activity_quick_update=True).activity_schedule(
+                        'hr_expense.mail_act_expense_approval',
+                        user_id=expense.manager_id.id
+                    )
                 expenses_submitted_to_review |= expense
             elif expense.state == 'approved':
                 expenses_activity_done |= expense
@@ -1122,8 +1123,8 @@ class HrExpense(models.Model):
             if not expense.product_id:
                 raise UserError(_("You can not submit an expense without a category."))
             if not expense.manager_id:
-                expense.sudo().manager_id = expense._get_default_responsible_for_approval()
-        expenses_autovalidated = self.filtered(lambda expense: not expense.manager_id and not expense.employee_id.expense_manager_id)
+                expense.sudo().manager_id = expense.employee_id.expense_manager_id
+        expenses_autovalidated = self.filtered(lambda expense: not expense.manager_id or expense.manager_id == expense.employee_id.user_id)
         (self - expenses_autovalidated).approval_state = 'submitted'
         if expenses_autovalidated:  # Note, this will and should bypass the duplicate check. May be changed later
             expenses_autovalidated._do_approve()
@@ -1365,6 +1366,7 @@ class HrExpense(models.Model):
         is_team_approver = self.env.user.has_group('hr_expense.group_hr_expense_team_approver') or self.env.su
         is_approver = self.env.user.has_group('hr_expense.group_hr_expense_user') or self.env.su
         is_hr_admin = self.env.user.has_group('hr_expense.group_hr_expense_manager') or self.env.su
+        is_auto_validation = not self.env.user.expense_manager_id or self.env.su
 
         valid_company_ids = set(self.env.companies.ids)
 
@@ -1393,14 +1395,16 @@ class HrExpense(models.Model):
                 )
 
             elif not is_expense_team_approver:
-                reason = _("%(expense_name)s: You are neither a Manager nor a HR Officer", expense_name=expense.name)
+                # Bypass rest of the checks because admins are team approvers
+                if not (is_auto_validation and expense_employee.user_id == self.env.user and not expense.manager_id):
+                    reason = _("%(expense_name)s: You are neither a Manager nor a HR Officer", expense_name=expense.name)
 
             elif not is_hr_admin:
                 current_managers = expense.sudo()._get_managers()
                 if expense_employee.id in expenses_employee_ids_under_user_ones:
                     current_managers |= self.env.user
 
-                if expense_employee.user_id == self.env.user:
+                if expense_employee.user_id == self.env.user and (is_auto_validation and not expense.manager_id):
                     reason = _("%(expense_name)s: It is your own expense", expense_name=expense.name)
 
                 elif self.env.user not in current_managers and not is_approver:
@@ -1481,6 +1485,7 @@ class HrExpense(models.Model):
         } for price in (price_round_up, price_round_down)]
 
     def _get_default_responsible_for_approval(self):
+        warnings.warn("expense_manager_id is called directly when needed now", DeprecationWarning)
         self.ensure_one()
         return (self._get_managers() - self.employee_id.user_id)[:1]
 
