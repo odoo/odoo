@@ -4,20 +4,21 @@ import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 
-export function handleRPCError(error, dialog) {
+export function handleRPCError(error, dialog, { extraBody = "" } = {}) {
     const { data } = error;
+    const body = data.message + extraBody;
     if (odooExceptionTitleMap.has(error.exceptionName)) {
         const title = odooExceptionTitleMap.get(error.exceptionName).toString();
-        dialog.add(AlertDialog, { title, body: data.message });
+        dialog.add(AlertDialog, { title, body });
     } else {
         if (odoo.debug === "assets") {
             dialog.add(ErrorDialog, {
-                traceback: data.message + "\n" + data.debug + "\n",
+                traceback: body + "\n" + data.debug + "\n",
             });
         } else {
             dialog.add(AlertDialog, {
                 title: _t("Odoo Server Error"),
-                body: data.message,
+                body,
             });
         }
     }
