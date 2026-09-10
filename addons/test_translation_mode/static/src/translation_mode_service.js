@@ -714,7 +714,7 @@ export const translationModeServiceFactory = {
     start(env, dependencies) {
         const service = new TranslationModeService();
         service.setup(env, dependencies);
-        if (isTranslationModeEnabled(env)) {
+        if (isTranslationModeEnabled()) {
             service.registerSidePanel();
         }
         return service;
