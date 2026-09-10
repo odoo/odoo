@@ -97,11 +97,28 @@ function containsActiveElement(parent) {
 }
 
 /**
+ * Ignores the tabable elements of readonly column group fields, e.g. the link
+ * of a readonly many2one.
+ *
  * @param {HTMLTableCellElement} cell
  * @param {number} index
  */
 function getElementToFocus(cell, index) {
-    return getTabableElements(cell).at(index) || cell;
+    const tabableElements = getTabableElements(cell).filter(
+        (el) => !el.closest(".o_column_group_field.o_readonly_modifier")
+    );
+    return tabableElements.at(index) || cell;
+}
+
+/**
+ * A cell may display several fields (column group), in which case it is only
+ * readonly when all of them are.
+ *
+ * @param {HTMLTableCellElement} cell
+ */
+function hasOnlyReadonlyFields(cell) {
+    const fields = [...cell.children];
+    return fields.length > 0 && fields.every((el) => el.classList.contains("o_readonly_modifier"));
 }
 
 export const listRendererProps = {
@@ -1196,12 +1213,28 @@ export class ListRenderer extends Component {
      * @param {RelationalRecord} record
      */
     getColumnGroupFieldClasses(fieldInfo, record) {
-        if (!this.canUseFormatter(fieldInfo, record)) {
-            return "";
+        const classNames = [];
+        if (evaluateBooleanExpr(fieldInfo.required, record.evalContextWithVirtualIds)) {
+            classNames.push("o_required_modifier");
         }
-        const classNames = this.getDecorationClassNames(fieldInfo, record);
-        if (this.getFieldClass(fieldInfo)) {
-            classNames.push(this.getFieldClass(fieldInfo));
+        if (record.isFieldInvalid(fieldInfo.name)) {
+            classNames.push("o_invalid_cell");
+        }
+        if (this.isCellReadonly(fieldInfo, record)) {
+            classNames.push("o_readonly_modifier");
+        }
+        if (
+            record.isInEdition &&
+            this.editedRecord() &&
+            this.isCellReadonly(fieldInfo, this.editedRecord())
+        ) {
+            classNames.push("text-muted");
+        }
+        if (this.canUseFormatter(fieldInfo, record)) {
+            classNames.push(...this.getDecorationClassNames(fieldInfo, record));
+            if (this.getFieldClass(fieldInfo)) {
+                classNames.push(this.getFieldClass(fieldInfo));
+            }
         }
         return classNames.join(" ");
     }
@@ -1715,10 +1748,7 @@ export class ListRenderer extends Component {
             if (!c.classList.contains("o_data_cell")) {
                 continue;
             }
-            if (
-                c.firstElementChild &&
-                c.firstElementChild.classList.contains("o_readonly_modifier")
-            ) {
+            if (hasOnlyReadonlyFields(c)) {
                 continue;
             }
             const toFocus = getElementToFocus(c, 0);
@@ -1742,10 +1772,7 @@ export class ListRenderer extends Component {
             if (!c.classList.contains("o_data_cell")) {
                 continue;
             }
-            if (
-                c.firstElementChild &&
-                c.firstElementChild.classList.contains("o_readonly_modifier")
-            ) {
+            if (hasOnlyReadonlyFields(c)) {
                 continue;
             }
             const toFocus = getElementToFocus(c, -1);
