@@ -1,8 +1,15 @@
+<<<<<<< 6dd4c4d4af086f19ee6b128c26cc7966c2e88864
 from dateutil.relativedelta import relativedelta
+||||||| fd4ec49dd3c0e1d02deafd63f2d9445daae7895b
+=======
+from unittest.mock import patch
+
+>>>>>>> 1cbc60716da9adb7be8283f72d5d4f4754c01eb4
 from freezegun import freeze_time
 
 from odoo import fields
 from odoo.fields import Command
+from odoo.addons.point_of_sale.models.pos_session import PosSession
 from odoo.addons.pos_stock.tests.common import CommonPosStockTest
 
 
@@ -1296,6 +1303,7 @@ class TestPosStockFlow(CommonPosStockTest):
         self.assertTrue(order.picking_ids)
         self.assertTrue(order.picking_ids.filtered(lambda p: p.state not in ('done', 'cancel')))
 
+<<<<<<< 6dd4c4d4af086f19ee6b128c26cc7966c2e88864
         refund_action = order.refund()
         refund_order = self.env['pos.order'].browse(refund_action['res_id'])
         payment_context = {"active_ids": [refund_order.id], "active_id": refund_order.id}
@@ -1544,3 +1552,34 @@ class TestPosStockFlow(CommonPosStockTest):
 
         # No return picking should be created
         self.assertFalse(refund_order.picking_ids)
+||||||| fd4ec49dd3c0e1d02deafd63f2d9445daae7895b
+        order = self.env['pos.order'].search([('session_id', '=', current_session_b.id)])
+        self.assertEqual(len(order), 1)
+        self.assertTrue(order.account_move)
+=======
+        order = self.env['pos.order'].search([('session_id', '=', current_session_b.id)])
+        self.assertEqual(len(order), 1)
+        self.assertTrue(order.account_move)
+
+    def test_unbalanced_closing_returns_force_close_action(self):
+        """ When the closing entry is unbalanced, point_of_sale returns the
+        'Force Close Session' wizard action; the pos_stock override must pass it
+        on so the session does not end up closed without any journal entry. """
+        self.create_backend_pos_order({
+            'line_data': [
+                {'product_id': self.ten_dollars_with_15_incl.product_variant_id.id},
+            ],
+            'payment_data': [
+                {'payment_method_id': self.bank_payment_method.id, 'amount': 10},
+            ],
+        })
+        session = self.pos_config_usd.current_session_id
+        force_close_action = session._close_session_action(1.0)
+        # The real path also calls cr.rollback(), which breaks the test transaction,
+        # so only the return value of the core method is simulated.
+        with patch.object(PosSession, '_process_session_validation', return_value=force_close_action):
+            result = session.action_pos_session_closing_control()
+        self.assertEqual(result, force_close_action)
+        self.assertEqual(session.state, 'closing_control')
+        self.assertFalse(session.move_id)
+>>>>>>> 1cbc60716da9adb7be8283f72d5d4f4754c01eb4
