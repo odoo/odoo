@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 <t t-name="mail.DiscussSearch">
     <div class="o-mail-DiscussSearch align-self-stretch d-flex align-items-center gap-1" t-attf-class="{{ this.class }}">
-        <div class="o-mail-DiscussSearch-inputContainer h-100 border border-secondary position-relative d-flex align-items-center justify-content-center gap-1 flex-grow-1 rounded-pill">
+        <div class="o-mail-DiscussSearch-inputContainer h-100 border position-relative d-flex align-items-center justify-content-center gap-1 flex-grow-1 rounded-pill">
             <div class="d-flex w-100 align-items-center gap-2 ps-2">
                 <i class="oi smaller opacity-50" data-icon="search"/>
                 <input class="form-control rounded-pill rounded-start-0 border-0 bg-inherit ps-0 lh-1" t-model.proxy="this.messagingMenuUiState().searchTerm" placeholder="Search" t-on-keydown="this.onKeydownSearch" t-ref="this.searchInput"/>

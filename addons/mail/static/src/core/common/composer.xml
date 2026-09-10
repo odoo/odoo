@@ -40,7 +40,7 @@
                     <i class="oi oi-lg rounded-circle p-0 cursor-pointer opacity-50 opacity-100-hover" data-icon="cancel" title="Discard" t-on-click="() => (this.props.composer.replyToMessage = undefined)"/>
                 </div>
                 <span t-if="this.props.composer.message and this.ui.isSmall" class="px-1" t-on-click="this.onClickCancelOrSaveEditText">
-                    <button class="btn btn-sm btn-secondary rounded-pill border border-secondary ps-1 pe-2 py-0 mb-1" t-att-data-type="this.EDIT_CLICK_TYPE.CANCEL">
+                    <button class="btn btn-sm btn-secondary rounded-pill border ps-1 pe-2 py-0 mb-1" t-att-data-type="this.EDIT_CLICK_TYPE.CANCEL">
                         <i class="oi pe-2" data-icon="close_small" t-att-data-type="this.EDIT_CLICK_TYPE.CANCEL"></i>
                         Discard editing
                     </button>

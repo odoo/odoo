@@ -1,7 +1,19 @@
 $poll-color-opacity-map: (
-    "secondary": 0.3,
+    "secondary": 0.1,
     "o-action": 0.1,
     "o-brand-primary": 0.2
+);
+
+$poll-border-color-opacity-map: (
+    "secondary": 0.15,
+    "o-action": 0.5,
+    "o-brand-primary": 0.5
+);
+
+$poll-check-opacity-map: (
+    "secondary": 0.65,
+    "o-action": 1,
+    "o-brand-primary": 1
 );
 
 $poll-color-map: (
@@ -12,11 +24,14 @@ $poll-color-map: (
 
 @mixin o-poll-bg($color-name) {
     $opacity: map-get($poll-color-opacity-map, $color-name);
+    $border-opacity: map-get($poll-border-color-opacity-map, $color-name);
     $color-value: map-get($poll-color-map, $color-name);
     --poll-bg-r: #{red($color-value)};
     --poll-bg-g: #{green($color-value)};
     --poll-bg-b: #{blue($color-value)};
     --poll-bg-opacity: #{$opacity};
+    --poll-border-opacity: #{$border-opacity};
+    --poll-check-opacity: #{map-get($poll-check-opacity-map, $color-name)};
 }
 
 @mixin o-mail-poll() {
@@ -40,13 +55,13 @@ $poll-color-map: (
     }
 
     .o-mail-PollOption {
-        --poll-border-color: rgba(var(--poll-bg-r), var(--poll-bg-g), var(--poll-bg-b), 0.5);
+        --poll-border-color: rgba(var(--poll-bg-r), var(--poll-bg-g), var(--poll-bg-b), var(--poll-border-opacity));
         border: 1px solid var(--poll-border-color);
         background-size: 0%;
         transition: background-size 0.6s cubic-bezier(0.215, 0.61, 0.355, 1);
 
         [data-icon="check_circle"].oi-filled {
-            color: rgb(var(--poll-bg-r), var(--poll-bg-g), var(--poll-bg-b));
+            color: rgba(var(--poll-bg-r), var(--poll-bg-g), var(--poll-bg-b), var(--poll-check-opacity));
         }
 
         .form-check-input:focus {

@@ -14,7 +14,7 @@
         </t>
         <t t-else="">
             <div class="o-EmojiPicker-search d-flex align-items-center mx-2 mt-2 rounded">
-                <span class="o-EmojiPicker-searchContour d-flex mx-1 w-100 rounded-pill o-active align-items-center justify-content-center border border-secondary bg-view">
+                <span class="o-EmojiPicker-searchContour d-flex mx-1 w-100 rounded-pill o-active align-items-center justify-content-center border bg-view">
                     <i class="oi ps-2 py-1 fs-7 rounded-start-0 rounded-3 o-active opacity-50" data-icon="search" title="Search..." role="img" aria-label="Search..."/>
                     <t t-call="web.EmojiPicker.searchInput"/>
                     <button t-if="this.searchTerm()" class="btn btn-sm btn-link p-0 px-1 opacity-50 opacity-100-hover" title="Clear search" t-on-click="this.clearSearch">
@@ -55,7 +55,7 @@
                 </t>
             </div>
             <div
-                class="o-EmojiPicker-navbar d-flex flex-shrink-0 w-100 align-items-center justify-content-center overflow-auto px-1 gap-1 border-top border-secondary"
+                class="o-EmojiPicker-navbar d-flex flex-shrink-0 w-100 align-items-center justify-content-center overflow-auto px-1 gap-1 border-top"
                 t-att-class="{ 'opacity-0': !this.emojiNavbarRepr() }"
                 t-ref="this.navbarRef"
             >

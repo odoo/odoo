@@ -13,7 +13,7 @@
     </t>
 
     <t t-name="mail.ChatBubblePreview">
-        <div t-if="this.props.chatWindow?.channel" class="o-mail-ChatBubble-preview o-mail-ChatBubble-menu px-0 py-1 shadow-sm border border-secondary bg-view o-rounded-bubble" t-att-class="{
+        <div t-if="this.props.chatWindow?.channel" class="o-mail-ChatBubble-preview o-mail-ChatBubble-menu px-0 py-1 shadow-sm border bg-view o-rounded-bubble" t-att-class="{
             'o-blue': this.lastMessage?.bubbleColor === 'blue',
             'o-green': this.lastMessage?.bubbleColor === 'green',
             'o-orange': this.lastMessage?.bubbleColor === 'orange',
