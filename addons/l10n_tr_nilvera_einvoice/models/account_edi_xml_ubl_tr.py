@@ -124,7 +124,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
 
         text_i = num2words(amount_integer_part * sign, lang="tr") or 'Sifir'
         text_d = num2words(amount_decimal_part * sign, lang="tr") or 'Sifir'
-        return f'YALNIZ : {text_i} {currency.name} {text_d} {currency.currency_subunit_label}'.upper()
+        return f'YALNIZ : {text_i} {currency.name} {text_d} {currency.with_context(lang="tr_TR").currency_subunit_label}'.upper()
 
     def _add_invoice_accounting_customer_party_nodes(self, document_node, vals):
         """Extend invoice accounting customer party nodes for TR E-Invoicing.
