@@ -14,7 +14,7 @@ from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 class TestAllocations(TestHrHolidaysCommon):
     @classmethod
     def setUpClass(cls):
-        super(TestAllocations, cls).setUpClass()
+        super().setUpClass()
         cls.work_entry_type = cls.env['hr.work.entry.type'].create({
             'name': 'Time Off with no validation for approval',
             'code': 'Time Off with no validation for approval',
@@ -493,6 +493,31 @@ class TestAllocations(TestHrHolidaysCommon):
             'request_date_from': date(2025, 11, 10),
             'request_date_to': date(2025, 11, 10),
             })
+
+    def test_different_granularity_warning_unit(self):
+        """Test that the allocation warning displayed below the requested dates is
+        expressed in unit_of_measure and not the leave type's request_unit
+        """
+        allocation = self.env['hr.leave.allocation'].create({
+            'name': 'allocation in hours',
+            'employee_id': self.employee.id,
+            'work_entry_type_id': self.work_entry_type_diff_gran.id,
+            'date_from': date(2026, 10, 1),
+            # number_of_days will be multiplied by hours_per_day (8.0) to compute allocation duration
+            # so this allocation is for 8.5 hours
+            'number_of_days': 8.5 / 8.0,
+        })
+        allocation.action_approve()
+
+        leave = self.env['hr.leave'].with_context(skip_allocation_check=True).create({
+            'employee_id': self.employee.id,
+            'work_entry_type_id': self.work_entry_type_diff_gran.id,
+            'request_date_from': date(2026, 10, 31),
+            'request_date_to': date(2026, 10, 31),
+        })
+        self.assertEqual(leave.work_entry_type_request_unit, 'day')  # leave request is for 1 day -> 8 hours -> remining 0.5
+        self.assertEqual(leave.number_of_hours, 8)
+        self.assertEqual(leave.allocation_display_warning, "Only 0.5 hour(s) available")
 
     def test_leave_allocation_by_removing_employee(self):
         """
