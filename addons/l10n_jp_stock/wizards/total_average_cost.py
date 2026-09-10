@@ -127,10 +127,8 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
                             purchases_qty += qty
                             purchases_val += self._get_acquisition_value(move, qty)
                         elif returned_move and self._move_date_local(returned_move) >= self.date_from:
-                            # unlike a return of stock below, one with nothing to return to is left
-                            # alone: the goods never entered stock, so the pool gained them from the
-                            # drop-ship alone, and without it there is neither a period to place them
-                            # in nor a price to take them out at
+                            # unlike stock below, these goods are in no opening quantity, so with
+                            # no origin there is neither a period to remove them from nor a price
                             returns_qty += qty
                             returns_val += self._get_acquisition_value(returned_move, qty)
                     elif (origin_usage in ('supplier', 'transit') and dest_usage == 'internal'):
@@ -223,18 +221,14 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
             'next': {'type': 'ir.actions.act_window_close', 'infos': {'done': True}},
         }
         if updated_count or unchanged_count:
-            # nothing here closes the period, and an evaluation is only final once something does; the
-            # end date already says to evaluate again if a move of the period moved, so this stays short
+            # an evaluation is only final once the period is closed, which nothing here does
             params['message'] = message + ' ' + self.env._(
                 'The period is not final until the stock valuation is closed for it in %s.',
             )
-            # core renders every notification link with target="_blank" (see the display_notification
-            # client action), so this opens a new tab, the way each core module using links already does
             params['links'] = [{
                 'label': self.env._('Inventory Valuation'),
                 'url': '/odoo/action-stock_account.action_report_stock_valuation',
             }]
-            # a reminder that disappears on its own reminds nobody
             params['sticky'] = True
         return {
             'type': 'ir.actions.client',
@@ -299,17 +293,11 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
 
     def _get_acquisition_value(self, move, qty):
         """
-        Return what a quantity of an incoming move cost to acquire.
+        Return what a quantity of an incoming move cost to acquire (施行令32条1項1号, 2号).
 
-        法人税法施行令 32条1項1号 makes the 購入代価 the acquisition cost and 32条1項2号
-        adds what it took to bring the goods in, so the resolution follows core's own
-        order: a correction someone made on the move itself, then whatever a posted
-        bill evidences, then what the order priced, then the price the move carries,
-        and on top of it the landed costs allocated to the receipt. Core's own last
-        resort, the standard price, is skipped: it is the very cost being evaluated.
-
-        A correction and a landed cost are both stated for the move as a whole, so
-        each is taken pro rata of the quantity asked for here.
+        Core's own ladder without its last resort: the standard price is the cost being
+        evaluated, so falling back to it would feed the average its own answer. A
+        correction and a landed cost are stated for the whole move, so each is pro rata.
         """
         valued_qty = move._get_valued_qty()
         share = qty / valued_qty if valued_qty else 0.0
