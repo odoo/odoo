@@ -396,8 +396,15 @@ class MailMail(models.Model):
         self.ensure_one()
         if tools.is_html_empty(self.body_html):
             return ''
+
+        def get_base_url():
+            record = self.env.get(self.model) if self.model else None
+            if record is not None:
+                record = record.browse(self.res_id)
+            return record.get_base_url() if record else None
+
         body = self._transform_mention_links_for_email(self.body_html)
-        return self.env['mail.render.mixin']._replace_local_links(body)
+        return self.env['mail.render.mixin']._replace_local_links(body, get_base_url)
 
     def _transform_mention_links_for_email(self, html_body):
         if not html_body or (
