@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.addons.sale.tests.common import TestSaleCommon
 
 
@@ -29,6 +30,7 @@ class TestSaleProjectCommon(TestSaleCommon):
             'name': 'Project Global',
             'account_id': cls.analytic_account_sale.id,
             'allow_billable': True,
+            'type_ids': [Command.set([])],
         })
         cls.project_template = Project.create({
             'name': 'Project TEMPLATE for services',

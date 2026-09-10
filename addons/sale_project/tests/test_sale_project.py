@@ -729,7 +729,7 @@ class TestSaleProject(TestSaleProjectCommon):
     def test_generated_project_stages(self):
         """ This test checks that when a project is created on SO confirmation, the following stages are automatically
             generated for the new project (assuming there is no project template set on the product):
-            - To Do
+            - New
             - In Progress
             - Done
             - Cancelled
@@ -756,7 +756,7 @@ class TestSaleProject(TestSaleProjectCommon):
             'product_uom_qty': 10,
             'price_unit': product.list_price,
         })
-        names = ['To Do', 'In Progress', 'Done', 'Cancelled']
+        names = ['New', 'In Progress', 'Done', 'Cancelled']
         project = sale_order_line._timesheet_create_project()
         self.assertEqual(names, project.type_ids.mapped('name'), "The project stages' name should be equal to: %s" % names)
 
