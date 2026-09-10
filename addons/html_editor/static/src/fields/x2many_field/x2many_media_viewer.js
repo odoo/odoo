@@ -35,6 +35,8 @@ export class X2ManyMediaViewer extends X2ManyField {
             visibleTabs: ["IMAGES", "VIDEOS"],
             imageSave: this.onImageSave.bind(this),
             videoSave: this.onVideoSave.bind(this),
+            resModel: this.props.record.model.config.resModel,
+            resId: this.props.record.model.config.resId,
         };
     }
 
