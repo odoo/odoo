@@ -6,7 +6,7 @@
             <div class="oe_structure oe_empty" id="oe_structure_website_partner_partner_1" data-editor-message.translate="Drag blocks here to add them on all partners"/>
             <div class="container">
                 <div class="row">
-                    <t t-call="website_partner.partner_detail" contact_details="True"/>
+                    <t t-call="website_partner.partner_detail"/>
                 </div>
             </div>
             <div class="oe_structure oe_empty" id="oe_structure_website_partner_partner_2" data-editor-message.translate="Drag blocks here to add them on all partners"/>
@@ -47,4 +47,11 @@
         </div>
     </div>
 </template>
+
+<template id="contact_details" inherit_id="website_partner.partner_page" name="Contact Details">
+    <t t-call="website_partner.partner_detail" position="attributes">
+        <attribute name="contact_details">True</attribute>
+    </t>
+</template>
+
 </odoo>

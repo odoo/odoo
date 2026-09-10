@@ -14,14 +14,24 @@
                 <BuilderSelectItem action="'websiteConfig'" actionParam="{views: ['website_partnership.image_four_five_partner_page']}">4:5</BuilderSelectItem>
             </BuilderSelect>
         </BuilderRow>
-        <BuilderRow label.translate="Contact Details">
-            <BuilderCheckbox action="'websiteConfig'" actionParam="{views: ['website_partnership.o_wcrm_partner_address', 'website_partnership.contact_details']}"/>
+        <BuilderRow label.translate="State &amp; Country">
+            <BuilderCheckbox action="'websiteConfig'" actionParam="{views: ['website_partnership.o_wcrm_partner_address']}"/>
         </BuilderRow>
         <BuilderRow label.translate="Search">
             <BuilderCheckbox action="'websiteConfig'" actionParam="{views: ['website_partnership.search_setting']}" />
         </BuilderRow>
         <BuilderRow label.translate="Categories" id="'categories_option'">
             <BuilderCheckbox action="'websiteConfig'" actionParam="{views: ['website_partnership.categories_setting']}" />
+        </BuilderRow>
+        <hr/>
+        <BuilderRow label.translate="Cards Design">
+            Global options for all inner cards.
+        </BuilderRow>
+        <BuilderRow label.translate="Roundness" tooltip.translate="Applies to all cards" level="1">
+            <BuilderRange action="'customizeWebsiteVariable'" actionParam="'website-partnership-card-roundness'" default="10" max="50"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Shadows" tooltip.translate="Applies to all cards" level="1">
+            <BuilderCheckbox action="'websiteConfig'" actionParam="{views: ['website_partnership.partners_card_shadow']}" />
         </BuilderRow>
     </t>
 
