@@ -115,3 +115,32 @@ class TestTRAccountMoveSend(TestAccountMoveSendCommon, TestUBLTRCommon):
         self.company_data['company'].bank_ids.bank_id = bank.id
 
         self.assertTrue(self._generate_invoice_xml(self.einvoice_partner), "XML generation failed")
+
+    def test_ubl_tr_amount_currency_translation(self):
+        """ Test that the currency subunit is translated to Turkish when sending to Nilvera."""
+
+        invoice = self.init_invoice(
+            move_type='out_invoice',
+            partner=self.einvoice_partner,
+            invoice_date='2025-11-28',
+            amounts=[504.0],
+            currency=self.env.ref('base.USD'),
+            taxes=self.tax_sale_a,
+            post=True,
+        )
+
+        wizard = self.create_send_and_print(invoice, True)
+        wizard.sending_methods = False
+        wizard.extra_edis = False
+        wizard.alerts = False
+        wizard.action_send_and_print()
+
+        xml_data = invoice.ubl_cii_xml_id.raw
+        xml_tree = ET.fromstring(xml_data.decode('utf-8'))
+        ns = {'cbc': 'urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2'}
+
+        notes = [node.text for node in xml_tree.findall('.//cbc:Note', ns) if node.text]
+        full_note_text = " ".join(notes).upper()
+
+        self.assertIn('SENT', full_note_text)
+        self.assertNotIn('CENTS', full_note_text)
