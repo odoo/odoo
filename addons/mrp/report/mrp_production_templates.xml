@@ -4,14 +4,14 @@
     <t t-call="web.html_container">
         <t t-foreach="docs" t-as="o">
             <t t-call="web.internal_layout">
-                <div class="page">
+                <div class="page o_mrp_mo_report">
                     <div class="oe_structure"/>
                     <div class="row">
                         <div class="col-7">
                             <h2><span t-field="o.name">MRP-001</span></h2>
                         </div>
                         <div class="col-5">
-                            <span class="text-end">
+                            <span class="text-end top-barcode">
                                 <span t-field="o.name" t-options="{'widget': 'barcode', 'width': 600, 'height': 100, 'img_style': 'width:350px;height:60px'}">Package barcode</span>
                             </span>
                         </div>
@@ -25,7 +25,7 @@
                             <strong>Responsible:</strong><br/>
                             <span t-field="o.user_id">John Doe</span>
                         </div>
-                        <div class="col-3" t-if="o.state not in ('done', 'cancel') and o.date_deadline">
+                        <div class="col-3" t-if="o.date_deadline">
                             <strong>Deadline:</strong><br/>
                             <span t-field="o.date_deadline">2023-09-15</span>
                         </div>
@@ -40,15 +40,19 @@
                             <strong>Description:</strong><br/>
                             <span t-field="o.product_description_variants">Laptop with 16GB RAM</span>
                         </div>
-                        <div class="col-3">
+                        <div class="col-3" t-if="o.state != 'done'">
                             <strong>Quantity to Produce:</strong><br/>
                             <span t-field="o.product_qty">100</span>
                             <span t-field="o.uom_id.name" groups="uom.group_uom">Units</span>
                         </div>
-                        <div class="col-3" t-if="o.qty_producing">
-                            <strong>Quantity Producing:</strong><br/>
+                        <div class="col-3" t-if="o.qty_producing and o.state == 'done'">
+                            <strong>Quantity Produced:</strong><br/>
                             <span t-field="o.qty_producing">50</span>
                             <span t-field="o.uom_id.name" groups="uom.group_uom">Units</span>
+                        </div>
+                        <div class="col-3" t-if="o.state == 'done' and o.date_finished">
+                            <strong>Production Date:</strong><br/>
+                            <span t-field="o.date_finished">2023-09-15</span>
                         </div>
                     </div>
 
@@ -58,34 +62,58 @@
                             <span t-elif="o.is_planned">Operations Planned</span>
                             <span t-else="">Operations</span>
                         </h3>
-                        <table class="table table-sm">
-                            <tr>
-                                <th><strong>Operation</strong></th>
-                                <th><strong>WorkCenter</strong></th>
-                                <th><strong>Duration</strong></th>
-                                <th t-if="o.state in ('progress', 'to_close')"><strong>Actual Duration</strong></th>
-                                <th style="width:30%"><strong>Barcode</strong></th>
-                            </tr>
-                            <tr t-foreach="o.workorder_ids" t-as="line2">
-                                <td><span t-field="line2.name">Assembling</span></td>
-                                <td><span t-field="line2.workcenter_id.name">Center A</span></td>
-                                <td>
-                                    <span t-if="o.state != 'done'" t-field="line2.duration_expected">60</span>
-                                    <span t-if="o.state == 'done'" t-field="line2.duration">58</span>
-                                </td>
-                                <td t-if="o.state in ('progress', 'to_close')">
-                                    <span t-field="line2.duration">58</span>
-                                </td>
-                                <td>
-                                    <span t-field="line2.barcode" t-options="{'widget': 'barcode', 'width': 600, 'height': 100, 'img_style': 'width:100%;height:35px'}">987654321098</span>
-                                </td>
-                            </tr>
+                        <table class="table table-sm table-borderless">
+                            <thead>
+                                <tr>
+                                    <th width="20%" class="o_mrp_col"><strong>Operation</strong></th>
+                                    <th width="20%" class="o_mrp_col" ><strong>Work Center</strong></th>
+                                    <th width="20%" class="o_mrp_col"><strong>Duration</strong></th>
+                                    <th t-if="o.state == 'done'" width="20%" class="o_mrp_col"><strong>Actual Duration</strong></th>
+                                    <th t-if="o.state != 'done'" width="20%" class="o_mrp_col text-center"><strong>Start/Stop</strong></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="o.workorder_ids" t-as="line2">
+                                    <td width="20%" class="o_mrp_col">
+                                        <span t-field="line2.name">Assembling</span>
+                                    </td>
+                                    <td width="20%" class="o_mrp_col">
+                                        <span t-field="line2.workcenter_id.name">Center A</span>
+                                    </td>
+                                    <td width="20%" class="o_mrp_col">
+                                        <span t-field="line2.duration_expected" t-options="{'widget': 'duration', 'unit': 'minute', 'format': 'narrow'}">58</span>
+                                    </td>
+                                    <td width="20%" class="o_mrp_col" t-if="o.state == 'done'">
+                                        <span t-field="line2.duration" t-options="{'widget': 'duration', 'unit': 'minute', 'format': 'narrow'}">58</span>
+                                    </td>
+                                    <td width="20%" class="o_mrp_col" t-if="o.state != 'done'">
+                                        <span t-field="line2.barcode" t-options="{'widget': 'barcode', 'width': 600, 'height': 100, 'img_style': 'width:100%;height:35px'}">987654321098</span>
+                                    </td>
+                                </tr>
+                            </tbody>
                         </table>
                     </div>
 
                     <div t-if="o.move_raw_ids">
                         <t t-call="mrp.report_mrp_production_components"/>
-
+                    </div>
+                    <div t-if="o.move_raw_ids">
+                        <t t-if="o.product_id.tracking in ['serial', 'lot']" groups="stock.group_production_lot">
+                            <h3>
+                                <span>
+                                    Serial Numbers
+                                </span>
+                            </h3>
+                            <table class="table table-sm table-borderless">
+                                <tbody>
+                                    <tr t-foreach="o.lot_producing_ids" t-as="serial">
+                                        <td>
+                                            <span t-field="serial.name"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </t>
                     </div>
                     <div class="oe_structure"/>
                 </div>
@@ -100,30 +128,38 @@
             Components
         </span>
     </h3>
-    <table class="table table-sm">
+    <table class="table table-sm table-borderless">
         <div class="oe_structure"></div>
         <t t-set="has_product_barcode" t-value="any(m.product_id.barcode for m in o.move_raw_ids)"/>
         <thead>
             <tr>
-                <th>Product</th>
-                <th t-if="o.state in ('progress', 'to_close','done')" t-attf-class="{{ 'text-end' if not has_product_barcode else '' }}">Consumed</th>
-                <th t-attf-class="{{ 'text-end' if not has_product_barcode else '' }}">To Consume</th>
-                <th t-if="has_product_barcode" width="15%" class="text-center">Barcode</th>
+                <th width="35%" class="o_mrp_col">Products</th>
+                <th t-if="o.state != 'done'" width="10%" class="o_mrp_col">To Consume</th>
+                <th t-if="o.state == 'done'" width="10%" class="o_mrp_col">Consumed/To Consume</th>
+                <th groups="stock.group_production_lot" t-attf-class="o_mrp_col_serials o_mrp_col {{ 'text-end' if not has_product_barcode else '' }}">Serial Numbers</th>
+                <th t-if="has_product_barcode" width="15%" class="text-center">Product Barcode</th>
             </tr>
         </thead>
         <tbody>
             <tr t-foreach="o.move_raw_ids" t-as="raw_line">
-                <td>
+                <td width="35%" class="o_mrp_col">
                     <span t-field="raw_line.product_id">8 GB RAM</span>
                 </td>
-                <td t-attf-class="{{ 'text-end' if not has_product_barcode else '' }}" t-if="o.state in ('progress', 'to_close','done')">
+                <td t-if="o.state != 'done'" width="10%" class="o_mrp_col">
                     <div>
-                        <span t-field="raw_line.quantity">2</span>
+                        <span t-field="raw_line.product_uom_qty">2</span> <span t-field="raw_line.uom_id.name">Units</span>
                     </div>
                 </td>
-                <td t-attf-class="{{ 'text-end' if not has_product_barcode else '' }}">
-                    <span t-field="raw_line.product_uom_qty">25</span>
-                    <span t-field="raw_line.uom_id" groups="uom.group_uom">Pieces</span>
+                <td t-if="o.state == 'done'" width="20%" class="o_mrp_col">
+                    <div>
+                        <span t-field="raw_line.quantity">2</span>
+                        <span>/</span>
+                        <span t-field="raw_line.product_uom_qty">2</span>
+                        <span t-field="raw_line.uom_id.name">Units</span>
+                    </div>
+                </td>
+                <td groups="stock.group_production_lot" t-attf-class="o_mrp_col_serials o_mrp_col {{ 'text-end' if not has_product_barcode else '' }}">
+                    <span t-if="raw_line.lot_ids" t-field="raw_line.lot_ids">103780</span>
                 </td>
                 <td t-if="has_product_barcode" width="15%" class="text-center">
                     <t t-if="raw_line.product_id.barcode">
