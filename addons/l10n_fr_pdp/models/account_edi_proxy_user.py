@@ -248,7 +248,10 @@ class AccountEdiProxyClientUser(models.Model):
         if annuaire_start_date := proxy_user.get('annuaire_line_start_date'):
             company = self.sudo().company_id
             company.l10n_fr_pdp_annuaire_start_date = fields.Date.to_date(annuaire_start_date)
-            company._force_update_l10n_fr_f10_moves()
+            annuaire_start_date = fields.Date.to_date(annuaire_start_date)
+            if company.l10n_fr_pdp_annuaire_start_date != annuaire_start_date:
+                company.l10n_fr_pdp_annuaire_start_date = annuaire_start_date
+                company._force_update_l10n_fr_f10_moves()
 
     def _peppol_get_new_documents(self):
         if 'pdp_einvoicing_chatter_messages' not in self.env.context:

@@ -4,6 +4,7 @@ import logging
 from odoo import _, api, fields, models
 
 from odoo.exceptions import UserError
+from odoo.tools import split_every
 from odoo.tools.sql import SQL
 
 from odoo.addons.iap.tools import iap_tools
@@ -149,9 +150,18 @@ class ResCompany(models.Model):
         self.env.cr.execute(
             self._l10n_fr_pdp_get_f10_moves_query(tuple(account_ids), date_company_conditions),
         )
-        moves = self.env['account.move'].browse(res[0] for res in self.env.cr.fetchall())
-        moves._compute_l10n_fr_pdp_flow_10_operation_type()
-        moves._compute_l10n_fr_pdp_flow_10_report_type()
+        move_ids = [res[0] for res in self.env.cr.fetchall()]
+        if not move_ids:
+            return
+        AccountMove = self.env['account.move']
+        f10_fnames = ['l10n_fr_pdp_flow_10_operation_type', 'l10n_fr_pdp_flow_10_report_type']
+        for batch_ids in split_every(1000, move_ids):
+            batch = AccountMove.browse(batch_ids)
+            for fname in f10_fnames:
+                self.env.add_to_compute(AccountMove._fields[fname], batch)
+            batch.modified(f10_fnames)
+            self.env.flush_all()
+            self.env.invalidate_all()
 
     def _l10n_fr_pdp_get_f10_moves_query(self, account_ids, date_company_conditions):
         return SQL('''
