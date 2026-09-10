@@ -1091,7 +1091,7 @@ class PosConfig(models.Model):
         journal_domain = [
             *self.env['account.journal']._check_company_domain(self.env.company),
             ('type', '=', 'bank'),
-            ('currency_id', '=', False),
+            ('currency_id', 'in', [False, self.env.company.currency_id.id]),
         ]
         bank_pm = self.env['pos.payment.method'].search([
             *self.env['pos.payment.method']._check_company_domain(self.env.company),
