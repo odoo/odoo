@@ -113,13 +113,17 @@ class AccountMove(models.Model):
 
     @api.depends('l10n_es_edi_is_required', 'l10n_es_edi_sii_state')
     def _compute_need_cancel_request(self):
+        # EXTENDS 'account'
         super()._compute_need_cancel_request()
-        for move in self:
-            if move.l10n_es_edi_is_required and move.l10n_es_edi_sii_state == 'sent':
-                move.need_cancel_request = True
+
+    def _need_cancel_request(self):
+        # EXTENDS 'account'
+        self.ensure_one()
+        return super()._need_cancel_request() or (self.l10n_es_edi_is_required and self.l10n_es_edi_sii_state == 'sent')
 
     @api.depends('l10n_es_edi_is_required', 'l10n_es_edi_sii_state')
     def _compute_show_reset_to_draft_button(self):
+        # EXTENDS 'account': keep the "Reset to Draft" button available alongside the cancellation request
         super()._compute_show_reset_to_draft_button()
         for move in self:
             if move.l10n_es_edi_is_required and move.l10n_es_edi_sii_state == 'sent':

@@ -46,6 +46,10 @@
                                    or l10n_es_edi_sii_state != 'sent'"/>
                 </xpath>
 
+                <xpath expr="//button[@name='button_request_cancel']" position="attributes">
+                    <attribute name="invisible" add="l10n_es_edi_is_required" separator=" or "/>
+                </xpath>
+
                 <xpath expr="//group[@id='header_right_group']" position='inside'>
                     <field
                         name="l10n_es_sii_refund_reason"
@@ -59,10 +63,6 @@
                            readonly="state == 'posted'"
                            invisible="country_code != 'ES'"/>
                     <field name="l10n_es_edi_csv" readonly="1"/>
-                </xpath>
-
-                <xpath expr="//button[@name='button_request_cancel']" position="attributes">
-                    <attribute name="invisible">state != 'posted' or not need_cancel_request or (show_reset_to_draft_button and not l10n_es_edi_is_required)</attribute>
                 </xpath>
 
                 <xpath expr="//notebook" position="inside">
@@ -117,6 +117,19 @@
                            string="Edi Blocking Level"
                            optional="show"/>
                 </xpath>
+            </field>
+        </record>
+
+        <record model="ir.actions.server" id="action_request_cancel">
+            <field name="name">Request SII Cancellation</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="group_ids" eval="[(4, ref('account.group_account_invoice'))]"/>
+            <field name="binding_model_id" ref="account.model_account_move" />
+            <field name="state">code</field>
+            <field name="binding_view_types">form</field>
+            <field name="code">
+if records:
+    records.button_request_cancel()
             </field>
         </record>
 
