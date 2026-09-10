@@ -553,20 +553,22 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "id": self.channel_channel_group_1.call_history_ids.id,
                 },
             ],
+            # `channels_as_member` fetches the last message of the channels it adds to the store,
+            # hence the `last_message_fetched` flag on each of them.
             "discuss.channel": self._filter_channels_fields(
-                self._expected_result_for_channel(self.channel_general),
-                self._expected_result_for_channel(self.channel_channel_public_1),
-                self._expected_result_for_channel(self.channel_channel_public_2),
-                self._expected_result_for_channel(self.channel_channel_group_1),
-                self._expected_result_for_channel(self.channel_channel_group_2),
-                self._expected_result_for_channel(self.channel_channel_group_4),
-                self._expected_result_for_channel(self.channel_chat_1),
-                self._expected_result_for_channel(self.channel_chat_2),
-                self._expected_result_for_channel(self.channel_chat_3),
-                self._expected_result_for_channel(self.channel_chat_4),
-                self._expected_result_for_channel(self.channel_group_1),
-                self._expected_result_for_channel(self.channel_livechat_1),
-                self._expected_result_for_channel(self.channel_livechat_2),
+                self._expected_result_for_channel(self.channel_general, last_message_fetched=True),
+                self._expected_result_for_channel(self.channel_channel_public_1, last_message_fetched=True),
+                self._expected_result_for_channel(self.channel_channel_public_2, last_message_fetched=True),
+                self._expected_result_for_channel(self.channel_channel_group_1, last_message_fetched=True),
+                self._expected_result_for_channel(self.channel_channel_group_2, last_message_fetched=True),
+                self._expected_result_for_channel(self.channel_channel_group_4, last_message_fetched=True),
+                self._expected_result_for_channel(self.channel_chat_1, last_message_fetched=True),
+                self._expected_result_for_channel(self.channel_chat_2, last_message_fetched=True),
+                self._expected_result_for_channel(self.channel_chat_3, last_message_fetched=True),
+                self._expected_result_for_channel(self.channel_chat_4, last_message_fetched=True),
+                self._expected_result_for_channel(self.channel_group_1, last_message_fetched=True),
+                self._expected_result_for_channel(self.channel_livechat_1, last_message_fetched=True),
+                self._expected_result_for_channel(self.channel_livechat_2, last_message_fetched=True),
             ),
             "discuss.channel.member": [
                 self._res_for_member(self.channel_general, self.users[0].partner_id),
@@ -673,7 +675,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             ],
         }
 
-    def _expected_result_for_channel(self, channel):
+    def _expected_result_for_channel(self, channel, last_message_fetched=False):
+        # only sent by the routes fetching the last message of the channels they add to the store
+        last_message_fetched_res = {"last_message_fetched": True} if last_message_fetched else {}
         # sudo: bus.bus: reading non-sensitive last id
         bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
         member_0 = channel.with_user(self.users[0]).self_member_id
@@ -682,6 +686,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         last_interest_dt = fields.Datetime.to_string(channel.last_interest_dt)
         if channel == self.channel_general:
             return {
+                **last_message_fetched_res,
                 "avatar_128_access_token": channel._get_avatar_128_access_token(),
                 "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "channel",
@@ -706,6 +711,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_channel_public_1:
             return {
+                **last_message_fetched_res,
                 "avatar_128_access_token": channel._get_avatar_128_access_token(),
                 "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "channel",
@@ -730,6 +736,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_channel_public_2:
             return {
+                **last_message_fetched_res,
                 "avatar_128_access_token": channel._get_avatar_128_access_token(),
                 "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "channel",
@@ -754,6 +761,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_channel_group_1:
             return {
+                **last_message_fetched_res,
                 "avatar_128_access_token": channel._get_avatar_128_access_token(),
                 "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "channel",
@@ -781,6 +789,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_channel_group_2:
             return {
+                **last_message_fetched_res,
                 "avatar_128_access_token": channel._get_avatar_128_access_token(),
                 "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "channel",
@@ -805,6 +814,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_channel_group_4:
             return {
+                **last_message_fetched_res,
                 "avatar_128_access_token": channel._get_avatar_128_access_token(),
                 "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "channel",
@@ -829,6 +839,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_group_1:
             return {
+                **last_message_fetched_res,
                 "avatar_128_access_token": channel._get_avatar_128_access_token(),
                 "avatar_cache_key": channel.avatar_cache_key,
                 "channel_name_member_ids": [member_0.id, member_12.id],
@@ -851,6 +862,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_chat_1:
             return {
+                **last_message_fetched_res,
                 "avatar_128_access_token": channel._get_avatar_128_access_token(),
                 "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "chat",
@@ -870,6 +882,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_chat_2:
             return {
+                **last_message_fetched_res,
                 "avatar_128_access_token": channel._get_avatar_128_access_token(),
                 "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "chat",
@@ -889,6 +902,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_chat_3:
             return {
+                **last_message_fetched_res,
                 "avatar_128_access_token": channel._get_avatar_128_access_token(),
                 "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "chat",
@@ -908,6 +922,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_chat_4:
             return {
+                **last_message_fetched_res,
                 "avatar_128_access_token": channel._get_avatar_128_access_token(),
                 "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "chat",
@@ -927,6 +942,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_livechat_1:
             return {
+                **last_message_fetched_res,
                 "ai_agent_id": False,
                 "ai_session_ids": [],
                 "avatar_128_access_token": channel._get_avatar_128_access_token(),
@@ -962,6 +978,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_livechat_2:
             return {
+                **last_message_fetched_res,
                 "ai_agent_id": False,
                 "ai_session_ids": [],
                 "avatar_128_access_token": channel._get_avatar_128_access_token(),
