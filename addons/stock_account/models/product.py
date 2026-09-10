@@ -237,24 +237,32 @@ class ProductProduct(models.Model):
         return
 
     def _correct_inventory_valuation(self, from_date):
+        old_values = {}
+
         def replay(products, cost_method, lot=False):
             if cost_method == 'standard':
                 products._run_standard(at_date=from_date, correction=True)
             elif cost_method == 'average':
-                products._run_avco(at_date=from_date, lot=lot, correction=True)
+                products._run_avco(at_date=from_date, lot=lot, correction=True, old_values=old_values)
             else:
-                products._run_fifo(at_date=from_date, lot=lot, correction=True)
+                products._run_fifo(at_date=from_date, lot=lot, correction=True, old_values=old_values)
 
         lot_valuated = self.filtered(lambda p: p.lot_valuated and p.cost_method != 'standard')
         for product in lot_valuated:
             boundary = from_date - timedelta(seconds=1) if from_date != datetime.min else from_date
             moves_in_scope = product._get_stock_moves_with_valuation_by_product(boundary).get(product, self.env['stock.move'])
-            moves_in_scope.filtered('is_out').value = 0.0
+            moves_out = moves_in_scope.filtered('is_out')
+            for move in moves_out:
+                old_values.setdefault(move.id, move.value)
+            moves_out.value = 0.0
             for lot in moves_in_scope.move_line_ids.lot_id:
                 replay(product, product.cost_method, lot=lot)
 
         for cost_method, products in (self - lot_valuated).grouped('cost_method').items():
             replay(products, cost_method)
+
+        replayed_moves = self.env['stock.move'].browse(list(old_values))
+        return replayed_moves.filtered(lambda move: move.value != old_values[move.id])
 
     def _get_stock_moves_with_valuation_by_product(self, from_date, lot=False):
         domain = [
@@ -359,7 +367,7 @@ class ProductProduct(models.Model):
 
         return std_price_by_product_id, value_by_product_id
 
-    def _run_avco(self, at_date=None, lot=None, force_recompute=None, correction=False):
+    def _run_avco(self, at_date=None, lot=None, force_recompute=None, correction=False, old_values=None):
         if at_date and correction and at_date != datetime.min:
             at_date = at_date - timedelta(seconds=1)
         std_price_by_product_id = defaultdict(float)
@@ -481,6 +489,8 @@ class ProductProduct(models.Model):
                             out_value = (out_value * lot_qty / out_qty) if out_qty else 0
                             out_qty = lot_qty
                         if correction and move.date > at_date and move.is_out:
+                            if old_values is not None:
+                                old_values.setdefault(move.id, move.value)
                             if lot:
                                 move.value -= out_value
                             elif move.value != -out_value:
@@ -496,7 +506,7 @@ class ProductProduct(models.Model):
 
         return std_price_by_product_id, value_by_product_id
 
-    def _run_fifo(self, at_date=None, lot=None, correction=False):
+    def _run_fifo(self, at_date=None, lot=None, correction=False, old_values=None):
         std_price_by_product_id = {}
         value_by_product_id = {}
         stack_by_product = defaultdict(list)
@@ -569,7 +579,11 @@ class ProductProduct(models.Model):
                         filled = min(shortage, in_qty)
                         if shortage_move.out_move:
                             old_unit = shortage_move.value / shortage_move.quantity
-                            shortage_move.out_move.value += filled * (old_unit - unit_price)
+                            new_value = shortage_move.out_move.value + filled * (old_unit - unit_price)
+                            if shortage_move.out_move.value != new_value:
+                                if old_values is not None:
+                                    old_values.setdefault(shortage_move.out_move.id, shortage_move.out_move.value)
+                                shortage_move.out_move.value = new_value
                         in_qty -= filled
                         remaining_qty = shortage_move.quantity + filled
                         if remaining_qty < 0:
@@ -595,6 +609,8 @@ class ProductProduct(models.Model):
                     if out_qty > 0:
                         out_value += out_qty * unit_price
                         stack.append(FifoCandidate(-out_qty, -out_qty * unit_price, move))
+                    if old_values is not None:
+                        old_values.setdefault(move.id, move.value)
                     if lot:
                         move.value -= out_value
                     elif move.value != -out_value:

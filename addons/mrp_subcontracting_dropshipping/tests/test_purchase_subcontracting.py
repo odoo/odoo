@@ -572,3 +572,6 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon, TestStock
         bill.action_post()
         # The AVCO cost must be updated to bill price + component cost = $10 + $2 = $12.
         self.assertAlmostEqual(final_product.standard_price, 12.0, places=2)
+        partial_valuation = dropship_picking.move_ids._get_value_from_account_move(0.5)
+        self.assertEqual(partial_valuation['quantity'], 0.5)
+        self.assertAlmostEqual(partial_valuation['value'], 6.0, places=2)

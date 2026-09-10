@@ -782,7 +782,8 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
         subcontract_mo_move.move_dest_ids = po.picking_ids.move_ids
         self.assertEqual(len(subcontract_mo_move.move_dest_ids), 2)
 
-        self.assertEqual(subcontract_mo_move._get_value_from_account_move(1).get('value'), 20.0)
+        quantity = subcontract_mo_move._get_valued_qty()
+        self.assertEqual(subcontract_mo_move._get_value_from_account_move(quantity).get('value'), 20.0)
 
     def test_update_qty_purchased_with_subcontracted_product(self):
         """

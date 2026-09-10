@@ -321,7 +321,9 @@ class StockMove(models.Model):
             from ``recompute_date`` (the earliest impacted date among the moves) through
         :param skip_check: internal flag set while replaying, to only refresh in-move
             values without re-triggering the replay detection below (which would loop).
+        :return: the outgoing moves whose value changed during a valuation replay.
         """
+        changed_moves = self.env['stock.move']
         moves_already_sold = self.filtered(lambda m: m.is_in and m.remaining_qty != m._get_valued_qty())
         if not recompute_date and not skip_check and moves_already_sold:
             recompute_date = min(self.mapped('date'))
@@ -334,12 +336,11 @@ class StockMove(models.Model):
                 if oversold_moves:
                     recompute_date = min(recompute_date, *oversold_moves.mapped('date'))
             self._set_value(recompute_date=recompute_date)
-            return
+            return changed_moves
 
         if recompute_date and any(m.remaining_qty != m._get_valued_qty() or m.is_out for m in self):
             self.filtered(lambda m: m.is_in)._set_value(skip_check=True)
-            self.product_id._correct_inventory_valuation(recompute_date)
-            return
+            return self.product_id._correct_inventory_valuation(recompute_date)
 
         self = self.sorted(key=lambda m: (m.date, m.id))  # noqa: PLW0642
         products_to_recompute = set()
@@ -404,6 +405,7 @@ class StockMove(models.Model):
         # Recompute the standard price
         self.env['product.product'].browse(products_to_recompute)._update_standard_price()
         self.env['stock.lot'].browse(lots_to_recompute)._update_standard_price()
+        return changed_moves
 
     def _get_value(self, forced_std_price=False, ignore_manual_update=False):
         return self._get_value_data(forced_std_price, ignore_manual_update)['value']
