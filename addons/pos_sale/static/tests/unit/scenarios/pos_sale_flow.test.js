@@ -40,7 +40,9 @@ test("PosSettleOrderIncompatiblePartner: settling an order of another customer s
     const firstOrder = store.getOrder();
     expect(firstOrder.getPartner().id).toBe(3);
 
-    await Utils.settleSaleOrder("S00006");
+    await Utils.settleSaleOrder("S00006", {
+        removeFilter: `Customer ${firstOrder.getPartner().name}`,
+    });
     const secondOrder = store.getOrder();
 
     expect(secondOrder.id).not.toBe(firstOrder.id);
