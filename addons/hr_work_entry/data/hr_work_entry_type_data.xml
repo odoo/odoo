@@ -5003,6 +5003,186 @@
         <field name="country_id" ref="base.tr"/>
     </record>
 
+    <record id="l10n_tr_work_entry_type_sick_leave_medical_rest" model="hr.work.entry.type">
+        <field name="name">[Unpaid]: Sick Leave / Medical rest</field>
+        <field name="code">TR_UNPAID01</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.tr"/>
+        <field name="amount_rate">0.0</field>
+        <field name="external_code">01</field>
+    </record>
+
+    <record id="l10n_tr_work_entry_type_unpaid_leave_leave_without_pay" model="hr.work.entry.type">
+        <field name="name">[Unpaid]: Unpaid leave / Leave without pay</field>
+        <field name="code">TR_UNPAID02</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.tr"/>
+        <field name="amount_rate">0.0</field>
+        <field name="external_code">02</field>
+    </record>
+
+    <record id="l10n_tr_work_entry_type_disciplinary_penalty" model="hr.work.entry.type">
+        <field name="name">[Unpaid]: Disciplinary penalty</field>
+        <field name="code">TR_UNPAID03</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.tr"/>
+        <field name="amount_rate">0.0</field>
+        <field name="external_code">03</field>
+    </record>
+
+    <record id="l10n_tr_work_entry_type_being_held_in_custody_detained" model="hr.work.entry.type">
+        <field name="name">[Unpaid]: Being held in custody / detained</field>
+        <field name="code">TR_UNPAID04</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.tr"/>
+        <field name="amount_rate">0.0</field>
+        <field name="external_code">04</field>
+    </record>
+
+    <record id="l10n_tr_work_entry_type_imprisonment_formal_detention" model="hr.work.entry.type">
+        <field name="name">[Unpaid]: Imprisonment / formal detention</field>
+        <field name="code">TR_UNPAID05</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.tr"/>
+        <field name="amount_rate">0.0</field>
+        <field name="external_code">05</field>
+    </record>
+
+    <record id="l10n_tr_work_entry_type_part_time_partial_employment" model="hr.work.entry.type">
+        <field name="name">[Unpaid]: Part-time / partial employment</field>
+        <field name="code">TR_UNPAID06</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.tr"/>
+        <field name="amount_rate">0.0</field>
+        <field name="external_code">06</field>
+    </record>
+
+    <record id="l10n_tr_work_entry_type_time_card_attendance_records" model="hr.work.entry.type">
+        <field name="name">[Unpaid]: Time-card / attendance records</field>
+        <field name="code">TR_UNPAID07</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.tr"/>
+        <field name="amount_rate">0.0</field>
+        <field name="external_code">07</field>
+    </record>
+
+    <record id="l10n_tr_work_entry_type_strike" model="hr.work.entry.type">
+        <field name="name">[Unpaid]: Strike</field>
+        <field name="code">TR_UNPAID08</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.tr"/>
+        <field name="amount_rate">0.0</field>
+        <field name="external_code">08</field>
+    </record>
+
+    <record id="l10n_tr_work_entry_type_lock_out" model="hr.work.entry.type">
+        <field name="name">[Unpaid]: Lock-out</field>
+        <field name="code">TR_UNPAID09</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.tr"/>
+        <field name="amount_rate">0.0</field>
+        <field name="external_code">09</field>
+    </record>
+
+    <record id="l10n_tr_work_entry_type_events_affecting_general_life" model="hr.work.entry.type">
+        <field name="name">[Unpaid]: Events affecting general life</field>
+        <field name="code">TR_UNPAID10</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.tr"/>
+        <field name="amount_rate">0.0</field>
+        <field name="external_code">10</field>
+    </record>
+
+    <record id="l10n_tr_work_entry_type_natural_disaster" model="hr.work.entry.type">
+        <field name="name">[Unpaid]: Natural disaster</field>
+        <field name="code">TR_UNPAID11</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.tr"/>
+        <field name="amount_rate">0.0</field>
+        <field name="external_code">11</field>
+    </record>
+
+    <record id="l10n_tr_work_entry_type_multiple_reasons" model="hr.work.entry.type">
+        <field name="name">[Unpaid]: Multiple reasons</field>
+        <field name="code">TR_UNPAID12</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.tr"/>
+        <field name="amount_rate">0.0</field>
+        <field name="external_code">12</field>
+    </record>
+
+    <record id="l10n_tr_work_entry_type_other" model="hr.work.entry.type">
+        <field name="name">[Unpaid]: Other</field>
+        <field name="code">TR_UNPAID14</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.tr"/>
+        <field name="amount_rate">0.0</field>
+        <field name="external_code">14</field>
+    </record>
+
+    <record id="l10n_tr_work_entry_type_absence_without_excuse" model="hr.work.entry.type">
+        <field name="name">[Unpaid]: Absence without excuse</field>
+        <field name="code">TR_UNPAID15</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.tr"/>
+        <field name="amount_rate">0.0</field>
+        <field name="external_code">15</field>
+    </record>
+
+    <record id="l10n_tr_work_entry_type_not_worked_on_date_of_termination" model="hr.work.entry.type">
+        <field name="name">[Unpaid]: Not worked on the date of termination</field>
+        <field name="code">TR_UNPAID16</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.tr"/>
+        <field name="amount_rate">0.0</field>
+        <field name="external_code">16</field>
+    </record>
+
+    <record id="l10n_tr_work_entry_type_less_than_30_days_in_home_services" model="hr.work.entry.type">
+        <field name="name">[Unpaid]: Less than 30 days in home services</field>
+        <field name="code">TR_UNPAID17</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.tr"/>
+        <field name="amount_rate">0.0</field>
+        <field name="external_code">17</field>
+    </record>
+
+    <record id="l10n_tr_work_entry_type_short_work_allowance" model="hr.work.entry.type">
+        <field name="name">[Unpaid]: Short-work allowance</field>
+        <field name="code">TR_UNPAID18</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.tr"/>
+        <field name="amount_rate">0.0</field>
+        <field name="external_code">18</field>
+    </record>
+
+    <record id="l10n_tr_work_entry_type_unpaid_maternity_leave" model="hr.work.entry.type">
+        <field name="name">[Unpaid]: Unpaid maternity leave</field>
+        <field name="code">TR_UNPAID19</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.tr"/>
+        <field name="amount_rate">0.0</field>
+        <field name="external_code">19</field>
+    </record>
+
+    <record id="l10n_tr_work_entry_type_unpaid_travel_leave" model="hr.work.entry.type">
+        <field name="name">[Unpaid]: Unpaid travel leave</field>
+        <field name="code">TR_UNPAID20</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.tr"/>
+        <field name="amount_rate">0.0</field>
+        <field name="external_code">20</field>
+    </record>
+
+    <record id="l10n_tr_work_entry_type_other_unpaid_leave" model="hr.work.entry.type">
+        <field name="name">[Unpaid]: Other unpaid leave</field>
+        <field name="code">TR_UNPAID21</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.tr"/>
+        <field name="amount_rate">0.0</field>
+        <field name="external_code">21</field>
+    </record>
+
 <!-- US : United States -->
     <record id="us_work_entry_type_attendance" model="hr.work.entry.type">
         <field name="name">Attendance</field>

@@ -1316,6 +1316,16 @@
     </record>
 
 <!--TR : Turkey-->
+    <function model="hr.work.entry.type" name="write">
+        <value model="hr.work.entry.type" eval="obj().sudo().search([('code', 'like', 'TR_UNPAID')]).ids"/>
+        <value eval="{
+            'requires_allocation': False,
+            'request_unit': 'half_day',
+            'hide_on_dashboard': True,
+            'leave_validation_type': 'both',
+        }"/>
+    </function>
+
     <record id="hr_work_entry.l10n_tr_work_entry_type_maternity_leave" model="hr.work.entry.type">
         <field name="requires_allocation">False</field>
         <field name="leave_validation_type">hr</field>
