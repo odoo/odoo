@@ -234,6 +234,63 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
         imported_invoice = self._import_invoice_as_attachment_on(attachment=xml_attachment, journal=self.company_data["default_journal_sale"])
         self.assertEqual(imported_invoice.partner_id, partner)
 
+    def test_import_partner_retrieval_bank_account_number(self):
+        """Check that the bank account number is used to retieve the partner when importing a non-BIS3 UBL XML."""
+        partner_bank = self.env['res.partner.bank'].create({
+            'account_number': 'BE43200112345678',
+            'partner_id': self.partner_a.id,
+            'allow_out_payment': True,
+        })
+        # Update partner_a and link it with the bank account we created
+        self.partner_a.update({
+            'name': "Test Partner Bank Retrieval",
+            'street': "42 Maze street",
+            'city': "Berlin",
+            'zip': "6534",
+            'vat': 'BE0727720427',
+            'country_id': self.env.ref('base.be').id,
+            'bank_ids': partner_bank.ids,
+        })
+
+        invoice = self.env['account.move'].create({
+            'partner_id': self.partner_a.id,
+            'move_type': 'out_invoice',
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id})],
+            'partner_bank_id': partner_bank.id,
+        })
+        invoice.action_post()
+
+        xml_attachment = self.env['ir.attachment'].create({
+            'raw': self.env['account.edi.xml.ubl_21']._export_invoice(invoice)[0],
+            'name': 'test_invoice.xml',
+        })
+
+        # Change the partner details so it can only be retrieved through the bank account
+        self.partner_a.update({
+            'name': "Different Partner",
+            'vat': False,
+            'email': False,
+            'phone': False,
+        })
+        # partner_a should be matched through the bank account number and its VAT should be filled in from the XML
+        imported_invoice = self._import_invoice_as_attachment_on(attachment=xml_attachment, journal=self.company_data['default_journal_sale'])
+        self.assertEqual(imported_invoice.partner_id, self.partner_a)
+        self.assertEqual(imported_invoice.partner_id.vat, 'BE0727720427')
+
+        # Change the VAT to trigger the VAT mismatch logic
+        self.partner_a.vat = 'BE0403170701'
+        # A new partner should be created
+        imported_invoice = self._import_invoice_as_attachment_on(attachment=xml_attachment, journal=self.company_data["default_journal_sale"])
+        self.assertNotEqual(imported_invoice.partner_id, self.partner_a)
+        self.assertRecordValues(imported_invoice.partner_id, [{
+            'name': "Test Partner Bank Retrieval",
+            'street': "42 Maze street",
+            'city': "Berlin",
+            'zip': "6534",
+            'vat': 'BE0727720427',
+            'country_id': self.env.ref('base.be').id,
+        }])
+
     def test_actual_delivery_date_in_cii_xml(self):
 
         invoice = self.env['account.move'].create({
