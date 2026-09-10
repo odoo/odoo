@@ -313,11 +313,16 @@ class SMSCase(MockSMS):
                 for message in messages:
                     self.assertEqual(content, tools.html2plaintext(tools.html_sanitize(message.body)).rstrip('\n'))
 
-    def assertSMSLogged(self, records, body):
+    def assertSMSLogged(self, records, body, message_values=None):
         for record in records:
             message = record.message_ids[0]  # assume last message
-            self.assertEqual(message.subtype_id, self.env.ref('mail.mt_note'))
-            self.assertEqual(message.message_type, 'sms')
+            expected_values = {
+                'message_type': 'sms',
+                'subtype_id': self.env.ref('mail.mt_note'),
+            }
+            if message_values:
+                expected_values.update(**message_values)
+            self.assertMessageFields(message, expected_values)
             self.assertEqual(tools.html2plaintext(message.body).rstrip('\n'), body)
 
 

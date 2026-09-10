@@ -124,7 +124,17 @@ class TestSMSComposerComment(SMSCommon, TestSMSRecipients):
             with self.mockSMSGateway():
                 messages = composer._action_send_sms()
 
-        self.assertSMSNotification([{'partner': self.test_record.customer_id, 'number': self.test_record.mobile_nbr}], 'Dear %s this is an SMS.' % self.test_record.display_name, messages)
+        self.assertSMSNotification(
+            [
+                {'partner': self.test_record.customer_id, 'number': self.test_record.mobile_nbr}
+            ],
+            'Dear %s this is an SMS.' % self.test_record.display_name,
+            messages,
+            mail_message_values={
+                'message_type': 'sms',
+                'source_sms_template_id': self.sms_template,
+            }
+        )
 
     def test_composer_comment_invalid_field(self):
         """ Test the Send Message in SMS Composer when a Model does not contain a number field name """
@@ -594,7 +604,10 @@ class TestSMSComposerMass(SMSCommon):
                 record.customer_id, None,
                 content='Dear %s this is an SMS.' % record.display_name
             )
-            self.assertSMSLogged(record, 'Dear %s this is an SMS.' % record.display_name)
+            self.assertSMSLogged(
+                record, 'Dear %s this is an SMS.' % record.display_name,
+                message_values={'source_sms_template_id': self.sms_template}
+            )
 
     def test_composer_template_context_action(self):
         """ Test the context action from a SMS template (Add context action button)
