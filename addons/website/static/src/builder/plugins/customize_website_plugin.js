@@ -18,6 +18,7 @@ import { CompositeAction } from "@html_builder/core/composite_action_plugin";
  * @typedef { Object } CustomizeWebsiteShared
  * @property { CustomizeWebsitePlugin['customizeWebsiteColors'] } customizeWebsiteColors
  * @property { CustomizeWebsitePlugin['customizeWebsiteVariables'] } customizeWebsiteVariables
+ * @property { CustomizeWebsitePlugin['getColorPaletteURL'] } getColorPaletteURL
  * @property { CustomizeWebsitePlugin['loadTemplateKey'] } loadTemplateKey
  * @property { CustomizeWebsitePlugin['makeSCSSCusto'] } makeSCSSCusto
  * @property { CustomizeWebsitePlugin['toggleTemplate'] } toggleTemplate
@@ -45,6 +46,7 @@ export class CustomizeWebsitePlugin extends Plugin {
     static shared = [
         "customizeWebsiteColors",
         "customizeWebsiteVariables",
+        "getColorPaletteURL",
         "loadTemplateKey",
         "makeSCSSCusto",
         "toggleTemplate",
@@ -175,13 +177,16 @@ export class CustomizeWebsitePlugin extends Plugin {
             nullValue
         );
     }, 0);
+    getColorPaletteURL(colorType) {
+        return `/website/static/src/scss/options/colors/user_${
+            colorType ? `${colorType}_` : ""
+        }color_palette.scss`;
+    }
     async customizeWebsiteColors(
         colors = {},
         { colorType, combinationColor, nullValue, resetCcOnEmpty, reloadBundles = true } = {}
     ) {
-        const baseURL = "/website/static/src/scss/options/colors/";
-        colorType = colorType ? colorType + "_" : "";
-        const url = `${baseURL}user_${colorType}color_palette.scss`;
+        const url = this.getColorPaletteURL(colorType);
 
         const finalColors = {};
         for (const [colorName, color] of Object.entries(colors)) {
@@ -319,20 +324,30 @@ export class CustomizeWebsitePlugin extends Plugin {
     withCustomHistory(action) {
         const applyFn = action.apply.bind(action);
         action.apply = async (arg) => {
-            const oldValue = action.getValue(arg);
             const { value } = arg;
-            const blockedApply = (v) => {
+            const withBlockedUI = (fn) => {
                 this.services.ui.block({ delay: 2500 });
-                return applyFn({ ...arg, value: v })
+                return Promise.resolve(fn())
                     .then(() => {
                         this.dispatchTo("trigger_dom_updated");
                     })
                     .finally(() => this.services.ui.unblock());
             };
+            const blockedApply = (v) => withBlockedUI(() => applyFn({ ...arg, value: v }));
+            // Save the previous state before applying. Most actions revert by
+            // re-applying the value they had before, but an action whose state
+            // is spread over several variables (e.g. a color combination, a
+            // custom color and a gradient) can not be described by a single
+            // value: it exposes `getRevertValue` to save them all and `revert`
+            // to restore them.
+            const oldValue = (action.getRevertValue || action.getValue).call(action, arg);
+            const revert = action.revert
+                ? () => withBlockedUI(() => action.revert(arg.params, oldValue))
+                : () => blockedApply(oldValue);
             await blockedApply(value);
             this.dependencies.history.addCustomMutation({
                 apply: () => blockedApply(value),
-                revert: () => blockedApply(oldValue),
+                revert,
             });
         };
     }
@@ -926,6 +941,52 @@ export class CustomizeWebsiteColorAction extends BuilderAction {
             }
         }
         return getCSSVariableValue(color, style);
+    }
+    /**
+     * The state of this option is spread over several variables which are set
+     * independently: the color combination, the custom color and the gradient.
+     * Applying one of them purposely leaves the others untouched, so a single
+     * value can not describe that state: save all of them instead.
+     */
+    getRevertValue({ params: { mainParam: color, gradientColor, combinationColor } }) {
+        const style = getHtmlStyle(this.document);
+        const oldValues = Object.fromEntries(
+            [color, combinationColor]
+                .filter(Boolean)
+                .map((variable) => [variable, getCSSVariableValue(variable, style)])
+        );
+        if (gradientColor) {
+            oldValues[gradientColor] =
+                this.dependencies.customizeWebsite.getWebsiteVariableValue(gradientColor);
+        }
+        return oldValues;
+    }
+    /**
+     * Restores the values saved by `getRevertValue`. They are written back as
+     * is: unlike in `apply`, there is no user selection to deduce them from.
+     */
+    async revert({ mainParam: color, colorType, gradientColor, nullValue }, oldValues) {
+        const customizeWebsite = this.dependencies.customizeWebsite;
+        const { [gradientColor]: oldGradient, ...oldColors } = oldValues;
+        await Promise.all([
+            customizeWebsite.makeSCSSCusto(
+                customizeWebsite.getColorPaletteURL(colorType),
+                oldColors,
+                nullValue
+            ),
+            gradientColor &&
+                customizeWebsite.customizeWebsiteVariables(
+                    { [gradientColor]: oldGradient },
+                    nullValue,
+                    false,
+                    false
+                ),
+        ]);
+        await customizeWebsite.reloadBundles();
+        setBuilderCSSVariables(getHtmlStyle(this.document));
+        await Promise.allSettled(
+            this.getResource("on_website_color_updated_handlers").map((handler) => handler([color]))
+        );
     }
     async apply({
         params: { mainParam: color, colorType, gradientColor, combinationColor, nullValue },

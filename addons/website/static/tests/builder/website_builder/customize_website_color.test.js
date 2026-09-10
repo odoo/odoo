@@ -1,4 +1,4 @@
-import { expect, test } from "@odoo/hoot";
+import { beforeEach, expect, test } from "@odoo/hoot";
 import { animationFrame, Deferred } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains, defineModels, models, onRpc } from "@web/../tests/web_test_helpers";
@@ -10,21 +10,9 @@ import {
 
 defineWebsiteModels();
 
-test("BuilderColorPicker with action “customizeWebsiteColor” is correctly displayed", async () => {
-    class WebEditorAssets extends models.Model {
-        _name = "web_editor.assets";
-        make_scss_customization(location, changes) {
-            expect.step(`${location} ${JSON.stringify(changes)}`);
-        }
-    }
-    defineModels([WebEditorAssets]);
+let def;
 
-    let def = new Deferred();
-    onRpc("/website/theme_customize_bundle_reload", async (request) => {
-        expect.step("asset reload");
-        def.resolve();
-        return "";
-    });
+beforeEach(() => {
     addOption({
         selector: ".test-options-target",
         template: xml`
@@ -42,6 +30,23 @@ test("BuilderColorPicker with action “customizeWebsiteColor” is correctly di
         />
         `,
     });
+
+    onRpc("/website/theme_customize_bundle_reload", async () => {
+        expect.step("asset reload");
+        def.resolve();
+        return "";
+    });
+});
+
+test("BuilderColorPicker with action “customizeWebsiteColor” is correctly displayed", async () => {
+    class WebEditorAssets extends models.Model {
+        _name = "web_editor.assets";
+        make_scss_customization(location, changes) {
+            expect.step(`${location} ${JSON.stringify(changes)}`);
+        }
+    }
+    defineModels([WebEditorAssets]);
+
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`, {
         loadIframeBundles: true,
     });
@@ -50,6 +55,7 @@ test("BuilderColorPicker with action “customizeWebsiteColor” is correctly di
     expect(".o-tab-content > .o_customize_tab").toHaveCount(1);
 
     expect.step("set preset");
+    def = new Deferred();
     await contains("button.o_we_color_preview").click();
     await contains("button[data-color='o_cc4'").click();
     // Should wait for 2 ticks (debounced): customizeWebsiteColors, reloadBundles
@@ -154,4 +160,74 @@ test("BuilderColorPicker with action “customizeWebsiteColor” is correctly di
     const presetElStyles = window.getComputedStyle(colorPresetEl, "::before");
     expect(presetElStyles.backgroundImage).toInclude("transparent.png");
     expect(presetElStyles.backgroundSize).toBe("32px");
+});
+
+test("Undo after changing the header/footer theme color should restore the previous theme color", async () => {
+    const iframeRootStyle = () =>
+        document.querySelector("iframe").contentDocument.documentElement.style;
+
+    class WebEditorAssets extends models.Model {
+        _name = "web_editor.assets";
+        make_scss_customization(location, changes) {
+            for (const [key, value] of Object.entries(changes)) {
+                if (value === "NULL") {
+                    // A null value unsets the variable in the compiled SCSS.
+                    iframeRootStyle().removeProperty(`--${key}`);
+                } else {
+                    iframeRootStyle().setProperty(`--${key}`, String(value));
+                }
+            }
+        }
+    }
+    defineModels([WebEditorAssets]);
+
+    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`, {
+        loadIframeBundles: true,
+    });
+    await contains(":iframe .test-options-target").click();
+    await animationFrame();
+
+    // Select the first theme (o_cc4).
+    def = new Deferred();
+    await contains("button.o_we_color_preview").click();
+    await contains("button[data-color='o_cc4'").click();
+    await def;
+    expect(iframeRootStyle().getPropertyValue("--test")).toBe("4");
+
+    // Select the second theme (o_cc2).
+    def = new Deferred();
+    await contains("button.o_we_color_preview").click();
+    await contains("button[data-color='o_cc2'").click();
+    await def;
+    expect(iframeRootStyle().getPropertyValue("--test")).toBe("2");
+
+    // Select a custom color: it does not impact the theme color.
+    def = new Deferred();
+    await contains("button.o_we_color_preview").click();
+    await contains("button.custom-tab").click();
+    await contains("button[data-color='400']").click();
+    await def;
+    expect(iframeRootStyle().getPropertyValue("--test-custom")).toBe("#CED4DA");
+    expect(iframeRootStyle().getPropertyValue("--test")).toBe("2");
+
+    // Undo must clear the custom color and keep the second theme (o_cc2).
+    def = new Deferred();
+    await contains(".o-website-builder_sidebar .fa-undo").click();
+    await def;
+    expect(iframeRootStyle().getPropertyValue("--test-custom")).toBe("");
+    expect(iframeRootStyle().getPropertyValue("--test")).toBe("2");
+
+    // Undo must restore the first theme (o_cc4), not reset to the default.
+    def = new Deferred();
+    await contains(".o-website-builder_sidebar .fa-undo").click();
+    await def;
+    expect(iframeRootStyle().getPropertyValue("--test")).toBe("4");
+
+    expect.verifySteps([
+        "asset reload",
+        "asset reload",
+        "asset reload",
+        "asset reload",
+        "asset reload",
+    ]);
 });
