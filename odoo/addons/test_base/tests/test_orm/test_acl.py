@@ -19,7 +19,7 @@ class TestACL(TransactionCaseWithUserDemo):
         cls.TEST_GROUP = 'base.base_test_group'
         cls.test_group = cls.env['res.groups'].create({
             'name': 'test with implied user',
-            'implied_ids': [Command.link(cls.env.ref('base.group_user').id)]
+            'implied_ids': [Command.link(cls.env.ref('base.group_user').id)],
         })
         cls.env["ir.model.data"].create({
             "module": "base",
@@ -167,7 +167,7 @@ class TestACL(TransactionCaseWithUserDemo):
 
         country = self.env['test_orm.country'].with_user(self.user_demo).create({
             'name': 'New Guy',
-            'state_ids': [Command.create({'name': '9876'})]
+            'state_ids': [Command.create({'name': '9876'})],
         })
 
         # check we can create countries

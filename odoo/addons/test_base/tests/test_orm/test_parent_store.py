@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import TransactionCase, tagged
 from odoo import Command
+from odoo.tests.common import TransactionCase, tagged
 
 
 @tagged('at_install', '-post_install')
@@ -9,7 +9,7 @@ class TestParentStore(TransactionCase):
     """ Verify that parent_store computation is done right """
 
     def setUp(self):
-        super(TestParentStore, self).setUp()
+        super().setUp()
 
         # force res_partner_category.copy() to copy children
         category = self.env['test_orm.partner.category']

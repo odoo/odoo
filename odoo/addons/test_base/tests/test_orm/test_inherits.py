@@ -12,7 +12,7 @@ class test_inherits(common.TransactionCase):
 
     def test_ir_model_inherit(self):
         imi = self.env['ir.model.inherit'].search(
-            [('model_id.model', '=', 'test.box')]
+            [('model_id.model', '=', 'test.box')],
         )
         self.assertEqual(len(imi), 1)
         self.assertEqual(imi.parent_id.model, 'test.unit')

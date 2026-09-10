@@ -1,7 +1,7 @@
 from psycopg2.errors import GroupingError
 
 from odoo import models
-from odoo.tests.common import tagged, TransactionCase
+from odoo.tests.common import TransactionCase, tagged
 
 
 @tagged('-at_install', 'post_install')
@@ -28,5 +28,5 @@ class TestReadGroupOverride(TransactionCase):
                         f'Bad method override for model {Model._name}. '
                         'Fields used by both customized order and Model._order '
                         'must be added to the query.groupby when query.groupby '
-                        'is not empty to avoid GroupingError.'
+                        'is not empty to avoid GroupingError.',
                     )

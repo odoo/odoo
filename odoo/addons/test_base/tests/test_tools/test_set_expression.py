@@ -1,4 +1,3 @@
-from odoo import Command
 from odoo.tests import common
 from odoo.tools import SetDefinitions
 

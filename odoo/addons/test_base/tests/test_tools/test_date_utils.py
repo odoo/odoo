@@ -7,7 +7,7 @@ import babel
 from dateutil.relativedelta import relativedelta, weekdays
 from freezegun import freeze_time
 
-from odoo.tests import tagged, BaseCase, TransactionCase
+from odoo.tests import BaseCase, TransactionCase, tagged
 from odoo.tools.date_utils import (
     add,
     date_range,
@@ -283,7 +283,7 @@ class TestDateRangeFunction(BaseCase):
             datetime(1985, 10, 1, 0, 0),
             datetime(1985, 11, 1, 0, 0),
             datetime(1985, 12, 1, 0, 0),
-            datetime(1986, 1, 1, 0, 0)
+            datetime(1986, 1, 1, 0, 0),
         ]
 
         dates = list(date_range(start, end))
@@ -395,7 +395,7 @@ class TestDateRangeFunction(BaseCase):
             datetime(2018, 3, 25, 21, 0),
             datetime(2018, 3, 25, 22, 0),
             datetime(2018, 3, 25, 23, 0),
-            datetime(2018, 3, 26, 0, 0)
+            datetime(2018, 3, 26, 0, 0),
         ]
 
         dates = list(date_range(start, end, step))

@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from odoo.tests.common import tagged, TransactionCase
+from odoo.tests.common import TransactionCase, tagged
 from odoo.tools.intervals import Intervals, intervals_overlap, invert_intervals
 
 
@@ -191,7 +191,7 @@ class TestUtils(TransactionCase):
             ],
             [
                 (datetime(2023, 2, 1), datetime(2023, 2, 5)),
-            ]
+            ],
         ]
         for limits, expected_result in zip(test_limits, test_results):
             start, end = limits

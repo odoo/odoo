@@ -1,12 +1,13 @@
 from datetime import date, datetime
-from freezegun import freeze_time
 from itertools import combinations
 from unittest.mock import patch
 
+from freezegun import freeze_time
+
 from odoo.fields import Command, Domain
 from odoo.models import Query
-from odoo.tests import tagged, TransactionCase, users
-from odoo.tools import OrderedSet, SQL
+from odoo.tests import TransactionCase, tagged, users
+from odoo.tools import SQL, OrderedSet
 
 from .test_domain_expression import TransactionExpressionCase
 
@@ -746,17 +747,17 @@ class TestDomainOptimize(TransactionCase):
         self.assertEqual(
             Domain('moment', '>=', '2024-01-01 10:00:00').optimize(model),
             Domain('moment', '>=', datetime(2024, 1, 1, 10)),
-            "Timezone should have no effect on moment"
+            "Timezone should have no effect on moment",
         )
         self.assertEqual(
             Domain('moment', '>=', '2024-07-02').optimize(model),
             Domain('moment', '>=', datetime(2024, 7, 1, 22)),
-            "Date should consider timezone of the user"
+            "Date should consider timezone of the user",
         )
         self.assertEqual(
             Domain('moment', '>=', '2024-01-02').optimize(model),
             Domain('moment', '>=', datetime(2024, 1, 1, 23)),
-            "Date should consider timezone of the user"
+            "Date should consider timezone of the user",
         )
 
     def test_condition_optimize_datetime_millisecond(self):

@@ -4,7 +4,7 @@ import sys
 import time
 from pathlib import Path
 
-from odoo.tests import tagged, BaseCase
+from odoo.tests import BaseCase, tagged
 
 _logger = logging.getLogger(__name__)
 
@@ -31,7 +31,7 @@ class TestInit(BaseCase):
             env=env,
             text=text,
             timeout=timeout,
-            **kwargs
+            **kwargs,
         )
 
     def odoo_modules_to_test(self):

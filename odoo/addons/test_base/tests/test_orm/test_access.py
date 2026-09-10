@@ -1,6 +1,6 @@
-from contextlib import contextmanager
 import functools
 import re
+from contextlib import contextmanager
 
 from odoo import Command
 from odoo.exceptions import AccessError
@@ -237,12 +237,12 @@ class TestAccess(TransactionCase):
         # create, unlink: access in Group 3
         with self.assertAccessError(
             r"You are not allowed to create.*"
-            r"This operation is allowed for the following groups:\s*- Group 3"
+            r"This operation is allowed for the following groups:\s*- Group 3",
         ):
             self.records.check_access('create')
         with self.assertAccessError(
             r"You are not allowed to delete.*"
-            r"This operation is allowed for the following groups:\s*- Group 3"
+            r"This operation is allowed for the following groups:\s*- Group 3",
         ):
             self.records.check_access('unlink')
 
@@ -256,7 +256,7 @@ class TestAccess(TransactionCase):
             r"Uh-oh.*"
             rf"Sorry, Bob Bobman \(id={self.user.id}\) doesn't have 'read' access to:\s*"
             r"- Object For Test Access Right \(test_access_right\.some_obj\)\s*"
-            r"If you really"
+            r"If you really",
         ):
             self.records.check_access('read')
 
@@ -269,7 +269,7 @@ class TestAccess(TransactionCase):
                 rf"- Object For Test Access Right, {self.bowser.display_name}.*"
                 r"Blame the following accesses:\s*"
                 r"- Restrict to humans\s*"
-                r"If you really"
+                r"If you really",
             ):
                 self.records.check_access('read')
 
@@ -284,7 +284,7 @@ class TestAccess(TransactionCase):
             r"Uh-oh.*"
             rf"Sorry, Bob Bobman \(id={self.user.id}\) doesn't have 'read' access to:\s*"
             r"- Object For Test Access Right \(test_access_right\.some_obj\)\s*"
-            r"If you really"
+            r"If you really",
         ):
             self.records.check_access('read')
 
@@ -297,7 +297,7 @@ class TestAccess(TransactionCase):
                 rf"- Object For Test Access Right, {self.bowser.display_name}.*"
                 r"Blame the following accesses:\s*"
                 r"- Restrict to humans\s*"
-                r"If you really"
+                r"If you really",
             ):
                 self.records.check_access('read')
 
@@ -312,7 +312,7 @@ class TestAccess(TransactionCase):
             r"Uh-oh.*"
             rf"Sorry, Bob Bobman \(id={self.user.id}\) doesn't have 'read' access to:\s*"
             r"- Object For Test Access Right \(test_access_right\.some_obj\)\s*"
-            r"If you really"
+            r"If you really",
         ):
             self.records.check_access('read')
 
@@ -326,7 +326,7 @@ class TestAccess(TransactionCase):
                 r"Blame the following accesses:\s*"
                 r"- See good guys\s*"
                 r"- Restrict to humans\s*"
-                r"If you really"
+                r"If you really",
             ):
                 self.records.check_access('read')
 

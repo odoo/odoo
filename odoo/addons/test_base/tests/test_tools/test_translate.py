@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+# ruff: noqa: E201, E241
 import ast
 import io
 import logging
@@ -41,10 +42,10 @@ class TranslationToolsTestCase(BaseCase):
 
         def test_string(str):
             quoted = quote(str)
-            #print "\n1:", repr(str)
-            #print "2:", repr(quoted)
+            # print "\n1:", repr(str)
+            # print "2:", repr(quoted)
             unquoted = unquote("".join(quoted.split('"\n"')))
-            #print "3:", repr(unquoted)
+            # print "3:", repr(unquoted)
             self.assertEqual(str, unquoted)
 
         test_string("""test \nall kinds\n \n o\r
@@ -83,7 +84,7 @@ class TranslationToolsTestCase(BaseCase):
     def test_translate_xml_unicode(self):
         """ Test xml_translate() on plain text with unicode characters. """
         terms = []
-        source = u"Un heureux évènement"
+        source = "Un heureux évènement"
         result = xml_translate(terms.append, source)
         self.assertEqual(result, source)
         self.assertItemsEqual(terms, [source])
@@ -627,7 +628,7 @@ class TestTranslation(TransactionCase):
                 'fr_FR': 'Clients',
                 'nl_NL': 'Klanten',
                 'zh_CN': '客户',
-            }
+            },
         )
 
         category_copy = self.customers.with_context(lang='fr_FR').copy()
@@ -640,7 +641,7 @@ class TestTranslation(TransactionCase):
                 'fr_FR': 'Clients (copie)',
                 'nl_NL': 'Klanten (kopie)',
             },
-            'English, French and Dutch translation should be copied, Chinese translation should be dropped'
+            'English, French and Dutch translation should be copied, Chinese translation should be dropped',
         )
 
     def test_107_duplicate_record_en(self):
@@ -728,14 +729,14 @@ class TestTranslation(TransactionCase):
         industries.invalidate_recordset()
         self.assertEqual(
             industries.with_context(lang='nl_NL').mapped('name'),
-            ['Industry1_NL', False, 'Industry3']
+            ['Industry1_NL', False, 'Industry3'],
         )
 
         with self.assertQueryCount(0):
             # None value in cache means no translation and should not trigger a query
             self.assertEqual(
                 industries[1]._get_stored_translations('name'),
-                None
+                None,
             )
 
         with self.assertQueryCount(1):
@@ -745,7 +746,7 @@ class TestTranslation(TransactionCase):
                 {
                     'en_US': 'Industry1',
                     'nl_NL': 'Industry1_NL',
-                }
+                },
             )
 
         with self.assertQueryCount(0):
@@ -754,7 +755,7 @@ class TestTranslation(TransactionCase):
                 industries[2]._get_stored_translations('name'),
                 {
                     'en_US': 'Industry3',
-                }
+                },
             )
 
     # TODO Currently, the unique constraint doesn't work for translatable field
@@ -933,17 +934,17 @@ class TestTranslationWrite(TransactionCase):
         self.assertEqual(
             empty_value,
             belgium.with_context(lang='fr_FR').vat_label,
-            "Value should be the empty_value"
+            "Value should be the empty_value",
         )
         self.assertEqual(
             empty_value,
             belgium.with_context(lang='en_US').vat_label,
-            "Value should be the empty_value"
+            "Value should be the empty_value",
         )
         self.assertEqual(
             empty_value,
             belgium.with_context(lang=None).vat_label,
-            "Value should be the empty_value"
+            "Value should be the empty_value",
         )
 
         belgium.with_context(lang='en_US').write({'vat_label': 'VAT'})
@@ -954,17 +955,17 @@ class TestTranslationWrite(TransactionCase):
         self.assertEqual(
             empty_value,
             belgium.with_context(lang='fr_FR').vat_label,
-            "Value should be the empty_value"
+            "Value should be the empty_value",
         )
         self.assertEqual(
             empty_value,
             belgium.with_context(lang='en_US').vat_label,
-            "Value should be the empty_value"
+            "Value should be the empty_value",
         )
         self.assertEqual(
             empty_value,
             belgium.with_context(lang=None).vat_label,
-            "Value should be the empty_value"
+            "Value should be the empty_value",
         )
 
     def test_write_empty_and_value(self):
@@ -1524,7 +1525,6 @@ class TestXMLTranslation(TransactionCase):
         self.assertEqual(view.arch_db, archf % terms_en)
         self.assertEqual(view.with_context(lang='fr_FR').arch_db, archf % terms_fr)
 
-
     def test_cache_consistency(self):
         view = self.env["ir.ui.view"].create({
             "name": "test_translate_xml_cache_invalidation",
@@ -1555,7 +1555,7 @@ class TestXMLTranslation(TransactionCase):
 
         view.update_field_translations('arch_db', {
             'en_US': {'Fork': 'Fork2'},
-            'fr_FR': {'Fork': 'Fourchette2'}
+            'fr_FR': {'Fork': 'Fourchette2'},
         })
 
         self.assertEqual(view.arch_db, '<form string="X">Bread and cheese<div>Fork2</div></form>')
@@ -1574,7 +1574,7 @@ class TestXMLTranslation(TransactionCase):
         self.assertEqual(view.with_context(lang='es_ES').arch_db, '<form string="X">Bread and cheese<div>Fork2</div></form>')
         view.update_field_translations('arch_db', {
             'en_US': {'Fork2': 'Fork3'},
-            'es_ES': {'Fork2': 'Tenedor3'}
+            'es_ES': {'Fork2': 'Tenedor3'},
         })
         self.assertEqual(view.with_context(lang='en_US').arch_db, '<form string="X">Bread and cheese<div>Fork3</div></form>')
         self.assertEqual(view.with_context(lang='es_ES').arch_db, '<form string="X">Bread and cheese<div>Tenedor3</div></form>')
@@ -1594,14 +1594,14 @@ class TestXMLTranslation(TransactionCase):
         self.assertEqual(
             view0.with_context(lang='en_US').arch_db,
             archf2 % terms_en2,
-            'en_US value should be the latest one since it is updated directly'
+            'en_US value should be the latest one since it is updated directly',
         )
         self.assertEqual(view0.with_context(lang='en_US', check_translations=True).arch_db, archf2 % terms_en2)
 
         self.assertEqual(
             view0.with_context(lang='fr_FR').arch_db,
             archf % terms_fr,
-            "fr_FR value should keep the same since its translations hasn't been confirmed"
+            "fr_FR value should keep the same since its translations hasn't been confirmed",
         )
         self.assertEqual(
             view0.with_context(lang='fr_FR', edit_translations=True).arch_db,
@@ -1641,32 +1641,32 @@ class TestXMLTranslation(TransactionCase):
                         f'{terms_fr[2]}'
                     '</span>'
                 '</div>'
-            '</form>'
+            '</form>',
         )
         self.assertEqual(
             view0.with_context(lang='fr_FR', check_translations=True).arch_db,
-            archf2 % (terms_en2[0], terms_fr[1], terms_fr[2])
+            archf2 % (terms_en2[0], terms_fr[1], terms_fr[2]),
         )
 
         self.assertEqual(
             view0.with_context(lang='nl_NL').arch_db,
             archf2 % terms_en2,
-            "nl_NL value should fallback to en_US value"
+            "nl_NL value should fallback to en_US value",
         )
         self.assertEqual(
             view0.with_context(lang='nl_NL', check_translations=True).arch_db,
-            archf2 % terms_en2
+            archf2 % terms_en2,
         )
 
         # update and confirm translations
         view0.update_field_translations('arch_db', {'fr_FR': {}})
         self.assertEqual(
             view0.with_context(lang='fr_FR').arch_db,
-            archf2 % (terms_en2[0], terms_fr[1], terms_fr[2])
+            archf2 % (terms_en2[0], terms_fr[1], terms_fr[2]),
         )
         self.assertEqual(
             view0.with_context(lang='fr_FR', check_translations=True).arch_db,
-            archf2 % (terms_en2[0], terms_fr[1], terms_fr[2])
+            archf2 % (terms_en2[0], terms_fr[1], terms_fr[2]),
         )
 
     def test_delay_translations_no_term(self):
@@ -1682,12 +1682,12 @@ class TestXMLTranslation(TransactionCase):
             self.assertEqual(
                 view0.with_context(lang=lang).arch_db,
                 archf2,
-                f'arch_db for {lang} should be {archf2}'
+                f'arch_db for {lang} should be {archf2}',
             )
             self.assertEqual(
                 view0.with_context(lang=lang, check_translations=True).arch_db,
                 archf2,
-                f'arch_db for {lang} should be {archf2} when check_translations'
+                f'arch_db for {lang} should be {archf2} when check_translations',
             )
 
     def test_translate_xml_select(self):
@@ -1787,7 +1787,7 @@ class TestXMLTranslation(TransactionCase):
         view1.update_field_translations('arch_db', {
             'fr_FR': {
                 'Knife': 'Couteau',
-                'Fork': 'Fourchette'
+                'Fork': 'Fourchette',
             },
         }, source_lang='fr_FR')
         self.assertEqual(view1.with_context(lang='en_US').arch_db, archf % ('Knife', 'Fork', 'Spoon'))
@@ -1797,10 +1797,10 @@ class TestXMLTranslation(TransactionCase):
             'en_US': {
                 'Couteau': 'knife',
                 'Fourchette': 'fork',
-                'Spoon': 'spoon'
+                'Spoon': 'spoon',
             },
             'fr_FR': {
-                'Spoon': 'Cuiller'
+                'Spoon': 'Cuiller',
             },
         }, source_lang='fr_FR')
         self.assertEqual(view1.with_context(lang='en_US').arch_db, archf % ('knife', 'fork', 'spoon'))
@@ -1816,12 +1816,12 @@ class TestXMLTranslation(TransactionCase):
         view1.update_field_translations('arch_db', {
             'en_US': {
                 'Fork': 'fork',
-                'Spoon': ''
+                'Spoon': '',
             },
             'fr_FR': {
                 'Knife': '',
-                'Fork': False
-            }
+                'Fork': False,
+            },
         })
         self.assertEqual(view1.with_context(lang='en_US').arch_db, archf % ('Knife', 'fork', 'Spoon'))
         self.assertEqual(view1.with_context(lang='fr_FR').arch_db, archf % ('Knife', 'Fork', 'Cuiller'))
@@ -1833,7 +1833,7 @@ class TestXMLTranslation(TransactionCase):
         view1 = self.env['ir.ui.view'].with_context(lang='fr_FR').create({
             'name': 'view_1',
             'model': 'test_tools.partner',
-            'arch': xml % ('Pomme', 'Poire')  # with typo
+            'arch': xml % ('Pomme', 'Poire'),  # with typo
         })  # with typo
         # jsonb column value:
         # {
@@ -1859,7 +1859,7 @@ class TestXMLTranslation(TransactionCase):
         view1 = self.env['ir.ui.view'].with_context(lang='en_GB').create({
             'name': 'view_1',
             'model': 'test_tools.partner',
-            'arch': xml % ('Footbell', 'Clbus', 'Rakning')  # with typo
+            'arch': xml % ('Footbell', 'Clbus', 'Rakning'),  # with typo
         })
         view1.update_field_translations('arch_db', {'en_US': {'Footbell': 'SocceR'}})  # still with a typo
         # jsonb column value:
@@ -1903,7 +1903,7 @@ class TestXMLDuplicateTranslations(TransactionCase):
         cls.view1 = cls.env['ir.ui.view'].with_context(lang='fr_FR').create({
             'name': 'view_1',
             'model': 'test_tools.partner',
-            'arch': cls.xml % ('un étudiant', 'une étudiante')
+            'arch': cls.xml % ('un étudiant', 'une étudiante'),
         })
         # jsonb column value:
         # {
@@ -1916,7 +1916,7 @@ class TestXMLDuplicateTranslations(TransactionCase):
         # translate 2 fr_FR terms to one en_US term
         cls.view1.update_field_translations('arch_db', {
             'en_US': {'un étudiant': 'a student', 'une étudiante': 'a student'},
-            'es_ES': {'un étudiant': 'un estudiante', 'une étudiante': 'una estudiante'}
+            'es_ES': {'un étudiant': 'un estudiante', 'une étudiante': 'una estudiante'},
         })
 
     # intuitive behaviour
@@ -1969,7 +1969,7 @@ class TestXMLDuplicateTranslations(TransactionCase):
         self.assertItemsEqual(self.view1.get_field_translations('arch_db')[0], [
             {'lang': 'en_US', 'source': 'a student', 'value': ''},
             {'lang': 'fr_FR', 'source': 'a student', 'value': 'une étudiante'},
-            {'lang': 'es_ES', 'source': 'a student', 'value': 'una estudiante'}
+            {'lang': 'es_ES', 'source': 'a student', 'value': 'una estudiante'},
         ])
 
     # tricky behaviour
@@ -2042,12 +2042,12 @@ class TestHTMLTranslation(TransactionCase):
                 self.assertEqual(
                     translatable0.with_context(lang=lang).structured_html,
                     html,
-                    f'report_footer for {lang} should be {html}'
+                    f'report_footer for {lang} should be {html}',
                 )
                 self.assertEqual(
                     translatable0.with_context(lang=lang, check_translations=True).structured_html,
                     html,
-                    f'report_footer for {lang} should be {html} when check_translations'
+                    f'report_footer for {lang} should be {html} when check_translations',
                 )
 
 
@@ -2101,7 +2101,7 @@ class TestStoredTranslations(TransactionCase):
         )
         self.assertEqual(
             mapping,
-            {'Knife': {'fr_FR': 'Couteau', 'nl_NL': 'Mes'}}
+            {'Knife': {'fr_FR': 'Couteau', 'nl_NL': 'Mes'}},
         )
 
         mapping = StoredTranslations._get_translation_dictionary(
@@ -2117,7 +2117,7 @@ class TestStoredTranslations(TransactionCase):
             {
                 'Knife': {'fr_FR': 'Couteau', 'nl_NL': 'Mes'},
                 'Fork': {'fr_FR': 'Fourchette', 'nl_NL': 'Vork'},
-            }
+            },
         )
 
         mapping = StoredTranslations._get_translation_dictionary(
@@ -2169,7 +2169,7 @@ class TestStoredTranslations(TransactionCase):
         html_field = self._get_html_field()
 
         mapping = StoredTranslations._get_translation_dictionary(
-            char_field, 'Knife', {}
+            char_field, 'Knife', {},
         )
         self.assertEqual(mapping, {'Knife': {}})
 
@@ -2190,7 +2190,7 @@ class TestStoredTranslations(TransactionCase):
         )
         self.assertEqual(
             mapping,
-            {'Knife': {'fr_FR': 'Couteau', 'nl_NL': 'Knife', 'es_ES': 'Knife'}}
+            {'Knife': {'fr_FR': 'Couteau', 'nl_NL': 'Knife', 'es_ES': 'Knife'}},
         )
 
         mapping = StoredTranslations._get_translation_dictionary(
@@ -2203,7 +2203,7 @@ class TestStoredTranslations(TransactionCase):
             {
                 'Knife': {'fr_FR': 'Knife', 'nl_NL': 'Knife', 'es_ES': 'Knife'},
                 'Fork': {'fr_FR': 'Fork', 'nl_NL': 'Fork', 'es_ES': 'Fork'},
-            }
+            },
         )
 
     # --- dict read tests ---
@@ -2273,27 +2273,27 @@ class TestStoredTranslations(TransactionCase):
         char_field = self._get_char_field()
         st = StoredTranslations({
             'en_US': 'English',
-            'fr_FR': 'French'
+            'fr_FR': 'French',
         })
         st.validate(self.env, char_field)
         result = st.normalize(self.env, char_field)
         self.assertEqual(dict(result), {
             'en_US': 'English',
-            'fr_FR': 'French'
+            'fr_FR': 'French',
         })
 
         html_field = self._get_html_field()
         st = StoredTranslations({
             'en_US': '<div>English</div>',
             '_en_US': '<p>English</p>',
-            'fr_FR': '<p>French</p>'
+            'fr_FR': '<p>French</p>',
         })
         st.validate(self.env, html_field)
         result = st.normalize(self.env, html_field)
         self.assertEqual(dict(result), {
             'en_US': '<div>English</div>',
             '_en_US': '<p>English</p>',
-            'fr_FR': '<p>French</p>'
+            'fr_FR': '<p>French</p>',
         })
 
         st = StoredTranslations({
@@ -2332,7 +2332,7 @@ class TestStoredTranslations(TransactionCase):
         self.assertEqual(dict(result), {
             'en_US': 'English',
             # _en_US should be popped for `field.translate is True`
-            'fr_FR': 'French'
+            'fr_FR': 'French',
         })
 
         html_field = self._get_html_field()
@@ -2636,7 +2636,7 @@ class TestStoredTranslations(TransactionCase):
             'fr_FR': '<div><span help="Couteau"></span></div><div><span help="Fourchette"></span></div>',
         })
         result = st.written(self.env, html_field, ({
-            'fr_FR': ParsedTranslation(html_field, '<div><span title="Couteau"></span></div><div><span title="Fourchette"></span></div>')
+            'fr_FR': ParsedTranslation(html_field, '<div><span title="Couteau"></span></div><div><span title="Fourchette"></span></div>'),
         }))
         self.assertEqual(dict(result), {
             'en_US': '<div><span title="Couteau"></span></div><div><span title="Fourchette"></span></div>',
@@ -3030,7 +3030,6 @@ class TestTranslationTrigramIndexPatterns(BaseCase):
     def test_value_conversion(self):
         sc = SPECIAL_CHARACTERS
         cases = [
-            # pylint: disable=bad-whitespace
             ( 'abc',    '%abc%',      'simple text is not escaped correctly'),
             ( 'a"bc',  r'%a\\"bc%',   '" is not escaped correctly'),
             (r'a\bc',  r'%a\\\\bc%', r'\ is not escaped correctly'),
@@ -3046,7 +3045,6 @@ class TestTranslationTrigramIndexPatterns(BaseCase):
     def test_pattern_conversion(self):
         sc = SPECIAL_CHARACTERS
         cases = [
-            # pylint: disable=bad-whitespace
             ( 'abc',      '%abc%',      'simple pattern is not escaped correctly'),
             ( 'a"bc',    r'%a\\"bc%',   '" is not escaped correctly'),
             (r'a\\bc',   r'%a\\\\bc%', r'\ is not escaped correctly'),

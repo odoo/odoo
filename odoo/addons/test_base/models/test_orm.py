@@ -1,4 +1,5 @@
 import datetime
+import itertools
 import logging
 
 from odoo import api, fields, models
@@ -7,10 +8,8 @@ from odoo.fields import Command
 from odoo.tools import SQL
 from odoo.tools.float_utils import float_round
 from odoo.tools.translate import mark_as_copy
-import itertools
 
 from odoo.addons.base.models.res_company import company_default_for
-
 
 _logger = logging.getLogger('precompute_setter')
 

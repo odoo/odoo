@@ -1,6 +1,7 @@
 from lxml import etree
 
-from odoo.tests import tagged, common
+from odoo.tests import common, tagged
+
 from odoo.addons.base.tests.test_ir_ui_view import ViewCase
 
 
@@ -18,19 +19,19 @@ class TestDefaultView(common.TransactionCase):
         )
         self.assertEqual(
             etree.tostring(self.env['test_orm.company']._get_default_form_view()),
-            b'<form><sheet string="Test ORM Company"><group><group><field name="foo"/></group></group><group><field name="text"/></group><group><group><field name="date"/><field name="tag_id"/><field name="count"/></group><group><field name="moment"/><field name="truth"/><field name="phi"/></group></group><group><field name="html1"/></group><group><field name="html2"/></group><group><group><field name="company_id"/></group><group><field name="partner_id"/></group></group><group><separator/></group></sheet></form>'
+            b'<form><sheet string="Test ORM Company"><group><group><field name="foo"/></group></group><group><field name="text"/></group><group><group><field name="date"/><field name="tag_id"/><field name="count"/></group><group><field name="moment"/><field name="truth"/><field name="phi"/></group></group><group><field name="html1"/></group><group><field name="html2"/></group><group><group><field name="company_id"/></group><group><field name="partner_id"/></group></group><group><separator/></group></sheet></form>',
         )
 
     def test_default_view_with_binaries(self):
         self.assertEqual(
             etree.tostring(self.env['binary.test']._get_default_form_view()),
-            b'<form><sheet string="binary.test"><group><group><field name="img"/></group><group><field name="bin1"/></group></group><group><separator/></group></sheet></form>'
+            b'<form><sheet string="binary.test"><group><group><field name="img"/></group><group><field name="bin1"/></group></group><group><separator/></group></sheet></form>',
         )
 
     def test_default_calender_view(self):
         self.assertEqual(
             etree.tostring(self.env['calendar.test']._get_default_calendar_view()),
-            b'<calendar string="calendar.test" date_start="x_date_start" date_stop="x_date_end"><field name="id"/></calendar>'
+            b'<calendar string="calendar.test" date_start="x_date_start" date_stop="x_date_end"><field name="id"/></calendar>',
         )
 
 

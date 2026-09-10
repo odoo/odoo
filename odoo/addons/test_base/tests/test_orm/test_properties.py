@@ -1,14 +1,16 @@
 import json
-import psycopg2
 import unittest
 from collections import abc
 from unittest.mock import patch
 
-from .test_domain_expression import TransactionExpressionCase
+import psycopg2
+
 from odoo.exceptions import AccessError, UserError
 from odoo.fields import Command, Domain
-from odoo.tests import tagged, TransactionCase, users
+from odoo.tests import TransactionCase, tagged, users
 from odoo.tools import mute_logger
+
+from .test_domain_expression import TransactionExpressionCase
 
 
 class TestPropertiesMixin(TransactionCase):

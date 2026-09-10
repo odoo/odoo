@@ -1,5 +1,5 @@
 import odoo.tests
-from odoo.tools.translate import StoredTranslations, mark_as_copy, code_translations
+from odoo.tools.translate import StoredTranslations, code_translations, mark_as_copy
 
 
 class TestCopyTranslations(odoo.tests.TransactionCase):

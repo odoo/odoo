@@ -1,5 +1,5 @@
 from odoo import Command
-from odoo.tests import tagged, common
+from odoo.tests import common, tagged
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -225,7 +225,7 @@ class TestPrivateReadGroupingSets(common.TransactionCase):
             {
                 # Test 2 many2manys
                 'grouping_sets': [
-                    ['user_ids', 'customer_ids'], ['key'], ['user_ids'], ['customer_ids'], ['key', 'customer_ids'], []
+                    ['user_ids', 'customer_ids'], ['key'], ['user_ids'], ['customer_ids'], ['key', 'customer_ids'], [],
                 ],
                 'aggregates': ['__count', 'integer:sum'],
                 # 1 for ('user_ids', 'customer_ids') + 1 for ('user_ids',) + 1 for ('customer_ids',) + 1 for remaining (key, [])

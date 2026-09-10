@@ -70,7 +70,7 @@ class TestFindCircularDependency(BaseCase):
         result = find_circular_dependency(elems)
         self.assertEqual(result[0], result[-1])
         self.assertTrue(
-            set(result).issubset({'a', 'b'}) or set(result).issubset({'c', 'd'})
+            set(result).issubset({'a', 'b'}) or set(result).issubset({'c', 'd'}),
         )
 
 
@@ -150,7 +150,7 @@ class TestFormatLangDate(TransactionCase):
 
         # Change 2 parameters
         self.assertEqual(misc.format_date(lang.with_context(lang='zh_CN').env, date_str, lang_code='fr_FR'), '31/01/2017')
-        self.assertEqual(misc.format_date(lang.with_context(lang='zh_CN').env, date_str, date_format='MMM d, y'), u'1\u6708 31, 2017')
+        self.assertEqual(misc.format_date(lang.with_context(lang='zh_CN').env, date_str, date_format='MMM d, y'), '1\u6708 31, 2017')
         self.assertEqual(misc.format_date(lang.env, date_str, lang_code='fr_FR', date_format='MMM d, y'), 'janv. 31, 2017')
 
         # Change 3 parameters
@@ -191,7 +191,7 @@ class TestFormatLangDate(TransactionCase):
         self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, time_part_tz, time_format='HH:mm:ss Z'), '16:30:22 -0500')
         self.assertEqual(misc.format_time(lang.with_context(lang='zh_CN').env, time_part_tz, time_format='zzzz ah:mm:ss'), '\u5317\u7f8e\u4e1c\u90e8\u6807\u51c6\u65f6\u95f4\u0020\u4e0b\u53484:30:22')
 
-        #Check timezone conversion in format_time
+        # Check timezone conversion in format_time
         self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, datetime_str, 'Europe/Brussels', time_format='HH:mm:ss Z'), '11:33:00 +0100')
         self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, datetime_str, 'America/New_York', time_format='HH:mm:ss Z'), '05:33:00 -0500')
 
@@ -322,20 +322,20 @@ class TestAddonsFileAccess(BaseCase):
     def test_file_path(self):
         # absolute path
         self.assertEqual(__file__, file_path(__file__))
-        self.assertEqual(__file__, file_path(__file__, filter_ext=None)) # means "no filter" too
+        self.assertEqual(__file__, file_path(__file__, filter_ext=None))  # means "no filter" too
         self.assertEqual(__file__, file_path(__file__, filter_ext=('.py',)))
 
         # directory target is ok
         self.assertEqual(os.path.dirname(__file__), file_path(os.path.join(__file__, '..')))
 
         # relative path
-        relpath = os.path.join(*(__file__.split(os.sep)[-4:])) # 'base/tests/test_misc.py'
+        relpath = os.path.join(*(__file__.split(os.sep)[-4:]))  # 'base/tests/test_misc.py'
         self.assertEqual(__file__, file_path(relpath))
         self.assertEqual(__file__, file_path(relpath, filter_ext=('.py',)))
 
         # leading 'addons/' is ignored if present
         self.assertTrue(file_path("addons/web/__init__.py"))
-        relpath = os.path.join('addons', relpath) # 'addons/base/tests/test_misc.py'
+        relpath = os.path.join('addons', relpath)  # 'addons/base/tests/test_misc.py'
         self.assertEqual(__file__, file_path(relpath))
 
         # files in root_path are allowed
@@ -375,14 +375,14 @@ class TestAddonsFileAccess(BaseCase):
             file_open(os.path.join(__file__, '..'))
 
         # relative path
-        relpath = os.path.join(*(__file__.split(os.sep)[-4:])) # 'base/tests/test_misc.py'
+        relpath = os.path.join(*(__file__.split(os.sep)[-4:]))  # 'base/tests/test_misc.py'
         self.assertCanRead(relpath, test_needle)
         self.assertCanRead(relpath, test_needle.encode(), mode='rb')
         self.assertCanRead(relpath, test_needle.encode(), mode='rb', filter_ext=('.py',))
 
         # leading 'addons/' is ignored if present
         self.assertCanRead("addons/web/__init__.py", "import")
-        relpath = os.path.join('addons', relpath) # 'addons/base/tests/test_misc.py'
+        relpath = os.path.join('addons', relpath)  # 'addons/base/tests/test_misc.py'
         self.assertCanRead(relpath, test_needle)
 
         # files in root_path are allowed
@@ -493,11 +493,11 @@ class TestFormatLang(TransactionCase):
             'position': 'after',
         })
 
-        self.assertEqual(misc.formatLang(self.env, 100, currency_obj=currency_object), '100.0%sfL' % u'\N{NO-BREAK SPACE}')
+        self.assertEqual(misc.formatLang(self.env, 100, currency_obj=currency_object), '100.0%sfL' % '\N{NO-BREAK SPACE}')
 
         currency_object.write({'position': 'before'})
 
-        self.assertEqual(misc.formatLang(self.env, 100, currency_obj=currency_object), 'fL%s100.0' % u'\N{NO-BREAK SPACE}')
+        self.assertEqual(misc.formatLang(self.env, 100, currency_obj=currency_object), 'fL%s100.0' % '\N{NO-BREAK SPACE}')
 
     def test_decimal_precision_and_currency_object(self):
         decimal_precision = self.env['decimal.precision'].create({
@@ -513,7 +513,7 @@ class TestFormatLang(TransactionCase):
         })
 
         # If we have a 'dp' and 'currency_obj', we use the decimal precision of 'dp' and the format of 'currency_obj'.
-        self.assertEqual(misc.formatLang(self.env, 100, dp=decimal_precision.name, currency_obj=currency_object), '100.000%sfL' % u'\N{NO-BREAK SPACE}')
+        self.assertEqual(misc.formatLang(self.env, 100, dp=decimal_precision.name, currency_obj=currency_object), '100.000%sfL' % '\N{NO-BREAK SPACE}')
 
     def test_rounding_method(self):
         self.assertEqual(misc.formatLang(self.env, 100.205), '100.20')  # Default is 'HALF-EVEN'
@@ -699,7 +699,7 @@ class TestMiscToken(TransactionCase):
         self.assertIsNone(misc.verify_hash_signed(self.env, 'test', token))
 
     def test_long_payload(self):
-        payload = {'test': True, 'value':123456, 'some_string': 'hello', 'some_dict': {'name': 'New Dict'}}
+        payload = {'test': True, 'value': 123456, 'some_string': 'hello', 'some_dict': {'name': 'New Dict'}}
         token = misc.hash_sign(self.env, 'test', payload, expiration_hours=24)
         self.assertEqual(misc.verify_hash_signed(self.env, 'test', token), payload)
 

@@ -569,7 +569,7 @@ class TestPerformance(TestOrmPartnerCommon, SavepointCaseWithUserDemo):
         self.assertEqual(len(initial_records), 5)
         for _i in range(8):
             self.env.cr.execute(
-                'insert into test_performance_base(value) select value from test_performance_base'
+                'insert into test_performance_base(value) select value from test_performance_base',
             )
         records = self.env['test_performance.base'].search([])
         self.assertEqual(len(records), 1280)
@@ -590,7 +590,7 @@ class TestPerformance(TestOrmPartnerCommon, SavepointCaseWithUserDemo):
         # clean up after each pass
         self.env.cr.execute(
             'delete from test_performance_base where id not in %s',
-            (tuple(initial_records.ids),)
+            (tuple(initial_records.ids),),
         )
 
     def test_prefetch_compute(self):

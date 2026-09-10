@@ -1,27 +1,37 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from markupsafe import Markup
+# ruff: noqa: W291, W293, E241
 
 import re
 
-from odoo.addons.base.models.ir_mail_server import extract_rfc2822_addresses
-from odoo.addons.base.models.ir_qweb_fields import nl2br_enclose
+from markupsafe import Markup
+
 from odoo.tests import tagged
 from odoo.tests.common import BaseCase
 from odoo.tools import misc
 from odoo.tools.mail import (
+    append_content_to_html,
+    email_anonymize,
+    email_domain_normalize,
+    email_normalize,
+    email_re,
+    email_split,
+    email_split_and_format,
+    email_split_and_format_normalize,
+    email_split_tuples,
+    formataddr,
+    html2plaintext,
     html_remove_links,
     html_remove_xpath,
-    is_html_empty, html2plaintext, html_to_inner_content, html_sanitize, append_content_to_html, plaintext2html,
-    email_domain_normalize, email_normalize, email_re,
-    email_split, email_split_and_format, email_split_and_format_normalize, email_split_tuples,
-    single_email_re,
-    formataddr,
-    email_anonymize,
+    html_sanitize,
+    html_to_inner_content,
+    is_html_empty,
+    plaintext2html,
     prepend_html_content,
+    single_email_re,
 )
 
+from odoo.addons.base.models.ir_mail_server import extract_rfc2822_addresses
+from odoo.addons.base.models.ir_qweb_fields import nl2br_enclose
 from odoo.addons.base.tests import mail_examples
 
 
@@ -53,7 +63,7 @@ class TestSanitizer(BaseCase):
             ("yop", "<p>yop</p>"),  # simple
             ("lala<p>yop</p>xxx", "<p>lala</p><p>yop</p>xxx"),  # trailing text
             ("Merci à l'intérêt pour notre produit.nous vous contacterons bientôt. Merci",
-                u"<p>Merci à l'intérêt pour notre produit.nous vous contacterons bientôt. Merci</p>"),  # unicode
+                "<p>Merci à l'intérêt pour notre produit.nous vous contacterons bientôt. Merci</p>"),  # unicode
             ('<div>a<div>b</div></div>', '<div>a<div>b</div></div>'),
             ('<div><div>a</div></div>', '<div><div>a</div></div>'),
             ('<script> alert(1) </script>', ''),
@@ -192,7 +202,7 @@ class TestSanitizer(BaseCase):
             (
                 '<span style="position: fixed; top: 0px; left: 50px; width: 40%; height: 50%; background-color: red;">Coin coin </span>',
                 ['background-color:red', 'Coin coin'],
-                ['position', 'top', 'left']
+                ['position', 'top', 'left'],
             ), (
                 """<div style='before: "Email Address; coincoin cheval: lapin";  
    font-size: 30px; max-width: 100%; after: "Not sure
@@ -200,12 +210,12 @@ class TestSanitizer(BaseCase):
           this; means: anything ?#ùµ"
     ; some-property: 2px; top: 3'>youplaboum</div>""",
                 ['font-size:30px', 'youplaboum'],
-                ['some-property', 'top', 'cheval']
+                ['some-property', 'top', 'cheval'],
             ), (
                 '<span style="width">Coincoin</span>',
                 [],
-                ['width']
-            )
+                ['width'],
+            ),
         ]
 
         for test, in_lst, out_lst in test_data:
@@ -217,21 +227,21 @@ class TestSanitizer(BaseCase):
 
         # style should not be sanitized if removed
         new_html = html_sanitize(test_data[0][0], sanitize_attributes=False, strip_style=True, strip_classes=False)
-        self.assertEqual(new_html, u'<span>Coin coin </span>')
+        self.assertEqual(new_html, '<span>Coin coin </span>')
 
     def test_style_class(self):
         html = html_sanitize(mail_examples.REMOVE_CLASS, sanitize_attributes=True, sanitize_style=True, strip_classes=True)
         for ext in mail_examples.REMOVE_CLASS_IN:
             self.assertIn(ext, html)
         for ext in mail_examples.REMOVE_CLASS_OUT:
-            self.assertNotIn(ext, html,)
+            self.assertNotIn(ext, html)
 
     def test_style_class_only(self):
         html = html_sanitize(mail_examples.REMOVE_CLASS, sanitize_attributes=False, sanitize_style=True, strip_classes=True)
         for ext in mail_examples.REMOVE_CLASS_IN:
             self.assertIn(ext, html)
         for ext in mail_examples.REMOVE_CLASS_OUT:
-            self.assertNotIn(ext, html,)
+            self.assertNotIn(ext, html)
 
     def test_edi_source(self):
         html = html_sanitize(mail_examples.EDI_LIKE_HTML_SOURCE)
@@ -248,14 +258,14 @@ class TestSanitizer(BaseCase):
         for ext in mail_examples.QUOTE_BLOCKQUOTE_IN:
             self.assertIn(ext, html)
         for ext in mail_examples.QUOTE_BLOCKQUOTE_OUT:
-            self.assertIn(u'<span data-o-mail-quote="1">%s' % misc.html_escape(ext), html)
+            self.assertIn('<span data-o-mail-quote="1">%s' % misc.html_escape(ext), html)
 
     def test_quote_thunderbird(self):
         html = html_sanitize(mail_examples.QUOTE_THUNDERBIRD_1)
         for ext in mail_examples.QUOTE_THUNDERBIRD_1_IN:
             self.assertIn(ext, html)
         for ext in mail_examples.QUOTE_THUNDERBIRD_1_OUT:
-            self.assertIn(u'<span data-o-mail-quote="1">%s</span>' % misc.html_escape(ext), html)
+            self.assertIn('<span data-o-mail-quote="1">%s</span>' % misc.html_escape(ext), html)
 
     def test_quote_hotmail_html(self):
         html = html_sanitize(mail_examples.QUOTE_HOTMAIL_HTML)
@@ -296,34 +306,34 @@ class TestSanitizer(BaseCase):
             (
                 """This is Sparta!\n--\nAdministrator\n+9988776655""",
                 ['This is Sparta!'],
-                ['\n--\nAdministrator\n+9988776655']
+                ['\n--\nAdministrator\n+9988776655'],
             ), (
                 """<p>This is Sparta!\n--\nAdministrator</p>""",
                 [],
-                ['\n--\nAdministrator']
+                ['\n--\nAdministrator'],
             ), (
                 """<p>This is Sparta!<br/>--<br>Administrator</p>""",
                 ['This is Sparta!'],
-                []
+                [],
             ), (
                 """This is Sparta!\n>Ah bon ?\nCertes\n> Chouette !\nClair""",
                 ['This is Sparta!', 'Certes', 'Clair'],
-                ['\n>Ah bon ?', '\n> Chouette !']
-            )
+                ['\n>Ah bon ?', '\n> Chouette !'],
+            ),
         ]
         for test, in_lst, out_lst in test_data:
             new_html = html_sanitize(test)
             for text in in_lst:
                 self.assertIn(text, new_html)
             for text in out_lst:
-                self.assertIn(u'<span data-o-mail-quote="1">%s</span>' % misc.html_escape(text), new_html)
+                self.assertIn('<span data-o-mail-quote="1">%s</span>' % misc.html_escape(text), new_html)
 
     def test_quote_signature(self):
         test_data = [
             (
                 """<div>Hello<pre>--<br />Administrator</pre></div>""",
                 ["<pre data-o-mail-quote=\"1\">--", "<br data-o-mail-quote=\"1\">"],
-            )
+            ),
         ]
         for test, in_lst in test_data:
             new_html = html_sanitize(test)
@@ -367,20 +377,20 @@ class TestSanitizer(BaseCase):
         for ext in mail_examples.TEXT_1_IN:
             self.assertIn(ext, html)
         for ext in mail_examples.TEXT_1_OUT:
-            self.assertIn(u'<span data-o-mail-quote="1">%s</span>' % misc.html_escape(ext), html)
+            self.assertIn('<span data-o-mail-quote="1">%s</span>' % misc.html_escape(ext), html)
 
         html = html_sanitize(mail_examples.TEXT_2)
         for ext in mail_examples.TEXT_2_IN:
             self.assertIn(ext, html)
         for ext in mail_examples.TEXT_2_OUT:
-            self.assertIn(u'<span data-o-mail-quote="1">%s</span>' % misc.html_escape(ext), html)
+            self.assertIn('<span data-o-mail-quote="1">%s</span>' % misc.html_escape(ext), html)
 
     def test_quote_bugs(self):
         html = html_sanitize(mail_examples.BUG1)
         for ext in mail_examples.BUG_1_IN:
             self.assertIn(ext, html)
         for ext in mail_examples.BUG_1_OUT:
-            self.assertIn(u'<span data-o-mail-quote="1">%s</span>' % misc.html_escape(ext), html)
+            self.assertIn('<span data-o-mail-quote="1">%s</span>' % misc.html_escape(ext), html)
 
     def test_misc(self):
         # False / void should not crash
@@ -390,7 +400,7 @@ class TestSanitizer(BaseCase):
         self.assertEqual(html, False)
 
         # Message with xml and doctype tags don't crash
-        html = html_sanitize(u'<?xml version="1.0" encoding="iso-8859-1"?>\n<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"\n         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">\n<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">\n <head>\n  <title>404 - Not Found</title>\n </head>\n <body>\n  <h1>404 - Not Found</h1>\n </body>\n</html>\n')
+        html = html_sanitize('<?xml version="1.0" encoding="iso-8859-1"?>\n<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"\n         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">\n<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">\n <head>\n  <title>404 - Not Found</title>\n </head>\n <body>\n  <h1>404 - Not Found</h1>\n </body>\n</html>\n')
         self.assertNotIn('encoding', html)
         self.assertNotIn('<title>404 - Not Found</title>', html)
         self.assertIn('<h1>404 - Not Found</h1>', html)
@@ -462,12 +472,12 @@ class TestHtmlTools(BaseCase):
             (   # missing root
                 'This is a <b>very</b> big deal.',
                 '//b',
-                '<div>This is a \nbig deal.</div>'
+                '<div>This is a \nbig deal.</div>',
             ),
             (   # indented removal with complex xpath
                 'This is a <b>very <i>big</i>, important</b><span class="fa fa-money-bag delete"> and lucrative</span> deal.',
                 '//b | //i | //*[hasclass("delete")]',
-                '<div>This is a \ndeal.</div>'
+                '<div>This is a \ndeal.</div>',
             ),
             (   # removing the root
                 '<span>Remove root</span>',
@@ -514,7 +524,7 @@ class TestHtmlTools(BaseCase):
             ('<p>Now =&gt; processing&nbsp;entities&#8203;and extra whitespace too.  </p>',
              'Now => processing\xa0entities\u200band extra whitespace too.'),
             ('<div>Look what happens with <p>unmatched tags</div>', 'Look what happens with unmatched tags'),
-            ('<div>Look what happens with <p unclosed tags</div> Are we good?', 'Look what happens with Are we good?')
+            ('<div>Look what happens with <p unclosed tags</div> Are we good?', 'Look what happens with Are we good?'),
         ]
         for content, expected in cases:
             text = html_to_inner_content(content)
@@ -558,7 +568,7 @@ class TestHtmlTools(BaseCase):
             '<div style="margin: 4px"><p>Hello World</p></div>',
             '<p><span style="font-weight: bolder;"><font style="color: rgb(255, 0, 0);" class=" ">W</font></span><br></p>',
             '<span class="oi" data-icon="favorite"></span>',
-            '<i class="fas fa-home"></i>'
+            '<i class="fas fa-home"></i>',
         ]
         for content in valid_html_samples:
             self.assertFalse(is_html_empty(content))
@@ -646,7 +656,7 @@ class TestEmailTools(BaseCase):
 
     @classmethod
     def setUpClass(cls):
-        super(TestEmailTools, cls).setUpClass()
+        super().setUpClass()
 
         cls.sources = [
             # single email
@@ -764,7 +774,7 @@ class TestEmailTools(BaseCase):
             res = email_re.findall(src)
             self.assertEqual(
                 res, exp,
-                'Seems email_re is broken with %s (expected %r, received %r)' % (src, exp, res)
+                'Seems email_re is broken with %s (expected %r, received %r)' % (src, exp, res),
             )
 
     def test_email_split(self):
@@ -785,42 +795,42 @@ class TestEmailTools(BaseCase):
             # - multi emails (with invalid)
             (
                 'Ivan@dezotos.com Cc iv.an@notgmail.com',
-                ['Ivan@dezotos.com', 'iv.an@notgmail.com']
+                ['Ivan@dezotos.com', 'iv.an@notgmail.com'],
             ),
             (
                 'ivan-dredi@coldmail.com ivan.dredi@notgmail.com',
-                ['ivan-dredi@coldmail.com', 'ivan.dredi@notgmail.com']
+                ['ivan-dredi@coldmail.com', 'ivan.dredi@notgmail.com'],
             ),
             (
                 '@notgmail.com ivan@coincoin.com.ar jeanine@coincoin.com.ar',
-                ['ivan@coincoin.com.ar', 'jeanine@coincoin.com.ar']
+                ['ivan@coincoin.com.ar', 'jeanine@coincoin.com.ar'],
             ),
             (
                 '@notgmail.com whoareyou@youhou.com.   ivan.dezotos@notgmail.com',
-                ['whoareyou@youhou.com', 'ivan.dezotos@notgmail.com']
+                ['whoareyou@youhou.com', 'ivan.dezotos@notgmail.com'],
             ),
             (
                 'francois@nc.gz CC: ois@notgmail.com ivan@dezotos.com',
-                ['francois@nc.gz', 'ois@notgmail.com', 'ivan@dezotos.com']
+                ['francois@nc.gz', 'ois@notgmail.com', 'ivan@dezotos.com'],
             ),
             (
                 'francois@nc.gz CC: ois@notgmail.com,ivan@dezotos.com',
-                ['francois@nc.gzCC', 'ois@notgmail.com', 'ivan@dezotos.com']
+                ['francois@nc.gzCC', 'ois@notgmail.com', 'ivan@dezotos.com'],
             ),
             # - separated with '/''
             (
                 'ivan.plein@dezotos.com / ivan.plu@notgmail.com',
-                ['ivan.plein@dezotos.com', 'ivan.plu@notgmail.com']
+                ['ivan.plein@dezotos.com', 'ivan.plu@notgmail.com'],
             ),
             (
                 '@notgmail.com ivan.parfois@notgmail.com/ ivan.souvent@notgmail.com',
-                ['ivan.parfois@notgmail.com', 'ivan.souvent@notgmail.com']
+                ['ivan.parfois@notgmail.com', 'ivan.souvent@notgmail.com'],
             ),
             # - separated with '-''
             ('ivan@dezotos.com - ivan.dezotos@notgmail.com', ['ivan@dezotos.com', 'ivan.dezotos@notgmail.com']),
             (
                 'car.pool@notgmail.com - co (TAMBO) Registration car.warsh@notgmail.com',
-                ['car.pool@notgmail.com', 'car.warsh@notgmail.com']
+                ['car.pool@notgmail.com', 'car.warsh@notgmail.com'],
             ),
         ]
         for source, expected in cases:
@@ -915,7 +925,7 @@ class TestEmailTools(BaseCase):
             res = email_split_tuples(src)
             self.assertEqual(
                 res, exp,
-                'Seems email_split_tuples is broken with %s (expected %r, received %r)' % (src, exp, res)
+                'Seems email_split_tuples is broken with %s (expected %r, received %r)' % (src, exp, res),
             )
 
     def test_email_formataddr(self):
@@ -976,7 +986,7 @@ class TestEmailTools(BaseCase):
         expected = [
             # single email
             ['alfred.astaire@test.example.com'],
-            [], [], [], [], # formatting issue for single email re
+            [], [], [], [],  # formatting issue for single email re
             # multiple emails -> couic
             [], [], [], [],
             # text containing email -> couic
@@ -991,7 +1001,7 @@ class TestEmailTools(BaseCase):
             res = single_email_re.findall(src)
             self.assertEqual(
                 res, exp,
-                'Seems single_email_re is broken with %s (expected %r, received %r)' % (src, exp, res)
+                'Seems single_email_re is broken with %s (expected %r, received %r)' % (src, exp, res),
             )
 
     def test_email_anonymize(self):

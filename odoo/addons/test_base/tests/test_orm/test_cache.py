@@ -2,11 +2,13 @@
 
 import os
 import platform
-import psutil
 import unittest
 
-from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
+import psutil
+
 from odoo.tests.common import tagged
+
+from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install

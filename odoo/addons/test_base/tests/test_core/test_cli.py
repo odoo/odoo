@@ -31,7 +31,7 @@ class TestCommand(BaseCase):
             capture_output=capture_output,
             check=check,
             text=text,
-            **kwargs
+            **kwargs,
         )
 
     def popen_command(self, *args, capture_output=True, text=True, **kwargs):
@@ -40,7 +40,7 @@ class TestCommand(BaseCase):
         return sp.Popen(
             [*self.run_args, *args],
             text=text,
-            **kwargs
+            **kwargs,
         )
 
     def test_docstring(self):
@@ -59,7 +59,7 @@ class TestCommand(BaseCase):
                 self.assertEqual(
                     command_output,
                     f"Unknown command '{name}'.\n"
-                    "Use 'odoo-bin --help' to see the list of available commands."
+                    "Use 'odoo-bin --help' to see the list of available commands.",
                 )
 
     def test_help(self):
@@ -107,7 +107,7 @@ class TestCommand(BaseCase):
         from odoo.cli import upgrade_code  # noqa: PLC0415
         proc = sp.run(
             [sys.executable, upgrade_code.__file__, '--help'],
-            check=True, capture_output=True, text=True
+            check=True, capture_output=True, text=True,
         )
         self.assertIn("usage: ", proc.stdout)
         self.assertIn("Rewrite the entire source code", proc.stdout)
@@ -129,7 +129,7 @@ class TestCommand(BaseCase):
         with os.fdopen(child, 'w', encoding="utf-8") as stdin_file:
             stdin_file.write(
                 'print(message)\n'
-                'exit()\n'
+                'exit()\n',
             )
         self.assertFalse(shell.wait(), "exited with a non 0 code")
 

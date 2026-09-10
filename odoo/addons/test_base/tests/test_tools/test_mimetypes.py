@@ -1,10 +1,17 @@
 import typing
 import unittest
-
-from odoo.tests import tagged, BaseCase
-from odoo.tools import file_path
-from odoo.tools.mimetypes import _odoo_guess_mimetype, _odoo_guess_file_mimetype, fix_filename_extension, get_extension, guess_mimetype, guess_file_mimetype
 from pathlib import Path
+
+from odoo.tests import BaseCase, tagged
+from odoo.tools import file_path
+from odoo.tools.mimetypes import (
+    _odoo_guess_file_mimetype,
+    _odoo_guess_mimetype,
+    fix_filename_extension,
+    get_extension,
+    guess_file_mimetype,
+    guess_mimetype,
+)
 
 TEST_FOLDER = Path(file_path('base/tests/files'))
 

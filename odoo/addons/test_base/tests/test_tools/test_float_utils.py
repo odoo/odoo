@@ -2,8 +2,16 @@
 
 from math import log10
 
-from odoo.tests.common import tagged, TransactionCase
-from odoo.tools import float_compare, float_div, float_is_zero, float_repr, float_round, float_split, float_split_str
+from odoo.tests.common import TransactionCase, tagged
+from odoo.tools import (
+    float_compare,
+    float_div,
+    float_is_zero,
+    float_repr,
+    float_round,
+    float_split,
+    float_split_str,
+)
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -17,15 +25,15 @@ class TestFloatPrecision(TransactionCase):
             result = float_repr(value, precision_digits=digits)
             self.assertEqual(result, expected, 'Rounding error: got %s, expected %s' % (result, expected))
 
-        try_round(2.674,'2.67')
-        try_round(2.675,'2.68')   # in Python 2.7.2, round(2.675,2) gives 2.67
-        try_round(-2.675,'-2.68') # in Python 2.7.2, round(2.675,2) gives 2.67
-        try_round(0.001,'0.00')
+        try_round(2.674, '2.67')
+        try_round(2.675, '2.68')   # in Python 2.7.2, round(2.675,2) gives 2.67
+        try_round(-2.675, '-2.68')  # in Python 2.7.2, round(2.675,2) gives 2.67
+        try_round(0.001, '0.00')
         try_round(-0.001, '0.00')
-        try_round(0.0049,'0.00')   # 0.0049 is closer to 0 than to 0.01, so should round down
-        try_round(0.005,'0.01')   # the rule is to round half away from zero
-        try_round(-0.005,'-0.01') # the rule is to round half away from zero
-        try_round(6.6 * 0.175, '1.16') # 6.6 * 0.175 is rounded to 1.15 with epsilon = 53
+        try_round(0.0049, '0.00')   # 0.0049 is closer to 0 than to 0.01, so should round down
+        try_round(0.005, '0.01')   # the rule is to round half away from zero
+        try_round(-0.005, '-0.01')  # the rule is to round half away from zero
+        try_round(6.6 * 0.175, '1.16')  # 6.6 * 0.175 is rounded to 1.15 with epsilon = 53
         try_round(-6.6 * 0.175, '-1.16')
         try_round(5.015, '5.02', method='HALF-EVEN')
         try_round(5.025, '5.02', method='HALF-EVEN')
@@ -42,10 +50,10 @@ class TestFloatPrecision(TransactionCase):
         try_zero(-0.001, True)
         try_zero(0.0046, True)
         try_zero(-0.0046, True)
-        try_zero(2.68-2.675, False) # 2.68 - 2.675 = 0.005 -> rounds to 0.01
-        try_zero(2.68-2.676, True)  # 2.68 - 2.675 = 0.004 -> rounds to 0.0
-        try_zero(2.676-2.68, True)  # 2.675 - 2.68 = -0.004 -> rounds to -0.0
-        try_zero(2.675-2.68, False) # 2.675 - 2.68 = -0.005 -> rounds to -0.01
+        try_zero(2.68 - 2.675, False)  # 2.68 - 2.675 = 0.005 -> rounds to 0.01
+        try_zero(2.68 - 2.676, True)  # 2.68 - 2.675 = 0.004 -> rounds to 0.0
+        try_zero(2.676 - 2.68, True)  # 2.675 - 2.68 = -0.004 -> rounds to -0.0
+        try_zero(2.675 - 2.68, False)  # 2.675 - 2.68 = -0.005 -> rounds to -0.01
 
         def try_compare(amount1, amount2, expected):
             self.assertEqual(float_compare(amount1, amount2, precision_rounding=0.01), expected,
@@ -146,7 +154,7 @@ class TestFloatPrecision(TransactionCase):
         # 17 significant decimal digits
         for magnitude in range(7):
             for frac, exp, prec in zip(fractions, expecteds, precisions):
-                for sign in [-1,1]:
+                for sign in [-1, 1]:
                     for x in range(0, 10000, 97):
                         n = x * 10 ** magnitude
                         f = sign * (n + frac)
@@ -181,7 +189,7 @@ class TestFloatPrecision(TransactionCase):
         try_compare(-657.4444, -657.445, 1)
 
         # Rounding to unusual rounding units (e.g. coin values)
-        def try_round(amount, expected, precision_rounding=None, method='HALF-UP'): # pylint: disable=function-redefined
+        def try_round(amount, expected, precision_rounding=None, method='HALF-UP'):  # pylint: disable=function-redefined
             value = float_round(amount, precision_rounding=precision_rounding, rounding_method=method)
             result = float_repr(value, precision_digits=2)
             self.assertEqual(result, expected, 'Rounding error: got %s, expected %s' % (result, expected))
@@ -203,7 +211,7 @@ class TestFloatPrecision(TransactionCase):
 
         try_split(2.674, ('2', '67'), float_split_str)
         try_split(2.675, ('2', '68'), float_split_str)   # in Python 2.7.2, round(2.675,2) gives 2.67
-        try_split(-2.675, ('-2', '68'), float_split_str) # in Python 2.7.2, round(2.675,2) gives 2.67
+        try_split(-2.675, ('-2', '68'), float_split_str)  # in Python 2.7.2, round(2.675,2) gives 2.67
         try_split(0.001, ('0', '00'), float_split_str)
         try_split(-0.001, ('0', '00'), float_split_str)
         try_split(42, ('42', '00'), float_split_str)
@@ -212,7 +220,7 @@ class TestFloatPrecision(TransactionCase):
 
         try_split(2.674, (2, 67), float_split)
         try_split(2.675, (2, 68), float_split)   # in Python 2.7.2, round(2.675,2) gives 2.67
-        try_split(-2.675, (-2, 68), float_split) # in Python 2.7.2, round(2.675,2) gives 2.67
+        try_split(-2.675, (-2, 68), float_split)  # in Python 2.7.2, round(2.675,2) gives 2.67
         try_split(0.001, (0, 0), float_split)
         try_split(-0.001, (0, 0), float_split)
         try_split(42, (42, 0), float_split)
