@@ -142,6 +142,13 @@ export class TranslateXml extends Component {
         return tree;
     });
 
+    _getNodeInnerValue(node) {
+        if (node._shouldUseInnerText) {
+            return node.innerText;
+        }
+        return node.innerHTML || node.innerText;
+    }
+
     parseNode(node) {
         if (this.nodeWeakMap.has(node)) {
             return this.nodeWeakMap.get(node);
@@ -159,12 +166,12 @@ export class TranslateXml extends Component {
             const attributes = Object.fromEntries(
                 node.getAttributeNames().map((attName) => [attName, node.getAttribute(attName)])
             );
-            attributes["data-width"] = this.computeInputWidth(node.innerHTML || node.innerText);
+            attributes["data-width"] = this.computeInputWidth(this._getNodeInnerValue(node));
             parsed.attributes = attributes;
             const translationKey = this.model.getTranslationKey(attributes);
             attributes["data-translation-key"] = translationKey;
             parsed.value = (lang) =>
-                this.getHashChange(lang, translationKey) ?? (node.innerHTML || node.innerText);
+                this.getHashChange(lang, translationKey) ?? this._getNodeInnerValue(node);
         }
         return parsed;
     }
@@ -192,18 +199,17 @@ export class TranslateXml extends Component {
         }
     }
 
-    static translatableAttrRe = /(<span.*>)(.*)(<\/span>)/;
+    static translatableAttrRe = /^(<span.*?>)(.*)(<\/span>)$/;
     parseAttrXML(string) {
         string = string?.trim();
-        if (string?.startsWith("<span data-oe-model=")) {
-            const matched = string.match(this.constructor.translatableAttrRe);
-            if (matched) {
-                const text = matched[2];
-                const dummy = this.parseXML(matched[1] + matched[3], "text/html").firstElementChild
-                    .firstElementChild;
-                dummy.innerText = text;
-                return dummy;
-            }
+        const matched = string.match(this.constructor.translatableAttrRe);
+        if (matched) {
+            const text = matched[2];
+            const dummy = this.parseXML(matched[1] + matched[3], "text/html").firstElementChild
+                .firstElementChild;
+            dummy.innerText = text;
+            dummy._shouldUseInnerText = true;
+            return dummy;
         }
     }
 }
