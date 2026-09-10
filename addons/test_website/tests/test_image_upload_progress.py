@@ -55,4 +55,9 @@ class TestImageUploadProgress(odoo.tests.HttpCase):
         # disable undraw, no third party should be called in tests
         self.patch(Web_Unsplash, 'fetch_unsplash_images', fetch_unsplash_images)
 
+        # The routing map is cached (the "routing" ormcache) with the controller endpoints
+        # baked in. When it was already built with the original methods, the patches above
+        # are ignored.
+        self.env.transaction.invalidate_ormcache("routing")
+
         self.start_tour(self.env['website'].get_client_action_url('/test_image_progress', True), 'test_image_upload_progress_unsplash', login="admin")
