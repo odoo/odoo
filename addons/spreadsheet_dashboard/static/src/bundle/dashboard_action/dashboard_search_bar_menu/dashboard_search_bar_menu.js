@@ -1,5 +1,4 @@
 import { Component, onWillStart, proxy } from "@odoo/owl";
-import { useLayoutEffect } from "@web/owl2/utils";
 import { useService } from "@web/core/utils/hooks";
 import { deepEqual } from "@web/core/utils/objects";
 import { CheckboxItem } from "@web/core/dropdown/checkbox_item";
@@ -44,12 +43,12 @@ export class DashboardSearchBarMenu extends Component {
         onWillStart(async () => {
             this.searchableParentRelations = await this.fetchSearchableParentRelation();
         });
-        useLayoutEffect(
-            () => {
-                this.state.filtersAndValues = this._computeFilterAndValues();
-            },
-            () => [this.searchModel.activeFavoriteId]
-        );
+        // useLayoutEffect(
+        //     () => {
+        //         this.state.filtersAndValues = this._computeFilterAndValues();
+        //     },
+        //     () => [this.searchModel.activeFavoriteId]
+        // );
     }
 
     _computeFilterAndValues() {
