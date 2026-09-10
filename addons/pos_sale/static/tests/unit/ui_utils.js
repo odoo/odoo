@@ -1,5 +1,6 @@
 import { animationFrame, click, waitFor, waitUntil } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
+import { removeFacet } from "@web/../tests/_framework/search_test_helpers";
 import {
     clickControlButton,
     isMobile,
@@ -19,8 +20,11 @@ export async function openQuotationList() {
     await waitFor(isMobile() ? ".modal .o_kanban_view" : ".modal .o_list_view");
 }
 
-export async function selectQuotation(saleOrderName) {
+export async function selectQuotation(saleOrderName, { removeFilter } = {}) {
     await openQuotationList();
+    if (removeFilter) {
+        await removeFacet(removeFilter);
+    }
     await contains(`${quotationCell()}:contains("${saleOrderName}")`).click();
     await waitFor(`.modal .selection-item`);
 }
@@ -35,8 +39,8 @@ export function listedQuotationsCount() {
     return document.querySelectorAll(quotationRow()).length;
 }
 
-export async function settleSaleOrder(saleOrderName, { loadSN } = {}) {
-    await selectQuotation(saleOrderName);
+export async function settleSaleOrder(saleOrderName, { loadSN, removeFilter } = {}) {
+    await selectQuotation(saleOrderName, { removeFilter });
     await contains(`.modal .selection-item:contains("Settle the order")`).click();
     if (loadSN !== undefined) {
         await waitFor(
