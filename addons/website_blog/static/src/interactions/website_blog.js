@@ -17,9 +17,6 @@ export class WebsiteBlog extends Interaction {
             "t-on-click.prevent": this.onNextBlogClick,
             "t-on-keydown": this.onNextBlogKeydown,
         },
-        "#o_wblog_post_content_jump": {
-            "t-on-click.prevent": this.onContentAnchorClick,
-        },
         ".o_twitter, .o_facebook, .o_linkedin, .o_google, .o_twitter_complete, .o_facebook_complete, .o_linkedin_complete, .o_google_complete":
             {
                 "t-on-click.prevent": this.onShareArticleClick,
@@ -80,11 +77,7 @@ export class WebsiteBlog extends Interaction {
         placeholder.style.minHeight = "100vh";
         this.insert(placeholder, this.el.querySelector("#o_wblog_next_container"), "beforeend");
         const nextUrl = verifyHttpsUrl(nextInfo.url);
-        await this.forumScrollAction(
-            blogNextContainerEl,
-            300,
-            () => (location.href = nextUrl)
-        );
+        await this.forumScrollAction(blogNextContainerEl, 300, () => (location.href = nextUrl));
     }
     /**
      * @param {KeyboardEvent} ev
@@ -94,20 +87,6 @@ export class WebsiteBlog extends Interaction {
         if (hotkey === "enter" || hotkey === "space") {
             return this.onNextBlogClick(ev);
         }
-    }
-
-    /**
-     * @param {MouseEvent} ev
-     */
-    async onContentAnchorClick(ev) {
-        ev.stopImmediatePropagation();
-        const scrollTargetEl = document.querySelector(ev.currentTarget.hash);
-
-        await this.forumScrollAction(
-            scrollTargetEl,
-            500,
-            () => (location.hash = "blog_content")
-        );
     }
 
     /**
@@ -171,8 +150,8 @@ export class WebsiteBlog extends Interaction {
      */
     _isCompactListOrSplitGridView() {
         return (
-            this.el.querySelector(".o_wblog_compact_list_month_header") !== null ||
-            this.el.querySelector(".o_wblog_split_grid_view_container") !== null
+            !!this.el.querySelector(".o_wblog_compact_list_month_header") ||
+            !!this.el.querySelector(".o_wblog_split_grid_view_container")
         );
     }
 
