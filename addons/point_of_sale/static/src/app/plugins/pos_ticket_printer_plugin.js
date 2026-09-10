@@ -76,6 +76,14 @@ export class PosTicketPrinterPlugin extends Plugin {
         return this.config.preparation_printer_ids || [];
     }
 
+    /**
+     * Preparation printers this device prints on itself. Printers driven by the server
+     * are excluded, otherwise their ticket would be printed twice.
+     */
+    get localPreparationPrinters() {
+        return this.preparationPrinters;
+    }
+
     get hasReceiptPrinters() {
         return this.receiptPrinters.length > 0;
     }
