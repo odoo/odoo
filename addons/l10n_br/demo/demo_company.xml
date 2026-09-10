@@ -19,13 +19,10 @@
     </record>
 
     <record id="base.demo_company_br" model="res.company" forcecreate="1">
+        <field name="currency_id" ref="base.BRL"/>
         <field name="name">BR Company</field>
         <field name="partner_id" ref="base.partner_demo_company_br"/>
     </record>
-
-    <function model="res.company" name="_onchange_country_id">
-        <value eval="[ref('base.demo_company_br')]"/>
-    </function>
 
     <function model="res.users" name="write">
         <value eval="[ref('base.user_root'), ref('base.user_admin'), ref('base.user_demo')]"/>
