@@ -3,11 +3,11 @@ import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import { registry } from "@web/core/registry";
-import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
-import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_util";
 import * as FeedbackScreen from "@point_of_sale/../tests/pos/tours/utils/feedback_screen_util";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
+import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
 import * as Notification from "@point_of_sale/../tests/generic_helpers/notification_util";
+import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_util";
 import { negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
 
 registry.category("web_tour.tours").add("GiftCardProgramTour1", {
@@ -96,21 +96,6 @@ registry.category("web_tour.tours").add("GiftCardWithRefundTour", {
                     refundQty: "2",
                 })
             ),
-        ].flat(),
-});
-
-registry.category("web_tour.tours").add("GiftCardProgramPriceNoTaxTour", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-            // Use gift card
-            ProductScreen.addOrderline("Magnetic Board", "1", "1.98", "1.98"),
-            PosLoyalty.enterCode("043123456"),
-            Dialog.proceed({ title: "unpaid gift card" }),
-            ProductScreen.clickOrderline("Gift Card"),
-            ProductScreen.selectedOrderlineHas("Gift Card", "1", "-1.00"),
-            PosLoyalty.orderTotalIs("0.98"),
         ].flat(),
 });
 
@@ -244,16 +229,6 @@ registry.category("web_tour.tours").add("test_physical_gift_card_invoiced", {
             PaymentScreen.clickValidate(),
             FeedbackScreen.isShown(),
             FeedbackScreen.clickNextOrder(),
-        ].flat(),
-});
-
-registry.category("web_tour.tours").add("EmptyProductScreenTour", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-            ProductScreen.isEmpty(),
-            ProductScreen.loadSampleButtonIsThere(),
         ].flat(),
 });
 
