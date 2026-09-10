@@ -20,7 +20,7 @@ registry.category("web_tour.tours").add("blog_tags", {
             trigger: ":iframe h1.o_wblog_post_name",
         },
         ...clickOnEditAndWaitEditMode(),
-        ...clickOnSnippet("#o_wblog_post_top .o_wblog_post_page_cover"),
+        ...clickOnSnippet("#o_wblog_post_main"),
         {
             content: "Open tag dropdown",
             trigger: "[data-label='Tags'] button.o_select_menu_toggler",
@@ -45,7 +45,7 @@ registry.category("web_tour.tours").add("blog_tags", {
             trigger: ":iframe #o_wblog_post_content .badge:contains('testtag')",
         },
         ...clickOnEditAndWaitEditMode(),
-        ...clickOnSnippet("#o_wblog_post_top .o_wblog_post_page_cover"),
+        ...clickOnSnippet("#o_wblog_post_main"),
         {
             content: "Remove tag",
             trigger:

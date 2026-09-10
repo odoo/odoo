@@ -13,9 +13,9 @@
 </t>
 
 <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
-    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+    <xpath expr="//t[@id='page_options_hook']" position="after">
         <blog_post_tags_option
-            selector=".o_wblog_post_page_cover[data-res-model='blog.post']"
+            selector="main:has(#o_wblog_post_main)"
             editableOnly="false"/>
     </xpath>
 </t>
