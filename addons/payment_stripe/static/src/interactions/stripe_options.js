@@ -1,3 +1,6 @@
+// The versionless URL of the Stripe SDK, as required by Stripe to always serve the latest
+// version. It can therefore not be checked against a checksum.
+export const STRIPE_SDK_URL = 'https://js.stripe.com/v3/';
 
 export class StripeOptions {
     /**
