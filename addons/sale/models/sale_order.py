@@ -2344,7 +2344,8 @@ class SaleOrder(models.Model):
 
         prepayment_amount = self._get_prepayment_required_amount()
         if self.state in ("draft", "sent") and self.prepayment_percent > 0:
-            suggested_amount = prepayment_amount  # Suggest the amount needed to confirm the quote.
+            # Suggest the amount needed to confirm the quote.
+            suggested_amount = max(prepayment_amount - self.amount_paid, 0)
         else:  # The order is confirmed or doesn't require payment.
             suggested_amount = max(self.amount_total - self.amount_paid, 0.0)
         return {
@@ -2409,6 +2410,7 @@ class SaleOrder(models.Model):
         - it is not expired;
         - the prepayment percent is strictly positive;
         - the total amount is strictly positive.
+        - confirmation amount is not reached
 
         Note: self.ensure_one()
 
@@ -2421,6 +2423,7 @@ class SaleOrder(models.Model):
             and not self.is_expired
             and self.prepayment_percent > 0
             and self.amount_total > 0
+            and not self._is_confirmation_amount_reached()
         )
 
     def _get_portal_return_action(self):
@@ -2614,6 +2617,20 @@ class SaleOrder(models.Model):
         if self.prepayment_percent == 0:
             return 0
         return self.currency_id.round(self.amount_total * self.prepayment_percent)
+
+    def _is_confirmation_amount_reached(self):
+        """Return whether `self.amount_paid` is higher than the prepayment required amount.
+
+        Note: self.ensure_one()
+
+        :return: Whether `self.amount_paid` is higher than the prepayment required amount.
+        :rtype: bool
+        """
+        self.ensure_one()
+        amount_comparison = self.currency_id.compare_amounts(
+            self._get_prepayment_required_amount(), self.amount_paid
+        )
+        return amount_comparison <= 0
 
     def _generate_downpayment_invoices(self):
         """Generate invoices as down payments for sale order.
