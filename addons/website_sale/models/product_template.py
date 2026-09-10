@@ -1391,7 +1391,7 @@ class ProductTemplate(models.Model):
     def _get_google_analytics_data(self, product, combination_info):
         self.ensure_one()
         tracking_data = {
-            "item_id": product.barcode or product.id,
+            "item_id": product.default_code or product.id,
             "item_name": combination_info["display_name"],
             "item_category": self.categ_id.name,
             "currency": combination_info["currency"].name,
