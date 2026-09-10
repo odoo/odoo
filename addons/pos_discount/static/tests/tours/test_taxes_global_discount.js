@@ -52,6 +52,21 @@ export function payAndInvoice(totalAmount) {
     ];
 }
 
+export function pay(totalAmount) {
+    return [
+        ProductScreen.clickPayButton(),
+
+        PaymentScreen.totalIs(totalAmount),
+        PaymentScreen.clickPaymentMethod("Bank"),
+        PaymentScreen.remainingIs("0.0"),
+
+        PaymentScreen.clickValidate(),
+
+        ReceiptScreen.receiptAmountTotalIs(totalAmount),
+        ReceiptScreen.clickNextOrder(),
+    ];
+}
+
 registry
     .category("web_tour.tours")
     .add("test_taxes_l10n_in_pos_global_discount_round_per_line_price_excluded", {
@@ -343,3 +358,15 @@ registry
                 ...payAndInvoice("42.25"),
             ].flat(),
     });
+registry.category("web_tour.tours").add("test_pos_discount_rounding_3_decimal_currency", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            ...addDocument([{ product: "discount_rounding_test_product", quantity: "1" }]),
+            ...addDiscount("5"),
+            ProductScreen.checkTotalAmount("43.22"),
+            ...pay("43.22"),
+        ].flat(),
+});

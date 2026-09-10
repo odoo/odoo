@@ -103,3 +103,54 @@ class TestTaxesGlobalDiscountPOS(TestTaxCommonPOS, TestTaxesGlobalDiscount):
         self.assert_pos_orders_and_invoices('test_taxes_l10n_be_pos_global_discount_round_globally_price_included', [
             round_globally_included_tests[0],
         ])
+
+    def test_pos_discount_rounding_3_decimal_currency(self):
+        currency_3dp = self.env['res.currency'].create({
+            'name': 'T3D',
+            'symbol': 'T3',
+            'rounding': 0.001,
+            'decimal_places': 3,
+        })
+        self.main_pos_config.company_id.currency_id = currency_3dp
+        self.main_pos_config.company_id.currency_id = currency_3dp
+        self.main_pos_config.journal_id.currency_id = currency_3dp
+        for pricelist in self.main_pos_config.available_pricelist_ids:
+            pricelist.currency_id = currency_3dp
+        tax_10_included = self.env['account.tax'].create({
+            'name': 'Tax 10% (incl)',
+            'amount': 10,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+            'price_include_override': 'tax_included',
+            'company_id': self.main_pos_config.company_id.id,
+        })
+
+        self.env['product.product'].create({
+            'name': 'discount_rounding_test_product',
+            'available_in_pos': True,
+            'list_price': 45.5,
+            'taxes_id': [Command.set(tax_10_included.ids)],
+            'pos_categ_ids': [Command.set(self.pos_desk_misc_test.ids)],
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(
+            f"/pos/ui?config_id={self.main_pos_config.id}",
+            "test_pos_discount_rounding_3_decimal_currency",
+            login="pos_user",
+        )
+
+        session = self.main_pos_config.current_session_id
+        try:
+            session.action_pos_session_closing_control()
+        except AssertionError:
+            pass
+
+        self.assertEqual(
+            session.state,
+            "closed",
+            "Session should close successfully without a rounding imbalance.",
+        )
+
+        move = session.move_id
+        self.assertTrue(move, "Expected an account.move to be generated on session close.")
