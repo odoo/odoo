@@ -65,8 +65,10 @@ Usage
     python3 generate_icons.py
 """
 
+import collections
 import json
 import logging
+import math
 import re
 import subprocess
 import sys
@@ -967,6 +969,179 @@ def write_font_face_css(ms_dir, style_lower: str, font_file: str, backend_font_p
     (ms_dir / f'material_symbols_{style_lower}.css').write_text(css, encoding='utf-8')
 
 
+# Google splits its icon categories over two vintages -- the Material Icons
+# names it started with, and the Material Symbols ones it renamed them to --
+# and an icon carries whichever one its metadata entry was written under, so
+# `format_bold` sits in `editor` and `format_h1` in `Text`.  Fold the old
+# names into the new ones, the rest match once casefolded.
+ICON_CATEGORY_ALIASES = {
+    'action': 'actions',
+    'av': 'audio&video',
+    'communication': 'communicate',
+    'device': 'hardware',
+    'editor': 'text',
+    'home': 'household',
+    'image': 'images',
+    'places': 'maps',
+    'transit': 'travel',
+    'ui actions': 'actions',
+}
+
+
+def chain_by_similarity(bags: dict[str, set[str]]) -> list[str]:
+    """Order *bags* so that each one is followed by the closest one left.
+
+    Closeness is the cosine similarity of the bags weighted by inverse document
+    frequency, so that a word carried by most of them (`brand`) weighs less
+    than a rare one (`chevron`).  Ties are broken by key, and a bag with
+    nothing in common with the ones left starts the chain over on the most
+    typical one rather than on an arbitrary neighbour, which is also where the
+    chain starts: a group then opens on what it is about and trails off into
+    its oddities.
+    """
+    frequencies = collections.Counter(word for bag in bags.values() for word in bag)
+    weights = {}
+    for key, bag in bags.items():
+        weighted = {word: math.log(len(bags) / frequencies[word]) for word in bag}
+        norm = math.sqrt(sum(w * w for w in weighted.values())) or 1
+        weights[key] = {word: w / norm for word, w in weighted.items()}
+
+    by_word = collections.defaultdict(list)
+    for key, weighted in weights.items():
+        for word in weighted:
+            by_word[word].append(key)
+
+    similarities = {}
+    for key, weighted in weights.items():
+        scores = collections.Counter()
+        for word, weight in weighted.items():
+            for other in by_word[word]:
+                scores[other] += weight * weights[other][word]
+        del scores[key]
+        similarities[key] = scores
+
+    def most_typical(keys):
+        return min(keys, key=lambda key: (-sum(similarities[key].values()), key))
+
+    remaining = set(weights)
+    order = []
+    current = most_typical(remaining)
+    while True:
+        order.append(current)
+        remaining.discard(current)
+        if not remaining:
+            return order
+        closest = min(remaining, key=lambda key: (-similarities[current][key], key))
+        current = closest if similarities[current][closest] else most_typical(remaining)
+
+
+# Smallest set of icons worth pulling out of its block as a family of its own.
+MIN_FAMILY = 4
+
+# Slack allowed between the codepoints of two variants of the same icon: Google
+# hands out its codepoints by batches of related icons, so variants sit a few
+# apart at most -- the gap being the icons of the batch left out of the subset.
+MAX_VARIANT_GAP = 4
+
+
+def name_words(name: str) -> set[str]:
+    return set(re.split(r'[_-]', name))
+
+
+def group_variants(names: list[str], codepoints: dict[str, int]) -> list[list[str]]:
+    """Group the icons that are variants of one another, ordered by codepoint.
+
+    Two icons are variants when their codepoints are all but consecutive and
+    their names share a word distinctive enough not to be carried by half the
+    block: `north` and `north_east` are variants, `oi_amazon` and `oi_angellist`
+    merely alphabetical neighbours in a font where every name starts with `oi`.
+
+    Codepoints are the only thing that tells `format_h1` from `format_h6`: they
+    carry the same tags, so :func:`chain_by_similarity` shuffles them.
+    """
+    shared = collections.Counter(word for name in names for word in name_words(name))
+    groups = []
+    for name in sorted(names, key=codepoints.__getitem__):
+        previous = groups[-1][-1] if groups else None
+        common = name_words(name) & name_words(previous) if previous else set()
+        if (previous and 0 < codepoints[name] - codepoints[previous] <= MAX_VARIANT_GAP
+                and any(2 * shared[word] <= len(names) for word in common)):
+            groups[-1].append(name)
+        else:
+            groups.append([name])
+    return groups
+
+
+def group_by_family(keys: list[str], words: dict[str, set[str]],
+                    bags: dict[str, set[str]]) -> list[str]:
+    """Order *keys* by families, a family being the icons sharing a name word.
+
+    Families are cut out most populous first and recursively -- `arrow` yields
+    `arrow_circle` and `keyboard_double_arrow` inside itself -- down to the
+    icons sharing nothing, which trail the ones that do.  The families are laid
+    out by :func:`chain_by_similarity` on the union of their bags, so that
+    `chevron` follows `arrow`, and so are the icons inside a family.
+
+    A family is cut on the words of the names only: the tags are too vague to
+    partition on, `direction` covering `recenter` as much as `chevron_left`.
+    """
+    families, rest = {}, list(keys)
+    while len(rest) >= 2 * MIN_FAMILY:
+        shared = collections.Counter(word for key in rest for word in words[key])
+        candidates = [(-count, word) for word, count in shared.items()
+                      if MIN_FAMILY <= count < len(rest)]
+        if not candidates:
+            break
+        word = min(candidates)[1]
+        families[word] = [key for key in rest if word in words[key]]
+        rest = [key for key in rest if word not in words[key]]
+
+    if not families:
+        return chain_by_similarity({key: bags[key] for key in keys})
+    if rest:
+        families[''] = rest
+    order = chain_by_similarity({
+        word: set().union(*(bags[key] for key in family))
+        for word, family in families.items()
+    })
+    return [key for word in order for key in group_by_family(families[word], words, bags)]
+
+
+def order_icons(tags: dict[str, str], codepoints: dict[str, int],
+                categories: dict[str, str]) -> list[str]:
+    """Order the icons by category, and each category by families of icons.
+
+    The picker lists the icons in the order ``icons.py`` declares them, and an
+    alphabetical list scatters the variants of an icon: `arrow_back` between
+    `article` and `arrow_circle_down`, `crop_landscape` far from `crop`.
+
+    Google files each Material Symbol under a category, which gives the coarse
+    blocks; inside one, the variants of an icon are pinned together (see
+    :func:`group_variants`) and travel as one through the grouping by family
+    (see :func:`group_by_family`).  The icons Google knows nothing about -- the
+    whole of ``odoo_ui_icons`` -- have no category and form a last block.
+    """
+    blocks = collections.defaultdict(list)
+    for name in tags:
+        category = (categories.get(name) or '').casefold()
+        category = ICON_CATEGORY_ALIASES.get(category, category)
+        # An empty category sorts last: the odoo icons close the list.
+        blocks[not category, category].append(name)
+
+    order = []
+    for _, names in sorted(blocks.items()):
+        variants = {group[0]: group for group in group_variants(names, codepoints)}
+        words = {key: set().union(*map(name_words, group)) for key, group in variants.items()}
+        bags = {
+            key: set().union(*(set(tags[name].lower().split()) | name_words(name)
+                               for name in group))
+            for key, group in variants.items()
+        }
+        order += [name for key in group_by_family(list(variants), words, bags)
+                  for name in variants[key]]
+    return order
+
+
 ICON_SEARCH_CODE = '''
 
 _ICONS_INDEX = [
@@ -1009,22 +1184,36 @@ def write_python_icon_list(
 
     # The response is prefixed with an anti-JSON-hijacking guard.
     metadata = json.loads(response_text.removeprefix(")]}'"))
-    for icon_data in metadata.get('icons', []):
+    categories = {}
+    # The metadata lists an icon once per revision of its artwork, in no
+    # particular order, and the tags and category were rewritten along the way:
+    # walk it by version so that the latest entry has the last word.
+    for icon_data in sorted(metadata.get('icons', []), key=lambda icon_data: icon_data['version']):
         if icon_data['name'] in icons:
             icons[icon_data['name']]['tags'] = ' '.join(icon_data.get('tags', []))
+            categories[icon_data['name']] = next(iter(icon_data.get('categories') or []), '')
 
-    ms_entries = [
-        f"    {icon_name!r}: {{'has_fill': {icon['has_fill']}, "
-        f"'codepoint': 0x{codepoints[icon_name]:04X}, 'tags': {icon.get('tags', '')!r}}},"
-        for icon_name, icon in icons.items()
-    ]
     glyph_codepoints = {glyph: codepoint for codepoint, glyph in oi_codepoints.items()}
-    oi_entries = [
-        f"    {name!r}: {{'has_fill': False, "
-        f"'codepoint': 0x{glyph_codepoints[glyph]:04X}, 'tags': {oi_tags.get(name, '')!r}}},"
-        for name, glyph in sorted(oi_ligatures.items())
-    ]
-    entries = '\n'.join(ms_entries + oi_entries)
+    all_icons = {
+        **{
+            name: (icon['has_fill'], codepoints[name], icon.get('tags', ''))
+            for name, icon in icons.items()
+        },
+        **{
+            name: (False, glyph_codepoints[glyph], oi_tags.get(name, ''))
+            for name, glyph in oi_ligatures.items()
+        },
+    }
+    order = order_icons(
+        {name: icon_tags for name, (_, _, icon_tags) in all_icons.items()},
+        {name: codepoint for name, (_, codepoint, _) in all_icons.items()},
+        categories,
+    )
+    entries = '\n'.join(
+        f"    {name!r}: {{'has_fill': {all_icons[name][0]}, "
+        f"'codepoint': 0x{all_icons[name][1]:04X}, 'tags': {all_icons[name][2]!r}}},"
+        for name in order
+    )
     dst_path.write_text(
         "# Part of Odoo. See LICENSE file for full copyright and licensing details.\n"
         "\n"
