@@ -154,7 +154,7 @@ export class AccountProductCatalogSearchPanel extends ProductCatalogSearchPanel 
     }
 
     onSectionInputKeydown(ev, sectionId) {
-        if (this.env.isSmall) {
+        if (this.uiService.isSmall) {
             return;
         }
 
