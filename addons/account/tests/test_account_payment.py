@@ -664,6 +664,33 @@ class TestAccountPayment(AccountTestInvoicingCommon, MailCommon):
         register_payment_and_assert_state(invoice_2, 100.0, is_community=False)
         self.assertFalse(invoice_2.reconciled_payment_ids.move_id)
 
+    def test_payment_is_matched_when_bill_reconciled_afterwards(self):
+        """ Ensure the is_matched field of the payment is updated when the bill is reconciled """
+        with patch.object(self.env.registry['account.move'], '_get_invoice_in_payment_state', return_value='in_payment'):
+            # Set the outbound payment method line to have no outstanding account, so that the payment has no journal entry.
+            self.company_data['default_journal_bank'].outbound_payment_method_line_ids.payment_account_id = False
+            bill = self.init_invoice('in_invoice', post=True, amounts=[10], taxes=[])
+            payment = self.env['account.payment.register'] \
+                .with_context(active_model='account.move', active_ids=bill.ids) \
+                .create({})._create_payments()
+            self.assertFalse(payment.move_id)
+            self.assertRecordValues(payment, [{'state': 'in_process', 'is_matched': False}])
+
+            # Invalidate to force the state to be recomputed, as in a new request
+            self.env.invalidate_all()
+            payable_account = self.company_data['default_account_payable']
+            counterpart = self.env['account.move'].create({
+                'line_ids': [
+                    Command.create({'account_id': payable_account.id, 'balance': 10}),
+                    Command.create({'account_id': self.company_data['default_account_expense'].id, 'balance': -10}),
+                ],
+            })
+            counterpart.action_post()
+            (bill + counterpart).line_ids.filtered(lambda line: line.account_id == payable_account).reconcile()
+
+            self.assertEqual(bill.payment_state, 'paid')
+            self.assertRecordValues(payment, [{'state': 'paid', 'is_matched': True}])
+
     def test_payment_confirmation_with_bank_outstanding_account(self):
         """ Ensures that when the outstanding account of the payment method is set to a bank,
             the validation process of a payment is skipped therefore reaching paid status after confirmation of payment. """
