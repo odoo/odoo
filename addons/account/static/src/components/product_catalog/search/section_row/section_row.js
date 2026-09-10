@@ -2,6 +2,7 @@ import { Component, onMounted, onPatched, signal, t, useProps } from "@odoo/owl"
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
+import { useService } from "@web/core/utils/hooks";
 
 export class SectionRow extends Component {
     static template = "account.SectionRow";
@@ -20,6 +21,7 @@ export class SectionRow extends Component {
     InputRef = signal.ref();
 
     setup() {
+        this.uiService = useService("ui");
         onMounted(() => {
             // New (sub)section
             if (this.props.editing) {
