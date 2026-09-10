@@ -211,6 +211,11 @@ class IrHttp(models.AbstractModel):
             session_info['bundle_params']['debug'] = request.session.debug
         return session_info
 
+    @classmethod
+    def _get_translation_frontend_modules_name(cls) -> list[str]:
+        """ Return a list of module names whose JavaScript translations should be included in the frontend."""
+        return ['web']
+
     @deprecated("Deprecated since 19.0, use get_all_currencies on 'res.currency'")
     def get_currencies(self):
         return self.env['res.currency'].get_all_currencies()
