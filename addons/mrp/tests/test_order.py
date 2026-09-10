@@ -875,7 +875,6 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         self.byproduct3 = self.env['product.product'].create({
             'name': 'Byproduct 3',
             'is_storable': True,
-            'tracking': 'none',
         })
 
         with Form(self.bom_1) as bom:
@@ -1050,7 +1049,6 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         byproduct1, byproduct2 = self.env['product.product'].create([{
             'name': f'byproduct{i}',
             'is_storable': True,
-            'tracking': 'none',
         } for i in [1, 2]])
 
         self.bom_1.product_qty = 1
@@ -5816,17 +5814,14 @@ class TestTourMrpOrder(HttpCase):
         product_finish = product.create({
             'name': 'product1',
             'is_storable': True,
-            'tracking': 'none',
         })
         component = product.create({
             'name': 'product2',
             'is_storable': True,
-            'tracking': 'none',
         })
         by_product = product.create({
             'name': 'product2',
             'is_storable': True,
-            'tracking': 'none',
         })
 
         self.env['stock.quant']._update_available_quantity(component, location, 50)

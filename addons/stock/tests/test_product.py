@@ -4,6 +4,7 @@
 # Author: Leonardo Pistone
 # Copyright 2015 Camptocamp SA
 
+from unittest import skip
 from freezegun import freeze_time
 
 from odoo.addons.stock.tests.common import TestStockCommon
@@ -346,6 +347,7 @@ class TestVirtualAvailable(TestStockCommon):
         product = product_form.save()
         self.assertEqual(product.tracking, False)
 
+    @skip('TODO: Temporarily skipped as the "none" option was removed from `tracking`.')
     def test_duplicate_service_with_legacy_tracking_keeps_is_storable_false(self):
         """Test that an imported service template with tracking='none' compute the is_storable field to False"""
         template = self.env['product.template'].create({

@@ -44,7 +44,7 @@ class TestSaleMrpProcurement(TransactionCase):
         product.categ_id = product_category_allproductssellable0
         product.list_price = 200.0
         product.name = 'Slider Mobile'
-        product.tracking = 'none'
+        product.store_by = 'quantity'
         product.uom_id = uom_unit
         product.route_ids.clear()
         product.route_ids.add(route_mto)
@@ -107,7 +107,7 @@ class TestSaleMrpProcurement(TransactionCase):
         # Create raw product for manufactured product
         product_form = Form(self.env['product.product'])
         product_form.name = 'Raw Stick'
-        product_form.tracking = 'none'
+        product_form.store_by = 'quantity'
         product_form.uom_id = self.uom_unit
         self.raw_product = product_form.save()
 
@@ -115,7 +115,7 @@ class TestSaleMrpProcurement(TransactionCase):
         product_form = Form(self.env['product.product'])
         product_form.name = 'Stick'
         product_form.uom_id = self.uom_unit
-        product_form.tracking = 'none'
+        product_form.store_by = 'quantity'
         product_form.route_ids.clear()
         product_form.route_ids.add(route_mto)
         self.finished_product = product_form.save()
@@ -123,7 +123,7 @@ class TestSaleMrpProcurement(TransactionCase):
         # Create manifactured product which uses another manifactured
         product_form = Form(self.env['product.product'])
         product_form.name = 'Arrow'
-        product_form.tracking = 'none'
+        product_form.store_by = 'quantity'
         product_form.route_ids.clear()
         product_form.route_ids.add(route_mto)
         self.complex_product = product_form.save()
@@ -131,7 +131,7 @@ class TestSaleMrpProcurement(TransactionCase):
         ## Create raw product for manufactured product
         product_form = Form(self.env['product.product'])
         product_form.name = 'Raw Iron'
-        product_form.tracking = 'none'
+        product_form.store_by = 'quantity'
         product_form.uom_id = self.uom_unit
         self.raw_product_2 = product_form.save()
 

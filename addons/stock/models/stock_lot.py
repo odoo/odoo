@@ -43,7 +43,7 @@ class StockLot(models.Model):
     ref = fields.Char('Internal Reference', help="Internal reference number in case it differs from the manufacturer's lot/serial number")
     product_id = fields.Many2one(
         'product.product', 'Product', index=True,
-        domain=("[('tracking', '!=', 'none'), ('is_storable', '=', True)] +"
+        domain=("[('tracking', '!=', False), ('is_storable', '=', True)] +"
             " ([('product_tmpl_id', '=', context['default_product_tmpl_id'])] if context.get('default_product_tmpl_id') else [])"),
         required=True, check_company=True, tracking=True)
     uom_id = fields.Many2one(
@@ -93,7 +93,7 @@ class StockLot(models.Model):
     @api.model
     def _get_next_serial(self, company, product):
         """Return the next serial number to be attributed to the product."""
-        if product.tracking != "none":
+        if product.tracking:
             last_serial = self.env['stock.lot'].search(
                 ['|', ('company_id', '=', company.id), ('company_id', '=', False), ('product_id', '=', product.id)],
                 limit=1, order='id DESC')
