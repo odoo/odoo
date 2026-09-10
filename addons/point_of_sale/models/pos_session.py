@@ -1365,7 +1365,6 @@ class PosSession(models.Model):
         split_inv_payment_receivable_lines = data.get('split_inv_payment_receivable_lines')
         combine_invoice_receivable_lines = data.get('combine_invoice_receivable_lines')
         split_invoice_receivable_lines = data.get('split_invoice_receivable_lines')
-        stock_output_lines = data.get('stock_output_lines')
         payment_method_to_receivable_lines = data.get('payment_method_to_receivable_lines')
         payment_to_receivable_lines = data.get('payment_to_receivable_lines')
 

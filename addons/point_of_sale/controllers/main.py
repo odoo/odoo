@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
 import json
 
 from odoo import http, _
@@ -10,8 +9,6 @@ from odoo.tools import format_amount, file_open
 from odoo.addons.account.controllers.portal import PortalAccount
 from odoo.exceptions import UserError
 from datetime import timedelta, datetime
-
-_logger = logging.getLogger(__name__)
 
 
 class PosController(PortalAccount):
