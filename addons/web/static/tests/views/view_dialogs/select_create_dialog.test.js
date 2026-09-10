@@ -1,3 +1,4 @@
+import { registry } from "@web/core/registry";
 import { renderToMarkup } from "@web/core/utils/render";
 import { useSetupAction } from "@web/search/action_hook";
 import { listView } from "@web/views/list/list_view";
@@ -5,7 +6,7 @@ import { kanbanView } from "@web/views/kanban/kanban_view";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 import { WebClient } from "@web/webclient/webclient";
 
-import { xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 
 import {
     clickModalButton,
@@ -798,6 +799,24 @@ test("SelectCreateDialog empty list, default no content helper", async () => {
         </div>`
     );
 });
+
+test.tags("desktop");
+test("SelectCreateDialog doesn't display the cog menu", async () => {
+    class CogItem extends Component {
+        static template = xml`<span class="test-cog"/>`;
+        static props = {};
+    }
+    registry.category("cogMenu").add("test-cog", { Component: CogItem, isDisplayed: () => true });
+    Partner._views["list"] = /* xml */ `<list><field name="name"/></list>`;
+
+    await mountWithCleanup(WebClient);
+    getService("dialog").add(SelectCreateDialog, { resModel: "partner" });
+    await animationFrame();
+
+    expect(".o_dialog .o_list_view").toHaveCount(1);
+    expect(".o_dialog .o_cp_action_menus").toHaveCount(0);
+});
+
 test.tags("mobile");
 test("SelectCreateDialog empty kanban, default no content helper", async () => {
     Partner._records = [];
