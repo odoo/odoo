@@ -14,7 +14,7 @@ class TestLinkTracker(TransactionCase):
             'name': 'Company 2',
         })
 
-        cls.website_1, cls.website_2 = cls.env['website'].create([
+        cls.website_1, cls.website_2, cls.website_3 = cls.env['website'].create([
             {
                 'name': 'website 1',
                 'domain': 'https://maincompany.odoo.com',
@@ -24,6 +24,11 @@ class TestLinkTracker(TransactionCase):
                 'name': 'Website 2',
                 'domain': 'https://secondarycompany.odoo.com',
                 'company_id': cls.company_2.id
+            },
+            {
+                'name': 'Website 3',
+                'domain': 'https://maincompany-second-site.odoo.com',
+                'company_id': cls.company_1.id
             }
         ])
 
@@ -50,13 +55,20 @@ class TestLinkTracker(TransactionCase):
         self.assertTrue(link_1.short_url.startswith(self.website_1.domain),
             "Short URL uses the current website's domain")
 
-        # Current website differs from the company's website.
+        # Current website is another website of the same company.
+        link_1_bis = self.env['link.tracker'].with_context(website_id=self.website_3.id).create({
+            'url': 'https://www.1bisodoo.com',
+        })
+        self.assertTrue(link_1_bis.short_url.startswith(self.website_3.domain),
+            "Short URL uses the current website's domain, even if it is not the company's default website")
+
+        # Current website belongs to another company.
         self.env.user.company_id = self.company_2
         link_2 = self.env['link.tracker'].with_context(website_id=self.website_1.id).create({
             'url': 'https://www.2odoooo.com',
         })
         self.assertTrue(link_2.short_url.startswith(self.website_2.domain),
-            "Short URL uses the company's website domain when it differs from the current website")
+            "Short URL uses the company's website domain when the current website belongs to another company")
 
         # No website resolvable from context.
         link_3 = self.env['link.tracker'].create({
