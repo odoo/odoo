@@ -8,6 +8,7 @@ from pypdf import __version__  # noqa: F401
 from odoo.tools.func import deprecated
 
 __all__ = [
+    "Fit",
     "PageObject",
     "PdfReader",
     "PdfWriter",
