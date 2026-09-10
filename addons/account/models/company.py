@@ -287,7 +287,10 @@ class ResCompany(models.Model):
         help="Default on whether the sales price used on the product and invoices with this Company includes its taxes."
     )
     company_vat_placeholder = fields.Char(compute='_compute_company_vat_placeholder')
-
+    coa_version = fields.Char(
+        string="COA Version",
+        help="Version of the chart of accounts template that was last loaded for this company.",
+    )
     income_account_id = fields.Many2one(
         comodel_name='account.account',
         string="Income Account",
@@ -321,6 +324,10 @@ class ResCompany(models.Model):
         string="Price Difference Account",
         domain=ACCOUNT_DOMAIN,
         help="During perpetual valuation, this account will hold the price difference between the standard price and the bill price.",
+    )
+    skipped_coa_version = fields.Char(
+        string="Skipped COA Version",
+        help="Version of the chart of accounts template update that was skipped for this company.",
     )
 
     # Cash Rounding default accounts
