@@ -207,7 +207,7 @@ def load_wishlist() -> list[str]:
     if not wishlist_path.is_file():
         sys.exit(f"Wishlist not found: {wishlist_path}")
     with wishlist_path.open(encoding='utf-8') as fh:
-        return sorted(line.strip() for line in fh if line.strip() and not line.startswith('#'))
+        return [line.strip() for line in fh if line.strip() and not line.startswith('#')]
 
 
 def fetch_google_font(style: str, icon_names: list[str]) -> TTFont:
@@ -836,6 +836,11 @@ def build_font(
     with_backend_font: bool = False,
 ):
     print(f"Building {style} font…")  # noqa: T201
+    # The wishlist order is the order the picker lists the icons in, and is only
+    # kept for the returned metadata: the font is built from a sorted copy, its
+    # glyphs being numbered in the order they are handed over (see
+    # :data:`icons_suffixed`).
+    icons_order, wishlist = wishlist, sorted(wishlist)
     print("  Downloading font from Google…")  # noqa: T201
     font = fetch_google_font(style, wishlist)
 
@@ -919,7 +924,7 @@ def build_font(
     strip_font_metadata(merged, style)
     # After the metadata strip, see :func:`add_fill_axis`.
     add_fill_axis(merged, filled_glyphs)
-    icons = {name: {'has_fill': name in icons_with_fill} for name in wishlist if name in glyphs_map}
+    icons = {name: {'has_fill': name in icons_with_fill} for name in icons_order if name in glyphs_map}
 
     print("  Saving fonts…")  # noqa: T201
     ms_dir.mkdir(parents=True, exist_ok=True)
@@ -1021,7 +1026,7 @@ def write_python_icon_list(
     oi_entries = [
         f"    {name!r}: {{'has_fill': False, "
         f"'codepoint': 0x{glyph_codepoints[glyph]:04X}, 'tags': {oi_tags.get(name, '')!r}}},"
-        for name, glyph in sorted(oi_ligatures.items())
+        for name, glyph in oi_ligatures.items()
     ]
     entries = '\n'.join(ms_entries + oi_entries)
     dst_path.write_text(
@@ -1232,6 +1237,10 @@ def build_odoo_ui_icons_font(module_path):
     font.flavor = 'woff'
     woff_path = fonts_dir / f'{family}_backend.woff'
     save_font(font, woff_path)
+
+    # Back to the config order, the font having been built by codepoint: it is
+    # the order the icon picker lists them in.
+    ligatures = {prefix + icon['css']: ligatures[prefix + icon['css']] for icon in icons}
 
     # The name is searched on its own (see the `/html_editor/icons_search`
     # controller), so it earns nothing as a tag of itself.
