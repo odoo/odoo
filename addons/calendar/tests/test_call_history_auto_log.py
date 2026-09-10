@@ -50,6 +50,30 @@ class TestCallHistoryAutoLog(TransactionCase):
         self.assertEqual(call_history.activity_res_model, "res.partner")
         self.assertEqual(call_history.activity_res_id, self.customer.id)
 
+    def test_call_is_logged_on_the_document_the_meeting_was_linked_to(self):
+        """A meeting linked to a document only after it was created has no activity to log
+        the call on: it gets one, so that the call still reaches that document."""
+        meeting = self._create_meeting(datetime(2026, 8, 14, 11, 0))
+        meeting.res_record = self.customer
+        call_history = self._start_call(meeting.videocall_channel_id, datetime(2026, 8, 14, 11, 5))
+        call_history.end_dt = datetime(2026, 8, 14, 11, 5, 6)
+
+        call_history._link_to_activity()
+
+        self.assertEqual(call_history.activity_res_model, "res.partner")
+        self.assertEqual(call_history.activity_res_id, self.customer.id)
+        self.assertEqual(call_history.activity_id.calendar_event_id, meeting)
+        self.assertIn("Meeting done (6s)", self.customer.message_ids[0].body)
+
+    def test_call_in_a_meeting_linked_to_nothing_stays_unlogged(self):
+        """A meeting held for its own sake has no document to log its call on."""
+        meeting = self._create_meeting(datetime(2026, 8, 14, 11, 0))
+        call_history = self._start_call(meeting.videocall_channel_id, datetime(2026, 8, 14, 11, 5))
+
+        call_history._link_to_activity()
+
+        self.assertFalse(call_history.activity_id)
+
     def test_call_marks_the_activity_done_without_manual_action(self):
         """Linking the call to the activity that planned it is enough to log it in
         the chatter: the user does not have to mark the activity done by hand."""

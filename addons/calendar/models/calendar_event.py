@@ -1490,6 +1490,39 @@ class CalendarEvent(models.Model):
                 if activity_values.keys():
                     event.meeting_activity_ids.with_context(calendar_event_meeting_update=True).write(activity_values)
 
+    def _create_meeting_activity(self):
+        """ Create the activity a meeting linked to a document carries in the chatter of
+        that document, when it has none: only a meeting created from a document gets one
+        right away (see `create`), not one linked to it afterwards.
+
+        :return: a ``mail.activity`` recordset, void when the meeting is linked to no
+            document able to hold one"""
+        self.ensure_one()
+        if not self.res_model or not self.res_id:
+            return self.env['mail.activity']
+        if self.res_model in self._get_activity_excluded_models():
+            return self.env['mail.activity']
+        if not self.env['ir.model']._get(self.res_model).sudo().is_mail_activity:
+            return self.env['mail.activity']
+        record = self.env[self.res_model].browse(self.res_id).exists()
+        if not record:
+            return self.env['mail.activity']
+        activity_types = self.env['mail.activity.type'].search([('category', '=', 'meeting')])
+        activity_type = activity_types.filtered(
+            lambda act_type: act_type.res_model in (False, self.res_model)
+        )[:1]
+        if not activity_type:
+            return self.env['mail.activity']
+        return record.activity_schedule(
+            activity_type_id=activity_type.id,
+            automated=False,
+            calendar_event_id=self.id,
+            date_deadline=self._get_activity_deadline_from_start(self.start, self.allday),
+            note=self.description,
+            summary=self.name,
+            user_id=self.user_id.id,
+        )
+
     @api.model
     def _get_activity_deadline_from_start(self, start, allday):
         # self.start is a datetime UTC *only when the event is not allday*

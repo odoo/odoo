@@ -7,15 +7,22 @@ class DiscussCallHistory(models.Model):
     _inherit = "discuss.call.history"
 
     def _get_activity_to_link(self):
-        """ A meeting planned from a document carries an activity in the chatter
-        of that document: the call taking place in that meeting is logged on it. """
+        """ A meeting linked to a document carries an activity in the chatter of that
+        document: the call taking place in that meeting is logged on it. A meeting linked
+        to a document only after it was created has no such activity yet: it gets one. """
         if activity := super()._get_activity_to_link():
             return activity
-        activities = self._get_meeting().meeting_activity_ids
-        return next(
+        meeting = self._get_meeting()
+        activities = meeting.meeting_activity_ids
+        pending = next(
             (activity for activity in activities if not activity.date_done),
             self.env["mail.activity"],
         )
+        if pending or not meeting:
+            return pending
+        # the meeting is read as sudo (see `_get_meeting`): the call is logged on the
+        # document whoever attended it, as it already is for a scheduled meeting.
+        return meeting._create_meeting_activity()
 
     def _get_log_contact(self):
         if contact := super()._get_log_contact():
