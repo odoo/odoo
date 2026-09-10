@@ -150,3 +150,62 @@ class TestProjectHrExpenseProfitability(TestProjectProfitabilityCommon, TestProj
                 'revenues': {'data': [], 'total': {'to_invoice': 0.0, 'invoiced': 0.0}},
             },
         )
+
+    def test_project_profitability_expense_with_divided_distribution(self):
+        expense = self.create_expenses(
+            {
+                "name": "Car Travel Expenses",
+                "employee_id": self.expense_employee.id,
+                "product_id": self.product_c.id,
+                "total_amount_currency": 130.00,
+                "company_id": self.project.company_id.id,
+                "analytic_distribution": {self.project.account_id.id: 50},
+            }
+        )
+
+        sequence_per_invoice_type = self.project._get_profitability_sequence_per_invoice_type()
+        self.assertIn('expenses', sequence_per_invoice_type)
+        expense_sequence = sequence_per_invoice_type['expenses']
+
+        expense.action_submit()
+        expense.action_approve()
+        self.post_expenses_with_wizard(expense)
+
+        self.assertDictEqual(
+            self.project._get_profitability_items(False),
+            {
+                'costs': {
+                    'data': [{'id': 'expenses', 'sequence': expense_sequence, 'to_bill': 0.0,
+                              'billed': -50}],
+                    'total': {'to_bill': 0.0, 'billed': -50},
+                },
+                'revenues': {'data': [], 'total': {'to_invoice': 0.0, 'invoiced': 0.0}},
+            },
+        )
+
+        expense_second = self.create_expenses(
+            {
+                "name": "Car Travel Expenses",
+                "employee_id": self.expense_employee.id,
+                "product_id": self.product_c.id,
+                "total_amount_currency": 260.00,
+                "company_id": self.project.company_id.id,
+                "analytic_distribution": {self.project.account_id.id: 75},
+            }
+        )
+
+        expense_second.action_submit()
+        expense_second.action_approve()
+        self.post_expenses_with_wizard(expense_second)
+
+        self.assertDictEqual(
+            self.project._get_profitability_items(False),
+            {
+                'costs': {
+                    'data': [{'id': 'expenses', 'sequence': expense_sequence, 'to_bill': 0.0,
+                              'billed': -200}],
+                    'total': {'to_bill': 0.0, 'billed': -200},
+                },
+                'revenues': {'data': [], 'total': {'to_invoice': 0.0, 'invoiced': 0.0}},
+            },
+        )
