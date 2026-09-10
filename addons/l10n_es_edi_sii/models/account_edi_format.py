@@ -244,7 +244,11 @@ class AccountEdiFormat(models.Model):
                         **partner_info,
                         'NombreRazon': com_partner.name[:120],
                     }
-                invoice_node['ClaveRegimenEspecialOTrascendencia'] = invoice.invoice_line_ids.tax_ids._l10n_es_get_regime_code()
+
+                regime_code = invoice.invoice_line_ids.tax_ids._l10n_es_get_regime_code()
+                if regime_code != '02' and com_partner.country_id.code == 'ES' and com_partner.state_id.code in ('TF', 'GC', 'CE', 'ME') and invoice.invoice_line_ids.tax_ids.filtered(lambda t: t.l10n_es_type == 'no_sujeto_loc'):
+                    regime_code = '08'
+                invoice_node['ClaveRegimenEspecialOTrascendencia'] = regime_code
             else:
                 if invoice._l10n_es_is_dua():
                     partner_info = self._l10n_es_edi_get_partner_info(invoice.company_id.partner_id)
