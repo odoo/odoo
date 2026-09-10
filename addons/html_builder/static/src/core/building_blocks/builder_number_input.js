@@ -9,6 +9,19 @@ import {
 } from "../utils";
 import { BuilderComponent } from "./builder_component";
 import { textInputBasePassthroughProps } from "./builder_input_base";
+import { useAutofocus } from "@web/core/utils/hooks";
+
+export const builderNumberInputProps = {
+    default: t.or([t.number(), t.literal(null)]).optional(0),
+    unit: t.string().optional(),
+    saveUnit: t.string().optional(),
+    step: t.number().optional(),
+    min: t.number().optional(),
+    max: t.number().optional(),
+    composable: t.boolean().optional(false),
+    applyWithUnit: t.boolean().optional(true),
+    autofocus: t.boolean().optional(false),
+};
 
 export class BuilderNumberInput extends Component {
     static components = { BuilderComponent, BuilderNumberInputBase };
@@ -16,14 +29,7 @@ export class BuilderNumberInput extends Component {
 
     props = useProps({
         ...basicContainerBuilderComponentProps,
-        default: t.or([t.number(), t.literal(null)]).optional(0),
-        unit: t.string().optional(),
-        saveUnit: t.string().optional(),
-        step: t.number().optional(),
-        min: t.number().optional(),
-        max: t.number().optional(),
-        composable: t.boolean().optional(false),
-        applyWithUnit: t.boolean().optional(true),
+        ...builderNumberInputProps,
     });
     textInputBaseProps = useProps(textInputBasePassthroughProps);
 
@@ -40,6 +46,9 @@ export class BuilderNumberInput extends Component {
         this.formatRawValue = formatRawValue;
         this.parseDisplayValue = parseDisplayValue;
         this.clampValue = clampValue;
+        if (this.props.autofocus) {
+            useAutofocus({ ref: this.inputRef });
+        }
 
         useBuilderComponent(this.props);
         const { state, commit, preview } = useInputBuilderComponent(this.props, {
