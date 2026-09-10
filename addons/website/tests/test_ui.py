@@ -163,6 +163,7 @@ class TestUiHtmlEditor(HttpCaseWithUserDemo):
         BASE_URL = self.base_url()
         banner = '/website/static/src/img/snippets_demo/s_banner.jpg'
 
+        @http.route('/html_editor/media_library_search', type='jsonrpc', auth="user", website=True)
         def mock_media_library_search(self, **params):
             return {
                 'results': 1,
@@ -178,8 +179,8 @@ class TestUiHtmlEditor(HttpCaseWithUserDemo):
 
         # disable undraw, no third party should be called in tests
         # Mocked for the previews in the media dialog
-        mock_media_library_search.routing_type = 'json'
-        HTML_Editor.media_library_search = http.route(['/html_editor/media_library_search'], type='jsonrpc', auth='user', website=True)(mock_media_library_search)
+        self.patch(HTML_Editor, 'media_library_search', mock_media_library_search)
+        self.env.transaction.invalidate_ormcache('routing')
 
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'website_media_dialog_undraw', login='admin')
 
