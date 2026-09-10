@@ -918,20 +918,6 @@ class ResPartner(models.Model):
         self.ensure_one()
         return self.has_vat
 
-    # TODO accounting/JCO, seems strange that this address validation logic is only there for pos, and
-    # not for standard address management on portal/ecommerce
-    @api.model
-    def get_partner_localisation_fields_required_to_invoice(self, country_id):
-        """ Returns the list of fields that needs to be filled when creating an invoice for the selected country.
-        This is required for some flows that would allow a user to request an invoice from the portal.
-        Using these, we can get their information and dynamically create form inputs based for the fields required legally for the company country_id.
-        The returned fields must be of type ir.model.fields in order to handle translations
-
-        :param country_id: The country for which we want the fields.
-        :return: an array of ir.model.fields for which the user should provide values.
-        """
-        return []
-
     # -------------------------------------------------------------------------
     # EDI
     # -------------------------------------------------------------------------

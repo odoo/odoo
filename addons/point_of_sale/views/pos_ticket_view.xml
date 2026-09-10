@@ -6,13 +6,13 @@
         <t t-call="portal.portal_layout" no_breadcrumbs="True">
             <div class="row justify-content-md-center o_customer_address_fill">
                 <form
-                    class="address_autoformat"
+                    name="address_form"
+                    action="/pos/ticket/get_invoice"
                     method="post"
-                    onsubmit="this.querySelector('#get_my_invoice > button').setAttribute('disabled', 'disabled')"
-                    t-att-action="'/pos/ticket/validate'"
+                    class="address_autoformat"
                     t-att-data-company-country-code="res_company.country_id.code"
                     t-att-data-default-required-fields="','.join(required_fields)"
-                    target="_self"
+                    t-att-data-submit-url="'/pos/ticket/get_invoice?access_token=%s' % access_token"
                 >
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                     <input type="hidden" name="access_token" t-att-value="access_token"/>
@@ -49,49 +49,32 @@
                                     <h4>Billing address:</h4>
                                 </div>
                             </div>
-                            <div t-if="error_message" class="alert alert-danger" role="alert">
-                                <div class="col-lg-12">
-                                    <t t-foreach="error_message" t-as="err"><t t-out="err"/><br /></t>
-                                </div>
-                            </div>
                             <t t-if="not partner_address">
                                 Your address is missing or incomplete. <br/>
                                 Please make sure to <a t-att-href="address_url">fill all relevant information</a> before continuing.
                             </t>
-                            <t t-else="">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <t t-out="partner.name"/>
-                                        <t t-if="partner.company_name">
-                                            , <t t-out="partner.company_name"/>
-                                        </t><br />
-                                        <t id="partner_vat" t-if="partner.vat">
-                                            <t t-out="partner.vat" /><br />
-                                        </t>
-                                        <t t-out="partner_address"/> <a role="button" t-att-href="address_url" class="btn btn-sm btn-link"><i class="oi oi-filled" data-icon="edit"/> Edit</a>
+                            <div t-else="" class="card o_address_card position-relative h-100">
+                                <div class="card-body d-flex flex-column flex-md-row justify-content-between gap-2">
+                                    <div class="d-inline-block flex-grow-1">
+                                        <t
+                                            t-out="partner"
+                                            t-options="dict(
+                                                widget='contact',
+                                                fields=['name', 'address', 'vat'],
+                                                no_marker=True,
+                                                no_tag_br=True,
+                                            )"
+                                        />
                                     </div>
+                                    <a
+                                        role="button"
+                                        t-att-href="address_url"
+                                        class="btn btn-sm btn-link"
+                                    >
+                                        <i class="oi oi-filled" data-icon="edit"/> Edit
+                                    </a>
                                 </div>
-                            </t>
-                            <t t-if="partner_required_fields">
-                                <div class="row mt-4">
-                                    <div class="col-12">
-                                        <h4>Additional required user information:</h4>
-                                        <t t-set="required_fields" t-value="partner_required_fields"/>
-                                        <t t-set="field_prefix" t-value="'partner_'"/>
-                                        <t t-call="account.portal_invoice_required_fields_form"/>
-                                    </div>
-                                </div>
-                            </t>
-                            <t t-if="invoice_required_fields">
-                                <div class="row mt-4">
-                                    <div class="col-12">
-                                        <h4>Additional required invoicing information:</h4>
-                                        <t t-set="required_fields" t-value="invoice_required_fields"/>
-                                        <t t-set="field_prefix" t-value="'invoice_'"/>
-                                        <t t-call="account.portal_invoice_required_fields_form"/>
-                                    </div>
-                                </div>
-                            </t>
+                            </div>
                         </t>
                         <t t-else="">
                             <div class="row mt-4">
@@ -99,39 +82,28 @@
                                     <h4>Please enter your billing information <small class="text-muted">or</small> <a role="button" t-att-href="'/web/login?redirect=/pos/ticket/validate?access_token=%s' % access_token" style="margin-top: -11px"> Sign in</a>:</h4>
                                 </div>
                             </div>
+                            <div id="errors"/> <!-- for js -->
                             <div class="row portal_details">
                                 <div class="col-lg-12">
                                     <div class="row">
                                         <t t-call="portal.address_form_fields"/>
-                                        <t t-if="partner_required_fields">
-                                            <t t-set="required_fields" t-value="partner_required_fields"/>
-                                            <t t-set="field_prefix" t-value="'partner_'"/>
-                                            <t t-call="account.portal_invoice_required_fields_form"/>
-                                        </t>
                                     </div>
                                 </div>
                             </div>
-                            <t t-if="invoice_required_fields">
-                                <div class="row mt-4">
-                                    <div class="col-12">
-                                        <div class="row">
-                                            <h4>Additional required information:</h4>
-                                            <t t-set="required_fields" t-value="invoice_required_fields"/>
-                                            <t t-set="field_prefix" t-value="'invoice_'"/>
-                                            <t t-call="account.portal_invoice_required_fields_form"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </t>
                         </t>
                         <div class="row mt-4">
                             <div class="col-12 col-md-4" id="get_my_invoice">
-                                <t t-if="user_is_connected and not partner_address">
-                                    <button class="btn btn-primary btn-lg lh-lg w-100" disabled="True">Get my invoice</button>
-                                </t>
-                                <t t-else="">
-                                    <button class="btn btn-primary btn-lg lh-lg w-100">Get my invoice</button>
-                                </t>
+                                <t
+                                    t-set="is_missing_address"
+                                    t-value="user_is_connected and not partner_address"
+                                />
+                                <button
+                                    id="save_address"
+                                    class="btn btn-primary btn-lg lh-lg w-100"
+                                    t-att-disabled="is_missing_address"
+                                >
+                                    Get my invoice
+                                </button>
                             </div>
                         </div>
                     </div>

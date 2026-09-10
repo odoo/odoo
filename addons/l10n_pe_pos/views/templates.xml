@@ -36,18 +36,6 @@
             </h4>
         </xpath>
 
-        <!-- Show PE fields preview info, and show warning is a required field need to be completed -->
-        <xpath expr="//t[@id='partner_vat']" position="before">
-            <t t-if="pos_order.company_id.country_code == 'PE'">
-                <t t-if="partner.vat or partner.additional_identifiers">
-                    <t t-out="partner._get_preferred_legal_entity_identifier_vals().get('label', '')" /> -
-                </t>
-                <t t-else="">
-                    <span class="text-danger">* Please configure your Identification Number</span><br />
-                </t>
-            </t>
-        </xpath>
-
     </template>
 
 </odoo>
