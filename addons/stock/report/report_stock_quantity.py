@@ -11,9 +11,9 @@ class ReportStockQuantity(models.Model):
 
     _depends = {
         'product.product': ['product_tmpl_id'],
-        'product.template': ['type'],
+        'product.template': ['type', 'uom_id'],
         'stock.location': ['parent_path'],
-        'stock.move': ['company_id', 'date', 'location_dest_id', 'location_final_id', 'location_id', 'product_id', 'product_qty', 'state'],
+        'stock.move': ['company_id', 'date', 'location_dest_id', 'location_final_id', 'location_id', 'product_id', 'product_qty', 'state', 'product_uom'],
         'stock.quant': ['company_id', 'location_id', 'product_id', 'quantity'],
         'stock.warehouse': ['view_location_id'],
     }
@@ -57,10 +57,18 @@ WITH
             ON sl.parent_path LIKE concat('%%/', w.view_location_id, '/%%')
             OR sl.parent_path LIKE concat(w.view_location_id, '/%%')
     ),
+<<<<<<< 157874aad3aebef5bc9268de6e17530641107e31
     existing_sm (id, product_id, tmpl_id, product_qty, quantity, qty_done_product_uom, date, state, company_id, whs_id, whd_id) AS (
         SELECT m.id, m.product_id, pt.id, m.product_qty, m.quantity,
                m.quantity * uom_move.factor / uom_product.factor,
                m.date, m.state, m.company_id, source.w_id, dest.w_id
+||||||| 7d5eaa419f0c0c7f24d76b1a8b762b7911b80ecd
+    existing_sm (id, product_id, tmpl_id, product_qty, quantity, date, state, company_id, whs_id, whd_id) AS (
+        SELECT m.id, m.product_id, pt.id, m.product_qty, m.quantity, m.date, m.state, m.company_id, source.w_id, dest.w_id
+=======
+    existing_sm (id, product_id, tmpl_id, product_qty, quantity, date, state, company_id, whs_id, whd_id) AS (
+        SELECT m.id, m.product_id, pt.id, m.product_qty, m.quantity * (mu.factor / pu.factor), m.date, m.state, m.company_id, source.w_id, dest.w_id
+>>>>>>> 3af098aed34bdbccf5acb87fc7f242285c7bb9ff
         FROM stock_move m
         LEFT JOIN warehouse_cte source ON source.sl_id = m.location_id
         LEFT JOIN warehouse_cte dest ON dest.sl_id = CASE
@@ -69,8 +77,14 @@ WITH
         END
         LEFT JOIN product_product pp on pp.id=m.product_id
         LEFT JOIN product_template pt on pt.id=pp.product_tmpl_id
+<<<<<<< 157874aad3aebef5bc9268de6e17530641107e31
         LEFT JOIN uom_uom uom_move ON uom_move.id = m.product_uom
         LEFT JOIN uom_uom uom_product ON uom_product.id = pt.uom_id
+||||||| 7d5eaa419f0c0c7f24d76b1a8b762b7911b80ecd
+=======
+        LEFT JOIN uom_uom mu ON mu.id = m.product_uom
+        LEFT JOIN uom_uom pu ON pu.id = pt.uom_id
+>>>>>>> 3af098aed34bdbccf5acb87fc7f242285c7bb9ff
         WHERE pt.is_storable = true AND
             source.w_id IS DISTINCT FROM dest.w_id AND
             (m.product_qty != 0 OR m.quantity != 0) AND
