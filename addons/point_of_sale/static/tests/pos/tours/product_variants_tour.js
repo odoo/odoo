@@ -113,3 +113,15 @@ registry.category("web_tour.tours").add("test_integration_dynamic_always_never_v
             Chrome.endTour(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_product_variant_combination_available", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            check_variant_price("A combination product", ["M"], "1.00"),
+
+            Chrome.endTour(),
+        ].flat(),
+});
