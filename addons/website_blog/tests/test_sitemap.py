@@ -24,16 +24,19 @@ class TestSitemap(HttpCase):
     def test_01_sitemap_language(self):
         """Ensure sitemap is in English even when navigating to the French version of the website."""
 
-        # Navigate to the French version of the website
+        # Navigate to the French version of the website. The prefix is `fr` only as
+        # long as no other French variant is active: activating e.g. fr_BE while fr_FR
+        # is inactive hands `fr` to fr_BE and leaves fr_FR with `fr_FR`.
+        fr_prefix = self.lang_fr.url_code
         response = self.url_open("/fr_FR")
-        self.assertIn('/fr/contactus', response.text)
+        self.assertTrue(f'/{fr_prefix}/contactus' in response.text, f"The French homepage should link to /{fr_prefix}/contactus")
 
         # Access the sitemap
         response = self.url_open("/sitemap.xml")
 
         # Ensure the sitemap content is still in English as it's the default language
         if self.blog_post:
-            self.assertIn(self.blog_post.website_url, response.text)
+            self.assertTrue(self.blog_post.website_url in response.text, f"The sitemap should contain the default language URL {self.blog_post.website_url}")
 
     def test_02_sitemap_language(self):
         """Ensure sitemap is in the default language"""
@@ -47,4 +50,4 @@ class TestSitemap(HttpCase):
         # Ensure the sitemap content is in French
         if self.blog_post:
             translated_url = self.blog_post.with_context(lang='fr_FR').website_url
-            self.assertIn(translated_url, response.text)
+            self.assertTrue(translated_url in response.text, f"The sitemap should contain the French URL {translated_url}")
