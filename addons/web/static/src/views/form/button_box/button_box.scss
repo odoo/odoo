@@ -125,14 +125,16 @@
         }
     }
 
-    &:not(.o-form-buttonbox-small) > * + * {
+    &:not(.o-form-buttonbox-small, .o_dropdown_more) > * + * {
         margin-left: -$border-width;
     }
 
     @include media-breakpoint-up(md) {
-        .oe_stat_button,
-        .oe_stat_button > button {
-            border-radius: 0;
+        &:not(.o_dropdown_more) {
+            .oe_stat_button,
+            .oe_stat_button > button {
+                border-radius: 0;
+            }
         }
 
         > .oe_stat_button:first-child,

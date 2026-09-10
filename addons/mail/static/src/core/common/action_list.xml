@@ -7,8 +7,9 @@
             <t t-if="group.length">
                 <t t-set="firstActionInGroup" t-value="group[0]"/>
                 <t t-set="groupDescription" t-value="firstActionInGroup.actions?.actionGroupDescriptions.get(firstActionInGroup.sequenceGroup)"/>
-                <span class="o-mail-ActionList-group btn-group" t-att-class="{
+                <span class="o-mail-ActionList-group" t-att-class="{
                     [this.props.groupClass]: true,
+                    'btn-group': !this.props.dropdown,
                     'flex-column w-100 bg-transparent': !this.props.inline,
                     'o-inline rounded-3': this.props.inline,
                     'o-rounded-bubble': this.props.inline and !this.hasBtnBg,
@@ -50,7 +51,8 @@
     <t t-set="isInlineCircleButton" t-value="this.isInlineCircleButtonValue"/>
     <!-- core-->
     <t t-set="btnClass" t-value="this.attClassObjectToString({
-        'o-mail-ActionList-button btn btn-group-item position-relative': true,
+        'btn-group-item': true and !this.props.dropdown,
+        'o-mail-ActionList-button btn position-relative': true,
         'o-first': this.props.isFirstInGroup,
         'o-last': this.props.isLastInGroup,
         'active': this.action.isActive,
@@ -78,7 +80,6 @@
     <!-- roundness -->
     <t t-set="btnClass" t-value="this.attClassObjectToString({
         [btnClass]: true,
-        'rounded-3':       this.props.dropdown,
         'rounded-circle':  this.props.inline and  isInlineCircleButton,
         'rounded-start-3': this.props.inline and !isInlineCircleButton and this.props.isFirstInGroup,
         'rounded-end-3':   this.props.inline and !isInlineCircleButton and this.props.isLastInGroup,
