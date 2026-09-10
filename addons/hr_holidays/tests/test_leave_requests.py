@@ -2538,3 +2538,31 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         self.assertTrue(resource_leave.exists(), "Resource calendar leave should still exist after employee departure")
         self.assertEqual(resource_leave.date_from.date(), date(2026, 3, 1), "Resource calendar leave start date should match the updated leave start date")
         self.assertEqual(resource_leave.date_to.date(), departure_date, "Resource calendar leave end date should match the updated leave end date")
+
+    def test_holiday_type_allocation_future_leave(self):
+        """A validated future leave should already reduce the allocation's virtual_remaining_leaves."""
+        with freeze_time('2026-09-10'):
+            allocation = self.env['hr.leave.allocation'].create({
+                'name': 'Allocation',
+                'employee_id': self.employee_emp_id,
+                'holiday_status_id': self.holidays_type_2.id,
+                'number_of_days': 10,
+                'state': 'confirm',
+                'date_from': '2026-01-01',
+                'date_to': '2026-12-31',
+            })
+            allocation.action_approve()
+
+            leave = self.env['hr.leave'].with_user(self.user_employee_id).create({
+                'name': 'Holiday Request',
+                'employee_id': self.employee_emp_id,
+                'holiday_status_id': self.holidays_type_2.id,
+                'request_date_from': '2026-11-02',
+                'request_date_to': '2026-11-06',
+            })
+            leave.with_user(self.user_hrmanager_id).action_approve()
+
+            self.assertEqual(leave.state, 'validate')
+            self.assertEqual(leave.number_of_days, 5)
+            self.assertEqual(allocation.virtual_remaining_leaves, 5,
+                'A validated future leave should already reduce the allocation remaining balance')
