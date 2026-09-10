@@ -553,11 +553,6 @@ def _set_request_dispatcher(request: Request, rule: werkzeug.routing.Rule):
 def _update_served_exception(request: Request, exc: Exception) -> Exception:
     if isinstance(exc, HTTPException) and exc.code is None:
         return exc  # bubble up to _serve_db
-    if (
-        'werkzeug' in config['dev_mode']
-        and request.dispatcher.routing_type != JsonRPCDispatcher.routing_type
-    ):
-        return exc  # bubble up to werkzeug.debug.DebuggedApplication
     if not hasattr(exc, 'error_response'):
         if isinstance(exc, AccessDenied):
             exc.suppress_traceback()
@@ -598,7 +593,7 @@ def serve_ir_http(request: Request, rule: werkzeug.routing.Rule, args) -> Respon
 
 
 # ruff: noqa: E402
-from .dispatcher import HttpDispatcher, JsonRPCDispatcher, _dispatchers
+from .dispatcher import HttpDispatcher, _dispatchers
 from .requestlib import (
     HTTPRequest,
     Request,
