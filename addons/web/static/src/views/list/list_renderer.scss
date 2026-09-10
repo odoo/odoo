@@ -385,6 +385,19 @@
             width: 32px;
             min-width: 32px;
             background: var(--ListRenderer-thead-bg-color);
+
+            // room for both the "open in view" button and the optional
+            // columns dropdown
+            &.o_list_actions_header_lg {
+                width: 52px;
+                min-width: 52px;
+                max-width: 52px !important;
+            }
+
+            .o_x2m_open_view {
+                border: 0;
+                line-height: 1;
+            }
         }
 
         .o_data_row.o_list_no_open {

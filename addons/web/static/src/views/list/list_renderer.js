@@ -114,6 +114,7 @@ export const listRendererProps = {
     allowSelectors: t.any().optional(false),
     editable: t.any().optional(),
     onOpenFormView: t.any().optional(),
+    onOpenInView: t.any().optional(),
     hasOpenFormViewButton: t.any().optional(),
     noContentHelp: t.any().optional(),
     nestedKeyOptionalFieldsData: t.any().optional(),
@@ -381,11 +382,31 @@ export class ListRenderer extends Component {
         );
     }
 
+    /**
+     * Whether the records of the embedded list can be opened in a full blown
+     * action, from the header of the table. Only x2many fields provide the
+     * callback, and there is nothing to display when the list is empty.
+     */
+    get canOpenInView() {
+        return !!this.props.onOpenInView && this.props.list.count > 0;
+    }
+
+    /**
+     * Whether the button to open the records in a view shares the header cell
+     * with the optional columns dropdown, in which case it needs more room.
+     */
+    get hasWideActionsColumn() {
+        return (
+            this.canOpenInView && (this.displayOptionalFields || this.hasOptionalOpenFormViewColumn)
+        );
+    }
+
     get hasActionsColumn() {
         return !!(
             this.displayOptionalFields ||
             this.activeActions.onDelete ||
             this.hasOptionalOpenFormViewColumn ||
+            this.canOpenInView ||
             // spare some space to display the cog icon in group headers
             this.props.list.isGrouped
         );

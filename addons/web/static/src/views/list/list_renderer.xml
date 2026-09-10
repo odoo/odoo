@@ -65,8 +65,19 @@
                             <th t-else="" t-on-keydown="(ev) => this.onCellKeydown(ev)" t-att-class="{'o_list_button w-print-0 p-print-0': column.type === 'button_group'}"/>
                         </t>
                         <th t-if="this.hasOpenFormViewColumn" t-on-keydown="(ev) => this.onCellKeydown(ev)" class="o_list_open_form_view w-print-0 p-print-0"/>
-                        <th t-if="this.hasActionsColumn" t-on-keydown="(ev) => this.onCellKeydown(ev)" class="o_list_controller o_list_actions_header w-print-0 p-print-0 position-sticky end-0 z-2">
-                            <div t-if="this.displayOptionalFields or this.hasOptionalOpenFormViewColumn" class="o_optional_columns d-print-none text-center border-top-0">
+                        <th t-if="this.hasActionsColumn" t-on-keydown="(ev) => this.onCellKeydown(ev)" class="o_list_controller o_list_actions_header w-print-0 p-print-0 position-sticky end-0 z-2" t-att-class="{ o_list_actions_header_lg: this.hasWideActionsColumn }">
+                            <div class="o_list_actions d-flex align-items-center justify-content-center">
+                                <button
+                                    t-if="this.canOpenInView"
+                                    type="button"
+                                    class="o_x2m_open_view btn p-0 d-print-none text-muted"
+                                    title="Open in a view, to search, group and export the records"
+                                    tabindex="-1"
+                                    t-on-click.stop="() => this.props.onOpenInView()"
+                                >
+                                    <i class="oi oi-fw" data-icon="open_in_browser" role="img" aria-hidden="true"/>
+                                </button>
+                                <div t-if="this.displayOptionalFields or this.hasOptionalOpenFormViewColumn" class="o_optional_columns d-print-none text-center border-top-0">
                                 <Dropdown position="'bottom-end'" menuClass="'o_optional_columns_dropdown'">
                                     <button class="btn p-0" tabindex="-1" data-available-offline="" t-attf-class="{{this.hasInvalidOptionalFields ? 'o_invalid_optional_columns_button' : ''}}">
                                         <i class="o_optional_columns_dropdown_toggle oi oi-fw" data-icon="tune"/>
@@ -101,6 +112,7 @@
                                         </DropdownItem>
                                     </t>
                                 </Dropdown>
+                                </div>
                             </div>
                         </th>
                     </tr>

@@ -17,6 +17,7 @@ import {
     useX2ManyCrud,
 } from "@web/views/fields/relational_utils";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
+import { useOpenX2ManyViewAction } from "@web/views/fields/x2many/x2many_view_action";
 import { CardCompiler } from "@web/views/card/card_compiler";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
 import { ListRenderer } from "@web/views/list/list_renderer";
@@ -123,6 +124,18 @@ export class X2ManyField extends Component {
         };
         this.action = useService("action");
         this.notificationService = useService("notification");
+        this.openViewAction = useOpenX2ManyViewAction();
+    }
+
+    openInView() {
+        return this.openViewAction({
+            record: this.props.record,
+            fieldName: this.props.name,
+            name: this.props.string || this.field.string,
+            views: this.props.views,
+            context: this.props.context,
+            domain: this.props.domain,
+        });
     }
 
     get activeField() {
@@ -226,6 +239,7 @@ export class X2ManyField extends Component {
                 !this.props.readonly && ("editable" in params ? params.editable : editable);
             this.onAdd(params);
         };
+        props.onOpenInView = () => this.openInView();
         props.onOpenFormView = this.switchToForm.bind(this);
         props.hasOpenFormViewButton = archInfo.editable ? archInfo.openFormView : false;
         return props;
