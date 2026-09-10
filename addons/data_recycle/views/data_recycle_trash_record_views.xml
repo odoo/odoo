@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_data_recycle_trash_record_list" model="ir.ui.view">
+        <field name="name">data_recycle.trash.record.list</field>
+        <field name="model">data_recycle.trash.record</field>
+        <field name="arch" type="xml">
+            <list string="Trash Records" create="false" edit="false">
+                <header>
+                    <button name="action_restore" type="object" string="Restore"/>
+                </header>
+                <field name="delete_date"/>
+                <field name="res_model_name"/>
+                <field name="record_id"/>
+                <field name="record_name"/>
+                <field name="deleted_by"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_data_recycle_trash_record_form" model="ir.ui.view">
+        <field name="name">data_recycle.trash.record.form</field>
+        <field name="model">data_recycle.trash.record</field>
+        <field name="arch" type="xml">
+            <form string="Trash Record" create="false" edit="false">
+                <header>
+                    <button name="action_restore" type="object" string="Restore" class="oe_highlight"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="res_model_name"/>
+                            <field name="record_id"/>
+                            <field name="record_name"/>
+                        </group>
+                        <group>
+                            <field name="deleted_by"/>
+                            <field name="delete_date"/>
+                        </group>
+                    </group>
+                    <group string="Data">
+                        <field name="field_data" nolabel="1" widget="json"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_data_recycle_trash_record_search" model="ir.ui.view">
+        <field name="name">data_recycle.trash.record.search</field>
+        <field name="model">data_recycle.trash.record</field>
+        <field name="arch" type="xml">
+            <search string="Trash Records">
+                <field name="res_model_name"/>
+                <field name="record_id"/>
+                <field name="record_name"/>
+                <field name="deleted_by"/>
+                <filter name="filter_delete_date" string="Deleted On" date="delete_date"/>
+                <group>
+                    <filter name="group_by_model" string="Model" context="{'group_by': 'res_model_name'}"/>
+                    <filter name="group_by_deleted_by" string="Deleted By" context="{'group_by': 'deleted_by'}"/>
+                    <filter name="group_by_delete_date" string="Deleted On" context="{'group_by': 'delete_date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_data_recycle_trash_record" model="ir.actions.act_window">
+        <field name="name">Deleted Records</field>
+        <field name="res_model">data_recycle.trash.record</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_group_by_model': 1}</field>
+    </record>
+</odoo>
