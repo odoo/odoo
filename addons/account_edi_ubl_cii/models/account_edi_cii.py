@@ -965,7 +965,7 @@ class AccountEdiCii(models.AbstractModel):
             ('street2', ".//{*}LineTwo"),
             ('city', ".//{*}CityName"),
             ('country_code', ".//{*}CountryID"),
-            ('vat', "./{*}SpecifiedTaxRegistration/{*}ID")
+            ('vat', './{*}SpecifiedTaxRegistration/{*}ID[@schemeID="VA"]'),
         ):
             customer_values[key] = None
             if (node := party_node.find(xpath)) is not None:
@@ -976,6 +976,15 @@ class AccountEdiCii(models.AbstractModel):
             customer_values['peppol_endpoint'] = node.text
             if peppol_eas := node.attrib.get('schemeID'):
                 customer_values['peppol_eas'] = peppol_eas
+
+        # fallback to an unqualified tax registration only when no VA entry was found
+        if not customer_values['vat']:
+            nodes = [
+                node for node in party_node.findall('./{*}SpecifiedTaxRegistration/{*}ID')
+                if not node.attrib
+            ]
+            if len(nodes) > 0:
+                customer_values['vat'] = nodes[0].text
 
     def _import_cii_retrieve_customer(self, collected_values):
         self._import_retrieve_customer(collected_values)
