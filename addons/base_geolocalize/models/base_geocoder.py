@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
+import time
 
 from odoo import api, fields, models, modules, tools, _
 from odoo.exceptions import UserError
@@ -88,6 +89,7 @@ class BaseGeocoder(models.AbstractModel):
         if not addr:
             _logger.info('invalid address given')
             return None
+        time.sleep(15 if self.env.context.get('cron_id') else 1)
         import requests  # noqa: PLC0415
         url = 'https://nominatim.openstreetmap.org/search'
         try:
@@ -116,6 +118,7 @@ class BaseGeocoder(models.AbstractModel):
             return None
         if tools.config['test_enable'] or modules.module.current_test:
             raise UserError(_("OpenStreetMap calls disabled in testing environment."))
+        time.sleep(15 if self.env.context.get('cron_id') else 1)
         import requests  # noqa: PLC0415
         try:
             headers = {"User-Agent": "Odoo (http://www.odoo.com/contactus)"}

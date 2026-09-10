@@ -13,6 +13,7 @@ Partners Geolocation
         'views/res_partner_views.xml',
         'views/res_config_settings_views.xml',
         'data/data.xml',
+        'data/ir_cron.xml',
         'security/ir.access.csv',
     ],
     'author': 'Odoo S.A.',
