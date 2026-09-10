@@ -78,7 +78,7 @@ function getMeetingViewTourSteps({ isPublicPage = false } = {}) {
     if (isPublicPage) {
         steps.unshift(
             {
-                trigger: ".modal:has(button:text('Use Camera')) .btn-close",
+                trigger: ".modal:has(button:text('Use microphone')) .btn-close",
                 run: "click",
             },
             { trigger: "input[name='guest_name']", run: "edit Guest" },
