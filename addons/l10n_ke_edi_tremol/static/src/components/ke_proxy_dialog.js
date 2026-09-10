@@ -2,16 +2,16 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useKEProxy } from "./ke_proxy_hook";
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 
 
 export class KEProxyDialog extends Component {
     static template = "l10n_ke_edi_tremol.KEProxyDialog";
     static components = { Dialog };
-    static props = {
-        invoices: Object,
-        close: Function,
-    };
+    props = useProps({
+        invoices: t.object(),
+        close: t.function(),
+    });
 
     setup() {
         // prevent the escape key from exiting the dialog

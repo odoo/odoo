@@ -7,7 +7,6 @@ import { user } from "@web/core/user";
 
 export class FetchInvoicesCogMenu extends Component {
     static template = "l10n_ro_edi.FetchInvoices";
-    static props = {};
     static components = { DropdownItem };
 
     setup() {
