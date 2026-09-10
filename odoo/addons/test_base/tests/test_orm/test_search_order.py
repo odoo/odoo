@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import tagged, TransactionCase
+from odoo.tests.common import TransactionCase, tagged
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -69,7 +68,7 @@ class TestSearch(TransactionCase):
             ('email asc nulls first', b | a | c),
             ('email asc nulls last', a | c | b),
             ('email desc nulls first', b | c | a),
-            ('email desc nulls last', c | a | b)
+            ('email desc nulls last', c | a | b),
         ]:
             with self.subTest(order):
                 self.assertEqual(
@@ -85,7 +84,7 @@ class TestSearch(TransactionCase):
         }, {
             'name': 'Country 2',
             'code': 'C2',
-            'phone_code': '02'
+            'phone_code': '02',
         }])
 
         for order, result in [
@@ -94,7 +93,7 @@ class TestSearch(TransactionCase):
             ('country_id asc nulls first', b | a | c),
             ('country_id asc nulls last', a | c | b),
             ('country_id desc nulls first', b | c | a),
-            ('country_id desc nulls last', c | a | b)
+            ('country_id desc nulls last', c | a | b),
         ]:
             with self.subTest(order):
                 self.assertEqual(
@@ -111,7 +110,7 @@ class TestSearch(TransactionCase):
             ('country_id asc nulls first', a | c | b),
             ('country_id asc nulls last', a | c | b),
             ('country_id desc nulls first', b | c | a),
-            ('country_id desc nulls last', b | c | a)
+            ('country_id desc nulls last', b | c | a),
         ]:
             with self.subTest(order):
                 self.assertEqual(
@@ -127,7 +126,7 @@ class TestSearch(TransactionCase):
             ('country_id asc nulls first', b | a | c),
             ('country_id asc nulls last', b | a | c),
             ('country_id desc nulls first', c | a | b),
-            ('country_id desc nulls last', c | a | b)
+            ('country_id desc nulls last', c | a | b),
         ]:
             with self.subTest(order):
                 self.assertEqual(
@@ -182,7 +181,7 @@ class TestSearch(TransactionCase):
         for name in 'BAC':
             model_ids[name] = self.env['test_orm.search.order.alpha'].create({
                 'name': name,
-                'beta_id': self.env['test_orm.search.order.beta'].create({'name': name}).id
+                'beta_id': self.env['test_orm.search.order.beta'].create({'name': name}).id,
             }).id
 
         found_ids = self.env['test_orm.search.order.alpha'].search([('id', 'in', list(model_ids.values()))], order='beta_id').ids

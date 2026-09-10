@@ -1,14 +1,14 @@
 import unittest
 from unittest.mock import patch
 
-from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 from odoo.exceptions import AccessError
 from odoo.fields import Command, Domain
+from odoo.tests import tagged
 from odoo.tests.common import TransactionCase, new_test_user
 from odoo.tools import mute_logger
-from odoo.tests import tagged
 
 from .common import TestOrmPartnerCommon
+from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 
 _FALSE_LEAF, _TRUE_LEAF = (0, '=', 1), (1, '=', 1)
 
@@ -54,7 +54,7 @@ class TestExpression(TestOrmPartnerCommon, SavepointCaseWithUserDemo, Transactio
 
     @classmethod
     def setUpClass(cls):
-        super(TestExpression, cls).setUpClass()
+        super().setUpClass()
         cls._load_partners_set()
 
     def test_00_in_not_in_m2m(self):
@@ -128,7 +128,7 @@ class TestExpression(TestOrmPartnerCommon, SavepointCaseWithUserDemo, Transactio
         categories = self.env['test_orm.partner.category']
 
         cids = {}
-        for name in 'A B AB'.split():
+        for name in ['A', 'B', 'AB']:
             cids[name] = categories.create({'name': name}).id
 
         partners_config = {
@@ -432,17 +432,17 @@ class TestExpression(TestOrmPartnerCommon, SavepointCaseWithUserDemo, Transactio
 
         # existing values be treated similarly if we simply check that some
         # existing value belongs to them.
-        res_0 = self._search(Partner, [('parent_id', 'not like', 'probably_unexisting_name')]) # get all rows, included null parent_id
+        res_0 = self._search(Partner, [('parent_id', 'not like', 'probably_unexisting_name')])  # get all rows, included null parent_id
         self.assertEqual(res_0, all_partners)
-        res_1 = self._search(Partner, [('parent_id', 'not in', [non_partner_id])]) # get all rows, included null parent_id
+        res_1 = self._search(Partner, [('parent_id', 'not in', [non_partner_id])])  # get all rows, included null parent_id
         self.assertEqual(res_1, all_partners)
-        res_2 = self._search(Partner, [('parent_id', '!=', False)]) # get rows with not null parent_id, deprecated syntax
+        res_2 = self._search(Partner, [('parent_id', '!=', False)])  # get rows with not null parent_id, deprecated syntax
         self.assertEqual(res_2, with_parent)
-        res_3 = self._search(Partner, [('parent_id', 'not in', [])]) # get all rows, included null parent_id
+        res_3 = self._search(Partner, [('parent_id', 'not in', [])])  # get all rows, included null parent_id
         self.assertEqual(res_3, all_partners)
-        res_4 = self._search(Partner, [('parent_id', 'not in', [False])]) # get rows with not null parent_id
+        res_4 = self._search(Partner, [('parent_id', 'not in', [False])])  # get rows with not null parent_id
         self.assertEqual(res_4, with_parent)
-        res_4b = self._search(Partner, [('parent_id', 'not ilike', '')]) # get only rows without parent
+        res_4b = self._search(Partner, [('parent_id', 'not ilike', '')])  # get only rows without parent
         self.assertEqual(res_4b, without_parent)
 
         # The results of these queries, when combined with queries 0..4 must
@@ -457,7 +457,7 @@ class TestExpression(TestOrmPartnerCommon, SavepointCaseWithUserDemo, Transactio
         self.assertFalse(res_8)
         res_9 = self._search(Partner, [('parent_id', 'in', [False])])
         self.assertEqual(res_9, without_parent)
-        res_9b = self._search(Partner, [('parent_id', 'ilike', '')]) # get those with a parent
+        res_9b = self._search(Partner, [('parent_id', 'ilike', '')])  # get those with a parent
         self.assertEqual(res_9b, with_parent)
 
         # These queries must return exactly the results than the queries 0..4,
@@ -618,7 +618,7 @@ class TestExpression(TestOrmPartnerCommon, SavepointCaseWithUserDemo, Transactio
         business4 = Business.create({
             'name': 'Acme 4',
             'partner_id': self.env['test_orm.partner'].create({'name': 'Acme 4'}).id,
-            'parent_id': business3.id
+            'parent_id': business3.id,
         })
 
         # one2many towards same model
@@ -669,8 +669,8 @@ class TestExpression(TestOrmPartnerCommon, SavepointCaseWithUserDemo, Transactio
         self.assertEqual([p1], res.ids, "o2m NOT IN matches none on the right side")
         res = self._search(Partner, [('user_ids', 'in', [10000])])
         self.assertEqual([], res.ids, "o2m NOT IN matches none on the right side")
-        res = self._search(Partner, [('user_ids', 'in', [u1a,u2])])
-        self.assertEqual([p1,p2], res.ids, "o2m IN matches any on the right side")
+        res = self._search(Partner, [('user_ids', 'in', [u1a, u2])])
+        self.assertEqual([p1, p2], res.ids, "o2m IN matches any on the right side")
         all_ids = self._search(Partner, []).ids
         res = self._search(Partner, [('user_ids', 'not in', u1a)])
         self.assertEqual(set(all_ids) - {p1}, set(res.ids), "o2m NOT IN matches none on the right side")
@@ -984,28 +984,28 @@ class TestExpression(TestOrmPartnerCommon, SavepointCaseWithUserDemo, Transactio
         condition_c3 = Domain('c', '=', 3)
         self.assertEqual(
             and_domain.map_conditions(replace(condition_c3, condition_a1)),
-            and_domain
+            and_domain,
         )
         self.assertEqual(
             and_domain.map_conditions(replace(condition_b2, condition_a1)),
-            (condition_a1 & condition_a1)
+            (condition_a1 & condition_a1),
         )
         self.assertEqual(
             and_domain.map_conditions(replace(condition_b2, Domain.TRUE)),
-            condition_a1
+            condition_a1,
         )
         self.assertEqual(
             and_domain.map_conditions(replace(condition_b2, Domain.FALSE)),
-            Domain.FALSE
+            Domain.FALSE,
         )
         self.assertEqual(
             (and_domain | condition_c3).map_conditions(replace(condition_b2, condition_c3)),
-            (condition_a1 & condition_c3) | condition_c3, "replace inside different nary conditions"
+            (condition_a1 & condition_c3) | condition_c3, "replace inside different nary conditions",
         )
 
         self.assertEqual(
             Domain('foo', 'any', condition_a1).map_conditions(replace(condition_a1, condition_b2)),
-            Domain('foo', 'any', condition_a1), "We don't follow the 'any' operator"
+            Domain('foo', 'any', condition_a1), "We don't follow the 'any' operator",
         )
 
         with self.assertRaises(AssertionError):
@@ -1073,7 +1073,7 @@ class TestExpression(TestOrmPartnerCommon, SavepointCaseWithUserDemo, Transactio
 
         hermione, nicostratus = Model.create([
             {'name': 'Hermione', 'parent_id': helen.id},
-            {'name': 'Nicostratus', 'parent_id': helen.id}
+            {'name': 'Nicostratus', 'parent_id': helen.id},
         ])
         self.assertEqual(nicostratus.parent_path, f'{helen.id}/{nicostratus.id}/')
 
@@ -1289,7 +1289,7 @@ class TestExpression(TestOrmPartnerCommon, SavepointCaseWithUserDemo, Transactio
 
         expected = Domain(
             ['|', '&', ('foo', '=', 1), ('bar', '=', 1),
-                  '&', ('foo', '=', 2), ('bar', '=', 2)]
+                  '&', ('foo', '=', 2), ('bar', '=', 2)],
         )
         self.assertEqual(Domain.OR([d1, d2]), expected)
 
@@ -1750,7 +1750,7 @@ class TestBypassAccess(TransactionExpressionCase):
                 ('website', '!=', 'York'),
             ]),
             (obj1 | obj2 | obj4),
-            "Should have returned all partners whose website is not York"
+            "Should have returned all partners whose website is not York",
         )
 
         self.assertEqual(
@@ -1759,7 +1759,7 @@ class TestBypassAccess(TransactionExpressionCase):
                 ('website', 'not ilike', 'field'),
             ]),
             (obj1 | obj2 | obj3),
-            "Should have returned all partners whose website doesn't contain field"
+            "Should have returned all partners whose website doesn't contain field",
         )
 
 
@@ -2865,16 +2865,16 @@ class TestAnyfy(TransactionCase):
 
     def test_true_leaf_as_list(self):
         self._test_combine_anies([
-            [1, '=', 1]
+            [1, '=', 1],
         ], [
-            (1, '=', 1)
+            (1, '=', 1),
         ])
 
     def test_single_field(self):
         self._test_combine_anies([
-            ('name', '=', 'Jack')
+            ('name', '=', 'Jack'),
         ], [
-            ('name', '=', 'Jack')
+            ('name', '=', 'Jack'),
         ])
 
     def test_single_many2one_with_subfield(self):
@@ -2903,7 +2903,7 @@ class TestAnyfy(TransactionCase):
                     ('name', '=', 'SGC'),
                     ('name', '=', 'NID'),
                     ('name', '=', 'Free Jaffa Nation'),
-            ])
+            ]),
         ])
 
     def test_or_multiple_many2one_with_subfield(self):
@@ -2918,7 +2918,7 @@ class TestAnyfy(TransactionCase):
                     ('name', '=', 'SGC'),
                     ('name', '=', 'NID'),
                     ('name', '=', 'Free Jaffa Nation'),
-            ])
+            ]),
         ])
 
     def test_and_multiple_one2many_with_subfield(self):
@@ -2946,28 +2946,28 @@ class TestAnyfy(TransactionCase):
                     ('name', '=', 'Jack'),
                     ('name', '=', 'Sam'),
                     ('name', '=', 'Daniel'),
-            ])
+            ]),
         ])
 
     def test_not_single_field(self):
         self._test_combine_anies([
-            '!', ('name', '=', 'Jack')
+            '!', ('name', '=', 'Jack'),
         ], [
-            ('name', '!=', 'Jack')
+            ('name', '!=', 'Jack'),
         ])
 
     def test_not_single_many2one_with_subfield(self):
         self._test_combine_anies([
-            '!', ('business_id.name', '=', 'SGC')
+            '!', ('business_id.name', '=', 'SGC'),
         ], [
-            ('business_id', 'not any', [('name', '=', 'SGC')])
+            ('business_id', 'not any', [('name', '=', 'SGC')]),
         ])
 
     def test_not_single_one2many_with_subfield(self):
         self._test_combine_anies([
-            '!', ('child_ids.name', '=', 'Jack')
+            '!', ('child_ids.name', '=', 'Jack'),
         ], [
-            ('child_ids', 'not any', [('name', '=', 'Jack')])
+            ('child_ids', 'not any', [('name', '=', 'Jack')]),
         ])
 
     def test_not_and_multiple_many2one_field_with_subfield(self):
@@ -2982,7 +2982,7 @@ class TestAnyfy(TransactionCase):
                     ('name', '=', 'SGC'),
                     ('name', '=', 'NID'),
                     ('name', '=', 'Free Jaffa Nation'),
-            ])
+            ]),
         ])
 
     def test_not_or_multiple_many2one_field_with_subfield(self):
@@ -2997,7 +2997,7 @@ class TestAnyfy(TransactionCase):
                     ('name', '=', 'SGC'),
                     ('name', '=', 'NID'),
                     ('name', '=', 'Free Jaffa Nation'),
-            ])
+            ]),
         ])
 
     def test_not_and_multiple_one2many_field_with_subfield(self):
@@ -3025,5 +3025,5 @@ class TestAnyfy(TransactionCase):
                     ('name', '=', 'Jack'),
                     ('name', '=', 'Sam'),
                     ('name', '=', 'Daniel'),
-            ])
+            ]),
         ])

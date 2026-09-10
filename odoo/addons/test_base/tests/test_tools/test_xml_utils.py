@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import tagged, common
-from odoo.tools.xml_utils import _check_with_xsd
-
 from lxml.etree import XMLSchemaError
+
+from odoo.tests import common, tagged
+from odoo.tools.xml_utils import _check_with_xsd
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -36,13 +36,13 @@ class TestLXML(common.TransactionCase):
 
         self.env['ir.attachment'].create([{
             'raw': resolver_schema_int,
-            'name': 'resolver_schema_int.xsd'
+            'name': 'resolver_schema_int.xsd',
         }, {
             'raw': incomplete_schema_int,
-            'name': 'incomplete_schema_int.xsd'
+            'name': 'incomplete_schema_int.xsd',
         }, {
             'raw': imported_schema,
-            'name': 'imported_schema.xsd'
+            'name': 'imported_schema.xsd',
         }])
 
         _check_with_xsd("<a><b></b></a>", 'resolver_schema_int.xsd', self.env)

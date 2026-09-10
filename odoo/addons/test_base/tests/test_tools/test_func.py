@@ -1,12 +1,14 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import functools
 
-from odoo.tests.common import tagged, BaseCase
-from odoo.tools import frozendict, lazy
-from odoo.tools.func import classproperty, lazy_classproperty, reset_lazy_classproperties
 from odoo import Command
+from odoo.tests.common import BaseCase, tagged
+from odoo.tools import frozendict, lazy
+from odoo.tools.func import (
+    classproperty,
+    lazy_classproperty,
+    reset_lazy_classproperties,
+)
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -72,6 +74,9 @@ class TestLazy(BaseCase):
                 if isinstance(other, Obj):
                     return self.num == other.num
                 raise ValueError('Object does not have the correct type')
+
+            def __hash__(self):
+                return hash(self.name)
 
         self.assertEqual(lazy(lambda: Obj(42)) == lazy(lambda: Obj(42)), True)
         self.assertEqual(lazy(lambda: Obj(1)) == lazy(lambda: Obj(42)), False)

@@ -1,9 +1,9 @@
 import base64
 import io
 from collections import OrderedDict
+from contextlib import contextmanager
 from datetime import date, datetime
 from unittest.mock import patch
-from contextlib import contextmanager
 
 import psycopg2
 from PIL import Image
@@ -15,9 +15,9 @@ from odoo.tests import TransactionCase, tagged, users
 from odoo.tools import BinaryBytes, float_repr, mute_logger
 from odoo.tools.image import binary_to_image, image_data_uri
 
+from .test_domain_expression import TransactionExpressionCase
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.addons.base.tests.files import SVG_RAW, ZIP_RAW
-from .test_domain_expression import TransactionExpressionCase
 
 
 @tagged('at_install', '-post_install')
@@ -3326,7 +3326,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.assertEqual(
             [rec.no_expand for rec in search_records],
             ['c', 'b', 'a'],
-            "Search ASC should follow the selection definition sequence."
+            "Search ASC should follow the selection definition sequence.",
         )
 
         # test DESC (Should reverse the definition order: a, b, c)
@@ -3337,7 +3337,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.assertEqual(
             [rec.no_expand for rec in search_records_desc],
             ['a', 'b', 'c'],
-            "Search DESC should reverse the selection definition sequence."
+            "Search DESC should reverse the selection definition sequence.",
         )
 
 
@@ -5504,5 +5504,5 @@ class TestCompanyDependent(TransactionCase):
                              f'may also be deleted for sake of on delete cascade field {comodel_field}, which will '
                              f'bypass the ORM ondelete="restrict" check for a company dependent many2one field {field}. '
                              f'Please override the unlink method of {comodel_field.comodel_name} and do the ORM on '
-                             f'delete cascade logic and remove/override the ondelete="cascade" of {comodel_field}')
+                             f'delete cascade logic and remove/override the ondelete="cascade" of {comodel_field}'),
                         )

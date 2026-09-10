@@ -1,5 +1,5 @@
 from odoo import fields, models
-from odoo.tools import xml_translate, html_translate
+from odoo.tools import html_translate, xml_translate
 
 
 class TranslatableModel(models.Model):

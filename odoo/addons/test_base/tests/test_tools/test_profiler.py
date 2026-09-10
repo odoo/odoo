@@ -1,16 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
-import sys
 import time
-
 from unittest.mock import patch
+
 from psycopg2.errors import UndefinedTable
 
 from odoo.exceptions import AccessError, UserError
-from odoo.tests.common import BaseCase, TransactionCase, tagged, new_test_user, HttpCase
+from odoo.tests.common import BaseCase, HttpCase, TransactionCase, new_test_user, tagged
 from odoo.tests.result import stats_logger
-from odoo.tools import profiler, mute_logger
-from odoo.tools.profiler import Profiler, ExecutionContext
+from odoo.tools import mute_logger, profiler
+from odoo.tools.profiler import ExecutionContext, Profiler
 from odoo.tools.speedscope import Speedscope
 
 
@@ -193,7 +192,7 @@ class TestSpeedscope(BaseCase):
         res = sp.make()
         profile_combined = res['profiles'][0]
         events = [
-            (e['at']+2, e['type'], res['shared']['frames'][e['frame']]['name'])
+            (e['at'] + 2, e['type'], res['shared']['frames'][e['frame']]['name'])
             for e in profile_combined['events']
         ]
         self.assertEqual(events, [
@@ -220,15 +219,15 @@ class TestSpeedscope(BaseCase):
                 'time': 1,
                 'query': 'SELECT 1',
                 'full_query': 'SELECT 1',
-                'stack': stack[:]
+                'stack': stack[:],
             },
             {
                 'start': 10.0,
                 'time': 1,
                 'query': 'SELECT 1',
                 'full_query': 'SELECT 1',
-                'stack': stack[:]
-            }
+                'stack': stack[:],
+            },
         ]
         sp = Speedscope(init_stack_trace=[])
         sp.add('sql', sql_profile)
@@ -250,8 +249,6 @@ class TestSpeedscope(BaseCase):
                 (2.0, 'C', 'do_stuff1'),
             (2.0, 'C', 'main'),
         ])
-
-
 
     def test_converts_context(self):
         stack = [
@@ -484,19 +481,19 @@ class TestProfiling(TransactionCase):
                 <t t-foreach="{'a': 3, 'b': 2, 'c': 1}" t-as="item">
                     [<t t-out="item_index"/>: <t t-set="record" t-value="item"/><t t-call="base.dummy"/> <t t-out="item_value"/>]
                     <b t-out="add_one_query()"/></t>
-            </t>'''
+            </t>''',
         })
         child_template = self.env['ir.ui.view'].create({
             'name': 'test',
             'type': 'qweb',
             'key': 'dummy',
-            'arch_db': '<t t-name="dummy"><span t-attf-class="myclass"><t t-out="record"/> <t t-out="add_one_query()"/></span></t>'
+            'arch_db': '<t t-name="dummy"><span t-attf-class="myclass"><t t-out="record"/> <t t-out="add_one_query()"/></span></t>',
         })
         self.env.cr.execute("INSERT INTO ir_model_data(name, model, res_id, module)"
                             "VALUES ('dummy', 'ir.ui.view', %s, 'base')", [child_template.id])
 
         values = {'add_one_query': lambda: self.env.cr.execute('SELECT id FROM ir_ui_view LIMIT 1') or 'query'}
-        result = u"""
+        result = """
                     [0: <span class="myclass">a query</span> 3]
                     <b>query</b>
                     [1: <span class="myclass">b query</span> 2]
@@ -532,7 +529,6 @@ class TestProfiling(TransactionCase):
 
         data = p.collectors[0].entries[0]['results']['data']
         expected = [
-            # pylint: disable=bad-whitespace
             # first template and first directive
             {'view_id': template.id,       'xpath': '/t/t',         'directive': """t-foreach="{'a': 3, 'b': 2, 'c': 1}" t-as='item'""", 'query': 0},
             # first pass in the loop
@@ -581,7 +577,7 @@ class TestProfiling(TransactionCase):
         self.assertEqual(len(rq), total_queries)
         first_query = rq[0]
         self.assertEqual(first_query['stack'][0][2], 'create')
-        #self.assertIn("self.env['res.partner'].create({", first_query['stack'][0][3])
+        # self.assertIn("self.env['res.partner'].create({", first_query['stack'][0][3])
 
         self.assertGreater(first_query['time'], 0)
         self.assertEqual(first_query['stack'][-1][2], 'execute')
@@ -764,7 +760,7 @@ class TestExplainAnalyse(TransactionCase):
                 'time': 1,
                 'query': query_str,
                 'full_query': query_str,
-                'stack': []
+                'stack': [],
             },
         ]
         profile = self.env['ir.profile'].create({
@@ -784,7 +780,7 @@ class TestExplainAnalyse(TransactionCase):
         })
         self.assertFalse(
             self.env['ir.profile.query'].search([('profile_id', '=', profile.id)]),
-            "query entries are created lazily on demand"
+            "query entries are created lazily on demand",
         )
         profile.action_open_sql_queries()
         query = self.env['ir.profile.query'].search([('profile_id', '=', profile.id)])
@@ -814,7 +810,7 @@ class TestExplainAnalyse(TransactionCase):
         self.assertEqual(
             partner.name,
             'Raoul update 2',
-            "the name should be the last committed value"
+            "the name should be the last committed value",
         )
 
     def test_explain_analyse_access(self):

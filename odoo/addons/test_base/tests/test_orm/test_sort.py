@@ -2,7 +2,7 @@
 
 from odoo.api import NewId
 from odoo.fields import Command
-from odoo.tests import tagged, TransactionCase
+from odoo.tests import TransactionCase, tagged
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -35,7 +35,7 @@ class TestSort(TransactionCase):
             self.assertEqual(db_result[::-1].ids, self.countries.sorted(reverse=True).ids)
         self.assertEqual(
             self.countries.sorted().mapped('name'),
-            ['A', 'B', 'C']
+            ['A', 'B', 'C'],
         )
 
     def test_stable(self):
@@ -54,7 +54,7 @@ class TestSort(TransactionCase):
             self.assertEqual(db_result[::-1].ids, self.cities.sorted(reverse=True).ids)
         self.assertEqual(
             self.cities.sorted().mapped('name'),
-            ['a1', 'a2', 'b1', 'b2', 'c1', 'c2']
+            ['a1', 'a2', 'b1', 'b2', 'c1', 'c2'],
         )
 
     def test_basic_boolean(self):
@@ -108,7 +108,7 @@ class TestSort(TransactionCase):
             with self.subTest(order=order):
                 self.assertEqual(
                     self.env['test_orm.city'].search([('id', 'in', cities.ids)], order=order).mapped('name'),
-                    cities.sorted(order).mapped('name')
+                    cities.sorted(order).mapped('name'),
                 )
 
     def test_collation(self):
@@ -135,7 +135,7 @@ class TestSort(TransactionCase):
             with self.subTest(order=order):
                 self.assertEqual(
                     countries.search([('id', 'in', countries.ids)], order=order).mapped('name'),
-                    countries.sorted(order).mapped('name')
+                    countries.sorted(order).mapped('name'),
                 )
 
     def test_sorted_recursion(self):
@@ -149,7 +149,7 @@ class TestSort(TransactionCase):
             with self.subTest(order=order):
                 self.assertEqual(
                     categories.search([('id', 'in', categories.ids)], order=order).mapped('name'),
-                    categories.sorted(order).mapped('name')
+                    categories.sorted(order).mapped('name'),
                 )
 
     def test_compare_new_id(self):

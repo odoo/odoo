@@ -15,7 +15,7 @@ from . import (
     test_properties,
     test_read_group,
     test_schema,
-    test_tools,
     test_search,
+    test_tools,
     test_unity_read,
 )

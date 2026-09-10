@@ -2,12 +2,11 @@ import logging
 import time
 import timeit
 from typing import Literal
-
 from unittest.mock import patch
 
 from odoo import Command
 from odoo.models import BaseModel
-from odoo.tests.common import tagged, TransactionCase
+from odoo.tests.common import TransactionCase, tagged
 
 _logger = logging.getLogger(__name__)
 

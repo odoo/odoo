@@ -13,12 +13,12 @@ from odoo.tools.safe_eval import (
     safe_eval,
 )
 from odoo.tools.safe_eval.runtime import (
-    _SafeGenerator,
-    UnsafePolicy,
     UnsafeClassError,
     UnsafeFunctionError,
     UnsafeInstanceError,
     UnsafeModuleError,
+    UnsafePolicy,
+    _SafeGenerator,
     safe_call,
 )
 
@@ -27,7 +27,7 @@ from odoo.tools.safe_eval.runtime import (
 class TestSafeEval(BaseCase):
     def test_const(self):
         # NB: True and False are names in Python 2 not consts
-        expected = (1, {"a": {2.5}}, [None, u"foo"])
+        expected = (1, {"a": {2.5}}, [None, "foo"])
         actual = const_eval('(1, {"a": {2.5}}, [None, u"foo"])')
         self.assertEqual(actual, expected)
         # Test RETURN_CONST
@@ -179,7 +179,7 @@ class TestSafeEval(BaseCase):
 
         with (
             self.assertRaises(ValueError),
-            mute_logger('odoo.tools.safe_eval.runtime')  # Warning because of `async`
+            mute_logger('odoo.tools.safe_eval.runtime'),  # Warning because of `async`
         ):
             # async generator comprehension
             safe_eval("res = tuple(val + 1 async for val in (1, 2))", mode="exec")
@@ -221,7 +221,7 @@ class TestSafeEvalTransaction(TransactionCase):
         self.assertEqual(
             type(normal_exception.exception),
             type(bubble_up_exception.exception),
-            'Database integrity exception must be the same as normal business code evaluation.'
+            'Database integrity exception must be the same as normal business code evaluation.',
         )
 
 
@@ -238,7 +238,7 @@ class TestSafeEvalRuntime(TransactionCase):
         super().setUpClass()
         cls.startClassPatcher(patch(
             'odoo.tools.safe_eval.runtime.unsafe_policy',
-            lambda: UnsafePolicy.RAISE
+            lambda: UnsafePolicy.RAISE,
         ))
 
     def setUp(self):
@@ -782,13 +782,14 @@ class TestSafeEvalRuntime(TransactionCase):
     def test_trust_wrapped_modules(self):
         # Modules is not verified
         import datetime  # noqa: PLC0415
+        import json  # noqa: PLC0415
+        import time  # noqa: PLC0415
+
         import dateutil  # noqa: PLC0415
         import dateutil.parser  # noqa: PLC0415
         import dateutil.relativedelta  # noqa: PLC0415
         import dateutil.rrule  # noqa: PLC0415
         import dateutil.tz  # noqa: PLC0415
-        import json  # noqa: PLC0415
-        import time  # noqa: PLC0415
 
         modules = (
             datetime,

@@ -1,20 +1,19 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
 import datetime
 import hashlib
 import io
-
 from unittest.mock import patch
-from asn1crypto import algos, cms, tsp, x509 as asn1x509
+
+from asn1crypto import algos, cms, tsp
+from asn1crypto import x509 as asn1x509
 from cryptography import x509
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import padding, rsa
 from cryptography.x509.oid import NameOID
 
-from odoo.addons.base.tests.files import PDF_RAW, KIDS_PDF_RAW
-from odoo.tests.common import tagged, TransactionCase
+from odoo.tests.common import TransactionCase, tagged
 from odoo.tools import pdf
 from odoo.tools.misc import file_open
 from odoo.tools.pdf import reshape_text
@@ -27,6 +26,8 @@ from odoo.tools.pdf.signature import (
     certificate_common_name,
     next_signature_appearance_origin,
 )
+
+from odoo.addons.base.tests.files import KIDS_PDF_RAW, PDF_RAW
 
 
 def verify_pdf_signatures(pdf_data, public_key, signer_certificate_der=None, expected_chain_length=None):
@@ -75,6 +76,7 @@ def verify_pdf_signatures(pdf_data, public_key, signer_certificate_der=None, exp
         )
         verified += 1
     return verified
+
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPdf(TransactionCase):
@@ -202,11 +204,11 @@ class TestSignature(TransactionCase):
 
     @classmethod
     def setUpClass(cls):
-        super(TestSignature, cls).setUpClass()
+        super().setUpClass()
 
         cls.private_key = rsa.generate_private_key(
             public_exponent=65537,
-            key_size=4096
+            key_size=4096,
         )
 
         cert_subject = x509.Name([
@@ -215,31 +217,31 @@ class TestSignature(TransactionCase):
                 NameOID.STATE_OR_PROVINCE_NAME, "Brabant Wallon"),
             x509.NameAttribute(NameOID.LOCALITY_NAME, "Grand Rosiere"),
             x509.NameAttribute(NameOID.ORGANIZATION_NAME, "Odoo"),
-            x509.NameAttribute(NameOID.COMMON_NAME, "odoo.com")
+            x509.NameAttribute(NameOID.COMMON_NAME, "odoo.com"),
         ])
 
         cls.certificate = x509.CertificateBuilder().subject_name(
-            cert_subject
+            cert_subject,
         ).issuer_name(
-            cert_subject
+            cert_subject,
         ).public_key(
-            cls.private_key.public_key()
+            cls.private_key.public_key(),
         ).serial_number(
-            x509.random_serial_number()
+            x509.random_serial_number(),
         ).not_valid_before(
-            datetime.datetime.now(datetime.timezone.utc)
+            datetime.datetime.now(datetime.UTC),
         ).not_valid_after(
-            datetime.datetime.now(datetime.timezone.utc) +
-            datetime.timedelta(days=10)
+            datetime.datetime.now(datetime.UTC) +
+            datetime.timedelta(days=10),
         ).add_extension(
             x509.SubjectAlternativeName([x509.DNSName("localhost")]),
-            critical=False
+            critical=False,
         ).sign(cls.private_key, hashes.SHA256())
 
         cls.pdf_path = "base/tests/files/file.pdf"
 
     def test_odoo_pdf_signer(self):
-        fixed_time = datetime.datetime.now(datetime.timezone.utc)
+        fixed_time = datetime.datetime.now(datetime.UTC)
         with file_open(self.pdf_path, "rb") as stream:
             out_stream = io.BytesIO()
             with patch.object(PdfSigner, "_load_key_and_certificates",
@@ -275,13 +277,13 @@ class TestSignature(TransactionCase):
             # Setting up the content information to assert
             encap_content_info = {
                 'content_type': 'data',
-                'content': None
+                'content': None,
             }
 
             attrs = cms.CMSAttributes([
                 cms.CMSAttribute({
                     'type': 'content_type',
-                    'values': ['data']
+                    'values': ['data'],
                 }),
                 cms.CMSAttribute({
                     'type': 'cms_algorithm_protection',
@@ -290,15 +292,15 @@ class TestSignature(TransactionCase):
                             {
                                 'mac_algorithm': None,
                                 'digest_algorithm': cms.DigestAlgorithm(
-                                    {'algorithm': 'sha256', 'parameters': None}
+                                    {'algorithm': 'sha256', 'parameters': None},
                                 ),
                                 'signature_algorithm': cms.SignedDigestAlgorithm({
                                     'algorithm': 'sha256_rsa',
-                                    'parameters': None
-                                })
-                            }
-                        )
-                    ]
+                                    'parameters': None,
+                                }),
+                            },
+                        ),
+                    ],
                 }),
                 cms.CMSAttribute({
                     'type': 'message_digest',
@@ -318,7 +320,7 @@ class TestSignature(TransactionCase):
             signed_attrs = self.private_key.sign(
                 attrs.dump(),
                 padding.PKCS1v15(),
-                hashes.SHA256()
+                hashes.SHA256(),
             )
 
             signer_info = cms.SignerInfo({
@@ -329,8 +331,8 @@ class TestSignature(TransactionCase):
                 'sid': cms.SignerIdentifier({
                     'issuer_and_serial_number': cms.IssuerAndSerialNumber({
                         'issuer': cert.issuer,
-                        'serial_number': cert.serial_number
-                    })
+                        'serial_number': cert.serial_number,
+                    }),
                 }),
                 'signed_attrs': attrs})
 
@@ -339,12 +341,12 @@ class TestSignature(TransactionCase):
                 'digest_algorithms': [algos.DigestAlgorithm({'algorithm': 'sha256'})],
                 'encap_content_info': encap_content_info,
                 'certificates': [cert],
-                'signer_infos': [signer_info]
+                'signer_infos': [signer_info],
             }
 
             content_info = cms.ContentInfo({
                 'content_type': 'signed_data',
-                'content': cms.SignedData(signed_data)
+                'content': cms.SignedData(signed_data),
             })
 
             signature_hex = content_info.dump().hex()
@@ -360,7 +362,7 @@ class TestSignature(TransactionCase):
     def test_prepare_finalize_matches_sign_pdf(self):
         """ The split prepare/finalize path with an externally computed signature must
         produce the exact bytes of the one-shot local signing path. """
-        fixed_time = datetime.datetime.now(datetime.timezone.utc)
+        fixed_time = datetime.datetime.now(datetime.UTC)
         field_name = "Test Signature"
         with file_open(self.pdf_path, "rb") as stream:
             raw = stream.read()

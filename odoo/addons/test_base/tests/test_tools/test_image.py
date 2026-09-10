@@ -2,11 +2,12 @@
 
 import base64
 
-from PIL import Image, ImageDraw, PngImagePlugin
+from PIL import Image, ImageDraw
 
-from odoo.tools import image as tools
 from odoo.exceptions import UserError
-from odoo.tests.common import tagged, TransactionCase
+from odoo.tests.common import TransactionCase, tagged
+from odoo.tools import image as tools
+
 from odoo.addons.base.tests.files import PNG_RAW
 
 img_open = tools.binary_to_image
@@ -16,7 +17,7 @@ img_open = tools.binary_to_image
 class TestImage(TransactionCase):
     """Tests for the different image tools helpers."""
     def setUp(self):
-        super(TestImage, self).setUp()
+        super().setUp()
         self.bg_color = (135, 90, 123)
         self.fill_color = (0, 160, 157)
 
@@ -51,7 +52,7 @@ class TestImage(TransactionCase):
         draw = ImageDraw.Draw(image)
         draw.rectangle(xy=[
             (offset, 0),
-            (image.size[0] - offset, image.size[1])
+            (image.size[0] - offset, image.size[1]),
         ], fill=self.fill_color)
         self.img_1920x1080_png = tools.image_apply_opt(image, 'PNG')
 
@@ -61,7 +62,7 @@ class TestImage(TransactionCase):
         draw = ImageDraw.Draw(image)
         draw.rectangle(xy=[
             (0, offset),
-            (image.size[0], image.size[1] - offset)
+            (image.size[0], image.size[1] - offset),
         ], fill=self.fill_color)
         self.img_1080x1920_png = tools.image_apply_opt(image, 'PNG')
 
@@ -91,9 +92,9 @@ class TestImage(TransactionCase):
     def test_03_image_fix_orientation_exif(self):
         """Test that a jpg image with exif orientation tag gets rotated"""
         image = img_open(self.img_exif_jpg)
-        self.assertEqual(image.size, (6,3))
+        self.assertEqual(image.size, (6, 3))
         image = tools.image_fix_orientation(image)
-        self.assertEqual(image.size, (3,6))
+        self.assertEqual(image.size, (3, 6))
 
     def test_10_image_process_source(self):
         """Test the source parameter of image_process."""
@@ -175,7 +176,7 @@ class TestImage(TransactionCase):
         # Drawing non trivial content so that optimization matters.
         ImageDraw.Draw(pil_image).ellipse(xy=[
             (400, 0),
-            (1500, 1080)
+            (1500, 1080),
         ], fill=self.fill_color, outline=(240, 25, 40), width=10)
         image = tools.image_apply_opt(pil_image, 'JPEG')
         res = tools.image_process(image, quality=50)

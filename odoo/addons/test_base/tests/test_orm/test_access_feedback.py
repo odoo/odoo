@@ -1,7 +1,7 @@
 from odoo.api import SUPERUSER_ID
 from odoo.exceptions import AccessError
 from odoo.fields import Command
-from odoo.tests import tagged, TransactionCase
+from odoo.tests import TransactionCase, tagged
 from odoo.tools.misc import mute_logger
 
 

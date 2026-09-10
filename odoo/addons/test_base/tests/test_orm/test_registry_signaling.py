@@ -10,7 +10,7 @@ from psycopg2.extensions import ISOLATION_LEVEL_REPEATABLE_READ
 from odoo import api
 from odoo.modules.registry import Registry
 from odoo.sql_db import db_connect
-from odoo.tests import tagged, common
+from odoo.tests import common, tagged
 from odoo.tests.common import BaseCase, HttpCase, TransactionCase
 from odoo.tests.test_cursor import TestCursor
 from odoo.tools.misc import config
@@ -608,7 +608,7 @@ class TestCursorHooksTransactionCaseCleanup(common.TransactionCase):
             self.assertEqual(
                 callback.data[f'test_cursor_hooks_{name}'],
                 ['keep'],
-                f"{name} failed to clean up between transaction tests"
+                f"{name} failed to clean up between transaction tests",
             )
             self.assertIn(self.initial_callback, callback._funcs)
             self.assertNotIn(self.other_callback, callback._funcs)

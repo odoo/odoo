@@ -115,7 +115,7 @@ class TestCurrencyExport(TestExport):
 
         self.assertEqual(
             converter(-0.12, {'widget': 'monetary', 'display_currency': currency}),
-            f'<span class="oe_currency_value">-\N{ZERO WIDTH NO-BREAK SPACE}0.12</span>\N{NO-BREAK SPACE}{currency.symbol}'
+            f'<span class="oe_currency_value">-\N{ZERO WIDTH NO-BREAK SPACE}0.12</span>\N{NO-BREAK SPACE}{currency.symbol}',
         )
 
     def test_currency_pre(self):
@@ -124,7 +124,7 @@ class TestCurrencyExport(TestExport):
 
         self.assertEqual(
             converter(0.12, {'widget': 'monetary', 'display_currency': currency}),
-            f'{currency.symbol}\N{NO-BREAK SPACE}<span class="oe_currency_value">0.12</span>'
+            f'{currency.symbol}\N{NO-BREAK SPACE}<span class="oe_currency_value">0.12</span>',
         )
 
     def test_currency_precision(self):
@@ -134,7 +134,7 @@ class TestCurrencyExport(TestExport):
         # Should user the currency's precision, not the float field's.
         self.assertEqual(
             converter(0.1234567, {'widget': 'monetary', 'display_currency': currency}),
-            f'<span class="oe_currency_value">0.12</span>\N{NO-BREAK SPACE}{currency.symbol}'
+            f'<span class="oe_currency_value">0.12</span>\N{NO-BREAK SPACE}{currency.symbol}',
         )
 
 
@@ -264,13 +264,13 @@ class TestDurationExport(TestExport):
         # With round
         self.assertEqual(
             converter(-4.678, {'unit': 'year', 'round': 'hour'}),
-            '- 4 years 8 months 1 week 11 hours'
+            '- 4 years 8 months 1 week 11 hours',
         )
 
         # With digital
         self.assertEqual(
             converter(-90, {'unit': 'minute', 'round': 'minute', 'digital': True}),
-            '-01:30'
+            '-01:30',
         )
 
     def test_duration_unit(self):
@@ -288,7 +288,7 @@ class TestDurationExport(TestExport):
 
         self.assertEqual(
             converter(-4.678, {'unit': 'year', 'round': 'hour'}, {'lang': 'fr_FR'}),
-            '- 4 ans 8 mois 1 semaine 11 heures'
+            '- 4 ans 8 mois 1 semaine 11 heures',
         )
 
 

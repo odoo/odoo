@@ -1,7 +1,7 @@
 from odoo import Command
 from odoo.tests import tagged
 from odoo.tools import mute_logger
-from odoo.tools.constants import IN_MAX, BIG_RECORDSET_SIZE
+from odoo.tools.constants import BIG_RECORDSET_SIZE, IN_MAX
 
 from .common import TestOrmPartnerCommon
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo

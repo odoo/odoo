@@ -93,7 +93,7 @@ class TestORM(TransactionCase):
         with self.assertRaises(AccessError):
             p1.with_user(user).unlink()
 
-        # Prepare mixed case 
+        # Prepare mixed case
         p2.unlink()
         # read mixed records: some deleted and some filtered
         with self.assertRaises(AccessError):

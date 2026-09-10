@@ -5,10 +5,11 @@ import tempfile
 from os.path import join as opj
 from unittest.mock import patch
 
-import odoo.addons
 from odoo.modules.module import Manifest
 from odoo.release import major_version
-from odoo.tests.common import tagged, BaseCase
+from odoo.tests.common import BaseCase, tagged
+
+import odoo.addons
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -27,7 +28,7 @@ class TestModuleManifest(BaseCase):
         self.module_name = os.path.basename(self.module_root)
 
     def test_default_manifest(self):
-        with open(opj(self.module_root, '__manifest__.py'), 'w') as file:
+        with open(opj(self.module_root, '__manifest__.py'), 'w', encoding='utf-8') as file:
             file.write(str({'name': f'Temp {self.module_name}', 'license': 'MIT', 'author': 'Fapi'}))
 
         with self.assertNoLogs('odoo.modules.module', 'WARNING'):
@@ -90,7 +91,7 @@ class TestModuleManifest(BaseCase):
         self.assertIn("manifest not found", capture.output[0])
 
     def test_missing_license(self):
-        with open(opj(self.module_root, '__manifest__.py'), 'w') as file:
+        with open(opj(self.module_root, '__manifest__.py'), 'w', encoding='utf-8') as file:
             file.write(str({'name': f'Temp {self.module_name}'}))
         with self.assertLogs('odoo.modules.module', 'WARNING') as capture:
             manifest = Manifest.for_addon(self.module_name)

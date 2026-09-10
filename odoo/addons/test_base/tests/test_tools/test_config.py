@@ -5,7 +5,7 @@ import unittest
 from unittest.mock import call, patch
 
 import odoo
-from odoo.tests import tagged, TransactionCase
+from odoo.tests import TransactionCase, tagged
 from odoo.tools import file_open, file_open_temporary_directory, file_path
 from odoo.tools.config import configmanager
 
@@ -806,7 +806,7 @@ class TestConfigManager(TransactionCase):
                 _, options = self.parse_reset(['--addons-path', not_addons])
             self.assertEqual(options['addons_path'], [])
             self.assertEqual(capture.output, [
-                f"WARNING:odoo.tools.config:option --addons-path, invalid addons directory {not_addons!r}, skipped"
+                f"WARNING:odoo.tools.config:option --addons-path, invalid addons directory {not_addons!r}, skipped",
             ])
 
             # A glob with no matches silently resolves to an empty list

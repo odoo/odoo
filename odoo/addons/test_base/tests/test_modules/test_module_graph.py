@@ -2,9 +2,9 @@
 
 from unittest.mock import patch
 
-from odoo.tests.common import tagged, BaseCase
-from odoo.modules.module_graph import ModuleGraph
 from odoo.modules.module import _DEFAULT_MANIFEST, Manifest
+from odoo.modules.module_graph import ModuleGraph
+from odoo.tests.common import BaseCase, tagged
 from odoo.tools import mute_logger
 
 
@@ -15,7 +15,7 @@ class TestGraph(BaseCase):
         self,
         dependency: dict[str, list[str]],
         modules_list: list[list[str]],
-        expected: list[str]
+        expected: list[str],
     ) -> None:
         """
         Test the order of the modules that need to be loaded
@@ -62,25 +62,25 @@ class TestGraph(BaseCase):
         self._test_graph_order(
             dependency,
             [['base'], ['module3', 'module4', 'module1', 'module5', 'module2']],
-            ['base', 'module1', 'module2', 'module3', 'module4', 'module5']
+            ['base', 'module1', 'module2', 'module3', 'module4', 'module5'],
         )
         # module 5's depends is missing
         self._test_graph_order(
             dependency,
             [['base'], ['module1', 'module2', 'module3', 'module5']],
-            ['base', 'module1', 'module2', 'module3']
+            ['base', 'module1', 'module2', 'module3'],
         )
         # module 6's manifest is missing
         self._test_graph_order(
             dependency,
             [['base'], ['module1', 'module2', 'module3', 'module4', 'module5', 'module6']],
-            ['base', 'module1', 'module2', 'module3', 'module4', 'module5']
+            ['base', 'module1', 'module2', 'module3', 'module4', 'module5'],
         )
         # three adding rounds
         self._test_graph_order(
             dependency,
             [['base'], ['module1', 'module2', 'module3'], ['module4', 'module5']],
-            ['base', 'module1', 'module2', 'module3', 'module4', 'module5']
+            ['base', 'module1', 'module2', 'module3', 'module4', 'module5'],
         )
 
     def test_graph_order_2(self):
@@ -97,7 +97,7 @@ class TestGraph(BaseCase):
         self._test_graph_order(
             dependency,
             [['base'], ['module3', 'module4', 'module1', 'module5', 'module2']],
-            ['base', 'module1', 'module2', 'module3', 'module4', 'module5']
+            ['base', 'module1', 'module2', 'module3', 'module4', 'module5'],
         )
 
     def test_graph_order_3(self):
@@ -113,7 +113,7 @@ class TestGraph(BaseCase):
         self._test_graph_order(
             dependency,
             [['base'], ['module3', 'module4', 'module1', 'module5', 'module2']],
-            ['base', 'module1', 'module2']
+            ['base', 'module1', 'module2'],
         )
 
     def test_graph_order_with_test_modules(self):
@@ -131,5 +131,5 @@ class TestGraph(BaseCase):
         self._test_graph_order(
             dependency,
             [['base'], ['test_c', 'module4', 'module2', 'test_a', 'module3', 'test_b', 'module1', 'test_z']],
-            ['base', 'test_z', 'test_a', 'module1', 'test_c', 'module2', 'module3', 'module4', 'test_b']
+            ['base', 'test_z', 'test_a', 'module1', 'test_c', 'module2', 'module3', 'module4', 'test_b'],
         )

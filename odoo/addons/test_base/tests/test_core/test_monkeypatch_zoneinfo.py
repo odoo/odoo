@@ -3,8 +3,8 @@ import logging
 from unittest.mock import MagicMock, patch
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
-from odoo.tests.common import tagged, TransactionCase
 from odoo._monkeypatches.zoneinfo import _tz_mapping
+from odoo.tests.common import TransactionCase, tagged
 from odoo.tools.date_utils import all_timezones
 
 _logger = logging.getLogger(__name__)
@@ -16,6 +16,7 @@ class TestTZ(TransactionCase):
     def test_tz_legacy(self):
         d = datetime.datetime(2014, 7, 21)
         # See https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+
         def assertTZEqual(tz1, tz2):
             self.assertEqual(d.replace(tzinfo=tz1).strftime('%z'), d.replace(tzinfo=tz2).strftime('%z'))
 

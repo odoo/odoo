@@ -2,7 +2,7 @@ from unittest.mock import patch
 
 from odoo.fields import Command, Domain
 from odoo.tests import TransactionCase, tagged, warmup
-from odoo.tools import BinaryBytes, SQL, mute_logger
+from odoo.tools import SQL, BinaryBytes, mute_logger
 
 from .common import TestOrmPartnerCommon
 from .test_domain_expression import TransactionExpressionCase
@@ -1824,7 +1824,7 @@ class TestAnyDomainSearchContext(TransactionCase):
 
         self.enterContext(patch.object(Attachment, '_search_res_access', _search_res_access))
         result = link.with_user(restricted_user).search(
-            [('attachment_id', 'in', [target.id])]
+            [('attachment_id', 'in', [target.id])],
         )
         self.assertEqual(result, link)
 

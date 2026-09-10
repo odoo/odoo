@@ -2,7 +2,7 @@
 
 from psycopg2.errors import CheckViolation
 
-from odoo.tests.common import tagged, BaseCase, TransactionCase
+from odoo.tests.common import BaseCase, TransactionCase, tagged
 from odoo.tools import SQL, mute_logger, sql
 
 
@@ -189,7 +189,7 @@ class TestSQL(BaseCase):
         self.assertEqual(sql, SQL('SELECT "id" FROM "table" WHERE "table"."foo"=%s AND "table"."bar"=%s', 1, 2))
         self.assertEqual(
             repr(sql),
-            """SQL('SELECT "id" FROM "table" WHERE "table"."foo"=%s AND "table"."bar"=%s', 1, 2)"""
+            """SQL('SELECT "id" FROM "table" WHERE "table"."foo"=%s AND "table"."bar"=%s', 1, 2)""",
         )
 
 
