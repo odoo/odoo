@@ -21,7 +21,3 @@ class IrHttp(models.AbstractModel):
         super()._pre_dispatch(rule, args)
         ctx = cls._get_editor_context()
         request.update_context(**ctx)
-
-    @classmethod
-    def _get_translation_frontend_modules_name(cls):
-        return ["html_editor", *super()._get_translation_frontend_modules_name()]
