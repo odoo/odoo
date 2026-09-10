@@ -135,6 +135,13 @@ registerStoreHandler(
             thread: channel,
         });
         MailMessage.set_message_done(messages.map((message) => message.id));
+        const lastMessage = MailMessage._filter([
+            ["model", "=", "discuss.channel"],
+            ["res_id", "=", params.channel_id],
+        ]).sort((m1, m2) => m2.id - m1.id)[0];
+        if (!lastMessage || messages.includes(lastMessage)) {
+            store.add(channel, { last_message_fetched: true });
+        }
     },
     { audience: "everyone", readonly: false }
 );

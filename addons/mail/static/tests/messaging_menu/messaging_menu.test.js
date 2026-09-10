@@ -708,6 +708,53 @@ test("Messaging menu notification body of chat should show author name once", as
     await contains(".o-mail-NotificationItem-text", { textContent: "Hey!" });
 });
 
+test("OdooBot chat added at init messaging still shows its last message", async () => {
+    // `init_messaging` adds the OdooBot chat to the store without its last message, so the
+    // messaging menu has to fetch it rather than consider the channel already loaded.
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "chat",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: serverState.odoobotId }),
+        ],
+    });
+    pyEnv["mail.message"].create({
+        author_id: serverState.odoobotId,
+        body: "<p>Welcome!</p>",
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    await start();
+    await openMessagingMenu();
+    await contains(".o-mail-NotificationItem-text", { textContent: "Welcome!" });
+});
+
+test("fetching the bottom of a channel marks its last message as fetched", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ channel_type: "channel" });
+    const messageIds = pyEnv["mail.message"].create(
+        ["First message", "Second message", "Latest message"].map((body) => ({
+            body,
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        }))
+    );
+    await start();
+    const store = getService("mail.store");
+    const channel = store["discuss.channel"].insert({ id: channelId });
+    expect(channel.last_message_fetched).toBe(false);
+    await store.fetchStoreData("/discuss/channel/messages", {
+        channel_id: channelId,
+        fetch_params: { around: messageIds[0], limit: 2 },
+    });
+    expect(channel.last_message_fetched).toBe(false);
+    await store.fetchStoreData("/discuss/channel/messages", { channel_id: channelId });
+    expect(channel.last_message_fetched).toBe(true);
+});
+
 test("Group chat should be displayed inside the chat section of the messaging menu", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ channel_type: "group" });
