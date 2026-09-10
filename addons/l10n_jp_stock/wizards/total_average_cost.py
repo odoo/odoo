@@ -212,16 +212,30 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
                 'or the result is not positive.',
             )
             notification_type = 'warning'
+        params = {
+            'message': message,
+            'sticky': False,
+            'type': notification_type,
+            'next': {'type': 'ir.actions.act_window_close', 'infos': {'done': True}},
+        }
+        if updated_count or unchanged_count:
+            # nothing here closes the period, and an evaluation is only final once something does; the
+            # end date already says to evaluate again if a move of the period moved, so this stays short
+            params['message'] = message + ' ' + self.env._(
+                'The period is not final until the stock valuation is closed for it in %s.',
+            )
+            # core renders every notification link with target="_blank" (see the display_notification
+            # client action), so this opens a new tab, the way each core module using links already does
+            params['links'] = [{
+                'label': self.env._('Inventory Valuation'),
+                'url': '/odoo/action-stock_account.action_report_stock_valuation',
+            }]
+            # a reminder that disappears on its own reminds nobody
+            params['sticky'] = True
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
-            'params': {
-                'title': self.env._('Total Average Cost'),
-                'message': message,
-                'sticky': False,
-                'type': notification_type,
-                'next': {'type': 'ir.actions.act_window_close', 'infos': {'done': True}},
-            },
+            'params': params,
         }
 
     def _default_date_from(self):
