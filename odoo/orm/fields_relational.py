@@ -891,6 +891,11 @@ class One2many(_RelationalMulti):
     def setup_inverses(self, registry, inverses):
         if self.inverse_name:
             # link self to its inverse field and vice-versa
+            if self.manual and self.inverse_name not in registry[self.comodel_name]._fields:
+                # ignore manual fields (e.g. from Studio) that may reference a
+                # non-existent inverse field in the registry to avoid crashing
+                _logger.warning("%s: ignoring manual field with invalid inverse name %r", self, self.inverse_name)
+                return
             invf = registry[self.comodel_name]._fields[self.inverse_name]
             if isinstance(invf, (Many2one, Many2oneReference)):
                 # setting one2many fields only invalidates many2one inverses;
