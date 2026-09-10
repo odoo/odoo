@@ -14,7 +14,7 @@ from collections import defaultdict
 from io import BytesIO
 from os.path import join as opj
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, modules, _
 from odoo.exceptions import AccessDenied, AccessError, UserError
 from odoo.fields import Domain
 from odoo.http import request
@@ -330,6 +330,7 @@ class IrModuleModule(models.Model):
         if not zipfile.is_zipfile(module_file):
             raise UserError(_('Only zip files are supported.'))
 
+        module_states_before = self.sudo().search([('state', 'in', ('to install', 'to upgrade', 'to remove'))])
         module_names = []
         with zipfile.ZipFile(module_file, "r") as z:
             for zf in z.infolist():
@@ -387,6 +388,13 @@ class IrModuleModule(models.Model):
                             "Error while importing module '%(module)s'.\n\n %(error_message)s \n\n",
                             module=mod_name, error_message=traceback.format_exc(),
                         )) from e
+
+        module_states_after = self.sudo().search([('state', 'in', ('to install', 'to upgrade', 'to remove'))])
+        if module_states_before != module_states_after:
+            # Force install/upgrade/... modules if state is modified from the data module.
+            self.env.cr.commit()
+            modules.registry.Registry.new(self.env.cr.dbname, update_module=True)
+
         return "", module_names
 
     def module_uninstall(self):
