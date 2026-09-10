@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="point_of_sale.product_template_view_form_normalized_pos"/>
         <field name="arch" type="xml">
             <field name="is_storable" position="after">
-                <field name="tracking" class="pe-1" invisible="not is_storable" groups="stock.group_production_lot"/>
+                <field name="store_by" class="pe-1" invisible="not is_storable" groups="stock.group_production_lot"/>
             </field>
         </field>
     </record>

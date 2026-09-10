@@ -491,12 +491,12 @@ class TestLotValuation(TestStockValuationCommon):
         self.assertEqual(self.product.tracking, 'lot')
         self.product.lot_valuated = True
         self.assertTrue(self.product.lot_valuated)
-        self.product.tracking = 'none'
+        self.product.store_by = 'quantity'
         self.assertFalse(self.product.lot_valuated)
         # update the tracking from product.template
         self.product.tracking = 'lot'
         self.product.lot_valuated = True
-        self.product.product_tmpl_id.tracking = 'none'
+        self.product.product_tmpl_id.store_by = 'quantity'
         self.assertFalse(self.product.lot_valuated)
 
     def test_lot_valuation_lot_product_price_diff(self):
@@ -584,7 +584,7 @@ class TestLotValuation(TestStockValuationCommon):
         This is because you can't validate a move without lot when lot valuation is enabled.
         The user would hence be unable to use the quant without lot anyway.
         """
-        self.product.tracking = 'none'
+        self.product.store_by = 'quantity'
         self.product.lot_valuated = False
         quant = self.env['stock.quant'].create({
             'product_id': self.product.id,

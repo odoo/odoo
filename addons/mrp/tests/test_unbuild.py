@@ -345,7 +345,7 @@ class TestUnbuild(TestMrpCommon):
         """ This test creates a MO from 3 different lot on a consumed product (p2).
         The unbuild order should revert the correct quantity for each specific lot.
         """
-        mo, bom, p_final, p1, p2 = self.generate_mo(tracking_final='none', tracking_base_2='lot', tracking_base_1='none')
+        mo, bom, p_final, p1, p2 = self.generate_mo(tracking_final=False, tracking_base_2='lot', tracking_base_1=False)
         self.assertEqual(len(mo), 1, 'MO should have been created')
 
         lot_1 = self.env['stock.lot'].create({
@@ -396,7 +396,7 @@ class TestUnbuild(TestMrpCommon):
     def test_production_links_with_non_tracked_lots(self):
         """ This test produces an MO in two times and checks that the move lines are linked in a correct way
         """
-        mo, bom, p_final, p1, p2 = self.generate_mo(tracking_final='lot', tracking_base_1='none', tracking_base_2='lot')
+        mo, _, p_final, p1, p2 = self.generate_mo(tracking_final='lot', tracking_base_1=False, tracking_base_2='lot')
         # Young Tom
         #    \ Botox - 4 - p1
         #    \ Old Tom - 1 - p2

@@ -352,10 +352,10 @@ class TestVirtualAvailable(TestStockCommon):
             'name': 'Imported service',
             'type': 'service',
         })
-        # Simulate a import, with column "tracking" set to "none"
-        template.tracking = 'none'
-        self.assertEqual(template.tracking, 'none')
+        # Simulate an import by setting tracking to 'quantity'
+        template.store_by = 'quantity'
         self.assertFalse(template.is_storable)
+        self.assertFalse(template.tracking)
 
     def test_domain_locations_only_considers_selected_companies(self):
         product = self.env['product.product'].create({'name': 'Product', 'is_storable': True})

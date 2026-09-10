@@ -15,7 +15,7 @@ class TestMrpCommon(TestStockCommon):
     _test_user_name = 'Test MRP/Stock User'
 
     @classmethod
-    def generate_mo(cls, tracking_final='none', tracking_base_1='none', tracking_base_2='none', qty_final=5, qty_base_1=4, qty_base_2=1, picking_type_id=False):
+    def generate_mo(cls, tracking_final=False, tracking_base_1=False, tracking_base_2=False, qty_final=5, qty_base_1=4, qty_base_2=1, picking_type_id=False):
         """ This function generate a manufacturing order with one final
         product and two consumed product. Arguments allows to choose
         the tracking/qty for each different products. It returns the

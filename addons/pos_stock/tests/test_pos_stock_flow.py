@@ -100,7 +100,7 @@ class TestPosStockFlow(CommonPosStockTest):
             'is_storable': True,
         })
         self.twenty_dollars_with_15_incl.product_variant_id.write({
-            'tracking': 'none',
+            'store_by': 'quantity',
             'is_storable': True,
         })
         lot = self.env['stock.lot'].create({
