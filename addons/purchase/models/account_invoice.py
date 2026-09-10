@@ -516,7 +516,7 @@ class AccountMove(models.Model):
                         'sequence': -1,
                     })]
 
-        if not any(line.purchase_order_id for line in self.line_ids):
+        if not any(line.purchase_order_id for line in self.line_ids) and ('ubl_cii_xml_file' not in self._fields or not self.ubl_cii_xml_file):
             self.invoice_origin = False
 
 
