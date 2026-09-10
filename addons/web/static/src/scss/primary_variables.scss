@@ -75,6 +75,28 @@ $o-grays: (
 $o-colors: #a2a2a2, #ee2d2d, #dc8534, #e8bb1d, #5794dd, #9f628f, #db8865,
            #41a9a2, #304be0, #ee2f8a, #61c36e, #9872e6 !default;
 
+// Tag and badge palette (o_tag_color_N, o_badge_color_N)
+// OKLCH triplets sharing the same lightness so no color stands
+// out more than another.
+// $o-colors-oklch: solid color
+// $o-colors-bg-subtle: background
+// $o-colors-text-emphasis: text
+$o-colors-oklch:
+    (0.65 0 0),       (0.65 0.14 27),   (0.65 0.14 59),   (0.65 0.129 90),
+    (0.65 0.119 225), (0.65 0.14 330),  (0.65 0.07 60),   (0.65 0.109 189),
+    (0.65 0.14 261),  (0.65 0.14 353),  (0.65 0.14 147),  (0.65 0.14 296)
+    !default;
+$o-colors-bg-subtle:
+    (0.92 0 0),       (0.92 0.04 27),   (0.92 0.049 59),  (0.92 0.055 90),
+    (0.92 0.05 225),  (0.92 0.055 330), (0.92 0.025 60),  (0.92 0.055 189),
+    (0.92 0.037 261), (0.92 0.045 353), (0.92 0.055 147), (0.92 0.042 296)
+    !default;
+$o-colors-text-emphasis:
+    (0.4 0 0),       (0.4 0.11 27),   (0.4 0.092 59),  (0.4 0.079 90),
+    (0.4 0.074 225), (0.4 0.11 330),  (0.4 0.045 60),  (0.4 0.067 189),
+    (0.4 0.11 261),  (0.4 0.11 353),  (0.4 0.11 147),  (0.4 0.11 296)
+    !default;
+
 $o-colors-ui: () !default;
 @for $index from 1 through length($o-colors) {
     $_color-name: "color-#{$index}";
