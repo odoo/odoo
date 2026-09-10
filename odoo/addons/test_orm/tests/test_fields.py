@@ -4269,6 +4269,18 @@ class TestRequiredMany2oneTransient(TransactionCase):
             field.setup_nonrelated(Model)
 
 
+class TestOne2manyInvalidInverse(TransactionCase):
+
+    def test_field_inverses_invalid_inverse_name(self):
+        """Building field_inverses must not crash on a wrong One2many inverse."""
+        field = self.env['test_orm.discussion']._fields['messages']
+        self.addCleanup(self.registry.reset_changes)
+        self.patch(field, 'inverse_name', 'invalid key example')
+        self.registry.__dict__.pop('field_inverses', None)
+        inverses = self.registry.field_inverses
+        self.assertFalse(inverses[field])
+
+
 @tagged('m2oref')
 class TestMany2oneReference(TransactionExpressionCase):
 
