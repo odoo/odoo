@@ -22,9 +22,10 @@ class TestCallHistoryAutoLog(TransactionCase):
         cls.env = cls.env(user=cls.organizer)
         cls.customer = cls.env["res.partner"].create({"name": "Test Customer"})
 
-    def _create_meeting(self, start, activities=None):
+    def _create_meeting(self, start, activities=None, name="Test Meeting", notes=None):
         return self.env["calendar.event"].create({
-            "name": "Test Meeting",
+            "name": name,
+            "notes": notes,
             "partner_ids": [(4, self.organizer.partner_id.id)],
             "start": start,
             "stop": start + timedelta(hours=1),
@@ -78,9 +79,9 @@ class TestCallHistoryAutoLog(TransactionCase):
 
         self.assertEqual(call_history.activity_id, second_activity)
 
-    def test_meeting_call_message_shows_the_call_label_alone(self):
-        """Without a summary, the call label stands for the whole activity title: the
-        attendee list is not repeated next to it."""
+    def test_meeting_call_message_does_not_repeat_the_attendee_list(self):
+        """The call label and the meeting summary are the whole activity title: the attendee
+        list shown when a meeting is merely scheduled is not repeated next to them."""
         activity = self.customer.activity_schedule("mail.mail_activity_data_meeting")
         meeting = self._create_meeting(datetime(2026, 8, 14, 11, 0), activities=activity)
         call_history = self._start_call(meeting.videocall_channel_id, datetime(2026, 8, 14, 11, 5))
@@ -90,12 +91,35 @@ class TestCallHistoryAutoLog(TransactionCase):
 
         body = html.fromstring(self.customer.message_ids[0].body)
         title = body.find_class("o_mail_activity_title")[0]
-        self.assertEqual(" ".join(title.text_content().split()), "Meeting done (1h 23m 45s)")
+        self.assertEqual(
+            " ".join(title.text_content().split()), "Meeting done (1h 23m 45s) - Test Meeting",
+        )
+
+    def test_meeting_call_message_shows_the_meeting_summary_and_notes(self):
+        """The summary and the notes of the meeting are what its attendees wrote down about
+        it: the message logging the call carries both."""
+        activity = self.customer.activity_schedule("mail.mail_activity_data_meeting")
+        meeting = self._create_meeting(
+            datetime(2026, 8, 14, 11, 0), activities=activity,
+            name="Office Design and Architecture", notes="<p>Bring the mockups</p>",
+        )
+        call_history = self._start_call(meeting.videocall_channel_id, datetime(2026, 8, 14, 11, 5))
+        call_history.end_dt = datetime(2026, 8, 14, 11, 5, 6)
+
+        call_history._link_to_activity()
+
+        body = html.fromstring(self.customer.message_ids[0].body)
+        title = body.find_class("o_mail_activity_title")[0]
+        self.assertEqual(
+            " ".join(title.text_content().split()),
+            "Meeting done (6s) - Office Design and Architecture",
+        )
+        note = body.find_class("o_mail_activity_note")[0]
+        self.assertEqual(note.text_content().strip(), "Bring the mockups")
 
     def test_meeting_call_message_shows_the_activity_summary(self):
-        """A summary entered when logging the call, unlike the one calendar mirrors from
-        the meeting name onto a scheduled meeting's activity, is worth keeping next to
-        the call label: it is the only place that summary is ever shown."""
+        """A summary entered when logging an ad-hoc call, which no meeting was scheduled
+        for, is shown next to the call label just like a meeting's own summary."""
         channel = self.env["discuss.channel"].create({"name": "Ad hoc", "channel_type": "group"})
         call_history = self._start_call(channel, datetime(2026, 8, 14, 11, 5))
         call_history.end_dt = datetime(2026, 8, 14, 11, 22, 30)

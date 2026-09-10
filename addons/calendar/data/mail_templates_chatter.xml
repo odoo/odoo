@@ -16,8 +16,17 @@
                     <span t-out="truncated_attendee_names" t-att-title="attendee_names" class="text-muted"/>
                 </t>
             </xpath>
+            <!-- the activity note is the meeting description, contact details included:
+                 not worth repeating, the meeting being linked next to it. -->
             <xpath expr="//div[hasclass('o_mail_activity_note')]" position="attributes">
                 <attribute name="t-if" add="not activity.calendar_event_id" separator=" and "/>
+            </xpath>
+            <!-- what the attendees wrote down lives in the meeting notes, which nothing
+                 mirrors onto the activity. -->
+            <xpath expr="//div[hasclass('o_mail_activity_note')]" position="after">
+                <div t-if="not is_html_empty(call_notes)" class="o_mail_activity_note pb-2">
+                    <div t-out="call_notes" class="fst-italic"/>
+                </div>
             </xpath>
         </template>
     </data>
