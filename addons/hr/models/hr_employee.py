@@ -432,6 +432,10 @@ We can redirect you to the public employee list."""
 
         return res
 
+    @api.model
+    def _has_model_formview_access(self):
+        return self.env.user.has_group('hr.group_hr_user')
+
     @api.constrains('pin')
     def _verify_pin(self):
         for employee in self:
