@@ -1,4 +1,3 @@
-import { onWillRender } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
@@ -17,6 +16,8 @@ import {
     t,
     signal,
     usePlugin,
+    untrack,
+    useEffect,
 } from "@odoo/owl";
 import { PosNumberBufferPlugin } from "@point_of_sale/app/plugins/pos_number_buffer_plugin";
 import { CategorySelector } from "@point_of_sale/app/components/category_selector/category_selector";
@@ -85,11 +86,19 @@ export class ProductScreen extends Component {
             this.numberBuffer.reset();
         });
 
-        onWillRender(() => {
-            // If its a shared order it can be paid from another POS
-            if (this.currentOrder?.state !== "draft" && !this.isValidatingOrder) {
-                const { table_id, preset_id } = this.currentOrder ?? {};
-                this.pos.addNewOrder({ table_id, preset_id });
+        useEffect(() => {
+            if (this.pos.router.currentScreen() !== "ProductScreen") {
+                return;
+            }
+            const order = this.currentOrder;
+            if (!order || (order.state !== "draft" && !this.isValidatingOrder)) {
+                const { table_id, preset_id } = order ?? {};
+                const newOrder = untrack(() => this.pos.addNewOrder({ table_id, preset_id }));
+
+                // addNewOrder() changes the current order while this effect is running.
+                // Explicitly read the replacement order's state so future remote updates
+                // to that order are tracked by this effect.
+                newOrder.state;
             }
         });
 
