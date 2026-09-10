@@ -7,6 +7,7 @@ import { registry } from "@web/core/registry";
 import { sortBy } from "@web/core/utils/arrays";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { location } from "@web/core/browser/browser";
+import { hasTouch } from "@web/core/browser/feature_detection";
 import { useCommand } from "@web/core/commands/command_hook";
 import { AccordionItem } from "@web/core/dropdown/accordion_item";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -37,6 +38,7 @@ export class SearchBarMenu extends Component {
 
     setup() {
         this.facet_icons = FACET_ICONS;
+        this.hasTouch = hasTouch();
         // Filter
         this.actionService = useService("action");
         // GroupBy
