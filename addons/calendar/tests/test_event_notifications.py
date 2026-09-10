@@ -146,7 +146,7 @@ class TestEventNotifications(CalendarMailCommon):
         self.env['ir.config_parameter'].sudo().set_param('mail.mail_force_send_limit', None)
         with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
             'message_type': 'user_notification',
-            'subtype': 'mail.mt_note',
+            'subtype': 'mail.mt_comment',
         }):
             self.event.partner_ids = self.partner
 
@@ -159,7 +159,7 @@ class TestEventNotifications(CalendarMailCommon):
     def test_message_invite_allday(self):
         with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
             'message_type': 'user_notification',
-            'subtype': 'mail.mt_note',
+            'subtype': 'mail.mt_comment',
         }):
             self.env['calendar.event'].with_context(mail_create_nolog=True).create([{
                 'name': 'Meeting',
@@ -210,7 +210,7 @@ class TestEventNotifications(CalendarMailCommon):
         "Invitation to Presentation of the new Calendar"
         with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
             'message_type': 'user_notification',
-            'subtype': 'mail.mt_note',
+            'subtype': 'mail.mt_comment',
         }):
             self.event.start = fields.Datetime.now() + relativedelta(days=1)
 
@@ -226,7 +226,7 @@ class TestEventNotifications(CalendarMailCommon):
 
         with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
             'message_type': 'user_notification',
-            'subtype': 'mail.mt_note',
+            'subtype': 'mail.mt_comment',
         }):
             self.event.start = fields.Datetime.now() + relativedelta(days=1)
 
@@ -239,7 +239,7 @@ class TestEventNotifications(CalendarMailCommon):
         self.event.partner_ids = self.partner
         with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
             'message_type': 'user_notification',
-            'subtype': 'mail.mt_note',
+            'subtype': 'mail.mt_comment',
         }):
             self.event.start_date += relativedelta(days=-1)
 
@@ -282,7 +282,7 @@ class TestEventNotifications(CalendarMailCommon):
         self.event.partner_ids -= self.partner
         with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
             'message_type': 'user_notification',
-            'subtype': 'mail.mt_note',
+            'subtype': 'mail.mt_comment',
         }):
             self.event.write({
                 'start': self.event.start - relativedelta(days=1),
