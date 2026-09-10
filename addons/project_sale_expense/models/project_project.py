@@ -13,7 +13,7 @@ class ProjectProject(models.Model):
         expenses_read_group = self.env['hr.expense']._read_group(
             [('state', 'in', ['posted', 'in_payment', 'paid']), ('analytic_distribution', 'in', self.account_id.ids)],
             groupby=['sale_order_id', 'product_id', 'currency_id'],
-            aggregates=['id:array_agg', 'untaxed_amount_currency:sum'],
+            aggregates=['id:array_agg', 'untaxed_amount_currency:array_agg', 'analytic_distribution:array_agg'],
         )
         if not expenses_read_group:
             return {}
@@ -21,10 +21,18 @@ class ProjectProject(models.Model):
         expense_ids = []
         dict_amount_per_currency = defaultdict(lambda: 0.0)
         can_see_expense = with_action and self.env.user.has_group('hr_expense.group_hr_expense_team_approver')
-        for sale_order, product, currency, ids, untaxed_amount_currency_sum in expenses_read_group:
+        for sale_order, product, currency, ids, untaxed_amount_currencies, analytic_distributions in expenses_read_group:
             expenses_per_so_id.setdefault(sale_order.id, {})[product.id] = ids
             if can_see_expense:
                 expense_ids.extend(ids)
+            untaxed_amount_currency_sum = sum(
+                untaxed_amount_currency * sum(
+                    percentage for account_ids, percentage in analytic_distribution.items()
+                    if str(self.account_id.id) in account_ids.split(',')
+                ) / 100.
+                for untaxed_amount_currency, analytic_distribution in
+                zip(untaxed_amount_currencies, analytic_distributions)
+            )
             dict_amount_per_currency[currency] += untaxed_amount_currency_sum
 
         amount_billed = 0.0
