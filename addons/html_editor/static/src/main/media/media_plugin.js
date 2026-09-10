@@ -205,7 +205,10 @@ export class MediaPlugin extends Plugin {
                     : [selection]
                 : [];
             for (const onMediaDialogSaved of this.getResource("on_media_dialog_saved_handlers")) {
-                await onMediaDialogSaved(elements, { node: params.node });
+                await onMediaDialogSaved(elements, {
+                    node: params.node,
+                    skipImagePostProcess: params.skipImagePostProcess,
+                });
             }
             return oldSave(...args);
         };

@@ -85,6 +85,7 @@ export class BackgroundImageOptionPlugin extends Plugin {
             const onClose = this.dependencies.media.openMediaDialog({
                 onlyImages: true,
                 node: editingElement,
+                skipImagePostProcess: true,
                 save: async (imageEl) => {
                     resolve(imageEl);
                 },
