@@ -27,24 +27,29 @@ class ResUsers(models.Model):
     def SELF_WRITEABLE_FIELDS(self):
         return super().SELF_WRITEABLE_FIELDS + ['calendar_default_privacy']
 
-    def get_selected_calendars_partner_ids(self, include_user=True):
+    def get_selected_calendars_partners(self, include_user=True):
         """
-        Retrieves the partner IDs of the attendees selected in the calendar view.
+        Retrieve the partners selected in the calendar view.
 
-        :param bool include_user: Determines whether to include the current user's partner ID in the results.
-        :return: A list of integer IDs representing the partners selected in the calendar view.
-                 If 'include_user' is True, the list will also include the current user's partner ID.
-        :rtype: list
+        :param bool include_user: Determines whether to include the current user's partner in the results.
+        :return: A list of dictionaries containing the partner ID and display name.
+        :rtype: list[dict]
         """
         self.ensure_one()
-        partner_ids = self.env['calendar.filters'].search([
+        partners = self.env['calendar.filters'].search([
             ('user_id', '=', self.id),
             ('partner_checked', '=', True)
-        ]).partner_id.ids
+        ]).partner_id
 
         if include_user:
-            partner_ids += [self.env.user.partner_id.id]
-        return partner_ids
+            partners |= self.env.user.partner_id
+        return [
+            {
+                "id": partner.id,
+                "display_name": partner.display_name,
+            }
+            for partner in reversed(partners)
+        ]
 
     @api.model
     def _default_user_calendar_default_privacy(self):
