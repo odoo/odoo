@@ -18,6 +18,7 @@ import { services } from "@web/core/services";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 
 const { DateTime } = luxon;
+const NARROW_WIDTH = 325;
 
 export class PosTicketPrinterPlugin extends Plugin {
     // After PosDataPlugin (20)
@@ -574,6 +575,7 @@ export class PosTicketPrinterPlugin extends Plugin {
 
         style.textContent = cssRules;
         iframeHead.appendChild(style);
+        iframeEl.classList.toggle("pos-receipt-narrow", maxWidth < NARROW_WIDTH);
     }
 
     async generateImage(iframe) {

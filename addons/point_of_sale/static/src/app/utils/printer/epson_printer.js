@@ -140,10 +140,10 @@ export class EpsonPrinter extends BasePrinter {
             tm_u22_76: { maxWidth: 200, fontSize: 12 },
             tm_u22_70: { maxWidth: 180, fontSize: 12 },
             tm_u22_58: { maxWidth: 150, fontSize: 12 },
-            tm_u33_76: { maxWidth: 400, fontSize: 22 },
-            tm_u33_70: { maxWidth: 380, fontSize: 22 },
-            tm_p60_60: { maxWidth: 375, fontSize: 22 },
-            tm_l100_40: { maxWidth: 240, fontSize: 14 },
+            tm_u33_76: { maxWidth: 450, fontSize: 22 },
+            tm_u33_70: { maxWidth: 405, fontSize: 22 },
+            tm_p60_60: { maxWidth: 420, fontSize: 22 },
+            tm_l100_40: { maxWidth: 280, fontSize: 14 },
         };
     }
 
