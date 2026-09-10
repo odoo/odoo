@@ -135,6 +135,25 @@ class TestTotalAverageCost(TestTotalAverageCostCommon):
         with patch.object(ResCompany, '_get_last_closing_date', return_value=fields.Datetime.to_datetime(today)):
             self.assertEqual(wizard.create({}).date_from, today)
 
+    def test_evaluated_period_asks_to_be_closed(self):
+        self._add_opening_stock()
+        self._create_move(10, 200, self.today, self.supplier_loc, self.stock_loc)
+        params = self._run_category_wizard()['params']
+        self.assertIn('closed for it', params['message'])
+        self.assertTrue(params['sticky'], "a reminder that disappears on its own reminds nobody")
+        self.assertEqual(
+            params['links'],
+            [{'label': 'Inventory Valuation', 'url': '/odoo/action-stock_account.action_report_stock_valuation'}],
+        )
+        # nothing was evaluated, so there is nothing for a closing to make final
+        untouched = self.env['product.product'].create({
+            'name': 'JP Untouched Product', 'categ_id': self.category.id, 'is_storable': True,
+        })
+        params = self._run_wizard(product_ids=untouched.ids)['params']
+        self.assertNotIn('closed for it', params['message'])
+        self.assertNotIn('links', params)
+        self.assertFalse(params['sticky'])
+
     def test_bill_price_beats_the_order_price(self):
         line = self._create_po_line(self.env.company.currency_id, 10, 100)
         self._add_opening_stock()
