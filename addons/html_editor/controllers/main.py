@@ -816,5 +816,5 @@ class HTML_Editor(Controller):
         """
         return [
             {'name': name, 'has_fill': has_fill}
-            for name, has_fill in search_icons(needle or '')
+            for name, has_fill in search_icons(needle or '', request.env._)
         ]

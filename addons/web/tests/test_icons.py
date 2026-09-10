@@ -5,7 +5,7 @@ import json
 from odoo.tests.common import BaseCase
 from odoo.tools import file_open
 
-from odoo.addons.web.icons import ICONS
+from odoo.addons.web.icons import ICONS, search_icons
 
 
 class TestIcons(BaseCase):
@@ -32,3 +32,16 @@ class TestIcons(BaseCase):
                 for icon in config['glyphs'] if icon.get('selected', True)
             }
             self.assertEqual(set(ICONS), wishlist | odoo_ui_icons)
+
+    def test_icons_search_translated(self):
+        def translate(tags):
+            return 'chariot de marché' if tags == ICONS['shopping_cart']['tags'] else ''
+
+        self.assertEqual(
+            list(search_icons('marché', translate)), [('shopping_cart', True)],
+            "the translated tags are searched on top of the English ones",
+        )
+        self.assertEqual(
+            next(search_icons('shopping cart', translate)), ('shopping_cart', True),
+            "English tags stay searchable whatever the language",
+        )

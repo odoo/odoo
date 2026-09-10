@@ -1144,21 +1144,30 @@ def order_icons(tags: dict[str, str], codepoints: dict[str, int],
 
 ICON_SEARCH_CODE = '''
 
+# Resolved to their English source: no language is detectable at import time,
+# and :func:`search_icons` translates the tags when it is given the means to.
 _ICONS_INDEX = [
-    (name, icon['has_fill'], f"{name} {icon['tags']}".lower())
+    (name, icon['has_fill'], f"{name} {icon['tags']._translate('en_US')}".lower())
     for name, icon in ICONS.items()
 ]
 
 
-def search_icons(needle=''):
+def search_icons(needle='', translate=None):
     """Yield the ``(name, has_fill)`` of every icon matching ``needle``.
 
-    The needle is matched against the icon name and its search tags; an empty
-    needle matches every icon.  The haystacks are lowercased once, at import.
+    The needle is matched against the icon name and its English search tags; an
+    empty needle matches every icon.  Pass ``env._`` as *translate* to match the
+    tags translated in the language of ``env`` as well, the English ones staying
+    searchable whatever the language.
     """
     needle = needle.strip().lower()
+    if not needle:
+        yield from ((name, icon['has_fill']) for name, icon in ICONS.items())
+        return
     for name, has_fill, haystack in _ICONS_INDEX:
-        if not needle or needle in haystack:
+        if needle in haystack or (
+            translate is not None and needle in translate(ICONS[name]['tags']).lower()
+        ):
             yield name, has_fill
 '''
 
@@ -1193,27 +1202,18 @@ def write_python_icon_list(
             icons[icon_data['name']]['tags'] = ' '.join(icon_data.get('tags', []))
             categories[icon_data['name']] = next(iter(icon_data.get('categories') or []), '')
 
+    ms_entries = [
+        f"    {icon_name!r}: {{'has_fill': {icon['has_fill']}, "
+        f"'codepoint': 0x{codepoints[icon_name]:04X}, 'tags': {icon.get('tags', '')!r}}},"
+        for icon_name, icon in icons.items()
+    ]
     glyph_codepoints = {glyph: codepoint for codepoint, glyph in oi_codepoints.items()}
-    all_icons = {
-        **{
-            name: (icon['has_fill'], codepoints[name], icon.get('tags', ''))
-            for name, icon in icons.items()
-        },
-        **{
-            name: (False, glyph_codepoints[glyph], oi_tags.get(name, ''))
-            for name, glyph in oi_ligatures.items()
-        },
-    }
-    order = order_icons(
-        {name: icon_tags for name, (_, _, icon_tags) in all_icons.items()},
-        {name: codepoint for name, (_, codepoint, _) in all_icons.items()},
-        categories,
-    )
-    entries = '\n'.join(
-        f"    {name!r}: {{'has_fill': {all_icons[name][0]}, "
-        f"'codepoint': 0x{all_icons[name][1]:04X}, 'tags': {all_icons[name][2]!r}}},"
-        for name in order
-    )
+    oi_entries = [
+        f"    {name!r}: {{'has_fill': False, "
+        f"'codepoint': 0x{glyph_codepoints[glyph]:04X}, 'tags': {oi_tags.get(name, '')!r}}},"
+        for name, glyph in oi_ligatures.items()
+    ]
+    entries = '\n'.join(ms_entries + oi_entries)
     dst_path.write_text(
         "# Part of Odoo. See LICENSE file for full copyright and licensing details.\n"
         "\n"
@@ -1224,11 +1224,14 @@ def write_python_icon_list(
         "\n"
         "Maps each icon name to its ``has_fill`` flag and the space-separated ``tags``\n"
         "used to search it. The tags are only ever matched server-side (see the\n"
-        "``/html_editor/icons_search`` controller), so they never reach the browser.\n"
+        "``/html_editor/icons_search`` controller), so they never reach the browser,\n"
+        "and they are translatable so that a search matches in the user's language.\n"
         "Use :func:`search_icons` to match a needle against both.\n"
         '"""\n'
         "\n"
-        "from odoo.tools import frozendict\n"
+        "from odoo.tools import LazyTranslate, frozendict\n"
+        "\n"
+        "_lt = LazyTranslate(__name__)\n"
         "\n"
         f"ICONS = frozendict({{\n{entries}\n}})\n"
         + ICON_SEARCH_CODE,
