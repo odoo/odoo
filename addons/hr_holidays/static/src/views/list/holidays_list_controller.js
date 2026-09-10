@@ -1,5 +1,6 @@
 import { useSubEnv } from "@web/owl2/utils";
-import { useService } from "@web/core/utils/hooks";
+import { useBus, useService } from "@web/core/utils/hooks";
+import { exportTimeOffRecords } from "@hr_holidays/views/hr_leave_export";
 import { registry } from "@web/core/registry";
 import { listView } from "@web/views/list/list_view";
 import { ListController } from "@web/views/list/list_controller";
@@ -11,6 +12,19 @@ export class HolidaysListController extends ListController {
     static template = "hr_holidays.HolidaysListView";
 
     setup() {
+        // Registered before super.setup() so that it runs before (and stops) the
+        // generic "Export All" listener installed by the list controller.
+        // The controller is shared with the allocation list: keep the generic export there.
+        if (this.props.resModel === "hr.leave") {
+            useBus(this.env.searchModel, "direct-export-data", (ev) => {
+                ev.stopImmediatePropagation();
+                exportTimeOffRecords({
+                    resModel: this.model.root.resModel,
+                    domain: this.model.root.domain,
+                    context: this.model.root.context,
+                });
+            });
+        }
         super.setup();
         this.orm = useService("orm");
 
