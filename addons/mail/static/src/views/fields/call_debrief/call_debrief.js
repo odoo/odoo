@@ -31,6 +31,7 @@ export class CallDebrief extends Component {
             // The name of the field on the record that stores the call's end datetime.
             callEndDateField: t.string(),
         });
+        // The call's official duration, extended to include any overflowing media.
         this.callDurationSeconds = 0;
         this.playbackRates = [0.25, 0.5, 0.75, 0.9, 1, 1.25, 1.5, 1.75, 2, 3];
         this.skipNextTimeUpdate = false;
@@ -301,6 +302,13 @@ export class CallDebrief extends Component {
         }
         segments.sort((a, b) => a.startSec - b.startSec);
 
+        // The end time of an artifact can exceed the call duration. To ensure
+        // the entire recordings is accessible we extend the timeline
+        if (segments.length > 0) {
+            const maxArtifactEndSec = Math.max(...segments.map((s) => s.endSec));
+            this.callDurationSeconds = Math.max(this.callDurationSeconds, maxArtifactEndSec);
+        }
+
         this.state.mediaSegments = segments;
         if (segments.length > 0) {
             this.state.currentSegment = segments[0];
@@ -547,10 +555,22 @@ export class CallDebrief extends Component {
         if (!media) {
             return;
         }
-        if (this.state.currentTime >= this.callDurationSeconds - 0.5) {
-            this.showVideoFeedback(_t("End of Media"));
+
+        // If playback at the end of all media, next click should reply from the very beginning
+        const lastSegment = this.state.mediaSegments.at(-1);
+        const isAtEndOfTimeline = this.state.currentTime >= this.callDurationSeconds - 0.5;
+        const isAtEndOfLastSegment = lastSegment && this.state.currentTime >= lastSegment.endSec - 0.5;
+        const isEffectivelyAtEnd = isAtEndOfTimeline || isAtEndOfLastSegment;
+        if (!this.state.isPlaying && isEffectivelyAtEnd) {
+            const firstSegment = this.state.mediaSegments[0];
+            this.setPlaybackTime({
+                timestamp: firstSegment.startSec,
+                artifactId: firstSegment.id,
+                play: true,
+            });
             return;
         }
+
         if (this.state.isPlaying) {
             this._pause();
         } else {
