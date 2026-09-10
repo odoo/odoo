@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import timedelta
 from pprint import pformat
 
 from odoo.addons.mail.tests.common import MailCommon
@@ -157,6 +158,60 @@ class TestMailPoll(MailCommon, HttpCase):
             f"/odoo/discuss?active_id={channel.id}&test_poll_id={poll_id}",
             "mail_poll_tour.js",
             login=self.user_employee.login,
+        )
+
+    def test_notify_by_web_push_prepare_payload(self):
+        self.authenticate(self.user_employee.login, self.user_employee.login)
+        with self.mock_datetime_and_now("2026-09-10 12:00:00"):
+            poll_id = self.make_jsonrpc_request(
+                "/mail/poll/create",
+                {
+                    "duration": 10,
+                    "options": self.POLL_OPTIONS,
+                    "question": "What is your favorite food?",
+                    "thread_id": self.test_record.id,
+                    "thread_model": self.test_record._name,
+                },
+            )
+            poll = self.env["mail.poll"].browse(poll_id)
+            payload = self.env["discuss.channel"]._notify_by_web_push_prepare_payload(
+                poll.start_message_id,
+            )
+            self.assertEqual(
+                payload["options"]["body"],
+                f'{self.user_employee.name} started a poll: "What is your favorite food?".',
+            )
+            self.make_jsonrpc_request(
+                "/mail/poll/vote",
+                {"poll_id": poll.id, "option_ids": poll.option_ids[0].ids},
+            )
+            no_winner_poll_id = self.make_jsonrpc_request(
+                "/mail/poll/create",
+                {
+                    "duration": 10,
+                    "options": self.POLL_OPTIONS,
+                    "question": "What is your favorite dessert?",
+                    "thread_id": self.test_record.id,
+                    "thread_model": self.test_record._name,
+                },
+            )
+            no_winner_poll = self.env["mail.poll"].browse(no_winner_poll_id)
+            self.frozen_datetime_mock.tick(timedelta(minutes=10))
+            self.env["mail.poll"]._end_expired_polls()
+        payload = self.env["discuss.channel"]._notify_by_web_push_prepare_payload(
+            poll.end_message_id,
+        )
+        self.assertEqual(
+            payload["options"]["body"],
+            f'{self.user_employee.name}\'s poll "What is your favorite food?" has closed. '
+            'Winning answer: "Burger".',
+        )
+        payload = self.env["discuss.channel"]._notify_by_web_push_prepare_payload(
+            no_winner_poll.end_message_id,
+        )
+        self.assertEqual(
+            payload["options"]["body"],
+            f'{self.user_employee.name}\'s poll "What is your favorite dessert?" has closed.',
         )
 
     def test_do_not_end_expired_polls_twice(self):

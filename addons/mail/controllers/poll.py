@@ -22,9 +22,6 @@ class PollController(ThreadController):
         thread = self._get_thread_with_access_for_post(thread_model, thread_id)
         if not thread:
             return
-        message = thread.message_post(
-            body="", message_type="comment", subtype_xmlid="mail.mt_comment",
-        )
         end_dt = fields.Datetime.now() + timedelta(minutes=duration)
         poll_values = {
             "allow_multiple_options": allow_multiple_options,
@@ -34,10 +31,12 @@ class PollController(ThreadController):
             ],
             "poll_end_dt": end_dt,
             "poll_question": question,
-            "start_message_id": message.id,
         }
-        # sudo - mail.poll: internal user can create poll on an accessible thread.
-        poll = self.env["mail.poll"].sudo().create(poll_values)
+        message = thread.with_context(mail_create_poll_values=poll_values).message_post(
+            body="", message_type="comment", subtype_xmlid="mail.mt_comment",
+        )
+        # sudo - mail.poll: can access the poll we just created.
+        poll = message.sudo().started_poll_ids
         self.env.ref("mail.ir_cron_mail_end_polls")._trigger(end_dt)
         Store(*thread._store_target()).add(poll, "_store_poll_fields")
         return poll.id
