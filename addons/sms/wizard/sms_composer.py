@@ -377,21 +377,26 @@ class SmsComposer(models.TransientModel):
         all_bodies = self._prepare_body_values(records)
 
         for record in records:
+            message_sms_vals = self._action_send_sms_comment_prepare_values()
+            message_sms_vals
             messages += self._action_send_sms_comment_record(
                 record=record,
                 body=all_bodies[record.id],
-                is_note=True,
-                number_field=self.number_field_name,
-                sms_numbers=self.sanitized_numbers.split(',') if self.sanitized_numbers else None,
-                sms_type=self.sms_type,
+                **message_sms_vals,
             )
         return messages
 
-    def _action_send_sms_comment_record(self, record, body, is_note=False, **kwargs):
-        subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note') if is_note else False
+    def _action_send_sms_comment_prepare_values(self):
+        return {
+            'number_field': self.number_field_name,
+            'sms_numbers': self.sanitized_numbers.split(',') if self.sanitized_numbers else None,
+            'sms_type': self.sms_type,
+            'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
+        }
+
+    def _action_send_sms_comment_record(self, record, body, **kwargs):
         return record._message_sms(
             body=body,
-            subtype_id=subtype_id,
             **kwargs,
         )
 
