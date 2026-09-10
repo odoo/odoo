@@ -984,20 +984,25 @@ _ICONS_INDEX = [
 def search_icons(needle='', translate=None):
     """Yield the ``(name, has_fill)`` of every icon matching ``needle``.
 
-    The needle is matched against the icon name and its English search tags; an
-    empty needle matches every icon.  Pass ``env._`` as *translate* to match the
-    tags translated in the language of ``env`` as well, the English ones staying
-    searchable whatever the language.
+    The needle is split on spaces and every word must be found in the icon name
+    or in its English search tags; an empty needle matches every icon.  Pass
+    ``env._`` as *translate* to look the missing words up in the tags translated
+    in the language of ``env`` too, the English ones staying searchable whatever
+    the language.
     """
-    needle = needle.strip().lower()
-    if not needle:
+    terms = needle.lower().split()
+    if not terms:
         yield from ((name, icon['has_fill']) for name, icon in ICONS.items())
         return
     for name, has_fill, haystack in _ICONS_INDEX:
-        if needle in haystack or (
-            translate is not None and needle in translate(ICONS[name]['tags']).lower()
-        ):
-            yield name, has_fill
+        missing = [term for term in terms if term not in haystack]
+        if missing:
+            if translate is None:
+                continue
+            translated = translate(ICONS[name]['tags']).lower()
+            if any(term not in translated for term in missing):
+                continue
+        yield name, has_fill
 '''
 
 
