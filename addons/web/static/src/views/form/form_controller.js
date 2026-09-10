@@ -504,7 +504,16 @@ export class FormController extends Component {
     }
 
     async beforeVisibilityChange() {
-        if (document.visibilityState === "hidden" && this.formInDialog === 0) {
+        const root = this.model.root;
+        const isEditingX2Many = Object.keys(root.activeFields).some((fieldName) => {
+            const field = root.fields[fieldName];
+            return (
+                ["one2many", "many2many"].includes(field.type) &&
+                !field.relatedPropertyField &&
+                root.data[fieldName].editedRecord
+            );
+        });
+        if (document.visibilityState === "hidden" && this.formInDialog === 0 && !isEditingX2Many) {
             // calling isDirty forces all fields to commit their changes
             const isDirty = await this.model.root.isDirty();
             if (isDirty && !this.disableSaveOnVisibilityChange) {
