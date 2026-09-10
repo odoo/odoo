@@ -1414,6 +1414,40 @@ test("out-of-focus notif takes new inbox messages into account", async () => {
     await expect.waitForSteps(["(1) Inbox"]);
 });
 
+test("no out-of-focus notif when push subscription is active", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Hagrid" });
+    const userId = pyEnv["res.users"].create({ partner_id: partnerId });
+    patchWithCleanup(OutOfFocusService.prototype, {
+        async hasServiceWorkInstalledAndPushSubscriptionActive() {
+            return true;
+        },
+        sendNotification() {
+            expect.step("send_notification");
+        },
+    });
+    listenStoreFetch("init_messaging");
+    await start();
+    await waitStoreFetch("init_messaging");
+    await openDiscuss("mail.box_inbox");
+    await contains(".o-mail-DiscussContent-threadName", { value: "Inbox" });
+    const adminId = serverState.partnerId;
+    await withUser(userId, () =>
+        rpc("/mail/message/post", {
+            post_data: {
+                body: "@Michell Admin",
+                partner_ids: [adminId],
+                message_type: "comment",
+            },
+            thread_id: partnerId,
+            thread_model: "res.partner",
+        })
+    );
+    await contains(".o-mail-DiscussSidebar-item:has(.badge:contains(1))", { text: "Inbox" });
+    await expect.waitForSteps([]);
+});
+
 test("out-of-focus notif on needaction message in group chat contributes only once", async () => {
     const pyEnv = await startServer();
     patchWithCleanup(document, {
@@ -2546,22 +2580,20 @@ test("leaveChannel closed the channel on RPC success with simulated SH websocket
     pyEnv["discuss.channel"].create({
         name: "SH leaveChannel test",
         channel_type: "channel",
-        channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId }),
-        ],
+        channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
     });
     await start();
     await openDiscuss();
-    // simulate websocket traffic failing to reach the browser 
+    // simulate websocket traffic failing to reach the browser
     onRpc("discuss.channel", "action_unfollow", () => {
         asyncStep("action_unfollow_called");
-        return true; 
+        return true;
     });
     await contains(".o-mail-DiscussSidebarChannel:has(:text('SH leaveChannel test'))");
     await click("[title='Channel Actions']");
     await click(".o-dropdown-item:contains('Leave Channel')");
     await click("button:contains(Leave Conversation)");
     await waitForSteps(["action_unfollow_called"]);
-    // ensure the channel has been fully closed 
+    // ensure the channel has been fully closed
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "SH leaveChannel test" });
 });
