@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.BuilderNumberSelect" t-inherit="html_builder.BuilderSelect">    
+    <!-- ... -->
+    <xpath expr="//div[hasclass('o-hb-select-wrapper')]" position="before">
+        <t t-if="this.state.disableOptions" t-call="html_builder.BuilderInput"/>
+    </xpath>
+
+    <xpath expr="//Dropdown" position="attributes">
+        <attribute name="t-if">!this.state.disableOptions</attribute>
+    </xpath>
+
+    <xpath expr="//button" position="replace">
+        <div class="o-hb-number-select-toggle">
+            <t t-if="this.state.enableCustomValue" t-call="html_builder.BuilderInput"/>
+            <input t-else=""
+                t-on-click="this.onSelectClick"
+                t-att-value="this.currentLabel"
+                class="o-hb-input-field-number text-center"
+                type="text"/>
+        </div>
+    </xpath>
+</t>
+
+<t t-name="html_builder.BuilderInput">
+    <BuilderNumberInput
+        t-props="this.numberInputProps"
+        action="this.numberInputProps.inputAction"
+        actionParam="this.numberInputProps.inputActionParam"
+        t-on-click="this.onInputClick"
+        autofocus="true"
+    />
+</t>
+
+</templates>

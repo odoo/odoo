@@ -7,15 +7,15 @@
             <BuilderSelectItem actionParam="''">None</BuilderSelectItem>
             <BuilderSelectItem actionParam="'shadow-sm'">
                 <t t-set="onClick" t-value="this.getOnClick('shadow-sm')"/>
-                <t t-call="html_builder.ShadowOptionItem">Small</t>
+                <t t-call="html_builder.EditInThemeOptionItem">Small</t>
             </BuilderSelectItem>
             <BuilderSelectItem actionParam="'shadow'">
                 <t t-set="onClick" t-value="this.getOnClick('shadow')"/>
-                <t t-call="html_builder.ShadowOptionItem">Normal</t>
+                <t t-call="html_builder.EditInThemeOptionItem">Normal</t>
             </BuilderSelectItem>
             <BuilderSelectItem actionParam="'shadow-lg'">
                 <t t-set="onClick" t-value="this.getOnClick('shadow-lg')"/>
-                <t t-call="html_builder.ShadowOptionItem">Large</t>
+                <t t-call="html_builder.EditInThemeOptionItem">Large</t>
             </BuilderSelectItem>
             <BuilderSelectItem id="'custom_shadow'" actionParam="'o-shadow-custom'">Custom</BuilderSelectItem>
         </BuilderSelect>
@@ -46,18 +46,6 @@
             </BuilderRow>
         </BuilderContext>
     </t>
-</t>
-
-<t t-name="html_builder.ShadowOptionItem">
-    <div class="d-flex">
-        <div class="flex-grow-1">
-            <t t-out="0"/>
-        </div>
-        <a class="oi oi-filled btn o-hb-theme-tab-link"
-                data-icon="edit"
-                title="Edit in Theme Tab"
-                t-on-click="onClick"/>
-    </div>
 </t>
 
 </templates>
