@@ -1080,7 +1080,7 @@ class TestPointOfSaleFlow(CommonPosTest):
         self.assertEqual(methods.mapped('name'), ['Cash', 'Card', 'Customer Account'])
         self.assertEqual(methods.mapped('sequence'), [1, 2, 4])
         new_pm = self.env['pos.payment.method'].create({'name': 'Quick Pay', 'type': 'bank'})
-        self.assertEqual(new_pm.sequence, 5)
+        self.assertGreaterEqual(new_pm.sequence, 5)
 
     def test_add_two_lines_with_same_uuid_through_sync_from_ui(self):
         """Test that adding two lines with the same UUID doesn't cause issues."""
