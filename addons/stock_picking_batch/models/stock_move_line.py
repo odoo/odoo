@@ -402,3 +402,9 @@ class StockMoveLine(models.Model):
 
         description = ', '.join(description_items)
         return description
+
+    def _get_related_pickings(self):
+        pickings = super()._get_related_pickings()
+        if pickings.batch_id:
+            pickings |= pickings.batch_id.picking_ids
+        return pickings

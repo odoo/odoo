@@ -42,7 +42,7 @@
                         <group>
                             <field name="package_type_id"/>
                             <field name='owner_id' groups="stock.group_tracking_owner"/>
-                            <field name="location_id" options="{'no_create': True}"/>
+                            <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
                             <field name="parent_package_id" domain="[('id', '!=', id), '|', ('location_id', '=', location_id), ('location_id', '=', False)]" widget="package_m2o" context="{'show_src_package': 1}"/>
                         </group>
                         <group>
@@ -86,7 +86,7 @@
                 <field name="name" string="Package Name"/>
                 <field name="parent_package_id" string="Container" widget="package_m2o" context="{'show_src_package': 1}"/>
                 <field name="package_type_id"/>
-                <field name="location_id" options="{'no_create': True}"/>
+                <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
                 <field name="company_id" groups="base.group_multi_company" optional="hide"/>
             </list>
         </field>
