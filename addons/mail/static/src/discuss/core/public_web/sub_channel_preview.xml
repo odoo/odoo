@@ -3,7 +3,7 @@
     <t t-name="mail.SubChannelPreview">
         <t t-set="message" t-value="this.channel().newestPersistentOfAllMessage ?? this.channel().from_message_id"/>
         <t t-set="channelAtRender" t-value="this.channel()"/>
-        <div class="o-mail-SubChannelPreview btn btn-light-subtle d-flex border border-secondary mx-1 px-2 py-1 rounded-4 align-items-center" role="button" t-att-class="{'o-pe-1_5': this.env.inMessage}" t-attf-class="{{ this.class() }}" t-on-click="(ev) => this.onClick?.(ev, { channelAtRender })">
+        <div class="o-mail-SubChannelPreview btn btn-light-subtle d-flex border mx-1 px-2 py-1 rounded-4 align-items-center" role="button" t-att-class="{'o-pe-1_5': this.env.inMessage}" t-attf-class="{{ this.class() }}" t-on-click="(ev) => this.onClick?.(ev, { channelAtRender })">
             <div class="d-flex flex-column w-100 bg-inherit">
                 <div class="d-flex w-100 align-items-baseline">
                     <span class="o-mail-SubChannelPreview-name fw-bold text-truncate small" t-out="this.channel().displayName"/>

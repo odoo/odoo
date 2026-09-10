@@ -14,7 +14,6 @@
         <t t-set="reactionAtRender" t-value="this.reaction()"/>
         <button class="position-relative o-mail-MessageReaction btn d-flex p-0 bg-view border o-rounded-bubble mb-1 fs-5 px-1 gap-1 align-items-center" t-on-click="(ev) => this.onClickReaction(ev, { messageAtRender, reactionAtRender })" t-on-contextmenu="this.onContextMenu" t-on-mouseenter="this.loadEmoji" t-ref="this.reactionButtonRef" t-att-class="{
             'o-selfReacted border-primary text-primary fw-bold': this.hasSelfReacted(this.message(), this.reaction()),
-            'border-secondary': !this.hasSelfReacted(this.message(), this.reaction()),
             'ms-1': this.env.inChatWindow and this.env.alignedRight,
             'me-1': !(this.env.inChatWindow and this.env.alignedRight),
             'cursor-default': !this.message().canAddReaction,

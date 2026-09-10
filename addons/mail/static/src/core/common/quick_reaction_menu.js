@@ -30,7 +30,7 @@ export class QuickReactionMenu extends Component {
             { onSelect: this.toggleReaction.bind(this), class: "overflow-hidden rounded-2" },
             {
                 position: "bottom-middle",
-                popoverClass: "o-mail-QuickReactionMenu-pickerPopover",
+                popoverClass: "o-mail-QuickReactionMenu-pickerPopover border",
             }
         );
         this.dropdown = useDropdownState({

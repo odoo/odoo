@@ -8,6 +8,7 @@ import { ChannelMemberList } from "@mail/discuss/core/common/channel_member_list
 import { DeleteThreadDialog } from "@mail/discuss/core/common/delete_thread_dialog";
 import { NotificationSettings } from "@mail/discuss/core/common/notification_settings";
 import { PinnedMessagesPanel } from "@mail/discuss/core/common/pinned_messages_panel";
+import { attClassObjectToString } from "@mail/utils/common/format";
 
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
@@ -176,11 +177,11 @@ registerThreadAction("invite-people", {
         }
     },
     actionPanelOuterClass: ({ owner, store }) =>
-        `o-discuss-ChannelInvitation ${
-            owner.props.chatWindow ? "bg-inherit" : ""
-        } border border-secondary ${
-            owner.env.inMeetingView ? "" : store.discussDropdownMenuClass(owner)
-        }`,
+        attClassObjectToString({
+            "o-discuss-ChannelInvitation border": true,
+            "bg-inherit": owner.props.chatWindow,
+            [store.discussDropdownMenuClass(owner)]: !owner.env.inMeetingView,
+        }),
     condition: ({ channel, owner }) =>
         channel &&
         !owner.env.pipWindow &&

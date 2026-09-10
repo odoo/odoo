@@ -102,7 +102,7 @@ registerThreadAction("search-messages", {
 });
 registerThreadAction("meeting-chat", {
     actionPanelComponent: MeetingChat,
-    actionPanelOuterClass: "bg-100 border border-secondary",
+    actionPanelOuterClass: "bg-100 border",
     badge: ({ thread }) => thread.isUnread,
     badgeIcon: ({ channel }) => !channel.importantCounter && "circle",
     badgeIconClass: ({ channel }) =>
