@@ -159,6 +159,14 @@ export class PaymentScreen extends Component {
         if (result.status) {
             this.numberBuffer.set(result.data.amount.toString());
             if (
+                paymentMethod.type === "pay_later" &&
+                this.currentOrder.hasCabaTax &&
+                !this.currentOrder.isToInvoice() &&
+                this.pos.config.canInvoice
+            ) {
+                this.currentOrder.setToInvoice(true);
+            }
+            if (
                 !this.isRefundOrder &&
                 ((paymentMethod.use_payment_terminal &&
                     paymentMethod.payment_terminal.fastPayments) ||
