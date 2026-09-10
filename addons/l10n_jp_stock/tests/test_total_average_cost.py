@@ -252,9 +252,14 @@ class TestTotalAverageCost(TestTotalAverageCostCommon):
         self._add_opening_stock()
         self._create_move(10, 125, self.today, self.supplier_loc, self.stock_loc)
         self._create_move(25, 110, self.today, self.supplier_loc, self.stock_loc)
+        # nothing says which receipt this one goes back on, so it leaves at its own price
         self._create_move(5, 125, self.today, self.stock_loc, self.supplier_loc)
         action = self._run_category_wizard()
-        self.assertAlmostEqual(self.product.standard_price, 102.88, places=2)
+        self.assertAlmostEqual(
+            self.product.standard_price,
+            (100 * 100 + 10 * 125 + 25 * 110 - 5 * 125) / 130,
+            places=2,
+        )
         self.assertEqual(action['params']['type'], 'success')
 
     def test_customer_return_sale_time_cost(self):
@@ -273,7 +278,7 @@ class TestTotalAverageCost(TestTotalAverageCostCommon):
         self._add_opening_stock()
         self._create_move(10, 125, self.today, self.supplier_loc, self.customer_loc)
         self._run_category_wizard()
-        self.assertAlmostEqual(self.product.standard_price, 102.27, places=2)
+        self.assertAlmostEqual(self.product.standard_price, (100 * 100 + 10 * 125) / 110, places=2)
 
     def test_dropship_return_prior_ignored(self):
         # the drop-ship it cancels was averaged into an earlier period, so removing
@@ -418,7 +423,7 @@ class TestTotalAverageCost(TestTotalAverageCostCommon):
         self._add_opening_stock()
         self._create_move(10, 150, self.today, self.supplier_loc, self.stock_loc)
         self._run_wizard(product_ids=[self.product.id])
-        self.assertAlmostEqual(self.product.standard_price, 104.55, places=2)
+        self.assertAlmostEqual(self.product.standard_price, (100 * 100 + 10 * 150) / 110, places=2)
         self.assertEqual(other_product.standard_price, 50)
 
     def test_purchase_fx_at_move_date(self):
@@ -448,4 +453,4 @@ class TestTotalAverageCost(TestTotalAverageCostCommon):
         self._create_move(10, 125, self.today - timedelta(days=1), self.supplier_loc, transit_loc)
         self._create_move(10, 125, self.today, transit_loc, self.stock_loc)
         self._run_category_wizard()
-        self.assertAlmostEqual(self.product.standard_price, 102.27, places=2)
+        self.assertAlmostEqual(self.product.standard_price, (100 * 100 + 10 * 125) / 110, places=2)
