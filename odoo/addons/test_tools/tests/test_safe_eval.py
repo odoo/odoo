@@ -8,9 +8,12 @@ from odoo.tools import mute_logger
 from odoo.tools.misc import OrderedSet
 from odoo.tools.safe_eval import (
     _BUILTINS,
+    SAFE_EVAL_COMPILE_CACHE_KEY,
     const_eval,
+    evaluation as safe_eval_evaluation,
     safe_checker,
     safe_eval,
+    safe_eval_compile_cache,
 )
 from odoo.tools.safe_eval.runtime import (
     _SafeGenerator,
@@ -25,6 +28,35 @@ from odoo.tools.safe_eval.runtime import (
 
 @tagged('at_install', '-post_install')
 class TestSafeEval(BaseCase):
+    def test_safe_eval_compile_cache(self):
+        expression = 'result = value + 1'
+        store = {}
+        with (
+            patch.object(
+                safe_eval_evaluation,
+                'compile_codeobj',
+                wraps=safe_eval_evaluation.compile_codeobj,
+            ) as compile_mock,
+            patch.object(
+                safe_eval_evaluation,
+                'assert_valid_codeobj',
+                wraps=safe_eval_evaluation.assert_valid_codeobj,
+            ) as validate_mock,
+            safe_eval_compile_cache(store) as cache,
+        ):
+            with safe_eval_compile_cache(store):
+                first_context = {'value': 1}
+                second_context = {'value': 2}
+                safe_eval(expression, first_context, mode='exec', cache=cache)
+                safe_eval(expression, second_context, mode='exec', cache=cache)
+            self.assertIs(store[SAFE_EVAL_COMPILE_CACHE_KEY], cache)
+
+        self.assertNotIn(SAFE_EVAL_COMPILE_CACHE_KEY, store)
+        self.assertEqual(first_context['result'], 2)
+        self.assertEqual(second_context['result'], 3)
+        self.assertEqual(compile_mock.call_count, 1)
+        self.assertEqual(validate_mock.call_count, 1)
+
     def test_const(self):
         # NB: True and False are names in Python 2 not consts
         expected = (1, {"a": {2.5}}, [None, u"foo"])
