@@ -428,16 +428,9 @@ export class ImageStrategyPlugin extends Plugin {
         // the value should be normalized for PILLOW
         // maybe it should be normalized for emails too.
         const font = "oi";
-        const isCustom = fontIcon.matches("[data-icon^='oi_']");
-        const content = this.getFontIconContent(fontIcon) || " ";
-        let icon = isCustom ? content.codePointAt(0) : content;
-        let fill = 0;
-        if (font === "oi" && !isCustom) {
-            if (this.isIconFilled(fontIcon)) {
-                icon = icon.replace(/_f$/, "");
-                fill = 1;
-            }
-        }
+        const content = this.getFontIconContent(fontIcon) || "help";
+        const icon = content.replace(/_f$/, "");
+        const fill = this.isIconFilled(fontIcon) ? 1 : 0;
         const color = this.getFontIconPropertyValue(fontIcon, "color");
         const pilColor =
             this.convertCSSColorToPILRgba(color) || this.convertCSSColorToPILRgba("rgb(0,0,0)");
