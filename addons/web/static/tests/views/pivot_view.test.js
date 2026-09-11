@@ -4111,3 +4111,20 @@ test("Measure from arch is not lost after update", async () => {
     await contains(".o_pivot_buttons button.dropdown-toggle").click();
     expect(".dropdown-menu .dropdown-item:contains(Product)").toHaveCount(1);
 });
+
+test("measure cells support decoration-danger and decoration-success", async () => {
+    await mountView({
+        type: "pivot",
+        resModel: "partner",
+        arch: `
+            <pivot>
+                <field name="customer" type="row"/>
+                <field name="foo" type="measure" decoration-danger="foo &lt; 15" decoration-success="foo &gt; 15"/>
+            </pivot>`,
+    });
+
+    expect("tbody tr td.o_pivot_cell_value.text-success").toHaveCount(2);
+    expect("tbody tr td.o_pivot_cell_value.text-danger").toHaveCount(1);
+    expect('tbody tr:contains("First") td.o_pivot_cell_value').toHaveClass("text-danger");
+    expect('tbody tr:contains("Second") td.o_pivot_cell_value').toHaveClass("text-success");
+});
