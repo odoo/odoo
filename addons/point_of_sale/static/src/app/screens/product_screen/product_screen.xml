@@ -40,6 +40,7 @@
                                 onClick.bind="() => this.addProductToOrder(product)"
                                 t-on-pointerdown="(event) => this.onPointerDown(event, product)"
                                 t-on-pointerup="longPressHandlers.onMouseUp"
+                                t-on-pointercancel="longPressHandlers.onTouchEnd"
                                 productCartQty="this.state.quantityByProductTmplId[product.id]" />
                         </div>
                     </div>
