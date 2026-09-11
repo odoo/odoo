@@ -28,7 +28,30 @@ import { htmlInsertText } from "@mail/../tests/mail_test_helpers_html";
 import { Store } from "@mail/../tests/mock_server/store";
 
 import { describe, expect, test } from "@odoo/hoot";
+<<<<<<< 92600d5248ff291b038f6bb4c74a06298fed58fe
 import { animationFrame, press, rightClick, tick, waitFor, waitForNone } from "@odoo/hoot-dom";
+||||||| 4fbe79b47240ece6e1b65f3de8431025930d3e65
+import {
+    animationFrame,
+    Deferred,
+    press,
+    rightClick,
+    runAllTimers,
+    tick,
+    waitFor,
+    waitForNone,
+} from "@odoo/hoot-dom";
+=======
+import {
+    animationFrame,
+    Deferred,
+    press,
+    rightClick,
+    tick,
+    waitFor,
+    waitForNone,
+} from "@odoo/hoot-dom";
+>>>>>>> 8345305f68abab00b9977fa03e60d894739448d8
 import { mockDate } from "@odoo/hoot-mock";
 
 import { browser } from "@web/core/browser/browser";
