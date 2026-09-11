@@ -39,7 +39,7 @@ export class MessagingMenuUIState extends Record {
      * The active chip filter (e.g. "Unread"), if any: rendered as a filter chip, sourced
      * from `tab.filters`.
      *
-     * @type {?import("@mail/core/public_web/messaging_menu/messaging_menu_tab_model").MessagingMenuTabFilter}
+     * @type {?import("models").MessagingMenuTabFilter}
      */
     selectedFilter;
     /**
@@ -47,8 +47,7 @@ export class MessagingMenuUIState extends Record {
      * itself (e.g. `"ai.agent_scope"`). ANDed with the chip filter. Display is up to
      * the addon.
      *
-     * @type {Object<string,
-     * import("@mail/core/public_web/messaging_menu/messaging_menu_tab_model").MessagingMenuTabFilter>}
+     * @type {Object<string, import("models").MessagingMenuTabFilter>}
      */
     pluginFilters = fields.Attr({}, { asProxy: true });
     /** @type {string} */
@@ -73,7 +72,7 @@ export class MessagingMenuUIState extends Record {
      * chip filter.
      *
      * @param {string} key
-     * @param {?import("@mail/core/public_web/messaging_menu/messaging_menu_tab_model").MessagingMenuTabFilter} filter
+     * @param {?import("models").MessagingMenuTabFilter} filter
      */
     setPluginFilter(key, filter) {
         if (filter) {

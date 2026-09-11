@@ -23,7 +23,7 @@ declare module "models" {
         channels: DiscussChannel[];
         channelsWithCounter: DiscussChannel[];
         compareChannels: (c1: DiscussChannel, c2: DiscussChannel) => number;
-        getSortedChannels: (filter: import("@mail/core/public_web/messaging_menu/messaging_menu_tab_model").MessagingMenuTabFilter, channels: DiscussChannel[]) => DiscussChannel[];
+        getSortedChannels: (filter: MessagingMenuTabFilter, channels: DiscussChannel[]) => DiscussChannel[];
         includesChannel: (channel: DiscussChannel) => boolean;
     }
     export interface Store {
