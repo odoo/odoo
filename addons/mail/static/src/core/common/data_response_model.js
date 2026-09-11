@@ -60,7 +60,7 @@ export class DataResponse extends Record {
      *
      * @type {boolean}
      */
-    _resolve;
+    _resolve = undefined;
     /**
      * Promise that is resolved with the data when the data request is complete.
      * @type {PromiseWithResolvers<InstanceFields<DataResponse>>}
