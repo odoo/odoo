@@ -321,3 +321,50 @@ class TestReturnPicking(TestStockCommon):
         # 2 exchanged products received: both on-hand and forecasted quantities should be 10
         self.assertEqual(self.productA.qty_available, 10)
         self.assertEqual(self.productA.virtual_available, 10)
+
+    def test_return_pick_after_returning_partial_delivery(self):
+        """ In a 2-step delivery, if only part of what was picked to Output is
+        actually delivered (the rest staying in Output), and the delivered
+        part is returned first, then returning the excess still sitting in
+        Output should reserve from Output, not from wherever the unrelated
+        return of the delivery happened to land. """
+        self.warehouse_1.delivery_steps = 'pick_ship'
+        self.StockQuantObj._update_available_quantity(self.productA, self.stock_location, 10)
+
+        pick = self.PickingObj.create({
+            'picking_type_id': self.warehouse_1.pick_type_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.output_location.id,
+            'move_ids': [Command.create({
+                'product_id': self.productA.id,
+                'product_uom_qty': 5,
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.output_location.id,
+            })],
+        })
+        pick.button_validate()
+
+        # Only 3 of the 5 picked units actually get delivered; the other 2
+        # stay in Output.
+        ship = pick.move_ids.move_dest_ids.picking_id
+        ship.move_ids.product_uom_qty = 3
+        ship.move_ids.quantity = 3
+        ship.button_validate()
+
+        # Return the 3 delivered units first.
+        return_ship_wizard = self.env['stock.return.picking'].with_context(
+            active_id=ship.id, active_ids=ship.ids, active_model='stock.picking',
+        ).create({})
+        return_ship_wizard.product_return_moves.quantity = 3
+        return_ship = self.env['stock.picking'].browse(return_ship_wizard.action_create_returns()['res_id'])
+        return_ship.button_validate()
+
+        # Return the 2 excess units that never left Output.
+        return_pick_wizard = self.env['stock.return.picking'].with_context(
+            active_id=pick.id, active_ids=pick.ids, active_model='stock.picking',
+        ).create({})
+        return_pick_wizard.product_return_moves.quantity = 2
+        return_pick = self.env['stock.picking'].browse(return_pick_wizard.action_create_returns()['res_id'])
+
+        self.assertEqual(return_pick.move_ids.move_line_ids.location_id, self.output_location)
+        self.assertEqual(return_pick.move_ids.move_line_ids.location_dest_id, self.stock_location)
