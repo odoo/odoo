@@ -271,3 +271,29 @@ class TestExpensesAccessRights(TestExpenseCommon, HttpCase):
         self.assertEqual(len(user_attachment), 1)
         user_attachment.sudo().unlink()
         self.assertEqual(len(expense.attachment_ids), 0)
+
+    def test_expense_filter(self):
+        """ Tests '_search_filter_for_expense' domain filtering per user role.
+            - Expense Manager: Sees all employees across the company.
+            - Team Approver: Sees only themselves and their direct reports.
+            - Base Employee: Sees only their own employee record.
+        """
+        hr_admin_user = new_test_user(self.env, login='hr_admin_user', groups='base.group_user,hr.group_hr_user')
+        Employee = self.env['hr.employee'].with_user(hr_admin_user)
+        approver_user = new_test_user(self.env, login='approver_user', groups='base.group_user,hr_expense.group_hr_expense_team_approver')
+        approver_employee = Employee.create({'name': 'approver_emp', 'user_id': approver_user.id})
+        subordinate_employee = Employee.create({'name': 'subordinate_emp', 'parent_id': approver_employee.id})
+
+        base_user = new_test_user(self.env, login='base_user', groups='base.group_user')
+        base_employee = Employee.create({'name': 'base_emp', 'user_id': base_user.id})
+
+        test_cases = [
+            ('Expense Manager', self.expense_user_manager, self.expense_employee + base_employee + approver_employee + subordinate_employee),
+            ('Team Approver', approver_user, approver_employee + subordinate_employee),
+            ('Base Employee', base_user, base_employee),
+        ]
+
+        for case_name, user, expected_employees in test_cases:
+            with self.subTest(case_name=case_name):
+                employees = self.env['hr.employee'].with_user(user).search([('filter_for_expense', '=', True)])
+                self.assertEqual(employees, expected_employees)
