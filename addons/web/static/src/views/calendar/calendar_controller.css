@@ -38,9 +38,10 @@
     --Avatar-size: var(--o-calendar-filter-avatar-size);
 
     flex: 0 0 auto;
+    width: var(--CalendarSidePanel-width, var(--o-datetime-picker-reduced-width));
 
     .o_calendar_unschedule_zone {
-        width: var(--o-datetime-picker-reduced-width);
+        width: 100%;
         height: stretch;
         min-height: 200px; /* Fallback for firefox < 146 */
         border: 1px solid color-mix(in srgb, var(--o-enterprise-action-color) 40%, transparent);
@@ -48,7 +49,7 @@
     }
 
     .o_calendar_sidepanel {
-        width: var(--o-datetime-picker-reduced-width);
+        width: 100%;
 
         /* Inlined in the panel: it spans the full width, the panel handles the */
         /* horizontal spacing. */
@@ -87,6 +88,14 @@
 .o_calendar_sidebar {
     writing-mode: vertical-rl;
     text-orientation: mixed;
+
+    .oi {
+        writing-mode: horizontal-tb;
+    }
+}
+
+.o_calendar_sidepanel_resize {
+    cursor: col-resize;
 }
 
 /* Print */
