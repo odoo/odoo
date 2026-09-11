@@ -71,10 +71,16 @@ class ResPartner(models.Model):
                     it_ruc.id,
                     it_dni.id,
                 ):
-                    if partner.l10n_latam_identification_type_id.id == it_dni.id and len(partner.vat) != 10:
+                    if (
+                        partner.l10n_latam_identification_type_id.id == it_dni.id
+                        and (len(partner.vat) != 10 or not partner.vat.isdigit())
+                    ):
                         raise ValidationError(_('If your identification type is %s, it must be 10 digits',
                                                 it_dni.display_name))
-                    if partner.l10n_latam_identification_type_id.id == it_ruc.id and len(partner.vat) != 13:
+                    if (
+                        partner.l10n_latam_identification_type_id.id == it_ruc.id
+                        and (len(partner.vat) != 13 or not partner.vat.isdigit())
+                    ):
                         raise ValidationError(_('If your identification type is %s, it must be 13 digits',
                                                 it_ruc.display_name))
         return super(ResPartner, self - ecuadorian_partners).check_vat()
