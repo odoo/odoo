@@ -170,11 +170,12 @@ function scrollToSelection(selection) {
  *
  * @typedef {((ev: PointerEvent) => void | true)[]} double_click_overrides
  * @typedef {((ev: PointerEvent) => void | true)[]} triple_click_overrides
- * @typedef {((selection: EditorSelection) => boolean)[]} fix_selection_on_editable_root_overrides
+ * @typedef {((selection: EditorSelection) => boolean)[]} fix_selection_on_no_inline_root_overrides
  *
  * @typedef {((node: Node, selection: EditorSelection, range: Range) => boolean | undefined)[]} is_node_fully_selected_predicates
  * @typedef {((ev: Event, char: string, lastSkipped: string) => boolean | undefined)[]} is_char_tangible_for_keyboard_navigation_predicates
  * @typedef {((node: Node) => boolean | undefined)[]} is_node_editable_predicates
+ * @typedef {((node: Node) => boolean | undefined)[]} is_no_inline_root_predicates
  *
  * @typedef {((targetedNodes: Node[]) => Node[])[]} targeted_nodes_processors
  */
@@ -371,7 +372,7 @@ export class SelectionPlugin extends Plugin {
         this.previousActiveSelection = this.activeSelection;
         // getSelectionData sets this.activeSelection to the current selection
         const selectionData = this.getSelectionData();
-        if (this.fixSelectionOnEditableRoot(selectionData)) {
+        if (this.fixSelectionOnNoInlineRoot(selectionData)) {
             return;
         }
         this.trigger("on_selectionchange_handlers", selectionData);
@@ -966,20 +967,22 @@ export class SelectionPlugin extends Plugin {
      * @param {SelectionData} selectionData
      * @returns {boolean} Whether the selection was fixed
      */
-    fixSelectionOnEditableRoot(selectionData) {
+    fixSelectionOnNoInlineRoot(selectionData) {
         const { editableSelection, documentSelectionIsInEditable } = selectionData;
         if (this.config.allowInlineAtRoot || !documentSelectionIsInEditable) {
             return false;
         }
-        const isSelectionOnEditableRoot = (s) => s.isCollapsed && s.anchorNode === this.editable;
-        if (!isSelectionOnEditableRoot(editableSelection)) {
+        const isSelectionOnNoInlineRoot = (s) =>
+            s.isCollapsed &&
+            (this.checkPredicates("is_no_inline_root_predicates", s.anchorNode) ?? false);
+        if (!isSelectionOnNoInlineRoot(editableSelection)) {
             return false;
         }
-        if (this.delegateTo("fix_selection_on_editable_root_overrides", editableSelection)) {
+        if (this.delegateTo("fix_selection_on_no_inline_root_overrides", editableSelection)) {
             return true;
         }
         // Revert the selection to the previous one
-        if (isSelectionOnEditableRoot(this.previousActiveSelection)) {
+        if (isSelectionOnNoInlineRoot(this.previousActiveSelection)) {
             // Last stored selection is also at the editable root
             return false;
         }

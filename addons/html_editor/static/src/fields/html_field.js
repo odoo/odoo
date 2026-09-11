@@ -381,6 +381,12 @@ export const htmlField = {
         if ("allowChecklist" in options) {
             editorConfig.allowChecklist = Boolean(options.allowChecklist);
         }
+        if ("allowScrollableTables" in options) {
+            editorConfig.allowScrollableTables = Boolean(options.allowScrollableTables);
+        }
+        if ("saveScrollableTables" in options) {
+            editorConfig.saveScrollableTables = Boolean(options.saveScrollableTables);
+        }
         if ("allowAttachmentCreation" in options) {
             editorConfig.allowImage = Boolean(options.allowAttachmentCreation);
             editorConfig.allowFile = Boolean(options.allowAttachmentCreation);

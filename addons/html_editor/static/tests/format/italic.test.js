@@ -216,7 +216,7 @@ test("should make a few characters italic inside table (italic)", async () => {
         stepFunction: italic,
         contentAfterEdit: unformat(`
             <p data-selection-placeholder=""><br></p>
-            <table class="table table-bordered o_table o_selected_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr>
                         <td class="o_selected_td"><p><em>[abc</em></p></td>
@@ -234,7 +234,7 @@ test("should make a few characters italic inside table (italic)", async () => {
                         <td><p><br></p></td>
                     </tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`),
     });
 });

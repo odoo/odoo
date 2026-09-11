@@ -42,7 +42,7 @@ describe("custom selection", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="o_selected_table">
+                <div class="o_table_wrapper"><table class="o_selected_table">
                 <tbody>
                     <tr>
                         <td>ab</td>
@@ -50,8 +50,8 @@ describe("custom selection", () => {
                         <td class="o_selected_td">e]f</td>
                     </tr>
                 </tbody>
-            </table>
-            <p data-selection-placeholder=""><br></p>`)
+            </table></div>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
         );
         const overlayColorTDs = queryAll("table td").map(
             (td) => getComputedStyle(td)["box-shadow"]
@@ -124,20 +124,20 @@ describe("select a full table on cross over", () => {
                     "<p>a[bc</p><table><tbody><tr><td>a]b</td><td>cd</td><td>ef</td></tr></tbody></table>",
                 contentBeforeEdit:
                     "<p>a[bc</p>" +
-                    '<table class="o_selected_table"><tbody><tr>' +
+                    '<div class="o_table_wrapper"><table class="o_selected_table"><tbody><tr>' +
                     '<td class="o_selected_td">ab</td>' +
                     '<td class="o_selected_td">cd</td>' +
                     '<td class="o_selected_td">ef]</td>' +
-                    "</tr></tbody></table>" +
-                    '<p data-selection-placeholder=""><br></p>',
+                    "</tr></tbody></table></div>" +
+                    '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
                 contentAfterEdit:
                     "<p>a[bc</p>" +
-                    '<table class="o_selected_table"><tbody><tr>' +
+                    '<div class="o_table_wrapper"><table class="o_selected_table"><tbody><tr>' +
                     '<td class="o_selected_td">ab</td>' +
                     '<td class="o_selected_td">cd</td>' +
                     '<td class="o_selected_td">ef]</td>' +
-                    "</tr></tbody></table>" +
-                    '<p data-selection-placeholder=""><br></p>',
+                    "</tr></tbody></table></div>" +
+                    '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
             });
         });
 
@@ -147,16 +147,16 @@ describe("select a full table on cross over", () => {
                     "<table><tbody><tr><td>ab</td><td>cd</td><td>e[f</td></tr></tbody></table><p>a]bc</p>",
                 contentBeforeEdit:
                     '<p data-selection-placeholder=""><br></p>' +
-                    '<table class="o_selected_table"><tbody><tr>' +
+                    '<div class="o_table_wrapper"><table class="o_selected_table"><tbody><tr>' +
                     '<td class="o_selected_td">[ab</td>' +
                     '<td class="o_selected_td">cd</td>' +
-                    '<td class="o_selected_td">ef</td></tr></tbody></table><p>a]bc</p>',
+                    '<td class="o_selected_td">ef</td></tr></tbody></table></div><p>a]bc</p>',
                 contentAfterEdit:
                     '<p data-selection-placeholder=""><br></p>' +
-                    '<table class="o_selected_table"><tbody><tr>' +
+                    '<div class="o_table_wrapper"><table class="o_selected_table"><tbody><tr>' +
                     '<td class="o_selected_td">[ab</td>' +
                     '<td class="o_selected_td">cd</td>' +
-                    '<td class="o_selected_td">ef</td></tr></tbody></table><p>a]bc</p>',
+                    '<td class="o_selected_td">ef</td></tr></tbody></table></div><p>a]bc</p>',
             });
         });
 
@@ -165,10 +165,10 @@ describe("select a full table on cross over", () => {
                 contentBefore:
                     "<p>a[bc</p><table><tbody><tr><td>ab</td><td>cd</td><td>ef</td></tr></tbody></table><p>a]bc</p>",
                 contentAfterEdit:
-                    '<p>a[bc</p><table class="o_selected_table"><tbody><tr>' +
+                    '<p>a[bc</p><div class="o_table_wrapper"><table class="o_selected_table"><tbody><tr>' +
                     '<td class="o_selected_td">ab</td>' +
                     '<td class="o_selected_td">cd</td>' +
-                    '<td class="o_selected_td">ef</td></tr></tbody></table><p>a]bc</p>',
+                    '<td class="o_selected_td">ef</td></tr></tbody></table></div><p>a]bc</p>',
             });
         });
 
@@ -177,25 +177,25 @@ describe("select a full table on cross over", () => {
                 contentBefore:
                     "<p>a[bc</p><table><tbody><tr><td>ab</td><td>cd</td><td>ef</td></tr></tbody></table><p>abc</p><table><tbody><tr><td>a]b</td><td>cd</td><td>ef</td></tr></tbody></table>",
                 contentBeforeEdit:
-                    '<p>a[bc</p><table class="o_selected_table"><tbody><tr>' +
+                    '<p>a[bc</p><div class="o_table_wrapper"><table class="o_selected_table"><tbody><tr>' +
                     '<td class="o_selected_td">ab</td>' +
                     '<td class="o_selected_td">cd</td>' +
-                    '<td class="o_selected_td">ef</td></tr></tbody></table>' +
-                    '<p>abc</p><table class="o_selected_table"><tbody><tr>' +
+                    '<td class="o_selected_td">ef</td></tr></tbody></table></div>' +
+                    '<p>abc</p><div class="o_table_wrapper"><table class="o_selected_table"><tbody><tr>' +
                     '<td class="o_selected_td">ab</td>' +
                     '<td class="o_selected_td">cd</td>' +
-                    '<td class="o_selected_td">ef]</td></tr></tbody></table>' +
-                    '<p data-selection-placeholder=""><br></p>',
+                    '<td class="o_selected_td">ef]</td></tr></tbody></table></div>' +
+                    '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
                 contentAfterEdit:
-                    '<p>a[bc</p><table class="o_selected_table"><tbody><tr>' +
+                    '<p>a[bc</p><div class="o_table_wrapper"><table class="o_selected_table"><tbody><tr>' +
                     '<td class="o_selected_td">ab</td>' +
                     '<td class="o_selected_td">cd</td>' +
-                    '<td class="o_selected_td">ef</td></tr></tbody></table>' +
-                    '<p>abc</p><table class="o_selected_table"><tbody><tr>' +
+                    '<td class="o_selected_td">ef</td></tr></tbody></table></div>' +
+                    '<p>abc</p><div class="o_table_wrapper"><table class="o_selected_table"><tbody><tr>' +
                     '<td class="o_selected_td">ab</td>' +
                     '<td class="o_selected_td">cd</td>' +
-                    '<td class="o_selected_td">ef]</td></tr></tbody></table>' +
-                    '<p data-selection-placeholder=""><br></p>',
+                    '<td class="o_selected_td">ef]</td></tr></tbody></table></div>' +
+                    '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
             });
         });
 
@@ -204,14 +204,14 @@ describe("select a full table on cross over", () => {
                 contentBefore:
                     "<p>a[bc</p><table><tbody><tr><td>ab</td><td>cd</td><td>ef</td></tr></tbody></table><p>abc</p><table><tbody><tr><td>ab</td><td>cd</td><td>ef</td></tr></tbody></table><p>a]bc</p>",
                 contentAfterEdit:
-                    '<p>a[bc</p><table class="o_selected_table"><tbody><tr>' +
+                    '<p>a[bc</p><div class="o_table_wrapper"><table class="o_selected_table"><tbody><tr>' +
                     '<td class="o_selected_td">ab</td>' +
                     '<td class="o_selected_td">cd</td>' +
-                    '<td class="o_selected_td">ef</td></tr></tbody></table>' +
-                    '<p>abc</p><table class="o_selected_table"><tbody><tr>' +
+                    '<td class="o_selected_td">ef</td></tr></tbody></table></div>' +
+                    '<p>abc</p><div class="o_table_wrapper"><table class="o_selected_table"><tbody><tr>' +
                     '<td class="o_selected_td">ab</td>' +
                     '<td class="o_selected_td">cd</td>' +
-                    '<td class="o_selected_td">ef</td></tr></tbody></table><p>a]bc</p>',
+                    '<td class="o_selected_td">ef</td></tr></tbody></table></div><p>a]bc</p>',
             });
         });
     });
@@ -228,12 +228,12 @@ describe("select a full table on cross over", () => {
                 stepFunction: bold,
                 contentAfterEdit:
                     "<p>a<strong>[bc</strong></p>" +
-                    '<table class="o_selected_table"><tbody><tr>' +
+                    '<div class="o_table_wrapper"><table class="o_selected_table"><tbody><tr>' +
                     '<td class="o_selected_td"><strong>ab</strong></td>' +
                     '<td class="o_selected_td"><strong>cd</strong></td>' +
                     '<td class="o_selected_td"><strong>ef]</strong></td>' +
-                    "</tr></tbody></table>" +
-                    '<p data-selection-placeholder=""><br></p>',
+                    "</tr></tbody></table></div>" +
+                    '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
             });
         });
 
@@ -247,20 +247,20 @@ describe("select a full table on cross over", () => {
                     "</tr></tbody></table><p>a]bc</p>",
                 contentBeforeEdit:
                     '<p data-selection-placeholder=""><br></p>' +
-                    '<table class="o_selected_table"><tbody><tr>' +
+                    '<div class="o_table_wrapper"><table class="o_selected_table"><tbody><tr>' +
                     '<td class="o_selected_td">[ab</td>' +
                     '<td class="o_selected_td">cd</td>' +
                     '<td class="o_selected_td">ef</td>' +
-                    "</tr></tbody></table>" +
+                    "</tr></tbody></table></div>" +
                     "<p>a]bc</p>",
                 stepFunction: bold,
                 contentAfterEdit:
                     '<p data-selection-placeholder=""><br></p>' +
-                    '<table class="o_selected_table"><tbody><tr>' +
+                    '<div class="o_table_wrapper"><table class="o_selected_table"><tbody><tr>' +
                     '<td class="o_selected_td"><strong>[ab</strong></td>' +
                     '<td class="o_selected_td"><strong>cd</strong></td>' +
                     '<td class="o_selected_td"><strong>ef</strong></td>' +
-                    "</tr></tbody></table>" +
+                    "</tr></tbody></table></div>" +
                     "<p><strong>a]</strong>bc</p>",
             });
         });
@@ -278,11 +278,11 @@ describe("select a full table on cross over", () => {
                 stepFunction: bold,
                 contentAfterEdit:
                     "<p>a<strong>[bc</strong></p>" +
-                    '<table class="o_selected_table"><tbody><tr>' +
+                    '<div class="o_table_wrapper"><table class="o_selected_table"><tbody><tr>' +
                     '<td class="o_selected_td"><strong>ab</strong></td>' +
                     '<td class="o_selected_td"><strong>cd</strong></td>' +
                     '<td class="o_selected_td"><strong>ef</strong></td>' +
-                    "</tr></tbody></table>" +
+                    "</tr></tbody></table></div>" +
                     "<p><strong>a]</strong>bc</p>",
             });
         });
@@ -305,18 +305,18 @@ describe("select a full table on cross over", () => {
                 stepFunction: bold,
                 contentAfterEdit:
                     "<p>a<strong>[bc</strong></p>" +
-                    '<table class="o_selected_table"><tbody><tr>' +
+                    '<div class="o_table_wrapper"><table class="o_selected_table"><tbody><tr>' +
                     '<td class="o_selected_td"><strong>ab</strong></td>' +
                     '<td class="o_selected_td"><strong>cd</strong></td>' +
                     '<td class="o_selected_td"><strong>ef</strong></td>' +
-                    "</tr></tbody></table>" +
+                    "</tr></tbody></table></div>" +
                     "<p><strong>abc</strong></p>" +
-                    '<table class="o_selected_table"><tbody><tr>' +
+                    '<div class="o_table_wrapper"><table class="o_selected_table"><tbody><tr>' +
                     '<td class="o_selected_td"><strong>ab</strong></td>' +
                     '<td class="o_selected_td"><strong>cd</strong></td>' +
                     '<td class="o_selected_td"><strong>ef]</strong></td>' +
-                    "</tr></tbody></table>" +
-                    '<p data-selection-placeholder=""><br></p>',
+                    "</tr></tbody></table></div>" +
+                    '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
             });
         });
 
@@ -339,17 +339,17 @@ describe("select a full table on cross over", () => {
                 stepFunction: bold,
                 contentAfterEdit:
                     "<p>a<strong>[bc</strong></p>" +
-                    '<table class="o_selected_table"><tbody><tr>' +
+                    '<div class="o_table_wrapper"><table class="o_selected_table"><tbody><tr>' +
                     '<td class="o_selected_td"><strong>ab</strong></td>' +
                     '<td class="o_selected_td"><strong>cd</strong></td>' +
                     '<td class="o_selected_td"><strong>ef</strong></td>' +
-                    "</tr></tbody></table>" +
+                    "</tr></tbody></table></div>" +
                     "<p><strong>abc</strong></p>" +
-                    '<table class="o_selected_table"><tbody><tr>' +
+                    '<div class="o_table_wrapper"><table class="o_selected_table"><tbody><tr>' +
                     '<td class="o_selected_td"><strong>ab</strong></td>' +
                     '<td class="o_selected_td"><strong>cd</strong></td>' +
                     '<td class="o_selected_td"><strong>ef</strong></td>' +
-                    "</tr></tbody></table>" +
+                    "</tr></tbody></table></div>" +
                     "<p><strong>a]</strong>bc</p>",
             });
         });
@@ -371,7 +371,7 @@ describe("select a full table on cross over", () => {
                     </table>`),
                 contentBeforeEdit: unformat(`
                     <p>a[bc</p>
-                    <table class="o_selected_table">
+                    <div class="o_table_wrapper"><table class="o_selected_table">
                         <tbody>
                             <tr>
                                 <td class="o_selected_td">ab</td>
@@ -379,8 +379,8 @@ describe("select a full table on cross over", () => {
                                 <td class="o_selected_td">ef]</td>
                             </tr>
                         </tbody>
-                    </table>
-                    <p data-selection-placeholder=""><br></p>`),
+                    </table></div>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`),
                 stepFunction: async (editor) => {
                     // Table selection happens on selectionchange
                     // event which is fired in the next tick.
@@ -391,7 +391,7 @@ describe("select a full table on cross over", () => {
                     <p>
                         a<font style="color: aquamarine;">[bc</font>
                     </p>
-                    <table class="o_selected_table">
+                    <div class="o_table_wrapper"><table class="o_selected_table">
                         <tbody>
                             <tr>
                                 <td class="o_selected_td">
@@ -405,8 +405,8 @@ describe("select a full table on cross over", () => {
                                 </td>
                             </tr>
                         </tbody>
-                    </table>
-                    <p data-selection-placeholder=""><br></p>`),
+                    </table></div>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`),
             });
         });
 
@@ -420,14 +420,14 @@ describe("select a full table on cross over", () => {
                     "</tr></tbody></table><p>a]bc</p>",
                 contentBeforeEdit:
                     '<p data-selection-placeholder=""><br></p>' +
-                    '<table class="o_selected_table"><tbody><tr>' +
+                    '<div class="o_table_wrapper"><table class="o_selected_table"><tbody><tr>' +
                     '<td class="o_selected_td">[ab</td>' +
                     '<td class="o_selected_td">cd</td>' +
-                    '<td class="o_selected_td">ef</td></tr></tbody></table><p>a]bc</p>',
+                    '<td class="o_selected_td">ef</td></tr></tbody></table></div><p>a]bc</p>',
                 stepFunction: setColor("aquamarine", "color"),
                 contentAfterEdit: unformat(`
                     <p data-selection-placeholder=""><br></p>
-                    <table class="o_selected_table">
+                    <div class="o_table_wrapper"><table class="o_selected_table">
                         <tbody><tr>
                             <td class="o_selected_td">
                                 <font style="color: aquamarine;">[ab</font>
@@ -439,7 +439,7 @@ describe("select a full table on cross over", () => {
                                 <font style="color: aquamarine;">ef</font>
                             </td>
                         </tr></tbody>
-                    </table>
+                    </table></div>
                     <p>
                         <font style="color: aquamarine;">a]</font>bc
                     </p>`),
@@ -461,7 +461,7 @@ describe("select a full table on cross over", () => {
                     <p>
                         a<font style="color: aquamarine;">[bc</font>
                     </p>
-                    <table class="o_selected_table">
+                    <div class="o_table_wrapper"><table class="o_selected_table">
                         <tbody><tr>
                             <td class="o_selected_td">
                                 <font style="color: aquamarine;">ab</font>
@@ -473,7 +473,7 @@ describe("select a full table on cross over", () => {
                                 <font style="color: aquamarine;">ef</font>
                             </td>
                         </tr></tbody>
-                    </table>
+                    </table></div>
                     <p>
                         <font style="color: aquamarine;">a]</font>bc
                     </p>`),
@@ -497,18 +497,18 @@ describe("select a full table on cross over", () => {
                     "</tr></tbody></table>",
                 contentBeforeEdit:
                     "<p>a[bc</p>" +
-                    '<table class="o_selected_table"><tbody><tr>' +
+                    '<div class="o_table_wrapper"><table class="o_selected_table"><tbody><tr>' +
                     '<td class="o_selected_td">ab</td>' +
                     '<td class="o_selected_td">cd</td>' +
                     '<td class="o_selected_td">ef</td>' +
-                    "</tr></tbody></table>" +
+                    "</tr></tbody></table></div>" +
                     "<p>abc</p>" +
-                    '<table class="o_selected_table"><tbody><tr>' +
+                    '<div class="o_table_wrapper"><table class="o_selected_table"><tbody><tr>' +
                     '<td class="o_selected_td">ab</td>' +
                     '<td class="o_selected_td">cd</td>' +
                     '<td class="o_selected_td">ef]</td>' +
-                    "</tr></tbody></table>" +
-                    '<p data-selection-placeholder=""><br></p>',
+                    "</tr></tbody></table></div>" +
+                    '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
                 stepFunction: async (editor) => {
                     // Table selection happens on selectionchange
                     // event which is fired in the next tick.
@@ -519,7 +519,7 @@ describe("select a full table on cross over", () => {
                     <p>
                         a<font style="color: aquamarine;">[bc</font>
                     </p>
-                    <table class="o_selected_table">
+                    <div class="o_table_wrapper"><table class="o_selected_table">
                         <tbody><tr>
                             <td class="o_selected_td">
                                 <font style="color: aquamarine;">ab</font>
@@ -531,11 +531,11 @@ describe("select a full table on cross over", () => {
                                 <font style="color: aquamarine;">ef</font>
                             </td>
                         </tr></tbody>
-                    </table>
+                    </table></div>
                     <p>
                         <font style="color: aquamarine;">abc</font>
                     </p>
-                    <table class="o_selected_table">
+                    <div class="o_table_wrapper"><table class="o_selected_table">
                         <tbody><tr>
                             <td class="o_selected_td">
                                 <font style="color: aquamarine;">ab</font>
@@ -547,8 +547,8 @@ describe("select a full table on cross over", () => {
                                 <font style="color: aquamarine;">ef]</font>
                             </td>
                         </tr></tbody>
-                    </table>
-                    <p data-selection-placeholder=""><br></p>`),
+                    </table></div>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`),
             });
         });
 
@@ -573,7 +573,7 @@ describe("select a full table on cross over", () => {
                     <p>
                         a<font style="color: aquamarine;">[bc</font>
                     </p>
-                    <table class="o_selected_table">
+                    <div class="o_table_wrapper"><table class="o_selected_table">
                         <tbody><tr>
                             <td class="o_selected_td">
                                 <font style="color: aquamarine;">ab</font>
@@ -585,9 +585,9 @@ describe("select a full table on cross over", () => {
                                 <font style="color: aquamarine;">ef</font>
                             </td>
                         </tr></tbody>
-                    </table>
+                    </table></div>
                     <p><font style="color: aquamarine;">abc</font></p>
-                    <table class="o_selected_table">
+                    <div class="o_table_wrapper"><table class="o_selected_table">
                         <tbody><tr>
                             <td class="o_selected_td">
                                 <font style="color: aquamarine;">ab</font>
@@ -599,7 +599,7 @@ describe("select a full table on cross over", () => {
                                 <font style="color: aquamarine;">ef</font>
                             </td>
                         </tr></tbody>
-                    </table>
+                    </table></div>
                     <p><font style="color: aquamarine;">a]</font>bc</p>`),
             });
         });
@@ -614,12 +614,12 @@ describe("select columns on cross over", () => {
                     "<table><tbody><tr><td>a[b</td><td>c]d</td><td>ef</td></tr></tbody></table>",
                 contentAfterEdit:
                     '<p data-selection-placeholder=""><br></p>' +
-                    '<table class="o_selected_table"><tbody><tr>' +
+                    '<div class="o_table_wrapper"><table class="o_selected_table"><tbody><tr>' +
                     '<td class="o_selected_td">a[b</td>' +
                     '<td class="o_selected_td">c]d</td>' +
                     "<td>ef</td>" +
-                    "</tr></tbody></table>" +
-                    '<p data-selection-placeholder=""><br></p>',
+                    "</tr></tbody></table></div>" +
+                    '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
             });
         });
 
@@ -629,12 +629,12 @@ describe("select columns on cross over", () => {
                     "<table><tbody><tr><td>a[b</td><td>cd</td><td>e]f</td></tr><tr><td>ab</td><td>cd</td><td>ef</td></tr></tbody></table>",
                 contentAfterEdit:
                     '<p data-selection-placeholder=""><br></p>' +
-                    '<table class="o_selected_table"><tbody><tr>' +
+                    '<div class="o_table_wrapper"><table class="o_selected_table"><tbody><tr>' +
                     '<td class="o_selected_td">a[b</td>' +
                     '<td class="o_selected_td">cd</td>' +
                     '<td class="o_selected_td">e]f</td>' +
-                    "</tr><tr><td>ab</td><td>cd</td><td>ef</td></tr></tbody></table>" +
-                    '<p data-selection-placeholder=""><br></p>',
+                    "</tr><tr><td>ab</td><td>cd</td><td>ef</td></tr></tbody></table></div>" +
+                    '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
             });
         });
 
@@ -648,7 +648,7 @@ describe("select columns on cross over", () => {
                     "</tbody></table>",
                 contentAfterEdit:
                     '<p data-selection-placeholder=""><br></p>' +
-                    '<table class="o_selected_table"><tbody>' +
+                    '<div class="o_table_wrapper"><table class="o_selected_table"><tbody>' +
                     "<tr>" +
                     '<td class="o_selected_td">a[b</td>' +
                     "<td>cd</td>" +
@@ -664,8 +664,8 @@ describe("select columns on cross over", () => {
                     "<td>cd</td>" +
                     "<td>ef</td>" +
                     "</tr>" +
-                    "</tbody></table>" +
-                    '<p data-selection-placeholder=""><br></p>',
+                    "</tbody></table></div>" +
+                    '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
             });
         });
 
@@ -679,7 +679,7 @@ describe("select columns on cross over", () => {
                     "</tbody></table>",
                 contentAfterEdit:
                     '<p data-selection-placeholder=""><br></p>' +
-                    '<table class="o_selected_table"><tbody>' +
+                    '<div class="o_table_wrapper"><table class="o_selected_table"><tbody>' +
                     "<tr>" +
                     '<td class="o_selected_td">a[b</td>' +
                     '<td class="o_selected_td">cd</td>' +
@@ -695,8 +695,8 @@ describe("select columns on cross over", () => {
                     "<td>cd</td>" +
                     "<td>ef</td>" +
                     "</tr>" +
-                    "</tbody></table>" +
-                    '<p data-selection-placeholder=""><br></p>',
+                    "</tbody></table></div>" +
+                    '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
             });
         });
 
@@ -710,7 +710,7 @@ describe("select columns on cross over", () => {
                     "</tbody></table>",
                 contentAfterEdit:
                     '<p data-selection-placeholder=""><br></p>' +
-                    '<table class="o_selected_table"><tbody>' +
+                    '<div class="o_table_wrapper"><table class="o_selected_table"><tbody>' +
                     "<tr>" +
                     '<td class="o_selected_td">a[b</td>' +
                     '<td class="o_selected_td">cd</td>' +
@@ -726,8 +726,8 @@ describe("select columns on cross over", () => {
                     '<td class="o_selected_td">cd</td>' +
                     '<td class="o_selected_td">e]f</td>' +
                     "</tr>" +
-                    "</tbody></table>" +
-                    '<p data-selection-placeholder=""><br></p>',
+                    "</tbody></table></div>" +
+                    '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
             });
         });
     });
@@ -744,12 +744,12 @@ describe("select columns on cross over", () => {
                 stepFunction: bold,
                 contentAfterEdit:
                     '<p data-selection-placeholder=""><br></p>' +
-                    '<table class="o_selected_table"><tbody><tr>' +
+                    '<div class="o_table_wrapper"><table class="o_selected_table"><tbody><tr>' +
                     '<td class="o_selected_td"><strong>a[b</strong></td>' +
                     '<td class="o_selected_td"><strong>c]d</strong></td>' +
                     "<td>ef</td>" +
-                    "</tr></tbody></table>" +
-                    '<p data-selection-placeholder=""><br></p>',
+                    "</tr></tbody></table></div>" +
+                    '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
             });
         });
 
@@ -764,12 +764,12 @@ describe("select columns on cross over", () => {
                 stepFunction: bold,
                 contentAfterEdit:
                     '<p data-selection-placeholder=""><br></p>' +
-                    '<table class="o_selected_table"><tbody><tr>' +
+                    '<div class="o_table_wrapper"><table class="o_selected_table"><tbody><tr>' +
                     '<td class="o_selected_td"><strong>a[b</strong></td>' +
                     '<td class="o_selected_td"><strong>cd</strong></td>' +
                     '<td class="o_selected_td"><strong>e]f</strong></td>' +
-                    "</tr><tr><td>ab</td><td>cd</td><td>ef</td></tr></tbody></table>" +
-                    '<p data-selection-placeholder=""><br></p>',
+                    "</tr><tr><td>ab</td><td>cd</td><td>ef</td></tr></tbody></table></div>" +
+                    '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
             });
         });
 
@@ -796,7 +796,7 @@ describe("select columns on cross over", () => {
                 stepFunction: bold,
                 contentAfterEdit:
                     '<p data-selection-placeholder=""><br></p>' +
-                    '<table class="o_selected_table"><tbody>' +
+                    '<div class="o_table_wrapper"><table class="o_selected_table"><tbody>' +
                     "<tr>" +
                     '<td class="o_selected_td"><strong>a[b</strong></td>' +
                     "<td>cd</td>" +
@@ -812,8 +812,8 @@ describe("select columns on cross over", () => {
                     "<td>cd</td>" +
                     "<td>ef</td>" +
                     "</tr>" +
-                    "</tbody></table>" +
-                    '<p data-selection-placeholder=""><br></p>',
+                    "</tbody></table></div>" +
+                    '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
             });
         });
 
@@ -840,7 +840,7 @@ describe("select columns on cross over", () => {
                 stepFunction: bold,
                 contentAfterEdit:
                     '<p data-selection-placeholder=""><br></p>' +
-                    '<table class="o_selected_table"><tbody>' +
+                    '<div class="o_table_wrapper"><table class="o_selected_table"><tbody>' +
                     "<tr>" +
                     '<td class="o_selected_td"><strong>a[b</strong></td>' +
                     '<td class="o_selected_td"><strong>cd</strong></td>' +
@@ -856,8 +856,8 @@ describe("select columns on cross over", () => {
                     "<td>cd</td>" +
                     "<td>ef</td>" +
                     "</tr>" +
-                    "</tbody></table>" +
-                    '<p data-selection-placeholder=""><br></p>',
+                    "</tbody></table></div>" +
+                    '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
             });
         });
 
@@ -884,7 +884,7 @@ describe("select columns on cross over", () => {
                 stepFunction: bold,
                 contentAfterEdit:
                     '<p data-selection-placeholder=""><br></p>' +
-                    '<table class="o_selected_table"><tbody>' +
+                    '<div class="o_table_wrapper"><table class="o_selected_table"><tbody>' +
                     "<tr>" +
                     '<td class="o_selected_td"><strong>a[b</strong></td>' +
                     '<td class="o_selected_td"><strong>cd</strong></td>' +
@@ -900,8 +900,8 @@ describe("select columns on cross over", () => {
                     '<td class="o_selected_td"><strong>cd</strong></td>' +
                     '<td class="o_selected_td"><strong>e]f</strong></td>' +
                     "</tr>" +
-                    "</tbody></table>" +
-                    '<p data-selection-placeholder=""><br></p>',
+                    "</tbody></table></div>" +
+                    '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
             });
         });
     });
@@ -1096,7 +1096,7 @@ describe("select columns on cross over", () => {
                 stepFunction: setColor("aquamarine", "color"),
                 contentAfterEdit: unformat(`
                     <p data-selection-placeholder=""><br></p>
-                    <table class="o_selected_table">
+                    <div class="o_table_wrapper"><table class="o_selected_table">
                         <tbody><tr>
                             <td class="o_selected_td">
                                 <font style="color: aquamarine;">a[b</font>
@@ -1106,8 +1106,8 @@ describe("select columns on cross over", () => {
                             </td>
                             <td>ef</td>
                         </tr></tbody>
-                    </table>
-                    <p data-selection-placeholder=""><br></p>`),
+                    </table></div>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`),
             });
         });
 
@@ -1122,7 +1122,7 @@ describe("select columns on cross over", () => {
                 stepFunction: setColor("aquamarine", "color"),
                 contentAfterEdit: unformat(`
                     <p data-selection-placeholder=""><br></p>
-                    <table class="o_selected_table">
+                    <div class="o_table_wrapper"><table class="o_selected_table">
                         <tbody><tr>
                             <td class="o_selected_td">
                                 <font style="color: aquamarine;">a[b</font>
@@ -1139,8 +1139,8 @@ describe("select columns on cross over", () => {
                             <td>cd</td>
                             <td>ef</td>
                         </tr></tbody>
-                    </table>
-                    <p data-selection-placeholder=""><br></p>`),
+                    </table></div>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`),
             });
         });
 
@@ -1167,7 +1167,7 @@ describe("select columns on cross over", () => {
                 stepFunction: setColor("aquamarine", "color"),
                 contentAfterEdit: unformat(`
                     <p data-selection-placeholder=""><br></p>
-                    <table class="o_selected_table">
+                    <div class="o_table_wrapper"><table class="o_selected_table">
                         <tbody><tr>
                             <td class="o_selected_td">
                                 <font style="color: aquamarine;">a[b</font>
@@ -1189,8 +1189,8 @@ describe("select columns on cross over", () => {
                             <td>cd</td>
                             <td>ef</td>
                         </tr></tbody>
-                    </table>
-                    <p data-selection-placeholder=""><br></p>`),
+                    </table></div>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`),
             });
         });
 
@@ -1217,7 +1217,7 @@ describe("select columns on cross over", () => {
                 stepFunction: setColor("aquamarine", "color"),
                 contentAfterEdit: unformat(`
                     <p data-selection-placeholder=""><br></p>
-                    <table class="o_selected_table">
+                    <div class="o_table_wrapper"><table class="o_selected_table">
                         <tbody><tr>
                             <td class="o_selected_td">
                                 <font style="color: aquamarine;">a[b</font>
@@ -1241,8 +1241,8 @@ describe("select columns on cross over", () => {
                             <td>cd</td>
                             <td>ef</td>
                         </tr></tbody>
-                    </table>
-                    <p data-selection-placeholder=""><br></p>`),
+                    </table></div>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`),
             });
         });
 
@@ -1269,7 +1269,7 @@ describe("select columns on cross over", () => {
                 stepFunction: setColor("aquamarine", "color"),
                 contentAfterEdit: unformat(`
                     <p data-selection-placeholder=""><br></p>
-                    <table class="o_selected_table">
+                    <div class="o_table_wrapper"><table class="o_selected_table">
                         <tbody><tr>
                             <td class="o_selected_td">
                                 <font style="color: aquamarine;">a[b</font>
@@ -1303,8 +1303,8 @@ describe("select columns on cross over", () => {
                                 <font style="color: aquamarine;">e]f</font>
                             </td>
                         </tr></tbody>
-                    </table>
-                    <p data-selection-placeholder=""><br></p>`),
+                    </table></div>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`),
             });
         });
     });
@@ -1486,7 +1486,7 @@ describe("move cursor with arrow keys", () => {
                 },
                 contentAfterEdit: unformat(
                     `<p data-selection-placeholder=""><br></p>
-                    <table>
+                    <div class="o_table_wrapper"><table>
                         <tbody>
                             <tr>
                                 <td><br></td>
@@ -1497,9 +1497,9 @@ describe("move cursor with arrow keys", () => {
                                 <td><br></td>
                             </tr>
                         </tbody>
-                    </table>
-                    <p data-selection-placeholder="" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p>
-                    <table>
+                    </table></div>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p>
+                    <div class="o_table_wrapper"><table>
                         <tbody>
                             <tr>
                                 <td><br></td>
@@ -1510,8 +1510,8 @@ describe("move cursor with arrow keys", () => {
                                 <td><br></td>
                             </tr>
                         </tbody>
-                    </table>
-                    <p data-selection-placeholder=""><br></p>`
+                    </table></div>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
                 ),
                 contentAfter: unformat(`
                     <table>
@@ -1560,13 +1560,13 @@ describe("move cursor with arrow keys", () => {
             expectContentToBe(
                 el,
                 `<p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table">
                     <tbody>
                         <tr><td><br></td><td><br></td><td><br></td></tr>
                         <tr><td><br></td><td colspan="2">[]<br></td></tr>
                         <tr><td><br></td><td><br></td><td><br></td></tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
             );
 
@@ -1576,13 +1576,13 @@ describe("move cursor with arrow keys", () => {
             expectContentToBe(
                 el,
                 `<p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table">
                     <tbody>
                         <tr><td><br></td><td>[]<br></td><td><br></td></tr>
                         <tr><td><br></td><td colspan="2"><br></td></tr>
                         <tr><td><br></td><td><br></td><td><br></td></tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
             );
         });
@@ -1605,14 +1605,14 @@ describe("move cursor with arrow keys", () => {
             expectContentToBe(
                 el,
                 `<p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table">
                     <tbody>
                         <tr><td><br></td><td><br></td></tr>
                         <tr><td><br></td><td rowspan="2">[]<br></td></tr>
                         <tr><td><br></td></tr>
                         <tr><td><br></td><td><br></td></tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
             );
 
@@ -1622,14 +1622,14 @@ describe("move cursor with arrow keys", () => {
             expectContentToBe(
                 el,
                 `<p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table">
                     <tbody>
                         <tr><td><br></td><td>[]<br></td></tr>
                         <tr><td><br></td><td rowspan="2"><br></td></tr>
                         <tr><td><br></td></tr>
                         <tr><td><br></td><td><br></td></tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
             );
         });
@@ -1810,7 +1810,7 @@ describe("move cursor with arrow keys", () => {
                 },
                 contentAfterEdit: unformat(
                     `<p data-selection-placeholder=""><br></p>
-                    <table>
+                    <div class="o_table_wrapper"><table>
                         <tbody>
                             <tr>
                                 <td><br></td>
@@ -1821,9 +1821,9 @@ describe("move cursor with arrow keys", () => {
                                 <td><br></td>
                             </tr>
                         </tbody>
-                    </table>
-                    <p data-selection-placeholder="" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p>
-                    <table>
+                    </table></div>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p>
+                    <div class="o_table_wrapper"><table>
                         <tbody>
                             <tr>
                                 <td><br></td>
@@ -1834,8 +1834,8 @@ describe("move cursor with arrow keys", () => {
                                 <td><br></td>
                             </tr>
                         </tbody>
-                    </table>
-                    <p data-selection-placeholder=""><br></p>`
+                    </table></div>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
                 ),
                 contentAfter: unformat(`
                     <table>
@@ -1884,13 +1884,13 @@ describe("move cursor with arrow keys", () => {
             expectContentToBe(
                 el,
                 `<p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table">
                     <tbody>
                         <tr><td><br></td><td><br></td><td><br></td></tr>
                         <tr><td><br></td><td colspan="2">[]<br></td></tr>
                         <tr><td><br></td><td><br></td><td><br></td></tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
             );
 
@@ -1900,13 +1900,13 @@ describe("move cursor with arrow keys", () => {
             expectContentToBe(
                 el,
                 `<p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table">
                     <tbody>
                         <tr><td><br></td><td><br></td><td><br></td></tr>
                         <tr><td><br></td><td colspan="2"><br></td></tr>
                         <tr><td><br></td><td>[]<br></td><td><br></td></tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
             );
         });
@@ -1929,14 +1929,14 @@ describe("move cursor with arrow keys", () => {
             expectContentToBe(
                 el,
                 `<p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table">
                     <tbody>
                         <tr><td><br></td><td><br></td></tr>
                         <tr><td><br></td><td rowspan="2">[]<br></td></tr>
                         <tr><td><br></td></tr>
                         <tr><td><br></td><td><br></td></tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
             );
 
@@ -1946,14 +1946,14 @@ describe("move cursor with arrow keys", () => {
             expectContentToBe(
                 el,
                 `<p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table">
                     <tbody>
                         <tr><td><br></td><td><br></td></tr>
                         <tr><td><br></td><td rowspan="2"><br></td></tr>
                         <tr><td><br></td></tr>
                         <tr><td><br></td><td>[]<br></td></tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
             );
         });
@@ -1980,12 +1980,12 @@ describe("symmetrical selection", () => {
         expectContentToBe(
             el,
             `<p data-selection-placeholder=""><br></p>
-            <table class="table table-bordered o_table o_selected_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr><td class="o_selected_td">[]<br></td><td><br></td><td><br></td></tr>
                     <tr><td><br></td><td><br></td><td><br></td></tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
 
@@ -1996,12 +1996,12 @@ describe("symmetrical selection", () => {
         expectContentToBe(
             el,
             `<p data-selection-placeholder=""><br></p>
-            <table class="table table-bordered o_table o_selected_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr><td class="o_selected_td">[<br></td><td class="o_selected_td">]<br></td><td><br></td></tr>
                     <tr><td><br></td><td><br></td><td><br></td></tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
 
@@ -2012,12 +2012,12 @@ describe("symmetrical selection", () => {
         expectContentToBe(
             el,
             `<p data-selection-placeholder=""><br></p>
-            <table class="table table-bordered o_table o_selected_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr><td class="o_selected_td">[<br></td><td class="o_selected_td"><br></td><td><br></td></tr>
                     <tr><td class="o_selected_td"><br></td><td class="o_selected_td">]<br></td><td><br></td></tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
 
@@ -2028,12 +2028,12 @@ describe("symmetrical selection", () => {
         expectContentToBe(
             el,
             `<p data-selection-placeholder=""><br></p>
-            <table class="table table-bordered o_table o_selected_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr><td class="o_selected_td">[<br></td><td><br></td><td><br></td></tr>
                     <tr><td class="o_selected_td">]<br></td><td><br></td><td><br></td></tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
 
@@ -2044,12 +2044,12 @@ describe("symmetrical selection", () => {
         expectContentToBe(
             el,
             `<p data-selection-placeholder=""><br></p>
-            <table class="table table-bordered o_table o_selected_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr><td class="o_selected_td">[]<br></td><td><br></td><td><br></td></tr>
                     <tr><td><br></td><td><br></td><td><br></td></tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
     });
@@ -2072,13 +2072,13 @@ describe("symmetrical selection", () => {
         expectContentToBe(
             el,
             `<p data-selection-placeholder=""><br></p>
-            <table class="table table-bordered o_table o_selected_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr><td class="o_selected_td">[]<br></td><td><br></td><td><br></td><td><br></td></tr>
                     <tr><td><br></td><td colspan="2"><br></td><td><br></td></tr>
                     <tr><td><br></td><td><br></td><td><br></td><td><br></td></tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
 
@@ -2087,13 +2087,13 @@ describe("symmetrical selection", () => {
         expectContentToBe(
             el,
             `<p data-selection-placeholder=""><br></p>
-            <table class="table table-bordered o_table o_selected_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr><td class="o_selected_td">[<br></td><td class="o_selected_td">]<br></td><td><br></td><td><br></td></tr>
                     <tr><td><br></td><td colspan="2"><br></td><td><br></td></tr>
                     <tr><td><br></td><td><br></td><td><br></td><td><br></td></tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
 
@@ -2102,13 +2102,13 @@ describe("symmetrical selection", () => {
         expectContentToBe(
             el,
             `<p data-selection-placeholder=""><br></p>
-            <table class="table table-bordered o_table o_selected_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr><td class="o_selected_td">[<br></td><td class="o_selected_td"><br></td><td><br></td><td><br></td></tr>
                     <tr><td class="o_selected_td"><br></td><td colspan="2" class="o_selected_td">]<br></td><td><br></td></tr>
                     <tr><td><br></td><td><br></td><td><br></td><td><br></td></tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
 
@@ -2117,13 +2117,13 @@ describe("symmetrical selection", () => {
         expectContentToBe(
             el,
             `<p data-selection-placeholder=""><br></p>
-            <table class="table table-bordered o_table o_selected_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr><td class="o_selected_td">[<br></td><td class="o_selected_td"><br></td><td><br></td><td><br></td></tr>
                     <tr><td class="o_selected_td"><br></td><td colspan="2" class="o_selected_td"><br></td><td><br></td></tr>
                     <tr><td class="o_selected_td"><br></td><td class="o_selected_td">]<br></td><td><br></td><td><br></td></tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
 
@@ -2132,13 +2132,13 @@ describe("symmetrical selection", () => {
         expectContentToBe(
             el,
             `<p data-selection-placeholder=""><br></p>
-            <table class="table table-bordered o_table o_selected_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr><td class="o_selected_td">[<br></td><td class="o_selected_td"><br></td><td class="o_selected_td"><br></td><td><br></td></tr>
                     <tr><td class="o_selected_td"><br></td><td colspan="2" class="o_selected_td"><br></td><td><br></td></tr>
                     <tr><td class="o_selected_td"><br></td><td class="o_selected_td"><br></td><td class="o_selected_td">]<br></td><td><br></td></tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
 
@@ -2147,13 +2147,13 @@ describe("symmetrical selection", () => {
         expectContentToBe(
             el,
             `<p data-selection-placeholder=""><br></p>
-            <table class="table table-bordered o_table o_selected_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr><td class="o_selected_td">[<br></td><td class="o_selected_td"><br></td><td class="o_selected_td"><br></td><td class="o_selected_td"><br></td></tr>
                     <tr><td class="o_selected_td"><br></td><td colspan="2" class="o_selected_td"><br></td><td class="o_selected_td"><br></td></tr>
                     <tr><td class="o_selected_td"><br></td><td class="o_selected_td"><br></td><td class="o_selected_td"><br></td><td class="o_selected_td">]<br></td></tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
 
@@ -2162,13 +2162,13 @@ describe("symmetrical selection", () => {
         expectContentToBe(
             el,
             `<p data-selection-placeholder=""><br></p>
-            <table class="table table-bordered o_table o_selected_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr><td class="o_selected_td">[<br></td><td class="o_selected_td"><br></td><td class="o_selected_td"><br></td><td><br></td></tr>
                     <tr><td class="o_selected_td"><br></td><td colspan="2" class="o_selected_td"><br></td><td><br></td></tr>
                     <tr><td class="o_selected_td"><br></td><td class="o_selected_td"><br></td><td class="o_selected_td">]<br></td><td><br></td></tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
 
@@ -2177,13 +2177,13 @@ describe("symmetrical selection", () => {
         expectContentToBe(
             el,
             `<p data-selection-placeholder=""><br></p>
-            <table class="table table-bordered o_table o_selected_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr><td class="o_selected_td">[<br></td><td class="o_selected_td"><br></td><td><br></td><td><br></td></tr>
                     <tr><td class="o_selected_td"><br></td><td colspan="2" class="o_selected_td"><br></td><td><br></td></tr>
                     <tr><td class="o_selected_td"><br></td><td class="o_selected_td">]<br></td><td><br></td><td><br></td></tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
 
@@ -2192,13 +2192,13 @@ describe("symmetrical selection", () => {
         expectContentToBe(
             el,
             `<p data-selection-placeholder=""><br></p>
-            <table class="table table-bordered o_table o_selected_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr><td class="o_selected_td">[<br></td><td><br></td><td><br></td><td><br></td></tr>
                     <tr><td class="o_selected_td"><br></td><td colspan="2"><br></td><td><br></td></tr>
                     <tr><td class="o_selected_td">]<br></td><td><br></td><td><br></td><td><br></td></tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
 
@@ -2207,13 +2207,13 @@ describe("symmetrical selection", () => {
         expectContentToBe(
             el,
             `<p data-selection-placeholder=""><br></p>
-            <table class="table table-bordered o_table o_selected_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr><td class="o_selected_td">[<br></td><td><br></td><td><br></td><td><br></td></tr>
                     <tr><td class="o_selected_td">]<br></td><td colspan="2"><br></td><td><br></td></tr>
                     <tr><td><br></td><td><br></td><td><br></td><td><br></td></tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
     });
@@ -2236,14 +2236,14 @@ describe("symmetrical selection", () => {
         expectContentToBe(
             el,
             `<p data-selection-placeholder=""><br></p>
-            <table class="table table-bordered o_table o_selected_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr><td class="o_selected_td">[]<br></td><td><br></td><td><br></td></tr>
                     <tr><td><br></td><td rowspan="2"><br></td><td><br></td></tr>
                     <tr><td><br></td><td><br></td></tr>
                     <tr><td><br></td><td><br></td><td><br></td></tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
 
@@ -2252,14 +2252,14 @@ describe("symmetrical selection", () => {
         expectContentToBe(
             el,
             `<p data-selection-placeholder=""><br></p>
-            <table class="table table-bordered o_table o_selected_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr><td class="o_selected_td">[<br></td><td class="o_selected_td">]<br></td><td><br></td></tr>
                     <tr><td><br></td><td rowspan="2"><br></td><td><br></td></tr>
                     <tr><td><br></td><td><br></td></tr>
                     <tr><td><br></td><td><br></td><td><br></td></tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
 
@@ -2268,14 +2268,14 @@ describe("symmetrical selection", () => {
         expectContentToBe(
             el,
             `<p data-selection-placeholder=""><br></p>
-            <table class="table table-bordered o_table o_selected_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr><td class="o_selected_td">[<br></td><td class="o_selected_td"><br></td><td><br></td></tr>
                     <tr><td class="o_selected_td"><br></td><td rowspan="2" class="o_selected_td">]<br></td><td><br></td></tr>
                     <tr><td><br></td><td><br></td></tr>
                     <tr><td><br></td><td><br></td><td><br></td></tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
 
@@ -2284,14 +2284,14 @@ describe("symmetrical selection", () => {
         expectContentToBe(
             el,
             `<p data-selection-placeholder=""><br></p>
-            <table class="table table-bordered o_table o_selected_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr><td class="o_selected_td">[<br></td><td class="o_selected_td"><br></td><td class="o_selected_td"><br></td></tr>
                     <tr><td class="o_selected_td"><br></td><td rowspan="2" class="o_selected_td"><br></td><td class="o_selected_td">]<br></td></tr>
                     <tr><td><br></td><td><br></td></tr>
                     <tr><td><br></td><td><br></td><td><br></td></tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
 
@@ -2300,14 +2300,14 @@ describe("symmetrical selection", () => {
         expectContentToBe(
             el,
             `<p data-selection-placeholder=""><br></p>
-            <table class="table table-bordered o_table o_selected_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr><td class="o_selected_td">[<br></td><td class="o_selected_td"><br></td><td class="o_selected_td"><br></td></tr>
                     <tr><td class="o_selected_td"><br></td><td rowspan="2" class="o_selected_td"><br></td><td class="o_selected_td"><br></td></tr>
                     <tr><td class="o_selected_td"><br></td><td class="o_selected_td">]<br></td></tr>
                     <tr><td><br></td><td><br></td><td><br></td></tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
 
@@ -2316,14 +2316,14 @@ describe("symmetrical selection", () => {
         expectContentToBe(
             el,
             `<p data-selection-placeholder=""><br></p>
-            <table class="table table-bordered o_table o_selected_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr><td class="o_selected_td">[<br></td><td class="o_selected_td"><br></td><td class="o_selected_td"><br></td></tr>
                     <tr><td class="o_selected_td"><br></td><td rowspan="2" class="o_selected_td"><br></td><td class="o_selected_td"><br></td></tr>
                     <tr><td class="o_selected_td"><br></td><td class="o_selected_td"><br></td></tr>
                     <tr><td class="o_selected_td"><br></td><td class="o_selected_td"><br></td><td class="o_selected_td">]<br></td></tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
 
@@ -2332,14 +2332,14 @@ describe("symmetrical selection", () => {
         expectContentToBe(
             el,
             `<p data-selection-placeholder=""><br></p>
-            <table class="table table-bordered o_table o_selected_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr><td class="o_selected_td">[<br></td><td class="o_selected_td"><br></td><td><br></td></tr>
                     <tr><td class="o_selected_td"><br></td><td rowspan="2" class="o_selected_td"><br></td><td><br></td></tr>
                     <tr><td class="o_selected_td"><br></td><td><br></td></tr>
                     <tr><td class="o_selected_td"><br></td><td class="o_selected_td">]<br></td><td><br></td></tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
 
@@ -2348,14 +2348,14 @@ describe("symmetrical selection", () => {
         expectContentToBe(
             el,
             `<p data-selection-placeholder=""><br></p>
-            <table class="table table-bordered o_table o_selected_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr><td class="o_selected_td">[<br></td><td><br></td><td><br></td></tr>
                     <tr><td class="o_selected_td"><br></td><td rowspan="2"><br></td><td><br></td></tr>
                     <tr><td class="o_selected_td"><br></td><td><br></td></tr>
                     <tr><td class="o_selected_td">]<br></td><td><br></td><td><br></td></tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
     });
@@ -2377,12 +2377,12 @@ describe("symmetrical selection", () => {
         expectContentToBe(
             el,
             `<p data-selection-placeholder=""><br></p>
-            <table class="table table-bordered o_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table">
                 <tbody>
                     <tr><td>ab[]</td><td><br></td><td><br></td></tr>
                     <tr><td><br></td><td><br></td><td><br></td></tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
         const firstTd = el.querySelector("td");
@@ -2399,12 +2399,12 @@ describe("symmetrical selection", () => {
         expectContentToBe(
             el,
             `<p data-selection-placeholder=""><br></p>
-            <table class="table table-bordered o_table o_selected_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr><td class="o_selected_td">[ab]</td><td><br></td><td><br></td></tr>
                     <tr><td><br></td><td><br></td><td><br></td></tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
     });
@@ -2435,12 +2435,12 @@ describe("symmetrical selection", () => {
         expectContentToBe(
             el,
             `<p data-selection-placeholder=""><br></p>
-            <table class="table table-bordered o_table o_selected_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr><td><br></td><td class="o_selected_td">]ab[</td><td><br></td></tr>
                     <tr><td><br></td><td><br></td><td><br></td></tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
 
@@ -2450,12 +2450,12 @@ describe("symmetrical selection", () => {
         expectContentToBe(
             el,
             `<p data-selection-placeholder=""><br></p>
-            <table class="table table-bordered o_table o_selected_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr><td class="o_selected_td">]<br></td><td class="o_selected_td">ab[</td><td><br></td></tr>
                     <tr><td><br></td><td><br></td><td><br></td></tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
     });
@@ -2495,12 +2495,12 @@ describe("single cell selection", () => {
         expectContentToBe(
             el,
             `<p data-selection-placeholder=""><br></p>
-            <table class="table table-bordered o_table o_selected_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr><td class="o_selected_td">[]<br></td><td><br></td><td><br></td></tr>
                     <tr><td><br></td><td><br></td><td><br></td></tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
     });
@@ -2538,12 +2538,12 @@ describe("single cell selection", () => {
         expectContentToBe(
             el,
             `<p data-selection-placeholder=""><br></p>
-            <table class="table table-bordered o_table o_selected_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr><td class="o_selected_td">[abc]<br></td><td><br></td><td><br></td></tr>
                     <tr><td><br></td><td><br></td><td><br></td></tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
     });
@@ -2570,12 +2570,12 @@ describe("single cell selection", () => {
         expectContentToBe(
             el,
             `<p data-selection-placeholder=""><br></p>
-            <table class="table table-bordered o_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table">
                 <tbody>
                     <tr><td>ab[]c<br></td><td><br></td><td><br></td></tr>
                     <tr><td><br></td><td><br></td><td><br></td></tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
     });
@@ -2603,12 +2603,12 @@ describe("single cell selection", () => {
         expectContentToBe(
             el,
             `<p data-selection-placeholder=""><br></p>
-            <table class="table table-bordered o_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table">
                 <tbody>
                     <tr><td>[]<br></td><td><br></td><td><br></td></tr>
                     <tr><td><br></td><td><br></td><td><br></td></tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
     });
@@ -2740,12 +2740,12 @@ describe("deselecting table", () => {
         expectContentToBe(
             el,
             `<p>[abc</p>
-                <table class="table table-bordered o_table o_selected_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                     <tbody>
                         <tr><td class="o_selected_td"><br></td><td class="o_selected_td"><br></td><td class="o_selected_td"><br></td></tr>
                         <tr><td class="o_selected_td"><br></td><td class="o_selected_td"><br></td><td class="o_selected_td">]<br></td></tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
 
@@ -2756,12 +2756,12 @@ describe("deselecting table", () => {
         expectContentToBe(
             el,
             `<p>[abc]</p>
-            <table class="table table-bordered o_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table">
                 <tbody>
                     <tr><td><br></td><td><br></td><td><br></td></tr>
                     <tr><td><br></td><td><br></td><td><br></td></tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
     });
@@ -2796,12 +2796,12 @@ describe("deselecting table", () => {
         expectContentToBe(
             el,
             `<p data-selection-placeholder=""><br></p>
-            <table class="table table-bordered o_table o_selected_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr><td class="o_selected_td">[]<br></td><td><br></td><td><br></td></tr>
                     <tr><td><br></td><td><br></td><td><br></td></tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
 
@@ -2813,12 +2813,12 @@ describe("deselecting table", () => {
         expectContentToBe(
             el,
             `<p data-selection-placeholder=""><br></p>
-            <table class="table table-bordered o_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table">
                 <tbody>
                     <tr><td><br></td><td><br></td><td><br></td></tr>
                     <tr><td><br></td><td><br></td><td><br></td></tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
     });
@@ -2845,7 +2845,7 @@ describe("keyboard navigation with multiline", () => {
             expect(getContent(el)).toBe(
                 unformat(`
                     <p data-selection-placeholder=""><br></p>
-                    <table><tbody>
+                    <div class="o_table_wrapper"><table><tbody>
                     <tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td><td>E1</td></tr>
                     <tr><td>A2</td><td>B2</td><td>C2[]</td><td>D2</td><td>E2</td></tr>
                     <tr><td>A3</td><td>B3</td><td>
@@ -2853,8 +2853,8 @@ describe("keyboard navigation with multiline", () => {
                     </td><td>D3</td><td>E3</td></tr>
                     <tr><td>A4</td><td>B4</td><td>C4</td><td>D4</td><td>E4</td></tr>
                     <tr><td>A5</td><td>B5</td><td>C5</td><td>D5</td><td>E5</td></tr>
-                    </tbody></table>
-                    <p data-selection-placeholder=""><br></p>
+                    </tbody></table></div>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
                 `)
             );
         });
@@ -2876,7 +2876,7 @@ describe("keyboard navigation with multiline", () => {
             expect(getContent(el)).toBe(
                 unformat(`
                     <p data-selection-placeholder=""><br></p>
-                    <table><tbody>
+                    <div class="o_table_wrapper"><table><tbody>
                     <tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td><td>E1</td></tr>
                     <tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td><td>E2</td></tr>
                     <tr><td>A3</td><td>B3</td><td>
@@ -2884,8 +2884,8 @@ describe("keyboard navigation with multiline", () => {
                     </td><td>D3</td><td>E3</td></tr>
                     <tr><td>A4</td><td>B4</td><td>C4</td><td>D4</td><td>E4</td></tr>
                     <tr><td>A5</td><td>B5</td><td>C5</td><td>D5</td><td>E5</td></tr>
-                    </tbody></table>
-                    <p data-selection-placeholder=""><br></p>
+                    </tbody></table></div>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
                 `)
             );
         });
@@ -2908,7 +2908,7 @@ describe("keyboard navigation with multiline", () => {
             expect(getContent(el)).toBe(
                 unformat(`
                     <p data-selection-placeholder=""><br></p>
-                    <table><tbody>
+                    <div class="o_table_wrapper"><table><tbody>
                     <tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td><td>E1</td></tr>
                     <tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td><td>E2</td></tr>
                     <tr><td>A3</td><td>B3</td><td>
@@ -2916,8 +2916,8 @@ describe("keyboard navigation with multiline", () => {
                     </td><td>D3</td><td>E3</td></tr>
                     <tr><td>A4</td><td>B4</td><td>[]C4</td><td>D4</td><td>E4</td></tr>
                     <tr><td>A5</td><td>B5</td><td>C5</td><td>D5</td><td>E5</td></tr>
-                    </tbody></table>
-                    <p data-selection-placeholder=""><br></p>
+                    </tbody></table></div>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
                 `)
             );
         });
@@ -2939,7 +2939,7 @@ describe("keyboard navigation with multiline", () => {
             expect(getContent(el)).toBe(
                 unformat(`
                     <p data-selection-placeholder=""><br></p>
-                    <table><tbody>
+                    <div class="o_table_wrapper"><table><tbody>
                     <tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td><td>E1</td></tr>
                     <tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td><td>E2</td></tr>
                     <tr><td>A3</td><td>B3</td><td>
@@ -2947,8 +2947,8 @@ describe("keyboard navigation with multiline", () => {
                     </td><td>D3</td><td>E3</td></tr>
                     <tr><td>A4</td><td>B4</td><td>C4</td><td>D4</td><td>E4</td></tr>
                     <tr><td>A5</td><td>B5</td><td>C5</td><td>D5</td><td>E5</td></tr>
-                    </tbody></table>
-                    <p data-selection-placeholder=""><br></p>
+                    </tbody></table></div>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
                 `)
             );
         });
@@ -2970,7 +2970,7 @@ describe("keyboard navigation with multiline", () => {
             expect(getContent(el)).toBe(
                 unformat(`
                     <p data-selection-placeholder=""><br></p>
-                    <table><tbody>
+                    <div class="o_table_wrapper"><table><tbody>
                     <tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td><td>E1</td></tr>
                     <tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td><td>E2</td></tr>
                     <tr><td>A3</td><td>B3</td><td>
@@ -2978,8 +2978,8 @@ describe("keyboard navigation with multiline", () => {
                     </td><td>D3</td><td>E3</td></tr>
                     <tr><td>A4</td><td>B4</td><td>C4</td><td>D4</td><td>E4</td></tr>
                     <tr><td>A5</td><td>B5</td><td>C5</td><td>D5</td><td>E5</td></tr>
-                    </tbody></table>
-                    <p data-selection-placeholder=""><br></p>
+                    </tbody></table></div>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
                 `)
             );
         });
@@ -3001,7 +3001,7 @@ describe("keyboard navigation with multiline", () => {
             expect(getContent(el)).toBe(
                 unformat(`
                     <p data-selection-placeholder=""><br></p>
-                    <table><tbody>
+                    <div class="o_table_wrapper"><table><tbody>
                     <tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td><td>E1</td></tr>
                     <tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td><td>E2</td></tr>
                     <tr><td>A3</td><td>B3</td><td>
@@ -3009,8 +3009,8 @@ describe("keyboard navigation with multiline", () => {
                     </td><td>D3</td><td>E3</td></tr>
                     <tr><td>A4</td><td>B4</td><td>C4</td><td>D4</td><td>E4</td></tr>
                     <tr><td>A5</td><td>B5</td><td>C5</td><td>D5</td><td>E5</td></tr>
-                    </tbody></table>
-                    <p data-selection-placeholder=""><br></p>
+                    </tbody></table></div>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
                 `)
             );
         });
@@ -3034,7 +3034,7 @@ describe("keyboard navigation with multiline", () => {
             expect(getContent(el)).toBe(
                 unformat(`
                     <p data-selection-placeholder=""><br></p>
-                    <table class="o_selected_table"><tbody>
+                    <div class="o_table_wrapper"><table class="o_selected_table"><tbody>
                     <tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td><td>E1</td></tr>
                     <tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td><td>E2</td></tr>
                     <tr><td>A3</td><td>B3</td><td class="o_selected_td">
@@ -3042,8 +3042,8 @@ describe("keyboard navigation with multiline", () => {
                     </td><td>D3</td><td>E3</td></tr>
                     <tr><td>A4</td><td>B4</td><td>C4</td><td>D4</td><td>E4</td></tr>
                     <tr><td>A5</td><td>B5</td><td>C5</td><td>D5</td><td>E5</td></tr>
-                    </tbody></table>
-                    <p data-selection-placeholder=""><br></p>
+                    </tbody></table></div>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
                 `)
             );
         });
@@ -3065,7 +3065,7 @@ describe("keyboard navigation with multiline", () => {
             expect(getContent(el)).toBe(
                 unformat(`
                     <p data-selection-placeholder=""><br></p>
-                    <table><tbody>
+                    <div class="o_table_wrapper"><table><tbody>
                     <tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td><td>E1</td></tr>
                     <tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td><td>E2</td></tr>
                     <tr><td>A3</td><td>B3</td><td>
@@ -3073,8 +3073,8 @@ describe("keyboard navigation with multiline", () => {
                     </td><td>D3</td><td>E3</td></tr>
                     <tr><td>A4</td><td>B4</td><td>C4</td><td>D4</td><td>E4</td></tr>
                     <tr><td>A5</td><td>B5</td><td>C5</td><td>D5</td><td>E5</td></tr>
-                    </tbody></table>
-                    <p data-selection-placeholder=""><br></p>
+                    </tbody></table></div>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
                 `)
             );
         });
@@ -3096,7 +3096,7 @@ describe("keyboard navigation with multiline", () => {
             expect(getContent(el)).toBe(
                 unformat(`
                     <p data-selection-placeholder=""><br></p>
-                    <table class="o_selected_table"><tbody>
+                    <div class="o_table_wrapper"><table class="o_selected_table"><tbody>
                     <tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td><td>E1</td></tr>
                     <tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td><td>E2</td></tr>
                     <tr><td>A3</td><td>B3</td><td class="o_selected_td">
@@ -3104,8 +3104,8 @@ describe("keyboard navigation with multiline", () => {
                     </td><td>D3</td><td>E3</td></tr>
                     <tr><td>A4</td><td>B4</td><td>C4</td><td>D4</td><td>E4</td></tr>
                     <tr><td>A5</td><td>B5</td><td>C5</td><td>D5</td><td>E5</td></tr>
-                    </tbody></table>
-                    <p data-selection-placeholder=""><br></p>
+                    </tbody></table></div>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
                 `)
             );
         });
@@ -3127,7 +3127,7 @@ describe("keyboard navigation with multiline", () => {
             expect(getContent(el)).toBe(
                 unformat(`
                     <p data-selection-placeholder=""><br></p>
-                    <table><tbody>
+                    <div class="o_table_wrapper"><table><tbody>
                     <tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td><td>E1</td></tr>
                     <tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td><td>E2</td></tr>
                     <tr><td>A3</td><td>B3</td><td>
@@ -3135,8 +3135,8 @@ describe("keyboard navigation with multiline", () => {
                     </td><td>D3</td><td>E3</td></tr>
                     <tr><td>A4</td><td>B4</td><td>C4</td><td>D4</td><td>E4</td></tr>
                     <tr><td>A5</td><td>B5</td><td>C5</td><td>D5</td><td>E5</td></tr>
-                    </tbody></table>
-                    <p data-selection-placeholder=""><br></p>
+                    </tbody></table></div>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
                 `)
             );
         });
@@ -3158,7 +3158,7 @@ describe("keyboard navigation with multiline", () => {
             expect(getContent(el)).toBe(
                 unformat(`
                     <p data-selection-placeholder=""><br></p>
-                    <table class="o_selected_table"><tbody>
+                    <div class="o_table_wrapper"><table class="o_selected_table"><tbody>
                     <tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td><td>E1</td></tr>
                     <tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td><td>E2</td></tr>
                     <tr><td>A3</td><td>B3</td><td class="o_selected_td">
@@ -3166,8 +3166,8 @@ describe("keyboard navigation with multiline", () => {
                     </td><td>D3</td><td>E3</td></tr>
                     <tr><td>A4</td><td>B4</td><td>C4</td><td>D4</td><td>E4</td></tr>
                     <tr><td>A5</td><td>B5</td><td>C5</td><td>D5</td><td>E5</td></tr>
-                    </tbody></table>
-                    <p data-selection-placeholder=""><br></p>
+                    </tbody></table></div>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
                 `)
             );
         });
@@ -3189,7 +3189,7 @@ describe("keyboard navigation with multiline", () => {
             expect(getContent(el)).toBe(
                 unformat(`
                     <p data-selection-placeholder=""><br></p>
-                    <table class="o_selected_table"><tbody>
+                    <div class="o_table_wrapper"><table class="o_selected_table"><tbody>
                     <tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td><td>E1</td></tr>
                     <tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td><td>E2</td></tr>
                     <tr><td>A3</td><td>B3</td><td class="o_selected_td">
@@ -3197,8 +3197,8 @@ describe("keyboard navigation with multiline", () => {
                     </td><td>D3</td><td>E3</td></tr>
                     <tr><td>A4</td><td>B4</td><td>C4</td><td>D4</td><td>E4</td></tr>
                     <tr><td>A5</td><td>B5</td><td>C5</td><td>D5</td><td>E5</td></tr>
-                    </tbody></table>
-                    <p data-selection-placeholder=""><br></p>
+                    </tbody></table></div>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
                 `)
             );
         });
@@ -3224,7 +3224,7 @@ describe("keyboard navigation with multiline", () => {
             expect(getContent(el)).toBe(
                 unformat(`
                     <p data-selection-placeholder=""><br></p>
-                    <table class="o_selected_table"><tbody>
+                    <div class="o_table_wrapper"><table class="o_selected_table"><tbody>
                     <tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td><td>E1</td></tr>
                     <tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td><td>E2</td></tr>
                     <tr><td>A3</td><td>B3</td><td class="o_selected_td">
@@ -3232,8 +3232,8 @@ describe("keyboard navigation with multiline", () => {
                     </td><td>D3</td><td>E3</td></tr>
                     <tr><td>A4</td><td>B4</td><td>C4</td><td>D4</td><td>E4</td></tr>
                     <tr><td>A5</td><td>B5</td><td>C5</td><td>D5</td><td>E5</td></tr>
-                    </tbody></table>
-                    <p data-selection-placeholder=""><br></p>
+                    </tbody></table></div>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
                 `)
             );
             events = await press("ArrowUp");
@@ -3243,7 +3243,7 @@ describe("keyboard navigation with multiline", () => {
             expect(getContent(el)).toBe(
                 unformat(`
                     <p data-selection-placeholder=""><br></p>
-                    <table class="o_selected_table"><tbody>
+                    <div class="o_table_wrapper"><table class="o_selected_table"><tbody>
                     <tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td><td>E1</td></tr>
                     <tr><td>A2</td><td>B2</td><td class="o_selected_td">C2]</td><td>D2</td><td>E2</td></tr>
                     <tr><td>A3</td><td>B3</td><td class="o_selected_td">
@@ -3251,8 +3251,8 @@ describe("keyboard navigation with multiline", () => {
                     </td><td>D3</td><td>E3</td></tr>
                     <tr><td>A4</td><td>B4</td><td>C4</td><td>D4</td><td>E4</td></tr>
                     <tr><td>A5</td><td>B5</td><td>C5</td><td>D5</td><td>E5</td></tr>
-                    </tbody></table>
-                    <p data-selection-placeholder=""><br></p>
+                    </tbody></table></div>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
                 `)
             );
             events = await press("ArrowUp");
@@ -3261,7 +3261,7 @@ describe("keyboard navigation with multiline", () => {
             expect(getContent(el)).toBe(
                 unformat(`
                     <p data-selection-placeholder=""><br></p>
-                    <table><tbody>
+                    <div class="o_table_wrapper"><table><tbody>
                     <tr><td>A1</td><td>B1</td><td>C1[]</td><td>D1</td><td>E1</td></tr>
                     <tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td><td>E2</td></tr>
                     <tr><td>A3</td><td>B3</td><td>
@@ -3269,8 +3269,8 @@ describe("keyboard navigation with multiline", () => {
                     </td><td>D3</td><td>E3</td></tr>
                     <tr><td>A4</td><td>B4</td><td>C4</td><td>D4</td><td>E4</td></tr>
                     <tr><td>A5</td><td>B5</td><td>C5</td><td>D5</td><td>E5</td></tr>
-                    </tbody></table>
-                    <p data-selection-placeholder=""><br></p>
+                    </tbody></table></div>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
                 `)
             );
         });
@@ -3294,7 +3294,7 @@ describe("keyboard navigation with multiline", () => {
             expect(getContent(el)).toBe(
                 unformat(`
                     <p data-selection-placeholder=""><br></p>
-                    <table class="o_selected_table"><tbody>
+                    <div class="o_table_wrapper"><table class="o_selected_table"><tbody>
                     <tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td><td>E1</td></tr>
                     <tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td><td>E2</td></tr>
                     <tr><td>A3</td><td>B3</td><td class="o_selected_td">
@@ -3302,8 +3302,8 @@ describe("keyboard navigation with multiline", () => {
                     </td><td>D3</td><td>E3</td></tr>
                     <tr><td>A4</td><td>B4</td><td>C4</td><td>D4</td><td>E4</td></tr>
                     <tr><td>A5</td><td>B5</td><td>C5</td><td>D5</td><td>E5</td></tr>
-                    </tbody></table>
-                    <p data-selection-placeholder=""><br></p>
+                    </tbody></table></div>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
                 `)
             );
             events = await press("ArrowDown");
@@ -3313,7 +3313,7 @@ describe("keyboard navigation with multiline", () => {
             expect(getContent(el)).toBe(
                 unformat(`
                     <p data-selection-placeholder=""><br></p>
-                    <table class="o_selected_table"><tbody>
+                    <div class="o_table_wrapper"><table class="o_selected_table"><tbody>
                     <tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td><td>E1</td></tr>
                     <tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td><td>E2</td></tr>
                     <tr><td>A3</td><td>B3</td><td class="o_selected_td">
@@ -3321,8 +3321,8 @@ describe("keyboard navigation with multiline", () => {
                     </td><td>D3</td><td>E3</td></tr>
                     <tr><td>A4</td><td>B4</td><td class="o_selected_td">]C4</td><td>D4</td><td>E4</td></tr>
                     <tr><td>A5</td><td>B5</td><td>C5</td><td>D5</td><td>E5</td></tr>
-                    </tbody></table>
-                    <p data-selection-placeholder=""><br></p>
+                    </tbody></table></div>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
                 `)
             );
             events = await press("ArrowDown");
@@ -3331,7 +3331,7 @@ describe("keyboard navigation with multiline", () => {
             expect(getContent(el)).toBe(
                 unformat(`
                     <p data-selection-placeholder=""><br></p>
-                    <table><tbody>
+                    <div class="o_table_wrapper"><table><tbody>
                     <tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td><td>E1</td></tr>
                     <tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td><td>E2</td></tr>
                     <tr><td>A3</td><td>B3</td><td>
@@ -3339,8 +3339,8 @@ describe("keyboard navigation with multiline", () => {
                     </td><td>D3</td><td>E3</td></tr>
                     <tr><td>A4</td><td>B4</td><td>C4</td><td>D4</td><td>E4</td></tr>
                     <tr><td>A5</td><td>B5</td><td>[]C5</td><td>D5</td><td>E5</td></tr>
-                    </tbody></table>
-                    <p data-selection-placeholder=""><br></p>
+                    </tbody></table></div>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
                 `)
             );
         });

@@ -51,7 +51,7 @@ test("should insert a paragraph at end of editable and place cursor in it (table
         },
         contentAfterEdit: unformat(
             `<p data-selection-placeholder=""><br></p>
-            <table><tbody><tr><td><div class="o-paragraph"><br></div></td></tr></tbody></table>
+            <div class="o_table_wrapper"><table><tbody><tr><td><div class="o-paragraph"><br></div></td></tr></tbody></table></div>
             <p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
         ),
         contentAfter:
@@ -82,8 +82,8 @@ test("should insert a paragraph at beginning of editable and place cursor in it 
         },
         contentAfterEdit: unformat(`
             <p data-selection-placeholder="" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p>
-            <table><tbody><tr><td><div class="o-paragraph"><br></div></td></tr></tbody></table>
-            <p data-selection-placeholder=""><br></p>
+            <div class="o_table_wrapper"><table><tbody><tr><td><div class="o-paragraph"><br></div></td></tr></tbody></table></div>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
         `),
         contentAfter: "[]<table><tbody><tr><td><div><br></div></td></tr></tbody></table>",
     });
@@ -115,10 +115,10 @@ test("should insert a paragraph between the two non-P blocks and place cursor in
         },
         contentAfterEdit: unformat(
             `<p data-selection-placeholder=""><br></p>
-            <table><tbody><tr><td><div class="o-paragraph"><br></div></td></tr></tbody></table>
-            <p data-selection-placeholder="" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p>
-            <table><tbody><tr><td><div class="o-paragraph"><br></div></td></tr></tbody></table>
-            <p data-selection-placeholder=""><br></p>`
+            <div class="o_table_wrapper"><table><tbody><tr><td><div class="o-paragraph"><br></div></td></tr></tbody></table></div>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p>
+            <div class="o_table_wrapper"><table><tbody><tr><td><div class="o-paragraph"><br></div></td></tr></tbody></table></div>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         ),
         contentAfter:
             "<table><tbody><tr><td><div><br></div></td></tr></tbody></table>[]<table><tbody><tr><td><div><br></div></td></tr></tbody></table>",
@@ -130,11 +130,11 @@ test("should insert a paragraph before the table, then one after it", async () =
     const table = el.querySelector("table");
     await simulateMouseClick(table, true);
     expect(getContent(el)).toBe(
-        `<p data-selection-placeholder="" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p><table><tbody><tr><td><div class="o-paragraph"><br></div></td></tr></tbody></table><p data-selection-placeholder=""><br></p>`
+        `<p data-selection-placeholder="" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p><div class="o_table_wrapper"><table><tbody><tr><td><div class="o-paragraph"><br></div></td></tr></tbody></table></div><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
     );
     await simulateMouseClick(table);
     expect(getContent(el)).toBe(
-        `<p data-selection-placeholder=""><br></p><table><tbody><tr><td><div class="o-paragraph"><br></div></td></tr></tbody></table><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
+        `<p data-selection-placeholder=""><br></p><div class="o_table_wrapper"><table><tbody><tr><td><div class="o-paragraph"><br></div></td></tr></tbody></table></div><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
     );
 });
 
