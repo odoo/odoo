@@ -6,11 +6,15 @@
         border-bottom: none;
     }
 
+    .o_resume_timeline_header {
+        box-sizing: content-box;
+        width: $o-hrs-timeline-dot-size;
+    }
+
     .o_data_row td {
         padding: var(--o-hrs-timeline-entry-padding);
 
         &.o_resume_timeline_cell {
-            overflow: hidden !important;
             div {
                 width: $o-hrs-timeline-dot-size;
                 height: $o-hrs-timeline-dot-size;
@@ -19,21 +23,13 @@
             &:before {
                 position: absolute;
                 top: 0;
-                left: ($o-hrs-timeline-dot-size * .5 + o-to-rem($o-horizontal-padding) - o-to-rem($border-width));
+                left: auto;
                 bottom: auto;
-                right: auto;
+                right: $o-hrs-timeline-dot-size * .5;
                 width: var(--border-width);
                 height: 100%;
                 background-color: var(--border-color);
                 content: "";
-
-                @media screen and (min-width: 992px), print and (min-width: 190mm) {
-                    left: ($o-hrs-timeline-dot-size * .5 + o-to-rem(map-get($spacers, 4))  - o-to-rem($border-width))
-                }
-
-                @media screen and (min-width: 1400px), print and (min-width: 250mm) {
-                    left: ($o-hrs-timeline-dot-size * .5 + o-to-rem($o-horizontal-padding)  - o-to-rem($border-width))
-                }
             }
         }
     }
