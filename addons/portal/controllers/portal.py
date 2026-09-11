@@ -29,12 +29,16 @@ def pager(url, total, page=1, step=30, scope=5, url_args=None):
     - Shows current page with -1 and +1 neighbors
     - Adds ellipses when necessary
 
+    In version 19 (current stable), you need to use a negative value for the scope parameter if you
+    want to have a fixed number of pages displayed without the first / last page and the ellipses.
+    We use the absolute value of parameter scope.
+
     :param str url : base url of the page link
     :param int total : number total of item to be splitted into pages
     :param int page : current page
     :param int step : item per page
     :param int scope : number of page to display on pager
-    :param dict url_args : additionnal parameters to add as query params to page url
+    :param dict url_args : additional parameters to add as query params to page url
     :returns dict
     """
     # Compute Pager
@@ -52,14 +56,34 @@ def pager(url, total, page=1, step=30, scope=5, url_args=None):
         return _url
 
     # Build page list based on conditions
-    if page_count <= 5:
-        page_list = list(range(1, page_count + 1))
-    elif page <= 3:
-        page_list = [1, 2, 3, 4, "…", page_count]
-    elif page >= page_count - 2:
-        page_list = [1, "…"] + list(range(page_count - 3, page_count + 1))
+    if scope < 0:
+        # To distinguish from the previous behavior, negative scope means fixed scope while positive scope
+        # means old leftover scope. From this way we don't change behavior of current running databases.
+        scope = abs(scope)
+
+        start = page - (scope // 2)
+        end = start + scope - 1
+
+        if start < 1:
+            start = 1
+            end = min(scope, page_count)
+
+        if end > page_count:
+            end = page_count
+            start = max(1, page_count - scope + 1)
+        start = int(start)
+        end = int(end) + 1
+
+        page_list = list(range(start, end))
     else:
-        page_list = [1, "…", page - 1, page, page + 1, "…", page_count]
+        if page_count <= 5:
+            page_list = list(range(1, page_count + 1))
+        elif page <= 3:
+            page_list = [1, 2, 3, 4, "…", page_count]
+        elif page >= page_count - 2:
+            page_list = [1, "…"] + list(range(page_count - 3, page_count + 1))
+        else:
+            page_list = [1, "…", page - 1, page, page + 1, "…", page_count]
 
     pages = [
         {"num": p, "url": get_url(p) if p != "…" else None, "is_current": p == page}
