@@ -11,8 +11,10 @@ class TestHrAttendanceSelfEdit(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env.company.country_id = cls.env.ref('base.us').id
         cls.company = cls.env['res.company'].create({
             'name': 'SweatChipChop Inc.',
+            'country_id': cls.env.ref('base.us').id,
         })
 
         cls.admin = new_test_user(cls.env, login='user_admin', groups='hr_attendance.group_hr_attendance_manager', company_id=cls.company.id).with_company(cls.company)
