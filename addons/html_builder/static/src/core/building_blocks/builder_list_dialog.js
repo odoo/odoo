@@ -1,4 +1,4 @@
-import { Component, proxy, useProps, t } from "@odoo/owl";
+import { Component, computed, proxy, useProps, t } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { localeCompare } from "@web/core/l10n/utils";
@@ -19,6 +19,8 @@ export class BuilderListDialog extends Component {
             includedRecords: [...this.props.includedRecords],
             searchString: "",
         });
+        this.searchExcluded = computed(() => this.search(this.state.excludedRecords));
+        this.searchIncluded = computed(() => this.search(this.state.includedRecords));
     }
 
     save() {
@@ -26,26 +28,11 @@ export class BuilderListDialog extends Component {
         this.props.close();
     }
 
-    get searchExcluded() {
+    search(records) {
         if (!this.state.searchString) {
-            return this.state.excludedRecords;
+            return records;
         }
-        return fuzzyLookup(
-            this.state.searchString,
-            this.state.excludedRecords,
-            (record) => record.display_name
-        );
-    }
-
-    get searchIncluded() {
-        if (!this.state.searchString) {
-            return this.state.includedRecords;
-        }
-        return fuzzyLookup(
-            this.state.searchString,
-            this.state.includedRecords,
-            (record) => record.display_name
-        );
+        return fuzzyLookup(this.state.searchString, records, (record) => record.display_name);
     }
 
     onSearch(ev) {

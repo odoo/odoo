@@ -108,6 +108,7 @@ export class BuilderList extends Component {
         this.commit = commit;
         this.preview = preview;
         this.allRecords = computed(() => this.formatRawValue(this.props.records));
+        this.includedRecords = computed(() => this.formatRawValue(this.state.value));
         this.visibilityState = proxy({
             limit: this.props.limit,
         });
@@ -169,7 +170,7 @@ export class BuilderList extends Component {
     }
 
     getIncludedRecords() {
-        return this.formatRawValue(this.state.value);
+        return this.includedRecords();
     }
 
     getExcludedRecords() {
