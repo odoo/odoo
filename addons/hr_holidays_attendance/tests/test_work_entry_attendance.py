@@ -244,6 +244,10 @@ class TestWorkentryAttendance(HrWorkEntryAttendanceCommon):
             as the time type of an attendance. """
         country = self.env['res.country'].create({'name': 'Allocland', 'code': 'Q3'})
         self.employee.company_id.country_id = country
+        # undo the live-generated fallback types: this test wants only the two created below.
+        self.env['hr.time.rule'].sudo().search([('country_id', '=', country.id)]).unlink()
+        self.env['hr.work.entry.type'].sudo().with_context(active_test=False).search(
+            [('country_id', '=', country.id)]).unlink()
         free_type, allocation_type = self.env['hr.work.entry.type'].create([{
             'name': 'Free working time',
             'code': 'TDOM_FREE',

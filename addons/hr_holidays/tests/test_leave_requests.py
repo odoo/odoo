@@ -37,6 +37,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
     def setUpClass(cls):
         super(TestLeaveRequests, cls).setUpClass()
 
+        cls.env.company.country_id = cls.env.ref('base.us')
         # Make sure we have the rights to create, validate and delete the leaves, leave types and allocations
         HrWorkEntryType = cls.env['hr.work.entry.type'].with_user(cls.user_hrmanager_id)
 
@@ -3592,11 +3593,25 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         10h of Work from 08:00 on a day scheduled 08:00-12:00 and 13:00-17:00 end at 18:00 the
         same day, and the 2 hours beyond the schedule become overtime.
         """
-        overtime_rule = self.env.ref('hr_work_entry.hr_time_rule_employee_schedule')
+        work = self.env['hr.work.entry.type'].create({
+            'name': 'Attendance TEST',
+            'code': 'ATT_TEST',
+            'request_unit': 'hour',
+            'requires_allocation': False,
+        })
+        overtime_type = self.env['hr.work.entry.type'].create({
+            'name': 'Overtime TEST',
+            'code': 'OT_TEST',
+        })
+        overtime_rule = self.env['hr.time.rule'].create({
+            'name': 'Employee Schedule Rule TEST',
+            'calendar_source': 'employee',
+            'quantity_period': 'day',
+            'condition_work_entry_type_ids': [Command.link(work.id)],
+            'work_entry_type_id': overtime_type.id,
+        })
         self.env['hr.time.rule'].search([]).active = False
         overtime_rule.active = True
-        work = self.env.ref('hr_work_entry.generic_work_entry_type_attendance')
-        work.write({'request_unit': 'hour', 'requires_allocation': False})
         employee = self._employee_on(self.company.resource_calendar_id)
 
         with Form(self.env['hr.leave'].with_context(default_employee_id=employee.id)) as form:

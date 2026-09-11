@@ -19,6 +19,8 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         # work part time. Then creates an employee per calendar (one
         # for the standard calendar and one for the one we created)
         self.test_company = self.env.ref('base.test_company')
+        self.test_company.country_id = self.env.ref('base.us')
+        self.env.company.country_id = self.test_company.country_id
 
         attendance_ids = [
             (0, 0, {'dayofweek': '0', 'hour_from': 9, 'hour_to': 12}),
