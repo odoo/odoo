@@ -55,6 +55,7 @@ class StockMove(models.Model):
     analytic_account_line_ids = fields.Many2many('account.analytic.line', copy=False)
     account_move_id = fields.Many2one('account.move', 'stock_move_id', copy=False, index="btree_not_null")
     invoice_line_ids = fields.One2many('account.move.line', 'stock_move_id', 'Invoice Line', index='btree_not_null')
+    product_value_ids = fields.One2many('product.value', 'move_id', 'Product Value', index='btree_not_null')
 
     def search_remaining_qty(self, operator, value):
         if operator != '=' or not isinstance(value, bool) or value is not True:
@@ -146,6 +147,13 @@ class StockMove(models.Model):
                 move.remaining_value = ratio * move.value if ratio else 0
             else:
                 move.remaining_value = move.remaining_qty * move.standard_price
+
+    @api.depends_context('for_product_value')
+    def _compute_display_name(self):
+        if not self.env.context.get('for_product_value'):
+            return super()._compute_display_name()
+        for move in self:
+            move.display_name = move.reference
 
     def write(self, vals):
         """ Editing the done date of a valued move (to the past or the future) shifts the
