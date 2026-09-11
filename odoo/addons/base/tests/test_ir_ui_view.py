@@ -4862,7 +4862,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'account_reports',
             'account_saft_import',
             'account_sepa',
-            'account_winbooks_import',
             'analytic',
             'appointment',
             'approvals',
