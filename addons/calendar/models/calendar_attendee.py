@@ -127,7 +127,12 @@ class CalendarAttendee(models.Model):
 
         :param mail_template: a mail.template record
         :param force_send: if set to True, the mail(s) will be sent immediately (instead of the next queue processing)
+
+        Context:
+        :param message_subtype_xmlid: subtype used for the follower notification, defaults to 'mail.mt_note'
         """
+        message_subtype_xmlid = self.env.context.get('message_subtype_xmlid', 'mail.mt_note')
+
         # TDE FIXME: check this
         if force_send:
             force_send_limit = int(self.env['ir.config_parameter'].sudo().get_param('mail.mail_force_send_limit', 100))
@@ -203,6 +208,7 @@ class CalendarAttendee(models.Model):
                     email_layout_xmlid='mail.mail_notification_light',
                     attachment_ids=attachment_ids,
                     force_send=False,
+                    subtype_xmlid=message_subtype_xmlid,
                 )
         # batch sending at the end
         if force_send and len(notified_attendees) < force_send_limit:
