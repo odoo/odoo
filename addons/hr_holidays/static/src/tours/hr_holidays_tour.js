@@ -26,11 +26,11 @@ registry.category("web_tour.tours").add("hr_holidays_tour", {
         },
         {
             trigger: 'div[name="work_entry_type_id"] input',
-            content: _t("Let's try to create a sick time off, select it in the list"),
+            content: _t("Let's try to create a Sick Time Off, select it in the list"),
             run: "click",
         },
         {
-            trigger: ".ui-autocomplete .ui-menu-item a:contains('Guaranted monthly wage illness')",
+            trigger: ".ui-autocomplete .ui-menu-item a:contains('Sick Time Off')",
             tooltipPosition: "right",
             run: "click",
         },
