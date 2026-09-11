@@ -117,7 +117,7 @@ class SaleReport(models.Model):
             LEFT JOIN stock_picking_type picking ON picking.id = config.picking_type_id
             JOIN {currency_table} ON currency_table.company_id = pos.company_id
             """.format(
-            currency_table=self.env['res.currency']._get_query_currency_table(self.env.companies.ids, fields.Date.today())
+            currency_table=self.env['res.currency']._get_query_currency_table((self.env.companies | self.env.company).ids, fields.Date.today())
             )
 
     def _where_pos(self):

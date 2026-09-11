@@ -136,7 +136,7 @@ class AccountInvoiceReport(models.Model):
                     AND product_standard_price.company_id = line.company_id
                 JOIN {currency_table} ON currency_table.company_id = line.company_id
         '''.format(
-            currency_table=self.env['res.currency']._get_query_currency_table(self.env.companies.ids, fields.Date.today())
+            currency_table=self.env['res.currency']._get_query_currency_table((self.env.companies | self.env.company).ids, fields.Date.today())
         )
 
     @api.model
