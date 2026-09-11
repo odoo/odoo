@@ -75,6 +75,7 @@ _DEFAULT_MANIFEST = {
     'data': [],
     'demo': [],
     'depends': [],
+    'deprecated': False,
     'description': '',  # defaults to README file
     'external_dependencies': {},
     'iap_paid_service': False,

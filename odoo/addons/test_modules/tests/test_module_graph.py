@@ -133,3 +133,37 @@ class TestGraph(BaseCase):
             [['base'], ['test_c', 'module4', 'module2', 'test_a', 'module3', 'test_b', 'module1', 'test_z']],
             ['base', 'test_z', 'test_a', 'module1', 'test_c', 'module2', 'module3', 'module4', 'test_b']
         )
+
+    @mute_logger('odoo.modules.module_graph')
+    def test_graph_loads_installed_deprecated_module(self):
+        module_states = {
+            'base': 'installed',
+            'deprecated_installed': 'installed',
+            'deprecated_installing': 'to install',
+        }
+
+        def make_deprecated_manifest(name, **kw):
+            if name not in module_states:
+                return None
+            return Manifest(
+                path='/dummy/' + name,
+                manifest_content=dict(
+                    _DEFAULT_MANIFEST, author='test', license='LGPL-3',
+                    installable=name == 'base', deprecated=name != 'base',
+                ),
+            )
+
+        def update_from_database(graph, names):
+            for name in names:
+                if module := graph._modules.get(name):
+                    module.state = module_states[name]
+
+        with (
+            patch('odoo.modules.module_graph.ModuleGraph._update_from_database', update_from_database),
+            patch('odoo.modules.module_graph.Manifest.for_addon', make_deprecated_manifest),
+            patch('odoo.modules.module_graph.ModuleGraph._imported_modules', {'studio_customization'}),
+        ):
+            graph = ModuleGraph(None, mode='update')
+            graph.extend(module_states)
+
+        self.assertEqual({module.name for module in graph}, {'base', 'deprecated_installed'})

@@ -29,6 +29,8 @@ const BLACKLISTED_MENUS = new Set([
 const BLACKLISTED_NEW_RECORD = new Set([
     "ai_app.ai_agent_menu_action", // The new button creates the agent and opens its chat in Discuss, not a form view
     "ai_app.ai_menu_root", // same here, no form view is opened
+    "ai_agentic.ai_agent_menu_action", // same here
+    "ai_agentic.ai_menu_root", // same here
     "website_hr_recruitment.menu_job_pages", // The new button opens a website editor, not a form
     "stock.menu_action_warehouse_form", // It opens an error dialog : Creating a new warehouse will automatically activate the Storage Locations setting.
 ]);
@@ -94,6 +96,19 @@ const EXCEPTION_RECORD_ACTIONS = {
         },
     },
     "ai_app.ai_menu_root": {
+        kanban: {
+            toCheck: ".o-mail-Discuss",
+            toGoBack: ".o_back_button",
+        },
+    },
+    "ai_agentic.ai_agent_menu_action": {
+        // an agent card opens the agent's chat in Discuss, not a form
+        kanban: {
+            toCheck: ".o-mail-Discuss",
+            toGoBack: ".o_back_button",
+        },
+    },
+    "ai_agentic.ai_menu_root": {
         kanban: {
             toCheck: ".o-mail-Discuss",
             toGoBack: ".o_back_button",
