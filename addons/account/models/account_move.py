@@ -6740,7 +6740,7 @@ class AccountMove(models.Model):
             invoice_date = lock_dates[-1][0] + timedelta(days=1)
         if self.is_sale_document(include_receipts=True):
             if lock_dates:
-                if not highest_name or number_reset == 'month':
+                if not highest_name or number_reset in ('month', 'year_range_month'):
                     return min(today, date_utils.get_month(invoice_date)[1])
                 elif number_reset == 'year':
                     return min(today, date_utils.end_of(invoice_date, 'year'))
