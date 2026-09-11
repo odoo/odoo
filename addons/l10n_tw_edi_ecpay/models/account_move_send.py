@@ -79,12 +79,12 @@ class AccountMoveSend(models.AbstractModel):
     @api.model
     def _l10n_tw_edi_sync_ecpay_buyers(self, invoices_data):
         """
-        Register the buyer of the B2B invoices to send, once per customer instead of once per invoice
+        Register the buyer of the B2B invoices to send, once per contact instead of once per invoice
         """
         buyers = {}
         for invoice, invoice_data in invoices_data.items():
             if 'tw_ecpay_send' in invoice_data['extra_edis'] and invoice.l10n_tw_edi_is_b2b:
-                buyer = (invoice.company_id, invoice.partner_id.commercial_partner_id)
+                buyer = (invoice.company_id, invoice.partner_id)
                 buyers.setdefault(buyer, []).append(invoice)
 
         for invoices in buyers.values():

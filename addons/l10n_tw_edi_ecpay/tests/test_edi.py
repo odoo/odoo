@@ -474,6 +474,39 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
         json_data = credit_note._l10n_tw_edi_generate_issue_allowance_json()
         self.assertEqual(json_data.get("InvoiceDate"), "2026-01-06")
 
+    def test_15_b2b_invoice_addressed_to_a_contact(self):
+        """
+        A B2B invoice is issued to the company, so the data of the company must be used and checked
+        even when the invoice is addressed to one of its contacts.
+        """
+        contact = self.env["res.partner"].create({
+            "name": "Employee",
+            "parent_id": self.partner_b.id,
+            "email": "not an email",
+            "phone": "+886 000 000 000",
+            "street": "street contact",
+            "city": "信義區",
+            "state_id": self.env.ref("base.state_tw_klc").id,
+            "country_id": self.env.ref("base.tw").id,
+        })
+        invoice = self.init_invoice("out_invoice", partner=contact, products=self.product_a)
+        invoice.action_post()
+        self.assertTrue(invoice.l10n_tw_edi_is_b2b)
+
+        json_data = invoice._l10n_tw_edi_generate_invoice_json()
+        self.assertEqual(json_data.get("CustomerIdentifier"), self.partner_b.vat)
+        self.assertEqual(json_data.get("CustomerEmail"), self.partner_b.email)
+        self.assertEqual(json_data.get("CustomerPhone"), "0123456789")
+        self.assertEqual(json_data.get("CustomerAddr"), self.partner_b.address_inline)
+
+        # The company is the buyer, the contact is only the person in charge.
+        self.buyer_calls = []
+        with patch(CALL_API_METHOD, new=self._test_11_mock):
+            self.create_send_and_print(invoice).action_send_and_print()
+        self.assertEqual(self.buyer_calls[0]["CompanyName"], self.partner_b.name)
+        self.assertEqual(self.buyer_calls[0]["EmailAddress"], self.partner_b.email)
+        self.assertEqual(self.buyer_calls[0]["SalesName"], "Employee")
+
     # -------------------------------------------------------------------------
     # Patched methods
     # -------------------------------------------------------------------------
