@@ -85,3 +85,6 @@ class IrAttachment(models.Model):
         - Non admin user uploading an unsplash image (bypass binary/url check)
         """
         return False
+
+    def _get_mimetype_exempt_groups(self):
+        return []
