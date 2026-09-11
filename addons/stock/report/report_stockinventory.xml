@@ -10,27 +10,26 @@
                         <h2>Inventory Count Sheet</h2>
                         <t t-set="locations" t-value="docs.mapped('location_id')"/>
                         <div class="oe_structure"></div>
-                        <table class="table table-borderless">
+                        <table class="table table-bordered border-top-0">
                             <thead>
-                                <tr>
+                                <tr class="table-borderless border-top-0">
                                     <th groups="stock.group_stock_multi_locations">Location</th>
                                     <th>Product</th>
                                     <th groups="stock.group_production_lot">Lot/Serial Number</th>
                                     <th groups="stock.group_tracking_lot">Package</th>
-                                    <th class="text-end">Quantity</th>
+                                    <th class="text-end">Counted Quantity</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <t t-foreach="locations" t-as="location">
                                     <tr groups="stock.group_stock_multi_locations">
-                                        <td colspan="2"><span class="fw-bold" t-out="location.display_name">Shelf A</span></td>
-                                        <td groups="stock.group_production_lot"></td>
-                                        <td groups="stock.group_tracking_lot"></td>
-                                        <td></td>
+                                        <td colspan="5" class="border-start border-end border-top border-bottom">
+                                            <span class="fw-bold" t-out="location.display_name">Shelf A</span>
+                                        </td>
                                     </tr>
                                     <tr t-foreach="docs.filtered(lambda quant: quant.location_id.id == location.id)" t-as="line">
-                                        <td groups="stock.group_stock_multi_locations"></td>
-                                        <td><span t-field="line.product_id">Laptop</span></td>
+                                        <td groups="stock.group_stock_multi_locations" class="border-end-0"></td>
+                                        <td class="border-start-0"><span t-field="line.product_id">Laptop</span></td>
                                         <td groups="stock.group_production_lot"><span t-field="line.lot_id"/></td>
                                         <td groups="stock.group_tracking_lot"><span t-field="line.package_id"/></td>
                                         <td class="o_td_quantity text-end">
