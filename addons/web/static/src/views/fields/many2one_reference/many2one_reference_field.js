@@ -17,6 +17,7 @@ export class Many2OneReferenceField extends Component {
 
         return {
             ...props,
+            domain: typeof props.domain === 'function' ? props.domain : () => props.domain || [],
             relation,
             value: value ? { id: value.resId, display_name: value.displayName } : false,
             readonly: this.props.readonly || !relation,
