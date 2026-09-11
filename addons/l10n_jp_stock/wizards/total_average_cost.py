@@ -158,7 +158,16 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
                             returned = move._get_value_from_returns(qty)
                             purchases_val += returned['value']
                             if (remaining := qty - returned['quantity']) > 0:
-                                purchases_val += self._get_acquisition_value(move, remaining)
+                                if move.price_unit:
+                                    purchases_val += self._get_acquisition_value(move, remaining)
+                                else:
+                                    # nothing links this return to the sale it undoes and nothing
+                                    # priced it, so it re-enters at the cost in effect on its day
+                                    # sudo: the valuation history is not read by a product manager
+                                    day = product.sudo()._get_last_product_value(move.date)
+                                    purchases_val += remaining * (
+                                        day[product].value if product in day else product.standard_price
+                                    )
                 opening_cost = opening_values[product].value if product in opening_values else product.standard_price
                 init_val = init_qty * opening_cost
                 tot_qty = init_qty + purchases_qty - returns_qty

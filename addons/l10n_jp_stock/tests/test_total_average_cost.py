@@ -212,7 +212,7 @@ class TestTotalAverageCost(TestTotalAverageCostCommon):
         freight = self.env['product.product'].create({
             'name': 'JP Freight', 'type': 'service', 'landed_cost_ok': True,
         })
-        landed_cost = self.env['stock.landed.cost'].create({
+        landed_cost = self.env['stock.landed.cost'].create({  # noqa: OLS03001
             'date': self.today,
             'picking_ids': [(6, 0, picking.ids)],
             'cost_lines': [(0, 0, {
@@ -394,6 +394,21 @@ class TestTotalAverageCost(TestTotalAverageCostCommon):
         self._create_move(10, 90, self.today, self.customer_loc, self.stock_loc)
         self._run_category_wizard()
         self.assertAlmostEqual(self.product.standard_price, (100 * 100 + 10 * 90) / 110, places=2)
+
+    def test_unpriced_customer_return_enters_at_the_cost_of_the_day(self):
+        # what the point of sale writes for a refund: no price, and no link to the sale
+        self._add_opening_stock()
+        # inside the period, so it is not the opening cost the return could be confused with
+        self._set_standard_price(120, self.today - timedelta(days=1))
+        self._create_move(10, 200, self.today, self.supplier_loc, self.stock_loc)
+        self._create_move(10, 0, self.today, self.customer_loc, self.stock_loc)
+        self._run_category_wizard()
+        # the return re-enters at the 120 in effect on its date, not at nothing
+        self.assertAlmostEqual(
+            self.product.standard_price,
+            (100 * 100 + 10 * 200 + 10 * 120) / 120,
+            places=2,
+        )
 
     def test_free_sample_receipt_at_zero(self):
         self._add_opening_stock()
