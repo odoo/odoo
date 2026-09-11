@@ -1,9 +1,8 @@
-import { Component, computed, proxy, signal, t, useProps } from "@odoo/owl";
+import { Component, computed, onMounted, onPatched, proxy, signal, t, useProps } from "@odoo/owl";
 import { location } from "@web/core/browser/browser";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useService } from "@web/core/utils/hooks";
-import { useLayoutEffect } from "@web/owl2/utils";
 
 export class SettingsPage extends Component {
     static template = "web.SettingsPage";
@@ -15,6 +14,19 @@ export class SettingsPage extends Component {
         slots: t.object(),
     });
     settingsRef = signal.ref();
+
+    /**
+     * Whether the settings on screen still hold a visible setting. The `d-none`
+     * classes this is measured from are toggled imperatively by SettingsApp and
+     * SettingsBlock, so it cannot be derived from signals; it is re-measured
+     * after every patch, see `setup`.
+     */
+    hasVisibleSetting = signal(true);
+
+    displayNoContent = computed(
+        () => Boolean(this.state.search.value) && !this.hasVisibleSetting()
+    );
+
     setup() {
         this.uiService = useService("ui");
         this.state = proxy({
@@ -41,18 +53,50 @@ export class SettingsPage extends Component {
         }
 
         this.scrollMap = Object.create(null);
-        useLayoutEffect(
-            (settingsEl, currentTab) => {
-                if (!settingsEl) {
-                    return;
-                }
+        // `useLayoutEffect` only re-ran its callback when a dependency changed.
+        // That gating is not incidental here: this callback writes `scrollTop`,
+        // so running it on every patch would yank the panel back to the stored
+        // offset while the user scrolls or edits a setting, and force a layout
+        // each time. `onPatched` has no dependency array, so the check is kept
+        // explicitly.
+        let lastSettingsEl;
+        let lastTab;
+        const restoreTabScroll = () => {
+            const settingsEl = this.settingsRef();
+            if (!settingsEl) {
+                return;
+            }
+            if (settingsEl === lastSettingsEl && this.state.selectedTab === lastTab) {
+                return;
+            }
+            lastSettingsEl = settingsEl;
+            lastTab = this.state.selectedTab;
 
-                const { scrollTop } = this.scrollMap[currentTab] || 0;
-                settingsEl.scrollTop = scrollTop;
-                this.tabChangeProm?.resolve();
-            },
-            () => [this.settingsRef(), this.state.selectedTab]
-        );
+            const { scrollTop } = this.scrollMap[lastTab] || 0;
+            settingsEl.scrollTop = scrollTop;
+            this.tabChangeProm?.resolve();
+        };
+        onMounted(restoreTabScroll);
+        onPatched(restoreTabScroll);
+
+        const measureVisibleSetting = () => {
+            const settingsEl = this.settingsRef();
+            // Reading the search value first keeps the two queries out of every
+            // patch that is not a search: nothing is hidden then, so the answer
+            // is known without touching the DOM.
+            this.hasVisibleSetting.set(
+                !this.state.search.value ||
+                    !settingsEl ||
+                    Boolean(
+                        settingsEl.querySelector(".o_settings_container:not(.d-none)") ||
+                            settingsEl.querySelector(
+                                ".o_settings_container:not(.d-none) .o_setting_box.o_searchable_setting"
+                            )
+                    )
+            );
+        };
+        onMounted(measureVisibleSetting);
+        onPatched(measureVisibleSetting);
     }
 
     selectedModule = computed(() =>
