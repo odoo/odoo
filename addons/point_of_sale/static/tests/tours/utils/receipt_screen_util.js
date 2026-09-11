@@ -154,7 +154,13 @@ export function receiptChangeAmountIsNotThere() {
 export function emailIsSuccessful() {
     return [
         {
+            content: "the receipt email finished sending",
+            // Sending renders the receipt to an image first, which embeds every
+            // @font-face of the loaded bundles. That render is merely slow, not
+            // stuck, and on a loaded machine it has been measured from under a
+            // second to over ten, so the default 10s step budget is not enough.
             trigger: `.receipt-screen .notice .text-success`,
+            timeout: 30000,
         },
     ];
 }
