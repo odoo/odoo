@@ -3,6 +3,7 @@
 import logging
 import requests
 import threading
+from concurrent.futures import Future
 
 from odoo.http import route, Controller, request
 from odoo.tests.common import HttpCase, tagged, ChromeBrowser, TEST_CURSOR_COOKIE_NAME, Like
@@ -97,6 +98,28 @@ class TestChromeBrowser(HttpCase):
 class TestChromeBrowserOddDimensions(TestChromeBrowser):
     allow_inherited_tests_method = True
     browser_size = "1215x768"
+
+
+@tagged('-at_install', 'post_install')
+class TestChromeBrowserShutdown(HttpCase):
+    def test_close_without_answer(self):
+        """Chrome can close the devtools connection before answering Browser.close."""
+        browser = ChromeBrowser(self)
+        websocket_send = ChromeBrowser._websocket_send
+        close_request = None
+
+        def close_connection(browser, method, **kwargs):
+            nonlocal close_request
+            if method != 'Browser.close':
+                return websocket_send(browser, method, **kwargs)
+            close_request = browser._responses[next(browser._request_id)] = Future()
+            browser.ws.close()
+            return close_request
+
+        with patch.object(ChromeBrowser, '_websocket_send', close_connection):
+            with self.assertNoLogs('odoo.tests.common', 'WARNING'):
+                browser.stop()
+        self.assertTrue(close_request.cancelled())
 
 
 class TestRequestRemainingCommon(HttpCase):
