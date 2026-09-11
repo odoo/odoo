@@ -9,6 +9,7 @@ from odoo.tools.func import deprecated
 
 __all__ = [
     "Fit",
+    "Link",
     "PageObject",
     "PdfReader",
     "PdfWriter",

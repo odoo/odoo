@@ -1,12 +1,13 @@
 import warnings
 
 from PyPDF2 import errors, filters, generic, PdfReader, PdfWriter as _Writer
-from PyPDF2.generic import create_string_object
+from PyPDF2.generic import AnnotationBuilder, create_string_object
 from PyPDF2._page import PageObject
 from PyPDF2 import __version__  # noqa: F401
 
 __all__ = [
     "Fit",
+    "Link",
     "PageObject",
     "PdfReader",
     "PdfWriter",
@@ -31,6 +32,19 @@ class Fit:
     @classmethod
     def fit(cls):
         return cls('/Fit')
+
+
+def Link(*, rect, border=None, target_page_index=None, fit=None):
+    """Minimal stand-in for pypdf.annotations.Link: PyPDF2 2.x has no annotations
+    module and instead builds the annotation dict through AnnotationBuilder.link()."""
+    fit = fit or Fit.fit()
+    return AnnotationBuilder.link(
+        rect=rect,
+        border=border,
+        target_page_index=target_page_index,
+        fit=fit.fit_type,
+        fit_args=fit.fit_args,
+    )
 
 
 class PdfWriter(_Writer):
