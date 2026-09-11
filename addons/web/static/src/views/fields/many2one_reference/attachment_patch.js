@@ -22,7 +22,7 @@ patch(Many2OneReferenceField.prototype, {
             const baseDomain = new Domain(currentDomain);
             const excludeDomain = new Domain([['id', '!=', resId]]);
 
-            props.domain = Domain.and([baseDomain, excludeDomain]).toList();
+            props.domain = () => Domain.and([baseDomain, excludeDomain]).toList();
         }
 
         return props;
