@@ -2360,7 +2360,7 @@ class MrpProduction(models.Model):
             lambda m: not m.manual_consumption and not m.picked and m.product_uom.compare(m.quantity, m.product_uom_qty) == 0
         ).picked = True
 
-        self.move_raw_ids.filtered(lambda m: m.manual_consumption and not m.picked).picked = True
+        self.move_raw_ids.filtered(lambda m: m._should_be_auto_picked()).picked = True
 
         # Produce by-products also for not auto productions.
         (self - productions_auto)._mark_byproducts_as_produced()
