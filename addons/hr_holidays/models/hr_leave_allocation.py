@@ -205,7 +205,7 @@ class HrLeaveAllocation(models.Model):
     @api.depends('employee_id', 'holiday_status_id')
     def _compute_leaves(self):
         date_from = fields.Date.today()
-        employee_days_per_allocation = self.employee_id._get_consumed_leaves(self.holiday_status_id, date_from, ignore_future=True)[0]
+        employee_days_per_allocation = self.employee_id._get_consumed_leaves(self.holiday_status_id, date_from)[0]
         for allocation in self:
             origin = allocation._origin
             virtual_leave = employee_days_per_allocation[origin.employee_id][origin.holiday_status_id][origin]
