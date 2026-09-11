@@ -234,7 +234,7 @@ class HrLeaveAllocation(models.Model):
     @api.depends('employee_id', 'work_entry_type_id', 'nextcall')
     def _compute_leaves(self):
         date_from = fields.Date.context_today(self)
-        employee_days_per_allocation = self.employee_id._get_consumed_leaves(self.work_entry_type_id, date_from, ignore_future=True)[0]
+        employee_days_per_allocation = self.employee_id._get_consumed_leaves(self.work_entry_type_id, date_from)[0]
         self._set_leaves_from_consumption_data(employee_days_per_allocation)
 
     def _set_leaves_from_consumption_data(self, employee_days_per_allocation):
