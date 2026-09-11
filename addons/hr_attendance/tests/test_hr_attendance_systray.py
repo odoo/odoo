@@ -9,7 +9,7 @@ class TestHrAttendanceSystray(HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.company = cls.env['res.company'].create({'name': 'systray_company'})
+        cls.company = cls.env['res.company'].create({'name': 'systray_company', 'country_id': cls.env.ref('base.us').id})
 
         # A user linked to an employee: the regular check in/out case.
         cls.user_with_employee = cls.env['res.users'].create({

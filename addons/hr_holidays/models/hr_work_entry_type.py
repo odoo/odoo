@@ -58,6 +58,7 @@ class HrWorkEntryType(models.Model):
     group_days_leave = fields.Float(
         compute='_compute_group_days_leave', string='Group Time Off')
     is_used = fields.Boolean(compute="_compute_is_used")
+    company_has_country = fields.Boolean(compute='_compute_company_has_country')
     country_id = fields.Many2one('res.country', string='Country',
                                  default=lambda self: self.env.company.country_id,
                                  tracking=True,
@@ -344,6 +345,12 @@ been taken for this time off type. Changing it now would affect existing employe
         allocations_count = self._allocations_count_by_work_entry_type_id()
         for work_entry_type in self:
             work_entry_type.is_used = leaves_count.get(work_entry_type.id, 0) or allocations_count.get(work_entry_type.id, 0)
+
+    @api.depends_context('allowed_company_ids')
+    def _compute_company_has_country(self):
+        has_country = bool(self.env.companies.country_id)
+        for work_entry_type in self:
+            work_entry_type.company_has_country = has_country
 
     def _leaves_count_by_work_entry_type_id(self):
         leave_domain = [
