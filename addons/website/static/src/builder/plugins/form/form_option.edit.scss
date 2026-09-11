@@ -22,9 +22,11 @@
         }
     }
 
-    .s_website_form_label_content[contenteditable="true"] {
+    .s_website_form_label [contenteditable="true"] {
         cursor: text;
+    }
 
+    .s_website_form_label_content {
         &[data-show-default-label]::after {
             content: attr(data-default-label-content);
             opacity: 0.3;

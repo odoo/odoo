@@ -47,12 +47,12 @@
     </t>
 
     <t t-name="website.form_label_content">
-        <span class="s_website_form_label_content" t-out="this.field.string"/>
+        <span class="s_website_form_label_content o_not_translate_inline" t-out="this.field.string"/>
         <t t-if="this.field.required or this.field.modelRequired">
-            <span class="s_website_form_mark" t-if="this.field.formatInfo.requiredMark" t-out="' ' + this.field.formatInfo.mark"/>
+            <span class="s_website_form_mark o_not_translate_inline" t-if="this.field.formatInfo.requiredMark" t-out="' ' + this.field.formatInfo.mark"/>
         </t>
         <t t-else="">
-            <span class="s_website_form_mark" t-if="this.field.formatInfo.optionalMark" t-out="' ' + this.field.formatInfo.mark"/>
+            <span class="s_website_form_mark o_not_translate_inline" t-if="this.field.formatInfo.optionalMark" t-out="' ' + this.field.formatInfo.mark"/>
         </t>
     </t>
 
