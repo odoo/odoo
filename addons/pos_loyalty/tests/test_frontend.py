@@ -3687,7 +3687,7 @@ class TestUi(TestPointOfSaleHttpCommon):
     def test_confirm_coupon_programs_one_by_one(self):
         """
         Sync from UI is now syncing orders one by one.
-        confirm_coupon_programs should be called 6 times in this tour (6 orders created).
+        confirm_coupon_programs should be called 7 times in this tour (6 orders created + one sent to preparation).
         """
         self.create_programs([('arbitrary_name', 'gift_card')])['arbitrary_name']
         pos_order = self.env.registry.models['pos.order']
@@ -3699,7 +3699,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         with patch.object(pos_order, "confirm_coupon_programs", confirm_coupon_programs_patch):
             self.start_pos_tour("test_confirm_coupon_programs_one_by_one", login="pos_user")
-            self.assertEqual(sync_counter['count'], 6)
+            self.assertEqual(sync_counter['count'], 7)
 
     def test_specific_reward_product_tax_included_excluded(self):
         """This test makes sure that the value of a reward applied on a specific product is
