@@ -18,7 +18,7 @@
                 </div>
                 <t t-if="this.uiService.isSmall or !this.group.isFolded">
                     <GroupConfigMenu t-props="this.configMenuProps"/>
-                    <button t-if="this.canQuickCreate()" class="o_kanban_quick_add o_btn_circle d-print-none btn me-0" t-on-click="() => this.quickCreate()">
+                    <button t-if="this.canQuickCreate()" class="o_kanban_quick_add o_btn_circle d-print-none btn btn-light me-0" t-on-click="() => this.quickCreate()">
                         <i class="oi" data-icon="add_2" role="img" aria-label="Quick add" title="Quick add"/>
                     </button>
                 </t>

@@ -14,6 +14,9 @@
 
     position: relative;
     z-index: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     margin: calc(var(--btn-padding-y) * #{$_btn_ratio * 0.5});
     padding: 0;
     line-height: 1;
@@ -35,6 +38,7 @@
         // Apply button rules to the pseudoelement itself
         background: var(--btn-bg);
         border: var(--btn-border-width) solid var(--btn-border-color);
+        @include transition($btn-transition);
     }
 
     &:hover:before {
@@ -54,12 +58,14 @@
     }
 
     &.active, &.show {
-        background-color: var(--btn-active-bg);
-        background-image: if($enable-gradients, none, null);
-        border-color: var(--btn-active-border-color);
-        @include box-shadow(var(--btn-active-shadow));
+        &:before {
+            background-color: var(--btn-active-bg);
+            background-image: if($enable-gradients, none, null);
+            border-color: var(--btn-active-border-color);
+            @include box-shadow(var(--btn-active-shadow));
+        }
 
-        &:focus-visible {
+        &:focus-visible:before {
             @if $enable-shadows {
                 box-shadow: var(--btn-active-shadow), var(--btn-focus-box-shadow);
             } @else {
@@ -69,10 +75,13 @@
     }
 
     &:disabled, &.disabled {
-        background-color: var(--btn-disabled-bg);
-        background-image: if($enable-gradients, none, null);
-        border-color: var(--btn-disabled-border-color);
         opacity: var(--btn-disabled-opacity);
-        @include box-shadow(none);
+
+        &:before {
+            background-color: var(--btn-disabled-bg);
+            background-image: if($enable-gradients, none, null);
+            border-color: var(--btn-disabled-border-color);
+            @include box-shadow(none);
+        }
     }
 }
