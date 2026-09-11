@@ -64,7 +64,7 @@ patch(OrderPaymentValidation.prototype, {
     skipAutomaticInvoicing() {
         if (
             this.pos.config.is_spanish &&
-            this.order.is_settling_account &&
+            this.order.uiState.is_settling_account &&
             this.order.lines.length === 0 &&
             !this.order.to_invoice
         ) {
