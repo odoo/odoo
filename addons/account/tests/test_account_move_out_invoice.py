@@ -5378,3 +5378,41 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         exchange_moves = partials.exchange_move_id
 
         self.assertTrue(exchange_moves)
+
+    def test_read_group_multi_currency_sort(self):
+        """Test that grouping invoices by partner and sorting by the 'Total' ascending is correctly displayed"""
+        eur = self.env.ref('base.EUR')
+        eur.active = True
+        self.env['res.currency.rate'].create({
+            'name': '2026-08-01',
+            'rate': 0.5,
+            'currency_id': eur.id,
+            'company_id': self.env.company.id,
+        })
+        partner_1 = self.env['res.partner'].create({'name': 'Customer 1'})
+        partner_2 = self.env['res.partner'].create({'name': 'Customer 2'})
+        inv_1_usd = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': partner_1.id,
+            'invoice_line_ids': [(0, 0, {'name': 'product', 'price_unit': 57.50})],
+        })
+        inv_1_eur = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': partner_1.id,
+            'currency_id': eur.id,
+            'invoice_line_ids': [(0, 0, {'name': 'product', 'price_unit': 115.00})],
+        })
+        inv_2_usd = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': partner_2.id,
+            'invoice_line_ids': [(0, 0, {'name': 'product', 'price_unit': 200.00})],
+        })
+        (inv_1_usd + inv_1_eur + inv_2_usd).action_post()
+        groups = self.env['account.move']._read_group(
+            domain=[('id', 'in', (inv_1_usd + inv_1_eur + inv_2_usd).ids)],
+            groupby=['partner_id'],
+            order='amount_total_in_currency_signed:sum ASC'
+        )
+        self.assertEqual(len(groups), 2)
+        self.assertEqual(groups[0][0], partner_2)
+        self.assertEqual(groups[1][0], partner_1)
