@@ -472,6 +472,9 @@ class AccountEdiCii(models.AbstractModel):
         supplier_vat = invoice.fiscal_position_id.foreign_vat or commercial_partner.vat
         if supplier_vat in ['/', 'na', 'NA']:
             supplier_vat = None
+        seller_extra_tax_registrations = []
+        if invoice.company_id._has_l10n_de_stnr():
+            seller_extra_tax_registrations.append({'scheme': 'FC', 'value': invoice.company_id.l10n_de_stnr})
         return self._cii_get_partner_trade_party_node(vals, {
             'gln': False,
             'name': supplier.name,
@@ -492,6 +495,7 @@ class AccountEdiCii(models.AbstractModel):
             'peppol_eas': supplier.peppol_eas,
             'peppol_endpoint': supplier.peppol_endpoint,
             'partner_tax_registration': supplier_vat,
+            'partner_extra_tax_registrations': seller_extra_tax_registrations,
         })
 
     def _cii_get_partner_trade_party_node(self, vals, partner_values):
@@ -515,12 +519,23 @@ class AccountEdiCii(models.AbstractModel):
                     '_text': partner_values['peppol_endpoint'],
                 },
             } if partner_values['peppol_eas'] and partner_values['peppol_endpoint'] else None,
-            'ram:SpecifiedTaxRegistration': {
-                'ram:ID': {
-                    '_text': partner_values['partner_tax_registration'],
-                    'schemeID': 'VA',
-                },
-            } if partner_values['partner_tax_registration'] else None,
+            'ram:SpecifiedTaxRegistration': [
+                {
+                    'ram:ID': {
+                        '_text': partner_values['partner_tax_registration'],
+                        'schemeID': 'VA',
+                    },
+                } if partner_values['partner_tax_registration'] else None,
+                *[
+                    {
+                        'ram:ID': {
+                            '_text': tax_registration['value'],
+                            'schemeID': tax_registration['scheme'],
+                        },
+                    }
+                    for tax_registration in partner_values.get('partner_extra_tax_registrations', [])
+                ],
+            ],
         }
 
     def _cii_get_defined_trade_contact_node(self, vals, contact_values):
