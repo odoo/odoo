@@ -34,7 +34,7 @@ import {
 
 import { OutOfFocusService } from "@mail/core/common/out_of_focus_service";
 import { rpc } from "@web/core/network/rpc";
-import { press, runAllTimers } from "@odoo/hoot-dom";
+import { press } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -2002,7 +2002,6 @@ test("restore thread scroll position", async () => {
 });
 
 test("Message shows up even if channel data is incomplete", async () => {
-    // Pass in only but not when bulk running tests
     const pyEnv = await startServer();
     await start();
     await openDiscuss();
@@ -2023,9 +2022,9 @@ test("Message shows up even if channel data is incomplete", async () => {
         ],
         channel_type: "chat",
     });
+    const subscribePromise = waitUntilSubscribe();
     getService("bus_service").forceUpdateChannels();
-    await runAllTimers();
-    await waitUntilSubscribe();
+    await subscribePromise;
     await withUser(correspondentUserId, () =>
         rpc("/discuss/channel/notify_typing", {
             is_typing: true,
