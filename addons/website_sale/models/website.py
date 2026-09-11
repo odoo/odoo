@@ -417,12 +417,13 @@ class Website(models.Model):
         }
 
     @api.model
-    def get_configurator_shop_page_styles(self):  # noqa: PLR6301
+    def get_configurator_shop_page_styles(self):
         """Format and return the ids and previews of each shop page style for website onboarding.
 
         :return: The shop page style information.
         :rtype: list[dict]
         """
+        self._check_configurator_access()
         return [
             {
                 "option": option,
@@ -434,12 +435,13 @@ class Website(models.Model):
         ]
 
     @api.model
-    def get_configurator_product_page_styles(self):  # noqa: PLR6301
+    def get_configurator_product_page_styles(self):
         """Format and return ids and previews of each product page style for website onboarding.
 
         :return: The product page style information.
         :rtype: list[dict]
         """
+        self._check_configurator_access()
         return [
             {
                 "option": option,

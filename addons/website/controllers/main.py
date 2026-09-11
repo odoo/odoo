@@ -6,6 +6,7 @@ import logging
 import math
 import os
 import re
+import string
 import urllib.parse
 import zipfile
 from hashlib import md5, sha256
@@ -782,6 +783,15 @@ class Website(Home):
                 final_html = final_html.replace(shape_url, updated_shape_url)
         return final_html
 
+    def _is_configurator_preview_color(self, color):
+        """Check a palette color, as the configurator normalizes them.
+
+        :param str color: ``#RRGGBB``, or ``#RRGGBBAA`` when it carries alpha
+        :return: whether it may be written in the preview style sheet
+        :rtype: bool
+        """
+        return color.startswith('#') and len(color) in (7, 9) and set(color[1:]) <= set(string.hexdigits)
+
     def _get_configurator_preview_contrast_color(self, background_color):
         """Pick a readable text color for a preview background color.
 
@@ -970,7 +980,7 @@ class Website(Home):
             raise NotFound() from exc
         is_dark_color_palette = is_dark == '1'
         palette = [
-            color if re.fullmatch(r'#[0-9a-fA-F]{6}(?:[0-9a-fA-F]{2})?', color) else ''
+            color if self._is_configurator_preview_color(color) else ''
             for color in (color1, color2, color3, color4, color5)
         ]
         palette_map = {
