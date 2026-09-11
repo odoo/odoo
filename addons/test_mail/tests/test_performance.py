@@ -511,7 +511,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
                 composer_form.attachment_ids.add(attachment)
             composer = composer_form.save()
 
-        with self.assertQueryCount(admin=58, employee=58):  # tm 57/57
+        with self.assertQueryCount(admin=57, employee=57):  # tm 56/56
             composer._action_send_mail()
 
         # notifications
@@ -699,7 +699,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
     @warmup
     def test_message_assignation_inbox(self):
         record = self.env['mail.test.track'].create({'name': 'Test'})
-        with self.assertQueryCount(admin=25, employee=24):
+        with self.assertQueryCount(admin=24, employee=23):
             record.write({
                 'user_id': self.user_emp_inbox.id,
             })
@@ -787,7 +787,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
     def test_message_post_one_inbox_notification(self):
         record = self.env['mail.test.simple'].create({'name': 'Test'})
 
-        with self.assertQueryCount(admin=21, employee=21):
+        with self.assertQueryCount(admin=20, employee=20):
             record.message_post(
                 body=Markup('<p>Test Post Performances with an inbox ping</p>'),
                 partner_ids=self.user_emp_inbox.partner_id.ids,
@@ -1915,7 +1915,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
 
         self.env.invalidate_all()
         with self.assertBus(notifications):
-            with self.assertQueryCount(24):
+            with self.assertQueryCount(23):
                 record.message_post(
                     body=Markup("<p>Test Post Performances with multiple inbox ping!</p>"),
                     message_type="comment",
@@ -2004,7 +2004,7 @@ class TestPerformance(BaseMailPostPerformance):
         self.push_to_end_point_mocked.reset_mock()  # reset as executed twice
         self.flush_tracking()
 
-        with self.assertQueryCount(employee=70):
+        with self.assertQueryCount(employee=69):
             ticket.message_post(
                 attachments=attachments_vals,
                 attachment_ids=attachments.ids,
@@ -2053,7 +2053,7 @@ class TestPerformance(BaseMailPostPerformance):
         self.push_to_end_point_mocked.reset_mock()  # reset as executed twice
         self.flush_tracking()
 
-        with self.assertQueryCount(employee=556):  # tm: 556
+        with self.assertQueryCount(employee=555):  # tm: 555
             for ticket, attachments in zip(tickets, attachments_all, strict=True):
                 ticket.message_post(
                     attachments=attachments_vals,
