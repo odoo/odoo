@@ -1,5 +1,5 @@
 import pytz
-from datetime import datetime, time
+from datetime import datetime, time, timedelta
 from odoo import api, models
 from odoo.fields import Domain
 
@@ -33,10 +33,10 @@ class ResourceCalendarLeaves(models.Model):
             tz = pytz.timezone(leave.calendar_id.tz or leave.company_id.resource_calendar_id.tz)
 
             start_date = pytz.utc.localize(leave.date_from).astimezone(tz).date()
-            utc_start = tz.localize(datetime.combine(start_date, time(0, 0, 0))).astimezone(pytz.utc).replace(tzinfo=None)
+            utc_start = tz.localize(datetime.combine(start_date, time(0, 0, 0))).astimezone(pytz.utc).replace(tzinfo=None) - timedelta(days=1)
 
             end_date = pytz.utc.localize(leave.date_to).astimezone(tz).date()
-            utc_end = tz.localize(datetime.combine(end_date, time(23, 59, 59))).astimezone(pytz.utc).replace(tzinfo=None)
+            utc_end = tz.localize(datetime.combine(end_date, time(23, 59, 59))).astimezone(pytz.utc).replace(tzinfo=None) + timedelta(days=1)
 
             leave_domain = [
                 ('check_in', '<=', utc_end),
