@@ -28,7 +28,7 @@ class TestHrTimeRulePerformance(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.company = cls.env['res.company'].create({'name': 'Flower Corporation', 'tz': 'Europe/Brussels'})
+        cls.company = cls.env['res.company'].create({'name': 'Flower Corporation', 'tz': 'Europe/Brussels', 'country_id': cls.env.ref('base.us').id})
         cls.env.user.company_id = cls.company
 
         cls.calendar_38h = cls.env['resource.calendar'].create({
@@ -53,7 +53,7 @@ class TestHrTimeRulePerformance(TransactionCase):
         # silence all pre-existing time rules
         cls.env['hr.time.rule'].search([]).write({'active': False})
 
-        cls.overtime_type = cls.env.ref('hr_work_entry.generic_work_entry_type_overtime')
+        cls.overtime_type = cls.env.ref('hr_work_entry.be_work_entry_type_overtime')
         cls.att_type = cls.company._get_default_attendance_work_entry_type()
 
         cls.time_rule = cls.env['hr.time.rule'].create({

@@ -38,18 +38,8 @@
 
     <record id="hr_holidays_allocation_cl" model="hr.leave.allocation">
         <field name="name">Paid Time Off for Mitchell Admin</field>
-        <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_legal_leave"/>
+        <field name="work_entry_type_id" eval="ref('hr_work_entry.us_work_entry_type_legal_leave')"/>
         <field name="number_of_days">20</field>
-        <field name="employee_id" ref="hr.employee_admin"/>
-        <field name="state">confirm</field>
-        <field name="date_from" eval="time.strftime('%Y-01-01')"/>
-        <field name="date_to" eval="time.strftime('%Y-12-31')"/>
-    </record>
-
-    <record id="hr_holidays_int_tour" model="hr.leave.allocation">
-        <field name="name">International Tour</field>
-        <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_compensatory"/>
-        <field name="number_of_days">7</field>
         <field name="employee_id" ref="hr.employee_admin"/>
         <field name="state">confirm</field>
         <field name="date_from" eval="time.strftime('%Y-01-01')"/>
@@ -66,31 +56,14 @@
         <field name="date_to" eval="time.strftime('%Y-12-31')"/>
     </record>
 
-    <record id='hr_holidays_cl_allocation' model="hr.leave.allocation">
-        <field name="name">Compensation</field>
-        <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_compensatory"/>
-        <field name="number_of_days">12</field>
-        <field name="employee_id" ref="hr.employee_admin"/>
-        <field name="state">confirm</field>
-        <field name="date_from" eval="time.strftime('%Y-01-01')"/>
-        <field name="date_to" eval="time.strftime('%Y-12-31')"/>
-    </record>
     <function model="hr.leave.allocation" name="action_approve">
-        <value eval="[ref('hr_holidays_allocation_cl'), ref('hr_holidays_int_tour'), ref('hr_holidays_cl_allocation')]"/>
+        <value eval="ref('hr_holidays_allocation_cl')"/>
     </function>
 
     <!-- leave request -->
-    <record id="hr_holidays_cl" model="hr.leave">
-        <field name="name">Trip with Family</field>
-        <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_compensatory"/>
-        <field name="request_date_from" eval="(datetime.today().date() + relativedelta(day=1, weekday=0))"/>
-        <field name="request_date_to" eval="(datetime.today().date() + relativedelta(day=1, weekday=0) + relativedelta(weekday=2))"/>
-        <field name="employee_id" ref="hr.employee_admin"/>
-    </record>
-
     <record id="hr_holidays_sl" model="hr.leave">
         <field name="name">Doctor Appointment</field>
-        <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_sick_leave"/>
+        <field name="work_entry_type_id" eval="ref('hr_work_entry.us_work_entry_type_sick_leave')"/>
         <field name="request_date_from" eval="(datetime.today().date() + relativedelta(day=20, weekday=0))"/>
         <field name="request_date_to" eval="(datetime.today().date() + relativedelta(day=20, weekday=0) + relativedelta(weekday=2))"/>
         <field name="employee_id" ref="hr.employee_admin"/>
@@ -124,7 +97,7 @@
 
     <record id="hr_holidays_allocation_cl_al" model="hr.leave.allocation">
         <field name="name">Paid Time Off for Ronnie Hart</field>
-        <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_legal_leave"/>
+        <field name="work_entry_type_id" eval="ref('hr_work_entry.us_work_entry_type_legal_leave')"/>
         <field name="number_of_days">20</field>
         <field name="employee_id" ref="hr.employee_al"/>
         <field name="state">confirm</field>
@@ -158,7 +131,7 @@
     <!-- leave request -->
     <record id="hr_holidays_cl_al" model="hr.leave">
         <field name="name">Trip with Friends</field>
-        <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_legal_leave"/>
+        <field name="work_entry_type_id" eval="ref('hr_work_entry.us_work_entry_type_legal_leave')"/>
         <field name="request_date_from" eval="time.strftime('%Y-%m-14')"/>
         <field name="request_date_to" eval="time.strftime('%Y-%m-20')"/>
         <field name="employee_id" ref="hr.employee_al"/>
@@ -169,7 +142,7 @@
 
     <record id="hr_holidays_sl_al" model="hr.leave">
         <field name="name">Dentist appointment</field>
-        <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_sick_leave"/>
+        <field name="work_entry_type_id" eval="ref('hr_work_entry.us_work_entry_type_sick_leave')"/>
         <field name="request_date_from" eval="(datetime.today().date() + relativedelta(months=1, day=17, weekday=0))"/>
         <field name="request_date_to" eval="(datetime.today().date() + relativedelta(months=1, day=17, weekday=0) + relativedelta(weekday=2))"/>
         <field name="employee_id" ref="hr.employee_al"/>
@@ -183,7 +156,7 @@
 
     <record id="hr_holidays_allocation_cl_mit" model="hr.leave.allocation">
         <field name="name">Paid Time Off for Anita Oliver</field>
-        <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_legal_leave"/>
+        <field name="work_entry_type_id" eval="ref('hr_work_entry.us_work_entry_type_legal_leave')"/>
         <field name="number_of_days">20</field>
         <field name="employee_id" ref="hr.employee_mit"/>
         <field name="state">confirm</field>
@@ -207,7 +180,7 @@
     <!-- leave request -->
     <record id="hr_holidays_cl_mit" model="hr.leave">
         <field name="name">Trip to Paris</field>
-        <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_legal_leave"/>
+        <field name="work_entry_type_id" eval="ref('hr_work_entry.us_work_entry_type_legal_leave')"/>
         <field name="request_date_from" eval="time.strftime('%Y-%m-22')"/>
         <field name="request_date_to" eval="time.strftime('%Y-%m-28')"/>
         <field name="employee_id" ref="hr.employee_mit"/>
@@ -218,7 +191,7 @@
 
     <record id="hr_holidays_cl_mit_2" model="hr.leave">
         <field name="name">Trip</field>
-        <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_legal_leave"/>
+        <field name="work_entry_type_id" eval="ref('hr_work_entry.us_work_entry_type_legal_leave')"/>
         <field name="request_date_from" eval="(datetime.today().date() + relativedelta(day=5, weekday=0))"/>
         <field name="request_date_to" eval="(datetime.today().date() + relativedelta(day=5, weekday=0) + relativedelta(weekday=2))"/>
         <field name="employee_id" ref="hr.employee_mit"/>
@@ -230,7 +203,7 @@
 
     <record id="hr_holidays_cl_mit_1" model="hr.leave">
         <field name="name">Trip</field>
-        <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_legal_leave"/>
+        <field name="work_entry_type_id" eval="ref('hr_work_entry.us_work_entry_type_legal_leave')"/>
         <field name="request_date_from" eval="time.strftime('%Y-01-15')"/>
         <field name="request_date_to" eval="time.strftime('%Y-01-15')"/>
         <field name="employee_id" ref="hr.employee_mit"/>
@@ -240,7 +213,7 @@
 
     <record id="hr_holidays_allocation_cl_qdp" model="hr.leave.allocation">
         <field name="name">Paid Time Off for Marc Demo</field>
-        <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_legal_leave"/>
+        <field name="work_entry_type_id" eval="ref('hr_work_entry.us_work_entry_type_legal_leave')"/>
         <field name="number_of_days">20</field>
         <field name="employee_id" ref="hr.employee_qdp"/>
         <field name="state">confirm</field>
@@ -264,7 +237,7 @@
     <!-- leave request -->
     <record id="hr_holidays_cl_qdp" model="hr.leave">
         <field name="name">Sick day</field>
-        <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_sick_leave"/>
+        <field name="work_entry_type_id" eval="ref('hr_work_entry.us_work_entry_type_sick_leave')"/>
         <field name="request_date_from" eval="(datetime.today().date()+relativedelta(months=1, day=3, weekday=0))"/>
         <field name="request_date_to" eval="(datetime.today().date()+relativedelta(months=1, day=3, weekday=0) + relativedelta(weekday=2))"/>
         <field name="employee_id" ref="hr.employee_qdp"/>
@@ -276,7 +249,7 @@
 
     <record id="hr_holidays_sl_qdp" model="hr.leave">
         <field name="name">Sick day</field>
-        <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_sick_leave"/>
+        <field name="work_entry_type_id" eval="ref('hr_work_entry.us_work_entry_type_sick_leave')"/>
         <field name="request_date_from" eval="(datetime.today().date() + relativedelta(day=1, weekday=0))"/>
         <field name="request_date_to" eval="(datetime.today().date() + relativedelta(day=1, weekday=0) + relativedelta(days=2))"/>
         <field name="employee_id" ref="hr.employee_qdp"/>
@@ -290,7 +263,7 @@
 
     <record id="hr_holidays_allocation_cl_fpi" model="hr.leave.allocation">
         <field name="name">Paid Time Off for Audrey Peterson</field>
-        <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_legal_leave"/>
+        <field name="work_entry_type_id" eval="ref('hr_work_entry.us_work_entry_type_legal_leave')"/>
         <field name="number_of_days">20</field>
         <field name="employee_id" ref="hr.employee_fpi"/>
         <field name="state">confirm</field>
@@ -315,7 +288,7 @@
 
     <record id="hr_holidays_allocation_cl_vad" model="hr.leave.allocation">
         <field name="name">Paid Time Off for Olivia</field>
-        <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_legal_leave"/>
+        <field name="work_entry_type_id" eval="ref('hr_work_entry.us_work_entry_type_legal_leave')"/>
         <field name="number_of_days">20</field>
         <field name="employee_id" ref="hr.employee_niv"/>
         <field name="state">confirm</field>
@@ -338,7 +311,7 @@
 
     <record id="hr_holidays_cl_vad" model="hr.leave">
         <field name="name">Trip to London</field>
-        <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_legal_leave"/>
+        <field name="work_entry_type_id" eval="ref('hr_work_entry.us_work_entry_type_legal_leave')"/>
         <field name="request_date_from" eval="time.strftime('%Y-%m-09')"/>
         <field name="request_date_to" eval="time.strftime('%Y-%m-16')"/>
         <field name="employee_id" ref="hr.employee_niv"/>
@@ -350,7 +323,7 @@
 
     <record id="hr_holidays_sl_vad" model="hr.leave">
         <field name="name">Doctor Appointment</field>
-        <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_sick_leave"/>
+        <field name="work_entry_type_id" eval="ref('hr_work_entry.us_work_entry_type_sick_leave')"/>
         <field name="request_date_from" eval="(datetime.today().date() + relativedelta(day=25, weekday=0))"/>
         <field name="request_date_to" eval="(datetime.today().date() + relativedelta(day=25, weekday=0) + relativedelta(weekday=2))"/>
         <field name="employee_id" ref="hr.employee_niv"/>
@@ -364,7 +337,7 @@
 
     <record id="hr_holidays_allocation_cl_kim" model="hr.leave.allocation">
         <field name="name">Paid Time Off for Kim</field>
-        <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_legal_leave"/>
+        <field name="work_entry_type_id" eval="ref('hr_work_entry.us_work_entry_type_legal_leave')"/>
         <field name="number_of_days">20</field>
         <field name="employee_id" ref="hr.employee_jve"/>
         <field name="state">confirm</field>
@@ -385,7 +358,7 @@
     <!-- leave request -->
     <record id="hr_holidays_sl_kim" model="hr.leave">
         <field name="name">Dentist appointment</field>
-        <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_sick_leave"/>
+        <field name="work_entry_type_id" eval="ref('hr_work_entry.us_work_entry_type_sick_leave')"/>
         <field name="request_date_from" eval="(datetime.today().date() + relativedelta(months=1, day=1, weekday=0))"/>
         <field name="request_date_to" eval="(datetime.today().date() + relativedelta(months=1, day=1, weekday=0))"/>
         <field name="employee_id" ref="hr.employee_jve"/>
@@ -397,7 +370,7 @@
 
     <record id="hr_holidays_sl_kim_2" model="hr.leave">
         <field name="name">Second dentist appointment</field>
-        <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_sick_leave"/>
+        <field name="work_entry_type_id" eval="ref('hr_work_entry.us_work_entry_type_sick_leave')"/>
         <field name="request_date_from" eval="(datetime.today().date()+relativedelta(months=4, day=1, weekday=2))"/>
         <field name="request_date_to" eval="(datetime.today().date()+relativedelta(months=4, day=1, weekday=2))"/>
         <field name="employee_id" ref="hr.employee_jve"/>
@@ -414,7 +387,7 @@
         <field name="calendar_id" ref="resource.resource_calendar_std"/>
         <field name="date_from" eval="time.strftime('%Y-02-13 05:00:00')"/>
         <field name="date_to" eval="time.strftime('%Y-02-13 17:00:00')"/>
-        <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_leave"></field>
+        <field name="work_entry_type_id" ref="hr_work_entry.us_work_entry_type_public_holiday"></field>
     </record>
 
     <!-- Mandatory day -->

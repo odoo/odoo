@@ -15,6 +15,7 @@ class TestTimeRuleAllocationLog(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
 
+        cls.env.company.country_id = cls.env.ref('base.us')
         cls.calendar = cls.env['resource.calendar'].create({
             'name': '40h/week',
             'attendance_ids': [
@@ -26,7 +27,7 @@ class TestTimeRuleAllocationLog(TransactionCase):
         cls.env.company.resource_calendar_id = cls.calendar
         cls.att_type = cls.env.company._get_default_attendance_work_entry_type()
         cls.env.company.attendance_work_entry_type_id = cls.att_type
-        cls.overtime_type = cls.env.ref('hr_work_entry.generic_work_entry_type_overtime')
+        cls.overtime_type = cls.env.ref('hr_work_entry.be_work_entry_type_overtime')
 
         cls.env['hr.time.rule'].search([]).write({'active': False})
 

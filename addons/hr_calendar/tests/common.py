@@ -16,10 +16,12 @@ class TestHrContractCalendarCommon(common.TransactionCase):
             {
                 'name': 'Test company A',
                 'tz': "Europe/Brussels",
+                'country_id': cls.env.ref('base.us').id,
             },
             {
                 'name': 'Test company B',
                 'tz': "Europe/Brussels",
+                'country_id': cls.env.ref('base.us').id,
             },
         ])
         cls.env.user.company_id = cls.company_A

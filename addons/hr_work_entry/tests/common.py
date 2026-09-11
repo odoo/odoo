@@ -12,6 +12,7 @@ class TestWorkEntryBase(TransactionCase):
         super().setUpClass()
 
         cls.env.user.tz = 'Europe/Brussels'
+        cls.env.company.country_id = cls.env.ref('base.be')
         cls.env.company.resource_calendar_id = cls.env['resource.calendar'].create({
             'attendance_ids': [
                 (0, 0,
