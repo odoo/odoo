@@ -2267,7 +2267,27 @@ actual arch.
 
             elif attr.startswith('decoration-'):
                 vnames = get_expression_field_names(expr)
-                if vnames:
+                if node_info.get('view_type') == 'pivot' and node.tag == 'field':
+                    # in pivot views, decorations are evaluated client side with
+                    # only the measure value in the evaluation context
+                    fname = node.get('name')
+                    if node.get('type') != 'measure':
+                        msg = _(
+                            "Decoration %(attribute)s=“%(value)s” on field “%(field)s” is only "
+                            "supported on measures (type=“measure”)",
+                            attribute=attr, value=expr, field=fname,
+                        )
+                        self._raise_view_error(msg, node)
+                    other_names = vnames - {fname}
+                    if other_names:
+                        msg = _(
+                            "Decoration %(attribute)s=“%(value)s” on field “%(field)s” can only "
+                            "reference the field itself, found: %(names)s",
+                            attribute=attr, value=expr, field=fname,
+                            names=", ".join(sorted(other_names)),
+                        )
+                        self._raise_view_error(msg, node)
+                elif vnames:
                     name_manager.must_have_fields(node, vnames, node_info, f"{attr}={expr!r}")
 
             elif attr == 'data-bs-toggle' and expr == 'tab':

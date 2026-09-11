@@ -2871,6 +2871,37 @@ class TestViews(ViewCase):
         self.assertTrue(tree.xpath('//div[@id="foo"]'))
         self.assertTrue(tree.xpath('//div[@id="bar"]'))
 
+    def test_pivot_decoration_validation(self):
+        self.assertValid("""
+            <pivot string="View">
+                <field name="priority" type="measure" decoration-danger="priority &lt; 0" decoration-success="priority &gt;= 16"/>
+            </pivot>
+        """)
+        self.assertInvalid(
+            """
+            <pivot string="View">
+                <field name="priority" type="measure" decoration-danger="name == 'foo'"/>
+            </pivot>
+            """,
+            """Decoration decoration-danger=“name == 'foo'” on field “priority” can only reference the field itself, found: name""",
+        )
+        self.assertInvalid(
+            """
+            <pivot string="View">
+                <field name="priority" type="measure" decoration-danger="priority &lt; 0 and unknown_name"/>
+            </pivot>
+            """,
+            """Decoration decoration-danger=“priority < 0 and unknown_name” on field “priority” can only reference the field itself, found: unknown_name""",
+        )
+        self.assertInvalid(
+            """
+            <pivot string="View">
+                <field name="priority" type="row" decoration-danger="priority &lt; 0"/>
+            </pivot>
+            """,
+            """Decoration decoration-danger=“priority < 0” on field “priority” is only supported on measures (type=“measure”)""",
+        )
+
     def test_attrs_groups_validation(self):
         def validate(arch, valid=False, parent=False, field='name', model='ir.ui.view'):
             parent = 'parent.' if parent else ''
