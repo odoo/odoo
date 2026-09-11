@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-10 17:37+0000\n"
-"PO-Revision-Date: 2026-08-28 08:53+0000\n"
+"PO-Revision-Date: 2026-09-07 13:11+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s19-1/"
 "payment/es/>\n"
@@ -679,9 +679,10 @@ msgid ""
 "Use this if you want to charge your customers cards only when\n"
 "you are sure you can ship the goods to them."
 msgstr ""
-"Capture el importe de Odoo cuando la entrega se haya completado.\n"
-"Utilícelo si desea hacer el cargo a la tarjeta de sus clientes solo cuando\n"
-"esté seguro de que puede enviarles los artículos."
+"Captura el importe desde Odoo cuando se haya completado la entrega.\n"
+"Utiliza esta opción si quieres cargar el importe en la tarjeta de tus "
+"clientes solo cuando\n"
+"estés seguro de que puedes enviarles los artículos/productos."
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_card
@@ -1189,7 +1190,7 @@ msgstr "Contiene un importe restante"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__is_post_processed
 msgid "Has the payment been post-processed"
-msgstr "¿Se ha posprocesado el pago?"
+msgstr "Se ha procesado el pago posteriormente"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__pre_msg
@@ -1638,7 +1639,7 @@ msgstr "No hay proveedor establecido"
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_method
 msgid "No payment methods found for your payment providers."
-msgstr "No se encontraron métodos de pago para sus proveedores de pago"
+msgstr "No se han encontrado métodos de pago para tus proveedores de pago."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
@@ -1860,7 +1861,7 @@ msgstr "PaySafeCard"
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_payu
 msgid "PayU"
-msgstr ""
+msgstr "PayU"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -2904,12 +2905,12 @@ msgid ""
 "the\n"
 "provider's database, allowing the customer to reuse it for a next purchase."
 msgstr ""
-"Controla si los clientes pueden guardar sus métodos de pago como tokens de "
+"Determina si los clientes pueden guardar sus métodos de pago como tokens de "
 "pago.\n"
-"Un token de pago es un enlace anónimo a los detalles de pago guardados en "
-"la\n"
-"base de datos del proveedor de pago, lo que permite al cliente volver a "
-"usarlo en una futura compra."
+"Un token de pago es un enlace anónimo a los datos del método de pago "
+"almacenados en la\n"
+"base de datos del proveedor, que permite al cliente volver a usarlo en la "
+"próxima compra."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_express_checkout
@@ -3389,7 +3390,7 @@ msgstr "Su pago ha sido cancelado."
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_worldline
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_xendit
 msgid "Your payment has been processed but is waiting for approval."
-msgstr "Su pago ha sido procesado pero está en espera de su aprobación."
+msgstr "Tu pago se ha procesado, pero está pendiente de aprobación."
 
 #. module: payment
 #. odoo-python
@@ -3419,7 +3420,7 @@ msgstr "Su pago ha sido procesado pero está en espera de su aprobación."
 #: model_terms:payment.provider,done_msg:payment.payment_provider_worldline
 #: model_terms:payment.provider,done_msg:payment.payment_provider_xendit
 msgid "Your payment has been processed."
-msgstr "Tu pago ha sido procesado."
+msgstr "Tu pago se ha procesado."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.state_header
@@ -3487,7 +3488,7 @@ msgstr "eNETS"
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "express checkout not supported"
-msgstr "no se admite el pago exprés"
+msgstr "no se admite el pago rápido"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_ideal

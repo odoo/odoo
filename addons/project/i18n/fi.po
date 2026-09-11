@@ -42,7 +42,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-31 17:37+0000\n"
-"PO-Revision-Date: 2026-08-26 08:37+0000\n"
+"PO-Revision-Date: 2026-09-10 14:11+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-1/"
 "project/fi/>\n"
@@ -4286,7 +4286,7 @@ msgstr "Poista yhteistyökumppani"
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_create/subtask_kanban_create.xml:0
 msgid "Rename"
-msgstr "Uudelleennimeä"
+msgstr "Nimeä uudelleen"
 
 #. module: project
 #: model:account.analytic.account,name:project.analytic_renovations
@@ -4671,10 +4671,10 @@ msgid ""
 "\n"
 "Are you sure you want to proceed?"
 msgstr ""
-"Jotkin valituista analyyttisistä tileistä liittyvät projektiin:\n"
+"Jotkin valituista laskentakohteista liittyvät projektiin:\n"
 "%(accountList)s\n"
 "\n"
-"Näiden tilien arkistointi poistaa mahdollisuuden lisätä työaikakirjauksia "
+"Näiden tilien arkistoiminen poistaa mahdollisuuden lisätä työaikakirjauksia "
 "vastaaviin projekteihin.\n"
 "\n"
 "Haluatko varmasti jatkaa?"
@@ -5252,8 +5252,8 @@ msgid ""
 "The project's company cannot be changed if its analytic account has analytic "
 "lines or if more than one project is linked to it."
 msgstr ""
-"Projektin yritystä ei voi muuttaa, jos sen kustannuspaikalla on analyyttisiä "
-"rivejä tai jos siihen on liitetty useampi kuin yksi projekti."
+"Projektin yritystä ei voi muuttaa, jos sen laskentakohteessa on "
+"laskentakohderivejä tai jos siihen on liitetty useampi kuin yksi projekti."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_project_project_date_greater
@@ -5359,13 +5359,13 @@ msgid ""
 "\n"
 "Are you sure you want to proceed?"
 msgstr ""
-"Tämä kustannuspaikka liittyy seuraaviin hankkeisiin:\n"
+"Tämä laskentakohde liittyy seuraaviin projekteihin:\n"
 "%(projectList)s\n"
 "\n"
-"Tilin arkistoinnin jälkeen näiden projektien työaikakirjauksia ei enää voida "
-"kirjata.\n"
+"Tilin arkistoiminen poistaa mahdollisuuden lisätä työaikakirjauksia näihin "
+"projekteihin.\n"
 "\n"
-"Oletko varma, että haluat jatkaa?"
+"Haluatko varmasti jatkaa?"
 
 #. module: project
 #. odoo-javascript
@@ -5646,8 +5646,8 @@ msgid ""
 "Track project costs, revenues, and margin by setting the analytic account "
 "associated with the project on relevant documents."
 msgstr ""
-"Seuraa projektin kustannuksia, tuloja ja katetta asettamalla projektiin "
-"liittyvä kustannuspaikka asiaankuuluviin asiakirjoihin."
+"Seuraa projektin kustannuksia, tuloja ja katetta määrittämällä projektiin "
+"liittyvä laskentakohde asiaankuuluviin asiakirjoihin."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -5726,7 +5726,7 @@ msgstr "Surunaama"
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid "Unknown Analytic Account"
-msgstr "Kustannuspaikka ei ole tiedossa"
+msgstr "Tuntematon laskentakohde"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
@@ -6185,7 +6185,7 @@ msgstr "alias"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "analytic"
-msgstr "analyyttinen"
+msgstr "laskennallinen"
 
 #. module: project
 #. odoo-javascript

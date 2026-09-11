@@ -28,7 +28,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-30 18:35+0000\n"
-"PO-Revision-Date: 2026-08-12 03:27+0000\n"
+"PO-Revision-Date: 2026-09-09 08:11+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-1/"
 "analytic/fi/>\n"
@@ -37,7 +37,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: analytic
 #. odoo-python
@@ -49,12 +49,12 @@ msgstr "%s (kopio)"
 #. odoo-python
 #: code:addons/analytic/models/analytic_line.py:0
 msgid "%s analytic lines created"
-msgstr "%s analyyttistä riviä luotu"
+msgstr "%s laskentakohderiviä luotu"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
 msgid "<span class=\"o_stat_text\">Analytic Accounts</span>"
-msgstr "<span class=\"o_stat_text\">Kustannuspaikat</span>"
+msgstr "<span class=\"o_stat_text\">Laskentakohteet</span>"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
@@ -112,7 +112,7 @@ msgstr "Lisää rivi"
 #: model_terms:ir.actions.act_window,help:analytic.action_account_analytic_account_form
 #: model_terms:ir.actions.act_window,help:analytic.action_analytic_account_form
 msgid "Add a new analytic account"
-msgstr "Lisää uusi kustannuspaikka"
+msgstr "Lisää uusi laskentakohde"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_administratif
@@ -122,7 +122,7 @@ msgstr "Hallinnollinen"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__all_account_count
 msgid "All Analytic Accounts Count"
-msgstr "Kaikkien kustannuspaikkojen määrä"
+msgstr "Laskentakohteiden kokonaismäärä"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__amount
@@ -140,7 +140,7 @@ msgstr "Summa-kenttä"
 #. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
 msgid "Analytic"
-msgstr "Analyyttinen"
+msgstr "Laskennallinen"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_account
@@ -156,25 +156,25 @@ msgstr "Kustannuspaikka"
 #: model:ir.model.fields,field_description:analytic.field_res_config_settings__group_analytic_accounting
 #: model:res.groups,name:analytic.group_analytic_accounting
 msgid "Analytic Accounting"
-msgstr "Analyyttinen kirjanpito"
+msgstr "Laskentakohteet"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_account_analytic_account_form
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Analytic Accounts"
-msgstr "Kustannuspaikat"
+msgstr "Laskentakohteet"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__account_count
 msgid "Analytic Accounts Count"
-msgstr "Kustannuspaikkojen määrä"
+msgstr "Laskentakohteiden määrä"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_distribution
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__analytic_distribution
 #: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_distribution
 msgid "Analytic Distribution"
-msgstr "Analyyttinen jako"
+msgstr "Laskentakohteiden kohdistus"
 
 #. module: analytic
 #. odoo-javascript
@@ -183,17 +183,17 @@ msgstr "Analyyttinen jako"
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_tree_view
 msgid "Analytic Distribution Model"
-msgstr "Analyyttinen jakomalli"
+msgstr "Laskentakohteiden kohdistusmalli"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_analytic_distribution_model
 msgid "Analytic Distribution Models"
-msgstr "Analyyttiset jakomallit"
+msgstr "Laskentakohteiden kohdistusmallit"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
 msgid "Analytic Item"
-msgstr "Analyyttinen kohde"
+msgstr "Laskentakohderivi"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_line_action_entries
@@ -201,7 +201,7 @@ msgstr "Analyyttinen kohde"
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_pivot
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
 msgid "Analytic Items"
-msgstr "Analyyttiset kohteet"
+msgstr "Laskentakohderivit"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_line
@@ -216,49 +216,49 @@ msgstr "Analyyttiset rivit"
 #. module: analytic
 #: model:ir.model,name:analytic.model_analytic_mixin
 msgid "Analytic Mixin"
-msgstr "Analyyttinen Mixin"
+msgstr "Laskentakohteiden mixin"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_plan
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__analytic_plan_id
 msgid "Analytic Plan"
-msgstr "Analyyttinen suunnitelma"
+msgstr "Laskentakohderyhmä"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_analytic_plan_fields_mixin
 msgid "Analytic Plan Fields"
-msgstr "Analyyttiset suunnitelmakentät"
+msgstr "Laskentakohderyhmän kentät"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_applicability
 msgid "Analytic Plan's Applicabilities"
-msgstr "Analyyttisen suunnitelman sovellettavuus"
+msgstr "Laskentakohderyhmän sovellettavuus"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_plan_action
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_tree_view
 msgid "Analytic Plans"
-msgstr "Analyyttiset suunnitelmat"
+msgstr "Laskentakohderyhmät"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_precision
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__analytic_precision
 #: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_precision
 msgid "Analytic Precision"
-msgstr "Analyyttinen tarkkuus"
+msgstr "Laskennallinen tarkkuus"
 
 #. module: analytic
 #. odoo-python
 #: code:addons/analytic/models/analytic_plan.py:0
 msgid "Analytical Accounts"
-msgstr "Kustannuspaikat"
+msgstr "Laskentakohteet"
 
 #. module: analytic
 #. odoo-python
 #: code:addons/analytic/models/analytic_plan.py:0
 msgid "Analytical Plans"
-msgstr "Analyyttiset suunnitelmat"
+msgstr "Laskentakohderyhmät"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__applicability
@@ -287,7 +287,7 @@ msgstr "Asustek"
 #. odoo-python
 #: code:addons/analytic/models/analytic_line.py:0
 msgid "At least one analytic account must be set"
-msgstr "Vähintään yksi kustannuspaikka on asetettava"
+msgstr "Määritä vähintään yksi laskentakohde"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_attachment_count
@@ -329,7 +329,7 @@ msgstr "Kategoria"
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_analytic_account_form
 msgid "Chart of Analytic Accounts"
-msgstr "Kustannuspaikkojen tilikartta"
+msgstr "Laskentakohteiden tilikartta"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__children_count
@@ -344,7 +344,7 @@ msgstr "Alitasot"
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_plan_action
 msgid "Click to add a new analytic account plan."
-msgstr "Lisää uusi kustannuspaikkasuunnitelma klikkaamalla."
+msgstr "Lisää uusi laskentakohderyhmä klikkaamalla."
 
 #. module: analytic
 #. odoo-javascript
@@ -501,7 +501,7 @@ msgstr "Näyttönimi"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__distribution_analytic_account_ids
 #: model:ir.model.fields,field_description:analytic.field_analytic_mixin__distribution_analytic_account_ids
 msgid "Distribution Analytic Account"
-msgstr "Jaon kustannuspaikka"
+msgstr "Laskentakohteen kohdistus"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
@@ -594,7 +594,7 @@ msgid ""
 "                your margins easily."
 msgstr ""
 "Odoossa myyntitilaukset ja projektit käsitellään käyttämällä\n"
-"                kustannuspaikkoja. Voit seurata kustannuksia ja tuloja "
+"                laskentakohteita. Voit seurata kustannuksia ja tuloja "
 "analysoidaksesi\n"
 "                katteitasi helposti."
 
@@ -704,7 +704,7 @@ msgstr "Tällä tilillä ei ole vielä toimintaa"
 #. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
 msgid "No analytic plans found"
-msgstr "Analyyttisiä suunnitelmia ei löytynyt"
+msgstr "Laskentakohderyhmiä ei löytynyt"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction_counter
@@ -730,7 +730,7 @@ msgstr "Toimitusvirheellisten viestien määrä"
 #. odoo-python
 #: code:addons/analytic/models/analytic_mixin.py:0
 msgid "One or more lines require a 100% analytic distribution."
-msgstr "Yksi tai useampi rivi edellyttää 100% analytiikkajakoa."
+msgstr "Yksi tai useampi rivi edellyttää 100% laskentakohteiden kohdistusta."
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_internal
@@ -863,7 +863,7 @@ msgstr "Juurisuunnitelma"
 #. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
 msgid "Save as new analytic distribution model"
-msgstr "Tallenna uutena analyyttisena jakomallina"
+msgstr "Tallenna uutena laskentakohteiden kohdistusmallina"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_seagate_p2
@@ -873,7 +873,7 @@ msgstr "Seagate P2"
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Search Analytic Lines"
-msgstr "Hae analyyttisiä rivejä"
+msgstr "Hae laskentakohderivejä"
 
 #. module: analytic
 #. odoo-python
@@ -888,9 +888,9 @@ msgid ""
 "create new customer invoice or Sales order if we select this company, it "
 "will automatically take this as an analytic account)"
 msgstr ""
-"Valitse yritys, jossa analyyttistä jakoa käytetään (esim. luo uusi "
-"asiakaslasku tai myyntitilaus, jos valitsemme tämän yrityksen, se valitaan "
-"automaattisesti kustannuspaikaksi)"
+"Valitse yritys, jossa laskentakohteiden kohdistusta käytetään (esim. uutta "
+"myyntilaskua tai -tilausta luotaessa tämän yrityksen käyttäminen valitsee "
+"automaattisesti tämän laskentakohteeksi)"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_category_id
@@ -899,9 +899,9 @@ msgid ""
 "(e.g. create new customer invoice or Sales order if we select this partner, "
 "it will automatically take this as an analytic account)"
 msgstr ""
-"Valitse kumppanikategoria, jossa analyyttistä jakoa käytetään (esim. luo "
-"uusi asiakaslasku tai myyntitilaus, jos valitsemme tämän kumppanin, se "
-"valitaan automaattisesti kustannuspaikaksi)"
+"Valitse kumppanikategoria, jossa laskentakohteiden kohdistusta käytetään "
+"(esim. uutta myyntilaskua tai -tilausta luotaessa tämän kumppaniin "
+"käyttäminen valitsee automaattisesti laskentakohteen)"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_id
@@ -910,9 +910,9 @@ msgid ""
 "create new customer invoice or Sales order if we select this partner, it "
 "will automatically take this as an analytic account)"
 msgstr ""
-"Valitse kumppani, jolle analyyttistä jakoa käytetään (esim. luo uusi "
-"asiakaslasku tai myyntitilaus, jos valitsemme tämän kumppanin, se valitaan "
-"automaattisesti kustannuspaikaksi)"
+"Valitse kumppani, jolle laskentakohteiden kohdistusta käytetään (esim. uutta "
+"myyntilaskua tai -tilausta luotaessa kyseisen kumppanin käyttäminen valitsee "
+"automaattisesti tämän laskentakohteeksi)"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__sequence
@@ -1000,8 +1000,8 @@ msgid ""
 "You can't change the company of an analytic account that already has "
 "analytic items! It's a recipe for an analytical disaster!"
 msgstr ""
-"Et voi vaihtaa yritystä analytiikkatililtä, jolla on jo analyyttisiä "
-"kirjauksia! Se olisi suorastaan analyyttinen katastrofi!"
+"Et voi vaihtaa yritystä laskentakohteelle, jolla on jo kirjauksia! Se olisi "
+"laskennallisesti suoranainen katastrofi!"
 
 #. module: analytic
 #. odoo-python
@@ -1016,8 +1016,8 @@ msgid ""
 "You defined a distribution with analytic account(s) belonging to a specific "
 "company but a model shared between companies or with a different company"
 msgstr ""
-"Olet määritellyt jaon, jossa kustannuspaikka(t) kuuluvat tietylle "
-"yritykselle, mutta malli on jaettu yritysten välillä tai eri yrityksen kanssa"
+"Määritit kohdistuksen, jossa laskentakohteet kuuluvat tietylle yritykselle, "
+"mutta malli on jaettu yritysten välillä tai kuuluu eri yritykselle"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form

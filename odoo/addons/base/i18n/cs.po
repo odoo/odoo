@@ -22,7 +22,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-09 15:28+0000\n"
-"PO-Revision-Date: 2026-08-28 10:09+0000\n"
+"PO-Revision-Date: 2026-08-31 11:08+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Czech <https://translate.odoo.com/projects/odoo-s19-1/base/"
 "cs/>\n"
@@ -545,6 +545,9 @@ msgid ""
 "\n"
 "Use iMin ePOS Printers without the IoT Box in the Point of Sale\n"
 msgstr ""
+"\n"
+"\n"
+"Používejte tiskárny iMin ePOS bez modulu IoT Box v prodejních místech\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar_reports
@@ -575,6 +578,32 @@ msgid ""
 "Especificaciones.doc\n"
 "\n"
 msgstr ""
+"\n"
+"* Přidat výkaz „Kniha DPH“, který je v Argentině zákonnou povinností a "
+"obsahuje podrobné údaje o DPH z prodejů nebo nákupů uskutečněných v daném "
+"období.\n"
+"* Přidat souhrnnou zprávu o DPH, která slouží k analýze fakturace\n"
+"* Přidat funkci digitální knihy DPH, která umožňuje generovat soubory TXT "
+"pro import do systému ARCA. Implementujeme následující soubory:\n"
+"\n"
+"    * LIBRO_IVA_DIGITAL_VENTAS_CBTE\n"
+"    * LIBRO_IVA_DIGITAL_VENTAS_ALICUOTAS\n"
+"    * LIBRO_IVA_DIGITAL_COMPRAS_CBTE\n"
+"    * LIBRO_IVA_DIGITAL_COMPRAS_ALICUOTAS\n"
+"    * LIBRO_IVA_DIGITAL_IMPORTACION_BIENES_ALICUOTA\n"
+"\n"
+"Oficiální dokumentace ARCA\n"
+"\n"
+"* Digitální kniha DPH – struktura záznamů https://www.afip.gob.ar/libro-iva-"
+"digital/documentos/libro-iva-digital-diseno-registros.pdf\n"
+"* CITI – struktura záznamů (stejná jako u digitální knihy DPH): https://"
+"www.afip.gob.ar/comprasyventas/documentos/"
+"RegimendeInformaciondeComprasyVentasDisenosdeRegistros1.xls\n"
+"* CITI – specifikace (obsahuje další informace o formátování čísel a "
+"vyplňování číselných a alfanumerických polí): https://www.afip.gob.ar/"
+"comprasyventas/documentos/Regimen-Informacion-Compras-Ventas-"
+"Especificaciones.doc\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_ai_app
@@ -965,6 +994,10 @@ msgid ""
 "===========================\n"
 "A helper model for managing transfers between accounts.\n"
 msgstr ""
+"\n"
+"Převody mezi účty\n"
+"===========================\n"
+"Pomocný model pro správu převodů mezi účty.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_accountant
@@ -1292,6 +1325,8 @@ msgid ""
 "\n"
 "Accounting Expense Bridge\n"
 msgstr ""
+"\n"
+"Přechodný výkaz nákladů účetnictví\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_accountant_fleet
@@ -1299,6 +1334,8 @@ msgid ""
 "\n"
 "Accounting Fleet Bridge\n"
 msgstr ""
+"\n"
+"Spojovací modul mezi Účetnictvím a Vozovým parkem\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_base_import
@@ -8220,6 +8257,9 @@ msgid ""
 "Mauritania basic package that contains the chart of accounts, the taxes, tax "
 "reports, etc.\n"
 msgstr ""
+"\n"
+"Základní balíček pro Mauritánii, který obsahuje účtovou osnovu, daně, daňové "
+"výkazy atd.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_hr_payroll
@@ -9134,6 +9174,16 @@ msgid ""
 "- Fiscal Positions\n"
 "- States\n"
 msgstr ""
+"\n"
+"Účetní modul pro Omán\n"
+"=================================================================\n"
+"Základní účetní schémata a lokalizace pro Omán.\n"
+"Aktivuje:\n"
+"- Účtová osnova\n"
+"- Daně\n"
+"- Daňové přiznání k DPH\n"
+"- Fiskální pozice\n"
+"- Státy\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_event
@@ -10364,6 +10414,10 @@ msgid ""
 "=====================\n"
 "This module allows the user to send their invoices to the Ecpay system.\n"
 msgstr ""
+"\n"
+"Tchaj-wan – Elektronická fakturace\n"
+"=====================\n"
+"Tento modul umožňuje uživateli odesílat své faktury do systému Ecpay.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_appointment_hr
@@ -10808,6 +10862,13 @@ msgid ""
 "enabling\n"
 "the use of those accounts for non swedish companies.\n"
 msgstr ""
+"\n"
+"Toto přidává podporu pro BBAN, Plusgiro a Bankgiro pro švédské účty.\n"
+"Přizpůsobuje formát XML pro platby podle normy ISO 20022, pokud je číslo "
+"účtu\n"
+"účtem typu BBAN, Plusgiro nebo Bankgiro.\n"
+"Tento modul lze nainstalovat bez instalace švédské lokalizace, což umožňuje\n"
+"používání těchto účtů i pro společnosti, které nejsou ze Švédska.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_subcontracting_purchase
@@ -10827,6 +10888,9 @@ msgid ""
 "This bridge module allows the user to input Ecpay information in ecommerce "
 "for sending their invoices to the Ecpay system\n"
 msgstr ""
+"\n"
+"Tento propojovací modul umožňuje uživateli zadávat údaje Ecpay v E-shopu za "
+"účelem odesílání faktur do systému Ecpay\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_subcontracting_dropshipping
@@ -11619,6 +11683,12 @@ msgid ""
 "categorisation of products sold to be included in the details of the line of "
 "an invoice.\n"
 msgstr ""
+"\n"
+"Tento modul slouží k přidání identifikačního čísla CPV (Common Procurement "
+"Vocabulary) k produktu.\n"
+"Rumunský formát CIUS-RO v některých případech vyžaduje, aby byla do "
+"podrobností řádku faktury zahrnuta přesná kategorizace prodávaných "
+"produktů.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ro
@@ -12393,6 +12463,16 @@ msgid ""
 "-----------------\n"
 "Three layouts copied from the US check printing module, adjusted for DO\n"
 msgstr ""
+"\n"
+"Tento modul umožňuje tisknout vaše platby na předtištěný šekový papír.\n"
+"Výstup (rozložení, informace na útržcích atd.) můžete nakonfigurovat v "
+"nastavení společnosti a spravovat\n"
+"číslování šeků (pokud používáte předtištěné šeky bez čísel) v nastavení "
+"deníku.\n"
+"\n"
+"Podporované formáty\n"
+"-----------------\n"
+"Tři rozvržení převzatá z modulu pro tisk šeků v USA, upravená pro DO\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ph_check_printing
@@ -12519,6 +12599,10 @@ msgid ""
 "The user has to create an account on twilio.com and top\n"
 "up their account to start sending SMS messages.\n"
 msgstr ""
+"\n"
+"Tento modul umožňuje používat Twilio jako poskytovatele SMS zpráv.\n"
+"Uživatel si musí vytvořit účet na twilio.com a\n"
+"dobít si účet, aby mohl začít odesílat SMS zprávy.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_barcode_barcodelookup
@@ -12702,6 +12786,9 @@ msgid ""
 "This module also provides the possibility to generate the JPK_KR_PD in xml, "
 "for Poland.\n"
 msgstr ""
+"\n"
+"Tento modul také nabízí možnost generovat soubor JPK_KR_PD ve formátu XML "
+"pro Polsko.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_mass_mailing
@@ -12757,6 +12844,9 @@ msgid ""
 "This module brings the technical requirement for the Uruguayan regulation.\n"
 "Install this if you are using the Point of Sale app in Uruguay.\n"
 msgstr ""
+"\n"
+"Tento modul splňuje technické požadavky uruguayské regulace.\n"
+"Nainstalujte jej, pokud používáte aplikaci Prodejní místa v Uruguayi.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_de_pos_cert
@@ -12801,6 +12891,12 @@ msgid ""
 "and provides a checksum that\n"
 "can be verified to make sure the code has not been tampered with.\n"
 msgstr ""
+"\n"
+"Tento modul certifikuje prodejní místa u LNE (Laboratoire national de "
+"métrologie et d'essais),\n"
+"což je zákonná povinnost v některých zemích EU. Vynucuje určitá nastavení a "
+"poskytuje kontrolní součet, který\n"
+"lze ověřit, aby se zajistilo, že kód nebyl pozměněn.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale
@@ -12991,6 +13087,12 @@ msgid ""
 "- Possibility to attribute LPP amounts in %\n"
 "- Add custom amounts for employer parts for LAAC and IJM\n"
 msgstr ""
+"\n"
+"Tento modul rozšiřuje certifikaci na ELM 5.1 a ELM 5.3 a přidává různá "
+"vylepšení pro větší pohodlí, jako například: \n"
+"- Možnost přiřadit částky LPP v rámci programu „ %“ \n"
+"- Přidání vlastních částek pro zaměstnavatelské příspěvky v rámci programů "
+"LAAC a IJM\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sms
@@ -14041,6 +14143,9 @@ msgid ""
 "This modules allows the user to send consolidated invoices to the MyInvois "
 "system when using the POS app.\n"
 msgstr ""
+"\n"
+"Tento modul umožňuje uživateli odesílat souhrnné faktury do systému MyInvois "
+"při používání aplikace POS.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_my_edi
@@ -14638,6 +14743,8 @@ msgid ""
 "\n"
 "e-invoicing for Croatia\n"
 msgstr ""
+"\n"
+"Elektronická fakturace pro Chorvatsko\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_rs_edi
