@@ -54,9 +54,10 @@ class BankAccountAllocationWizard(models.TransientModel):
             if line.amount_type == 'percentage':
                 total += line_amount
                 check_for_total = True
-            line.bank_account_id.sudo().write({
-                'allow_out_payment': line.trusted
-            })
+            if line.bank_account_id.allow_out_payment != line.trusted:
+                line.bank_account_id.write({
+                    'allow_out_payment': line.trusted
+                })
         if check_for_total and not float_is_zero(total - 100.0, precision_digits=4):
             raise ValidationError(self.env._("Total percentage allocation must equal 100%."))
 
