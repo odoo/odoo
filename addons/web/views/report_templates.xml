@@ -555,8 +555,7 @@
     </template>
 
     <template id="external_layout_folder">
-        <t t-set="header_shape_height" t-value="'174'"/>
-
+        <t t-set="header_shape_height" t-value="str(company.folder_layout_custom_header_height or 174)"/>
         <div t-attf-class="header o_company_#{company.id}_layout {{report_type != 'pdf' and 'h-0'}}">
             <div class="o_folder_header_container position-absolute start-0 top-0 z-n1 w-100">
                 <svg width="100%" t-att-height="header_shape_height" fill="none" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
