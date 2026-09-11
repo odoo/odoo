@@ -32,7 +32,6 @@ import {
     Deferred,
     press,
     rightClick,
-    runAllTimers,
     tick,
     waitFor,
     waitForNone,
@@ -2376,7 +2375,6 @@ test("restore thread scroll position", async () => {
 });
 
 test("Message shows up even if channel data is incomplete", async () => {
-    // Pass in only but not when bulk running tests
     const pyEnv = await startServer();
     await start();
     await openDiscuss();
@@ -2397,9 +2395,9 @@ test("Message shows up even if channel data is incomplete", async () => {
         ],
         channel_type: "chat",
     });
+    const subscribePromise = waitUntilSubscribe();
     getService("bus_service").forceUpdateChannels();
-    await runAllTimers();
-    await waitUntilSubscribe();
+    await subscribePromise;
     await withUser(correspondentUserId, () =>
         rpc("/discuss/channel/notify_typing", {
             is_typing: true,
