@@ -1945,3 +1945,114 @@ test("a record made while the store is made reads the true store", async () => {
     expect(store.thread.name).toBe("boot");
     expect(store.thread.messages._store).toBe(store);
 });
+
+test("forEach visits every record when the callback deletes one", async () => {
+    (class Message extends Record {
+        static id = "id";
+        id;
+    }).register(localRegistry);
+    (class Thread extends Record {
+        static id = "name";
+        name;
+        messages = fields.Many("Message");
+    }).register(localRegistry);
+    const store = await start();
+    const thread = store.Thread.insert({
+        name: "General",
+        messages: [{ id: 1 }, { id: 2 }, { id: 3 }],
+    });
+    const visited = [];
+    thread.messages.forEach((message) => {
+        visited.push(message.id);
+        if (message.id === 1) {
+            thread.messages.delete(message);
+        }
+    });
+    expect(visited).toEqual([1, 2, 3]);
+    expect(thread.messages.map((message) => message.id)).toEqual([2, 3]);
+});
+
+test("find returns the record its callback matched", async () => {
+    (class Message extends Record {
+        static id = "id";
+        id;
+    }).register(localRegistry);
+    (class Thread extends Record {
+        static id = "name";
+        name;
+        messages = fields.Many("Message");
+    }).register(localRegistry);
+    const store = await start();
+    const thread = store.Thread.insert({
+        name: "General",
+        messages: [{ id: 1 }, { id: 2 }, { id: 3 }],
+    });
+    const message = thread.messages.find((message) => {
+        if (message.id === 1) {
+            thread.messages.delete(message);
+        }
+        return message.id === 3;
+    });
+    expect(message.id).toBe(3);
+    expect(thread.messages.map((message) => message.id)).toEqual([2, 3]);
+});
+
+test("reduce visits the records the relation holds when it starts", async () => {
+    (class Message extends Record {
+        static id = "id";
+        id;
+    }).register(localRegistry);
+    (class Thread extends Record {
+        static id = "name";
+        name;
+        messages = fields.Many("Message");
+    }).register(localRegistry);
+    const store = await start();
+    const thread = store.Thread.insert({
+        name: "General",
+        messages: [{ id: 1 }, { id: 2 }, { id: 3 }],
+    });
+    const visited = thread.messages.reduce((acc, message) => {
+        if (message.id === 1) {
+            thread.messages.add({ id: 9 });
+        }
+        return [...acc, message.id];
+    }, []);
+    expect(visited).toEqual([1, 2, 3]);
+    expect(thread.messages.map((message) => message.id)).toEqual([1, 2, 3, 9]);
+});
+
+test("forEach skips a record when the callback shifts the relation, as an array does", async () => {
+    (class Message extends Record {
+        static id = "id";
+        id;
+    }).register(localRegistry);
+    (class Thread extends Record {
+        static id = "name";
+        name;
+        messages = fields.Many("Message");
+    }).register(localRegistry);
+    const store = await start();
+    const thread = store.Thread.insert({
+        name: "General",
+        messages: [{ id: 1 }, { id: 2 }, { id: 3 }],
+    });
+    const visited = [];
+    thread.messages.forEach((message) => {
+        visited.push(message.id);
+        if (message.id === 1) {
+            thread.messages.shift();
+        }
+    });
+    expect(visited).toEqual([1, 3]);
+    expect(thread.messages.map((message) => message.id)).toEqual([2, 3]);
+    const ids = [1, 2, 3];
+    const visitedIds = [];
+    ids.forEach((id) => {
+        visitedIds.push(id);
+        if (id === 1) {
+            ids.shift();
+        }
+    });
+    expect(visitedIds).toEqual([1, 3]);
+});

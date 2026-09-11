@@ -106,7 +106,7 @@ export class RecordList extends Array {
     /** @param {R} recordProxy */
     indexOf(recordProxy) {
         const recordList = this._raw;
-        return recordList._.data().indexOf(recordProxy?._raw);
+        return recordList._.records().indexOf(recordProxy?._raw);
     }
     /**
      * @param {number} [start]
@@ -237,6 +237,94 @@ export class RecordList extends Array {
         // this custom implement of "at" is slightly faster than auto-calling unimplement array method
         const recordList = this._raw;
         return recordList._.data().at(index)?._proxy;
+    }
+    /** @param {(record: R, index: number, list: RecordList<R>) => any} fn */
+    map(fn) {
+        const recordList = this._raw;
+        const listProxy = recordList._proxy;
+        return recordList._.records().map((record, index) => fn(record._proxy, index, listProxy));
+    }
+    /** @param {(record: R, index: number, list: RecordList<R>) => boolean} fn */
+    filter(fn) {
+        const recordList = this._raw;
+        const listProxy = recordList._proxy;
+        const res = [];
+        recordList._.records().forEach((record, index) => {
+            if (fn(record._proxy, index, listProxy)) {
+                res.push(record._proxy);
+            }
+        });
+        return res;
+    }
+    /** @param {(record: R, index: number, list: RecordList<R>) => void} fn */
+    forEach(fn) {
+        const recordList = this._raw;
+        const listProxy = recordList._proxy;
+        recordList._.records().forEach((record, index) => fn(record._proxy, index, listProxy));
+    }
+    /** @param {(record: R, index: number, list: RecordList<R>) => boolean} fn */
+    findIndex(fn) {
+        const recordList = this._raw;
+        const listProxy = recordList._proxy;
+        return recordList._.records().findIndex((record, index) =>
+            fn(record._proxy, index, listProxy)
+        );
+    }
+    /** @param {(record: R, index: number, list: RecordList<R>) => boolean} fn */
+    find(fn) {
+        const recordList = this._raw;
+        const listProxy = recordList._proxy;
+        return recordList._.records().find((record, index) => fn(record._proxy, index, listProxy))
+            ?._proxy;
+    }
+    /** @param {(record: R, index: number, list: RecordList<R>) => boolean} fn */
+    some(fn) {
+        return this._raw.findIndex(fn) !== -1;
+    }
+    /** @param {(record: R, index: number, list: RecordList<R>) => boolean} fn */
+    every(fn) {
+        const recordList = this._raw;
+        const listProxy = recordList._proxy;
+        return !recordList.some((record, index) => !fn(record, index, listProxy));
+    }
+    /**
+     * @param {(acc: any, record: R, index: number, list: RecordList<R>) => any} fn
+     * @param {any} [init]
+     */
+    reduce(fn, ...init) {
+        const recordList = this._raw;
+        const listProxy = recordList._proxy;
+        const records = recordList._.records();
+        const { length } = records;
+        let index = 0;
+        let acc;
+        if (init.length) {
+            acc = init[0];
+        } else {
+            if (length === 0) {
+                throw new TypeError("Reduce of empty record list with no initial value");
+            }
+            acc = records[0]._proxy;
+            index = 1;
+        }
+        for (; index < length; index++) {
+            acc = fn(acc, records[index]._proxy, index, listProxy);
+        }
+        return acc;
+    }
+    /**
+     * @param {number} [start]
+     * @param {number} [end]
+     */
+    slice(start, end) {
+        const recordList = this._raw;
+        return recordList._.records()
+            .slice(start, end)
+            .map((record) => record._proxy);
+    }
+    /** @param {R} record */
+    includes(record) {
+        return this._raw.indexOf(record) !== -1;
     }
 }
 
