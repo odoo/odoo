@@ -123,11 +123,9 @@ export class Message extends Record {
     /** @type {string|undefined} */
     postFailMessage = undefined;
     reactions = fields.Many("MessageReactions", { inverse: "message" });
-    sortedReactions = fields.Many("MessageReactions", {
-        compute() {
-            return [...this.reactions].sort((r1, r2) => r1.sequence - r2.sequence);
-        },
-    });
+    sortedReactions = this.computed(() =>
+        [...this.reactions].sort((r1, r2) => r1.sequence - r2.sequence)
+    );
     notification_ids = fields.Many("mail.notification", { inverse: "mail_message_id" });
     self_notification = this.computed(() =>
         this.notification_ids.find((n) => n.res_partner_id?.eq(this.store.self_user?.partner_id))
@@ -300,13 +298,9 @@ export class Message extends Record {
         return _t("Last edited %(editedDate)s", { editedDate: this.editedDatetimeMedium });
     }
 
-    /** @type {import("models").Store["selvesBySequence"]} */
-    selvesBySequence = fields.Attr(undefined, {
-        /** @this {import("models").Message} */
-        compute() {
-            return this.thread?.selvesBySequence ?? this.store.selvesBySequence;
-        },
-    });
+    selvesBySequence = this.computed(
+        () => this.thread?.selvesBySequence ?? this.store.selvesBySequence
+    );
 
     /**
      * Get the effective persona performing actions on this message.
@@ -546,24 +540,21 @@ export class Message extends Record {
         return markup`<i class="oi me-1" data-icon="${this.previewIcon}"></i>${messageBody}`;
     });
 
-    previewText = fields.Html("", {
-        /** @this {import("models").Message} */
-        compute() {
-            const messageBody = this.bodyPreview;
-            if (this.isSelfAuthored) {
-                return markup`<i class="oi me-1 opacity-75" data-icon="reply"></i>${_t(
-                    "You: %(message_content)s",
-                    { message_content: messageBody }
-                )}`;
-            }
-            if (!this.author || this.author.notEq(this.thread?.channel?.correspondent?.persona)) {
-                return _t("%(authorName)s: %(message_content)s", {
-                    authorName: this.authorName,
-                    message_content: messageBody,
-                });
-            }
-            return messageBody;
-        },
+    previewText = this.computed(() => {
+        const messageBody = this.bodyPreview;
+        if (this.isSelfAuthored) {
+            return markup`<i class="oi me-1 opacity-75" data-icon="reply"></i>${_t(
+                "You: %(message_content)s",
+                { message_content: messageBody }
+            )}`;
+        }
+        if (!this.author || this.author.notEq(this.thread?.channel?.correspondent?.persona)) {
+            return _t("%(authorName)s: %(message_content)s", {
+                authorName: this.authorName,
+                message_content: messageBody,
+            });
+        }
+        return messageBody;
     });
 
     get previewIcon() {

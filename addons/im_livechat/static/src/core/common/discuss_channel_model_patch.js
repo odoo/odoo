@@ -58,15 +58,13 @@ const discussChannelPatch = {
                 return this.livechatNoteText;
             },
         });
-        this.livechatVisitorMember = fields.One("discuss.channel.member", {
-            compute() {
-                if (this.channel_type !== "livechat") {
-                    return;
-                }
-                return [...this.channel_member_ids]
-                    .sort((a, b) => a.id - b.id)
-                    .find((member) => member.livechat_member_type === "visitor");
-            },
+        this.livechatVisitorMember = this.computed(() => {
+            if (this.channel_type !== "livechat") {
+                return;
+            }
+            return [...this.channel_member_ids]
+                .sort((a, b) => a.id - b.id)
+                .find((member) => member.livechat_member_type === "visitor");
         });
         /** @type {import("@web/core/network/rpc").RPCError|import("@web/core/network/rpc").ConnectionLostError|import("@web/core/network/rpc").ConnectionAbortedError|undefined} */
         this.chatbotTriggerFailedError = undefined;

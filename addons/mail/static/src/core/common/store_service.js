@@ -47,18 +47,15 @@ export class Store extends BaseStore {
         return this.self_user?.partner_id || this.self_guest;
     }
     /** @type {{self: import("models").ResPartner | import("models").MailGuest, sequence: number}[]} */
-    selvesBySequence = fields.Attr(undefined, {
-        /** @this {import("models").Store} */
-        compute() {
-            const result = [];
-            if (this.self_user?.partner_id) {
-                result.push({ self: this.self_user.partner_id, sequence: 10 });
-            }
-            if (this.self_guest) {
-                result.push({ self: this.self_guest, sequence: 30 });
-            }
-            return result.sort((a, b) => a.sequence - b.sequence);
-        },
+    selvesBySequence = this.computed(() => {
+        const result = [];
+        if (this.self_user?.partner_id) {
+            result.push({ self: this.self_user.partner_id, sequence: 10 });
+        }
+        if (this.self_guest) {
+            result.push({ self: this.self_guest, sequence: 30 });
+        }
+        return result.sort((a, b) => a.sequence - b.sequence);
     });
     /** @type {boolean} */
     hasCannedResponses;
@@ -89,19 +86,17 @@ export class Store extends BaseStore {
     menu = { counter: 0 };
     chatHub = this.computed(() => this.ChatHub.insert({}));
     failures = fields.Many("Failure");
-    sortedFailures = fields.Many("Failure", {
-        compute() {
-            return [...this.failures].sort((f1, f2) => {
-                if (f1.lastMessage?.id && !f2.lastMessage?.id) {
-                    return -1;
-                }
-                if (!f1.lastMessage?.id && f2.lastMessage?.id) {
-                    return 1;
-                }
-                return f2.lastMessage?.id - f1.lastMessage?.id || f2.id - f1.id;
-            });
-        },
-    });
+    sortedFailures = this.computed(() =>
+        [...this.failures].sort((f1, f2) => {
+            if (f1.lastMessage?.id && !f2.lastMessage?.id) {
+                return -1;
+            }
+            if (!f1.lastMessage?.id && f2.lastMessage?.id) {
+                return 1;
+            }
+            return f2.lastMessage?.id - f1.lastMessage?.id || f2.id - f1.id;
+        })
+    );
     /** local settings of the current device (not stored server side) */
     settings = this.computed(() => this.Settings.insert({}));
 
