@@ -255,10 +255,19 @@ class HrApplicant(models.Model):
                 applicant.partner_id = applicant._partner_find_from_emails_single(
                     [applicant.email_from], no_create=False,
                     additional_values={
-                        email_normalized: {'lang': self.env.lang}
+                        email_normalized: {
+                            'lang': self.env.lang,
+                            'name': applicant.partner_name,
+                            'phone': applicant.partner_phone,
+                        },
                     },
                 )
+<<<<<<< 83f01ad684e253601b24607a80f65f914ad83c42
                 applicant._track_record(applicant.partner_id, ['name', 'email', 'phone'], body="Contact has been updated")
+||||||| c65bfe35495e86f72ef42e0ec0216bf0e8a65538
+=======
+                continue
+>>>>>>> 0713ad1af1ef6209cb54233996cf821f0fb5ee50
             if applicant.partner_name and applicant.partner_name != applicant.partner_id.name:
                 applicant.partner_id.name = applicant.partner_name
             if email_normalized and email_normalized != applicant.partner_id.email:
