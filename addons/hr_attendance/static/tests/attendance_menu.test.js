@@ -55,7 +55,6 @@ test("the attendance review keeps its dropdown open when using a datetime field"
         name: "Test Employee",
         attendance_state: "checked_in",
         last_attendance_worked_hours: 7,
-        break_today: 1,
         today_attendance_ids: [{
             id: 42,
             check_in: "2026-08-27 09:00:00",
@@ -91,7 +90,7 @@ test("the attendance review keeps its dropdown open when using a datetime field"
     expect(".o_att_today_wrap").toHaveCount(1);
 });
 
-function mockCheckedOutEmployee(todayAttendances, breakToday = 0) {
+function mockCheckedOutEmployee(todayAttendances) {
     mockService("lazy_session", () => ({
         getValue(key, callback) {
             if (key === "attendance_check_in_ability" || key === "attendance_break_management") {
@@ -108,7 +107,6 @@ function mockCheckedOutEmployee(todayAttendances, breakToday = 0) {
         name: "Test Employee",
         attendance_state: "checked_out",
         last_attendance_worked_hours: 0,
-        break_today: breakToday,
         today_attendance_ids: todayAttendances,
     }));
 }
@@ -143,7 +141,10 @@ test("the totals of the reviewed attendances are displayed next to the check in"
 });
 
 test("the totals display the break of the day once there is one", async () => {
-    mockCheckedOutEmployee([morningAttendance, afternoonAttendance], 0.5);
+    mockCheckedOutEmployee([
+        { ...morningAttendance, break_duration: 0.25 },
+        { ...afternoonAttendance, break_duration: 0.25 },
+    ]);
 
     await mountWithCleanup(ActivityMenu);
 
@@ -194,6 +195,13 @@ test("the displayed total sums the rounded attendance durations", () => {
 
 test("the displayed break total sums the reviewed attendance breaks", () => {
     const attendanceMenu = Object.create(ActivityMenu.prototype);
+    const nightShift = {
+        id: 41,
+        check_in: "2026-07-12 22:00:00",
+        check_out: "2026-07-13 06:00:00",
+        break_duration: 1,
+        worked_hours: 7,
+    };
     const attendance = {
         id: 42,
         check_in: "2026-07-13 14:00:00",
@@ -205,14 +213,15 @@ test("the displayed break total sums the reviewed attendance breaks", () => {
         activeAttendance: attendance,
         employee: {
             break_management_enabled: true,
-            break_today: 2,
             last_attendance_worked_hours: 0,
         },
-        attendances: [attendance],
+        attendances: [nightShift, attendance],
     };
     const details = attendanceMenu.attendanceDetails;
 
-    expect(details.breakDisplay).toBe("2:00");
+    expect(details.breakDisplay).toBe("3:00", {
+        message: "the total is the sum of the breaks of the listed attendances",
+    });
     expect(details.breakDurationLabel).toBe("2:00");
 });
 

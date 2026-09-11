@@ -125,6 +125,7 @@ export class ActivityMenu extends Component {
             return null;
         }
         let totalDisplayMinutes = 0;
+        let totalBreakMinutes = 0;
         const sessions = this.state.attendances.map((att) => {
             const checkInDate = deserializeDateTime(att.check_in);
             const checkOutDate = att.check_out ? deserializeDateTime(att.check_out) : null;
@@ -133,6 +134,7 @@ export class ActivityMenu extends Component {
                 : this.state.employee.last_attendance_worked_hours;
             const displayMinutes = Math.round(duration * 60);
             totalDisplayMinutes += displayMinutes;
+            totalBreakMinutes += Math.round((att.break_duration || 0) * 60);
             return {
                 id: att.id,
                 selected:
@@ -158,8 +160,8 @@ export class ActivityMenu extends Component {
                 ? formatFloatTime(attendance.break_duration, { numeric: true })
                 : false,
             breakDisplay:
-                this.state.employee.break_today > 0 &&
-                formatFloatTime(this.state.employee.break_today, { numeric: true }),
+                totalBreakMinutes > 0 &&
+                formatFloatTime(totalBreakMinutes, { numeric: true, unit: "minutes" }),
             totalDisplay: formatFloatTime(totalDisplayMinutes, {
                 numeric: true,
                 unit: "minutes",
