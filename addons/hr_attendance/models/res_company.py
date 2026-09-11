@@ -74,20 +74,17 @@ class ResCompany(models.Model):
 
     @api.depends('country_id')
     def _compute_attendance_work_entry_type_id(self):
-        fallback = self.env.ref('hr_work_entry.generic_work_entry_type_attendance', raise_if_not_found=False)
-        country_codes = self.mapped('country_id.code')
-        country_types = self.env['hr.work.entry.type'].sudo().search([
-            ('count_as', '=', 'working_time'),
-            ('code', '=', '002.00'),
-            ('country_code', 'in', country_codes),
-        ])
-        type_by_country = {t.country_code: t for t in country_types}
+        work_entry_types_by_country = dict(self.env['hr.work.entry.type'].sudo()._read_group(
+            domain=[
+                ('count_as', '=', 'working_time'),
+                ('code', '=', '002.00'),
+                ('country_id', 'in', self.country_id.ids + [False]),
+            ],
+            groupby=['country_id'],
+            aggregates=['id:recordset'],
+        ))
         for company in self:
-            current = company.attendance_work_entry_type_id
-            country_specific = type_by_country.get(company.country_id.code)
-            if current and (not country_specific or current != fallback):
-                continue
-            company.attendance_work_entry_type_id = country_specific or fallback
+            company.attendance_work_entry_type_id = work_entry_types_by_country.get(company.country_id, self.env['hr.work.entry.type'])[:1]
 
     # ---------------------------------------------------------
     # ORM Overrides
