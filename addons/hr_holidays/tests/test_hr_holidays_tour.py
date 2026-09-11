@@ -14,6 +14,7 @@ class TestHrHolidaysTour(HttpCase):
     @freeze_time('01/17/2022')
     def test_hr_holidays_tour(self):
         admin_user = self.env.ref('base.user_admin')
+        admin_user.company_id.country_id = self.env.ref('base.us')
         admin_user.write({
             'email': 'mitchell.admin@example.com',
         })
@@ -38,6 +39,7 @@ class TestHrHolidaysTour(HttpCase):
             'request_unit': 'day',
             'unit_of_measure': 'day',
             'count_as': 'absence',
+            'country_id': admin_user.company_id.country_id.id,
         })
         # add allocation
         self.env['hr.leave.allocation'].create({

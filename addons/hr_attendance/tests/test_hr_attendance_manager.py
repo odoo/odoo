@@ -12,6 +12,7 @@ class TestAttendanceManager(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env.company.country_id = cls.env.ref('base.us')
         # Create an attendance manager
         cls.luisa = new_test_user(cls.env, login='luisa', groups='hr_attendance.group_hr_attendance_manager')
 

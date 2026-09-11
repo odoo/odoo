@@ -20,13 +20,14 @@ class ResourceCalendarAttendance(models.Model):
 
     @api.depends('calendar_id.company_id')
     def _compute_allowed_work_entry_type_ids(self):
+        work_entry_types_by_country = dict(self.env['hr.work.entry.type']._read_group(
+            domain=[('country_id', 'in', self.calendar_id.company_id.sudo().country_id.ids + [False])],
+            groupby=['country_id'],
+            aggregates=['id:recordset'],
+        ))
         for attendance in self:
             country = attendance.calendar_id.company_id.sudo().country_id
-            if not country or not self.env['hr.work.entry.type'].search_count([('country_id', '=', country.id)], limit=1):
-                domain = [('country_id', '=', False)]
-            else:
-                domain = [('country_id', '=', country.id)]
-            attendance.allowed_work_entry_type_ids = self.env['hr.work.entry.type'].search(domain)
+            attendance.allowed_work_entry_type_ids = work_entry_types_by_country.get(country, self.env['hr.work.entry.type'])
 
     def _compute_display_name(self):
         for attendance in self:

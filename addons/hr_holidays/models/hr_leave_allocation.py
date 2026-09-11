@@ -308,14 +308,18 @@ class HrLeaveAllocation(models.Model):
 
     @api.depends('employee_company_id')
     def _compute_allowed_work_entry_type_ids(self):
+        countries = self.mapped('employee_company_id.country_id') | self.env.company.country_id
+        work_entry_types_by_country = dict(self.env['hr.work.entry.type']._read_group(
+            domain=Domain.AND([
+                self._domain_work_entry_type_id(),
+                [('country_id', 'in', countries.ids + [False])],
+            ]),
+            groupby=['country_id'],
+            aggregates=['id:recordset'],
+        ))
         for allocation in self:
             country = allocation.employee_company_id.country_id or self.env.company.country_id
-            if not country or not self.env['hr.work.entry.type'].search_count([('country_id', '=', country.id)], limit=1):
-                domain = [('country_id', '=', False)]
-            else:
-                domain = [('country_id', '=', country.id)]
-            domain = Domain.AND([allocation._domain_work_entry_type_id(), domain])
-            allocation.allowed_work_entry_type_ids = self.env['hr.work.entry.type'].search(domain)
+            allocation.allowed_work_entry_type_ids = work_entry_types_by_country.get(country, self.env['hr.work.entry.type'])
 
     @api.depends('accrual_plan_id')
     def _compute_work_entry_type_id(self):

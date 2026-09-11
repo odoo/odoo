@@ -10,6 +10,7 @@ class TestHrAttendanceDomainTranslation(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
 
+        cls.env.company.country_id = cls.env.ref('base.us')
         cls.hr_attendance = cls.env['hr.attendance']
         cls.hr_employee = cls.env['hr.employee']
         cls.employee_musa, employee_tecna = cls.hr_employee.create([{'name': 'Musa'}, {'name': 'Tecna'}])
