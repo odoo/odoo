@@ -57,7 +57,7 @@ class TestMrpSerialMassProducePerformance(common.TransactionCase):
         mo.action_confirm()
 
         for i in range(raw_materials_count):
-            if raw_materials[i].tracking == 'none':
+            if not raw_materials[i].tracking:
                 self.env['stock.quant'].with_context(inventory_mode=True).create({
                     'product_id': raw_materials[i].id,
                     'inventory_quantity': total_quantity,

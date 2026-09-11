@@ -26,14 +26,14 @@ class TestWarehouseMrp(common.TestMrpCommon):
             'uom_id': cls.uom_unit.id,
             'type': 'consu',
             'is_storable': True,
-            'tracking': 'none',
+            'store_by': 'quantity',
         })
         cls.laptop = cls.env['product.product'].create({
             'name': 'Acoustic Bloc Screens',
             'uom_id': cls.uom_unit.id,
             'type': 'consu',
             'is_storable': True,
-            'tracking': 'none',
+            'store_by': 'quantity',
         })
         cls.depot_location = cls.env['stock.location'].create({
             'name': 'Depot',
@@ -306,7 +306,7 @@ class TestWarehouseMrp(common.TestMrpCommon):
         """ Test that movement of pack in backorder is correctly handled. """
         self.warehouse_1.manufacture_steps = 'pbm'
 
-        self.product_1.tracking = 'none'
+        self.product_1.store_by = 'quantity'
         self.env['stock.quant']._update_available_quantity(self.product_1, self.stock_location, 100)
 
         mo_form = Form(self.env['mrp.production'])
@@ -404,7 +404,7 @@ class TestKitPicking(common.TestMrpCommon):
         def create_product(name):
             return cls.env['product.product'].create({
                 'name': name,
-                'tracking': 'none',
+                'store_by': 'quantity',
             })
 
         # Create a kit 'kit_parent' :

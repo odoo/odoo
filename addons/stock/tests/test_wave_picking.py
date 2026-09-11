@@ -499,8 +499,8 @@ class TestBatchPicking(TransactionCase):
             that the picking stays unchanged (except for the 'picked' state of the move)
             and is removed from the transfer
         """
-        self.productA.tracking = 'none'
-        self.productB.tracking = 'none'
+        self.productA.store_by = 'quantity'
+        self.productB.store_by = 'quantity'
         (picking_1, picking_2) = self.env['stock.picking'].create([
             {
             'picking_type_id': self.picking_type_in,
@@ -595,7 +595,7 @@ class TestBatchPicking(TransactionCase):
             Check that we can validate a wave transfer containing a picking without quantity.
             In that case, the picking remains unchanged and is removed from the wave
         """
-        (self.productA | self.productB).tracking = 'none'
+        (self.productA | self.productB).store_by = 'quantity'
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 10.0)
         self.env['stock.quant']._update_available_quantity(self.productB, self.stock_location, 10.0)
         picking_1, picking_2 = self.env['stock.picking'].create([

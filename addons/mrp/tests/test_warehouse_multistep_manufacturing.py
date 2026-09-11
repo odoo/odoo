@@ -36,13 +36,13 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
             {
                 'name': 'Stick',
                 'uom_id': cls.uom_unit.id,
-                'tracking': 'none',
+                'store_by': 'quantity',
                 'route_ids': [Command.set(cls.route_mto.ids)],
             },
             {
                 'name': 'Raw Stick',
                 'uom_id': cls.uom_unit.id,
-                'tracking': 'none',
+                'store_by': 'quantity',
             },
         ])
         # Create bom for manufactured product
@@ -430,7 +430,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         # Create an additional BoM for component
         product_form = Form(self.env['product.product'])
         product_form.name = 'Wood'
-        product_form.tracking = 'none'
+        product_form.store_by = 'quantity'
         product_form.uom_id = self.uom_unit
         self.wood_product = product_form.save()
 

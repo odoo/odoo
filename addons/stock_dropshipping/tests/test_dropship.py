@@ -510,7 +510,7 @@ class TestDropshipPostInstall(common.TransactionCase):
         ])
         cls.dropship_product = cls.env['product.product'].create({
             'name': 'Dropshipped Product',
-            'tracking': 'none',
+            'store_by': 'quantity',
             'standard_price': 20,
             'invoice_policy': 'delivery',
             'seller_ids': [Command.create({

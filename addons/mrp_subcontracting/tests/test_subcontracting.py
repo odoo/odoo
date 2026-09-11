@@ -1217,7 +1217,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
     def test_flow_tracked_only_finished(self):
         """ Test when only the finished product is tracked """
         self.finished.tracking = "serial"
-        self.comp1.tracking = "none"
+        self.comp1.store_by = "quantity"
         nb_finished_product = 3
         # Create a receipt picking from the subcontractor
         picking_form = Form(self.env['stock.picking'])

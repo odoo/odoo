@@ -277,7 +277,7 @@ class TestStockMoveLine(TestStockCommon):
         Test that if the product already have quantities and after that tracking is set to serial,
         we can create a lot and assign it to the move.
         """
-        self.productA.tracking = "none"
+        self.productA.store_by = "quantity"
 
         self.env["stock.quant"]._update_available_quantity(self.productA, self.stock_location, 100)
 

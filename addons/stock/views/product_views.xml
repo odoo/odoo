@@ -174,10 +174,10 @@
                 </xpath>
                 <xpath expr="//div[@name='tracking_and_qty_no_stock']" position="replace">
                     <!-- Replace the single line tacking + qty without stock with 2 individual lines with stock (tracking + tracking method // qty) -->
-                    <field name="tracking" placeholder="None" invisible="type != 'consu'" groups="stock.group_production_lot"/>
+                    <field name="store_by" invisible="type != 'consu'" groups="stock.group_production_lot"/>
                     <!-- Qty line if storable -->
-                    <label for="qty_available" class="oe_inline" invisible="not is_storable or not tracking or not product_variant_id" groups="stock.group_stock_user"/>
-                    <div name="qty_available_with_stock" class="o_row" invisible="not is_storable or not tracking or not product_variant_id" groups="stock.group_stock_user">
+                    <label for="qty_available" class="oe_inline" invisible="not is_storable or not product_variant_id" groups="stock.group_stock_user"/>
+                    <div name="qty_available_with_stock" class="o_row" invisible="not is_storable or not product_variant_id" groups="stock.group_stock_user">
                         <a type="object" name="action_open_quants"
                            invisible="not show_qty_update_button" groups="stock.group_stock_manager">
                             <field name="qty_available" readonly="True"/>
@@ -208,7 +208,7 @@
                     </group>
                 </xpath>
                 <xpath expr="//group[@name='group_lots_and_weight']" position="after">
-                    <group string="Traceability" name="traceability" groups="stock.group_production_lot" invisible="tracking not in ['lot', 'serial']">
+                    <group string="Traceability" name="traceability" groups="stock.group_production_lot" invisible="store_by not in ['lot', 'serial']">
                         <label for="serial_prefix_format" string="Custom Lot/Serial"/>
                         <div class="d-flex">
                             <field name="serial_prefix_format" style="max-width: 150px;"/>
@@ -312,7 +312,7 @@
                 <data>
                     <div name="button_box" position="inside">
                         <t groups="stock.group_stock_user">
-                            <field name="tracking" invisible="1"/>
+                            <field name="store_by" invisible="1"/>
                             <field name="show_on_hand_qty_status_button" invisible="1"/>
                             <field name="show_forecasted_qty_status_button" invisible="1"/>
                             <button type="object"
@@ -384,7 +384,7 @@
                             </button>
                             <button type="object"
                                 name="action_open_product_lot"
-                                invisible="tracking not in ['lot', 'serial']"
+                                invisible="store_by not in ['lot', 'serial']"
                                 class="oe_stat_button" icon="menu" groups="stock.group_production_lot">
                                 <div class="o_stat_info">
                                     <span class="o_stat_text">Lot/Serial Numbers</span>
@@ -429,7 +429,7 @@
                 <data>
                     <button name="action_open_documents" position="before">
                         <t groups="stock.group_stock_user">
-                            <field name="tracking" invisible="1"/>
+                            <field name="store_by" invisible="1"/>
                             <field name="show_on_hand_qty_status_button" invisible="1"/>
                             <field name="show_forecasted_qty_status_button" invisible="1"/>
                             <button type="object"
@@ -507,7 +507,7 @@
                             </button>
                             <button type="object"
                                 name="action_open_product_lot"
-                                invisible="tracking not in ['lot', 'serial']"
+                                invisible="store_by not in ['lot', 'serial']"
                                 class="oe_stat_button" icon="menu" groups="stock.group_production_lot">
                                 <div class="o_stat_info">
                                     <span class="o_stat_text">Lot/Serial Numbers</span>

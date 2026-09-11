@@ -34,15 +34,14 @@ class TestTraceability(TestMrpCommon):
     def _create_product(self, tracking):
         return self.env['product.product'].create({
             'name': 'Product %s' % tracking,
-            'is_storable': True,
-            'tracking': tracking,
+            'store_by': tracking,
         })
 
     def test_tracking_types_on_mo(self):
-        finished_no_track = self._create_product('none')
+        finished_no_track = self._create_product('quantity')
         finished_lot = self._create_product('lot')
         finished_serial = self._create_product('serial')
-        consumed_no_track = self._create_product('none')
+        consumed_no_track = self._create_product('quantity')
         consumed_lot = self._create_product('lot')
         consumed_serial = self._create_product('serial')
         Lot = self.env['stock.lot']

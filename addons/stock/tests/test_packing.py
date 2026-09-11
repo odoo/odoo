@@ -1792,7 +1792,7 @@ class TestPackagePropagation(TestPackingCommon):
         self.productA = self.env['product.product'].create({
             'name': 'productA',
             'is_storable': True,
-            'tracking': 'none',
+            'store_by': 'quantity',
         })
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 2)
         self.env['stock.rule'].run([

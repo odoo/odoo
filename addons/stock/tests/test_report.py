@@ -36,7 +36,7 @@ class TestReportsCommon(TransactionCase):
         cls.product = cls.env['product.product'].create({
             'name': 'Product',
             'categ_id': cls.env.ref('product.product_category_goods').id,
-            'tracking': 'none',
+            'store_by': 'quantity',
         })
         cls.product_template = cls.product.product_tmpl_id
         cls.wh_2 = cls.env['stock.warehouse'].create({

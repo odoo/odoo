@@ -30,7 +30,7 @@
                 <xpath expr="//create[@id='products']" position="inside">
                     <field name="is_storable" eval="True"/>
                     <field name="categ_id" ref="product_categories"/>
-                    <field name="tracking" values="{'none': 6, 'lot': 2, 'serial': 2}"/>
+                    <field name="tracking" values="['lot', 'serial']" null_ratio="0.6"/>
                     <field name="weight" start="0.1" end="50.0" distribution="exponential(rate=0.05)" null_ratio="0.3"/>
                     <field name="volume" start="0.01" end="10.0" distribution="exponential(rate=0.08)" null_ratio="0.4"/>
                 </xpath>

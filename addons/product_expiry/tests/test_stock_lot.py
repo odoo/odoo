@@ -787,7 +787,7 @@ class TestStockLot(TestStockCommon):
             'removal_time': 2,
         })
 
-        product.write({'tracking': 'none'})
+        product.write({'store_by': 'quantity'})
 
         self.assertFalse(product.use_expiration_date)
 
