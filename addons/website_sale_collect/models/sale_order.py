@@ -69,6 +69,7 @@ class SaleOrder(models.Model):
             return
 
         fpos_before = self.fiscal_position_id
+        warehouse_before = self.warehouse_id
         if self.partner_shipping_id.pickup_location_data:
             self.warehouse_id = self.partner_shipping_id.pickup_location_data["id"]
             self._compute_fiscal_position_id()
@@ -76,6 +77,8 @@ class SaleOrder(models.Model):
             self._compute_warehouse_id()
         if fpos_before != self.fiscal_position_id:
             self._recompute_taxes()
+        if warehouse_before != self.warehouse_id:
+            self._set_estimated_commitment_date()
 
     def _is_cart_ready_for_delivery(self):
         """Override of `website_sale` to include errors if no pickup location is selected and to

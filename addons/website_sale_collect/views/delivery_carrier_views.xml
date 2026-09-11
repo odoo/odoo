@@ -39,6 +39,12 @@
             <field name="enable_delivery_estimate" position="attributes">
                 <attribute name="invisible" add="delivery_type != 'in_store'" separator=" and "/>
             </field>
+            <div name="delivery_calendar_row" position="attributes">
+                <attribute name="invisible" add="delivery_type == 'in_store'" separator=" or "/>
+            </div>
+            <field name="delivery_calendar_id" position="attributes">
+                <attribute name="required" add="delivery_type != 'in_store'" separator=" and "/>
+            </field>
             <page name="pricing" position="before">
                 <page string="Stores" name="warehouses" invisible="delivery_type != 'in_store'">
                     <field name="warehouse_ids">
