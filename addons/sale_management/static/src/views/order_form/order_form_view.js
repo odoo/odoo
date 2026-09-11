@@ -1,9 +1,5 @@
-import { registry } from "@web/core/registry";
-import { formView } from "@web/views/form/form_view";
+import { saleOrderFormView } from "@sale/views/sale_order_form_view/sale_order_form_view";
 
-export const saleManagementOrderFormView = {
-    ...formView,
+Object.assign(saleOrderFormView, {
     buttonTemplate: "sale_management.SaleManagementOrderFormView.Buttons",
-};
-
-registry.category("views").add("sale_order_form", saleManagementOrderFormView);
+});
