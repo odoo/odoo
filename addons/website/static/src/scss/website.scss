@@ -2205,6 +2205,14 @@ header {
     @if o-website-value('header-template') == 'boxed' {
         margin-top: $navbar-padding-y !important;
     }
+
+    .container, .container-fluid {
+        // Mega menu layout containers are nested in the navbar's `.container`.
+        // Override `%o-double-container-no-padding` from `portal.scss` to keep
+        // their grid gutter.
+        padding-left: $grid-gutter-width * .5;
+        padding-right: $grid-gutter-width * .5;
+    }
 }
 
 // Offcanvas mega menu on mobile or in sidebar/hamburger header
