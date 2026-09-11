@@ -670,7 +670,8 @@ class _RelationalMulti(_Relational):
                         # don't update real records, otherwise some subsequent
                         # write() won't do the actual update
                         if not line.id:
-                            line._update_cache(command[2], validate)
+                            # update the new record and trigger invalidations
+                            line.update(command[2])
                         ids.add(line.id)
                     elif command[0] in (Command.DELETE, Command.UNLINK):
                         ids.discard(browse(command[1]).id)

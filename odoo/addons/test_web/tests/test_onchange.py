@@ -562,9 +562,23 @@ class TestOnchange(SavepointCaseWithUserDemo):
             'important_messages': [Command.set(discussion.important_messages.ids)],
             'important_emails': [Command.set(discussion.important_emails.ids)],
         }
+
         self.env.invalidate_all()
         result = discussion.onchange(values, ['name'], fields_spec)
+        self.assertEqual(
+            result['value']['important_emails'],
+            [Command.update(email.id, {
+                'name': f'[Foo Bar] {USER.name}',
+            })],
+        )
 
+        # test the same change but ignore the active field
+        # the email inherits from message (which has an active field), by
+        # resolving important_emails, we filter the result using that active
+        # flag which puts it and the message field (from inherits) in cache;
+        # test that without that side-effect, we get the same result
+        self.env.invalidate_all()
+        result = discussion.with_context(active_test=False).onchange(values, ['name'], fields_spec)
         self.assertEqual(
             result['value']['important_emails'],
             [Command.update(email.id, {
@@ -996,14 +1010,8 @@ class TestOnchange(SavepointCaseWithUserDemo):
             #  - values: {'base': 1, 'total': 20, 'line_ids': [(1, ..., {'subtotal': 20})]}
             #  - result: {'total': 10, 'line_ids': [(1, ..., {'subtotal': 10})]}
             #
-            # Bug: when putting values in cache, setting 'subtotal' invalidates
-            # field 'total'. Then onchange() makes an initial snapshot of field
-            # values, which causes 'total' to be recomputed to value 10. When
-            # onchange() compares the final snapshot to the initial one,
-            # field 'total' is not different and is therefore not returned to
-            # the form view!
             form.base = 1
-            self.assertEqual(form.total, 10)
+            self.assertEqual(form.total, 20)
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
