@@ -568,8 +568,8 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
 
     def test_unsupported_tax_rate_is_rejected_for_flow_reporting(self):
         unsupported_tax = self._get_tax_on_payment().copy({
-            'name': 'Unsupported 21% tax',
-            'amount': 21,
+            'name': 'Unsupported 150% tax',
+            'amount': 150,
         })
         invoice = self._create_reporting_invoice(
             partner=self.b2bi_customer,
@@ -581,9 +581,43 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
             'l10n_fr_pdp_status': 'error',
         }])
         self.assertIn(
-            'Tax Unsupported 21% tax is not supported by French e-reporting.',
+            'Tax Unsupported 150% tax is not supported by French e-reporting.',
             invoice._get_l10n_fr_pdp_errors(),
         )
+
+    def test_oss_eu_vat_rate_is_accepted_for_flow_reporting(self):
+        """OSS B2C destination rates (e.g. 21% BE) are valid CDAR TaxPercent values."""
+        oss_partner = self.env['res.partner'].create({
+            'name': 'OSS B2C Belgium',
+            'street': 'Rue de la Loi 1',
+            'zip': '1000',
+            'city': 'Bruxelles',
+            'country_id': self.env.ref('base.be').id,
+        })
+        oss_tax = self._get_tax_on_payment_20().copy({
+            'name': '21.0% BE VAT',
+            'amount': 21,
+            'description': '21.0%',
+        })
+        invoice = self._create_reporting_invoice(
+            partner=oss_partner,
+            tax_ids=oss_tax,
+        )
+
+        self.assertRecordValues(invoice, [{
+            'l10n_fr_pdp_has_error': False,
+            'l10n_fr_pdp_status': 'pending',
+            'l10n_fr_pdp_flow_10_report_type': 'transaction',
+        }])
+        self.assertFalse(invoice._get_l10n_fr_pdp_errors())
+
+        xml = self._build_flow_xml(invoice.l10n_fr_pdp_last_flow_id)
+        tax_percents = [
+            float(node.text)
+            for node in xml.findall('.//TaxPercent')
+            if node.text is not None
+        ]
+        self.assertIn(21.0, tax_percents)
 
     def test_b2bi_invoice_creates_transaction_flow_payload(self):
         invoice = self._create_reporting_invoice(partner=self.b2bi_customer)

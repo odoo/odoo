@@ -16,7 +16,9 @@ from odoo.addons.l10n_fr_pdp.utils import drom_com_territories
 
 PAID_CODES = frozenset({'ESC', 'RAB', 'REM', 'MPA', 'MEN'})
 G1_05_RE = re.compile(r'^(?! )(?!.*  )[A-Za-z0-9+\-_/ ]{1,20}(?<! )$')  # can't start with space, can't have 2 consecutive spaces, max 20 chars, allowed chars are alphanumeric, space, -, _, /, can't end with space
-VALID_PDP_TAX_RATES = {0, 0.9, 1.05, 1.75, 2.1, 5.5, 7, 8.5, 9.2, 9.6, 10, 13, 19.6, 20, 20.6}
+# PPF e-reporting XSD (transaction.xsd / payment.xsd v3.2): TaxPercent and TaxCategory/Percent
+# are xs:decimal with no French-rate enumeration. OSS destination VAT (19, 21, 22, 23, 24, 25,
+# 25.5, 27, ...) must be reportable on Flow 10. Keep a 0-100 bound to reject garbage values.
 PDP_TRACKED_FIELDS = {
     'l10n_fr_pdp_last_flow_id',
     'l10n_fr_pdp_status',
@@ -557,6 +559,12 @@ class AccountMove(models.Model):
         self.ensure_one()
         return self.is_purchase_document(include_receipts=False)  # Purchase receipts are not in Flow10 scope as they do not have VAT to report.
 
+    def _l10n_fr_pdp_is_supported_tax_rate(self, tax):
+        """Return whether `tax` can be sent as CDAR TaxPercent (xs:decimal, 0-100)."""
+        if tax.amount_type not in ('percent', 'division'):
+            return True
+        return 0 <= tax.amount <= 100
+
     def _get_l10n_fr_pdp_errors(self, lazy=False):
         """Return the list of validation errors for this move in the context of PDP reporting."""
         self.ensure_one()
@@ -587,7 +595,7 @@ class AccountMove(models.Model):
                 if not move.name or not G1_05_RE.match(move.name):
                     yield self.env._("Move name is not valid%s.", ref_move)
                 for tax in move.invoice_line_ids.tax_ids.flatten_taxes_hierarchy():
-                    if tax.amount not in VALID_PDP_TAX_RATES:
+                    if not move._l10n_fr_pdp_is_supported_tax_rate(tax):
                         yield self.env._(
                             "Tax %(tax)s is not supported by French e-reporting%(ref_move)s.",
                             tax=tax.display_name,
