@@ -560,6 +560,8 @@ class IrAttachment(models.Model):
         for row in self._cr.dictfetchall():
             if not row['res_model'] or row['public']:
                 continue
+            if not row['res_id'] and (self.env.is_system() or row["create_uid"] == self.env.uid):
+                continue
             # model_attachments = {res_model: {res_id: set(ids)}}
             model_attachments[row['res_model']][row['res_id']].add(row['id'])
             # Should not retrieve binary fields attachments if not explicitly required
