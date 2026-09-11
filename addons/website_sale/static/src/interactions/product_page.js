@@ -372,7 +372,7 @@ export class ProductPage extends Interaction {
         // ready).
         if (images && !isEditorEnabled && newImages) {
             this.services["public.interactions"].stopInteractions(images);
-            images.insertAdjacentHTML('beforebegin', markup(newImages));
+            images.insertAdjacentHTML('beforebegin', htmlEscape(newImages));
             images.remove();
 
             // Re-query the latest images.
@@ -475,16 +475,18 @@ export class ProductPage extends Interaction {
             'product_template_id': productTemplateId,
             'combination': combination,
         }));
-        if (combinationInfo.product_tags) {
-            combinationInfo.product_tags = markup(combinationInfo.product_tags);
+        const htmlKeys = [
+            'product_tags',
+            'out_of_stock_message',
+            'documents',
+            'carousel',
+            'packaging_selector',
+        ];
+        for (const key of htmlKeys) {
+            if (combinationInfo[key]) {
+                combinationInfo[key] = markup(combinationInfo[key]);
+            }
         }
-        if (combinationInfo.out_of_stock_message) {
-            combinationInfo.out_of_stock_message = markup(combinationInfo.out_of_stock_message);
-        }
-        if (combinationInfo.documents) {
-            combinationInfo.documents = markup(combinationInfo.documents);
-        }
-        combinationInfo.packaging_selector = markup(combinationInfo.packaging_selector);
 
         this._onChangeCombination(ev, parent, combinationInfo, attributeValueImages);
         this._checkExclusions(parent, combination);
