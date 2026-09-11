@@ -471,6 +471,11 @@ class AccountEdiCii(models.AbstractModel):
             },
         }
 
+    def _cii_is_vat_void(self, vat):
+        """Whether `vat` is one of Odoo's conventional values meaning "not subject to VAT"
+        (as opposed to a real, missing, or invalid VAT number)."""
+        return not vat or vat in ['/', 'na', 'NA']
+
     def _cii_get_seller_trade_party_node(self, vals):
         invoice = vals['invoice']
         supplier = vals['supplier']
@@ -481,8 +486,12 @@ class AccountEdiCii(models.AbstractModel):
             siret = commercial_partner.siret[:9]
             scheme_id = "0002"
         supplier_vat = invoice.fiscal_position_id.foreign_vat or commercial_partner.vat
-        if supplier_vat in ['/', 'na', 'NA']:
+        if self._cii_is_vat_void(supplier_vat):
             supplier_vat = None
+        # Beyond the seller's VAT (handled separately): the German Steuernummer, if set.
+        seller_extra_tax_registrations = []
+        if invoice.company_id._has_l10n_de_stnr():
+            seller_extra_tax_registrations.append({'scheme': 'FC', 'value': invoice.company_id.l10n_de_stnr})
         return self._cii_get_partner_trade_party_node(vals, {
             'gln': False,
             'name': supplier.name,
@@ -503,9 +512,13 @@ class AccountEdiCii(models.AbstractModel):
             'peppol_eas': supplier.peppol_eas,
             'peppol_endpoint': supplier.peppol_endpoint,
             'partner_tax_registration': supplier_vat,
+            'extra_partner_tax_registrations': seller_extra_tax_registrations,
         })
 
     def _cii_get_partner_trade_party_node(self, vals, partner_values):
+        tax_registrations = partner_values.get('extra_partner_tax_registrations', [])
+        if (vat := partner_values.get('partner_tax_registration', '')) and not self._cii_is_vat_void(vat):
+            tax_registrations.insert(0, {'scheme': 'VA', 'value': vat})
         return {
             'ram:ID': {
                 'schemeID': '0088',
@@ -526,12 +539,14 @@ class AccountEdiCii(models.AbstractModel):
                     '_text': partner_values['peppol_endpoint'],
                 },
             } if partner_values['peppol_eas'] and partner_values['peppol_endpoint'] else None,
-            'ram:SpecifiedTaxRegistration': {
-                'ram:ID': {
-                    '_text': partner_values['partner_tax_registration'],
-                    'schemeID': 'VA',
-                },
-            } if partner_values['partner_tax_registration'] else None,
+            'ram:SpecifiedTaxRegistration': [
+                {
+                    'ram:ID': {
+                        '_text': tax_registration['value'],
+                        'schemeID': tax_registration['scheme'],
+                    },
+                } for tax_registration in tax_registrations
+            ],
         }
 
     def _cii_get_defined_trade_contact_node(self, vals, contact_values):
@@ -565,7 +580,7 @@ class AccountEdiCii(models.AbstractModel):
         if 'siret' in commercial_partner._fields and commercial_partner.siret:
             siret = commercial_partner.siret[:9]
             scheme_id = "0002"
-        buyer_vat = customer.vat if customer.vat not in ['/', 'na', 'NA'] else None
+        buyer_vat = customer.vat if not self._cii_is_vat_void(customer.vat) else None
         return self._cii_get_partner_trade_party_node(vals, {
             'gln': False,
             'name': name,
