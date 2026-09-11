@@ -3289,10 +3289,10 @@ class AccountTax(models.Model):
         # Distribution of rounded amounts.
         new_target_factors = [
             {
-                'factor': target_factor['factor'],
+                'factor': target_factor[1],
                 'tax_data': new_tax_data,
             }
-            for new_tax_data, target_factor in zip(new_taxes_data, target_factors)
+            for new_tax_data, target_factor in zip(new_taxes_data, factors)
         ]
 
         for delta_currency_indicator, delta_currency in (
