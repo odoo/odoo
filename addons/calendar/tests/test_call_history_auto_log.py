@@ -168,6 +168,19 @@ class TestCallHistoryAutoLog(TransactionCase):
 
         self.assertEqual(action["context"]["log_contact_id"], self.organizer.partner_id.id)
 
+    def test_log_meeting_offers_more_than_the_records_of_its_contact(self):
+        """The contact a meeting call is logged for is its organizer, i.e. whoever logs it
+        more often than not: restricting the wizard to the records about that contact
+        would leave it with nothing to offer. Its lists rank the records of the attendees
+        first instead (see `mail.activity.mixin.name_search`), dropping none."""
+        meeting = self._create_meeting(datetime(2026, 8, 14, 11, 0))
+        call_history = self._start_call(meeting.videocall_channel_id, datetime(2026, 8, 14, 11, 5))
+
+        action = call_history.action_log_meeting()
+
+        wizard = self.env["mail.activity.schedule"].with_context(action["context"]).new()
+        self.assertEqual(literal_eval(wizard.contact_id_domain), [])
+
     def test_log_meeting_only_offers_meeting_activity_types(self):
         """The activity this call gets logged on is about the meeting that took place: only
         offer activity types meant for that, not e.g. a phone call or a to-do."""

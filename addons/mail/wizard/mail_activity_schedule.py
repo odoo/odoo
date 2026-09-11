@@ -339,15 +339,50 @@ class MailActivitySchedule(models.TransientModel):
     def _compute_contact_id(self):
         self.contact_id = self.env.context.get('log_contact_id')
 
-    @api.depends_context('log_contact_id')
+    @api.depends_context('log_contact_id', 'log_channel_partner_ids')
     def _compute_contact_id_domain(self):
         # the call may be logged on any contact of the commercial entity of the
         # contact it was made with, not just on that contact itself
-        if contact := self.env['res.partner'].browse(self.env.context.get('log_contact_id')):
+        if contact := self._get_log_filter_contact():
             domain = [('id', 'in', contact._search_commercial_partners().ids)]
         else:
             domain = []
         self.contact_id_domain = domain
+
+    @api.model
+    def _is_logging_call(self):
+        """ Whether a call is being logged on a document of the user's choice, as opposed
+        to an activity being scheduled on a record already known. """
+        context = self.env.context
+        return bool(context.get('log_contact_id')) or 'log_channel_partner_ids' in context
+
+    @api.model
+    def _get_log_filter_contact(self):
+        """ The contact whose records alone the wizard offers, when logging a call.
+
+        A call placed to a single known number (see `voip.call`) is about the contact
+        holding it: nothing else is worth offering. A call held in a channel is about
+        whoever was in it, which the wizard lists first rather than hiding everything
+        else (see `mail.activity.mixin.name_search`): a meeting can well be logged on a
+        record its attendees are not the customer of.
+
+        :return: a ``res.partner`` recordset, void when the lists are to be left whole"""
+        if 'log_channel_partner_ids' in self.env.context:
+            return self.env['res.partner']
+        return self.env['res.partner'].browse(self.env.context.get('log_contact_id'))
+
+    @api.model
+    def _get_log_default_record(self, model_name, domain, order='id desc'):
+        """ The record the wizard offers by default for a model, when logging a call:
+        the most recent of those it lists first, so that a call is never offered a
+        record about nobody who took part in it.
+
+        :return: a recordset of ``model_name``, void when nothing is worth offering"""
+        model = self.env[model_name]
+        priority_domain = model._get_call_log_priority_domain()
+        if not priority_domain.is_false():
+            domain = Domain(domain) & priority_domain
+        return model.search(domain, limit=1, order=order)
 
     @api.depends('call_history_id.end_dt')
     def _compute_is_call_ongoing(self):

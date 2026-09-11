@@ -19,9 +19,9 @@ class MailActivitySchedule(models.TransientModel):
         export_string_translation=False,
     )
 
-    @api.depends_context("log_contact_id")
+    @api.depends_context("log_contact_id", "log_channel_partner_ids")
     def _compute_task_id_domain(self):
-        if contact := self.env["res.partner"].browse(self.env.context.get("log_contact_id")):
+        if contact := self._get_log_filter_contact():
             task_id_domain = [("partner_id", "in", contact._search_commercial_partners(active_test=False).ids)]
         else:
             task_id_domain = []
@@ -42,6 +42,6 @@ class MailActivitySchedule(models.TransientModel):
             if activity.task_id or activity.res_model_selection != "project.task":
                 continue
             domain = literal_eval(activity.task_id_domain)
-            activity.task_id = self.env.context.get("default_task_id") or activity.env["project.task"].search(
-                domain, limit=1, order="id desc",
+            activity.task_id = self.env.context.get("default_task_id") or self._get_log_default_record(
+                "project.task", domain,
             )

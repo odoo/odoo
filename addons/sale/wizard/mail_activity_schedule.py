@@ -19,9 +19,9 @@ class MailActivitySchedule(models.TransientModel):
         export_string_translation=False,
     )
 
-    @api.depends_context("log_contact_id")
+    @api.depends_context("log_contact_id", "log_channel_partner_ids")
     def _compute_sale_order_id_domain(self):
-        if contact := self.env["res.partner"].browse(self.env.context.get("log_contact_id")):
+        if contact := self._get_log_filter_contact():
             sale_order_id_domain = [("partner_id", "in", contact._search_commercial_partners(active_test=False).ids)]
         else:
             sale_order_id_domain = []
@@ -42,6 +42,6 @@ class MailActivitySchedule(models.TransientModel):
             if activity.sale_order_id or activity.res_model_selection != "sale.order":
                 continue
             domain = literal_eval(activity.sale_order_id_domain)
-            activity.sale_order_id = self.env.context.get("default_sale_order_id") or activity.env["sale.order"].search(
-                domain, limit=1, order="id desc",
+            activity.sale_order_id = self.env.context.get("default_sale_order_id") or self._get_log_default_record(
+                "sale.order", domain,
             )
