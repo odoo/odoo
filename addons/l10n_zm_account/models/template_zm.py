@@ -19,6 +19,7 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_zm_res_company(self):
         return {
             self.env.company.id: {
+                'account_price_include': 'tax_included',
                 'anglo_saxon_accounting': True,
                 'account_fiscal_country_id': 'base.zm',
                 'bank_account_code_prefix': '840000',
