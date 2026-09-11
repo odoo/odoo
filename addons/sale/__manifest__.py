@@ -53,7 +53,7 @@ This module contains all the common features of Sales Management and eCommerce.
     "demo": ["data/product_demo.xml", "data/sale_demo.xml"],
     "assets": {
         "web.assets_backend": [
-             "sale/static/src/scss/sale_onboarding.scss",
+            "sale/static/src/scss/sale_onboarding.scss",
             "sale/static/src/scss/services_and_material.scss",
             "sale/static/src/js/badge_extra_price/*",
             "sale/static/src/js/sale_action_helper/*",
@@ -80,13 +80,14 @@ This module contains all the common features of Sales Management and eCommerce.
             "sale/static/src/js/sale_product_mixin.js",
             "sale/static/src/js/sale_product_field/*",
             "sale/static/src/js/sale_utils.js",
+            "sale/static/src/js/combo_configurator_utils.js",
             "sale/static/src/js/sale_label_text/*",
             "sale/static/src/js/date_filter_button/**/*",
             "sale/static/src/js/dashboard/**/*",
             ("remove", "sale/static/src/js/dashboard/**/*.dark.scss"),
             "sale/static/src/views/**/*",
         ],
-        'web.assets_web_dark': [
+        "web.assets_web_dark": [
             "sale/static/src/js/dashboard/**/*.dark.scss",
             "sale/static/src/scss/services_and_material.dark.scss",
         ],
