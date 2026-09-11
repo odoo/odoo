@@ -455,6 +455,9 @@ class IrAttachment(models.Model):
                 if not any(has_group(g) for g in attachment.get_serving_groups()):
                     raise ValidationError(_("Sorry, you are not allowed to write on this document"))
 
+    def _mimetype_exception_groups(self):
+        return []
+
     @api.model
     def check(self, mode, values=None):
         """ Restricts the access to an ir.attachment, according to referred mode """

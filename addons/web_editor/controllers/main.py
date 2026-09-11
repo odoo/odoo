@@ -593,6 +593,12 @@ class Web_Editor(http.Controller):
             # empty record set.
             request.env[fields['res_model']].browse(fields['res_id']).check_access_rights('write')
 
+            mimetype_excepted_group = any(
+                request.env.user.has_group(group) for group in attachment._mimetype_exception_groups()
+            )
+            if not mimetype_excepted_group:
+                request.env['ir.ui.view'].sudo(False).check_access_rights('write')
+
             # Sudo because restricted editor will not be able to copy the record
             attachment = attachment.sudo().copy(fields).sudo(False)
             # Override mimetype with SUPERUSER if it was forced to plain text

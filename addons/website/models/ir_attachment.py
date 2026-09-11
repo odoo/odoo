@@ -31,3 +31,6 @@ class Attachment(models.Model):
         extra_domain = (extra_domain or []) + website.website_domain()
         order = ('website_id, %s' % order) if order else 'website_id'
         return super()._get_serve_attachment(url, extra_domain, order)
+
+    def _mimetype_exception_groups(self):
+        return super(Attachment, self)._mimetype_exception_groups() + ['website.group_website_restricted_editor']
