@@ -194,12 +194,6 @@
     </div>
   </t>
 
-  <t t-name="web.NavBar.DropdownItem" t-inherit="web.DropdownItem" t-inherit-mode="primary">
-    <xpath expr="//t[@t-tag]" position="attributes">
-      <attribute name="t-att-style">this.props.style</attribute>
-    </xpath>
-  </t>
-
   <t t-name="web.NavBar.SectionsMenu.Dropdown.MenuSlot">
     <t t-set="style" t-value="`padding-left: ${decalage}px;`" />
     <t t-foreach="items" t-as="item" t-key="item.id">
