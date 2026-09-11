@@ -12,6 +12,8 @@ import { normalize } from "@web/core/l10n/utils";
  * Models to load: product.product, uom.uom
  */
 
+export const attributeCacheVersion = { value: 0 };
+
 export class ProductTemplate extends ProductTemplateAccounting {
     static pythonModel = "product.template";
     static enableLazyGetters = false;
@@ -142,10 +144,18 @@ export class ProductTemplate extends ProductTemplateAccounting {
     }
 
     get searchString() {
+        if (this._attributeCacheVersion !== attributeCacheVersion.value) {
+            this._attributeCacheVersion = attributeCacheVersion.value;
+            delete this.cachedValues.searchString;
+        }
         return this.cacheValues("searchString", () => {
             const fields = ["name", "default_code", "barcode"];
+            const attributeValues = this.attribute_line_ids.flatMap((l) =>
+                l.product_template_value_ids.map((v) => v.name)
+            );
             const raw = fields
                 .map((field) => this[field] || "")
+                .concat(attributeValues)
                 .filter(Boolean)
                 .join(" ");
 
