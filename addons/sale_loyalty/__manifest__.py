@@ -17,13 +17,14 @@
         "views/sale_portal_templates.xml",
         "views/res_partner_views.xml",
         "views/sale_loyalty_menus.xml",
-        'security/ir.access.csv',
+        "security/ir.access.csv",
     ],
     "assets": {
         "web.assets_frontend": [
             "sale_loyalty/static/src/interactions/gift_card.js",
             "sale_loyalty/static/src/scss/gift_card.scss",
-        ]
+        ],
+        "web.assets_backend": ["sale_loyalty/static/src/xml/discount_menu_widget.xml"],
     },
     "uninstall_hook": "uninstall_hook",
     "author": "Odoo S.A.",

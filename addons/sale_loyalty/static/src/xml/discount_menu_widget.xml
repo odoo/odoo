@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="sale_loyalty.DiscountMenuWidget" t-inherit="sale.DiscountMenuWidget" t-inherit-mode="extension">
+        <xpath expr="//t[@t-set-slot='content']" position="inside">
+            <DropdownItem tag="'button'" class="'btn btn-link'" onSelected="() => this.doActionButton('action', 'sale_loyalty.sale_loyalty_coupon_wizard_action')">
+                Coupon Code
+            </DropdownItem>
+            <DropdownItem tag="'button'" class="'btn btn-link'" onSelected="() => this.doActionButton('object', 'action_open_reward_wizard')">
+                Reward
+            </DropdownItem>
+        </xpath>
+    </t>
+
+</templates>
