@@ -1,6 +1,6 @@
 import { useLayoutEffect, useSubEnv } from "@web/owl2/utils";
-import { useChildRefs, useForwardRefsToParent, useScrollState } from "@mail/utils/common/hooks";
-import { Component, signal, t, useEffect, useProps, xml } from "@odoo/owl";
+import { useChildRefs, useScrollState } from "@mail/utils/common/hooks";
+import { Component, Portal, signal, t, useEffect, useProps } from "@odoo/owl";
 
 export class Tabs extends Component {
     static template = "mail.Tabs";
@@ -21,15 +21,15 @@ export class Tabs extends Component {
         this.scrollState = useScrollState(this.navRef);
         useSubEnv({
             tabsContext: {
+                navRef: this.navRef,
                 headerRefs: this.headerRefs,
                 isActive: (id) => this.activeHeaderId() === id,
                 setActiveTab: (id) => this.activeHeaderId.set(id),
             },
         });
         useEffect(() => {
-            const headerEls = this.navRef()?.children;
-            if (!this.headerRefs.has(this.activeHeaderId()) && headerEls?.length) {
-                this.activeHeaderId.set(headerEls[0].dataset.headerId);
+            if (!this.headerRefs.has(this.activeHeaderId()) && this.headerRefs.size) {
+                this.activeHeaderId.set(this.headerRefs.keys().next().value);
             }
         });
     }
@@ -49,18 +49,37 @@ export class Tabs extends Component {
     }
 }
 
-export class InternalTabHeader extends Component {
-    static template = "mail.InternalTabHeader";
+/**
+ * One tab inside the `Tabs` component. The `header` slot is rendered in the tabs' navbar
+ * while the content is displayed in place when this tab is the active one.
+ */
+export class Tab extends Component {
+    static template = "mail.Tab";
+    static components = { Portal };
 
     setup() {
         super.setup(...arguments);
         this.props = useProps({
-            headerRefs: t.instanceOf(Map),
             id: t.or([t.string(), t.number()]),
             title: t.string().optional(),
+            onBecameVisible: t.function([]).optional(),
         });
         this.rootRef = signal();
-        useForwardRefsToParent("headerRefs", (props) => props.id, this.rootRef);
+        useLayoutEffect(
+            (headerRefs, id) => {
+                headerRefs.set(id, this.rootRef);
+                return () => headerRefs.delete(id);
+            },
+            () => [this.env.tabsContext.headerRefs, this.props.id]
+        );
+        useLayoutEffect(
+            (active) => {
+                if (active) {
+                    this.props.onBecameVisible?.();
+                }
+            },
+            () => [this.isActive]
+        );
     }
 
     onClick() {
@@ -69,45 +88,5 @@ export class InternalTabHeader extends Component {
 
     get isActive() {
         return this.env.tabsContext.isActive(this.props.id);
-    }
-}
-
-/**
- * Owl doesn’t support dynamic slot names (`t-set-slot`). Tabs therefore define
- * two static slots: one for the headers and one for the content. To manage header
- * refs internally, we use `useForwardRefsToParent`. `TabHeader` is a thin wrapper
- * around `InternalTabHeader` that forwards these refs while keeping the external
- * API simple.
- */
-export class TabHeader extends Component {
-    static template = xml`<InternalTabHeader id="this.props.id" title="this.props.title" headerRefs="this.env.tabsContext.headerRefs"><t t-call-slot="default"/></InternalTabHeader>`;
-    static components = { InternalTabHeader };
-
-    setup() {
-        super.setup(...arguments);
-        this.props = useProps({
-            id: t.any(),
-            title: t.string().optional(),
-        });
-    }
-}
-
-export class TabPanel extends Component {
-    static template = "mail.TabPanel";
-
-    setup() {
-        super.setup();
-        this.props = useProps({
-            id: t.any(),
-            onBecameVisible: t.function([]).optional(),
-        });
-        useLayoutEffect(
-            (active) => {
-                if (active) {
-                    this.props.onBecameVisible?.();
-                }
-            },
-            () => [this.env.tabsContext.isActive(this.props.id)]
-        );
     }
 }

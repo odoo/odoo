@@ -1,14 +1,23 @@
 import { onExternalClick } from "@mail/utils/common/hooks";
 
-import { Component, onMounted, signal, t, untrack, useEffect, useListener, useProps } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    signal,
+    t,
+    untrack,
+    useEffect,
+    useListener,
+    useProps,
+} from "@odoo/owl";
 
 import { Dialog } from "@web/core/dialog/dialog";
 import { emojiLoader, useLoadEmoji } from "@web/core/emoji_picker/emoji_loader";
 import { useService } from "@web/core/utils/hooks";
-import { TabHeader, TabPanel, Tabs } from "./tabs";
+import { Tab, Tabs } from "./tabs";
 
 export class MessageReactionMenu extends Component {
-    static components = { Dialog, Tabs, TabHeader, TabPanel };
+    static components = { Dialog, Tabs, Tab };
     static template = "mail.MessageReactionMenu";
 
     setup() {

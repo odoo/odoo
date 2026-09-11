@@ -1,4 +1,4 @@
-import { TabHeader, TabPanel, Tabs } from "@mail/core/common/tabs";
+import { Tab, Tabs } from "@mail/core/common/tabs";
 import { attClassObjectToString } from "@mail/utils/common/format";
 import { onExternalClick } from "@mail/utils/common/hooks";
 
@@ -8,7 +8,7 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
 
 export class PollVotesPanel extends Component {
-    static components = { Dialog, Tabs, TabHeader, TabPanel };
+    static components = { Dialog, Tabs, Tab };
     static template = "mail.PollVotesPanel";
 
     setup() {
