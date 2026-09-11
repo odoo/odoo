@@ -58,7 +58,9 @@ class StockReturnPickingLine(models.TransientModel):
                 # |              ↓                                | return_line.move_id              ↓
                 # |       return pick(Add as dest)          return toLink                    return ship(Add as orig)
                 # +--------------------------------------------------------------------------------------------------------+
-                move_orig_to_link = self.move_id.move_dest_ids.returned_move_ids
+                # Only keep the returns that deliver back where this return picks from, so that the
+                # chain never sources the new move from an unrelated location
+                move_orig_to_link = self.move_id.move_dest_ids.returned_move_ids.filtered(lambda m: m.location_dest_id._child_of(new_return_move.location_id))
                 # link to original move
                 move_orig_to_link |= self.move_id
                 # link to siblings of original move, if any
