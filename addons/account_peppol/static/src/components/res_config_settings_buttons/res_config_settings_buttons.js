@@ -80,7 +80,7 @@ class PeppolSettingsButtons extends Component {
             return _t("Discard");
         }
         if (this.isPdpEdiIdentification) {
-            return _t("Remove from Approved Platform");
+            return _t("Disconnect");
         }
         return _t("Remove from Peppol");
     }
@@ -97,15 +97,41 @@ class PeppolSettingsButtons extends Component {
     }
 
     showConfirmation(warning, methodName) {
-        const message = _t(warning);
-        const confirmMessage = this.isPdpEdiIdentification
-              ? _t("You will no longer be able to send or receive documents via the Odoo Approved Platform. Are you sure you want to proceed?")
-              : _t("You will no longer be able to send or receive Peppol documents in Odoo. Are you sure you want to proceed?");
-        this.dialogService.add(ConfirmationDialog, {
-            body: markup(
+        let bodyMarkup = "";
+        if(this.isPdpEdiIdentification) {
+            bodyMarkup = markup(`
+                <div class="text-start my-n5" style="white-space: normal;">
+                    <div class="alert alert-warning" role="alert">
+                        <i class="fa fa-warning me-2"></i>${escape(_t("Are you sure you want to unregister from the Odoo PDP?"))}
+                    </div>
+                    <div class="text-muted">
+                        <p class="mb-2">${escape(_t("The platform change must be initiated by your NEW platform."))}</p>
+
+                        <div class="mb-1">${escape(_t("Here are the steps to follow:"))}</div>
+                        <ol class="mb-3">
+                            <li>${escape(_t("Sign your contract with the new platform."))}</li>
+                            <li>${escape(_t("Your new platform will contact Odoo to request the directory transfer."))}</li>
+                            <li>${escape(_t("Odoo will validate the request within 5 business days."))}</li>
+                        </ol>
+
+                        <p class="mb-0">
+                            <strong>${escape(_t("Guaranteed service continuity:"))}</strong><br/>
+                            ${escape(_t("In accordance with regulations, Odoo will continue to process the reception of your invoices until your new platform effectively takes over (and for a maximum period of 12 months)."))}
+                        </p>
+                    </div>
+                </div>
+            `);
+        } else {
+            const message = _t(warning);
+            const confirmMessage = _t("You will no longer be able to send or receive Peppol documents in Odoo. Are you sure you want to proceed?");
+            bodyMarkup = markup(
                 `<div class="text-danger">${escape(message)}</div>
                 <div class="text-danger">${escape(confirmMessage)}</div>`
-            ),
+            );
+        }
+
+        this.dialogService.add(ConfirmationDialog, {
+            body: bodyMarkup,
             confirm: async () => {
                 await this._callConfigMethod(methodName);
             },
