@@ -41,8 +41,14 @@ class TestHrCommon(common.TransactionCase):
             name='HR Admin',
         )
 
+        cls.work_location = cls.env['hr.work.location'].create({
+            'name': "Office 1",
+            'location_type': "office",
+            'address_id': cls.env.company.partner_id.id,
+        })
         cls.employee = cls.env['hr.employee'].create({
             'name': 'Richard',
             'sex': 'male',
             'country_id': cls.env.ref('base.be').id,
+            'work_location_id': cls.work_location.id,
         })

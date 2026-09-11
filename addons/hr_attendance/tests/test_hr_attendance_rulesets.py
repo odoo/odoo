@@ -65,6 +65,11 @@ class TestHrAttendanceOvertime(TransactionCase):
         })
 
         cls.user = new_test_user(cls.env, login='fru', groups='base.group_user,hr_attendance.group_hr_attendance_manager', company_id=cls.company.id).with_company(cls.company)
+        cls.work_location = cls.env['hr.work.location'].create({
+            'name': "Office 1",
+            'location_type': "office",
+            'address_id': cls.env.company.partner_id.id,
+        })
         cls.employee = cls.env['hr.employee'].create({
             'name': "Marie-Edouard De La Court",
             'user_id': cls.user.id,
@@ -179,7 +184,10 @@ class TestHrAttendanceOvertime(TransactionCase):
         Only the employee admin should be able to see and change the ruleset on the employee
         """
         user = new_test_user(self.env, login='usr', groups='hr.group_hr_user', company_id=self.company.id)
-        employee = self.env['hr.employee'].with_context(allowed_company_ids=self.company.ids).create({'name': "Employee Test"})
+        employee = self.env['hr.employee'].with_context(allowed_company_ids=self.company.ids).create(
+            {'name': "Employee Test",
+             "work_location_id": self.work_location.id
+            })
         with Form(employee.with_user(user)) as employee_form:
             self.assertFalse("ruleset_id" in employee_form._view['fields'])
 
