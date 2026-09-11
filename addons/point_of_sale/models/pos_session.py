@@ -281,6 +281,10 @@ class PosSession(models.Model):
         non_existent_and_inactive_ids = {}
         for model, ids in models_to_filter.items():
             ids = list(map(int, ids))
+            if model not in self.env:
+                # model no longer exists (ex: module uninstalled)
+                non_existent_and_inactive_ids[model] = ids
+                continue
             try:
                 existing_active_records = self.env[model].search_read([('id', 'in', ids)], ['id'])
             except AccessError:
