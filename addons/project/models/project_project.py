@@ -39,7 +39,7 @@ class ProjectProject(models.Model):
         count_fields = {fname for fname in self._fields if 'count' in fname}
         if count_field not in count_fields:
             raise ValueError(f"Parameter 'count_field' can only be one of {count_fields}, got {count_field} instead.")
-        domain = Domain('project_id', 'in', self.ids) & Domain('is_template', '=', False)
+        domain = Domain('project_id', 'in', self.ids) & Domain('has_template_ancestor', '=', False)
         if additional_domain:
             domain &= Domain(additional_domain)
         ProjectTask = self.env['project.task'].with_context(active_test=any(project.active for project in self))
@@ -53,10 +53,7 @@ class ProjectProject(models.Model):
     def _compute_open_task_count(self):
         self.__compute_task_count(
             count_field='open_task_count',
-            additional_domain=Domain.AND([
-                [('state', 'in', self.env['project.task'].OPEN_STATES)],
-                ['|', ('parent_id.is_template', '=', False), ('parent_id', '=', False)],
-            ]),
+            additional_domain=[('state', 'in', self.env['project.task'].OPEN_STATES)],
         )
 
     def _compute_closed_task_count(self):
@@ -1193,10 +1190,10 @@ class ProjectProject(models.Model):
         if "followers" in request_list:
             res.many("collaborator_ids", [], value=lambda p: p.sudo().collaborator_ids.partner_id)
 
-    @api.depends('task_count', 'open_task_count')
+    @api.depends('task_count', 'closed_task_count')
     def _compute_task_completion_percentage(self):
         for task in self:
-            task.task_completion_percentage = task.task_count and 1 - task.open_task_count / task.task_count
+            task.task_completion_percentage = task.task_count and task.closed_task_count / task.task_count
 
     def _get_share_url(self, redirect=False, signup_partner=False, pid=None, share_token=True):
         self.ensure_one()
