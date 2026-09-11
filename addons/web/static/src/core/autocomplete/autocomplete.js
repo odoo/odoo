@@ -185,6 +185,15 @@ export class AutoComplete extends Component {
         this.mouseSelectionActive = false;
     }
 
+    discardPendingInput() {
+        this.debouncedProcessInput.cancel();
+        this.pendingPromise?.resolve();
+        if (this.loadingPromise === this.pendingPromise) {
+            this.loadingPromise = null;
+        }
+        this.pendingPromise = null;
+    }
+
     cancel() {
         if (this.inputRef.el.value.length) {
             if (this.props.autoSelect) {
@@ -263,6 +272,7 @@ export class AutoComplete extends Component {
 
     selectOption(option) {
         this.inEdition = false;
+        this.discardPendingInput();
         if (option.unselectable) {
             return;
         }
