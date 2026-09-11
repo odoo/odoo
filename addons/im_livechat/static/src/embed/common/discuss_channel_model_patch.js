@@ -54,7 +54,7 @@ const discussChannelPatch = {
         let bestScore = -1;
         let bestMemberHistory;
         // Agents are preferred over bots, current members over former members, and higher IDs over lower IDs
-        for (const memberHistory of this.livechat_channel_member_history_ids.sort(
+        for (const memberHistory of [...this.livechat_channel_member_history_ids].sort(
             (a, b) => b.id - a.id
         )) {
             if (memberHistory.livechat_member_type === "visitor") {
