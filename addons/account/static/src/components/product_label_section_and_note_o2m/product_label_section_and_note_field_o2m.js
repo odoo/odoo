@@ -44,16 +44,13 @@ export class ProductLabelSectionAndNoteListRender extends SectionAndNoteListRend
     }
 
     isColumnGroupFieldVisible(column, fieldInfo, record) {
-        if (column.name !== this.productAndDescriptionColumn) {
-            return super.isColumnGroupFieldVisible(column, fieldInfo, record);
+        if (fieldInfo.name === "name" && this.isSectionOrNote(record)) {
+            return true;
         }
 
-        if (this.isSectionOrNote(record)) {
-            return fieldInfo.name === "name";
-        }
-
-        if (!super.isColumnGroupFieldVisible(column, fieldInfo, record)) {
-            return false;
+        const visible = super.isColumnGroupFieldVisible(column, fieldInfo, record);
+        if (column.name !== this.productAndDescriptionColumn || !visible) {
+            return visible;
         }
 
         const isProductFieldActive = this.isProductFieldActive();
@@ -62,6 +59,10 @@ export class ProductLabelSectionAndNoteListRender extends SectionAndNoteListRend
         }
         if (fieldInfo.name === "name") {
             return isProductFieldActive;
+        }
+        // Hide the template field if variant one is active (for sale, purchase)
+        if (fieldInfo.name === "product_template_id") {
+            return !this.optionalActiveFields["product_id"];
         }
 
         return true;

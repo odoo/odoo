@@ -718,6 +718,7 @@
                                         optional="hide"
                                         widget="sol_product_many2one"
                                         placeholder="Type to find a product..."
+                                        invisible="display_type"
                                     />
                                     <field
                                         name="product_id"
@@ -733,6 +734,7 @@
                                         optional="hide"
                                         widget="sol_product_many2one"
                                         placeholder="Type to find a product..."
+                                        invisible="display_type"
                                     />
                                     <field
                                         name="name"
@@ -745,6 +747,7 @@
                                         name="label"
                                         widget="sol_label_text"
                                         context="{'partner_id': parent.partner_id}"
+                                        invisible="display_type"
                                         required="1"
                                     />
                                 </column>

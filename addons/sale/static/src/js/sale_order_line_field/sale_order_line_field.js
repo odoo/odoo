@@ -104,20 +104,6 @@ export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRen
         return activeColumns;
     }
 
-    isColumnGroupFieldVisible(column, fieldInfo, record) {
-        const visible = super.isColumnGroupFieldVisible(column, fieldInfo, record);
-        if (column.name != this.productAndDescriptionColumn || !visible) {
-            return visible;
-        }
-
-        // Hide the template field if variant one is active
-        if (fieldInfo.name === "product_template_id") {
-            return !this.optionalActiveFields["product_id"];
-        }
-
-        return true;
-    }
-
     getRowClass(record) {
         let classNames = super.getRowClass(record);
         if (this.isCombo(record) || this.isComboItem(record)) {

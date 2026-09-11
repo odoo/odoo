@@ -178,20 +178,6 @@ export class SaleOrderTemplateLineListRenderer extends ProductLabelSectionAndNot
         super.add(params);
     }
 
-    isColumnGroupFieldVisible(column, fieldInfo, record) {
-        const visible = super.isColumnGroupFieldVisible(column, fieldInfo, record);
-        if (column.name != this.productAndDescriptionColumn || !visible) {
-            return visible;
-        }
-
-        // Hide the template field if variant one is active
-        if (fieldInfo.name === "product_template_id") {
-            return !this.optionalActiveFields["product_id"];
-        }
-
-        return true;
-    }
-
     getCreateContext(params) {
         const evaluatedContext = makeContext([params.context]);
         // A falsy context indicates a product line (no `display_type` specified)

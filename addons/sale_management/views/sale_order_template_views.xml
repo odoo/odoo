@@ -157,7 +157,11 @@
                                         decoration-warning="not display_type and not product_id and mandatory_product"
                                         widget="text"
                                     />
-                                    <field name="label" widget="sotl_label_text"/>
+                                    <field
+                                        name="label"
+                                        widget="sotl_label_text"
+                                        invisible="display_type"
+                                    />
                                 </column>
                                 <column name="sotl_qty">
                                     <field name="product_uom_qty" invisible="display_type"/>

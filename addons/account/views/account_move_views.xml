@@ -1300,6 +1300,7 @@
                                                     or [('purchase_ok', '=', True)]
                                                 "
                                                 placeholder="Search a product"
+                                                invisible="display_type in ('line_section', 'line_subsection', 'line_note')"
                                             />
                                             <field
                                                 name="name"
@@ -1308,7 +1309,11 @@
                                                 optional="show"
                                                 widget="text"
                                             />
-                                            <field name="label" widget="account_label_text"/>
+                                            <field
+                                                name="label"
+                                                widget="account_label_text"
+                                                invisible="display_type in ('line_section', 'line_subsection', 'line_note')"
+                                            />
                                         </column>
                                         <field name="account_id"
                                                context="{

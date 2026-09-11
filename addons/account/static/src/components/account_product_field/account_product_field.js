@@ -1,10 +1,10 @@
+import { registry } from "@web/core/registry";
+import { Component, useProps } from "@odoo/owl";
+import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
 import {
     buildM2OFieldDescription,
     many2OneFieldProps,
 } from "@web/views/fields/many2one/many2one_field";
-import { registry } from "@web/core/registry";
-import { Component, useProps } from "@odoo/owl";
-import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
 
 export class AccountProductField extends Component {
     static template = "account.AccountProductField";
