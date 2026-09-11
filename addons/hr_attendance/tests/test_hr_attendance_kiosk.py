@@ -16,8 +16,9 @@ class TestHrAttendanceKiosk(HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.company_A = cls.env['res.company'].create({'name': 'company_A'})
-        cls.company_B = cls.env['res.company'].create({'name': 'company_B'})
+        cls.env.company.country_id = cls.env.ref('base.us')
+        cls.company_A = cls.env['res.company'].create({'name': 'company_A', 'country_id': cls.env.ref('base.us').id})
+        cls.company_B = cls.env['res.company'].create({'name': 'company_B', 'country_id': cls.env.ref('base.us').id})
 
         cls.department_A = cls.env['hr.department'].create({'name': 'department_A', 'company_id': cls.company_B.id})
 
