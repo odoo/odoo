@@ -77,11 +77,36 @@ class AccountMoveSend(models.AbstractModel):
         self._l10n_tw_edi_generate_ecpay_json(invoice, invoice_data)
 
     @api.model
+    def _l10n_tw_edi_sync_ecpay_buyers(self, invoices_data):
+        """
+        Register the buyer of the B2B invoices to send, once per customer instead of once per invoice
+        """
+        buyers = {}
+        for invoice, invoice_data in invoices_data.items():
+            if 'tw_ecpay_send' in invoice_data['extra_edis'] and invoice.l10n_tw_edi_is_b2b:
+                buyer = (invoice.company_id, invoice.partner_id.commercial_partner_id)
+                buyers.setdefault(buyer, []).append(invoice)
+
+        for invoices in buyers.values():
+            if errors := invoices[0]._l10n_tw_edi_sync_buyer():
+                for invoice in invoices:
+                    invoices_data[invoice]["error"] = {
+                        "error_title": self.env._("Error when sending the invoices to ECPay."),
+                        "errors": errors,
+                    }
+
+    @api.model
     def _call_web_service_before_invoice_pdf_render(self, invoices_data):
         # EXTENDS 'account'
         super()._call_web_service_before_invoice_pdf_render(invoices_data)
 
+        self._l10n_tw_edi_sync_ecpay_buyers(invoices_data)
+
         for invoice, invoice_data in invoices_data.items():
+            # The buyer could not be registered, so the invoice must not be issued.
+            if invoice_data.get('error'):
+                continue
+
             if any(key in invoice_data['extra_edis'] for key in ('tw_ecpay_send', 'tw_ecpay_issue_allowance')):
                 if 'ecpay_attachments' in invoice_data:
                     json_content = json.loads(invoice_data['ecpay_attachments']['raw'])
