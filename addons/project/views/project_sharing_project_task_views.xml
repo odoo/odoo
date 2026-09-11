@@ -199,8 +199,8 @@
                             <field name="depend_on_count" invisible="1" />
                             <field name="allow_task_dependencies" invisible="1" />
                             <field name="current_user_same_company_partner" invisible="1"/>
-                            <field name="tag_ids" context="{'project_id': project_id}" widget="many2many_tags" options="{'color_field': 'color', 'no_create': True, 'no_edit': True}"/>
-                            <field name="partner_id" readonly="not current_user_same_company_partner" options="{'no_open': True, 'no_create': True, 'no_edit': True}" invisible="not project_id"/>
+                            <field name="tag_ids" context="{'project_id': project_id}" widget="many2many_tags" options="{'color_field': 'color', 'no_create': True}"/>
+                            <field name="partner_id" readonly="not current_user_same_company_partner" options="{'no_open': True, 'no_create': True}" invisible="not project_id"/>
                             <field name="date_deadline" decoration-danger="date_deadline &lt; current_date and state not in ['1_done', '1_canceled']"/>
                             <field name="recurring_task" invisible="not allow_recurring_tasks or not active or parent_id" groups="project.group_project_recurring_tasks"/>
                             <label for="repeat_interval" invisible="not recurring_task or not allow_recurring_tasks" groups="project.group_project_recurring_tasks"/>
@@ -244,7 +244,7 @@
                                         column_invisible="not parent.allow_milestones"
                                         invisible="not allow_milestones"/>
                                     <field name="company_id" column_invisible="True"/>
-                                    <field name="partner_id" options="{'no_open': True, 'no_create': True, 'no_edit': True}" optional="hide"/>
+                                    <field name="partner_id" options="{'no_open': True, 'no_create': True}" optional="hide"/>
                                     <field name="user_ids" column_invisible="True" />
                                     <field name="portal_user_names" string="Assignees" optional="show"/>
                                     <field name="date_deadline" decoration-danger="date_deadline &lt; current_date and state not in ['1_done', '1_canceled']" optional="show"/>
@@ -280,7 +280,7 @@
                                         column_invisible="not parent.allow_milestones"
                                     />
                                     <field name="company_id" column_invisible="True"/>
-                                    <field name="partner_id" options="{'no_open': True, 'no_create': True, 'no_edit': True}" optional="hide" invisible="not project_id"/>
+                                    <field name="partner_id" options="{'no_open': True, 'no_create': True}" optional="hide" invisible="not project_id"/>
                                     <field name="portal_user_names" string="Assignees" optional="show"/>
                                     <field name="date_deadline" decoration-danger="date_deadline &lt; current_date and state not in ['1_done', '1_canceled']" optional="show"/>
                                     <field name="priority" widget="priority" optional="show" nolabel="1" width="20px" readonly="1"/>
