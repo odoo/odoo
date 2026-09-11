@@ -18,6 +18,7 @@ import sys
 import types
 import typing
 import zoneinfo
+from contextlib import nullcontext
 from opcode import opmap, opname
 from types import CodeType
 
@@ -26,6 +27,7 @@ import werkzeug
 
 import odoo.exceptions
 
+from ..lru import LRU
 from .runtime import (
     _MONITORING_BUILTINS,
     UnsafeError,
@@ -36,6 +38,7 @@ from .runtime import (
 )
 
 unsafe_eval = eval
+SAFE_EVAL_COMPILE_CACHE_KEY = object()
 
 __all__ = [
     '_BLACKLIST',
@@ -53,6 +56,8 @@ __all__ = [
     'dateutil',
     'json',
     'safe_eval',
+    'SAFE_EVAL_COMPILE_CACHE_KEY',
+    'safe_eval_compile_cache',
     'test_python_expr',
     'time',
     'to_opcodes',
@@ -310,6 +315,60 @@ def compile_codeobj(expr: str, /, filename: str = '<unknown>', mode: typing.Lite
         raise ValueError('%r while compiling\n%r' % (e, expr))
 
 
+def _compile_and_validate(expr, *, filename, mode):
+    code_obj = compile_codeobj(expr, filename=filename, mode=mode)
+    assert_valid_codeobj(_SAFE_OPCODES, code_obj, expr)
+    return code_obj
+
+
+class _SafeEvalCompileCache:
+    __slots__ = ('__cache', '__store', '__closed')
+
+    def __init__(self, maxsize, store):
+        if maxsize < 1:
+            raise ValueError("safe_eval compile cache maxsize must be positive")
+        self.__cache = LRU(maxsize)
+        self.__store = store
+        self.__closed = False
+
+    def __enter__(self):
+        if self.__closed:
+            raise RuntimeError("safe_eval compile cache is closed")
+        if self.__store is not None:
+            self.__store[SAFE_EVAL_COMPILE_CACHE_KEY] = self
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        if self.__store is not None:
+            self.__store.pop(SAFE_EVAL_COMPILE_CACHE_KEY, None)
+        self.__cache.clear()
+        self.__closed = True
+
+    def _compile_and_validate(self, expr, *, filename, mode):
+        if self.__closed:
+            raise RuntimeError("safe_eval compile cache is closed")
+        if type(expr) not in (str, bytes):
+            return _compile_and_validate(expr, filename=filename, mode=mode)
+
+        key = (expr, filename or '', mode)
+        if code_obj := self.__cache.get(key):
+            return code_obj
+
+        code_obj = _compile_and_validate(expr, filename=filename, mode=mode)
+        self.__cache[key] = code_obj
+        return code_obj
+
+
+def safe_eval_compile_cache(store=None, *, maxsize=1024):
+    """Create a bounded cache for repeated :func:`safe_eval` calls.
+
+    Nested scopes registered in the same store reuse the active cache.
+    """
+    if store is not None and type(store.get(SAFE_EVAL_COMPILE_CACHE_KEY)) is _SafeEvalCompileCache:
+        return nullcontext()
+    return _SafeEvalCompileCache(maxsize, store)
+
+
 def const_eval(expr):
     """const_eval(expression) -> value
 
@@ -385,7 +444,7 @@ _BUBBLEUP_EXCEPTIONS = (
 )
 
 
-def safe_eval(expr, /, context=None, *, mode="eval", filename=None):
+def safe_eval(expr, /, context=None, *, mode="eval", filename=None, cache=None):
     """System-restricted Python expression evaluation
 
     Evaluates a string that contains an expression that mostly
@@ -406,6 +465,7 @@ def safe_eval(expr, /, context=None, *, mode="eval", filename=None):
     :param filename: optional pseudo-filename for the compiled expression,
                      displayed for example in traceback frames
     :type filename: string
+    :param cache: optional cache created by :func:`safe_eval_compile_cache`
     :throws TypeError: If the expression provided is a code object
     :throws SyntaxError: If the expression provided is not valid Python
     :throws NameError: If the expression provided accesses forbidden names
@@ -413,6 +473,9 @@ def safe_eval(expr, /, context=None, *, mode="eval", filename=None):
     """
     if type(expr) is CodeType:
         raise TypeError("safe_eval does not allow direct evaluation of code objects.")
+
+    if cache is not None and type(cache) is not _SafeEvalCompileCache:
+        raise TypeError("cache must be created by safe_eval_compile_cache()")
 
     assert context is None or type(context) is dict, "Context must be a dict"
 
@@ -424,8 +487,10 @@ def safe_eval(expr, /, context=None, *, mode="eval", filename=None):
         __builtins__=dict(_BUILTINS),
     )
 
-    c = compile_codeobj(expr, filename=filename, mode=mode)
-    assert_valid_codeobj(_SAFE_OPCODES, c, expr)
+    if cache is None:
+        c = _compile_and_validate(expr, filename=filename, mode=mode)
+    else:
+        c = cache._compile_and_validate(expr, filename=filename, mode=mode)
     try:
         # empty locals dict makes the eval behave like top-level code
         return unsafe_eval(c, globals_dict, None)
