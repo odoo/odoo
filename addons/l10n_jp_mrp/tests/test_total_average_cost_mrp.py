@@ -161,6 +161,37 @@ class TestTotalAverageCostMrp(TestTotalAverageCostCommon):
         # 法人税法施行令 32条1項2号 counts the 経費 alongside the materials
         self.assertAlmostEqual(self.product.standard_price, (150 + 3 * 5) / 3, places=2)
 
+    def test_manual_correction_on_the_output_outranks_the_order(self):
+        mo, _byproduct = self._create_mo()
+        self._finish_mo(mo)
+        # someone stated what the goods finally cost, which outranks the 製造原価
+        # the order adds up, the same way it outranks a bill on a receipt
+        mo.move_finished_ids.value_manual = 3 * 90
+        self._run_category_wizard()
+        self.assertAlmostEqual(self.product.standard_price, 90, places=2)
+
+    def test_landed_cost_on_the_order_is_part_of_the_manufacturing_cost(self):
+        self.ensure_installed('mrp_landed_costs')
+        mo, _byproduct = self._create_mo()
+        self._finish_mo(mo)
+        freight = self.env['product.product'].create({
+            'name': 'JP Freight', 'type': 'service', 'landed_cost_ok': True,
+        })
+        landed_cost = self.env['stock.landed.cost'].create({  # noqa: OLS03001
+            'date': self.today,
+            'target_model': 'manufacturing',
+            'mrp_production_ids': [(6, 0, mo.ids)],
+            'cost_lines': [(0, 0, {
+                'product_id': freight.id, 'price_unit': 300, 'split_method': 'equal',
+            })],
+        })
+        landed_cost.compute_landed_cost()
+        landed_cost.button_validate()
+        self._run_category_wizard()
+        # 法人税法施行令 32条1項2号 counts what it cost to bring the goods in whether
+        # they were bought or made, so the freight of an order belongs in its 製造原価
+        self.assertAlmostEqual(self.product.standard_price, (150 + 300) / 3, places=2)
+
     def test_workcenter_cost_is_part_of_the_manufacturing_cost(self):
         workcenter = self.env['mrp.workcenter'].create({'name': 'JP Workcenter', 'costs_hour': 60})
         mo, _byproduct = self._create_mo(operation={
