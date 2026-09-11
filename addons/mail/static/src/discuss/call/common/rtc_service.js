@@ -869,8 +869,9 @@ export class Rtc extends Record {
     async leaveCall(channel = this.localChannel) {
         this.store.fullscreenChannel = null;
         this.hasPendingRequest = true;
-        await rpc("/mail/rtc/channel/leave_call", { channel_id: channel.id }, { silent: true });
+        // Must precede the RPC: otherwise, the echoed session removal would read as a server-initiated disconnect.
         this.endCall(channel);
+        await rpc("/mail/rtc/channel/leave_call", { channel_id: channel.id }, { silent: true });
         this.hasPendingRequest = false;
     }
 
