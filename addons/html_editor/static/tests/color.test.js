@@ -626,6 +626,14 @@ test("should keep font element on top of underline/strike (2)", async () => {
     });
 });
 
+test("should keep font element on top of underline/strike (3)", async () => {
+    await testEditor({
+        contentBefore: "<p><u><s>[a]bc</s></u></p>",
+        stepFunction: setColor("red", "color"),
+        contentAfter: '<p><font style="color: red;"><u><s>[a]</s></u></font><u><s>bc</s></u></p>',
+    });
+});
+
 test("should not apply color on an invisible text node", async () => {
     await testEditor({
         contentBefore: `
