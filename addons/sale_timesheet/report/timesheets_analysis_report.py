@@ -4,21 +4,21 @@
 from odoo import fields, models, api
 from odoo.tools import SQL
 
-from odoo.addons.sale_project.models.account_analytic_line import BILLABLE_TYPES
-from odoo.addons.sale_timesheet.models.account_analytic_line import TIMESHEET_BILLABLE_TYPES
-
 
 class TimesheetsAnalysisReport(models.Model):
     _inherit = "timesheets.analysis.report"
 
     order_id = fields.Many2one("sale.order", string="Sales Order", readonly=True)
     so_line = fields.Many2one("sale.order.line", string="Sales Order Item", readonly=True)
-    billable_type = fields.Selection(BILLABLE_TYPES + TIMESHEET_BILLABLE_TYPES, string="Billable Type", readonly=True)
+    billable_type = fields.Selection(selection="_selection_billable_type", string="Billable Type", readonly=True)
     reinvoice_move_id = fields.Many2one("account.move", string="Invoice", readonly=True, help="Invoice created from the timesheet")
     timesheet_revenues = fields.Monetary("Timesheet Revenues", currency_field="currency_id", readonly=True, help="Number of hours spent multiplied by the unit price per hour/day.")
     margin = fields.Monetary("Margin", currency_field="currency_id", readonly=True, help="Timesheets revenues minus the costs")
     billable_time = fields.Float("Billable Time", readonly=True, help="Number of hours/days linked to a SOL.")
     non_billable_time = fields.Float("Non-billable Time", readonly=True, help="Number of hours/days not linked to a SOL.")
+
+    def _selection_billable_type(self):
+        return self.env["account.analytic.line"]._selection_billable_type()
 
     @property
     def _table_sql(self):
