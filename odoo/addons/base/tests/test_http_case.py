@@ -80,6 +80,28 @@ class TestChromeBrowserOddDimensions(TestChromeBrowser):
     browser_size = "1215x768"
 
 
+@tagged('-at_install', 'post_install')
+class TestChromeBrowserShutdown(HttpCase):
+    def test_close_without_answer(self):
+        """Chrome can close the devtools connection before answering Browser.close."""
+        browser = ChromeBrowser(type(self))
+        websocket_send = ChromeBrowser._websocket_send
+        close_request = None
+
+        def close_connection(browser, method, **kwargs):
+            nonlocal close_request
+            future = websocket_send(browser, method, **kwargs)
+            if method == 'Browser.close':
+                close_request = future
+                browser.ws.close()
+            return future
+
+        with patch.object(ChromeBrowser, '_websocket_send', close_connection):
+            with self.assertNoLogs('odoo.tests.common', 'WARNING'):
+                browser.stop()
+        self.assertTrue(close_request.cancelled())
+
+
 class TestRequestRemaining(HttpCase):
     # This test case tries to reproduce the case where a request is lost between two test and is execute during the secone one.
     #
