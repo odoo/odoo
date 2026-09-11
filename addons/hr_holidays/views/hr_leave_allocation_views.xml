@@ -94,7 +94,7 @@
         <field name="model">hr.leave.allocation</field>
         <field name="priority">32</field>
         <field name="arch" type="xml">
-            <form string="Allocation Request" duplicate="false">
+            <form string="Allocation Request" class="o_hr_leave_form" duplicate="false">
                 <field name="can_approve" invisible="1"/>
                 <field name="validation_type" invisible="1"/>
                 <field name="lastcall" invisible="1"/>
@@ -114,16 +114,25 @@
                 </div>
                 <sheet>
                     <div class="oe_button_box" name="button_box"/>
-                    <div id="title" class="oe_title">
-                        <h2><field name="name" class="w-100"
-                            placeholder="e.g. Time type (From validity start to validity end / no limit)"
-                            invisible="state != 'confirm'" readonly="True" force_save="True"/>
-                        <field name="name_validity" invisible="state == 'confirm'"/></h2>
-                    </div>
-                    <group id="full_group">
-                        <group id="alloc_left_col">
+                    <div id="alloc_col_left" class="o_hr_leave_column col_left col-md-6 col-12">
+                        <div id="title" class="o_hr_leave_title">
+                            <h2><field name="name" class="w-100"
+                                placeholder="e.g. Time type (From validity start to validity end / no limit)"
+                                invisible="state != 'confirm'" readonly="True" force_save="True"/>
+                            <field name="name_validity" invisible="state == 'confirm'"/></h2>
+                        </div>
+                        <group id="full_group">
+                            <field name="employee_id" invisible="1" readonly="state in ['refuse', 'validate']"/>
                             <field name="is_name_custom" invisible="1"/> <!-- needed for triggering reasons -->
                             <field name="type_request_unit" invisible="1"/>
+                            <field name="work_entry_type_id"
+                                context="{'employee_id':employee_id, 'default_date_from':current_date, 'request_type':'allocation'}"
+                                domain="[
+                                    ('id','in', allowed_work_entry_type_ids),
+                                ]"
+                                readonly="state in ['refuse', 'validate']"/>
+                            <field name="accrual_plan_id" placeholder="Regular allocation"
+                                readonly="not is_officer or state in ['refuse', 'validate']"/>
                             <div class="o_td_label" name="validity_label" invisible="not is_officer">
                                 <label for="date_from" string="Validity Period"
                                     invisible="accrual_plan_id or state != 'confirm'"/>
@@ -147,14 +156,6 @@
                                  invisible="id or not date_to or date_to &gt;= context_today().strftime('%Y-%m-%d')">
                                 <span>The allocated days cannot be used, because the allocation is set to finish in the past.</span>
                             </div>
-                            <field name="accrual_plan_id" placeholder="Regular allocation"
-                                readonly="not is_officer or state in ['refuse', 'validate']"/>
-                            <field name="work_entry_type_id"
-                                context="{'employee_id':employee_id, 'default_date_from':current_date, 'request_type':'allocation'}"
-                                domain="[
-                                    ('id','in', allowed_work_entry_type_ids),
-                                ]"
-                                readonly="state in ['refuse', 'validate']"/>
                             <field name="number_of_days" invisible="1"/>
                             <div class="o_td_label">
                                 <label for="number_of_days_display" string="Allocation"
@@ -172,12 +173,12 @@
                                 <span class="ml8" invisible="type_request_unit == 'hour'">Days</span>
                                 <span id="hour_display_field" class="ml8" invisible="type_request_unit != 'hour'">Hours</span>
                             </div>
+                            <field name="notes" nolabel="1" placeholder="Add a reason..." readonly="state not in ['confirm']" colspan="2"/>
                         </group>
-                        <group name="alloc_right_col">
-                            <field name="employee_id" invisible="1" readonly="state in ['refuse', 'validate']"/>
-                        </group>
-                    </group>
-                    <field name="notes" nolabel="1" placeholder="Add a reason..." readonly="state not in ['confirm']"/>
+                    </div>
+                    <div class="o_hr_leave_column col_right col-md-6 col-12" name="alloc_right_col">
+                        <widget name="hr_allocation_stats"/>
+                    </div>
                 </sheet>
                 <chatter/>
             </form>
@@ -203,6 +204,7 @@
             <field name="employee_id" position="replace">
                 <field name="employee_id"
                     readonly="state in ['refuse', 'validate']"
+                    default_focus="1"
                     widget="many2one_avatar_employee"/>
             </field>
             <label for="date_from" position="replace">
@@ -234,10 +236,10 @@
             <xpath expr="//header" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
-            <xpath expr="//group[@id='full_group']" position="before">
-                <xpath expr="//group[@id='alloc_left_col']" position="move"/>
+            <xpath expr="//div[@id='alloc_col_left']" position="attributes">
+                <attribute name="class">o_hr_leave_column col_left col-12</attribute>
             </xpath>
-            <xpath expr="//group[@id='full_group']" position="replace"/>
+            <div name="alloc_right_col" position="replace"/>
             <div name="button_box" position="attributes">
                 <attribute name="invisible">1</attribute>
             </div>
