@@ -867,7 +867,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
 
         (partners[4] | partners[7] | partners[9]).unlink()
 
-        with self.assertQueryCount(4):
+        with self.assertQueryCount(3):
             result = Model.formatted_read_group(
                 domain=[('discussion', '!=', self.wrong_discussion_id)],
                 aggregates=['__count'],
@@ -894,7 +894,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
 
         # now message 1 and 2 will also be in the falsy group
         partners[:8].unlink()
-        with self.assertQueryCount(4):
+        with self.assertQueryCount(3):
             result = Model.formatted_read_group(
                 domain=[('discussion', '!=', self.wrong_discussion_id)],
                 aggregates=['__count'],

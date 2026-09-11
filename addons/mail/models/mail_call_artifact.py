@@ -89,6 +89,6 @@ class MailCallArtifact(models.Model):
         self.ensure_one()
         return self.discuss_call_history_id
 
-    @api.ondelete(at_uninstall=False)
-    def _unlink_cleanup_media_attachment(self):
-        self.media_id.sudo().unlink()
+    def _delete_collect_extra(self):
+        yield from super()._delete_collect_extra()
+        yield self.media_id

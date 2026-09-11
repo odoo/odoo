@@ -3206,6 +3206,7 @@ class TestMrpOrder(TestMrpCommon, MailCase):
 
         wo_02.action_replan()
 
+        (wo_01 + wo_02).invalidate_recordset(['has_conflicts'])  # missing dependencies on field
         self.assertFalse(wo_01.has_conflicts)
         self.assertFalse(wo_02.has_conflicts)
         self.assertEqual(wo_01.date_finished, wo_02.date_start)
@@ -3240,6 +3241,7 @@ class TestMrpOrder(TestMrpCommon, MailCase):
 
         wo_02.action_replan()
 
+        (wo_01 + wo_02).invalidate_recordset(['has_conflicts'])  # missing dependencies on field
         self.assertFalse(wo_01.has_conflicts)
         self.assertFalse(wo_02.has_conflicts)
         self.assertEqual(wo_01.date_finished, wo_02.date_start)

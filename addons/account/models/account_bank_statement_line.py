@@ -487,6 +487,8 @@ class AccountBankStatementLine(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _check_allow_unlink(self):
+        if self.env.context.get('force_delete'):
+            return
         if self.statement_id.filtered(lambda stmt: stmt.is_statement_posted and stmt.is_valid and stmt.is_complete):
             raise UserError(_("You can not delete a transaction from a valid statement.\n"
                               "If you want to delete it, please remove the statement first."))
