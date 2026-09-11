@@ -95,6 +95,15 @@ class MrpProduction(models.Model):
             raise ValidationError(_("Subcontracted manufacturing orders cannot be merged."))
         return super().action_merge()
 
+    def _split_productions(self, amounts=False, cancel_remaining_qty=False, set_consumed_qty=False):
+        # Read the subcontract moves before the split: afterwards the backorders are
+        # linked to them too, and each of them needs its own receipt move.
+        subcontract_moves = self._get_subcontract_move()
+        productions = super()._split_productions(amounts=amounts, cancel_remaining_qty=cancel_remaining_qty, set_consumed_qty=set_consumed_qty)
+        if not self.env.context.get('skip_subcontract_move_split'):
+            subcontract_moves._split_per_subcontract_production()
+        return productions
+
     def pre_button_mark_done(self):
         if self._get_subcontract_move():
             return super(MrpProduction, self.with_context(skip_consumption=True)).pre_button_mark_done()
