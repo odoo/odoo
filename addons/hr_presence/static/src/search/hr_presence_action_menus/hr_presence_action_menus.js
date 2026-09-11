@@ -15,6 +15,7 @@ patch(HrActionMenus.prototype, {
     },
 
     async getActionItems(props) {
+        void props.items.action;
         const records = await getActionRecords(this.orm);
         const result = getPresenceActionItems(props.items.action, records);
 
