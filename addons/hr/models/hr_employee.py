@@ -513,6 +513,14 @@ class HrEmployee(models.Model):
             else:
                 version = employee.current_version_id
             employee.version_id = version
+            contract_type_field = self._fields.get('contract_type_id')
+            structure_type_field = self._fields.get('structure_type_id')
+            # Ensure the fields are fully initialized as computed and stored to prevent crashes during database setup.
+            if contract_type_field and contract_type_field.compute and contract_type_field.store:
+                self.env.add_to_compute(contract_type_field, employee)
+                
+            if structure_type_field and structure_type_field.compute and structure_type_field.store:
+                self.env.add_to_compute(structure_type_field, employee)
 
     @api.depends("version_id.work_location_id.name")
     def _compute_work_location_name(self):

@@ -738,6 +738,47 @@ class TestHrEmployee(TestHrCommon):
         result = self.env['hr.employee'].search([('child_ids', '!=', False)])
         self.assertNotIn(employee_1, result)
 
+    def test_employee_contract_type_timeline_context(self):
+        """
+        Test that navigating historical employee records via the version_id context
+        correctly recalculates the cached, stored related field `contract_type_id`
+        instead of persistently displaying the active contract type.
+        """
+        contract_type_1 = self.env['hr.contract.type'].create({'name': 'Permanent Type 1'})
+        contract_type_2 = self.env['hr.contract.type'].create({'name': 'Temporary Type 2'})
+
+        employee = self.env['hr.employee'].create({
+            'name': 'Timeline Test Employee',
+            'contract_type_id': contract_type_1.id,
+            'date_version': fields.Date.today() - relativedelta(days=10)
+        })
+        version_1 = employee.version_id
+
+        version_2 = employee.create_version({
+            'contract_type_id': contract_type_2.id,
+            'date_version': fields.Date.today()
+        })
+
+        self.assertEqual(
+            employee.contract_type_id,
+            contract_type_2,
+            "The main employee record should reflect the active contract type of version_2."
+        )
+
+        employee_v1 = employee.with_context(version_id=version_1.id)
+        self.assertEqual(
+            employee_v1.contract_type_id,
+            contract_type_1,
+            "The contract_type_id should dynamically recompute to Type 1 based on version_1 in context."
+        )
+
+        employee_v2 = employee.with_context(version_id=version_2.id)
+        self.assertEqual(
+            employee_v2.contract_type_id,
+            contract_type_2,
+            "The contract_type_id should dynamically recompute to Type 2 based on version_2 in context."
+        )
+
 @tagged('-at_install', 'post_install')
 class TestHrEmployeeLinks(HttpCase):
     def test_shared_private_link_permissions(self):
