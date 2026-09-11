@@ -129,7 +129,23 @@ class StockForecasted(models.AbstractModel):
         res['user_can_edit_pickings'] = self.env.user.has_group('stock.group_stock_user')
         return res
 
+    def _prepare_forecast_availability_line(self, quantity, move_out, move_in, replenishment_filled, product=False):
+        """Report line holding only the values needed to compute an availability.
+
+        Everything a full line adds for display purposes (source documents, display
+        names, formatted dates, reservation data) is left out.
+        """
+        product = product or move_out.product_id
+        return {
+            'quantity': float_round(quantity, precision_rounding=product.uom_id.rounding),
+            'replenishment_filled': replenishment_filled,
+            'move_out': move_out,
+            'move_in': move_in,
+        }
+
     def _prepare_report_line(self, quantity, move_out=None, move_in=None, replenishment_filled=True, product=False, reserved_move=False, in_transit=False, read=True):
+        if move_out and self.env.context.get('forecast_availability_move_ids') is not None:
+            return self._prepare_forecast_availability_line(quantity, move_out, move_in, replenishment_filled, product)
         product = product or (move_out.product_id if move_out else move_in.product_id)
         is_late = move_out.date < move_in.date if (move_out and move_in) else False
 
@@ -189,66 +205,114 @@ class StockForecasted(models.AbstractModel):
 
     def _get_report_lines(self, product_template_ids, product_ids, wh_location_ids, wh_stock_location, read=True):
 
-        def _get_out_move_reserved_data(out, linked_moves, used_reserved_moves, currents):
+        # The helpers below read the plain dicts built further down rather than the
+        # records themselves: the allocation walks every move chained to every outgoing
+        # move, and at that scale each field access costs a new singleton recordset.
+        def _move_rounding(move_id):
+            """Rounding of the move product's reference uom."""
+            return uom_rounding[product_uom_id[product_of[move_id]]]
+
+        def _move_reserved_qty(move_id):
+            """Quantity of the move, converted to its product's reference uom."""
+            qty, from_uom = qty_of[move_id], uom_of[move_id]
+            to_uom = product_uom_id.get(product_of[move_id])
+            if not (from_uom and qty and to_uom):
+                return qty
+            if from_uom != to_uom:
+                if uom_category[from_uom] != uom_category[to_uom]:
+                    # Different categories: leave the conversion to the ORM.
+                    UoM = self.env['uom.uom']
+                    return UoM.browse(from_uom)._compute_quantity(qty, UoM.browse(to_uom))
+                qty = qty / uom_factor[from_uom] * uom_factor[to_uom]
+            return float_round(qty, precision_rounding=uom_rounding[to_uom], rounding_method='UP')
+
+        def _move_chain_qty(move_id):
+            """What the origin moves brought in, minus what their other dests took."""
+            origs = orig_map.get(move_id, ())
+            move_in_qty = sum(qty_of.get(orig, 0.0) for orig in origs if state_of.get(orig) == 'done')
+            move_out_qty, counted = 0, set()
+            for orig in origs:
+                for dest in dest_map.get(orig, ()):
+                    if dest in counted or dest == move_id:
+                        continue
+                    counted.add(dest)
+                    if state_of.get(dest) == 'done':
+                        move_out_qty += qty_of.get(dest, 0.0)
+            return move_in_qty - move_out_qty
+
+        def _get_out_move_reserved_data(out_id, linked_ids, used_reserved_moves, currents):
             reserved_out = 0
             # the move to show when qty is reserved
-            reserved_move = self.env['stock.move']
-            for move in linked_moves:
-                if move.state not in ('partially_available', 'assigned'):
+            reserved_move_id = False
+            out_qty, out_product = product_qty_of[out_id], product_of[out_id]
+            for move_id in linked_ids:
+                if state_of[move_id] not in ('partially_available', 'assigned'):
                     continue
                 # count reserved stock.
-                reserved = move.product_uom._compute_quantity(move.quantity, move.product_id.uom_id)
+                reserved = _move_reserved_qty(move_id)
                 # check if the move reserved qty was counted before (happens if multiple outs share pick/pack)
-                reserved = min(reserved - used_reserved_moves[move], out.product_qty)
-                if reserved and not reserved_move:
-                    reserved_move = move
+                reserved = min(reserved - used_reserved_moves[move_id], out_qty)
+                if reserved and not reserved_move_id:
+                    reserved_move_id = move_id
                 # add to reserved line data
                 reserved_out += reserved
-                used_reserved_moves[move] += reserved
-                currents[(out.product_id.id, move.location_id.id)] -= reserved
-                if float_compare(reserved_out, out.product_qty, precision_rounding=move.product_id.uom_id.rounding) >= 0:
+                used_reserved_moves[move_id] += reserved
+                currents[(out_product, location_of[move_id])] -= reserved
+                if float_compare(reserved_out, out_qty, precision_rounding=_move_rounding(move_id)) >= 0:
                     break
 
             return {
                 'reserved': reserved_out,
-                'reserved_move': reserved_move,
-                'linked_moves': linked_moves,
+                'reserved_move_id': reserved_move_id,
+                'linked_ids': linked_ids,
             }
 
-        def _get_out_move_taken_from_stock_data(out, currents, reserved_data):
+        def _get_out_move_taken_from_stock_data(out_id, currents, reserved_data):
             reserved_out = reserved_data['reserved']
-            demand_out = out.product_qty - reserved_out
-            linked_moves = reserved_data['linked_moves']
+            demand_out = product_qty_of[out_id] - reserved_out
+            out_product = product_of[out_id]
             taken_from_stock_out = 0
-            for move in linked_moves:
-                if move.state in ('draft', 'cancel', 'assigned', 'done'):
+            for move_id in reserved_data['linked_ids']:
+                if state_of[move_id] in ('draft', 'cancel', 'assigned', 'done'):
                     continue
-                reserved = move.product_uom._compute_quantity(move.quantity, move.product_id.uom_id)
-                demand = max(move.product_qty - reserved, 0)
+                reserved = _move_reserved_qty(move_id)
+                demand = max(product_qty_of[move_id] - reserved, 0)
                 # to make sure we don't demand more than the out (useful when same pick/pack goes to multiple out)
                 demand = min(demand, demand_out)
-                if float_is_zero(demand, precision_rounding=move.product_id.uom_id.rounding):
+                if float_is_zero(demand, precision_rounding=_move_rounding(move_id)):
                     continue
+                stock_key = (out_product, location_of[move_id])
                 # check available qty for move if chained, move available is what was move by orig moves
-                if move.move_orig_ids:
-                    move_in_qty = sum(move.move_orig_ids.filtered(lambda m: m.state == 'done').mapped('quantity'))
-                    sibling_moves = (move.move_orig_ids.move_dest_ids - move)
-                    move_out_qty = sum(sibling_moves.filtered(lambda m: m.state == 'done').mapped('quantity'))
-                    move_available_qty = move_in_qty - move_out_qty - reserved
+                if orig_map.get(move_id):
+                    move_available_qty = _move_chain_qty(move_id) - reserved
                 else:
-                    move_available_qty = currents[(out.product_id.id, move.location_id.id)]
+                    move_available_qty = currents[stock_key]
                 # count taken from stock, but avoid taking more than whats in stock in case of move origs,
                 # this can happen if stock adjustment is done after orig moves are done
-                taken_from_stock = min(demand, move_available_qty, currents[(out.product_id.id, move.location_id.id)])
+                taken_from_stock = min(demand, move_available_qty, currents[stock_key])
                 if taken_from_stock > 0:
-                    currents[(out.product_id.id, move.location_id.id)] -= taken_from_stock
+                    currents[stock_key] -= taken_from_stock
                     taken_from_stock_out += taken_from_stock
                 demand_out -= taken_from_stock
             return {
                 'taken_from_stock': taken_from_stock_out,
             }
 
-        def _reconcile_out_with_ins(lines, out, ins, demand, product_rounding, in_id_to_in_data, ins_per_product, dest_ids_to_in_ids, read=True):
+        # A caller may only care about some outgoing moves. The allocation still has to
+        # run over all of them, but building a line is the expensive part, so only build
+        # the lines that will be read back.
+        wanted_out_ids = self.env.context.get('forecast_availability_move_ids')
+        lines = []
+
+        def _add_line(quantity, out_id=None, **kwargs):
+            if wanted_out_ids is not None and (out_id is None or out_id not in wanted_out_ids):
+                return
+            # `browse()` alone would reduce the prefetch set to this single id, while
+            # the line still reads related fields off the record.
+            move_out = Move.browse(out_id).with_prefetch(outs._ids) if out_id else None
+            lines.append(self._prepare_report_line(quantity, move_out=move_out, read=read, **kwargs))
+
+        def _reconcile_out_with_ins(out_id, ins, demand, product_rounding, in_id_to_in_data, ins_per_product, dest_ids_to_in_ids):
             ins_to_remove = []
             for in_id in ins:
                 in_data = in_id_to_in_data[in_id]
@@ -257,7 +321,7 @@ class StockForecasted(models.AbstractModel):
                     continue
                 taken_from_in = min(demand, in_data['qty'])
                 demand -= taken_from_in
-                lines.append(self._prepare_report_line(taken_from_in, move_in=in_data['move'], move_out=out, read=read))
+                _add_line(taken_from_in, out_id, move_in=in_data['move'])
                 in_data['qty'] -= taken_from_in
                 if in_data['qty'] <= 0:
                     ins_to_remove.append(in_id)
@@ -278,42 +342,103 @@ class StockForecasted(models.AbstractModel):
         past_domain = [('reservation_date', '<=', date.today())]
         future_domain = ['|', ('reservation_date', '>', date.today()), ('reservation_date', '=', False)]
 
-        past_outs = self.env['stock.move'].search(AND([out_domain, past_domain]), order='priority desc, date, id')
-        future_outs = self.env['stock.move'].search(AND([out_domain, future_domain]), order='reservation_date, priority desc, date, id')
+        Move = self.env['stock.move']
+        past_outs = Move.search(AND([out_domain, past_domain]), order='priority desc, date, id')
+        future_outs = Move.search(AND([out_domain, future_domain]), order='reservation_date, priority desc, date, id')
 
         outs = past_outs | future_outs
 
-        ins = self.env['stock.move'].search(in_domain, order='priority desc, date, id')
+        ins = Move.search(in_domain, order='priority desc, date, id')
         # Prewarm cache with rollups
         outs._rollup_move_origs_fetch()
         ins._rollup_move_dests_fetch()
 
-        linked_moves_per_out = {}
+        # Walk the origin graph once on ids instead of rolling up each outgoing move
+        # separately: the chains overlap, so a single level-by-level prefetch of
+        # `move_orig_ids` is enough to serve every rollup.
+        orig_map = {}
+        frontier = outs
+        while frontier:
+            frontier.fetch(['move_orig_ids'])
+            next_ids = set()
+            for move in frontier:
+                if move.id not in orig_map:
+                    orig_map[move.id] = move.move_orig_ids._ids
+                    next_ids.update(orig_map[move.id])
+            frontier = Move.browse(next_ids - orig_map.keys())
+
+        def _rollup_origs(move_id):
+            """Same as `stock.move._rollup_move_origs`, on ids and in the same order."""
+            seen = OrderedSet()
+            level = [move_id]
+            while True:
+                unseen = [i for i in level if i not in seen]
+                if not unseen:
+                    return seen
+                seen.update(unseen)
+                nxt, taken = [], set()
+                for i in unseen:
+                    for orig in orig_map.get(i, ()):
+                        if orig not in taken:
+                            taken.add(orig)
+                            nxt.append(orig)
+                level = nxt
+
+        linked_ids_per_out = {}
         ins_ids = set(ins._ids)
-        for out in outs:
-            linked_move_ids = out._rollup_move_origs() - ins_ids
-            linked_moves_per_out[out] = self.env['stock.move'].browse(linked_move_ids)
+        all_linked_move_ids = set()
+        for out_id in outs._ids:
+            linked = [_id for _id in _rollup_origs(out_id) if _id not in ins_ids]
+            linked_ids_per_out[out_id] = linked
+            all_linked_move_ids.update(linked)
 
-        # Gather all linked moves
-        all_linked_move_ids = {
-            _id for _ids in linked_moves_per_out.values() for _id in _ids._ids
-        }
-        all_linked_moves = self.env['stock.move'].browse(all_linked_move_ids)
+        # Read every move the allocation touches once, into plain dicts.
+        universe = Move.browse(all_linked_move_ids | set(outs._ids))
+        universe.fetch(['state', 'quantity', 'product_uom', 'product_id', 'product_qty', 'location_id'])
+        state_of, qty_of, uom_of = {}, {}, {}
+        product_of, product_qty_of, location_of = {}, {}, {}
+        # All fields in a single pass: one loop per field would rebuild a singleton
+        # recordset for every move as many times as there are fields.
+        for move in universe:
+            move_id = move.id
+            state_of[move_id] = move.state
+            qty_of[move_id] = move.quantity
+            uom_of[move_id] = move.product_uom.id
+            product_of[move_id] = move.product_id.id
+            product_qty_of[move_id] = move.product_qty
+            location_of[move_id] = move.location_id.id
 
-        # Prewarm cache with sibling move's state/quantity
-        all_linked_moves.fetch(['move_orig_ids'])
-        all_linked_moves.move_orig_ids.fetch(['move_dest_ids'])
-        all_linked_moves.move_orig_ids.move_dest_ids.fetch(['state', 'quantity'])
+        # The origins' other destination moves, of which only state and quantity is read.
+        sibling_ids = set()
+        for move_id in all_linked_move_ids:
+            sibling_ids.update(orig_map.get(move_id, ()))
+        siblings = Move.browse(sibling_ids)
+        siblings.fetch(['move_dest_ids'])
+        dest_map = {move.id: move.move_dest_ids._ids for move in siblings}
+        # An origin may itself be an incoming move, excluded from the linked ids and so
+        # missing from the maps above; read state and quantity for those too.
+        extra = Move.browse((sibling_ids | {d for dests in dest_map.values() for d in dests}) - set(state_of))
+        if extra:
+            extra.fetch(['state', 'quantity'])
+            for move in extra:
+                state_of[move.id] = move.state
+                qty_of[move.id] = move.quantity
 
-        # Share prefetch ids among all linked moves for performance
-        for out, linked_moves in linked_moves_per_out.items():
-            linked_moves_per_out[out] = linked_moves.with_prefetch(
-                all_linked_moves._prefetch_ids
-            )
+        # Factors and roundings of the products and uoms actually referenced above.
+        products = self.env['product.product'].browse({p for p in product_of.values() if p})
+        products.fetch(['uom_id'])
+        product_uom_id = {product.id: product.uom_id.id for product in products}
+        uoms = products.uom_id | self.env['uom.uom'].browse({u for u in uom_of.values() if u})
+        uoms.fetch(['factor', 'rounding', 'category_id'])
+        uom_factor, uom_rounding, uom_category = {}, {}, {}
+        for uom in uoms:
+            uom_factor[uom.id] = uom.factor
+            uom_rounding[uom.id] = uom.rounding
+            uom_category[uom.id] = uom.category_id.id
 
         outs_per_product = defaultdict(list)
-        for out in outs:
-            outs_per_product[out.product_id.id].append(out)
+        for out_id in outs._ids:
+            outs_per_product[product_of[out_id]].append(out_id)
 
         dest_ids_to_in_ids, in_id_to_in_data = defaultdict(OrderedSet), {}
         ins_per_product = defaultdict(OrderedSet)
@@ -328,7 +453,7 @@ class StockForecasted(models.AbstractModel):
             for dest in in_id_to_in_data[in_.id]['move_dests']:
                 dest_ids_to_in_ids[dest].add(in_.id)
 
-        qties = self.env['stock.quant']._read_group([('location_id', 'in', wh_location_ids), ('quantity', '>', 0), ('product_id', 'in', outs.product_id.ids)],
+        qties = self.env['stock.quant']._read_group([('location_id', 'in', wh_location_ids), ('quantity', '>', 0), ('product_id', 'in', [product_of[i] for i in outs._ids])],
                                                     ['product_id', 'location_id'], ['quantity:sum'])
         wh_stock_sub_location_ids = set(
             wh_stock_location.search([('id', 'child_of', wh_stock_location.id)])._ids
@@ -341,22 +466,21 @@ class StockForecasted(models.AbstractModel):
                 location_id = wh_stock_location.id
             currents[(product.id, location_id)] += quantity
         moves_data = {}
-        for _, out_moves in outs_per_product.items():
+        for _, out_ids in outs_per_product.items():
             # to handle multiple out wtih same in (ex: same pick/pack for 2 outs)
             used_reserved_moves = defaultdict(float)
             # for all out moves, check for linked moves and count reserved quantity
-            for out in out_moves:
-                moves_data[out] = _get_out_move_reserved_data(
-                    out, linked_moves_per_out[out], used_reserved_moves, currents
+            for out_id in out_ids:
+                moves_data[out_id] = _get_out_move_reserved_data(
+                    out_id, linked_ids_per_out[out_id], used_reserved_moves, currents
                 )
             # another loop to remove qty from current stock after reserved is counted for
-            for out in out_moves:
-                data = _get_out_move_taken_from_stock_data(out, currents, moves_data[out])
-                moves_data[out].update(data)
+            for out_id in out_ids:
+                data = _get_out_move_taken_from_stock_data(out_id, currents, moves_data[out_id])
+                moves_data[out_id].update(data)
         product_sum = defaultdict(float)
         for product_loc, quantity in currents.items():
             product_sum[product_loc[0]] += quantity
-        lines = []
         for product in (ins | outs).product_id:
             product_rounding = product.uom_id.rounding
             unreconciled_outs = []
@@ -364,16 +488,17 @@ class StockForecasted(models.AbstractModel):
             free_stock = currents[product.id, wh_stock_location.id]
             transit_stock = product_sum[product.id] - free_stock
             # add report lines and see if remaining demand can be reconciled by unreservable stock or ins
-            for out in outs_per_product[product.id]:
-                reserved_out = moves_data[out].get('reserved')
-                taken_from_stock_out = moves_data[out].get('taken_from_stock')
-                reserved_move = moves_data[out].get('reserved_move')
-                demand_out = out.product_qty
+            for out_id in outs_per_product[product.id]:
+                reserved_out = moves_data[out_id].get('reserved')
+                taken_from_stock_out = moves_data[out_id].get('taken_from_stock')
+                reserved_move_id = moves_data[out_id].get('reserved_move_id')
+                demand_out = product_qty_of[out_id]
                 # Reconcile with the reserved stock.
                 if reserved_out > 0:
                     demand_out = max(demand_out - reserved_out, 0)
-                    in_transit = bool(reserved_move.move_orig_ids)
-                    lines.append(self._prepare_report_line(reserved_out, move_out=out, reserved_move=reserved_move, in_transit=in_transit, read=read))
+                    reserved_move = Move.browse(reserved_move_id).with_prefetch(universe._ids)
+                    in_transit = bool(orig_map.get(reserved_move_id))
+                    _add_line(reserved_out, out_id, reserved_move=reserved_move, in_transit=in_transit)
 
                 if float_is_zero(demand_out, precision_rounding=product_rounding):
                     continue
@@ -381,7 +506,7 @@ class StockForecasted(models.AbstractModel):
                 # Reconcile with the current stock.
                 if taken_from_stock_out > 0:
                     demand_out = max(demand_out - taken_from_stock_out, 0)
-                    lines.append(self._prepare_report_line(taken_from_stock_out, move_out=out, read=read))
+                    _add_line(taken_from_stock_out, out_id)
 
                 if float_is_zero(demand_out, precision_rounding=product_rounding):
                     continue
@@ -391,36 +516,36 @@ class StockForecasted(models.AbstractModel):
                 if unreservable_qty > 0:
                     demand_out -= unreservable_qty
                     transit_stock -= unreservable_qty
-                    lines.append(self._prepare_report_line(unreservable_qty, move_out=out, in_transit=True, read=read))
+                    _add_line(unreservable_qty, out_id, in_transit=True)
 
                 if float_is_zero(demand_out, precision_rounding=product_rounding):
                     continue
 
                 # Reconcile with the ins.
-                demand_out = _reconcile_out_with_ins(lines, out, dest_ids_to_in_ids[out.id], demand_out, product_rounding, in_id_to_in_data, ins_per_product, dest_ids_to_in_ids, read=read)
+                demand_out = _reconcile_out_with_ins(out_id, dest_ids_to_in_ids[out_id], demand_out, product_rounding, in_id_to_in_data, ins_per_product, dest_ids_to_in_ids)
 
                 if not float_is_zero(demand_out, precision_rounding=product_rounding):
-                    unreconciled_outs.append((demand_out, out))
+                    unreconciled_outs.append((demand_out, out_id))
 
             # Another pass, in case there are some ins linked to a dest move but that still have some quantity available
-            for (demand, out) in unreconciled_outs:
-                demand = _reconcile_out_with_ins(lines, out, ins_per_product[product.id], demand, product_rounding, in_id_to_in_data, ins_per_product, dest_ids_to_in_ids, read=read)
+            for (demand, out_id) in unreconciled_outs:
+                demand = _reconcile_out_with_ins(out_id, ins_per_product[product.id], demand, product_rounding, in_id_to_in_data, ins_per_product, dest_ids_to_in_ids)
                 if not float_is_zero(demand, precision_rounding=product_rounding):
                     # Not reconciled
-                    lines.append(self._prepare_report_line(demand, move_out=out, replenishment_filled=False, read=read))
+                    _add_line(demand, out_id, replenishment_filled=False)
             # Stock in transit
             if not float_is_zero(transit_stock, precision_rounding=product_rounding):
-                lines.append(self._prepare_report_line(transit_stock, product=product, in_transit=True, read=read))
+                _add_line(transit_stock, product=product, in_transit=True)
 
             # Unused remaining stock.
             if not float_is_zero(free_stock, precision_rounding=product_rounding):
-                lines.append(self._prepare_report_line(free_stock, product=product, read=read))
+                _add_line(free_stock, product=product)
             # In moves not used.
             for in_id in ins_per_product[product.id]:
                 in_data = in_id_to_in_data[in_id]
                 if float_is_zero(in_data['qty'], precision_rounding=product_rounding):
                     continue
-                lines.append(self._prepare_report_line(in_data['qty'], move_in=in_data['move'], read=read))
+                _add_line(in_data['qty'], move_in=in_data['move'])
         return lines
 
     @api.model
