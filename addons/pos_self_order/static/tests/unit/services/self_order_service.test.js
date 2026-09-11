@@ -639,3 +639,29 @@ test("product with single 'multi' display_type attr with single choice is config
     store.self_ordering_mode = "mobile";
     expect(!!store.isProductConfigurable(product)).toBe(true);
 });
+
+test("payment status notification keeps the partner of the order", async () => {
+    const store = await setupSelfPosEnv();
+    const { uuid } = await getFilledSelfOrder(store);
+    await store.sendDraftOrderToServer();
+    const order = store.models["pos.order"].getBy("uuid", uuid);
+    const signedPartnerId = "7-0123456789abcdef";
+    const connectedData = store.models.connectNewData({
+        "res.partner": [{ id: signedPartnerId, name: "Demo User" }],
+    });
+    order.partner_id = connectedData["res.partner"][0];
+
+    const { method: onPaymentStatus } = store.data.channels.find(
+        ({ channel }) => channel === "PAYMENT_STATUS"
+    );
+    onPaymentStatus({
+        payment_result: "Success",
+        data: {
+            "pos.order": [{ id: order.id, uuid, access_token: order.access_token, state: "paid" }],
+        },
+    });
+
+    expect(order.state).toBe("paid");
+    expect(order.partner_id?.id).toBe(signedPartnerId);
+    expect(order.partner_id?.name).toBe("Demo User");
+});

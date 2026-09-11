@@ -236,7 +236,7 @@ class TestSelfOrderController(SelfOrderCommonTest):
         params = {
             'access_token': self.pos_config.access_token,
             'preset_id': self.delivery_preset.id,
-            'partner_id': customer.id,
+            'partner_id': self.env['pos.order']._get_signed_self_partner_id(self.pos_config, customer.id),
             'name': customer.name,
             'phone': customer.phone,
             'street': customer.street,
@@ -281,7 +281,7 @@ class TestSelfOrderController(SelfOrderCommonTest):
         params = {
             'access_token': self.pos_config.access_token,
             'preset_id': self.delivery_preset.id,
-            'partner_id': customer.id,
+            'partner_id': self.env['pos.order']._get_signed_self_partner_id(self.pos_config, customer.id),
             'name': customer.name,
             'phone': customer.phone,
             'street': customer.street,

@@ -210,4 +210,24 @@ describe("startPayment", () => {
 
         expect(paymentCashMachine.payment_interface.hasBeenCancelled).toBe(true);
     });
+
+    test("sends the signed partner of the order to the backend", async () => {
+        const { store, paymentNoProvider } = await setupPaymentPage();
+        const signedPartnerId = "7-0123456789abcdef";
+        const connectedData = store.models.connectNewData({
+            "res.partner": [{ id: signedPartnerId, name: "Demo User" }],
+        });
+        store.currentOrder.partner_id = connectedData["res.partner"][0];
+
+        let sentOrder;
+        onRpc("/kiosk/payment/1/kiosk", async (request) => {
+            const { params } = await request.json();
+            sentOrder = params.order;
+            return true;
+        });
+        await clickPaymentMethod(paymentNoProvider);
+
+        expect(store.paymentError).toBe(false);
+        expect(sentOrder.partner_id).toBe(signedPartnerId);
+    });
 });
