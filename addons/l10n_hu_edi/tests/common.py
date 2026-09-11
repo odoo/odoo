@@ -175,7 +175,7 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
         """ Create a really basic bill refund - just one line. """
         return self._create_simple_move(move_type='in_refund', currency=currency)
 
-    def create_invoice_simple_discount(self):
+    def create_invoice_simple_discount(self, discount=None):
         """ Create a really basic invoice with a discount - just one line. """
         return self.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -189,7 +189,7 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
                     'product_id': self.product_a.id,
                     'price_unit': 10000.0,
                     'quantity': 1,
-                    'discount': 20,
+                    'discount': discount or 20,
                     'tax_ids': [Command.set(self.tax_vat.ids)],
                 })
             ]
