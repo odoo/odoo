@@ -354,14 +354,11 @@ export class DiscussChannel extends Record {
             : this.last_interest_dt
     );
     markedAsUnread = false;
-    onlineMembers = fields.Many("discuss.channel.member", {
-        /** @this {import("models").DiscussChannel} */
-        compute() {
-            return this.channel_member_ids
-                .filter((member) => ["online", "away", "busy"].includes(member.imStatusUI))
-                .sort((m1, m2) => this.store.sortMembers(m1, m2)); // FIXME: sort are prone to infinite loop (see test "Display livechat custom name in typing status")
-        },
-    });
+    onlineMembers = this.computed(() =>
+        this.channel_member_ids
+            .filter((member) => ["online", "away", "busy"].includes(member.imStatusUI))
+            .sort((m1, m2) => this.store.sortMembers(m1, m2))
+    );
     get hasAttachmentPanel() {
         return true;
     }
@@ -426,11 +423,7 @@ export class DiscussChannel extends Record {
     }
     invited_member_ids = fields.Many("discuss.channel.member");
     /** ⚠️ {@link AwaitChatHubInit} */
-    isDisplayed = fields.Attr(false, {
-        compute() {
-            return this.computeIsDisplayed();
-        },
-    });
+    isDisplayed = this.computed(() => this.computeIsDisplayed());
     lastMessageSeenByAllId = this.computed(() => {
         if (!this.hasSeenFeature) {
             return;
@@ -506,14 +499,11 @@ export class DiscussChannel extends Record {
     otherTypingMembers = this.computed(() =>
         this.typingMembers.filter((member) => !member.persona?.eq(this.store.self))
     );
-    offlineMembers = fields.Many("discuss.channel.member", {
-        /** @this {import("models").DiscussChannel} */
-        compute() {
-            return this.channel_member_ids
-                .filter((member) => member.imStatusUI === "offline")
-                .sort((m1, m2) => this.store.sortMembers(m1, m2)); // FIXME: sort are prone to infinite loop (see test "Display livechat custom name in typing status")
-        },
-    });
+    offlineMembers = this.computed(() =>
+        this.channel_member_ids
+            .filter((member) => member.imStatusUI === "offline")
+            .sort((m1, m2) => this.store.sortMembers(m1, m2))
+    );
     /** @type {true|undefined} */
     open_chat_window;
     parent_channel_id = fields.One("discuss.channel", {
@@ -583,14 +573,9 @@ export class DiscussChannel extends Record {
     get unknownMembersCount() {
         return (this.member_count ?? 0) - (this.channel_member_ids.length ?? 0);
     }
-    unknownStatusMembers = fields.Many("discuss.channel.member", {
-        /** @this {import("models").DiscussChannel} */
-        compute() {
-            return this._computeUnknownStatusMembers().sort(
-                (m1, m2) => this.store.sortMembers(m1, m2) // FIXME: sort are prone to infinite loop (see test "Display livechat custom name in typing status")
-            );
-        },
-    });
+    unknownStatusMembers = this.computed(() =>
+        this._computeUnknownStatusMembers().sort((m1, m2) => this.store.sortMembers(m1, m2))
+    );
 
     _onDeleteChatWindow() {}
 

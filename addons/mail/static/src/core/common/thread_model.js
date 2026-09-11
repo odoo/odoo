@@ -396,14 +396,12 @@ export class Thread extends Record {
         return this.messages.findLast((msg) => Number.isInteger(msg.id));
     }
 
-    newestPersistentAllMessages = fields.Many("mail.message", {
-        compute() {
-            const allPersistentMessages = this.allMessages.filter((message) =>
-                Number.isInteger(message.id)
-            );
-            allPersistentMessages.sort((m1, m2) => m2.id - m1.id);
-            return allPersistentMessages;
-        },
+    newestPersistentAllMessages = this.computed(() => {
+        const allPersistentMessages = this.allMessages.filter((message) =>
+            Number.isInteger(message.id)
+        );
+        allPersistentMessages.sort((m1, m2) => m2.id - m1.id);
+        return allPersistentMessages;
     });
 
     newestPersistentOfAllMessage = this.computed(() => this.newestPersistentAllMessages[0]);
@@ -553,12 +551,9 @@ export class Thread extends Record {
     }
 
     /** @type {import("models").Store["selvesBySequence"]} */
-    selvesBySequence = fields.Attr(undefined, {
-        /** @this {import("models").Thread} */
-        compute() {
-            return this.computeSelvesBySequence().sort((a, b) => a.sequence - b.sequence);
-        },
-    });
+    selvesBySequence = this.computed(() =>
+        this.computeSelvesBySequence().sort((a, b) => a.sequence - b.sequence)
+    );
 
     computeSelvesBySequence() {
         return [...this.store.selvesBySequence];

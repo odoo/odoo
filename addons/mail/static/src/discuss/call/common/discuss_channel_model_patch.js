@@ -113,21 +113,16 @@ const DiscussChannelPatch = {
             });
             return raisingHandCards.concat(sessionCards, invitationCards);
         });
-        this.useCameraByDefault = fields.Attr(null, {
-            /** @this {import("models").Thread} */
-            compute() {
-                if (this.channel_type === "chat" && this.store.rtc.selfSession?.channel?.eq(this)) {
-                    return this.store.rtc.selfSession.is_camera_on;
-                }
-                return JSON.parse(
-                    localStorage.getItem(`discuss_channel_camera_default_${this.id}`)
-                );
-            },
+        this.useCameraByDefault = this.computed(() => {
+            if (this.channel_type === "chat" && this.store.rtc.selfSession?.channel?.eq(this)) {
+                return this.store.rtc.selfSession.is_camera_on;
+            }
+            return JSON.parse(localStorage.getItem(`discuss_channel_camera_default_${this.id}`));
         });
         this.onChange(
             () => [this.useCameraByDefault],
             function onChangeUseCameraByDefault(useCameraByDefault) {
-                if (useCameraByDefault !== null) {
+                if (typeof useCameraByDefault === "boolean") {
                     localStorage.setItem(
                         `discuss_channel_camera_default_${this.id}`,
                         JSON.stringify(useCameraByDefault)
