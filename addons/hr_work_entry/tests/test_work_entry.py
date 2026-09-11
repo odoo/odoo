@@ -488,7 +488,7 @@ class TestWorkEntry(TestWorkEntryBase):
             'attendance_ids': False,
         })
 
-        wfh_type = self.env.ref('hr_work_entry.generic_work_entry_type_home_working')
+        wfh_type = self.env.ref('hr_work_entry.be_work_entry_type_home_working')
 
         attendances = self.env['resource.calendar.attendance'].create([
             {

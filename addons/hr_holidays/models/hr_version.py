@@ -373,7 +373,10 @@ class HrVersion(models.Model):
             rc_leave = including_holiday_rcleaves[0]
         if rc_leave:
             return self._get_leave_work_entry_type_dates(rc_leave, interval_start, interval_stop, self.employee_id)
-        return self.env.ref('hr_work_entry.generic_work_entry_type_leave')
+        return self.env['hr.work.entry.type'].search([
+            ('code', '=', 'LEAVE100'),
+            ('country_id', '=', self.company_country_id.id),
+        ], limit=1)
 
     def _get_sub_leave_domain(self):
         """Also accept the leaves of the time off of the employees, whatever their calendar.
