@@ -119,9 +119,10 @@ class TestCallHistoryAutoLog(TransactionCase):
             " ".join(title.text_content().split()), "Meeting done (1h 23m 45s) - Test Meeting",
         )
 
-    def test_meeting_call_message_shows_the_meeting_summary_and_notes(self):
-        """The summary and the notes of the meeting are what its attendees wrote down about
-        it: the message logging the call carries both."""
+    def test_meeting_call_message_shows_the_summary_but_not_the_notes(self):
+        """The summary of a meeting says what it was about: the message logging its call
+        carries it. Its notes, where video call providers write down how to connect, stay
+        out of the chatter."""
         activity = self.customer.activity_schedule("mail.mail_activity_data_meeting")
         meeting = self._create_meeting(
             datetime(2026, 8, 14, 11, 0), activities=activity,
@@ -138,8 +139,7 @@ class TestCallHistoryAutoLog(TransactionCase):
             " ".join(title.text_content().split()),
             "Meeting done (6s) - Office Design and Architecture",
         )
-        note = body.find_class("o_mail_activity_note")[0]
-        self.assertEqual(note.text_content().strip(), "Bring the mockups")
+        self.assertNotIn("Bring the mockups", body.text_content())
 
     def test_meeting_call_message_shows_the_activity_summary(self):
         """A summary entered when logging an ad-hoc call, which no meeting was scheduled

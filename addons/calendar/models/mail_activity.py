@@ -79,9 +79,6 @@ class MailActivity(models.Model):
         """Extra values for the chatter template send on activity marked as done."""
         values = super()._get_activity_done_message_extra_values(activity)
         event = activity.calendar_event_id
-        # the activity note mirrors the meeting description; its notes reach the document
-        # nowhere else.
-        values["call_notes"] = event.notes if values.get("call_history") else False
         if not event.partner_ids or values.get("call_history"):
             return values
         attendee_names = format_list(self.env, event.partner_ids.mapped("name"))
