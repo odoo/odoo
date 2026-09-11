@@ -632,6 +632,50 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
         })
         self.assertEqual(node[0].text, self.company.vat, "Company VAT fallback")
 
+    def test_facturx_omits_schemeid_va_when_vat_is_slash(self):
+        """Test that Factur-X never outputs '/' as a VAT id.
+
+        '/' is the conventional value Odoo uses to mark a partner as not subject to VAT (as
+        opposed to one who simply hasn't had a VAT number entered yet): it must never be emitted
+        as a real VAT id, be it the seller's (the company's own VAT) or the buyer's. A VAT id
+        without its ISO country-code prefix (e.g. 'DE', 'FR') would otherwise violate EN16931
+        rule BR-CO-09.
+
+        (The fiscal position's foreign VAT isn't tested here: base_vat's format validation
+        already rejects '/' at creation, so that branch can never actually see it.)
+        """
+        namespaces = {
+            "ram": "urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100",
+            "rsm": "urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100",
+        }
+
+        # Company VAT and buyer VAT are both '/' at once: 2 independent t-if conditions evaluated
+        # on the same invoice, so one export already exercises both; a bug in either would
+        # surface a VA tag on its side.
+        self.company.vat = '/'
+        self.partner_a.write({'invoice_edi_format': 'facturx', 'vat': '/'})
+        invoice = self._create_invoice_one_line(price_unit=1)
+        invoice.action_post()
+
+        # The fix was applied to both the legacy QWeb template and the new dict-based builder:
+        # exercise both so neither regresses on its own. set_param(key, False) would unlink the
+        # parameter instead of storing it (see ir.config_parameter.set_param), silently falling
+        # back to its own True default, hence the str() conversion.
+        for use_new_dict_to_xml_helpers in (False, True):
+            self.env['ir.config_parameter'].sudo().set_param(
+                'account_edi_ubl_cii.use_new_dict_to_xml_helpers', str(use_new_dict_to_xml_helpers))
+            with self.subTest(use_new_dict_to_xml_helpers=use_new_dict_to_xml_helpers):
+                xml_bytes = self.env["account.edi.xml.cii"]._export_invoice(invoice)[0]
+
+                self.assertFalse(
+                    etree.fromstring(xml_bytes).xpath("//ram:SellerTradeParty//ram:ID[@schemeID='VA']", namespaces=namespaces),
+                    "'/' company / seller VAT must not be output as a VA tag",
+                )
+                self.assertFalse(
+                    etree.fromstring(xml_bytes).xpath("//ram:BuyerTradeParty//ram:ID[@schemeID='VA']", namespaces=namespaces),
+                    "'/' buyer VAT must not be output as a VA tag",
+                )
+
     def test_facturx_line_without_product_has_name(self):
         """A line with no product_id (e.g. a sale order down payment invoice line) must still
         expose a ram:Name in the Factur-X/CII export, falling back to the line's free-text name,
