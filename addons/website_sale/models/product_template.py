@@ -1376,7 +1376,7 @@ class ProductTemplate(models.Model):
         :return: List of service_tracking values that are allowed to have zero price.
         :rtype: list
         """
-        return ['subcontract']  # added from sale_purchase as there is no bridge for website
+        return ["subcontract"]  # added from sale_purchase as there is no bridge for website
 
     # ---------------------------------------------------------
     # Rating Mixin API
@@ -1995,19 +1995,18 @@ class ProductTemplate(models.Model):
         for template in self.env["product.template"].search([("image_1920", "!=", False)]):
             template_image = template.image_1920
             first_extra_image = template.product_template_image_ids.sorted("sequence")[:1]
-            if template_image.content == first_extra_image.image_1920.content:
-                continue
-
-            image_vals.append({
-                "name": template.display_name,
-                "product_tmpl_id": template.id,
-                "image_1920": template_image,
-                "sequence": first_extra_image.sequence - 1,
-            })
+            add_template_main_image = template_image.content != first_extra_image.image_1920.content
+            template_main_image_ptavs = self.env["product.template.attribute.value"]
 
             for product in template.product_variant_ids:
                 variant_image = product.image_variant_1920
                 first_extra_image_product = product.variant_image_ids.sorted("sequence")[:1]
+                if (
+                    add_template_main_image
+                    and not variant_image
+                    and template_image.content == product.image_1920.content
+                ):
+                    template_main_image_ptavs |= product.product_template_attribute_value_ids
                 if (
                     not variant_image
                     or variant_image.content == first_extra_image_product.image_1920.content
@@ -2023,5 +2022,18 @@ class ProductTemplate(models.Model):
                     "image_1920": variant_image,
                     "sequence": first_extra_image_product.sequence - 1,
                 })
+
+            if add_template_main_image:
+                image_vals = [
+                    {
+                        "name": template.display_name,
+                        "product_tmpl_id": template.id,
+                        "attribute_value_ids": [Command.set(template_main_image_ptavs.ids)]
+                        if template_main_image_ptavs and len(template.product_variant_ids) > 1
+                        else False,
+                        "image_1920": template_image,
+                        "sequence": first_extra_image.sequence - 1,
+                    }
+                ] + image_vals  # Make sure the template image is created before the variant images.
 
         self.env["product.image"].with_context(skip_update_main_image=True).create(image_vals)
