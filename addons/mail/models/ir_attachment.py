@@ -18,6 +18,16 @@ class IrAttachment(models.Model):
 
     thumbnail = fields.Image()
     has_thumbnail = fields.Boolean(compute="_compute_has_thumbnail")
+    message_ids = fields.Many2many(
+        "mail.message",
+        "message_attachment_rel",
+        "attachment_id",
+        "message_id",
+        string="Messages",
+        readonly=True,
+        copy=False,
+        bypass_search_access=True,
+    )
 
     @api.depends("thumbnail")
     def _compute_has_thumbnail(self):

@@ -277,9 +277,15 @@ class ChannelController(http.Controller):
         ]
         if before:
             domain.append(["id", "<", before])
-        # sudo: ir.attachment - reading attachments of a channel that the current user can access
+        # sudo: ir.attachment - reading attachments (and its messages) of a channel that the current user can access
         attachments = request.env["ir.attachment"].sudo().search(domain, limit=limit, order="id DESC")
-        store = Store().add(attachments, "_store_attachment_fields")
+        store = Store().add(
+            attachments,
+            lambda res: (
+                res.from_method("_store_attachment_fields"),
+                res.many("message_ids", lambda res: res.one("thread", [], as_thread=True)),
+            ),
+        )
         return {"store_data": store, "count": len(attachments)}
 
     @mail_route("/discuss/channel/sub_channel/create", methods=["POST"], type="jsonrpc", auth="public")
