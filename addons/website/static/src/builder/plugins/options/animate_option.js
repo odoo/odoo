@@ -19,13 +19,18 @@ export class AnimateOption extends BaseOptionComponent {
     setup() {
         super.setup();
         this.state = useDomState(async (editingElement) => {
-            const hasAnimateClass = editingElement.classList.contains("o_animate");
+            const isDefaultEnabled = this.dependencies.animateOption.isDefaultAnimationEnabled();
+            const isDefault =
+                isDefaultEnabled && editingElement.classList.contains("o_animate_default");
+            const hasAnimateClass = isDefault || editingElement.classList.contains("o_animate");
             this.getDirectionsItems = this.dependencies.animateOption.getDirectionsItems;
             const { getEffectsItems } = this.dependencies.animateOption;
 
             return {
                 isOptionActive: this.isOptionActive(editingElement),
                 hasAnimateClass: hasAnimateClass,
+                isDefaultEnabled: isDefaultEnabled,
+                isDefault: isDefault,
                 canHover: await this.dependencies.animateOption.canHaveHoverEffect(editingElement),
                 isLimitedEffect: this.limitedEffects.some((className) =>
                     editingElement.classList.contains(className)
@@ -59,22 +64,20 @@ export class AnimateOption extends BaseOptionComponent {
         return true;
     }
 
+    goToThemeTab() {
+        this.env.editThemeOption(null, "theme-advanced");
+    }
+
     shouldShowIntensity(editingElement, hasAnimateClass) {
         if (!hasAnimateClass) {
             return false;
         }
-        if (!editingElement.classList.contains("o_anim_fade_in")) {
+        const { getEffectClass, getDirectionClass } = this.dependencies.animateOption;
+        if (getEffectClass(editingElement) !== "o_anim_fade_in") {
             return true;
         }
-
-        const possibleDirections = this.getDirectionsItems()
-            .map((i) => i.className)
-            .filter(Boolean);
-        const hasDirection = possibleDirections.some((direction) =>
-            editingElement.classList.contains(direction)
-        );
-
-        return hasDirection;
+        // A fade has an intensity only when it comes from a direction.
+        return !!getDirectionClass(editingElement);
     }
 }
 

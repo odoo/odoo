@@ -10,12 +10,20 @@
 
 <t t-name="website.AnimateOption">
     <t t-if="this.state.isOptionActive">
-        <BuilderRow label.translate="Animation">
+        <BuilderRow label.translate="Animation" t-key="this.state.isDefault"
+                    expand="!this.state.isDefault" observeCollapseContent="true">
             <BuilderSelect t-if="!this.isActiveItem('transform_image')" preview="false" dropdownClass="this.props.dropdownClass">
+                <!-- Without a class the theme would animate the block again;
+                     nothing to opt out of when it does not. -->
                 <BuilderSelectItem action="'setAnimationMode'" actionValue="''"
-                            classAction="''"
+                            classAction="this.state.isDefaultEnabled ? 'o_animate_none' : ''"
                             id="'no_animation_opt'"
                             t-if="!this.props.requireAnimation">None</BuilderSelectItem>
+                <BuilderSelectItem action="'setAnimationMode'" actionValue="'onAppearance'"
+                            actionParam="{isDefault: true}"
+                            classAction="'o_animate_default'"
+                            id="'animation_default_opt'"
+                            t-if="!this.props.requireAnimation and this.state.isDefaultEnabled">Default</BuilderSelectItem>
                 <BuilderSelectItem action="'setAnimationMode'" actionValue="'onAppearance'"
                             actionParam="{forceAnimation: true}"
                             classAction="'o_animate'"
@@ -29,9 +37,12 @@
                             id="'animation_on_hover_opt'"
                             t-if="this.state.canHover">On Hover</BuilderSelectItem>
             </BuilderSelect>
+            <a t-if="this.state.isDefault" class="oi oi-filled btn o-hb-theme-tab-link" data-icon="edit"
+                title="Edit the default animation in Theme Tab"
+                t-on-click="this.goToThemeTab"/>
             <t t-if="!!this.props.slots?.animationRowTrailing" t-call-slot="animationRowTrailing"/>
-            <t t-else="" t-call="website.animateOnScrollInOut"/> 
-        </BuilderRow>
+            <t t-else="" t-call="website.animateOnScrollInOut"/>
+        <t t-set-slot="collapse">
         <BuilderRow label.translate="On Scroll" level="1" t-if="!!this.props.slots?.animationRowTrailing">
             <t t-call="website.animateOnScrollInOut"/>
         </BuilderRow>
@@ -48,15 +59,15 @@
             </BuilderSelect>
         </BuilderRow>
         <BuilderRow label.translate="Direction" level="1" t-if="this.state.hasAnimateClass and !this.state.isLimitedEffect">
-            <BuilderSelect id="'animation_direction_opt'" action="'forceAnimation'" dropdownClass="this.props.dropdownClass">
+            <BuilderSelect id="'animation_direction_opt'" dropdownClass="this.props.dropdownClass">
                 <t t-foreach="this.state.directionItems" t-as="item" t-key="item.className">
-                    <BuilderSelectItem classAction="item.className" t-out="item.label" />
+                    <BuilderSelectItem action="'setAnimationDirection'" actionValue="item.className" t-out="item.label" />
                 </t>
             </BuilderSelect>
         </BuilderRow>
         <!-- Trigger -->
         <BuilderRow label.translate="Trigger" level="1">
-            <BuilderSelect t-if="this.isActiveItem('animation_on_appearance_opt') and !this.state.isInDropdown" dropdownClass="this.props.dropdownClass">
+            <BuilderSelect t-if="this.isActiveItems(['animation_on_appearance_opt', 'animation_default_opt']) and !this.state.isInDropdown" action="'forceAnimation'" dropdownClass="this.props.dropdownClass">
                 <BuilderSelectItem classAction="''">First Time Only</BuilderSelectItem>
                 <BuilderSelectItem classAction="'o_animate_both_scroll'">Every Time</BuilderSelectItem>
             </BuilderSelect>
@@ -79,7 +90,7 @@
             <span class="mx-2">to</span>
             <BuilderNumberInput unit="'%'" dataAttributeAction="'scrollZoneEnd'" action="'forceAnimation'" />
         </BuilderRow>
-        <BuilderContext t-if="this.isActiveItem('animation_on_appearance_opt')">
+        <BuilderContext t-if="this.isActiveItems(['animation_on_appearance_opt', 'animation_default_opt'])">
             <!-- Start After -->
             <BuilderRow label.translate="Start After" level="1">
                 <BuilderNumberInput styleAction="'animation-delay'" action="'forceAnimation'" unit="'s'" />
@@ -127,6 +138,8 @@
                     step="1" min="1" unit="'px'" preview="false"/>
             </BuilderRow>
         </t>
+        </t>
+        </BuilderRow>
     </t>
 </t>
 

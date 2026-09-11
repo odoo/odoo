@@ -26,7 +26,9 @@ export class ImageToolOption extends BaseOptionComponent {
             const mimetype = await getMimetypeBeforeShape(editingElement);
             const showCropTool = await isImageSupportedForProcessing(editingElement, mimetype);
             return {
-                isImageAnimated: editingElement.classList.contains("o_animate"),
+                isImageAnimated:
+                    editingElement.classList.contains("o_animate") ||
+                    editingElement.classList.contains("o_animate_default"),
                 isGridMode: editingElement.closest(".o_grid_mode, .o_grid"),
                 isSocialMediaImg: editingElement.classList.contains("social_media_img"),
                 isDynamicSVG: editingElement.matches(dynamicSVGSelector),

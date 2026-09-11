@@ -10,6 +10,16 @@
                 }"
             />
         </BuilderRow>
+        <BuilderRow label.translate="Animation" tooltip.translate="Add a subtle default animation on key building blocks as they scroll into view.">
+            <BuilderSelect action="'customizeWebsiteVariable'" actionParam="'default-animation-type'">
+                <BuilderSelectItem actionValue="'none'">None</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'fade'">Fade Up</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'fade_in'">Fade In</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'zoom_in'">Zoom In</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'zoom_out'">Zoom Out</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'slide'">Slide</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
         <BuilderRow label.translate="Code Injection" tooltip.translate="Enter code that will be added into every page of your site">
             <BuilderButton title.translate="&lt;Head&gt; and &lt;body&gt;" action="'editCustomCode'">&lt;head&gt; and &lt;/body&gt;</BuilderButton>
         </BuilderRow>
