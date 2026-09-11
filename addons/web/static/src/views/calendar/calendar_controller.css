@@ -38,9 +38,9 @@
     --Avatar-size: var(--o-calendar-filter-avatar-size);
 
     flex: 0 0 auto;
+    width: var(--o-datetime-picker-reduced-width);
 
     .o_calendar_unschedule_zone {
-        width: var(--o-datetime-picker-reduced-width);
         height: stretch;
         min-height: 200px; /* Fallback for firefox < 146 */
         border: 1px solid color-mix(in srgb, var(--o-enterprise-action-color) 40%, transparent);
@@ -48,12 +48,10 @@
     }
 
     .o_calendar_sidepanel {
-        width: var(--o-datetime-picker-reduced-width);
-
-        /* Inlined in the panel: it spans the full width, the panel handles the */
-        /* horizontal spacing. */
+        /* The panel is as wide as the reduced picker, whose width includes */
+        /* this horizontal padding: the content is padded the same to align. */
         > .o_datetime_picker {
-            --DateTimePicker-padding: var(--o-bs-spacer-2) 0;
+            --DateTimePicker-padding: var(--o-bs-spacer-2);
         }
 
         .o_time_picker input {
@@ -86,7 +84,14 @@
 
 .o_calendar_sidebar {
     writing-mode: vertical-rl;
-    text-orientation: mixed;
+
+    .oi {
+        text-orientation: sideways;
+    }
+}
+
+.o_calendar_sidepanel_resize {
+    cursor: col-resize;
 }
 
 /* Print */

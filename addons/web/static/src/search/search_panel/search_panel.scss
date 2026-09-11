@@ -89,22 +89,18 @@
 }
 
 .o_search_panel_resize {
+    position: relative;
+    z-index: 1;
+    margin-inline: var(--SearchPanelResize-margin-x, calc(-1 * var(--o-bs-spacer-2)));
     cursor: col-resize;
+
+    + * {
+        isolation: isolate;
+    }
 }
 
 .o_search_panel_sidebar {
     writing-mode: vertical-rl;
-    text-orientation: mixed;
-
-    & .btn {
-        writing-mode: initial;
-        text-orientation: initial;
-    }
-    
-    &:hover .o_search_panel_sidebar_button {
-        background-color: var(--btn-hover-bg);
-        color: var(--btn-hover-color);
-    }
 }
 
 .o_mobile_search_content {
@@ -168,4 +164,5 @@
 
 .o_search_panel_wrap {
     padding-top: var(--SearchPanelSidebarButton-padding-top, var(--o-bs-spacer-3));
+    padding-right: var(--SearchPanel-padding-end, var(--o-bs-spacer-3));
 }

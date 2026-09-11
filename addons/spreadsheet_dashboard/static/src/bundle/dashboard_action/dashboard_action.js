@@ -5,6 +5,7 @@ import {
     onWillStart,
     providePlugins,
     proxy,
+    signal,
     useEffect,
     useListener,
     useProps,
@@ -13,6 +14,7 @@ import { SpreadsheetComponent } from "@spreadsheet/actions/spreadsheet_component
 import { DashboardShareButton } from "@spreadsheet_dashboard/bundle/dashboard_share_button/dashboard_share_button";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { useResizablePanel } from "@web/core/resizable_panel/resizable_panel";
 import { useService } from "@web/core/utils/hooks";
 import { render } from "@web/owl2/utils";
 import { useSetupAction } from "@web/search/action_hook";
@@ -47,6 +49,10 @@ export class SpreadsheetDashboardAction extends Component {
         const id = this.activeDashboardId();
         return id ? this.loader.getDashboard(id) : undefined;
     });
+
+    sidePanelRef = signal.ref();
+    handleRef = signal.ref();
+    foldedRef = signal.ref();
 
     setup() {
         this.Status = Status;
@@ -86,6 +92,17 @@ export class SpreadsheetDashboardAction extends Component {
         /** @type {{ sidebarExpanded: boolean}} */
         this.state = proxy({ sidebarExpanded: true });
         this.searchBarToggler = useSearchBarToggler();
+
+        useResizablePanel({
+            containerRef: this.sidePanelRef,
+            handleRef: this.handleRef,
+            foldedRef: this.foldedRef,
+            resizeOnMount: false,
+            getMaxWidth: () => 0.5 * window.innerWidth,
+            getHandlerSpacing: () => 0,
+            onFold: () => this.toggleSidebar(),
+            onUnfold: () => this.toggleSidebar(),
+        });
     }
 
     get dashboardButton() {

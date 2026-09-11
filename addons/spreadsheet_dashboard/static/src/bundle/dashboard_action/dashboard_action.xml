@@ -38,6 +38,7 @@
             <t t-if="!this.uiService.isSmall">
                 <t t-if="this.state.sidebarExpanded" t-call="spreadsheet_dashboard.DashboardAction.Expanded"/>
                 <t t-else="" t-call="spreadsheet_dashboard.DashboardAction.Collapsed"/>
+                <div class="o_search_panel_resize px-2 d-print-none" t-on-click.stop.prevent="" t-ref="this.handleRef"/>
             </t>
             <!-- Main content -->
             <h3 t-if="!dashboard" class="dashboard-loading-status">No available dashboard</h3>
@@ -49,7 +50,7 @@
                 </div>
                 <t t-else="">
                     <MobileFigureContainer t-if="this.uiService.isSmall" spreadsheetModel="dashboard.model" t-key="dashboard.data.id"/>
-                    <div t-else="" class="o_renderer" t-att-class="{'o-sample-dashboard': dashboard.isSample}">
+                    <div t-else="" class="o_renderer z-0 me-3 px-2 pt-2 border border-bottom-0 rounded-4 rounded-bottom-0" t-att-class="{'o-sample-dashboard': dashboard.isSample}">
                         <SpreadsheetComponent
                             model="dashboard.model"
                             t-key="dashboard.data.id"/>
@@ -60,27 +61,18 @@
     </div>
 
     <t t-name="spreadsheet_dashboard.DashboardAction.Collapsed">
-        <div class="h-100 o_search_panel_sidebar mx-3 cursor-pointer" t-on-click="this.toggleSidebar">
-            <div class="d-flex">
-                <button title="Open sidebar" aria-label="Open sidebar" class="btn btn-light btn-sm d-flex m-1 mb-2 p-2">
-                    <i class="oi oi-lg oi-filled" data-icon="left_panel_open"/>
-                </button>
-                <div class="mx-auto" t-if="this.loader.getActiveDashboard()">
-                    <span class="fw-bolder" t-out="this.activeDashboardGroupName"/>
-                    /
-                    <t t-out="this.loader.getActiveDashboard().data.name"/>
-                </div>
-            </div>
+        <div class="h-100 o_search_panel_sidebar px-3 pt-2 cursor-pointer" t-on-click="this.toggleSidebar" t-ref="this.foldedRef">
+            <t t-if="this.loader.getActiveDashboard()">
+                <span class="fw-bolder" t-out="this.activeDashboardGroupName"/>
+                /
+                <t t-out="this.loader.getActiveDashboard().data.name"/>
+            </t>
         </div>
     </t>
 
     <t t-name="spreadsheet_dashboard.DashboardAction.Expanded">
-        <div class="o_spreadsheet_dashboard_search_panel o_search_panel flex-grow-0 flex-shrink-0 pe-2 pb-5 ps-4 h-100 overflow-auto position-relative pt-3">
-            <button title="Close sidebar" aria-label="Close sidebar" t-if="!this.uiService.isSmall and this.loader.getActiveDashboard()" class="btn btn-light btn-sm d-flex end-0 m-1 mb-2 ms-auto position-absolute p-2 py-1 top-0 z-1" t-on-click="this.toggleSidebar">
-                <i class="oi oi-lg oi-filled" data-icon="left_panel_close"/>
-            </button>
-            <div class="mt-2"/>
-            <section t-foreach="this.getDashboardGroups()" t-as="group" t-key="group.id" class="o_search_panel_section o_search_panel_category mt-3">
+        <div class="o_spreadsheet_dashboard_search_panel o_search_panel flex-grow-0 flex-shrink-0 pe-2 pb-5 ps-3 h-100 overflow-auto position-relative pt-2" t-ref="this.sidePanelRef">
+            <section t-foreach="this.getDashboardGroups()" t-as="group" t-key="group.id" class="o_search_panel_section o_search_panel_category">
                 <header class="o_search_panel_section_header pb-2 text-uppercase o_cursor_default user-select-none">
                     <b t-out="group.name"/>
                 </header>

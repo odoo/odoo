@@ -163,10 +163,13 @@ export class CalendarController extends Component {
     get weekHeader() {
         const { start, end } = this.model.visibleRange;
         if (start.year != end.year) {
-            return `${start.toFormat(isMobileOS() ? "MMM" : "MMMM")} ${start.year} - ${end.toFormat(isMobileOS() ? "MMM" : "MMMM")} ${end.year}`;
+            return `${start.toFormat(isMobileOS() ? "MMM" : "MMMM")} ${start.year} - ${end.toFormat(
+                isMobileOS() ? "MMM" : "MMMM"
+            )} ${end.year}`;
         } else if (start.month != end.month) {
-            return isMobileOS() ? `${start.toFormat("MMM")}-${end.toFormat("MMM")} ${start.year}` :
-                `${start.toFormat("MMMM")} - ${end.toFormat("MMMM")} ${start.year}`;
+            return isMobileOS()
+                ? `${start.toFormat("MMM")}-${end.toFormat("MMM")} ${start.year}`
+                : `${start.toFormat("MMMM")} - ${end.toFormat("MMMM")} ${start.year}`;
         }
         return `${start.toFormat("MMMM")} ${start.year}`;
     }
@@ -221,26 +224,6 @@ export class CalendarController extends Component {
 
     get sidePanelExpanded() {
         return this.uiService.isSmall ? this.state.mobilePanelOpen : this.state.sidePanelExpanded;
-    }
-
-    get filters() {
-        const res = [];
-        for (const f of this.model.filterSections) {
-            const filter = { label: f.label, active: false };
-            if (f.filters.some((f) => f.active)) {
-                filter.active = true;
-            }
-            res.push(filter);
-        }
-        return res;
-    }
-
-    get toScheduleString() {
-        const { eventsToSchedule } = this.model.data;
-        if (eventsToSchedule.length) {
-            return _t("%s to schedule", eventsToSchedule.length);
-        }
-        return _t("Nothing to schedule");
     }
 
     get className() {
