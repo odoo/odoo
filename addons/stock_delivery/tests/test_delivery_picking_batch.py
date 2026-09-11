@@ -121,3 +121,40 @@ class TestDeliveryPickingBatch(TestStockBatchCommon):
         pick_2.button_validate()
         ship_2 = pick_2.move_ids.move_dest_ids.picking_id
         self.assertEqual(ship_1.batch_id.picking_ids, ship_1 | ship_2)
+
+    def test_auto_wave_group_by_carrier(self):
+        """Check carrier grouping when automatically creating and reusing waves.
+
+        Deliveries using different carriers must create separate waves, while
+        subsequent deliveries must join the existing wave for their carrier.
+        """
+
+        self.picking_type_out.write({
+            'auto_batch': True,
+            'batch_group_by_carrier': True,
+            'wave_group_by_product': True,
+        })
+        self.env['stock.quant']._update_available_quantity(self.product_a, self.stock_location, 4)
+        carrier_2 = self.local_delivery_carrier.copy({'name': 'Other Carrier'})
+        pickings = self.env['stock.picking'].create([{
+            'picking_type_id': self.picking_type_out.id,
+            'carrier_id': carrier.id,
+            'move_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'product_uom_qty': 1,
+            })],
+        } for carrier in (self.local_delivery_carrier, carrier_2, self.local_delivery_carrier, carrier_2)])
+
+        first_pickings = pickings[:2]
+        first_pickings.action_confirm()
+        first_pickings.action_assign()
+        self.assertEqual(len(first_pickings.batch_id), 2)
+
+        remaining_pickings = pickings[2:]
+        remaining_pickings.action_confirm()
+        remaining_pickings.action_assign()
+        self.assertEqual(len(remaining_pickings.batch_id), 2)
+        self.assertEqual(len(pickings.batch_id), 2)
+        for wave in pickings.batch_id:
+            self.assertEqual(len(wave.picking_ids), 2)
+            self.assertEqual(len(wave.picking_ids.carrier_id), 1)
