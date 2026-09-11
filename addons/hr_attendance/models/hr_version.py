@@ -14,8 +14,7 @@ class HrVersion(models.Model):
         ], limit=1).sudo(False)
         if company_ruleset:
             return company_ruleset
-        default_ruleset = self.env.ref('hr_attendance.hr_attendance_default_ruleset', raise_if_not_found=False)
-        return default_ruleset if default_ruleset and default_ruleset.sudo().active else False
+        return False
 
     ruleset_id = fields.Many2one(
          "hr.attendance.overtime.ruleset",

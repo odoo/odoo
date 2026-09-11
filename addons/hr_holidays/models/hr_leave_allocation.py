@@ -299,10 +299,7 @@ class HrLeaveAllocation(models.Model):
     def _compute_allowed_work_entry_type_ids(self):
         for allocation in self:
             country = allocation.employee_company_id.country_id or self.env.company.country_id
-            if not country or not self.env['hr.work.entry.type'].search_count([('country_id', '=', country.id)], limit=1):
-                domain = [('country_id', '=', False)]
-            else:
-                domain = [('country_id', '=', country.id)]
+            domain = [('country_id', '=', country.id)] if country else [('id', '=', False)]
             domain = Domain.AND([allocation._domain_work_entry_type_id(), domain])
             allocation.allowed_work_entry_type_ids = self.env['hr.work.entry.type'].search(domain)
 

@@ -7,6 +7,17 @@ from odoo.tests import TransactionCase, tagged
 @tagged('-at_install', 'post_install')
 class TestWorkEntryType(TransactionCase):
 
+    def test_default_country_is_current_company_country(self):
+        country = self.env.ref('base.be')
+        self.env.company.country_id = country
+
+        work_entry_type = self.env['hr.work.entry.type'].create({
+            'code': 'TEST_DEFAULT_COUNTRY',
+            'name': 'Test default country',
+        })
+
+        self.assertEqual(work_entry_type.country_id, country)
+
     def test_duplicate_work_entry_type_same_country(self):
         country_be = self.env.ref('base.be')
         self.env['hr.work.entry.type'].create({

@@ -30,6 +30,7 @@ class HrWorkEntryType(models.Model):
         'res.country',
         string="Country",
         tracking=True,
+        default=lambda self: self.env.company.country_id,
         domain=lambda self: [('id', 'in', self.env.companies.country_id.ids)]
     )
     country_code = fields.Char(related='country_id.code')
@@ -65,7 +66,7 @@ class HrWorkEntryType(models.Model):
 
         related_we_types = self.search([
             ('code', 'in', self.mapped('code')),
-            ('country_id', 'in', self.country_id.ids + [False]),
+            ('country_id', 'in', self.country_id.ids),
             ('id', 'not in', self.ids),
         ]).grouped(lambda wt: (wt.code, wt.country_id))
 
