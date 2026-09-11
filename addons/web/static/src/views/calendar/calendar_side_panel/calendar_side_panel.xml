@@ -1,23 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="web.CalendarSidePanel">
-        <div t-if="this.props.sidePanelExpanded" class="o_calendar_sidepanel_container d-print-none position-relative w-100 w-md-auto bg-view overflow-x-hidden overflow-y-auto">
-            <div t-if="this.props.model.meta.canScheduleEvents and this.state.isDragging" class="d-flex o_calendar_unschedule_zone m-3 align-items-center justify-content-center">
-                <b>Drop here to unschedule</b>
-            </div>
-            <div class="o_calendar_sidepanel" t-att-class="{ 'd-none': this.props.model.meta.canScheduleEvents and this.state.isDragging }">
-                <DatePicker t-if="this.showDatePicker" t-props="this.datePickerProps" />
-                <div class="o_calendar_sidepanel_content px-3">
-                    <t t-foreach="this.sortedFilterSections" t-as="section" t-key="section.fieldName">
-                        <FilterSection model="this.props.model" section="section"/>
-                    </t>
-                    <ScheduleSection
-                        t-if="this.props.model.meta.canScheduleEvents"
-                        model="this.props.model"
-                        editRecord="this.props.editRecord"
-                    />
+        <ResizablePanel
+            class="'d-print-none'"
+            handleSide="'start'"
+            minWidth="this.width"
+            maxWidth="this.width"
+            resizable="!this.uiService.isSmall"
+            folded="!this.props.sidePanelExpanded"
+            onToggle="() => this.props.toggleSidePanel()"
+        >
+            <div class="o_calendar_sidepanel_container d-print-none position-relative bg-view overflow-x-hidden overflow-y-auto"
+                t-att-class="{ 'w-100 flex-shrink-0': this.uiService.isSmall, 'flex-grow-1 min-h-0 pb-5': !this.uiService.isSmall }">
+                <div t-if="this.props.model.meta.canScheduleEvents and this.state.isDragging" class="d-flex o_calendar_unschedule_zone m-3 align-items-center justify-content-center">
+                    <b>Drop here to unschedule</b>
+                </div>
+                <div class="o_calendar_sidepanel" t-att-class="{ 'd-none': this.props.model.meta.canScheduleEvents and this.state.isDragging }">
+                    <DatePicker t-if="this.showDatePicker" t-props="this.datePickerProps" />
+                    <div class="o_calendar_sidepanel_content px-3">
+                        <t t-foreach="this.sortedFilterSections" t-as="section" t-key="section.fieldName">
+                            <FilterSection model="this.props.model" section="section"/>
+                        </t>
+                        <ScheduleSection
+                            t-if="this.props.model.meta.canScheduleEvents"
+                            model="this.props.model"
+                            editRecord="this.props.editRecord"
+                        />
+                    </div>
                 </div>
             </div>
-        </div>
+            <t t-set-slot="folded">
+                <div class="d-flex align-items-center gap-1">
+                    <t t-if="this.filters.length">
+                        <i class="oi mb-1" data-icon="filter_alt"/>
+                        <t t-foreach="this.filters" t-as="filter" t-key="filter_index">
+                            <span class="text-truncate mb-2" t-att-class="{ 'text-muted': !filter.active }" t-out="filter.label"/>
+                        </t>
+                    </t>
+                    <t t-if="this.props.model.meta.canScheduleEvents">
+                        <i class="oi mb-1" t-att-class="{ 'mt-3': this.filters.length }" data-icon="schedule"/>
+                        <span class="text-truncate mb-2" t-out="this.toScheduleString"/>
+                    </t>
+                </div>
+            </t>
+        </ResizablePanel>
     </t>
 </templates>

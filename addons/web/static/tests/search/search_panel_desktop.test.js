@@ -1,5 +1,13 @@
 import { describe, expect, press, test } from "@odoo/hoot";
-import { drag, queryAll, queryAllTexts, queryFirst, scroll } from "@odoo/hoot-dom";
+import {
+    drag,
+    queryAll,
+    queryAllTexts,
+    queryFirst,
+    queryOne,
+    queryRect,
+    scroll,
+} from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { Component, useOnChange, useProps, xml } from "@odoo/owl";
 import {
@@ -3281,7 +3289,7 @@ test("Display message when no filter availible", async () => {
         resModel: "partner",
         searchViewId: false,
     });
-    await contains(`.o_search_panel_sidebar button`).click();
+    await contains(`.o_resizable_panel_folded`).click();
     expect(`.o_search_panel_empty_state`).toHaveCount(1);
     expect(`.o_search_panel_empty_state button`).toHaveCount(1);
 });
@@ -3308,32 +3316,94 @@ test("search panel can be collapsed/expanded", async () => {
     expect(`.o_search_panel`).toHaveCount(1);
     expect(`.o_search_panel_section`).toHaveCount(2);
 
-    await contains(`.o_search_panel button`).click();
-    expect.verifySteps([["setItem", "search_panel_expanded,false,1", false]]);
+    let resizeHandle = queryFirst(".o_resizable_panel_handle");
+    let { drop } = await drag(resizeHandle);
+    await drop(resizeHandle, { position: { x: 0 } });
+    await animationFrame();
+    expect.verifySteps([["setItem", "search_panel_expanded,partner,1", false]]);
     expect(`.o_search_panel`).toHaveCount(0);
-    expect(`.o_search_panel_sidebar`).toHaveCount(1);
-    expect(`.o_search_panel_sidebar`).toHaveText("All");
+    expect(`.o_resizable_panel_folded`).toHaveCount(1);
+    expect(`.o_resizable_panel_folded`).toHaveText("All");
 
-    await contains(`.o_search_panel_sidebar button`).click();
-    expect.verifySteps([["setItem", "search_panel_expanded,false,1", true]]);
+    await contains(`.o_resizable_panel_folded`).click();
+    expect.verifySteps([["setItem", "search_panel_expanded,partner,1", true]]);
     expect(`.o_search_panel`).toHaveCount(1);
 
     await contains(queryAll`.o_search_panel_category_value header`[1]).click();
     await contains(queryAll`.o_search_panel_filter_value input`[1]).click();
-    await contains(`.o_search_panel button`).click();
-    expect.verifySteps([["setItem", "search_panel_expanded,false,1", false]]);
+    resizeHandle = queryFirst(".o_resizable_panel_handle");
+    ({ drop } = await drag(resizeHandle));
+    await drop(resizeHandle, { position: { x: 0 } });
+    await animationFrame();
+    expect.verifySteps([["setItem", "search_panel_expanded,partner,1", false]]);
     expect(`.o_search_panel`).toHaveCount(0);
-    expect(`.o_search_panel_sidebar`).toHaveCount(1);
-    expect(`.o_search_panel_sidebar`).toHaveText("asusteksilver");
+    expect(`.o_resizable_panel_folded`).toHaveCount(1);
+    expect(`.o_resizable_panel_folded`).toHaveText("asusteksilver");
 });
 
 test("search panel can be collapsed by default if it was set in local storage beforehand", async () => {
-    localStorage.setItem("search_panel_expanded,false,1", false);
+    localStorage.setItem("search_panel_expanded,partner,1", false);
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
     expect(`.o_search_panel`).toHaveCount(0);
-    expect(`.o_search_panel_sidebar`).toHaveCount(1);
-    expect(`.o_search_panel_sidebar`).toHaveText("All");
+    expect(`.o_resizable_panel_folded`).toHaveCount(1);
+    expect(`.o_resizable_panel_folded`).toHaveText("All");
+});
+
+test("search panel can be folded and unfolded with its toggle button", async () => {
+    patchWithCleanup(localStorage, {
+        setItem(key, value) {
+            if (key.startsWith("search_panel_expanded")) {
+                expect.step(["setItem", key, value]);
+            }
+            super.setItem(...arguments);
+        },
+    });
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    const toggle = queryOne(".o_side_panel_toggle");
+    expect(toggle).toHaveAttribute("aria-label", "Collapse side panel");
+    expect(".o_side_panel_toggle .oi").not.toHaveClass("o_side_panel_toggle_folded");
+
+    await contains(".o_side_panel_toggle").click();
+    expect.verifySteps([["setItem", "search_panel_expanded,partner,1", false]]);
+    expect(`.o_search_panel`).toHaveCount(0);
+    expect(`.o_resizable_panel_folded`).toHaveCount(1);
+    expect(queryOne(".o_side_panel_toggle")).toBe(toggle);
+    expect(toggle).toHaveAttribute("aria-label", "Expand side panel");
+    expect(".o_side_panel_toggle .oi").toHaveClass("o_side_panel_toggle_folded");
+
+    await contains(".o_side_panel_toggle").click();
+    expect.verifySteps([["setItem", "search_panel_expanded,partner,1", true]]);
+    expect(`.o_search_panel`).toHaveCount(1);
+    expect(queryOne(".o_side_panel_toggle")).toBe(toggle);
+    expect(toggle).toHaveAttribute("aria-label", "Collapse side panel");
+});
+
+test("folded search panel can be expanded by dragging its resize handle", async () => {
+    await mountWithSearch(TestComponent, {
+        resModel: "partner",
+        searchViewId: false,
+    });
+    const originalWidth = queryFirst(".o_search_panel").offsetWidth;
+
+    let resizeHandle = queryFirst(".o_resizable_panel_handle");
+    let { drop } = await drag(resizeHandle);
+    await drop(resizeHandle, { position: { x: 0 } });
+    await animationFrame();
+    expect(`.o_search_panel`).toHaveCount(0);
+    expect(`.o_resizable_panel_folded`).toHaveCount(1);
+    expect(`.o_resizable_panel_folded button`).toHaveCount(0);
+
+    resizeHandle = queryFirst(".o_resizable_panel_handle");
+    const { moveTo } = await drag(resizeHandle);
+    ({ drop } = await moveTo(resizeHandle, { position: { x: 500 } }));
+    await animationFrame();
+    expect(`.o_search_panel`).toHaveCount(1);
+    expect(`.o_resizable_panel_folded`).toHaveCount(0);
+
+    await drop(".o_resizable_panel_handle", { position: { x: 500 } });
+    expect(queryFirst(".o_search_panel").offsetWidth).toBeGreaterThan(originalWidth);
 });
 
 test("search panel collapse with multiple filter categories selected", async () => {
@@ -3359,28 +3429,35 @@ test("search panel collapse with multiple filter categories selected", async () 
     await contains(queryAll`.o_search_panel_category_value header`[1]).click();
     await contains(queryAll`.o_search_panel_filter_value input`[1]).click();
     await contains(queryAll`.o_search_panel_filter_value input`[2]).click();
-    await contains(`.o_search_panel button`).click();
+
+    const resizeHandle = queryFirst(".o_resizable_panel_handle");
+    const { drop } = await drag(resizeHandle);
+    await drop(resizeHandle, { position: { x: 0 } });
+    await animationFrame();
     expect(`.o_search_panel`).toHaveCount(0);
-    expect(`.o_search_panel_sidebar`).toHaveCount(1);
-    expect(`.o_search_panel_sidebar`).toHaveText("asusteksilverABC");
+    expect(`.o_resizable_panel_folded`).toHaveCount(1);
+    expect(`.o_resizable_panel_folded`).toHaveText("asusteksilverABC");
 });
 
 test("expand/collapse state is kept when switching between controllers", async () => {
     onRpc("has_group", () => true);
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
-    await contains(`.o_search_panel button`).click();
+    const resizeHandle = queryFirst(".o_resizable_panel_handle");
+    const { drop } = await drag(resizeHandle);
+    await drop(resizeHandle, { position: { x: 0 } });
+    await animationFrame();
     expect(`.o_search_panel`).toHaveCount(0);
-    expect(`.o_search_panel_sidebar`).toHaveCount(1);
+    expect(`.o_resizable_panel_folded`).toHaveCount(1);
     await getService("action").switchView("list");
     expect(`.o_search_panel`).toHaveCount(0);
-    expect(`.o_search_panel_sidebar`).toHaveCount(1);
-    await contains(`.o_search_panel_sidebar button`).click();
+    expect(`.o_resizable_panel_folded`).toHaveCount(1);
+    await contains(`.o_resizable_panel_folded`).click();
     expect(`.o_search_panel`).toHaveCount(1);
-    expect(`.o_search_panel_sidebar`).toHaveCount(0);
+    expect(`.o_resizable_panel_folded`).toHaveCount(0);
     await getService("action").switchView("kanban");
     expect(`.o_search_panel`).toHaveCount(1);
-    expect(`.o_search_panel_sidebar`).toHaveCount(0);
+    expect(`.o_resizable_panel_folded`).toHaveCount(0);
 });
 
 test("search panel should be resizable", async () => {
@@ -3390,7 +3467,7 @@ test("search panel should be resizable", async () => {
     });
 
     const searchPanel = queryFirst(".o_search_panel");
-    const resizeHandle = queryFirst(".o_search_panel_resize");
+    const resizeHandle = queryFirst(".o_resizable_panel_handle");
     const originalWidth = searchPanel.offsetWidth;
 
     const { drop } = await drag(resizeHandle);
@@ -3403,7 +3480,7 @@ test("search panel width is kept when switching between controllers", async () =
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
     const searchPanel = queryFirst(".o_search_panel");
-    const resizeHandle = queryFirst(".o_search_panel_resize");
+    const resizeHandle = queryFirst(".o_resizable_panel_handle");
     const originalWidth = searchPanel.offsetWidth;
 
     const { drop } = await drag(resizeHandle);
@@ -3415,6 +3492,26 @@ test("search panel width is kept when switching between controllers", async () =
     expect(queryFirst(".o_search_panel").offsetWidth).toBe(newWidth);
     await getService("action").switchView("kanban");
     expect(queryFirst(".o_search_panel").offsetWidth).toBe(newWidth);
+});
+
+test("search panel min width is kept when switching between controllers", async () => {
+    onRpc("has_group", () => true);
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    const minWidth = queryFirst(".o_search_panel").offsetWidth;
+
+    let { drop } = await drag(".o_resizable_panel_handle");
+    await drop(".o_resizable_panel_handle", { position: { x: 500 } });
+    await getService("action").switchView("list");
+    const newWidth = queryFirst(".o_search_panel").offsetWidth;
+    expect(newWidth).toBeGreaterThan(minWidth);
+
+    ({ drop } = await drag(".o_resizable_panel_handle"));
+    await drop(".o_resizable_panel_handle", {
+        position: { x: queryRect(".o_search_panel").left + 0.75 * minWidth },
+    });
+    expect(".o_search_panel").toHaveCount(1);
+    expect(queryFirst(".o_search_panel").offsetWidth).toBe(minWidth);
 });
 
 test("hide search panel if there is no records", async () => {
@@ -3434,7 +3531,7 @@ test("hide search panel if there is no records", async () => {
         searchViewId: false,
     });
 
-    expect(`.o_search_panel_sidebar`).toHaveCount(1);
+    expect(`.o_resizable_panel_folded`).toHaveCount(1);
     expect(`.o_search_panel`).toHaveCount(0);
 });
 

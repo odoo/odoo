@@ -1,15 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates>
 
-    <t t-name="web_studio.ResizablePanel">
-        <div class="o_resizable_panel d-flex flex-column" t-att-class="this.class" t-ref="this.containerRef">
-            <t t-call-slot="default" />
-            <div
-                class="o_resizable_panel_handle position-absolute top-0 bottom-0" t-att-class="this.handleClass()"
-                t-ref="this.handleRef"
-            >
-                <span t-if="this.props.outerHandle" class="border-start border-2 border-primary h-100"/>
+    <t t-name="web.ResizablePanel">
+        <t t-if="!this.props.resizable">
+            <t t-if="!this.props.folded" t-call-slot="default"/>
+        </t>
+        <div t-elif="!this.props.onToggle" class="o_resizable_panel d-flex flex-column" t-att-class="this.class()" t-ref="this.containerRef">
+            <t t-call-slot="default"/>
+            <t t-call="web.ResizablePanel.Handle"/>
+        </div>
+        <t t-else="">
+            <t t-if="this.props.handleSide === 'end'" t-call="web.ResizablePanel.Toggle"/>
+            <t t-else="" t-call="web.ResizablePanel.Handle"/>
+            <div t-if="!this.props.folded" class="o_resizable_panel d-flex flex-column flex-shrink-0" t-att-class="this.class()" t-ref="this.containerRef">
+                <t t-call-slot="default"/>
             </div>
+            <div t-else="" class="o_resizable_panel_folded h-100 cursor-pointer d-print-none px-3 pt-2 pb-5" t-on-click="() => this.props.onToggle()" t-ref="this.foldedRef">
+                <t t-call-slot="folded"/>
+            </div>
+            <t t-if="this.props.handleSide === 'end'" t-call="web.ResizablePanel.Handle"/>
+            <t t-else="" t-call="web.ResizablePanel.Toggle"/>
+        </t>
+    </t>
+
+    <t t-name="web.ResizablePanel.Handle">
+        <div class="o_resizable_panel_handle d-print-none" t-att-class="this.edgeClass()" t-on-click.stop.prevent="" t-ref="this.handleRef">
+            <div class="o_resizable_panel_grip position-absolute top-0 bottom-0" t-attf-class="o_resizable_panel_grip_{{ this.props.handleSide }}"/>
+        </div>
+    </t>
+
+    <t t-name="web.ResizablePanel.Toggle">
+        <div class="position-relative z-3 d-print-none">
+            <button
+                type="button"
+                class="o_side_panel_toggle btn btn-light rounded-circle position-absolute bottom-0 mb-2 p-0 d-flex align-items-center justify-content-center"
+                t-attf-class="o_side_panel_toggle_{{ this.toggleSide() }}"
+                t-att-data-tooltip="this.toggleLabel()"
+                t-att-aria-label="this.toggleLabel()"
+                t-att-aria-expanded="!this.props.folded"
+                t-on-click="() => this.props.onToggle()"
+            >
+                <i
+                    class="oi oi-fw pe-none"
+                    t-att-class="{ o_side_panel_toggle_folded: this.props.folded }"
+                    t-att-data-icon="this.toggleSide() === 'start' ? 'chevron_backward' : 'chevron_forward'"
+                    aria-hidden="true"
+                />
+            </button>
         </div>
     </t>
 

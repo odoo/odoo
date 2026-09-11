@@ -88,22 +88,14 @@
     }
 }
 
-.o_search_panel_resize {
-    cursor: col-resize;
-}
+.o_search_panel_container {
+    --SearchPanel-width: 100%;
 
-.o_search_panel_sidebar {
-    writing-mode: vertical-rl;
-    text-orientation: mixed;
-
-    & .btn {
-        writing-mode: initial;
-        text-orientation: initial;
-    }
-    
-    &:hover .o_search_panel_sidebar_button {
-        background-color: var(--btn-hover-bg);
-        color: var(--btn-hover-color);
+    /* The space of the scrollbar is always kept, in place of most of the end padding: */
+    /* nothing moves when it shows. */
+    .o_search_panel {
+        scrollbar-gutter: stable;
+        padding-inline-end: var(--o-bs-spacer-1);
     }
 }
 
@@ -164,8 +156,4 @@
             color: var(--SearchPanelHeader-hover-fold-color, var(--o-bs-black));
         }
     }
-}
-
-.o_search_panel_wrap {
-    padding-top: var(--SearchPanelSidebarButton-padding-top, var(--o-bs-spacer-3));
 }

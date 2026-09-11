@@ -4,6 +4,14 @@
  * libsass. Every bundle including this file emits its own values: light,
  * dark and print bundles each follow their variables.
  */
+
+/* Registered so that its computed value resolves to px, readable from JS. */
+@property --o-datetime-picker-reduced-width {
+    syntax: "<length>";
+    inherits: true;
+    initial-value: 0px;
+}
+
 :root,
 :host {
     --o-action: #{$o-action};
