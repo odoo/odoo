@@ -71,9 +71,18 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
         def allocate(order_moves, value):
             # the order is valued once and spread over all it produced, not per period
             order_qty = sum(order_moves.mapped('quantity_product_uom'))
-            share = value / order_qty if order_qty else 0.0
+            unit_cost = value / order_qty if order_qty else 0.0
             for move in order_moves & moves:
-                values[move.id] = share * move.quantity_product_uom
+                qty = move.quantity_product_uom
+                valued_qty = move._get_valued_qty()
+                stated_share = qty / valued_qty if valued_qty else 0.0
+                if (manual := move._get_manual_value(qty))['quantity']:
+                    values[move.id] = manual['value'] * stated_share
+                else:
+                    values[move.id] = (
+                        unit_cost * qty
+                        + move._get_value_from_extra(qty)['value'] * stated_share
+                    )
 
         for production in moves.production_id:
             # the shares come from the order, so they do not depend on which of its
