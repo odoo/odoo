@@ -29,6 +29,9 @@ function useResizable({
     useListener(document, "mousemove", (ev) => onMouseMove(ev));
 
     useListener(window, "resize", () => {
+        if (!containerRef.el) {
+            return;
+        }
         const limit = getLimitWidth();
         if (getContainerRect().width >= limit) {
             resize(computeFinalWidth(limit));

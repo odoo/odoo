@@ -6,7 +6,7 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { throttleForAnimation } from "@web/core/utils/timing";
+import { useThrottleForAnimation } from "@web/core/utils/timing";
 import { getFieldDomain } from "@web/model/relational_model/utils";
 import { useSpecialData } from "@web/views/fields/relational_utils";
 import { standardFieldProps } from "../standard_field_props";
@@ -92,7 +92,12 @@ export class StatusBarField extends Component {
             forceRecomputeItems = false;
         });
 
-        useListener(window, "resize", throttleForAnimation(adjust));
+        const throttledRenderAndAdapt = useThrottleForAnimation(() => {
+            if (this.rootRef()) {
+                adjust();
+            }
+        });
+        useListener(window, "resize", throttledRenderAndAdapt);
 
         // Special data
         if (this.field.type === "many2one") {
@@ -105,15 +110,17 @@ export class StatusBarField extends Component {
                 }
                 let domain = getFieldDomain(record, fieldName, props.domain);
                 domain = Domain.and([this.getDomain(props), domain]).toList();
-                const res = await orm.searchRead(relation, domain, fieldNames, { context }).catch((error) => {
-                    if (error instanceof ConnectionLostError) {
-                        if (this.props.record.data[this.props.name]) {
-                            return [this.props.record.data[this.props.name]];
+                const res = await orm
+                    .searchRead(relation, domain, fieldNames, { context })
+                    .catch((error) => {
+                        if (error instanceof ConnectionLostError) {
+                            if (this.props.record.data[this.props.name]) {
+                                return [this.props.record.data[this.props.name]];
+                            }
+                            return [];
                         }
-                        return [];
-                    }
-                    throw error;
-                });
+                        throw error;
+                    });
                 forceRecomputeItems = true;
                 return res;
             });
