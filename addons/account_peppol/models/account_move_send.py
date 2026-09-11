@@ -218,8 +218,21 @@ class AccountMoveSend(models.AbstractModel):
         if method == 'peppol':
             partner = move.partner_id.commercial_partner_id.with_company(move.company_id)
             invoice_edi_format = move_data.get('invoice_edi_format') or partner._get_peppol_edi_format()
+
             if partner.peppol_verification_state == 'not_verified':
                 partner.button_account_peppol_check_partner_endpoint(company=move.company_id)
+
+            if partner.peppol_verification_state != 'valid' and partner.routing_endpoint and partner.routing_identifier in ('0208', '9925'):
+                # only for BE participants
+                inverse_eas = '9925' if partner.routing_identifier == '0208' else '0208'
+                inverse_endpoint = f'BE{partner.routing_endpoint}' if partner.routing_identifier == '0208' else partner.routing_endpoint[2:]
+                if partner._get_peppol_verification_state(inverse_endpoint, inverse_eas, invoice_edi_format) == 'valid':
+                    partner.write({
+                        'routing_identifier': inverse_eas,
+                        'routing_endpoint': inverse_endpoint,
+                    })
+                    partner.button_account_peppol_check_partner_endpoint(company=move.company_id)
+
             return all([
                 partner.country_code in PEPPOL_LIST,
                 self._is_applicable_to_company(method, move.company_id),
