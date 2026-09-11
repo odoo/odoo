@@ -296,7 +296,32 @@ export class PaymentScreen extends Component {
         // If a paymentline with a payment terminal linked to
         // it is removed, the terminal should get a cancel
         // request.
+<<<<<<< 473dd7f849bf039386e4f526bc87e1274759d559
         const finalizeDeletion = () => {
+||||||| 0a682634173d8836a1ea364b0cc5c74acfaafa27
+        if (["waiting", "waitingCard", "timeout"].includes(line.getPaymentStatus())) {
+            line.setPaymentStatus("waitingCancel");
+            line.payment_method_id.payment_terminal
+                .sendPaymentCancel(this.currentOrder, uuid)
+                .then(() => {
+                    this.currentOrder.removePaymentline(line);
+                    this.numberBuffer.reset();
+                });
+        } else if (line.getPaymentStatus() !== "waitingCancel") {
+=======
+        if (
+            ["waiting", "waitingCard", "timeout"].includes(line.getPaymentStatus()) &&
+            line.payment_method_id.payment_terminal
+        ) {
+            line.setPaymentStatus("waitingCancel");
+            line.payment_method_id.payment_terminal
+                .sendPaymentCancel(this.currentOrder, uuid)
+                .then(() => {
+                    this.currentOrder.removePaymentline(line);
+                    this.numberBuffer.reset();
+                });
+        } else if (line.getPaymentStatus() !== "waitingCancel") {
+>>>>>>> 286f375ce2eb3ae6f03e8d0bc515582ca6943a97
             this.currentOrder.removePaymentline(line);
             this.numberBuffer.reset();
         };
