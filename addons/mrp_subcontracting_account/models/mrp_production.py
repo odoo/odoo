@@ -16,7 +16,8 @@ class MrpProduction(models.Model):
             bill_data = last_done_receipt._get_value_from_account_move(quantity)
             po_data = last_done_receipt._get_value_from_quotation(quantity - bill_data['quantity'])
             if not bill_data['value'] and not po_data['value']:
-                self.extra_cost = last_done_receipt.price_unit
+                supplier_info = last_done_receipt.product_id._select_seller(partner_id=last_done_receipt.partner_id, quantity=last_done_receipt.quantity, date=last_done_receipt.date)
+                self.extra_cost = supplier_info['price'] if supplier_info else last_done_receipt.price_unit
             else:
                 self.extra_cost = (bill_data['value'] + po_data['value']) / quantity
         return super()._cal_price(consumed_moves=consumed_moves)
