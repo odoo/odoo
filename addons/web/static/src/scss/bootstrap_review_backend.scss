@@ -12,6 +12,50 @@
     --#{$variable-prefix}btn-disabled-border-color: transparent;
     --#{$prefix}btn-focus-box-shadow: #{$focus-ring-box-shadow};
     --#{$prefix}gradient: #{$o-gradient-btn};
+
+    // Bootstrap gives the same declarations to a button being pressed
+    // (':active') and to a toggled one ('.active', '.show' and a checked
+    // '.btn-check'), so a selected button looks like a button being clicked.
+    // The '--btn-active-*' variables keep styling the toggled ones, the
+    // pressed state gets these. They default to the toggled values, meaning
+    // nothing changes until a design gives them their own.
+    --#{$prefix}btn-pressed-color: var(--#{$prefix}btn-active-color);
+    --#{$prefix}btn-pressed-bg: var(--#{$prefix}btn-active-bg);
+    --#{$prefix}btn-pressed-border-color: var(--#{$prefix}btn-active-border-color);
+    --#{$prefix}btn-pressed-shadow: var(--#{$prefix}btn-active-shadow);
+}
+
+// Same selectors as Bootstrap: a label following a '.btn-check' is left out,
+// its checked design must not flash while the mouse is held down.
+:not(.btn-check) + .btn:active,
+.btn:first-child:active {
+    color: var(--#{$prefix}btn-pressed-color);
+    background-color: var(--#{$prefix}btn-pressed-bg);
+    background-image: if($enable-gradients, none, null);
+    border-color: var(--#{$prefix}btn-pressed-border-color);
+    @include box-shadow(var(--#{$prefix}btn-pressed-shadow));
+
+    &:focus-visible {
+        @if $enable-shadows {
+            box-shadow: var(--#{$prefix}btn-pressed-shadow), var(--#{$prefix}btn-focus-box-shadow);
+        } @else {
+            box-shadow: var(--#{$prefix}btn-focus-box-shadow);
+        }
+    }
+}
+
+// Values a map can give to the pressed state. Only the defined ones are
+// emitted, the others keep the toggled value.
+@mixin o-btn-pressed-variant($background, $border, $color) {
+    @if $background {
+        --#{$prefix}btn-pressed-bg: #{$background};
+    }
+    @if $border {
+        --#{$prefix}btn-pressed-border-color: #{$border};
+    }
+    @if $color {
+        --#{$prefix}btn-pressed-color: #{$color};
+    }
 }
 
 // 1. Render buttons defined in '$o-btns-bs-override' and '$o-btns-bs-outline-override'
@@ -32,6 +76,11 @@
             o-safe-get($-value, disabled-border),
             o-safe-get($-value, disabled-color)
         );
+        @include o-btn-pressed-variant(
+            o-safe-get($-value, pressed-background),
+            o-safe-get($-value, pressed-border),
+            o-safe-get($-value, pressed-color)
+        );
     }
 }
 
@@ -51,6 +100,11 @@
             o-safe-get($-value, disabled-border),
             o-safe-get($-value, disabled-color)
         );
+        @include o-btn-pressed-variant(
+            o-safe-get($-value, pressed-background),
+            o-safe-get($-value, pressed-border),
+            o-safe-get($-value, pressed-color)
+        );
     }
 }
 
@@ -67,6 +121,11 @@
             o-safe-get($-value, active-border),
             o-safe-get($-value, active-color),
         );
+        @include o-btn-pressed-variant(
+            o-safe-get($-value, pressed-background),
+            o-safe-get($-value, pressed-border),
+            o-safe-get($-value, pressed-color)
+        );
     }
 }
 
@@ -75,12 +134,46 @@
 @each $-name, $-color in $theme-colors {
     @if (not map-get($o-btns-bs-override, $-name)) {
         .btn-#{$-name} {
-            @include button-variant($-color, $-color);
+            @if $o-btns-split-states {
+                // The toggled state inverts the filling, the pressed one keeps
+                // the strong step. 'shade-color' follows the palette: it
+                // darkens in light mode and lightens in dark mode, so the
+                // pressed state is always the step furthest away from the page
+                // background.
+                $-toggled-bg: mix($-color, $body-bg, 12%);
+                $-pressed-bg: shade-color($-color, $btn-active-bg-shade-amount);
+
+                @include button-variant(
+                    $-color,
+                    $-color,
+                    $active-background: $-toggled-bg,
+                    $active-border: $-color,
+                    $active-color: color-contrast($-toggled-bg)
+                );
+                @include o-btn-pressed-variant($-pressed-bg, $-pressed-bg, color-contrast($-pressed-bg));
+            } @else {
+                @include button-variant($-color, $-color);
+            }
         }
     }
     @if (not map-get($o-btns-bs-outline-override, $-name)) {
         .btn-outline-#{$-name} {
             @include button-outline-variant($-color);
+
+            @if $o-btns-split-states {
+                // Bootstrap fills the button on hover and never changes it
+                // again, so hover, toggled and pressed end up identical.
+                // Instead the hover only tints the background, the toggled
+                // state fills it and the pressed one fills it with a stronger
+                // color.
+                $-pressed-bg: shade-color($-color, 15%);
+
+                @include o-btn-pressed-variant($-pressed-bg, $-pressed-bg, color-contrast($-pressed-bg));
+
+                --#{$prefix}btn-hover-color: #{$-color};
+                --#{$prefix}btn-hover-bg: #{rgba($-color, .12)};
+                --#{$prefix}btn-hover-border-color: #{$-color};
+            }
         }
     }
 }
@@ -88,7 +181,21 @@
 // 3. Render custom buttons.
 @each $-name, $-color in $o-btn-custom {
     .btn-#{$-name} {
-        @include button-variant($-color, $-color);
+        @if $o-btns-split-states {
+            $-toggled-bg: mix($-color, $body-bg, 12%);
+            $-pressed-bg: shade-color($-color, $btn-active-bg-shade-amount);
+
+            @include button-variant(
+                $-color,
+                $-color,
+                $active-background: $-toggled-bg,
+                $active-border: $-color,
+                $active-color: color-contrast($-toggled-bg)
+            );
+            @include o-btn-pressed-variant($-pressed-bg, $-pressed-bg, color-contrast($-pressed-bg));
+        } @else {
+            @include button-variant($-color, $-color);
+        }
     }
 }
 
