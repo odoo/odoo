@@ -512,7 +512,10 @@ class HrEmployee(models.Model):
                 version = context_version
             else:
                 version = employee.current_version_id
-            employee.version_id = version
+            
+            if employee.version_id != version:
+                employee.version_id = version
+                self.env.add_to_compute(self._fields['contract_type_id'], employee)
 
     @api.depends("version_id.work_location_id.name")
     def _compute_work_location_name(self):
