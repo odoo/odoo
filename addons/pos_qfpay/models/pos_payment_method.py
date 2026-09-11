@@ -42,9 +42,6 @@ class PosPaymentMethod(models.Model):
         if any(record.payment_provider == 'qfpay' and record.company_id.currency_id.name != 'HKD' for record in self):
             raise UserError(_('QFPay is only valid for HKD Currency'))
 
-    def _is_write_forbidden(self, fields):
-        return super()._is_write_forbidden(fields - {'qfpay_latest_response'})
-
     def qfpay_sign_request(self, payload):
         self.ensure_one()
         if not self.env.su and not self.env.user.has_group('point_of_sale.group_pos_user'):
