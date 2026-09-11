@@ -1621,7 +1621,11 @@ class ResPartner(models.Model):
         if sort_key:
             candidates.sort(key=lambda c: sort_key(*c))
         winner_key, winner_value, winner_meta = candidates[0]
-        return {'key': winner_key, 'value': winner_value, **winner_meta}
+        return {
+            'key': winner_key,
+            'value': winner_value,
+            **self._lazy_translate_additional_identifiers_metadata(winner_meta),
+        }
 
     @api.depends_context('company')
     @api.depends('country_id')

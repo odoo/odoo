@@ -175,3 +175,10 @@ class TestPartnerIdentifiers(TransactionCase):
         self.assertEqual(self.partner.additional_identifiers['SG_UEN'], 'FRUIDsomeidentifier')
         with self.assertRaisesRegex(ValidationError, "Invalid identifier: SGUENnotauen"):
             self.partner._set_additional_identifier('SG_UEN', 'SGUENnotauen')
+
+    def test_preferred_identifier_label_lt(self):
+        """ The label of the preferred identifier must return as a plain string."""
+        self.partner._set_additional_identifier('FR_SIRET', '33417522101010')
+        label = self.partner._get_preferred_legal_entity_identifier_vals()['label']
+        self.assertIsInstance(label, str)
+        self.assertEqual(label, 'SIRET')
