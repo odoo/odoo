@@ -8,7 +8,7 @@ import { ListRenderer, listRendererProps } from "@web/views/list/list_renderer";
 const SHOW_ALL_ITEMS_TOOLTIP = _t("Some lines can be on the next page, display them to unlock actions on section.");
 const DISABLED_MOVE_DOWN_ITEM_TOOLTIP = _t("Some lines of the next section can be on the next page, display them to unlock the action.");
 
-const DISPLAY_TYPES = {
+export const DISPLAY_TYPES = {
     NOTE: "line_note",
     SECTION: "line_section",
     SUBSECTION: "line_subsection",
