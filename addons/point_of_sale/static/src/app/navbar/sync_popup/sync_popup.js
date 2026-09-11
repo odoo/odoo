@@ -16,17 +16,20 @@ export class SyncPopup extends Component {
         this.pos = usePos();
         this.dialog = useService("dialog");
     }
-    getCount(data) {
-        return data.values ? 1 : data.args.length;
+    trySync(orderId) {
+        const orderToSync = this.pos.models["pos.order"]
+            .filter((order) => order.id == orderId)
+            .filter(Boolean);
+        this.pos.syncAllOrders({ orders: orderToSync });
     }
-    delete(uuid) {
+    delete(orderId) {
         this.dialog.add(ConfirmationDialog, {
             title: _t("Delete pending record?"),
             body: _t(
                 "Please note that this operation will result in the loss of any data not saved on the server."
             ),
             confirm: () => {
-                this.pos.data.deleteUnsyncData(uuid);
+                this.pos.removePendingOrder(orderId);
             },
         });
     }
