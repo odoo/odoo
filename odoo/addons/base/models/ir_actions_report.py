@@ -3,7 +3,8 @@
 from ast import literal_eval
 from contextlib import ExitStack
 from markupsafe import Markup
-from urllib.parse import urlparse
+from pathlib import Path
+from urllib.parse import urljoin, urlparse, urlsplit
 
 from odoo import api, fields, models, modules, tools, _
 from odoo.exceptions import UserError, AccessError, RedirectWarning, ValidationError
@@ -15,15 +16,19 @@ from odoo.http import request, root
 from odoo.tools.pdf import PdfFileWriter, PdfFileReader, PdfReadError
 from odoo.osv.expression import NEGATIVE_TERM_OPERATORS, FALSE_DOMAIN
 
+import hashlib
 import io
 import logging
+import mimetypes
 import os
 import lxml.html
+import shutil
 import tempfile
 import subprocess
 import re
 import requests
 import json
+import threading
 
 from lxml import etree
 from contextlib import closing
@@ -32,6 +37,7 @@ from reportlab.pdfbase.pdfmetrics import getFont, TypeFace
 from collections import OrderedDict
 from collections.abc import Iterable
 from PIL import Image, ImageFile
+from werkzeug.test import Client
 from itertools import islice
 
 # Allow truncated images
@@ -134,6 +140,120 @@ else:
             _logger.info('You need to start Odoo with at least two workers to convert images to html.')
     else:
         _logger.info('Wkhtmltoimage seems to be broken.')
+
+_CSS_URL_RE = re.compile(r"""url\(\s*(?P<q>['"]?)(?P<url>[^'"()\s]+)(?P=q)\s*\)""")
+_DOCTYPE_RE = re.compile(r'\s*<!DOCTYPE[^>]*>', re.IGNORECASE)
+_EXTENSIONS = {'text/javascript': '.js', 'application/javascript': '.js'}
+_THREAD_ATTRS = ('dbname', 'uid', 'url', 'query_count', 'query_time', 'perf_t0', 'cursor_mode')
+
+
+class _ReportAssets:
+    """ Rewrite the urls of a report html so that wkhtmltopdf reads local files
+    instead of requesting them from the http workers, which may all be busy
+    waiting for wkhtmltopdf. Static files are referenced in place, anything
+    else served by this instance is fetched in-process and written to
+    ``workdir``. Urls that cannot be resolved are left untouched.
+    """
+
+    def __init__(self, report, workdir, session_id=None):
+        self.workdir = workdir
+        self.session_id = session_id
+        self.cache = {}
+        self.allow_paths = set()
+        self.origin = report._get_report_url()
+        web_base_url = report.env['ir.config_parameter'].sudo().get_param('web.base.url', '')
+        self.hosts = {urlsplit(url).netloc for url in (self.origin, web_base_url)} - {''}
+
+    def localize_html(self, html):
+        if not html:
+            return html
+        doctype = _DOCTYPE_RE.match(html)
+        doc = lxml.html.document_fromstring(html)
+        base = doc.find('.//base')
+        base_url = base.get('href') if base is not None else self.origin
+        for node in doc.iter('link', 'script', 'img'):
+            attr = 'href' if node.tag == 'link' else 'src'
+            if node.tag == 'link' and 'stylesheet' not in (node.get('rel') or ''):
+                continue
+            local = self.localize_url(node.get(attr), base_url)
+            if local:
+                node.set(attr, local)
+        for node in doc.xpath('//*[@style]'):
+            node.set('style', self.localize_css(node.get('style'), base_url))
+        for node in doc.iter('style'):
+            if node.text:
+                node.text = self.localize_css(node.text, base_url)
+        result = lxml.html.tostring(doc, encoding='unicode')
+        return doctype.group(0) + result if doctype else result
+
+    def localize_css(self, css, base_url, static_only=False):
+        def replace(match):
+            local = self.localize_url(match.group('url'), base_url, static_only)
+            return f'url({local})' if local else match.group(0)
+        return _CSS_URL_RE.sub(replace, css)
+
+    def localize_url(self, url, base_url, static_only=False):
+        """ Return a ``file://`` url for ``url``, or None to leave it untouched.
+
+        With ``static_only`` (references inside stylesheets, most of which the
+        page never uses), only files that can be read from disk are rewritten.
+        """
+        if not url or url.startswith('#'):
+            return None
+        parts = urlsplit(urljoin(base_url, url.strip()))
+        if parts.scheme not in ('http', 'https') or parts.netloc not in self.hosts:
+            return None
+        static_path = root.get_static_file(parts.path)
+        if static_path:
+            static_root, _, _ = static_path.rpartition(f'{os.sep}static{os.sep}')
+            self.allow_paths.add(f'{static_root}{os.sep}static')
+            return Path(static_path).as_uri()
+        if static_only:
+            return None
+        key = parts.path + (f'?{parts.query}' if parts.query else '')
+        if key not in self.cache:
+            self.cache[key] = None  # break cycles
+            self.cache[key] = self._fetch_to_workdir(parts.path, key)
+        return self.cache[key]
+
+    def _fetch_to_workdir(self, path, key):
+        fetched = self._fetch(key)
+        if not fetched:
+            return None
+        mimetype, data = fetched
+        if mimetype == 'text/css':
+            css = self.localize_css(data.decode(errors='replace'), urljoin(self.origin, path), True)
+            data = css.encode()
+        extension = _EXTENSIONS.get(mimetype) or mimetypes.guess_extension(mimetype) or ''
+        local_path = os.path.join(self.workdir, hashlib.sha1(key.encode()).hexdigest() + extension)
+        with open(local_path, 'wb') as local_file:
+            local_file.write(data)
+        return Path(local_path).as_uri()
+
+    def _fetch(self, key):
+        headers = {'Cookie': f'session_id={self.session_id}'} if self.session_id else {}
+        thread = threading.current_thread()
+        saved = {attr: getattr(thread, attr) for attr in _THREAD_ATTRS if hasattr(thread, attr)}
+        try:
+            response = Client(root, use_cookies=False).get(
+                key, base_url=self.origin, headers=headers, environ_base={'REMOTE_ADDR': '127.0.0.1'},
+            )
+            try:
+                if response.status_code != 200 or 'X-Sendfile' in response.headers:
+                    return None
+                return response.mimetype, response.get_data()
+            finally:
+                response.close()
+        except Exception:
+            _logger.warning('Could not fetch report asset %s', key, exc_info=True)
+            return None
+        finally:
+            for attr in _THREAD_ATTRS:
+                if hasattr(thread, attr):
+                    delattr(thread, attr)
+            for attr, value in saved.items():
+                setattr(thread, attr, value)
+
 
 class IrActionsReport(models.Model):
     _name = 'ir.actions.report'
@@ -556,6 +676,16 @@ class IrActionsReport(models.Model):
                 cookie_jar_file.write(cookie.encode())
             command_args.extend(['--cookie-jar', cookie_jar_file_path])
 
+        # Serve the assets from local files, the http workers may all be busy
+        # waiting for wkhtmltopdf.
+        assets_dir = tempfile.mkdtemp(prefix='report.assets.tmp.')
+        assets = _ReportAssets(self, assets_dir, temp_session and temp_session.sid)
+        header = assets.localize_html(header)
+        footer = assets.localize_html(footer)
+        bodies = [assets.localize_html(body) for body in bodies]
+        for path in sorted(assets.allow_paths | {assets_dir}):
+            command_args.extend(['--allow', path])
+
         if header:
             head_file_fd, head_file_path = tempfile.mkstemp(suffix='.html', prefix='report.header.tmp.')
             with closing(os.fdopen(head_file_fd, 'wb')) as head_file:
@@ -622,6 +752,7 @@ class IrActionsReport(models.Model):
         finally:
             if temp_session:
                 root.session_store.delete(temp_session)
+            shutil.rmtree(assets_dir, ignore_errors=True)
 
         with open(pdf_report_path, 'rb') as pdf_document:
             pdf_content = pdf_document.read()

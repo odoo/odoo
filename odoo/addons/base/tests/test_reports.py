@@ -2,13 +2,26 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import io
 import logging
+import os
+import re
+import shutil
+import subprocess
+import tempfile
 from base64 import b64decode
+from pathlib import Path
+from types import SimpleNamespace
 from unittest import skipIf
+from unittest.mock import patch
+
+from werkzeug.test import Client
 
 import odoo
 import odoo.tests
 from odoo import tools
+from odoo.addons.base.models import ir_actions_report
 from odoo.exceptions import UserError
+from odoo.http import root
+from odoo.service import security
 
 try:
     from pdfminer.converter import PDFPageAggregator
@@ -759,3 +772,198 @@ class TestAggregatePdfReports(odoo.tests.HttpCase):
         self.assertTrue(aggregate_report_content, "PDF not generated")
         for record in records:
             self.assertTrue(report.retrieve_attachment(record), "Attachment not generated")
+
+
+@odoo.tests.tagged('post_install', '-at_install')
+class TestReportAssets(odoo.tests.HttpCase):
+    """ wkhtmltopdf must not need the http workers to load the report assets. """
+
+    STATIC_CSS = '/web/static/src/libs/fontawesome/css/font-awesome.css'
+    STATIC_IMG = '/web/static/img/logo.png'
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.report = cls.env['ir.actions.report']
+        cls.origin = cls.report._get_report_url()
+        cls.static_root = tools.file_path('web/static')
+
+    def setUp(self):
+        super().setUp()
+        self.workdir = tempfile.mkdtemp(prefix='test.report.assets.')
+        self.addCleanup(shutil.rmtree, self.workdir, ignore_errors=True)
+
+    def assets(self, session_id=None):
+        return ir_actions_report._ReportAssets(self.report, self.workdir, session_id)
+
+    def written(self):
+        return sorted(os.listdir(self.workdir))
+
+    @staticmethod
+    def file_url(path):
+        return Path(tools.file_path(path.lstrip('/'))).as_uri()
+
+    def test_static_files_referenced_in_place(self):
+        html = (
+            f'<html><head><base href="{self.origin}/">'
+            f'<link rel="stylesheet" href="{self.STATIC_CSS}"/>'
+            f'<link rel="icon" href="{self.STATIC_IMG}"/></head>'
+            f'<body><img src="{self.origin}{self.STATIC_IMG}"/></body></html>'
+        )
+        assets = self.assets()
+        result = assets.localize_html(html)
+        self.assertTrue(result.startswith('<html>'))
+        self.assertIn(f'href="{self.file_url(self.STATIC_CSS)}"', result)
+        self.assertIn(f'src="{self.file_url(self.STATIC_IMG)}"', result)
+        self.assertIn(f'<link rel="icon" href="{self.STATIC_IMG}">', result)
+        self.assertEqual(assets.allow_paths, {self.static_root})
+        self.assertEqual(self.written(), [])
+
+    def test_asset_bundles_fetched_in_process(self):
+        bundle = self.env['ir.qweb']._get_asset_bundle('web.report_assets_common')
+        css_url, js_url = bundle.css()[0].url, bundle.js()[0].url
+        html = (
+            f'<html><head><link rel="stylesheet" href="{css_url}"/>'
+            f'<script src="{js_url}"></script></head><body/></html>'
+        )
+        assets = self.assets()
+        result = assets.localize_html(html)
+        self.assertNotIn(css_url, result)
+        self.assertNotIn(js_url, result)
+        css_file = next(name for name in self.written() if name.endswith('.css'))
+        js_file = next(name for name in self.written() if name.endswith('.js'))
+        self.assertIn(f'href="{Path(self.workdir, css_file).as_uri()}"', result)
+        self.assertIn(f'src="{Path(self.workdir, js_file).as_uri()}"', result)
+        css = Path(self.workdir, css_file).read_text()
+        self.assertIn('url(file://', css)
+        self.assertNotIn('url(/web/static/', css)
+        self.assertIn(self.static_root, assets.allow_paths)
+
+    def test_css_urls_resolved_against_stylesheet_static_only(self):
+        attachment = self.env['ir.attachment'].create({
+            'name': 'test.css',
+            'public': True,
+            'mimetype': 'text/css',
+            'raw': b"body{background:url('../static/img/logo.png')}"
+                   b"h1{background:url(/web/image/res.company/1/logo)}",
+        })
+        html = f'<html><head><link rel="stylesheet" href="/web/content/{attachment.id}"/></head><body/></html>'
+        self.assets().localize_html(html)
+        css_file, = self.written()
+        self.assertEqual(
+            Path(self.workdir, css_file).read_text(),
+            f'body{{background:url({self.file_url(self.STATIC_IMG)})}}'
+            'h1{background:url(/web/image/res.company/1/logo)}',
+        )
+
+    def test_inline_styles_rewritten(self):
+        html = (
+            f'<html><head><style>.a{{background:url({self.STATIC_IMG})}}</style><style/></head>'
+            f'<body><div style="background: url( \'{self.STATIC_IMG}\' )"/></body></html>'
+        )
+        result = self.assets().localize_html(html)
+        self.assertEqual(result.count(f'url({self.file_url(self.STATIC_IMG)})'), 2)
+
+    def test_foreign_and_unresolvable_urls_untouched(self):
+        urls = [
+            'https://example.com/a.png',
+            'data:image/png;base64,AAAA',
+            '#anchor',
+            'mailto:a@b.c',
+            '/web/static/img/missing.png',
+            '/web/does-not-exist',
+        ]
+        images = ''.join(f'<img src="{url}"/>' for url in urls)
+        assets = self.assets()
+        result = assets.localize_html(f'<html><body>{images}</body></html>')
+        for url in urls:
+            self.assertIn(f'src="{url}"', result)
+        self.assertEqual(self.written(), [])
+        self.assertIsNone(assets.localize_url('', self.origin))
+        self.assertIsNone(assets.localize_html(None))
+
+    def test_x_sendfile_response_untouched(self):
+        attachment = self.env['ir.attachment'].create({'name': 'blob.bin', 'public': True, 'raw': b'binary'})
+        url = f'/web/content/{attachment.id}'
+        with patch.dict(tools.config.options, {'x_sendfile': True}):
+            result = self.assets().localize_html(f'<html><body><img src="{url}"/></body></html>')
+        self.assertIn(f'src="{url}"', result)
+        self.assertEqual(self.written(), [])
+
+    def test_fetch_failure_untouched(self):
+        url = '/web/image/res.company/1/logo'
+        with patch.object(Client, 'get', side_effect=RuntimeError('boom')), \
+                self.assertLogs(ir_actions_report.__name__, logging.WARNING):
+            result = self.assets().localize_html(f'<html><body><img src="{url}"/></body></html>')
+        self.assertIn(f'src="{url}"', result)
+
+    def test_repeated_url_fetched_once(self):
+        url = '/web/image/res.company/1/logo'
+        images = f'<img src="{url}"/><img src="{url}?unique=1"/><img src="{url}"/>'
+        Assets = ir_actions_report._ReportAssets
+        with patch.object(Assets, '_fetch', autospec=True, wraps=Assets._fetch) as fetch:
+            self.assets().localize_html(f'<html><body>{images}</body></html>')
+        self.assertEqual(fetch.call_count, 2)
+        self.assertEqual(len(self.written()), 2)
+
+    def test_session_grants_user_access_rights(self):
+        user = self.env.ref('base.user_admin')
+        attachment = self.env['ir.attachment'].create({'name': 'private.txt', 'raw': b'private', 'mimetype': 'text/plain'})
+        url = f'/web/content/{attachment.id}'
+        self.assertIsNone(self.assets()._fetch(url))
+        session = root.session_store.new()
+        session.update({'uid': user.id, 'login': user.login, 'db': self.env.cr.dbname})
+        session.session_token = security.compute_session_token(session, self.env)
+        root.session_store.save(session)
+        self.addCleanup(root.session_store.delete, session)
+        self.assertEqual(self.assets(session.sid)._fetch(url), ('text/plain', b'private'))
+
+    def test_run_wkhtmltopdf_uses_local_files(self):
+        html = f'<!DOCTYPE html><html><head><link rel="stylesheet" href="{self.STATIC_CSS}"/></head><body/></html>'
+        captured = {}
+
+        def fake_popen(cmd, *args, **kwargs):
+            captured['cmd'] = cmd
+            captured['html'] = [Path(path).read_text() for path in cmd if path.endswith('.html')]
+            return SimpleNamespace(communicate=lambda: ('', ''), returncode=0)
+
+        fake_request = SimpleNamespace(db=self.env.cr.dbname, session={'db': self.env.cr.dbname})
+        with patch.object(ir_actions_report, 'request', fake_request), \
+                patch.object(ir_actions_report, '_get_wkhtmltopdf_bin', return_value='wkhtmltopdf'), \
+                patch.object(ir_actions_report.subprocess, 'Popen', side_effect=fake_popen), \
+                patch.object(root.session_store, 'delete', wraps=root.session_store.delete) as delete:
+            self.report._run_wkhtmltopdf([html, html], header=html, footer=None)
+        cmd = captured['cmd']
+        expected = self.assets().localize_html(html)
+        self.assertTrue(expected.startswith('<!DOCTYPE html>'))
+        self.assertEqual(captured['html'], [expected] * 3)
+        self.assertIn('--disable-local-file-access', cmd)
+        self.assertIn('--cookie-jar', cmd)
+        allow = [cmd[i + 1] for i, arg in enumerate(cmd) if arg == '--allow']
+        assets_dir = next(path for path in allow if 'report.assets.tmp.' in path)
+        self.assertEqual(allow, sorted([assets_dir, self.static_root]))
+        self.assertFalse(os.path.exists(assets_dir))
+        delete.assert_called_once()
+
+    def test_real_wkhtmltopdf_needs_no_http(self):
+        try:
+            ir_actions_report._get_wkhtmltopdf_bin()
+        except OSError:
+            self.skipTest('wkhtmltopdf not installed')
+        popen, captured = subprocess.Popen, {}
+
+        def spy(cmd, *args, **kwargs):
+            captured['cmd'] = cmd
+            captured['html'] = ''.join(Path(path).read_text() for path in cmd if path.endswith('.html'))
+            return popen(cmd, *args, **kwargs)
+
+        module = self.env.ref('base.module_web')
+        report = self.report.with_context(force_report_rendering=True)
+        with patch.object(ir_actions_report.subprocess, 'Popen', side_effect=spy), \
+                self.assertNoLogs(ir_actions_report.__name__, logging.WARNING):
+            pdf, _ = report._render_qweb_pdf('base.report_irmodulereference', [module.id])
+        self.assertTrue(pdf.startswith(b'%PDF'))
+        self.assertIn('--allow', captured['cmd'])
+        remote = set(re.findall(r'(?:src|href)="(https?://[^"]+)"', captured['html']))
+        self.assertLessEqual(remote, {self.origin, f'{self.origin}/'})
+        self.assertIn('href="file://', captured['html'])
