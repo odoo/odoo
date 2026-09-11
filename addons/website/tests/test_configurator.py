@@ -100,7 +100,7 @@ class TestConfigurator(TestConfiguratorCommon):
         def iap_jsonrpc_mocked_olg(*args, **kwargs):
             return {
                 'status': 'success',
-                'content': '["theme_clean", "theme_cobalt", "theme_unknown"]',
+                'themes': ['theme_clean', 'theme_cobalt'],
             }
 
         with patch('odoo.addons.iap.tools.iap_tools.iap_jsonrpc', iap_jsonrpc_mocked_olg):
@@ -117,12 +117,9 @@ class TestConfigurator(TestConfiguratorCommon):
 
         self.assertEqual(themes, ['theme_clean', 'theme_cobalt'])
 
-    def test_ai_recommend_themes_wrong_answer(self):
+    def test_ai_recommend_themes_error(self):
         def iap_jsonrpc_mocked_olg(*args, **kwargs):
-            return {
-                'status': 'success',
-                'content': '[{"name": "New Arrivals", "description": "Fresh styles"}]',
-            }
+            return {'status': 'error_server'}
 
         with patch('odoo.addons.iap.tools.iap_tools.iap_jsonrpc', iap_jsonrpc_mocked_olg):
             themes = self.env['website']._ai_recommend_themes(

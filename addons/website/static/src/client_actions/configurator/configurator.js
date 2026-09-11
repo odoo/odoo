@@ -13,7 +13,6 @@ import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 import { clamp } from "@web/core/utils/numbers";
 import { registry } from "@web/core/registry";
 import { rpc } from "@web/core/network/rpc";
-import { user } from "@web/core/user";
 import { mixCssColors } from "@web/core/utils/colors";
 import { router } from "@web/core/browser/router";
 import {
@@ -111,12 +110,6 @@ const PREVIEW_IMAGE_LIST = [
     "set_2_square_md_5",
 ];
 
-function getUserLanguageName() {
-    const locale = user.lang || "en-US";
-    const language = new Intl.Locale(locale).language;
-    return new Intl.DisplayNames([locale], { type: "language" }).of(language) || "English";
-}
-
 function getCSSPalettes(style) {
     const palettes = {};
     for (const [paletteName, { label, isDark = false }] of Object.entries(PALETTES)) {
@@ -197,7 +190,7 @@ function getPreviewHeadersKey(state) {
  * @param {Object} state
  * @returns {Promise<string[]>}
  */
-async function ensurePreviewHeaders(state) {
+async function ensurePreviewHeaders(state, orm) {
     const industry = state.selectedIndustry?.label || "general";
     const type = WEBSITE_TYPES[state.selectedType]?.name || "business";
     const positioning = state.selectedPositioning || state.formerSelectedPositioning || "general";
@@ -210,18 +203,11 @@ async function ensurePreviewHeaders(state) {
     state.previewHeadersKey = key;
     state.previewHeadersLoading = true;
     try {
-        const prompt = `For a ${industry} ${type} business with a ${positioning} positioning, return only a JSON array of 6 short homepage hero titles. Each item must be a plain string of not more than 4 words, with no numbering and no explanation.`;
-        const response = await rpc("/html_editor/generate_text", {
-            prompt,
-            conversation_history: [],
+        const generatedHeaders = await orm.call("website", "configurator_preview_headers", [], {
+            industry_name: industry,
+            website_type: type,
+            positioning,
         });
-        const match = response?.match(/\[[\s\S]*\]/);
-        const parsed = match && JSON.parse(match[0]);
-        const generatedHeaders = (
-            Array.isArray(parsed) && parsed.length === 6
-                ? parsed.filter((item) => typeof item === "string").map((item) => item.trim())
-                : []
-        ).filter(Boolean);
         if (state.previewHeadersKey === key && generatedHeaders.length === 6) {
             state.previewHeaders = generatedHeaders;
         }
@@ -340,24 +326,19 @@ export class DescriptionScreen extends Component {
 
     async findClosestIndustryId(unknownIndustry) {
         const industries = this.state.industries;
-        const catalog = industries
-            .map(({ id, label, synonyms }) => `${id}: ${label}${synonyms ? ` (${synonyms})` : ""}`)
-            .join("\n");
-        const prompt = `A user typed "${unknownIndustry}" as their business industry but it is not part of the known industries listed below, one per line as "id: label (synonyms)":
-${catalog}
-
-Find the single known industry that best matches what the user typed.
-
-Return ONLY a JSON object with:
-- "id": the numeric id of the best matching industry
-- "confidence": an integer between 0 and 100 telling how confident you are that this industry is what the user meant`;
+        const catalog = Object.fromEntries(
+            industries.map(({ id, label, synonyms }) => [
+                id,
+                synonyms ? `${label} (${synonyms})` : label,
+            ])
+        );
         try {
-            const response = await rpc("/html_editor/generate_text", {
-                prompt,
-                conversation_history: [],
-            });
-            const match = response?.match(/\{[\s\S]*\}/);
-            const { id, confidence } = (match && JSON.parse(match[0])) || {};
+            const { id, confidence } = await this.orm.call(
+                "website",
+                "configurator_closest_industry",
+                [],
+                { industries: catalog, unknown_industry: unknownIndustry }
+            );
             if (
                 confidence >= MIN_INDUSTRY_MATCH_CONFIDENCE &&
                 industries.some((industry) => industry.id === id)
@@ -372,7 +353,6 @@ Return ONLY a JSON object with:
     }
 
     async fetchPositionings(industryLabel) {
-        const userLanguage = getUserLanguageName();
         const fallback = [
             "premium",
             "affordable",
@@ -385,20 +365,14 @@ Return ONLY a JSON object with:
         this.state.selectedPositioning = undefined;
         this.state.positioningsLoading = true;
         try {
-            const prompt = `${_t(
-                "Design a website for my %(industry)s business with a _______ positioning.",
-                { industry: industryLabel }
-            )} Return only a JSON array of 6 possibilities in ${userLanguage} to fill in the blank.`;
-            const response = await rpc("/html_editor/generate_text", {
-                prompt,
-                conversation_history: [],
+            const positionings = await this.orm.call("website", "configurator_positionings", [], {
+                industry_name: industryLabel,
+                sentence: _t(
+                    "Design a website for my %(industry)s business with a _______ positioning.",
+                    { industry: industryLabel }
+                ),
             });
-            const match = response?.match(/\[[\s\S]*\]/);
-            const parsed = match && JSON.parse(match[0]);
-            this.state.positionings =
-                Array.isArray(parsed) && parsed.every((item) => typeof item === "string")
-                    ? parsed
-                    : fallback;
+            this.state.positionings = positionings.length ? positionings : fallback;
         } catch {
             this.state.positionings = fallback;
         }
@@ -672,7 +646,7 @@ export class PaletteSelectionScreen extends Component {
         if (this.state.logo) {
             this.updatePalettes();
         }
-        ensurePreviewHeaders(this.state);
+        ensurePreviewHeaders(this.state, this.orm);
         this.prefetchThemes();
         this.fetchStyleRecommendation();
     }
@@ -696,7 +670,6 @@ export class PaletteSelectionScreen extends Component {
         }
         const { selectedIndustry, selectedType, selectedPositioning, formerSelectedPositioning } =
             this.state;
-        const userLanguage = getUserLanguageName();
         const industry = selectedIndustry?.label || "general";
         const type = WEBSITE_TYPES[selectedType]?.name || "business";
         const positioning = selectedPositioning || formerSelectedPositioning || "";
@@ -714,27 +687,22 @@ export class PaletteSelectionScreen extends Component {
                 },
             };
         });
-        const prompt = `You are choosing the color palette for a new ${type} website in a website configurator.
-The website is for a business in the ${industry} industry with a ${positioning} positioning.
-Choose the palette that best supports its brand image and audience across the full website, including navigation, content, backgrounds, and calls to action:
-${JSON.stringify(catalog, null, 2)}
-
-Consider both light and dark palettes, and select the one that feels most suitable for this specific website.
-
-Return ONLY a JSON object with:
-- "id": the numeric ID from the catalog
-- "reason": a short, user-friendly sentence in ${userLanguage} mentioning the business context without technical color terms or color codes, like: "For a family restaurant with a cozy positioning, I'd recommend the \\"Coral\\" palette for its warm and welcoming feel."`;
         this.state.styleRecommendation = undefined;
         let palette;
         let reason = " ";
         try {
-            const response = await rpc("/html_editor/generate_text", {
-                prompt,
-                conversation_history: [],
-            });
-            const match = response?.match(/\{[\s\S]*\}/);
-            const parsed = match && JSON.parse(match[0]);
-            palette = parsed && palettes[parsed.id];
+            const parsed = await this.orm.call(
+                "website",
+                "configurator_palette_recommendation",
+                [],
+                {
+                    palettes: catalog,
+                    industry_name: industry,
+                    website_type: type,
+                    positioning,
+                }
+            );
+            palette = palettes[parsed.id];
             if (palette) {
                 reason = parsed.reason || " ";
             }
@@ -1083,7 +1051,7 @@ export class ThemeSelectionScreen extends ApplyConfiguratorScreen {
         });
         onWillStart(async () => {
             if (!this.state.previewHeaders?.length && !this.state.previewHeadersLoading) {
-                await ensurePreviewHeaders(this.state);
+                await ensurePreviewHeaders(this.state, this.orm);
             }
             if (!this.state.themes.length) {
                 let themeName;
