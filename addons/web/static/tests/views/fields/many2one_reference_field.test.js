@@ -15,6 +15,9 @@ import {
     selectFieldDropdownItem,
 } from "@web/../tests/web_test_helpers";
 
+import { patch } from "@web/core/utils/patch";
+import { Many2OneReferenceField } from "@web/views/fields/many2one_reference/many2one_reference_field";
+
 class Partner extends models.Model {
     model = fields.Char({
         string: "Resource Model",
@@ -41,7 +44,22 @@ class PartnerType extends models.Model {
     ];
 }
 
-defineModels([Partner, PartnerType]);
+class IrAttachment extends models.Model {
+    _name = "ir.attachment";
+    name = fields.Char();
+    res_model = fields.Char();
+    res_id = fields.Many2oneReference({
+        model_field: "res_model",
+        relation: "ir.attachment",
+    });
+
+    _records = [
+        { id: 1, name: "Parent Attachment", res_model: "ir.attachment", res_id: 2 },
+        { id: 2, name: "Child Attachment", res_model: "ir.attachment", res_id: 1 },
+    ];
+}
+
+defineModels([Partner, PartnerType, IrAttachment]);
 
 onRpc("has_group", () => true);
 
@@ -229,4 +247,27 @@ test("Many2OneReferenceField with no_create option", async () => {
     expect(
         ".o_field_widget[name='res_id'] .dropdown-menu .o_m2o_dropdown_option_create"
     ).toHaveCount(0);
+});
+
+test("Many2OneReferenceField patched domain doesn't crash on ir.attachment", async () => {
+    patch(Many2OneReferenceField.prototype,  {
+        get m2oProps() {
+            const props = super.m2oProps;
+            props.domain = () => [['id', '!=', this.props.record.resId]];
+            return props;
+        }
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "ir.attachment",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="name"/>
+                <field name="res_model"/>
+                <field name="res_id"/>
+            </form>`,
+    });
+    expect(".o_field_widget[name='res_id']").toHaveCount(1);
 });
