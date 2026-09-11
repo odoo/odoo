@@ -3,7 +3,7 @@ import { CopyButton } from "@web/core/copy_button/copy_button";
 import { Dialog } from "@web/core/dialog/dialog";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { editModelDebug } from "@web/core/debug/debug_utils";
-import { formatDateTime, deserializeDateTime } from "@web/core/l10n/dates";
+import { formatDate, formatDateTime, deserializeDateTime } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { formatMany2one } from "@web/views/fields/formatters";
@@ -335,6 +335,10 @@ class SetDefaultDialog extends Component {
             value = value.id;
         } else if (value && fieldInfo.type === "selection") {
             displayed = fieldInfo.selection.find((option) => option[0] === value)[1];
+        } else if (value && fieldInfo.type === "date") {
+            displayed = formatDate(value);
+        } else if (value && fieldInfo.type === "datetime") {
+            displayed = formatDateTime(value);
         }
         if (
             (typeof displayed === "string" || displayed instanceof String) &&
@@ -353,9 +357,10 @@ class SetDefaultDialog extends Component {
             (field) => field.name === this.state.fieldToSet
         ).value;
 
-        if (fieldToSet.constructor.name.toLowerCase() === "date") {
+        const fieldType = this.fields[this.state.fieldToSet].type;
+        if (fieldType === "date") {
             fieldToSet = serializeDate(fieldToSet);
-        } else if (fieldToSet.constructor.name.toLowerCase() === "datetime") {
+        } else if (fieldType === "datetime") {
             fieldToSet = serializeDateTime(fieldToSet);
         }
         await this.orm.call("ir.default", "set", [
