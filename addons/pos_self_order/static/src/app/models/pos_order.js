@@ -71,6 +71,7 @@ patch(PosOrder.prototype, {
         if (this.email && !data.email) {
             data.email = this.email;
         }
+        data.partner_id = this.raw.partner_id || false;
         return data;
     },
 });
