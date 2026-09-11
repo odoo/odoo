@@ -1,12 +1,24 @@
 import { Component, EventBus, onWillStart, proxy, useProps, signal, t } from "@odoo/owl";
 import { rpc } from "@web/core/network/rpc";
 import { Dialog } from "@web/core/dialog/dialog";
+import { SelectMenu } from "@web/core/select_menu/select_menu";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { isValidPhone } from "@point_of_sale/utils";
 import { AddressAutoComplete } from "@google_address_autocomplete/address_autocomplete/google_address_autocomplete";
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { PillsSelectionPopup } from "@pos_self_order/app/components/pills_selection_popup/pills_selection_popup";
 import { _t } from "@web/core/l10n/translation";
+
+class NoPrefillSelectMenu extends SelectMenu {
+    updateInputValue(value = null) {
+        for (const ref of Object.values(this.inputRefs)) {
+            const el = ref();
+            if (el) {
+                el.value = value || this.pendingValue || "";
+            }
+        }
+    }
+}
 
 class SelfOrderAddressAutoComplete extends AddressAutoComplete {
     setup() {
@@ -88,7 +100,11 @@ class SelfOrderAddressAutoComplete extends AddressAutoComplete {
 const { DateTime } = luxon;
 export class PresetInfoPopup extends Component {
     static template = "pos_self_order.PresetInfoPopup";
-    static components = { Dialog, AddressAutoComplete: SelfOrderAddressAutoComplete };
+    static components = {
+        Dialog,
+        AddressAutoComplete: SelfOrderAddressAutoComplete,
+        SelectMenu: NoPrefillSelectMenu,
+    };
     props = useProps({
         close: t.function(),
         getPayload: t.function(),
@@ -300,9 +316,19 @@ export class PresetInfoPopup extends Component {
     }
 
     get selectedCountry() {
-        return this.selfOrder.models["res.country"]
-            .getAll()
-            .find((c) => c.phone_code === this.state.phoneCode);
+        return this.countries.find((c) => c.phone_code === this.state.phoneCode);
+    }
+
+    get phoneCountryChoices() {
+        return this.countries.map((country) => ({
+            value: country.phone_code,
+            label: `+${country.phone_code} ${country.name}`,
+            country,
+        }));
+    }
+
+    setPhoneCountry(phoneCode) {
+        this.state.phoneCode = phoneCode;
     }
 
     flagEmoji(code) {
@@ -312,9 +338,11 @@ export class PresetInfoPopup extends Component {
     }
 
     getFullPhone() {
-        return this.state.phoneLocal.trim()
-            ? `+${this.state.phoneCode}${this.state.phoneLocal.trim()}`
-            : "";
+        const trimmedPhoneLocal = this.state.phoneLocal.trim();
+        if (trimmedPhoneLocal.startsWith(`+${this.state.phoneCode}`)) {
+            return trimmedPhoneLocal;
+        }
+        return trimmedPhoneLocal ? `+${this.state.phoneCode}${trimmedPhoneLocal}` : "";
     }
 
     get validSelection() {
@@ -338,5 +366,34 @@ export class PresetInfoPopup extends Component {
 
     checkPhoneFormat() {
         return !this.state.phoneLocal || isValidPhone(this.getFullPhone());
+    }
+
+    onPhoneInput(event) {
+        const phone = event.target.value;
+        this.state.phoneLocal = phone;
+
+        if (!phone.trim().startsWith("+")) {
+            return;
+        }
+
+        let possibleCountryCode = phone
+            .trim()
+            .slice(1)
+            .split(/[\s()-]/, 1)[0]
+            .replace(/\D/g, "")
+            .slice(0, 4);
+
+        while (possibleCountryCode) {
+            const country = this.countries.find(
+                (country) => String(country.phone_code) === possibleCountryCode
+            );
+
+            if (country) {
+                this.state.phoneCode = country.phone_code;
+                return;
+            }
+
+            possibleCountryCode = possibleCountryCode.slice(0, -1);
+        }
     }
 }
