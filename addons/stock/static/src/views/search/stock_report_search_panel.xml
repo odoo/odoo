@@ -4,7 +4,7 @@
 <t t-name="stock.StockReportSearchPanel.Regular" t-inherit="web.SearchPanel.Regular">
     <xpath expr="//div/section[1]" position="before">
         <section class="o_search_panel_section o_search_panel_inventory_date">
-            <header class="o_search_panel_section_header pt-4 pb-2 text-uppercase o_cursor_default">
+            <header class="o_search_panel_section_header pt-4 pb-2 text-uppercase text-truncate o_cursor_default">
                 <i class="oi oi-filled o_search_panel_section_icon text-warning me-2" data-icon="calendar_today"/>
                 <b>Inventory at Date</b>
             </header>
@@ -24,7 +24,7 @@
             </div>
         </section>
         <section t-if="this.warehouses.length > 1" class="o_search_panel_section o_search_panel_warehouse">
-            <header class="o_search_panel_section_header pt-4 pb-2 text-uppercase o_cursor_default">
+            <header class="o_search_panel_section_header pt-4 pb-2 text-uppercase text-truncate o_cursor_default">
                 <i t-attf-class="oi oi-filled o_search_panel_section_icon text-warning me-2" data-icon="filter_alt"/>
                 <b>Warehouses</b>
             </header>

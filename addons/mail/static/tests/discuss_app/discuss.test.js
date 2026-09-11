@@ -2529,6 +2529,23 @@ test("header fits a narrow content area", async () => {
     expect(content.scrollWidth).toBe(content.clientWidth);
 });
 
+test("side panel keeps its width next to a long message", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["mail.message"].create({
+        body: "A message too long for a single line of the conversation. ".repeat(20),
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await waitFor(`${actionPanel("Members")}:count(1)`); // wait for auto-open of this panel
+    await waitFor(".o-mail-Message:count(1)");
+    expect(queryOne(".o-mail-DiscussContent-panelContainer").offsetWidth).toBe(
+        queryOne(".o-mail-ActionPanel-resizable").offsetWidth
+    );
+});
+
 test("long description does not truncate the parent channel name", async () => {
     const pyEnv = await startServer();
     const parentId = pyEnv["discuss.channel"].create({ name: "General" });

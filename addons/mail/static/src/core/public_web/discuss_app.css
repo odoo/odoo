@@ -116,6 +116,8 @@
 
     /* The conversation is a card, the panel is flat on the page next to it. */
     .o-mail-DiscussContent-column {
+        /* Not sized by its content: only a panel too wide for the content area shrinks. */
+        flex-basis: 0;
         border: var(--border-width) solid var(--border-color);
         border-radius: var(--border-radius-xl);
         background-color: var(--o-view-background-color);

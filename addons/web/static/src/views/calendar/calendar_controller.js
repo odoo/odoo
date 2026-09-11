@@ -20,7 +20,7 @@ import { standardViewProps } from "@web/views/standard_view_props";
 import { MultiSelectionButtons } from "@web/views/view_components/multi_selection_buttons";
 import { getLocalYearAndWeek } from "@web/core/l10n/dates";
 
-import { Component, proxy, t, useProps } from "@odoo/owl";
+import { Component, computed, proxy, t, useProps } from "@odoo/owl";
 import { hasTouch, isMobileOS } from "@web/core/browser/feature_detection";
 import { addFieldDependencies, extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
 import { omit } from "@web/core/utils/objects";
@@ -67,6 +67,9 @@ export class CalendarController extends Component {
         itemCalendarProps: t.object().optional(),
     });
 
+    showCalendar = computed(() => !this.uiService.isSmall || !this.state.mobilePanelOpen);
+    isSidePanelVisible = computed(() => !this.uiService.isSmall || this.state.mobilePanelOpen);
+
     setup() {
         this.action = useService("action");
         this.orm = useService("orm");
@@ -79,15 +82,11 @@ export class CalendarController extends Component {
             getLocalState: () => this.model.exportedState,
         });
         this.keyExpandSidebar = `calendar_sidepanel_expanded,${this.env.config.viewId},${this.env.config.actionId}`;
-        const localSidePanelExpanded = browser.localStorage.getItem(this.keyExpandSidebar);
         this.state = proxy({
             isWeekendVisible:
                 browser.localStorage.getItem("calendar.isWeekendVisible") != null
                     ? JSON.parse(browser.localStorage.getItem("calendar.isWeekendVisible"))
                     : true,
-            sidePanelExpanded: Boolean(
-                localSidePanelExpanded != null ? JSON.parse(localSidePanelExpanded) : true
-            ),
             mobilePanelOpen: false,
         });
 
@@ -176,10 +175,13 @@ export class CalendarController extends Component {
     get weekHeader() {
         const { start, end } = this.model.visibleRange;
         if (start.year != end.year) {
-            return `${start.toFormat(isMobileOS() ? "MMM" : "MMMM")} ${start.year} - ${end.toFormat(isMobileOS() ? "MMM" : "MMMM")} ${end.year}`;
+            return `${start.toFormat(isMobileOS() ? "MMM" : "MMMM")} ${start.year} - ${end.toFormat(
+                isMobileOS() ? "MMM" : "MMMM"
+            )} ${end.year}`;
         } else if (start.month != end.month) {
-            return isMobileOS() ? `${start.toFormat("MMM")}-${end.toFormat("MMM")} ${start.year}` :
-                `${start.toFormat("MMMM")} - ${end.toFormat("MMMM")} ${start.year}`;
+            return isMobileOS()
+                ? `${start.toFormat("MMM")}-${end.toFormat("MMM")} ${start.year}`
+                : `${start.toFormat("MMMM")} - ${end.toFormat("MMMM")} ${start.year}`;
         }
         return `${start.toFormat("MMMM")} ${start.year}`;
     }
@@ -214,46 +216,17 @@ export class CalendarController extends Component {
         return {
             model: this.model,
             editRecord: this.editRecord.bind(this),
-            sidePanelExpanded: this.sidePanelExpanded,
-            toggleSidePanel: this.toggleSidePanel.bind(this),
+            initialFolded: browser.localStorage.getItem(this.keyExpandSidebar) === "false",
+            onToggle: this.onToggleSidePanel.bind(this),
         };
     }
 
-    toggleSidePanel() {
-        this.state.sidePanelExpanded = !this.state.sidePanelExpanded;
-        browser.localStorage.setItem(this.keyExpandSidebar, this.state.sidePanelExpanded);
-    }
-
-    get showCalendar() {
-        return !this.uiService.isSmall || !this.sidePanelExpanded;
+    onToggleSidePanel(folded) {
+        browser.localStorage.setItem(this.keyExpandSidebar, !folded);
     }
 
     get hasSidePanel() {
         return this.model.showDatePicker || this.model.filterSections.length > 0;
-    }
-
-    get sidePanelExpanded() {
-        return this.uiService.isSmall ? this.state.mobilePanelOpen : this.state.sidePanelExpanded;
-    }
-
-    get filters() {
-        const res = [];
-        for (const f of this.model.filterSections) {
-            const filter = { label: f.label, active: false };
-            if (f.filters.some((f) => f.active)) {
-                filter.active = true;
-            }
-            res.push(filter);
-        }
-        return res;
-    }
-
-    get toScheduleString() {
-        const { eventsToSchedule } = this.model.data;
-        if (eventsToSchedule.length) {
-            return _t("%s to schedule", eventsToSchedule.length);
-        }
-        return _t("Nothing to schedule");
     }
 
     get className() {

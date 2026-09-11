@@ -5175,10 +5175,25 @@ test(`calendar with option show_date_picker set to false and filters`, async () 
     });
     expect(`.o_datetime_picker`).toHaveCount(0);
     expect(`.o_calendar_sidepanel`).toHaveCount(1);
-    await contains('.o_calendar_sidebar_controller button[title="Toggle Side Panel"]').click();
+    const resizeHandle = queryFirst(".o_resizable_panel_handle");
+    const { drop } = await drag(resizeHandle);
+    await drop(resizeHandle, { position: { x: 5000 } });
+    await animationFrame();
     expect(`.o_calendar_sidepanel`).toHaveCount(0);
-    expect(`.o_calendar_sidebar_controller`).toHaveCount(1);
-    expect(`.o_calendar_sidebar_controller`).toHaveText("Partner");
+    expect(`.o_resizable_panel_folded`).toHaveCount(1);
+    expect(`.o_resizable_panel_folded`).toHaveText("Partner");
+});
+
+test.tags("desktop");
+test(`folded side panel shows the date without filters nor events to schedule`, async () => {
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `<calendar date_start="start" date_stop="stop" mode="week"/>`,
+    });
+    await contains(".o_side_panel_toggle").click();
+    expect(`.o_resizable_panel_folded`).toHaveText("12/12/2016");
+    expect(`.o_resizable_panel_folded .oi[data-icon='calendar_today']`).toHaveCount(1);
 });
 
 test(`calendar with option month_overflow not set (default)`, async () => {
@@ -5481,12 +5496,32 @@ test(`calendar sidepanel can be collapsed/expanded`, async () => {
         arch: `<calendar date_start="start" mode="week"/>`,
     });
     expect(`.o_calendar_sidepanel`).toHaveCount(1);
-    await contains(`.o_calendar_sidebar_controller button`).click();
+    const resizeHandle = queryFirst(".o_resizable_panel_handle");
+    const { drop } = await drag(resizeHandle);
+    await drop(resizeHandle, { position: { x: 5000 } });
+    await animationFrame();
     expect(`.o_calendar_sidepanel`).toHaveCount(0);
     expect.verifySteps([["setItem", "calendar_sidepanel_expanded,-1,false", false]]);
-    await contains(`.o_calendar_sidebar_controller button`).click();
+    await contains(`.o_resizable_panel_folded`).click();
     expect(`.o_calendar_sidepanel`).toHaveCount(1);
     expect.verifySteps([["setItem", "calendar_sidepanel_expanded,-1,false", true]]);
+});
+
+test.tags("desktop");
+test(`calendar sidepanel cannot be widened by dragging its resize handle`, async () => {
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `<calendar date_start="start" mode="week"/>`,
+    });
+    const width = queryFirst(".o_calendar_sidepanel_container").offsetWidth;
+    const resizeHandle = queryFirst(".o_resizable_panel_handle");
+    const { moveTo, drop } = await drag(resizeHandle);
+    await moveTo(resizeHandle, { position: { x: -200 }, relative: true });
+    await animationFrame();
+    expect(`.o_calendar_sidepanel`).toHaveCount(1);
+    expect(queryFirst(".o_calendar_sidepanel_container").offsetWidth).toBe(width);
+    await drop(resizeHandle);
 });
 
 test.tags("desktop");
@@ -5500,6 +5535,7 @@ test(`calendar sidepanel can be collapsed by default if it was set in local stor
     expect(`.o_calendar_sidepanel`).toHaveCount(0);
 });
 
+
 test.tags("desktop");
 test("calendar sidebar reacts to isSmall changes", async () => {
     await mountView({
@@ -5509,8 +5545,9 @@ test("calendar sidebar reacts to isSmall changes", async () => {
     });
     expect(".o_calendar_renderer").toHaveCount(1);
     expect(".o_calendar_sidepanel").toHaveCount(1);
-    expect(".o_calendar_sidebar").toHaveCount(0);
+    expect(".o_resizable_panel_folded").toHaveCount(0);
     expect(".o_other_calendar_panel").toHaveCount(0);
+    expect(".o_side_panel_toggle").toHaveCount(1);
 
     // Reduce the viewport to a mobile size (isSmall = true)
     // The sidepanel (which is expanded by default) should be hidden without interaction,
@@ -5519,8 +5556,9 @@ test("calendar sidebar reacts to isSmall changes", async () => {
     await animationFrame();
     expect(".o_calendar_renderer").toHaveCount(1);
     expect(".o_calendar_sidepanel").toHaveCount(0);
-    expect(".o_calendar_sidebar").toHaveCount(0);
+    expect(".o_resizable_panel_folded").toHaveCount(0);
     expect(".o_other_calendar_panel").toHaveCount(1);
+    expect(".o_side_panel_toggle").toHaveCount(0);
 
     // Expand the viewport to desktop size, the sidepanel should show again,
     // and the mobile filter panel should be removed.
@@ -5528,7 +5566,7 @@ test("calendar sidebar reacts to isSmall changes", async () => {
     await animationFrame();
     expect(".o_calendar_renderer").toHaveCount(1);
     expect(".o_calendar_sidepanel").toHaveCount(1);
-    expect(".o_calendar_sidebar").toHaveCount(0);
+    expect(".o_resizable_panel_folded").toHaveCount(0);
     expect(".o_other_calendar_panel").toHaveCount(0);
 });
 

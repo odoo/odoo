@@ -1,6 +1,13 @@
 .o_hierarchy_renderer {
     --o-chart-line-color: var(--o-gray-300);
 
+    .o_resizable_panel_edge + & {
+        margin-inline-end: var(--o-bs-spacer-3);
+        border: var(--border-width) solid var(--border-color);
+        border-bottom: 0;
+        border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
+    }
+
     .o_hierarchy_container {
         gap: 25px;
 
