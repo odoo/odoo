@@ -1,6 +1,5 @@
 import { Image } from "@html_builder/core/img";
 import { ImgGroup } from "@html_builder/core/img_group";
-import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { expect, test, describe } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-dom";
 import { Component, xml, useProps } from "@odoo/owl";
@@ -8,7 +7,6 @@ import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpe
 
 describe.current.tags("desktop");
 
-defineMailModels(); // meh
 test("ImgGroup's inner Image components should not be blocked before src load", async () => {
     const defs = {
         img1: Promise.withResolvers(),
