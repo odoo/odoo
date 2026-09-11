@@ -16,10 +16,6 @@
             <div class="d-flex flex-column align-items-start justify-content-center" >
                 <span class="o_timeoff_name">
                     <t t-out="this.props.name"/>
-                    <t name="duration_unit">
-                        <t t-if="data.unit_of_measure == 'hour'"> Hours</t>
-                        <t t-else=""> Days</t>
-                    </t>
                 </span>
                 <span t-if="this.props.requires_allocation and data.closest_allocation_expire !== false"
                     t-att-class="'o_timeoff_validity' + (this.warning() ? ' text-warning' : '')">

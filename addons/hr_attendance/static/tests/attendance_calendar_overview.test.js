@@ -16,7 +16,14 @@ test("worked hours display updates when dateRange prop changes", async () => {
 
     onRpc("get_attendace_data_by_employee", ({ args }) => {
         expect.step(`load:${args[1]}`);
-        return { 1: { worked_hours: args[1] === "2024-01-01" ? 8 : 16, overtime_hours: 0 } };
+        const workedHours = args[1] === "2024-01-01" ? 8 : 16;
+        return {
+            1: {
+                worked_hours: workedHours,
+                overtime_hours: 0,
+                entries: [{ name: "Attendance", worked_hours: workedHours, color: 0 }],
+            },
+        };
     });
 
     class Container extends Component {
@@ -29,15 +36,17 @@ test("worked hours display updates when dateRange prop changes", async () => {
 
     await mountWithCleanup(Container, {
         componentEnv: {
-            searchModel: { context: { active_id: 1, display_extra_hours: false } },
+            searchModel: { context: { active_id: 1 } },
         },
     });
     await animationFrame();
     expect.verifySteps(["load:2024-01-01"]);
-    expect(".o_attendance_info_number").toHaveText("8h");
+    const [durationEl1] = document.querySelectorAll(".o_attendance_entry_duration");
+    expect(durationEl1).toHaveText("8h");
 
     dateRange.set({ start: "2024-02-01", end: "2024-02-29" });
     await animationFrame();
     expect.verifySteps(["load:2024-02-01"]);
-    expect(".o_attendance_info_number").toHaveText("16h");
+    const [durationEl2] = document.querySelectorAll(".o_attendance_entry_duration");
+    expect(durationEl2).toHaveText("16h");
 });

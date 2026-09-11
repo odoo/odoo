@@ -64,4 +64,16 @@ export class TimeOffDashboard extends Component {
             employeeId: this.props.employeeId,
         });
     }
+
+    openPendingAllocations() {
+        const context = this.getContext();
+        this.actionService.doAction({
+            type: "ir.actions.act_window",
+            name: "Pending Allocations",
+            res_model: "hr.leave.allocation",
+            views: [[false, "list"], [false, "form"]],
+            domain: [["state", "in", ["confirm", "validate1"]]],
+            context,
+        });
+    }
 }

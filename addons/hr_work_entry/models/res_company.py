@@ -10,6 +10,14 @@ class ResCompany(models.Model):
     allowed_work_entry_type_ids = fields.Many2many(
         'hr.work.entry.type', compute='_compute_allowed_work_entry_type_ids')
 
+    def _get_default_attendance_work_entry_type(self):
+        self.ensure_one()
+        country_type = self.env['hr.work.entry.type'].search([
+            ('code', '=', 'WORK100'),
+            ('country_code', '=', self.country_id.code),
+        ], limit=1)
+        return country_type or self.env.ref('hr_work_entry.generic_work_entry_type_attendance', raise_if_not_found=False)
+
     @api.depends('partner_id.country_id')
     def _compute_allowed_work_entry_type_ids(self):
         for company in self:

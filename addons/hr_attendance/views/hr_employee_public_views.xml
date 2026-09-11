@@ -15,10 +15,10 @@
                         <div class="o_field_widget o_stat_info">
                             <span class="o_stat_value">
                                 <field name="hours_last_month" widget="float_time"/>
-                                <span class="o_stat_value text-success" invisible="hours_last_month_overtime &lt;= 0 or not display_extra_hours">
+                                <span class="o_stat_value text-success" invisible="hours_last_month_overtime &lt;= 0">
                                     (+<field name="hours_last_month_overtime" widget="float_time"/>)
                                 </span>
-                                <span class="o_stat_value text-danger" invisible="hours_last_month_overtime &gt;= 0 or not display_extra_hours">
+                                <span class="o_stat_value text-danger" invisible="hours_last_month_overtime &gt;= 0">
                                     (<field name="hours_last_month_overtime" widget="float_time"/>)
                                 </span>
                             </span>
