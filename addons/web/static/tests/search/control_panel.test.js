@@ -178,7 +178,7 @@ test("pager", async () => {
         onUpdate: () => {},
     });
 
-    await mountWithSearch(ControlPanel, { resModel: "foo" }, { pagerProps });
+    await mountWithSearch(ControlPanel, { resModel: "foo" }, { getPagerProps: () => pagerProps });
     expect(`.o_pager`).toHaveCount(1);
 
     pagerProps.total = 0;
