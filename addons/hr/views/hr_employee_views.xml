@@ -253,7 +253,7 @@
                                         <field name="children"/>
                                     </group>
                                     <group string="Education" name="hr_education_group">
-                                        <field name="certificate"/>
+                                        <field name="certificate" class="o_hr_certificate_base" widget="filterable_selection" options="{'whitelisted_values': ['graduate', 'bachelor', 'master', 'doctor', 'other']}"/>
                                         <field name="study_field"/>
                                     </group>
                                     <group string="Documents" name="hr_document_group">
