@@ -4,7 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { useService } from "@web/core/utils/hooks";
-import { Tabs, TabHeader, TabPanel } from "@mail/core/common/tabs";
+import { Tabs, Tab } from "@mail/core/common/tabs";
 import { useMicrophoneVolume } from "@mail/utils/common/hooks";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { DeviceSelect } from "@mail/discuss/call/common/device_select";
@@ -13,7 +13,7 @@ import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 
 export class CallSettings extends Component {
     static template = "discuss.CallSettings";
-    static components = { ActionPanel, DeviceSelect, Tabs, TabHeader, TabPanel };
+    static components = { ActionPanel, DeviceSelect, Tabs, Tab };
 
     debugMode = usePlugin(DebugModePlugin);
 
