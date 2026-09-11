@@ -390,9 +390,18 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         channel.message_post(body="cc", message_type="comment")
         self.assertTrue(member.is_pinned, "channel should be pinned for operator after visitor sent a message")
         self.authenticate(operator.login, self.password)
-        data = self.make_jsonrpc_request("/mail/store", {"fetch_params": ["channels_as_member"]})
+        data = self.make_jsonrpc_request(
+            "/mail/store",
+            {
+                "fetch_params": [
+                    ["/mail/messaging_menu/discuss.channel/load_more", {"tab_id": "livechat", "limit": 30}]
+                ]
+            },
+        )
         channel_ids = [channel["id"] for channel in data["discuss.channel"]]
-        self.assertIn(channel.id, channel_ids, "channel should be fetched by operator on new page")
+        self.assertIn(
+            channel.id, channel_ids, "channel should be fetched by operator in messaging menu"
+        )
 
     def test_read_channel_unpined_for_operator_after_one_day(self):
         data = self.make_jsonrpc_request(
