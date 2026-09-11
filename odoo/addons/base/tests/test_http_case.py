@@ -3,6 +3,13 @@
 import logging
 import requests
 import threading
+<<<<<<< 51aa6d522f64c70eb6feae5a9ff61a4e6476b49d
+||||||| 268b87fdd7d183016c1fbac0d9d5bfeaf19ab80f
+from unittest.mock import patch
+=======
+from concurrent.futures import Future
+from unittest.mock import patch
+>>>>>>> 0d8535436e8518770c204a32e1ed8591e75cabf2
 
 from odoo.http import route, Controller, request
 from odoo.tests.common import HttpCase, tagged, ChromeBrowser, TEST_CURSOR_COOKIE_NAME, Like
@@ -99,7 +106,35 @@ class TestChromeBrowserOddDimensions(TestChromeBrowser):
     browser_size = "1215x768"
 
 
+<<<<<<< 51aa6d522f64c70eb6feae5a9ff61a4e6476b49d
 class TestRequestRemainingCommon(HttpCase):
+||||||| 268b87fdd7d183016c1fbac0d9d5bfeaf19ab80f
+class TestRequestRemaining(HttpCase):
+=======
+@tagged('-at_install', 'post_install')
+class TestChromeBrowserShutdown(HttpCase):
+    def test_close_without_answer(self):
+        """Chrome can close the devtools connection before answering Browser.close."""
+        browser = ChromeBrowser(self)
+        websocket_send = ChromeBrowser._websocket_send
+        close_request = None
+
+        def close_connection(browser, method, **kwargs):
+            nonlocal close_request
+            if method != 'Browser.close':
+                return websocket_send(browser, method, **kwargs)
+            close_request = browser._responses[next(browser._request_id)] = Future()
+            browser.ws.close()
+            return close_request
+
+        with patch.object(ChromeBrowser, '_websocket_send', close_connection):
+            with self.assertNoLogs('odoo.tests.common', 'WARNING'):
+                browser.stop()
+        self.assertTrue(close_request.cancelled())
+
+
+class TestRequestRemaining(HttpCase):
+>>>>>>> 0d8535436e8518770c204a32e1ed8591e75cabf2
     # This test case tries to reproduce the case where a request is lost between two test and is execute during the secone one.
     #
     # - Test A browser js finishes with a pending request
