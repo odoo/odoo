@@ -13,7 +13,7 @@ class IrHttp(models.AbstractModel):
 
     bots = [
         "bot", "crawl", "slurp", "spider", "curl", "wget", "facebookexternalhit",
-        "whatsapp", "trendsmapresolver", "pinterest", "instagram",
+        "whatsapp", "trendsmapresolver", "pinterest", "instagram", "xrawler",
         "google-pagerenderer", "preview", "google-inspectiontool", "googleother",
         "meta-external", "meta-webindexer", "chatgpt-user", "claude-user", "perplexity-user",
     ]
