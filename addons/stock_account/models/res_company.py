@@ -89,7 +89,7 @@ class ResCompany(models.Model):
     def stock_value(self, accounts_by_product=None, at_date=None):
         self.ensure_one()
         value_by_account: dict = defaultdict(float)
-        if not accounts_by_product:
+        if accounts_by_product is None:
             accounts_by_product = self.with_context(prefetch_fields=False)._get_accounts_by_product()
         for product, accounts in accounts_by_product.items():
             account = accounts['valuation']
@@ -99,19 +99,27 @@ class ResCompany(models.Model):
 
     def stock_accounting_value(self, accounts_by_product=None, at_date=None):
         self.ensure_one()
-        if not accounts_by_product:
-            accounts_by_product = self._get_accounts_by_product()
         account_data = defaultdict(float)
-        stock_valuation_accounts_ids = {accounts['valuation'].id for accounts in accounts_by_product.values()}
-        stock_valuation_accounts = self.env['account.account'].browse(stock_valuation_accounts_ids)
+        categ_accounts = self.env['product.category'].with_company(self).search_fetch(
+            domain=[('property_stock_valuation_account_id', '!=', False)],
+            field_names=['property_stock_valuation_account_id'],
+        ).mapped('property_stock_valuation_account_id')
+        stock_valuation_accounts = self.account_stock_valuation_id | categ_accounts
+        if not stock_valuation_accounts:
+            return account_data
         domain = Domain([
             ('account_id', 'in', stock_valuation_accounts.ids),
             ('company_id', '=', self.id),
             ('parent_state', '=', 'posted'),
         ])
         if at_date:
-            domain = domain & Domain([('date', '<=', at_date)])
-        amls_group = self.env['account.move.line']._read_group(domain, ['account_id'], ['balance:sum'])
+            domain &= Domain([('date', '<=', at_date)])
+        amls_group = self.env['account.move.line']._read_group(
+            domain,
+            ['account_id'],
+            ['balance:sum'],
+            having=[('balance:sum', '!=', 0.0)],
+        )
         for account, balance in amls_group:
             account_data[account] += balance
         return account_data
@@ -150,10 +158,22 @@ class ResCompany(models.Model):
                 continue
 
     def _get_valuation_product_domain(self):
-        return [('is_storable', '=', True)]
+        return [
+            ('is_storable', '=', True),
+            '|',
+            ('stock_move_ids', 'any', [
+                ('company_id', '=', self.id),
+                ('state', '=', 'done'),
+            ]),
+            ('stock_quant_ids', 'any', [
+                ('company_id', '=', self.id),
+                ('location_id.is_valued_internal', '=', True),
+                ('quantity', '!=', 0),
+            ]),
+        ]
 
     def _get_accounts_by_product(self, products=None):
-        if not products:
+        if products is None:
             products = self.env['product.product'].with_company(self).search_fetch(
                 self._get_valuation_product_domain(), ['categ_id'],
             )
@@ -237,8 +257,6 @@ class ResCompany(models.Model):
 
     def _get_stock_valuation_account_vals(self, accounts_by_product, at_date=None, extra_aml_vals_list=None):
         amls_vals_list = []
-        if not accounts_by_product:
-            return amls_vals_list
 
         extra_balance = self._get_extra_balance(extra_aml_vals_list)
 
