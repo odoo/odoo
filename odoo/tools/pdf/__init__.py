@@ -50,8 +50,8 @@ else:
         raise ImportError("pypdf implementation not found") from errors[0]
     del errors
 
-PageObject, PdfReaderBase, PdfWriter, filters, generic, errors, create_string_object, Fit =\
-    pypdf.PageObject, pypdf.PdfReader, pypdf.PdfWriter, pypdf.filters, pypdf.generic, pypdf.errors, pypdf.create_string_object, pypdf.Fit
+PageObject, PdfReaderBase, PdfWriter, filters, generic, errors, create_string_object, Fit, Link =\
+    pypdf.PageObject, pypdf.PdfReader, pypdf.PdfWriter, pypdf.filters, pypdf.generic, pypdf.errors, pypdf.create_string_object, pypdf.Fit, pypdf.Link
 # because they got re-exported
 (ArrayObject, BooleanObject, ByteStringObject, DecodedStreamObject, DictionaryObject,
  IndirectObject, NameObject, NumberObject, PdfObject, NullObject, RectangleObject, TextStringObject) =\
