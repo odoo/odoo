@@ -773,9 +773,9 @@ class Website(Home):
     def _get_configurator_preview_overrides(self, palette, final_html, is_dark=False):
         """Return the CSS variables injected into static configurator previews.
 
-        The selected palette overrides the preview's base colors. Text color
-        variables are derived from the preview color-combination backgrounds to
-        keep text readable after the palette changes.
+        The selected palette overrides the preview's base colors. Text colors
+        are derived from palette and color-combination backgrounds to keep them
+        readable after the palette changes.
 
         :param list[str] palette: selected palette colors ordered from
             ``o-color-1`` to ``o-color-5``
@@ -799,6 +799,14 @@ class Website(Home):
             final_html,
             palette_map,
         )
+        background_color_overrides = ''
+        for color_name, background_color in sorted(palette_map.items()):
+            text_color = self._get_configurator_preview_contrast_color(background_color)
+            if text_color:
+                background_color_overrides += (
+                    f'.bg-{color_name}'
+                    f'{{--color:{text_color};color:{text_color};}}'
+                )
         dark_mode_overrides = ''
         if is_dark:
             root_variables += (
@@ -838,6 +846,7 @@ class Website(Home):
         return (
             '<style id="o_configurator_theme_preview_overrides">'
             f':root{{{root_variables}}}'
+            f'{background_color_overrides}'
             f'{dark_mode_overrides}'
             '.o_we_shape{top:-2px;bottom:-2px;}'
             'section{margin-top:-2px;}'
