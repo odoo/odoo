@@ -29,3 +29,6 @@ class IrAttachment(models.Model):
         extra_domain = (extra_domain or []) + website.website_domain()
         order = ('website_id, %s' % order) if order else 'website_id'
         return super()._get_serve_attachment(url, extra_domain, order)
+
+    def _get_mimetype_exempt_groups(self):
+        return super()._get_mimetype_exempt_groups() + ['website.group_website_restricted_editor']
