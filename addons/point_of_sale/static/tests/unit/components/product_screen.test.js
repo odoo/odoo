@@ -1,5 +1,11 @@
-import { test, expect } from "@odoo/hoot";
-import { pointerDown, pointerUp, queryAll, queryOne } from "@odoo/hoot-dom";
+import { test, expect, mockTouch } from "@odoo/hoot";
+import {
+    manuallyDispatchProgrammaticEvent,
+    pointerDown,
+    pointerUp,
+    queryAll,
+    queryOne,
+} from "@odoo/hoot-dom";
 import { advanceTime, animationFrame } from "@odoo/hoot-mock";
 import {
     contains,
@@ -78,6 +84,46 @@ test("long press on a product opens the product info popup", async () => {
     await advanceTime(LONG_PRESS_DURATION + TOUCH_DELAY + 5);
     await pointerUp(product);
     expect.verifySteps(["product-info:5"]);
+});
+
+test("long press on a product opens the product info popup on touch devices", async () => {
+    mockTouch(true);
+    const { store } = await mountProductScreen();
+
+    patchWithCleanup(store, {
+        async onProductInfoClick(product) {
+            expect.step(`product-info:${product.id}`);
+        },
+    });
+
+    const product = queryOne('.product-sortable[data-product-id="5"]');
+    await pointerDown(product);
+    await advanceTime(LONG_PRESS_DURATION + TOUCH_DELAY + 5);
+    expect.verifySteps(["product-info:5"]);
+});
+
+test("scrolling the product list on touch devices does not open the product info popup", async () => {
+    mockTouch(true);
+    const { store } = await mountProductScreen();
+
+    patchWithCleanup(store, {
+        async onProductInfoClick(product) {
+            expect.step(`product-info:${product.id}`);
+        },
+    });
+
+    const product = queryOne('.product-sortable[data-product-id="5"]');
+    const productList = product.closest(".overflow-y-auto");
+    // The list is still scrolling from a previous swipe
+    await manuallyDispatchProgrammaticEvent(productList, "scroll");
+    await pointerDown(product);
+    // The browser takes the gesture over to scroll: no pointerup follows
+    await manuallyDispatchProgrammaticEvent(product, "pointercancel", { bubbles: true });
+    for (let elapsed = 0; elapsed <= LONG_PRESS_DURATION + TOUCH_DELAY; elapsed += 50) {
+        await manuallyDispatchProgrammaticEvent(productList, "scroll");
+        await advanceTime(50);
+    }
+    expect.verifySteps([]);
 });
 
 test("simple click on a product adds it to the cart", async () => {
