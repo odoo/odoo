@@ -14,23 +14,23 @@
              style="transform:translateY(50%)">
 
             <div class="flex-shrink-0" style="width:8vw">
-                <t t-if="this.previewImages[0]">
+                <t t-if="this.previewImages()[0]">
                     <div class="o_configurator_showcase_item o_configurator_showcase_slot_0">
-                        <img class="o_configurator_showcase_img h-auto d-block w-100 shadow rounded" t-att-src="this.previewImages[0].url"/>
+                        <img class="o_configurator_showcase_img h-auto d-block w-100 shadow rounded" t-att-src="this.previewImages()[0].url"/>
                     </div>
                 </t>
             </div>
 
             <div class="d-flex flex-column align-items-end gap-4 mt-3 flex-shrink-0" style="width:8vw">
-                <t t-if="this.previewImages[1]">
+                <t t-if="this.previewImages()[1]">
                     <div class="o_configurator_showcase_item o_configurator_showcase_slot_1">
-                        <img class="o_configurator_showcase_img h-auto d-block w-100 shadow rounded" t-att-src="this.previewImages[1].url"/>
+                        <img class="o_configurator_showcase_img h-auto d-block w-100 shadow rounded" t-att-src="this.previewImages()[1].url"/>
                     </div>
                 </t>
                 <div class="flex-shrink-0" style="width:17vw">
-                    <t t-if="this.previewImages[6]">
+                    <t t-if="this.previewImages()[6]">
                         <div class="o_configurator_showcase_item o_configurator_showcase_slot_6">
-                            <img class="o_configurator_showcase_img h-auto d-block w-100 shadow-lg rounded-3" t-att-src="this.previewImages[6].url"/>
+                            <img class="o_configurator_showcase_img h-auto d-block w-100 shadow-lg rounded-3" t-att-src="this.previewImages()[6].url"/>
                         </div>
                     </t>
                 </div>
@@ -40,17 +40,17 @@
             <div class="d-flex align-items-center flex-column gap-4 flex-shrink-0 position-relative">
 
                 <div class="flex-shrink-0" style="width:12vw">
-                    <t t-if="this.previewImages[2]">
+                    <t t-if="this.previewImages()[2]">
                         <div class="o_configurator_showcase_item o_configurator_showcase_slot_2">
-                            <img class="o_configurator_showcase_img h-auto d-block w-100 shadow-lg rounded-3" t-att-src="this.previewImages[2].url"/>
+                            <img class="o_configurator_showcase_img h-auto d-block w-100 shadow-lg rounded-3" t-att-src="this.previewImages()[2].url"/>
                         </div>
                     </t>
                 </div>
 
                 <div class="flex-shrink-0" style="width:8vw">
-                    <t t-if="this.previewImages[3]">
+                    <t t-if="this.previewImages()[3]">
                         <div class="o_configurator_showcase_item o_configurator_showcase_slot_3">
-                            <img class="o_configurator_showcase_img h-auto d-block w-100 shadow rounded" t-att-src="this.previewImages[3].url"/>
+                            <img class="o_configurator_showcase_img h-auto d-block w-100 shadow rounded" t-att-src="this.previewImages()[3].url"/>
                         </div>
                     </t>
                 </div>
@@ -59,17 +59,17 @@
                 <div class="position-absolute bottom-100 end-0 d-flex align-items-end gap-4 gap-xxl-5 mb-4">
 
                     <div class="flex-shrink-0 mb-3 mb-xxl-4 me-xxl-4" style="width:15vw">
-                        <t t-if="this.previewImages[4]">
+                        <t t-if="this.previewImages()[4]">
                             <div class="o_configurator_showcase_item o_configurator_showcase_slot_4">
-                                <img class="o_configurator_showcase_img h-auto d-block w-100 shadow-lg rounded-3" t-att-src="this.previewImages[4].url"/>
+                                <img class="o_configurator_showcase_img h-auto d-block w-100 shadow-lg rounded-3" t-att-src="this.previewImages()[4].url"/>
                             </div>
                         </t>
                     </div>
 
                     <div class="flex-shrink-0" style="width:16vw">
-                        <t t-if="this.previewImages[5]">
+                        <t t-if="this.previewImages()[5]">
                             <div class="o_configurator_showcase_item o_configurator_showcase_slot_5">
-                                <img class="o_configurator_showcase_img h-auto d-block w-100 shadow rounded" t-att-src="this.previewImages[5].url"/>
+                                <img class="o_configurator_showcase_img h-auto d-block w-100 shadow rounded" t-att-src="this.previewImages()[5].url"/>
                             </div>
                         </t>
                     </div>
@@ -81,17 +81,17 @@
                  style="transform:translateY(-50%)">
 
                 <div class="flex-shrink-0" style="width:17vw">
-                    <t t-if="this.previewImages[7]">
+                    <t t-if="this.previewImages()[7]">
                         <div class="o_configurator_showcase_item o_configurator_showcase_slot_7">
-                            <img class="o_configurator_showcase_img h-auto d-block w-100 shadow rounded" t-att-src="this.previewImages[7].url"/>
+                            <img class="o_configurator_showcase_img h-auto d-block w-100 shadow rounded" t-att-src="this.previewImages()[7].url"/>
                         </div>
                     </t>
                 </div>
 
                 <div class="flex-shrink-0" style="width:9vw">
-                    <t t-if="this.previewImages[8]">
+                    <t t-if="this.previewImages()[8]">
                         <div class="o_configurator_showcase_item o_configurator_showcase_slot_8">
-                            <img class="o_configurator_showcase_img h-auto d-block w-100 shadow rounded" t-att-src="this.previewImages[8].url"/>
+                            <img class="o_configurator_showcase_img h-auto d-block w-100 shadow rounded" t-att-src="this.previewImages()[8].url"/>
                         </div>
                     </t>
                 </div>
@@ -107,7 +107,7 @@
     <div class="o_configurator_screen overflow-x-hidden h-100 d-flex flex-row-reverse justify-content-around position-relative px-3 px-xxl-0">
         <div class="o_description_screen_image_preview position-relative d-none d-lg-flex flex-column w-50 h-100">
             <div class="d-flex flex-grow-1 align-items-center justify-content-center">
-                <t t-if="this.previewImages.length" t-call="website.Configurator.IndustryImageShowcase"/>
+                <t t-if="this.previewImages().length" t-call="website.Configurator.IndustryImageShowcase"/>
             </div>
             <SkipButton skip="this.props.skip" className="'py-2 pb-md-3 text-end mt-auto z-1'"/>
         </div>
