@@ -32,7 +32,7 @@ class DeliveryPriceRule(models.Model):
                 rule.variable,
                 rule.operator,
                 rule.max_value,
-                rule.variable_unit,
+                rule.variable_unit or "",
             )
             if rule.currency_id:
                 base_price = format_amount(self.env, rule.list_base_price, rule.currency_id)
