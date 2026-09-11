@@ -117,7 +117,8 @@ export class Store extends Record {
                         for (const usedRecord of recordList._.data()) {
                             usedRecord._.uses.delete(recordList);
                         }
-                        recordList._.data().length = 0;
+                        recordList._.data.set([]);
+                        recordList._.syncLength();
                     }
                 }
             }
