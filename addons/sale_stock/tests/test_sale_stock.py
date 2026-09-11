@@ -2835,3 +2835,75 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         self.assertRecordValues(sale_order.order_line, [
             {'product_id': self.new_product.id, 'product_uom_qty': 0, 'qty_delivered': 3}
         ])
+
+    def test_resupply_so_qty_update(self):
+        """In a 2-warehouse resupply scenario (WH/Stock -> WH/Output -> WH2/Stock
+        -> Customer), updating the SO line qty should update all 3 moves qty in the
+        chain accordingly.
+        """
+        warehouse = self.company_data['default_warehouse']
+        warehouse2 = self.env['stock.warehouse'].create({
+            'name': 'Warehouse 2',
+            'code': 'WH2',
+            'resupply_wh_ids': [Command.set([warehouse.id])],
+        })
+
+        resupply_route = warehouse2.resupply_route_ids
+        self.assertEqual(len(resupply_route), 1)
+
+        # WH2 delivery: always trigger resupply.
+        warehouse2.delivery_route_id.rule_ids.procure_method = 'make_to_order'
+
+        # Replace auto-created rules with 2 explicit rules:
+        # Rule A: WH/Output -> WH2/Stock
+        # Rule B: WH/Stock  -> WH/Output
+        resupply_route.rule_ids.unlink()
+        self.env['stock.rule'].create([
+            {
+                'name': 'WH/Output -> WH2/Stock',
+                'route_id': resupply_route.id,
+                'action': 'pull',
+                'location_src_id': warehouse.wh_output_stock_loc_id.id,
+                'location_dest_id': warehouse2.lot_stock_id.id,
+                'picking_type_id': warehouse2.in_type_id.id,
+                'procure_method': 'make_to_order',
+                'warehouse_id': warehouse2.id,
+                'location_dest_from_rule': True,
+            },
+            {
+                'name': 'WH/Stock -> WH/Output',
+                'route_id': resupply_route.id,
+                'action': 'pull',
+                'location_src_id': warehouse.lot_stock_id.id,
+                'location_dest_id': warehouse.wh_output_stock_loc_id.id,
+                'picking_type_id': warehouse.pick_type_id.id,
+                'procure_method': 'make_to_stock',
+                'warehouse_id': warehouse2.id,
+                'location_dest_from_rule': True,
+            },
+        ])
+
+        self.product_a.is_storable = True
+        self.product_a.route_ids = [Command.set([resupply_route.id])]
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'warehouse_id': warehouse2.id,
+            'order_line': [Command.create({
+                'product_id': self.product_a.id,
+                'product_uom_qty': 1,
+            })],
+        })
+        so.action_confirm()
+        self.assertEqual(len(so.picking_ids), 3)
+        self.assertRecordValues(so.picking_ids.move_ids.sorted('id'), [
+            {'location_id': warehouse2.lot_stock_id.id, 'location_dest_id': self.partner_a.property_stock_customer.id, 'product_uom_qty': 1},
+            {'location_id': warehouse.wh_output_stock_loc_id.id, 'location_dest_id': warehouse2.lot_stock_id.id, 'product_uom_qty': 1},
+            {'location_id': warehouse.lot_stock_id.id, 'location_dest_id': warehouse.wh_output_stock_loc_id.id, 'product_uom_qty': 1},
+        ])
+        so.order_line.product_uom_qty = 2
+        self.assertRecordValues(so.picking_ids.move_ids.sorted('id'), [
+            {'location_id': warehouse2.lot_stock_id.id, 'location_dest_id': self.partner_a.property_stock_customer.id, 'product_uom_qty': 2},
+            {'location_id': warehouse.wh_output_stock_loc_id.id, 'location_dest_id': warehouse2.lot_stock_id.id, 'product_uom_qty': 2},
+            {'location_id': warehouse.lot_stock_id.id, 'location_dest_id': warehouse.wh_output_stock_loc_id.id, 'product_uom_qty': 2},
+        ])
