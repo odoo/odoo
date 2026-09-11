@@ -16,7 +16,6 @@ export class SaleOrderTemplateLineListRenderer extends ProductLabelSectionAndNot
         super.setup();
         this.copyFields.push('is_optional');
         useSubEnv({
-            adjustSectionQuantities: this.adjustSectionQuantities.bind(this),
             shouldCollapse: this.shouldCollapse.bind(this),
         });
     }
@@ -47,29 +46,6 @@ export class SaleOrderTemplateLineListRenderer extends ProductLabelSectionAndNot
         }
 
         return activeColumns;
-    }
-
-    async adjustSectionQuantities(record, ratio) {
-        if (ratio === 1) {
-            return;
-        }
-
-        const commands = [];
-        const sectionLines = getSectionRecords(
-            this.props.list,
-            record,
-            this.isSubSection(record)
-        ).filter((line) => !this.isNote(line) && line !== record);
-
-        for (const line of sectionLines) {
-            const qtyField = this.isSection(line) ? "section_qty" : "product_uom_qty";
-            commands.push(
-                x2ManyCommands.update(line.resId || line._virtualId, {
-                    [qtyField]: line.data[qtyField] * ratio,
-                })
-            );
-        }
-        await this.props.list.applyCommands(commands);
     }
 
     /**
