@@ -18,7 +18,7 @@
             t-att-data-color="currentGradient" t-on-click="this.toggleGradientPicker" title="Define a custom gradient">
             Custom
         </button>
-        <GradientPicker t-if="this.state.showGradientPicker"
+        <GradientPicker t-if="this.showGradientPicker()"
             onGradientChange.bind="this.props.applyColor"
             onGradientPreview.bind="this.props.onColorPreview"
             setOnCloseCallback.bind="this.props.setOnCloseCallback"
