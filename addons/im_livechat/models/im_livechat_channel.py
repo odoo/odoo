@@ -38,10 +38,8 @@ class Im_LivechatChannel(models.Model):
     button_text = fields.Char('Text of the Button', default=_default_button_text, translate=True)
     default_message = fields.Char('Welcome Message', default=_default_default_message,
         help="This is an automated 'welcome' message that your visitor will see when they initiate a new conversation.", translate=True)
-    header_background_color = fields.Char(default="#875A7B", help="Default background color of the channel header once open")
-    title_color = fields.Char(default="#FFFFFF", help="Default title color of the channel once open")
-    button_background_color = fields.Char(default="#875A7B", help="Default background color of the Livechat button")
-    button_text_color = fields.Char(default="#FFFFFF", help="Default text color of the Livechat button")
+    widget_background_color = fields.Char(default="#875A7B", help="Default background color for the Livechat button and opened Channel Header.")
+    widget_text_color = fields.Char(default="#FFFFFF", help="Default text and icon color for the Livechat button and opened Channel Header.")
     max_sessions_mode = fields.Selection(
         [("unlimited", "Unlimited"), ("limited", "Limited")],
         default="unlimited",
@@ -604,10 +602,8 @@ class Im_LivechatChannel(models.Model):
         self.ensure_one()
 
         return {
-            'header_background_color': self.header_background_color,
-            'button_background_color': self.button_background_color,
-            'title_color': self.title_color,
-            'button_text_color': self.button_text_color,
+            'widget_background_color': self.widget_background_color,
+            'widget_text_color': self.widget_text_color,
             'button_text': self.button_text,
             'default_message': self.default_message,
             "channel_name": self.name,
