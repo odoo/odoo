@@ -80,6 +80,17 @@ class IrQweb(models.AbstractModel):
         if website and tagName == 'img' and 'loading' not in atts:
             atts['loading'] = 'lazy'  # default is auto
 
+        if (
+            website
+            and tagName == "img"
+            and "data-img-dimensions" in atts
+            and len(atts["data-img-dimensions"].split(' ')) == 3
+        ):
+            src, naturalWidth, naturalHeight = atts['data-img-dimensions'].split(' ')
+            if src == atts.get('src'):
+                atts['width'] = naturalWidth
+                atts['height'] = naturalHeight
+
         if self.env.context.get('inherit_branding') or self.env.context.get('rendering_bundle') or \
            self.env.context.get('edit_translations') or self.env.context.get('debug') or (request and request.session.debug):
             return atts
