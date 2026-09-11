@@ -24,7 +24,10 @@
             "sale_loyalty/static/src/interactions/gift_card.js",
             "sale_loyalty/static/src/scss/gift_card.scss",
         ],
-        "web.assets_backend": ["sale_loyalty/static/src/xml/discount_menu_widget.xml"],
+        "web.assets_backend": [
+            "sale_loyalty/static/src/xml/discount_menu_widget.xml",
+            "sale_loyalty/static/src/sale_order_form_view/**/*",
+        ],
     },
     "uninstall_hook": "uninstall_hook",
     "author": "Odoo S.A.",

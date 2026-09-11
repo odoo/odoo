@@ -948,7 +948,7 @@ export class StaticList extends DataPoint {
             virtualId: params.virtualId,
             manuallyAdded: params.manuallyAdded,
         };
-        const record = new this.model.constructor.Record(this.model, config, data, options);
+        const record = this._buildRecord(config, data, options);
         this._cache[id] = record;
         if (!params.dontApplyCommands) {
             const commands = this._unknownRecordCommands[id];
@@ -958,6 +958,10 @@ export class StaticList extends DataPoint {
             }
         }
         return record;
+    }
+
+    _buildRecord(config, data, options) {
+        return new this.model.constructor.Record(this.model, config, data, options);
     }
 
     _clearCommands() {

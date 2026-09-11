@@ -4,15 +4,10 @@ import {
     productLabelSectionAndNoteOne2Many,
     ProductLabelSectionAndNoteOne2Many,
 } from "@account/components/product_label_section_and_note_o2m/product_label_section_and_note_field_o2m";
-import {
-    getSectionRecords,
-    sectionAndNoteFieldOne2Many,
-} from "@account/components/section_and_note_fields_backend/section_and_note_fields_backend";
+import { sectionAndNoteFieldOne2Many } from "@account/components/section_and_note_fields_backend/section_and_note_fields_backend";
 import { openComboConfigurator } from "@sale/js/combo_configurator_utils";
 import { clearSelectedComboItems, getSelectedComboItems } from "@sale/js/sale_utils";
-import { x2ManyCommands } from "@web/core/orm_plugin";
 import { registry } from "@web/core/registry";
-import { getFieldsSpec } from "@web/model/relational_model/utils";
 import { useService } from "@web/core/utils/hooks";
 
 function getComboRecords(listRecords, record) {
@@ -72,7 +67,6 @@ export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRen
 
         useSubEnv({
             shouldCollapse: this.shouldCollapse.bind(this),
-            adjustSectionQuantities: this.adjustSectionQuantities.bind(this),
         });
     }
 
@@ -125,76 +119,6 @@ export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRen
             return;
         }
         super.focusToName(editRec);
-    }
-
-    async adjustSectionQuantities(record, ratio) {
-        if (ratio === 1 || this.adjustingSectionQuantities) {
-            return;
-        }
-
-        const sectionLines = getSectionRecords(
-            this.props.list,
-            record,
-            this.isSubSection(record)
-        ).filter((line) => !this.isNote(line) && !this.isComboItem(line) && line !== record);
-
-        if (!sectionLines.length) {
-            return;
-        }
-
-        const linesById = {};
-        const sectionLinesData = {};
-        const commands = [];
-        const orderChanges = {
-            order_id: {
-                ...(await this.props.list._parent.getChanges()),
-                ...(!this.props.list._parent.isNew && { id: this.props.list._parent.resId }),
-            },
-        };
-
-        for (const sectionLine of sectionLines) {
-            const qtyField = this.isSection(sectionLine) ? "section_qty" : "product_uom_qty";
-            const lineId = sectionLine.resId || sectionLine._virtualId;
-            linesById[lineId] = sectionLine;
-            sectionLinesData[lineId] = {
-                ids: sectionLine.resId ? [sectionLine.resId] : [],
-                changes: {
-                    ...(await sectionLine.getChanges({ withReadonly: true })),
-                    [qtyField]: sectionLine.data[qtyField] * ratio,
-                },
-                changed_fields: [qtyField],
-            };
-            commands.push(
-                x2ManyCommands.update(lineId, {
-                    [qtyField]: sectionLine.data[qtyField] * ratio,
-                })
-            );
-        }
-
-        const fieldsSpec = getFieldsSpec(
-            this.props.list.activeFields,
-            this.props.list.fields,
-            this.props.list.evalContext,
-            { withInvisible: true }
-        );
-        const results = await this.orm.call("sale.order", "batch_onchange_sol", [
-            sectionLinesData,
-            orderChanges,
-            fieldsSpec,
-        ]);
-
-        commands.push(
-            ...Object.entries(results).map(([lineId, values]) => {
-                const id = linesById[lineId].resId || linesById[lineId]._virtualId;
-                return x2ManyCommands.update(id, values);
-            })
-        );
-
-        // To make sure rpc isn't called recursively for subsections when updating the quantities of
-        // parent section lines.
-        this.adjustingSectionQuantities = true;
-        await this.props.list.applyCommands(commands);
-        this.adjustingSectionQuantities = false;
     }
 
     /**
