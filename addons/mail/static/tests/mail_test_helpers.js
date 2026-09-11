@@ -949,7 +949,7 @@ export const STORE_FETCH_ROUTES = ["/mail/store"];
  * them. Each intercepted fetch should have a corresponding waitStoreFetch in the test.
  *
  * @param {string|string[]} [nameOrNames=[]] name or names of the store fetch params to intercept
- * (such as init_messaging or channels_as_member). If empty all params are intercepted.
+ * (such as init_messaging). If empty all params are intercepted.
  * @param {Object} [options={}]
  * @param {function} [options.onRpc] entry point to override the onRpc of the intercepted calls.
  * @param {string[]} [options.logParams=[]] names of the store fetch params for which both the name
