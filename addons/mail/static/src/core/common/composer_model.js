@@ -57,6 +57,15 @@ export class Composer extends Record {
             { immediate: true, initialRun: false }
         );
         this.onChange(
+            () => [this.message?.body],
+            function onChangeMessageBody(body) {
+                if (this.syncHtmlWithMessage) {
+                    this.composerHtml = prepareBodyForEditing(body);
+                }
+            },
+            { immediate: true, initialRun: false }
+        );
+        this.onChange(
             () => [this.isFocused, this.thread],
             function onChangeIsFocused(isFocused, thread) {
                 if (thread && isFocused) {
@@ -112,17 +121,7 @@ export class Composer extends Record {
     cannedResponses = fields.Many("mail.canned.response");
     isDirty = false;
     composerText = "";
-    composerHtml = fields.Html(markup("<div class='o-paragraph'><br></div>"), {
-        compute() {
-            if (this.syncHtmlWithMessage) {
-                return (
-                    prepareBodyForEditing(this.message.body) ||
-                    markup("<div class='o-paragraph'><br></div>")
-                );
-            }
-            return this.composerHtml;
-        },
-    });
+    composerHtml = fields.Html(markup("<div class='o-paragraph'><br></div>"));
     thread = fields.One("mail.thread");
     /** @type {{ start: number, end: number, direction: "forward" | "backward" | "none"}}*/
     selection = fields.Attr(
