@@ -1,12 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+import secrets
 from datetime import timedelta
 
-from odoo import fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import urls
 
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_paypal import const
 from odoo.addons.payment_paypal.controllers.main import PaypalController
@@ -23,13 +25,10 @@ class PaymentProvider(models.Model):
     paypal_email_account = fields.Char(
         string="PayPal Email",
         help="The public business email solely used to identify the account with PayPal",
-        required_if_provider="paypal",
         default=lambda self: self.env.company.email,
         copy=False,
     )
-    paypal_client_id = fields.Char(
-        string="PayPal Client ID", required_if_provider="paypal", copy=False
-    )
+    paypal_client_id = fields.Char(string="PayPal Client ID", copy=False)
     paypal_client_secret = fields.Char(
         string="PayPal Client Secret", copy=False, groups="base.group_system"
     )
@@ -47,6 +46,12 @@ class PaymentProvider(models.Model):
         groups="base.group_system",
     )
     paypal_webhook_id = fields.Char(string="PayPal Webhook ID", copy=False)
+    paypal_account_id = fields.Char(string="Paypal Seller Account ID", copy=False)
+    paypal_seller_nonce = fields.Char(string="Paypal Seller Nonce", copy=False)
+
+    paypal_is_oauth_onboarded = fields.Boolean(string="Onboarded via OAuth button", copy=False)
+    paypal_payments_receivable = fields.Boolean(copy=False)
+    paypal_email_confirmed = fields.Boolean(copy=False)
 
     # === COMPUTE METHODS === #
 
@@ -58,6 +63,27 @@ class PaymentProvider(models.Model):
                 lambda c: c.name in const.SUPPORTED_CURRENCIES
             )
         return supported_currencies
+
+        # === CONSTRAINT METHODS === #
+
+    @api.constrains("is_published")
+    def _check_paypal_credentials_are_set_if_published(self):
+        """Check that the PayPal credentials are valid when the provider is set to published mode.
+
+        :raise ValidationError: If the PayPal credentials are not valid.
+        """
+        for provider in self.filtered(lambda p: p.code == "paypal" and p.is_published):
+            if (
+                not provider.paypal_client_id
+                or not provider.paypal_client_secret
+                or not provider.paypal_account_id
+            ):
+                raise ValidationError(
+                    provider.env._(
+                        'PayPal credentials are missing. Please click the "Connect" button or'
+                        " fill them manually to set up your account."
+                    )
+                )
 
     # === CRUD METHODS === #
 
@@ -78,35 +104,220 @@ class PaymentProvider(models.Model):
         :return: None
         :raise UserError: If the base URL is not in HTTPS.
         """
-        base_url = self.get_base_url()
-        if "localhost" in base_url:
-            raise UserError(
-                "PayPal: " + self.env._("You must have an HTTPS connection to generate a webhook.")
-            )
+        base_url = self._paypal_get_base_url()
+        webhook_events = (
+            const.CHECKOUT_WEBHOOK_EVENTS
+            + const.CAPTURE_WEBHOOK_EVENTS
+            + [const.SELLER_EMAIL_CONFIRMED_WEBHOOK]
+        )
         data = {
             "url": urls.urljoin(base_url, PaypalController._webhook_url),
-            "event_types": [{"name": event_type} for event_type in const.HANDLED_WEBHOOK_EVENTS],
+            "event_types": [{"name": event_type} for event_type in webhook_events],
         }
         webhook_data = self._send_api_request("POST", "/v1/notifications/webhooks", json=data)
         self.paypal_webhook_id = webhook_data.get("id")
 
+    def action_start_onboarding(self, menu_id=None):
+        """Override of `payment` to redirect to the PayPal OAuth URL.
+
+        Note: `self.ensure_one()`
+
+        :param int menu_id: The menu from which the onboarding is started, as an `ir.ui.menu` id.
+        :return: An URL action to redirect to the PayPal OAuth URL.
+        :rtype: dict
+        """
+        self.ensure_one()
+
+        if self.code != "paypal":
+            return super().action_start_onboarding(menu_id=menu_id)
+
+        self.paypal_seller_nonce = secrets.token_urlsafe(32)
+
+        return {
+            "type": "ir.actions.client",
+            "tag": "paypal_onboarding_client_action",
+            "params": {"provider_id": self.id},
+        }
+
+    def action_paypal_check_onboarding_status(self):
+        for provider in self:
+            provider._paypal_check_onboarding_status()
+        return True
+
+    def action_reset_credentials(self):
+        """Override to trigger a hard reload on the page when credentials are reset."""
+        res = super().action_reset_credentials()
+        if self.code != "paypal":
+            return res
+        return {"type": "ir.actions.client", "tag": "reload"}
+
     # === BUSINESS METHODS === #
 
-    def _paypal_get_inline_form_values(self, currency=None):
+    def _find_available_payment_methods(
+        self,
+        partner_id,
+        *,
+        currency_id=None,
+        force_tokenization=False,
+        is_express_checkout=False,
+        report=None,
+        amount=0.0,
+        **kwargs,
+    ):
+        """Override of `payment` to filter out payment methods that PayPal deems ineligible.
+
+        PayPal's own eligibility rules (based on the customer's country, the seller account, etc.)
+        are not necessarily reflected in the local configuration of the payment methods. The
+        `find-eligible-methods` endpoint is called to refine the availability of PayPal's payment
+        methods for the given payment context.
+
+        :param float amount: The amount to pay (`0` for validation transactions)
+
+        """
+        payment_methods = super()._find_available_payment_methods(
+            partner_id,
+            currency_id=currency_id,
+            force_tokenization=force_tokenization,
+            is_express_checkout=is_express_checkout,
+            report=report,
+            amount=amount,
+            **kwargs,
+        )
+        for provider in self.filtered(lambda p: p.code == "paypal"):
+            if not provider.paypal_client_id or not provider.paypal_client_secret:
+                continue
+            eligible_method_keys = provider._paypal_get_eligible_payment_method_keys(
+                partner_id,
+                amount,
+                currency_id=currency_id,
+                user_agent=kwargs.get("paypal_customer_user_agent"),
+            )
+            if eligible_method_keys is None:
+                continue
+            ineligible_pms = payment_methods.filtered(
+                lambda pm: (
+                    pm.code in const.PAYMENT_METHODS_MAPPING
+                    and const.PAYMENT_METHODS_MAPPING[pm.code] not in eligible_method_keys
+                )
+            )
+            payment_utils.add_to_report(
+                report,
+                ineligible_pms,
+                available=False,
+                reason=self.env._("Not eligible according to PayPal"),
+            )
+            payment_methods -= ineligible_pms
+        return payment_methods
+
+    def _paypal_get_eligible_payment_method_keys(
+        self, partner_id, amount, currency_id=None, user_agent=None
+    ):
+        """Return the PayPal payment source keys that are eligible for the given context.
+
+        Note: `self.ensure_one()`
+
+        :param int partner_id: The partner making the payment, as a `res.partner` id.
+        :param float amount: The amount to pay (`0` for validation transactions)
+        :param int currency_id: The payment currency, as a `res.currency` id.
+        :param str user_agent: The customer's browser user agent string, forwarded to PayPal to
+                               derive the browser, OS, and device type for eligibility assessment.
+        :return: The eligible PayPal payment source keys (e.g., `{'paypal', 'venmo'}`), or `None`
+                 if the eligibility could not be determined.
+        :rtype: set|None
+        """
+        self.ensure_one()
+
+        partner = self.env["res.partner"].browse(partner_id)
+        currency = self.env["res.currency"].browse(currency_id)
+        payload = {
+            "customer": {"country_code": partner.country_code, "email": partner.email},
+            "purchase_units": [
+                {
+                    "amount": {"currency_code": currency.name, "value": amount},
+                    "payee": {
+                        "email_address": self.paypal_email_account,
+                        "merchant_id": self.paypal_account_id,
+                    },
+                }
+            ],
+            "preferences": {"intent": "CAPTURE"},
+        }
+        try:
+            response_content = self._send_api_request(
+                "POST",
+                "/v2/payments/find-eligible-methods",
+                json=payload,
+                paypal_customer_user_agent=user_agent,
+            )
+        except ValidationError:
+            _logger.warning("Could not fetch eligible payment methods from PayPal.")
+            return None
+        return set(response_content.get("eligible_methods", {}))
+
+    def _paypal_get_inline_form_values(self, currency=None, partner_id=None):
         """Return a serialized JSON of the required values to render the inline form.
 
         Note: `self.ensure_one()`
 
         :param res.currency currency: The transaction currency.
+        :param int partner_id: The partner of the transaction, as a `res.partner` id.
         :return: The JSON serial of the required values to render the inline form.
         :rtype: str
         """
+        partner = self.env["res.partner"].browse(partner_id).exists()
         inline_form_values = {
             "provider_id": self.id,
             "client_id": self.paypal_client_id,
+            "merchant_id": self.paypal_account_id,
             "currency_code": currency and currency.name,
+            "country_code": partner and partner.country_code,
         }
         return json.dumps(inline_form_values)
+
+    def _get_reset_values(self):
+        """Override of `payment` to supply the provider-specific credential values to reset."""
+        if self.code != "paypal":
+            return super()._get_reset_values()
+
+        return {
+            "paypal_access_token": None,
+            "paypal_access_token_expiry": None,
+            "paypal_email_account": None,
+            "paypal_client_id": None,
+            "paypal_client_secret": None,
+            "paypal_webhook_id": None,
+            "paypal_account_id": None,
+            "paypal_is_oauth_onboarded": False,
+            "paypal_seller_nonce": None,
+        }
+
+    def _paypal_request_onboarding_token(self, auth_code, shared_id):
+        self.ensure_one()
+        data = {
+            "grant_type": "authorization_code",
+            "code": auth_code,
+            "code_verifier": self.paypal_seller_nonce,
+        }
+        response_content = self._send_api_request(
+            "POST", "/v1/oauth2/token", data=data, paypal_onboarding_shared_id=shared_id
+        )
+        if not (paypal_onboarding_access_token := response_content.get("access_token")):
+            raise ValidationError(_("Failed to retrieve access token."))
+        return paypal_onboarding_access_token
+
+    def _paypal_check_onboarding_status(self):
+        self.ensure_one()
+        if not self.paypal_account_id:
+            raise ValidationError(_("Missing Account ID. Cannot check onboarding status."))
+        endpoint = (
+            f"/v1/customer/partners/{const.ONBOARDING_REFERENCE['partner_id']}"
+            f"/merchant-integrations/{self.paypal_account_id}"
+        )
+        response_content = self._send_api_request("GET", endpoint)
+        self.paypal_email_account = response_content.get("primary_email")
+        self.paypal_payments_receivable = response_content.get("payments_receivable")
+        self.paypal_email_confirmed = response_content.get("primary_email_confirmed")
+        return response_content
 
     # === REQUEST HELPERS === #
 
@@ -130,26 +341,44 @@ class PaymentProvider(models.Model):
             return "https://api-m.paypal.com"
         return "https://api-m.sandbox.paypal.com"
 
+    def _paypal_get_base_url(self):
+        base_url = self.get_base_url()
+        if "localhost" in base_url:
+            raise UserError(
+                "PayPal: " + self.env._("You must have an HTTPS connection to generate a webhook.")
+            )
+        return base_url
+
     def _build_request_headers(
-        self, *args, idempotency_key=None, is_refresh_token_request=False, **kwargs
+        self,
+        *args,
+        idempotency_key=None,
+        is_refresh_token_request=False,
+        paypal_onboarding_shared_id=None,
+        paypal_onboarding_access_token=None,
+        paypal_customer_user_agent=None,
+        **kwargs,
     ):
         """Override of `payment` to build the request headers."""
         if self.code != "paypal":
-            return super()._build_request_headers(
-                *args,
-                idempotency_key=idempotency_key,
-                is_refresh_token_request=is_refresh_token_request,
-                **kwargs,
-            )
-
+            return super()._build_request_headers(*args, idempotency_key=idempotency_key, **kwargs)
+        is_onboarding_request = paypal_onboarding_shared_id or paypal_onboarding_access_token
         headers = {
-            "Content-Type": "application/json",
             # PayPal requires a reference specific to Odoo to be able to track Odoo customers.
-            "PayPal-Partner-Attribution-Id": "OdooInc_SP_EC",
+            "PayPal-Partner-Attribution-Id": "ODOO_SP_DIRECT"
         }
+        if is_onboarding_request:
+            headers["Content-Type"] = "application/x-www-form-urlencoded"
+        else:
+            headers["Content-Type"] = "application/json"
+
+        if paypal_customer_user_agent:
+            headers["User-Agent"] = paypal_customer_user_agent
+        if paypal_onboarding_access_token:
+            headers["Authorization"] = f"Bearer {paypal_onboarding_access_token}"
         if idempotency_key:
             headers["PayPal-Request-Id"] = idempotency_key
-        if not is_refresh_token_request:
+        if not (is_refresh_token_request or is_onboarding_request):
             headers["Authorization"] = f"Bearer {self._paypal_fetch_access_token()}"
         return headers
 
@@ -160,7 +389,10 @@ class PaymentProvider(models.Model):
         :rtype: str
         :raise ValidationError: If the access token can not be fetched.
         """
-        if fields.Datetime.now() > self.paypal_access_token_expiry - timedelta(minutes=5):
+        if (
+            not self.paypal_access_token_expiry
+            or fields.Datetime.now() > self.paypal_access_token_expiry - timedelta(minutes=5)
+        ):
             response_content = self._send_api_request(
                 "POST",
                 "/v1/oauth2/token",
@@ -181,12 +413,26 @@ class PaymentProvider(models.Model):
         """Override of `payment` to parse the error message."""
         if self.code != "paypal":
             return super()._parse_response_error(response)
-        return response.json().get("message", "")
+        response_content = response.json()
+        descriptions = [
+            detail["description"]
+            for detail in response_content.get("details", [])
+            if detail.get("description")
+        ]
+        return "\n".join(descriptions) or response_content.get("message", "")
 
-    def _build_request_auth(self, *, is_refresh_token_request=False, **kwargs):
+    def _build_request_auth(
+        self, *, is_refresh_token_request=False, paypal_onboarding_shared_id=None, **kwargs
+    ):
         """Override of `payment` to build the request Auth."""
-        if self.code != "paypal" or not is_refresh_token_request:
+        if self.code != "paypal" or not (is_refresh_token_request or paypal_onboarding_shared_id):
             return super()._build_request_auth(
-                is_refresh_token_request=is_refresh_token_request, **kwargs
+                is_refresh_token_request=is_refresh_token_request,
+                paypal_onboarding_shared_id=paypal_onboarding_shared_id,
+                **kwargs,
             )
-        return self.paypal_client_id, self.paypal_client_secret
+
+        if is_refresh_token_request:
+            return self.paypal_client_id, self.paypal_client_secret
+        if paypal_onboarding_shared_id:
+            return paypal_onboarding_shared_id, ""
