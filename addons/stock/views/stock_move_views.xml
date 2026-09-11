@@ -116,33 +116,96 @@
             </field>
         </record>
 
+        <record id="view_move_form_from_kanban" model="ir.ui.view">
+            <field name="name">stock.move.form.from.kanban</field>
+            <field name="model">stock.move</field>
+            <field name="priority" eval="1000"/>
+            <field name="arch" type="xml">
+                <form string="Stock Move">
+                    <field name="state" invisible="1"/>
+                    <field name="additional" invisible="1"/>
+                    <field name="move_lines_count" invisible="1"/>
+                    <group>
+                        <field name="product_id" context="{'default_is_storable': True}" required="1"
+                            readonly="(state != 'draft' and not additional) or move_lines_count &gt; 0"/>
+                        <label for="quantity" string="Quantity"/>
+                        <div class="o_row">
+                            <field name="quantity" readonly="not product_id"/>
+                            <field name="uom_id" readonly="1" options="{'no_open': True, 'no_create': True}"
+                                widget="many2one_uom"/>
+                        </div>
+                        <label for="product_uom_qty" string="Demand"/>
+                        <div class="o_row">
+                            <field name="product_uom_qty" readonly="state in ('done', 'cancel')"/>
+                            <field name="uom_id" readonly="state != 'draft' and not additional"
+                                options="{'no_open': True, 'no_create': True}" widget="many2one_uom"/>
+                        </div>
+                    </group>
+                </form>
+            </field>
+        </record>
+
         <record id="view_move_kandan" model="ir.ui.view">
             <field name="name">stock.move.kanban</field>
             <field name="model">stock.move</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
                 <kanban class="o_kanban_mobile">
+                    <field name="forecast_availability"/>
+                    <field name="forecast_expected_date"/>
                     <field name="product_qty" readonly="1" force_save="0"/>
-                    <field name="is_inventory"/>
+                    <field name="date"/>
+                    <field name="date_deadline"/>
+                    <field name="is_storable"/>
+                    <field name="picking_code"/>
+                    <field name="has_lines_without_result_package"/>
                     <templates>
                         <t t-name="card">
-                            <field name="product_id" readonly="state == 'done'" class="fw-bold fs-5"/>
-                            <a name="action_show_details"
-                                title="Show details"
-                                class="o_icon_button oi" data-icon="format_list_bulleted" type="object"
-                                invisible="not show_details_visible"/>
-                            <div invisible="not is_inventory">
-                                <span>Initial Demand <field name="product_uom_qty" readonly="state == 'done'"/></span><br/>
-                                <span>Quantity <field name="quantity"/></span>
+                            <div class="d-flex align-items-start gap-2">
+                                <field name="product_id" class="fw-bold" readonly="state == 'done'"/>
+                                <field name="forecast_availability" widget="forecast_widget" class="ms-auto flex-shrink-0 w-auto"
+                                    invisible="state in ('done', 'cancel') or picking_code not in ('internal', 'outgoing')"/>
                             </div>
-                            <span invisible="is_inventory">
-                                Quantity <field name="quantity"/> /
-                                <field name="product_uom_qty" readonly="state != 'draft'"/>
-                                <field name="uom_id" groups="uom.group_uom" class="ms-1"/>
-                            </span>
+                            <div class="text-muted" t-if="record.description_picking.value &amp;&amp; record.description_picking.value !== record.product_id.value"><field name="description_picking"/></div>
+                            <div class="text-muted">Quantity: <field name="quantity"/> / <field name="product_uom_qty" readonly="state != 'draft'"/> <field name="uom_id" groups="uom.group_uom"/></div>
+                            <div class="d-flex align-items-center gap-1 text-muted"
+                                groups="stock.group_tracking_lot" invisible="not package_ids">
+                                <div class="text-nowrap">Packages:</div>
+                                <field name="package_ids" class="d-inline-flex" widget="package_m2m" readonly="1"/>
+                            </div>
                         </t>
                     </templates>
                 </kanban>
+            </field>
+        </record>
+
+        <record id="stock_move_view_kanban_from_batch" model="ir.ui.view">
+            <field name="name">stock.move.view.kanban.from.batch</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_kandan"/>
+            <field name="mode">primary</field>
+            <field name="priority" eval="1000"/>
+            <field name="arch" type="xml">
+                <xpath expr="//kanban" position="attributes">
+                    <attribute name="can_open">0</attribute>
+                    <attribute name="create">0</attribute>
+                </xpath>
+                <templates position="before">
+                    <field name="show_details_visible"/>
+                </templates>
+                <xpath expr="//t[@t-name='card']//field[@name='forecast_availability']" position="replace"/>
+                <xpath expr="//t[@t-name='card']/div[field[@name='product_uom_qty']]" position="replace">
+                    <div class="text-muted">Processed: <field name="quantity"/> <field name="uom_id" groups="uom.group_uom"/></div>
+                    <div class="text-muted">Demand: <field name="product_uom_qty" readonly="state != 'draft'"/> <field name="uom_id" groups="uom.group_uom"/></div>
+                    <div class="text-muted">Transfer: <field name="picking_id"/></div>
+                </xpath>
+                <xpath expr="//t[@t-name='card']" position="inside">
+                    <footer class="justify-content-center" invisible="not show_details_visible">
+                        <button name="action_show_details" type="object" icon="format_list_bulleted"
+                            class="btn btn-secondary" string="Details"
+                            context="{'show_picking': True}"/>
+                    </footer>
+                </xpath>
             </field>
         </record>
 
@@ -185,9 +248,65 @@
                     </group>
                     <div class="mt-3 mx-n3 d-flex flex-column justify-content-center o_stock_move_lines_padded">
                         <field name="move_line_ids"
+                            mode="list,kanban"
                             readonly="state == 'cancel' or (state == 'done' and is_locked) or not product_id"
-                            context="{'list_view_ref': 'stock.view_stock_move_line_operation_tree', 'form_view_ref': 'stock.view_move_line_mobile_form', 'default_picking_id': picking_id, 'default_move_id': id, 'default_product_id': product_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_company_id': company_id, 'active_picking_id': picking_id}"
-                            widget="sml_x2_many"/>
+                            context="{'list_view_ref': 'stock.view_stock_move_line_operation_tree', 'default_picking_id': picking_id, 'default_move_id': id, 'default_product_id': product_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_company_id': company_id, 'active_picking_id': picking_id}"
+                            widget="sml_x2_many">
+                            <kanban class="o_kanban_mobile">
+                                <templates>
+                                    <t t-name="card">
+                                        <div class="fw-bold" groups="stock.group_production_lot" invisible="not parent.show_lots_m2o or not lot_id">Lot/Serial Number: <field name="lot_id"/></div>
+                                        <div class="fw-bold" groups="stock.group_production_lot" invisible="not parent.show_lots_text or not lot_name">Lot/Serial Number: <field name="lot_name"/></div>
+                                        <field name="quant_id" widget="pick_from" class="fw-bold" readonly="1" force_save="1" options="{'no_open': True}" invisible="not parent.show_quant"/>
+                                        <div groups="stock.group_stock_multi_locations" invisible="not location_dest_id or (parent.show_quant and parent.picking_code != 'internal')">Store To: <field name="location_dest_id"/></div>
+                                        <div groups="stock.group_tracking_lot" invisible="not result_package_id">Destination Package: <field name="result_package_id"/></div>
+                                        <div groups="stock.group_tracking_owner" invisible="parent.show_quant or not owner_id">Owner: <field name="owner_id"/></div>
+                                        <div>Quantity: <field name="quantity"/> <field name="uom_id" groups="uom.group_uom"/></div>
+                                    </t>
+                                </templates>
+                            </kanban>
+                            <form string="Detailed Operations">
+                                <field name="company_id" invisible="1" force_save="1"/>
+                                <field name="picking_id" invisible="1" force_save="1"/>
+                                <field name="move_id" invisible="1" force_save="1"/>
+                                <field name="product_id" invisible="1"/>
+                                <field name="location_id" invisible="1"/>
+                                <field name="state" invisible="1"/>
+                                <field name="is_locked" invisible="1"/>
+                                <group>
+                                    <field name="quant_id"
+                                        domain="[('product_id', '=', product_id), ('location_id', 'child_of', parent.location_id)]"
+                                        context="{'default_location_id': location_id, 'default_product_id': product_id, 'search_view_ref': 'stock.quant_search_view', 'list_view_ref': 'stock.view_stock_quant_tree', 'form_view_ref': 'stock.view_stock_quant_form', 'readonly_form': True, 'show_src_package': 1}"
+                                        invisible="not parent.show_quant"
+                                        options="{'no_create': True, 'no_open': True}"
+                                        widget="pick_from"/>
+                                    <field name="lot_id" groups="stock.group_production_lot"
+                                        domain="[('product_id', '=', parent.product_id), '|', ('company_id', '=', company_id), ('company_id', '=', False)]"
+                                        context="{'active_picking_id': picking_id, 'default_product_id': parent.product_id}"
+                                        invisible="parent.show_quant or parent.has_tracking not in ['lot', 'serial'] or not parent.show_lots_m2o"/>
+                                    <field name="lot_name" string="Lot/Serial Number" groups="stock.group_production_lot"
+                                        invisible="parent.has_tracking not in ['lot', 'serial'] or not parent.show_lots_text"
+                                        placeholder="e.g. SN000001"/>
+                                    <field name="location_dest_id" string="Store To" groups="stock.group_stock_multi_locations"
+                                        domain="[('id', 'child_of', parent.location_dest_id), '|', ('company_id', '=', False), ('company_id', '=', company_id), ('usage', '!=', 'view')]"
+                                        invisible="parent.show_quant and parent.picking_code != 'internal'"/>
+                                    <field name="result_package_id" groups="stock.group_tracking_lot"
+                                        context="{'picking_id': picking_id, 'show_dest_package': 1}"
+                                        readonly="state == 'done' and is_locked"
+                                        widget="package_m2o"/>
+                                    <field name="owner_id" groups="stock.group_tracking_owner"
+                                        invisible="parent.show_quant"/>
+                                    <label for="quantity" string="Quantity"/>
+                                    <div class="o_row">
+                                        <field name="quantity" readonly="state == 'done' and is_locked"/>
+                                        <field name="uom_id" groups="uom.group_uom"
+                                            options="{'no_open': True, 'no_create': True}"
+                                            readonly="state == 'done' and id"
+                                            widget="many2one_uom"/>
+                                    </div>
+                                </group>
+                            </form>
+                        </field>
                     </div>
                 </form>
             </field>

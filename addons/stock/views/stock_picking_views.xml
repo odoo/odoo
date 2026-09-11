@@ -147,6 +147,35 @@
             </field>
         </record>
 
+        <record id="stock_picking_view_kanban_from_batch" model="ir.ui.view">
+            <field name="name">stock.picking.kanban.from.batch</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.stock_picking_kanban"/>
+            <field name="mode">primary</field>
+            <field name="priority" eval="1000"/>
+            <field name="arch" type="xml">
+                <xpath expr="//kanban/progressbar" position="replace"/>
+                <xpath expr="//t[@t-name='card']" position="replace">
+                    <t t-name="card">
+                        <div class="d-flex align-items-center gap-2">
+                            <field name="name" class="fw-bold"/>
+                            <field name="state" widget="badge" class="ms-auto flex-shrink-0"
+                                decoration-danger="state == 'cancel'"
+                                decoration-info="state == 'assigned'"
+                                decoration-muted="state == 'draft'"
+                                decoration-success="state == 'done'"
+                                decoration-warning="state not in ('draft', 'cancel', 'done', 'assigned')"/>
+                        </div>
+                        <div class="text-muted" invisible="not origin">Source Document: <field name="origin"/></div>
+                        <div class="text-muted" groups="stock.group_stock_multi_locations" invisible="not location_id">From: <field name="location_id"/></div>
+                        <div class="text-muted" groups="stock.group_stock_multi_locations" invisible="not location_dest_id">To: <field name="location_dest_id"/></div>
+                        <div class="text-muted" invisible="not partner_id">Contact: <field name="partner_id"/></div>
+                        <div class="text-muted" invisible="not scheduled_date or state in ('done', 'cancel')">Scheduled: <field name="scheduled_date" options="{'show_time': false}"/></div>
+                    </t>
+                </xpath>
+            </field>
+        </record>
+
         <record id="stock_picking_view_list_create_from_batch" model="ir.ui.view">
             <field name="name">stock.picking.view.list.create.from.batch</field>
             <field name="model">stock.picking</field>

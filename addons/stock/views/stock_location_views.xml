@@ -222,13 +222,22 @@
                         </group>
                     </group>
                     <group string="Rules" >
-                        <field name="rule_ids" colspan="2" nolabel="1" context="{'default_company_id': company_id, 'form_view_ref':'stock.view_route_rule_form'}">
+                        <field name="rule_ids" mode="list,kanban" colspan="2" nolabel="1" context="{'default_company_id': company_id, 'form_view_ref':'stock.view_route_rule_form'}">
                             <list>
                                 <field name="sequence" widget="handle"/>
                                 <field name="action"/>
                                 <field name="location_src_id" options="{'no_create': True}"/>
                                 <field name="location_dest_id" options="{'no_create': True}"/>
                             </list>
+                            <kanban class="o_kanban_mobile">
+                                <templates>
+                                    <t t-name="card">
+                                        <field name="action" class="fw-bold"/>
+                                        <div class="text-muted" invisible="not location_src_id">Source: <field name="location_src_id"/></div>
+                                        <div class="text-muted" invisible="not location_dest_id">Destination: <field name="location_dest_id"/></div>
+                                    </t>
+                                </templates>
+                            </kanban>
                         </field>
                     </group>
                     </sheet>
