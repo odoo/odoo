@@ -2675,6 +2675,63 @@ class TestUi(TestPointOfSaleHttpCommon):
             login="pos_user",
         )
 
+    def test_mixed_refund_sale_reward_refresh(self):
+        self.env['loyalty.program'].search([]).write({'active': False})
+        self.env['product.product'].create([
+            {
+                'name': 'Mixed Refund Product',
+                'list_price': 10,
+                'available_in_pos': True,
+                'taxes_id': False,
+            },
+            {
+                'name': 'Mixed Large Sale Product',
+                'list_price': 200,
+                'available_in_pos': True,
+                'taxes_id': False,
+            },
+            {
+                'name': 'Mixed Cheapest Sale Product',
+                'list_price': 30,
+                'available_in_pos': True,
+                'taxes_id': False,
+            },
+        ])
+        program = self.env['loyalty.program'].create({
+            'name': 'Mixed Refund Sale Coupon Program',
+            'program_type': 'coupons',
+            'trigger': 'with_code',
+            'applies_on': 'current',
+            'pos_ok': True,
+            'rule_ids': [Command.create({
+                'mode': 'with_code',
+                'minimum_amount': 100,
+                'minimum_qty': 2,
+            })],
+            'reward_ids': [Command.create({
+                'reward_type': 'discount',
+                'discount': 10,
+                'discount_mode': 'percent',
+                'discount_applicability': 'cheapest',
+                'required_points': 1,
+            })],
+            'pos_config_ids': [Command.link(self.main_pos_config.id)],
+        })
+        self.env['loyalty.generate.wizard'].with_context(
+            {'active_id': program.id}
+        ).create({
+            'coupon_qty': 1,
+            'points_granted': 1,
+        }).generate_coupons()
+        program.coupon_ids.write({'code': 'mixedrefund'})
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "PosLoyaltyMixedRefundSaleReward",
+            login="pos_user",
+        )
+
     def test_cheapest_product_tax_included(self):
         tax_01 = self.env['account.tax'].create({
                 "name": "Tax 1",
