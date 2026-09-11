@@ -12,7 +12,6 @@ declare module "models" {
         messagingMenuTabs: MessagingMenuTab[];
         messagingMenuTabsWithCounter: MessagingMenuTab[];
         notifyDescriptionToServer: (description: string) => Promise<unknown>;
-        notifyMessageToUser: (message: Message) => Promise<void>;
         primaryMessagingMenuTab: MessagingMenuTab;
     }
     export interface MessagingMenu {
@@ -23,6 +22,8 @@ declare module "models" {
     export interface MessagingMenuTab {
         channels: DiscussChannel[];
         channelsWithCounter: DiscussChannel[];
+        compareChannels: (c1: DiscussChannel, c2: DiscussChannel) => number;
+        getSortedChannels: (filter: import("@mail/core/public_web/messaging_menu/messaging_menu_tab_model").MessagingMenuTabFilter, channels: DiscussChannel[]) => DiscussChannel[];
         includesChannel: (channel: DiscussChannel) => boolean;
     }
     export interface Store {

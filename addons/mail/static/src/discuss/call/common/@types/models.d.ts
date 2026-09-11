@@ -12,6 +12,7 @@ declare module "models" {
         startInvitationTimeout: () => void;
     }
     export interface DiscussChannel {
+        _playRtcSessionsSoundEffects: (rtcSessions: RtcSession[]) => Promise<void>;
         activeRtcSession: RtcSession;
         cancelRtcInvitationTimeout: number|undefined;
         focusAvailableVideo: () => void;
@@ -30,7 +31,7 @@ declare module "models" {
         updateCallFocusStack: (session: RtcSession) => void;
         useCameraByDefault: null;
         videoCount: number;
-        videoCountNotSelf: number;
+        videoCountNotSelf: Readonly<number>;
         visibleCards: import("@mail/discuss/call/common/call").CardData[];
     }
     export interface MailGuest {
@@ -42,7 +43,6 @@ declare module "models" {
     export interface Store {
         _hasFullscreenUrl: boolean;
         _hasFullscreenUrlOnUpdate: () => void;
-        _shareUrl: undefined|unknown;
         "discuss.channel.rtc.session": StaticMailRecord<RtcSession, typeof RtcSessionClass>;
         fullscreenChannel: DiscussChannel;
         meetingViewOpened: boolean;
@@ -50,6 +50,7 @@ declare module "models" {
         ringingChannels: DiscussChannel[];
         rtc: Rtc;
         Rtc: StaticMailRecord<Rtc, typeof RtcClass>;
+        shareUrl: Readonly<string|undefined>;
     }
 
     export interface Models {

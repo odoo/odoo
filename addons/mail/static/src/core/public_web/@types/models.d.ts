@@ -5,6 +5,7 @@ declare module "models" {
     export interface Store {
         discuss: DiscussApp;
         messagingMenu: MessagingMenu;
+        showPushPermissionRequest: boolean;
     }
     export interface Thread {
         askLeaveConfirmation: (body: string) => Promise<void>;

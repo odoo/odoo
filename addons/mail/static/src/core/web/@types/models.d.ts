@@ -27,7 +27,6 @@ declare module "models" {
         onUpdateActivityGroups: () => void;
         removeAllBookmarks: () => Promise<void>;
         scheduleActivity: (resModel: string, resIds: number[], defaultActivityTypeId: number|undefined) => Promise<void>;
-        showPushPermissionRequest: boolean;
         updateAppBadge: () => void;
     }
     export interface Thread {

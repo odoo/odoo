@@ -52,7 +52,7 @@ declare module "models" {
     export interface Thread {
         channel: DiscussChannel;
         firstUnreadMessage: Message;
-        handleMarkAsRead: (newestPersistentMessage: Message, wasMarkedAsUnread: boolean) => Promise<undefined|unknown>;
+        handleMarkAsRead: (newestPersistentMessage: Message) => Promise<undefined|unknown>;
         isReadBySelf: (message: Message) => boolean;
         markAsReadRpc: (newestPersistentMessage: Message) => unknown;
         markingAsRead: boolean;

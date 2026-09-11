@@ -8,6 +8,6 @@ declare module "models" {
         isSubjectThreadName: Readonly<boolean>;
         notifyAlreadySent: () => void;
         send: () => Promise<void>;
-        textContent: string|unknown;
+        textContent: string;
     }
 }
