@@ -65,6 +65,9 @@ class StockReturnPickingLine(models.TransientModel):
                 move_orig_to_link |= self.move_id\
                     .move_dest_ids.filtered(lambda m: m.state not in ('cancel'))\
                     .move_orig_ids.filtered(lambda m: m.state not in ('cancel'))
+                # Only keep origins that actually deliver to the same location this move feeds into
+                move_orig_to_link = move_orig_to_link.filtered(
+                    lambda m: m.location_dest_id == self.move_id.location_dest_id)
                 move_dest_to_link = self.move_id.move_orig_ids.returned_move_ids
                 # link to children of originally returned moves, if any. Note that the use of
                 # 'return_line.move_id.move_orig_ids.returned_move_ids.move_orig_ids.move_dest_ids'
