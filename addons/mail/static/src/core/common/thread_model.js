@@ -237,7 +237,7 @@ export class Thread extends Record {
     /* The suggested recipients are the recipients that are suggested by the
      * current model and includes the recipients of the last message. (e.g: for
      * a crm lead, the model will suggest the customer associated to the lead). */
-    suggestedRecipients = fields.Attr([]);
+    suggestedRecipients = [];
     /** @type {Boolean|undefined} */
     showSubjectInSmallComposer;
     /**
