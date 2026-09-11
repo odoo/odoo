@@ -599,7 +599,7 @@ export class EmailImageFormatPlugin extends Plugin {
         const mimetype = data.mimetype && data.mimetype !== "undefined" ? data.mimetype : undefined;
         const imageInfo = {
             mimetype,
-            attachmentId,
+            originalId: attachmentId,
         };
         if (el.nodeName === "IMG") {
             if (

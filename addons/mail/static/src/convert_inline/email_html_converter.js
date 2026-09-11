@@ -4,6 +4,7 @@ import { PluginManager } from "./plugin_manager";
 export class EmailHtmlConverter extends PluginManager {
     /**
      * @param {MailHtmlConversionConfig} config
+     * @returns {HTMLTemplateElement|null}
      */
     async convertToEmailHtml(config) {
         if (!(await this.measureReference(config))) {
@@ -14,7 +15,7 @@ export class EmailHtmlConverter extends PluginManager {
         if (!inlineTemplate) {
             return null;
         }
-        return inlineTemplate.innerHTML;
+        return inlineTemplate;
 
         // // Old toInline
         // // TODO EGGMAIL: adapt usage, use plugin instead of old method

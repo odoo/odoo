@@ -495,6 +495,10 @@ export class SpacingPlugin extends Plugin {
                 },
             ],
         });
+        // Allow padding for PRE elements for mail clients that support it.
+        rules.allow(/^padding(-(top|right|bottom|left))?$/, {
+            when: ({ referenceNode }) => referenceNode.nodeName === "PRE",
+        });
         // HR can have a userAgent style which needs to be countered
         const isHR = ({ referenceNode }) => referenceNode.nodeName === "HR";
         // block HR margin no matter what, to make it "fail".

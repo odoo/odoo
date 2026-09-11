@@ -1,11 +1,10 @@
-import { Operation } from "@html_builder/core/operation";
 import { DYNAMIC_FIELD_PLUGINS } from "@html_editor/backend/dynamic_field/dynamic_field_plugin";
 import { htmlField, HtmlField, htmlFieldProps } from "@html_editor/fields/html_field";
 import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
 import { MAIN_PLUGINS as MAIN_EDITOR_PLUGINS } from "@html_editor/plugin_sets";
 import { normalizeHTML, parseHTML } from "@html_editor/utils/html";
 import { fixInvalidHTML } from "@html_editor/utils/sanitize";
-import { useEmailHtmlConverter } from "@mail/convert_inline/hooks";
+import { useEmailHtmlConverter, useSavePendingImage } from "@mail/convert_inline/hooks";
 import { MassMailingIframe } from "@mass_mailing/iframe/mass_mailing_iframe";
 import { ThemeSelectorIframe } from "@mass_mailing/themes/theme_selector/theme_selector_iframe";
 import {
@@ -56,8 +55,11 @@ export class MassMailingHtmlField extends HtmlField {
             ],
             bundles: ["mass_mailing.assets_iframe_style"],
         });
+        this._savePendingImages = useSavePendingImage({
+            getLastChangeId: () => this.lastChangeId,
+            setLastChangeId: (id) => (this.lastChangeId = id),
+        });
         this.themeService = useService("mass_mailing.themes");
-        this.ui = useService("ui");
         Object.assign(this.state, {
             showThemeSelector: this.props.record.isNew,
             activeTheme: undefined,
@@ -403,42 +405,11 @@ export class MassMailingHtmlField extends HtmlField {
     }
 
     /**
-     * Ensure that every SVG and WEBP images are converted to PNG, and create
-     * an attachment for every b64 encoded image, to ensure every image src
-     * is not a data url.
-     * Prevent the user from making additional changes during the operation.
+     * @see useSavePendingImage
      * @override
      */
     async savePendingImages(content) {
-        const operation = this.editor.shared.operation
-            ? this.editor.shared.operation
-            : new Operation(this.editor.document);
-        let result;
-        await operation.next(
-            async () => {
-                try {
-                    result = await this.editor.shared.emailImageFormat.sanitizeImages(content);
-                } finally {
-                    const lastChangeIdSnapshot = this.lastChangeId;
-                    if (
-                        this.editor.shared.history.commit() &&
-                        this.lastChangeId === lastChangeIdSnapshot + 1
-                    ) {
-                        // All pending image changes were done in both the content
-                        // clone and the editable, so if an editor commit was made
-                        // during this operation, it is reasonable to assume that
-                        // the changes it contains were also done in content, which
-                        // will be sent to the server. Therefore this commit
-                        // onChange should not have increased lastChangeId and the
-                        // snapshotted value is restored, allowing the field to
-                        // not be dirty after updateValue.
-                        this.lastChangeId = lastChangeIdSnapshot;
-                    }
-                }
-            },
-            { canTimeout: false, shouldInterceptClick: true }
-        );
-        return result;
+        await this._savePendingImages({ content, editor: this.editor });
     }
 
     /**
@@ -494,9 +465,10 @@ export class MassMailingHtmlField extends HtmlField {
         const valueFragment = parseHTML(document, value);
         let inlineValue;
         try {
-            inlineValue = await this.converter.convertToEmailHtml(valueFragment, {
+            const template = await this.converter.convertToEmailHtml(valueFragment, {
                 debug: this.env.debug,
             });
+            inlineValue = template ? template.innerHTML : null;
         } catch (error) {
             if (status(this) !== "destroyed") {
                 throw error;
