@@ -1798,7 +1798,7 @@ We can redirect you to the public employee list."""
                 tz=employee_tz,
                 resources=self.resource_id,
                 compute_leaves=True,
-                domain=[('company_id', 'in', [False, self.company_id.id])])[self.resource_id.id]
+                domain=[('company_id', 'in', [False, self.company_id.id]), ('time_type', '=', 'other')])[self.resource_id.id]
             return calendar_intervals
         duration_data = Intervals()
         version_prev = datetime.combine(valid_versions[0].date_start, time.min, employee_tz)
