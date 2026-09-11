@@ -77,12 +77,19 @@ class Authenticate(http.Controller):
         auth_message = self._get_auth_code_data(auth_code)
         if not auth_message:
             return {"error": "Invalid code"}
+        if auth_message.get('scope') != 'outlook':
+            return {"error": "Invalid scope"}
         request.update_env(user=auth_message['uid'])
         scope = 'odoo.plugin.' + auth_message.get('scope', '')
-        api_key = request.env['res.users.apikeys']._generate(
+        expiration_days = int(request.env['ir.config_parameter'].sudo().get_param(
+            'mail_plugin.access_token_expiration_days', 7))
+        if expiration_days <= 0:
+            expiration_days = 7
+        # created in SUDO to ignore the limit
+        api_key = request.env['res.users.apikeys'].sudo()._generate(
             scope,
             auth_message['name'],
-            datetime.datetime.now() + datetime.timedelta(days=1)
+            datetime.datetime.now() + datetime.timedelta(days=expiration_days),
         )
         return {'access_token': api_key}
 
