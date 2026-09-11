@@ -104,6 +104,7 @@ export async function freezeOdooData(model) {
             const position = { sheetId, col, row };
             const evaluatedCell = model.getters.getEvaluatedCell(position);
             if (containsOdooFunction(cell.content)) {
+                freezeDynamicTable(model, position, data);
                 const pivotId = model.getters.getPivotIdFromPosition(position);
                 if (pivotId && model.getters.getPivotCoreDefinition(pivotId).type !== "ODOO") {
                     continue;
@@ -297,3 +298,46 @@ const backgroundColorPlugin = {
         ctx.restore();
     },
 };
+
+function freezeDynamicTable(model, position, data) {
+    const sheetId = position.sheetId;
+    const coreTable = model.getters.getCoreTable(position);
+    const table = model.getters.getTable(position);
+    if (!table || !coreTable || coreTable?.type !== "dynamic") {
+        return;
+    }
+    const tableZone = table.range.zone;
+    const xc = toXC(tableZone.left, tableZone.top);
+
+    const sheetData = data.sheets.find((sheet) => sheet.id === sheetId);
+    const tableIndex = sheetData?.tables?.findIndex((t) => t.range === xc);
+    if (!sheetData || !sheetData.tables || tableIndex === -1) {
+        return;
+    }
+    sheetData.tables.splice(tableIndex, 1);
+
+    const styles = data.styles;
+    const borders = data.borders;
+    sheetData.borders = sheetData.borders || {};
+    sheetData.styles = sheetData.styles || {};
+
+    const { left, right, top, bottom } = table.range.zone;
+    for (let row = top; row <= bottom; row++) {
+        for (let col = left; col <= right; col++) {
+            const position = { sheetId, col, row };
+            const xc = toXC(col, row);
+
+            const style = model.getters.getCellComputedStyle(position);
+            if (Object.keys(style || {}).length) {
+                const styleId = getItemId(style, styles);
+                sheetData.styles[xc] = styleId;
+            }
+
+            const border = model.getters.getCellComputedBorder(position);
+            if (border) {
+                const borderId = getItemId(border, borders);
+                sheetData.borders[xc] = borderId;
+            }
+        }
+    }
+}
