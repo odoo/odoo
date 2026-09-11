@@ -113,9 +113,7 @@ export const fields = {
      *   the field is immediately (re-)computed when dependencies changes, which matches the built-in
      *   behaviour of OWL reactive.
      * @param {string} [param1.inverse] if set, the name of field in targetModel that acts as the inverse.
-     * @param {(this: Record, r: import("models").Models[M]) => void} [param1.onAdd] function that is called when a record is added
      *   in the relation.
-     * @param {(this: Record, r: import("models").Models[M]) => void} [param1.onDelete] function that is called when a record is removed
      *   from the relation.
      * @returns {import("models").Models[M]}
      */
@@ -135,9 +133,7 @@ export const fields = {
      *   the field is immediately (re-)computed when dependencies changes, which matches the built-in
      *   behaviour of OWL reactive.
      * @param {string} [param1.inverse] if set, the name of field in targetModel that acts as the inverse.
-     * @param {(this: Record, r: import("models").Models[M]) => void} [param1.onAdd] function that is called when a record is added
      *   in the relation.
-     * @param {(this: Record, r: import("models").Models[M]) => void} [param1.onDelete] function that is called when a record is removed
      *   from the relation.
      * @returns {import("models").Models[M][]}
      */
