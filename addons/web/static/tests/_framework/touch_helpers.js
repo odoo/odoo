@@ -24,12 +24,17 @@ async function swipe(target, direction, dragOptions, moveToOptions) {
     }
 
     const { moveTo, drop } = await contains(el).drag({
-        position: { x: 0, y: 0 },
+        // Make sure the swipe originates from the center of the element, as that is where moveTo
+        // will end. This makes sure that the Y distance moved is ~0, and we only swipe horizontally.
+        position: { x: 0 },
+        relative: true,
+        initialPointerMoveDistance: 0,
         ...dragOptions,
     });
 
     await moveTo(el, {
         position: { x: direction * el.clientWidth },
+        relative: true,
         ...moveToOptions,
     });
 

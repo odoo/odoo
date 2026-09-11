@@ -6,13 +6,13 @@
                 <button class="btn btn-primary o-calendar-button-new" t-on-click="this.onClickAddButton" data-hotkey="c">New</button>
             </t>
         </xpath>
-        <!-- Remove the ms-auto from the today button so that the synchronization buttons can be right-aligned -->
-        <xpath expr="//button[hasclass('o_calendar_button_today')]" position="attributes">
+        <!-- Remove the ms-auto from the sidebar section so that the synchronization buttons can be right-aligned -->
+        <xpath expr="//div[hasclass('o_calendar_sidebar_controller')]" position="attributes">
             <attribute name="class" remove="ms-auto" separator=" "/>
         </xpath>
         <!-- Add header div to be filled with synchronization buttons in synchronization modules. -->
         <xpath expr="//Layout//div[hasclass('o_calendar_container')]//h5[hasclass('d-inline-flex')]" position="after">
-            <div id="header_synchronization_settings" class="mx-2 ms-auto d-flex flex-wrap align-items-end">
+            <div id="header_synchronization_settings" class="me-auto me-sm-2 ms-sm-auto d-flex flex-wrap align-items-end">
                 <div t-if="
                     (this.model.syncStatus.google_calendar === 'sync_active' and this.model.state?.googlePendingSync and this.model.googleSyncTimedOut)
                     or (this.model.syncStatus.microsoft_calendar === 'sync_active' and this.model.state?.microsoftPendingSync and this.model.microsoftSyncTimedOut)"
@@ -33,7 +33,7 @@
                 <t t-elif="(this.model.credentialStatus.google_calendar or this.model.credentialStatus.microsoft_calendar)
                 and (!this.model.syncStatus.google_calendar or ['sync_stopped', 'missing_credentials'].includes(this.model.syncStatus.google_calendar))
                 and (!this.model.syncStatus.microsoft_calendar or ['sync_stopped', 'missing_credentials'].includes(this.model.syncStatus.microsoft_calendar))">
-                    <h5 id="synchronize_with" class="d-inline-flex my-auto">Synchronize with</h5>
+                    <h5 id="synchronize_with" class="d-none d-sm-inline-flex my-auto">Synchronize with</h5>
                 </t>
                 <t t-elif="(this.model.googleCredentialsSet and this.model.syncStatus.google_calendar === 'sync_active')
                 or (this.model.microsoftCredentialsSet and this.model.syncStatus.microsoft_calendar === 'sync_active')">

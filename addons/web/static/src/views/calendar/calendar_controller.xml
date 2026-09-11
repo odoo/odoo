@@ -32,9 +32,9 @@
                                 t-on-click.stop="() => this.setDate('next')"
                             ><i class="oi" data-icon="east"/></button>
                         </div>
-                        <ViewScaleSelector scales="this.scales" currentScale="this.model.scale" isWeekendVisible="this.state.isWeekendVisible" setScale.bind="this.setScale" toggleWeekendVisibility.bind="this.toggleWeekendVisibility" dropdownClass="'d-print-none order-3 order-lg-0'"/>
+                        <ViewScaleSelector scales="this.scales" currentScale="this.model.scale" isWeekendVisible="this.state.isWeekendVisible" setScale.bind="this.setScale" toggleWeekendVisibility.bind="this.toggleWeekendVisibility" dropdownClass="'d-print-none'"/>
                         <button
-                            class="btn btn-secondary o_calendar_button_today d-print-none order-2 order-lg-0 ms-auto ms-md-0"
+                            class="btn btn-secondary o_calendar_button_today d-print-none ms-md-0"
                             t-on-click.stop="() => this.setDate('today')">
                             Today
                         </button>
