@@ -1,15 +1,15 @@
-import { onWillStart, proxy, signal } from "@odoo/owl";
+import { proxy, signal } from "@odoo/owl";
 import { formatCurrency } from "@web/core/currency";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { useNestedSortable } from "@web/core/utils/nested_sortable";
 import { useSubEnv } from "@web/owl2/utils";
-import { SearchPanel } from "@web/search/search_panel/search_panel";
+import { ProductCatalogSearchPanel } from "@product/product_catalog/product_catalog_search_panel";
 import { SectionRow } from "../section_row/section_row";
 
-export class AccountProductCatalogSearchPanel extends SearchPanel {
+export class AccountProductCatalogSearchPanel extends ProductCatalogSearchPanel {
     static template = "account.ProductCatalogSearchPanel";
-    static components = { ...SearchPanel.components, SectionRow };
+    static components = { ...ProductCatalogSearchPanel.components, SectionRow };
 
     sectionTreeRef = signal.ref();
 
@@ -54,24 +54,11 @@ export class AccountProductCatalogSearchPanel extends SearchPanel {
             this.updateSectionSubtotal(detail.sectionId, detail.subtotalDelta);
         });
 
-        onWillStart(async () => {
-            const { name, sections, amountUntaxed } = await this.orm.call(
-                this.orderModel,
-                "get_catalog_section_data",
-                [this.orderId],
-                { child_field: this.childField }
-            );
-
-            this.orderName = name;
-            if (this.showPrices) {
-                this.state.totalUntaxedAmount = amountUntaxed;
-            }
-
-            this._setSectionsState(sections);
-            if (this.state.sections.length) {
-                this.setSelectedSection(this.state.sections[0].id);
-            }
-        });
+        this.orderName = this.env.searchModel.catalogOrderDetails.name;
+        if (this.showPrices) {
+            this.state.totalUntaxedAmount = this.env.searchModel.catalogOrderDetails.amount_untaxed;
+        }
+        this._setSectionsState(this.env.searchModel.catalogSections);
 
         useNestedSortable({
             ref: this.sectionTreeRef,
@@ -401,6 +388,12 @@ export class AccountProductCatalogSearchPanel extends SearchPanel {
             } else {
                 rootSections.push(node);
             }
+        }
+
+        const selectedSection = sectionsById.get(this.selectedSectionId);
+        if (selectedSection?.parent_id) {
+            // Expand the parent so the initially selected subsection is visible.
+            sectionsById.get(selectedSection.parent_id).isOpen = true;
         }
 
         this.state.sections = rootSections;
