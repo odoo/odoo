@@ -4,15 +4,7 @@ import { compareDatetime } from "@mail/utils/common/misc";
 import { _t } from "@web/core/l10n/translation";
 
 /**
- * @typedef {{
- *   id: string,
- *   text: string,
- *   includesMessage?: (message: import("models").Message) => boolean,
- *   includesChannel?: (channel: import("models").DiscussChannel) => boolean,
- *   isDefault?: boolean,
- *   sequence?: number,
- *   compareChannels?: (c1: import("models").DiscussChannel, c2: import("models").DiscussChannel) => number,
- * }} MessagingMenuTabFilter
+ * @typedef {import("models").MessagingMenuTabFilter} MessagingMenuTabFilter
  *
  * The channels of a tab are ordered by the comparator of the active filter, falling back to the
  * one of the tab, then to the default order of the messaging menu.
@@ -85,7 +77,7 @@ export class MessagingMenuTab extends Record {
     /**
      * Actions available next to the search bar.
      *
-     * @type {MessagingMenuTabAction}
+     * @type {MessagingMenuTabAction[]}
      */
     actions = [];
     /** @type {?string} */
@@ -130,7 +122,7 @@ export class MessagingMenuTab extends Record {
      * A filter marked `isDefault` is selected when the tab is opened, and drives the
      * tab's counter badge server-side.
      *
-     * @type {MessagingMenuTabFilter}
+     * @type {MessagingMenuTabFilter[]}
      */
     filters = [];
     /**
