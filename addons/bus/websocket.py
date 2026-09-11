@@ -852,9 +852,10 @@ class WebsocketConnectionHandler:
                     version,
                 ),
             )
-            # Force save the session. Session must be persisted to handle
-            # WebSocket authentication.
-            request.session.is_dirty = True
+            # Save the session, as the WebSocket authentication reads it back
+            # from disk. Marking it dirty would resend the session_id cookie.
+            if request.session.can_save:
+                session_store().save(request.session)
             return response
         except KeyError as exc:
             e = f"Couldn't bind the websocket. Is the connection opened on the evented port ({config['gevent_port']})?"

@@ -183,6 +183,10 @@ class TestWebsocketCheckSession(WebsocketCase, HttpCase):
         self.trigger_notification_dispatching()
         self.assert_close_with_code(websocket, CloseCode.SESSION_EXPIRED)
 
+    def test_handshake_does_not_resend_the_session_cookie(self):
+        websocket = self.websocket_connect()
+        self.assertNotIn("set-cookie", websocket.getheaders())
+
     @patch.dict(os.environ, {"ODOO_BUS_PUBLIC_SAMESITE_WS": "True"})
     def test_public_configuration(self):
         new_test_user(self.env, login='test_user', password='Password!1')
@@ -208,9 +212,10 @@ class TestWebsocketCheckSession(WebsocketCase, HttpCase):
                 cookie=f'session_id={user_session.sid};',
                 origin='http://example.com',
             )
-            self.assertTrue(
-                ws.getheaders().get('set-cookie').startswith(f'session_id={user_session.sid}'),
-                "The set-cookie response header must be the origin request session rather than the websocket session",
+            self.assertNotIn(
+                "set-cookie",
+                ws.getheaders(),
+                "The browser must be left on the origin request session rather than the websocket one",
             )
             self.wait_for_event(serve_forever_called_event)
             self.assertTrue(mock.called)
