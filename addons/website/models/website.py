@@ -1401,7 +1401,7 @@ class Website(models.Model):
         # The format of `httprequest.host` is `domain:port`
         domain_name = (
             request and request.httprequest.host
-            or hasattr(threading.current_thread(), 'url') and threading.current_thread().url
+            or hasattr(threading.current_thread(), 'url') and get_base_domain(threading.current_thread().url)
             or '')
         website_id = self.sudo()._get_current_website_id(domain_name, fallback=fallback)
         return self.browse(website_id)
@@ -1447,8 +1447,11 @@ class Website(models.Model):
             return website_domain.lower() == (domain_name or '').lower()
 
         # We need to test two possibilities unicode or punycode (safety guard)
-        domain_name = domain_name.encode("idna").decode("ascii")
-        domain_name_idna = domain_name.encode("ascii").decode("idna")
+        try:
+            domain_name = domain_name.encode("idna").decode("ascii")
+            domain_name_idna = domain_name.encode("ascii").decode("idna")
+        except UnicodeError:
+            domain_name = domain_name_idna = ''
 
         # TODO: in master, store the computed field domain_punycode to avoid
         #       the need to search on domain_name and domain_name_idna.

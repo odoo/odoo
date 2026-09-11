@@ -1,5 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
+import threading
+
+from unittest.mock import patch
 
 from odoo import Command
 from odoo.tests import tagged
@@ -84,6 +87,17 @@ class TestGetCurrentWebsite(HttpCaseWithUserDemo):
         website2.domain = 'xn--dsseldorf-q9a.com'
         self.assertEqual(Website._get_current_website_id('xn--dsseldorf-q9a.com'), website2.id)
         self.assertEqual(Website._get_current_website_id('düsseldorf.com'), website2.id)
+
+        # CASE: domain with label too long / invalid idna does not crash
+        long_label_domain = 'a' * 70 + '.com'
+        self.assertEqual(Website._get_current_website_id(long_label_domain), website1.id)
+
+    def test_get_current_website_thread_url(self):
+        """Make sure `get_current_website` handles full URLs on the current thread."""
+        Website = self.env['website']
+        with patch.object(threading.current_thread(), 'url', 'http://localhost:8069/web/dataset/call_kw/website/configurator_apply', create=True):
+            website = Website.get_current_website()
+            self.assertEqual(website.id, self.website.id)
 
     def test_02_signup_user_website_id(self):
         website = self.website
