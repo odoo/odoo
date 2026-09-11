@@ -1787,6 +1787,14 @@ We can redirect you to the public employee list."""
             return duration_data
 
     def _get_expected_attendances(self, date_from, date_to):
+        return self._get_expected_attendances_batch(date_from, date_to, compute_leaves=True)
+
+    def _get_expected_attendances_batch(self, date_from, date_to, compute_leaves=True):
+        """
+        Implementation of `_get_expected_attendances`, which always nets out the approved time off.
+        `compute_leaves=False` leaves it aside, for `hr_attendance_gantt` to deduct the time off of a
+        flexible calendar itself, day by day.
+        """
         self.ensure_one()
         valid_versions = self.sudo()._get_versions_with_contract_overlap_with_period(date_from.date(), date_to.date())
         employee_tz = timezone(self.tz) if self.tz else None
@@ -1797,7 +1805,7 @@ We can redirect you to the public employee list."""
                 date_to,
                 tz=employee_tz,
                 resources=self.resource_id,
-                compute_leaves=True,
+                compute_leaves=compute_leaves,
                 domain=[('company_id', 'in', [False, self.company_id.id])])[self.resource_id.id]
             return calendar_intervals
         duration_data = Intervals()
@@ -1813,7 +1821,7 @@ We can redirect you to the public employee list."""
                                     min(date_to, version_end),
                                     tz=employee_tz,
                                     resources=self.resource_id,
-                                    compute_leaves=True,
+                                    compute_leaves=compute_leaves,
                                     domain=[('company_id', 'in', [False, self.company_id.id]), ('time_type', '=', 'leave')])[self.resource_id.id]
             duration_data = duration_data | version_intervals
         return duration_data
