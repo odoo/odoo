@@ -1213,7 +1213,8 @@ class DiscussChannel(models.Model):
                        partner.name,
                        partner.partner_share,
                        sub_user.uid as uid,
-                       COALESCE(sub_user.share, FALSE) as ushare
+                       COALESCE(sub_user.share, FALSE) as ushare,
+                       sub_users.uids as uids
                   FROM res_partner partner
      LEFT JOIN LATERAL (
                         SELECT users.id AS uid,
@@ -1223,6 +1224,11 @@ class DiscussChannel(models.Model):
                       ORDER BY users.share ASC NULLS FIRST, users.id ASC
                          FETCH FIRST ROW ONLY
                        ) sub_user ON TRUE
+     LEFT JOIN LATERAL (
+                        SELECT ARRAY_AGG(users.id ORDER BY users.share ASC NULLS FIRST, users.id ASC) AS uids
+                          FROM res_users users
+                         WHERE users.partner_id = partner.id AND users.active
+                       ) sub_users ON TRUE
                  WHERE partner.active IS TRUE
                        AND partner.email != %(email)s
                        AND partner.id IN %(partner_ids)s AND partner.id != %(author_id)s
@@ -1232,7 +1238,7 @@ class DiscussChannel(models.Model):
                 author_id=author_id or 0,
             )
             self.env.cr.execute(sql_query)
-            for partner_id, email_normalized, lang, name, partner_share, uid, ushare in self.env.cr.fetchall():
+            for partner_id, email_normalized, lang, name, partner_share, uid, ushare, uids in self.env.cr.fetchall():
                 # ocn_client: will add partners to recipient recipient_data. more ocn notifications. We neeed to filter them maybe
                 recipients_data.append({
                     'active': True,
@@ -1247,6 +1253,7 @@ class DiscussChannel(models.Model):
                     'share': partner_share,
                     'type': 'user' if not partner_share else 'customer',
                     'uid': uid,
+                    'uids': uids or [],
                     'ushare': ushare,
                 })
 
@@ -1296,6 +1303,7 @@ class DiscussChannel(models.Model):
                 "share": member.partner_id.partner_share,
                 "type": "customer",
                 "uid": False,
+                "uids": [],
                 "ushare": False,
             })
         return recipients_data

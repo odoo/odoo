@@ -3448,7 +3448,7 @@ class MailThread(models.AbstractModel):
 
         recipients_data = self._notify_get_recipients(message, **kwargs)
         # cache data fetched by manual query to avoid extra queries when reading user.partner_id
-        uid2pid = {r['uid']: r['id'] for r in recipients_data if r['id'] and r['uid']}
+        uid2pid = {uid: r['id'] for r in recipients_data if r['id'] for uid in r['uids']}
         users = self.env['res.users'].browse(uid2pid)
         users._fields['partner_id']._insert_cache(users, uid2pid.values())
 
@@ -3489,7 +3489,7 @@ class MailThread(models.AbstractModel):
           ``MailThread._notify_get_recipients()``;
         """
         inbox_pids_uids = sorted(
-            [(r["id"], r["uid"]) for r in recipients_data if r["id"] and r["notif"] == "inbox"]
+            [(r["id"], r["uids"]) for r in recipients_data if r["id"] and r["notif"] == "inbox"]
         )
         if inbox_pids_uids:
             notif_create_values = [
@@ -3504,14 +3504,7 @@ class MailThread(models.AbstractModel):
             ]
             # sudo: mail.notification - creating notifications is the purpose of notify methods
             self.env["mail.notification"].sudo().create(notif_create_values)
-            # sudo: res.users - can read users of recipients to notify them
-            users = (
-                self.env["res.partner"]
-                .browse(pid for pid, _uid in inbox_pids_uids)
-                .sudo()
-                .with_context(active_test=True)
-                .user_ids
-            )
+            users = self.env["res.users"].browse(uid for _pid, uids in inbox_pids_uids for uid in uids)
             followers = Store.LazyValue(
                 lambda: (
                     self.env["mail.followers"]
@@ -4273,6 +4266,7 @@ class MailThread(models.AbstractModel):
                     'type': partner usage ('customer', 'portal', 'user');
                     'uid': user ID (in case of multiple users, internal then first found
                         by ID);)
+                    'uids': IDs of all active users (internal first, then by ID);
                     'ushare': are users shared (if users, all users are shared);
                 }, {...}]
 
@@ -4341,6 +4335,7 @@ class MailThread(models.AbstractModel):
                 'share': True,
                 'type': 'customer',
                 'uid': False,
+                'uids': [],
                 'ushare': False,
             } for name, email in outgoing_email_to_lst
         ]

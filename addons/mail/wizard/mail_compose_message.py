@@ -1389,6 +1389,7 @@ class MailComposeMessage(models.TransientModel):
                         'share': True,
                         'type': 'customer',
                         'uid': False,
+                        'uids': [],
                         'ushare': False,
                     } for pid in all_recipient_ids],
                     model_description=False,  # force dynamic computation
