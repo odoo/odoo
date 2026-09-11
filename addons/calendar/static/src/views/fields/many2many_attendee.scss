@@ -2,6 +2,7 @@
     --Avatar-size: 24px;
 
     position: relative;
+    margin-right: map-get($spacers, 2);
 
     img:hover {
         cursor: context-menu;
@@ -9,7 +10,7 @@
     }
 
     .attendee_tag_status {
-        @include o-position-absolute($bottom: -0.375em, $right: -0.375em);
+        @include o-position-absolute($bottom: -1px, $right: -0.60em);
         aspect-ratio: 1;
         border: 1px $o-view-background-color solid;
     }
