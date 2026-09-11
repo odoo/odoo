@@ -35,7 +35,7 @@ registry.category("web_tour.tours").add("hr_expense_test_tour", {
         },
         {
             content: "Enter a value for the total",
-            trigger: "div[name=total_amount_currency] input",
+            trigger: "div[name=price_unit_currency] input",
             run: "edit 100",
         },
         {
