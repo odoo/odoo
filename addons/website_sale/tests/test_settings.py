@@ -17,7 +17,7 @@ class TestWebsiteSaleSettings(BaseCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.company = cls.env["res.company"].create({"name": "Test Company"})
+        cls.company = cls.env.ref('base.test_company')
         cls._test_user.company_ids |= cls.company
         cls.website = cls.env["website"].create({
             "name": "Test Website",

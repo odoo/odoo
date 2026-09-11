@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import logging
 
 from contextlib import contextmanager
 from unittest.mock import patch, Mock
@@ -6,6 +7,10 @@ from unittest.mock import patch, Mock
 from odoo import Command, models
 from odoo.tests.common import new_test_user, TransactionCase, HttpCase
 from odoo.tools.mail import email_split_and_format
+
+
+_logger = logging.getLogger(__name__)
+
 
 DISABLED_MAIL_CREATE_CONTEXT = {
     'mail_create_nolog': True,
@@ -39,15 +44,12 @@ class BaseCommon(TransactionCase):
             cls.user = cls.env.user
         else:
             cls.env.user.group_ids += cls.get_default_groups()
-
-        company = cls.setup_independent_company() or cls.env.company
-        if company is not cls.env.company:
-            # avoid using the context to assign companies
-            cls.env.user.company_id = company
-            cls.env.user.company_ids = [Command.set(company.ids)]
-        else:
-            cls.setup_main_company()
-
+        company = cls.setup_independent_company()
+        if company not in cls.env.company:
+            cls.env.user.write({
+                'company_id': company.id,
+                'company_ids': [Command.set((company | company.child_ids).ids)]
+            })
         if cls._test_user_groups:
             cls._test_user = new_test_user(
                 cls.env,
@@ -127,8 +129,13 @@ class BaseCommon(TransactionCase):
         return currency
 
     @classmethod
-    def setup_independent_company(cls, **kwargs):
-        return None
+    def setup_independent_company(cls):
+        cls.setup_main_company()
+        return cls.env.company
+
+    @classmethod
+    def setup_main_company(cls, currency_code='USD'):
+        cls._use_currency(cls.env.company, currency_code)
 
     @classmethod
     def setup_independent_user(cls):
@@ -137,10 +144,6 @@ class BaseCommon(TransactionCase):
     @classmethod
     def get_default_groups(cls):
         return cls.env.ref('base.group_user')
-
-    @classmethod
-    def setup_main_company(cls, currency_code='USD'):
-        cls._use_currency(cls.env.company, currency_code)
 
     @classmethod
     def _enable_currency(cls, currency_code):
@@ -170,14 +173,24 @@ class BaseCommon(TransactionCase):
             **create_values,
         })
 
+    _force_new_company = False
+
     @classmethod
-    def _create_company(cls, **create_values):
-        company = cls.env['res.company'].create({
-            'name': "Test Company",
-            **create_values,
-        })
+    def _create_company(cls, company_xmlid='base.test_company_template', **create_values):
+        template_company = cls.env.ref(company_xmlid)
+        if cls._force_new_company or template_company in cls.env.user.company_ids:
+            if not cls._force_new_company:
+                _logger.debug("Cannot use %s, company is already in the companies of user %s", company_xmlid, cls.env.user.name)
+            company = cls.env['res.company'].create({
+                'name': "Secondary Test Company",
+                **create_values,
+            })
+        else:
+            cls.registry._assertion_report.custom_test_stats['res.company.create'].add_avoided()
+            _logger.debug('Using %s to create a company', company_xmlid)
+            template_company.write(create_values)
+            company = template_company
         cls.env.user.company_ids = [Command.link(company.id)]
-        # cls.env.context['allowed_company_ids'].append(company.id)
         return company
 
     @classmethod

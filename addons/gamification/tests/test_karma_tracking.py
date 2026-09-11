@@ -7,7 +7,7 @@ from freezegun import freeze_time
 from itertools import chain, repeat
 from unittest.mock import patch
 
-from odoo import exceptions, fields, _
+from odoo import Command, exceptions, fields, _
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.tests import tagged, common
 
@@ -18,12 +18,11 @@ class TestKarmaTrackingCommon(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestKarmaTrackingCommon, cls).setUpClass()
-        cls.test_user = mail_new_test_user(
-            cls.env, login='test',
-            name='Test User', email='test@example.com',
-            karma=0,
-            groups='base.group_user',
-        )
+        cls.test_user = cls.env.ref('base.test_user')
+        cls.test_user.write({
+            'karma': 0,
+            'group_ids': [Command.set([cls.env.ref('base.group_user').id])],
+        })
         cls.test_user_2 = mail_new_test_user(
             cls.env, login='test2',
             name='Test User 2', email='test2@example.com',

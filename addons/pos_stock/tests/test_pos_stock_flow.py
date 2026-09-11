@@ -942,6 +942,7 @@ class TestPosStockFlow(CommonPosStockTest):
             4. Assign a partner to Order A and invoice it AFTER the session is closed.
             - Confirm that `reversed_move_ids` is set accordingly.
         """
+        self.env.user.company_ids = self.env.company  # else the default tax picks another company's
         self.env.company.inventory_valuation = 'real_time'
         self.real_time_categ = self.env['product.category'].create({
             'name': 'test category',

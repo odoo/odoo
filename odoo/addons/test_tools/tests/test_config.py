@@ -78,6 +78,7 @@ class TestConfigManager(TransactionCase):
             'update': {},
             'reinit': [],
             'with_demo': False,
+            'with_test_data': False,
             'import_file_maxbytes': 10485760,
             'import_file_timeout': 3,
             'import_partial': '',
@@ -199,6 +200,7 @@ class TestConfigManager(TransactionCase):
             'update': {},  # blacklist for save, ignored from the config file
             'reinit': [],
             'with_demo': True,
+            'with_test_data': False,
             'import_file_maxbytes': 10485760,
             'import_file_timeout': 3,
             'import_partial': '',
@@ -391,6 +393,7 @@ class TestConfigManager(TransactionCase):
             'upgrade_path': [],
             'pre_upgrade_scripts': [],
             'with_demo': True,
+            'with_test_data': False,
 
             # options that are not taken from the file (also in 14.0)
             'addons_path': [],
@@ -500,6 +503,7 @@ class TestConfigManager(TransactionCase):
             'update': {'account': True, 'website': True},
             'reinit': ['account'],
             'with_demo': True,
+            'with_test_data': True,
             'import_file_maxbytes': 10485760,
             'import_file_timeout': 3,
             'import_partial': '/tmp/import-partial',
@@ -631,6 +635,7 @@ class TestConfigManager(TransactionCase):
             'update': {},
             'reinit': [],
             'with_demo': True,
+            'with_test_data': False,
             'import_file_maxbytes': 10485760,
             'import_file_timeout': 3,
             'import_partial': '',

@@ -48,6 +48,7 @@ class AccountTestInvoicingCommon(ProductCommon):
     chart_template = False
     country_code = False
     extra_tags = ('-standard', 'external') if 'EXTERNAL_MODE' in (config['test_tags'] or {}) else ()
+    _test_company_xmlid = 'base.test_company'
 
     @classmethod
     def safe_copy(cls, record):
@@ -101,6 +102,8 @@ class AccountTestInvoicingCommon(ProductCommon):
             list_price=1000.0,
             standard_price=800.0,
             uom_id=cls.uom_unit.id,
+            taxes_id=[Command.set(cls.tax_sale_a.ids)],  # pin explicitly, see product_b
+            supplier_taxes_id=[Command.set(cls.tax_purchase_a.ids)],
         )
         cls.product_b = cls._create_product(
             name='product_b',
@@ -226,9 +229,8 @@ class AccountTestInvoicingCommon(ProductCommon):
             )
 
     @classmethod
-    def setup_other_company(cls, **kwargs):
-        # OVERRIDE
-        company = cls._create_company(**{'name': 'company_2'} | kwargs)
+    def setup_other_company(cls, name='company_2', **kwargs):
+        company = cls._create_company(name=name, **kwargs)
         data = cls.collect_company_accounting_data(company)
         cls.product_category.with_company(company).write({
             'property_account_income_categ_id': data['default_account_revenue'].id,
@@ -236,18 +238,22 @@ class AccountTestInvoicingCommon(ProductCommon):
         })
         return data
 
+    # xmlid of a fixture company to reuse instead of creating company_1_data
+    _test_independent_company_xmlid = None
+
     @classmethod
     def setup_independent_company(cls, **kwargs):
-        if cls.env.registry.loaded:
-            # Only create a new company for post-install tests
-            return cls._create_company(name='company_1_data', **kwargs)
-        else:
-            cls.env['account.tax.group'].create({
-                'name': 'Test tax group',
-                'company_id': cls.env.company.id,
-            })
-            cls.env.company.country_id = cls.quick_ref('base.be')
-        return super().setup_independent_company(**kwargs)
+        # EXTENDS 'base'
+        if cls._test_independent_company_xmlid:
+            cls.registry._assertion_report.custom_test_stats['res.company.create'].add_avoided()
+            return cls.env.ref(cls._test_independent_company_xmlid)
+        company = cls._create_company(name='company_1_data', **kwargs)  # many tests hardcode this name
+        # TODO try to remove this, may be the cause of the failure in test_tax_unit
+        cls.env['account.tax.group'].sudo().create({
+            'name': 'Test tax group',
+            'company_id': company.id,
+        })
+        return company
 
     @classmethod
     def setup_independent_user(cls):
@@ -263,6 +269,21 @@ class AccountTestInvoicingCommon(ProductCommon):
 
     @classmethod
     def _create_company(cls, **create_values):
+        create_values.setdefault('terms_type', 'plain')  # avoid an unwanted auto note
+
+        if not cls.country_code and not cls.chart_template:
+            # no country/chart needed: reuse base.test_company
+            create_values.setdefault('company_xmlid', cls._test_company_xmlid or 'base.test_company')
+            create_values.setdefault('account_opening_date', False)  # avoid auto-generating returns
+            company = super()._create_company(**create_values)
+            if not company.chart_template:
+                # fresh fallback company has no chart yet
+                cls._use_chart_template(company, cls.chart_template)
+                if create_values.get('currency_id'):
+                    company.currency_id = create_values['currency_id']  # keep the explicit currency
+            company.account_fiscal_country_id = cls.env.ref('base.us')  # match _use_chart_template
+            return company
+
         if cls.country_code:
             country = cls.env['res.country'].search([('code', '=', cls.country_code.upper())])
             if not country:

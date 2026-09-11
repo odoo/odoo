@@ -86,6 +86,7 @@ class OdooTestResult(object):
         self.stats = collections.defaultdict(Stat)
         self.global_report = global_report
         self.shouldStop = self.global_report and self.global_report.shouldStop or False
+        self.custom_test_stats = {}
 
     @property
     def failures_count(self):
@@ -251,6 +252,9 @@ class OdooTestResult(object):
     def log_stats(self):
         if not stats_logger.isEnabledFor(logging.INFO):
             return
+
+        for key, value in self.custom_test_stats.items():
+            stats_logger.runbot("%s: %s", key, value)
 
         details = stats_logger.isEnabledFor(logging.DEBUG)
         stats_tree = collections.defaultdict(Stat)

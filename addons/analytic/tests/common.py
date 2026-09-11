@@ -33,14 +33,6 @@ class AnalyticCommon(BaseCommon):
         ])
 
     @classmethod
-    def setup_independent_company(cls, **kwargs):
-        # OVERRIDE
-        company = super().setup_independent_company(**kwargs)
-        if not company:
-            company = cls._create_company(name='analytic', **kwargs)
-        return company
-
-    @classmethod
     def get_default_groups(cls):
         groups = super().get_default_groups()
         return groups + cls.env.ref('analytic.group_analytic_accounting')

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data>
+    <record id="test_company" model="res.company">
+        <field name="name">Test Company</field>
+        <field name="partner_id" ref="test_company_partner"/>
+        <field name="currency_id" ref="base.USD"/>
+    </record>
+    <record id="test_company_with_branch" model="res.company">
+        <field name="name">Test Company With Branches</field>
+        <field name="currency_id" ref="base.USD"/>
+    </record>
+    <record id="test_company_branch_a" model="res.company">
+        <field name="name">Test Company Branch A</field>
+        <field name="parent_id" ref="test_company_with_branch"/>
+    </record>
+    <record id="test_company_branch_b" model="res.company">
+        <field name="name">Test Company Branch B</field>
+        <field name="parent_id" ref="test_company_with_branch"/>
+    </record>
+    <record id="test_company_template" model="res.company">
+        <field name="name">Test Company Template</field>
+    </record>
+
+</data>

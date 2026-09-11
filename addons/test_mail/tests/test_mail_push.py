@@ -345,7 +345,7 @@ class TestWebPushNotification(SMSCommon):
     @patch.object(odoo.addons.mail.models.mail_thread, 'push_to_end_point')
     @mute_logger('odoo.tests')
     def test_notify_call_invitation(self, push_to_end_point):
-        inviting_user = self.env['res.users'].sudo().create({'name': "Test User", 'login': 'test'})
+        inviting_user = self.env.ref('base.test_user')
         channel = self.env['discuss.channel'].with_user(inviting_user)._get_or_create_chat(
             partners_to=[self.user_email.partner_id.id])
         inviting_channel_member = channel.with_user(inviting_user).self_member_id

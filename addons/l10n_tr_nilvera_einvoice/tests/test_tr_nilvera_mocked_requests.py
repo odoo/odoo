@@ -359,8 +359,8 @@ class TestTRNilveraMockedRequests(TestUBLTRCommon):
     @patch_nilvera_request
     def test_fetching_einvoices(self, mocked_request):
         # EndDate is adjusted to match Europe/Istanbul timezone(UTC+3)
+        self.env.company.l10n_tr_einvoice_purchase_last_fetched_date = fields.Datetime.now() - relativedelta(months=1)  # reset to the frozen "now"
         with patch.object(self.env.cr, 'commit', autospec=True):
-            self.env
             self.env['account.move']._l10n_tr_nilvera_get_documents()
             self.env['account.move']._l10n_tr_nilvera_get_documents()
 
