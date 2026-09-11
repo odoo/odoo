@@ -1,3 +1,5 @@
+from urllib.parse import urlsplit
+
 import requests
 
 from lxml import etree
@@ -13,8 +15,7 @@ def _make_mydata_request(company, endpoint, xml_content) -> dict[str, str] | dic
     It should thus be safe to use them as a list key.
 
     :param res.company company: `res.company` object containing `l10n_gr_edi_{test_env|aade_id|aade_key}`
-    :param str endpoint: 'SendInvoices' (for sending invoice) |
-                         'SendExpensesClassification' (for sending vendor bill's expense classification) |
+    :param str endpoint: 'SendExpensesClassification' (for sending vendor bill's expense classification) |
                          'RequestDocs' (for fetching third-party-issued invoices (for creating vendor bills))
     :param str xml_content: xml content to send to myDATA
     :return: dict[str, str]            error_object    {'error': <str>} |
@@ -75,6 +76,7 @@ class GreeceEDIDocument(models.Model):
     move_id = fields.Many2one(comodel_name='account.move', ondelete='cascade')
     state = fields.Selection(
         selection=[
+            ('invoice_pending', "Invoice submission pending"),
             ('invoice_sent', "Invoice sent"),
             ('invoice_error', "Invoice send failed"),
             ('bill_fetched', "Expense classification ready to send"),
@@ -93,6 +95,29 @@ class GreeceEDIDocument(models.Model):
     mydata_mark = fields.Char()
     mydata_cls_mark = fields.Char()
     mydata_url = fields.Char()
+    mydata_uid = fields.Char(string='myDATA UID', copy=False)
+    mydata_authentication_code = fields.Char(string='myDATA Authentication Code', copy=False)
+
+    provider_uid = fields.Char(copy=False)
+    provider_invoice_identifier = fields.Char(string='Invoice Identifier', copy=False)
+    provider_qr_url = fields.Char(string='Provider QR URL', copy=False)
+
+    # pdf upload is tracked separately because the invoice is already issued at this stage
+    provider_pdf_state = fields.Selection(
+        selection=[
+            ('pending', "Pending"),
+            ('sent', "Sent"),
+            ('error', "Failed"),
+        ],
+        string='Final PDF Status',
+        copy=False,
+    )
+    provider_pdf_error = fields.Text(copy=False)
+
+    def _l10n_gr_edi_get_provider_parent_token(self):
+        self.ensure_one()
+        path = urlsplit(self.provider_qr_url or '').path.rstrip('/')
+        return path.rsplit('/', 1)[-1] if path else False
 
     def action_download(self):
         """ Download the XML file linked to the document. """
