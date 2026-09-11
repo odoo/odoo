@@ -1033,6 +1033,7 @@ class CalendarEvent(models.Model):
                 )._notify_attendees(
                     self.env.ref('calendar.calendar_template_meeting_changedate', raise_if_not_found=False),
                     force_send=True,
+                    notified_attendees_log_message=_('An update of the date has been sent to:')
                 )
 
         if 'videocall_location' in values or update_time:
