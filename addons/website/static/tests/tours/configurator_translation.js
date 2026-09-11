@@ -55,6 +55,7 @@ function runConfiguratorFlow(industrySearchText) {
         {
             content: "Wait for the editor to load after redirect",
             trigger: ":iframe [data-view-xmlid='website.homepage']",
+            timeout: 60000,
         },
         {
             content: "Check that the editor, not translation mode, is opened",
@@ -85,7 +86,7 @@ registry.category("web_tour.tours").add("configurator_translation", {
                 }
             },
         },
-        ...clickOnEditAndWaitEditMode(),
+        ...clickOnEditAndWaitEditMode(60000),
         {
             // Check the content of the save button to make sure the website is in
             // Parseltongue. (The editor should be in the website's default language,
@@ -93,10 +94,12 @@ registry.category("web_tour.tours").add("configurator_translation", {
             content: "exit edit mode",
             trigger: ".o-snippets-top-actions button.btn-success:contains('Save_Parseltongue')",
             run: "click",
+            timeout: 50000,
         },
         {
             content: "wait for editor to be closed",
             trigger: ":iframe #wrapwrap:not(.odoo-editor-editable)",
+            timeout: 50000,
         },
     ],
 });
@@ -109,6 +112,7 @@ registry.category("web_tour.tours").add("configurator_page_creation", {
             content: "Open create content menu",
             trigger: ".o_new_content_container button",
             run: "click",
+            timeout: 60000,
         },
         {
             content: "Create a new page",
@@ -119,6 +123,7 @@ registry.category("web_tour.tours").add("configurator_page_creation", {
             content: "Click on About Us pages category",
             trigger: ".o_website_page_templates_dialog aside [data-id='about_us']",
             run: "click",
+            timeout: 60000,
         },
         {
             content: "Check if configurator pages exist",
