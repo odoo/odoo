@@ -1614,7 +1614,12 @@ class HrLeave(models.Model):
             return vals_list
         if all(leave.state in ['cancel', 'refuse'] for leave in self):  # No overlap constraint in these cases
             return vals_list
-        raise UserError(_('A time off cannot be duplicated.'))
+        for vals in vals_list:
+            vals['state'] = 'confirm'
+            if 'request_date_from' in vals and 'request_date_to' in vals:
+                vals.pop('request_date_from')
+                vals.pop('request_date_to')
+        return vals_list
 
     ####################################################
     # Business methods
