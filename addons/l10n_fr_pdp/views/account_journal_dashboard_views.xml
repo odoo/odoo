@@ -24,7 +24,7 @@
                     <attribute name="invisible" add="country_code == 'FR'" separator="or"/>
                 </xpath>
                 <xpath expr="//a[@name='peppol_get_new_documents']" position="after">
-                    <a type="object" name="peppol_get_new_documents" groups="account.group_account_invoice" invisible="country_code != 'FR'">Fetch E-Invoicing Documents</a>
+                    <a type="object" name="peppol_get_new_documents" groups="account.group_account_invoice" invisible="country_code != 'FR'">Fetch from the Approved Platform</a>
                 </xpath>
             </data>
         </field>
