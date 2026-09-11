@@ -181,7 +181,7 @@ export class AccountProductCatalogSearchPanel extends SearchPanel {
 
     leaveEditionMode(sectionId) {
         if (!sectionId) {
-            const newSection = this._findSectionById(sectionId);
+            const newSection = this._findEditingSection();
             if (newSection.parent_id) {
                 const parentSection = this._findSectionById(newSection.parent_id);
                 parentSection.children = parentSection.children.filter(
@@ -259,7 +259,8 @@ export class AccountProductCatalogSearchPanel extends SearchPanel {
             return;
         }
 
-        const section = this._findSectionById(sectionId);
+        const section =
+            sectionId === false ? this._findEditingSection() : this._findSectionById(sectionId);
         if (!section) {
             return;
         }
@@ -412,6 +413,22 @@ export class AccountProductCatalogSearchPanel extends SearchPanel {
             }
 
             const child = sec.children.find((c) => c.id === id);
+            if (child) {
+                return child;
+            }
+        }
+        return null;
+    }
+
+    // "No Section" also has `id: false`, so a plain id lookup can't
+    // distinguish it from the unsaved section currently being created.
+    _findEditingSection() {
+        for (const sec of this.state.sections) {
+            if (sec.id === false && sec.editing) {
+                return sec;
+            }
+
+            const child = sec.children.find((c) => c.id === false && c.editing);
             if (child) {
                 return child;
             }
