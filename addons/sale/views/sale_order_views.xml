@@ -892,8 +892,20 @@
                                 <widget name="section_state"/>
                             </list>
                             <kanban class="o_kanban_mobile">
+                                <field name="product_custom_attribute_value_ids" column_invisible="1" />
+                                <field name="product_template_id" column_invisible="1"/>
+                                <field name="combo_item_id" column_invisible="1"/>
+                                <field name="linked_line_id" column_invisible="1"/>
+                                <field name="selected_combo_items" column_invisible="1"/>
+                                <field name="virtual_id" column_invisible="1"/>
+                                <field name="linked_virtual_id" column_invisible="1"/>
+                                <field name="collapse_composition" column_invisible="1"/>
+                                <field name="collapse_prices" column_invisible="1"/>
+                                <field name="product_no_variant_attribute_value_ids" column_invisible="1"/>
+                                <field name="technical_price_unit" column_invisible="1"/>
                                 <field name="display_type"/>
                                 <field name="currency_id"/>
+                                <field name="sequence" invisible="combo_item_id" widget="handle"/>
                                 <control>
                                     <create string="Add Line" name="add_product_control"/>
                                     <create
@@ -964,13 +976,15 @@
                                 </templates>
                             </kanban>
                         </field>
-                        <div class="float-end d-flex d-print-none gap-1 mb-2"
-                             name="so_button_below_order_lines">
+                        <div
+                            class="d-flex flex-fill d-print-none gap-1 mb-2"
+                            name="so_button_below_order_lines"
+                        >
                             <button
                                 string="Discount"
                                 name="action_open_discount_wizard"
                                 type="object"
-                                class="btn btn-secondary"
+                                class="btn btn-secondary d-none d-md-block"
                                 groups="sale.group_discount_per_so_line"
                                 invisible="locked or state == 'cancel'"
                             />
@@ -978,10 +992,17 @@
                                 string="Discounts"
                                 name="action_open_discount_wizard"
                                 type="object"
-                                class="btn btn-secondary"
+                                class="btn btn-secondary d-none d-md-block"
                                 groups="sale.group_discount_per_so_line"
                                 disabled="1"
                                 invisible="not (locked or state == 'cancel')"
+                            />
+                            <widget name="combo_menu" class="mb-0 flex-grow-1 d-md-none"/>
+                            <widget
+                                name="discount_menu"
+                                groups="sale.group_discount_per_so_line"
+                                invisible="locked or state == 'cancel'"
+                                class="mb-0 flex-grow-1 d-md-none"
                             />
                         </div>
                         <group name="note_group" col="6" class="mt-2 mt-md-0">
