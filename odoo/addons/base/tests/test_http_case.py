@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import threading
+from concurrent.futures import Future
 from unittest.mock import patch
 
 from odoo.http import Controller, request, route
@@ -78,6 +79,28 @@ class TestChromeBrowser(HttpCase):
 @tagged('-at_install', 'post_install')
 class TestChromeBrowserOddDimensions(TestChromeBrowser):
     browser_size = "1215x768"
+
+
+@tagged('-at_install', 'post_install')
+class TestChromeBrowserShutdown(HttpCase):
+    def test_close_without_answer(self):
+        """Chrome can close the devtools connection before answering Browser.close."""
+        browser = ChromeBrowser(TestChromeBrowserShutdown)
+        websocket_send = ChromeBrowser._websocket_send
+        close_request = None
+
+        def close_connection(browser, method, **kwargs):
+            nonlocal close_request
+            if method != 'Browser.close':
+                return websocket_send(browser, method, **kwargs)
+            close_request = browser._responses[next(browser._request_id)] = Future()
+            browser.ws.close()
+            return close_request
+
+        with patch.object(ChromeBrowser, '_websocket_send', close_connection):
+            with self.assertNoLogs('odoo.tests.common', 'WARNING'):
+                browser.stop()
+        self.assertTrue(close_request.cancelled())
 
 
 class TestRequestRemaining(HttpCase):
