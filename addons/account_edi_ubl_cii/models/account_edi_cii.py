@@ -1,6 +1,7 @@
 from odoo import models, Command
 from odoo.tools import formatLang, frozendict, html2plaintext
 from odoo.tools.misc import NON_BREAKING_SPACE
+from odoo.tools.partner_identifiers import is_identifier_void
 from datetime import datetime
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import (
     FloatFmt,
@@ -472,6 +473,11 @@ class AccountEdiCii(models.AbstractModel):
             },
         }
 
+    def _cii_is_vat_void(self, vat):
+        """Whether `vat` is one of Odoo's conventional values meaning "not subject to VAT"
+        (as opposed to a real, missing, or invalid VAT number)."""
+        return is_identifier_void(vat)
+
     def _cii_get_seller_trade_party_node(self, vals):
         invoice = vals['invoice']
         supplier = vals['supplier']
@@ -482,6 +488,12 @@ class AccountEdiCii(models.AbstractModel):
             scheme_id = "0002"
             legal_organization_val = siret[:9]
         supplier_vat = invoice.fiscal_position_id.foreign_vat or commercial_partner.vat
+        if self._cii_is_vat_void(supplier_vat):
+            supplier_vat = None
+        # Beyond the seller's VAT (handled separately): the German Steuernummer, if set.
+        seller_extra_tax_registrations = []
+        if (stnr := invoice.company_id._get_l10n_de_stnr()):
+            seller_extra_tax_registrations.append({'scheme': 'FC', 'value': stnr})
         return self._cii_get_partner_trade_party_node(vals, {
             'gln': False,
             'name': supplier.name,
@@ -502,9 +514,13 @@ class AccountEdiCii(models.AbstractModel):
             'routing_scheme': supplier.routing_scheme,
             'routing_endpoint': supplier.routing_endpoint,
             'partner_tax_registration': supplier_vat,
+            'extra_partner_tax_registrations': seller_extra_tax_registrations,
         })
 
     def _cii_get_partner_trade_party_node(self, vals, partner_values):
+        tax_registrations = partner_values.get('extra_partner_tax_registrations', [])
+        if (vat := partner_values.get('partner_tax_registration', '')) and not self._cii_is_vat_void(vat):
+            tax_registrations.insert(0, {'scheme': 'VA', 'value': vat})
         return {
             'ram:ID': {
                 'schemeID': '0088',
@@ -525,12 +541,14 @@ class AccountEdiCii(models.AbstractModel):
                     '_text': partner_values['routing_endpoint'],
                 },
             } if partner_values['routing_scheme'] and partner_values['routing_endpoint'] else None,
-            'ram:SpecifiedTaxRegistration': {
-                'ram:ID': {
-                    '_text': partner_values['partner_tax_registration'],
-                    'schemeID': 'VA',
-                },
-            } if partner_values['partner_tax_registration'] else None,
+            'ram:SpecifiedTaxRegistration': [
+                {
+                    'ram:ID': {
+                        '_text': tax_registration['value'],
+                        'schemeID': tax_registration['scheme'],
+                    },
+                } for tax_registration in tax_registrations
+            ],
         }
 
     def _cii_get_defined_trade_contact_node(self, vals, contact_values):
@@ -564,6 +582,7 @@ class AccountEdiCii(models.AbstractModel):
         if siret := commercial_partner._get_additional_identifier('FR_SIRET'):
             scheme_id = "0002"
             legal_organization_val = siret[:9]
+        buyer_vat = customer.vat if not self._cii_is_vat_void(customer.vat) else None
         return self._cii_get_partner_trade_party_node(vals, {
             'gln': False,
             'name': name,
@@ -583,7 +602,7 @@ class AccountEdiCii(models.AbstractModel):
             },
             'routing_scheme': customer.routing_scheme,
             'routing_endpoint': customer.routing_endpoint,
-            'partner_tax_registration': customer.vat,
+            'partner_tax_registration': buyer_vat,
         })
 
     def _cii_get_applicable_header_trade_delivery_node(self, vals):

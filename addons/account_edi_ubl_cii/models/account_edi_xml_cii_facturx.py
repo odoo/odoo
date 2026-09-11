@@ -172,6 +172,9 @@ class AccountEdiXmlCii(models.AbstractModel):
             tax_details['base_amount_currency'] += fixed_tax_details['tax_amount_currency']
             tax_details['base_amount'] += fixed_tax_details['tax_amount']
 
+        seller_extra_tax_registrations = []
+        if (stnr := invoice.company_id._get_l10n_de_stnr()):
+            seller_extra_tax_registrations.append({'scheme': 'FC', 'value': stnr})
         template_values = {
             **invoice._prepare_edi_vals_to_export(),
             'tax_details': tax_details,
@@ -194,6 +197,7 @@ class AccountEdiXmlCii(models.AbstractModel):
                 and invoice.purchase_order_reference else invoice.ref or invoice.name,
             'contract_reference': invoice.contract_reference if 'contract_reference' in invoice._fields and invoice.contract_reference else '',
             'document_context_id': "urn:cen.eu:en16931:2017#conformant#urn:factur-x.eu:1p0:extended",
+            'seller_extra_tax_registrations': seller_extra_tax_registrations,
         }
 
         # data used for IncludedSupplyChainTradeLineItem / SpecifiedLineTradeSettlement
