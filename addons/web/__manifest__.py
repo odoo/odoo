@@ -21,6 +21,7 @@ This module provides the core of the Odoo Web Client.
         'views/speedscope_config_wizard.xml',
         'views/neutralize_views.xml',
         'views/ir_ui_view_views.xml',
+        'views/buttons_debug_templates.xml',
         'data/ir_attachment.xml',
         'data/report_layout.xml',
         'security/ir.access.csv',
