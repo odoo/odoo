@@ -1,0 +1,40 @@
+// The x2many control panel (create buttons) is always rendered before the
+// record list by the framework (see X2ManyField.xml's `o_x2m_control_panel`),
+// regardless of arch order. Reorder visually so the "Line"/"Add Section"/
+// "Note"/"Catalog" controls appear after the order lines instead of before.
+.o_sale_order_line_o2m {
+    > div {
+        display: flex;
+        flex-direction: column;
+
+        .o_x2m_control_panel {
+            order: 2;
+            // Bootstrap's mt-1/mb-4 (baked into X2ManyField's own template) assume
+            // the panel sits above the records; now that it's below, drop the
+            // bottom margin so it doesn't add extra gap before the buttons row
+            // that follows (Combo/Discount/...).
+            margin-bottom: 0 !important;
+        }
+
+        .o_kanban_renderer {
+            order: 1;
+        }
+    }
+
+    // .o_cp_buttons defaults to margin-right: auto (hugs the left, leaving
+    // room for a pager on the right - see control_panel.scss). Here there's
+    // no pager: stretch the group full width and spread the buttons evenly.
+    .o_cp_buttons {
+        width: 100%;
+
+        // .o_x2m_control_panel is flex/row without align-items set, so it
+        // defaults to stretch: if one button's label wraps to two lines
+        // (e.g. "Add Section" once squeezed to 1/4 width), every button in
+        // the row grows to match it. Keep each button single-line so they
+        // all stay at their natural (equal) height.
+        > button {
+            flex: 1 1 0;
+            white-space: nowrap;
+        }
+    }
+}

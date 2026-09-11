@@ -61,5 +61,12 @@ export class ProductCatalogKanbanController extends KanbanController {
                 res_id: this.orderId,
             });
         }
+        this.scrollToLastLine();
+    }
+
+    scrollToLastLine() {
+        const childField = this.props.context.child_field;
+        const lines = document.querySelectorAll(`[name="${childField}"] [data-id]`);
+        lines[lines.length - 1]?.scrollIntoView({ behavior: "smooth", block: "end" });
     }
 }

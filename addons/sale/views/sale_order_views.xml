@@ -541,6 +541,7 @@
                             name="order_line"
                             widget="sol_o2m"
                             mode="list,kanban"
+                            class="o_sale_order_line_o2m"
                             readonly="state == 'cancel' or locked"
                             aggregated_fields="price_subtotal,price_total"
                             options="{'hide_composition': True, 'hide_prices': True, 'subsections': True}"
@@ -573,6 +574,7 @@
                                                 widget="many2one_barcode"
                                             />
                                         </div>
+                                        <field name="name"/>
                                         <label for="product_uom_qty"/>
                                         <div class="o_row" name="ordered_qty">
                                             <field name="product_uom_qty"/>
@@ -618,27 +620,25 @@
                                            options="{'product_field': 'product_id', 'business_domain': 'sale_order'}"/>
                                     </group>
                                 </group>
-                                <label for="name" string="Description" invisible="display_type"/>
                                 <label for="name" string="Section Name (eg. Products, Services)" invisible="display_type != 'line_section'"/>
                                 <label for="name" string="Subsection Name" invisible="display_type != 'line_subsection'"/>
                                 <label for="name" string="Note" invisible="display_type != 'line_note'"/>
-                                <field name="name"/>
+                                <field name="name" invisible="not display_type"/>
                                 <group>
                                     <field
                                         name="collapse_composition"
+                                        string="Hide Composition"
                                         invisible="display_type not in ['line_section', 'line_subsection']"
                                         readonly="1"
                                     />
                                     <field
                                         name="collapse_prices"
+                                        string="Hide Prices"
                                         invisible="display_type not in ['line_section', 'line_subsection']"
                                         readonly="1"
                                     />
                                 </group>
-                                <div name="invoice_lines" groups="base.group_no_one" invisible="display_type">
-                                    <label for="invoice_lines"/>
-                                    <field name="invoice_lines"/>
-                                </div>
+                                <field name="invoice_lines" invisible="1"/>
                             </form>
                             <list
                                 name="sol_list"
@@ -907,14 +907,14 @@
                                 <field name="currency_id"/>
                                 <field name="sequence" invisible="combo_item_id" widget="handle"/>
                                 <control>
-                                    <create string="Add Line" name="add_product_control"/>
+                                    <create string="Line" name="add_product_control"/>
                                     <create
-                                        string="Add Section"
+                                        string="Section"
                                         name="add_section_control"
                                         context="{'default_display_type': 'line_section'}"
                                     />
                                     <create
-                                        string="Add Note"
+                                        string="Note"
                                         name="add_note_control"
                                         context="{'default_display_type': 'line_note'}"
                                     />
@@ -928,9 +928,9 @@
                                 <templates>
                                     <t t-name="card" class="row g-0 ps-0 pe-0">
                                         <t t-if="!record.display_type.raw_value">
-                                            <aside t-if="record.product_id.value" class="col-2 p-1">
-                                                <span t-att-title="record.product_id.value">
-                                                    <field name="product_id" widget="image" options="{'preview_image': 'image_128', 'img_class': 'object-fit-contain w-100'}"/>
+                                            <aside t-if="record.product_id.value" class="col-auto p-1 pe-2 d-flex align-items-start">
+                                                <span t-att-title="record.product_id.value" class="d-inline-block flex-shrink-0">
+                                                    <field name="product_id" widget="image" options="{'size': [38, 38], 'preview_image': 'image_128', 'img_class': 'object-fit-contain rounded'}"/>
                                                 </span>
                                             </aside>
                                             <main class="col">
@@ -950,10 +950,6 @@
                                                 <div class="text-muted">
                                                     Quantity:
                                                     <field name="product_uom_qty"/> <field name="product_uom_id"/>
-                                                </div>
-                                                <div class="text-muted">
-                                                    Unit Price:
-                                                    <field name="price_unit"/>
                                                 </div>
                                                 <t t-if="record.discount?.raw_value">
                                                     <div class="text-muted">
