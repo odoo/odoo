@@ -1524,6 +1524,7 @@ def load_language(cr, lang):
     :param str lang: language ISO code with optional underscore (``_``) and
         l10n flavor (ex: 'fr', 'fr_BE', but not 'fr-BE')
     """
+    lang = locale.normalize(lang).split('.')[0]
     env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
     lang_ids = env['res.lang'].with_context(active_test=False).search([('code', '=', lang)]).ids
     installer = env['base.language.install'].create({'lang_ids': [(6, 0, lang_ids)]})
