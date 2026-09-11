@@ -208,7 +208,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
             'quantity_on_hand': product.uom_id._compute_quantity(product.qty_available, production.uom_id) if product.is_storable else False,
             'quantity_reserved': 0.0,
             'receipt': self._check_planned_start(production.date_deadline, self._get_replenishment_receipt(production, components)),
-            'unit_cost': self._get_unit_cost(production.move_finished_ids.filtered(lambda m: m.product_id == production.product_id)),
+            'unit_cost': self._get_unit_cost(production.move_finished_ids.filtered(lambda m: m.product_id == production.product_id)[:1]),
             'mo_cost': currency.round(mo_cost),
             'mo_cost_decorator': mo_cost_decorator,
             'real_cost_decorator': real_cost_decorator if not mo_cost_decorator else False,
