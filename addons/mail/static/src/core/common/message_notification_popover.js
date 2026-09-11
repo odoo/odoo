@@ -21,7 +21,7 @@ export class MessageNotificationPopover extends Component {
         const data = this.props.message.notification_ids.map((notification) => {
             const email = notification.mail_email_address || notification.res_partner_id?.email;
             const failure = notification.isFailure && notification.failureMessage;
-            const isFollower = notification._proxy.isFollowerNotification;
+            const isFollower = notification.isFollowerNotification;
             if (!notification.res_partner_id) {
                 return {
                     email,
