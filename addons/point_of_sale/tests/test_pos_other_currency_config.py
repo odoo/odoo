@@ -101,11 +101,12 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
         self.assertEqual(product1_data['standard_price'], 2.5)  # standard price should be converted
 
     def test_pos_data_shared_product_cost_currency(self):
-        """ A product shared across companies (company_id = False) takes its sale-price
-        currency from the main company but its cost currency from the active company.
-        When the POS runs in a company whose currency differs from the main company, the
-        cost (standard_price) must be converted from cost_currency_id, not currency_id,
-        otherwise it gets wrongly multiplied by the exchange rate even though it is
+        """ A product shared across companies (company_id = False) takes both its
+        sale-price and cost currency from the active company, since list_price and
+        standard_price are both company-dependent with no fallback across companies:
+        each company must set its own price. When the POS runs in a company whose
+        currency differs from the main company, prices set for that company must be
+        loaded as-is, not converted again through an exchange rate, since they are
         already expressed in the POS currency.
         """
         main_company = self.env['res.company']._get_main_company()
@@ -129,21 +130,22 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
             'available_in_pos': True,
             'is_storable': True,
             'taxes_id': [(5, 0, 0)],
-            'lst_price': 100.0,
             'company_id': False,
         }).with_company(other_company)
-        # standard_price is company-dependent: set it for the active company, where it
-        # is therefore expressed in that company's currency (the "other" currency).
+        # list_price and standard_price are company-dependent: set them for the active
+        # company, where they are therefore expressed in that company's currency (the
+        # "other" currency).
+        shared_product.lst_price = 100.0
         shared_product.standard_price = 100.0
 
-        self.assertEqual(shared_product.currency_id, main_company.currency_id)
+        self.assertEqual(shared_product.currency_id, other_company.currency_id)
         self.assertEqual(shared_product.cost_currency_id, self.other_currency)
 
         self.assertEqual(self.other_currency_config.currency_id, self.other_currency)
         [data] = shared_product._load_pos_data_read(shared_product, self.other_currency_config)
 
         self.assertAlmostEqual(data['standard_price'], 100.0)
-        self.assertAlmostEqual(data['lst_price'], 50.0)
+        self.assertAlmostEqual(data['lst_price'], 100.0)
 
     def test_combo_prices_converted_to_pos_currency(self):
         # A combo's `base_price` and its items' `extra_price` are stored in the

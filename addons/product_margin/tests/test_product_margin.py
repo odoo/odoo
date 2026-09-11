@@ -97,6 +97,36 @@ class TestProductMargin(AccountTestInvoicingCommon):
             self.assertEqual(expected_margin_sum, expected_margin)
             write_method.assert_not_called()
 
+    def test_product_margin_company_dependent_list_price(self):
+        """ sale_expected must use list_price resolved for the invoice's own company,
+        not the current/main company's value (list_price is company_dependent). """
+        company_b_data = self.setup_other_company()
+        company_b = company_b_data['company']
+        self.env.user.company_ids += company_b
+
+        self.ipad.with_company(company_b).list_price = 1000.0
+
+        bill_b = self.env['account.move'].create([{
+            'move_type': 'out_invoice',
+            'company_id': company_b.id,
+            'partner_id': self.customer.id,
+            'invoice_line_ids': [
+                Command.create({'product_id': self.ipad.id, 'quantity': 5.0, 'price_unit': 1000.0}),
+            ],
+        }])
+        bill_b.invoice_date = self.invoices[0].date
+        bill_b.action_post()
+
+        results_b = self.ipad.with_context(
+            force_company=company_b.id
+        )._compute_product_margin_fields_values()
+        self.assertEqual(results_b[self.ipad.id]['sale_expected'], 1000.0 * 5.0)
+
+        # the main company's own list_price (750.0) and invoices must stay unaffected
+        self.invoices.action_post()
+        results_a = self.ipad._compute_product_margin_fields_values()
+        self.assertEqual(results_a[self.ipad.id]['sale_expected'], 750.0 * 30.0)
+
     def test_product_margin_negative_price_in_move_lines(self):
         """
         Test that product margins are calculated correctly when move lines

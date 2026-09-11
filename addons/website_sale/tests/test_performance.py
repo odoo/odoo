@@ -60,6 +60,7 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
     def _get_shop_page_queries(self):
         res = defaultdict(int)
         res.update({
+            "account_account": 1,
             "account_account_tag": 2,
             "account_tax": 2,
             "account_tax_repartition_line": 2,
@@ -74,7 +75,7 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
             "product_tag": 1,
             "product_template": 2,
             "product_template_attribute_line": 2,
-            "res_company": 2,
+            "res_company": 1,
             "res_currency": 1,
             "res_partner": 2,
             "res_users": 1,
@@ -104,6 +105,7 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
     def _get_product_page_queries(self):
         res = defaultdict(int)
         res.update({
+            "account_account": 1,
             "account_account_tag": 2,
             "account_tax": 2,
             "account_tax_repartition_line": 2,
@@ -121,7 +123,7 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
             "product_template": 3,
             "product_template_attribute_line": 2,
             "product_template_attribute_value": 4,
-            "res_company": 2,
+            "res_company": 1,
             "res_currency": 1,
             "res_partner": 2,
             "res_users": 1,
@@ -261,9 +263,9 @@ class TestWebsiteSalePerformanceWithPricelist(TestWebsiteSalePerformanceWithPric
         if "website_sale_subscription" not in self.installed_modules:
             # FIXME VFE magic comeback when sub is installed makes no **** sense
             # Seems to come from the `website_sale` template, not the sub override strangely
-            # The rules are fixed, product currency (through _get_main_company) does not have to be
-            # computed anymore
-            res["res_company"] -= 1
+            # All variants have a fixed price rule, so the product's own currency
+            # is never looked up.
+            del res["account_account"]
         return res
 
     def test_product_page_generation(self):
