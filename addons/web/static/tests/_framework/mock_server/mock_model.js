@@ -3405,16 +3405,7 @@ export class Model extends Array {
             } else {
                 continue; // the field doesn't exist on the model, so skip it
             }
-            if (field.type === "many2one_reference") {
-                for (const record of this) {
-                    const coModel = getRelation(field, record);
-                    if (!coModel) {
-                        continue;
-                    }
-                    modelMap[coModel._name] ||= {};
-                    modelMap[coModel._name][record[fieldName]] = record[fieldName];
-                }
-            } else if (isM2OField(field.type)) {
+            if (field.type === "many2one") {
                 const coModel = getRelation(field);
                 if (coModel && !modelMap[coModel._name]) {
                     modelMap[coModel._name] = {};
@@ -3441,11 +3432,16 @@ export class Model extends Array {
                 if (["float", "integer", "monetary"].includes(field.type)) {
                     // read should return 0 for unset numeric fields
                     result[field.name] = record[field.name] || 0;
-                } else if (isM2OField(field)) {
+                } else if (field.type === "many2one_reference") {
+                    // the value of a many2one_reference is a plain id: there's no need to
+                    // resolve the co-record, only to check that the co-model is resolved
+                    const coModel = getRelation(field, record);
+                    result[field.name] = (coModel && record[field.name]) || false;
+                } else if (field.type === "many2one") {
                     const coModel = getRelation(field, record);
                     const relRecord = coModel && modelMap[coModel._name][record[field.name]];
                     if (relRecord) {
-                        if (field.type === "many2one_reference" || load !== "_classic_read") {
+                        if (load !== "_classic_read") {
                             result[field.name] = record[field.name];
                         } else {
                             result[field.name] = [record[field.name], relRecord.display_name];
