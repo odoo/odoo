@@ -43,3 +43,14 @@ class L10nLatamDocumentType(models.Model):
                 name = '(%s) %s' % (rec.code, name)
             result.append((rec.id, name))
         return result
+
+    def _get_move_type(self, journal_type="purchase"):
+        """ It is necessary to get the move_type depending on the internal type of the invoice document type. """
+        self.ensure_one()
+        prefix = "in" if journal_type == "purchase" else "out"
+        data = {
+            'invoice': prefix + '_invoice',
+            'debit_note':  prefix + '_invoice',
+            'credit_note':  prefix + '_refund',
+        }
+        return data.get(self.internal_type)
