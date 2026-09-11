@@ -116,8 +116,18 @@ export class AutoComplete extends Component {
     }
 
     close() {
+        this.discardPendingInput();
         this.state.open = false;
         this.state.activeSourceOption = null;
+    }
+
+    discardPendingInput() {
+        this.debouncedProcessInput.cancel();
+        this.pendingPromise?.resolve();
+        if (this.loadingPromise === this.pendingPromise) {
+            this.loadingPromise = null;
+        }
+        this.pendingPromise = null;
     }
 
     cancel() {
