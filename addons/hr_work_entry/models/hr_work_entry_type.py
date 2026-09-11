@@ -45,7 +45,9 @@ class HrWorkEntryType(models.Model):
         'res.country',
         string="Country",
         tracking=True,
-        domain=lambda self: [('id', 'in', self.env.companies.country_id.ids)]
+        domain=lambda self: [('id', 'in', self.env.companies.country_id.ids)],
+        help="Time types are country-specific. A country without localized time types only gets "
+             "Work, Out Of Contract and Public holiday: create the other time types it needs.",
     )
     country_code = fields.Char(related='country_id.code')
     count_as = fields.Selection(

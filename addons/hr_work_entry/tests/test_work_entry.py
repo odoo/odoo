@@ -495,7 +495,7 @@ class TestWorkEntry(TestWorkEntryBase):
             'attendance_ids': False,
         })
 
-        wfh_type = self.env.ref('hr_work_entry.generic_work_entry_type_home_working')
+        wfh_type = self.env.ref('hr_work_entry.be_work_entry_type_home_working')
 
         attendances = self.env['resource.calendar.attendance'].create([
             {
@@ -519,8 +519,8 @@ class TestWorkEntry(TestWorkEntryBase):
         att_wfh, att_empty = attendances[0], attendances[1]
 
         self.assertIn(
-            "HW", att_wfh.display_name,
-            "The 'HW' display_code was lost in the display_name."
+            wfh_type.display_code, att_wfh.display_name,
+            "The display_code of the time type was lost in the display_name."
         )
         self.assertNotIn(
             " A", att_wfh.display_name,
