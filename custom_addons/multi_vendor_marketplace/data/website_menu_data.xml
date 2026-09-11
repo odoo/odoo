@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!--    Sell menu in the website-->
+    <record id="menu_sell" model="website.menu">
+        <field name="name">Sell</field>
+        <field name="url">/sell</field>
+        <field name="parent_id" ref="website.main_menu"/>
+        <field name="sequence" type="int">10</field>
+    </record>
+</odoo>
