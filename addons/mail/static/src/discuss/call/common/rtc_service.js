@@ -384,11 +384,11 @@ export class Rtc extends Record {
     /** @type {Map<number, number>} timeoutId by sessionId for download pausing delay */
     downloadTimeouts = new Map();
     /** @type {{urls: string[]}[]} */
-    iceServers = fields.Attr(undefined, {
-        compute() {
-            return this.iceServers ? this.iceServers : GET_DEFAULT_ICE_SERVERS();
-        },
-    });
+    iceServers = undefined;
+    /** @returns {{urls: string[]}[]} */
+    get effectiveIceServers() {
+        return this.iceServers ? this.iceServers : GET_DEFAULT_ICE_SERVERS();
+    }
     /** @type {Promise<void[]>|undefined} */
     mediaPermissionsPromise;
     /** @type {"granted" | "denied" | "prompt" | undefined} */
@@ -1422,7 +1422,7 @@ export class Rtc extends Record {
         // loading p2p in any case as we may need to receive peer-to-peer connections from users who failed to connect to the SFU.
         this.p2pService.connect(this.localSession.id, this.localChannel.id, {
             info: this.formatInfo(),
-            iceServers: this.iceServers,
+            iceServers: this.effectiveIceServers,
         });
         this.network = new Network(this.p2pService);
         this.updateUpload();
@@ -1810,7 +1810,7 @@ export class Rtc extends Record {
                     return;
                 }
                 this._p2pRecoveryCount++;
-                if (this._p2pRecoveryCount > 1 || !hasTurn(this.iceServers)) {
+                if (this._p2pRecoveryCount > 1 || !hasTurn(this.effectiveIceServers)) {
                     this.upgradeConnectionDebounce();
                 }
             }
@@ -1946,7 +1946,7 @@ export class Rtc extends Record {
                 }, 10000);
                 await this.sfuClient.connect(this.serverInfo.url, this.serverInfo.jsonWebToken, {
                     channelUUID: this.serverInfo.channelUUID,
-                    iceServers: this.iceServers,
+                    iceServers: this.effectiveIceServers,
                 });
             }
             return;
@@ -2079,7 +2079,7 @@ export class Rtc extends Record {
             channelId: this.localChannel.id,
             selfSessionId: this.localSession.id,
             start: new Date().toISOString(),
-            hasTurn: hasTurn(this.iceServers),
+            hasTurn: hasTurn(this.effectiveIceServers),
             entriesBySessionId: {},
         };
     }
