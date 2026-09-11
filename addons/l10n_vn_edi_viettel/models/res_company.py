@@ -27,11 +27,6 @@ class ResCompany(models.Model):
         groups='base.group_system',
         readonly=True,
     )
-    l10n_vn_edi_symbol_id = fields.Many2one(
-        comodel_name='l10n_vn_edi_viettel.sinvoice.symbol',
-        string='Default Symbol',
-        help='If set, this symbol will be used as the default symbol for all invoices of this company.',
-    )
 
     def _l10n_vn_edi_get_credentials_company(self):
         """ The company holding the credentials could be one of the parent companies.
