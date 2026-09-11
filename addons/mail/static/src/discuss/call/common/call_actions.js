@@ -256,7 +256,7 @@ registerCallAction("minimize", {
 });
 registerCallAction("picture-in-picture", {
     condition: ({ owner, channel, store }) =>
-        channel?.isSelfInCall && !store.env?.isSmall && !owner.env.pipWindow,
+        channel?.isSelfInCall && !store.env.services.ui.isSmall && !owner.env.pipWindow,
     disabledCondition: ({ store }) => store.rtc?.isRemote,
     name: ({ store }) =>
         store.rtc?.isPipMode ? _t("Exit Picture in Picture") : _t("Picture in Picture"),

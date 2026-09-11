@@ -122,12 +122,8 @@ export function encodeTranslation(isTranslated, metadata, translation) {
     return encodedMetadata + translation;
 }
 
-/**
- * @param {import("@web/env").OdooEnv} [env]
- */
-export function isTranslationModeEnabled(env) {
-    const debug = env?.debug ?? odoo.debug ?? "";
-    return debug.includes("translate");
+export function isTranslationModeEnabled() {
+    return (odoo.debug ?? "").includes("translate");
 }
 
 /**

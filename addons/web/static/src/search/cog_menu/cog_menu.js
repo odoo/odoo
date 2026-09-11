@@ -1,4 +1,4 @@
-import { asyncComputed, onWillStart, t } from "@odoo/owl";
+import { asyncComputed, onWillStart, t, useScope } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -40,6 +40,8 @@ export class CogMenu extends ActionMenus {
     };
     static actionMenusProps = cogMenuProps;
 
+    scope = useScope();
+
     setup() {
         super.setup();
         this.uiService = useService("ui");
@@ -54,7 +56,9 @@ export class CogMenu extends ActionMenus {
     async _registryItems() {
         const registryItems = cogMenuRegistry.getAll();
         const areDisplayed = await Promise.all(
-            registryItems.map((item) => ("isDisplayed" in item ? item.isDisplayed(this.env) : true))
+            registryItems.map((item) =>
+                "isDisplayed" in item ? this.scope.run(() => item.isDisplayed(this.env)) : true
+            )
         );
         const items = [];
         for (let i = 0; i < registryItems.length; i++) {
