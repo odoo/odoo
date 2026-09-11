@@ -59,6 +59,9 @@ class SaleOrder(models.Model):
         return order
 
     def action_confirm(self):
+        # Discount rewards are priced from tax-inclusive amounts, so the taxes
+        # have to be final before the rewards are computed below.
+        self._ensure_final_taxes()
         for order in self:
             all_coupons = order.applied_coupon_ids | order.coupon_point_ids.coupon_id | order.order_line.coupon_id
             if any(order._get_real_points_for_coupon(coupon) < 0 for coupon in all_coupons):
@@ -1160,3 +1163,10 @@ class SaleOrder(models.Model):
                 return apply_result
             coupon = apply_result.get('coupon', self.env['loyalty.card'])
         return self._get_claimable_rewards(forced_coupons=coupon)
+
+    def _recompute_tax_dependent_prices(self):
+        for order in self:
+            if order.state not in ("draft", "sent"):
+                continue
+            order._update_programs_and_rewards()
+        return super()._recompute_tax_dependent_prices()
