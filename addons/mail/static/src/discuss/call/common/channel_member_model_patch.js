@@ -9,25 +9,23 @@ ChannelMember.CANCEL_CALL_INVITE_DELAY = 30000;
 const ChannelMemberPatch = {
     setup() {
         super.setup(...arguments);
-        this.rtc_inviting_session_id = fields.One("discuss.channel.rtc.session", {
-            /** @this {import("models").ChannelMember} */
-            onAdd(r) {
+        this.rtc_inviting_session_id = fields.One("discuss.channel.rtc.session");
+        this.onChange(
+            () => [this.rtc_inviting_session_id],
+            (session) => {
                 if (!this.channel_id) {
                     return;
                 }
-                this.channel_id.rtc_session_ids.add(r);
+                this.channel_id.rtc_session_ids.add(session);
                 this.store.ringingChannels.add(this.channel_id);
                 this.startInvitationTimeout();
+                return () => {
+                    this.cancelInvitationTimeout();
+                    this.store.ringingChannels.delete(this.channel_id);
+                };
             },
-            /** @this {import("models").ChannelMember} */
-            onDelete() {
-                if (!this.channel_id) {
-                    return;
-                }
-                this.cancelInvitationTimeout();
-                this.store.ringingChannels.delete(this.channel_id);
-            },
-        });
+            { diff: true, immediate: true }
+        );
         this.rtcSession = fields.One("discuss.channel.rtc.session");
     },
     cancelInvitationTimeout() {

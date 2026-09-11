@@ -5,13 +5,22 @@ import { _t } from "@web/core/l10n/translation";
 export class Notification extends Record {
     static _name = "mail.notification";
 
+    setup() {
+        super.setup(...arguments);
+        this.onChange(
+            () => [this.mail_message_id],
+            (mail_message_id) => {
+                if (!mail_message_id) {
+                    this.delete();
+                }
+            },
+            { immediate: true, initialRun: false }
+        );
+    }
+
     /** @type {number} */
     id;
-    mail_message_id = fields.One("mail.message", {
-        onDelete() {
-            this.delete();
-        },
-    });
+    mail_message_id = fields.One("mail.message");
     /** @type {string} */
     notification_status;
     /** @type {string} */

@@ -432,9 +432,6 @@ export class Rtc extends Record {
             }
             return this._remotelyHostedChannelId;
         },
-        onDelete(channel) {
-            channel.clearActiveSpeakers();
-        },
     });
     /**
      * Html element embedding the rtc service. Used to scope the dialog to the correct
@@ -532,6 +529,11 @@ export class Rtc extends Record {
     });
 
     setup() {
+        this.onChange(
+            () => [this.channel],
+            (channel) => () => channel.clearActiveSpeakers(),
+            { diff: true, immediate: true }
+        );
         // the services and the dialog the record holds, assigned when the service starts or
         // when a call runs
         /** @type {SfuClientState} */

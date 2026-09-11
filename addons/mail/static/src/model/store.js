@@ -30,23 +30,17 @@ export class Store extends Record {
             this.handleError(err);
         }
         this._.UPDATE--;
+        if (this._.UPDATE === 0) {
+            this._.isDrainingQueues.set(true);
+        }
         this._.lowerUpdateDepth();
         if (this._.UPDATE === 0) {
             // pretend an increased update cycle so that nothing in queue creates many small update cycles
             this._.UPDATE++;
-            while (
-                this._.FC_QUEUE.size > 0 ||
-                this._.FA_QUEUE.size > 0 ||
-                this._.FD_QUEUE.size > 0 ||
-                this._.RD_QUEUE.size > 0
-            ) {
+            while (this._.FC_QUEUE.size > 0 || this._.RD_QUEUE.size > 0) {
                 const FC_QUEUE = new Map(this._.FC_QUEUE);
-                const FA_QUEUE = new Map(this._.FA_QUEUE);
-                const FD_QUEUE = new Map(this._.FD_QUEUE);
                 const RD_QUEUE = new Map(this._.RD_QUEUE);
                 this._.FC_QUEUE.clear();
-                this._.FA_QUEUE.clear();
-                this._.FD_QUEUE.clear();
                 this._.RD_QUEUE.clear();
                 while (FC_QUEUE.size > 0) {
                     /** @type {[Record, Map<string, true>]} */
@@ -54,45 +48,6 @@ export class Store extends Record {
                     FC_QUEUE.delete(record);
                     for (const fieldName of recMap.keys()) {
                         record._.requestCompute(fieldName, { force: true });
-                    }
-                }
-                while (FA_QUEUE.size > 0) {
-                    /** @type {[Record, Map<string, Map<Record, true>>]} */
-                    const [record, recMap] = FA_QUEUE.entries().next().value;
-                    FA_QUEUE.delete(record);
-                    while (recMap.size > 0) {
-                        /** @type {[string, Map<Record, true>]} */
-                        const [fieldName, fieldMap] = recMap.entries().next().value;
-                        recMap.delete(fieldName);
-                        const onAdd = record.Model._.fieldsOnAdd.get(fieldName);
-                        for (const addedRec of fieldMap.keys()) {
-                            try {
-                                onAdd?.call(record._proxy, addedRec._proxy);
-                            } catch (err) {
-                                this.handleError(err);
-                            }
-                        }
-                    }
-                }
-                while (FD_QUEUE.size > 0) {
-                    /** @type {[Record, Map<string, Map<Record, true>>]} */
-                    const [record, recMap] = FD_QUEUE.entries().next().value;
-                    FD_QUEUE.delete(record);
-                    while (recMap.size > 0) {
-                        /** @type {[string, Map<Record, true>]} */
-                        const [fieldName, fieldMap] = recMap.entries().next().value;
-                        recMap.delete(fieldName);
-                        const onDelete = record.Model._.fieldsOnDelete.get(fieldName);
-                        for (const removedRec of fieldMap.keys()) {
-                            try {
-                                onDelete?.call(
-                                    record._proxy,
-                                    removedRec.exists() ? removedRec._proxy : undefined
-                                );
-                            } catch (err) {
-                                this.handleError(err);
-                            }
-                        }
                     }
                 }
                 while (RD_QUEUE.size > 0) {
@@ -123,6 +78,7 @@ export class Store extends Record {
                 }
             }
             this._.UPDATE--;
+            this._.isDrainingQueues.set(false);
             if (this._.ERRORS.length) {
                 if (this.warnErrors) {
                     console.warn("Store data insert aborted due to following errors:");

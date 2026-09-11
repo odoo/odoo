@@ -35,13 +35,12 @@ export class RecordListInternal {
     addNoinv(...records) {
         const self = this;
         const recordList = this.recordList;
-        const store = recordList._store;
         if (this.isOne()) {
             const last = records.at(-1);
             if (isRecord(last) && last.in(recordList)) {
                 return;
             }
-            const record = self.insert(
+            self.insert(
                 last,
                 function recordList_AddNoInvOneInsert(record) {
                     if (record !== self.data()[0]) {
@@ -55,14 +54,13 @@ export class RecordListInternal {
                 },
                 { inv: false }
             );
-            store._.ADD_QUEUE("onAdd", self.owner, self.name, record);
             return;
         }
         for (const val of records) {
             if (isRecord(val) && val.in(recordList)) {
                 continue;
             }
-            const record = self.insert(
+            self.insert(
                 val,
                 function recordList_AddNoInvManyInsert(record) {
                     if (self.data().indexOf(record) === -1) {
@@ -73,7 +71,6 @@ export class RecordListInternal {
                 },
                 { inv: false }
             );
-            store._.ADD_QUEUE("onAdd", self.owner, self.name, record);
         }
     }
     /** @param {R[]|any[]} data */
@@ -92,7 +89,6 @@ export class RecordListInternal {
                 self.insert(val, function recordListAssignInsert(record) {
                     if (record.notIn(oldRecords)) {
                         record._.uses.add(recordList);
-                        store._.ADD_QUEUE("onAdd", self.owner, self.name, record);
                     }
                 })
             );
@@ -100,7 +96,6 @@ export class RecordListInternal {
             for (const oldRecord of oldRecords) {
                 if (oldRecord.notIn(newRecords)) {
                     oldRecord._.uses.delete(recordList);
-                    store._.ADD_QUEUE("onDelete", self.owner, self.name, oldRecord);
                     if (inverse) {
                         store._.updateFields(oldRecord, {
                             [inverse]: [["DELETE", self.owner]],
@@ -125,9 +120,8 @@ export class RecordListInternal {
     deleteNoinv(...records) {
         const self = this;
         const recordList = this.recordList;
-        const store = recordList._store;
         for (const val of records) {
-            const record = this.insert(
+            this.insert(
                 val,
                 function recordList_DeleteNoInv_Insert(record) {
                     const index = self.data().indexOf(record);
@@ -138,7 +132,6 @@ export class RecordListInternal {
                 },
                 { inv: false }
             );
-            store._.ADD_QUEUE("onDelete", self.owner, self.name, record);
         }
     }
     getInverse() {
@@ -259,7 +252,6 @@ export class RecordListInternal {
                     if (oldRecord && oldRecord.notEq(newRecord)) {
                         oldRecord._.uses.delete(recordList);
                     }
-                    store._.ADD_QUEUE("onDelete", self.owner, self.name, oldRecord);
                     const inverse = self.getInverse();
                     if (inverse) {
                         store._.updateFields(oldRecord, {
@@ -268,7 +260,6 @@ export class RecordListInternal {
                     }
                     if (newRecord) {
                         newRecord._.uses.add(recordList);
-                        store._.ADD_QUEUE("onAdd", self.owner, self.name, newRecord);
                         if (inverse) {
                             store._.updateFields(newRecord, {
                                 [inverse]: [["ADD", self.owner]],
