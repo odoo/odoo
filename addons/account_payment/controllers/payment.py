@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _
-from odoo.exceptions import AccessError, MissingError, ValidationError
+from odoo.exceptions import AccessError, MissingError, ValidationError, UserError
 from odoo.fields import Command
 from odoo.http import request, route
 
@@ -29,6 +29,10 @@ class PaymentPortal(payment_portal.PaymentPortal):
             raise error
         except AccessError:
             raise ValidationError(_("The access token is invalid."))
+
+        # Prevents weird corner case where a user has two tabs open and tries to pay twice while a payment is processing or processed
+        if error := invoice_sudo._get_online_payment_error():
+            raise UserError(error)
 
         logged_in = not request.env.user._is_public()
         partner_sudo = request.env.user.partner_id if logged_in else invoice_sudo.partner_id
