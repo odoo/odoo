@@ -68,6 +68,25 @@ class TestRoutes(TransactionCase):
         wh.reception_steps = 'two_steps'
         self.assertEqual(wh.reception_steps, 'two_steps')
 
+    def test_toggling_warehouse_ids_syncs_global_route_rules(self):
+        """
+        Removing/re-adding a warehouse from a global route's `warehouse_ids`
+        (Buy, and Manufacture when installed) must immediately archive/
+        reactivate the corresponding rule, right when the route changes.
+        """
+        wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        route = wh.buy_pull_id.route_id
+        self.assertTrue(wh.buy_pull_id.active)
+        self.assertIn(wh, route.warehouse_ids)
+
+        route.warehouse_ids = [Command.clear()]
+        self.assertFalse(wh.buy_pull_id.active)
+
+        # `buy_to_resupply` have no `@api.depends` on `warehouse_ids
+        wh.invalidate_recordset()
+        route.warehouse_ids = [Command.link(wh.id)]
+        self.assertTrue(wh.buy_pull_id.active)
+
     def test_buy_to_resupply_unchecks_and_unlinks_warehouse(self):
         """Unchecking Buy to Resupply should keep buy_to_resupply disabled."""
         wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
