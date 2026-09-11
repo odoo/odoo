@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import fields, Command
 from odoo.tests import tagged
 from odoo.addons.sale_purchase.tests.test_sale_purchase import TestSalePurchase
 
@@ -43,3 +44,24 @@ class TestSalePurchaseProject(TestSalePurchase):
 
         self.assertEqual(purchase_line1.analytic_distribution, {str(self.sale_order_1.project_id[self.analytic_plan._column_name()].id): 100}, "Analytic Distribution in PO should be same as Analytic Account set in SO")
         self.assertEqual(purchase_line2.analytic_distribution, {str(self.test_analytic_account_2.id): 100}, "Analytic Distribution in PO should be same as Analytic Distribution set in SOL")
+
+    def test_analytic_line_billable_type_purchase_order(self):
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': self.service_purchase_1.id,
+                'product_qty': 1,
+                'price_unit': 100,
+                'analytic_distribution': {str(self.test_analytic_account_1.id): 100},
+            })],
+        })
+        purchase_order.button_confirm()
+        purchase_order.order_line.qty_received = 1
+        purchase_order.action_create_invoice()
+        bill = purchase_order.invoice_ids
+        bill.invoice_date = fields.Date.today()
+        bill.action_post()
+
+        line = bill.invoice_line_ids.analytic_line_ids
+        self.assertEqual(line.billable_type, '21_purchase_order', "A vendor bill billed from a purchase order is reported apart from a plain vendor bill")
+        self.assertEqual(line.category_report, 'costs')

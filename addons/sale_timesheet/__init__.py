@@ -27,7 +27,7 @@ def _sale_timesheet_post_init(env):
 
     lines = env['account.analytic.line'].search(['&', '|',
         ('billable_type', '=', '30_other_costs'),
-        ('billable_type', '=', '11_other_revenues'),
+        ('billable_type', '=', '14_other_revenues'),
         ('project_id', '!=', False),
     ])
     lines._compute_project_billable_type()

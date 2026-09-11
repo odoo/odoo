@@ -2084,7 +2084,7 @@ class TestSaleProject(TestSaleProjectCommon):
             'unit_amount': 1,
         }])
         self.assertEqual(lines[0].category_report, 'revenues')
-        self.assertEqual(lines[0].billable_type, '11_other_revenues')
+        self.assertEqual(lines[0].billable_type, '14_other_revenues')
         self.assertEqual(lines[1].category_report, 'costs')
         self.assertEqual(lines[1].billable_type, '30_other_costs')
 
@@ -2101,7 +2101,18 @@ class TestSaleProject(TestSaleProjectCommon):
         vendor_bill.action_post()
         line_vendor_bill = self.env['account.analytic.line'].search([('account_id', '=', self.project_global.account_id.id), ('category', '=', 'vendor_bill')])
         self.assertEqual(line_vendor_bill.category_report, 'costs')
-        self.assertEqual(line_vendor_bill.billable_type, '12_vendor_bill')
+        self.assertEqual(line_vendor_bill.billable_type, '20_vendor_bill')
+
+    def test_aal_billable_type_materials(self):
+        line = self.env['account.analytic.line'].create({
+            'account_id': self.project_global.account_id.id,
+            'name': 'materials',
+            'amount': 500,
+            'unit_amount': 1,
+            'product_id': self.product_consumable.id,
+        })
+        self.assertEqual(line.billable_type, '11_materials', "Revenue on a goods product should be reported as materials")
+        self.assertEqual(line.category_report, 'revenues')
 
     def test_compute_project_required(self):
         """

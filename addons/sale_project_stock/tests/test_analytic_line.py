@@ -64,7 +64,7 @@ class TestAnalyticLine(TestStockCommon):
         picking_in.action_confirm()
         picking_in.button_validate()
 
-        self.assertEqual('16_picking_entry_negative', picking_out.move_ids.analytic_account_line_ids.billable_type)
+        self.assertEqual('24_picking_entry_negative', picking_out.move_ids.analytic_account_line_ids.billable_type)
         self.assertEqual('costs', picking_out.move_ids.analytic_account_line_ids.category_report)
-        self.assertEqual('15_picking_entry_positive', picking_in.move_ids.analytic_account_line_ids.billable_type)
+        self.assertEqual('13_picking_entry_positive', picking_in.move_ids.analytic_account_line_ids.billable_type)
         self.assertEqual('revenues', picking_in.move_ids.analytic_account_line_ids.category_report)
