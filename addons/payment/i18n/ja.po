@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-10 17:38+0000\n"
-"PO-Revision-Date: 2026-08-31 20:34+0000\n"
+"PO-Revision-Date: 2026-09-09 05:11+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-4/"
 "payment/ja/>\n"
@@ -30,7 +30,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (コピー)"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
@@ -177,6 +177,9 @@ msgid ""
 "                        supported; please use the <em>Duplicate</em> action "
 "instead."
 msgstr ""
+"<strong>警告:</strong> 決済プロバイダーを新規作成することはサポートされていま"
+"せん。\n"
+"                        代わりに <em>複製</em>アクションを使用してください。"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -213,7 +216,7 @@ msgstr "有効"
 #. module: payment
 #: model:ir.actions.server,name:payment.action_add_payment_method
 msgid "Add a Payment Method"
-msgstr ""
+msgstr "支払方法を追加"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_address
@@ -229,12 +232,12 @@ msgstr "Adyen"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "All Countries"
-msgstr ""
+msgstr "すべての国"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "All Currencies"
-msgstr ""
+msgstr "すべての通貨"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__allow_express_checkout
@@ -485,7 +488,7 @@ msgstr "接続"
 #: model:ir.model,name:payment.model_res_partner
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "Contact"
-msgstr "連絡先"
+msgstr "ウェブ管理者宛に"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__module_id
@@ -530,7 +533,7 @@ msgstr "顧客を作成"
 #: model_terms:ir.ui.view,arch_db:payment.payment_data_form
 #: model_terms:ir.ui.view,arch_db:payment.payment_data_list
 msgid "Created On"
-msgstr ""
+msgstr "作成日"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__create_uid
@@ -656,7 +659,7 @@ msgstr "エラー"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_data__error_traceback
 msgid "Error Traceback"
-msgstr ""
+msgstr "エラーのトレースバック"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__support_express_checkout
@@ -684,12 +687,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "Express checkout not supported"
-msgstr ""
+msgstr "エクスプレス・チェックアウトはサポートされていません"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_data__errored
 msgid "Failed"
-msgstr ""
+msgstr "失敗"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
@@ -785,6 +788,8 @@ msgid ""
 "If live mode is disabled, a fake payment is processed through a test payment "
 "interface. This mode is advised when setting up the provider."
 msgstr ""
+"ライブモードが無効の場合、テスト決済インターフェースを介してダミー決済が処理"
+"されます。このモードはプロバイダーの設定を行う際に推奨されます。"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__image
@@ -795,19 +800,19 @@ msgstr "画像"
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "Incompatible country"
-msgstr ""
+msgstr "非対応国"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "Incompatible currency"
-msgstr ""
+msgstr "非対応通貨"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "Incompatible website"
-msgstr ""
+msgstr "非対応ウェブサイト"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__inline_form_view_id
@@ -838,7 +843,7 @@ msgstr "インストール済"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_config_settings__installed_provider_id
 msgid "Installed Provider"
-msgstr ""
+msgstr "インストール済プロバイダー"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__is_amount_to_capture_valid
@@ -917,12 +922,12 @@ msgstr "最終更新日"
 #: model:ir.model.fields,field_description:payment.field_payment_provider__is_live
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
 msgid "Live"
-msgstr ""
+msgstr "本番"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__image_128
 msgid "Logo"
-msgstr ""
+msgstr "ロゴ"
 
 #. module: payment
 #: model:portal.entry,description:payment.payment_methods_portal_entry
@@ -943,18 +948,18 @@ msgstr "手動確定がサポートされています"
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "Manual capture not supported"
-msgstr ""
+msgstr "手動確定はサポートされていません"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "Manually confirmed by the user."
-msgstr ""
+msgstr "ユーザによる手動確定済み。"
 
 #. module: payment
 #: model:ir.actions.server,name:payment.action_confirm_payment_transaction
 msgid "Mark as Confirmed"
-msgstr ""
+msgstr "確定済とする"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__maximum_amount
@@ -992,7 +997,7 @@ msgstr "最小金額"
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "Minimum or maximum amount exceeded"
-msgstr ""
+msgstr "最小または最大金額を超えています"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_mollie
@@ -1090,7 +1095,7 @@ msgstr "工程"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Options"
-msgstr ""
+msgstr "オプション"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
@@ -1100,7 +1105,7 @@ msgstr "他の決済方法"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Others"
-msgstr ""
+msgstr "その他"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_manual_capture__partial
@@ -1148,12 +1153,12 @@ msgstr "PayPal"
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_payu
 msgid "PayU"
-msgstr ""
+msgstr "PayU"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_data__payload
 msgid "Payload"
-msgstr ""
+msgstr "ペイロード"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -1173,7 +1178,7 @@ msgstr "支払確定"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__payment_data_count
 msgid "Payment Data Count"
-msgstr ""
+msgstr "支払データ件数"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__payment_details
@@ -1294,13 +1299,13 @@ msgstr "支払方法"
 #. odoo-javascript
 #: code:addons/payment/static/src/interactions/payment_form.js:0
 msgid "Payment method unavailable"
-msgstr ""
+msgstr "利用できないお支払方法です"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "Payment method with duplicate code"
-msgstr ""
+msgstr "コードが重複している支払方法"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.availability_report
@@ -1332,6 +1337,9 @@ msgid ""
 "queue payment data for processing, or pass payment_safe_write=True to the "
 "context after ensuring that the update can tolerate a rollback."
 msgstr ""
+"支払取引を直接更新しないでください。_record() を使用して支払いデータを処理"
+"キューに入れるか、ロールバックに耐えうる更新であることを確認した上で、"
+"コンテキストに payment_safe_write=True を渡してください。"
 
 #. module: payment
 #: model:ir.actions.server,name:payment.cron_post_process_payment_tx_ir_actions_server
@@ -1341,7 +1349,7 @@ msgstr "支払: 後処理取引"
 #. module: payment
 #: model:ir.actions.server,name:payment.processing_cron_ir_actions_server
 msgid "Payment: Run Processing"
-msgstr ""
+msgstr "支払：処理を実行中"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_form
@@ -1371,12 +1379,12 @@ msgstr "保留メッセージ"
 #: model_terms:ir.ui.view,arch_db:payment.payment_data_list
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Pending Updates"
-msgstr ""
+msgstr "保留中の更新"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_data
 msgid "Pending payment data payload to process"
-msgstr ""
+msgstr "処理待ちの支払データ(ペイロード)"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_phone
@@ -1387,7 +1395,7 @@ msgstr "電話"
 #. odoo-javascript
 #: code:addons/payment/static/src/interactions/payment_form.js:0
 msgid "Please choose another payment method."
-msgstr ""
+msgstr "別の支払い方法をお選びください。"
 
 #. module: payment
 #. odoo-python
@@ -1430,12 +1438,12 @@ msgstr "主な支払方法"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__primary_payment_method_ids
 msgid "Primary Payment Methods"
-msgstr ""
+msgstr "主要な支払方法"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__processed_amount
 msgid "Processed Amount"
-msgstr ""
+msgstr "処理済金額"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -1545,7 +1553,7 @@ msgstr "関連ドキュメントモデル"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Restrictions"
-msgstr ""
+msgstr "制限事項"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -1635,7 +1643,7 @@ msgstr "対応事業者:"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
 msgid "Test"
-msgstr ""
+msgstr "テスト"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -1788,14 +1796,14 @@ msgstr "取引の内部参照"
 msgid ""
 "The label to be displayed on the payment buttons for 'Pay Later' payment "
 "methods."
-msgstr ""
+msgstr "「後払い」決済方法の決済ボタンに表示されるラベル。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_res_company__pay_now_label
 msgid ""
 "The label to be displayed on the payment buttons for 'Pay Now' payment "
 "methods."
-msgstr ""
+msgstr "「今すぐ支払う」決済方法の決済ボタンに表示されるラベル。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__supported_country_ids
@@ -1865,6 +1873,8 @@ msgid ""
 "The minimum payment amount that this payment provider is available for. "
 "Leave blank to make it available for any payment amount."
 msgstr ""
+"この決済プロバイダーを利用できる最小決済金額。すべての決済金額で利用可能にす"
+"る場合は空欄のままにしてください。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__support_manual_capture
@@ -1895,13 +1905,15 @@ msgstr ""
 #. module: payment
 #: model:ir.model.constraint,message:payment.constraint_payment_method_provider_id_code_uniq
 msgid "The provider already has a payment method with this code."
-msgstr ""
+msgstr "このプロバイダーには、このコードの支払方法がすでに登録されています。"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "The provider must not be archived to make a request."
 msgstr ""
+"リクエストを実行するには、プロバイダーがアーカイブされていない必要があります"
+"。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__provider_ref
@@ -1916,7 +1928,7 @@ msgstr "取引のプロバイダ参照"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__provider_id
 msgid "The provider supporting this payment method."
-msgstr ""
+msgstr "この支払方法に対応しているプロバイダー。"
 
 #. module: payment
 #. odoo-python
@@ -2028,6 +2040,8 @@ msgid ""
 "This action will also archive %s tokens that are registered with this "
 "provider."
 msgstr ""
+"この操作により、このプロバイダーに登録されている %s 個のトークンもアーカイブ"
+"されます。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_tokenization
@@ -2037,6 +2051,9 @@ msgid ""
 "saved in the provider's database, allowing the customer to reuse it for a "
 "next purchase."
 msgstr ""
+"これは、顧客が決済方法を支払トークンとして保存できるかどうかを制御します。支"
+"払トークンとは、プロバイダのデータベースに保存された支払い方法の詳細への匿名"
+"リンクで、顧客は次回の購入時にそれを再利用することができます。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_express_checkout
@@ -2073,7 +2090,7 @@ msgstr "会社切り替え機能でメイン会社を選択してください。
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__token_count
 msgid "Token Count"
-msgstr ""
+msgstr "トークン数"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__token_inline_form_view_id
@@ -2099,23 +2116,23 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "Tokenization not supported"
-msgstr ""
+msgstr "トークン化はサポートされていません"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "Tokenization without payment no supported"
-msgstr ""
+msgstr "支払なしのトークン化はサポートされていません"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Tokens"
-msgstr ""
+msgstr "トークン"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_toss_payments
 msgid "Toss Payments"
-msgstr ""
+msgstr "Toss Payments"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__transaction_ids
@@ -2126,7 +2143,7 @@ msgstr "取引"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__transaction_count
 msgid "Transaction Count"
-msgstr ""
+msgstr "取引数"
 
 #. module: payment
 #. odoo-python
@@ -2139,7 +2156,7 @@ msgstr "取引の承認は、以下の決済プロバイダではサポートさ
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Transactions"
-msgstr ""
+msgstr "取引"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.method_form
@@ -2247,6 +2264,8 @@ msgid ""
 "You can't unarchive tokens linked to inactive payment methods or archived "
 "providers."
 msgstr ""
+"無効な決済方法やアーカイブされたプロバイダーにリンクされているトークンの"
+"アーカイブを解除することはできません。"
 
 #. module: payment
 #. odoo-python
@@ -2270,6 +2289,8 @@ msgstr "デフォルトの支払方法は削除できません。"
 msgid ""
 "You cannot delete the payment provider %s; archive or uninstall it instead."
 msgstr ""
+"決済プロバイダー「%s 」を削除することはできません。代わりに、アーカイブするか"
+"アンインストールしてください。"
 
 #. module: payment
 #. odoo-python
@@ -2289,12 +2310,12 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_status
 msgid "Your order is being processed."
-msgstr ""
+msgstr "ご注文を処理中です。"
 
 #. module: payment
 #: model_terms:payment.provider,done_msg:payment.payment_provider_pay_on_invoice
 msgid "Your order is confirmed, you will receive your invoice shortly."
-msgstr ""
+msgstr "ご注文が確定しました。間もなく請求書をお送りいたします。"
 
 #. module: payment
 #. odoo-python
@@ -2427,7 +2448,7 @@ msgstr "支払はまだ処理されていません。"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_status
 msgid "Your payment is being processed."
-msgstr ""
+msgstr "お支払いを処理中です。"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_status
@@ -2444,7 +2465,7 @@ msgstr "支払方法が保存されました。"
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "Your payment method has not been saved yet."
-msgstr ""
+msgstr "お支払い方法はまだ保存されていません。"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
@@ -2489,7 +2510,7 @@ msgstr "プロバイダ"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "the website administrator."
-msgstr ""
+msgstr "お問い合わせください。"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.company_mismatch_warning
@@ -2504,9 +2525,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "transaction_id"
-msgstr ""
+msgstr "transaction_id"
 
 #. module: payment
 #: model:ir.model,name:payment.model_ir_websocket
 msgid "websocket message handling"
-msgstr ""
+msgstr "WebSocketメッセージ処理"

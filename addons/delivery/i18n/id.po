@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-19 17:37+0000\n"
-"PO-Revision-Date: 2026-09-04 04:09+0000\n"
+"PO-Revision-Date: 2026-09-09 10:26+0000\n"
 "Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-4/"
 "delivery/id/>\n"
@@ -34,6 +34,10 @@ msgid ""
 "object.name)\n"
 "        "
 msgstr ""
+"\n"
+"            \"Catatan Pengiriman - %s - %s\" % (object.partner_id.name or "
+"\"\", object.name)\n"
+"        "
 
 #. module: delivery
 #. odoo-python
@@ -90,6 +94,35 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Halo <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>"
+",<br/><br/>\n"
+"        Dengan senang hati kami mengabarkan bahwa pesanan Anda telah "
+"dikirimkan.\n"
+"        <t t-if=\"object.tracking_ref\">\n"
+"            Referensi pelacakan Anda adalah\n"
+"            <strong>\n"
+"                <t t-if=\"object.tracking_url\">\n"
+"                    <a t-attf-href=\"{{ object.tracking_url }}\" "
+"target=\"_blank\" t-out=\"object.tracking_ref\"/>.\n"
+"                </t>\n"
+"                <t t-else=\"\">\n"
+"                    <t t-out=\"object.tracking_ref\"/>.\n"
+"                </t>\n"
+"            </strong>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Untuk detail selengkapnya, lihat surat jalan terlampir.<br/><br/>\n"
+"        Terima kasih,\n"
+"        <t t-if=\"user.signature\">\n"
+"            <br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"user.signature or ''\">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
@@ -144,47 +177,47 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
 msgid "<span>Delivery Note</span>"
-msgstr ""
+msgstr "<span>Catatan Pengiriman</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
 msgid "<strong>Customer</strong>"
-msgstr ""
+msgstr "<strong>Pelanggan</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
 msgid "<strong>Delivery Address</strong>"
-msgstr ""
+msgstr "<strong>Alamat Pengiriman</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_report_saleorder_document
 msgid "<strong>Delivery Description</strong>"
-msgstr ""
+msgstr "<strong>Deskripsi Pengiriman</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
 msgid "<strong>Delivery method</strong>"
-msgstr ""
+msgstr "<strong>Metode pengiriman</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
 msgid "<strong>Order</strong>"
-msgstr ""
+msgstr "<strong>Order</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
 msgid "<strong>Remaining quantities to ship:</strong>"
-msgstr ""
+msgstr "<strong>Sisa kuantitas yang akan dikirim:</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
 msgid "<strong>Shipping Date</strong>"
-msgstr ""
+msgstr "<strong>Tanggal Pengiriman</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
 msgid "<strong>Tracking Number</strong>"
-msgstr ""
+msgstr "<strong>Nomor Pelacak</strong>"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__carrier_description
@@ -193,11 +226,14 @@ msgid ""
 "customers on the Sales Order and sales confirmation email. E.g. instructions "
 "for customers to follow."
 msgstr ""
+"Deskripsi metode pengiriman yang ingin Anda sampaikan kepada pelanggan pada "
+"Order Penjualan dan email konfirmasi penjualan, misalnya instruksi yang "
+"harus diikuti oleh pelanggan."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__integration_level
 msgid "Action while validating Delivery Orders."
-msgstr ""
+msgstr "Tindakan saat memvalidasi Order Pengiriman."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__active
@@ -242,6 +278,8 @@ msgid ""
 "Amount of the order to benefit from a free shipping, expressed in the "
 "company currency."
 msgstr ""
+"Jumlah order untuk mendapatkan pengiriman gratis, dicantumkan dalam mata "
+"uang perusahaan."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -299,7 +337,7 @@ msgstr "Bayar di Tempat (COD)"
 #. odoo-python
 #: code:addons/delivery/models/payment_provider.py:0
 msgid "Cash on delivery not allowed by selected delivery method"
-msgstr ""
+msgstr "COD tidak diizinkan oleh metode pengiriman terpilih"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__company_id
@@ -316,17 +354,17 @@ msgstr "Syarat"
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Pengaturan Konfig"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.res_config_settings_view_form
 msgid "Configure Methods"
-msgstr ""
+msgstr "Konfigurasi Metode"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_note_form_view
 msgid "Confirm Shipment"
-msgstr ""
+msgstr "Konfirmasi Pengiriman"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
@@ -405,7 +443,7 @@ msgstr "Tentukan metode pengiriman baru"
 #: model:ir.ui.menu,name:delivery.sale_menu_action_delivery_carrier_form
 #: model:product.category,name:delivery.product_category_deliveries
 msgid "Deliveries"
-msgstr ""
+msgstr "Pengiriman"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
@@ -446,23 +484,23 @@ msgstr "Metode Pengiriman"
 #: model:ir.actions.report,name:delivery.action_report_delivery_note
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_note_form_view
 msgid "Delivery Note"
-msgstr ""
+msgstr "Catatan Pengiriman"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_note_wizard_line
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_note_list_view
 msgid "Delivery Note Line"
-msgstr ""
+msgstr "Baris Catatan Pengiriman"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard_line__note_id
 msgid "Delivery Note Reference"
-msgstr ""
+msgstr "Referensi Catatan Pengiriman"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_note_wizard
 msgid "Delivery Note Wizard"
-msgstr ""
+msgstr "Wizard Catatan Pengiriman"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__delivery_price
@@ -498,7 +536,7 @@ msgstr "Biaya pengiriman harus dihitung kembali"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard__dm_id
 msgid "Delivery method"
-msgstr ""
+msgstr "Metode pengiriman"
 
 #. module: delivery
 #. odoo-python
@@ -516,6 +554,8 @@ msgid ""
 "Delivery method details to be included at bottom sales orders and their "
 "confirmation emails. E.g. Instructions for customers to follow."
 msgstr ""
+"Detail metode pengiriman untuk dimasukkan di order penjualan di bawah dan "
+"email konfirmasinya. Contoh: Instruksi untuk diikuti pelanggan."
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_zip_prefix_list
@@ -523,6 +563,8 @@ msgid ""
 "Delivery zip prefixes are assigned to delivery methods to restrict\n"
 "            which zips it is available to."
 msgstr ""
+"Awalan zip pengiriman diberikan ke metode pengiriman untuk membatasi\n"
+"            zip mana yang tersedia untuk metode tersebut."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__carrier_description
@@ -624,11 +666,13 @@ msgid ""
 "Filling this form allows you to make the delivery method available according "
 "to the content of the order or its destination."
 msgstr ""
+"Dengan mengisi formulir ini, Anda dapat membuat metode pengiriman tersedia "
+"sesuai dengan isi atau tujuan order."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.res_config_settings_view_form
 msgid "Find a Delivery Provider"
-msgstr ""
+msgstr "Temukan Penyedia Pengiriman"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_margin
@@ -691,6 +735,8 @@ msgid ""
 "If the order total amount (shipping excluded) is above or equal to this "
 "value, the customer benefits from a free shipping."
 msgstr ""
+"Bila jumlah total order (tidak termasuk pengiriman) di atas atau sama dengan "
+"value ini, pelanggan mendapatkan pengiriman gratis."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__max_volume
@@ -710,7 +756,7 @@ msgstr "Bila berat total pesanan di atas berat ini, metode tidak akan tersedia."
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard_line__product_image
 msgid "Image 128"
-msgstr ""
+msgstr "Gambar 128"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -843,12 +889,12 @@ msgstr "Tidak tersedia untuk order saat ini"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard__name
 msgid "Note Reference"
-msgstr ""
+msgstr "Referensi Catatan"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard__note_line_ids
 msgid "Operations"
-msgstr ""
+msgstr "Operasi"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__operator
@@ -863,12 +909,12 @@ msgstr "Order"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard__so_reference
 msgid "Order reference"
-msgstr ""
+msgstr "Referensi order"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_payment_method
 msgid "Payment Method"
-msgstr ""
+msgstr "Metode Pembayaran"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_payment_provider
@@ -930,7 +976,7 @@ msgstr "Peraturan Harga"
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard_line__product_id
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
 msgid "Product"
-msgstr ""
+msgstr "Produk"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_product_category
@@ -959,7 +1005,7 @@ msgstr "Kuantitas"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard_line__remaining_qty_to_ship
 msgid "Remaining Qty To Ship"
-msgstr ""
+msgstr "Sisa Kuantitas untuk Dikirim"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__get_return_label_from_portal
@@ -990,7 +1036,7 @@ msgstr "Baris Pesanan Penjualan"
 #. module: delivery
 #: model:mail.template,description:delivery.mail_template_data_delivery_note
 msgid "Sent to the customers when orders are shipped."
-msgstr ""
+msgstr "Dikirimkan kepada pelanggan saat order dikirim."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__sequence
@@ -1012,23 +1058,23 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
 msgid "Ship"
-msgstr ""
+msgstr "Kirim"
 
 #. module: delivery
 #. odoo-python
 #: code:addons/delivery/models/sale_order.py:0
 msgid "Ship Order %s"
-msgstr ""
+msgstr "Kirim Order %s"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
 msgid "Shipped"
-msgstr ""
+msgstr "Dikirim"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard__shipping_date
 msgid "Shipping Date"
-msgstr ""
+msgstr "Tanggal Pengiriman"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__shipping_weight
@@ -1047,12 +1093,12 @@ msgstr ""
 #. module: delivery
 #: model:mail.template,name:delivery.mail_template_data_delivery_note
 msgid "Shipping: Send by Email"
-msgstr ""
+msgstr "Pengiriman: Kirim melalui Email"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard_line__sol_id
 msgid "Source Sale Order Line"
-msgstr ""
+msgstr "Baris Order Penjualan Sumber"
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
@@ -1068,7 +1114,7 @@ msgstr "Status"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__supports_cash_on_delivery
 msgid "Supports Cash On Delivery"
-msgstr ""
+msgstr "Mendukung COD"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__supports_shipping_insurance
@@ -1171,17 +1217,17 @@ msgstr "Link Pelacak"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard__tracking_ref
 msgid "Tracking Reference"
-msgstr ""
+msgstr "Referensi Pelacakan"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard__tracking_url
 msgid "Tracking URL"
-msgstr ""
+msgstr "URL Pelacakan"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard_line__product_uom_id
 msgid "Unit"
-msgstr ""
+msgstr "Unit"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form

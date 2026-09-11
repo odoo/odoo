@@ -33,7 +33,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-17 17:37+0000\n"
-"PO-Revision-Date: 2026-09-01 15:12+0000\n"
+"PO-Revision-Date: 2026-09-08 09:11+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s19-4/"
 "account/es/>\n"
@@ -197,6 +197,8 @@ msgstr "%(exception)s para %(user)s%(end_datetime_string)s%(reason)s."
 msgid ""
 "%(failed_count)s out of %(total_count)s entries could not be reset to draft."
 msgstr ""
+"No hemos podido restablecer a borrador %(failed_count)s de %(total_count)s "
+"asientos."
 
 #. module: account
 #. odoo-python
@@ -1193,6 +1195,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
 msgid "<span class=\"me-1\">The Bank Account could be a duplicate of</span>"
 msgstr ""
+"<span class=\"me-1\">La cuenta bancaria podría ser un duplicado de</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1233,6 +1236,10 @@ msgid ""
 "                                <span class=\"o_stat_text\" "
 "invisible=\"move_type != 'in_refund'\">Vendor Bill</span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"move_type != 'out_refund'\">Factura "
+"de cliente</span>\n"
+"                                <span class=\"o_stat_text\" "
+"invisible=\"move_type != 'in_refund'\">Factura de proveedor</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
@@ -1306,7 +1313,7 @@ msgstr "<span class=\"o_stat_text\">Asiento contable</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "<span class=\"o_stat_text\">Journal Items</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Apuntes contables</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1384,6 +1391,8 @@ msgid ""
 "<span invisible=\"name or name_placeholder or "
 "document_sequence_editable\">Draft</span>"
 msgstr ""
+"<span invisible=\"name or name_placeholder or document_sequence_editable\">"
+"Borrador</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
@@ -2490,7 +2499,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_journal_group_uniq_name
 msgid "A Ledger group name must be unique."
-msgstr ""
+msgstr "El nombre del grupo del libro mayor debe ser único."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_defaults
@@ -2539,6 +2548,9 @@ msgid ""
 "and is used by domestic money transfer protocols (from/to bank accounts in "
 "the same country)."
 msgstr ""
+"Un código de compensación (o número de ruta) identifica a un banco, sucursal "
+"o ubicación, y se utiliza en protocolos de transferencia nacional (entre "
+"cuentas bancarias del mismo país)."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_credit_statement_tree
@@ -2556,7 +2568,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid "A fiscal position with a foreign Tax ID already exists in this country."
-msgstr ""
+msgstr "Ya existe en este país una posición fiscal con un NIF extranjero."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -2918,7 +2930,7 @@ msgstr "Cuentas por cobrar"
 #: model:ir.model.fields,field_description:account.field_res_partner__property_account_receivable_active
 #: model:ir.model.fields,field_description:account.field_res_users__property_account_receivable_active
 msgid "Account Receivable Active"
-msgstr ""
+msgstr "Cuenta por cobrar activa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__account_root_id
@@ -3027,6 +3039,8 @@ msgstr ""
 msgid ""
 "Account holder name in case it is different than the name of the partner."
 msgstr ""
+"Nombre del titular de la cuenta en caso de que sea diferente del nombre del "
+"contacto."
 
 #. module: account
 #: model:ir.model,name:account.model_account_merge_wizard
@@ -3281,7 +3295,7 @@ msgstr "Total devengado"
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_buildings
 msgid "Accumulated Amortization - Buildings"
-msgstr ""
+msgstr "Amortización acumulada - Edificios"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_furniture
@@ -3291,27 +3305,27 @@ msgstr ""
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_improvements
 msgid "Accumulated Amortization - Improvements"
-msgstr ""
+msgstr "Amortización acumulada - Mejoras"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_machines
 msgid "Accumulated Amortization - Machines & Tools"
-msgstr ""
+msgstr "Amortización acumulada - Máquinas y herramientas"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_other_property
 msgid "Accumulated Amortization - Other Property"
-msgstr ""
+msgstr "Amortización acumulada - Otros bienes inmuebles"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_technology
 msgid "Accumulated Amortization - Technology"
-msgstr ""
+msgstr "Amortización acumulada - Tecnología"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_vehicles
 msgid "Accumulated Amortization - Vehicles"
-msgstr ""
+msgstr "Amortización acumulada - Vehículos"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_acc_depreciation
@@ -3554,7 +3568,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account/static/src/components/mail_attachments/account_move_send_attachments_selector.xml:0
 msgid "Add..."
-msgstr ""
+msgstr "Añadir..."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
@@ -3797,7 +3811,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__allow_foreign_vat
 msgid "Allow Foreign Tax ID"
-msgstr ""
+msgstr "Permitir NIF extranjero"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_product_margin
@@ -3872,7 +3886,7 @@ msgstr "Impuesto exigible siempre"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_line__foldability__always_unfolded
 msgid "Always Unfolded"
-msgstr ""
+msgstr "Siempre desplegado"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_partial_reconcile__amount
@@ -18007,7 +18021,7 @@ msgstr "NIF"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required
 msgid "Tax ID required"
-msgstr ""
+msgstr "Se requiere número de identificación fiscal"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__document_tax_mode__tax_included
@@ -21595,7 +21609,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_base_document_layout__vat
 msgid "You can use '/' to indicate that the customer has no Tax ID."
-msgstr ""
+msgstr "Puedes utilizar «/» para indicar que el cliente no tiene NIF."
 
 #. module: account
 #. odoo-python
@@ -21797,6 +21811,8 @@ msgid ""
 "You cannot create a fiscal position with a foreign Tax ID within your fiscal "
 "country without assigning it a state."
 msgstr ""
+"No puedes crear una posición fiscal con un NIF extranjero dentro de tu país "
+"fiscal sin asignarle una provincia/región."
 
 #. module: account
 #. odoo-python
