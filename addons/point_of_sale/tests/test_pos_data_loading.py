@@ -233,6 +233,17 @@ class TestPosDataLoading(CommonPosTest):
         self.assertNotIn(config_id, ids_to_remove,
             "Existing active record should not be returned by filter_local_data")
 
+    def test_filter_local_data_handles_model_no_longer_in_registry(self):
+        """filter_local_data should not crash on a model that no longer exists (e.g. its
+        module was uninstalled since the client last synced), and should treat all of its
+        locally cached IDs as stale."""
+        session = self._get_session()
+
+        result = session.filter_local_data({'this.model.does.not.exist': ['1', '2']})
+
+        self.assertEqual(sorted(result.get('this.model.does.not.exist', [])), [1, 2],
+            "IDs of a model missing from the registry should all be treated as stale")
+
     # -------------------------------------------------------------------------
     # Pagination via search_params
     # -------------------------------------------------------------------------
