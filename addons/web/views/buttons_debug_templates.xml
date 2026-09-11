@@ -1,0 +1,541 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!--
+    Buttons debug page, served by "/web/buttons" and reachable from the debug
+    menu. It renders the button variants whose design is set in
+    'bootstrap_review_backend.scss' and in the theme maps, each one in all of
+    its states at the same time, so they can be reviewed as a whole. It is a
+    design tool only, nothing of the webclient depends on it.
+-->
+
+<!-- Renders one table: a row per variant, a column per state. -->
+<template id="web.buttons_debug_matrix">
+    <table class="o_dbg_matrix">
+        <thead>
+            <tr>
+                <th>Class</th>
+                <t t-foreach="states" t-as="state" t-key="state_index">
+                    <th>
+                        <t t-out="state[0]"/>
+                        <span t-if="state[1]" class="o_dbg_state_selector" t-out="state[1]"/>
+                    </th>
+                    <th t-if="state_index in separators" class="o_dbg_gap"/>
+                </t>
+            </tr>
+        </thead>
+        <tbody>
+            <tr t-foreach="variants" t-as="variant" t-key="variant">
+                <th t-out="variant or '.btn (no variant)'"/>
+                <t t-foreach="states" t-as="state" t-key="state_index">
+                    <td t-att-class="'o_dbg_changed' if state[0] in changed.get(variant, []) else None">
+                        <button type="button" t-attf-class="btn #{variant} #{state[2]}"
+                            t-att-disabled="state[2] == 'disabled' or None">Button</button>
+                    </td>
+                    <td t-if="state_index in separators" class="o_dbg_gap"/>
+                </t>
+            </tr>
+        </tbody>
+    </table>
+</template>
+
+<template id="web.buttons_debug">
+    <t t-set="states" t-value="[
+        ('Default', '', ''),
+        ('Hover', '', 'o_dbg_hover'),
+        ('Pressed', '(:active)', 'o_dbg_pressed'),
+        ('Toggled', '(.active)', 'active'),
+        ('Disabled', '', 'disabled'),
+    ]"/>
+    <!-- A spacer column follows these states, splitting the table in groups. -->
+    <t t-set="separators" t-value="[0, 3]"/>
+    <!--
+        The states this branch changes, per variant. The values live in the
+        enterprise maps, so nothing is tinted on a community database.
+    -->
+    <t t-set="changed" t-value="{
+        'btn-primary': ['Pressed'],
+        'btn-secondary': ['Hover', 'Pressed', 'Disabled'],
+        'btn-light': ['Pressed', 'Disabled'],
+        'btn-outline-secondary': ['Hover', 'Pressed'],
+        'btn-fill-primary': ['Pressed'],
+        'btn-fill-secondary': ['Hover', 'Pressed'],
+        'btn-fill-light': ['Pressed'],
+    }"/>
+    <t t-set="head">
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <t t-if="color_scheme == 'dark'">
+            <t t-call-assets="web.assets_web_dark" media="screen" t-js="false"/>
+        </t>
+        <t t-else="">
+            <t t-call-assets="web.assets_web" media="screen" t-js="false"/>
+        </t>
+        <style>
+            /*
+                The states are forced through the Bootstrap button CSS
+                variables, so that they can all be displayed at once. It only
+                works for the buttons built with the 'button-variant' mixin:
+                the Default column is the only one showing real pseudo-classes.
+            */
+            .btn.o_dbg_hover {
+                --btn-color: var(--btn-hover-color);
+                --btn-bg: var(--btn-hover-bg);
+                --btn-border-color: var(--btn-hover-border-color);
+            }
+            /*
+                Declared, not remapped: '--btn-pressed-*' defaults to
+                '--btn-active-*', so feeding them back into each other would
+                make a cycle and blank out every variant without its own
+                pressed values.
+            */
+            .btn.o_dbg_pressed {
+                color: var(--btn-pressed-color);
+                background-color: var(--btn-pressed-bg);
+                border-color: var(--btn-pressed-border-color);
+            }
+
+            /* The webclient gray would tint the buttons read against it. */
+            .o_web_client {
+                background-color: #fff;
+            }
+            .o_dbg_page {
+                padding: 0 1.5rem 6rem;
+            }
+            .o_dbg_toolbar {
+                position: sticky;
+                top: 0;
+                z-index: 10;
+                display: flex;
+                flex-wrap: wrap;
+                gap: .5rem 1.25rem;
+                align-items: center;
+                margin: 0 -1.5rem 1.5rem;
+                padding: .5rem 1.5rem;
+                background: var(--body-bg, #fff);
+                color: var(--body-color, #000);
+                border-bottom: 1px solid var(--border-color, #dee2e6);
+            }
+            .o_dbg_brand {
+                font-size: .9375rem;
+            }
+            .o_dbg_control {
+                display: flex;
+                gap: .375rem;
+                align-items: center;
+            }
+            .o_dbg_control_label {
+                font-size: .6875rem;
+                text-transform: uppercase;
+                letter-spacing: .04em;
+                opacity: .5;
+            }
+            .o_dbg_hint {
+                margin-left: auto;
+                font-size: .75rem;
+                opacity: .5;
+            }
+
+            /* Segmented control */
+            .o_dbg_seg {
+                display: inline-flex;
+                gap: 2px;
+                padding: 2px;
+                border-radius: 6px;
+                background: rgba(128, 128, 128, .16);
+            }
+            .o_dbg_seg > button {
+                appearance: none;
+                padding: .0625rem .5rem;
+                border: 0;
+                border-radius: 4px;
+                background: transparent;
+                color: inherit;
+                font: inherit;
+                font-size: .8125rem;
+                opacity: .7;
+                cursor: pointer;
+            }
+            .o_dbg_seg > button:hover {
+                opacity: 1;
+            }
+            .o_dbg_seg > button[aria-pressed="true"] {
+                background: var(--body-bg, #fff);
+                box-shadow: 0 1px 2px rgba(0, 0, 0, .15);
+                opacity: 1;
+            }
+
+            /* Light/dark switch */
+            .o_dbg_switch {
+                display: inline-flex;
+                gap: .5rem;
+                align-items: center;
+                font-size: .8125rem;
+                cursor: pointer;
+                user-select: none;
+            }
+            .o_dbg_switch input {
+                position: absolute;
+                width: 1px;
+                height: 1px;
+                opacity: 0;
+            }
+            .o_dbg_switch_track {
+                position: relative;
+                width: 2.25rem;
+                height: 1.25rem;
+                border-radius: 1rem;
+                background: rgba(128, 128, 128, .4);
+                transition: background .15s ease;
+            }
+            .o_dbg_switch_track:before {
+                content: "";
+                position: absolute;
+                top: 2px;
+                left: 2px;
+                width: 1rem;
+                height: 1rem;
+                border-radius: 50%;
+                background: #fff;
+                box-shadow: 0 1px 2px rgba(0, 0, 0, .3);
+                transition: transform .15s ease;
+            }
+            .o_dbg_switch input:checked + .o_dbg_switch_track {
+                background: var(--primary, #714b67);
+            }
+            .o_dbg_switch input:checked + .o_dbg_switch_track:before {
+                transform: translateX(1rem);
+            }
+            .o_dbg_switch input:focus-visible + .o_dbg_switch_track {
+                outline: 2px solid var(--primary, #714b67);
+                outline-offset: 2px;
+            }
+            .o_dbg_section {
+                margin-bottom: 2.5rem;
+            }
+            .o_dbg_section > h3 {
+                margin-bottom: .25rem;
+                font-size: 1.1rem;
+            }
+            .o_dbg_section > p {
+                max-width: 60ch;
+                opacity: .65;
+            }
+            .o_dbg_more {
+                margin-top: .75rem;
+            }
+            .o_dbg_more > summary {
+                display: inline-flex;
+                gap: .375rem;
+                align-items: center;
+                padding: .125rem .5rem;
+                border-radius: 4px;
+                background: rgba(128, 128, 128, .14);
+                font-size: .8125rem;
+                cursor: pointer;
+                list-style: none;
+            }
+            .o_dbg_more > summary::-webkit-details-marker {
+                display: none;
+            }
+            .o_dbg_more > summary:before {
+                content: "+";
+                font-family: monospace;
+                opacity: .6;
+            }
+            .o_dbg_more[open] > summary:before {
+                content: "-";
+            }
+            .o_dbg_matrix {
+                table-layout: fixed;
+                border-collapse: separate;
+                border-spacing: .5rem;
+            }
+            .o_dbg_matrix th:first-child {
+                width: 13rem;
+                text-align: left;
+            }
+            .o_dbg_matrix th {
+                font-weight: 500;
+                text-align: left;
+                vertical-align: middle;
+                white-space: nowrap;
+            }
+            .o_dbg_matrix thead th {
+                width: 8rem;
+                vertical-align: bottom;
+                text-align: center;
+                white-space: normal;
+                font-size: .75rem;
+                text-transform: uppercase;
+                letter-spacing: .04em;
+                opacity: .55;
+            }
+            .o_dbg_matrix .o_dbg_state_selector {
+                display: block;
+                font-family: monospace;
+                text-transform: none;
+            }
+            .o_dbg_matrix tbody th {
+                font-family: monospace;
+                font-size: .8rem;
+            }
+            /*
+                Three groups: the reference, the states that change the colors,
+                then the rest. An empty column holds them apart, so every state
+                cell keeps the same size.
+            */
+            .o_dbg_matrix .o_dbg_gap {
+                position: relative;
+                width: 3rem;
+            }
+            .o_dbg_matrix .o_dbg_gap:before {
+                content: "";
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 50%;
+                border-left: 1px dotted var(--border-color, #dee2e6);
+            }
+            /* The cell background is a pseudo-element, painted behind the button. */
+            .o_dbg_matrix td {
+                position: relative;
+                padding: .5rem 0;
+                text-align: center;
+            }
+            .o_dbg_matrix td.o_dbg_changed:before {
+                content: "";
+                position: absolute;
+                z-index: -1;
+                inset: 0;
+                background: #f8f9fa;
+            }
+            .o_dbg_swatch.o_dbg_changed {
+                background: #f8f9fa;
+            }
+            .o_dbg_row {
+                display: flex;
+                flex-wrap: wrap;
+                gap: .5rem;
+                align-items: center;
+                margin-bottom: .75rem;
+            }
+            /* Inspector */
+            .o_dbg_inspector {
+                position: fixed;
+                right: 0;
+                bottom: 0;
+                z-index: 20;
+                width: 22rem;
+                max-height: 60vh;
+                overflow: auto;
+                padding: .75rem;
+                background: var(--body-bg, #fff);
+                color: var(--body-color, #000);
+                border-top: 1px solid var(--border-color, #dee2e6);
+                border-left: 1px solid var(--border-color, #dee2e6);
+                font-size: .75rem;
+            }
+            .o_dbg_inspector table {
+                width: 100%;
+            }
+            .o_dbg_inspector td {
+                font-family: monospace;
+                vertical-align: top;
+                word-break: break-all;
+            }
+            .o_dbg_inspector td:first-child {
+                opacity: .6;
+                white-space: nowrap;
+                padding-right: .5rem;
+            }
+            .o_dbg_swatch {
+                display: inline-block;
+                width: .75rem;
+                height: .75rem;
+                margin-right: .25rem;
+                border: 1px solid rgba(128, 128, 128, .5);
+                vertical-align: -1px;
+            }
+        </style>
+    </t>
+    <t t-call="web.layout" head="head" title.translate="Buttons" body_classname.f="o_web_client">
+        <div id="o_dbg_root" class="o_dbg_page">
+            <div class="o_dbg_toolbar">
+                <strong class="o_dbg_brand">Buttons</strong>
+                <div class="o_dbg_control">
+                    <span class="o_dbg_control_label">Size</span>
+                    <div class="o_dbg_seg" id="o_dbg_size" role="group" aria-label="Button size">
+                        <button type="button" data-size="btn-sm" aria-pressed="false">sm</button>
+                        <button type="button" data-size="" aria-pressed="true">default</button>
+                        <button type="button" data-size="btn-lg" aria-pressed="false">lg</button>
+                    </div>
+                </div>
+                <label class="o_dbg_switch">
+                    <input type="checkbox" id="o_dbg_scheme"
+                        t-att-checked="color_scheme == 'dark' or None"/>
+                    <span class="o_dbg_switch_track"/>
+                    <span>Dark</span>
+                </label>
+                <span class="o_dbg_hint">
+                    <span class="o_dbg_swatch o_dbg_changed"/> changed by this branch ·
+                    click a button to inspect its resolved variables
+                </span>
+            </div>
+
+            <div class="o_dbg_section">
+                <h3>Solid variants</h3>
+                <p>Generated in <code>bootstrap_review_backend.scss</code>: primary, secondary and
+                    light from the <code>$o-btns-bs-override</code> map, the status colors from
+                    Bootstrap <code>$theme-colors</code>, and <code>btn-favourite</code> from
+                    <code>$o-btn-custom</code>.</p>
+                <p>Toggled (<code>.active</code>, <code>.show</code>, a checked
+                    <code>.btn-check</code>) keeps the <code>active-*</code> keys of the maps and
+                    inverts the filling. Pressed (the mouse is held down) comes from the
+                    <code>pressed-*</code> keys. A variant without those keys looks the same in
+                    both.</p>
+                <t t-set="variants" t-value="['btn-primary', 'btn-secondary', 'btn-light', '']"/>
+                <t t-call="web.buttons_debug_matrix"/>
+                <details class="o_dbg_more">
+                    <summary>Status colors</summary>
+                    <t t-set="variants" t-value="[
+                        'btn-success', 'btn-info', 'btn-warning', 'btn-danger', 'btn-dark',
+                        'btn-favourite',
+                    ]"/>
+                    <t t-call="web.buttons_debug_matrix"/>
+                </details>
+            </div>
+
+            <div class="o_dbg_section">
+                <h3>Outline variants</h3>
+                <p>Only <code>btn-outline-secondary</code> is overridden by Odoo
+                    (<code>$o-btns-bs-outline-override</code>), the others come from Bootstrap.</p>
+                <t t-set="variants" t-value="['btn-outline-secondary']"/>
+                <t t-call="web.buttons_debug_matrix"/>
+                <details class="o_dbg_more">
+                    <summary>Status colors</summary>
+                    <t t-set="variants" t-value="[
+                        'btn-outline-primary', 'btn-outline-success', 'btn-outline-info',
+                        'btn-outline-warning', 'btn-outline-danger', 'btn-outline-dark',
+                        'btn-outline-light',
+                    ]"/>
+                    <t t-call="web.buttons_debug_matrix"/>
+                </details>
+            </div>
+
+            <div class="o_dbg_section">
+                <h3>Fill variants</h3>
+                <p>Same colors as the solid ones, but with a transparent border. Used where a button
+                    must keep the exact size of its container.</p>
+                <t t-set="variants" t-value="['btn-fill-primary', 'btn-fill-secondary', 'btn-fill-light']"/>
+                <t t-call="web.buttons_debug_matrix"/>
+            </div>
+
+            <div class="o_dbg_section">
+                <h3>Link buttons</h3>
+                <p>Styled with real pseudo-classes (<code>o-btn-link-variant</code>), so the forced
+                    Hover column is not reliable here: hover the Default one.</p>
+                <t t-set="variants" t-value="['btn-link', 'btn-link btn-link-inline']"/>
+                <t t-call="web.buttons_debug_matrix"/>
+            </div>
+
+            <aside id="o_dbg_inspector" class="o_dbg_inspector" style="display: none;">
+                <div class="d-flex align-items-center mb-2">
+                    <strong id="o_dbg_inspector_title" class="text-truncate"/>
+                    <button type="button" id="o_dbg_inspector_close" class="btn-close ms-auto" aria-label="Close"/>
+                </div>
+                <table><tbody id="o_dbg_inspector_body"/></table>
+            </aside>
+        </div>
+
+        <script type="text/javascript">
+            (function () {
+                const root = document.getElementById("o_dbg_root");
+
+                function pressOnly(group, item) {
+                    for (const button of group.children) {
+                        button.setAttribute("aria-pressed", String(button === item));
+                    }
+                }
+
+                // Size switch: add the size class on every button of the page,
+                // except the ones of the "Sizes" section.
+                const sizeGroup = document.getElementById("o_dbg_size");
+                sizeGroup.addEventListener("click", (ev) =&gt; {
+                    const item = ev.target.closest("button");
+                    if (!item) {
+                        return;
+                    }
+                    pressOnly(sizeGroup, item);
+                    for (const btn of root.querySelectorAll(".btn")) {
+                        btn.classList.remove("btn-sm", "btn-lg");
+                        if (item.dataset.size) {
+                            btn.classList.add(item.dataset.size);
+                        }
+                    }
+                });
+
+                // Color scheme switch: the styles are chosen server side.
+                document.getElementById("o_dbg_scheme").addEventListener("change", (ev) =&gt; {
+                    location.search = "?color_scheme=" + (ev.target.checked ? "dark" : "light");
+                });
+
+                // Inspector: show the resolved button variables of a button.
+                const VARS = [
+                    "--btn-color", "--btn-bg", "--btn-border-color", "--btn-border-width",
+                    "--btn-border-radius", "--btn-padding-y", "--btn-padding-x",
+                    "--btn-font-size", "--btn-font-weight", "--btn-line-height",
+                    "--btn-hover-color", "--btn-hover-bg", "--btn-hover-border-color",
+                    "--btn-active-color", "--btn-active-bg", "--btn-active-border-color",
+                    "--btn-pressed-color", "--btn-pressed-bg", "--btn-pressed-border-color",
+                    "--btn-disabled-color", "--btn-disabled-bg", "--btn-disabled-border-color",
+                    "--btn-disabled-opacity", "--btn-focus-box-shadow", "--btn-box-shadow",
+                ];
+                const inspector = document.getElementById("o_dbg_inspector");
+                const inspectorBody = document.getElementById("o_dbg_inspector_body");
+                const inspectorTitle = document.getElementById("o_dbg_inspector_title");
+                document.getElementById("o_dbg_inspector_close").addEventListener("click", () =&gt; {
+                    inspector.style.display = "none";
+                });
+                root.addEventListener("click", (ev) =&gt; {
+                    const btn = ev.target.closest(".btn, .btn-close");
+                    if (!btn || btn.id === "o_dbg_inspector_close") {
+                        return;
+                    }
+                    ev.preventDefault();
+                    const style = getComputedStyle(btn);
+                    inspectorTitle.textContent = btn.className || btn.nodeName.toLowerCase();
+                    inspectorBody.replaceChildren();
+                    const rows = [
+                        ["computed color", style.color],
+                        ["computed background", style.backgroundColor],
+                        ["computed border", style.borderTopColor],
+                    ];
+                    for (const name of VARS) {
+                        const value = style.getPropertyValue(name).trim();
+                        if (value) {
+                            rows.push([name, value]);
+                        }
+                    }
+                    for (const [name, value] of rows) {
+                        const tr = document.createElement("tr");
+                        const th = document.createElement("td");
+                        th.textContent = name;
+                        const td = document.createElement("td");
+                        if (/^(rgb|#)/.test(value)) {
+                            const swatch = document.createElement("span");
+                            swatch.className = "o_dbg_swatch";
+                            swatch.style.background = value;
+                            td.appendChild(swatch);
+                        }
+                        td.appendChild(document.createTextNode(value));
+                        tr.append(th, td);
+                        inspectorBody.appendChild(tr);
+                    }
+                    inspector.style.display = "block";
+                });
+            })();
+        </script>
+    </t>
+</template>
+
+</odoo>
