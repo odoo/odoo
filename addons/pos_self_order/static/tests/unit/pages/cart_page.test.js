@@ -4,6 +4,13 @@ import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { CartPage } from "@pos_self_order/app/pages/cart_page/cart_page";
 import { setupSelfPosEnv, getFilledSelfOrder, addComboProduct } from "../utils";
 import { definePosSelfModels } from "../data/generate_model_definitions";
+<<<<<<< 165b08303b1c4444c0085e9742b5bb699852a707
+||||||| 157874aad3aebef5bc9268de6e17530641107e31
+import { animationFrame } from "@odoo/hoot-dom";
+=======
+import { animationFrame } from "@odoo/hoot-dom";
+import * as Utils from "@pos_self_order/../tests/unit/ui_utils";
+>>>>>>> 4695f4eeff770fce02ca0ccf7754db0d9955b7af
 
 definePosSelfModels();
 
@@ -88,4 +95,19 @@ test("add note button is not shown in kiosk mode", async () => {
 
     const orderNoteContainer = queryFirst(".order-note");
     expect(orderNoteContainer).toBe(null);
+});
+
+test("slots at capacity should disabled in self order", async () => {
+    const store = await setupSelfPosEnv();
+    store.config.company_id.country_id.state_ids = [];
+    const preset = store.models["pos.preset"].get(2);
+    preset.slots_per_interval = 1;
+
+    const order = await getFilledSelfOrder(store);
+    order.preset_id = preset;
+    order.partner_id = false;
+
+    await mountWithCleanup(CartPage, {});
+    await Utils.clickCartButton("Order");
+    await Utils.checkSlotDisabled("12:00");
 });
