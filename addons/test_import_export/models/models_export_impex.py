@@ -194,6 +194,8 @@ class ExportM2oStrChild(models.Model):
     _description = 'export.m2o.str.child'
 
     name = fields.Char()
+    value = fields.Integer(default=0)
+    extra = fields.Char()
 
 
 class ExportWithRequiredField(models.Model):
