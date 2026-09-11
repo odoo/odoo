@@ -56,17 +56,6 @@ class DiscussChannelWebclientController(WebclientController):
             > 0,
         )
 
-    @store_handler("channels_as_member", audience="everyone")
-    def store_channels_as_member(self, store: Store):
-        channels = request.env["discuss.channel"].search_fetch(
-            [("channel_member_ids", "any", [("is_self", "=", True), ("is_pinned", "=", True)])],
-        )
-        request.update_context(
-            channels=request.env.context["channels"] | channels,
-            add_channels_last_message=True,
-        )
-        self.store_has_hidden_channels(store)
-
     @store_handler("discuss.channel", audience="everyone")
     def store_add_discuss_channel_to_context(self, store: Store, ids=(), with_last_message=False):
         channels = request.env["discuss.channel"].search([("id", "in", ids)])
