@@ -5818,8 +5818,68 @@ class BaseModel(metaclass=MetaModel):
     @api.private
     def update(self, values: ValuesType) -> None:
         """ Update the records in ``self`` with ``values``. """
-        for name, value in values.items():
-            self[name] = value
+        if not self._ids or not values:
+            return
+
+        env = self.env
+        fields = self._fields
+
+        # group updates by ids {ids: [(field, value)]} for new and real records
+        new_updates = defaultdict(list)
+        real_updates = defaultdict(list)
+
+        for fname, value in values.items():
+            field = fields[fname]
+            ids = self._ids
+
+            if ((protected_ids := env._protected.get(field, ())) and
+                (protected_ids := tuple(id_ for id_ in ids if id_ in protected_ids))
+            ):
+                # records being computed: no business logic, no recomputation
+                protected_records = self.__class__(env, protected_ids, self._prefetch_ids)
+                field.write(protected_records, value)
+                if len(protected_ids) == len(ids):
+                    continue
+                ids = tuple(id_ for id_ in ids if id_ not in protected_ids)
+
+            new_ids = tuple(id_ for id_ in ids if not id_)
+            if new_ids:
+                new_updates[new_ids].append((field, value))
+                if len(new_ids) == len(ids):
+                    continue
+                ids = tuple(id_ for id_ in ids if id_)
+
+            real_updates[ids].append((field, value))
+
+        # new records: no business logic
+        for ids, field_vals in new_updates.items():
+            new_records = self.__class__(env, ids, self._prefetch_ids)
+            fields_to_protect = OrderedSet(
+                f
+                for field, _ in field_vals
+                for f in env.registry.field_computed.get(field, (field,))
+            )
+            with env.protecting(fields_to_protect, new_records):
+                new_records.modified(
+                    [field.name for field, _ in field_vals if field.relational], before=True,
+                )
+                for field, value in field_vals:
+                    field.write(new_records, value)
+                new_records.modified([field.name for field, _ in field_vals])
+
+            # special case: also assign parent records if they are new
+            for field, value in field_vals:
+                if field.inherited:
+                    parents = new_records[field.related.split('.')[0]]
+                    parents.filtered(lambda r: not r.id)[field.name] = value
+
+        # base case: full business logic
+        for ids, field_vals in real_updates.items():
+            records = self.__class__(env, ids, self._prefetch_ids)
+            records.write({
+                field.name: field.convert_to_write(value, records)
+                for field, value in field_vals
+            })
 
     @api.private
     def flush_model(self, fnames: Collection[str] | None = None) -> None:
@@ -6202,8 +6262,7 @@ class BaseModel(metaclass=MetaModel):
 
     def __setitem__(self, key: str, value: typing.Any):
         """ Assign the field ``key`` to ``value`` in record ``self``. """
-        # important: one must call the field's setter
-        return self._fields[key].__set__(self, value)
+        self.update({key: value})
 
     #
     # Cache and recomputation management
