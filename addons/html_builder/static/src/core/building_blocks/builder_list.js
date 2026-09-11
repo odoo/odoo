@@ -108,18 +108,17 @@ export class BuilderList extends Component {
         this.commit = commit;
         this.preview = preview;
         this.allRecords = computed(() => this.formatRawValue(this.props.records));
+        this.includedRecords = computed(() => this.formatRawValue(this.state.value));
         this.visibilityState = proxy({
             limit: this.props.limit,
         });
+        this.cappedItems = computed(() =>
+            this.includedRecords().slice(0, this.visibilityState.limit)
+        );
+        this.hasMoreItems = computed(
+            () => this.cappedItems().length < this.includedRecords().length
+        );
         this.onTableScroll = useThrottleForAnimation(this._onTableScroll.bind(this));
-    }
-
-    get cappedItems() {
-        return this.getIncludedRecords().slice(0, this.visibilityState.limit);
-    }
-
-    get hasMoreItems() {
-        return this.cappedItems.length < this.getIncludedRecords().length;
     }
 
     setupSortable() {
@@ -140,12 +139,12 @@ export class BuilderList extends Component {
     }
 
     loadMoreItems() {
-        if (!this.hasMoreItems) {
+        if (!this.hasMoreItems()) {
             return;
         }
         this.visibilityState.limit = Math.min(
             this.visibilityState.limit + this.props.limit,
-            this.getIncludedRecords().length
+            this.includedRecords().length
         );
     }
 
@@ -168,19 +167,15 @@ export class BuilderList extends Component {
         }
     }
 
-    getIncludedRecords() {
-        return this.formatRawValue(this.state.value);
-    }
-
     getExcludedRecords() {
-        const itemIds = new Set(this.getIncludedRecords().map((r) => r.id));
+        const itemIds = new Set(this.includedRecords().map((r) => r.id));
         return this.allRecords().filter((record) => record.id && !itemIds.has(record.id));
     }
 
     openRecordsDialog() {
         this.dialog.add(BuilderListDialog, {
             excludedRecords: this.getExcludedRecords(),
-            includedRecords: this.getIncludedRecords(),
+            includedRecords: this.includedRecords(),
             save: this.commit,
         });
     }
@@ -202,14 +197,12 @@ export class BuilderList extends Component {
     }
 
     addItem(record) {
-        const items = this.getIncludedRecords();
-        items.push(record ?? this.makeDefaultItem());
-        this.commit(items);
+        this.commit([...this.includedRecords(), record ?? this.makeDefaultItem()]);
     }
 
     updateRecords() {
         const selectedRecordsMap = new Map(
-            this.getIncludedRecords()
+            this.includedRecords()
                 .filter((r) => r.id)
                 .map((r) => [r.id, r])
         );
@@ -224,12 +217,12 @@ export class BuilderList extends Component {
     }
 
     deleteItem(itemId) {
-        const items = this.getIncludedRecords();
+        const items = this.includedRecords();
         this.commit(items.filter((item) => item._id !== itemId));
     }
 
     reorderItem(itemId, previousId) {
-        let items = this.getIncludedRecords();
+        let items = this.includedRecords();
         const itemToReorder = items.find((item) => item._id === itemId);
         items = items.filter((item) => item._id !== itemId);
 

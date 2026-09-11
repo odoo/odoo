@@ -18,6 +18,7 @@ import { mixCssColors } from "@web/core/utils/colors";
 import { router } from "@web/core/browser/router";
 import {
     Component,
+    computed,
     onMounted,
     onWillStart,
     proxy,
@@ -264,6 +265,7 @@ export class DescriptionScreen extends Component {
     setup() {
         this.bootstrap = usePlugin(BootstrapInstance);
         this.state = useStore();
+        this.previewImages = computed(() => this.computePreviewImages());
         this.orm = useService("orm");
         useAutofocus({ ref: this.autofocusRef });
 
@@ -405,7 +407,7 @@ Return ONLY a JSON object with:
         this.state.positioningsLoading = false;
     }
 
-    get previewImages() {
+    computePreviewImages() {
         const images = this.state.images || {};
         const fallbackImageUrls = [];
         const previewImageUrls = [];

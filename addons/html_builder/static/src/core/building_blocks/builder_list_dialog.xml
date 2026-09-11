@@ -12,8 +12,8 @@
                             <i class="oi me-1" data-icon="add" />Include all</button>
                     </div>
                     <div class="o_list_panel overflow-auto border mt-2">
-                        <h3 t-if="this.searchExcluded.length === 0" class="text-center text-muted my-2">No record.</h3>
-                        <t t-foreach="this.searchExcluded" t-as="record" t-key="record.id">
+                        <h3 t-if="this.searchExcluded().length === 0" class="text-center text-muted my-2">No record.</h3>
+                        <t t-foreach="this.searchExcluded()" t-as="record" t-key="record.id">
                             <div class="o_list_item cursor-pointer position-relative ps-4"
                                 t-on-click="() => this.include(record)">
                                 <div class="d-flex align-items-center">
@@ -31,8 +31,8 @@
                             <i class="oi me-1" data-icon="remove"/>Exclude all</button>
                     </div>
                     <div class="o_list_panel overflow-auto border mt-2">
-                        <h3 t-if="this.searchIncluded.length === 0" class="text-center text-muted my-2">No record.</h3>
-                        <t t-foreach="this.searchIncluded" t-as="record" t-key="record.id">
+                        <h3 t-if="this.searchIncluded().length === 0" class="text-center text-muted my-2">No record.</h3>
+                        <t t-foreach="this.searchIncluded()" t-as="record" t-key="record.id">
                             <div class="o_list_item cursor-pointer position-relative ps-4"
                                 t-on-click="() => this.exclude(record)">
                                 <div class="d-flex align-items-center">
