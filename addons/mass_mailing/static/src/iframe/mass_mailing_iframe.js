@@ -221,7 +221,7 @@ export class MassMailingIframe extends Component {
     async setupIframe() {
         let loadingError;
         try {
-            this.bundleControls = await loadIframe(this.iframeRef(), (iframe) => {
+            await loadIframe(this.iframeRef(), (iframe) => {
                 iframe.contentDocument.head.appendChild(this.renderHeadContent());
                 return this.loadIframeAssets();
             });
