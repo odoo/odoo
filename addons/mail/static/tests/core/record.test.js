@@ -1941,3 +1941,199 @@ test("a record made while the store is made reads the true store", async () => {
     expect(store.thread.name).toBe("boot");
     expect(store.thread.messages._store).toBe(store);
 });
+
+test("forEach visits every record when the callback deletes one", async () => {
+    (class Message extends Record {
+        static id = "id";
+        id;
+    }).register(localRegistry);
+    (class Thread extends Record {
+        static id = "name";
+        name;
+        messages = fields.Many("Message");
+    }).register(localRegistry);
+    const store = await start();
+    const thread = store.Thread.insert({
+        name: "General",
+        messages: [{ id: 1 }, { id: 2 }, { id: 3 }],
+    });
+    const visited = [];
+    thread.messages.forEach((message) => {
+        visited.push(message.id);
+        if (message.id === 1) {
+            thread.messages.delete(message);
+        }
+    });
+    expect(visited).toEqual([1, 2, 3]);
+    expect(thread.messages.map((message) => message.id)).toEqual([2, 3]);
+});
+
+test("find returns the record its callback matched", async () => {
+    (class Message extends Record {
+        static id = "id";
+        id;
+    }).register(localRegistry);
+    (class Thread extends Record {
+        static id = "name";
+        name;
+        messages = fields.Many("Message");
+    }).register(localRegistry);
+    const store = await start();
+    const thread = store.Thread.insert({
+        name: "General",
+        messages: [{ id: 1 }, { id: 2 }, { id: 3 }],
+    });
+    const message = thread.messages.find((message) => {
+        if (message.id === 1) {
+            thread.messages.delete(message);
+        }
+        return message.id === 3;
+    });
+    expect(message.id).toBe(3);
+    expect(thread.messages.map((message) => message.id)).toEqual([2, 3]);
+});
+
+test("reduce visits the records the relation holds when it starts", async () => {
+    (class Message extends Record {
+        static id = "id";
+        id;
+    }).register(localRegistry);
+    (class Thread extends Record {
+        static id = "name";
+        name;
+        messages = fields.Many("Message");
+    }).register(localRegistry);
+    const store = await start();
+    const thread = store.Thread.insert({
+        name: "General",
+        messages: [{ id: 1 }, { id: 2 }, { id: 3 }],
+    });
+    const visited = thread.messages.reduce((acc, message) => {
+        if (message.id === 1) {
+            thread.messages.add({ id: 9 });
+        }
+        return [...acc, message.id];
+    }, []);
+    expect(visited).toEqual([1, 2, 3]);
+    expect(thread.messages.map((message) => message.id)).toEqual([1, 2, 3, 9]);
+});
+
+describe("RecordList read methods", () => {
+    let thread;
+
+    beforeEach(async () => {
+        (class Message extends Record {
+            static id = "id";
+            id;
+            selected = false;
+        }).register(localRegistry);
+        (class Thread extends Record {
+            static id = "name";
+            name;
+            messages = fields.Many("Message");
+        }).register(localRegistry);
+        const store = await start();
+        thread = store.Thread.insert({
+            name: "General",
+            messages: [{ id: 1 }, { id: 2 }, { id: 3 }],
+        });
+    });
+
+    const mutations = {
+        shift: {
+            run: (messages) => messages.shift(),
+            ids: [2, 3],
+        },
+        unshift: {
+            run: (messages) => messages.unshift({ id: 9 }),
+            ids: [9, 1, 2, 3],
+        },
+        "indexed replacement": {
+            run: (messages) => (messages[1] = thread.store.Message.insert({ id: 9 })),
+            ids: [1, 9, 3],
+        },
+        "owner deletion": {
+            run: () => thread.delete(),
+            ids: [],
+        },
+    };
+    const methods = ["map", "filter", "forEach", "find", "findIndex", "some", "every", "reduce"];
+
+    for (const [mutation, { run, ids }] of Object.entries(mutations)) {
+        test(`${mutation} only exposes the completed mutation to immediate observers`, () => {
+            const snapshots = [];
+            after(
+                immediateEffect(() => {
+                    snapshots.push([...thread.messages].map((message) => message.id));
+                })
+            );
+            run(thread.messages);
+            expect(snapshots).toEqual([[1, 2, 3], ids]);
+        });
+    }
+
+    for (const method of methods) {
+        for (const [mutation, { run, ids }] of Object.entries(mutations)) {
+            test(`${method} preserves the initial records during ${mutation}`, () => {
+                const messages = thread.messages;
+                const visited = [];
+                const visit = (message, index) => {
+                    visited.push([message.id, index]);
+                    if (index === 0) {
+                        run(messages);
+                    }
+                    // Keep search predicates from stopping before the final index.
+                    return method === "every";
+                };
+                if (method === "reduce") {
+                    messages.reduce((acc, message, index) => {
+                        visit(message, index);
+                        return acc;
+                    }, null);
+                } else {
+                    messages[method](visit);
+                }
+                expect(visited).toEqual([
+                    [1, 0],
+                    [2, 1],
+                    [3, 2],
+                ]);
+                expect([...messages].map((message) => message.id)).toEqual(ids);
+            });
+        }
+
+        if (method !== "reduce") {
+            test(`${method} binds the callback to thisArg`, () => {
+                const context = {};
+                const visited = [];
+                thread.messages[method](function (message) {
+                    expect(this).toBe(context);
+                    visited.push(message.id);
+                    return method === "every";
+                }, context);
+                expect(visited).toEqual([1, 2, 3]);
+            });
+        }
+    }
+
+    test("map preserves records when an immediate onChange deletes their owner", () => {
+        const messages = thread.messages;
+        const firstMessage = messages[0];
+        firstMessage.onChange(
+            () => [firstMessage.selected],
+            (selected) => {
+                if (selected) {
+                    thread.delete();
+                }
+            },
+            { immediate: true }
+        );
+        const ids = messages.map((message) => {
+            message.selected = true;
+            return message.id;
+        });
+        expect(thread.exists()).toBe(false);
+        expect(messages.length).toBe(0);
+        expect(ids).toEqual([1, 2, 3]);
+    });
+});
