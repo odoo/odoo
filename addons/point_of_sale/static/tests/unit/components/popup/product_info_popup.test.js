@@ -38,7 +38,8 @@ test("Product info popup displays product tag names and colors", async () => {
             taxName: "",
             productTaxDetails: {
                 taxes_data: [],
-                total_excluded_currency: "$\u00a00.00",
+                total_excluded_currency: 0,
+                total_included_currency: 0,
             },
         },
         productTemplate: product,
@@ -54,4 +55,40 @@ test("Product info popup displays product tag names and colors", async () => {
     expect(`[data-product-tag-id="${blueTag.id}"]`).toHaveStyle({
         backgroundColor: "rgb(0, 0, 255)",
     });
+});
+
+test("Product info popup prices come from the tax details, not from the server prices", async () => {
+    const store = await setupPosEnv();
+    const product = store.models["product.template"].get(5);
+
+    await mountPosDialog(ProductInfoPopup, {
+        close: () => {},
+        info: {
+            productInfo,
+            costCurrency: "$ 0.00",
+            marginCurrency: "$ 0.00",
+            marginPercent: 0,
+            orderCostCurrency: "$ 0.00",
+            orderMarginCurrency: "$ 0.00",
+            orderMarginPercent: 0,
+            orderPriceWithoutTaxCurrency: "$ 0.00",
+            orderPriceWithTaxCurrency: "$ 0.00",
+            orderTaxTotalCurrency: "$ 0.00",
+            taxAmount: "$ 1.50",
+            taxName: "15%",
+            productTaxDetails: {
+                taxes_data: [{ tax: { id: 1, name: "15%" }, tax_amount_currency: 1.5 }],
+                total_excluded_currency: 10,
+                total_included_currency: 11.5,
+            },
+        },
+        productTemplate: product,
+    });
+
+    await waitFor(".section-financials");
+    expect(".section-financials .price-excl-tax").toHaveText("$ 10.00");
+    expect(".section-financials .vat-value").toHaveText("$ 1.50");
+    expect(".section-financials .price-incl-tax").toHaveText("$ 11.50");
+    // The dialog title shows the same price incl. tax, so it must use the same source.
+    expect(".modal-header .section-title").toHaveText(/11\.50/);
 });

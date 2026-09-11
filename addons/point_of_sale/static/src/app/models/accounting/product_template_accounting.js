@@ -289,7 +289,10 @@ export class ProductTemplateAccounting extends Base {
         const productTemplateAttributeValueById =
             this.models["product.template.attribute.value"].getAllBy("id");
         const decimalPrecision = this.models["decimal.precision"].getAll();
-        const parentLstPrice = this.getPrice(pricelist, 1, 0, false, this);
+        const isVariant = Boolean(this.product_tmpl_id);
+        const productTmpl = isVariant ? this.product_tmpl_id : this;
+        const variant = isVariant ? this : this.product_variant_ids?.[0] || false;
+        const parentLstPrice = productTmpl.getPrice(pricelist, 1, 0, false, variant);
         let originalTotal = childLineConf.reduce((acc, conf) => {
             const originalPrice = conf.combo_item_id.combo_id.base_price * conf.qty;
             return acc + originalPrice;

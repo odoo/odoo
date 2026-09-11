@@ -165,6 +165,7 @@ test("test_convert_orderlines_to_combo: convert orderlines to combo and break", 
 
     const order = store.getOrder();
     expect(order.lines).toHaveLength(3);
+    expect(order.priceIncl).toBe(61);
 
     await Utils.ensurePane("left");
     await waitFor(".combo-proposition");
@@ -172,6 +173,16 @@ test("test_convert_orderlines_to_combo: convert orderlines to combo and break", 
     await animationFrame();
 
     expect(Utils.hasOrderline({ productName: "Office Combo", quantity: "1" })).toBe(true);
+
+    // After converting the combo, assert combo line prices
+    const comboParent = order.lines.find((l) => l.product_id.type === "combo");
+    const childLines = order.lines.filter((l) => l.combo_parent_id?.id === comboParent.id);
+    expect(childLines).toHaveLength(3);
+    const childPrices = childLines.map((l) => store.currency.round(l.price_unit));
+    expect(childPrices.sort((a, b) => b - a)).toEqual([16.67, 16.67, 16.66]);
+    expect(order.priceIncl).toBe(50);
+    expect(Utils.getOrderTotal()).toInclude("50.00");
+
     await Utils.clickControlButton("Break Combo");
 
     expect(Utils.hasOrderline({ productName: "Combo Product 2", quantity: "1" })).toBe(true);
