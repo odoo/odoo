@@ -171,16 +171,28 @@ class TestPosCashRounding(TestPointOfSaleHttpCommon):
                 (4, self.env.ref('account.group_account_manager').id),
             ]
         })
-        self.env['product.product'].create({
+        product = self.env['product.product'].create({
             'is_storable': True,
             'name': 'A Test Product',
             'available_in_pos': True,
             'list_price': 1,
         })
+
         self.main_pos_config.with_user(self.pos_admin).open_ui()
         self.start_tour(
             "/pos/ui?config_id=%d" % self.main_pos_config.id,
-            "test_archived_product_removed_and_order_is_refunded",
+            "test_archived_product_removed_and_order_is_refunded_1",
+            login="pos_admin"
+        )
+
+        # close session
+        pos_session = self.main_pos_config.current_session_id
+        pos_session.action_pos_session_closing_control()
+        product.action_archive()
+
+        self.start_tour(
+            "/pos/ui?config_id=%d" % self.main_pos_config.id,
+            "test_archived_product_removed_and_order_is_refunded_2",
             login="pos_admin"
         )
 
