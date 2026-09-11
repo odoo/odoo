@@ -69,18 +69,11 @@ export class RecordList extends Array {
         const recordList = this._raw;
         const store = recordList._store;
         return store.MAKE_UPDATE(function recordListShift() {
-            const record = recordList._.data().shift();
-            recordList._.syncLength();
-            if (!record) {
-                return;
+            const oldRecordProxy = recordList.at(0);
+            if (oldRecordProxy) {
+                recordList.splice(0, 1);
             }
-            record._.uses.delete(recordList);
-            store._.ADD_QUEUE("onDelete", recordList._.owner, recordList._.name, record);
-            const inverse = recordList._.getInverse();
-            if (inverse) {
-                store._.updateFields(record, { [inverse]: [["DELETE", recordList._.owner]] });
-            }
-            return record._proxy;
+            return oldRecordProxy;
         });
     }
     /** @param {R[]} records */
@@ -91,7 +84,9 @@ export class RecordList extends Array {
             const inverse = recordList._.getInverse();
             for (let i = records.length - 1; i >= 0; i--) {
                 const record = recordList._.insert(records[i], (record) => {
-                    recordList._.data().unshift(record);
+                    const list = recordList._.data().slice();
+                    list.unshift(record);
+                    recordList._.data.set(list);
                     recordList._.syncLength();
                     record._.uses.add(recordList);
                 });
@@ -106,7 +101,7 @@ export class RecordList extends Array {
     /** @param {R} recordProxy */
     indexOf(recordProxy) {
         const recordList = this._raw;
-        return recordList._.data().indexOf(recordProxy?._raw);
+        return recordList._.records().indexOf(recordProxy?._raw);
     }
     /**
      * @param {number} [start]
@@ -237,6 +232,120 @@ export class RecordList extends Array {
         // this custom implement of "at" is slightly faster than auto-calling unimplement array method
         const recordList = this._raw;
         return recordList._.data().at(index)?._proxy;
+    }
+    /**
+     * @param {(record: R, index: number, list: RecordList<R>) => any} fn
+     * @param {any} [thisArg]
+     */
+    map(fn, thisArg) {
+        const recordList = this._raw;
+        const listProxy = recordList._proxy;
+        return recordList._.records().map((record, index) =>
+            fn.call(thisArg, record._proxy, index, listProxy)
+        );
+    }
+    /**
+     * @param {(record: R, index: number, list: RecordList<R>) => boolean} fn
+     * @param {any} [thisArg]
+     */
+    filter(fn, thisArg) {
+        const recordList = this._raw;
+        const listProxy = recordList._proxy;
+        const res = [];
+        recordList._.records().forEach((record, index) => {
+            if (fn.call(thisArg, record._proxy, index, listProxy)) {
+                res.push(record._proxy);
+            }
+        });
+        return res;
+    }
+    /**
+     * @param {(record: R, index: number, list: RecordList<R>) => void} fn
+     * @param {any} [thisArg]
+     */
+    forEach(fn, thisArg) {
+        const recordList = this._raw;
+        const listProxy = recordList._proxy;
+        recordList._.records().forEach((record, index) =>
+            fn.call(thisArg, record._proxy, index, listProxy)
+        );
+    }
+    /**
+     * @param {(record: R, index: number, list: RecordList<R>) => boolean} fn
+     * @param {any} [thisArg]
+     */
+    findIndex(fn, thisArg) {
+        const recordList = this._raw;
+        const listProxy = recordList._proxy;
+        return recordList._.records().findIndex((record, index) =>
+            fn.call(thisArg, record._proxy, index, listProxy)
+        );
+    }
+    /**
+     * @param {(record: R, index: number, list: RecordList<R>) => boolean} fn
+     * @param {any} [thisArg]
+     */
+    find(fn, thisArg) {
+        const recordList = this._raw;
+        const listProxy = recordList._proxy;
+        return recordList._.records().find((record, index) =>
+            fn.call(thisArg, record._proxy, index, listProxy)
+        )?._proxy;
+    }
+    /**
+     * @param {(record: R, index: number, list: RecordList<R>) => boolean} fn
+     * @param {any} [thisArg]
+     */
+    some(fn, thisArg) {
+        return this._raw.findIndex(fn, thisArg) !== -1;
+    }
+    /**
+     * @param {(record: R, index: number, list: RecordList<R>) => boolean} fn
+     * @param {any} [thisArg]
+     */
+    every(fn, thisArg) {
+        const recordList = this._raw;
+        const listProxy = recordList._proxy;
+        return !recordList.some((record, index) => !fn.call(thisArg, record, index, listProxy));
+    }
+    /**
+     * @param {(acc: any, record: R, index: number, list: RecordList<R>) => any} fn
+     * @param {any} [init]
+     */
+    reduce(fn, ...init) {
+        const recordList = this._raw;
+        const listProxy = recordList._proxy;
+        const records = recordList._.records();
+        const { length } = records;
+        let index = 0;
+        let acc;
+        if (init.length) {
+            acc = init[0];
+        } else {
+            if (length === 0) {
+                throw new TypeError("Reduce of empty record list with no initial value");
+            }
+            acc = records[0]._proxy;
+            index = 1;
+        }
+        for (; index < length; index++) {
+            acc = fn(acc, records[index]._proxy, index, listProxy);
+        }
+        return acc;
+    }
+    /**
+     * @param {number} [start]
+     * @param {number} [end]
+     */
+    slice(start, end) {
+        const recordList = this._raw;
+        return recordList._.records()
+            .slice(start, end)
+            .map((record) => record._proxy);
+    }
+    /** @param {R} record */
+    includes(record) {
+        return this._raw.indexOf(record) !== -1;
     }
 }
 
