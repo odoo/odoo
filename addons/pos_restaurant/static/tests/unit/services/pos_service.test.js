@@ -595,6 +595,7 @@ describe("restaurant pos_store.js", () => {
         expect(tableOrderChange[0].extra_data.table_name).toBe(table.table_number);
         expect(tableOrderChange[0].extra_data.floor_name).toBe(table.floor_id.name);
     });
+<<<<<<< fd4ec49dd3c0e1d02deafd63f2d9445daae7895b
 
     test("name entered for a name-required preset shows as the prep ticket order_label", async () => {
         const store = await setupPosEnv();
@@ -617,4 +618,32 @@ describe("restaurant pos_store.js", () => {
         const orderChange = generator.generatePreparationData(new Set([...pos_categories]), {});
         expect(orderChange[0].extra_data.order_label).toBe("Mitchell");
     });
+||||||| cbeac8f0e3227c41d06c75e314534ff10cae1ad7
+=======
+
+    test("order synced from a trusted config updates its session_id to the current session", async () => {
+        const store = await setupPosEnv();
+        const currentSession = store.session;
+        store.config.module_pos_restaurant = false;
+
+        const otherConfigId = MockServer.env["pos.config"].create({});
+        const otherSessionId = MockServer.env["pos.session"].create({
+            config_id: otherConfigId.id,
+        });
+        const otherSession = MockServer.env["pos.session"].browse(otherSessionId);
+
+        // Simulate Config A already knowing about Config B's session
+        // (as happens via notify_synchronisation for trusted configs)
+        store.deviceSync.processStaticRecords({ "pos.session": otherSession });
+
+        const orderId = MockServer.env["pos.order"].create({
+            session_id: otherSessionId,
+            config_id: otherConfigId,
+            lines: [],
+        });
+        await store.deviceSync.readDataFromServer();
+        const order = store.models["pos.order"].get(orderId);
+        expect(order.session_id.id).toBe(currentSession.id);
+    });
+>>>>>>> 990f232ad119f0341c3c2a0718d508c72658d42c
 });
