@@ -21,19 +21,18 @@ class HrVersion(models.Model):
         """Return the id of the work entry type used for worked time without explicit type.
 
         Used for calendar attendances without ``work_entry_type_id`` and for attendances
-        without type. Default: the ``002.00`` type of the version's country, else the generic
-        ``hr_work_entry.generic_work_entry_type_attendance``. ``hr_payroll`` gives precedence to
-        the structure type's ``default_work_entry_type_id``.
+        without type. Default: the ``002.00`` type of the version's country, or of the
+        country-less bucket when the version (or its company) has none. ``hr_payroll`` gives
+        precedence to the structure type's ``default_work_entry_type_id``.
 
         :return: an ``hr.work.entry.type`` id, or ``False`` if none is found
         :rtype: int
         """
         country_code = self.country_code
-        country_attendance = self.env['hr.work.entry.type'].search([
+        attendance = self.env['hr.work.entry.type'].search([
             ('code', '=', '002.00'),
             ('country_code', '=', country_code),
         ], limit=1)
-        attendance = country_attendance or self.env.ref('hr_work_entry.generic_work_entry_type_attendance', raise_if_not_found=False)
         return attendance.id if attendance else False
 
     def _get_leave_work_entry_type_dates(self, leave, date_from, date_to, employee):
@@ -116,8 +115,8 @@ class HrVersion(models.Model):
         :param tuple interval: ``(start, stop, payload)``, tz-aware in the employee timezone
         :param list leaves: ``(start, stop, resource.calendar.leaves)`` tuples
         :param list bypassing_codes: result of :meth:`_get_bypassing_work_entry_type_codes`
-        :return: the leave's type, or ``hr_work_entry.generic_work_entry_type_leave`` if no
-            leave contains the interval
+        :return: the leave's type, or the company's country's ``006.00`` (public holiday) type
+            if no leave contains the interval
         :rtype: hr.work.entry.type
         """
         # returns the work entry time related to the leave that
@@ -128,7 +127,14 @@ class HrVersion(models.Model):
                 interval_start = interval[0].astimezone(UTC).replace(tzinfo=None)
                 interval_stop = interval[1].astimezone(UTC).replace(tzinfo=None)
                 return self._get_leave_work_entry_type_dates(leave[2], interval_start, interval_stop, self.employee_id)
-        return self.env.ref('hr_work_entry.generic_work_entry_type_leave')
+        return self._get_default_leave_work_entry_type()
+
+    def _get_default_leave_work_entry_type(self):
+        self.ensure_one()
+        return self.env['hr.work.entry.type'].search([
+            ('code', '=', '006.00'),
+            ('country_id', '=', self.company_id.country_id.id),
+        ], limit=1)
 
     def _get_sub_leave_domain(self):
         """Return the calendar part of the domain of :meth:`_get_leave_domain`.
