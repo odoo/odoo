@@ -342,8 +342,8 @@ class Im_LivechatChannel(models.Model):
             chatbot_script=chatbot_script,
             operator_partner=operator_partner,
             operator_model=operator_model,
-            **kwargs
-        ))]
+            **kwargs,
+        ))] if operator_partner else []
         guest = self.env["mail.guest"]._get_guest_from_context()
         if guest and self.env.user._is_public():
             members_to_add.append(
