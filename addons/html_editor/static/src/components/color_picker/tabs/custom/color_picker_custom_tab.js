@@ -1,7 +1,7 @@
 import { Component } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { isColorGradient } from "@web/core/utils/colors";
+import { isColorGradient, isCSSColor } from "@web/core/utils/colors";
 import { CustomColorPicker } from "../../custom_color_picker/custom_color_picker";
 
 export class ColorPickerCustomTab extends Component {
@@ -30,7 +30,7 @@ export class ColorPickerCustomTab extends Component {
     };
 
     setup() {
-        this.usedCustomColors = this.props.getUsedCustomColors();
+        this.usedCustomColors = Array.from(this.props.getUsedCustomColors()).filter(isCSSColor);
     }
 
     isValidCustomColor(color) {

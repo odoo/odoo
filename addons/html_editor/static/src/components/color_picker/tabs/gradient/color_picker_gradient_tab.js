@@ -52,6 +52,9 @@ export class ColorPickerGradientTab extends Component {
             },
             () => [this.state.showGradientPicker]
         );
+        this.usedCustomColors = Array.from(this.props.getUsedCustomColors()).filter(
+            isColorGradient
+        );
     }
 
     getCurrentGradientColor() {

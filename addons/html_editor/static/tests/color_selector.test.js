@@ -1751,7 +1751,7 @@ test("should move focus to next element when pressing Tab after selecting custom
 
     // On Tab, the focus should move to the next focusable element
     await press("Tab");
-    expect(queryAll(".o_type_row button")[0]).toBeFocused();
+    expect(queryOne(".o_colorpicker_section .o_color_button")).toBeFocused();
 });
 
 test.tags("desktop");

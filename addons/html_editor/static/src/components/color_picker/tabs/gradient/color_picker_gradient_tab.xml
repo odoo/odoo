@@ -18,15 +18,29 @@
             t-att-data-color="currentGradient" t-on-click="this.toggleGradientPicker" title="Define a custom gradient">
             Custom
         </button>
-        <GradientPicker t-if="this.state.showGradientPicker"
-            onGradientChange.bind="this.props.applyColor"
-            onGradientPreview.bind="this.props.onColorPreview"
-            setOnCloseCallback.bind="this.props.setOnCloseCallback"
-            setOperationCallbacks.bind="this.props.setOperationCallbacks"
-            selectedGradient="this.getCurrentGradientColor()"
-            onColorPointerOver.bind="this.props.onColorPointerOver"
-            onColorPointerOut.bind="this.props.onColorPointerOut"
-            noTransparency="this.props.noTransparency"/>
+        <div t-if="this.state.showGradientPicker">
+            <div class="o_colorpicker_section" t-on-click="this.props.onColorClick"
+            t-on-mouseover="this.props.onColorPointerOver" t-on-mouseout="this.props.onColorPointerOut"
+            t-on-focusin="this.props.onFocusin" t-on-focusout="this.props.onFocusout">
+                <t t-foreach="this.usedCustomColors" t-as="color" t-key="color_index">
+                    <button t-if="color.toLowerCase() !== this.props.currentCustomColor?.toLowerCase()"
+                        class="o_color_button o_color_picker_button btn p-0" t-att-data-color="color"
+                        t-attf-style="background-image: {{color}}"/>
+                </t>
+                <button t-if="!!currentGradient" class="selected o_color_button o_color_picker_button btn p-0"
+                t-attf-style="background-image: {{currentGradient}}"
+                t-att-data-color="currentGradient"/>
+            </div>
+            <GradientPicker
+                onGradientChange.bind="this.props.applyColor"
+                onGradientPreview.bind="this.props.onColorPreview"
+                setOnCloseCallback.bind="this.props.setOnCloseCallback"
+                setOperationCallbacks.bind="this.props.setOperationCallbacks"
+                selectedGradient="this.getCurrentGradientColor()"
+                onColorPointerOver.bind="this.props.onColorPointerOver"
+                onColorPointerOut.bind="this.props.onColorPointerOut"
+                noTransparency="this.props.noTransparency"/>
+        </div>
     </div>
 </t>
 </templates>
