@@ -15,11 +15,12 @@ class ResPartner(models.Model):
         readonly=False,
     )
 
-    @api.depends("vat", "country_id")
+    @api.depends("vat")
     def _compute_l10n_lk_vat_registered(self):
+        """Detect Sri Lankan VAT registration from the VAT number.
+
+        We intentionally do not check the country, because the partner country may be missing.
+        """
         for partner in self:
-            if partner.country_id.code != "LK":
-                partner.l10n_lk_vat_registered = False
-            else:
-                vat_digits = "".join(ch for ch in (partner.vat or "") if ch.isdigit())
-                partner.l10n_lk_vat_registered = len(vat_digits) >= 13 and vat_digits[-4:] == "7000"
+            vat_digits = "".join(ch for ch in (partner.vat or "") if ch.isdigit())
+            partner.l10n_lk_vat_registered = len(vat_digits) >= 13 and vat_digits[-4:] == "7000"

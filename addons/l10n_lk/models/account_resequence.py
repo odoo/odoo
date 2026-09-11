@@ -5,7 +5,7 @@ from datetime import date
 
 from odoo import models
 
-from odoo.addons.l10n_lk_invoice.models.account_move import (
+from odoo.addons.l10n_lk.models.account_move import (
     LK_MONTH_ABBR,
     LK_TAX_INVOICE_FORMAT,
     LK_TAX_INVOICE_REGEX,

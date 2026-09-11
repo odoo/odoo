@@ -7,7 +7,7 @@ from odoo.exceptions import UserError
 from odoo.tests import Form, tagged
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.addons.l10n_lk_invoice.models.account_move import LK_TAX_INVOICE_MAX_LENGTH
+from odoo.addons.l10n_lk.models.account_move import LK_TAX_INVOICE_MAX_LENGTH
 
 
 @tagged("post_install", "-at_install", "post_install_l10n")
@@ -419,7 +419,7 @@ class TestLkTaxInvoiceSequence(AccountTestInvoicingCommon):
         invoice = self._create_lk_invoice("2026-05-15", post=False)
         self.assertEqual(
             invoice._get_name_invoice_report(),
-            "l10n_lk_invoice.report_invoice_document",
+            "l10n_lk.report_invoice_document",
         )
 
     def test_get_name_invoice_report_non_lk(self):
