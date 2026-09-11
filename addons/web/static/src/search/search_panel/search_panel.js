@@ -1,6 +1,15 @@
-import { Component, onWillStart, onWillUpdateProps, proxy, signal, useEffect } from "@odoo/owl";
+import {
+    Component,
+    computed,
+    onWillStart,
+    onWillUpdateProps,
+    proxy,
+    signal,
+    useEffect,
+} from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { Dropdown } from "@web/core/dropdown/dropdown";
+import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { exprToBoolean } from "@web/core/utils/strings";
 import { render } from "@web/owl2/utils";
@@ -40,6 +49,7 @@ export class SearchPanel extends Component {
     static template = "web.SearchPanel";
     static components = {
         Dropdown,
+        ResizablePanel,
     };
     static subTemplates = {
         section: "web.SearchPanel.Section",
@@ -48,18 +58,23 @@ export class SearchPanel extends Component {
     };
 
     root = signal.ref();
+    hasContent = computed(() => this.computeHasContent());
 
     setup() {
-        this.keyExpandSidebar = `search_panel_expanded,${this.env.config.viewId},${this.env.config.actionId}`;
+        this.keyExpandSidebar = `search_panel_expanded,${this.env.searchModel.resModel},${this.env.config.actionId}`;
         this.state = proxy({
             active: {},
             expanded: {},
             sidebarExpanded: true,
+            hasSections: false,
         });
         this.hasImportedState = false;
         this.scrollTop = 0;
         this.dropdownStates = {};
-        this.width = "10px";
+        this.width = undefined;
+        this.minWidth = parseFloat(
+            getComputedStyle(document.documentElement).getPropertyValue("--o-search-panel-width")
+        );
 
         this.uiService = useService("ui");
 
@@ -78,7 +93,6 @@ export class SearchPanel extends Component {
         useEffect(() => {
             const el = this.root();
             if (el && this.hasImportedState) {
-                el.style["min-width"] = this.width;
                 el.scroll({ top: this.scrollTop });
             }
         });
@@ -113,6 +127,10 @@ export class SearchPanel extends Component {
     //---------------------------------------------------------------------
     // Public
     //---------------------------------------------------------------------
+
+    computeHasContent() {
+        return this.state.hasSections;
+    }
 
     exportState() {
         const exported = {
@@ -311,8 +329,8 @@ export class SearchPanel extends Component {
         }
     }
 
-    toggleSidebar() {
-        this.state.sidebarExpanded = !this.state.sidebarExpanded;
+    onToggleSidebar(folded) {
+        this.state.sidebarExpanded = !folded;
         browser.localStorage.setItem(this.keyExpandSidebar, this.state.sidebarExpanded);
     }
 
@@ -352,9 +370,7 @@ export class SearchPanel extends Component {
     }
 
     updateActiveValues() {
-        if (this.sections.length === 0) {
-            this.state.sidebarExpanded = false;
-        }
+        this.state.hasSections = this.sections.length > 0;
         for (const section of this.sections) {
             if (section.type === "category") {
                 this.state.active[section.id] = section.activeValueId;
@@ -374,61 +390,5 @@ export class SearchPanel extends Component {
                 }
             }
         }
-    }
-
-    /**
-     * Handles the resize feature on the sidebar
-     *
-     * @private
-     * @param {PointerEvent} ev
-     */
-    _onStartResize(ev) {
-        // Only triggered by left mouse button
-        if (ev.button !== 0) {
-            return;
-        }
-
-        const initialX = ev.pageX;
-        const initialWidth = this.root().offsetWidth;
-        const resizeStoppingEvents = ["keydown", "pointerdown", "pointerup"];
-
-        // Pointermove event : resize header
-        const resizePanel = (ev) => {
-            ev.preventDefault();
-            ev.stopPropagation();
-            const maxWidth = Math.max(0.5 * window.innerWidth, initialWidth);
-            const delta = ev.pageX - initialX;
-            const newWidth = Math.min(maxWidth, Math.max(10, initialWidth + delta));
-            this.width = `${newWidth}px`;
-            this.root().style["min-width"] = this.width;
-        };
-        document.addEventListener("pointermove", resizePanel, true);
-
-        // Pointer or keyboard events : stop resize
-        const stopResize = (ev) => {
-            // Ignores the initial 'left mouse button down' event in order
-            // to not instantly remove the listener
-            if (ev.type === "pointerdown" && ev.button === 0) {
-                return;
-            }
-            ev.preventDefault();
-            ev.stopPropagation();
-
-            document.removeEventListener("pointermove", resizePanel, true);
-            resizeStoppingEvents.forEach((stoppingEvent) => {
-                document.removeEventListener(stoppingEvent, stopResize, true);
-            });
-            // we remove the focus to make sure that the there is no focus inside
-            // the panel. If that is the case, there is some css to darken the whole
-            // thead, and it looks quite weird with the small css hover effect.
-            document.activeElement.blur();
-        };
-        // We have to listen to several events to properly stop the resizing function. Those are:
-        // - pointerdown (e.g. pressing right click)
-        // - pointerup : logical flow of the resizing feature (drag & drop)
-        // - keydown : (e.g. pressing 'Alt' + 'Tab' or 'Windows' key)
-        resizeStoppingEvents.forEach((stoppingEvent) => {
-            document.addEventListener(stoppingEvent, stopResize, true);
-        });
     }
 }

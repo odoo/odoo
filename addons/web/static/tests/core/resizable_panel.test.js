@@ -1,8 +1,16 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { drag, queryOne, queryRect, resize } from "@odoo/hoot-dom";
+import {
+    drag,
+    hover,
+    manuallyDispatchProgrammaticEvent,
+    pointerDown,
+    queryOne,
+    queryRect,
+    resize,
+} from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { Component, proxy, useProps, xml } from "@odoo/owl";
-import { mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";
 
 describe.current.tags("desktop");
@@ -116,12 +124,12 @@ test("the width follows the pointer wherever the handle is grabbed", async () =>
     expect(".o_resizable_panel").toHaveRect({ width: 80 });
 });
 
-test("outer handle sits outside the panel and stays visible while resizing", async () => {
+test("a right click on the handle does not start a resize", async () => {
     class Parent extends Component {
         static components = { ResizablePanel };
         static template = xml`
             <div class="d-flex">
-                <ResizablePanel minWidth="20" initialWidth="100" outerHandle="true">
+                <ResizablePanel minWidth="20" initialWidth="100">
                     <div style="width: 10px;" class="text-break">
                         A cool paragraph
                     </div>
@@ -131,17 +139,130 @@ test("outer handle sits outside the panel and stays visible while resizing", asy
     }
 
     await mountWithCleanup(Parent);
+    await pointerDown(".o_resizable_panel_handle", { button: 2 });
+    await hover(".o_resizable_panel_handle", { position: { x: 50 }, relative: true });
+    expect(".o_resizable_panel").toHaveRect({ width: 100 });
+    expect(document.body).not.toHaveClass("pe-none");
+});
+
+test("a resize stops when the pointer moves without the button pressed", async () => {
+    class Parent extends Component {
+        static components = { ResizablePanel };
+        static template = xml`
+            <div class="d-flex">
+                <ResizablePanel minWidth="20" initialWidth="100">
+                    <div style="width: 10px;" class="text-break">
+                        A cool paragraph
+                    </div>
+                </ResizablePanel>
+            </div>
+        `;
+    }
+
+    await mountWithCleanup(Parent);
+    const { drop, moveTo } = await drag(".o_resizable_panel_handle");
+    await moveTo(".o_resizable_panel_handle", { position: { x: 10 }, relative: true });
+    expect(document.body).toHaveClass("pe-none");
+    const width = queryRect(".o_resizable_panel").width;
+
+    // e.g. the button was released outside the window
+    await manuallyDispatchProgrammaticEvent(document, "mousemove", {
+        buttons: 0,
+        clientX: queryRect(".o_resizable_panel_handle").x + 50,
+    });
+    expect(".o_resizable_panel").toHaveRect({ width });
+    expect(document.body).not.toHaveClass("pe-none");
+    await drop();
+});
+
+test("handle is on the edge of the panel, mostly inside, and shows its pill while resizing", async () => {
+    class Parent extends Component {
+        static components = { ResizablePanel };
+        static template = xml`
+            <div class="d-flex">
+                <ResizablePanel minWidth="20" initialWidth="100">
+                    <div style="width: 10px;" class="text-break">
+                        A cool paragraph
+                    </div>
+                </ResizablePanel>
+            </div>
+        `;
+    }
+
+    await mountWithCleanup(Parent);
+    const pillOpacity = () =>
+        getComputedStyle(queryOne(".o_resizable_panel_grip"), "::after").opacity;
     const panelRight = queryRect(".o_resizable_panel").right;
-    expect(queryRect(".o_resizable_panel_handle > span").left).toBeGreaterThan(panelRight);
-    expect(".o_resizable_panel_handle").toHaveStyle({ opacity: "0" });
+    const handle = queryRect(".o_resizable_panel_grip");
+    expect(handle.right).toBeGreaterThan(panelRight);
+    expect(handle.left + handle.width / 2).toBeLessThan(panelRight);
+    expect(pillOpacity()).toBe("0");
 
     const { drop, moveTo } = await drag(".o_resizable_panel_handle");
     await moveTo(".o_resizable_panel_handle", { position: { x: 10 }, relative: true });
     await animationFrame();
-    expect(".o_resizable_panel_handle").toHaveStyle({ opacity: "1" });
+    expect(pillOpacity()).toBe("1");
     await drop();
     await animationFrame();
-    expect(".o_resizable_panel_handle").toHaveStyle({ opacity: "0" });
+    expect(pillOpacity()).toBe("0");
+});
+
+test("handle leaves most of a scrollbar along the edge of the panel free", async () => {
+    const state = proxy({ contentHeight: 50 });
+    class Parent extends Component {
+        static components = { ResizablePanel };
+        static template = xml`
+            <div class="d-flex" style="height: 100px;">
+                <ResizablePanel minWidth="100" initialWidth="200">
+                    <div class="o_scroller h-100 overflow-y-auto" style="scrollbar-gutter: stable;">
+                        <div t-att-style="'height: ' + this.state.contentHeight + 'px;'"/>
+                    </div>
+                </ResizablePanel>
+            </div>
+        `;
+        state = state;
+    }
+
+    await mountWithCleanup(Parent);
+    const scroller = queryOne(".o_scroller");
+    const scrollbarWidth = scroller.offsetWidth - scroller.clientWidth;
+    const scrollbarMiddle = queryRect(".o_scroller").right - scrollbarWidth / 2;
+    expect(scrollbarWidth).toBeGreaterThan(0);
+    expect(".o_resizable_panel_handle").not.toHaveClass("o_resizable_panel_over_scrollbar");
+    expect(queryRect(".o_resizable_panel_grip").left).toBeLessThan(scrollbarMiddle);
+
+    state.contentHeight = 1000;
+    await animationFrame();
+    await hover(".o_resizable_panel_grip");
+    expect(".o_resizable_panel_handle").toHaveClass("o_resizable_panel_over_scrollbar");
+    expect(queryRect(".o_resizable_panel_grip").left).toBeGreaterThan(scrollbarMiddle);
+});
+
+test("handle leaves an overlay scrollbar along the edge of the panel free", async () => {
+    const state = proxy({ contentHeight: 50 });
+    class Parent extends Component {
+        static components = { ResizablePanel };
+        static template = xml`
+            <div class="d-flex" style="height: 100px;">
+                <ResizablePanel minWidth="100" initialWidth="200">
+                    <div class="o_scroller h-100 overflow-y-auto" style="scrollbar-width: none;">
+                        <div t-att-style="'height: ' + this.state.contentHeight + 'px;'"/>
+                    </div>
+                </ResizablePanel>
+            </div>
+        `;
+        state = state;
+    }
+
+    await mountWithCleanup(Parent);
+    const scroller = queryOne(".o_scroller");
+    expect(scroller.offsetWidth).toBe(scroller.clientWidth);
+    expect(".o_resizable_panel_handle").not.toHaveClass("o_resizable_panel_over_scrollbar");
+
+    state.contentHeight = 1000;
+    await animationFrame();
+    await hover(".o_resizable_panel_grip");
+    expect(".o_resizable_panel_handle").toHaveClass("o_resizable_panel_over_scrollbar");
 });
 
 test("resizing the window adapts the panel", async () => {
@@ -167,10 +288,64 @@ test("resizing the window adapts the panel", async () => {
         },
     });
 
-    expect(queryOne(".o_resizable_panel").offsetWidth).toBe(398);
+    expect(queryOne(".o_resizable_panel").offsetWidth).toBe(400);
     queryOne(".parent-el").style.width = "200px";
     await resize();
-    expect(queryOne(".o_resizable_panel").offsetWidth).toBe(198);
+    expect(queryOne(".o_resizable_panel").offsetWidth).toBe(200);
+});
+
+test("side panel stays within half the window when the window shrinks", async () => {
+    class Parent extends Component {
+        static components = { ResizablePanel };
+        static template = xml`
+            <div class="d-flex" style="height: 100px;">
+                <ResizablePanel minWidth="100" initialWidth="400" foldable="true">
+                    <div>content</div>
+                </ResizablePanel>
+            </div>
+        `;
+    }
+
+    await resize({ width: 1000 });
+    await mountWithCleanup(Parent);
+    expect(queryOne(".o_resizable_panel").offsetWidth).toBe(400);
+
+    await resize({ width: 600 });
+    expect(queryOne(".o_resizable_panel").offsetWidth).toBe(300);
+
+    await contains(".o_side_panel_toggle").click();
+    await resize({ width: 400 });
+    await contains(".o_side_panel_toggle").click();
+    expect(queryOne(".o_resizable_panel").style.width).toBe("200px");
+});
+
+test("side panel starts as initialFolded and reports each fold change", async () => {
+    class Parent extends Component {
+        static components = { ResizablePanel };
+        static template = xml`
+            <div class="d-flex" style="height: 100px;">
+                <ResizablePanel foldable="true" initialFolded="true" onToggle="(folded) => this.onToggle(folded)">
+                    <div>content</div>
+                    <t t-set-slot="folded">strip</t>
+                </ResizablePanel>
+            </div>
+        `;
+        onToggle(folded) {
+            expect.step(`folded: ${folded}`);
+        }
+    }
+
+    await mountWithCleanup(Parent);
+    expect(".o_resizable_panel_folded").toHaveCount(1);
+    expect(".o_resizable_panel").toHaveCount(0);
+
+    await contains(".o_side_panel_toggle").click();
+    expect(".o_resizable_panel").toHaveCount(1);
+    expect.verifySteps(["folded: false"]);
+
+    await contains(".o_side_panel_toggle").click();
+    expect(".o_resizable_panel_folded").toHaveCount(1);
+    expect.verifySteps(["folded: true"]);
 });
 
 test("minWidth props can be updated", async () => {

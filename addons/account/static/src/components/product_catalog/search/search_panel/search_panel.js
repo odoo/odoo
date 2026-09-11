@@ -88,9 +88,8 @@ export class AccountProductCatalogSearchPanel extends ProductCatalogSearchPanel 
         });
     }
 
-    updateActiveValues() {
-        super.updateActiveValues();
-        this.state.sidebarExpanded ||= this.showSections;
+    computeHasContent() {
+        return super.computeHasContent() || this.showSections;
     }
 
     get selectedSectionId() {
