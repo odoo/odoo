@@ -19,6 +19,19 @@ patch(PaymentForm.prototype, {
     // === DOM MANIPULATION === //
 
     /**
+     * Request the Mercado Pago SDK if a Mercado Pago payment option is listed in the form.
+     *
+     * @override method from payment.payment_form
+     */
+    _getAssetsPromises() {
+        const promises = super._getAssetsPromises();
+        if (this.el.querySelector('[name="o_payment_radio"][data-provider-code="mercado_pago"]')) {
+            promises['mercado_pago'] = [loadJS('https://sdk.mercadopago.com/js/v2')];
+        }
+        return promises;
+    },
+
+    /**
      * Prepare the inline form of Mercado Pago for direct payment.
      *
      * @override method from payment.payment_form
@@ -59,7 +72,6 @@ patch(PaymentForm.prototype, {
 
         // Create the bricksBuilder object if not already done for another payment method.
         if (!this.mercadoPagoBricksBuilder) {
-            await this.waitFor(loadJS('https://sdk.mercadopago.com/js/v2'));
             const mercadoPago = new MercadoPago(publicKey, { locale: inlineFormValues['locale'] });
             this.mercadoPagoBricksBuilder = mercadoPago.bricks();
         }

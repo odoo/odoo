@@ -18,6 +18,22 @@ patch(PaymentForm.prototype, {
     // #=== DOM MANIPULATION ===#
 
     /**
+     * Request the SDK of each PayPal payment option listed in the form.
+     *
+     * @override method from payment.payment_form
+     */
+    _getAssetsPromises() {
+        const promises = super._getAssetsPromises();
+        const paypalRadios = this.el.querySelectorAll(
+            '[name="o_payment_radio"][data-provider-code="paypal"][data-paypal-inline-form-values]'
+        );
+        promises['paypal'] = [...paypalRadios].map(
+            radio => this._paypalLoadSDK(this._paypalGetSDKURL(radio))
+        );
+        return promises;
+    },
+
+    /**
      * @override
      */
     async willStart() {
@@ -91,27 +107,13 @@ patch(PaymentForm.prototype, {
         }
         const currentPayPalData = this.paypalData[paymentOptionId];
         if (currentPayPalData && this.selectedOptionId !== paymentOptionId) {
-            const paypalSDKURL = this.paypalData[paymentOptionId]['sdkURL']
-            await this.waitFor(this._paypalLoadSDK(paypalSDKURL));
             this.paypalData[this.selectedOptionId]['enabledButtons'].forEach(btn => btn.show());
             this.paypalData[this.selectedOptionId]['disabledButtons'].forEach(btn => btn.show());
         }
         else if (!currentPayPalData) {
             this.paypalData[paymentOptionId] = {};
             const radio = document.querySelector('input[name="o_payment_radio"]:checked');
-            let inlineFormValues;
-            let paypalColor = 'blue';
-            if (radio) {
-                inlineFormValues = JSON.parse(radio.dataset['paypalInlineFormValues']);
-                paypalColor = radio.dataset['paypalColor'];
-            }
-
-            // https://developer.paypal.com/sdk/js/configuration/#link-queryparameters
-            const { client_id, currency_code } = inlineFormValues;
-            const paypalSDKURL = `https://www.paypal.com/sdk/js?client-id=${
-                client_id}&components=buttons&currency=${currency_code}&intent=capture`;
-            this.paypalData[paymentOptionId]['sdkURL'] = paypalSDKURL;
-            await this.waitFor(this._paypalLoadSDK(paypalSDKURL));
+            const paypalColor = radio?.dataset['paypalColor'] || 'blue';
 
             // Create the two sets of PayPal buttons.
             // See https://developer.paypal.com/sdk/js/reference.
@@ -158,6 +160,21 @@ patch(PaymentForm.prototype, {
             buttonContainer.classList.remove('d-none');
         }
         this.selectedOptionId = paymentOptionId;
+    },
+
+    /**
+     * Return the SDK URL of the PayPal payment option linked to the provided radio button.
+     *
+     * See https://developer.paypal.com/sdk/js/configuration/#link-queryparameters.
+     *
+     * @private
+     * @param {HTMLInputElement} radio - The radio button linked to the payment option.
+     * @return {string} The SDK URL.
+     */
+    _paypalGetSDKURL(radio) {
+        const { client_id, currency_code } = JSON.parse(radio.dataset['paypalInlineFormValues']);
+        return `https://www.paypal.com/sdk/js?client-id=${
+            client_id}&components=buttons&currency=${currency_code}&intent=capture`;
     },
 
     /**

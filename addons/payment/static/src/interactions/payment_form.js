@@ -28,6 +28,13 @@ export class PaymentForm extends Interaction {
     }
 
     async willStart() {
+        // Request the SDK assets of all the providers listed in the form at once.
+        // They are awaited when the inline form of their provider is expanded.
+        this.assetsPromises = this._getAssetsPromises();
+        Object.values(this.assetsPromises).flat().forEach(
+            promise => promise.catch(() => {})  // Failures are reported in `_expandInlineForm`
+        );
+
         // Expand the payment form of the selected payment option if there is only one.
         const checkedRadio = document.querySelector('input[name="o_payment_radio"]:checked');
         if (checkedRadio) {
@@ -42,6 +49,19 @@ export class PaymentForm extends Interaction {
 
             this._setPaymentFlow(); // Initialize the payment flow to let providers overwrite it.
         }
+    }
+
+    /**
+     * Return the promises of the SDK assets to request, grouped by provider code.
+     *
+     * Providers requiring an SDK must override this method to add their own promises, rather than
+     * awaiting them in a `willStart` override.
+     *
+     * @private
+     * @return {Object} The promises of the SDK assets to request, by provider code.
+     */
+    _getAssetsPromises() {
+        return {};
     }
 
     // #=== EVENT HANDLERS ===#
@@ -228,6 +248,7 @@ export class PaymentForm extends Interaction {
         const paymentMethodCode = this._getPaymentMethodCode(radio);
         const flow = this._getPaymentFlow(radio);
         try {
+            await this.waitFor(Promise.all(this.assetsPromises[providerCode] ?? []));
             await this.waitFor(this._prepareInlineForm(
                 providerId, providerCode, paymentOptionId, paymentMethodCode, flow
             ));
