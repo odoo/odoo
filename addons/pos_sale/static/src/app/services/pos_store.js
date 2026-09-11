@@ -95,6 +95,7 @@ patch(PosStore.prototype, {
     },
     async settleSO(sale_order, orderFiscalPos) {
         const order = this.getOrder();
+        const lineCountBeforeSettle = order.lines.length;
         // Suppress expensive reactive work (order summary and customer display
         // re-renders, loyalty updates) for the whole settle. Not in uiState:
         // that is persisted, so a reload mid-settle would restore a stuck flag.
@@ -185,6 +186,12 @@ patch(PosStore.prototype, {
                 return;
             }
             this.addDownPaymentProductOrderlineToOrder(sale_order, -paidDiff, false);
+        }
+
+        if (order.lines.length === lineCountBeforeSettle) {
+            this.notification.add(_t("There is nothing left to settle on this sale order."), {
+                type: "warning",
+            });
         }
     },
 
