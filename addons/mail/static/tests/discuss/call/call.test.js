@@ -11,6 +11,7 @@ import {
     mockBrowserFullscreen,
     mockGetMedia,
     mockPipWindow,
+    onRpcAfter,
     openDiscuss,
     openMessagingMenu,
     patchUiSize,
@@ -28,6 +29,7 @@ import { CALL_GRID_LAYOUT } from "@mail/discuss/call/common/call_layout";
 import {
     CROSS_TAB_CLIENT_MESSAGE,
     CROSS_TAB_HOST_MESSAGE,
+    Rtc,
 } from "@mail/discuss/call/common/rtc_service";
 import { ChannelMember } from "@mail/discuss/core/common/channel_member_model";
 
@@ -1355,6 +1357,37 @@ test("Shows warning badge on mic/camera on non-granted permission in meeting con
     await contains("button[title='Turn camera on'].o-tag-WARNING_BADGE", { count: 0 });
     await click("button[title='Disconnect']");
     await waitNotifications(["discuss.channel.rtc.session/ended"]);
+});
+
+test("only notified of a call disconnection when the server ends the session", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    patchWithCleanup(Rtc.prototype, {
+        notifyServerDisconnect() {
+            expect.step("notifyServerDisconnect");
+            return super.notifyServerDisconnect(...arguments);
+        },
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("[title='Start Call']");
+    await contains(".o-discuss-Call");
+    // Delay the response so that the session removal broadcast by the server is processed
+    // before the client knows that the leave request succeeded.
+    let respondToLeave;
+    onRpcAfter("/mail/rtc/channel/leave_call", () => new Promise((res) => (respondToLeave = res)));
+    await click("[title='Disconnect']");
+    await waitNotifications(["discuss.channel.rtc.session/ended"]);
+    respondToLeave();
+    await contains(".o-discuss-Call", { count: 0 });
+    await expect.waitForSteps([]);
+    // A session removal that does not come from leaving locally is a server disconnection.
+    await click("[title='Start Call']");
+    await contains(".o-discuss-Call");
+    pyEnv["discuss.channel.rtc.session"].unlink([getService("discuss.rtc").selfSession.id]);
+    await contains(".o-discuss-Call", { count: 0 });
+    await contains(".o_notification:text('Disconnected from the call by the server')");
+    await expect.waitForSteps(["notifyServerDisconnect"]);
 });
 
 test("should not show context menu on participant card when not in a call", async () => {
