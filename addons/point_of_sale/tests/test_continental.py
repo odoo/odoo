@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests import tagged
+from odoo import Command
 from odoo.addons.point_of_sale.tests.test_anglo_saxon import TestAngloSaxonCommon
 
 
@@ -107,3 +108,56 @@ class TestContinentalPerpetualFlow(TestContinentalCommon):
 
         self.assertEqual(len(valuation_lines), 1)
         self.assertEqual(valuation_lines.credit, 20.0)
+
+    def test_no_duplicate_cogs_invoice_and_at_closing(self):
+        """
+        Check that when point_of_sale_update_stock_quantities is set to 'closing',
+        and we have a product with real_time valuation,
+        invoicing the order does not result in duplicated journal entries, from
+        the invoice and at closing
+        """
+        self.company.point_of_sale_update_stock_quantities = 'closing'
+        self.category.property_valuation = 'real_time'
+        self.product.standard_price = 100.0
+
+        self.pos_config.open_ui()
+        session = self.pos_config.current_session_id
+        session.set_opening_control(0, None)
+
+        order = self.PosOrder.create({
+            'company_id': self.company.id,
+            'partner_id': self.partner.id,
+            'session_id': session.id,
+            'to_invoice': True,
+            'lines': [Command.create({
+                'product_id': self.product.id,
+                'price_unit': 450.0,
+                'qty': 1.0,
+                'price_subtotal': 450.0,
+                'price_subtotal_incl': 450.0,
+            })],
+            'amount_total': 450.0,
+            'amount_tax': 0.0,
+            'amount_paid': 0.0,
+            'amount_return': 0.0,
+        })
+        
+        context_make_payment = {'active_ids': [order.id], 'active_id': order.id}
+        self.PosMakePayment.with_context(context_make_payment).create({
+            'amount': 450.0,
+            'payment_method_id': self.cash_payment_method.id,
+        }).with_context(context_make_payment).check()
+        order.action_pos_order_invoice()
+        
+        session.post_closing_cash_details(450.0)
+        session.close_session_from_ui()
+
+        valuation_lines = self.env['account.move.line'].search([
+            ('account_id', '=', self.category.property_stock_valuation_account_id.id),
+            ('move_id', 'in', (order.account_move | session.move_id).ids),
+            ('move_id.state', '=', 'posted'),
+        ])
+
+        valuation_change = sum(valuation_lines.mapped('credit')) - sum(valuation_lines.mapped('debit'))
+        self.assertEqual(valuation_change, 100.0)
+
