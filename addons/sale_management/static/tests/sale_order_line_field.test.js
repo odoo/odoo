@@ -126,7 +126,7 @@ class SaleOrder extends saleManagementModels.SaleOrder {
     ];
     _views = {
         form: `
-            <form>
+            <form js_class="sale_order_form">
                 <field name="company_id" invisible="1"/>
                 <field name="fiscal_position_id" invisible="1"/>
                 <field name="currency_id" invisible="1"/>
@@ -151,7 +151,6 @@ class SaleOrder extends saleManagementModels.SaleOrder {
                             <field
                                 name="section_qty"
                                 invisible="display_type not in ('line_section', 'line_subsection')"
-                                widget="section_qty"
                             />
                         </column>
                         <field name="price_unit"/>
@@ -515,5 +514,5 @@ test("Editing a subsection's quantity applies the ratio to its line and recomput
     await contains(".o_selected_row [name=section_qty] input", { visible: false }).edit("4");
     await clickSave();
 
-    await expect.verifySteps(["batch_onchange_sol", "web_save"]);
+    expect.verifySteps(["batch_onchange_sol", "web_save"]);
 });
