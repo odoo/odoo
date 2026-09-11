@@ -8,6 +8,7 @@ class Web_TourTour(models.Model):
     _order = "sequence, name, id"
 
     name = fields.Char(required=True)
+    active = fields.Boolean(default=True)
     step_ids = fields.One2many("web_tour.tour.step", "tour_id")
     url = fields.Char(string="Starting URL", default="/odoo")
     sharing_url = fields.Char(compute="_compute_sharing_url", string="Sharing URL")
