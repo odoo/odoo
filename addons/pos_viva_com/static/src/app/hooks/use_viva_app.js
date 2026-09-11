@@ -4,6 +4,7 @@ import { useService } from "@web/core/utils/hooks";
 import { roundPrecision } from "@web/core/utils/numbers";
 import { _t } from "@web/core/l10n/translation";
 import { uuidv4 } from "@point_of_sale/utils";
+import { getPaymentMismatchErrorMessage } from "../utils/error_messages";
 
 /**
  * This hook is used to handle the Viva Wallet app integration in the POS.
@@ -37,6 +38,17 @@ export const useVivaApp = (validateCallback) => {
         const action = urlParams.get("action");
         const ref = urlParams.get("referenceNumber");
         const bankId = urlParams.get("bankId");
+
+        if (urlParams.get("viva_com_error") === "mismatch") {
+            const msg = getPaymentMismatchErrorMessage(Object.fromEntries(urlParams));
+            dialog.add(AlertDialog, {
+                title: _t("Viva.com Payment Error"),
+                body: msg,
+            });
+            const newUrl = window.location.href.split("?")[0];
+            window.history.replaceState({}, document.title, newUrl);
+            return;
+        }
 
         if (!action || !status) {
             return;
@@ -99,13 +111,8 @@ export const useVivaApp = (validateCallback) => {
         const line = order.addPaymentline(paymentMethod).data;
         try {
             line.viva_com_session_id = `${order.uuid}-${uuidv4()}`;
-            const result = await pos.syncAllOrders({ orders: [order] });
+            await pos.syncAllOrders({ orders: [order], throw: true });
             await pos.data.synchronizeLocalDataInIndexedDB();
-            if (!result) {
-                throw new Error(
-                    "Impossible to initiate Vivawallet payment without syncing the order"
-                );
-            }
 
             const baseUrl = window.location.origin;
             const callbackPath = `/pos_viva_com/${pos.config.id}/payment/${order.uuid}`;
