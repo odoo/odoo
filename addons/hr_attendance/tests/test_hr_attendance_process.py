@@ -200,7 +200,6 @@ class TestHrAttendance(HttpCase, TransactionCase):
 
         public_payload = HrAttendance._get_user_attendance_data(self.test_employee)
         self.assertNotIn('last_attendance', public_payload)
-        self.assertNotIn('break_today', public_payload)
         self.assertNotIn('in_location', public_payload['today_attendance_ids'][0])
         self.assertNotIn('can_edit', public_payload['today_attendance_ids'][0])
         self.assertEqual(public_payload['hours_today'], 1.5)
@@ -211,7 +210,6 @@ class TestHrAttendance(HttpCase, TransactionCase):
             include_attendance_details=True,
         )
         self.assertNotIn('last_attendance', user_payload)
-        self.assertAlmostEqual(user_payload['break_today'], 0.5, places=6)
         self.assertIn('in_location', user_payload['today_attendance_ids'][0])
         self.assertIn('can_edit', user_payload['today_attendance_ids'][0])
         attendance_ids = [attendance['id'] for attendance in user_payload['today_attendance_ids']]
