@@ -59,6 +59,7 @@ export default class IndexedDB {
             this.db = event.target.result;
 
             const actualStoreNames = this.db.objectStoreNames;
+            const expectedStoreNames = new Set(this.dbStores.map(([, storeName]) => storeName));
             let needsUpgrade = false;
 
             for (const [, storeName] of this.dbStores) {
@@ -71,6 +72,21 @@ export default class IndexedDB {
                     );
                     needsUpgrade = true;
                     break;
+                }
+            }
+
+            if (!needsUpgrade) {
+                for (const storeName of actualStoreNames) {
+                    if (!expectedStoreNames.has(storeName)) {
+                        logPosMessage(
+                            "IndexedDB",
+                            "onsuccess",
+                            `Schema mismatch: Store '${storeName}' is no longer expected (ex: module uninstalled). Triggering upgrade.`,
+                            CONSOLE_COLOR
+                        );
+                        needsUpgrade = true;
+                        break;
+                    }
                 }
             }
 
@@ -100,9 +116,19 @@ export default class IndexedDB {
             whenReady?.();
         };
         dbInstance.onupgradeneeded = (event) => {
+            const db = event.target.result;
+            const expectedStoreNames = new Set(this.dbStores.map(([, storeName]) => storeName));
+
             for (const [id, storeName] of this.dbStores) {
-                if (!event.target.result.objectStoreNames.contains(storeName)) {
-                    event.target.result.createObjectStore(storeName, { keyPath: id });
+                if (!db.objectStoreNames.contains(storeName)) {
+                    db.createObjectStore(storeName, { keyPath: id });
+                }
+            }
+
+            // Drop stores for models that are no longer expected (ex: module uninstalled).
+            for (const storeName of Array.from(db.objectStoreNames)) {
+                if (!expectedStoreNames.has(storeName)) {
+                    db.deleteObjectStore(storeName);
                 }
             }
         };
