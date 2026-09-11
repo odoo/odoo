@@ -3,6 +3,7 @@ import {
     advanceTime,
     animationFrame,
     click,
+    drag,
     press,
     queryAllRects,
     queryAllTexts,
@@ -5035,10 +5036,13 @@ test(`calendar with option show_date_picker set to false and filters`, async () 
     });
     expect(`.o_datetime_picker`).toHaveCount(0);
     expect(`.o_calendar_sidepanel`).toHaveCount(1);
-    await contains('.o_calendar_sidebar_controller button[title="Toggle Side Panel"]').click();
+    const resizeHandle = queryFirst(".o_calendar_sidepanel_resize");
+    const { drop } = await drag(resizeHandle);
+    await drop(resizeHandle, { position: { x: 5000 } });
+    await animationFrame();
     expect(`.o_calendar_sidepanel`).toHaveCount(0);
-    expect(`.o_calendar_sidebar_controller`).toHaveCount(1);
-    expect(`.o_calendar_sidebar_controller`).toHaveText("Partner");
+    expect(`.o_calendar_sidebar`).toHaveCount(1);
+    expect(`.o_calendar_sidebar`).toHaveText("Partner");
 });
 
 test(`calendar with option month_overflow not set (default)`, async () => {
@@ -5318,10 +5322,13 @@ test(`calendar sidepanel can be collapsed/expanded`, async () => {
         arch: `<calendar date_start="start" mode="week"/>`,
     });
     expect(`.o_calendar_sidepanel`).toHaveCount(1);
-    await contains(`.o_calendar_sidebar_controller button`).click();
+    const resizeHandle = queryFirst(".o_calendar_sidepanel_resize");
+    const { drop } = await drag(resizeHandle);
+    await drop(resizeHandle, { position: { x: 5000 } });
+    await animationFrame();
     expect(`.o_calendar_sidepanel`).toHaveCount(0);
     expect.verifySteps([["setItem", "calendar_sidepanel_expanded,-1,false", false]]);
-    await contains(`.o_calendar_sidebar_controller button`).click();
+    await contains(`.o_calendar_sidebar`).click();
     expect(`.o_calendar_sidepanel`).toHaveCount(1);
     expect.verifySteps([["setItem", "calendar_sidepanel_expanded,-1,false", true]]);
 });

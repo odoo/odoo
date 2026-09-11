@@ -3308,7 +3308,10 @@ test("search panel can be collapsed/expanded", async () => {
     expect(`.o_search_panel`).toHaveCount(1);
     expect(`.o_search_panel_section`).toHaveCount(2);
 
-    await contains(`.o_search_panel button`).click();
+    let resizeHandle = queryFirst(".o_search_panel_resize");
+    let { drop } = await drag(resizeHandle);
+    await drop(resizeHandle, { position: { x: 0 } });
+    await animationFrame();
     expect.verifySteps([["setItem", "search_panel_expanded,false,1", false]]);
     expect(`.o_search_panel`).toHaveCount(0);
     expect(`.o_search_panel_sidebar`).toHaveCount(1);
@@ -3320,7 +3323,10 @@ test("search panel can be collapsed/expanded", async () => {
 
     await contains(queryAll`.o_search_panel_category_value header`[1]).click();
     await contains(queryAll`.o_search_panel_filter_value input`[1]).click();
-    await contains(`.o_search_panel button`).click();
+    resizeHandle = queryFirst(".o_search_panel_resize");
+    ({ drop } = await drag(resizeHandle));
+    await drop(resizeHandle, { position: { x: 0 } });
+    await animationFrame();
     expect.verifySteps([["setItem", "search_panel_expanded,false,1", false]]);
     expect(`.o_search_panel`).toHaveCount(0);
     expect(`.o_search_panel_sidebar`).toHaveCount(1);
@@ -3359,7 +3365,11 @@ test("search panel collapse with multiple filter categories selected", async () 
     await contains(queryAll`.o_search_panel_category_value header`[1]).click();
     await contains(queryAll`.o_search_panel_filter_value input`[1]).click();
     await contains(queryAll`.o_search_panel_filter_value input`[2]).click();
-    await contains(`.o_search_panel button`).click();
+
+    const resizeHandle = queryFirst(".o_search_panel_resize");
+    const { drop } = await drag(resizeHandle);
+    await drop(resizeHandle, { position: { x: 0 } });
+    await animationFrame();
     expect(`.o_search_panel`).toHaveCount(0);
     expect(`.o_search_panel_sidebar`).toHaveCount(1);
     expect(`.o_search_panel_sidebar`).toHaveText("asusteksilverABC");
@@ -3369,7 +3379,10 @@ test("expand/collapse state is kept when switching between controllers", async (
     onRpc("has_group", () => true);
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
-    await contains(`.o_search_panel button`).click();
+    const resizeHandle = queryFirst(".o_search_panel_resize");
+    const { drop } = await drag(resizeHandle);
+    await drop(resizeHandle, { position: { x: 0 } });
+    await animationFrame();
     expect(`.o_search_panel`).toHaveCount(0);
     expect(`.o_search_panel_sidebar`).toHaveCount(1);
     await getService("action").switchView("list");

@@ -163,6 +163,10 @@ export class AutoComplete extends Component {
 
     open(useInput = false) {
         this.state.open = true;
+        this.ignoreNextScrollClose = true;
+        requestAnimationFrame(() => {
+            this.ignoreNextScrollClose = false;
+        });
         return this.loadSources(useInput);
     }
 
@@ -465,6 +469,10 @@ export class AutoComplete extends Component {
     }
 
     externalClose(ev) {
+        if (ev.type === "scroll" && this.ignoreNextScrollClose) {
+            this.ignoreNextScrollClose = false;
+            return;
+        }
         if (this.isOpened && !this.root().contains(ev.target)) {
             this.cancel();
         }
