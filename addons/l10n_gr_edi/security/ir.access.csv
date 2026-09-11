@@ -2,3 +2,5 @@ id,name,model_id,group_id/id,operation,domain
 access_l10n_gr_edi_document_readonly,access_l10n_gr_edi_document_readonly,l10n_gr_edi.document,base.group_user,r,
 access_l10n_gr_edi_document_group_invoice,access_l10n_gr_edi_document_group_invoice,l10n_gr_edi.document,account.group_account_invoice,crud,
 access_l10n_gr_edi_preferred_classification,access_l10n_gr_edi_preferred_classification,l10n_gr_edi.preferred_classification,base.group_user,crud,
+access_l10n_gr_edi_reconciliation_readonly,access_l10n_gr_edi_reconciliation_readonly,l10n_gr_edi.reconciliation,account.group_account_readonly,r,"[('company_id', 'in', company_ids)]"
+access_l10n_gr_edi_reconciliation_account_user,access_l10n_gr_edi_reconciliation_account_user,l10n_gr_edi.reconciliation,account.group_account_user,cru,"[('company_id', 'in', company_ids)]"
