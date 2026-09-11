@@ -202,7 +202,7 @@ test("test_pos_snooze: snooze and unsnooze products", async () => {
     await contains(".modal .section-inventory .btn").click();
     await animationFrame();
 
-    await contains('.modal label:contains("1 Hour")').click();
+    await contains('.modal .o_snooze_option:contains("1 Hour")').click();
     await animationFrame();
 
     await contains('.modal .btn-primary:contains("Apply")').click();
