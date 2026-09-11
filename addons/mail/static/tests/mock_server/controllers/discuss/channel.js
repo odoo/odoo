@@ -36,20 +36,6 @@ registerStoreHandler(
 );
 
 registerStoreHandler(
-    "channels_as_member",
-    function store_channels_as_member(store) {
-        /** @type {import("mock_models").DiscussChannel} */
-        const DiscussChannel = this.env["discuss.channel"];
-        for (const channel of DiscussChannel._get_channels_as_member()) {
-            store.request_channel_ids.add(channel.id);
-        }
-        store.add_channels_last_message = true;
-        storeHandlerRegistry.handlers.store_has_hidden_channels.call(this, store);
-    },
-    { audience: "everyone" }
-);
-
-registerStoreHandler(
     "discuss.channel",
     function store_add_discuss_channel_to_context(store, params) {
         /** @type {import("mock_models").DiscussChannel} */
