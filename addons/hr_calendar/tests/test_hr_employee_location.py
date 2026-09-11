@@ -17,9 +17,8 @@ class TestHrHomeworkingHrEmployeeLocation(common.TransactionCase):
         cls.user_employee = mail_new_test_user(cls.env, login='david', groups='base.group_user')
 
         # Hr Data
-        Department = cls.env['hr.department']
-        WorkLocation = cls.env['hr.work.location']
-        main_partner_id = cls.env.ref('base.main_partner')
+        Department = cls.env['hr.department'].with_context(tracking_disable=True)
+        WorkLocation = cls.env['hr.work.location'].with_context(tracking_disable=True)
 
         cls.rd_dept = Department.create({
             'name': 'Research and devlopment',
@@ -28,19 +27,16 @@ class TestHrHomeworkingHrEmployeeLocation(common.TransactionCase):
         cls.work_office_1 = WorkLocation.create({
             'name': "Bureau 1",
             'location_type': "office",
-            'address_id': main_partner_id.id,
         })
 
         cls.work_office_2 = WorkLocation.create({
             'name': "Bureau 2",
             'location_type': "office",
-            'address_id': main_partner_id.id,
         })
 
         cls.work_home = WorkLocation.create({
             'name': "Maison",
             'location_type': "home",
-            'address_id': main_partner_id.id,
         })
 
         cls.employee_emp = cls.env['hr.employee'].create({
