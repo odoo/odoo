@@ -16,6 +16,9 @@ from odoo.addons.l10n_fr_pdp.utils import drom_com_territories
 
 PAID_CODES = frozenset({'ESC', 'RAB', 'REM', 'MPA', 'MEN'})
 G1_05_RE = re.compile(r'^(?! )(?!.*  )[A-Za-z0-9+\-_/ ]{1,20}(?<! )$')  # can't start with space, can't have 2 consecutive spaces, max 20 chars, allowed chars are alphanumeric, space, -, _, /, can't end with space
+# French domestic VAT rates (incl. DOM-COM and historical). OSS destination rates are not
+# in this set; they are allowed when the commercial partner is outside French territories.
+# PPF CDAR TaxPercent is xs:decimal (specs v3.2 transaction.xsd), not this enum.
 VALID_PDP_TAX_RATES = {0, 0.9, 1.05, 1.75, 2.1, 5.5, 7, 8.5, 9.2, 9.6, 10, 13, 19.6, 20, 20.6}
 PDP_TRACKED_FIELDS = {
     'l10n_fr_pdp_last_flow_id',
@@ -557,6 +560,20 @@ class AccountMove(models.Model):
         self.ensure_one()
         return self.is_purchase_document(include_receipts=False)  # Purchase receipts are not in Flow10 scope as they do not have VAT to report.
 
+    def _l10n_fr_pdp_is_supported_tax_rate(self, tax):
+        """Return whether `tax` can be sent as CDAR TaxPercent.
+
+        Keep the French rate whitelist for domestic customers. Skip it for extra-FR
+        partners (OSS B2C destination VAT): l10n_eu_oss still stores those taxes
+        with country_id=FR, so the partner country is the OSS signal.
+        """
+        if tax.amount_type in ('percent', 'division') and not (0 <= tax.amount <= 100):
+            return False
+        partner_code = self.commercial_partner_id.country_id.code
+        if partner_code and not drom_com_territories.is_france_territory(partner_code):
+            return True
+        return tax.amount in VALID_PDP_TAX_RATES
+
     def _get_l10n_fr_pdp_errors(self, lazy=False):
         """Return the list of validation errors for this move in the context of PDP reporting."""
         self.ensure_one()
@@ -587,7 +604,7 @@ class AccountMove(models.Model):
                 if not move.name or not G1_05_RE.match(move.name):
                     yield self.env._("Move name is not valid%s.", ref_move)
                 for tax in move.invoice_line_ids.tax_ids.flatten_taxes_hierarchy():
-                    if tax.amount not in VALID_PDP_TAX_RATES:
+                    if not move._l10n_fr_pdp_is_supported_tax_rate(tax):
                         yield self.env._(
                             "Tax %(tax)s is not supported by French e-reporting%(ref_move)s.",
                             tax=tax.display_name,
