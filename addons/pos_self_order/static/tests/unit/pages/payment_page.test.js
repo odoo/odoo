@@ -102,4 +102,25 @@ describe("startPayment", () => {
         expect(paymentTerminal.payment_terminal.hasBeenCalled).toBe(true);
         expect(store.paymentError).toBe(true);
     });
+
+    test("sends the signed partner of the order to the backend", async () => {
+        const { paymentPage, store, nonPaymentTerminal } = await setupPaymentPage();
+        paymentPage.state.paymentMethodId = nonPaymentTerminal.id;
+        const signedPartnerId = "7-0123456789abcdef";
+        const connectedData = store.models.connectNewData({
+            "res.partner": [{ id: signedPartnerId, name: "Demo User" }],
+        });
+        store.currentOrder.partner_id = connectedData["res.partner"][0];
+
+        let sentOrder;
+        onRpc("/kiosk/payment/1/kiosk", async (request) => {
+            const { params } = await request.json();
+            sentOrder = params.order;
+            return true;
+        });
+        await paymentPage.startPayment();
+
+        expect(store.paymentError).toBe(false);
+        expect(sentOrder.partner_id).toBe(signedPartnerId);
+    });
 });
