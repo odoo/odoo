@@ -238,7 +238,6 @@
             <field name="arch" type="xml">
                 <form string="Manufacturing Orders">
                 <header>
-                    <field name="show_lock" invisible="1"/>
                     <button name="button_mark_done" type="object" string="Produce" class="oe_highlight"
                             invisible="not move_raw_ids or state not in ('confirmed', 'progress', 'to_close')" data-hotkey="g"/>
                     <button name="button_mark_done" type="object" string="Produce" class="oe_highlight"
@@ -248,8 +247,8 @@
                     <button name="button_plan" type="object" string="Plan" class="oe_highlight" invisible="state in ('cancel', 'done') or is_planned or not workorder_ids" groups="mrp.group_mrp_routings" data-hotkey="z"/>
                     <button name="button_unplan" type="object" string="Unplan" invisible="not is_planned or state in ['cancel', 'done']" groups="mrp.group_mrp_routings" data-hotkey="z"/>
                     <button name="action_start"  type="object" string="Start" invisible="state != 'confirmed'"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,progress,done" invisible="workorder_ids"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,progress,to_close,done" invisible="not workorder_ids" groups="mrp.group_mrp_routings"/>
+                    <field name="state" widget="locked_statusbar" statusbar_visible="draft,confirmed,progress,done" invisible="workorder_ids"/>
+                    <field name="state" widget="locked_statusbar" statusbar_visible="draft,confirmed,progress,to_close,done" invisible="not workorder_ids" groups="mrp.group_mrp_routings"/>
                     <button name="action_cancel" type="object" string="Cancel" data-hotkey="x"
                             invisible="not id or state in ('done', 'cancel')"
                             confirm="Are you sure you want to cancel this manufacturing order?&#10;This action cannot be undone."

@@ -268,7 +268,6 @@ class MrpProduction(models.Model):
     mrp_production_all_child_done_count = fields.Integer("Number of done all generated MO", compute='_compute_mrp_production_all_child_count')
     mrp_production_source_count = fields.Integer("Number of source MO", compute='_compute_mrp_production_source_count')
     mrp_production_backorder_count = fields.Integer("Count of linked backorder", compute='_compute_mrp_production_backorder')
-    show_lock = fields.Boolean('Show Lock/unlock buttons', compute='_compute_show_lock')
     components_availability = fields.Char(
         string="Component Status", compute='_compute_components_availability',
         help="Latest component availability status for this MO. If green, then the MO's readiness status is ready, as per BOM configuration.")
@@ -740,15 +739,6 @@ class MrpProduction(models.Model):
         move_finished_ids = self.move_finished_ids.filtered(lambda m: m.product_id == self.product_id)
         # TODO: Try to create by-product moves here instead of moving them in the `create`.
         self.move_finished_ids = move_finished_ids | self.move_byproduct_ids
-
-    @api.depends('state')
-    def _compute_show_lock(self):
-        for order in self:
-            order.show_lock = order.state == 'done' or (
-                not self.env.user.has_group('mrp.group_unlocked_by_default')
-                and order.id is not False
-                and order.state not in {'cancel', 'draft'}
-            )
 
     @api.depends('state', 'move_raw_ids')
     def _compute_show_lot_ids(self):
