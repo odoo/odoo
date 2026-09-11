@@ -932,8 +932,11 @@ class StockPicking(models.Model):
         # |              ↓                                | return_line.move_id              ↓
         # |       return pick(Add as dest)          return toLink                    return ship(Add as orig)
         # +--------------------------------------------------------------------------------------------------------+
+        location_id = self.location_id or move_id.location_dest_id
         origin_move = move_id.origin_returned_move_id or move_id
-        move_orig_to_link = origin_move.move_dest_ids.returned_move_ids
+        # Only keep the returns that deliver back where this return picks from, so that the
+        # chain never sources the new move from an unrelated location
+        move_orig_to_link = origin_move.move_dest_ids.returned_move_ids.filtered(lambda m: m.location_dest_id._child_of(location_id))
         if not move_id.origin_returned_move_id:
             # link to original move
             move_orig_to_link |= origin_move
@@ -958,7 +961,7 @@ class StockPicking(models.Model):
             'picking_id': self.id,
             'state': 'draft',
             'date': fields.Datetime.now(),
-            'location_id': self.location_id.id or move_id.location_dest_id.id,
+            'location_id': location_id.id,
             'location_dest_id': self.location_dest_id.id or move_id.location_id.id,
             'forecasted_location_id': False,
             'picking_type_id': self.picking_type_id.id,
