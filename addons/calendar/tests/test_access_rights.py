@@ -419,6 +419,7 @@ class TestAccessRights(TransactionCase):
 
     def test_res_record_with_not_allowed_records_for_non_admin(self):
         """Ensure res_record works even if target records are not accessible."""
+        # Restricted by multi-company record rule
         restricted_company = self.env['res.company'].create({
             'name': 'Restricted Calendar Company',
         })
@@ -427,21 +428,24 @@ class TestAccessRights(TransactionCase):
             'company_id': restricted_company.id,
         })
 
-        # using server action as it is restricted to non admin users
-        restricted_record = self.env['ir.actions.server'].create({
-            'name': 'Restricted Server Action',
-            'model_id': self.env['ir.model']._get_id('calendar.event'),
-            'state': 'code',
-            'code': 'action = None',
+        # Restricted by an explicit ir.access rule denying read on this one record
+        blocked_partner = self.env['res.partner'].create({
+            'name': 'Fully Blocked Partner',
+        })
+        self.env['ir.access'].create({
+            'name': 'test_block_partner',
+            'model_id': self.env['ir.model']._get_id('res.partner'),
+            'operation': 'r',
+            'domain': [('id', '!=', blocked_partner.id)],
         })
 
         cases = [
-            ('res.partner', restricted_partner.id, restricted_partner),
-            ('ir.actions.server', restricted_record.id, restricted_record),
+            ('multi-company rule', 'res.partner', restricted_partner.id, restricted_partner),
+            ('explicit deny rule', 'res.partner', blocked_partner.id, blocked_partner),
         ]
 
-        for model, res_id, target in cases:
-            with self.subTest(model=model):
+        for label, model, res_id, target in cases:
+            with self.subTest(scenario=label):
                 with self.assertRaises(AccessError):
                     target.with_user(self.john).check_access('read')
 
