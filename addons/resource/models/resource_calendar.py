@@ -423,7 +423,9 @@ class ResourceCalendar(models.Model):
 
                     result_per_resource_id[resource.id] = Intervals(intervals, keep_distinct=True)
                 else:
-                    result_per_resource_id[resource.id] = res_intervals
+                    leaves = self._leave_intervals_batch(start_dt, end_dt, resources_per_tz=resources_per_tz, domain=domain)[resource.id]
+                    leaves_intervals = Intervals(leaves, keep_distinct=True)
+                    result_per_resource_id[resource.id] = res_intervals - leaves_intervals
         return result_per_resource_id
 
     def _handle_flexible_leave_interval(self, dt0, dt1, leave):
