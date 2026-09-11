@@ -19,6 +19,35 @@ export class DiscussChannel extends Record {
 
     setup() {
         super.setup(...arguments);
+        this.onChange(
+            () => [this.chatWindow],
+            () => {
+                if (this.self_member_id && !this.self_member_id.is_pinned) {
+                    this.self_member_id.unpin_dt = false;
+                    this.pinRpc({ pinned: true });
+                }
+                return () => this._onDeleteChatWindow();
+            },
+            { diff: true, immediate: true }
+        );
+        this.onChange(
+            () => [this.parent_channel_id],
+            (parent_channel_id) => {
+                if (!parent_channel_id) {
+                    this.delete();
+                }
+            },
+            { immediate: true, initialRun: false }
+        );
+        this.onChange(
+            () => [this.self_member_id],
+            (self_member_id) => {
+                if (!self_member_id) {
+                    this.onPinStateUpdated();
+                }
+            },
+            { immediate: true, initialRun: false }
+        );
         // Handles subscriptions for non-members. Subscriptions for channels
         // that the user is a member of are handled by
         // `ir_websocket@_build_bus_channel_list`.
@@ -221,10 +250,7 @@ export class DiscussChannel extends Record {
     _computeCanHide() {
         return Boolean(this.self_member_id?.is_pinned);
     }
-    channel_member_ids = fields.Many("discuss.channel.member", {
-        inverse: "channel_id",
-        onDelete: (r) => r?.delete(),
-    });
+    channel_member_ids = fields.Many("discuss.channel.member", { inverse: "channel_id" });
     sortedChannelMembers = this.computed(() =>
         [...this.channel_member_ids].sort((m1, m2) => m1.id - m2.id)
     );
@@ -232,18 +258,7 @@ export class DiscussChannel extends Record {
     /** @type {"chat"|"channel"|"group"|"livechat"|"whatsapp"|"ai_chat"|"ai_composer"} */
     channel_type;
     /** ⚠️ {@link AwaitChatHubInit} */
-    chatWindow = fields.One("ChatWindow", {
-        inverse: "channel",
-        onAdd() {
-            if (this.self_member_id && !this.self_member_id.is_pinned) {
-                this.self_member_id.unpin_dt = false;
-                this.pinRpc({ pinned: true });
-            }
-        },
-        onDelete() {
-            this._onDeleteChatWindow();
-        },
-    });
+    chatWindow = fields.One("ChatWindow", { inverse: "channel" });
     get channelNotifications() {
         return (
             this.self_member_id?.custom_notifications ||
@@ -505,12 +520,7 @@ export class DiscussChannel extends Record {
     );
     /** @type {true|undefined} */
     open_chat_window;
-    parent_channel_id = fields.One("discuss.channel", {
-        inverse: "sub_channel_ids",
-        onDelete() {
-            this.delete();
-        },
-    });
+    parent_channel_id = fields.One("discuss.channel", { inverse: "sub_channel_ids" });
     /** @type {"loaded"|"loading"|"error"|undefined} */
     pinnedMessagesState = undefined;
     get showCorrespondentCountry() {
@@ -545,12 +555,7 @@ export class DiscussChannel extends Record {
             (a, b) => compareDatetime(b.lastInterestDt, a.lastInterestDt) || b.id - a.id
         )
     );
-    self_member_id = fields.One("discuss.channel.member", {
-        inverse: "channelAsSelf",
-        onDelete() {
-            this.onPinStateUpdated();
-        },
-    });
+    self_member_id = fields.One("discuss.channel.member", { inverse: "channelAsSelf" });
     storeAsFavoriteChannels = fields.One("Store", {
         compute() {
             return this.self_member_id?.is_favorite ? this.store : null;
@@ -562,7 +567,6 @@ export class DiscussChannel extends Record {
             return { id: this.id, model: "discuss.channel" };
         },
         inverse: "channel",
-        onDelete: (r) => r?.delete(),
     });
     // Start with `not_member` not to trigger a subscription if the user is not a member
     // initially, only when switching from `member_xxx` to `not_member` following a leave.

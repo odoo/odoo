@@ -439,21 +439,55 @@ export class Record {
      * @param {(this: this, ...deps: T) => (() => void)|void} callback may return
      *  a cleanup function, invoked before the next callback and on dispose
      * @param {Object} [options]
+     * @param {boolean} [options.diff=false] run once per dependency that
+     *  entered, with that `T[number]` as only argument and the falsy ones
+     *  ignored, and take its cleanup as the one of that dependency: it runs
+     *  when that one leaves, or on dispose
      * @param {boolean} [options.immediate=false] run synchronously, once the
      *  write that changed a dependency is applied, instead of in the default
      *  batched `effect`
      * @param {boolean} [options.initialRun=true] pass false to skip the first run
      */
-    onChange(dependencies, callback, { immediate = false, initialRun = true } = {}) {
+    onChange(dependencies, callback, { diff = false, immediate = false, initialRun = true } = {}) {
         const record = this;
         if (!record._) {
             // the dummy record collecting the field declarations has no internals
             return;
         }
         const deps = record._.ensureScope().run(() =>
-            computed(dependencies.bind(record), { equals: shallowEqual })
+            computed(
+                diff ? () => dependencies.call(record).filter(Boolean) : dependencies.bind(record),
+                { equals: shallowEqual }
+            )
         );
-        const boundCallback = (...values) => callback.apply(record._proxy, values);
+        let previous = [];
+        /** @type {Map<any, () => void>} */
+        const itemCleanups = new Map();
+        function getChanges(items) {
+            const added = items.filter((item) => !previous.includes(item));
+            const removed = previous.filter((item) => !items.includes(item));
+            previous = items;
+            return added.length || removed.length ? { added, removed } : undefined;
+        }
+        function runDiff(values) {
+            // Loop over what the callbacks change themselves, as the effect
+            // subscribed to the items they read before running.
+            let changes = getChanges(values);
+            while (changes) {
+                for (const item of changes.removed) {
+                    const itemCleanup = itemCleanups.get(item);
+                    itemCleanups.delete(item);
+                    itemCleanup?.();
+                }
+                for (const item of changes.added) {
+                    const result = callback.call(record._proxy, item);
+                    if (typeof result === "function") {
+                        itemCleanups.set(item, result);
+                    }
+                }
+                changes = getChanges(deps());
+            }
+        }
         let firstRun = true;
         let firstValues;
         let cleanup;
@@ -486,16 +520,30 @@ export class Record {
                             }
                         }
                         untrack(() => {
+                            if (diff) {
+                                runDiff(values);
+                                return;
+                            }
                             cleanup?.();
-                            const result = boundCallback(...values);
+                            const result = callback.apply(record._proxy, values);
                             cleanup = typeof result === "function" ? result : undefined;
                         });
                     })
                 );
                 record._registerDisposeFn(() => {
                     disposeFn();
-                    untrack(() => cleanup?.());
+                    untrack(() => {
+                        cleanup?.();
+                        if (!record.exists()) {
+                            // Undo only for a deleted record: the app teardown
+                            // disposes live ones too.
+                            for (const itemCleanup of itemCleanups.values()) {
+                                itemCleanup();
+                            }
+                        }
+                    });
                     cleanup = undefined;
+                    itemCleanups.clear();
                 });
             })
         );

@@ -61,6 +61,15 @@ export class RtcSession extends Record {
     setup() {
         super.setup(...arguments);
         this.onChange(
+            () => [this.channel_member_id],
+            (channel_member_id) => {
+                if (!channel_member_id) {
+                    this.delete();
+                }
+            },
+            { immediate: true, initialRun: false }
+        );
+        this.onChange(
             () => [this.is_screen_sharing_on],
             function onChangeIsScreenSharingOn(is_screen_sharing_on) {
                 if (

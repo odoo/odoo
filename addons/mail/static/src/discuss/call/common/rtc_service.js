@@ -410,11 +410,6 @@ export class Rtc extends Record {
                 this.store["discuss.channel.rtc.session"].get(this._remotelyHostedSessionId)
             );
         },
-        onDelete() {
-            if (this.channel) {
-                this.channel.promoteFullscreen = CALL_PROMOTE_FULLSCREEN.INACTIVE;
-            }
-        },
     });
     /**
      * The DiscussChannel of the current user for the call hosted by this tab.
@@ -506,6 +501,17 @@ export class Rtc extends Record {
     });
 
     setup() {
+        this.onChange(
+            () => [this.selfSession],
+            function onChangeSelfSession() {
+                return () => {
+                    if (this.channel) {
+                        this.channel.promoteFullscreen = CALL_PROMOTE_FULLSCREEN.INACTIVE;
+                    }
+                };
+            },
+            { immediate: true }
+        );
         // the services and the dialog the record holds, assigned when the service starts or
         // when a call runs
         /** @type {SfuClientState} */
