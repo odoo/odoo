@@ -3,6 +3,7 @@
 import itertools
 import markupsafe
 
+from copy import deepcopy
 from lxml import etree
 from unittest.mock import patch
 
@@ -768,7 +769,8 @@ class TestQWebBasic(TransactionCase):
         ]
 
         IrQweb = self.env['ir.qweb']
-        for expr, q_values, result in tests:
+        # Without compile context
+        for expr, q_values, result in deepcopy(tests):
             compile_context = {}
             expr_namespace = IrQweb._compile_expr(expr, compile_context)
 
@@ -779,6 +781,21 @@ class TestQWebBasic(TransactionCase):
             test = values['test']
 
             test(q_values)
+            q_result = dict(q_values, result=result)
+            self.assertDictEqual(q_values, q_result, "Should compile: %s" % expr)
+
+        # With compile context
+        name_gen = itertools.count()
+        for expr, q_values, result in deepcopy(tests):
+            compile_context = {
+                'make_name': lambda prefix: f"{prefix}_{next(name_gen)}",
+                '_qweb_expr_funcs': {},
+            }
+            IrQweb._compile_expr(expr, compile_context)
+            _, func = compile_context['_qweb_expr_funcs'].popitem()
+            expr_result = func(q_values)
+            q_values['result'] = expr_result
+
             q_result = dict(q_values, result=result)
             self.assertDictEqual(q_values, q_result, "Should compile: %s" % expr)
 
