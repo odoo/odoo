@@ -12,6 +12,49 @@
     --#{$variable-prefix}btn-disabled-border-color: transparent;
     --#{$prefix}btn-focus-box-shadow: #{$focus-ring-box-shadow};
     --#{$prefix}gradient: #{$o-gradient-btn};
+
+    // Bootstrap gives the same declarations to a button being pressed
+    // (':active') and to a toggled one ('.active', '.show' and a checked
+    // '.btn-check'), so a selected button looks like a button being clicked.
+    // The '--btn-active-*' variables keep styling the toggled ones, the
+    // pressed state gets the ones below. They default to the toggled values,
+    // meaning nothing changes until a design gives them their own.
+    --#{$prefix}btn-pressed-color: var(--#{$prefix}btn-active-color);
+    --#{$prefix}btn-pressed-bg: var(--#{$prefix}btn-active-bg);
+    --#{$prefix}btn-pressed-border-color: var(--#{$prefix}btn-active-border-color);
+    --#{$prefix}btn-pressed-shadow: var(--#{$prefix}btn-active-shadow);
+}
+
+// Bootstrap selectors
+:not(.btn-check) + .btn:active,
+.btn:first-child:active {
+    color: var(--#{$prefix}btn-pressed-color);
+    background-color: var(--#{$prefix}btn-pressed-bg);
+    background-image: if($enable-gradients, none, null);
+    border-color: var(--#{$prefix}btn-pressed-border-color);
+    @include box-shadow(var(--#{$prefix}btn-pressed-shadow));
+
+    &:focus-visible {
+        @if $enable-shadows {
+            box-shadow: var(--#{$prefix}btn-pressed-shadow), var(--#{$prefix}btn-focus-box-shadow);
+        } @else {
+            box-shadow: var(--#{$prefix}btn-focus-box-shadow);
+        }
+    }
+}
+
+// Values a map can give to the pressed state. Only the defined ones are
+// emitted, the others keep the toggled value.
+@mixin o-btn-pressed-variant($background, $border, $color) {
+    @if $background {
+        --#{$prefix}btn-pressed-bg: #{$background};
+    }
+    @if $border {
+        --#{$prefix}btn-pressed-border-color: #{$border};
+    }
+    @if $color {
+        --#{$prefix}btn-pressed-color: #{$color};
+    }
 }
 
 // 1. Render buttons defined in '$o-btns-bs-override' and '$o-btns-bs-outline-override'
@@ -32,6 +75,11 @@
             o-safe-get($-value, disabled-border),
             o-safe-get($-value, disabled-color)
         );
+        @include o-btn-pressed-variant(
+            o-safe-get($-value, pressed-background),
+            o-safe-get($-value, pressed-border),
+            o-safe-get($-value, pressed-color)
+        );
     }
 }
 
@@ -51,6 +99,11 @@
             o-safe-get($-value, disabled-border),
             o-safe-get($-value, disabled-color)
         );
+        @include o-btn-pressed-variant(
+            o-safe-get($-value, pressed-background),
+            o-safe-get($-value, pressed-border),
+            o-safe-get($-value, pressed-color)
+        );
     }
 }
 
@@ -67,20 +120,38 @@
             o-safe-get($-value, active-border),
             o-safe-get($-value, active-color),
         );
+        @include o-btn-pressed-variant(
+            o-safe-get($-value, pressed-background),
+            o-safe-get($-value, pressed-border),
+            o-safe-get($-value, pressed-color)
+        );
     }
 }
 
 // 2. Render '$theme-colors' buttons excluding the ones already generated
 //    using the custom maps.
 @each $-name, $-color in $theme-colors {
+    $-pressed: shade-color($-color, 15%);
+    $-toggled: mix($-color, $body-bg, 12%);
+
     @if (not map-get($o-btns-bs-override, $-name)) {
         .btn-#{$-name} {
             @include button-variant($-color, $-color);
+            @include o-btn-pressed-variant($-pressed, $-pressed, color-contrast($-pressed));
+
+            --#{$prefix}btn-active-color: #{color-contrast($-toggled)};
+            --#{$prefix}btn-active-bg: #{$-toggled};
+            --#{$prefix}btn-active-border-color: #{$-color};
         }
     }
     @if (not map-get($o-btns-bs-outline-override, $-name)) {
         .btn-outline-#{$-name} {
             @include button-outline-variant($-color);
+            @include o-btn-pressed-variant($-pressed, $-pressed, color-contrast($-pressed));
+
+            --#{$prefix}btn-hover-color: #{$-color};
+            --#{$prefix}btn-hover-bg: #{rgba($-color, .12)};
+            --#{$prefix}btn-hover-border-color: #{$-color};
         }
     }
 }
@@ -88,7 +159,15 @@
 // 3. Render custom buttons.
 @each $-name, $-color in $o-btn-custom {
     .btn-#{$-name} {
+        $-pressed: shade-color($-color, 15%);
+        $-toggled: mix($-color, $body-bg, 12%);
+
         @include button-variant($-color, $-color);
+        @include o-btn-pressed-variant($-pressed, $-pressed, color-contrast($-pressed));
+
+        --#{$prefix}btn-active-color: #{color-contrast($-toggled)};
+        --#{$prefix}btn-active-bg: #{$-toggled};
+        --#{$prefix}btn-active-border-color: #{$-color};
     }
 }
 
