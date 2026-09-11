@@ -91,7 +91,7 @@ class SaleOrderTemplate extends saleManagementModels.SaleOrderTemplate {
     ];
     _views = {
         form: `
-            <form>
+            <form js_class="sale_order_template_form">
                 <field
                     name="sale_order_template_line_ids"
                     widget="so_template_line_o2m"
@@ -108,7 +108,14 @@ class SaleOrderTemplate extends saleManagementModels.SaleOrderTemplate {
                             <field name="name" invisible="not display_type"/>
                             <field name="label" invisible="display_type"/>
                         </column>
-                        <field name="product_uom_qty"/>
+                        <column name="sotl_qty">
+                            <field name="product_uom_qty" invisible="display_type"/>
+                            <field
+                                name="section_qty"
+                                invisible="display_type not in ('line_section', 'line_subsection')"
+                                class="fw-normal text-muted"
+                            />
+                        </column>
                         <field name="display_type" column_invisible="1"/>
                         <field name="is_optional" column_invisible="1"/>
                         <field name="collapse_prices" column_invisible="1"/>
@@ -178,7 +185,9 @@ test("drag and drop regular template lines inside optional section resets some f
         resId: 1,
     });
 
-    expect(queryAllTexts('.o_data_row .o_column_group_field')).toEqual(EXPECTED_LINE_RECORDS);
+    expect(queryAllTexts(".o_data_row td[name=product_and_description]")).toEqual(
+        EXPECTED_LINE_RECORDS
+    );
 
     await contains('.o_data_row:contains(Sec4-r1):first .o_row_handle').dragAndDrop('.o_data_row:contains(Sec3-sub2):first');
     await contains('.o_data_row:contains(Sec3-sub2-r1):first .o_row_handle').dragAndDrop('.o_data_row:contains(Sec4-sub1):first');
@@ -223,7 +232,9 @@ test("Moving Optional Sections to include some template lines should set quantit
         resId: 1,
     });
 
-    expect(queryAllTexts('.o_data_row .o_column_group_field')).toEqual(EXPECTED_LINE_RECORDS);
+    expect(queryAllTexts(".o_data_row td[name=product_and_description]")).toEqual(
+        EXPECTED_LINE_RECORDS
+    );
 
     await contains('.o_data_row:contains(Sec4):first .o_row_handle').dragAndDrop('.o_data_row:contains(Sec3-r2):first');
     await clickSave();
@@ -273,7 +284,9 @@ test("Moving Optional Sections to exclude some template lines should set quantit
         resId: 1,
     });
 
-    expect(queryAllTexts('.o_data_row .o_column_group_field')).toEqual(EXPECTED_LINE_RECORDS);
+    expect(queryAllTexts(".o_data_row td[name=product_and_description]")).toEqual(
+        EXPECTED_LINE_RECORDS
+    );
 
     await contains('.o_data_row:contains(Sec3):first .o_row_handle').dragAndDrop('.o_data_row:contains(Sec4):first');
     await clickSave();
@@ -287,7 +300,9 @@ test("Can't mark section hidden if optional and vice versa", async () => {
         resId: 1,
     });
 
-    expect(queryAllTexts(".o_data_row .o_column_group_field")).toEqual(EXPECTED_LINE_RECORDS);
+    expect(queryAllTexts(".o_data_row td[name=product_and_description]")).toEqual(
+        EXPECTED_LINE_RECORDS
+    );
 
     await contains(".o_data_row:contains(Sec1) .o_list_section_options button").click();
     expect(".o-dropdown-item:contains(Set Optional)").toHaveClass("disabled", {
@@ -328,7 +343,9 @@ test("Setting section optional should reset some fields", async () => {
         resId: 1,
     });
 
-    expect(queryAllTexts(".o_data_row .o_column_group_field")).toEqual(EXPECTED_LINE_RECORDS);
+    expect(queryAllTexts(".o_data_row td[name=product_and_description]")).toEqual(
+        EXPECTED_LINE_RECORDS
+    );
 
     await contains(".o_data_row:contains(Sec3-sub2) .o_list_section_options button").click();
     await contains(".o-dropdown-item:contains(Hide Composition)").click();
@@ -380,7 +397,9 @@ test("Unsetting optional section should reset quantity", async () => {
         resId: 1,
     });
 
-    expect(queryAllTexts(".o_data_row .o_column_group_field")).toEqual(EXPECTED_LINE_RECORDS);
+    expect(queryAllTexts(".o_data_row td[name=product_and_description]")).toEqual(
+        EXPECTED_LINE_RECORDS
+    );
 
     expect(".o_data_row:contains(Sec3-r1)").toHaveClass("text-primary", {
         message: "Line under optional section should be text-primary",
@@ -419,12 +438,55 @@ test("Drag and drop optional subsection under hidden section resets its optional
         resId: 1,
     });
 
-    expect(queryAllTexts(".o_data_row .o_column_group_field")).toEqual(EXPECTED_LINE_RECORDS);
+    expect(queryAllTexts(".o_data_row td[name=product_and_description]")).toEqual(
+        EXPECTED_LINE_RECORDS
+    );
 
     await contains(".o_data_row:contains(Sec3-sub1):first .o_row_handle").dragAndDrop(
         ".o_data_row:contains(Sec3):first"
     );
 
     await clickSave();
+    expect.verifySteps(["web_save"]);
+});
+
+test("Editing a subsection's quantity applies the ratio to its line and recomputes its price", async () => {
+    SaleOrderTemplateLine._records.find((record) => record.name === "Sec3-sub2").section_qty = 2;
+    SaleOrderTemplateLine._records.find(
+        (record) => record.name === "Sec3-sub2-r1"
+    ).product_uom_qty = 3;
+
+    onRpc("web_save", ({ args }) => {
+        expect.step("web_save");
+        const commands = args[1].sale_order_template_line_ids;
+
+        expect(commands.find((c) => c[1] === 10)[2]).toEqual(
+            { section_qty: 4 },
+            {
+                message: "The subsection's own quantity change should be saved",
+            }
+        );
+        expect(commands.find((c) => c[1] === 11)[2]).toEqual(
+            { product_uom_qty: 6 },
+            {
+                message: "Subsections lines quantity should be saved",
+            }
+        );
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "sale.order.template",
+        resId: 1,
+    });
+
+    expect(queryAllTexts(".o_data_row td[name=product_and_description]")).toEqual(
+        EXPECTED_LINE_RECORDS
+    );
+
+    await contains(".o_data_row:contains(Sec3-sub2):first [name=product_and_description]").click();
+    await contains(".o_selected_row [name=section_qty] input", { visible: false }).edit("4");
+    await clickSave();
+
     expect.verifySteps(["web_save"]);
 });

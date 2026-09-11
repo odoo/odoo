@@ -1,0 +1,13 @@
+.o_data_row {
+    div[data-field-name="section_qty"],
+    div[data-field-name="section_uom_id"] {
+        opacity: 0;
+    }
+
+    &:hover div[data-field-name="section_qty"],
+    &:hover div[data-field-name="section_uom_id"],
+    &:focus-within div[data-field-name="section_qty"],
+    &:focus-within div[data-field-name="section_uom_id"] {
+        opacity: 1;
+    }
+}
