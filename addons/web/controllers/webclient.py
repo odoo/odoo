@@ -107,6 +107,13 @@ class WebClient(http.Controller):
             },
         })
 
+    @http.route('/web/buttons', type='http', auth='user', readonly=True)
+    def buttons_debug_page(self, color_scheme=None, **kwargs):
+        """ Design page showing every backend button in all of its states. """
+        if color_scheme not in ('light', 'dark'):
+            color_scheme = request.env['ir.http'].color_scheme()
+        return request.render('web.buttons_debug', {'color_scheme': color_scheme})
+
     @http.route('/web/bundle/<string:bundle_name>', auth='public', methods=['GET'], readonly=True)
     def bundle(self, bundle_name, **bundle_params):
         """

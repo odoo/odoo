@@ -1,0 +1,814 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!--
+    Buttons debug page, served by "/web/buttons" and reachable from the debug
+    menu. It renders every button pattern used in the backend, each one in all
+    of its states at the same time, so button styles can be reviewed as a whole.
+    It is a design tool only, nothing of the webclient depends on it.
+-->
+
+<!-- Renders one table: a row per variant, a column per state. -->
+<template id="web.buttons_debug_matrix">
+    <table class="o_dbg_matrix">
+        <thead>
+            <tr>
+                <th>Class</th>
+                <th t-foreach="states" t-as="state" t-key="state_index" t-out="state[0]"/>
+                <th class="o_dbg_live">Live</th>
+                <th>Icon + label</th>
+                <th>Icon only</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr t-foreach="variants" t-as="variant" t-key="variant">
+                <th t-out="variant or '.btn (no variant)'"/>
+                <td t-foreach="states" t-as="state" t-key="state_index">
+                    <button type="button" t-attf-class="btn #{variant} #{state[1]}"
+                        t-att-disabled="state[1] == 'disabled' or None">Button</button>
+                </td>
+                <td class="o_dbg_live">
+                    <button type="button" t-attf-class="btn #{variant}">Button</button>
+                </td>
+                <td>
+                    <button type="button" t-attf-class="btn #{variant}">
+                        <i class="oi oi-fw" data-icon="add"/>Button
+                    </button>
+                </td>
+                <td>
+                    <button type="button" t-attf-class="btn #{variant} oi" data-icon="settings"
+                        aria-label="Settings" title="Settings"/>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</template>
+
+<template id="web.buttons_debug">
+    <t t-set="states" t-value="[
+        ('Default', ''),
+        ('Hover', 'o_dbg_hover'),
+        ('Focus', 'o_dbg_focus'),
+        ('Pressed (:active)', 'active o_dbg_pressed'),
+        ('Toggled (.active)', 'active'),
+        ('Disabled', 'disabled'),
+    ]"/>
+    <t t-set="head">
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <t t-if="color_scheme == 'dark'">
+            <t t-call-assets="web.assets_web_dark" media="screen" t-js="false"/>
+        </t>
+        <t t-else="">
+            <t t-call-assets="web.assets_web" media="screen" t-js="false"/>
+        </t>
+        <style>
+            /*
+                The states are forced through the Bootstrap button CSS
+                variables, so that they can all be displayed at once. It only
+                works for the buttons built with the 'button-variant' mixin,
+                the "Live" column is there to check the real thing.
+            */
+            .btn.o_dbg_hover, .btn.o_dbg_focus {
+                --btn-color: var(--btn-hover-color);
+                --btn-bg: var(--btn-hover-bg);
+                --btn-border-color: var(--btn-hover-border-color);
+            }
+            .btn.o_dbg_focus {
+                box-shadow: var(--btn-focus-box-shadow);
+            }
+            .btn.o_dbg_pressed {
+                --btn-active-color: var(--btn-pressed-color);
+                --btn-active-bg: var(--btn-pressed-bg);
+                --btn-active-border-color: var(--btn-pressed-border-color);
+                --btn-active-shadow: var(--btn-pressed-shadow);
+            }
+
+            .o_dbg_page {
+                padding: 0 1.5rem 6rem;
+            }
+            .o_dbg_toolbar {
+                position: sticky;
+                top: 0;
+                z-index: 10;
+                display: flex;
+                flex-wrap: wrap;
+                gap: .5rem 1.25rem;
+                align-items: center;
+                margin: 0 -1.5rem 1.5rem;
+                padding: .5rem 1.5rem;
+                background: var(--body-bg, #fff);
+                color: var(--body-color, #000);
+                border-bottom: 1px solid var(--border-color, #dee2e6);
+            }
+            .o_dbg_brand {
+                font-size: .9375rem;
+            }
+            .o_dbg_control {
+                display: flex;
+                gap: .375rem;
+                align-items: center;
+            }
+            .o_dbg_control_label {
+                font-size: .6875rem;
+                text-transform: uppercase;
+                letter-spacing: .04em;
+                opacity: .5;
+            }
+            .o_dbg_hint {
+                margin-left: auto;
+                font-size: .75rem;
+                opacity: .5;
+            }
+
+            /* Segmented control */
+            .o_dbg_seg {
+                display: inline-flex;
+                gap: 2px;
+                padding: 2px;
+                border-radius: 6px;
+                background: rgba(128, 128, 128, .16);
+            }
+            .o_dbg_seg > button {
+                appearance: none;
+                padding: .0625rem .5rem;
+                border: 0;
+                border-radius: 4px;
+                background: transparent;
+                color: inherit;
+                font: inherit;
+                font-size: .8125rem;
+                opacity: .7;
+                cursor: pointer;
+            }
+            .o_dbg_seg > button:hover {
+                opacity: 1;
+            }
+            .o_dbg_seg > button[aria-pressed="true"] {
+                background: var(--body-bg, #fff);
+                box-shadow: 0 1px 2px rgba(0, 0, 0, .15);
+                opacity: 1;
+            }
+
+            /* Surface chips */
+            .o_dbg_chips {
+                display: inline-flex;
+                gap: .25rem;
+            }
+            .o_dbg_chips > button {
+                width: 1.25rem;
+                height: 1.25rem;
+                padding: 0;
+                border: 1px solid rgba(128, 128, 128, .4);
+                border-radius: 4px;
+                cursor: pointer;
+            }
+            .o_dbg_chips > button[aria-pressed="true"] {
+                outline: 2px solid var(--primary, #714b67);
+                outline-offset: 1px;
+            }
+            .o_dbg_chip_none {
+                /* A diagonal line stands for "no surface, the page itself" */
+                background: linear-gradient(to top right, transparent 45%, rgba(128, 128, 128, .6) 45%, rgba(128, 128, 128, .6) 55%, transparent 55%);
+            }
+            .o_dbg_chip_name {
+                min-width: 5.5rem;
+                font-family: monospace;
+                font-size: .75rem;
+                opacity: .6;
+            }
+
+            /* Light/dark switch */
+            .o_dbg_switch {
+                display: inline-flex;
+                gap: .5rem;
+                align-items: center;
+                font-size: .8125rem;
+                cursor: pointer;
+                user-select: none;
+            }
+            .o_dbg_switch input {
+                position: absolute;
+                width: 1px;
+                height: 1px;
+                opacity: 0;
+            }
+            .o_dbg_switch_track {
+                position: relative;
+                width: 2.25rem;
+                height: 1.25rem;
+                border-radius: 1rem;
+                background: rgba(128, 128, 128, .4);
+                transition: background .15s ease;
+            }
+            .o_dbg_switch_track:before {
+                content: "";
+                position: absolute;
+                top: 2px;
+                left: 2px;
+                width: 1rem;
+                height: 1rem;
+                border-radius: 50%;
+                background: #fff;
+                box-shadow: 0 1px 2px rgba(0, 0, 0, .3);
+                transition: transform .15s ease;
+            }
+            .o_dbg_switch input:checked + .o_dbg_switch_track {
+                background: var(--primary, #714b67);
+            }
+            .o_dbg_switch input:checked + .o_dbg_switch_track:before {
+                transform: translateX(1rem);
+            }
+            .o_dbg_switch input:focus-visible + .o_dbg_switch_track {
+                outline: 2px solid var(--primary, #714b67);
+                outline-offset: 2px;
+            }
+            .o_dbg_section {
+                margin-bottom: 2.5rem;
+            }
+            .o_dbg_section > h3 {
+                margin-bottom: .25rem;
+                font-size: 1.1rem;
+            }
+            .o_dbg_section > p {
+                max-width: 60ch;
+                opacity: .65;
+            }
+            .o_dbg_more {
+                margin-top: .75rem;
+            }
+            .o_dbg_more > summary {
+                display: inline-flex;
+                gap: .375rem;
+                align-items: center;
+                padding: .125rem .5rem;
+                border-radius: 4px;
+                background: rgba(128, 128, 128, .14);
+                font-size: .8125rem;
+                cursor: pointer;
+                list-style: none;
+            }
+            .o_dbg_more > summary::-webkit-details-marker {
+                display: none;
+            }
+            .o_dbg_more > summary:before {
+                content: "+";
+                font-family: monospace;
+                opacity: .6;
+            }
+            .o_dbg_more[open] > summary:before {
+                content: "-";
+            }
+            .o_dbg_matrix {
+                border-collapse: separate;
+                border-spacing: .5rem;
+            }
+            .o_dbg_matrix th {
+                font-weight: 500;
+                text-align: left;
+                vertical-align: middle;
+                white-space: nowrap;
+            }
+            .o_dbg_matrix thead th {
+                font-size: .75rem;
+                text-transform: uppercase;
+                letter-spacing: .04em;
+                opacity: .55;
+            }
+            .o_dbg_matrix tbody th {
+                font-family: monospace;
+                font-size: .8rem;
+            }
+            .o_dbg_matrix .o_dbg_live {
+                border-left: 1px dashed var(--border-color, #dee2e6);
+                padding-left: .75rem;
+            }
+            .o_dbg_row {
+                display: flex;
+                flex-wrap: wrap;
+                gap: .5rem;
+                align-items: center;
+                margin-bottom: .75rem;
+            }
+            .o_dbg_surface {
+                display: flex;
+                flex-wrap: wrap;
+                gap: .5rem;
+                align-items: center;
+                margin-bottom: .5rem;
+                padding: .75rem;
+                border-radius: 4px;
+            }
+            .o_dbg_label {
+                min-width: 12rem;
+                font-family: monospace;
+                font-size: .8rem;
+                opacity: .65;
+            }
+            .o_dbg_fake_dialog {
+                max-width: 32rem;
+            }
+            /* Inspector */
+            .o_dbg_inspector {
+                position: fixed;
+                right: 0;
+                bottom: 0;
+                z-index: 20;
+                width: 22rem;
+                max-height: 60vh;
+                overflow: auto;
+                padding: .75rem;
+                background: var(--body-bg, #fff);
+                color: var(--body-color, #000);
+                border-top: 1px solid var(--border-color, #dee2e6);
+                border-left: 1px solid var(--border-color, #dee2e6);
+                font-size: .75rem;
+            }
+            .o_dbg_inspector table {
+                width: 100%;
+            }
+            .o_dbg_inspector td {
+                font-family: monospace;
+                vertical-align: top;
+                word-break: break-all;
+            }
+            .o_dbg_inspector td:first-child {
+                opacity: .6;
+                white-space: nowrap;
+                padding-right: .5rem;
+            }
+            .o_dbg_swatch {
+                display: inline-block;
+                width: .75rem;
+                height: .75rem;
+                margin-right: .25rem;
+                border: 1px solid rgba(128, 128, 128, .5);
+                vertical-align: -1px;
+            }
+        </style>
+    </t>
+    <t t-call="web.layout" head="head" title.translate="Buttons" body_classname.f="o_web_client">
+        <div id="o_dbg_root" class="o_dbg_page">
+            <div class="o_dbg_toolbar">
+                <strong class="o_dbg_brand">Buttons</strong>
+                <div class="o_dbg_control">
+                    <span class="o_dbg_control_label">Size</span>
+                    <div class="o_dbg_seg" id="o_dbg_size" role="group" aria-label="Button size">
+                        <button type="button" data-size="btn-sm" aria-pressed="false">sm</button>
+                        <button type="button" data-size="" aria-pressed="true">default</button>
+                        <button type="button" data-size="btn-lg" aria-pressed="false">lg</button>
+                    </div>
+                </div>
+                <div class="o_dbg_control">
+                    <span class="o_dbg_control_label">Surface</span>
+                    <div class="o_dbg_chips" id="o_dbg_surface" role="group" aria-label="Page surface">
+                        <button type="button" class="o_dbg_chip_none" data-surface="" aria-pressed="true"
+                            title="page" aria-label="page"/>
+                        <t t-foreach="[
+                            'text-bg-view', 'text-bg-light', 'text-bg-action',
+                            'text-bg-primary', 'text-bg-dark', 'text-bg-danger',
+                        ]" t-as="bg" t-key="bg">
+                            <button type="button" t-att-class="bg" t-att-data-surface="bg" aria-pressed="false"
+                                t-att-title="bg" t-att-aria-label="bg"/>
+                        </t>
+                    </div>
+                    <span class="o_dbg_chip_name" id="o_dbg_surface_name">page</span>
+                </div>
+                <label class="o_dbg_switch">
+                    <input type="checkbox" id="o_dbg_scheme"
+                        t-att-checked="color_scheme == 'dark' or None"/>
+                    <span class="o_dbg_switch_track"/>
+                    <span>Dark</span>
+                </label>
+                <span class="o_dbg_hint">Click a button to inspect its resolved variables</span>
+            </div>
+
+            <div class="o_dbg_section">
+                <h3>Solid variants</h3>
+                <p>Generated in <code>bootstrap_review_backend.scss</code> from
+                    <code>$o-btns-bs-override</code> (primary, secondary, light) and from Bootstrap
+                    <code>$theme-colors</code> for the others. <code>btn-favourite</code> comes from
+                    <code>$o-btn-custom</code>.</p>
+                <p>Toggled (<code>.active</code>, <code>.show</code>, a checked
+                    <code>.btn-check</code>) keeps the <code>active-*</code> keys of the maps and
+                    inverts the filling. Pressed (the mouse is held down) comes from the
+                    <code>pressed-*</code> keys and is the strongest step, so a toggled button
+                    cannot be taken for a button being clicked. A variant without
+                    <code>pressed-*</code> keys looks the same in both.</p>
+                <t t-set="variants" t-value="['btn-primary', 'btn-secondary', 'btn-light', '']"/>
+                <t t-call="web.buttons_debug_matrix"/>
+                <details class="o_dbg_more">
+                    <summary>Status colors</summary>
+                    <t t-set="variants" t-value="[
+                        'btn-danger', 'btn-success', 'btn-warning', 'btn-info', 'btn-dark',
+                        'btn-favourite',
+                    ]"/>
+                    <t t-call="web.buttons_debug_matrix"/>
+                </details>
+            </div>
+
+            <div class="o_dbg_section">
+                <h3>Outline variants</h3>
+                <p>Only <code>btn-outline-secondary</code> is overridden by Odoo
+                    (<code>$o-btns-bs-outline-override</code>), the others come from Bootstrap.</p>
+                <t t-set="variants" t-value="['btn-outline-primary', 'btn-outline-secondary']"/>
+                <t t-call="web.buttons_debug_matrix"/>
+                <details class="o_dbg_more">
+                    <summary>Status colors</summary>
+                    <t t-set="variants" t-value="[
+                        'btn-outline-danger', 'btn-outline-success', 'btn-outline-warning',
+                        'btn-outline-info', 'btn-outline-dark', 'btn-outline-light',
+                    ]"/>
+                    <t t-call="web.buttons_debug_matrix"/>
+                </details>
+            </div>
+
+            <div class="o_dbg_section">
+                <h3>Fill variants</h3>
+                <p>Same colors as the solid ones, but with a transparent border. Used where a button
+                    must keep the exact size of its container.</p>
+                <t t-set="variants" t-value="['btn-fill-primary', 'btn-fill-secondary', 'btn-fill-light']"/>
+                <t t-call="web.buttons_debug_matrix"/>
+            </div>
+
+            <div class="o_dbg_section">
+                <h3>Link buttons</h3>
+                <p>These are styled with real pseudo-classes (<code>o-btn-link-variant</code>), so the
+                    forced Hover and Focus columns are not reliable here: use the Live column.</p>
+                <t t-set="variants" t-value="[
+                    'btn-link', 'btn-link btn-link-inline', 'btn-link text-primary',
+                    'btn-link text-muted',
+                ]"/>
+                <t t-call="web.buttons_debug_matrix"/>
+                <details class="o_dbg_more">
+                    <summary>Status colors</summary>
+                    <t t-set="variants" t-value="[
+                        'btn-link text-danger', 'btn-link text-warning', 'btn-link text-success',
+                        'btn-link btn-danger', 'btn-link btn-favourite',
+                    ]"/>
+                    <t t-call="web.buttons_debug_matrix"/>
+                </details>
+            </div>
+
+            <div class="o_dbg_section">
+                <h3>Sizes</h3>
+                <t t-foreach="['btn-primary', 'btn-secondary', 'btn-outline-secondary', 'btn-link']" t-as="variant" t-key="variant">
+                    <div class="o_dbg_row">
+                        <span class="o_dbg_label" t-out="variant"/>
+                        <t t-foreach="['btn-lg', '', 'btn-sm']" t-as="size" t-key="size">
+                            <button type="button" data-dbg-nosize="1" t-attf-class="btn #{variant} #{size}">
+                                <t t-out="size or 'default'"/>
+                            </button>
+                            <button type="button" data-dbg-nosize="1" t-attf-class="btn #{variant} #{size}">
+                                <i class="oi oi-fw" data-icon="edit"/><t t-out="size or 'default'"/>
+                            </button>
+                            <button type="button" data-dbg-nosize="1" t-attf-class="btn #{variant} #{size} oi"
+                                data-icon="edit" aria-label="Edit"/>
+                        </t>
+                    </div>
+                </t>
+            </div>
+
+            <div class="o_dbg_section">
+                <h3>Content shapes</h3>
+                <div class="o_dbg_row">
+                    <span class="o_dbg_label">label only</span>
+                    <button type="button" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-secondary">Discard</button>
+                </div>
+                <div class="o_dbg_row">
+                    <span class="o_dbg_label">icon + label</span>
+                    <button type="button" class="btn btn-primary"><i class="oi oi-fw" data-icon="add"/>New</button>
+                    <button type="button" class="btn btn-secondary">Print<i class="oi oi-fw" data-icon="print"/></button>
+                </div>
+                <div class="o_dbg_row">
+                    <span class="o_dbg_label">icon only</span>
+                    <button type="button" class="btn btn-secondary oi" data-icon="delete" aria-label="Delete"/>
+                    <button type="button" class="btn btn-light oi" data-icon="more_vert" aria-label="More"/>
+                    <button type="button" class="btn btn-secondary"><i class="oi oi-fw" data-icon="download"/></button>
+                </div>
+                <div class="o_dbg_row">
+                    <span class="o_dbg_label">with a badge</span>
+                    <button type="button" class="btn btn-secondary">Messages<span class="badge text-bg-danger ms-1">3</span></button>
+                </div>
+                <div class="o_dbg_row">
+                    <span class="o_dbg_label">with a spinner</span>
+                    <button type="button" class="btn btn-primary" disabled="disabled">
+                        <span class="spinner-border spinner-border-sm me-1"/>Loading
+                    </button>
+                </div>
+                <div class="o_dbg_row">
+                    <span class="o_dbg_label">long label</span>
+                    <button type="button" class="btn btn-secondary">A rather long button label that could wrap</button>
+                </div>
+                <div class="o_dbg_row">
+                    <span class="o_dbg_label">o_btn_circle</span>
+                    <button type="button" class="o_btn_circle btn btn-light oi" data-icon="settings" aria-label="Actions"/>
+                    <button type="button" class="o_btn_circle btn btn-secondary oi" data-icon="settings" aria-label="Actions"/>
+                    <button type="button" class="o_btn_circle btn btn-primary oi" data-icon="add" aria-label="Add"/>
+                    <button type="button" class="o_btn_circle btn btn-light oi active" data-icon="settings" aria-label="Actions"/>
+                    <button type="button" class="o_btn_circle btn btn-light oi" data-icon="settings" aria-label="Actions" disabled="disabled"/>
+                </div>
+                <div class="o_dbg_row">
+                    <span class="o_dbg_label">btn-close</span>
+                    <button type="button" class="btn-close" aria-label="Close"/>
+                    <button type="button" class="btn-close" aria-label="Close" disabled="disabled"/>
+                    <span class="bg-dark p-2 rounded">
+                        <button type="button" class="btn-close btn-close-white" aria-label="Close"/>
+                    </span>
+                </div>
+            </div>
+
+            <div class="o_dbg_section">
+                <h3>Groups and toolbars</h3>
+                <div class="o_dbg_row">
+                    <span class="o_dbg_label">btn-group</span>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-secondary">Left</button>
+                        <button type="button" class="btn btn-secondary active">Middle</button>
+                        <button type="button" class="btn btn-secondary">Right</button>
+                    </div>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-outline-secondary oi" data-icon="chevron_left" aria-label="Previous"/>
+                        <button type="button" class="btn btn-outline-secondary oi" data-icon="chevron_right" aria-label="Next"/>
+                    </div>
+                </div>
+                <div class="o_dbg_row">
+                    <span class="o_dbg_label">btn-group + dropdown</span>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary">Send</button>
+                        <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" aria-label="More"/>
+                    </div>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-secondary dropdown-toggle">Actions</button>
+                    </div>
+                    <button type="button" class="btn btn-secondary dropdown-toggle show" aria-expanded="true">Opened</button>
+                </div>
+                <div class="o_dbg_row">
+                    <span class="o_dbg_label">btn-check (toggles)</span>
+                    <div class="btn-group">
+                        <input type="radio" class="btn-check" name="o_dbg_check" id="o_dbg_check1" checked="checked"/>
+                        <label class="btn btn-outline-secondary" for="o_dbg_check1">Checked</label>
+                        <input type="radio" class="btn-check" name="o_dbg_check" id="o_dbg_check2"/>
+                        <label class="btn btn-outline-secondary" for="o_dbg_check2">Unchecked</label>
+                        <input type="radio" class="btn-check" name="o_dbg_check" id="o_dbg_check3" disabled="disabled"/>
+                        <label class="btn btn-outline-secondary" for="o_dbg_check3">Disabled</label>
+                    </div>
+                </div>
+                <div class="o_dbg_row">
+                    <span class="o_dbg_label">btn-group-vertical</span>
+                    <div class="btn-group-vertical">
+                        <button type="button" class="btn btn-secondary">Top</button>
+                        <button type="button" class="btn btn-secondary">Bottom</button>
+                    </div>
+                </div>
+                <div class="o_dbg_row">
+                    <span class="o_dbg_label">input-group</span>
+                    <div class="input-group" style="max-width: 20rem;">
+                        <input type="text" class="form-control" value="Search"/>
+                        <button type="button" class="btn btn-secondary oi" data-icon="search" aria-label="Search"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="o_dbg_section">
+                <h3>In context</h3>
+                <p>The same buttons, in the layouts where they are actually used.</p>
+
+                <span class="o_dbg_label">control panel</span>
+                <div class="o_control_panel d-flex flex-wrap align-items-center gap-2 p-2 mb-3 border">
+                    <button type="button" class="btn btn-primary o_list_button_add">New</button>
+                    <button type="button" class="btn btn-secondary">Upload</button>
+                    <button type="button" class="btn btn-secondary dropdown-toggle">Actions</button>
+                    <div class="ms-auto d-flex align-items-center gap-2">
+                        <span class="btn-group">
+                            <button type="button" class="btn btn-secondary o_pager_previous oi" data-icon="chevron_left" aria-label="Previous"/>
+                            <button type="button" class="btn btn-secondary o_pager_next oi" data-icon="chevron_right" aria-label="Next"/>
+                        </span>
+                        <nav class="o_cp_switch_buttons d-inline-flex btn-group">
+                            <button type="button" class="btn btn-secondary o_switch_view active oi" data-icon="view_list" aria-label="List"/>
+                            <button type="button" class="btn btn-secondary o_switch_view oi" data-icon="view_kanban" aria-label="Kanban"/>
+                        </nav>
+                        <button type="button" class="o_btn_circle d-print-none btn btn-light p-1 m-0 ms-1 oi" data-icon="settings" aria-label="Actions"/>
+                    </div>
+                </div>
+
+                <span class="o_dbg_label">form status bar</span>
+                <div class="o_form_statusbar d-flex flex-wrap align-items-center gap-2 p-2 mb-3 border">
+                    <div class="o_statusbar_buttons d-flex align-items-center align-content-around flex-wrap gap-1">
+                        <button type="button" class="btn btn-primary">Confirm</button>
+                        <button type="button" class="btn btn-secondary">Send by Email</button>
+                        <button type="button" class="btn btn-secondary" disabled="disabled">Cancel</button>
+                        <button type="button" class="btn btn-secondary oi" data-icon="more_vert" aria-label="More"/>
+                    </div>
+                </div>
+
+                <span class="o_dbg_label">stat buttons (button box)</span>
+                <div class="o-form-buttonbox d-flex mb-3 border">
+                    <button type="button" class="oe_stat_button btn btn-outline-secondary flex-grow-1 flex-lg-grow-0">
+                        <i class="oi oi-fw" data-icon="receipt_long"/>
+                        <div class="o_stat_info">
+                            <span class="o_stat_value">12</span>
+                            <span class="o_stat_text">Invoices</span>
+                        </div>
+                    </button>
+                    <button type="button" class="oe_stat_button btn btn-outline-secondary flex-grow-1 flex-lg-grow-0">
+                        <i class="oi oi-fw" data-icon="local_shipping"/>
+                        <div class="o_stat_info">
+                            <span class="o_stat_text">Delivered</span>
+                        </div>
+                    </button>
+                    <button type="button" class="oe_stat_button btn btn-outline-secondary flex-grow-1 flex-lg-grow-0" disabled="disabled">
+                        <i class="oi oi-fw" data-icon="paid"/>
+                        <div class="o_stat_info">
+                            <span class="o_stat_value">0</span>
+                            <span class="o_stat_text">Payments</span>
+                        </div>
+                    </button>
+                    <div class="oe_stat_button btn position-relative p-0 border-0">
+                        <button type="button" class="o_button_more btn btn-outline-secondary o-dropdown-caret d-flex justify-content-center align-items-center">
+                            <span>More</span>
+                        </button>
+                    </div>
+                </div>
+
+                <span class="o_dbg_label">dialog footer</span>
+                <div class="modal d-block position-relative mb-3 o_dbg_fake_dialog">
+                    <div class="modal-dialog m-0">
+                        <div class="modal-content">
+                            <header class="modal-header">
+                                <h4 class="modal-title">Confirmation</h4>
+                                <button type="button" class="btn-close" aria-label="Close"/>
+                            </header>
+                            <main class="modal-body">Are you sure?</main>
+                            <footer class="modal-footer d-flex flex-wrap gap-2">
+                                <button type="button" class="btn btn-primary">Ok</button>
+                                <button type="button" class="btn btn-secondary">Cancel</button>
+                                <button type="button" class="btn btn-link">Learn more</button>
+                            </footer>
+                        </div>
+                    </div>
+                </div>
+
+                <span class="o_dbg_label">list row</span>
+                <table class="table o_list_table mb-3">
+                    <tbody>
+                        <tr>
+                            <td>Record</td>
+                            <td class="text-end">
+                                <button type="button" class="btn btn-link">Validate</button>
+                                <button type="button" class="btn btn-secondary btn-sm">Print</button>
+                                <button type="button" class="btn btn-link text-danger oi" data-icon="delete" aria-label="Delete"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="o_dbg_section">
+                <h3>On colored surfaces</h3>
+                <p>Buttons keep their own colors, which is where contrast problems usually show up.</p>
+                <t t-foreach="['bg-action', 'bg-primary', 'bg-dark', 'bg-light', 'bg-view', 'bg-danger']" t-as="bg" t-key="bg">
+                    <span class="o_dbg_label" t-out="bg"/>
+                    <div t-attf-class="o_dbg_surface #{bg}">
+                        <button type="button" class="btn btn-primary">Primary</button>
+                        <button type="button" class="btn btn-secondary">Secondary</button>
+                        <button type="button" class="btn btn-light">Light</button>
+                        <button type="button" class="btn btn-outline-secondary">Outline</button>
+                        <button type="button" class="btn btn-link">Link</button>
+                        <button type="button" class="btn btn-secondary" disabled="disabled">Disabled</button>
+                    </div>
+                </t>
+            </div>
+
+            <aside id="o_dbg_inspector" class="o_dbg_inspector" style="display: none;">
+                <div class="d-flex align-items-center mb-2">
+                    <strong id="o_dbg_inspector_title" class="text-truncate"/>
+                    <button type="button" id="o_dbg_inspector_close" class="btn-close ms-auto" aria-label="Close"/>
+                </div>
+                <table><tbody id="o_dbg_inspector_body"/></table>
+            </aside>
+        </div>
+
+        <script type="text/javascript">
+            (function () {
+                const root = document.getElementById("o_dbg_root");
+
+                function pressOnly(group, item) {
+                    for (const button of group.children) {
+                        button.setAttribute("aria-pressed", String(button === item));
+                    }
+                }
+
+                // Size switch: add the size class on every button of the page,
+                // except the ones of the "Sizes" section.
+                const sizeGroup = document.getElementById("o_dbg_size");
+                sizeGroup.addEventListener("click", (ev) =&gt; {
+                    const item = ev.target.closest("button");
+                    if (!item) {
+                        return;
+                    }
+                    pressOnly(sizeGroup, item);
+                    for (const btn of root.querySelectorAll(".btn:not([data-dbg-nosize])")) {
+                        btn.classList.remove("btn-sm", "btn-lg");
+                        if (item.dataset.size) {
+                            btn.classList.add(item.dataset.size);
+                        }
+                    }
+                });
+
+                // Surface switch: change the background the whole page sits on.
+                const surfaceGroup = document.getElementById("o_dbg_surface");
+                const surfaceName = document.getElementById("o_dbg_surface_name");
+                let currentSurface = "";
+                surfaceGroup.addEventListener("click", (ev) =&gt; {
+                    const chip = ev.target.closest("button");
+                    if (!chip) {
+                        return;
+                    }
+                    pressOnly(surfaceGroup, chip);
+                    if (currentSurface) {
+                        document.body.classList.remove(currentSurface);
+                    }
+                    currentSurface = chip.dataset.surface;
+                    if (currentSurface) {
+                        document.body.classList.add(currentSurface);
+                    }
+                    surfaceName.textContent = currentSurface || "page";
+                });
+
+                // The chips are small color squares: name the hovered one.
+                surfaceGroup.addEventListener("mouseover", (ev) =&gt; {
+                    const chip = ev.target.closest("button");
+                    if (chip) {
+                        surfaceName.textContent = chip.dataset.surface || "page";
+                    }
+                });
+                surfaceGroup.addEventListener("mouseleave", () =&gt; {
+                    surfaceName.textContent = currentSurface || "page";
+                });
+
+                // Color scheme switch: the styles are chosen server side.
+                document.getElementById("o_dbg_scheme").addEventListener("change", (ev) =&gt; {
+                    location.search = "?color_scheme=" + (ev.target.checked ? "dark" : "light");
+                });
+
+                // Inspector: show the resolved button variables of a button.
+                const VARS = [
+                    "--btn-color", "--btn-bg", "--btn-border-color", "--btn-border-width",
+                    "--btn-border-radius", "--btn-padding-y", "--btn-padding-x",
+                    "--btn-font-size", "--btn-font-weight", "--btn-line-height",
+                    "--btn-hover-color", "--btn-hover-bg", "--btn-hover-border-color",
+                    "--btn-active-color", "--btn-active-bg", "--btn-active-border-color",
+                    "--btn-pressed-color", "--btn-pressed-bg", "--btn-pressed-border-color",
+                    "--btn-disabled-color", "--btn-disabled-bg", "--btn-disabled-border-color",
+                    "--btn-disabled-opacity", "--btn-focus-box-shadow", "--btn-box-shadow",
+                ];
+                const inspector = document.getElementById("o_dbg_inspector");
+                const inspectorBody = document.getElementById("o_dbg_inspector_body");
+                const inspectorTitle = document.getElementById("o_dbg_inspector_title");
+                document.getElementById("o_dbg_inspector_close").addEventListener("click", () =&gt; {
+                    inspector.style.display = "none";
+                });
+                root.addEventListener("click", (ev) =&gt; {
+                    const btn = ev.target.closest(".btn, .btn-close");
+                    if (!btn || btn.id === "o_dbg_inspector_close") {
+                        return;
+                    }
+                    ev.preventDefault();
+                    const style = getComputedStyle(btn);
+                    inspectorTitle.textContent = btn.className || btn.nodeName.toLowerCase();
+                    inspectorBody.replaceChildren();
+                    const rows = [
+                        ["computed color", style.color],
+                        ["computed background", style.backgroundColor],
+                        ["computed border", style.borderTopColor],
+                    ];
+                    for (const name of VARS) {
+                        const value = style.getPropertyValue(name).trim();
+                        if (value) {
+                            rows.push([name, value]);
+                        }
+                    }
+                    for (const [name, value] of rows) {
+                        const tr = document.createElement("tr");
+                        const th = document.createElement("td");
+                        th.textContent = name;
+                        const td = document.createElement("td");
+                        if (/^(rgb|#)/.test(value)) {
+                            const swatch = document.createElement("span");
+                            swatch.className = "o_dbg_swatch";
+                            swatch.style.background = value;
+                            td.appendChild(swatch);
+                        }
+                        td.appendChild(document.createTextNode(value));
+                        tr.append(th, td);
+                        inspectorBody.appendChild(tr);
+                    }
+                    inspector.style.display = "block";
+                });
+            })();
+        </script>
+    </t>
+</template>
+
+</odoo>

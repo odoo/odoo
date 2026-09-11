@@ -53,6 +53,20 @@ export function becomeSuperuser() {
     };
 }
 
+function openButtonsDebugPage() {
+    const buttonsURL = location.origin + "/web/buttons";
+    return {
+        type: "item",
+        description: _t("Buttons Showcase"),
+        href: buttonsURL,
+        callback: () => {
+            browser.open(buttonsURL, "_blank");
+        },
+        sequence: 570,
+        section: "ui",
+    };
+}
+
 function leaveDebugMode() {
     return {
         type: "item",
@@ -69,5 +83,6 @@ registry
     .category("default")
     .add("regenerateAssets", regenerateAssets)
     .add("becomeSuperuser", becomeSuperuser)
+    .add("openButtonsDebugPage", openButtonsDebugPage)
     .add("activateTestsAssetsDebugging", activateTestsAssetsDebugging)
     .add("leaveDebugMode", leaveDebugMode);
