@@ -858,6 +858,18 @@ class TestSaleOrder(SaleCommon):
         base_line = sol._prepare_base_line_for_taxes_computation()
         self.assertEqual(base_line['product_uom_id'], sol.product_uom)
 
+    def test_compute_product_uom_preserves_same_category_uom(self):
+        """Re-assigning the product must not reset a manually chosen UOM within the
+        product's UOM category.
+        """
+        self._enable_uom()
+        line = self.sale_order.order_line[0]
+        with Form(line) as line_form:
+            line_form.product_uom = self.uom_dozen
+            line_form.product_id = self.product
+
+        self.assertEqual(line.product_uom, self.uom_dozen)
+
 @tagged('post_install', '-at_install')
 class TestSaleOrderInvoicing(AccountTestInvoicingCommon, SaleCommon):
     def test_invoice_state_when_ordered_quantity_is_negative(self):
