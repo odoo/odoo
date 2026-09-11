@@ -48,16 +48,6 @@ export class Thread extends Record {
             { immediate: true }
         );
         this.onChange(
-            () => [this.isFocusedByThread],
-            function onChangeIsFocusedByThread(isFocusedByThread) {
-                if (isFocusedByThread) {
-                    this.isFocusedCounter++;
-                    return () => this.isFocusedCounter--;
-                }
-            },
-            { immediate: true }
-        );
-        this.onChange(
             () => [this.isFocusedCounter],
             function onChangeIsFocusedCounter(isFocusedCounter) {
                 if (isFocusedCounter < 0) {
@@ -187,7 +177,6 @@ export class Thread extends Record {
     get isFocused() {
         return this.isFocusedCounter !== 0;
     }
-    isFocusedByThread = false;
     isFocusedCounter = 0;
     isLoadingAttachments = false;
     isLoadedPromise = new Promise((resolve) => (this._resolveIsLoaded = resolve));
