@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from lxml import etree
+
 from odoo import Command
 from odoo.addons.l10n_account_edi_ubl_cii_tests.tests.common import TestUBLCommon
 from odoo.tests import tagged
@@ -451,3 +453,112 @@ class TestUBLDE(TestUBLCommon):
         xml_content = base64.b64decode(attachment.with_context(bin_size=False).datas)
         xml_etree = self.get_xml_tree_from_string(xml_content)
         self.assertEqual(xml_etree.find('{*}BuyerReference').text, '13075957-K000-52')
+
+
+@tagged('post_install_l10n', 'post_install', '-at_install')
+class TestCIIDESteuernummer(TestUBLCommon):
+
+    @classmethod
+    @TestUBLCommon.setup_country('de')
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.company_data['company'].partner_id.write({
+            'street': 'Musterstraße 1',
+            'zip': '10115',
+            'city': 'Berlin',
+            'vat': 'DE811112663',
+            'phone': '+49 30 1234567',
+            'email': 'info@example.de',
+            'country_id': cls.env.ref('base.de').id,
+        })
+        cls.de_partner = cls.env['res.partner'].create({
+            'name': 'German customer',
+            'street': 'Kundenstraße 2',
+            'zip': '20095',
+            'city': 'Hamburg',
+            'vat': 'DE462612124',
+            'email': 'customer@example.de',
+            'country_id': cls.env.ref('base.de').id,
+        })
+        # Export re-reads company fields each time, so one invoice can be reused everywhere.
+        cls.de_invoice = cls._create_invoice_one_line(
+            partner_id=cls.de_partner,
+            company_id=cls.company_data['company'],
+            price_unit=100.0,
+            tax_ids=cls.company_data['company'].account_sale_tax_id,
+            post=True,
+        )
+        cls.foreign_partner = cls.env['res.partner'].create({
+            'name': 'French customer',
+            'country_id': cls.env.ref('base.fr').id,
+        })
+        cls.foreign_invoice = cls._create_invoice_one_line(
+            partner_id=cls.foreign_partner,
+            company_id=cls.company_data['company'],
+            price_unit=100.0,
+            tax_ids=cls.company_data['company'].account_sale_tax_id,
+            post=True,
+        )
+
+    def _seller_tax_registrations(self, invoice):
+        ram_ns = {'ram': 'urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100'}
+        xml_content = self.env['account.edi.xml.cii']._export_invoice(invoice)[0]
+        tree = etree.fromstring(xml_content)
+        seller = tree.find('.//ram:SellerTradeParty', ram_ns)
+        return [
+            (node.get('schemeID'), node.text)
+            for node in seller.findall('.//ram:SpecifiedTaxRegistration/ram:ID', ram_ns)
+        ]
+
+    def test_de_seller_tax_registrations(self):
+        """
+        Verify which SpecifiedTaxRegistration tag is emitted depending on
+        whether the DE company has a VAT number (BT-31, schemeID='VA'),
+        a Steuernummer (BT-32, schemeID='FC'), both, or neither.
+        FC is added alongside VA for a DE company with a Steuernummer.
+        """
+        # Real stnr, checksum-valid example from res.company.l10n_de_stnr's own help text.
+        valid_stnr = '2893081508152'
+        cases = [
+            # (vat, l10n_de_stnr, invoice, expected)
+            ('DE811112663', valid_stnr, self.de_invoice, [('VA', 'DE811112663'), ('FC', valid_stnr)]),
+            ('DE811112663', False, self.de_invoice, [('VA', 'DE811112663')]),
+            ('/', valid_stnr, self.de_invoice, [('FC', valid_stnr)]),
+            # Same result with a foreign buyer: the buyer's country doesn't affect this.
+            ('DE811112663', valid_stnr, self.foreign_invoice, [('VA', 'DE811112663'), ('FC', valid_stnr)]),
+        ]
+        for vat, stnr, invoice, expected in cases:
+            with self.subTest(vat=vat, l10n_de_stnr=stnr, invoice=invoice):
+                self.company_data['company'].write({'vat': vat, 'l10n_de_stnr': stnr})
+                self.assertEqual(self._seller_tax_registrations(invoice), expected)
+
+    def test_foreign_seller_tax_registrations(self):
+        """
+        The patched node is shared across all countries: a non-DE seller must
+        behave exactly like vanilla Odoo, regardless of its own vat, even
+        when selling to a DE customer.
+        """
+        foreign_company = self.setup_other_company(name='US Co', country_id=self.env.ref('base.us').id)['company']
+        foreign_seller_invoice = self._create_invoice_one_line(  # partner_a: not restricted to a specific company
+            partner_id=self.partner_a,
+            company_id=foreign_company,
+            price_unit=100.0,
+            tax_ids=foreign_company.account_sale_tax_id,
+            post=True,
+        )
+        de_buyer_invoice = self._create_invoice_one_line(  # de_partner: not restricted to a specific company either
+            partner_id=self.de_partner,
+            company_id=foreign_company,
+            price_unit=100.0,
+            tax_ids=foreign_company.account_sale_tax_id,
+            post=True,
+        )
+        cases = [
+            # (vat, invoice, expected)
+            ('US123456789', foreign_seller_invoice, [('VA', 'US123456789')]),
+            ('US123456789', de_buyer_invoice, [('VA', 'US123456789')]),
+        ]
+        for vat, invoice, expected in cases:
+            with self.subTest(vat=vat, invoice=invoice):
+                foreign_company.vat = vat
+                self.assertEqual(self._seller_tax_registrations(invoice), expected)
