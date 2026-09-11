@@ -6,7 +6,7 @@
         <div class="row gx-5 mb-3">
 
             <DashboardBlock subtitle.translate="Selection" t-if="this.showDatabaseSelector">
-                <div>Select the database you want to act on.</div>
+                <div>Select the database you want to act on</div>
                 <t t-set-slot="content">
                     <select class="form-select w-50" t-model="this.currentDbName">
                         <option
@@ -34,7 +34,7 @@
             </DashboardBlock>
 
             <DashboardBlock subtitle.translate="Rename" t-if="this.isSystem">
-                <div>Your database runs on <a href="#" t-out="this.databaseUrl"/>.</div>
+                <div>Your database runs on <a href="#" t-out="this.databaseUrl"/></div>
                 <t t-set-slot="content">
                     <button class="btn btn-secondary px-4 py-2" t-on-click="this.renameDatabase">
                         Rename
@@ -43,7 +43,7 @@
             </DashboardBlock>
 
             <DashboardBlock subtitle.translate="Duplicate" t-if="this.isSystem">
-                <div>Duplicate for testing or production purpose.</div>
+                <div>Duplicate for testing or production purpose</div>
                 <t t-set-slot="content">
                     <button class="btn btn-secondary px-4 py-2" t-on-click="this.duplicateDatabase">
                         Duplicate
@@ -52,7 +52,7 @@
             </DashboardBlock>
 
             <DashboardBlock subtitle.translate="Backups" t-if="this.isSystem">
-                <div>Your data is safe, check our <a href="https://www.odoo.com/cloud-sla" target="_blank">SLA policy.</a></div>
+                <div>Your data is safe, check our <a href="https://www.odoo.com/cloud-sla" target="_blank">SLA policy</a></div>
                 <t t-set-slot="content">
                     <button class="btn btn-secondary px-4 py-2" t-on-click="this.downloadBackup">
                         Download Backup
@@ -61,39 +61,41 @@
             </DashboardBlock>
         </div>
 
-        <hr class="my-4 text-muted opacity-25"/>
+        <t t-if="this.isSystem">
+            <hr class="my-4 text-muted opacity-25"/>
 
-        <h1 class="text-primary mb-3 o_mysub_title">Cancel Subscription</h1>
-        <div class="row gx-5 mb-3">
-            <div class="col-lg-12">
-                <div class="alert alert-danger" role="alert">
-                    <h5 class="text-danger">Danger Zone</h5>
-                    <span class="text-dark">Proceed with caution as these actions will affect your access to this database.</span>
+            <h1 class="text-primary mb-3 o_mysub_title">Cancel Subscription</h1>
+            <div class="row gx-5 mb-3">
+                <div class="col-lg-12">
+                    <div class="alert alert-danger" role="alert">
+                        <h5 class="text-danger">Danger Zone</h5>
+                        <span class="text-dark">Proceed with caution as these actions will affect your access to this database</span>
+                    </div>
                 </div>
+
+                <DashboardBlock subtitle.translate="Transfer Ownership">
+                    <div>Open a transfer request ticket and provide relevant documentation</div>
+                    <t t-set-slot="content">
+                        <a
+                            href="https://www.odoo.com/help-form#stage=administration"
+                            class="btn btn-secondary px-4 py-2"
+                            target="_blank"
+                        >
+                            Transfer Ownership
+                        </a>
+                    </t>
+                </DashboardBlock>
+
+                <DashboardBlock subtitle.translate="Delete Database">
+                    <div>This action will delete the database and close the subscription</div>
+                    <t t-set-slot="content">
+                        <button class="btn btn-danger px-4 py-2" t-on-click="this.dropDatabase">
+                            Delete
+                        </button>
+                    </t>
+                </DashboardBlock>
             </div>
-
-            <DashboardBlock subtitle.translate="Transfer Ownership" t-if="this.isSystem">
-                <div>Open a transfer request ticket and provide relevant documentation.</div>
-                <t t-set-slot="content">
-                    <a
-                        href="https://www.odoo.com/help-form#stage=administration"
-                        class="btn btn-secondary px-4 py-2"
-                        target="_blank"
-                    >
-                        Transfer Ownership
-                    </a>
-                </t>
-            </DashboardBlock>
-
-            <DashboardBlock subtitle.translate="Delete Database" t-if="this.isSystem">
-                <div>This action will delete the database and close the subscription.</div>
-                <t t-set-slot="content">
-                    <button class="btn btn-danger px-4 py-2" t-on-click="this.dropDatabase">
-                        Delete
-                    </button>
-                </t>
-            </DashboardBlock>
-        </div>
+        </t>
     </t>
 
 </templates>
