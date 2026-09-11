@@ -913,8 +913,7 @@ class TestResMixin(TestResourceCommon):
             datetime_tz(2018, 4, 9, 0, 0, 0, tzinfo=self.john.tz),
             datetime_tz(2018, 4, 13, 23, 59, 59, tzinfo=self.john.tz),
         )[self.john.id]
-        # For some reason float_round fails to limit precision to 3 decimals here
-        self.assertEqual(data, {'days': 0.9580000000000001, 'hours': 10})
+        self.assertEqual(data, {'days': 0.958, 'hours': 10})
 
         # half days
         leave = self.env['resource.calendar.leaves'].create({

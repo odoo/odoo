@@ -111,6 +111,15 @@ def float_round(value, precision_digits=None, precision_rounding=None, rounding_
         rounded_value = round(normalized_value)     # round to integer
 
     result = rounded_value * rounding_factor # de-normalize
+
+    # Normalization and de-normalization introduce a small amount of float division/multiplication
+    # error to the results, that can affect computation done with the float_round result.
+    # We need to reround the result post de-normalization to have a correct result.
+    if precision_digits:
+        result = builtins.round(result, precision_digits)
+    elif precision_rounding:
+        digits = math.ceil(abs(math.log10(precision_rounding))) if precision_rounding < 1 else 0
+        result = builtins.round(result, digits)
     return result
 
 def float_is_zero(value, precision_digits=None, precision_rounding=None):

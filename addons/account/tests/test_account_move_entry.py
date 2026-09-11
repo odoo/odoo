@@ -1279,3 +1279,40 @@ class TestAccountMove(AccountTestInvoicingCommon):
 
         line = invoice.invoice_line_ids.filtered(lambda l: l.product_id == self.product_a)[:1]
         self.assertEqual(line.name, "product_a\nBouteille d'eau")
+
+    def test_rounding_error_tax_included_use_case(self):
+        """Test a use case where a small error introduced by the float_round method would
+        lead to an invoice with a 1 cent error."""
+        tax_21 = self.percent_tax(21.0, price_include=True, sequence=2)
+        fixed_tax = self.fixed_tax(0.01, include_base_amount=True, sequence=1)
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'quantity': 3,
+                    'price_unit': 8.95,
+                    'discount': 30.0,
+                    'tax_ids': tax_21.ids,
+                }),
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'quantity': 1,
+                    'price_unit': 80.20,
+                    'discount': 40.0,
+                    'tax_ids': fixed_tax.ids + tax_21.ids,
+                }),
+            ]
+        })
+        invoice.action_post()
+        self.assertRecordValues(invoice.invoice_line_ids, [
+            {'price_subtotal': 15.53, 'price_total': 18.79},
+            {'price_subtotal': 39.77, 'price_total': 48.13},
+        ])
+        self.assertRecordValues(invoice, [{
+            'amount_total': 66.92,
+            'amount_untaxed': 55.30,
+            'amount_tax': 11.62,
+        }])

@@ -173,7 +173,7 @@ class TestAccountPaymentTerms(AccountTestInvoicingCommon):
             # What should be obtained
             {
                 'total_amount': 434.18,
-                'discount_balance': 390.78000000000003,
+                'discount_balance': 390.78,
                 'discount_amount_currency': 781.55,  # w/o cash rounding: 868.35 * 0.9 = 781.515
                 'line_ids': [{
                     'date': datetime.date(2016, 1, 3),
