@@ -155,6 +155,8 @@ class ResourceCalendarLeaves(models.Model):
         companies_without_country = self.env['res.company']
         companies_without_public_holidays = self.env['res.company']
         companies_with_all_existing_holidays = self.env['res.company']
+        companies_with_partially_existing_holidays = self.env['res.company']
+
         existing_holidays_dict = dict(self.env["resource.calendar.leaves"]._read_group(
             domain=[
                 ('company_id', 'in', companies.ids),
@@ -181,7 +183,9 @@ class ResourceCalendarLeaves(models.Model):
 
             company_tz = ZoneInfo(company.tz or self.env.user.tz or 'UTC')
             public_holidays_values_dict = {}
-            has_holidays_for_year = False
+            total_holidays_count = 0
+            existing_holidays_count = 0
+
             with file_open(csv_file_path) as f:
                 reader = csv.DictReader(f)
                 for row in reader:
@@ -193,7 +197,8 @@ class ResourceCalendarLeaves(models.Model):
                     if holiday_date < start_date:
                         continue
 
-                    has_holidays_for_year = True
+                    total_holidays_count += 1
+
                     holiday_start_utc = convert_timezone(datetime.combine(holiday_date, time.min), UTC, company_tz)
                     holiday_end_utc = convert_timezone(datetime.combine(holiday_date, time.max), UTC, company_tz)
                     overlapping = any(
@@ -201,6 +206,7 @@ class ResourceCalendarLeaves(models.Model):
                         for holiday in existing_holidays_dict.get(company, [])
                     )
                     if overlapping:
+                        existing_holidays_count += 1
                         continue
 
                     holiday_name = row["holiday"].strip()
@@ -216,7 +222,9 @@ class ResourceCalendarLeaves(models.Model):
 
             if public_holidays_values_dict:
                 prepared_public_holidays[company.id] = list(public_holidays_values_dict.values())
-            elif not has_holidays_for_year:
+                if existing_holidays_count > 0:
+                    companies_with_partially_existing_holidays += company
+            elif not total_holidays_count:
                 companies_without_public_holidays += company
             else:
                 companies_with_all_existing_holidays += company
@@ -226,6 +234,7 @@ class ResourceCalendarLeaves(models.Model):
             'companies_without_country': companies_without_country,
             'companies_without_public_holidays': companies_without_public_holidays,
             'companies_with_all_existing_holidays': companies_with_all_existing_holidays,
+            'companies_with_partially_existing_holidays': companies_with_partially_existing_holidays,
         }
 
     def _cron_generate_public_holidays(self):
