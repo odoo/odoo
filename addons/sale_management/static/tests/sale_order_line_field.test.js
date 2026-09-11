@@ -144,7 +144,7 @@ class SaleOrder extends saleManagementModels.SaleOrder {
                         <field name="sequence" widget="handle"/>
                         <column name="product_and_description">
                             <field name="name" invisible="not display_type"/>
-                            <field name="label"/>
+                            <field name="label" invisible="display_type"/>
                         </column>
                         <column name="sol_qty">
                             <field name="product_uom_qty" invisible="display_type"/>
