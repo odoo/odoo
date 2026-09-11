@@ -594,6 +594,22 @@ class EventEvent(models.Model):
                 ]
             event.event_ticket_ids = command
 
+    def _sync_event_ticket_translations_from_type(self):
+        """ Copy ticket translations from the event template after tickets are stored.
+
+        Translatable fields copied via Command.create only get the active language;
+        restore the other languages from the template.
+        """
+        for event in self.filtered('event_type_id'):
+            event_tickets = event.event_ticket_ids.filtered(lambda ticket: not ticket.registration_ids)
+            for template_ticket in event.event_type_id.event_type_ticket_ids:
+                event_ticket = next(
+                    (ticket for ticket in event_tickets if ticket.name == template_ticket.name), None
+                )
+                if event_ticket:
+                    template_ticket.copy_translations(event_ticket)
+                    event_tickets -= event_ticket
+
     @api.depends('event_type_id')
     def _compute_note(self):
         for event in self:
@@ -645,6 +661,7 @@ class EventEvent(models.Model):
         for res in events:
             if res.organizer_id:
                 res.message_subscribe([res.organizer_id.id])
+        events.filtered('event_type_id')._sync_event_ticket_translations_from_type()
         self.env.flush_all()
         return events
 
@@ -652,9 +669,16 @@ class EventEvent(models.Model):
         if 'stage_id' in vals and 'kanban_state' not in vals:
             # reset kanban state when changing stage
             vals['kanban_state'] = 'normal'
+        events_to_sync = self.env['event.event']
+        if vals.get('event_type_id'):
+            events_to_sync = self.filtered(
+                lambda event: event.event_type_id.id != vals['event_type_id']
+            )
         res = super(EventEvent, self).write(vals)
         if vals.get('organizer_id'):
             self.message_subscribe([vals['organizer_id']])
+        if events_to_sync:
+            events_to_sync._sync_event_ticket_translations_from_type()
         return res
 
     @api.depends('event_registrations_sold_out', 'seats_limited', 'seats_max', 'seats_available')
