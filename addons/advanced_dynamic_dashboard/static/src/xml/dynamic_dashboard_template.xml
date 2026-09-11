@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <!--DASHBOARD VIEW WITH NAVIGATION-BAR, GRID_STACK TEMPLATE-->
+    <t t-name="advanced_dynamic_dashboard">
+        <div class="container mx-auto">
+            <div class="navbar navbar-expand-md navbar-light bg-light mb-4 navbar-style border-bottom"
+                 role="navigation">
+                <button class="navbar-toggler" id="dropdownNavbar" type="button"
+                        data-toggle="collapse"
+                        data-target="#navbarCollapse"
+                        aria-controls="navbarCollapse" aria-expanded="false"
+                        aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"/>
+                </button>
+                <div class="collapse navbar-collapse"
+                     aria-labelledby="dropdownNavbar">
+                    <ul class="navbar-nav mr-auto">
+                        <label class="navbar-items dropdown drop-down-add">
+                            <button class="btn dropdown-add-items dropdown-toggle"
+                                    type="button" id="dropdownMenuButton"
+                                    data-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="false">
+                                <i class="bi bi-plus-circle-fill"/>
+                                <span>⠀Add Items</span>
+                            </button>
+                            <div class="dropdown-menu dropdown-addblock"
+                                 aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item add_block"
+                                   data-type="tile">Tile</a>
+                                <a class="dropdown-item add_block"
+                                   data-type="graph" data-chart_type="bar">Bar Chart</a>
+                                <a class="dropdown-item add_block"
+                                   data-type="graph" data-chart_type="doughnut">Doughnut Chart</a>
+                                <a class="dropdown-item add_block"
+                                   data-type="graph"
+                                   data-chart_type="line">Line Chart</a>
+                                <a class="dropdown-item add_block"
+                                   data-type="graph" data-chart_type="pie">Pie Chart</a>
+                                <a class="dropdown-item add_block"
+                                   data-type="graph"
+                                   data-chart_type="polarArea">Polar Area Chart</a>
+                                <a class="dropdown-item add_block"
+                                   data-type="graph"
+                                   data-chart_type="radar">Radar Chart</a>
+                            </div>
+                        </label>
+                        <label class="navbar-items layout-switch" id="edit-layout-label">
+                            <button class="navbar-items btn-search_edit btn btn-primary my-2 mx-2 my-sm-0" type="button" id="edit_layout">Edit Layout</button>
+                            <button class="navbar-items btn-search_edit btn btn-primary my-2 mx-2 my-sm-0" type="button" id="save_layout">Save Layout</button>
+                        </label>
+                        <label class="navbar-items toggle-btn" id="theme-change-icon">
+                            <input type="checkbox" class="toggle" id="theme-toggle" />
+                            <i class="theme_icon bi bi-moon-stars-fill" />
+                        </label>
+                        <div class="search-group" style="margin-right: 30px;">
+                            <!-- Search Bar -->
+                            <div class="navbar-items btn-group search-box">
+                                <input class="form-control mr-sm-2" type="text" placeholder="Search" id="search-input-chart" aria-label="Search" />
+                                <span id="searchclear">
+                                    <i class='fa fa-times search-clear' />
+                                </span>
+                            </div>
+                            <button class="navbar-items btn-search_edit btn btn-outline-primary my-2 my-sm-0 search-btn" type="button" id="search-button">Search</button>
+                        </div>
+                        <div class="dashboard_pdf"
+                                style="position:absolute;right:26.5em;">
+                            <i class="bi bi-file-pdf-fill" style="font-size:24px;"/>
+                        </div>
+                        <div class="dashboard_mail"
+                             style="position:absolute;right:29.5em;">
+                            <i class="bi bi-send-check" style="font-size:24px;"/>
+                        </div>
+                        <!-- Date Inputs -->
+                        <div class="date-inputs" style="position: absolute; right: 50.5em;">
+                            <label for="start-date"  style="color: black; margin-right: 5px;">Start Date:</label>
+                            <input type="date" id="start-date" name="start-date" style="color: black; border: 1px solid #4e4e4e; background-color: white; padding: 5px 10px; border-radius: 5px;"/>
+                            <label for="end-date"  style="color: black; margin-right: 5px;">End Date:</label>
+                            <input type="date" id="end-date" name="end-date" style="color: black; border: 1px solid #4e4e4e; background-color: white; padding: 5px 10px; border-radius: 5px;"/>
+                        </div>
+                    </ul>
+                </div>
+            </div>
+            <div class="o_dynamic_dashboard row m-2 grid-stack"
+                 name="gridstack">
+                <!--CONTAINER FOR CONTENT GENERATION :TILE & CHART(FROM DynamicDashboardTile & DynamicDashboardChart-->
+            </div>
+        </div>
+    </t>
+
+    <t t-name="DynamicDashboardTile">
+        <!-- TILE BUILDING TEMPLATE-->
+        <div t-att-class="'grid-stack-item ' + widget.name"
+             t-att-data-gs-y="widget.y_pos"
+             t-att-data-gs-x="widget.x_pos" t-att-data-gs-width="widget.width"
+             t-att-data-gs-height="widget.height"
+             t-att-data-id="widget.id">
+            <div class="grid-stack-item-content tile block"
+                 t-att-data-id="widget.id"
+                 t-att-style="widget.color+widget.text_color">
+                <div t-att-style="widget.color+widget.text_color"
+                     class="tile-container d-flex  align-items-center  w-100  my-3">
+                    <a class="block_setting tile_edit tile-container__setting-icon">
+                        <i class="fa fa-edit"/>
+                    </a>
+                    <a class="block_delete tile_edit tile-container__delete-icon">
+                        <i class="fa fa-times"/>
+                    </a>
+                    <div>
+
+                    </div>
+                    <div t-att-style="widget.icon_color"
+                         class="tile-container__icon-container bg-white d-flex justify-content-center align-items-center">
+                        <i t-att-class="widget.icon"/>
+                    </div>
+                    <div t-att-style="widget.text_color"
+                         class="tile-container__status-container">
+                        <h2 t-att-style="widget.text_color"
+                            class="status-container__title">
+                            <t t-esc="widget.name"/>
+                        </h2>
+                        <div class="status-container__figures d-flex flex-wrap align-items-baseline">
+                            <h3 class="mb-0 mb-md-1 mb-lg-0 mr-1"
+                                t-att-style="widget.val_color">
+                                <t t-esc="widget.value"/>
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="DynamicDashboardChart">
+        <!-- CHART BUILDING TEMPLATE-->
+        <div t-att-class="'grid-stack-item ' + widget.name"
+             t-att-data-gs-x="widget.x_pos"
+             t-att-data-gs-y="widget.y_pos" t-att-data-gs-width="widget.width"
+             t-att-data-gs-height="widget.height"
+             t-att-data-id="widget.id">
+            <div class="grid-stack-item-content block card"
+                 t-att-data-id="widget.id">
+                <div class="card-body mt-1" id="in_ex_body_hide">
+                    <div class="block_edit block_setting">
+                        <i title="Configuration"
+                           class="fa fa-pencil block_setting chart-edit"/>
+                    </div>
+                    <div class="block_edit block_delete">
+                        <i title="Delete"
+                           class="fa fa-times block_delete chart-setting"/>
+                    </div>
+                    <div class="dropdown export_option">
+                        <div class="block_edit fa fa-ellipsis-v block_export dropdown-toggle"
+                             type="button"
+                             id="ExportMenu" data-toggle="dropdown"
+                             aria-haspopup="true" aria-expanded="false">
+                        </div>
+                        <div class="dropdown-menu dropdown-export"
+                             aria-labelledby="ExportMenu">
+                            <div class="m-2 chart_export_menu_header">
+                                <span>Export</span>
+                            </div>
+                            <a class="dropdown-item chart_item_export chart_png_export"
+                               data-type="png">
+                                <i class="fa fa-file-image-o"/>
+                                <span>Save as Image</span>
+                            </a>
+                            <button class="dropdown-item chart_pdf_export chart_item_export"
+                                    data-type="pdf">
+                                <i class="fa fa-file-pdf-o"/>
+                                <span>Save as PDF</span>
+                            </button>
+                            <button class="dropdown-item chart_csv_export chart_item_export"
+                                    data-type="csv"
+                                    t-att-data-id="widget.id">
+                                <i class="fa fa-file-code-o"/>
+                                <span>Export to CSV</span>
+                            </button>
+                            <button class="dropdown-item chart_xlsx_export chart_item_export"
+                                    data-type="xlsx"
+                                    t-att-data-id="widget.id">
+                                <i class="bi bi-filetype-xlsx"/>
+                                <span>Export to XLSX</span>
+                            </button>
+                        </div>
+                    </div>
+                    <h3 class="chart_title">
+                        <t t-esc="widget.name"/>
+                    </h3>
+                    <div class="row">
+                        <div class="col-md-12 chart_canvas" id="chart_canvas"
+                             t-att-data-id="widget.id">
+                            <canvas id="canvas" class="chart_graphs" width="300"
+                                    height="200"
+                                    t-att-data-title="widget.name"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="report_settlement_document">
+        <t t-set="o" t-value="o.with_context(lang=o.agent_id.lang)" />
+        <t t-call="web.external_layout">
+            <div class="row">
+                <div class="offset-col-6 col-6" name="address">
+                    <t t-set="address">
+                        <address
+                            class="mb-0"
+                            t-field="o.agent_id"
+                            t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'
+                        />
+                    </t>
+                </div>
+            </div>
+            <div class="mt-5">
+                <div class="page">
+                    <h2>Settlement</h2>
+                    <div id="informations" class="row mt-4 mb-4">
+                        <div class="col-auto col-3 mw-100 mb-2" t-if="o.date_from">
+                            <strong>From:</strong>
+                            <p t-field="o.date_from" />
+                        </div>
+                        <div class="col-auto col-3 mw-100 mb-2" t-if="o.date_to">
+                            <strong>To:</strong>
+                            <p t-field="o.date_to" />
+                        </div>
+                    </div>
+                    <table class="table table-sm" name="invoice_line_table">
+                        <thead>
+                            <tr>
+                                <th class="text-start">Date</th>
+                                <th class="text-start">Commission</th>
+                                <th class="text-end">Amount settled</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="o.line_ids" t-as="l">
+                                <td>
+                                    <span t-field="l.date" />
+                                </td>
+                                <td class="text-start">
+                                    <span t-field="l.commission_id" />
+                                </td>
+                                <td class="text-end">
+                                    <span
+                                        t-field="l.settled_amount"
+                                        t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"
+                                    />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="mb-4">
+                        <div id="total" class="row">
+                            <div
+                                t-attf-class="#{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6'} ms-auto"
+                            >
+                                <table
+                                    class="table table-sm table-borderless"
+                                    style="page-break-inside: avoid;"
+                                >
+                                    <tr class="border-black o_total">
+                                        <td>
+                                            <strong>Total</strong>
+                                        </td>
+                                        <td class="text-end">
+                                            <span
+                                                t-field="o.total"
+                                                t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"
+                                            />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="report_settlement">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t
+                    t-call="commission.report_settlement_document"
+                    t-lang="o.agent_id.lang"
+                />
+            </t>
+        </t>
+    </template>
+
+</odoo>

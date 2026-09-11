@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo noupdate="1">
+    <record model="ir.cron" id="ir_cron_autocreate">
+        <field name="name">Auto-generate date ranges</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="active">True</field>
+        <field name="doall" eval="False" />
+        <field name="model_id" ref="model_date_range_type" />
+        <field name="state">code</field>
+        <field name="code">model.autogenerate_ranges()</field>
+    </record>
+</odoo>

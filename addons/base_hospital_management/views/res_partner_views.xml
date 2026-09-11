@@ -1,0 +1,476 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--    Res partner search view-->
+    <record id="res_partner_view_search" model="ir.ui.view">
+        <field name="name">res.partner.view.search</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <search string="Search Tips">
+                <field name="name" string="Name"/>
+                <field name="patient_seq" string="Patient Code"/>
+                <field name="gender" string="Gender"/>
+            </search>
+        </field>
+    </record>
+    <!--    Res partner kanban view-->
+    <record id="res_partner_view_kanban" model="ir.ui.view">
+        <field name="name">res.partner.view.kanban</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <kanban class="o_res_partner_kanban" sample="1">
+                <field name="id"/>
+                <field name="display_name"/>
+                <field name="patient_seq"/>
+                <field name="gender"/>
+                <t t-name="kanban-box">
+                    <div t-attf-class="oe_kanban_global_click">
+                        <div class="o_kanban_image">
+                            <img alt="Avatar"
+                                 t-att-src="kanban_image('res.partner', 'avatar_128',record.id.raw_value)"/>
+                        </div>
+                        <div class="oe_kanban_details">
+                            <strong class="o_kanban_record_title">
+                                <field name="display_name"/>
+                            </strong>
+                        </div>
+                    </div>
+                </t>
+            </kanban>
+        </field>
+    </record>
+    <!--    Res partner tree view-->
+    <record id="res_partner_view_tree" model="ir.ui.view">
+        <field name="name">res.partner.view.tree</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="patient_seq"/>
+                <field name="name"/>
+                <field name="date_of_birth"/>
+                <field name="gender"/>
+            </tree>
+        </field>
+    </record>
+    <!--    Res partner form view-->
+    <record id="res_partner_view_form" model="ir.ui.view">
+        <field name="name">res.partner.view.form</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_schedule" string="Add Appointment"
+                            type="object"
+                            groups="base_hospital_management.base_hospital_management_group_manager,base_hospital_management.base_hospital_management_group_receptionist"
+                            class="oe_highlight"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_invoice" type="object"
+                                class="oe_stat_button"
+                                attrs="{'invisible': [('name','=', False)]}"
+                                icon="fa-pencil-square-o"
+                                string="Invoice"/>
+                        <button name="action_generate_patient_card"
+                                type="object"
+                                class="oe_stat_button"
+                                attrs="{'invisible': [('is_alive', '=', 'dead')]}"
+                                icon="fa-download"
+                                string="Patient Card"/>
+                        <button class="oe_stat_button" type="object"
+                                name="alive_status"
+                                attrs="{'invisible': ['|',('is_alive', '=',
+                                'dead'),('name','=', False)]}"
+                                icon="fa-check">
+                            <span class="o_stat_text text-success">ALIVE</span>
+                        </button>
+                        <button class="oe_stat_button" type="object"
+                                name="alive_status"
+                                attrs="{'invisible': [('is_alive', '=',
+                                'alive')]}"
+                                icon="fa-times-circle">
+                            <span class="o_stat_text text-danger">EXPIRED</span>
+                        </button>
+                    </div>
+                    <field name="image_1920" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <h1 class="d-flex">
+                            <field name="patient_seq" placeholder="Patient No."
+                                   required="True"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name"
+                                   context="{'res_partner_search_mode':
+                                    'customer',
+                                    'show_address': 1, 'show_email':1}"
+                                   options="{&quot;always_reload&quot;: True}"/>
+                            <field name="date_of_birth"/>
+                            <field name="phone"/>
+                        </group>
+                        <group>
+                            <label for="blood_group" string="Blood Group"/>
+                            <div class="o_address_format">
+                                <field name="blood_group"
+                                       class="o_address_zip"/>
+                                <field name="rh_type" widget="radio"
+                                       options="{'horizontal': true}"
+                                       class="o_address_state"/>
+                            </div>
+                            <field name="gender"/>
+                            <field name="marital_status"/>
+                            <field name="is_alive" widget="radio" invisible="1"
+                                   options="{'horizontal': true}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="Personal Information"
+                              string="Personal Information">
+                            <group>
+                                <group>
+                                    <span class="o_form_label o_td_label"
+                                          name="address_name">
+                                        <field name="type" class="fw-bold"/>
+                                        <b>Address</b>
+                                    </span>
+                                    <div class="o_address_format">
+                                        <field name="street"
+                                               placeholder="Street..."
+                                               class="o_address_street"/>
+                                        <field name="street2"
+                                               placeholder="Street 2..."
+                                               class="o_address_street"/>
+                                        <field name="city" placeholder="City"
+                                               class="o_address_city"/>
+                                        <field name="state_id"
+                                               class="o_address_state"
+                                               placeholder="State"
+                                               options="{'no_open': True, 'no_quick_create': True}"
+                                               context="{'country_id': country_id, 'default_country_id': country_id, 'zip': zip}"/>
+                                        <field name="zip" placeholder="ZIP"
+                                               class="o_address_zip"/>
+                                        <div name="partner_address_country"
+                                             class="d-flex justify-content-between">
+                                            <field name="country_id"
+                                                   placeholder="Country"
+                                                   class="o_address_country"
+                                                   options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
+                                        </div>
+                                    </div>
+                                </group>
+                                <group>
+                                    <group>
+                                        <field name="barcode_png"
+                                               widget="image"/>
+                                        <field name="barcode" invisible="1"/>
+                                    </group>
+                                </group>
+                            </group>
+                        </page>
+                        <page name="family" string="Family and Insurance"
+                              groups="base_hospital_management.base_hospital_management_group_doctor,base_hospital_management.base_hospital_management_group_lab_assistant,base_hospital_management.base_hospital_management_group_pharmacist,base_hospital_management.base_hospital_management_group_nurse,base_hospital_management.base_hospital_management_group_receptionist,base_hospital_management.base_hospital_management_group_manager">
+                            <group>
+                                <group>
+                                    <field name="group"/>
+                                </group>
+                                <group>
+                                    <field name="insurance_id"
+                                           options="{'no_create': True, 'no_edit': True}"/>
+                                    <field name="unique_id"
+                                           attrs="{'invisible'
+                                           :[('insurance_id', '=', False)]}"/>
+                                </group>
+                            </group>
+                            <group>
+                                <field name="risk"/>
+                            </group>
+                            <group string="Family"/>
+                            <field name="family_ids">
+                                <tree editable="bottom">
+                                    <field name="name"/>
+                                    <field name="relation"/>
+                                    <field name="age"/>
+                                    <field name="deceased"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Life Style">
+                            <group>
+                                <group string="Physical Exercise">
+                                    <field name="exercise"/>
+                                    <field name="minute"
+                                           attrs="{'invisible':[('exercise', '=', False)]}"/>
+                                </group>
+                                <group string="Sleep Schedule">
+                                    <field name="day_sleep"/>
+                                    <field name="sleep_hrs"/>
+                                </group>
+                            </group>
+                            <group string="Diet Details">
+                                <group>
+                                    <field name="meals"/>
+                                    <field name="alone"/>
+                                    <field name="salt"/>
+                                    <field name="diet"/>
+                                </group>
+                                <group>
+                                    <field name="coffee"/>
+                                    <field name="cup"
+                                           attrs="{'invisible':[('coffee', '=', False)]}"/>
+                                    <field name="drink"/>
+                                </group>
+                            </group>
+                            <notebook>
+                                <page string="Addiction">
+                                    <group string="Smoking">
+                                        <group>
+                                            <field name="smoke"/>
+                                            <field name="age_start"
+                                                   attrs="{'invisible':[('smoke', '=', False)]}"/>
+                                        </group>
+                                        <group>
+                                            <field name="cigarettes"
+                                                   attrs="{'invisible':[('smoke', '=', False)]}"/>
+                                            <field name="ex_smoke"
+                                                   attrs="{'invisible':[('smoke', '=', True)]}"/>
+                                            <field name="age_quit"
+                                                   attrs="{'invisible':[('ex_smoke', '=', False)]}"/>
+                                            <field name="passive"
+                                                   attrs="{'invisible':[('smoke', '=', True)]}"/>
+                                        </group>
+                                    </group>
+                                    <group string="Drinking">
+                                        <group>
+                                            <field name="alcoholic"/>
+                                            <field name="age_start_alco"
+                                                   attrs="{'invisible':[('alcoholic', '=', False)]}"/>
+                                            <field name="beer"
+                                                   attrs="{'invisible':[('alcoholic', '=', False)]}"/>
+                                        </group>
+                                        <group>
+                                            <field name="liquor"
+                                                   attrs="{'invisible':[('alcoholic', '=', False)]}"/>
+                                            <field name="wine"
+                                                   attrs="{'invisible':[('alcoholic', '=', False)]}"/>
+                                            <field name="ex_alcoholic"
+                                                   attrs="{'invisible':[('alcoholic', '=', True)]}"/>
+                                            <field name="age_quit_alcoholic"
+                                                   attrs="{'invisible':[('ex_alcoholic', '=', False)]}"/>
+                                        </group>
+                                    </group>
+                                    <group string="Drugs">
+                                        <group>
+                                            <field name="drugs"/>
+                                            <field name="age_start_drug"
+                                                   attrs="{'invisible':[('drugs', '=', False)]}"/>
+                                        </group>
+                                        <group>
+                                            <field name="ex_drugs"
+                                                   attrs="{'invisible':[('drugs', '=', True)]}"/>
+                                            <field name="age_quit_drug"
+                                                   attrs="{'invisible':[('ex_drugs', '=', False)]}"/>
+                                            <field name="iv_user"/>
+                                        </group>
+                                    </group>
+                                </page>
+                                <page string="Sexuality">
+                                    <group>
+                                        <group>
+                                            <field name="orientation"/>
+                                            <field name="age_sex"/>
+                                        </group>
+                                        <group>
+                                            <field name="partners"/>
+                                            <field name="anti"/>
+                                        </group>
+                                    </group>
+                                    <group string="Other Sexual practises">
+                                        <group>
+                                            <field name="oral"/>
+                                            <field name="anal"/>
+                                        </group>
+                                        <group>
+                                            <field name="prostitute"/>
+                                            <field name="prostitute_sex"/>
+                                        </group>
+                                    </group>
+                                    <group string="Patient Sexuality Info"/>
+                                    <field name="sex_notes"/>
+                                </page>
+                                <page string="Driving And Home Safety">
+                                    <group>
+                                        <group>
+                                            <field name="rider"/>
+                                            <field name="helmet"
+                                                   attrs="{'invisible':[('rider', '=', False)]}"/>
+                                            <field name="laws"/>
+                                        </group>
+                                        <group>
+                                            <field name="revision"/>
+                                            <field name="belt"
+                                                   attrs="{'invisible':[('revision', '=', False)]}"/>
+                                            <field name="safety"
+                                                   attrs="{'invisible':[('revision', '=', False)]}"/>
+                                            <field name="home"/>
+                                        </group>
+                                    </group>
+                                </page>
+                                <field name="notes"/>
+                            </notebook>
+                        </page>
+                        <page name="medicine" string="Medical"
+                              groups="base_hospital_management.base_hospital_management_group_lab_assistant, base_hospital_management.base_hospital_management_group_pharmacist,base_hospital_management.base_hospital_management_group_nurse,base_hospital_management.base_hospital_management_group_receptionist,base_hospital_management.base_hospital_management_group_manager">
+                            <notebook>
+                                <page string="Medicine">
+                                    <field name="prescription_ids">
+                                        <tree editable="bottom" create="0">
+                                            <field name="medicine_id"/>
+                                            <field name="quantity"/>
+                                            <field name="no_intakes"/>
+                                            <field name="time"/>
+                                            <field name="note"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                                <page string="Lab Tests">
+                                    <field name="lab_test_ids">
+                                        <tree editable="bottom" create="0">
+                                            <field name="test_id"/>
+                                            <field name="date"/>
+                                            <field name="state"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                                <page string="Vaccine">
+                                    <field name="hospital_vaccination_ids">
+                                        <tree editable="bottom" create="0">
+                                            <field name="patient_id"
+                                                   widget="selection"/>
+                                            <field name="vaccine_product_id"/>
+                                            <field name="vaccine_price"/>
+                                            <field name="vaccine_date"/>
+                                            <field name="dose"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                            </notebook>
+                        </page>
+                        <page name="social" string="Socioeconomic">
+                            <group>
+                                <group string="General">
+                                    <field name="economic_level"/>
+                                    <field name="education_level"
+                                           string="Education Level"/>
+                                    <field name="house_level"/>
+                                    <field name="occupation"/>
+                                    <field name="work_home"/>
+                                    <field name="hours_outside"/>
+                                    <field name="hostile"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="income"/>
+                                </group>
+                                <group string="Infrastructure">
+                                    <group>
+                                        <field name="sanitary"/>
+                                        <field name="running"/>
+                                        <field name="electricity"/>
+                                        <field name="gas"/>
+                                    </group>
+                                    <group>
+                                        <field name="trash"/>
+                                        <field name="tv"/>
+                                        <field name="internet"/>
+                                    </group>
+                                </group>
+                            </group>
+                            <group>
+                                <group string="Family Details">
+                                    <field name="help"/>
+                                    <field name="discussion"/>
+                                    <field name="ability"/>
+                                    <field name="time_sharing"/>
+                                    <field name="affection"/>
+                                </group>
+                                <group string="Family Issues">
+                                    <group>
+                                        <field name="single"/>
+                                        <field name="violence"/>
+                                        <field name="children"/>
+                                        <field name="abuse"/>
+                                    </group>
+                                    <group>
+                                        <field name="drug"/>
+                                        <field name="withdrawal"/>
+                                        <field name="in_prison"/>
+                                        <field name="current_prison"/>
+                                        <field name="relative_prison"/>
+                                    </group>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Gynecology"
+                              attrs="{'invisible': [('gender', '!=', 'female')]}">
+                            <group string="Gynecology">
+                                <group>
+                                    <field name="fertile"/>
+                                    <field name="menarche_age"/>
+                                    <field name="pause"/>
+                                    <field name="pause_age"/>
+                                    <field name="colposcopy"/>
+                                    <field name="self"/>
+                                </group>
+                                <group>
+                                    <field name="mommography"/>
+                                    <field name="last_pap"/>
+                                    <field name="last_col"/>
+                                </group>
+                            </group>
+                            <group string="Obstetrics">
+                                <group>
+                                    <field name="deceased"/>
+                                    <field name="grandiva"/>
+                                </group>
+                                <group>
+                                    <field name="alive"/>
+                                    <field name="premature"/>
+                                    <field name="abortions"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Internal notes">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    <!--    Patient menu action-->
+    <record id="res_partner_action" model="ir.actions.act_window">
+        <field name="name">Patients</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,form,tree</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+        (0, 0,{'view_mode': 'kanban', 'view_id': ref('res_partner_view_kanban')}),
+        (0, 0,{'view_mode': 'tree', 'view_id': ref('res_partner_view_tree')}),
+        (0, 0,{'view_mode': 'form', 'view_id': ref('res_partner_view_form')})]"/>
+        <field name="domain">[('patient_seq','not in',['New', 'Employee',
+            'User'])]
+        </field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new Patient
+            </p>
+        </field>
+    </record>
+    <!--    Patient menu-->
+    <menuitem id="res_partner_menu"
+              name="Patient"
+              parent="hospital_menu_root"
+              action="res_partner_action"
+              sequence="1"/>
+</odoo>

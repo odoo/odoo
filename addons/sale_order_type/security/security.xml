@@ -1,0 +1,13 @@
+<odoo>
+    <record id="sale_order_type_comp_rule" model="ir.rule">
+        <field name="name">Sale Order Type multi-company</field>
+        <field name="model_id" ref="sale_order_type.model_sale_order_type" />
+        <field
+            name="domain_force"
+        >['|',('company_id','=',False),('company_id','in',company_ids)]</field>
+        <field name="perm_read" eval="1" />
+        <field name="perm_create" eval="1" />
+        <field name="perm_write" eval="1" />
+        <field name="perm_unlink" eval="1" />
+    </record>
+</odoo>

@@ -1,0 +1,81 @@
+interactions:
+  - request:
+      body: null
+      headers:
+        Accept: ["*/*"]
+        Accept-Encoding: ["gzip, deflate, br"]
+        Connection: [keep-alive]
+        User-Agent: [python-requests/2.19.1]
+      method: GET
+      uri: https://localhost/wp-json/wc/v3/payment_gateways/bacs
+    response:
+      body:
+        {
+          string:
+            '{
+              "id": "bacs",
+              "title": "Direct bank transfer",
+              "description": "Make your payment directly into our bank account.",
+              "order": 0,
+              "enabled": true,
+              "method_title": "Direct bank transfer",
+              "method_description": "Take payments in person via BACS.",
+              "method_supports": [
+                  "products"
+              ],
+              "settings": {
+                  "title": {
+                      "id": "title",
+                      "label": "Title",
+                      "description": "This controls the title which the user sees during checkout.",
+                      "type": "safe_text",
+                      "value": "Direct bank transfer",
+                      "default": "Direct bank transfer",
+                      "tip": "This controls the title which the user sees during checkout.",
+                      "placeholder": ""
+                  },
+                  "instructions": {
+                      "id": "instructions",
+                      "label": "Instructions",
+                      "description": "Instructions that will be added to the thank you page and emails.",
+                      "type": "textarea",
+                      "value": "",
+                      "default": "",
+                      "tip": "Instructions that will be added to the thank you page and emails.",
+                      "placeholder": ""
+                  }
+              },
+              "needs_setup": false,
+              "post_install_scripts": [],
+              "settings_url": "https://localhost/wp-admin/admin.php?page=wc-settings&tab=checkout&section=bacs",
+              "connection_url": null,
+              "setup_help_text": null,
+              "required_settings_keys": [],
+              "_links": {
+                  "self": [
+                      {
+                          "href": "https://localhost/wp-json/wc/v3/payment_gateways/bacs"
+                      }
+                  ],
+                  "collection": [
+                      {
+                          "href": "https://localhost/wp-json/wc/v3/payment_gateways"
+                      }
+                  ]
+              }
+          }',
+        }
+      headers:
+        Cache-Control: ["no-store, no-cache, must-revalidate"]
+        Connection: [keep-alive]
+        Content-Type: [application/json; charset=utf-8]
+        Date: ["Mon, 17 jul 2023 05:38:29 GMT"]
+        Expires: ["Jan 23 23:59:59 2023 GMT"]
+        Server: [nginx/1.14.0 (Ubuntu)]
+        Set-Cookie:
+          ["expires=Fri, 30-Jun-2017 15:27:02 GMT; path=/; domain=woocommerce; HttpOnly"]
+        Transfer-Encoding: [chunked]
+        Vary: [Accept-Encoding]
+        X-Frame-Options: [SAMEORIGIN]
+        content-length: ["1378"]
+      status: {code: 200, message: OK}

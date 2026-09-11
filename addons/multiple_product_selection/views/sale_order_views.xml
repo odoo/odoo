@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+<!--    Add button for selecting products in sale-->
+    <record id="view_order_form" model="ir.ui.view">
+        <field name="name">sale.order.view.form.inherit.multiple.product.selection</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="model">sale.order</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']" position="before">
+                 <button name="%(multiple_product_selection.multiple_product_action)d"
+                         class="oe_highlight" string="Product List" type="action"
+                         attrs="{'invisible': ['|',('state','=','sale'),('state','=','sent')]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

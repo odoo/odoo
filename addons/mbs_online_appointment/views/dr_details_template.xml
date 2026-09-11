@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="online_patient_appointment_details_form">
+        <t t-call="website.layout">
+            <div id="wrap" class="o_appointment_index bg-o-color-4 px-3 mt-3">
+                <section class="s_website_form" data-vcss="001" data-snippet="s_website_form">
+                    <div class="oe_structure container">
+                        <br/>
+                        <nav>
+                            <ul class="pagination pagination-lg justify-content-end">
+                                <li class="page-item active" aria-current="page">
+                                    <span class="page-link">Appointment</span>
+                                </li>
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#">Details</a>
+                                </li>
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#">Confirmation</a>
+                                </li>
+                                <li class="page-item disabled">
+                                    <a class="page-link">Done</a>
+                                </li>
+                            </ul>
+                        </nav>
+                        <br/>
+                        <span class="o_page_header h1 mt32 mb24">
+                            Welcome to Hospital
+                        </span>
+                        <br/>
+                        <span class="h6 text-muted">
+                            Please Choose Doctor for Your Appointment.
+                        </span>
+                        <form action="/appointment_details/">
+                            <div class="s_website_form_rows row s_col_no_bgcolor">
+
+                                <div class="form-group col-12 s_website_form_field s_website_form_required"
+                                     data-type="char" data-name="Field">
+                                    <br/>
+                                    <div class="col-12 row">
+                                        <div class="col-2">
+                                            <label for="hospital">Hospital</label>
+                                            <span class="s_website_form_mark">*</span>
+                                        </div>
+                                        <div class="col-4">
+                                            <select class="form-control" name="hospital">
+                                                <option value="select_hospital" disabled="True" selected="True">
+                                                    Select Hospital
+                                                </option>
+                                                <t t-if="values.get('confi.hospital')">
+                                                    <option t-att-value="values.get('hospital')">
+                                                        <t t-esc="request.env['confi.hospital'].sudo().search([('id', '=', values.get('name'))],limit=1).name"/>
+                                                    </option>
+                                                </t>
+                                                <t t-foreach="request.env['confi.hospital'].sudo().search([])"
+                                                   t-as="hospital">
+                                                    <option t-att-value="hospital.id">
+                                                        <t t-esc="hospital.name"/>
+                                                    </option>
+
+                                                </t>
+                                            </select>
+                                        </div>
+                                        <div class="col-2">
+                                            <label for="dr_nm">Doctor</label>
+                                            <span class="s_website_form_mark">*</span>
+                                        </div>
+                                        <div class="col-4">
+                                            <select class="form-control" name="dr_nm">
+                                                <option value="select_doctor" disabled="True" selected="True">
+                                                    Select Doctor
+                                                </option>
+                                                <t t-if="values.get('dr_nm')">
+                                                    <option t-att-value="values.get('dr_nm')">
+                                                        <t t-esc="request.env['doctor.config'].sudo().search([('id', '=', values.get('dr_id'))],limit=1).dr_id"/>
+                                                    </option>
+
+                                                </t>
+                                                <t t-foreach="request.env['doctor.config'].sudo().search([])"
+                                                   t-as="dr_nm">
+                                                    <option t-att-value="dr_nm.id">
+                                                        <t t-esc="dr_nm.dr_id.name"/>
+                                                    </option>
+                                                </t>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    <div class="col-12 row">
+                                        <div class="col-2">
+                                            <label for="date">Appointment Date</label>
+                                            <span class="s_website_form_mark">*</span>
+                                        </div>
+                                        <div class="col-4">
+                                            <input type="date" class="form-control" name="date"
+                                                   id="date"
+                                                   required="true"
+                                                   style="width: 300px; height: 40px; font-size: 25px;"
+                                                   t-att-value="values.get('date')"/>
+                                            <style>
+                                                input[type="date"] {
+                                                position: relative;
+                                                }
+
+                                                /* create a new arrow, because we are going to mess up the native one
+                                                see "List of symbols" below if you want another, you could also try to
+                                                add a font-awesome icon.. */
+                                                input[type="date"]:after {
+                                                content: "\25BC";
+                                                color: #555;
+                                                padding: 0 5px;
+                                                }
+
+                                                /* change color of symbol on hover */
+                                                input[type="date"]:hover:after {
+                                                color: #bf1400;
+                                                }
+
+                                                /* make the native arrow invisible and stretch it over the whole field
+                                                so you can click anywhere in the input field to trigger the native
+                                                datepicker*/
+                                                input[type="date"]::-webkit-calendar-picker-indicator {
+                                                position: absolute;
+                                                top: 0;
+                                                left: 0;
+                                                right: 0;
+                                                bottom: 0;
+                                                width: auto;
+                                                height: auto;
+                                                color: transparent;
+                                                background: transparent;
+                                                }
+
+                                                /* adjust increase/decrease button */
+                                                input[type="date"]::-webkit-inner-spin-button {
+                                                z-index: 1;
+                                                }
+
+                                                /* adjust clear button */
+                                                input[type="date"]::-webkit-clear-button {
+                                                z-index: 1;
+                                                }
+                                            </style>
+                                        </div>
+                                        <div class="col-2">
+                                            <label for="time">Appointment Time</label>
+                                            <span class="s_website_form_mark">*</span>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="form-check form-check-inline">
+                                                <input type="radio" class="btn-check" name="time"
+                                                       id="radio1"
+                                                       value="10:00"/>
+                                                <label class="btn btn-outline-primary" for="radio1">10:00 AM</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input type="radio" class="btn-check" name="time"
+                                                       id="radio2"
+                                                       value="10:30"/>
+                                                <label class="btn btn-outline-primary" for="radio2">10:30 AM</label>
+                                            </div>
+                                            <div class="form-check form-check-inline" style="padding-top:7px;">
+                                                <input type="radio" class="btn-check" name="time"
+                                                       id="radio3" value="11:00"/>
+                                                <label class="btn btn-outline-primary" for="radio3">11:00 AM</label>
+                                            </div>
+                                            <div class="form-check form-check-inline" style="padding-top:7px;">
+                                                <input type="radio" class="btn-check" name="time"
+                                                       id="radio4" value="11:30"/>
+                                                <label class="btn btn-outline-primary" for="radio4">11:30 AM</label>
+                                            </div>
+                                            <div class="form-check form-check-inline" style="padding-top:7px;">
+                                                <input type="radio" class="btn-check" name="time"
+                                                       id="radio5" value="12:00"/>
+                                                <label class="btn btn-outline-primary" for="radio5">12:00 PM</label>
+                                            </div>
+                                            <div class="form-check form-check-inline" style="padding-top:7px;">
+                                                <input type="radio" class="btn-check" name="time"
+                                                       id="radio6" value="12:30"/>
+                                                <label class="btn btn-outline-primary" for="radio6">12:30 PM</label>
+                                            </div>
+                                            <div class="form-check form-check-inline" style="padding-top:7px;">
+                                                <input type="radio" class="btn-check" name="time"
+                                                       id="radio7"
+                                                       value="03:00"/>
+                                                <label class="btn btn-outline-primary" for="radio7">03:00 PM</label>
+                                            </div>
+                                            <div class="form-check form-check-inline" style="padding-top:7px;">
+                                                <input type="radio" class="btn-check" name="time"
+                                                       id="radio8"
+                                                       value="03:30"/>
+                                                <label class="btn btn-outline-primary" for="radio8">03:30 PM</label>
+                                            </div>
+                                            <div class="form-check form-check-inline" style="padding-top:7px;">
+                                                <input type="radio" class="btn-check" name="time"
+                                                       id="radio9" value="04:00"/>
+                                                <label class="btn btn-outline-primary" for="radio9">04:00 PM</label>
+                                            </div>
+                                            <div class="form-check form-check-inline" style="padding-top:7px;">
+                                                <input type="radio" class="btn-check" name="time"
+                                                       id="radio10" value="04:30"/>
+                                                <label class="btn btn-outline-primary" for="radio10">04:30 PM
+                                                </label>
+                                            </div>
+                                            <div class="form-check form-check-inline" style="padding-top:7px;">
+                                                <input type="radio" class="btn-check" name="time"
+                                                       id="radio11" value="05:00"/>
+                                                <label class="btn btn-outline-primary" for="radio11">05:00 PM
+                                                </label>
+                                            </div>
+                                            <div class="form-check form-check-inline" style="padding-top:7px;">
+                                                <input type="radio" class="btn-check" name="time"
+                                                       id="radio12" value="05:30"/>
+                                                <label class="btn btn-outline-primary" for="radio12">05:30 PM
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <br/>
+                                    </div>
+                                    <div class="row" style="padding-top:36px;">
+                                        <div class="col-12">
+                                            <button type="submit" class="btn btn-primary">Next
+                                                <span class="fa fa-arrow-right"/>
+                                            </button>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+
+                                <br/>
+                                <div class="row" style="padding-top:100px;">
+                                    <div class="col-4" style="padding-top:100px;">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+            </div>
+            <div class="oe_structure"/>
+        </t>
+    </template>
+</odoo>

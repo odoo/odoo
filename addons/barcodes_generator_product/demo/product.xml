@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+Copyright (C) 2016-Today: GRAP (http://www.grap.coop)
+Copyright (C) 2016-Today La Louve (http://www.lalouve.net)
+@author Sylvain LE GAL (https://twitter.com/legalsylvain)
+License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+-->
+<!-- oca-hooks: disable=xml-duplicate-record-id -->
+<odoo>
+    <record id="product_template_mono_variant" model="product.template">
+        <field name="name">Template with Generated Barcode (Mono Variant)</field>
+        <field name="barcode_rule_id" ref="rule_product_generated_barcode_manually" />
+        <field name="barcode_base">50</field>
+    </record>
+
+    <record id="product_template_multi_variant" model="product.template">
+        <field name="name">Template with Generated Barcode (Multi Variant)</field>
+    </record>
+
+    <record
+        id="product_template_multi_variant_attribute_line"
+        model="product.template.attribute.line"
+    >
+        <field name="product_tmpl_id" ref="product_template_multi_variant" />
+        <field name="attribute_id" ref="product.product_attribute_2" />
+        <field
+            name="value_ids"
+            eval="[(6, 0, [ref('product.product_attribute_value_3'), ref('product.product_attribute_value_4')])]"
+        />
+    </record>
+
+    <function model="ir.model.data" name="_update_xmlids">
+        <value
+            model="base"
+            eval="[{
+            'xml_id': 'barcodes_generator_product.product_variant_1',
+            'record': obj().env.ref('barcodes_generator_product.product_template_multi_variant_attribute_line').product_template_value_ids[0],
+            'noupdate': True,
+        }, {
+            'xml_id': 'barcodes_generator_product.product_variant_2',
+            'record': obj().env.ref('barcodes_generator_product.product_template_multi_variant_attribute_line').product_template_value_ids[1],
+            'noupdate': True,
+        },]"
+        />
+    </function>
+    <function model="ir.model.data" name="_update_xmlids">
+        <value
+            model="base"
+            eval="[{
+            'xml_id': 'barcodes_generator_product.product_product_variant_1',
+            'record': obj().env.ref('barcodes_generator_product.product_template_multi_variant')._get_variant_for_combination(obj().env.ref('barcodes_generator_product.product_variant_1')),
+            'noupdate': True,
+        }, {
+            'xml_id': 'barcodes_generator_product.product_product_variant_2',
+            'record': obj().env.ref('barcodes_generator_product.product_template_multi_variant')._get_variant_for_combination(obj().env.ref('barcodes_generator_product.product_variant_2')),
+            'noupdate': True,
+        },]"
+        />
+    </function>
+
+    <record id="product_product_variant_1" model="product.product">
+        <field name="barcode_rule_id" ref="rule_product_generated_barcode_manually" />
+        <field name="barcode_base">10001</field>
+        <field name="product_tmpl_id" ref="product_template_multi_variant" />
+    </record>
+
+    <record id="product_product_variant_2" model="product.product">
+        <field name="barcode_rule_id" ref="rule_product_generated_barcode_manually" />
+        <field name="barcode_base">10002</field>
+        <field name="product_tmpl_id" ref="product_template_multi_variant" />
+    </record>
+
+    <record
+        id="product_template_multi_variant_attribute_line"
+        model="product.template.attribute.line"
+    >
+        <field name="product_tmpl_id" ref="product_template_multi_variant" />
+        <field name="attribute_id" ref="product.product_attribute_2" />
+        <field
+            name="value_ids"
+            eval="[(6,0,[ref('product.product_attribute_value_3'), ref('product.product_attribute_value_4')])]"
+        />
+    </record>
+
+    <record id="product_template_multi_variant" model="product.template">
+        <field
+            name="attribute_line_ids"
+            eval="[(6,0,[ref('product_template_multi_variant_attribute_line')])]"
+        />
+    </record>
+</odoo>

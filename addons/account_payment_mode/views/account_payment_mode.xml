@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="account_payment_mode_form" model="ir.ui.view">
+        <field name="name">account.payment.mode.form</field>
+        <field name="model">account.payment.mode</field>
+        <field name="arch" type="xml">
+            <form string="Payment Mode">
+                <sheet>
+                    <widget
+                        name="web_ribbon"
+                        title="Archived"
+                        bg_color="bg-danger"
+                        attrs="{'invisible': [('active', '=', True)]}"
+                    />
+                    <group name="main">
+                        <field name="name" />
+                        <field
+                            name="company_id"
+                            groups="!base.group_multi_company"
+                            invisible="1"
+                        />
+                        <field name="company_id" groups="base.group_multi_company" />
+                        <field name="active" invisible="1" />
+                        <field name="payment_method_id" />
+                        <field name="payment_type" />
+                        <field name="bank_account_link" />
+                        <field
+                            name="fixed_journal_id"
+                            attrs="{'invisible': [('bank_account_link', '!=', 'fixed')], 'required': [('bank_account_link', '=', 'fixed')]}"
+                        />
+                        <field
+                            name="variable_journal_ids"
+                            attrs="{'invisible': [('bank_account_link', '!=', 'variable')], 'required': [('bank_account_link', '=', 'variable')]}"
+                            widget="many2many_tags"
+                        />
+                    </group>
+                    <group string="Note" name="note">
+                        <field name="note" nolabel="1" colspan="2" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="account_payment_mode_tree" model="ir.ui.view">
+        <field name="name">account.payment.mode.tree</field>
+        <field name="model">account.payment.mode</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sequence" widget="handle" />
+                <field name="name" />
+                <field name="payment_method_id" />
+                <field name="payment_type" />
+                <field name="bank_account_link" />
+                <field
+                    name="company_id"
+                    groups="!base.group_multi_company"
+                    invisible="1"
+                />
+                <field name="company_id" groups="base.group_multi_company" />
+            </tree>
+        </field>
+    </record>
+    <record id="account_payment_mode_search" model="ir.ui.view">
+        <field name="name">account.payment.mode.search</field>
+        <field name="model">account.payment.mode</field>
+        <field name="arch" type="xml">
+            <search string="Search Payment Modes">
+                <field name="name" />
+                <filter
+                    name="inbound"
+                    string="Inbound"
+                    domain="[('payment_type', '=', 'inbound')]"
+                />
+                <filter
+                    name="outbound"
+                    string="Outbound"
+                    domain="[('payment_type', '=', 'outbound')]"
+                />
+                <group string="Group By" name="groupby">
+                    <filter
+                        string="Payment Method"
+                        name="payment_method_groupby"
+                        context="{'group_by': 'payment_method_id'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="account_payment_mode_action" model="ir.actions.act_window">
+        <field name="name">Payment Modes</field>
+        <field name="res_model">account.payment.mode</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem
+        id="account_payment_mode_menu"
+        action="account_payment_mode_action"
+        parent="account.account_management_menu"
+        sequence="25"
+    />
+</odoo>

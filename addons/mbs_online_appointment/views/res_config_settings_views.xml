@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.library</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('settings')]" position="inside">
+                    <div class="app_settings_block" data-string="Online Appointment" id="online_appointment"
+                         string="Online Appointment"
+                         data-key="mbs_online_appointment">
+
+                        <h2>SMS Configuration</h2>
+                        <div class="row mt16 o_settings_container" id="book_return_days">
+                            <div class="col-12 col-lg-6 o_setting_box"
+                                 id="library_return_setting">
+                                <div class="o_setting_left_pane"/>
+                                <div class="o_setting_right_pane">
+                                    <span class="o_form_label">Twilio Details</span>
+                                    <div class="text-muted">
+                                        Please fill Twilio Details here
+                                    </div>
+                                    <div class="content-group">
+                                        <div class="row mt16">
+                                            <label for="account_sid" class="col-lg-3 o_light_label"/>
+                                            <field name="account_sid"/>
+                                        </div>
+                                    </div>
+                                    <div class="content-group">
+                                        <div class="row mt16">
+                                            <label for="auth_token" class="col-lg-3 o_light_label"/>
+                                            <field name="auth_token"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box"
+                                 id="panelty_fee">
+                                <div class="o_setting_left_pane"/>
+                                <div class="o_setting_right_pane">
+                                    <span class="o_form_label">Twilio Number</span>
+                                    <div class="text-muted">
+                                        Please fill Twilio Number which is provided by Twilio
+                                    </div>
+                                    <div class="content-group">
+                                        <div class="row mt16">
+                                            <label for="twilio_number" class="col-lg-3 o_light_label"/>
+                                            <field name="twilio_number"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </xpath>
+            </field>
+        </record>
+
+        <record id="online_appointment_config_settings_action" model="ir.actions.act_window">
+            <field name="name">Settings</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+            <field name="context">{'module' : 'mbs_online_appointment', 'bin_size': False}</field>
+        </record>
+
+        <menuitem id="online_appointment_config_settings_menu" name="Settings"
+                  parent="mbs_online_appointment.menu_configuration" sequence="0"
+                  action="online_appointment_config_settings_action"
+                  groups="base.group_system"/>
+    </data>
+</odoo>

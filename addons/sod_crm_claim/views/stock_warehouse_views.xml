@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2019-2023 Sodexis
+     License OPL-1 (See LICENSE file for full copyright and licensing details). -->
+<odoo>
+	<record id="view_warehouse" model="ir.ui.view">
+		<field name="name">Stock Warehouse</field>
+		<field name="model">stock.warehouse</field>
+		<field name="inherit_id" ref="stock.view_warehouse" />
+		<field name="arch" type="xml">
+			<xpath expr="//field[@name='wh_output_stock_loc_id']" position="after">
+				<field name="rma_loc_id" />
+			</xpath>
+			<xpath expr="//field[@name='out_type_id']" position="after">
+				<field name="rma_type_id" />
+			</xpath>
+		</field>
+	</record>
+</odoo>

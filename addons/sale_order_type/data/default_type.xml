@@ -1,0 +1,7 @@
+<odoo noupdate="1">
+    <record id="normal_sale_type" model="sale.order.type">
+        <field name="name">Normal Order</field>
+        <field name="company_id" eval="False" />
+        <field name="sequence_id" ref="sale.seq_sale_order" />
+    </record>
+</odoo>

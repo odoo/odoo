@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--Template for the Drag and Drop widget-->
+<templates>
+    <t t-name="FieldDragAndDropBinary" owl="1">
+        <div class="d-inline-block position-relative opacity-trigger-hover" >
+            <div t-attf-class="position-absolute d-flex justify-content-between w-100 bottom-0 opacity-0 opacity-100-hover {{isMobile ? 'o_mobile_controls' : ''}}"
+                 aria-atomic="true" t-att-style="sizeStyle">
+                <t t-if="!props.readonly">
+                    <FileUploader
+                            acceptedFileExtensions="props.acceptedFileExtensions"
+                            onUploaded.bind="onFileUploaded"
+                            type="'image'">
+                        <t t-set-slot="toggler">
+                            <button
+                                    class="o_select_file_button btn btn-light border-0 rounded-circle m-1 p-1"
+                                    data-tooltip="Edit"
+                                    aria-label="Edit">
+                                <i class="fa fa-pencil fa-fw"/>
+                            </button>
+                        </t>
+                        <button
+                                t-if="props.value and state.isValid"
+                                class="o_clear_file_button btn btn-light border-0 rounded-circle m-1 p-1"
+                                data-tooltip="Clear"
+                                aria-label="Clear"
+                                t-on-click="onFileRemove">
+                            <i class="fa fa-trash-o fa-fw"/>
+                        </button>
+                    </FileUploader>
+                    <button
+                            t-if="props.record.data.id"
+                            class="o_upload_image_button btn btn-light border-0 rounded-circle m-1 p-1"
+                            data-tooltip="Drag"
+                            aria-label="Drag"
+                            t-on-click="onFileDragImage">
+                            <i class="fa fa-arrow-up fa-fw"/>
+                    </button>
+                </t>
+            </div>
+            <img
+                    class="img img-fluid w-100"
+                    alt="Binary file"
+                    t-att-src="getUrl(props.previewImage or props.name)"
+                    t-att-name="props.name"
+                    t-att-height="props.height"
+                    t-att-width="props.width"
+                    t-att-style="sizeStyle"
+                    t-on-error.stop="onLoadFailed"
+                    t-att-data-tooltip-template="hasTooltip and tooltipAttributes.template"
+                    t-att-data-tooltip-info="hasTooltip and tooltipAttributes.info"
+                    t-att-data-tooltip-delay="hasTooltip and props.zoomDelay"/>
+        </div>
+        <div class="setting image_picker d-none" id="image_picker" t-ref="image_picker">
+            <div class="settings_wrap">
+                <label class="drop_target">
+                    <div class="image_preview"/>
+                </label>
+                <input id="inputFile" t-ref="inputFile"  name="inputFile" type="hidden"/>
+                <button
+                        class="o_upload_image_button btn btn-light border-0 rounded-circle m-1 p-1"
+                        data-tooltip="Upload"
+                        aria-label="Upload"
+                        t-on-click="onImageUpload">
+                    <i class="fa fa-camera fa-fw"/>Upload Images
+                </button>
+            </div>
+        </div>
+        <script type="text/javascript">
+            var $dropzone = this.$('.image_picker');
+            var $droptarget = this.$('.drop_target');
+            var $dropinput = this.$('#inputFile');
+            var $dropimg = this.$('.image_preview');
+            var $remover = this.$('[data-action="remove_current_image"]');
+            var image_url;
+            this.$dropzone.on('dragover', function() {
+                $droptarget.addClass('dropping');
+                return false;
+            });
+            this.$dropzone.on('dragend dragleave', function() {
+                $droptarget.removeClass('dropping');
+                return false;
+            });
+            this.$dropzone.on('drop', function(e) {
+              $droptarget.removeClass('dropping');
+              $droptarget.addClass('dropped');
+              $remover.removeClass('disabled');
+              e.preventDefault();
+              var file = e.originalEvent.dataTransfer.files[0],
+                  reader = new FileReader();
+              reader.onload = function(event) {
+                $dropimg.css('background-image', 'url(' + event.target.result + ')');
+                image_url=event.target.result;
+                  document.getElementById("inputFile").value =event.target.result;
+              };
+              reader.readAsDataURL(file);
+              return false;
+            });
+            this.$dropinput.change(function(e) {
+              $droptarget.addClass('dropped');
+              $remover.removeClass('disabled');
+              var image_title = $('.image_title input').val('');
+            });
+            this.$remover.on('click', function() {
+              $dropimg.css('background-image', '');
+              $droptarget.removeClass('dropped');
+              $remover.addClass('disabled');
+              $('.image_title input').val('');
+              document.getElementById("inputFile").value = '';
+            });
+        </script>
+    </t>
+</templates>

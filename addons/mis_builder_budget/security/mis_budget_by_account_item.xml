@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2017-2018 ACSONE SA/NV
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record model="ir.model.access" id="mis_budget_by_account_item_access_base_user">
+        <field name="name">mis.budget.by.account.item access base user</field>
+        <field name="model_id" ref="model_mis_budget_by_account_item" />
+        <field name="group_id" ref="base.group_user" />
+        <field name="perm_read" eval="1" />
+        <field name="perm_create" eval="0" />
+        <field name="perm_write" eval="0" />
+        <field name="perm_unlink" eval="0" />
+    </record>
+    <record model="ir.model.access" id="mis_budget_by_account_item_access_adviser">
+        <field name="name">mis.budget.by.account.item access adviser</field>
+        <field name="model_id" ref="model_mis_budget_by_account_item" />
+        <field name="group_id" ref="account.group_account_manager" />
+        <field name="perm_read" eval="1" />
+        <field name="perm_create" eval="1" />
+        <field name="perm_write" eval="1" />
+        <field name="perm_unlink" eval="1" />
+    </record>
+    <record id="mis_budget_by_account_item_multi_company_rule" model="ir.rule">
+        <field name="name">mis.budget.by.account.item multi company</field>
+        <field name="model_id" ref="model_mis_budget_by_account_item" />
+        <field name="domain_force">
+            ['|',('budget_id.company_id','=',False),('budget_id.company_id','in',company_ids)]
+        </field>
+    </record>
+</odoo>

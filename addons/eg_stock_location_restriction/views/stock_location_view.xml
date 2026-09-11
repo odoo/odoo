@@ -1,0 +1,16 @@
+<odoo>
+    <record id="restriction_stock_location_form_view_inherited" model="ir.ui.view">
+        <field name="name">stock.location.restriction.form.view</field>
+        <field name="model">stock.location</field>
+        <field name="inherit_id" ref="stock.view_location_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='comment']" position="after">
+                <separator string="User Rights"/>
+                <group>
+                    <field name="user_ids" widget="many2many_tags"/>
+                </group>
+
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,654 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- Inherited Form View Of Student Information -->
+    <record id="view_student_student_form2" model="ir.ui.view">
+        <field name="name">student.student.form</field>
+        <field name="model">student.student</field>
+        <field name="inherit_id" ref="school.view_student_student_form_1" />
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//page[@name='general']" position="after">
+                    <page string="Transport">
+                        <separator string="Transportation Details" colspan="4" />
+                        <field name="transport_ids" readonly="1" nolabel='1' />
+                    </page>
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+    <!-- Inherited Form View of fleet.vehicle -->
+    <record id="fleet_vehicle_inhrited_view_form" model="ir.ui.view">
+        <field name="name">fleet.vehicle.inherited.form</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_form" />
+        <field name="arch" type="xml">
+            <field name="driver_id" position="attributes">
+                <attribute name="domain">[('is_driver','=',True)]</attribute>
+            </field>
+            <xpath expr="//button[@name='return_action_to_open']" position='after'>
+                <button
+                    name="action_show_participant"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-pencil-square-o"
+                    context="{'xml_id':'action_school_transport_participant_form'}"
+                    help="show the participants of this vehicle"
+                >
+                    <field
+                        name="participant_count"
+                        widget="statinfo"
+                        string="Participants"
+                    />
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Tree View Of Transport Participation -->
+    <record id="view_transport_participation_tree_1" model="ir.ui.view">
+        <field name="name">transport.participant.tree</field>
+        <field name="model">transport.participant</field>
+        <field name="arch" type="xml">
+            <tree create="false">
+                <field name="stu_pid_id" />
+                <field name="name" />
+                <field name="transport_id" />
+                <field name="vehicle_id" />
+                <field name="months" />
+                <field name="tr_reg_date" />
+                <field name="tr_end_date" />
+                <field
+                    name="state"
+                    widget="badge"
+                    decoration-danger="state == 'over'"
+                    decoration-success="state == 'running'"
+                />
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View Of Transport Participation -->
+    <record id="view_transport_participation_form" model="ir.ui.view">
+        <field name="name">transport.participant.form</field>
+        <field name="model">transport.participant</field>
+        <field name="arch" type="xml">
+            <form create="false" string="Transport Participants Information">
+                <header>
+                    <button
+                        name="set_over"
+                        string="Over"
+                        states="running"
+                        type='object'
+                        groups="school.group_school_administration,school_transport.group_transportation_manager"
+                    />
+                    <field name="state" widget="statusbar" string='State' />
+                </header>
+                <sheet>
+                <separator string="Personal Detail" orientation="vertical" />
+                <group col="4" colspan="2">
+                    <field name="stu_pid_id" readonly="1" />
+                    <field name="name" readonly="1" />
+                </group>
+                <separator string="Transportation Detail" orientation="vertical" />
+                <group col="4" colspan="4">
+                    <field name="transport_id" readonly="1" />
+                    <field name="vehicle_id" readonly="1" />
+                    <field name="months" readonly="1" />
+                    <field name="tr_reg_date" readonly="1" />
+                    <field name="tr_end_date" readonly="1" />
+                    <field name="amount" string="Amount" />
+                    <field name='active' invisible='1' string='Active' />
+                </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View Of Transport Participation -->
+    <record id="view_transport_participant_search" model="ir.ui.view">
+        <field name="name">transport.participant.search</field>
+        <field name="model">transport.participant</field>
+        <field name="arch" type="xml">
+            <search>
+              <field name="name" />
+              <field name="transport_id" />
+              <group string="Filter">
+                    <filter
+                        string="Running"
+                        name="state_running"
+                        domain="[('state','=','running')]"
+                    />
+                    <filter
+                        string="Over"
+                        name="state_over"
+                        domain="[('state','=','over')]"
+                    />
+               </group>
+               <newline />
+               <group expand="1" string="Group By">
+                   <filter
+                        string="Name"
+                        name="name_name"
+                        context="{'group_by':'name'}"
+                    />
+                   <filter
+                        string="Root"
+                        name="root"
+                        context="{'group_by':'transport_id'}"
+                    />
+                   <filter string="State" name="state" context="{'group_by':'state'}" />
+               </group>
+            </search>
+        </field>
+    </record>
+
+   <!-- Tree View Of Transport Information -->
+   <record id="view_student_transport_tree" model="ir.ui.view">
+        <field name="name">transport.tree</field>
+        <field name="model">student.transport</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+                <field name="start_date" />
+                <field name="end_date" />
+                <field name="contact_per_id" />
+                <field name="trans_vehicle_ids" />
+                <field
+                    name="state"
+                    widget="badge"
+                    decoration-info="state == 'draft'"
+                    decoration-danger="state == 'close'"
+                    decoration-success="state == 'open'"
+                />
+            </tree>
+        </field>
+    </record>
+
+   <!-- Form View Of Transport Information -->
+   <record id="view_student_transport_form" model="ir.ui.view">
+        <field name="name">student.transport.form</field>
+        <field name="model">student.transport</field>
+        <field name="arch" type="xml">
+            <form string="Transport Information">
+                <header>
+                    <button
+                        name="transport_open"
+                        class="fa fa-folder-open"
+                        string="Open"
+                        states="draft"
+                        type='object'
+                        groups="school.group_school_administration,school_transport.group_transportation_manager"
+                    />
+                    <button
+                        name="transport_close"
+                        class="fa fa-folder-close"
+                        string="Close"
+                        states="open"
+                        type='object'
+                        groups="school.group_school_administration,school_transport.group_transportation_manager"
+                    />
+                    <field name="state" widget="statusbar" nolabel="1" string='State' />
+                </header>
+                <sheet style="width: 90%%,height:90%%">
+                <separator string="Transport Information" />
+                <group col="4">
+                    <field
+                            name="name"
+                            placeholder="Route Name"
+                            attrs="{'readonly':[('state','=','close')]}"
+                        />
+                    <field
+                            name="contact_per_id"
+                            placeholder="Contact Person"
+                            attrs="{'readonly':[('state','=','close')]}"
+                            options="{&quot;no_create&quot;: True}"
+                        />
+                    <field
+                            name="start_date"
+                            string='Start Date'
+                            placeholder="Start Date"
+                            attrs="{'readonly':[('state','=','close')]}"
+                        />
+                    <field
+                            name="end_date"
+                            string='End Date'
+                            placeholder="End Date"
+                            attrs="{'readonly':[('state','=','close')]}"
+                        />
+                    <field name="total_participantes" readonly="1" />
+                    <field name="amount" attrs="{'readonly':[('state','=','close')]}" />
+                </group>
+                <notebook colspan="4">
+                    <page string="Vehicles">
+                            <separator string="Transport Vehicle Details" colspan="4" />
+                            <field
+                                name="trans_vehicle_ids"
+                                nolabel='1'
+                                attrs="{'readonly':[('state','not in','draft')]}"
+                                options="{&quot;no_create&quot;: True}"
+                            />
+                    </page>
+                    <page string="Participants">
+                        <separator string="Participants Details" colspan="4" />
+                        <field name="trans_participants_ids" nolabel='1' readonly="1">
+                            <tree>
+                                <field name="stu_pid_id" />
+                                <field name="name" />
+                                <field name="vehicle_id" />
+                                <field name="months" />
+                                <field name="tr_reg_date" />
+                                <field name="tr_end_date" />
+                                <field name="amount" />
+                                <field name="state" />
+                            </tree>
+                            <form string="Subject Information">
+                                <group col="6" colspan="4">
+                                    <field name="stu_pid_id" />
+                                    <field name="name" />
+                                    <field name="transport_id" />
+                                    <field name="vehicle_id" />
+                                    <field name="months" />
+                                    <field name="tr_reg_date" />
+                                    <field name="tr_end_date" />
+                                    <field name="amount" />
+                                    <field name="state" />
+                                </group>
+                            </form>
+                        </field>
+                    </page>
+                </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View Of Transport Information -->
+    <record id="view_student_transport_search" model="ir.ui.view">
+        <field name="name">student.transport.search</field>
+        <field name="model">student.transport</field>
+        <field name="arch" type="xml">
+            <search string="Search">
+                <group string="Filter" col="10" colspan="4">
+                    <filter
+                        name="open"
+                        icon="terp-personal"
+                        string="Open"
+                        help="Open"
+                        domain="[('state','=','open')]"
+                    />
+                    <filter
+                        name="close"
+                        icon="gtk-close"
+                        string="Close"
+                        help="Close"
+                        domain="[('state','=','close')]"
+                    />
+                    <separator orientation="vertical" />
+                    <field name="name" />
+                    <field name="contact_per_id" />
+                </group>
+               <newline />
+                <group expand="0" string="Group By" colspan="12" col="10">
+                    <filter
+                        string="This Month"
+                        icon="terp-go-month"
+                        name="this_month"
+                        domain="[('start_date','&lt;=',(context_today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('start_date','&gt;=',(context_today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
+                        help="Events in current month"
+                    />
+                    <separator orientation="vertical" />
+                    <filter
+                        name="root_name"
+                        icon="terp-stock_symbol-selection"
+                        string="Route Name"
+                        help="By Route Name"
+                        context="{'group_by':'name'}"
+                    />
+                    <separator orientation="vertical" />
+                    <filter
+                        name="contact"
+                        icon="terp-personal"
+                        string="Contact Person"
+                        help="By Contact Person"
+                        context="{'group_by':'contact_per_id'}"
+                    />
+                    <separator orientation="vertical" />
+                    <filter
+                        name="state"
+                        icon="terp-stock_symbol-selection"
+                        string="State"
+                        help="By State"
+                        context="{'group_by':'state'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+   <!-- Form View Of Transport Registration -->
+   <record id="transport_registration_form1" model="ir.ui.view">
+        <field name="name">transport.registration.form</field>
+        <field name="model">transport.registration</field>
+        <field name="arch" type="xml">
+            <form string="Transport Registration">
+                <header>
+                    <button
+                        name="trans_regi_confirm"
+                        class="fa fa-check"
+                        string="Confirm"
+                        states="draft"
+                        type='object'
+                    />
+                    <button
+                        name="trans_regi_cancel"
+                        class="fa fa-ban"
+                        string="Cancel"
+                        type='object'
+                        attrs="{'invisible':['|',('transport_user','=',True),('state','in' ,('draft','cancel','paid'))]}"
+                    />
+                    <button
+                        name="transport_fees_pay"
+                        string="Payment"
+                        type="object"
+                        states="confirm"
+                        groups="school_transport.group_transportation_manager"
+                    />
+                    <field
+                        name="state"
+                        string='State'
+                        widget="statusbar"
+                        readonly="1"
+                        statusbar_visible="draft,confirm,paid"
+                    />
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            name="view_invoice"
+                            icon="fa-pencil-square-o"
+                            type="object"
+                            widget="stateinfo"
+                            class="oe_stat_button"
+                            states="pending,paid"
+                            groups="school_transport.group_transportation_manager"
+                        >
+                            <div class="o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="count_inv" />
+                                </span>
+                                <span class="o_stat_text">
+                                    Invoice
+                                </span>
+                            </div>
+                        </button>
+                   </div>
+                    <group attrs="{'readonly':[('state','!=','draft')]}">
+                       <separator string="Transport Registration" colspan="4" />
+                        <group>
+                            <field name="transport_user" invisible="1" />
+                            <field
+                                name="student_id"
+                                placeholder="Enter Participant Name"
+                                attrs="{'readonly':[('state','not in','draft')]}"
+                                domain="[('state','=','done')]"
+                                options="{&quot;no_create&quot;: True}"
+                            />
+                            <field
+                                name="vehicle_id"
+                                attrs="{'invisible':[('name','=',False)],'readonly':[('state','not in','draft')]}"
+                                context="{'name':name}"
+                                options="{&quot;no_create&quot;: True}"
+                            />
+                            <field
+                                name="registration_month"
+                                attrs="{'readonly':[('state','not in','draft')]}"
+                            />
+                            <field
+                                name="paid_amount"
+                                readonly="1"
+                                string='Paid Amount'
+                            />
+                        </group>
+                        <group>
+                            <field
+                                name="name"
+                                placeholder="Enter Transport Route Name"
+                                attrs="{'readonly':[('state','not in','draft')]}"
+                                options="{'no_create': True, 'no_open': True}"
+                            />
+                            <field
+                                name="monthly_amount"
+                                string='Monthly Amount'
+                                attrs="{'readonly':[('state','not in','draft')]}"
+                            />
+                            <field name="transport_fees" string='Transport Fees' />
+                            <field name="remain_amt" readonly="1" />
+                        </group>
+                    </group>
+                    <separator string="Transport Duration" />
+                    <group col="4" colspan="4">
+                        <field name="reg_date" />
+                        <field
+                            name="reg_end_date"
+                            context="{'registration_month':registration_month}"
+                        />
+                    </group>
+               </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree View of transport Registration -->
+    <record id="transport_registration_tree" model="ir.ui.view">
+        <field name="name">transport.registration.tree</field>
+        <field name="model">transport.registration</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="student_id" />
+                <field name="name" />
+                <field name="registration_month" />
+                <field name="reg_end_date" />
+                <field
+                    name="state"
+                    widget="badge"
+                    decoration-info="state in ('draft', 'pending')"
+                    decoration-danger="state in ('cancel')"
+                    decoration-success="state in ('confirm', 'paid')"
+                />
+            </tree>
+        </field>
+    </record>
+
+    <!-- Search view of transport registration-->
+    <record id="transport_regis_search" model="ir.ui.view">
+        <field name="name">transport.registration</field>
+        <field name="model">transport.registration</field>
+        <field name="arch" type="xml">
+            <search string="Transport Registration Search">
+                <group col="10" colspan="4">
+                    <field name="state" />
+                </group>
+                <group expand="0" string="Filter..." colspan="12" col="10">
+                    <filter
+                        string="Confirm"
+                        name="draft_state"
+                        domain="[('state','=','confirm')]"
+                    />
+                 </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Inherited View of Account Invoice -->
+    <record id="account_invoice_inherited" model="ir.ui.view">
+        <field name="name">Account Invoice Iherits</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='journal_id']" position="before">
+                <field name="transport_student_id" invisible="1" />
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Actions Of Form & Tree Views Of Transport Registration -->
+    <record
+        id="action_student_transport_registration_form"
+        model="ir.actions.act_window"
+    >
+        <field name="name">Transport Registration</field>
+        <field name="res_model">transport.registration</field>
+        <field name="context">{'search_default_draft_state':1}</field>
+        <field name="view_id" ref="transport_registration_tree" />
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Actions Of Form & Tree Views Of Transport Participant -->
+    <record id="action_school_transport_participant_form" model="ir.actions.act_window">
+        <field name="name">Transport Participant</field>
+        <field name="res_model">transport.participant</field>
+        <field name="context">{'search_default_state_running':1}</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_transport_participant_search" />
+
+    </record>
+
+    <!-- Actions Of Form & Tree Views Of Transport Information -->
+    <record id="action_student_transport_form" model="ir.actions.act_window">
+        <field name="name">Transport Information</field>
+        <field name="res_model">student.transport</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_student_transport_search" />
+
+    </record>
+
+    <!-- Overrite the EMS Menu and Added the Transport manager and user groups -->
+    <menuitem
+        id="school.menu_ems"
+        name="EMS"
+        sequence="1"
+        groups="school.group_school_administration,school.group_school_student,school.group_school_teacher,school.group_school_parent,group_transportation_manager,group_transportation_user"
+    />
+
+    <!--Menu Items for Transport  -->
+    <menuitem
+        id="menu_transport"
+        name="Transport"
+        parent="school.school_facilities"
+        sequence="3"
+        groups="group_transportation_manager,group_transportation_user"
+    />
+    <menuitem
+        id="menu_transport_sub_form"
+        name="Transport Information"
+        parent="menu_transport"
+        sequence="91"
+        action="action_student_transport_form"
+        groups="school_transport.group_transportation_manager,school_transport.group_transportation_user,school.group_school_teacher,school.group_school_parent"
+    />
+    <menuitem
+        id="menu_transport_registration_sub_form"
+        name="Transport Registration"
+        sequence="92"
+        parent="menu_transport"
+        action="action_student_transport_registration_form"
+        groups="school_transport.group_transportation_manager,school_transport.group_transportation_user,school.group_school_teacher,school.group_school_parent"
+    />
+    <menuitem
+        id="menu_transport_sub_participant"
+        name="Transport Participant"
+        parent="menu_transport"
+        sequence="93"
+        action="action_school_transport_participant_form"
+        groups="school_transport.group_transportation_manager,school_transport.group_transportation_user,school.group_school_teacher,school.group_school_parent"
+    />
+    <!-- <menuitem id="menu_configuration" name="Configurations" parent="menu_ems" sequence="13" groups="group_school_administration" /> -->
+    <menuitem
+        name="Fleet"
+        parent="school.menu_ems"
+        id="fleet_vehicles"
+        sequence="9"
+        groups="fleet.fleet_group_user"
+    />
+        <menuitem
+        action="fleet.fleet_vehicle_action"
+        parent="fleet_vehicles"
+        name="Fleet"
+        id="fleet_vehicle_menu"
+        groups="fleet.fleet_group_user"
+        sequence="0"
+    />
+        <menuitem
+        action="fleet.fleet_vehicle_log_contract_action"
+        parent="fleet_vehicles"
+        id="fleet_vehicle_log_contract_menu"
+        groups="fleet.fleet_group_user"
+        sequence="2"
+    />
+        <menuitem
+        action="fleet.fleet_vehicle_log_services_action"
+        parent="fleet_vehicles"
+        id="fleet_vehicle_log_services_menu"
+        groups="fleet.fleet_group_user"
+        sequence="3"
+    />
+        <menuitem
+        action="fleet.fleet_vehicle_odometer_action"
+        parent="fleet_vehicles"
+        id="fleet_vehicle_odometer_menu"
+        groups="fleet.fleet_group_user"
+        sequence="10"
+    />
+    <menuitem
+        id="menu_fleet_configuration"
+        name="Fleet Configuration"
+        parent="school.menu_configuration"
+    />
+        <menuitem
+        id="fleet_config_settings_menu"
+        name="Settings"
+        parent="menu_fleet_configuration"
+        sequence="0"
+        action="fleet.fleet_config_settings_action"
+        groups="base.group_system"
+    />
+        <menuitem
+        action="fleet.fleet_vehicle_model_brand_action"
+        parent="menu_fleet_configuration"
+        id="fleet_vehicle_model_brand_menu"
+        sequence="2"
+    />
+        <menuitem
+        action="fleet.fleet_vehicle_model_action"
+        parent="menu_fleet_configuration"
+        id="fleet_vehicle_model_menu"
+        sequence="2"
+    />
+        <menuitem
+        action="fleet.fleet_vehicle_model_category_action"
+        parent="menu_fleet_configuration"
+        id="fleet_vehicle_model_category_menu"
+        sequence="2"
+    />
+        <menuitem
+        action="fleet.fleet_vehicle_service_types_action"
+        parent="menu_fleet_configuration"
+        id="fleet_vehicle_service_types_menu"
+        sequence="3"
+        groups="base.group_no_one"
+    />
+        <menuitem
+        action="fleet.fleet_vehicle_state_action"
+        parent="menu_fleet_configuration"
+        id="fleet_vehicle_state_menu"
+        groups="base.group_no_one"
+    />
+        <menuitem
+        id="fleet_vehicle_tag_menu"
+        parent="menu_fleet_configuration"
+        action="fleet.fleet_vehicle_tag_action"
+        sequence="89"
+        groups="base.group_no_one"
+    />
+</odoo>

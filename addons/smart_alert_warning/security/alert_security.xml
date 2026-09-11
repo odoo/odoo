@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <record model="ir.module.category" id="smart_alert">
+            <field name="name">Smart Alert</field>
+            <field name="description">Helps you to create customized alert messages.</field>
+            <field name="sequence">10</field>
+        </record>
+
+        <record id="smart_alert_warning_admin" model="res.groups">
+            <field name="name">Smart Alert Warning: Admin</field>
+            <field name="category_id" ref="smart_alert_warning.smart_alert"/>
+        </record>
+
+        <record id="smart_alert_warning_user" model="res.groups">
+            <field name="name">Smart Alert Warning: User</field>
+            <field name="category_id" ref="smart_alert_warning.smart_alert"/>
+            <field name="implied_ids" eval="[(4, ref('smart_alert_warning.smart_alert_warning_admin'))]"/>
+        </record>
+
+    </data>
+</odoo>

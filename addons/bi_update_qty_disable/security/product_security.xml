@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="group_onhand_qty_user" model="res.groups">
+            <field name="name">Onhand Quantity</field>
+            <field name="category_id" ref="base.module_category_usability"/>
+            <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        </record>
+    </data>
+</odoo>

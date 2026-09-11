@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <menuitem id="salon_management_menu_root" name="Salon"
+                  groups="salon_management.group_salon_user"
+                  action="salon_action_dashboard"
+                  web_icon="salon_management,static/description/icon.png"/>
+        <menuitem id="salon_dashboard_menu_action"
+                  name="Dashboard" parent="salon_management_menu_root"
+                  action="salon_action_dashboard"
+                  sequence="-100" />
+        <menuitem id="salon_management_salon_root" name="Salon"
+                  parent="salon_management_menu_root"/>
+        <menuitem id="salon_chair_menu_action" name="Chair"
+                  parent="salon_management_salon_root"
+                  action="salon_chair_action"/>
+        <menuitem id="salon_service_menu_action"
+                  parent="salon_management_salon_root"
+                  action="salon_service_action"/>
+        <menuitem id="salon_order_menu_action"
+                  parent="salon_management_salon_root" name="Salon Orders"
+                  action="salon_order_action"/>
+        <menuitem id="salon_booking_menu_action" name="Bookings"
+                  parent="salon_management_salon_root"
+                  action="salon_booking_action"/>
+        <menuitem id="salon_management_settings_menu_root"
+                  parent="salon_management_menu_root" name="Configuration"/>
+        <menuitem id="salon_config_settings_menu_action"
+                  parent="salon_management_settings_menu_root" name="Settings"
+                  action="salon_config_settings_action"/>
+        <menuitem id="salon_working_hours_menu_action"
+                  parent="salon_management_settings_menu_root"
+                  name="Working Hours" action="salon_working_hours_action"/>
+
+    </data>
+</odoo>

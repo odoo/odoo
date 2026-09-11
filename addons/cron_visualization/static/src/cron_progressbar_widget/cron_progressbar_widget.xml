@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!-- These widget templates are intended for read-only mode only -->
+
+    <t t-name="cron_progressbar_widget" owl="1">
+        <span>
+            <t t-foreach="getProgressBar" t-as="progress" t-key="progress.index">
+                <div class="d-flex align-items-center">
+                    <span class="me-3 fa fa-bolt" t-if="progress.type == 'automatic'" style="width: 12px;text-align: center;"/>
+                    <span class="me-3 fa fa-user" t-if="progress.type == 'manual'" style="width: 12px;text-align: center;"/>
+                    <div class="progress" style="width: 100%;">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" t-att-aria-valuenow="progress.progress" t-att-aria-valuemin="0" t-att-aria-valuemax="100" t-att-style="'width: min(' + 100 * progress.progress / 100 + '%, 100%)'">
+                            <t t-out="progress.progress + '%'"/>
+                        </div>
+                    </div>
+                    <span class="ms-3" t-out="progress.duration"/>
+                </div>
+            </t>
+        </span>
+    </t>
+
+</templates>

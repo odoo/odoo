@@ -1,0 +1,94 @@
+<odoo>
+    <record model="ir.ui.view" id="eg_sync_history_tree_view">
+        <field name="name">eg.sync.history.tree.view</field>
+        <field name="model">eg.sync.history</field>
+        <field name="arch" type="xml">
+            <tree create="0">
+                <field name="name"/>
+                <field name="process_on"/>
+                <field name="process"/>
+                <field name="status"/>
+                <field name="instance_id"/>
+                <field name="provider" invisible="1"/>
+                <field name="create_date"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="eg_sync_history_form_view">
+        <field name="name">eg.sync.history.form.view</field>
+        <field name="model">eg.sync.history</field>
+        <field name="arch" type="xml">
+            <form create="0">
+                <sheet>
+                    <div class="oe_title">
+                        <label class="oe_edit_only" for="name" string="History Number"/>
+                        <h1>
+                            <field name="name" placeholder="History Number"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="process"/>
+                            <field name="process_on"/>
+                            <field name="create_date"/>
+                            <field name="parent_id" attrs="{'invisible': [('parent_id', '=', False)]}"/>
+                            <field name="child_id" attrs="{'invisible': [('child_id', '=', False)]}"/>
+                        </group>
+                        <group>
+                            <field name="status"/>
+                            <field name="order_id"
+                                   attrs="{'invisible': ['|',('process_on', '!=', 'order'), ('parent_id', '=', True)]}"/>
+                            <field name="partner_id"
+                                   attrs="{'invisible': ['|',('process_on', '!=', 'customer'), ('parent_id', '=', True)]}"/>
+                            <field name="product_id"
+                                   attrs="{'invisible': ['|',('process_on', '!=', 'product'), ('parent_id', '=', True)]}"/>
+                            <field name="category_id"
+                                   attrs="{'invisible': ['|',('process_on', '!=', 'category'), ('parent_id', '=', True)]}"/>
+                            <field name="attribute_id"
+                                   attrs="{'invisible': ['|',('process_on', '!=', 'attribute'), ('parent_id', '=', True)]}"/>
+                            <field name="instance_id"/>
+                            <field name="eg_history_id" attrs="{'invisible': [('child_id', '=', False)]}"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="error_message"/>
+                    </group>
+                    <notebook attrs="{'invisible': [('parent_id', '=', False)]}">
+                        <page string="Child History">
+                            <field name="eg_history_ids">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="process_on"/>
+                                    <field name="process"/>
+                                    <field name="status"/>
+                                    <field name="instance_id"/>
+                                    <!--                                    <field name="order_id" attrs="{'invisible': [('process_on', '!=', 'order')]}"/>-->
+                                    <!--                                    <field name="partner_id" attrs="{'invisible': [('process_on', '!=', 'customer')]}"/>-->
+                                    <!--                                    <field name="product_id" attrs="{'invisible': [('process_on', '!=', 'product')]}"/>-->
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="eg_sync_history_search_view">
+        <field name="name">eg.sync.history.search.view</field>
+        <field name="model">eg.sync.history</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter string="Parent" name="parent" domain="[('parent_id', '=', True)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_eg_sync_history">
+        <field name="name">Synchronization</field>
+        <field name="res_model">eg.sync.history</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_parent': 1}</field>
+    </record>
+    <menuitem id="menu_eg_sync_history" name="Synchronization" action="action_eg_sync_history"
+              parent="base_history_menu_id"/>
+</odoo>

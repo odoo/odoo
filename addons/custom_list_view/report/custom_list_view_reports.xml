@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+	<!-- Define the action for exporting PDF -->
+	<record id="action_pdf_list_view" model="ir.actions.report">
+		<field name="name">Export</field>
+		<field name="model">ir.exports</field>
+		<field name="report_type">qweb-pdf</field>
+		<field name="report_name">custom_list_view.print_pdf_listview</field>
+		<field name="report_file">custom_list_view.print_pdf_listview</field>
+		<field name="print_report_name">Pdf Report - ${object.name}</field>
+		<field name="binding_type">report</field>
+	</record>
+</odoo>

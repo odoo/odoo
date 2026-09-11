@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+	<!--assign sales person form view-->
+	<record id="view_assign_sales_person_form" model="ir.ui.view">
+		<field name="name">assign.sales.person.form</field>
+		<field name="model">assign.sales.person</field>
+		<field name="arch" type="xml">
+			<form string="Assign Salesperson">
+				<group>
+					<field name = "user_ids" widget="many2many_tags"/>
+				</group>
+			     <footer>
+	                 <button name="salesperson_assign" string="Assign SalesPerson" type="object" class="btn-primary"/>
+	                 <button string="Cancel" class="btn-default" special="cancel"/>
+                 </footer>
+				
+			</form>
+		</field>
+	</record>
+
+	<!--assign sales person action-->
+	 <record id="assign_sales_person_action" model="ir.actions.act_window">
+        <field name="name">Asign Sales Person</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">assign.sales.person</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_assign_sales_person_form"/>
+        <field name="target">new</field>
+    </record>
+
+	<!--assign sales person server action-->
+	<record id="action_assign_sale_person" model="ir.actions.server">
+        <field name="name">Assign Sales Person</field>
+        <field name="model_id" ref="crm.model_crm_lead"/>
+        <field name="binding_model_id" ref="crm.model_crm_lead"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+			if record:
+			    action_values = env.ref('assign_salesperson.assign_sales_person_action').read()[0]
+			    action_values.update({'context': env.context})
+			    action = action_values
+        </field>
+    </record>
+</odoo>

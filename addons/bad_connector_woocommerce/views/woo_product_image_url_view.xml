@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Woocommerce product Image Url form view-->
+    <record id="view_woo_product_image_url_form" model="ir.ui.view">
+        <field name="name">woo.product.image.url.form</field>
+        <field name="model">woo.product.image.url</field>
+        <field name="arch" type="xml">
+            <form string="WooCommerce Product Image URL">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" placeholder="e.g. Image Toy" />
+                            <field name="url" />
+                            <field name="alt" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- Define the tree view -->
+    <record id="view_woo_product_image_url_tree" model="ir.ui.view">
+        <field name="name">woo.product.image.url.tree</field>
+        <field name="model">woo.product.image.url</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+                <field name="url" />
+            </tree>
+        </field>
+    </record>
+    <!-- Define the action for the menu item -->
+    <record id="action_woo_product_image_url" model="ir.actions.act_window">
+        <field name="name">Woo Product Image URL</field>
+        <field name="res_model">woo.product.image.url</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_woo_product_image_url_tree" />
+    </record>
+</odoo>

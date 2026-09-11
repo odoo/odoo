@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo noupdate="1">
+    <record id="ir_cron_vacuum_temp_reports" model="ir.cron">
+        <field name="name">Vacuum temporary reports</field>
+        <field name="interval_number">4</field>
+        <field name="interval_type">hours</field>
+        <field name="numbercall">-1</field>
+        <field eval="False" name="doall" />
+        <field ref="model_mis_report_instance" name="model_id" />
+        <field name="code">model._vacuum_report()</field>
+        <field name="active" eval="True" />
+    </record>
+</odoo>

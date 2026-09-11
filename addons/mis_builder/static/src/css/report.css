@@ -1,0 +1,46 @@
+.mis_table {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+.mis_row {
+    display: table-row;
+    page-break-inside: avoid;
+}
+.mis_cell {
+    display: table-cell;
+    page-break-inside: avoid;
+}
+.mis_thead {
+    display: table-header-group;
+}
+.mis_tbody {
+    display: table-row-group;
+}
+.mis_table,
+.mis_table .mis_row {
+    border-left: 0px;
+    border-right: 0px;
+    text-align: left;
+    padding-right: 3px;
+    padding-left: 3px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    border-collapse: collapse;
+}
+.mis_table .mis_row {
+    border-color: grey;
+    border-bottom: 1px solid lightGrey;
+}
+.mis_table .mis_cell.mis_collabel {
+    font-weight: bold;
+    background-color: #f0f0f0;
+    text-align: center;
+}
+.mis_table .mis_cell.mis_rowlabel {
+    text-align: left;
+    /*white-space: nowrap;*/
+}
+.mis_table .mis_cell.mis_amount {
+    text-align: right;
+}

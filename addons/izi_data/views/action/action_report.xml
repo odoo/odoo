@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data noupdate="0">
+    <record id="izi_data.printout_model_name" model="ir.actions.report">
+      <field name="model">Model Name</field>
+      <field name="binding_model_id" ref="izi_data.model_model_name"/> <!-- Define in which model the print button will shown. -->
+      <field name="name">Print Button Name</field>
+      <field name="report_type">qweb-pdf</field>
+      <field name="report_name">izi_data.printout_template_model_name</field>
+      <field name="print_report_name">'REPORT_NAME-%s-' % object.name</field>
+      <field name="paperformat_id" ref="izi_data.paperformat_model_name"/>
+      <field name="attachment_use" eval="False"/>
+    </record>
+  </data>
+</odoo>

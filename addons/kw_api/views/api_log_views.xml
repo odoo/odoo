@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="kw_api_log_kw_api_log_search" model="ir.ui.view">
+        <field name="name">kw.api.log.search (kw_api_log)</field>
+        <field name="model">kw.api.log</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="ip"/>
+                <field name="method"/>
+                <field name="code"/>
+                <field name="login"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="kw_api_log_kw_api_log_form" model="ir.ui.view">
+        <field name="name">kw.api.log.form (kw_api_log)</field>
+        <field name="model">kw.api.log</field>
+        <field name="arch" type="xml">
+            <form create="false" edit="false">
+                <group>
+                    <field name="name"/>
+                    <field name="create_date"/>
+                    <field name="json" widget="ace" options="{'mode': 'python'}"/>
+                    <field name="json_file"/>
+                    <field name="post_file"/>
+                    <field name="headers"/>
+                    <field name="error"/>
+                    <field name="response" widget="ace" options="{'mode': 'python'}"/>
+                    <field name="response_file"/>
+                    <field name="ip"/>
+                    <field name="method"/>
+                    <field name="code"/>
+                    <field name="login"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="kw_api_log_kw_api_log_tree" model="ir.ui.view">
+        <field name="name">kw.api.log.tree (kw_api_log)</field>
+        <field name="model">kw.api.log</field>
+        <field name="arch" type="xml">
+            <tree create="false" limit="50">
+                <field name="name" optional="show"/>
+                <field name="create_date" optional="show"/>
+                <field name="error" optional="hide"/>
+                <field name="ip" optional="show"/>
+                <field name="method" optional="show"/>
+                <field name="code" optional="show"/>
+                <field name="login" optional="show"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="kw_api_log_kw_api_log_act_window" model="ir.actions.act_window">
+        <field name="name">API LOG</field>
+        <field name="res_model">kw.api.log</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="kw_api_log_kw_api_log_menu"
+              action="kw_api_log_kw_api_log_act_window"
+              parent="kw_api_main_menu"
+              name="LOGs" sequence="200"/>
+</odoo>

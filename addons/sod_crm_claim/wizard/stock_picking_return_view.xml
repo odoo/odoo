@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2019-2023 Sodexis License License OPL-1 (See LICENSE file for full copyright and licensing details). -->
+<odoo>
+	<record id="view_stock_return_picking_form" model="ir.ui.view">
+		<field name="name">stock.return.picking.sale.stock.form</field>
+		<field name="model">stock.return.picking</field>
+		<field name="inherit_id" ref="stock.view_stock_return_picking_form" />
+		<field name="arch" type="xml">
+			<field name="location_id" position="after">
+				<field name="claim_id" groups="!sod_crm_claim.group_crm_claim_manager" />
+				<field
+                    name="claim_id"
+                    groups="sod_crm_claim.group_crm_claim_manager"
+                    readonly="False"
+                />
+                <field name="return_reason" />
+			</field>
+		</field>
+	</record>
+
+</odoo>

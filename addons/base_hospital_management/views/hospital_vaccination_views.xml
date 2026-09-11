@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--Hospital vaccination tree view-->
+    <record id="hospital_vaccination_view_tree" model="ir.ui.view">
+        <field name="name">hospital.vaccination.view.tree</field>
+        <field name="model">hospital.vaccination</field>
+        <field name="arch" type="xml">
+            <tree create="1">
+                <field name="name"/>
+                <field name="patient_id"/>
+                <field name="vaccine_date"/>
+                <field name="vaccine_product_id"/>
+                <field name="dose"/>
+            </tree>
+        </field>
+    </record>
+    <!--Hospital Vaccination form view-->
+    <record id="hospital_vaccination_view_form" model="ir.ui.view">
+        <field name="name">hospital.vaccination.view.form</field>
+        <field name="model">hospital.vaccination</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_create_so" class="oe_highlight"
+                            type="object" string="Create Sale order"
+                            attrs="{'invisible': [('sold', '=', True)]}"/>
+                </header>
+                <sheet>
+                    <div name="button_box" class="oe_button_box">
+                        <button id="invoice_smart_btn" name="get_sale_order"
+                                type="object" class="oe_stat_button"
+                                icon="fa-dollar"
+                                attrs="{'invisible':[('sold', '=', False)]}">
+                            Sale order
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1 class="d-flex">
+                            <field name="name" required="True"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="patient_id" widget="selection"/>
+                            <field name="vaccine_product_id"/>
+                            <field name="vaccine_price"/>
+                            <field name="dose"/>
+                            <field name="sold" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="vaccine_date"/>
+                            <field name="certificate"/>
+                            <field name="recurring_vaccine"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="Recurring Vaccine"
+                              attrs="{'invisible': [('recurring_vaccine', '=', False)]}"
+                              string="Recurring Vaccine">
+                            <group>
+                                <group>
+                                    <field name="total_vaccine"/>
+                                    <field name="next_vaccine_days"/>
+                                </group>
+                                <group>
+                                    <field name="next_vaccine"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!--    Vaccination menu action-->
+    <record id="hospital_vaccination_action" model="ir.actions.act_window">
+        <field name="name">Vaccination Details</field>
+        <field name="res_model">hospital.vaccination</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create Vaccination Details
+            </p>
+        </field>
+    </record>
+    <!--    Vaccination menu-->
+    <menuitem id="hospital_vaccination_menu" name="Vaccination" sequence="25"
+              parent="appointment_menu_patient"
+              action="hospital_vaccination_action"/>
+</odoo>

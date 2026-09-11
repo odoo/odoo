@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2019 Tecnativa - Alexandre Díaz
+     Copyright 2021 Sergey Shebanin
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+<template>
+    <t t-inherit="mail.AttachmentViewer" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('o_AttachmentViewer')]" position="attributes">
+            <attribute
+                name="t-att-class"
+                t-translation="off"
+            >state.maximized ? 'o_AttachmentViewer_maximized' : ''</attribute>
+        </xpath>
+        <xpath
+            expr="//div[hasclass('o_AttachmentViewer_headerItemButtonClose')]"
+            position="before"
+        >
+            <div
+                t-if="!state.maximized"
+                class="o_AttachmentViewer_headerItem o_AttachmentViewer_headerItemButton o_AttachmentViewer_headerItemButtonMaximize d-flex align-items-center mb-0 px-3 h4 text-reset cursor-pointer"
+                t-on-click="() => { state.maximized = true }"
+                role="button"
+                title="Maximize"
+                aria-label="Maximize"
+            >
+                <i class="fa fa-fw fa-window-maximize" role="img" />
+            </div>
+            <div
+                t-if="state.maximized"
+                class="o_AttachmentViewer_headerItem o_AttachmentViewer_headerItemButton o_AttachmentViewer_headerItemButtonMinimize d-flex align-items-center mb-0 px-3 h4 text-reset cursor-pointer"
+                t-on-click="() => { state.maximized = false }"
+                role="button"
+                title="Minimize"
+                aria-label="Minimize"
+            >
+                <i class="fa fa-fw fa-window-minimize" role="img" />
+            </div>
+        </xpath>
+    </t>
+</template>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    Hospital laboratory form view-->
+    <record id="hospital_laboratory_view_form" model="ir.ui.view">
+        <field name="name">hospital.laboratory.view.form</field>
+        <field name="model">hospital.laboratory</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <field name="image_130" widget="image" class="oe_avatar"
+                           options="{'preview_image': 'image_130'}"/>
+                    <div class="oe_title">
+                        <h1 class="d-flex">
+                            <field name="name" placeholder="lab No."
+                                   required="True"/>
+                        </h1>
+                    </div>
+                    <div>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="phone"/>
+                            <field name="mobile"/>
+                            <field name="email"/>
+                        </group>
+                        <group>
+                            <label for="street" string="Address"/>
+                            <div class="o_address_format">
+                                <field name="street"
+                                       placeholder="Street..."
+                                       class="o_address_street"/>
+                                <field name="street2"
+                                       placeholder="Street 2..."
+                                       class="o_address_street"/>
+                                <field name="city" placeholder="City"
+                                       class="o_address_city"/>
+                                <field name="state_id"
+                                       class="o_address_state"
+                                       placeholder="State"
+                                       options='{"no_open": True}'/>
+                                <field name="zip" placeholder="ZIP"
+                                       class="o_address_zip"/>
+                                <field name="country_id"
+                                       placeholder="Country"
+                                       class="o_address_country"
+                                       options='{"no_open": True,
+                                       "no_create": True}'/>
+                            </div>
+                            <field name="technician_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="public" string="Additional Notes">
+                            <field name="note" placeholder="Notes"
+                                   class="o_address_city"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!--Hospital laboratory tree view-->
+    <record id="hospital_laboratory_view_tree" model="ir.ui.view">
+        <field name="name">hospital.laboratory.view.tree</field>
+        <field name="model">hospital.laboratory</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="phone"/>
+                <field name="email"/>
+                <field name="technician_id"/>
+            </tree>
+        </field>
+    </record>
+    <!--    Action of labs menu-->
+    <record id="hospital_laboratory_action" model="ir.actions.act_window">
+        <field name="name">Laboratory</field>
+        <field name="res_model">hospital.laboratory</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create Laboratory
+            </p>
+        </field>
+    </record>
+    <!--    Labs menu-->
+    <menuitem id="hospital_laboratory_menu" name="Labs"
+              parent="hospital_menu_infrastructure" sequence="2"
+              action="hospital_laboratory_action"/>
+</odoo>

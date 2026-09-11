@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <record id="group_fiscal_year" model="res.groups">
+            <field name="name">Allow to define fiscal years of more or less than a year</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
+            <field name="users" eval="[Command.link(ref('base.user_root')), Command.link(ref('base.user_admin'))]"/>
+        </record>
+
+    </data>
+</odoo>

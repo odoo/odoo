@@ -1,0 +1,69 @@
+<odoo>
+<data noupdate="0">
+    <record model="izi.table" id="example_web">
+        <field name="name">Example Web</field>
+        <field name="source_id" search="[('type', '=', 'db_odoo')]"/>
+        <field name="is_stored" eval="True"/>
+        <field name="main_code">
+# Connect to API
+requests = izi.lib('requests')
+datetime = izi.lib('datetime')
+# Formatter
+year = datetime.now().year
+month_formatter = {}
+month = 1
+for month in range(1, 13):
+  month_datetime = datetime(year, month, 1)
+  month_name = month_datetime.strftime('%B %Y')
+  date_string = month_datetime.strftime('%Y-%m-01')
+  month_formatter[month_name] = date_string
+
+res = requests.post('https://apps.odoo.com/apps/statistics/graphs', headers={}, 
+  json = {
+    'jsonrpc': '2.0',
+    'method': 'call',
+    'params': {
+        'module_type': 'modules'
+    }
+  }
+)
+res_data = res.json()
+
+res = []
+for dt in res_data.get('result'):
+  statistic = dt.get('name')
+  key = dt.get('key')
+  for val in dt.get('values'):
+    insert_value = {}
+    if isinstance(val, dict):
+      break
+    elif isinstance(val, list):
+      name = val[0]
+      value = int(val[1])
+      date = False
+      insert_value = {
+        'statistic': statistic,
+        'key': key,
+        'name': name,
+        'value': value,
+        'date': ''
+      }
+      if name in month_formatter:
+        date = month_formatter[name]
+        if date:
+          insert_value.update({'date': date})
+    res.append(insert_value)
+
+if izi_table and res:
+  # Build Table Schma
+  izi_table.get_table_fields_from_dictionary(res[0])
+  izi_table.update_schema_store_table()
+
+  # Truncate and Insert Values
+  izi.query_execute('TRUNCATE izi_example_web;')
+  for r in res:
+    izi.query_insert('izi_example_web', r)
+        </field>
+    </record>
+</data>
+</odoo>

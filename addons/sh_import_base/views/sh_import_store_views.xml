@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <record id="sh_import_Store_form" model="ir.ui.view">
+        <field name="name">sh.import.store.form</field>
+        <field name="model">sh.import.store</field>
+        <field name="arch" type="xml">
+            <form string="Import">
+                <header>
+                    <button type="object" class="btn btn-primary" name='reset_draft' string="Reset To Draft" attrs="{'invisible':[('state', '=', 'draft')]}"></button>
+                    <button type="object" class="btn btn-primary" name='sent_inprogress' string="In Progress" attrs="{'invisible':[('state', 'in', ['in_progress','done','running','error','partial_done'])]}"></button>
+                    <button type="object" class="btn btn-primary" name='import_store_manually' string="Force Import" attrs="{'invisible':[('state', '=', 'draft')]}"/>
+                    <field name="state" widget="statusbar" />
+                </header>
+                <sheet>
+                    <h1>
+                        <field name="name" />
+                    </h1>
+                    <group>
+                        <field name='base_id' invisible="1" />
+                        <field name='base_name' />
+                        <field name='sh_file' required="1" />
+                    </group>
+                    <notebook>
+                        <page name="import_fields" string="Configuration">
+                            <group name="limit">
+                                <group>
+                                    <field name="import_limit" required="1" />
+                                    <field name="on_error" widget="radio" />
+                                </group>
+                            </group>
+                        </page>
+                        <page name="import_logs" string="Import Logs">
+                            <field name="import_logger_line" readonly="1">
+                                <tree>
+                                    <field name="sh_store_id" invisible="1" />
+                                    <field name="datetime" />
+                                    <field name="message" />
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" />
+                    <field name="activity_ids" />
+                    <field name="message_ids" />
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id='sh_import_store_tree' model='ir.ui.view'>
+        <field name="name">sh.import.store.tree</field>
+        <field name="model">sh.import.store</field>
+        <field name="arch" type="xml">
+            <tree string="Import" create="0">
+                <field name='name' />
+                <field name='base_name' />
+                <field name="state" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="sh_import_queue_search_view" model="ir.ui.view">
+        <field name="name">import.queue.search.view</field>
+        <field name="model">sh.import.store</field>
+        <field name="arch" type="xml">
+            <search string="Queue">
+                <field name="base_name" />
+                <field name="state" />
+                <separator />
+                <filter string="State" name="groupby_state" context="{'group_by': 'state'}" />
+                <filter string="Type" name="groupby_name" context="{'group_by': 'base_name'}" />
+                <filter string="Draft" name="draft_queue" domain="[('state', '=', 'draft')]" />
+                <filter string="In Progress" name="pending_queue" domain="[('state', '=', 'in_progress')]" />
+                <filter string="Running" name="running_queue" domain="[('state', '=', 'running')]" />
+                <filter string="Partial Done" name="partial_done_queue" domain="[('state', '=', 'partial_done')]" />
+                <filter string="Done" name="done_queue" domain="[('state', '=', 'done')]" />
+                <filter string="Error" name="error_queue" domain="[('state', '=', 'error')]" />
+
+            </search>
+        </field>
+    </record>
+
+    <record id="sh_store_all_action" model="ir.actions.act_window">
+        <field name="name">All Queue</field>
+        <field name="res_model">sh.import.store</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_groupby_state': 1}</field>
+    </record>
+
+    <record id="sh_store_in_progress_action" model="ir.actions.act_window">
+        <field name="name">In Progress</field>
+        <field name="res_model">sh.import.store</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_pending_queue': 1}</field>
+    </record>
+
+    <record id="sh_store_error_action" model="ir.actions.act_window">
+        <field name="name">Error</field>
+        <field name="res_model">sh.import.store</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_error_queue': 1}</field>
+    </record>
+
+    <record id="sh_store_done_action" model="ir.actions.act_window">
+        <field name="name">Done</field>
+        <field name="res_model">sh.import.store</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_done_queue': 1}</field>
+    </record>
+
+    <menuitem name="Queue" parent="sh_import_base" id="sh_queue_base" sequence="2" />
+    <menuitem name="All" parent="sh_queue_base" id="sh_all_queue" action="sh_store_all_action" sequence="1" />
+    <menuitem name="In-Progress" parent="sh_queue_base" id="sh_in_progress_queue" action="sh_store_in_progress_action" sequence="2" />
+    <menuitem name="Error" parent="sh_queue_base" id="sh_error_queue" action="sh_store_error_action" sequence="3" />
+    <menuitem name="Done" parent="sh_queue_base" id="sh_done_queue" action="sh_store_done_action" sequence="4" />
+</odoo>
