@@ -1284,7 +1284,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         for move in moves_auto:
             move.write({'location_dest_id': move.move_line_ids[0].location_dest_id})
 
-        new_moves = new_moves._action_confirm()
+        new_moves = new_moves.sudo()._action_confirm()
         return new_moves
 
     def _merge_moves_fields(self):
