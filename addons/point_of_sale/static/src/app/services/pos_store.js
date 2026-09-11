@@ -984,7 +984,9 @@ export class PosStore extends WithLazyGetterTrap {
         // It will return the weight of the product as quantity
         // ---
         // This actions cannot be handled inside pos_order.js or pos_order_line.js
-        if (values.product_tmpl_id.to_weight && this.config.iface_electronic_scale && configure) {
+        // A scanned product barcode still has to be weighed, unlike a weight barcode.
+        const shouldWeigh = configure || (code && code.type !== "weight");
+        if (values.product_tmpl_id.to_weight && this.config.iface_electronic_scale && shouldWeigh) {
             if (values.product_tmpl_id.isScaleAvailable) {
                 const decimalAccuracy = this.models["decimal.precision"].find(
                     (dp) => dp.name === "Product Unit"
