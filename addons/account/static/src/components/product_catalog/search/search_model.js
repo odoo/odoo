@@ -5,6 +5,31 @@ export class AccountProductCatalogSearchModel extends SearchModel {
         super.setup(...arguments);
         this.selectedSectionId = null;
         this.filterBySection = false;
+        this.catalogSections = [];
+        this.catalogOrderDetails = { name: "", amount_untaxed: 0.0 };
+    }
+
+    async load(config) {
+        await super.load(config);
+
+        const showSections = config.context.show_sections;
+        if (!showSections) {
+            return;
+        }
+
+        const { name, sections, amountUntaxed } = await this.orm.call(
+            config.context.product_catalog_order_model,
+            "get_catalog_section_data",
+            [config.context.product_catalog_order_id],
+            { child_field: config.context.child_field }
+        );
+        this.catalogOrderDetails.name = name;
+        this.catalogOrderDetails.amount_untaxed = amountUntaxed;
+        this.catalogSections = sections;
+
+        if (sections.length) {
+            this.selectedSectionId = sections[sections.length - 1].id;
+        }
     }
 
     setSelectedSection(sectionId) {
