@@ -94,13 +94,11 @@ export class MessagingMenu extends Record {
     });
     allTabs = fields.Many("MessagingMenuTab", { inverse: "messagingMenuAsTab" });
     visibleTabs = fields.Many("MessagingMenuTab", { inverse: "messagingMenuAsVisibleTabs" });
-    sortedVisibleTabs = fields.Many("MessagingMenuTab", {
-        compute() {
-            return [...this.visibleTabs].sort(
-                (t1, t2) => t1.sequence - t2.sequence || t1.id.localeCompare(t2.id)
-            );
-        },
-    });
+    sortedVisibleTabs = this.computed(() =>
+        [...this.visibleTabs].sort(
+            (t1, t2) => t1.sequence - t2.sequence || t1.id.localeCompare(t2.id)
+        )
+    );
 
     _computeGlobalCounter() {
         return this.visibleTabs.reduce((sum, t) => sum + (t.important ? t.counter ?? 0 : 0), 0);

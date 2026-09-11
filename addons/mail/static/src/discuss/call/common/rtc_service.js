@@ -493,20 +493,16 @@ export class Rtc extends Record {
         return !this.selfSession?.isMute && this.isMicAudioTrackMuted;
     }
 
-    /** @type {CallAction[]} */
-    callActions = fields.Attr([], {
-        /** @this {import("models").Rtc} */
-        compute() {
-            const transformedActions = registry
-                .category("discuss.call/actions")
-                .getEntries()
-                .map(([id, definition]) => new CallAction({ owner: this, id, definition }));
-            for (const action of transformedActions) {
-                action.setup();
-                void action.isActive;
-            }
-            return transformedActions;
-        },
+    callActions = this.computed(() => {
+        const transformedActions = registry
+            .category("discuss.call/actions")
+            .getEntries()
+            .map(([id, definition]) => new CallAction({ owner: this, id, definition }));
+        for (const action of transformedActions) {
+            action.setup();
+            void action.isActive;
+        }
+        return transformedActions;
     });
 
     setup() {

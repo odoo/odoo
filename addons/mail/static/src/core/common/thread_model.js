@@ -119,13 +119,11 @@ export class Thread extends Record {
 
     autofocus = 0;
     activities = fields.Many("mail.activity", { onDelete: (r) => r?.remove() });
-    sortedActivities = fields.Many("mail.activity", {
-        compute() {
-            return [...this.activities].sort(
-                (a, b) => compareDatetime(a.date_deadline, b.date_deadline) || a.id - b.id
-            );
-        },
-    });
+    sortedActivities = this.computed(() =>
+        [...this.activities].sort(
+            (a, b) => compareDatetime(a.date_deadline, b.date_deadline) || a.id - b.id
+        )
+    );
     create_uid = fields.One("res.users");
     /**
      * Server-side value used in chatter to determine if the thread has pinned messages without
@@ -145,11 +143,7 @@ export class Thread extends Record {
     areAttachmentsLoaded = false;
     group_public_id = fields.One("res.groups");
     attachments = fields.Many("ir.attachment");
-    sortedAttachments = fields.Many("ir.attachment", {
-        compute() {
-            return [...this.attachments].sort((a1, a2) => a2.id - a1.id);
-        },
-    });
+    sortedAttachments = this.computed(() => [...this.attachments].sort((a1, a2) => a2.id - a1.id));
     can_react = true;
     /** @type {boolean|undefined} */
     close_chat_window;
@@ -229,11 +223,9 @@ export class Thread extends Record {
     /** @type {Array<[string,string]>} */
     priority_definition;
     needactionMessages = fields.Many("mail.message", { inverse: "threadAsNeedaction" });
-    sortedNeedactionMessages = fields.Many("mail.message", {
-        compute() {
-            return [...this.needactionMessages].sort((m1, m2) => m1.id - m2.id);
-        },
-    });
+    sortedNeedactionMessages = this.computed(() =>
+        [...this.needactionMessages].sort((m1, m2) => m1.id - m2.id)
+    );
     // FIXME: should be in the portal/frontend bundle but live chat can be loaded
     // before portal resulting in the field not being properly initialized.
     portal_partner = fields.One("res.partner");
@@ -290,16 +282,14 @@ export class Thread extends Record {
     pid;
     composerDisabled = this.computed(() => this.computeComposerDisabled());
     pinnedMessages = fields.Many("mail.message", { inverse: "threadAsPinned" });
-    sortedPinnedMessages = fields.Many("mail.message", {
-        compute() {
-            return [...this.pinnedMessages].sort((m1, m2) => {
-                if (m1.pinned_at === m2.pinned_at) {
-                    return m2.id - m1.id;
-                }
-                return m1.pinned_at < m2.pinned_at ? 1 : -1;
-            });
-        },
-    });
+    sortedPinnedMessages = this.computed(() =>
+        [...this.pinnedMessages].sort((m1, m2) => {
+            if (m1.pinned_at === m2.pinned_at) {
+                return m2.id - m1.id;
+            }
+            return m1.pinned_at < m2.pinned_at ? 1 : -1;
+        })
+    );
 
     async fetchPinnedMessages() {
         await this.store.fetchStoreData("mail.thread", {
@@ -396,12 +386,10 @@ export class Thread extends Record {
         return this.messages.findLast((msg) => msg.persistent);
     }
 
-    newestPersistentAllMessages = fields.Many("mail.message", {
-        compute() {
-            const allPersistentMessages = this.allMessages.filter((message) => message.persistent);
-            allPersistentMessages.sort((m1, m2) => m2.id - m1.id);
-            return allPersistentMessages;
-        },
+    newestPersistentAllMessages = this.computed(() => {
+        const allPersistentMessages = this.allMessages.filter((message) => message.persistent);
+        allPersistentMessages.sort((m1, m2) => m2.id - m1.id);
+        return allPersistentMessages;
     });
 
     newestPersistentOfAllMessage = this.computed(() => this.newestPersistentAllMessages[0]);
@@ -548,13 +536,9 @@ export class Thread extends Record {
         this.pendingNewMessages = [];
     }
 
-    /** @type {import("models").Store["selvesBySequence"]} */
-    selvesBySequence = fields.Attr(undefined, {
-        /** @this {import("models").Thread} */
-        compute() {
-            return this.computeSelvesBySequence().sort((a, b) => a.sequence - b.sequence);
-        },
-    });
+    selvesBySequence = this.computed(() =>
+        this.computeSelvesBySequence().sort((a, b) => a.sequence - b.sequence)
+    );
 
     computeSelvesBySequence() {
         return [...this.store.selvesBySequence];

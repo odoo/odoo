@@ -155,12 +155,7 @@ export class RtcSession extends Record {
     talkingVolume = 0;
     isTalking = false;
     isActuallyTalking = this.computed(() => this.isTalking && !this.isMute);
-    isVideoStreaming = fields.Attr(false, {
-        /** @this {import("models").RtcSession} */
-        compute() {
-            return this.is_screen_sharing_on || this.is_camera_on;
-        },
-    });
+    isVideoStreaming = this.computed(() => this.is_screen_sharing_on || this.is_camera_on);
     shortStatus = this.computed(() => {
         if (this.is_screen_sharing_on) {
             return "live";
