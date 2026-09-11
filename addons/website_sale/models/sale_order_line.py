@@ -18,16 +18,19 @@ class SaleOrderLine(models.Model):
 
     # === COMPUTE METHODS ===#
 
-    @api.depends("product_id.display_name")
+    @api.depends("product_id.display_name", "name")
     def _compute_name_short(self):
         """Compute a short name for this sale order line, to be used on the website where we don't
         have much space. To keep it short, instead of using the first line of the description,
         we take the product name without the internal reference.
         """
         for record in self:
-            record.name_short = record.product_id.with_context(
-                display_default_code=False
-            ).display_name
+            if record.product_id:
+                record.name_short = record.product_id.with_context(
+                    display_default_code=False
+                ).display_name
+            else:
+                record.name_short = record.name.splitlines()[0]
 
     # === BUSINESS METHODS ===#
 
