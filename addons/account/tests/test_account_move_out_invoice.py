@@ -1,15 +1,13 @@
-# -*- coding: utf-8 -*-
 # pylint: disable=bad-whitespace
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import Form, tagged
 from odoo import fields, Command
 from odoo.exceptions import UserError, ValidationError
+from odoo.tests.common import RecordCapturer
 
 from collections import defaultdict
-from unittest.mock import patch
 from datetime import timedelta
 from freezegun import freeze_time
-
 
 
 @tagged('post_install', '-at_install')
@@ -4212,13 +4210,17 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
         (valid_invoice + invalid_invoice_1 + invalid_invoice_2).auto_post = 'at_date'
 
+        cron = self.env.ref('account.ir_cron_auto_post_draft_entry')
         with (
             self.enter_registry_test_mode(),
-            patch('odoo.addons.base.models.ir_cron.IrCron._reschedule_asap') as reschedule_asap,
+            RecordCapturer(
+                model=self.env['ir.cron.trigger'].sudo(),
+                domain=[('cron_id', '=', cron.id)],
+            ) as capture,
         ):
-            self.env.ref('account.ir_cron_auto_post_draft_entry').method_direct_trigger()
+            cron.method_direct_trigger()
             # No retries for batches with failed moves
-            reschedule_asap.assert_not_called()
+            self.assertFalse(capture.records, "No new triggers added")
 
         self.assertEqual(valid_invoice.state, 'posted')
         self.assertEqual(invalid_invoice_1.state, 'draft')
