@@ -14,8 +14,8 @@ class DiscussChannel(models.Model):
     )
     livechat_visitor_id = fields.Many2one('website.visitor', string='Visitor', index='btree_not_null')
 
-    def _store_channel_fields(self, res: Store.FieldList):
-        super()._store_channel_fields(res)
+    def _store_channel_fields(self, res: Store.FieldList, **kwargs):
+        super()._store_channel_fields(res, **kwargs)
         res.one(
             "livechat_visitor_id",
             lambda res: (
