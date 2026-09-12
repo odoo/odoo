@@ -354,7 +354,7 @@ class SaleOrderLine(models.Model):
                 if not move.origin_returned_move_id or (move.origin_returned_move_id and move.to_refund):
                     outgoing_moves_ids.add(move.id)
             elif move.to_refund and (
-                (strict and move._is_incoming() or move.location_id._is_outgoing()) or (
+                (strict and move._is_incoming() or move._is_location_outgoing()) or (
                 not strict and move.rule_id.id in triggering_rule_ids and
                 (move.location_final_id or move.location_dest_id).usage == 'internal'
             )):
