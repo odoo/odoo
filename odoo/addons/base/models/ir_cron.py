@@ -104,7 +104,11 @@ class ir_cron(models.Model):
         for cron in self:
             cron._try_lock()
             _logger.info('Manually starting job `%s`.', cron.name)
-            cron.with_user(cron.user_id).with_context({'lastcall': cron.lastcall}).ir_actions_server_id.run()
+            context = {
+                'lastcall': cron.lastcall,
+                'cron_id': cron.id,
+            }
+            cron.with_user(cron.user_id).with_context(**context).ir_actions_server_id.run()
             self.env.flush_all()
             _logger.info('Job `%s` done.', cron.name)
             cron.lastcall = fields.Datetime.now()
@@ -321,7 +325,7 @@ class ir_cron(models.Model):
         with cls.pool.cursor() as job_cr:
             lastcall = fields.Datetime.to_datetime(job['lastcall'])
             interval = _intervalTypes[job['interval_type']](job['interval_number'])
-            env = api.Environment(job_cr, job['user_id'], {'lastcall': lastcall})
+            env = api.Environment(job_cr, job['user_id'], {'lastcall': lastcall, 'cron_id': job['id']})
             ir_cron = env[cls._name]
 
             # Use the user's timezone to compare and compute datetimes,
