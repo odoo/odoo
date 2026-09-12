@@ -765,10 +765,8 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         mo.button_mark_done()
         self.assertEqual(mo.state, 'done', "Production order should be in done state.")
 
-    def test_product_produce_7(self):
-        """ Plan 2 finished products, reserve and produce 3. Post the current production.
-        Simulate an unlock and edit and, on the opened moves, set the consumed quantity
-        to 5, and to 4. Check the component quantity removed from inventory is correct."""
+    def test_finished_mo_quantity_readonly(self):
+        """The produced quantity cannot be edited through the form of a done MO."""
         mo, _, _, p1, p2 = self.generate_mo(qty_final=1)
         self.assertEqual(len(mo), 1, 'MO should have been created')
 
@@ -786,14 +784,9 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         mo.action_toggle_is_locked()
         self.assertFalse(mo.is_locked)
         mo_form = Form(mo)
-        mo_form.qty_producing = 5
-        mo = mo_form.save()
-        self.assertAlmostEqual(sum(mo.move_finished_ids.move_line_ids.mapped('quantity')), 5)
-
-        mo_form = Form(mo)
-        mo_form.qty_producing = 4
-        mo = mo_form.save()
-        self.assertAlmostEqual(sum(mo.move_finished_ids.move_line_ids.mapped('quantity')), 4)
+        with self.assertRaisesRegex(AssertionError, "can't write on readonly field 'qty_producing'"):
+            mo_form.qty_producing = 5
+        self.assertAlmostEqual(sum(mo.move_finished_ids.move_line_ids.mapped('quantity')), 2)
 
     def test_consumption_warning_1(self):
         """ Checks the constraints of a strict BOM without tracking when playing around
@@ -3610,10 +3603,8 @@ class TestMrpOrder(TestMrpCommon, MailCase):
             ('state', '=', 'draft'),
         ]))
 
-    def test_component_addition_to_finished_mo(self):
-        """Test that adding a new component move to a finished MO works as intended,
-           where the newly added component move's picked/state/date values are consistent
-           with the other component moves that are already consumed."""
+    def test_component_changes_to_finished_mo(self):
+        """Component lines cannot be added or edited through the form of a done MO."""
         with Form(self.env['mrp.production']) as mo_form:
             mo_form.product_id = self.productA
             with mo_form.move_raw_ids.new() as component:
@@ -3624,30 +3615,11 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         mo.button_mark_done()
         mo.action_toggle_is_locked()
 
-        with freeze_time(mo.date_finished + timedelta(minutes=3)):
-            with Form(mo) as mo_form:
-                with mo_form.move_raw_ids.edit(0) as line:
-                    line.quantity = 1
-                with mo_form.move_raw_ids.new() as component:
-                    component.product_id = self.productC
-                    component.quantity = 1
-                mo = mo_form.save()
-
-            self.assertRecordValues(mo.move_raw_ids, [{
-                'picked': True,
-                'state': 'done',
-                'date': mo.date_finished,
-                'quantity': 1,
-                'raw_material_production_id': mo.id,
-            } for move in mo.move_raw_ids])
-
-            self.assertRecordValues(mo.move_raw_ids.move_line_ids, [{
-                'picked': True,
-                'state': 'done',
-                'date': mo.date_finished,
-                'quantity': 1,
-                'production_id': mo.id,
-            } for move in mo.move_raw_ids])
+        mo_form = Form(mo)
+        with self.assertRaisesRegex(AssertionError, "field 'move_raw_ids' is not editable"):
+            mo_form.move_raw_ids.edit(0)
+        with self.assertRaisesRegex(AssertionError, "field 'move_raw_ids' is not editable"):
+            mo_form.move_raw_ids.new()
 
     def test_compute_picking_type_id(self):
         """
