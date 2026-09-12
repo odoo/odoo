@@ -201,3 +201,51 @@ class TestPosCashRounding(TestPointOfSaleHttpCommon):
             "test_to_pay_section_rounded",
             login="pos_admin"
         )
+
+    def test_cash_rounding_exact_payment_backend(self):
+        """
+        Tests that the amount_total, amount_paid and amount_difference are
+        correctly rounded even when not over paying.
+        """
+        self.main_pos_config.write({
+            'rounding_method': self.cash_rounding_add_invoice_line.id,
+            'cash_rounding': True,
+            'only_round_cash_method': False,
+        })
+        cash_pm = self.main_pos_config.payment_method_ids.filtered('is_cash_count')[:1]
+        product = self.env['product.product'].create({
+            'name': 'Not very round product',
+            'list_price': 56.99,
+            'taxes_id': False,
+            'available_in_pos': True,
+        })
+        with self.with_new_session(user=self.pos_user) as session:
+            order_data = {
+                'session_id': session.id,
+                'uuid': '12345-67890',
+                'lines': [Command.create({
+                    'product_id': product.id,
+                    'qty': 1,
+                    'price_unit': 56.99,
+                    'price_subtotal': 56.99,
+                    'price_subtotal_incl': 56.99,
+                })],
+                'payment_ids': [Command.create({
+                    'payment_method_id': cash_pm.id,
+                    'amount': 57.00,
+                })],
+                'amount_total': 56.99,
+                'amount_paid': 57.00,
+                'amount_return': 0.00,
+                'amount_tax': 0.00,
+            }
+                
+            self.env['pos.order'].sync_from_ui([order_data])
+            
+            order = self.env['pos.order'].search([('uuid', '=', '12345-67890')])
+            
+            self.assertRecordValues(order, [{
+                'amount_total': 57.00,
+                'amount_paid': 57.00,
+                'amount_difference': 0.00,
+            }])
