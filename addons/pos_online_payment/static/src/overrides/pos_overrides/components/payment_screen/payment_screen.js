@@ -71,6 +71,31 @@ patch(PaymentScreen.prototype, {
 
         const onlinePaymentLines = this.getRemainingOnlinePaymentLines();
         if (onlinePaymentLines.length > 0) {
+            const nonOnlineTotal = this.paymentLines
+                .filter(
+                    (l) =>
+                        !l.payment_method_id.is_online_payment || l.get_payment_status() === "done"
+                )
+                .reduce((sum, l) => sum + l.get_amount(), 0);
+            const orderTotal = this.currentOrder.amount_total;
+            const remainingForOnline = orderTotal - nonOnlineTotal;
+            const nonOnlineFullyCovers =
+                !this.env.utils.floatIsZero(orderTotal) &&
+                (this.env.utils.floatIsZero(Math.max(0, remainingForOnline)) ||
+                    remainingForOnline < 0);
+            if (nonOnlineFullyCovers) {
+                for (const line of [...this.paymentLines].filter(
+                    (l) => !l.payment_method_id.is_online_payment
+                )) {
+                    this.currentOrder.remove_paymentline(line);
+                }
+                for (const line of onlinePaymentLines) {
+                    if (this.env.utils.floatIsZero(line.get_amount())) {
+                        line.set_amount(orderTotal);
+                    }
+                }
+            }
+
             if (!this.currentOrder.id) {
                 this.cancelOnlinePayment(this.currentOrder);
                 this.dialog.add(AlertDialog, {
