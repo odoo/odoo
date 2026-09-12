@@ -678,16 +678,12 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
             "reward_ids": [Command.create({"reward_type": "discount", "discount": 10})],
         })
         order = self._create_so(order_line=[Command.create({"product_id": self.product_A.id})])
-        coupon_wizard = self.env["sale.loyalty.coupon.wizard"].create({
+        reward_wizard = self.env["sale.loyalty.reward.wizard"].create({
             "order_id": order.id,
             "coupon_code": "10%_discount",
         })
-        reward_wizard_action = coupon_wizard.action_apply()
-        self.assertIn(
-            promo_code_program.reward_ids.id, reward_wizard_action["context"]["default_reward_ids"]
-        )
+        reward_wizard.action_apply_coupon()
+        self.assertIn(promo_code_program.reward_ids, reward_wizard.reward_ids)
         # retry the same code, should work since the reward is not claimed but discarded
-        reward_wizard_action = coupon_wizard.action_apply()
-        self.assertIn(
-            promo_code_program.reward_ids.id, reward_wizard_action["context"]["default_reward_ids"]
-        )
+        reward_wizard.action_apply_coupon()
+        self.assertIn(promo_code_program.reward_ids, reward_wizard.reward_ids)
