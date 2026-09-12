@@ -24,6 +24,7 @@ Activates:
         'data/tax_report_simplified.xml',
         'data/res.country.state.csv',
         'data/res_country_data.xml',
+        'views/report_invoice_templates.xml',
     ],
     'demo': [
         'demo/demo_company.xml',
