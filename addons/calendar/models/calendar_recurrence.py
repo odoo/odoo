@@ -216,7 +216,7 @@ class CalendarRecurrence(models.Model):
     def _inverse_rrule(self):
         for recurrence in self:
             if recurrence.rrule:
-                values = self._rrule_parse(recurrence.rrule, recurrence.dtstart)
+                values = recurrence._rrule_parse(recurrence.rrule, recurrence.dtstart)
                 recurrence.with_context(dont_notify=True).write(values)
 
     def _reconcile_events(self, ranges):
@@ -390,8 +390,13 @@ class CalendarRecurrence(models.Model):
 
         return str(self._get_rrule()) if self.rrule_type else ''
 
-    @api.model
-    def _rrule_parse(self, rule_str, date_start):
+    def _rrule_parse(self, rule_str, date_start, until_tz=None):
+        """
+        Parse a RRULE string into recurrence field values.
+        :param rule_str: the iCalendar RRULE string to parse.
+        :param date_start: start of the recurrence.
+        :param until_tz: timezone the UNTIL boundary must be expressed in.
+        """
         # LUL TODO clean this mess
         data = {}
         day_list = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
@@ -413,6 +418,9 @@ class CalendarRecurrence(models.Model):
         data['count'] = rule._count
         data['interval'] = rule._interval
         data['until'] = rule._until
+        if data['until'] and data['until'].tzinfo:
+            until_tz = until_tz or (ZoneInfo(self.event_tz) if len(self) == 1 and self.event_tz else None)
+            data['until'] = data['until'].astimezone(until_tz).date() if until_tz else data['until'].date()
         # Repeat weekly
         if rule._byweekday:
             for weekday in day_list:
