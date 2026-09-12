@@ -844,7 +844,7 @@ QUnit.module('convert_inline', {}, function () {
         $styleSheet.remove();
     });
     QUnit.test('remove unsupported styles', async function (assert) {
-        assert.expect(9);
+        assert.expect(10);
 
         const $styleSheet = $('<style type="text/css" title="test-stylesheet"/>');
         document.head.appendChild($styleSheet[0])
@@ -976,6 +976,17 @@ QUnit.module('convert_inline', {}, function () {
         assert.strictEqual($editable.html(),
             `<div class="test-flex-specific" style="box-sizing:border-box;"></div>`,
             "should have removed all specific flex styles");
+        styleSheet.deleteRule(0);
+        styleSheet.insertRule(`
+            .test-inline-flex {
+                display: inline-flex;
+            }
+        `, 0);
+        $editable = $(`<div>${`<div class="test-inline-flex"></div>`}</div>`);
+        convertInline.classToStyle($editable, convertInline.getCSSRules($editable[0].ownerDocument));
+        assert.strictEqual($editable.html(),
+            `<div class="test-inline-flex" style="box-sizing:border-box;display:inline-block;"></div>`,
+            "should have replaced the inline-flex display with inline-block");
         styleSheet.deleteRule(0);
 
         $styleSheet.remove();
