@@ -1090,7 +1090,10 @@ class StockQuant(models.Model):
             if quantity:
                 vals['quantity'] = quant.quantity + quantity
             if reserved_quantity:
-                vals['reserved_quantity'] = max(0, quant.reserved_quantity + reserved_quantity)
+                new_reserved = quant.reserved_quantity + reserved_quantity
+                if product_id.tracking == 'serial' and reserved_quantity > 0:
+                    new_reserved = min(new_reserved, quant.quantity)
+                vals['reserved_quantity'] = max(0, new_reserved)
             quant.write(vals)
         else:
             vals = {
@@ -1104,7 +1107,10 @@ class StockQuant(models.Model):
             if quantity:
                 vals['quantity'] = quantity
             if reserved_quantity:
-                vals['reserved_quantity'] = reserved_quantity
+                if product_id.tracking == 'serial' and reserved_quantity > 0:
+                    vals['reserved_quantity'] = min(reserved_quantity, quantity or 0)
+                else:
+                    vals['reserved_quantity'] = reserved_quantity
             self.create(vals)
         return self._get_available_quantity(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True, allow_negative=True), in_date
 
@@ -1166,8 +1172,12 @@ class StockQuant(models.Model):
             ml_reserved_qty = reserved_move_lines.get((product, location, lot, package, owner), 0)
             if location.should_bypass_reservation():
                 quants._update_reserved_quantity(product, location, -reserved_quantity, lot_id=lot, package_id=package, owner_id=owner)
-            elif float_compare(reserved_quantity, ml_reserved_qty, precision_rounding=product.uom_id.rounding) != 0:
-                quants._update_reserved_quantity(product, location, ml_reserved_qty - reserved_quantity, lot_id=lot, package_id=package, owner_id=owner)
+            else:
+                if product.tracking == 'serial':
+                    quant_qty = sum(quants.mapped('quantity'))
+                    ml_reserved_qty = min(ml_reserved_qty, max(0.0, quant_qty))
+                if float_compare(reserved_quantity, ml_reserved_qty, precision_rounding=product.uom_id.rounding) != 0:
+                    quants._update_reserved_quantity(product, location, ml_reserved_qty - reserved_quantity, lot_id=lot, package_id=package, owner_id=owner)
             if ml_reserved_qty:
                 del reserved_move_lines[(product, location, lot, package, owner)]
 
