@@ -24,22 +24,32 @@
                         t-model.proxy="this.state.email"/>
                     <t t-if="this.preset.needsName || this.preset.needsPartner">
                         <div class="input-group">
-                            <div class="position-relative w-25 me-3">
-                                <div class="form-control form-control-lg d-flex align-items-center gap-1 pe-none">
-                                    <t t-out="this.flagEmoji(this.selectedCountry?.code || '')"/>
-                                    <span>+<t t-out="this.state.phoneCode"/></span>
-                                </div>
-                                <select class="position-absolute top-0 start-0 w-100 h-100 opacity-0"
-                                        t-model.proxy.number="this.state.phoneCode">
-                                    <option t-foreach="this.selfOrder.models['res.country'].getAll()" t-as="c" t-key="c.id" t-att-value="c.phone_code">
-                                        <t t-out="this.flagEmoji(c.code)"/> +<t t-out="c.phone_code"/> <t t-out="c.name"/>
-                                    </option>
-                                </select>
+                            <div class="w-25 me-3">
+                                <SelectMenu
+                                    choices="this.phoneCountryChoices"
+                                    value="this.state.phoneCode"
+                                    onSelect.bind="this.setPhoneCountry"
+                                    class="'o_phone_country_select h-100'"
+                                    togglerClass="'form-control-lg fs-3 d-flex justify-content-center align-items-center h-100'"
+                                    searchPlaceholder="'Search country...'"
+                                    required="true">
+                                    <span class="d-flex align-items-center gap-1">
+                                        <t t-out="this.flagEmoji(this.selectedCountry?.code || '')"/>
+                                        <span>+<t t-out="this.state.phoneCode"/></span>
+                                    </span>
+                                    <t t-set-slot="choice" t-slot-scope="choice">
+                                        <span class="d-flex align-items-center gap-1">
+                                            <t t-out="this.flagEmoji(choice.data.country.code)"/>
+                                            <span>+<t t-out="choice.data.country.phone_code"/></span>
+                                            <span class="text-truncate" t-out="choice.data.country.name"/>
+                                        </span>
+                                    </t>
+                                </SelectMenu>
                             </div>
                             <input type="tel"
                                 class="form-control form-control-lg"
                                 placeholder="Phone"
-                                t-model.proxy="this.state.phoneLocal" />
+                                t-on-input="this.onPhoneInput" />
                         </div>
                         <p t-if="!this.checkPhoneFormat()" class="text-danger">Enter a valid phone number</p>
                     </t>
