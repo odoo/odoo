@@ -405,16 +405,19 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
             'partner_address': ', '.join(filter(None, [partner.street, partner.street2, partner.city])),
             'alt_id_number': partner.vat or 'NO_DISPONIBLE',
         }
-
         if not partner._l10n_es_is_foreign() and partner.vat:
-            recipient_values['nif'] = split_vat(partner.vat, default_country_code='ES')[1]
+            # Spanish with NIF → block <NIF> (without IDOtro)
+            recipient_values['nif'] = partner.vat[2:] if partner.vat.startswith('ES') else partner.vat
 
-        elif partner.country_id and 'EU' in partner.country_id.country_group_codes:
+        elif partner.vat and partner.country_id and 'EU' in partner.country_id.country_group_codes:
+            # Intra-communitary with NIF-IVA → IDType 02 (no CodigoPais)
             recipient_values['alt_id_type'] = '02'
+            recipient_values['alt_id_number'] = partner.vat
 
         else:
-            recipient_values['alt_id_type'] = '04' if partner.vat else '06'
+            # Foreign: document required. CodigoPais mandatory.
             recipient_values['alt_id_country'] = partner.country_id.code if partner.country_id else None
+            recipient_values['alt_id_type'], recipient_values['alt_id_number'] = partner._l10n_es_get_additional_identifier_type()
 
         return {'recipient': recipient_values}
 
