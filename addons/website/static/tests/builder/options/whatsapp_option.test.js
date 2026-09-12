@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { click } from "@odoo/hoot-dom";
+import { click, waitFor } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 import {
     defineWebsiteModels,
@@ -54,4 +54,19 @@ test("Drop Whatsapp snippet and verify snippet options", async () => {
     // Color
     await contains("[data-class-action='no_icon_color'] input").click();
     expect(":iframe .s_whatsapp .s_whatsapp_fab").toHaveClass("no_icon_color");
+});
+
+test("whatsapp snippet shouldn't create extra dropzones", async () => {
+    await setupWebsiteBuilderWithSnippet("s_whatsapp");
+    const { moveTo } = await contains(".o-snippets-menu .o_snippet_thumbnail").drag();
+    await moveTo(":iframe #wrap");
+    // Whatsapp snippet shouldn't create an extra dropzone.
+    expect(":iframe .oe_drop_zone").toHaveCount(1);
+});
+
+test("whatsapp snippet is not a visible sibling of other snippets", async () => {
+    await setupWebsiteBuilderWithSnippet(["s_cover", "s_whatsapp"]);
+    await contains(":iframe .s_cover").click();
+    await waitFor(".o-we-toolbar");
+    expect(".o-we-toolbar .fa-angle-down").toHaveCount(0);
 });

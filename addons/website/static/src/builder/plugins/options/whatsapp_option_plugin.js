@@ -24,6 +24,9 @@ class WhatsappOptionPlugin extends Plugin {
             ReplaceAgentAvatarAction,
             WhatsappNumberAction,
         },
+        // Whatsapp snippet shouldn't create a new dropzone or be regarded as a
+        // visible sibling since it is visually independent of other snippets
+        ignored_sibling_element_selectors: ".s_whatsapp",
         system_attributes: ["data-should-show-chatbox"],
         should_remove_overlay_options_predicates: (el) => {
             if (el.matches(".s_whatsapp")) {
