@@ -90,3 +90,19 @@ test("same-thread message link does not open the thread again but highlights the
     await contains(".o-mail-Message.o-highlighted:contains(Hey)");
     await contains(".breadcrumb-item:contains(Alice)");
 });
+
+test("code block embedded in an email message's body should be ignored", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Jeanne" });
+    pyEnv["mail.message"].create({
+        body: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="python">print('hello')</pre>`,
+        message_type: "email",
+        model: "res.partner",
+        res_id: partnerId,
+    });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await contains("pre[data-embedded='readonlySyntaxHighlighting']:not([data-embedded-mounted])", {
+        parent: [".o-mail-Message-body > div", { shadowRoot: true }],
+    });
+});
