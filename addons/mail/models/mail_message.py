@@ -12,7 +12,7 @@ from lxml import html
 from typing import Self
 
 from odoo import _, api, fields, models, modules, tools
-from odoo.exceptions import AccessError, MissingError
+from odoo.exceptions import AccessError, MissingError, UserError
 from odoo.fields import Domain
 from odoo.tools import clean_context, groupby, SQL
 from odoo.tools.constants import PREFETCH_MAX
@@ -455,6 +455,21 @@ class MailMessage(models.Model):
                 break
             looping_offset += PREFETCH_MAX
         return self.browse(result[offset:limit])._as_query(ordered)
+
+    @api.model
+    def _read_group(self, domain, groupby=(), aggregates=(), having=(), offset=0, limit=None, order=None) -> list[tuple]:
+        try:
+            return super()._read_group(
+                domain, groupby, aggregates, having, offset, limit, order
+            )
+        except ValueError as e:
+            if str(e) != "Cannot search, too many messages":
+                raise
+            raise UserError(_(
+                "Group By includes too many messages to be processed properly.\n"
+                "Please apply additional search filters to reduce the number of messages (< %(limit)s).",
+                limit=MAX_SEARCH_LIMIT,
+            )) from None
 
     def _compute_res_access(self, operation: str):
         assert self.env.su
