@@ -3,7 +3,7 @@
 from odoo import _, fields, models
 
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools.float_utils import float_round
+from odoo.tools.float_utils import float_round, float_div, float_is_zero
 from odoo.tools.misc import groupby
 
 from .delivery_request_objects import DeliveryCommodity, DeliveryPackage
@@ -112,14 +112,18 @@ class DeliveryCarrier(models.Model):
         if total_weight == 0.0:
             weight_uom_name = self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
             raise UserError(_("The package cannot be created because the total weight of the products in the picking is 0.0 %s", weight_uom_name))
-        # If max weight == 0 => division by 0. If this happens, we want to have
-        # more in the max weight than in the total weight, so that it only
-        # creates ONE package with everything.
-        max_weight = default_package_type.max_weight or total_weight + 1
-        total_full_packages = int(total_weight / max_weight)
-        last_package_weight = total_weight % max_weight
+        precision = self.env['decimal.precision'].precision_get('Stock Weight')
+        # If max weight == 0 using the unit precision => division by 0.
+        # If this happens, we want to have more in the max weight than in
+        # the total weight, so that it only creates ONE package with everything.
+        max_weight = default_package_type.max_weight
+        if float_is_zero(max_weight, precision_digits=precision):
+            max_weight = total_weight + 1
+        total_full_packages, last_package_weight = float_div(total_weight, max_weight, precision_digits=precision)
 
         package_weights = [max_weight] * total_full_packages + ([last_package_weight] if last_package_weight else [])
+        if not package_weights:
+            package_weights = [total_weight]
         partial_cost = total_cost / len(package_weights)  # separate the cost uniformly
         order_commodities = self._get_commodities_from_order(order)
 
