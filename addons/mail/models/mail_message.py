@@ -345,6 +345,9 @@ class Message(models.Model):
         allowed = self.browse(id_ for id_ in ids if id_ in allowed_ids)
         return allowed._as_query(order)
 
+    def _format_web_search_read_results(self, domain, records, offset=0, limit=None, count_limit=None):
+        return super(Message, self.with_context(force_search_count=True))._format_web_search_read_results(domain, records, offset, limit, count_limit)
+
     def _filter_records_for_message_operation(self, doc_model, doc_res_ids, operation):
         """ Helper returning records on which 'operation' on mail.message is
         allowed, based on '_get_mail_message_access' behavior and potential

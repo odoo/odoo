@@ -12,3 +12,4 @@ from . import test_portal_thread_controller
 from . import test_rating
 from . import test_res_users
 from . import test_ui
+from . import test_web_mail
