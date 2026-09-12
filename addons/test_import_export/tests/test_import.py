@@ -487,7 +487,6 @@ class TestPreview(TransactionCase):
         ])
         self.assertEqual(result['preview'], [['foo', 'bar', 'qux'], ['5'], ['4', '6']])
 
-    @unittest.skipUnless(can_import('xlrd'), "XLRD module not available")
     def test_xls_success(self):
         file_content = self.file_read('test_import_export/data/test_import.xls')
         import_wizard = self.env['base_import.import'].create({
@@ -510,7 +509,6 @@ class TestPreview(TransactionCase):
         ])
         self.assertEqual(result['preview'], [['foo', 'bar', 'qux'], ['1', '3', '5'], ['2', '4', '6']])
 
-    @unittest.skipUnless(can_import('xlrd.xlsx') or can_import('openpyxl'), "XLRD/XLSX not available")
     def test_xlsx_success(self):
         file_content = self.file_read('test_import_export/data/test_import.xlsx')
         import_wizard = self.env['base_import.import'].create({
@@ -533,7 +531,6 @@ class TestPreview(TransactionCase):
         ])
         self.assertEqual(result['preview'], [['foo', 'bar', 'qux'], ['1', '3', '5'], ['2', '4', '6']])
 
-    @unittest.skipUnless(can_import('openpyxl'), "XLSX not available")
     def test_rich_text_to_html(self):
         importer = self.env["base_import.import"]
 
@@ -1047,7 +1044,6 @@ foo3,Invalid Country\n"""),
         self.assertItemsEqual(last_record.html, "<p>foo</p><br><p>bar</p>")
 
     @mute_logger('odoo.addons.base_import.models.base_import')
-    @unittest.skipUnless(can_import('xlwt') and can_import('openpyxl'), "xlwt/openpyxl not available")
     def test_xls_datetime_values(self):
         """ Test the support of having dates set as strings with the user format and date/datetime objects
         in the same xls(x) file.
@@ -1120,7 +1116,6 @@ foo3,Invalid Country\n"""),
 
                 self.assertFalse(response.get('messages'))
 
-    @unittest.skipUnless(can_import('xlwt') and can_import('openpyxl'), "xlwt/openpyxl not available")
     def test_xlsx_datetime_values_assigned_to_char_field(self):
         """Test that importing datetime values to char field is converted"""
 
@@ -1153,7 +1148,6 @@ foo3,Invalid Country\n"""),
         self.assertFalse(response.get('messages'))
         self.assertEqual(response['name'], ['foo', '08:10:00 06/01/2020', '01/07/2025', '', '', ''])
 
-    @unittest.skipUnless(can_import('xlwt') and can_import('openpyxl'), "xlwt/openpyxl not available")
     def test_xlsx_datetime_values_assigned_to_related_char_field(self):
         """Test that importing datetime values to a related char field is converted"""
         file_content = generate_xlsx(
@@ -1182,7 +1176,6 @@ foo3,Invalid Country\n"""),
             ['foo', '08:10:00 06/01/2020', '01/07/2024']
         )
 
-    @unittest.skipUnless(can_import('xlwt') and can_import('openpyxl'), "xlwt/openpyxl not available")
     def test_xlsx_datetime_values_assigned_to_property_char_field(self):
         """Test that importing datetime values to a property char field is converted"""
         def_record = self.env['import.properties.definition'].create([
@@ -1609,9 +1602,6 @@ class test_failures(TransactionCase):
 
 @tagged('at_install', '-post_install')
 class TestUrlImport(TransactionCase):
-    @unittest.skipUnless(
-        can_import("openpyxl"), "openpyxl not available",
-    )
     def test_import_image_by_url_as_non_admin_user(self):
         img_buf = io.BytesIO()
         Image.new('RGB', (1, 1), '#FF0000').save(img_buf, 'PNG')
@@ -1659,9 +1649,6 @@ class TestUrlImport(TransactionCase):
         )
         self.assertEqual(results['name'], ['Test Partner'])
 
-    @unittest.skipUnless(
-        can_import("openpyxl"), "openpyxl not available",
-    )
     def test_import_svg_by_url_mimetype(self):
         """SVG imported via URL: text/plain for non-admin (XSS prevention), image/svg+xml for admin."""
         svg_data = b'<svg xmlns="http://www.w3.org/2000/svg"></svg>'
