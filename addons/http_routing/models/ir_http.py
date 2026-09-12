@@ -185,7 +185,16 @@ class IrHttp(models.AbstractModel):
             path = cls._lang_url_prefix(path, lang.url_code)
 
         if canonical_domain:
-            return tools.urls.urljoin(canonical_domain, path)
+            try:
+                return tools.urls.urljoin(canonical_domain, path)
+            except ValueError:
+                # An URL the router could not rebuild is quoted as-is above, so
+                # it may still carry '.'/'..' segments -- scanners probe with
+                # them. urljoin refuses to build a domain-qualified URL out of
+                # such a path, and rightly so: it is not canonical. Degrade to
+                # the root-relative path, like the no-domain branch below, as
+                # this runs while rendering the error page of that very request.
+                return path
 
         return path + suffix
 

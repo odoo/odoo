@@ -429,6 +429,26 @@ class TestUrlLocalized(TestUrlCommon):
                 "/fr/no%20such/page-4",
             )
 
+    def test_dot_segments_degrade_instead_of_raising(self):
+        """A scanner probing with '..' must not break the page being rendered."""
+        with MockRequest(self.env, context={"lang": "en_US"}, mock_router=False):
+            for url in (
+                "/no/such/../../etc/passwd",
+                "/no/such/%2e%2e/page-4",
+                "/no/such/./page-4",
+            ):
+                with self.subTest(url=url):
+                    self.assertEqual(
+                        self.IrHttp._url_localized(
+                            url,
+                            lang_code="fr_FR",
+                            canonical_domain="https://example.com",
+                        ),
+                        "/fr" + url,
+                        "a dot-segment path is never canonical: it degrades to"
+                        " the root-relative path instead of being domain-joined",
+                    )
+
     def test_non_local_urls_untouched(self):
         with MockRequest(self.env, context={"lang": "en_US"}, mock_router=False):
             for url in (
