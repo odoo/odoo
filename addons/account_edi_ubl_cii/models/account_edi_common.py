@@ -1508,11 +1508,17 @@ class AccountEdiCommon(models.AbstractModel):
                 taxes_values = line_collected_values['taxes_values']
                 line_domain = []
                 if len(taxes_values) == 1:
-                    line_domain = [('tax_ids', 'any', [
-                        ('amount', '=', taxes_values[0]['amount']),
+                    tax_domain = [
                         ('amount_type', '=', taxes_values[0]['amount_type']),
                         ('type_tax_use', '=', taxes_values[0]['type_tax_use']),
-                    ])]
+                    ]
+                    if taxes_values[0]['amount'] or taxes_values[0].get('ubl_cii_tax_category_code') != 'AE':
+                        tax_domain.append(('amount', '=', taxes_values[0]['amount']))
+                    else:
+                        # Reverse charge taxes can be reported as 0% in the document even though
+                        # the tax itself isn't, so ignore the amount and rely on the category code.
+                        tax_domain.append(('ubl_cii_tax_category_code', '=', 'AE'))
+                    line_domain = [('tax_ids', 'any', tax_domain)]
 
                 line_collected_values['predicted_vals'] = self.env['account.move.line']._get_predicted_values(
                     name=line_collected_values['name'],
@@ -1596,6 +1602,13 @@ class AccountEdiCommon(models.AbstractModel):
             account_values = line_collected_values['account_values']
             if account := line_collected_values.get('predicted_vals', {}).get('account_id'):
                 account_values['account'] = account
+
+    def _import_invoice_retrieve_analytic_distribution(self, collected_values):
+        lines_collected_values = collected_values['lines_collected_values']
+        for line_collected_values in lines_collected_values:
+            to_write = line_collected_values['to_write']
+            if analytic_distribution := line_collected_values.get('predicted_vals', {}).get('analytic_distribution'):
+                to_write['analytic_distribution'] = analytic_distribution
 
     def _import_retrieve_taxes_search_plan(self, collected_values):
         AccountTax = self.env['account.tax']
@@ -1764,6 +1777,8 @@ class AccountEdiCommon(models.AbstractModel):
 
         if name := to_write.get('name'):
             base_line_kwargs['_create_values']['name'] = name
+        if analytic_distribution := to_write.get('analytic_distribution'):
+            base_line_kwargs['_create_values']['analytic_distribution'] = analytic_distribution
         if vehicle_id := to_write.get('vehicle_id'):
             base_line_kwargs['_create_values']['vehicle_id'] = vehicle_id
 
@@ -1912,7 +1927,11 @@ class AccountEdiCommon(models.AbstractModel):
             if not taxes:
                 continue
 
-            target_tax_amount_currency = taxes_to_tax_amount_currency[taxes]
+            delta_tax_amount_currency = taxes_to_tax_amount_currency[taxes] - sum(
+                tax_data['tax_amount_currency']
+                for _base_line, taxes_data in values['base_line_x_taxes_data']
+                for tax_data in taxes_data
+            )
             target_factors = [
                 {
                     'factor': tax_data['raw_tax_amount_currency'],
@@ -1923,12 +1942,13 @@ class AccountEdiCommon(models.AbstractModel):
             ]
             amounts_to_distribute = AccountTax._distribute_delta_amount_smoothly(
                 precision_digits=currency.decimal_places,
-                delta_amount=target_tax_amount_currency,
+                delta_amount=delta_tax_amount_currency,
                 target_factors=target_factors,
+                allow_negative_factors=True,
             )
             for target_factor, amount_to_distribute in zip(target_factors, amounts_to_distribute):
                 tax_data = target_factor['tax_data']
-                tax_data['tax_amount_currency'] = amount_to_distribute
+                tax_data['tax_amount_currency'] += amount_to_distribute
 
         AccountTax._add_accounting_data_in_base_lines_tax_details(base_lines, invoice.company_id, include_caba_tags=invoice.always_tax_exigible)
         tax_results = AccountTax._prepare_tax_lines(base_lines, invoice.company_id, tax_lines=tax_lines)

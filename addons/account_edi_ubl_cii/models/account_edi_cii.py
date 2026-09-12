@@ -1430,6 +1430,9 @@ class AccountEdiCii(models.AbstractModel):
     def _import_cii_invoice_retrieve_accounts(self, collected_values):
         self._import_invoice_retrieve_accounts(collected_values)
 
+    def _import_cii_invoice_retrieve_analytic_distribution(self, collected_values):
+        self._import_invoice_retrieve_analytic_distribution(collected_values)
+
     def _import_cii_invoice_retrieve_taxes(self, collected_values):
         self._import_invoice_retrieve_taxes(collected_values)
 
@@ -1528,6 +1531,7 @@ class AccountEdiCii(models.AbstractModel):
         self._import_cii_invoice_retrieve_products(collected_values)
         self._import_cii_invoice_retrieve_product_uoms(collected_values)
         self._import_cii_invoice_retrieve_accounts(collected_values)
+        self._import_cii_invoice_retrieve_analytic_distribution(collected_values)
         self._import_cii_invoice_retrieve_taxes(collected_values)
         self._import_cii_invoice_add_base_lines(collected_values)
 
