@@ -924,9 +924,10 @@ class WebsocketConnectionHandler:
                 httprequest,
                 version
             ))
-            # Force save the session. Session must be persisted to handle
-            # WebSocket authentication.
-            request.session.is_dirty = True
+            # Save the session, as the WebSocket authentication reads it back
+            # from disk. Marking it dirty would resend the session_id cookie.
+            if request.session.can_save:
+                root.session_store.save(request.session)
             return response
         except KeyError as exc:
             raise RuntimeError(
