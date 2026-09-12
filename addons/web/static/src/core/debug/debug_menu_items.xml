@@ -117,7 +117,8 @@
         <Dialog title.translate="Computed Arch">
             <pre t-out="this.props.arch"/>
             <t t-set-slot="footer">
-                <button class="btn btn-primary o-default-button" t-on-click="() => this.props.close()">Close</button>
+                <button class="btn btn-primary" t-on-click="() => this.props.close()">Close</button>
+                <CopyButton className="'btn-secondary'" copyText.translate="Copy Arch" successText.translate="Copied" content="props.arch"/>
             </t>
         </Dialog>
     </t>
