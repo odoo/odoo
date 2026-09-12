@@ -1,8 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+<<<<<<< cd992ceebbaf343c03e1941d39cfe423d35ba6c6
 from odoo import Command
 from odoo.tests import HttpCase, tagged
+||||||| 2fe4af4b3e03405e2aea243fd9aa6c8f5904be32
+from odoo.tests import tagged
+=======
+from odoo.fields import Command
+from odoo.tests import tagged
+>>>>>>> 95c6205b5e0ccafe1dc8aa4f520c72ff332bccb1
 
 from odoo.addons.product.tests.test_product_attribute_value_config import (
     TestProductAttributeValueCommon,
@@ -64,6 +71,34 @@ class TestWebsiteSaleStockProductWarehouse(
         with MockRequest(test_env, website=self.website.with_env(test_env)):
             combination_info = self.product_B.with_env(test_env)._get_combination_info_variant()
         self.assertEqual(combination_info['free_qty'], 10)
+
+    def test_product_is_not_sold_out_when_at_least_one_variant_is_in_stock(self):
+        template = self._create_product(name='Protein').product_tmpl_id
+        self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': template.id,
+            'attribute_id': self.size_attribute.id,
+            'value_ids': [Command.set(self.size_attribute.value_ids.ids)],
+        })
+        self.website.warehouse_id = self.warehouse_1
+        # Only the second variant is in stock.
+        self._add_product_qty_to_wh(
+            template.product_variant_ids[1].id, 10, self.warehouse_1.lot_stock_id.id
+        )
+
+        with MockRequest(self.env, website=self.website):
+            self.assertFalse(template._is_sold_out())
+
+    def test_product_is_sold_out_when_all_variants_sold_out(self):
+        template = self._create_product(name='Protein').product_tmpl_id
+        self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': template.id,
+            'attribute_id': self.size_attribute.id,
+            'value_ids': [Command.set(self.size_attribute.value_ids.ids)],
+        })
+        self.website.warehouse_id = self.warehouse_1
+
+        with MockRequest(self.env, website=self.website):
+            self.assertTrue(template._is_sold_out())
 
     def test_02_update_cart_with_multi_warehouses(self):
         """ When the user updates his cart and increases a product quantity, if
