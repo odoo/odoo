@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:44+0000\n"
+"POT-Creation-Date: 2026-09-11 17:41+0000\n"
 "PO-Revision-Date: 2026-08-31 14:08+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Burmese <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -196,6 +196,7 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/dynamic_snippet_products_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/wishlist_page_option.xml:0
 msgid "1 Column"
@@ -203,6 +204,7 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/dynamic_snippet_products_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/wishlist_page_option.xml:0
 msgid "2 Columns"
@@ -216,6 +218,7 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/dynamic_snippet_products_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/wishlist_page_option.xml:0
 msgid "3 Columns"
 msgstr ""
@@ -228,6 +231,7 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/dynamic_snippet_products_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/wishlist_page_option.xml:0
 msgid "4 Columns"
 msgstr ""
@@ -240,6 +244,7 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/dynamic_snippet_products_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/wishlist_page_option.xml:0
 msgid "5 Columns"
 msgstr ""
@@ -252,6 +257,7 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/dynamic_snippet_products_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/wishlist_page_option.xml:0
 msgid "6 Columns"
 msgstr ""
@@ -371,6 +377,12 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.billing_address_list
+#: model_terms:ir.ui.view,arch_db:website_sale.delivery_address_list
+msgid "<i class=\"oi me-1\" data-icon=\"add\"/>Add"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_compare
 msgid "<i class=\"oi me-1\" data-icon=\"chevron_backward\"/> Back to shop"
 msgstr ""
@@ -397,12 +409,6 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.billing_address_list
-#: model_terms:ir.ui.view,arch_db:website_sale.delivery_address_list
-msgid "<i class=\"oi me-2\" data-icon=\"add\"/>Add Address"
-msgstr ""
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_add_to_cart
 msgid "<i class=\"oi me-2\" data-icon=\"add_shopping_cart\"/>Add to Cart"
 msgstr ""
@@ -422,6 +428,13 @@ msgstr ""
 msgid ""
 "<i class=\"oi me-2\" data-icon=\"flash_on\"/>\n"
 "                Buy now"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cta_wrapper
+msgid ""
+"<i class=\"oi me-2\" data-icon=\"mail\"/>\n"
+"                    Notify me"
 msgstr ""
 
 #. module: website_sale
@@ -471,6 +484,21 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_edit_button
 msgid "<i class=\"oi oi-filled me-1\" data-icon=\"edit\"/>Want an invoice?"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_compare
+msgid ""
+"<i class=\"oi oi-filled me-2 text-danger\" data-icon=\"circle\" aria-"
+"hidden=\"true\"/>\n"
+"                                            Out of stock"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cta_wrapper
+msgid ""
+"<i class=\"oi oi-filled me-2\" data-icon=\"notifications\"/>\n"
+"                    Subscribed"
 msgstr ""
 
 #. module: website_sale
@@ -594,46 +622,6 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_inline
 msgid "<span class=\"fw-bold fs-5 w-100\">Donate</span>"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
-msgid ""
-"<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" "
-"data-oe-expression=\"data['price']\">\n"
-"                                                <span "
-"class=\"oe_currency_value\">1,500.00</span>\n"
-"                                            </span>"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
-msgid ""
-"<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" "
-"data-oe-expression=\"data['price']\">\n"
-"                                                <span "
-"class=\"oe_currency_value\">140.00</span>\n"
-"                                            </span>"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
-msgid ""
-"<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" "
-"data-oe-expression=\"data['price']\">\n"
-"                                                <span "
-"class=\"oe_currency_value\">33.00</span>\n"
-"                                            </span>"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
-msgid ""
-"<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" "
-"data-oe-expression=\"data['price']\">\n"
-"                                                <span "
-"class=\"oe_currency_value\">750.00</span>\n"
-"                                            </span>"
 msgstr ""
 
 #. module: website_sale
@@ -1325,6 +1313,11 @@ msgid "Accept Terms"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model,name:website_sale.model_res_groups
+msgid "Access Groups"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_feed__access_token
 msgid "Access Token"
 msgstr "အသုံးပြုခွင့် တိုကင်"
@@ -1481,17 +1474,9 @@ msgid "Add to compare"
 msgstr ""
 
 #. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/xml/website_sale_product_availability.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.product_add_to_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale.wishlist_button
 msgid "Add to wishlist"
-msgstr ""
-
-#. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/xml/website_sale_product_availability.xml:0
-msgid "Added to your wishlist"
 msgstr ""
 
 #. module: website_sale
@@ -1529,6 +1514,7 @@ msgstr ""
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/product_image/attribute_value_selector/attribute_value_selector.js:0
+#: model:website.snippet.filter,name:website_sale.dynamic_filter_all_products
 #: model_terms:ir.ui.view,arch_db:website_sale.filter_select_attributes
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "All"
@@ -1971,11 +1957,6 @@ msgid "CSS class for wishlist page design"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
-msgid "Cabinet with Doors"
-msgstr ""
-
-#. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_cabinets
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_category_preview_data
 msgid "Cabinets"
@@ -2020,6 +2001,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_layout__carousel
+#: model_terms:ir.ui.view,arch_db:website_sale.snippets
 msgid "Carousel"
 msgstr ""
 
@@ -2387,11 +2369,6 @@ msgid "Condensed List"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
-msgid "Conference Chair"
-msgstr ""
-
-#. module: website_sale
 #: model:ir.model,name:website_sale.model_res_config_settings
 msgid "Config Settings"
 msgstr ""
@@ -2631,11 +2608,6 @@ msgid "Customers"
 msgstr "ဖောက်သည်များ"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
-msgid "Customizable Desk"
-msgstr ""
-
-#. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/res_config_settings.py:0
 msgid "Customize Email Templates"
@@ -2857,6 +2829,7 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/dynamic_snippet_products_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/wishlist_page_option.xml:0
 msgid "Desktop"
 msgstr ""
@@ -2931,7 +2904,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_digest_digest__display_name
 #: model:ir.model.fields,field_description:website_sale.field_ir_http__display_name
 #: model:ir.model.fields,field_description:website_sale.field_ir_module_module__display_name
-#: model:ir.model.fields,field_description:website_sale.field_payment_token__display_name
 #: model:ir.model.fields,field_description:website_sale.field_payment_transaction__display_name
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute__display_name
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute_category__display_name
@@ -2952,6 +2924,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_wishlist__display_name
 #: model:ir.model.fields,field_description:website_sale.field_res_company__display_name
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:website_sale.field_res_groups__display_name
 #: model:ir.model.fields,field_description:website_sale.field_res_partner__display_name
 #: model:ir.model.fields,field_description:website_sale.field_res_users__display_name
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__display_name
@@ -3131,11 +3104,6 @@ msgstr ""
 #. module: website_sale
 #: model:product.attribute.category,name:website_sale.product_attribute_category_duration
 msgid "Duration"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippets
-msgid "Dynamic Carousel"
 msgstr ""
 
 #. module: website_sale
@@ -3476,13 +3444,6 @@ msgid "For"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_pricelist_item_form
-msgid ""
-"For formula or fixed pricing, the original price isn’t shown in\n"
-"                    sale orders or checkout."
-msgstr ""
-
-#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/interactions/checkout.js:0
 msgid "Free"
@@ -3571,12 +3532,6 @@ msgid "General Features"
 msgstr ""
 
 #. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/xml/website_sale_product_availability.xml:0
-msgid "Get notified when back in stock"
-msgstr ""
-
-#. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_desks_glass
 msgid "Glass Desks"
 msgstr ""
@@ -3606,6 +3561,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_layout__grid
 #: model_terms:ir.ui.view,arch_db:website_sale.products
+#: model_terms:ir.ui.view,arch_db:website_sale.snippets
 msgid "Grid"
 msgstr ""
 
@@ -3720,7 +3676,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_digest_digest__id
 #: model:ir.model.fields,field_description:website_sale.field_ir_http__id
 #: model:ir.model.fields,field_description:website_sale.field_ir_module_module__id
-#: model:ir.model.fields,field_description:website_sale.field_payment_token__id
 #: model:ir.model.fields,field_description:website_sale.field_payment_transaction__id
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute__id
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute_category__id
@@ -3741,6 +3696,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_wishlist__id
 #: model:ir.model.fields,field_description:website_sale.field_res_company__id
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__id
+#: model:ir.model.fields,field_description:website_sale.field_res_groups__id
 #: model:ir.model.fields,field_description:website_sale.field_res_partner__id
 #: model:ir.model.fields,field_description:website_sale.field_res_users__id
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__id
@@ -3947,6 +3903,7 @@ msgstr ""
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/interactions/product_page.js:0
+#: model_terms:ir.ui.view,arch_db:website_sale.cta_wrapper
 msgid "Invalid email"
 msgstr ""
 
@@ -4074,7 +4031,6 @@ msgstr ""
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_lamps
-#: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_category_preview_data
 msgid "Lamps"
 msgstr ""
 
@@ -4353,6 +4309,7 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/dynamic_snippet_products_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/wishlist_page_option.xml:0
@@ -4422,6 +4379,7 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/dynamic_snippet_products_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/product_ribbon_options.xml:0
 #: model:ir.model.fields,field_description:website_sale.field_product_feed__name
 #: model:ir.model.fields,field_description:website_sale.field_product_image__name
@@ -4487,16 +4445,16 @@ msgid "New!"
 msgstr "အသစ်!"
 
 #. module: website_sale
+#: model:website.snippet.filter,name:website_sale.dynamic_filter_newest_products
+msgid "Newest"
+msgstr ""
+
+#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/shared.js:0
 #: model:ir.model.fields.selection,name:website_sale.selection__website__shop_default_sort__publish_date_desc
 msgid "Newest Arrivals"
 msgstr "အသစ် ရောက်ရှိသည်များ"
-
-#. module: website_sale
-#: model:website.snippet.filter,name:website_sale.dynamic_filter_newest_products
-msgid "Newest Products"
-msgstr "ပစ္စည်း အသစ်များ"
 
 #. module: website_sale
 #. odoo-javascript
@@ -4863,11 +4821,6 @@ msgid "On sale"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_pricelist_item_form
-msgid "On the website original price is crossed out."
-msgstr ""
-
-#. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 msgid "On wheels"
@@ -5068,6 +5021,8 @@ msgid "Out of Stock"
 msgstr ""
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/product/product.xml:0
 #: model:product.ribbon,name:website_sale.out_of_stock_ribbon
 msgid "Out of stock"
 msgstr ""
@@ -5145,11 +5100,6 @@ msgstr "ငွေပေးချေမှု"
 #: model:website.checkout.step,name:website_sale.checkout_step_confirmation
 msgid "Payment Confirmation"
 msgstr ""
-
-#. module: website_sale
-#: model:ir.model,name:website_sale.model_payment_token
-msgid "Payment Token"
-msgstr "ပေးချေမှူ တိုကင်"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_payment_transaction
@@ -5350,6 +5300,11 @@ msgid "Prices have changed. Please review your cart."
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model.fields.selection,name:website_sale.selection__product_image__type__primary
+msgid "Primary"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
 msgid "Privacy Policy"
 msgstr ""
@@ -5452,12 +5407,6 @@ msgstr "ပစ္စည်းအမည်"
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/website_builder/dynamic_snippet_products_option.xml:0
-msgid "Product Names"
-msgstr ""
-
-#. module: website_sale
-#. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/website_sale_options.xml:0
 msgid "Product Page"
 msgstr ""
@@ -5524,6 +5473,8 @@ msgid "Product Public Categories"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__website_show_reference_price
+#: model:ir.model.fields,field_description:website_sale.field_website__show_product_reference_price
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Product Reference Price"
 msgstr ""
@@ -5621,16 +5572,14 @@ msgid "Product: send email regarding products availability"
 msgstr ""
 
 #. module: website_sale
-#. odoo-javascript
 #. odoo-python
 #: code:addons/website_sale/models/product_template.py:0
-#: code:addons/website_sale/static/src/website_builder/products_searchbar_option.xml:0
+#: code:addons/website_sale/models/website.py:0
 #: model:ir.actions.act_window,name:website_sale.product_template_action_website
 #: model:ir.ui.menu,name:website_sale.menu_catalog
 #: model:ir.ui.menu,name:website_sale.menu_catalog_products
 #: model_terms:ir.ui.view,arch_db:website_sale.product_public_category_form_view
 #: model_terms:ir.ui.view,arch_db:website_sale.products_breadcrumb
-#: model_terms:ir.ui.view,arch_db:website_sale.snippets
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_page_view_search
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_view_form
@@ -5639,10 +5588,20 @@ msgid "Products"
 msgstr "ပစ္စည်းများ"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippets
+msgid "Products Carousel"
+msgstr ""
+
+#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/wishlist_page_option.xml:0
 msgid "Products Design"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippets
+msgid "Products Grid"
 msgstr ""
 
 #. module: website_sale
@@ -5835,13 +5794,13 @@ msgstr ""
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_latest_sold_products_action
 #: model:website.snippet.filter,name:website_sale.dynamic_filter_latest_sold_products
-msgid "Recently Sold Products"
+msgid "Recently Sold"
 msgstr ""
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_latest_viewed_products_action
 #: model:website.snippet.filter,name:website_sale.dynamic_filter_latest_viewed_products
-msgid "Recently Viewed Products (per user)"
+msgid "Recently Viewed (per user)"
 msgstr ""
 
 #. module: website_sale
@@ -6227,6 +6186,11 @@ msgid "Search {{0}} globally"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model.fields.selection,name:website_sale.selection__product_image__type__secondary
+msgid "Secondary"
+msgstr ""
+
+#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Secondary Image"
@@ -6356,7 +6320,6 @@ msgstr "Sequence"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_services
-#: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_category_preview_data
 msgid "Services"
 msgstr "ဝန်ဆောင်မှူများ"
 
@@ -6588,12 +6551,6 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/website_builder/dynamic_snippet_products_option.xml:0
-msgid "Show variants"
-msgstr ""
-
-#. module: website_sale
-#. odoo-javascript
 #. odoo-python
 #: code:addons/website_sale/const.py:0
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
@@ -6748,6 +6705,12 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/dynamic_snippet_products_option.xml:0
+msgid "Split variants"
+msgstr ""
+
+#. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_boxes_stackable
 msgid "Stackable Boxes"
 msgstr ""
@@ -6780,6 +6743,11 @@ msgstr ""
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__style
 msgid "Style"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cta_wrapper
+msgid "Subscribe"
 msgstr ""
 
 #. module: website_sale
@@ -7210,11 +7178,6 @@ msgid "This promo code is not available."
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
-msgid "Three-Seat Sofa"
-msgstr ""
-
-#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
@@ -7344,6 +7307,11 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
 msgid "Twitter"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_image__type
+msgid "Type"
 msgstr ""
 
 #. module: website_sale
@@ -7597,11 +7565,6 @@ msgid "Warranty"
 msgstr "ဝရံတီ"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
-msgid "Warranty (2 year)"
-msgstr ""
-
-#. module: website_sale
 #: model:product.template,description_sale:website_sale.product_product_1_product_template
 msgid ""
 "Warranty, issued to the purchaser of an article by its manufacturer, "
@@ -7622,12 +7585,6 @@ msgstr ""
 msgid ""
 "We weren't able to update your cart. Please refresh your page before trying "
 "again."
-msgstr ""
-
-#. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/xml/website_sale_product_availability.xml:0
-msgid "We'll notify you once the product is back in stock"
 msgstr ""
 
 #. module: website_sale
@@ -8270,8 +8227,7 @@ msgid "x"
 msgstr ""
 
 #. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/xml/website_sale_product_availability.xml:0
+#: model_terms:ir.ui.view,arch_db:website_sale.cta_wrapper
 msgid "youremail@gmail.com"
 msgstr ""
 
@@ -8280,20 +8236,26 @@ msgstr ""
 msgid "{{ object.name or 'Product' }} is back in stock"
 msgstr ""
 
-msgid "Delivery Methods"
-msgstr "ပစ္စည်းပို့ရမည့် နည်းလမ်းများ"
+#~ msgid "Newest Products"
+#~ msgstr "ပစ္စည်း အသစ်များ"
 
-msgid "Payment Methods"
-msgstr "ငွေပေးချေမှု နည်းလမ်းများ"
+#~ msgid "Payment Token"
+#~ msgstr "ပေးချေမှူ တိုကင်"
 
-msgid "Payment Providers"
-msgstr "ပေးချေမှူ ဝန်ဆောင်သူများ"
+#~ msgid "Delivery Methods"
+#~ msgstr "ပစ္စည်းပို့ရမည့် နည်းလမ်းများ"
 
-msgid "Payment Tokens"
-msgstr "ပေးချေမှူ တိုကင်များ"
+#~ msgid "Payment Methods"
+#~ msgstr "ငွေပေးချေမှု နည်းလမ်းများ"
 
-msgid "Payment Transactions"
-msgstr "ပေးချေမှူ မှတ်တမ်းများ"
+#~ msgid "Payment Providers"
+#~ msgstr "ပေးချေမှူ ဝန်ဆောင်သူများ"
 
-msgid "Warning"
-msgstr "❗သတိပေးချက်"
+#~ msgid "Payment Tokens"
+#~ msgstr "ပေးချေမှူ တိုကင်များ"
+
+#~ msgid "Payment Transactions"
+#~ msgstr "ပေးချေမှူ မှတ်တမ်းများ"
+
+#~ msgid "Warning"
+#~ msgstr "❗သတိပေးချက်"

@@ -14,10 +14,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-08-31 15:01+0000\n"
+"POT-Creation-Date: 2026-09-11 17:42+0000\n"
+"PO-Revision-Date: 2026-09-11 06:33+0000\n"
 "Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
-"Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-4/"
+"Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-master/"
 "im_livechat/id/>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
@@ -126,6 +126,12 @@ msgstr ""
 #: code:addons/im_livechat/models/chatbot_script_step.py:0
 msgid "%(title)s - Step %(sequence)d"
 msgstr "%(title)s - Langkah %(sequence)d"
+
+#. module: im_livechat
+#. odoo-python
+#: code:addons/im_livechat/models/res_users.py:0
+msgid "%(visitor)s authenticated as %(user)s."
+msgstr ""
 
 #. module: im_livechat
 #. odoo-python
@@ -935,6 +941,7 @@ msgstr "Saluran Diskusi"
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__display_name
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_expertise__display_name
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__display_name
+#: model:ir.model.fields,field_description:im_livechat.field_ir_http__display_name
 #: model:ir.model.fields,field_description:im_livechat.field_ir_qweb__display_name
 #: model:ir.model.fields,field_description:im_livechat.field_ir_websocket__display_name
 #: model:ir.model.fields,field_description:im_livechat.field_mail_message__display_name
@@ -1156,6 +1163,11 @@ msgid "Guest"
 msgstr "Tamu"
 
 #. module: im_livechat
+#: model:ir.model,name:im_livechat.model_ir_http
+msgid "HTTP Routing"
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__handled_by_agent
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
 msgid "Handled by Agent"
@@ -1322,6 +1334,7 @@ msgstr "Saya memiliki pertanyaan mengenai harga"
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__id
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_expertise__id
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__id
+#: model:ir.model.fields,field_description:im_livechat.field_ir_http__id
 #: model:ir.model.fields,field_description:im_livechat.field_ir_qweb__id
 #: model:ir.model.fields,field_description:im_livechat.field_ir_websocket__id
 #: model:ir.model.fields,field_description:im_livechat.field_mail_message__id
@@ -2081,7 +2094,7 @@ msgstr ""
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Ongoing Sessions"
-msgstr "Sesi-Sesi yang Sedang Berlangsung"
+msgstr "Sesi Berlangsung"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__triggering_answer_ids
@@ -2864,9 +2877,11 @@ msgid "View Contact"
 msgstr "Lihat Kontak"
 
 #. module: im_livechat
+#. odoo-javascript
 #. odoo-python
 #: code:addons/im_livechat/controllers/main.py:0
 #: code:addons/im_livechat/models/im_livechat_channel.py:0
+#: code:addons/im_livechat/static/src/core/common/channel_member_list_patch.js:0
 #: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel_member__livechat_member_type__visitor
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_member_history__livechat_member_type__visitor
 msgid "Visitor"

@@ -14,10 +14,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:43+0000\n"
-"PO-Revision-Date: 2026-08-31 19:46+0000\n"
+"POT-Creation-Date: 2026-09-11 17:43+0000\n"
+"PO-Revision-Date: 2026-09-09 14:11+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
-"Language-Team: German <https://translate.odoo.com/projects/odoo-s19-4/"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-master/"
 "sale_stock/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -180,11 +180,6 @@ msgstr ""
 "  - Lagerbuchungen: Die Menge stammt aus bestätigten Kommissionierungen\n"
 
 #. module: sale_stock
-#: model:ir.model,name:sale_stock.model_account_accrued_orders_wizard
-msgid "Accrued Orders Wizard"
-msgstr "Assistent für abgegrenzte Aufträge"
-
-#. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 msgid "All planned operations included"
@@ -292,11 +287,6 @@ msgid "Default Warehouse"
 msgstr "Standardlagerhaus"
 
 #. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
-msgid "Delivered"
-msgstr "Geliefert"
-
-#. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
 msgid "Delivery"
@@ -328,7 +318,6 @@ msgid "Delivery:"
 msgstr "Lieferung:"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_account_accrued_orders_wizard__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_account_move__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_product_template__display_name
@@ -427,18 +416,11 @@ msgid "Free Qty Today"
 msgstr "Verfügbare Menge heute"
 
 #. module: sale_stock
-#. odoo-javascript
-#: code:addons/sale_stock/static/src/stock_valuation/stock_valuation_report.js:0
-msgid "Goods Delivered Not Invoiced"
-msgstr "Nicht in Rechnung gestellte, gelieferte Waren"
-
-#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__show_json_popover
 msgid "Has late picking"
 msgstr "Hat verspätete Kommissionierung"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_account_accrued_orders_wizard__id
 #: model:ir.model.fields,field_description:sale_stock.field_account_move__id
 #: model:ir.model.fields,field_description:sale_stock.field_account_move_line__id
 #: model:ir.model.fields,field_description:sale_stock.field_product_template__id
@@ -609,16 +591,6 @@ msgid "No products are available to return."
 msgstr "Es sind keine zu retournierenden Produkte verfügbar."
 
 #. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
-msgid "Not Available"
-msgstr "Nicht verfügbar"
-
-#. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
-msgid "Not Delivered"
-msgstr "Nicht geliefert"
-
-#. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 msgid "Not enough future availability"
@@ -641,11 +613,6 @@ msgstr "Am"
 #: model:return.reason,name:sale_stock.return_reason_order_by_mistake
 msgid "Ordered by mistake"
 msgstr "Versehentlich bestellt"
-
-#. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
-msgid "Partially Delivered"
-msgstr "Teilweise geliefert"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -801,8 +768,6 @@ msgid "Sale Line"
 msgstr "Auftragsposition"
 
 #. module: sale_stock
-#. odoo-javascript
-#: code:addons/sale_stock/static/src/stock_valuation/stock_valuation_report.js:0
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
 msgid "Sale Orders"
 msgstr "Verkaufsaufträge"
@@ -900,16 +865,6 @@ msgstr "Sequenz"
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_policy
 msgid "Shipping Policy"
 msgstr "Versandbedingungen"
-
-#. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
-msgid "Shipping Status"
-msgstr "Versandstatus"
-
-#. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
-msgid "Started"
-msgstr "Gestartet"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
@@ -1074,21 +1029,45 @@ msgstr "verarbeitet statt"
 msgid "will be late."
 msgstr "ist verspätet."
 
-msgid "<i class=\"oi oi-fw\" data-icon=\"close\"/>Cancelled"
-msgstr "<i class=\"oi oi-fw\" data-icon=\"close\"/>Storniert"
+#~ msgid "Accrued Orders Wizard"
+#~ msgstr "Assistent für abgegrenzte Aufträge"
 
-msgid "<i class=\"oi oi-fw\" data-icon=\"schedule\"/>Preparation"
-msgstr "<i class=\"oi oi-fw\" data-icon=\"schedule\"/>Vorbereitung"
+#~ msgid "Delivered"
+#~ msgstr "Geliefert"
 
-msgid ""
-"<span class=\"small badge rounded-pill text-bg-success "
-"orders_label_text_align\">\n"
-"                                        <i class=\"oi oi-fw\" data-"
-"icon=\"local_shipping\"/> Shipped\n"
-"                                    </span>"
-msgstr ""
-"<span class=\"small badge rounded-pill text-bg-success "
-"orders_label_text_align\">\n"
-"                                        <i class=\"oi oi-fw\" data-"
-"icon=\"local_shipping\"/> Versandt\n"
-"                                    </span>"
+#~ msgid "Goods Delivered Not Invoiced"
+#~ msgstr "Nicht in Rechnung gestellte, gelieferte Waren"
+
+#~ msgid "Not Available"
+#~ msgstr "Nicht verfügbar"
+
+#~ msgid "Not Delivered"
+#~ msgstr "Nicht geliefert"
+
+#~ msgid "Partially Delivered"
+#~ msgstr "Teilweise geliefert"
+
+#~ msgid "Shipping Status"
+#~ msgstr "Versandstatus"
+
+#~ msgid "Started"
+#~ msgstr "Gestartet"
+
+#~ msgid "<i class=\"oi oi-fw\" data-icon=\"close\"/>Cancelled"
+#~ msgstr "<i class=\"oi oi-fw\" data-icon=\"close\"/>Storniert"
+
+#~ msgid "<i class=\"oi oi-fw\" data-icon=\"schedule\"/>Preparation"
+#~ msgstr "<i class=\"oi oi-fw\" data-icon=\"schedule\"/>Vorbereitung"
+
+#~ msgid ""
+#~ "<span class=\"small badge rounded-pill text-bg-success "
+#~ "orders_label_text_align\">\n"
+#~ "                                        <i class=\"oi oi-fw\" data-"
+#~ "icon=\"local_shipping\"/> Shipped\n"
+#~ "                                    </span>"
+#~ msgstr ""
+#~ "<span class=\"small badge rounded-pill text-bg-success "
+#~ "orders_label_text_align\">\n"
+#~ "                                        <i class=\"oi oi-fw\" data-"
+#~ "icon=\"local_shipping\"/> Versandt\n"
+#~ "                                    </span>"

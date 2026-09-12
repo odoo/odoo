@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:44+0000\n"
+"POT-Creation-Date: 2026-09-11 17:41+0000\n"
 "PO-Revision-Date: 2026-08-31 14:26+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Persian <https://translate.odoo.com/projects/odoo-s19-4/mrp/"
@@ -205,6 +205,11 @@ msgstr "\"محصولات تمام شده - %s\" % object.name"
 #: model:ir.actions.report,print_report_name:mrp.action_report_mrp_mo_overview
 msgid "'MO Overview - %s' % object.display_name"
 msgstr "'نمای کلی MO - %s' % object.display_name"
+
+#. module: mrp
+#: model:ir.actions.report,print_report_name:mrp.action_report_mrp_packages
+msgid "'Packages - %s' % (object.name)"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_production_order
@@ -433,6 +438,11 @@ msgid "<span class=\"o_stat_text\">Manufacturing</span>"
 msgstr "<span class=\"o_stat_text\">تولید</span>"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "<span class=\"o_stat_text\">Moves</span>"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "<span class=\"o_stat_text\">OEE</span>"
 msgstr "<span class=\"o_stat_text\">اثربخشی کلی تجهیزات</span>"
@@ -451,6 +461,11 @@ msgstr "<span class=\"o_stat_text\">عملیات<br/>عملکرد</span>"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Overview</span>"
 msgstr "<span class=\"o_stat_text\">نمای کلی</span>"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "<span class=\"o_stat_text\">Packages</span>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -683,6 +698,11 @@ msgstr ""
 "یک محصول با صورتحساب مواد از نوع کیت نمی تواند قانون سفارش مجدد داشته باشد."
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_res_groups
+msgid "Access Groups"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_rule__action
 msgid "Action"
 msgstr "عمل"
@@ -878,11 +898,6 @@ msgstr "تخصیص"
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
 msgid "Allocation Report"
 msgstr "گزارش تخصیص"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
-msgid "Allocation Report Labels"
-msgstr "برچسب‌های گزارش تخصیص"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__allow_workorder_dependencies
@@ -1203,6 +1218,7 @@ msgstr ""
 "معوق مرتبطی وجود ندارد"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__barcode
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__barcode
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
 msgid "Barcode"
@@ -2246,6 +2262,11 @@ msgid "Destination Location"
 msgstr "مکان مقصد"
 
 #. module: mrp
+#: model:ir.actions.act_window,name:mrp.action_detailed_operations
+msgid "Detailed Operations"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Details"
 msgstr "جزییات"
@@ -2313,11 +2334,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_report_stock_report_stock_rule__display_name
 #: model:ir.model.fields,field_description:mrp.field_res_company__display_name
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:mrp.field_res_groups__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_allocation_report__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_forecasted_product_product__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_lot__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_move__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_move_line__display_name
+#: model:ir.model.fields,field_description:mrp.field_stock_package__display_name
+#: model:ir.model.fields,field_description:mrp.field_stock_package_history__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_picking__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_quant__display_name
@@ -2847,11 +2871,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_report_stock_report_stock_rule__id
 #: model:ir.model.fields,field_description:mrp.field_res_company__id
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__id
+#: model:ir.model.fields,field_description:mrp.field_res_groups__id
 #: model:ir.model.fields,field_description:mrp.field_stock_allocation_report__id
 #: model:ir.model.fields,field_description:mrp.field_stock_forecasted_product_product__id
 #: model:ir.model.fields,field_description:mrp.field_stock_lot__id
 #: model:ir.model.fields,field_description:mrp.field_stock_move__id
 #: model:ir.model.fields,field_description:mrp.field_stock_move_line__id
+#: model:ir.model.fields,field_description:mrp.field_stock_package__id
+#: model:ir.model.fields,field_description:mrp.field_stock_package_history__id
 #: model:ir.model.fields,field_description:mrp.field_stock_picking__id
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__id
 #: model:ir.model.fields,field_description:mrp.field_stock_quant__id
@@ -3311,6 +3338,11 @@ msgid "Link between products and their UoMs"
 msgstr ""
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "List view of detailed operations"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__location_id
 msgid "Location"
 msgstr "مکان"
@@ -3581,6 +3613,7 @@ msgstr "نوع عملیات ساخت"
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__mo_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__production_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__production_id
+#: model:ir.model.fields,field_description:mrp.field_stock_package_history__production_id
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -4375,9 +4408,42 @@ msgid "PDF"
 msgstr "PDF"
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_stock_package
+msgid "Package"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
+msgid "Package Content"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__package_history_ids
+msgid "Package History"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
+msgid "Package Label"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "Package barcode"
 msgstr "بارکد بسته‌بندی"
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_production.py:0
+#: model:ir.actions.report,name:mrp.action_report_mrp_packages
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Packages"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__packages_count
+msgid "Packages Count"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__bom_id
@@ -4649,8 +4715,18 @@ msgstr "چاپ"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
+msgid "Print label as:"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
 msgid "Print labels as:"
 msgstr "چاپ برچسب‌ها به صورت:"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
+msgid "Print on \"Put in Pack\""
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
@@ -5250,6 +5326,11 @@ msgid "Reserved"
 msgstr "رزرو شده"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Reset to Draft"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__resource_id
 msgid "Resource"
 msgstr "منبع"
@@ -5310,6 +5391,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__message_has_sms_error
 msgid "SMS Delivery error"
 msgstr "خطای تحویل پیامک"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter__barcode
+msgid "Scan to select the workcenter in shopfloor."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split_line__date
@@ -5434,6 +5520,11 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_replenishment_tree_view
 msgid "Set as Bill of Materials"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Set to In Progress"
 msgstr ""
 
 #. module: mrp
@@ -5737,6 +5828,11 @@ msgid "Stock Moves"
 msgstr "انتقالهای موجودی"
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_stock_package_history
+msgid "Stock Package History"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model,name:mrp.model_stock_forecasted_product_product
 msgid "Stock Replenishment Report"
 msgstr "گزارش جایگزینی انبار"
@@ -5878,6 +5974,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "The backorder %s has been created."
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.constraint,message:mrp.constraint_mrp_workcenter_barcode_company_uniq
+msgid "The barcode for a workcenter must be unique per company."
 msgstr ""
 
 #. module: mrp
@@ -6294,6 +6395,12 @@ msgid "To Produce"
 msgstr "برای تولید"
 
 #. module: mrp
+#. odoo-javascript
+#: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
+msgid "To Replenish"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__search_date_category__today
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Today"
@@ -6471,8 +6578,8 @@ msgid "Unable to split with more than the quantity to produce."
 msgstr "نمی توان با بیش از مقدار تولید تقسیم کرد."
 
 #. module: mrp
+#: model:ir.actions.server,name:mrp.action_production_order_unbuild
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__unbuild_id
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "Unbuild"
 msgstr "ساخته نشده"
@@ -6687,6 +6794,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "Visible to all"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_move_line__visual_lot_name
+msgid "Visual Pre-generated Lot"
 msgstr ""
 
 #. module: mrp
@@ -7390,112 +7502,115 @@ msgstr "مدت واقعی"
 msgid "split"
 msgstr "تقسیم"
 
-msgid "Allocation Report for Manufacturing Orders"
-msgstr "گزارش تخصیص برای سفارش‌های تولیدی"
+#~ msgid "Allocation Report Labels"
+#~ msgstr "برچسب‌های گزارش تخصیص"
 
-msgid "Create backorder"
-msgstr "ایجاد سفارش معوق"
+#~ msgid "Allocation Report for Manufacturing Orders"
+#~ msgstr "گزارش تخصیص برای سفارش‌های تولیدی"
 
-msgid "MRP Reception Report"
-msgstr "گزارش پذیرش MRP"
+#~ msgid "Create backorder"
+#~ msgstr "ایجاد سفارش معوق"
 
-msgid "No Backorder"
-msgstr "بدون سفارش معوق"
+#~ msgid "MRP Reception Report"
+#~ msgstr "گزارش پذیرش MRP"
 
-msgid "Produce All"
-msgstr "تولید همه"
+#~ msgid "No Backorder"
+#~ msgstr "بدون سفارش معوق"
 
-msgid "Set Quantities & Validate"
-msgstr "تعیین مقادیر و اعتبارسنجی"
+#~ msgid "Produce All"
+#~ msgstr "تولید همه"
 
-msgid "Show Produce"
-msgstr "نمایش تولید"
+#~ msgid "Set Quantities & Validate"
+#~ msgstr "تعیین مقادیر و اعتبارسنجی"
 
-msgid "Show Produce All"
-msgstr "نمایش تولید همه"
+#~ msgid "Show Produce"
+#~ msgstr "نمایش تولید"
 
-msgid "Stock Reception Report"
-msgstr "گزارش دریافت موجودی"
+#~ msgid "Show Produce All"
+#~ msgstr "نمایش تولید همه"
 
-msgid "Technical field to check if produce all button can be shown"
-msgstr "کادر فنی برای بررسی اینکه آیا دکمه تولید همه نمایش داده می‌شود"
+#~ msgid "Stock Reception Report"
+#~ msgstr "گزارش دریافت موجودی"
 
-msgid "Technical field to check if produce button can be shown"
-msgstr "فیلد فنی برای بررسی اینکه آیا دکمه تولید می‌تواند نمایش داده شود"
+#~ msgid "Technical field to check if produce all button can be shown"
+#~ msgstr "کادر فنی برای بررسی اینکه آیا دکمه تولید همه نمایش داده می‌شود"
 
-msgid "Use Reception Report with Manufacturing Orders"
-msgstr "استفاده از گزارش دریافت با سفارش‌های تولید"
+#~ msgid "Technical field to check if produce button can be shown"
+#~ msgstr "فیلد فنی برای بررسی اینکه آیا دکمه تولید می‌تواند نمایش داده شود"
 
-msgid "Check availability"
-msgstr "بررسی موجود بودن"
+#~ msgid "Use Reception Report with Manufacturing Orders"
+#~ msgstr "استفاده از گزارش دریافت با سفارش‌های تولید"
 
-msgid ""
-"Create operation level dependencies that will influence both planning and "
-"the status of work orders upon MO confirmation. If this feature is ticked, "
-"and nothing is specified, Odoo will assume that all operations can be "
-"started simultaneously."
-msgstr ""
-"ایجاد وابستگی‌های سطح عملیات که بر برنامه‌ریزی و وضعیت دستورات کار با تأیید MO "
-"تأثیر می‌گذارد. اگر این ویژگی انتخاب شود و چیزی مشخص نشده باشد، Odoo فرض "
-"خواهد کرد که تمام عملیات می‌توانند به صورت همزمان شروع شوند."
+#~ msgid "Check availability"
+#~ msgstr "بررسی موجود بودن"
 
-msgid "Operation Dependencies"
-msgstr "وابستگی‌های عملیات"
+#~ msgid ""
+#~ "Create operation level dependencies that will influence both planning and "
+#~ "the status of work orders upon MO confirmation. If this feature is "
+#~ "ticked, and nothing is specified, Odoo will assume that all operations "
+#~ "can be started simultaneously."
+#~ msgstr ""
+#~ "ایجاد وابستگی‌های سطح عملیات که بر برنامه‌ریزی و وضعیت دستورات کار با تأیید "
+#~ "MO تأثیر می‌گذارد. اگر این ویژگی انتخاب شود و چیزی مشخص نشده باشد، Odoo "
+#~ "فرض خواهد کرد که تمام عملیات می‌توانند به صورت همزمان شروع شوند."
 
-msgid ""
-"Set the order that work orders should be processed in. Activate the feature "
-"within each BoM's Miscellaneous tab"
-msgstr ""
-"سفارشاتی را تنظیم کنید که باید دستورات کاری به ترتیب انجام شوند. این ویژگی "
-"را در برگه متفرقه هر BoM فعال کنید."
+#~ msgid "Operation Dependencies"
+#~ msgstr "وابستگی‌های عملیات"
 
-msgid "The number of products already handled by this work order"
-msgstr "تعداد محصولاتی که قبلا توسط این سفارش کار انجام شده است"
+#~ msgid ""
+#~ "Set the order that work orders should be processed in. Activate the "
+#~ "feature within each BoM's Miscellaneous tab"
+#~ msgstr ""
+#~ "سفارشاتی را تنظیم کنید که باید دستورات کاری به ترتیب انجام شوند. این "
+#~ "ویژگی را در برگه متفرقه هر BoM فعال کنید."
 
-msgid "Total To Consume"
-msgstr "کل برای مصرف"
+#~ msgid "The number of products already handled by this work order"
+#~ msgstr "تعداد محصولاتی که قبلا توسط این سفارش کار انجام شده است"
 
-msgid "Unbuild: %s"
-msgstr "بازکردن: %s"
+#~ msgid "Total To Consume"
+#~ msgstr "کل برای مصرف"
 
-msgid "Use Operation Dependencies"
-msgstr "استفاده از وابستگی های عملیات"
+#~ msgid "Unbuild: %s"
+#~ msgstr "بازکردن: %s"
 
-msgid "Website Messages"
-msgstr "پیام های وب سایت"
+#~ msgid "Use Operation Dependencies"
+#~ msgstr "استفاده از وابستگی های عملیات"
 
-msgid "Website communication history"
-msgstr "تاریخچه ارتباط با وبسایت"
+#~ msgid "Website Messages"
+#~ msgstr "پیام های وب سایت"
 
-msgid "days"
-msgstr "روز"
+#~ msgid "Website communication history"
+#~ msgstr "تاریخچه ارتباط با وبسایت"
 
-msgid ""
-"<p class=\"o_view_nocontent_smiling_face\">\n"
-"                        Upload files to your product\n"
-"                    </p><p>\n"
-"                        Use this feature to store any files, like drawings "
-"or specifications.\n"
-"                    </p>"
-msgstr ""
-"<p class=\"o_view_nocontent_smiling_face\">\n"
-"                         فایل ها را در محصول خود آپلود کنید\n"
-"                     </p><p>\n"
-"                         از این ویژگی برای ذخیره هر فایلی مانند نقشه ها یا "
-"مشخصات استفاده کنید.\n"
-"                     </p>"
+#~ msgid "days"
+#~ msgstr "روز"
 
-msgid "Attachments Count"
-msgstr "تعداد پیوست‌ها"
+#~ msgid ""
+#~ "<p class=\"o_view_nocontent_smiling_face\">\n"
+#~ "                        Upload files to your product\n"
+#~ "                    </p><p>\n"
+#~ "                        Use this feature to store any files, like "
+#~ "drawings or specifications.\n"
+#~ "                    </p>"
+#~ msgstr ""
+#~ "<p class=\"o_view_nocontent_smiling_face\">\n"
+#~ "                         فایل ها را در محصول خود آپلود کنید\n"
+#~ "                     </p><p>\n"
+#~ "                         از این ویژگی برای ذخیره هر فایلی مانند نقشه ها "
+#~ "یا مشخصات استفاده کنید.\n"
+#~ "                     </p>"
 
-msgid "Files attached to the product."
-msgstr "فایل‌های ضمیمه شده به محصول."
+#~ msgid "Attachments Count"
+#~ msgstr "تعداد پیوست‌ها"
 
-msgid "Hidden"
-msgstr "پنهان"
+#~ msgid "Files attached to the product."
+#~ msgstr "فایل‌های ضمیمه شده به محصول."
 
-msgid "Product Attachments"
-msgstr "پیوست‌های محصول"
+#~ msgid "Hidden"
+#~ msgstr "پنهان"
 
-msgid "Product Document"
-msgstr "سند محصول"
+#~ msgid "Product Attachments"
+#~ msgstr "پیوست‌های محصول"
+
+#~ msgid "Product Document"
+#~ msgstr "سند محصول"

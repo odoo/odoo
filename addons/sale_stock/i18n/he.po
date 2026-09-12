@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:43+0000\n"
+"POT-Creation-Date: 2026-09-11 17:43+0000\n"
 "PO-Revision-Date: 2026-08-31 19:46+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -178,11 +178,6 @@ msgid ""
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.model,name:sale_stock.model_account_accrued_orders_wizard
-msgid "Accrued Orders Wizard"
-msgstr "אשף הזמנות שנצברו"
-
-#. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 msgid "All planned operations included"
@@ -289,11 +284,6 @@ msgid "Default Warehouse"
 msgstr "מחסן ברירת מחדל"
 
 #. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
-msgid "Delivered"
-msgstr "נמסר"
-
-#. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
 msgid "Delivery"
@@ -323,7 +313,6 @@ msgid "Delivery:"
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_account_accrued_orders_wizard__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_account_move__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_product_template__display_name
@@ -420,18 +409,11 @@ msgid "Free Qty Today"
 msgstr "כמות פנויה היום"
 
 #. module: sale_stock
-#. odoo-javascript
-#: code:addons/sale_stock/static/src/stock_valuation/stock_valuation_report.js:0
-msgid "Goods Delivered Not Invoiced"
-msgstr ""
-
-#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__show_json_popover
 msgid "Has late picking"
 msgstr "איחור באיסוף"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_account_accrued_orders_wizard__id
 #: model:ir.model.fields,field_description:sale_stock.field_account_move__id
 #: model:ir.model.fields,field_description:sale_stock.field_account_move_line__id
 #: model:ir.model.fields,field_description:sale_stock.field_product_template__id
@@ -601,16 +583,6 @@ msgid "No products are available to return."
 msgstr ""
 
 #. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
-msgid "Not Available"
-msgstr "לא זמין"
-
-#. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
-msgid "Not Delivered"
-msgstr "לא נשלח"
-
-#. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, fuzzy
@@ -635,11 +607,6 @@ msgstr "מופעל"
 #: model:return.reason,name:sale_stock.return_reason_order_by_mistake
 msgid "Ordered by mistake"
 msgstr ""
-
-#. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
-msgid "Partially Delivered"
-msgstr "נשלח חלקית"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -792,8 +759,6 @@ msgid "Sale Line"
 msgstr "שורת מכירה"
 
 #. module: sale_stock
-#. odoo-javascript
-#: code:addons/sale_stock/static/src/stock_valuation/stock_valuation_report.js:0
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
 msgid "Sale Orders"
 msgstr "הזמנות לקוח"
@@ -891,16 +856,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_policy
 msgid "Shipping Policy"
 msgstr "מדיניות משלוח"
-
-#. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
-msgid "Shipping Status"
-msgstr ""
-
-#. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
-msgid "Started"
-msgstr "התחיל"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
@@ -1061,8 +1016,26 @@ msgstr "מעובד במקום"
 msgid "will be late."
 msgstr "יהיה באיחור"
 
-msgid "<i class=\"oi oi-fw\" data-icon=\"close\"/>Cancelled"
-msgstr "<i class=\"oi oi-fw\" data-icon=\"close\"/> בוטל"
+#~ msgid "Accrued Orders Wizard"
+#~ msgstr "אשף הזמנות שנצברו"
 
-msgid "<i class=\"oi oi-fw\" data-icon=\"schedule\"/>Preparation"
-msgstr "<i class=\"oi oi-fw\" data-icon=\"schedule\"/> הכנה"
+#~ msgid "Delivered"
+#~ msgstr "נמסר"
+
+#~ msgid "Not Available"
+#~ msgstr "לא זמין"
+
+#~ msgid "Not Delivered"
+#~ msgstr "לא נשלח"
+
+#~ msgid "Partially Delivered"
+#~ msgstr "נשלח חלקית"
+
+#~ msgid "Started"
+#~ msgstr "התחיל"
+
+#~ msgid "<i class=\"oi oi-fw\" data-icon=\"close\"/>Cancelled"
+#~ msgstr "<i class=\"oi oi-fw\" data-icon=\"close\"/> בוטל"
+
+#~ msgid "<i class=\"oi oi-fw\" data-icon=\"schedule\"/>Preparation"
+#~ msgstr "<i class=\"oi oi-fw\" data-icon=\"schedule\"/> הכנה"

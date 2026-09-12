@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:44+0000\n"
+"POT-Creation-Date: 2026-09-11 17:41+0000\n"
 "PO-Revision-Date: 2026-09-04 08:44+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-4/mrp/"
@@ -203,6 +203,11 @@ msgstr "'完成品 - %s' % object.name"
 #: model:ir.actions.report,print_report_name:mrp.action_report_mrp_mo_overview
 msgid "'MO Overview - %s' % object.display_name"
 msgstr "'製造オーダ概要 - %s' % object.display_name"
+
+#. module: mrp
+#: model:ir.actions.report,print_report_name:mrp.action_report_mrp_packages
+msgid "'Packages - %s' % (object.name)"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_production_order
@@ -461,6 +466,11 @@ msgid "<span class=\"o_stat_text\">Manufacturing</span>"
 msgstr "<span class=\"o_stat_text\">製造中</span>"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "<span class=\"o_stat_text\">Moves</span>"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "<span class=\"o_stat_text\">OEE</span>"
 msgstr "<span class=\"o_stat_text\">総合設備能力(OEE)</span>"
@@ -479,6 +489,11 @@ msgstr "<span class=\"o_stat_text\">工程<br/>パフォーマンス</span>"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Overview</span>"
 msgstr "<span class=\"o_stat_text\">概要</span>"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "<span class=\"o_stat_text\">Packages</span>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -719,6 +734,11 @@ msgstr ""
 "キットタイプ部品表のあるプロダクトは再オーダルールを持つことはできません。"
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_res_groups
+msgid "Access Groups"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_rule__action
 msgid "Action"
 msgstr "アクション"
@@ -918,11 +938,6 @@ msgstr "割当"
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
 msgid "Allocation Report"
 msgstr "割当レポート"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
-msgid "Allocation Report Labels"
-msgstr "割当レポートラベル"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__allow_workorder_dependencies
@@ -1245,6 +1260,7 @@ msgstr ""
 "す。"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__barcode
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__barcode
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
 msgid "Barcode"
@@ -2298,6 +2314,11 @@ msgid "Destination Location"
 msgstr "移動先ロケーション"
 
 #. module: mrp
+#: model:ir.actions.act_window,name:mrp.action_detailed_operations
+msgid "Detailed Operations"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Details"
 msgstr "詳細"
@@ -2369,11 +2390,14 @@ msgstr "表示"
 #: model:ir.model.fields,field_description:mrp.field_report_stock_report_stock_rule__display_name
 #: model:ir.model.fields,field_description:mrp.field_res_company__display_name
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:mrp.field_res_groups__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_allocation_report__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_forecasted_product_product__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_lot__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_move__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_move_line__display_name
+#: model:ir.model.fields,field_description:mrp.field_stock_package__display_name
+#: model:ir.model.fields,field_description:mrp.field_stock_package_history__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_picking__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_quant__display_name
@@ -2914,11 +2938,14 @@ msgstr "週あたりの時間"
 #: model:ir.model.fields,field_description:mrp.field_report_stock_report_stock_rule__id
 #: model:ir.model.fields,field_description:mrp.field_res_company__id
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__id
+#: model:ir.model.fields,field_description:mrp.field_res_groups__id
 #: model:ir.model.fields,field_description:mrp.field_stock_allocation_report__id
 #: model:ir.model.fields,field_description:mrp.field_stock_forecasted_product_product__id
 #: model:ir.model.fields,field_description:mrp.field_stock_lot__id
 #: model:ir.model.fields,field_description:mrp.field_stock_move__id
 #: model:ir.model.fields,field_description:mrp.field_stock_move_line__id
+#: model:ir.model.fields,field_description:mrp.field_stock_package__id
+#: model:ir.model.fields,field_description:mrp.field_stock_package_history__id
 #: model:ir.model.fields,field_description:mrp.field_stock_picking__id
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__id
 #: model:ir.model.fields,field_description:mrp.field_stock_quant__id
@@ -3376,6 +3403,11 @@ msgid "Link between products and their UoMs"
 msgstr "プロダクトと単位のリンク"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "List view of detailed operations"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__location_id
 msgid "Location"
 msgstr "ロケーション"
@@ -3646,6 +3678,7 @@ msgstr "製造オペレーションタイプ"
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__mo_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__production_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__production_id
+#: model:ir.model.fields,field_description:mrp.field_stock_package_history__production_id
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -4453,9 +4486,42 @@ msgid "PDF"
 msgstr "PDF"
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_stock_package
+msgid "Package"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
+msgid "Package Content"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__package_history_ids
+msgid "Package History"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
+msgid "Package Label"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "Package barcode"
 msgstr "パッケージバーコード"
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_production.py:0
+#: model:ir.actions.report,name:mrp.action_report_mrp_packages
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Packages"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__packages_count
+msgid "Packages Count"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__bom_id
@@ -4731,8 +4797,18 @@ msgstr "印刷"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
+msgid "Print label as:"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
 msgid "Print labels as:"
 msgstr "ラベルを以下として印刷:"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
+msgid "Print on \"Put in Pack\""
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
@@ -5335,6 +5411,11 @@ msgid "Reserved"
 msgstr "引当済"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Reset to Draft"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__resource_id
 msgid "Resource"
 msgstr "リソース"
@@ -5397,6 +5478,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__message_has_sms_error
 msgid "SMS Delivery error"
 msgstr "SMS配信エラー"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter__barcode
+msgid "Scan to select the workcenter in shopfloor."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split_line__date
@@ -5524,6 +5610,11 @@ msgstr "製造オーダを分割するには、初期需要よりも少ない数
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_replenishment_tree_view
 msgid "Set as Bill of Materials"
 msgstr "部品表として設定"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Set to In Progress"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_configuration
@@ -5828,6 +5919,11 @@ msgid "Stock Moves"
 msgstr "在庫移動"
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_stock_package_history
+msgid "Stock Package History"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model,name:mrp.model_stock_forecasted_product_product
 msgid "Stock Replenishment Report"
 msgstr "在庫補充レポート"
@@ -5970,6 +6066,11 @@ msgstr ""
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "The backorder %s has been created."
 msgstr "バックオーダ%sが作成されました。"
+
+#. module: mrp
+#: model:ir.model.constraint,message:mrp.constraint_mrp_workcenter_barcode_company_uniq
+msgid "The barcode for a workcenter must be unique per company."
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -6387,6 +6488,12 @@ msgid "To Produce"
 msgstr "生産待ち"
 
 #. module: mrp
+#. odoo-javascript
+#: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
+msgid "To Replenish"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__search_date_category__today
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Today"
@@ -6564,8 +6671,8 @@ msgid "Unable to split with more than the quantity to produce."
 msgstr "生産予定数量より大きい数を分割することはできません。"
 
 #. module: mrp
+#: model:ir.actions.server,name:mrp.action_production_order_unbuild
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__unbuild_id
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "Unbuild"
 msgstr "解体"
@@ -6782,6 +6889,11 @@ msgstr "計画を表示"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "Visible to all"
 msgstr "全員に表示"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_move_line__visual_lot_name
+msgid "Visual Pre-generated Lot"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__reservation_state__confirmed
@@ -7485,3 +7597,6 @@ msgstr "実所要時間"
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "split"
 msgstr "分割"
+
+#~ msgid "Allocation Report Labels"
+#~ msgstr "割当レポートラベル"

@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:44+0000\n"
+"POT-Creation-Date: 2026-09-11 17:44+0000\n"
 "PO-Revision-Date: 2026-08-31 14:44+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -70,13 +70,6 @@ msgstr ""
 "                                        menyalin login Anda ("
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
-msgid ""
-"<br/>\n"
-"                            If you want to modify it, update"
-msgstr ""
-
-#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_footer
 msgid ""
 "<i class=\"fw-light oi me-2\" data-icon=\"keyboard_arrow_left\"/>Discard"
@@ -90,19 +83,14 @@ msgid ""
 msgstr ""
 
 #. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.my_addresses
+msgid "<i class=\"oi me-1\" data-icon=\"add\"/>Add"
+msgstr ""
+
+#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
 msgid "<i class=\"oi me-1\" data-icon=\"east\"/>Back to edit mode"
 msgstr "<i class=\"oi me-1\" data-icon=\"east\"/>Kembali ke mode edit"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.my_addresses
-msgid "<i class=\"oi me-2\" data-icon=\"add\"/>Add Address"
-msgstr ""
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.profile_picture_card
-msgid "<i class=\"oi oi-filled\" data-icon=\"edit\" title=\"Edit\"/>"
-msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.side_content
@@ -153,11 +141,6 @@ msgstr ""
 "label=\"Next\" title=\"Berikutnya\"/>"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.profile_picture_card
-msgid "<i class=\"oi\" data-icon=\"delete\" title=\"Clear\"/>"
-msgstr ""
-
-#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid ""
 "<i title=\"Documentation\" class=\"oi oi-fw o_button_icon\" data-"
@@ -165,23 +148,6 @@ msgid ""
 msgstr ""
 "<i title=\"Dokumentasi\" class=\"oi oi-fw o_button_icon\" data-icon=\"info\"/"
 ">"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
-msgid ""
-"<small class=\"form-text text-muted\">\n"
-"                    Changing country is not allowed once document(s) have\n"
-"                    been issued for your account. Please contact us directly "
-"for this\n"
-"                    operation.\n"
-"                </small>"
-msgstr ""
-"<small class=\"form-text text-muted\">\n"
-"                    Mengubah negara tidak diizinkan setelah dokumen telah\n"
-"                    diterbitkan untuk akun Anda. Silakan hubungi kami "
-"langsung untuk operasi\n"
-"                    ini.\n"
-"                </small>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.pager
@@ -253,6 +219,12 @@ msgstr "Terima & Tanda-Tangani"
 #: model:ir.model.fields,field_description:portal.field_portal_share__access_warning
 msgid "Access warning"
 msgstr "Peringatan akses"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+msgid "Account Details"
+msgstr ""
 
 #. module: portal
 #. odoo-python
@@ -341,9 +313,13 @@ msgstr "Alamat Tagihan"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_management
-#: model_terms:ir.ui.view,arch_db:portal.my_addresses
 msgid "Billing address"
 msgstr "Alamat tagihan"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.my_addresses
+msgid "Billing addresses"
+msgstr ""
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_entry__category
@@ -361,6 +337,14 @@ msgstr "Ubah Sandi"
 msgid ""
 "Changing %(field_description)s is not allowed once document(s) have been "
 "issued for your account. Please contact us directly for this operation."
+msgstr ""
+
+#. module: portal
+#. odoo-python
+#: code:addons/portal/controllers/portal.py:0
+msgid ""
+"Changing country is not allowed once document(s) have been issued for your "
+"account. Please contact us directly for this operation."
 msgstr ""
 
 #. module: portal
@@ -385,8 +369,8 @@ msgid "City"
 msgstr "Kota"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.profile_picture_card
-msgid "Clear"
+#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
+msgid "City..."
 msgstr ""
 
 #. module: portal
@@ -411,8 +395,8 @@ msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
-msgid "Company Name"
-msgstr "Nama Perusahaan"
+msgid "Company"
+msgstr ""
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_entry__is_config_card
@@ -461,11 +445,6 @@ msgid "Contact"
 msgstr "Kontak"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
-msgid "Contact Details"
-msgstr "Informasi  Kontak"
-
-#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Contacts"
 msgstr "Kontak"
@@ -477,6 +456,7 @@ msgid "Could not save file %s"
 msgstr "Tidak dapat menyimpan file %s"
 
 #. module: portal
+#: model:ir.model,name:portal.model_res_country
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "Country"
 msgstr "Negara"
@@ -551,9 +531,13 @@ msgstr "Alamat Tujuan"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_management
-#: model_terms:ir.ui.view,arch_db:portal.my_addresses
 msgid "Delivery address"
 msgstr "Alamat pengiriman"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.my_addresses
+msgid "Delivery addresses"
+msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -610,6 +594,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__display_name
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__display_name
 #: model:ir.model.fields,field_description:portal.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:portal.field_res_country__display_name
 #: model:ir.model.fields,field_description:portal.field_res_partner__display_name
 #: model:ir.model.fields,field_description:portal.field_res_users_apikeys_description__display_name
 msgid "Display Name"
@@ -626,11 +611,6 @@ msgstr "Jatuh tempo dalam %s hari"
 #: code:addons/portal/static/src/interactions/sidebar.js:0
 msgid "Due today"
 msgstr "Jatuh tempo hari ini"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.profile_picture_card
-msgid "Edit"
-msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_card
@@ -727,6 +707,7 @@ msgstr "Beranda"
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__id
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__id
 #: model:ir.model.fields,field_description:portal.field_res_config_settings__id
+#: model:ir.model.fields,field_description:portal.field_res_country__id
 #: model:ir.model.fields,field_description:portal.field_res_partner__id
 #: model:ir.model.fields,field_description:portal.field_res_users_apikeys_description__id
 msgid "ID"
@@ -743,6 +724,11 @@ msgstr ""
 "Bila Anda memesan untuk orang eksternal, mohon lakukan pemesanan Anda "
 "melalui backend. Bila Anda ingin mengganti nama atau alamat email Anda, "
 "mohon lakukan di pengaturan akun atau hubungi administrator Anda."
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
+msgid "If you want to modify it, update"
+msgstr ""
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_entry__image
@@ -883,6 +869,11 @@ msgstr "Akun saya"
 #: model_terms:ir.ui.view,arch_db:portal.my_addresses
 msgid "My addresses"
 msgstr "Alamat-alamat saya"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
+msgid "Name"
+msgstr ""
 
 #. module: portal
 #. odoo-javascript
@@ -1365,7 +1356,7 @@ msgstr "Pengguna"
 
 #. module: portal
 #. odoo-python
-#: code:addons/portal/controllers/portal.py:0
+#: code:addons/portal/models/res_country.py:0
 msgid "VAT"
 msgstr "PPN"
 
@@ -1471,11 +1462,6 @@ msgstr "Kontak Anda"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
-msgid "Your name"
-msgstr "Nama anda"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "Zip Code"
 msgstr "Kode Pos"
 
@@ -1532,3 +1518,29 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "your account details"
 msgstr "detail akun Anda"
+
+#~ msgid ""
+#~ "<small class=\"form-text text-muted\">\n"
+#~ "                    Changing country is not allowed once document(s) "
+#~ "have\n"
+#~ "                    been issued for your account. Please contact us "
+#~ "directly for this\n"
+#~ "                    operation.\n"
+#~ "                </small>"
+#~ msgstr ""
+#~ "<small class=\"form-text text-muted\">\n"
+#~ "                    Mengubah negara tidak diizinkan setelah dokumen "
+#~ "telah\n"
+#~ "                    diterbitkan untuk akun Anda. Silakan hubungi kami "
+#~ "langsung untuk operasi\n"
+#~ "                    ini.\n"
+#~ "                </small>"
+
+#~ msgid "Company Name"
+#~ msgstr "Nama Perusahaan"
+
+#~ msgid "Contact Details"
+#~ msgstr "Informasi  Kontak"
+
+#~ msgid "Your name"
+#~ msgstr "Nama anda"

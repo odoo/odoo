@@ -38,10 +38,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:45+0000\n"
-"PO-Revision-Date: 2026-09-03 07:44+0000\n"
+"POT-Creation-Date: 2026-09-11 17:43+0000\n"
+"PO-Revision-Date: 2026-09-09 13:59+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
-"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-4/"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-master/"
 "product/fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
@@ -90,20 +90,6 @@ msgstr "# Tuotetta"
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid ""
-"%(base)s with a %(discount)s %% %(discount_type)s and %(surcharge)s extra "
-"fee\n"
-"Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %"
-"(total_amount)s"
-msgstr ""
-"%(base)s, joka sisältää %(discount)s %% %(discount_type)s ja %(surcharge)s "
-"lisämaksun\n"
-"Esimerkki: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %"
-"(total_amount)s"
-
-#. module: product
-#. odoo-python
-#: code:addons/product/models/product_pricelist_item.py:0
-msgid ""
 "%(item_name)s: end date (%(end_date)s) should be after start date (%"
 "(start_date)s)"
 msgstr ""
@@ -115,18 +101,6 @@ msgstr ""
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% %(discount_type)s on %(base)s %(extra)s"
 msgstr "%(percentage)s %% %(discount_type)s perusteena %(base)s %(extra)s"
-
-#. module: product
-#. odoo-python
-#: code:addons/product/models/product_pricelist_item.py:0
-msgid "%(percentage)s %% discount on %(pricelist)s"
-msgstr "%(percentage)s %% alennus %(pricelist)s"
-
-#. module: product
-#. odoo-python
-#: code:addons/product/models/product_pricelist_item.py:0
-msgid "%(percentage)s %% discount on sales price"
-msgstr "%(percentage)s %% alennus myyntihinnasta"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_label_contour_marks
@@ -178,11 +152,8 @@ msgstr "- %(amount)s alennus"
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
-msgid ""
-"- Barcode \"%(barcode)s\" already assigned to product(s): %(product_list)s"
+msgid "- Barcode \"%(barcode)s\" already assigned to %(product_list)s"
 msgstr ""
-"- Viivakoodi \"%(barcode)s\" on jo määritetty tuotteelle (tuotteille): %"
-"(product_list)s"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__create_variant
@@ -282,11 +253,6 @@ msgstr ""
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "<b>Tip: want to round at 9.99?</b>"
-msgstr "<b>Vihje: haluat pyöristää 9,99:ään?</b>"
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid ""
 "<i class=\"oi mx-2 oe_edit_only\" data-icon=\"east\" aria-label=\"Arrow "
 "icon\" title=\"Arrow\"/>"
@@ -307,6 +273,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
 msgid "<span class=\"o_stat_text\"> Products</span>"
 msgstr "<span class=\"o_stat_text\"> Tuotteet</span>"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
+msgid "<span class=\"o_stat_text\">Daily Rates</span>"
+msgstr ""
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.uom_uom_view_form
@@ -332,19 +303,14 @@ msgid "<span class=\"text-muted\">On Hand</span>"
 msgstr ""
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
-msgid "<span> - </span>"
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid "<span class=\"text-nowrap\">% on</span>"
 msgstr ""
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "<span>%</span>"
-msgstr "<span>%</span>"
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "<span>on</span>"
-msgstr "<span>-></span>"
+#: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
+msgid "<span> - </span>"
+msgstr ""
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -442,6 +408,11 @@ msgid "A storable product is a product for which you manage stock."
 msgstr ""
 
 #. module: product
+#: model:ir.model,name:product.model_res_groups
+msgid "Access Groups"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__access_token
 msgid "Access Token"
 msgstr "Pääsytunniste"
@@ -522,6 +493,7 @@ msgstr "Toimenpiteen ikoni"
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/order_line/order_line.xml:0
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Add"
 msgstr "Lisää"
 
@@ -590,12 +562,6 @@ msgstr "Adidas"
 #: model_terms:ir.ui.view,arch_db:product.product_document_search
 msgid "All"
 msgstr "Kaikki"
-
-#. module: product
-#. odoo-python
-#: code:addons/product/models/product_pricelist_item.py:0
-msgid "All Categories"
-msgstr "Kaikki ryhmät"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
@@ -679,14 +645,19 @@ msgid "Applied On"
 msgstr "Pätee"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_pricelist_item__applied_on
-msgid "Apply On"
-msgstr "Vaikutus"
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_calendar
+msgid "Applied on"
+msgstr ""
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "Apply To"
-msgstr "Ota käyttöön"
+msgid "Apply"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__applied_on
+msgid "Apply On"
+msgstr "Vaikutus"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
@@ -862,6 +833,7 @@ msgstr ""
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
+#: code:addons/product/models/product_template.py:0
 msgid ""
 "Barcode(s) already assigned:\n"
 "\n"
@@ -920,11 +892,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__base
 msgid "Based on"
 msgstr "Perustuen"
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "Based price"
-msgstr "Perustuva hinta"
 
 #. module: product
 #: model:res.groups,name:product.group_product_pricelist
@@ -1012,7 +979,6 @@ msgstr "Kategoria(t)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__categ_id
-#: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__display_applied_on__2_product_category
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Category"
@@ -1414,6 +1380,13 @@ msgid "Cyan"
 msgstr "Syaani"
 
 #. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist.py:0
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_calendar
+msgid "Daily Rates"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__db_datas
 msgid "Database Data"
 msgstr "Tietokannan data"
@@ -1541,7 +1514,7 @@ msgid "Determine the display order"
 msgstr "Aseta näyttöjärjestys"
 
 #. module: product
-#: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__compute_price__percentage
+#: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__compute_price__discount
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Discount"
 msgstr "Alennus"
@@ -1555,11 +1528,6 @@ msgstr "Alennus (%)"
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__price_discounted
 msgid "Discounted Price"
 msgstr "Alennushinta"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_pricelist_item__display_applied_on
-msgid "Display Applied On"
-msgstr "Näytä mihin kohdistuu"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_ir_attachment__display_name
@@ -1595,6 +1563,7 @@ msgstr "Näytä mihin kohdistuu"
 #: model:ir.model.fields,field_description:product.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:product.field_res_country_group__display_name
 #: model:ir.model.fields,field_description:product.field_res_currency__display_name
+#: model:ir.model.fields,field_description:product.field_res_groups__display_name
 #: model:ir.model.fields,field_description:product.field_res_partner__display_name
 #: model:ir.model.fields,field_description:product.field_uom_uom__display_name
 #: model:ir.model.fields,field_description:product.field_update_product_attribute_value__display_name
@@ -1744,6 +1713,11 @@ msgid "Error exporting file. Please try again."
 msgstr "Virhe tiedoston viennissä. Yritä uudelleen."
 
 #. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid "Example:"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__excluded_value_ids
 msgid "Exclude For"
 msgstr ""
@@ -1891,8 +1865,6 @@ msgstr ""
 "Muussa tapauksessa tämä sisältää kaikki tyypin 'sisäinen' varastopaikat."
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_product_tree_view
-#: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_view_list_qty
 msgid "Forecasted"
 msgstr ""
@@ -1907,11 +1879,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_label_layout__print_format
 msgid "Format"
 msgstr "Muotoilu"
-
-#. module: product
-#: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__compute_price__formula
-msgid "Formula"
-msgstr "Kaava"
 
 #. module: product
 #: model:product.template,name:product.consu_delivery_03_product_template
@@ -2072,6 +2039,16 @@ msgid "Hotel Accommodation"
 msgstr "Hotellimajoitus"
 
 #. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist_item__compute_price
+msgid ""
+"How the price is derived from the base price.\n"
+"Discount: a percentage taken off it.\n"
+"Surcharge: a percentage added on top of it.\n"
+"Fixed Price: a set amount, ignoring the base price entirely.\n"
+"Activate the discount settings to show the discount to the customer."
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_ir_attachment__id
 #: model:ir.model.fields,field_description:product.field_product_attribute__id
 #: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__id
@@ -2105,6 +2082,7 @@ msgstr "Hotellimajoitus"
 #: model:ir.model.fields,field_description:product.field_res_config_settings__id
 #: model:ir.model.fields,field_description:product.field_res_country_group__id
 #: model:ir.model.fields,field_description:product.field_res_currency__id
+#: model:ir.model.fields,field_description:product.field_res_groups__id
 #: model:ir.model.fields,field_description:product.field_res_partner__id
 #: model:ir.model.fields,field_description:product.field_uom_uom__id
 #: model:ir.model.fields,field_description:product.field_update_product_attribute_value__id
@@ -2489,6 +2467,11 @@ msgid "Lines"
 msgstr "Rivit"
 
 #. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_document_kanban
+msgid "Link"
+msgstr ""
+
+#. module: product
 #: model:ir.model,name:product.model_product_uom
 msgid "Link between products and their UoMs"
 msgstr "Yhteys tuotteiden ja niiden mittayksiköiden (UoM) välillä"
@@ -2542,12 +2525,6 @@ msgstr "Hallitse tuotevariantteja"
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Margins"
 msgstr "Katteet"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_markup
-#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "Markup"
-msgstr "Merkintä"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_maroon
@@ -2614,11 +2591,6 @@ msgstr "Mime-tyyppi"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "Min Qty"
-msgstr "Minimimäärä"
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Min. Margin"
 msgstr "Minimikate"
 
@@ -2636,6 +2608,11 @@ msgstr "Vähimmäismäärä"
 #: model:product.template,description_sale:product.product_product_8_product_template
 msgid "Minimalist wooden desk for executive use"
 msgstr "Minimalistinen puinen työpöytä johtotason käyttöön"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid "Minimum Quantity"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_update_product_attribute_value__mode
@@ -3054,11 +3031,6 @@ msgid "Pepsi"
 msgstr "Pepsi"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_pricelist_item__percent_price
-msgid "Percentage Price"
-msgstr "Prosenttiosuus"
-
-#. module: product
 #: model:product.attribute.value,name:product.pav_brand_philips
 msgid "Philips"
 msgstr "Philips"
@@ -3072,6 +3044,11 @@ msgstr "Pillerit"
 #: model:product.attribute.value,name:product.pav_color_pink
 msgid "Pink"
 msgstr "Vaaleanpunainen"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__is_plain_discount
+msgid "Plain Discount"
+msgstr ""
 
 #. module: product
 #. odoo-javascript
@@ -3133,6 +3110,7 @@ msgstr ""
 "asennosta seisoma-asentoon sekunneissa."
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__price
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view_from_product
 msgid "Price"
 msgstr "Hinta"
@@ -3160,11 +3138,6 @@ msgid "Price Rules"
 msgstr "Hinnoittelusäännöt"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "Price Type"
-msgstr "Hintatyyppi"
-
-#. module: product
 #: model:ir.model.fields,help:product.field_product_product__list_price
 #: model:ir.model.fields,help:product.field_product_template__list_price
 msgid "Price at which the product is sold to customers."
@@ -3187,7 +3160,6 @@ msgstr "Hinnasto"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__applied_on
-#: model:ir.model.fields,help:product.field_product_pricelist_item__display_applied_on
 msgid "Pricelist Item applicable on selected option"
 msgstr "Hinnasto Valittuun vaihtoehtoon sovellettava vaihtoehto"
 
@@ -3274,7 +3246,6 @@ msgstr "Yksityinen koppi työpöydällä ja tuolilla"
 #: model:ir.model.fields,field_description:product.field_product_template__product_variant_id
 #: model:ir.model.fields,field_description:product.field_product_uom__product_id
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__applied_on__1_product
-#: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__display_applied_on__1_product
 #: model_terms:ir.ui.view,arch_db:product.product_kanban_view
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
 #: model_terms:ir.ui.view,arch_db:product.product_search_form_view
@@ -4101,6 +4072,13 @@ msgid "Supplier Pricelist"
 msgstr "Toimittajan hinnasto"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_markup
+#: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__compute_price__markup
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid "Surcharge"
+msgstr ""
+
+#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_tag_form_view
 msgid "Tag"
 msgstr "Tunniste"
@@ -4426,16 +4404,8 @@ msgid "Today Activities"
 msgstr "Tämän päivän toimenpiteet"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_product_tree_view
-#: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_view_list_qty
 msgid "Total Forecasted"
-msgstr ""
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_product_tree_view
-#: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
-msgid "Total Free To Use"
 msgstr ""
 
 #. module: product
@@ -4547,7 +4517,6 @@ msgid "Unit Name"
 msgstr "Yksikön nimi"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_pricelist_item__price
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__price
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -4628,15 +4597,6 @@ msgstr "Lisämyynti: upsell & cross-sell"
 #: model:ir.model.fields,field_description:product.field_product_document__url
 msgid "Url"
 msgstr "URL"
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_pricelist_item__compute_price
-msgid ""
-"Use the discount rules and activate the discount settings in order to show "
-"discount to customer."
-msgstr ""
-"Käytä alennussääntöjä ja aktivoi alennusasetukset, jotta voit näyttää "
-"alennuksen asiakkaalle."
 
 #. module: product
 #. odoo-python
@@ -4938,6 +4898,11 @@ msgid "What to expect ?"
 msgstr "Mitä odottaa?"
 
 #. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist_item__is_plain_discount
+msgid "Whether the rule lowers the price by exactly its discount percentage."
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_tag__visible_to_customers
 msgid "Whether the tag is displayed to customers."
 msgstr "Näkyykö tunniste asiakkaille."
@@ -5008,17 +4973,6 @@ msgid ""
 msgstr ""
 "Poistat hinnasto-ominaisuuden käytöstä. Jokainen aktiivinen hinnasto "
 "arkistoidaan."
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_pricelist_item__percent_price
-#: model:ir.model.fields,help:product.field_product_pricelist_item__price_discount
-msgid "You can apply a mark-up by setting a negative discount."
-msgstr "Voit soveltaa lisähintaa asettamalla negatiivisen alennuksen."
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_pricelist_item__price_markup
-msgid "You can apply a mark-up on the cost"
-msgstr "Voit soveltaa kustannuksiin lisähintaa"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
@@ -5413,12 +5367,6 @@ msgid "each variant"
 msgstr ""
 
 #. module: product
-#. odoo-python
-#: code:addons/product/models/product_pricelist_item.py:0
-msgid "markup"
-msgstr "kate"
-
-#. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "pdf"
@@ -5444,9 +5392,22 @@ msgid "product cost"
 msgstr "tuotteen hinta"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "round off to 10.00 and set an extra at -0.01"
-msgstr "pyöristetään 10.00:aan ja asetetaan ylimääräinen -0.01:een"
+#. odoo-python
+#: code:addons/product/models/product_product.py:0
+msgid "product: %(name)s"
+msgstr ""
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_product.py:0
+msgid "product: %(product_name)s"
+msgstr ""
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_product.py:0
+msgid "product: %(product_name)s with variant: %(variant_name)s"
+msgstr ""
 
 #. module: product
 #. odoo-python
@@ -5454,6 +5415,12 @@ msgstr "pyöristetään 10.00:aan ja asetetaan ylimääräinen -0.01:een"
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "sales price"
 msgstr "myyntihinta"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+msgid "surcharge"
+msgstr ""
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -5465,3 +5432,81 @@ msgstr "->"
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "xlsx"
 msgstr "xlsx"
+
+#~ msgid ""
+#~ "%(base)s with a %(discount)s %% %(discount_type)s and %(surcharge)s extra "
+#~ "fee\n"
+#~ "Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %"
+#~ "(total_amount)s"
+#~ msgstr ""
+#~ "%(base)s, joka sisältää %(discount)s %% %(discount_type)s ja %"
+#~ "(surcharge)s lisämaksun\n"
+#~ "Esimerkki: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %"
+#~ "(total_amount)s"
+
+#~ msgid "%(percentage)s %% discount on %(pricelist)s"
+#~ msgstr "%(percentage)s %% alennus %(pricelist)s"
+
+#~ msgid "%(percentage)s %% discount on sales price"
+#~ msgstr "%(percentage)s %% alennus myyntihinnasta"
+
+#~ msgid ""
+#~ "- Barcode \"%(barcode)s\" already assigned to product(s): %(product_list)s"
+#~ msgstr ""
+#~ "- Viivakoodi \"%(barcode)s\" on jo määritetty tuotteelle (tuotteille): %"
+#~ "(product_list)s"
+
+#~ msgid "<b>Tip: want to round at 9.99?</b>"
+#~ msgstr "<b>Vihje: haluat pyöristää 9,99:ään?</b>"
+
+#~ msgid "<span>%</span>"
+#~ msgstr "<span>%</span>"
+
+#~ msgid "<span>on</span>"
+#~ msgstr "<span>-></span>"
+
+#~ msgid "All Categories"
+#~ msgstr "Kaikki ryhmät"
+
+#~ msgid "Apply To"
+#~ msgstr "Ota käyttöön"
+
+#~ msgid "Based price"
+#~ msgstr "Perustuva hinta"
+
+#~ msgid "Display Applied On"
+#~ msgstr "Näytä mihin kohdistuu"
+
+#~ msgid "Formula"
+#~ msgstr "Kaava"
+
+#~ msgid "Markup"
+#~ msgstr "Merkintä"
+
+#~ msgid "Min Qty"
+#~ msgstr "Minimimäärä"
+
+#~ msgid "Percentage Price"
+#~ msgstr "Prosenttiosuus"
+
+#~ msgid "Price Type"
+#~ msgstr "Hintatyyppi"
+
+#~ msgid ""
+#~ "Use the discount rules and activate the discount settings in order to "
+#~ "show discount to customer."
+#~ msgstr ""
+#~ "Käytä alennussääntöjä ja aktivoi alennusasetukset, jotta voit näyttää "
+#~ "alennuksen asiakkaalle."
+
+#~ msgid "You can apply a mark-up by setting a negative discount."
+#~ msgstr "Voit soveltaa lisähintaa asettamalla negatiivisen alennuksen."
+
+#~ msgid "You can apply a mark-up on the cost"
+#~ msgstr "Voit soveltaa kustannuksiin lisähintaa"
+
+#~ msgid "markup"
+#~ msgstr "kate"
+
+#~ msgid "round off to 10.00 and set an extra at -0.01"
+#~ msgstr "pyöristetään 10.00:aan ja asetetaan ylimääräinen -0.01:een"

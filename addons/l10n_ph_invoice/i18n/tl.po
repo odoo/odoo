@@ -6,20 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.5a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 18:22+0000\n"
+"POT-Creation-Date: 2026-09-11 18:14+0000\n"
 "PO-Revision-Date: 2026-08-28 18:22+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
-
-#. module: l10n_ph_invoice
-#. odoo-python
-#: code:addons/l10n_ph_invoice/models/l10n_ph_discount_privilege.py:0
-msgid "%s (copy)"
-msgstr ""
 
 #. module: l10n_ph_invoice
 #: model:ir.model.constraint,message:l10n_ph_invoice.constraint_l10n_ph_discount_privilege_l10n_ph_discount_privilege__933ee0d6
@@ -66,7 +61,7 @@ msgstr ""
 #. module: l10n_ph_invoice
 #: model_terms:ir.ui.view,arch_db:l10n_ph_invoice.view_l10n_ph_discount_privilege_wizard_form
 msgid ""
-"Are you sure you want to remove all discount privileges from this invoice?"
+"Are you sure you want to remove all discount privileges from this document?"
 msgstr ""
 
 #. module: l10n_ph_invoice
@@ -253,12 +248,6 @@ msgid "Invoice Line"
 msgstr ""
 
 #. module: l10n_ph_invoice
-#: model:ir.model.fields,field_description:l10n_ph_invoice.field_l10n_ph_discount_privilege_wizard__line_ids
-#: model_terms:ir.ui.view,arch_db:l10n_ph_invoice.view_l10n_ph_discount_privilege_wizard_form
-msgid "Invoice Lines"
-msgstr ""
-
-#. module: l10n_ph_invoice
 #: model:ir.model,name:l10n_ph_invoice.model_account_move
 msgid "Journal Entry"
 msgstr ""
@@ -294,8 +283,20 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: l10n_ph_invoice
+#: model:ir.model.fields,field_description:l10n_ph_invoice.field_l10n_ph_discount_privilege_wizard__line_ids
+#: model_terms:ir.ui.view,arch_db:l10n_ph_invoice.view_l10n_ph_discount_privilege_wizard_form
+msgid "Lines"
+msgstr ""
+
+#. module: l10n_ph_invoice
 #: model:ir.model.fields,field_description:l10n_ph_invoice.field_l10n_ph_discount_privilege_wizard__move_id
 msgid "Move"
+msgstr ""
+
+#. module: l10n_ph_invoice
+#. odoo-python
+#: code:addons/l10n_ph_invoice/wizard/l10n_ph_discount_privilege_wizard.py:0
+msgid "Only one of %(fields)s can be set on the same wizard."
 msgstr ""
 
 #. module: l10n_ph_invoice
@@ -339,8 +340,7 @@ msgstr ""
 #. module: l10n_ph_invoice
 #: model_terms:ir.ui.view,arch_db:l10n_ph_invoice.view_l10n_ph_discount_privilege_wizard_form
 msgid ""
-"Please make sure that selected products are eligible for discount "
-"privileges."
+"Please make sure that selected products are eligible for discount privileges."
 msgstr ""
 
 #. module: l10n_ph_invoice
@@ -442,8 +442,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_ph_invoice/wizard/l10n_ph_discount_privilege_wizard.py:0
 msgid ""
-"The selected discount privilege does not apply to any line of this invoice. "
-"Please check the product categories set on the privilege."
+"The selected discount privilege does not apply to any line of this document. "
+"Please check the product categories set on the privilege and the taxes "
+"applied to the lines."
 msgstr ""
 
 #. module: l10n_ph_invoice
@@ -461,4 +462,11 @@ msgstr ""
 #. module: l10n_ph_invoice
 #: model:ir.model.fields,field_description:l10n_ph_invoice.field_l10n_ph_discount_privilege_wizard_line__wizard_id
 msgid "Wizard"
+msgstr ""
+
+#. module: l10n_ph_invoice
+#. odoo-python
+#: code:addons/l10n_ph_invoice/wizard/l10n_ph_discount_privilege_wizard.py:0
+msgid ""
+"You must set one of the following fields to use this wizard: %(fields)s."
 msgstr ""

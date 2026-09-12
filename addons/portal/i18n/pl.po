@@ -30,7 +30,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:44+0000\n"
+"POT-Creation-Date: 2026-09-11 17:44+0000\n"
 "PO-Revision-Date: 2026-08-31 14:44+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-s19-4/portal/"
@@ -90,13 +90,6 @@ msgstr ""
 "skopiowanie swojego loginu ("
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
-msgid ""
-"<br/>\n"
-"                            If you want to modify it, update"
-msgstr ""
-
-#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_footer
 msgid ""
 "<i class=\"fw-light oi me-2\" data-icon=\"keyboard_arrow_left\"/>Discard"
@@ -111,19 +104,14 @@ msgid ""
 msgstr ""
 
 #. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.my_addresses
+msgid "<i class=\"oi me-1\" data-icon=\"add\"/>Add"
+msgstr ""
+
+#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
 msgid "<i class=\"oi me-1\" data-icon=\"east\"/>Back to edit mode"
 msgstr "<i class=\"oi me-1\" data-icon=\"east\"/>Powrót do trybu edycji"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.my_addresses
-msgid "<i class=\"oi me-2\" data-icon=\"add\"/>Add Address"
-msgstr "<i class=\"oi me-2\" data-icon=\"add\"/>Dodaj adres"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.profile_picture_card
-msgid "<i class=\"oi oi-filled\" data-icon=\"edit\" title=\"Edit\"/>"
-msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.side_content
@@ -176,11 +164,6 @@ msgstr ""
 "label=\"Dalej\" title=\"Dalej\"/>"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.profile_picture_card
-msgid "<i class=\"oi\" data-icon=\"delete\" title=\"Clear\"/>"
-msgstr ""
-
-#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid ""
 "<i title=\"Documentation\" class=\"oi oi-fw o_button_icon\" data-"
@@ -188,23 +171,6 @@ msgid ""
 msgstr ""
 "<i title=\"Dokumentacja\" class=\"oi oi-fw o_button_icon\" data-"
 "icon=\"info\"/>"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
-msgid ""
-"<small class=\"form-text text-muted\">\n"
-"                    Changing country is not allowed once document(s) have\n"
-"                    been issued for your account. Please contact us directly "
-"for this\n"
-"                    operation.\n"
-"                </small>"
-msgstr ""
-"<small class=\"form-text text-muted\">\n"
-"                    Zmiana kraju nie jest dozwolona po wystawieniu "
-"dokumentów\n"
-"                    dla Twojego konta. W sprawie przeprowadzenia tej "
-"operacji prosimy o bezpośredni kontakt z nami.\n"
-"               </small>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.pager
@@ -276,6 +242,12 @@ msgstr "Zaakceptuj i podpisz"
 #: model:ir.model.fields,field_description:portal.field_portal_share__access_warning
 msgid "Access warning"
 msgstr "Ostrzeżenie o dostępie"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+msgid "Account Details"
+msgstr ""
 
 #. module: portal
 #. odoo-python
@@ -364,9 +336,13 @@ msgstr "Adres rachunku"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_management
-#: model_terms:ir.ui.view,arch_db:portal.my_addresses
 msgid "Billing address"
 msgstr "Adres rozliczeniowy"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.my_addresses
+msgid "Billing addresses"
+msgstr ""
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_entry__category
@@ -384,6 +360,14 @@ msgstr "Zmień hasło"
 msgid ""
 "Changing %(field_description)s is not allowed once document(s) have been "
 "issued for your account. Please contact us directly for this operation."
+msgstr ""
+
+#. module: portal
+#. odoo-python
+#: code:addons/portal/controllers/portal.py:0
+msgid ""
+"Changing country is not allowed once document(s) have been issued for your "
+"account. Please contact us directly for this operation."
 msgstr ""
 
 #. module: portal
@@ -408,8 +392,8 @@ msgid "City"
 msgstr "Miasto"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.profile_picture_card
-msgid "Clear"
+#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
+msgid "City..."
 msgstr ""
 
 #. module: portal
@@ -434,8 +418,8 @@ msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
-msgid "Company Name"
-msgstr "Nazwa firmy"
+msgid "Company"
+msgstr ""
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_entry__is_config_card
@@ -484,11 +468,6 @@ msgid "Contact"
 msgstr "Kontakt"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
-msgid "Contact Details"
-msgstr "Szczegóły kontaktu"
-
-#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Contacts"
 msgstr "Kontakty"
@@ -500,6 +479,7 @@ msgid "Could not save file %s"
 msgstr "Nie można zapisać pliku %s"
 
 #. module: portal
+#: model:ir.model,name:portal.model_res_country
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "Country"
 msgstr "Kraj"
@@ -574,9 +554,13 @@ msgstr "Adres dostawy"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_management
-#: model_terms:ir.ui.view,arch_db:portal.my_addresses
 msgid "Delivery address"
 msgstr "Adres dostawy"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.my_addresses
+msgid "Delivery addresses"
+msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -631,6 +615,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__display_name
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__display_name
 #: model:ir.model.fields,field_description:portal.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:portal.field_res_country__display_name
 #: model:ir.model.fields,field_description:portal.field_res_partner__display_name
 #: model:ir.model.fields,field_description:portal.field_res_users_apikeys_description__display_name
 msgid "Display Name"
@@ -647,11 +632,6 @@ msgstr "Za %s dni"
 #: code:addons/portal/static/src/interactions/sidebar.js:0
 msgid "Due today"
 msgstr "Do dziś"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.profile_picture_card
-msgid "Edit"
-msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_card
@@ -748,6 +728,7 @@ msgstr "Strona główna"
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__id
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__id
 #: model:ir.model.fields,field_description:portal.field_res_config_settings__id
+#: model:ir.model.fields,field_description:portal.field_res_country__id
 #: model:ir.model.fields,field_description:portal.field_res_partner__id
 #: model:ir.model.fields,field_description:portal.field_res_users_apikeys_description__id
 msgid "ID"
@@ -765,6 +746,11 @@ msgstr ""
 "zamówienia poprzez backend. Jeśli chcesz zmienić swoje imię i nazwisko lub "
 "adres e-mail, zrób to w ustawieniach konta lub skontaktuj się z "
 "administratorem."
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
+msgid "If you want to modify it, update"
+msgstr ""
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_entry__image
@@ -905,6 +891,11 @@ msgstr "Moje konto"
 #: model_terms:ir.ui.view,arch_db:portal.my_addresses
 msgid "My addresses"
 msgstr "Moje adresy"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
+msgid "Name"
+msgstr ""
 
 #. module: portal
 #. odoo-javascript
@@ -1393,7 +1384,7 @@ msgstr "Użytkownicy"
 
 #. module: portal
 #. odoo-python
-#: code:addons/portal/controllers/portal.py:0
+#: code:addons/portal/models/res_country.py:0
 msgid "VAT"
 msgstr "NIP"
 
@@ -1500,11 +1491,6 @@ msgstr "Twój kontakt"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
-msgid "Your name"
-msgstr "Twoja nazwa"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "Zip Code"
 msgstr "Kod pocztowy"
 
@@ -1561,3 +1547,31 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "your account details"
 msgstr "szczegóły Twojego konta"
+
+#~ msgid "<i class=\"oi me-2\" data-icon=\"add\"/>Add Address"
+#~ msgstr "<i class=\"oi me-2\" data-icon=\"add\"/>Dodaj adres"
+
+#~ msgid ""
+#~ "<small class=\"form-text text-muted\">\n"
+#~ "                    Changing country is not allowed once document(s) "
+#~ "have\n"
+#~ "                    been issued for your account. Please contact us "
+#~ "directly for this\n"
+#~ "                    operation.\n"
+#~ "                </small>"
+#~ msgstr ""
+#~ "<small class=\"form-text text-muted\">\n"
+#~ "                    Zmiana kraju nie jest dozwolona po wystawieniu "
+#~ "dokumentów\n"
+#~ "                    dla Twojego konta. W sprawie przeprowadzenia tej "
+#~ "operacji prosimy o bezpośredni kontakt z nami.\n"
+#~ "               </small>"
+
+#~ msgid "Company Name"
+#~ msgstr "Nazwa firmy"
+
+#~ msgid "Contact Details"
+#~ msgstr "Szczegóły kontaktu"
+
+#~ msgid "Your name"
+#~ msgstr "Twoja nazwa"

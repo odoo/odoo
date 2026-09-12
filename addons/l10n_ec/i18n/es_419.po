@@ -8,11 +8,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.5alpha1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 18:19+0000\n"
-"PO-Revision-Date: 2026-08-31 16:53+0000\n"
+"POT-Creation-Date: 2026-09-11 18:11+0000\n"
+"PO-Revision-Date: 2026-09-10 21:07+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
-"odoo-s19-4/l10n_ec/es_419/>\n"
+"odoo-master/l10n_ec/es_419/>\n"
 "Language: es_419\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,6 +58,41 @@ msgid ""
 "* Ecuador banks\n"
 "* Partners: Consumidor Final, SRI, IESS, and also basic VAT validation\n"
 msgstr ""
+"\n"
+"Funcional\n"
+"----------\n"
+"\n"
+"Este módulo agrega funciones contables para la localización ecuatoriana que "
+"representan los requisitos mínimos para operar un negocio en Ecuador de "
+"conformidad con los organismos reguladores locales, como la autoridad "
+"tributaria ecuatoriana (SRI) y la Superintendencia de Compañías.\n"
+"\n"
+"Sigue los siguientes pasos de configuración:\n"
+"1. Ve a tu empresa y configura tu país como Ecuador.\n"
+"2. Instala el módulo de Facturación o Contabilidad, todo se gestionará en "
+"automático.\n"
+"\n"
+"Detalles importantes:\n"
+"* El plan de cuentas ecuatoriano se instalará de forma automática y está "
+"basado en el ejemplo proporcionado por la Superintendencia de Compañías.\n"
+"* También se instalará la lista de impuestos (las retenciones están "
+"incluidas) y puedes desactivar los que tu empresa no utilice.\n"
+"* También se instalará la posición fiscal, los tipos de documento, la lista "
+"de bancos locales, la lista de estados locales, etc.\n"
+"\n"
+"Técnico\n"
+"---------\n"
+"Datos maestros:\n"
+"* Plan de cuentas basado en la recomendación de la Superintendencia de "
+"Compañías\n"
+"* Impuestos ecuatorianos, etiquetas fiscales y grupos fiscales ecuatorianos\n"
+"* Posiciones fiscales ecuatorianas\n"
+"* Tipos de documento (hay alrededor de 41 tipos de documentos de compra en "
+"Ecuador)\n"
+"* Tipos de identificación\n"
+"* Bancos ecuatorianos\n"
+"* Contactos: Consumidor Final, SRI, IESS y también validación básica del "
+"IVA\n"
 
 #. module: l10n_ec
 #: model:ir.model,name:l10n_ec.model_account_chart_template
@@ -105,6 +140,12 @@ msgstr "Base imponible(3140)"
 #: model:ir.model.fields,field_description:l10n_ec.field_l10n_latam_document_type__l10n_ec_check_format
 msgid "Check Number Format EC"
 msgstr "Formato del número de cheque EC"
+
+#. module: l10n_ec
+#. odoo-python
+#: code:addons/l10n_ec/tools/partner_identifiers.py:0
+msgid "Citizenship card or Identity Card."
+msgstr ""
 
 #. module: l10n_ec
 #: model:ir.model.fields,field_description:l10n_ec.field_l10n_ec_sri_payment__code
@@ -184,6 +225,12 @@ msgstr "Creado el"
 #: model:l10n_ec.sri.payment,name:l10n_ec.P19
 msgid "Credit Card"
 msgstr "Tarjeta de Crédito"
+
+#. module: l10n_ec
+#. odoo-python
+#: code:addons/l10n_ec/tools/partner_identifiers.py:0
+msgid "Cédula"
+msgstr ""
 
 #. module: l10n_ec
 #: model:l10n_ec.sri.payment,name:l10n_ec.P16
@@ -332,12 +379,6 @@ msgid "ID"
 msgstr "ID"
 
 #. module: l10n_ec
-#. odoo-python
-#: code:addons/l10n_ec/models/res_partner.py:0
-msgid "If your identification type is %s, it must be 10 digits"
-msgstr "Si su tipo de identificación es %s, debe tener 10 dígitos"
-
-#. module: l10n_ec
 #: model:ir.model.fields,field_description:l10n_ec.field_l10n_latam_document_type__internal_type
 msgid "Internal Type"
 msgstr "Tipo interno"
@@ -436,11 +477,6 @@ msgid "Purchase Liquidation"
 msgstr "Liquidación de compras"
 
 #. module: l10n_ec
-#: model:l10n_latam.identification.type,name:l10n_ec.ec_ruc
-msgid "RUC"
-msgstr "RUC"
-
-#. module: l10n_ec
 #: model:ir.model.fields,field_description:l10n_ec.field_account_journal__l10n_ec_require_emission
 msgid "Require Emission"
 msgstr "Emisión obligatoria"
@@ -459,11 +495,6 @@ msgstr "Secuencia"
 #: model:account.report.line,name:l10n_ec.tax_report_line_parent_line_report_156
 msgid "Servicios profesionales prestados por sociedades residentes"
 msgstr "Servicios profesionales prestados por sociedades residentes"
-
-#. module: l10n_ec
-#: model:l10n_latam.identification.type,description:l10n_ec.ec_ruc
-msgid "Single Taxpayer Registration"
-msgstr "Registro Único de Contribuyente"
 
 #. module: l10n_ec
 #: model:ir.model.fields.selection,name:l10n_ec.selection__account_tax_group__l10n_ec_type__ice
@@ -486,16 +517,6 @@ msgstr ""
 "El RUC %s parece no ser válido ya que el décimo dígito no cumple con el "
 "algoritmo de validación (SRI ha declarado que esta validación ya no es "
 "necesaria para algunos números de RUC)"
-
-#. module: l10n_ec
-#. odoo-python
-#: code:addons/l10n_ec/models/res_partner.py:0
-msgid ""
-"The VAT %s seems to be invalid as the tenth digit doesn't comply with the "
-"validation algorithm (could be an old VAT number)"
-msgstr ""
-"La Cédula %s parece no ser válida ya que el décimo dígito no cumple con el "
-"algoritmo de validación (podría ser un número de cédula antiguo)"
 
 #. module: l10n_ec
 #: model:ir.model.fields,help:l10n_ec.field_account_journal__l10n_ec_require_emission
@@ -588,3 +609,19 @@ msgstr "Valor retenido (3640)"
 #: model:ir.model.fields.selection,name:l10n_ec.selection__l10n_latam_document_type__internal_type__withhold
 msgid "Withhold"
 msgstr "Retención"
+
+#~ msgid "If your identification type is %s, it must be 10 digits"
+#~ msgstr "Si su tipo de identificación es %s, debe tener 10 dígitos"
+
+#~ msgid "RUC"
+#~ msgstr "RUC"
+
+#~ msgid "Single Taxpayer Registration"
+#~ msgstr "Registro Único de Contribuyente"
+
+#~ msgid ""
+#~ "The VAT %s seems to be invalid as the tenth digit doesn't comply with the "
+#~ "validation algorithm (could be an old VAT number)"
+#~ msgstr ""
+#~ "La Cédula %s parece no ser válida ya que el décimo dígito no cumple con "
+#~ "el algoritmo de validación (podría ser un número de cédula antiguo)"

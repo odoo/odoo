@@ -9,11 +9,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-08-31 16:30+0000\n"
+"POT-Creation-Date: 2026-09-11 17:41+0000\n"
+"PO-Revision-Date: 2026-09-10 21:07+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
-"odoo-s19-4/hr_recruitment/es_419/>\n"
+"odoo-master/hr_recruitment/es_419/>\n"
 "Language: es_419\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -654,7 +654,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_employee_view_form_inherit_applicant_button
 msgid "<span class=\"o_stat_text\">Applicant</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Postulante</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -735,6 +735,11 @@ msgid ""
 msgstr ""
 "Un diccionario de Python que se evaluará con el fin de proporcionar los "
 "valores predeterminados al crear nuevos registros para este alias."
+
+#. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_res_groups
+msgid "Access Groups"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_needaction
@@ -1715,6 +1720,7 @@ msgstr "Mostrar el CV en el formulario de la postulación"
 #: model:ir.model.fields,field_description:hr_recruitment.field_mail_activity_schedule__display_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_company__display_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_res_groups__display_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_partner__display_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_users__display_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_talent_pool_add_applicants__display_name
@@ -2065,6 +2071,7 @@ msgstr "Hora"
 #: model:ir.model.fields,field_description:hr_recruitment.field_mail_activity_schedule__id
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_company__id
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings__id
+#: model:ir.model.fields,field_description:hr_recruitment.field_res_groups__id
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_partner__id
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_users__id
 #: model:ir.model.fields,field_description:hr_recruitment.field_talent_pool_add_applicants__id
@@ -2340,7 +2347,6 @@ msgid "Job Position Created"
 msgstr "Puesto de trabajo creado"
 
 #. module: hr_recruitment
-#: model:mail.message.subtype,description:hr_recruitment.mt_job_new
 #: model:mail.message.subtype,name:hr_recruitment.mt_job_new
 msgid "Job Position created"
 msgstr "Puesto de trabajo creado"
@@ -2583,6 +2589,57 @@ msgid ""
 "allowing you to easily find for specific skills and build up a database of\n"
 "profiles.\n"
 msgstr ""
+"Gestiona el proceso de reclutamiento y las solicitudes de empleo\n"
+"---------------------------------------\n"
+"\n"
+"Publica, promociona y organiza tus vacantes con la \n"
+"<a href=\"https://www.odoo.com/app/recruitment\">aplicación Reclutamiento de "
+"código abierto</a> de Odoo.\n"
+"\n"
+"Organiza tu bolsa de trabajo, promociona los puestos disponibles y lleva "
+"seguimiento de\n"
+"las solicitudes de empleo con facilidad. Supervisa a cada postulante y crea "
+"una base de datos\n"
+"de habilidades y perfiles con documentos adjuntos.\n"
+"\n"
+"Publica tus empleos en las mejores bolsas de trabajo\n"
+"---------------------------------\n"
+"\n"
+"Conéctate en automático a los sitios web de las bolsas de trabajo más "
+"conocidas: LinkedIn, Monster,\n"
+"Craigslist, etc. Cada vacante tiene una nueva dirección de correo asignada "
+"en automático\n"
+"para enviar las postulaciones al puesto de trabajo correcto.\n"
+"\n"
+"No importa si los postulantes se comunican por correo electrónico o mediante "
+"un formulario en línea, recibirás todos\n"
+"los datos en automático (currículum, carta de presentación) y podrás "
+"responder\n"
+"con un solo clic gracias a las plantillas de respuestas.\n"
+"\n"
+"Personaliza tu proceso de reclutamiento\n"
+"----------------------------------\n"
+"\n"
+"Usa la vista de kanban y personaliza los pasos de tu proceso de "
+"reclutamiento:\n"
+"prevaloración, primera entrevista, segunda entrevista, negociación, etc.\n"
+"\n"
+"Obtén estadísticas precisas sobre tu flujo de reclutamiento y reportes que "
+"te permitan comparar\n"
+"el desempeño de tus diferentes inversiones en bolsas de trabajo externas.\n"
+"\n"
+"Agiliza tu proceso de reclutamiento\n"
+"-----------------------------------\n"
+"\n"
+"Dale seguimiento a los postulantes en tu proceso de contratación con la "
+"vista inteligente de kanban. Automatiza\n"
+"plantillas de correo electrónico para ahorrar tiempo.\n"
+"\n"
+"Los documentos como currículums y cartas de motivación se indexan de forma "
+"automática\n"
+"para que puedas encontrar habilidades específicas con facilidad y crear una "
+"base de datos de\n"
+"perfiles.\n"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_licenced
@@ -2599,7 +2656,7 @@ msgstr "Talentos compatibles"
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__activity_type_icon
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__activity_type_icon
 msgid "Material Symbols icon e.g. checklist"
-msgstr ""
+msgstr "Icono de Material Symbols, por ejemplo, checklist"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__salary_max
@@ -3951,7 +4008,7 @@ msgstr "Pronóstico de empleados totales"
 #. module: hr_recruitment
 #: model:ir.module.module,summary:base.module_hr_recruitment
 msgid "Track your recruitment pipeline"
-msgstr ""
+msgstr "Monitorea tu flujo de reclutamiento"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_sources

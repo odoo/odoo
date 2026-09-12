@@ -26,7 +26,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:41+0000\n"
+"POT-Creation-Date: 2026-09-11 17:42+0000\n"
 "PO-Revision-Date: 2026-08-31 20:29+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -106,14 +106,9 @@ msgid "AVCO Value"
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model,name:stock_account.model_account_account
-msgid "Account"
-msgstr "Konto"
-
-#. module: stock_account
-#: model:ir.model,name:stock_account.model_account_chart_template
-msgid "Account Chart Template"
-msgstr "Szablon planów kont"
+#: model:ir.model,name:stock_account.model_res_groups
+msgid "Access Groups"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_move__cogs_aml_ids
@@ -130,13 +125,6 @@ msgstr "Data księgowania"
 #: model_terms:ir.ui.view,arch_db:stock_account.view_location_form_inherit
 msgid "Accounting Information"
 msgstr "Informacje księgowe"
-
-#. module: stock_account
-#. odoo-javascript
-#: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.js:0
-#: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.xml:0
-msgid "Accrual"
-msgstr ""
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
@@ -185,12 +173,6 @@ msgstr ""
 "produkty, aby zaktualizować ich cenę kosztową."
 
 #. module: stock_account
-#. odoo-javascript
-#: code:addons/stock_account/static/src/stock_valuation/filters/filter_warehouses.xml:0
-msgid "All Warehouses"
-msgstr ""
-
-#. module: stock_account
 #: model:ir.model,name:stock_account.model_account_analytic_account
 msgid "Analytic Account"
 msgstr "Konto analityczne"
@@ -206,35 +188,12 @@ msgid "Analytic Plan"
 msgstr ""
 
 #. module: stock_account
-#. odoo-javascript
-#: code:addons/stock_account/static/src/stock_valuation/filters/filter_date.xml:0
-msgid "As of"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_account_account__account_stock_variation_id
-#: model:ir.model.fields,help:stock_account.field_product_category__account_stock_variation_id
-msgid ""
-"At closing, register the inventory variation of the period into a specific "
-"account"
-msgstr ""
-
-#. module: stock_account
-#. odoo-javascript
-#: code:addons/stock_account/static/src/stock_valuation/filters/filter_date.xml:0
-msgid "At the date of"
-msgstr ""
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__avg_cost
 #: model:ir.model.fields,field_description:stock_account.field_stock_lot__avg_cost
 msgid "Average Cost"
 msgstr "Średni koszt"
 
 #. module: stock_account
-#: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__average
-#: model:ir.model.fields.selection,name:stock_account.selection__product_template__cost_method__average
-#: model:ir.model.fields.selection,name:stock_account.selection__res_company__cost_method__average
 #: model:ir.model.fields.selection,name:stock_account.selection__stock_quant__cost_method__average
 msgid "Average Cost (AVCO)"
 msgstr "Średni koszt (AVCO)"
@@ -270,23 +229,6 @@ msgstr ""
 #: code:addons/stock_account/models/res_company.py:0
 msgid "Closing: Location Reclassification - [%(account)s]"
 msgstr ""
-
-#. module: stock_account
-#. odoo-python
-#: code:addons/stock_account/models/res_company.py:0
-msgid "Closing: Stock Variation Global for company [%(company)s]"
-msgstr ""
-
-#. module: stock_account
-#. odoo-python
-#: code:addons/stock_account/models/res_company.py:0
-msgid "Closing: Stock Variation Over Period"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_account_move_line__cogs_origin_id
-msgid "Cogs Origin"
-msgstr "Pochodzenie trybów"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_res_company
@@ -343,13 +285,6 @@ msgid "Costing Method"
 msgstr "Metoda wyceny"
 
 #. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_account_account__account_stock_expense_id
-msgid ""
-"Counterpart used at closing for accounting adjustments to inventory "
-"valuation."
-msgstr ""
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_picking__country_code
 #: model:ir.model.fields,field_description:stock_account.field_stock_picking_type__country_code
 msgid "Country Code"
@@ -364,12 +299,6 @@ msgstr "Utworzył(a)"
 #: model:ir.model.fields,field_description:stock_account.field_product_value__create_date
 msgid "Created on"
 msgstr "Data utworzenia"
-
-#. module: stock_account
-#. odoo-javascript
-#: code:addons/stock_account/static/src/stock_valuation/line/line.xml:0
-msgid "Credit"
-msgstr "Ma"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__currency_id
@@ -394,11 +323,6 @@ msgid "Current Value Details"
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model.fields.selection,name:stock_account.selection__res_company__inventory_period__daily
-msgid "Daily"
-msgstr "Codziennie"
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__date
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__date
 msgid "Date"
@@ -415,12 +339,6 @@ msgstr ""
 "Jeśli jest pusta, zostanie użyta data inwentaryzacji."
 
 #. module: stock_account
-#. odoo-javascript
-#: code:addons/stock_account/static/src/stock_valuation/line/line.xml:0
-msgid "Debit"
-msgstr "Winien"
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__description
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__description
 msgid "Description"
@@ -432,19 +350,18 @@ msgid "Display Lots & Serial Numbers on Invoices"
 msgstr "Wyświetlanie partii i numerów seryjnych na fakturach"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_account_account__display_name
 #: model:ir.model.fields,field_description:stock_account.field_account_analytic_account__display_name
 #: model:ir.model.fields,field_description:stock_account.field_account_analytic_plan__display_name
-#: model:ir.model.fields,field_description:stock_account.field_account_chart_template__display_name
 #: model:ir.model.fields,field_description:stock_account.field_account_move__display_name
 #: model:ir.model.fields,field_description:stock_account.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:stock_account.field_account_stock_valuation_report__display_name
 #: model:ir.model.fields,field_description:stock_account.field_product_category__display_name
 #: model:ir.model.fields,field_description:stock_account.field_product_product__display_name
 #: model:ir.model.fields,field_description:stock_account.field_product_template__display_name
 #: model:ir.model.fields,field_description:stock_account.field_product_value__display_name
 #: model:ir.model.fields,field_description:stock_account.field_res_company__display_name
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__display_name
-#: model:ir.model.fields,field_description:stock_account.field_stock_account_stock_valuation_report__display_name
+#: model:ir.model.fields,field_description:stock_account.field_res_groups__display_name
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__display_name
 #: model:ir.model.fields,field_description:stock_account.field_stock_forecasted_product_product__display_name
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory_adjustment_name__display_name
@@ -462,30 +379,6 @@ msgstr "Nazwa wyświetlana"
 #: model:res.groups,name:stock_account.group_lot_on_invoice
 msgid "Display Serial & Lot Number on Invoices"
 msgstr "Wyświetlanie numeru seryjnego i numeru partii na fakturach"
-
-#. module: stock_account
-#. odoo-javascript
-#. odoo-python
-#: code:addons/stock_account/report/stock_valuation_report.py:0
-#: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.xml:0
-msgid "Ending Stock"
-msgstr ""
-
-#. module: stock_account
-#. odoo-python
-#: code:addons/stock_account/models/res_company.py:0
-msgid "Everything is correctly closed"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_account_account__account_stock_expense_id
-msgid "Expense Account"
-msgstr "Konto wydatków"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_account_account__account_stock_expense_active
-msgid "Expense Account Active"
-msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_account_id
@@ -509,30 +402,18 @@ msgid "For %(quantity)s %(uom)s (%(price_unit)s per %(uom)s)"
 msgstr ""
 
 #. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_account_form
-msgid "For Perpetual Continental Only"
-msgstr ""
-
-#. module: stock_account
-#. odoo-javascript
-#: code:addons/stock_account/static/src/stock_valuation/buttons_bar/buttons_bar.xml:0
-msgid "Generate Entry"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_account_account__id
 #: model:ir.model.fields,field_description:stock_account.field_account_analytic_account__id
 #: model:ir.model.fields,field_description:stock_account.field_account_analytic_plan__id
-#: model:ir.model.fields,field_description:stock_account.field_account_chart_template__id
 #: model:ir.model.fields,field_description:stock_account.field_account_move__id
 #: model:ir.model.fields,field_description:stock_account.field_account_move_line__id
+#: model:ir.model.fields,field_description:stock_account.field_account_stock_valuation_report__id
 #: model:ir.model.fields,field_description:stock_account.field_product_category__id
 #: model:ir.model.fields,field_description:stock_account.field_product_product__id
 #: model:ir.model.fields,field_description:stock_account.field_product_template__id
 #: model:ir.model.fields,field_description:stock_account.field_product_value__id
 #: model:ir.model.fields,field_description:stock_account.field_res_company__id
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__id
-#: model:ir.model.fields,field_description:stock_account.field_stock_account_stock_valuation_report__id
+#: model:ir.model.fields,field_description:stock_account.field_res_groups__id
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__id
 #: model:ir.model.fields,field_description:stock_account.field_stock_forecasted_product_product__id
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory_adjustment_name__id
@@ -563,14 +444,6 @@ msgstr ""
 "partii/serii."
 
 #. module: stock_account
-#. odoo-javascript
-#. odoo-python
-#: code:addons/stock_account/report/stock_valuation_report.py:0
-#: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.xml:0
-msgid "Initial Balance"
-msgstr "Saldo początkowe"
-
-#. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_location.py:0
 msgid "Invalid search operator or value"
@@ -582,12 +455,6 @@ msgid "Inventory Adjustment Reference / Reason"
 msgstr "Numer referencyjny / powód korekty zapasów"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_account_bank_statement_line__inventory_closing
-#: model:ir.model.fields,field_description:stock_account.field_account_move__inventory_closing
-msgid "Inventory Closing"
-msgstr ""
-
-#. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_location
 msgid "Inventory Location"
 msgstr ""
@@ -595,25 +462,10 @@ msgstr ""
 #. module: stock_account
 #. odoo-javascript
 #. odoo-python
-#: code:addons/stock_account/report/stock_valuation_report.py:0
+#: code:addons/stock_account/report/account_stock_valuation_report.py:0
 #: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.js:0
-#: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.xml:0
 msgid "Inventory Loss"
 msgstr "Straty inwentaryzacyjne"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_res_company__inventory_period
-msgid "Inventory Period"
-msgstr "Okres magazynowania"
-
-#. module: stock_account
-#. odoo-python
-#: code:addons/stock_account/models/account_chart_template.py:0
-#: model:ir.actions.client,name:stock_account.action_report_stock_valuation
-#: model:ir.model.fields,field_description:stock_account.field_product_category__property_valuation
-#: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form_stock
-msgid "Inventory Valuation"
-msgstr "Wycena Magazynów"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_account_move_line__cogs_move_ids
@@ -656,14 +508,6 @@ msgid "Is valued inside the company"
 msgstr ""
 
 #. module: stock_account
-#. odoo-python
-#: code:addons/stock_account/models/res_company.py:0
-msgid ""
-"It exists closing entries after the selected date. Cancel them before "
-"generate an entry prior to them"
-msgstr ""
-
-#. module: stock_account
 #: model:ir.model,name:stock_account.model_account_move
 msgid "Journal Entry"
 msgstr "Zapis dziennika"
@@ -672,12 +516,6 @@ msgstr "Zapis dziennika"
 #: model:ir.model,name:stock_account.model_account_move_line
 msgid "Journal Item"
 msgstr "Pozycja zapisu"
-
-#. module: stock_account
-#. odoo-python
-#: code:addons/stock_account/models/res_company.py:0
-msgid "Journal Items"
-msgstr "Pozycje zapisów"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__justification
@@ -720,19 +558,9 @@ msgid "Lots & Serial numbers will appear on the invoice"
 msgstr "Partie i numery seryjne pojawią się na fakturze"
 
 #. module: stock_account
-#: model:ir.model.fields.selection,name:stock_account.selection__res_company__inventory_period__manual
-msgid "Manual"
-msgstr "Manualna"
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__value_manual
 msgid "Manual Value"
 msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields.selection,name:stock_account.selection__res_company__inventory_period__monthly
-msgid "Monthly"
-msgstr "Miesięcznie"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__move_id
@@ -751,70 +579,9 @@ msgid "Only is set (= True) is supported in search for remaining_qty."
 msgstr ""
 
 #. module: stock_account
-#. odoo-python
-#: code:addons/stock_account/models/product.py:0
-msgid ""
-"Only the value 'periodic' and 'real_time' are accepted to search on "
-"valuation field."
-msgstr ""
-
-#. module: stock_account
-#. odoo-javascript
-#: code:addons/stock_account/static/src/stock_valuation/filters/filter_options.xml:0
-msgid "Options"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__periodic
-#: model:ir.model.fields.selection,name:stock_account.selection__product_template__valuation__periodic
-#: model:ir.model.fields.selection,name:stock_account.selection__res_company__inventory_valuation__periodic
-msgid "Periodic (at closing)"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_category__property_valuation
-msgid ""
-"Periodic: The accounting entries are suggested manually in the inventory "
-"valuation report.\n"
-"        Perpetual: An accounting entry is automatically created to value the "
-"inventory when a product is billed or invoiced.\n"
-"        "
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__real_time
-#: model:ir.model.fields.selection,name:stock_account.selection__product_template__valuation__real_time
-#: model:ir.model.fields.selection,name:stock_account.selection__res_company__inventory_valuation__real_time
-msgid "Perpetual (at invoicing)"
-msgstr ""
-
-#. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_picking_type
 msgid "Picking Type"
 msgstr "Typ pobrania"
-
-#. module: stock_account
-#. odoo-python
-#: code:addons/stock_account/models/res_company.py:0
-msgid "Please set the Journal for Inventory Valuation in the settings."
-msgstr ""
-
-#. module: stock_account
-#. odoo-python
-#: code:addons/stock_account/models/res_company.py:0
-msgid ""
-"Please set the Valuation Account for Inventory Valuation in the settings."
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_category__property_price_difference_account_id
-msgid "Price Difference Account"
-msgstr "Konto różnic cenowych"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_category__property_price_difference_account_active
-msgid "Price Difference Account Active"
-msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__price_unit
@@ -922,9 +689,6 @@ msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__standard_price
-#: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__standard
-#: model:ir.model.fields.selection,name:stock_account.selection__product_template__cost_method__standard
-#: model:ir.model.fields.selection,name:stock_account.selection__res_company__cost_method__standard
 #: model:ir.model.fields.selection,name:stock_account.selection__stock_quant__cost_method__standard
 msgid "Standard Price"
 msgstr "Cena ewidencyjna"
@@ -936,43 +700,13 @@ msgid ""
 "the product.\n"
 "        Average Cost (AVCO): The products are valued at weighted average "
 "cost.\n"
-"        First In First Out (FIFO): The products are valued supposing those "
-"that enter the company first will also leave it first.\n"
 "        "
 msgstr ""
-"Cena standardowa: Produkty są wyceniane według ich standardowego kosztu "
-"określonego na produkcie.\n"
-"Średni koszt (AVCO): Produkty są wyceniane po średnim koszcie ważonym.\n"
-"First In First Out (FIFO): Produkty są wyceniane przy założeniu, że te, "
-"które wejdą do spółki jako pierwsze, opuszczą ją również jako pierwsze.\n"
-"        "
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_avco_report
 msgid "Stock AVCO Justifier"
 msgstr ""
-
-#. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
-msgid "Stock Account"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.actions.server,name:stock_account.ir_cron_post_stock_valuation_ir_actions_server
-msgid "Stock Account: Inventory Valuation Closing"
-msgstr ""
-
-#. module: stock_account
-#. odoo-python
-#: code:addons/stock_account/models/res_company.py:0
-msgid "Stock Closing"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_journal
-#: model:ir.model.fields,field_description:stock_account.field_res_company__account_stock_journal_id
-msgid "Stock Journal"
-msgstr "Dziennik magazynowy"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move
@@ -991,40 +725,14 @@ msgstr "Raport uzupełnienia zapasów"
 #. module: stock_account
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_account_forecasted/forecasted_header.js:0
-#: model:ir.model,name:stock_account.model_stock_account_stock_valuation_report
+#: model:ir.model,name:stock_account.model_account_stock_valuation_report
 msgid "Stock Valuation"
 msgstr "Wycena zapasów"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_valuation_account_id
-#: model:ir.model.fields,field_description:stock_account.field_res_company__account_stock_valuation_id
 #: model:ir.model.fields,field_description:stock_account.field_stock_location__valuation_account_id
 msgid "Stock Valuation Account"
 msgstr "Konto wyceny zapasów"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_valuation_account_active
-msgid "Stock Valuation Account Active"
-msgstr ""
-
-#. module: stock_account
-#. odoo-javascript
-#. odoo-python
-#: code:addons/stock_account/report/stock_valuation_report.py:0
-#: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.xml:0
-#: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
-msgid "Stock Variation"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_category__account_stock_variation_id
-msgid "Stock Variation Account"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_category__account_stock_variation_active
-msgid "Stock Variation Account Active"
-msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product__company_currency_id
@@ -1134,9 +842,6 @@ msgstr "Użytkownik"
 
 #. module: stock_account
 #: model:ir.actions.act_window,name:stock_account.stock_move_valuation_action
-#: model:ir.model.fields,field_description:stock_account.field_product_product__valuation
-#: model:ir.model.fields,field_description:stock_account.field_product_template__valuation
-#: model:ir.model.fields,field_description:stock_account.field_res_company__inventory_valuation
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 msgid "Valuation"
 msgstr "Wycena"
@@ -1194,55 +899,14 @@ msgstr ""
 "        Służy do obliczania marży na zamówieniach sprzedaży."
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_account_account__account_stock_variation_id
-msgid "Variation Account"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_account_account__account_stock_variation_active
-msgid "Variation Account Active"
-msgstr ""
-
-#. module: stock_account
 #: model:ir.module.module,shortdesc:base.module_stock_account
 msgid "WMS Accounting"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_category__property_stock_valuation_account_id
-msgid ""
-"When automated inventory valuation is enabled on a product, this account "
-"will hold the current value of the products."
-msgstr ""
-"Gdy automatyczna wycena zapasów jest włączona dla produktu, to konto będzie "
-"przechowywać bieżącą wartość produktów."
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_category__property_stock_journal
-msgid ""
-"When doing automated inventory valuation, this is the Accounting Journal in "
-"which entries will be automatically posted when stock moves are processed."
-msgstr ""
-"Podczas automatycznej wyceny zapasów jest to dziennik księgowy, w którym "
-"wpisy będą automatycznie księgowane po przetworzeniu ruchów zapasów."
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_category__property_price_difference_account_id
-msgid ""
-"With perpetual valuation, this account will hold the price difference "
-"between the standard price and the bill price."
 msgstr ""
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "You can only adjust valuation for one move at a time."
-msgstr ""
-
-#. module: stock_account
-#. odoo-python
-#: code:addons/stock_account/models/product.py:0
-msgid "You can only use the '=' operator to search on valuation field."
 msgstr ""
 
 #. module: stock_account
@@ -1272,13 +936,89 @@ msgstr ""
 msgid "units"
 msgstr "jednostki"
 
-msgid ""
-"Value of the product (automatically computed in AVCO).\n"
-"        Used to value the product when the purchase cost is not known (e.g. "
-"inventory adjustment).\n"
-"        Used to compute margins on sale orders."
-msgstr ""
-"Wartość produktu (obliczana automatycznie w AVCO).\n"
-"Służy do wyceny produktu, gdy koszt zakupu nie jest znany (np. korekta "
-"zapasów).\n"
-"Służy do obliczania marży na zamówieniach sprzedaży."
+#~ msgid "Account"
+#~ msgstr "Konto"
+
+#~ msgid "Account Chart Template"
+#~ msgstr "Szablon planów kont"
+
+#~ msgid "Cogs Origin"
+#~ msgstr "Pochodzenie trybów"
+
+#~ msgid "Credit"
+#~ msgstr "Ma"
+
+#~ msgid "Daily"
+#~ msgstr "Codziennie"
+
+#~ msgid "Debit"
+#~ msgstr "Winien"
+
+#~ msgid "Expense Account"
+#~ msgstr "Konto wydatków"
+
+#~ msgid "Initial Balance"
+#~ msgstr "Saldo początkowe"
+
+#~ msgid "Inventory Period"
+#~ msgstr "Okres magazynowania"
+
+#~ msgid "Inventory Valuation"
+#~ msgstr "Wycena Magazynów"
+
+#~ msgid "Journal Items"
+#~ msgstr "Pozycje zapisów"
+
+#~ msgid "Manual"
+#~ msgstr "Manualna"
+
+#~ msgid "Monthly"
+#~ msgstr "Miesięcznie"
+
+#~ msgid "Price Difference Account"
+#~ msgstr "Konto różnic cenowych"
+
+#~ msgid ""
+#~ "Standard Price: The products are valued at their standard cost defined on "
+#~ "the product.\n"
+#~ "        Average Cost (AVCO): The products are valued at weighted average "
+#~ "cost.\n"
+#~ "        First In First Out (FIFO): The products are valued supposing "
+#~ "those that enter the company first will also leave it first.\n"
+#~ "        "
+#~ msgstr ""
+#~ "Cena standardowa: Produkty są wyceniane według ich standardowego kosztu "
+#~ "określonego na produkcie.\n"
+#~ "Średni koszt (AVCO): Produkty są wyceniane po średnim koszcie ważonym.\n"
+#~ "First In First Out (FIFO): Produkty są wyceniane przy założeniu, że te, "
+#~ "które wejdą do spółki jako pierwsze, opuszczą ją również jako pierwsze.\n"
+#~ "        "
+
+#~ msgid "Stock Journal"
+#~ msgstr "Dziennik magazynowy"
+
+#~ msgid ""
+#~ "When automated inventory valuation is enabled on a product, this account "
+#~ "will hold the current value of the products."
+#~ msgstr ""
+#~ "Gdy automatyczna wycena zapasów jest włączona dla produktu, to konto "
+#~ "będzie przechowywać bieżącą wartość produktów."
+
+#~ msgid ""
+#~ "When doing automated inventory valuation, this is the Accounting Journal "
+#~ "in which entries will be automatically posted when stock moves are "
+#~ "processed."
+#~ msgstr ""
+#~ "Podczas automatycznej wyceny zapasów jest to dziennik księgowy, w którym "
+#~ "wpisy będą automatycznie księgowane po przetworzeniu ruchów zapasów."
+
+#~ msgid ""
+#~ "Value of the product (automatically computed in AVCO).\n"
+#~ "        Used to value the product when the purchase cost is not known "
+#~ "(e.g. inventory adjustment).\n"
+#~ "        Used to compute margins on sale orders."
+#~ msgstr ""
+#~ "Wartość produktu (obliczana automatycznie w AVCO).\n"
+#~ "Służy do wyceny produktu, gdy koszt zakupu nie jest znany (np. korekta "
+#~ "zapasów).\n"
+#~ "Służy do obliczania marży na zamówieniach sprzedaży."

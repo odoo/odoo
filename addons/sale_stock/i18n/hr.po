@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:43+0000\n"
+"POT-Creation-Date: 2026-09-11 17:43+0000\n"
 "PO-Revision-Date: 2026-08-31 19:46+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -176,12 +176,6 @@ msgid ""
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.model,name:sale_stock.model_account_accrued_orders_wizard
-#, fuzzy
-msgid "Accrued Orders Wizard"
-msgstr "Čarobnjak za vremenski razgraničene narudžbe"
-
-#. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 msgid "All planned operations included"
@@ -289,11 +283,6 @@ msgid "Default Warehouse"
 msgstr "Zadano skladište"
 
 #. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
-msgid "Delivered"
-msgstr "Isporučeno"
-
-#. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
 msgid "Delivery"
@@ -324,7 +313,6 @@ msgid "Delivery:"
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_account_accrued_orders_wizard__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_account_move__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_product_template__display_name
@@ -425,20 +413,12 @@ msgid "Free Qty Today"
 msgstr "Slobodna količina danas"
 
 #. module: sale_stock
-#. odoo-javascript
-#: code:addons/sale_stock/static/src/stock_valuation/stock_valuation_report.js:0
-#, fuzzy
-msgid "Goods Delivered Not Invoiced"
-msgstr "Isporučena roba koja nije fakturirana"
-
-#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__show_json_popover
 #, fuzzy
 msgid "Has late picking"
 msgstr "Ima zakašnjelu skladišnu operaciju"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_account_accrued_orders_wizard__id
 #: model:ir.model.fields,field_description:sale_stock.field_account_move__id
 #: model:ir.model.fields,field_description:sale_stock.field_account_move_line__id
 #: model:ir.model.fields,field_description:sale_stock.field_product_template__id
@@ -615,16 +595,6 @@ msgid "No products are available to return."
 msgstr ""
 
 #. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
-msgid "Not Available"
-msgstr "Nije dostupno"
-
-#. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
-msgid "Not Delivered"
-msgstr "Nije isporučeno"
-
-#. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, fuzzy
@@ -649,11 +619,6 @@ msgstr "Uključeno"
 #: model:return.reason,name:sale_stock.return_reason_order_by_mistake
 msgid "Ordered by mistake"
 msgstr ""
-
-#. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
-msgid "Partially Delivered"
-msgstr "Djelomično isporučeno"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -811,8 +776,6 @@ msgid "Sale Line"
 msgstr "Stavka prodaje"
 
 #. module: sale_stock
-#. odoo-javascript
-#: code:addons/sale_stock/static/src/stock_valuation/stock_valuation_report.js:0
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
 msgid "Sale Orders"
 msgstr "Prodajni nalozi"
@@ -910,17 +873,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_policy
 msgid "Shipping Policy"
 msgstr "Pravila otpreme"
-
-#. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
-#, fuzzy
-msgid "Shipping Status"
-msgstr "Status otpreme"
-
-#. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
-msgid "Started"
-msgstr "Započeto"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
@@ -1089,21 +1041,48 @@ msgstr "obrađeno umjesto"
 msgid "will be late."
 msgstr "će kasniti."
 
-msgid "<i class=\"oi oi-fw\" data-icon=\"close\"/>Cancelled"
-msgstr "<i class=\"oi oi-fw\" data-icon=\"close\"/>Otkazano"
+#, fuzzy
+#~ msgid "Accrued Orders Wizard"
+#~ msgstr "Čarobnjak za vremenski razgraničene narudžbe"
 
-msgid "<i class=\"oi oi-fw\" data-icon=\"schedule\"/>Preparation"
-msgstr "<i class=\"oi oi-fw\" data-icon=\"schedule\"/>Priprema"
+#~ msgid "Delivered"
+#~ msgstr "Isporučeno"
 
-msgid ""
-"<span class=\"small badge rounded-pill text-bg-success "
-"orders_label_text_align\">\n"
-"                                        <i class=\"oi oi-fw\" data-"
-"icon=\"local_shipping\"/> Shipped\n"
-"                                    </span>"
-msgstr ""
-"<span class=\"small badge rounded-pill text-bg-success "
-"orders_label_text_align\">\n"
-"                                        <i class=\"oi oi-fw\" data-"
-"icon=\"local_shipping\"/> Poslano\n"
-"                                    </span>"
+#, fuzzy
+#~ msgid "Goods Delivered Not Invoiced"
+#~ msgstr "Isporučena roba koja nije fakturirana"
+
+#~ msgid "Not Available"
+#~ msgstr "Nije dostupno"
+
+#~ msgid "Not Delivered"
+#~ msgstr "Nije isporučeno"
+
+#~ msgid "Partially Delivered"
+#~ msgstr "Djelomično isporučeno"
+
+#, fuzzy
+#~ msgid "Shipping Status"
+#~ msgstr "Status otpreme"
+
+#~ msgid "Started"
+#~ msgstr "Započeto"
+
+#~ msgid "<i class=\"oi oi-fw\" data-icon=\"close\"/>Cancelled"
+#~ msgstr "<i class=\"oi oi-fw\" data-icon=\"close\"/>Otkazano"
+
+#~ msgid "<i class=\"oi oi-fw\" data-icon=\"schedule\"/>Preparation"
+#~ msgstr "<i class=\"oi oi-fw\" data-icon=\"schedule\"/>Priprema"
+
+#~ msgid ""
+#~ "<span class=\"small badge rounded-pill text-bg-success "
+#~ "orders_label_text_align\">\n"
+#~ "                                        <i class=\"oi oi-fw\" data-"
+#~ "icon=\"local_shipping\"/> Shipped\n"
+#~ "                                    </span>"
+#~ msgstr ""
+#~ "<span class=\"small badge rounded-pill text-bg-success "
+#~ "orders_label_text_align\">\n"
+#~ "                                        <i class=\"oi oi-fw\" data-"
+#~ "icon=\"local_shipping\"/> Poslano\n"
+#~ "                                    </span>"

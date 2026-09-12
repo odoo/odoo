@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:44+0000\n"
+"POT-Creation-Date: 2026-09-11 17:41+0000\n"
 "PO-Revision-Date: 2026-09-04 08:45+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -404,12 +404,6 @@ msgid "+ Field"
 msgstr "+ フィールド"
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
-msgid "+ New"
-msgstr "+ 新規"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "+ New Website"
 msgstr "+ 新規ウェブサイト"
@@ -779,6 +773,7 @@ msgstr "5x"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_numbers_charts
+#: model_terms:ir.ui.view,arch_db:website.s_text_chart
 msgid ""
 "75% of clients have been using the service for over a decade consistently."
 msgstr ""
@@ -923,8 +918,10 @@ msgstr ""
 "a>"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_chart_text
 #: model_terms:ir.ui.view,arch_db:website.s_image_text
 #: model_terms:ir.ui.view,arch_db:website.s_image_text_overlap
+#: model_terms:ir.ui.view,arch_db:website.s_text_chart
 #: model_terms:ir.ui.view,arch_db:website.s_text_image
 msgid ""
 "<a href=\"#\" class=\"btn btn-secondary o_translate_inline\">Learn more</a>"
@@ -3354,6 +3351,11 @@ msgid "Access Denied"
 msgstr "アクセスが拒否されました"
 
 #. module: website
+#: model:ir.model,name:website.model_res_groups
+msgid "Access Groups"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__access_token
 msgid "Access Token"
 msgstr "アクセストークン"
@@ -3653,6 +3655,12 @@ msgstr "新しいカードを追加"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option_plugin.js:0
+msgid "Add a new field after this one"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/form/form_option_plugin.js:0
 msgid "Add a new field at the end"
 msgstr "最後に新規フィールドを追加"
 
@@ -3738,12 +3746,6 @@ msgstr "他のドメインをここに追加して下さい"
 #: code:addons/website/static/src/components/dialog/add_page_dialog.xml:0
 msgid "Add page template"
 msgstr "ページテンプレートを追加"
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/form/form_option_plugin.js:0
-msgid "Add some content after this field"
-msgstr "このフィールドの後にコンテンツを追加"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_page__is_new_page_template
@@ -5653,13 +5655,10 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/customize_website_plugin.js:0
 msgid ""
-"Changing theme requires to leave the editor. This will save all your "
-"changes, are you sure you want to proceed? Be careful that changing the "
-"theme will reset all your color customizations."
+"Changing the theme requires leaving the editor. This will save all your "
+"changes. Are you sure you want to proceed? Be aware that changing the theme "
+"will reset some layout, color, and style customizations."
 msgstr ""
-"テーマを変更するには、エディターを終了する必要があります。これにより、すべて"
-"の変更が保存されますが続行してもよろしいですか? テーマを変更すると、すべての"
-"色カスタマイズがリセットされることにご注意ください。"
 
 #. module: website
 #. odoo-javascript
@@ -5673,6 +5672,11 @@ msgstr "文字数制限"
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Chart"
 msgstr "グラフ"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Chart - Text"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -7522,6 +7526,7 @@ msgid "Discover more <i class=\"oi align-middle ms-1\" data-icon=\"east\"/>"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_chart_text
 #: model_terms:ir.ui.view,arch_db:website.s_image_text
 msgid "Discover new opportunities"
 msgstr "新たな可能性を見つける"
@@ -7714,6 +7719,7 @@ msgstr "中に表示"
 #: model:ir.model.fields,field_description:website.field_portal_wizard_user__display_name
 #: model:ir.model.fields,field_description:website.field_res_company__display_name
 #: model:ir.model.fields,field_description:website.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:website.field_res_groups__display_name
 #: model:ir.model.fields,field_description:website.field_res_lang__display_name
 #: model:ir.model.fields,field_description:website.field_res_partner__display_name
 #: model:ir.model.fields,field_description:website.field_res_users__display_name
@@ -8422,6 +8428,7 @@ msgid "Enhance contrast and brightness"
 msgstr "コントラストと明るさを強調"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_text_chart
 #: model_terms:ir.ui.view,arch_db:website.s_text_image
 #: model_terms:ir.ui.view,arch_db:website.s_text_image_full
 msgid "Enhance your experience"
@@ -8699,8 +8706,8 @@ msgstr ""
 "まれたものでも、まだ語られていない物語が秘められています。"
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/options/searchbar_option.xml:0
+#. odoo-python
+#: code:addons/website/models/website.py:0
 msgid "Everything"
 msgstr "すべて"
 
@@ -10131,6 +10138,21 @@ msgid "Header Position"
 msgstr "ヘッダ位置"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_website__header_search_type
+msgid "Header Search Scope"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_website__header_search_order_by
+msgid "Header Search Sort"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_website__header_search_limit
+msgid "Header Search Suggestions"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_theme_website_page__header_text_color
 #: model:ir.model.fields,field_description:website.field_website_page__header_text_color
 #: model:ir.model.fields,field_description:website.field_website_page_options_mixin__header_text_color
@@ -10634,6 +10656,7 @@ msgstr "作成目的："
 #: model:ir.model.fields,field_description:website.field_portal_wizard_user__id
 #: model:ir.model.fields,field_description:website.field_res_company__id
 #: model:ir.model.fields,field_description:website.field_res_config_settings__id
+#: model:ir.model.fields,field_description:website.field_res_groups__id
 #: model:ir.model.fields,field_description:website.field_res_lang__id
 #: model:ir.model.fields,field_description:website.field_res_partner__id
 #: model:ir.model.fields,field_description:website.field_res_users__id
@@ -13746,7 +13769,7 @@ msgstr "条件なし"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
-msgid "No links found, you are safe to delete."
+msgid "No links referring to this page have been found. You may delete it."
 msgstr ""
 
 #. module: website
@@ -13921,6 +13944,13 @@ msgstr "何もしない"
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 msgid "Number"
 msgstr "番号"
+
+#. module: website
+#: model:ir.model.fields,help:website.field_website__header_search_limit
+msgid ""
+"Number of autocomplete suggestions of the header search bar, 0 to disable "
+"them."
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_language_count
@@ -14474,6 +14504,11 @@ msgid "Order by"
 msgstr "並べ替え:"
 
 #. module: website
+#: model:ir.model.fields,help:website.field_website__header_search_order_by
+msgid "Order in which the header search bar sorts its results."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_achievements_list
 msgid "Organization Certification"
 msgstr ""
@@ -14978,8 +15013,8 @@ msgstr "自分のコピーを使用しているページ"
 #. module: website
 #. odoo-javascript
 #. odoo-python
+#: code:addons/website/models/website.py:0
 #: code:addons/website/models/website_page.py:0
-#: code:addons/website/static/src/builder/plugins/options/searchbar_option.xml:0
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #: model:ir.ui.menu,name:website.menu_website_pages_list
 #: model_terms:ir.ui.view,arch_db:website.list_website_public_pages
@@ -15597,6 +15632,11 @@ msgstr "プロダクト"
 #: model_terms:ir.ui.view,arch_db:website.external_snippets
 msgid "Products Carousel"
 msgstr "プロダクトカルーセル"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.external_snippets
+msgid "Products Grid"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -18090,12 +18130,14 @@ msgid "Start saving  <span class=\"oi\" data-icon=\"east\" role=\"img\"/>"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_chart_text
 #: model_terms:ir.ui.view,arch_db:website.s_image_hexagonal
 #: model_terms:ir.ui.view,arch_db:website.s_image_text
 #: model_terms:ir.ui.view,arch_db:website.s_image_text_box
 #: model_terms:ir.ui.view,arch_db:website.s_image_text_overlap
 #: model_terms:ir.ui.view,arch_db:website.s_mockup_image
 #: model_terms:ir.ui.view,arch_db:website.s_tabs
+#: model_terms:ir.ui.view,arch_db:website.s_text_chart
 #: model_terms:ir.ui.view,arch_db:website.s_text_image
 msgid "Start with the customer – find out what they want and give it to them."
 msgstr "お客様のニーズを起点に。求めるものを把握し、最適な形でお届けします。"
@@ -18112,6 +18154,11 @@ msgid ""
 "Stay informed of our latest news and discover what will happen in the next "
 "weeks."
 msgstr "最新ニュース情報を常に把握して、来週の起きることを発見しましょう。"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_chart_text
+msgid "Steady year-over-year growth driven by continuous product improvements."
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -18568,6 +18615,11 @@ msgstr "Googleサーチコンソールでrobots.txtをテスト"
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Text"
 msgstr "テキスト"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Text - Chart"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -19901,6 +19953,11 @@ msgid ""
 msgstr ""
 "確認したい場合は、下のボックスに「<i class=\"confirm_word\">yes</i>」と入力し"
 "てください。"
+
+#. module: website
+#: model:ir.model.fields,help:website.field_website__header_search_type
+msgid "Type of records the header search bar searches within."
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_rewrite__redirect_type
@@ -21654,6 +21711,7 @@ msgstr "製品やサービスについて軽く説明しましょう。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_card_offset
+#: model_terms:ir.ui.view,arch_db:website.s_chart_text
 #: model_terms:ir.ui.view,arch_db:website.s_features_image
 #: model_terms:ir.ui.view,arch_db:website.s_features_wall
 #: model_terms:ir.ui.view,arch_db:website.s_image_features
@@ -21662,6 +21720,7 @@ msgstr "製品やサービスについて軽く説明しましょう。"
 #: model_terms:ir.ui.view,arch_db:website.s_image_text_box
 #: model_terms:ir.ui.view,arch_db:website.s_image_text_overlap
 #: model_terms:ir.ui.view,arch_db:website.s_mockup_image
+#: model_terms:ir.ui.view,arch_db:website.s_text_chart
 #: model_terms:ir.ui.view,arch_db:website.s_text_image
 #: model_terms:ir.ui.view,arch_db:website.s_text_image_full
 msgid ""
@@ -22396,6 +22455,22 @@ msgid ""
 "contacts, collect, submission, input, fields, questionnaire, survey, "
 "registration, request, images, pictures, photos, illustration, media, "
 "visual, get-in-touch"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid ""
+"content, articles, story, stories, combination, graphs, tables, diagrams, "
+"line, plot, bars, metrics, figures, data-visualization, statistics, stats, "
+"analytics, infographic, report"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid ""
+"content, articles, story, stories, combination, graphs, tables, diagrams, "
+"pie, doughnut, plot, bars, metrics, figures, data-visualization, statistics, "
+"stats, analytics, infographic, report"
 msgstr ""
 
 #. module: website
@@ -23627,3 +23702,18 @@ msgstr "✽  ピザ"
 #: model_terms:ir.ui.view,arch_db:website.s_key_benefits
 msgid "✽  What We Offer"
 msgstr "✽  当社が提供するもの"
+
+#~ msgid "+ New"
+#~ msgstr "+ 新規"
+
+#~ msgid "Add some content after this field"
+#~ msgstr "このフィールドの後にコンテンツを追加"
+
+#~ msgid ""
+#~ "Changing theme requires to leave the editor. This will save all your "
+#~ "changes, are you sure you want to proceed? Be careful that changing the "
+#~ "theme will reset all your color customizations."
+#~ msgstr ""
+#~ "テーマを変更するには、エディターを終了する必要があります。これにより、すべ"
+#~ "ての変更が保存されますが続行してもよろしいですか? テーマを変更すると、すべ"
+#~ "ての色カスタマイズがリセットされることにご注意ください。"

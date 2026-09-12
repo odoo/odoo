@@ -9,10 +9,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:46+0000\n"
-"PO-Revision-Date: 2026-08-31 19:20+0000\n"
+"POT-Creation-Date: 2026-09-11 17:43+0000\n"
+"PO-Revision-Date: 2026-09-09 13:52+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
-"Language-Team: Catalan <https://translate.odoo.com/projects/odoo-s19-4/"
+"Language-Team: Catalan <https://translate.odoo.com/projects/odoo-master/"
 "spreadsheet/ca/>\n"
 "Language: ca\n"
 "MIME-Version: 1.0\n"
@@ -1957,6 +1957,13 @@ msgstr ""
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"Cannot perform this action on merged cells. Unmerge the cells and try again."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Cannot remove duplicates for an unknown reason"
 msgstr ""
 
@@ -2934,13 +2941,7 @@ msgstr "Taxa monetària"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/currency/plugins/currency.js:0
-msgid "Currency not available for this company."
-msgstr "La moneda no està disponible per a aquesta empresa."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/currency/plugins/currency.js:0
+#: code:addons/spreadsheet/static/src/currency/formulas.js:0
 msgid "Currency rate unavailable."
 msgstr "La taxa de divisa no està disponible."
 
@@ -4317,7 +4318,7 @@ msgstr "Filtre"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/global_filters/plugins/global_filters_core_view_plugin.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_functions.js:0
 msgid "Filter \"%(filter_name)s\" not found"
 msgstr "Filtre \"%(filter_name)s\" no trobat"
 
@@ -6839,7 +6840,7 @@ msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "No content to print"
 msgstr ""
 
@@ -7704,6 +7705,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Print content"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Print preview"
 msgstr ""
 
 #. module: spreadsheet
@@ -13550,16 +13557,6 @@ msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"This operation is not possible due to a merge. Please remove the merges "
-"first than try again."
-msgstr ""
-"Aquesta operació no és possible a causa d'una fusió. Si us plau, elimineu "
-"les combinacions primer i torneu-ho a provar."
-
-#. module: spreadsheet
-#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "This pivot has no cell missing on this sheet"
 msgstr ""
@@ -15372,25 +15369,35 @@ msgstr ""
 msgid "yesterday"
 msgstr "ahir"
 
-#, fuzzy
-msgid "%(matches)s matches in %(sheetName)s"
-msgstr "%(matches)s coincidències en %(sheetName)s"
+#~ msgid "Currency not available for this company."
+#~ msgstr "La moneda no està disponible per a aquesta empresa."
+
+#~ msgid ""
+#~ "This operation is not possible due to a merge. Please remove the merges "
+#~ "first than try again."
+#~ msgstr ""
+#~ "Aquesta operació no és possible a causa d'una fusió. Si us plau, elimineu "
+#~ "les combinacions primer i torneu-ho a provar."
 
 #, fuzzy
-msgid "%(matches)s matches in range %(range)s of %(sheetName)s"
-msgstr "%(matches)s coincidències en el rang %(range)s de %(sheetName)s"
+#~ msgid "%(matches)s matches in %(sheetName)s"
+#~ msgstr "%(matches)s coincidències en %(sheetName)s"
 
 #, fuzzy
-msgid "%s matches in all sheets"
-msgstr "%s coincidències en tots els fulls"
-
-msgid "Filters"
-msgstr "Filtres"
+#~ msgid "%(matches)s matches in range %(range)s of %(sheetName)s"
+#~ msgstr "%(matches)s coincidències en el rang %(range)s de %(sheetName)s"
 
 #, fuzzy
-msgid "First day of the month preceding a date."
-msgstr "Primer dia del mes anterior a una data."
+#~ msgid "%s matches in all sheets"
+#~ msgstr "%s coincidències en tots els fulls"
+
+#~ msgid "Filters"
+#~ msgstr "Filtres"
 
 #, fuzzy
-msgid "Last day of the month following a date."
-msgstr "Últim dia del mes següent a una data."
+#~ msgid "First day of the month preceding a date."
+#~ msgstr "Primer dia del mes anterior a una data."
+
+#, fuzzy
+#~ msgid "Last day of the month following a date."
+#~ msgstr "Últim dia del mes següent a una data."

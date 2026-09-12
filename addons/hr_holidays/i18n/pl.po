@@ -34,7 +34,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:44+0000\n"
+"POT-Creation-Date: 2026-09-11 17:41+0000\n"
 "PO-Revision-Date: 2026-08-31 16:48+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -658,6 +658,14 @@ msgid "A cancelled leave cannot be modified."
 msgstr "Anulowany urlop nie może zostać zmodyfikowany."
 
 #. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+msgid ""
+"A duration of %s per day does not fit in the working time of the selected "
+"dates."
+msgstr ""
+
+#. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_holiday_allocation_id
 msgid ""
 "A great way to keep track on employee’s PTOs, sick days, and approval status."
@@ -753,6 +761,11 @@ msgstr "Nieobecni pracownicy"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__is_absent
 msgid "Absent Today"
 msgstr "Nieobecni dzisiaj"
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_res_groups
+msgid "Access Groups"
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
@@ -1155,11 +1168,6 @@ msgid "Allowed Work Entry Type"
 msgstr ""
 
 #. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__already_accrued
-msgid "Already Accrued"
-msgstr "Już naliczone"
-
-#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
 msgid "Amount"
 msgstr "Kwota"
@@ -1495,11 +1503,6 @@ msgid "Carried over"
 msgstr "Przeniesiony"
 
 #. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__carried_over_days_expiration_date
-msgid "Carried over days expiration date"
-msgstr "Data ważności przeniesionych dni"
-
-#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "Carry Over Options"
 msgstr "Opcje przeniesienia"
@@ -1799,16 +1802,6 @@ msgid "Date Period Start"
 msgstr "Data rozpoczęcia okresu"
 
 #. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__lastcall
-msgid "Date of the last accrual allocation"
-msgstr "Data ostatniego przydziału planu naliczania"
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__nextcall
-msgid "Date of the next accrual allocation"
-msgstr "Data nastepnęgo przydziału zgromadzonych dni"
-
-#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_generate_multi_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_mandatory_day_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -1978,6 +1971,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_message_subtype__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_report_hr_holidays_report_holidayssummary__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_res_company__display_name
+#: model:ir.model.fields,field_description:hr_holidays.field_res_groups__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_res_partner__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_res_users__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_resource_calendar__display_name
@@ -2066,7 +2060,7 @@ msgid "Duration (days)"
 msgstr "Czas trwania (dni)"
 
 #. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__number_of_hours_display
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__number_of_hours
 msgid "Duration (hours)"
 msgstr "Czas trwania (godziny)"
 
@@ -2234,7 +2228,7 @@ msgstr "Obserwujący (partnerzy)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__number_of_days_display
-#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__number_of_hours_display
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__number_of_hours
 msgid ""
 "For an Accrual Allocation, this field contains the theorical amount of time "
 "given to the employee, due to a previous start date, on the first run of the "
@@ -2256,7 +2250,6 @@ msgstr "Piątek"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee__date_from
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__start_datetime
 msgid "From"
 msgstr "Od"
 
@@ -2459,6 +2452,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_message_subtype__id
 #: model:ir.model.fields,field_description:hr_holidays.field_report_hr_holidays_report_holidayssummary__id
 #: model:ir.model.fields,field_description:hr_holidays.field_res_company__id
+#: model:ir.model.fields,field_description:hr_holidays.field_res_groups__id
 #: model:ir.model.fields,field_description:hr_holidays.field_res_partner__id
 #: model:ir.model.fields,field_description:hr_holidays.field_res_users__id
 #: model:ir.model.fields,field_description:hr_holidays.field_resource_calendar__id
@@ -3583,11 +3577,13 @@ msgstr "Raportowanie"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_date_hour_from
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__request_date_hour_from
 msgid "Request Date Hour From"
 msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_date_hour_to
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__request_date_hour_to
 msgid "Request Date Hour To"
 msgstr ""
 
@@ -3595,6 +3591,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/views/hr_leave_export.js:0
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_date_to
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__request_date_to
 msgid "Request End Date"
 msgstr "Data zakończenia wniosku"
 
@@ -3602,6 +3599,7 @@ msgstr "Data zakończenia wniosku"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/views/hr_leave_export.js:0
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_date_from
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__request_date_from
 msgid "Request Start Date"
 msgstr "Data rozpoczęcia wniosku"
 
@@ -3798,7 +3796,7 @@ msgstr ""
 "Sekwencja jest generowana automatycznie na podstawie delty czasu rozpoczęcia."
 
 #. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__postpone_max_days
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__max_carriedover_duration
 msgid "Set a maximum of accruals an allocation keeps at the end of the year."
 msgstr "Ustal maksymalną sumę naliczeń, jaką alokacja zachowa na koniec roku."
 
@@ -4070,15 +4068,6 @@ msgstr ""
 "wartość 0, wyłącz limit ujemny."
 
 #. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__expiring_carryover_days
-msgid ""
-"The number of carried over days that will expire on "
-"carried_over_days_expiration_date"
-msgstr ""
-"Liczba przeniesionych dni, których ważność wygaśnie z dniem "
-"carried_over_days_expiration_date"
-
-#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "The plan will be on hold if the balance reach"
 msgstr "Plan zostanie wstrzymany, jeśli saldo przekroczy"
@@ -4174,18 +4163,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "They should be lost (reset)."
 msgstr ""
-
-#. module: hr_holidays
-#. odoo-python
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-msgid ""
-"This allocation have already ran once, any modification won't be effective "
-"to the days allocated to the employee. If you need to change the "
-"configuration of the allocation, delete and create a new one."
-msgstr ""
-"Ta alokacja została już uruchomiona raz, wszelkie modyfikacje nie będą miały "
-"wpływu na dni przydzielone pracownikowi. Jeśli musisz zmienić konfigurację "
-"alokacji, usuń ją i utwórz nową."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__first_approver_id
@@ -4566,11 +4543,6 @@ msgstr "Strefa czasowa"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Title"
 msgstr "Tytuł"
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__stop_datetime
-msgid "To"
-msgstr "Do"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -5266,7 +5238,7 @@ msgstr ""
 "maksymalnej wartości."
 
 #. module: hr_holidays
-#: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_valid_postpone_max_days_value
+#: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_valid_max_carriedover_duration_value
 msgid "You cannot have a maximum quantity to carryover set to 0."
 msgstr "Nie możesz mieć maksymalnej ilości przeniesień skonfigurowanej na 0."
 
@@ -5684,3 +5656,34 @@ msgstr "zatwierdź"
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
 msgid "year(s)"
 msgstr ""
+
+#~ msgid "Already Accrued"
+#~ msgstr "Już naliczone"
+
+#~ msgid "Carried over days expiration date"
+#~ msgstr "Data ważności przeniesionych dni"
+
+#~ msgid "Date of the last accrual allocation"
+#~ msgstr "Data ostatniego przydziału planu naliczania"
+
+#~ msgid "Date of the next accrual allocation"
+#~ msgstr "Data nastepnęgo przydziału zgromadzonych dni"
+
+#~ msgid ""
+#~ "The number of carried over days that will expire on "
+#~ "carried_over_days_expiration_date"
+#~ msgstr ""
+#~ "Liczba przeniesionych dni, których ważność wygaśnie z dniem "
+#~ "carried_over_days_expiration_date"
+
+#~ msgid ""
+#~ "This allocation have already ran once, any modification won't be "
+#~ "effective to the days allocated to the employee. If you need to change "
+#~ "the configuration of the allocation, delete and create a new one."
+#~ msgstr ""
+#~ "Ta alokacja została już uruchomiona raz, wszelkie modyfikacje nie będą "
+#~ "miały wpływu na dni przydzielone pracownikowi. Jeśli musisz zmienić "
+#~ "konfigurację alokacji, usuń ją i utwórz nową."
+
+#~ msgid "To"
+#~ msgstr "Do"

@@ -11,14 +11,15 @@
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Manon Rondou (ronm)" <ronm@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Cécile Collart (cco)" <cco@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:44+0000\n"
-"PO-Revision-Date: 2026-08-31 21:13+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: French <https://translate.odoo.com/projects/odoo-s19-4/stock/"
+"POT-Creation-Date: 2026-09-11 17:41+0000\n"
+"PO-Revision-Date: 2026-09-09 13:59+0000\n"
+"Last-Translator: \"Cécile Collart (cco)\" <cco@odoo.com>\n"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-master/stock/"
 "fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -232,6 +233,12 @@ msgid ""
 msgstr ""
 "%(operations)s a/ont des emplacements source ou de destination par défaut "
 "dans %(warehouse)s, vous ne pouvez donc pas les/l'archiver."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking_type.py:0
+msgid "%(picking_type)s : Detailed Moves"
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -687,11 +694,6 @@ msgid "<span class=\"col-6\">Waiting</span>"
 msgstr "<span class=\"col-6\">En attente</span>"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
-msgid "<span class=\"col-6\">Waves</span>"
-msgstr ""
-
-#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_delivery_no_package_section_line
 msgid "<span class=\"ms-1\">Products with no package assigned</span>"
 msgstr "<span class=\"ms-1\">Produits sans colis assigné</span>"
@@ -704,15 +706,15 @@ msgstr "<span class=\"mt0 float-start\">Aucun colis assigné</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid ""
-"<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\" "
-"style=\"white-space: nowrap;\">Wave Grouping</span>"
+"<span class=\"o_form_label fw-bold\" invisible=\"batch_creation_type == "
+"'manual'\">Grouping by</span>"
 msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid ""
-"<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\">Batch "
-"Grouping</span>"
+"<span class=\"o_form_label fw-bold\" invisible=\"batch_creation_type == "
+"'manual'\">Maximum</span>"
 msgstr ""
 
 #. module: stock
@@ -881,6 +883,11 @@ msgstr "<span>Type de colis : </span>"
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "<span>Remaining quantities not yet delivered:</span>"
 msgstr "<span>Quantités restantes non encore livrées :</span>"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
+msgid "<span>View</span>"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
@@ -1184,6 +1191,11 @@ msgid "A warning can be set on a partner (Stock)"
 msgstr "Un avertissement peut être défini sur un contact (stock)"
 
 #. module: stock
+#: model:ir.model,name:stock.model_res_groups
+msgid "Access Groups"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__action
 msgid "Action"
 msgstr "Action"
@@ -1287,6 +1299,11 @@ msgid "Add a lot/serial number"
 msgstr "Ajouter un lot/numéro de série"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_picking_view_batch_tree_ref
+msgid "Add a move line"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_location_form
 msgid "Add a new location"
 msgstr "Ajouter un nouvel emplacement"
@@ -1300,6 +1317,11 @@ msgstr "Ajouter une nouvelle route"
 #: model_terms:ir.actions.act_window,help:stock.action_storage_category
 msgid "Add a new storage category"
 msgstr "Ajouter une nouvelle catégorie d'emplacement"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_picking_view_batch_tree_ref
+msgid "Add a transfer"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -1365,21 +1387,20 @@ msgid "Add to"
 msgstr ""
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_move_line.py:0
 #: model_terms:ir.ui.view,arch_db:stock.stock_add_to_wave_form
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_tree_detailed
-msgid "Add to Wave"
+msgid "Add to Batch"
 msgstr ""
 
 #. module: stock
+#: model:ir.actions.act_window,name:stock.stock_add_to_wave_action_stock_picking
 #: model:ir.actions.act_window,name:stock.stock_picking_to_batch_action_stock_picking
 msgid "Add to batch"
 msgstr ""
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.stock_add_to_wave_action_stock_picking
-msgid "Add to wave"
+#: model:ir.actions.act_window,name:stock.action_add_move_lines
+msgid "Add: Move Lines"
 msgstr ""
 
 #. module: stock
@@ -1439,7 +1460,7 @@ msgid "After next month last year"
 msgstr "Après le mois suivant l'année dernière"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "All"
 msgstr "Tous"
 
@@ -1714,6 +1735,12 @@ msgstr "Me demander"
 
 #. module: stock
 #. odoo-javascript
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+msgid "Assign"
+msgstr ""
+
+#. module: stock
+#. odoo-javascript
 #: code:addons/stock/static/src/allocation_report/allocation_report.xml:0
 msgid "Assign All"
 msgstr "Assigner tout"
@@ -1727,6 +1754,12 @@ msgstr "Assigner un propriétaire"
 #: model:ir.model.fields,field_description:stock.field_stock_request_count__user_id
 msgid "Assign to"
 msgstr "Attribuer à"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/allocation_report/allocation_report.xml:0
+msgid "Assigned"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__child_package_dest_ids
@@ -1833,6 +1866,7 @@ msgid "Automate"
 msgstr "Automatiser"
 
 #. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__batch_creation_type__auto
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
 msgid "Automatic"
 msgstr "Automatique"
@@ -1874,6 +1908,7 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_batch
+#: model:ir.model.fields,help:stock.field_stock_picking_type__batch_creation_type
 msgid ""
 "Automatically put pickings into batches as they are confirmed when possible."
 msgstr ""
@@ -2016,8 +2051,8 @@ msgid "Batch"
 msgstr ""
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
-msgid "Batch & Wave Transfers"
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__batch_creation_type
+msgid "Batch Creation"
 msgstr ""
 
 #. module: stock
@@ -2035,6 +2070,7 @@ msgstr ""
 #: code:addons/stock/models/stock_picking_batch.py:0
 #: model:ir.actions.report,name:stock.action_report_picking_batch
 #: model:ir.model,name:stock.model_stock_picking_batch
+#: model:ir.model.fields,field_description:stock.field_stock_add_to_wave__wave_id
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__batch_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking__batch_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking_batch__name
@@ -2046,6 +2082,7 @@ msgid "Batch Transfer"
 msgstr ""
 
 #. module: stock
+#: model:ir.model,name:stock.model_stock_add_to_wave
 #: model:ir.model,name:stock.model_stock_picking_to_batch
 msgid "Batch Transfer Line"
 msgstr ""
@@ -2053,6 +2090,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_picking_batch_action
 #: model:ir.ui.menu,name:stock.stock_picking_batch_menu
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Batch Transfers"
 msgstr ""
 
@@ -2068,7 +2106,6 @@ msgid "Batch associated to this transfer"
 msgstr ""
 
 #. module: stock
-#: model_terms:ir.actions.act_window,help:stock.action_picking_tree_wave
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_batch_action
 msgid "Batch transfers"
 msgstr ""
@@ -2080,15 +2117,20 @@ msgid "Batch transfers cannot be merged with wave transfers and vice versa."
 msgstr ""
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking_batch.py:0
+msgid "Batch transfers have been merged into the following transfer"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.actions.act_window,help:stock.stock_picking_batch_action
+msgid "Batch transfers lines"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_picking_batch
 msgid "Batch, Wave & Cluster Transfers"
 msgstr "Transferts par lot, vague & cluster"
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_picking_batch.py:0
-msgid "Batch/Wave transfers have been merged into the following transfer"
-msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -2265,6 +2307,14 @@ msgid "Cannot remove the location of a non empty package"
 msgstr "Impossible de supprimer l'emplacement d'un colis non vide"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+msgid ""
+"Cannot reset move to draft.\n"
+"Quantity not enough, product might have been used in some transfer."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__capacity_ids
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
 msgid "Capacity"
@@ -2401,18 +2451,6 @@ msgid "Choose destination location"
 msgstr "Choisir l'emplacement de destination"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
-msgid ""
-"Choose how many days of demand are covered by the Minimum level based on the "
-"average daily demand.\rThis number of days should at least be equal to "
-"Replenishment Lead Times - Availability Time to not run out of stock while "
-"waiting for a new replenishment to arrive. Include extra days of safety to "
-"buffer unusual situations.\r\rGreen if > Replenishment Lead Times - "
-"Availability Time\rOrange if = Replenishment Lead Times - Availability "
-"Time\rRed if < Replenishment Lead Times - Availability Time"
-msgstr ""
-
-#. module: stock
 #: model:ir.model,name:stock.model_lot_label_layout
 msgid "Choose the sheet layout to print lot labels"
 msgstr ""
@@ -2441,7 +2479,6 @@ msgid "Closest Location"
 msgstr "Emplacement le plus proche"
 
 #. module: stock
-#: model_terms:ir.actions.act_window,help:stock.action_picking_tree_wave
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_batch_action
 msgid "Cluster transfers"
 msgstr ""
@@ -2677,11 +2714,6 @@ msgstr "Nombre de transferts prêts"
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_waiting
 msgid "Count Picking Waiting"
 msgstr "Nombre de transferts en attente"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_wave
-msgid "Count Picking Wave"
-msgstr ""
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_inventory
@@ -3036,6 +3068,11 @@ msgid "Date Category"
 msgstr "Catégorie Date"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__wave_date_granularity
+msgid "Date Precision"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__date
 msgid "Date Scheduled"
 msgstr "Date planifiée"
@@ -3074,6 +3111,11 @@ msgid "Date for next planned inventory based on cyclic schedule."
 msgstr "Date pour l'inventaire planifié suivant, basé sur un agenda cyclique."
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+msgid "Date if same"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__date_done
 msgid "Date of Transfer"
 msgstr "Date du transfert"
@@ -3087,6 +3129,11 @@ msgstr "Date du dernier inventaire à cet emplacement."
 #: model:ir.model.fields,field_description:stock.field_stock_move__reservation_date
 msgid "Date to Reserve"
 msgstr "Date de réservation"
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__wave_date_granularity__day
+msgid "Day"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__annual_inventory_day
@@ -3117,6 +3164,19 @@ msgstr "Jours"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__days_to_order
 msgid "Days To Order"
 msgstr "Jours pour commander"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_replenishment_info__min_coverage
+msgid ""
+"Days of demand covered by Minimum level:\n"
+"Should be ≥ Replenishment Time - Sales Availability Time to avoid stock-outs "
+"during replenishment time.\n"
+"Include extra days of safety to buffer unusual situations.\n"
+"\n"
+"Green if > Replenishment Time - Sales Availability Time\n"
+"Orange if = Replenishment Time - Sales Availability Time\n"
+"Red if < Replenishment Time - Sales Availability Time"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__reservation_days_before_priority
@@ -3590,6 +3650,12 @@ msgid "Destination route"
 msgstr "Route de destination"
 
 #. module: stock
+#: model:ir.actions.act_window,name:stock.action_picking_detailed_moves
+#: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
+msgid "Detailed Moves"
+msgstr ""
+
+#. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #: code:addons/stock/models/stock_picking.py:0
@@ -3683,6 +3749,7 @@ msgstr "Afficher des lots et des numéros de série sur les bons de livraison"
 #: model:ir.model.fields,field_description:stock.field_report_stock_report_stock_rule__display_name
 #: model:ir.model.fields,field_description:stock.field_res_company__display_name
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:stock.field_res_groups__display_name
 #: model:ir.model.fields,field_description:stock.field_res_partner__display_name
 #: model:ir.model.fields,field_description:stock.field_res_users__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_add_to_wave__display_name
@@ -3976,6 +4043,12 @@ msgid "Exp %s"
 msgstr "Prévu %s"
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/client_actions/stock_traceability_report_backend.xml:0
+msgid "Expand"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__products_availability_state__expected
 msgid "Expected"
 msgstr "Prévu"
@@ -4239,6 +4312,7 @@ msgstr "Virtuellement disponible"
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__location_id
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_body_print
+#: model_terms:ir.ui.view,arch_db:stock.stock_picking_view_list_create_from_batch
 #: model_terms:ir.ui.view,arch_db:stock.view_move_tree
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
 msgid "From"
@@ -4294,6 +4368,11 @@ msgstr "Réceptions à venir"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "General"
 msgstr "Général"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+msgid "General Source Location"
+msgstr ""
 
 #. module: stock
 #. odoo-javascript
@@ -4354,6 +4433,11 @@ msgstr "Accéder aux entrepôts"
 #: code:addons/stock/models/stock_picking_type.py:0
 msgid "Goods Receipt Note"
 msgstr "Bon de réception des marchandises"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__wave_group_by_date
+msgid "Group by Date"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__batch_group_by_dest_loc
@@ -4480,6 +4564,7 @@ msgstr "Comment les produits de ce type de transfert doivent être réservés"
 #: model:ir.model.fields,field_description:stock.field_report_stock_report_stock_rule__id
 #: model:ir.model.fields,field_description:stock.field_res_company__id
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__id
+#: model:ir.model.fields,field_description:stock.field_res_groups__id
 #: model:ir.model.fields,field_description:stock.field_res_partner__id
 #: model:ir.model.fields,field_description:stock.field_res_users__id
 #: model:ir.model.fields,field_description:stock.field_stock_add_to_wave__id
@@ -4606,8 +4691,8 @@ msgstr "Si renseigné, les opérations sont emballées dans ce colis."
 #. odoo-python
 #: code:addons/stock/models/stock_picking_type.py:0
 msgid ""
-"If the Automatic Batches feature is enabled, at least one 'Group by' option "
-"must be selected."
+"If the Automatic Batches feature is enabled, at least one 'Grouping by' "
+"option must be selected."
 msgstr ""
 
 #. module: stock
@@ -4688,15 +4773,6 @@ msgstr ""
 "contenus d'un transfert lorsqu'il est validé."
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_product_labels
-msgid ""
-"If this checkbox is ticked, Odoo will automatically print the product labels "
-"of a picking when it is validated."
-msgstr ""
-"Si cette case est cochée, Odoo imprimera automatiquement les étiquettes de "
-"produit d'un transfert lorsqu'il est validé."
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_reception_report_labels
 msgid ""
 "If this checkbox is ticked, Odoo will automatically print the reception "
@@ -4729,6 +4805,13 @@ msgstr ""
 msgid ""
 "If this checkbox is ticked, Odoo will automatically show the allocation "
 "report (if there are moves to allocate to) when validating."
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_product_labels
+msgid ""
+"If this checkbox is ticked, Odoo will show the allocation report (if there "
+"are moves to allocate to.)"
 msgstr ""
 
 #. module: stock
@@ -5585,7 +5668,6 @@ msgid "Latest product availability status of the picking"
 msgstr "Dernier statut de disponibilité du transfert"
 
 #. module: stock
-#: model_terms:ir.actions.act_window,help:stock.action_picking_tree_wave
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_batch_action
 msgid ""
 "Launch picking orders by aisle or area and regroup at packing zone. Ideal "
@@ -5663,6 +5745,11 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_add_to_wave__line_ids
 msgid "Line"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+msgid "Lines"
 msgstr ""
 
 #. module: stock
@@ -6003,6 +6090,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
 msgid "Manual"
 msgstr "Manuel"
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__batch_creation_type__manual
+msgid "Manual Only"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__auto__manual
@@ -6408,7 +6500,6 @@ msgstr "Jamais de valeurs d'attributs"
 #. odoo-python
 #: code:addons/stock/models/stock_picking_batch.py:0
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__state__draft
-#: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "New"
 msgstr "Nouveau"
@@ -6780,6 +6871,11 @@ msgid "Open"
 msgstr "Ouvrir"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__open_button_style
+msgid "Open Button Style"
+msgstr ""
+
+#. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid "Open: Stock Move"
@@ -6803,6 +6899,7 @@ msgstr "Quantités de l'opération"
 #: model:ir.model.fields,field_description:stock.field_stock_picking_batch__picking_type_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__name
 #: model:ir.model.fields,field_description:stock.field_stock_rule__picking_type_id
+#: model_terms:ir.ui.view,arch_db:stock.stock_picking_batch_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 #: model_terms:ir.ui.view,arch_db:stock.view_pickingtype_filter
@@ -7481,7 +7578,6 @@ msgid "Pick Type"
 msgstr "Type de transfert"
 
 #. module: stock
-#: model_terms:ir.actions.act_window,help:stock.action_picking_tree_wave
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_batch_action
 msgid ""
 "Pick multiple orders in one trip and prepare orders as you pick. This "
@@ -7590,6 +7686,11 @@ msgid "Preceding operations"
 msgstr "Opérations précédentes"
 
 #. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking_type__wave_date_granularity
+msgid "Precision to consider when grouping waves."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__route_id
 #: model:ir.model.fields,field_description:stock.field_stock_replenish_mixin__route_id
 msgid "Preferred Route"
@@ -7611,15 +7712,6 @@ msgid "Prepare Batch"
 msgstr ""
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.action_prepare_wave
-#: model:ir.actions.act_window,name:stock.action_prepare_wave_for_picking_type
-#: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
-#: model_terms:ir.ui.view,arch_db:stock.stock_picking_wave_kanban
-#: model_terms:ir.ui.view,arch_db:stock.stock_picking_wave_tree
-msgid "Prepare Wave"
-msgstr ""
-
-#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "Presence depends on the operation category."
 msgstr "La présence dépend de la catégorie d’opération."
@@ -7638,6 +7730,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_move__price_unit
 msgid "Price Unit"
 msgstr "Prix unitaire"
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__open_button_style__primary
+msgid "Primary"
+msgstr ""
 
 #. module: stock
 #. odoo-javascript
@@ -7866,6 +7963,11 @@ msgstr "Mixin du réassort de produits"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rules_report
 msgid "Product Routes Report"
 msgstr "Analyse des routes du produit"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+msgid "Product Source Location"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_tmpl_id
@@ -8350,7 +8452,6 @@ msgstr "Évaluations"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__state__assigned
-#: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Ready"
@@ -8507,7 +8608,6 @@ msgid "Refresh"
 msgstr ""
 
 #. module: stock
-#: model_terms:ir.actions.act_window,help:stock.action_picking_tree_wave
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_batch_action
 msgid ""
 "Regroup multiple orders into one picking and consolidate at the packing zone."
@@ -8644,7 +8744,7 @@ msgid "Replenishment"
 msgstr "Réassort"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
+#: model:ir.model.fields,help:stock.field_stock_replenishment_info__replenish_frequency
 msgid ""
 "Replenishment Frequency: choose how many days there are between "
 "replenishment requests to optimize the balance between your storage costs "
@@ -8784,7 +8884,6 @@ msgstr "Réserver des conditionnements partiels"
 
 #. module: stock
 #. odoo-javascript
-#: code:addons/stock/static/src/allocation_report/allocation_report.xml:0
 #: code:addons/stock/static/src/allocation_report/out_line/out_line.js:0
 msgid "Reserved"
 msgstr ""
@@ -9245,6 +9344,11 @@ msgstr "Rechercher une référence"
 #: code:addons/stock/models/stock_move.py:0
 msgid "Search not supported without a value."
 msgstr "Recherche non prise en charge sans valeur."
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__open_button_style__secondary
+msgid "Secondary"
+msgstr ""
 
 #. module: stock
 #. odoo-javascript
@@ -9782,7 +9886,6 @@ msgstr "Document d'origine"
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__default_location_src_id
 #: model:ir.model.fields,field_description:stock.field_stock_rule__location_src_id
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
-#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 #: model_terms:ir.ui.view,arch_db:stock.view_scrap_move_list
 msgid "Source Location"
 msgstr "Emplacement d'origine"
@@ -9850,6 +9953,11 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_picking_type__wave_group_by_product
 msgid ""
 "Split transfers by product then group transfers that have the same product."
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking_type__wave_group_by_date
+msgid "Split transfers by their date."
 msgstr ""
 
 #. module: stock
@@ -10451,12 +10559,14 @@ msgstr "Le premier dans la séquence est celui par défaut."
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
 #: code:addons/stock/wizard/stock_picking_to_batch.py:0
 msgid "The following batch transfer has been created"
 msgstr ""
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
 #: code:addons/stock/wizard/stock_picking_to_batch.py:0
 msgid "The following batch transfer has been updated"
 msgstr ""
@@ -10475,18 +10585,6 @@ msgid ""
 "check their states and operation types.\n"
 "\n"
 "Incompatibilities: %(incompatible_transfers)s"
-msgstr ""
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_move_line.py:0
-msgid "The following wave transfer has been created"
-msgstr ""
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_move_line.py:0
-msgid "The following wave transfer has been updated"
 msgstr ""
 
 #. module: stock
@@ -10668,7 +10766,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_picking_batch.py:0
 msgid ""
-"The sequence '%(sequence)s' is misconfigured. Its prefix should end with a "
+"The sequence 'picking.batch' is misconfigured. Its prefix should end with a "
 "'/' separator."
 msgstr ""
 
@@ -11031,6 +11129,7 @@ msgstr "Astuce : Accélérez vos opérations d'inventaire grâce aux codes-barre
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__location_dest_id
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_body_print
+#: model_terms:ir.ui.view,arch_db:stock.stock_picking_view_list_create_from_batch
 #: model_terms:ir.ui.view,arch_db:stock.view_move_tree
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
 msgid "To"
@@ -11220,7 +11319,6 @@ msgstr "Traçabilité"
 
 #. module: stock
 #. odoo-javascript
-#: code:addons/stock/static/src/client_actions/stock_traceability_report_backend.js:0
 #: code:addons/stock/static/src/client_actions/stock_traceability_report_backend.xml:0
 #: model:ir.actions.client,name:stock.action_stock_report
 #: model:ir.model,name:stock.model_stock_traceability_report
@@ -11357,7 +11455,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_batch_card
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_batch_form
-#: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
 msgid "Transfers"
 msgstr "Transferts"
@@ -11449,6 +11547,12 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_picking_batch__activity_exception_decoration
 msgid "Type of the exception activity on record."
 msgstr "Type d'activité d'exception enregistrée."
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+msgid "Unassign"
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -11671,7 +11775,6 @@ msgid "Vendor Locations"
 msgstr "Emplacements fournisseur"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_package_history_list
 msgid "View"
 msgstr "Vue"
@@ -11685,12 +11788,6 @@ msgstr "Voir la disponibilité"
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_stock
 msgid "View Diagram"
 msgstr "Voir le diagramme"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_product_template_tree
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_product_tree
-msgid "View Forecast"
-msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__view_location_id
@@ -11752,7 +11849,6 @@ msgstr "WH/Stock"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__state__confirmed
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__state__confirmed
-#: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Waiting"
 msgstr "En attente"
@@ -11916,25 +12012,14 @@ msgid "Wave Product Categories"
 msgstr ""
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_add_to_wave__wave_id
-msgid "Wave Transfer"
+#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__wave_date_granularity__week
+msgid "Week"
 msgstr ""
 
 #. module: stock
-#: model:ir.model,name:stock.model_stock_add_to_wave
-msgid "Wave Transfer Line"
-msgstr ""
-
-#. module: stock
-#: model:ir.actions.act_window,name:stock.action_picking_tree_wave
-#: model:ir.ui.menu,name:stock.stock_picking_wave_menu
-msgid "Wave Transfers"
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.actions.act_window,help:stock.action_picking_tree_wave
-#: model_terms:ir.actions.act_window,help:stock.stock_picking_batch_action
-msgid "Wave transfers"
+#. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+msgid "Week %d"
 msgstr ""
 
 #. module: stock
@@ -12652,23 +12737,15 @@ msgid "]<br/>min:"
 msgstr "]<br/>min :"
 
 #. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_add_to_wave__mode__new
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_to_batch__mode__new
 msgid "a new batch transfer"
 msgstr ""
 
 #. module: stock
-#: model:ir.model.fields.selection,name:stock.selection__stock_add_to_wave__mode__new
-msgid "a new wave transfer"
-msgstr ""
-
-#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_add_to_wave__mode__existing
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_to_batch__mode__existing
 msgid "an existing batch transfer"
-msgstr ""
-
-#. module: stock
-#: model:ir.model.fields.selection,name:stock.selection__stock_add_to_wave__mode__existing
-msgid "an existing wave transfer"
 msgstr ""
 
 #. module: stock
@@ -12708,7 +12785,6 @@ msgstr "jours avant/"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
 msgid "days)"
 msgstr ""
 
@@ -12921,251 +12997,258 @@ msgstr ""
 "{{ object.company_id.name }} Bon de livraison (Ref {{ object.name or 'n/"
 "a' }})"
 
-msgid "Andrwep"
-msgstr "Andrwep"
+#~ msgid ""
+#~ "If this checkbox is ticked, Odoo will automatically print the product "
+#~ "labels of a picking when it is validated."
+#~ msgstr ""
+#~ "Si cette case est cochée, Odoo imprimera automatiquement les étiquettes "
+#~ "de produit d'un transfert lorsqu'il est validé."
+
+#~ msgid "Andrwep"
+#~ msgstr "Andrwep"
+
+#~ msgid "DEMO_DATE"
+#~ msgstr "DEMO_DATE"
 
-msgid "DEMO_DATE"
-msgstr "DEMO_DATE"
+#~ msgid "DEMO_ORIGIN_DISPLAY_NAME"
+#~ msgstr "DEMO_ORIGIN_DISPLAY_NAME"
 
-msgid "DEMO_ORIGIN_DISPLAY_NAME"
-msgstr "DEMO_ORIGIN_DISPLAY_NAME"
+#~ msgid "DEMO_PARTNER_NAME"
+#~ msgstr "DEMO_PARTNER_NAME"
 
-msgid "DEMO_PARTNER_NAME"
-msgstr "DEMO_PARTNER_NAME"
+#~ msgid "DEMO_PRODUCT_DISPLAY_NAME"
+#~ msgstr "DEMO_PRODUCT_DISPLAY_NAME"
+
+#~ msgid "DEMO_QUANTITY"
+#~ msgstr "DEMO_QUANTITY"
+
+#~ msgid "DEMO_SOURCE_DISPLAY_NAME"
+#~ msgstr "DEMO_SOURCE_DISPLAY_NAME"
+
+#~ msgid "DEMO_UOM"
+#~ msgstr "DEMO_UOM"
+
+#~ msgid "Demo Display Name"
+#~ msgstr "Nom d'affichage démo"
+
+#~ msgid "Dispatch Management System"
+#~ msgstr "Système de gestion des envois"
 
-msgid "DEMO_PRODUCT_DISPLAY_NAME"
-msgstr "DEMO_PRODUCT_DISPLAY_NAME"
+#~ msgid "Expected Delivery:"
+#~ msgstr "Livraison prévue :"
 
-msgid "DEMO_QUANTITY"
-msgstr "DEMO_QUANTITY"
-
-msgid "DEMO_SOURCE_DISPLAY_NAME"
-msgstr "DEMO_SOURCE_DISPLAY_NAME"
+#~ msgid ""
+#~ "If this checkbox is ticked, Odoo will automatically show the reception "
+#~ "report (if there are moves to allocate to) when validating."
+#~ msgstr ""
+#~ "Si cette case est cochée, Odoo affichera automatiquement le rapport de "
+#~ "réception (s'il y a des déplacementsà allouer) lors de la validation."
+
+#~ msgid "No %s selected or a delivery order selected"
+#~ msgstr "Aucun %s sélectionné ou bon de livraison sélectionné"
+
+#~ msgid "Print Label"
+#~ msgstr "Imprimer l'étiquette"
+
+#~ msgid "Reason"
+#~ msgstr "Motif"
+
+#~ msgid "Show Reception Report at Validation"
+#~ msgstr "Montrer le Rapport de réception à la validation"
+
+#~ msgid "Stock Reception Report"
+#~ msgstr "Rapport de réception de stock"
+
+#~ msgid "This report cannot be used for done and not done %s at the same time"
+#~ msgstr ""
+#~ "Ce rapport ne peut être utilisé à la fois pour des %s terminés et non "
+#~ "terminés"
+
+#~ msgid "Transport management: organize packs in your fleet, or carriers."
+#~ msgstr ""
+#~ "Gestion du transport : organiser le transport avec votre parc automobile "
+#~ "ou des transporteurs."
+
+#~ msgid "Use Reception Report"
+#~ msgstr "Utiliser le rapport de réception"
+
+#~ msgid "View and allocate received quantities"
+#~ msgstr "Voir et allouer les quantités reçues"
+
+#~ msgid ""
+#~ "<i class=\"fa fa-exclamation-triangle\"/>\n"
+#~ "                                All products could not be reserved. Click "
+#~ "on the \"Check Availability\" button to try to reserve products."
+#~ msgstr ""
+#~ "<i class=\"fa fa-exclamation-triangle\"/>\n"
+#~ "                               Tous les produits n'ont pas pu être "
+#~ "réservés. Cliquer sur le bouton \"Vérifier la disponibilité\" pour "
+#~ "essayer de réserver les produits."
 
-msgid "DEMO_UOM"
-msgstr "DEMO_UOM"
+#~ msgid "Check Availability"
+#~ msgstr "Vérifier la disponibilité"
 
-msgid "Demo Display Name"
-msgstr "Nom d'affichage démo"
+#~ msgid "Click or press enter to add a description"
+#~ msgstr ""
+#~ "Cliquez ou appuyez sur la touche \"Entrée\" pour ajouter une description"
 
-msgid "Dispatch Management System"
-msgstr "Système de gestion des envois"
+#~ msgid "Compute shipping costs and ship with DHL"
+#~ msgstr "Calculer les frais d'expédition et expédier avec DHL"
+
+#~ msgid ""
+#~ "Compute shipping costs and ship with DHL<br/>\n"
+#~ "                                    <strong>(please go to Home&gt;Apps to "
+#~ "install)</strong>"
+#~ msgstr ""
+#~ "Calculer les frais de livraison et expédier avec DHL<br/>\n"
+#~ "                                    <strong>(allez dans Accueil > "
+#~ "Applications pour l’installer)</strong>"
+
+#~ msgid "Compute shipping costs and ship with Easypost"
+#~ msgstr "Calculer les frais d'expédition et expédier avec Easypost"
+
+#~ msgid "Compute shipping costs and ship with Envia.com"
+#~ msgstr "Calculer les frais d'expédition et expédier avec Envia.com"
 
-msgid "Expected Delivery:"
-msgstr "Livraison prévue :"
+#~ msgid "Compute shipping costs and ship with FedEx"
+#~ msgstr "Calculer les frais d'expédition et expédier avec FedEx"
+
+#~ msgid ""
+#~ "Compute shipping costs and ship with FedEx<br/>\n"
+#~ "                                    <strong>(please go to Home&gt;Apps to "
+#~ "install)</strong>"
+#~ msgstr ""
+#~ "Calculer les frais de livraison et expédier avec FedEx<br/>\n"
+#~ "                                    <strong>(allez dans Accueil > "
+#~ "Applications pour l’installer)</strong>"
 
-msgid ""
-"If this checkbox is ticked, Odoo will automatically show the reception "
-"report (if there are moves to allocate to) when validating."
-msgstr ""
-"Si cette case est cochée, Odoo affichera automatiquement le rapport de "
-"réception (s'il y a des déplacementsà allouer) lors de la validation."
+#~ msgid "Compute shipping costs and ship with Sendcloud"
+#~ msgstr "Calculer les frais d'expédition et expédier avec Sendcloud"
 
-msgid "No %s selected or a delivery order selected"
-msgstr "Aucun %s sélectionné ou bon de livraison sélectionné"
+#~ msgid "Compute shipping costs and ship with Shiprocket"
+#~ msgstr "Calculer les frais d'expédition et expédier avec Shiprocket"
 
-msgid "Print Label"
-msgstr "Imprimer l'étiquette"
-
-msgid "Reason"
-msgstr "Motif"
-
-msgid "Show Reception Report at Validation"
-msgstr "Montrer le Rapport de réception à la validation"
-
-msgid "Stock Reception Report"
-msgstr "Rapport de réception de stock"
-
-msgid "This report cannot be used for done and not done %s at the same time"
-msgstr ""
-"Ce rapport ne peut être utilisé à la fois pour des %s terminés et non "
-"terminés"
-
-msgid "Transport management: organize packs in your fleet, or carriers."
-msgstr ""
-"Gestion du transport : organiser le transport avec votre parc automobile ou "
-"des transporteurs."
+#~ msgid "Compute shipping costs and ship with Starshipit"
+#~ msgstr "Calculer les frais d'expédition et expédier avec Starshipit"
 
-msgid "Use Reception Report"
-msgstr "Utiliser le rapport de réception"
+#~ msgid "Compute shipping costs and ship with UPS"
+#~ msgstr "Calculer les frais d'expédition et expédier avec UPS"
 
-msgid "View and allocate received quantities"
-msgstr "Voir et allouer les quantités reçues"
+#~ msgid ""
+#~ "Compute shipping costs and ship with UPS<br/>\n"
+#~ "                                    <strong>(please go to Home&gt;Apps to "
+#~ "install)</strong>"
+#~ msgstr ""
+#~ "Calculer les frais de livraison et expédier avec UPS<br/>\n"
+#~ "                                    <strong>(allez dans Accueil > "
+#~ "Applications pour l’installer)</strong>"
 
-msgid ""
-"<i class=\"fa fa-exclamation-triangle\"/>\n"
-"                                All products could not be reserved. Click on "
-"the \"Check Availability\" button to try to reserve products."
-msgstr ""
-"<i class=\"fa fa-exclamation-triangle\"/>\n"
-"                               Tous les produits n'ont pas pu être réservés. "
-"Cliquer sur le bouton \"Vérifier la disponibilité\" pour essayer de réserver "
-"les produits."
+#~ msgid "Compute shipping costs and ship with USPS"
+#~ msgstr "Calculer les frais d'expédition et expédier avec USPS"
 
-msgid "Check Availability"
-msgstr "Vérifier la disponibilité"
+#~ msgid ""
+#~ "Compute shipping costs and ship with USPS<br/>\n"
+#~ "                                    <strong>(please go to Home&gt;Apps to "
+#~ "install)</strong>"
+#~ msgstr ""
+#~ "Calculer les frais de livraison et expédier avec USPS<br/>\n"
+#~ "                                    <strong>(allez dans Accueil > "
+#~ "Applications pour l’installer)</strong>"
 
-msgid "Click or press enter to add a description"
-msgstr ""
-"Cliquez ou appuyez sur la touche \"Entrée\" pour ajouter une description"
+#~ msgid "Compute shipping costs and ship with bpost"
+#~ msgstr "Calculer les frais d'expédition et expédier avec bpost"
 
-msgid "Compute shipping costs and ship with DHL"
-msgstr "Calculer les frais d'expédition et expédier avec DHL"
+#~ msgid "DHL Connector"
+#~ msgstr "Connecteur DHL"
 
-msgid ""
-"Compute shipping costs and ship with DHL<br/>\n"
-"                                    <strong>(please go to Home&gt;Apps to "
-"install)</strong>"
-msgstr ""
-"Calculer les frais de livraison et expédier avec DHL<br/>\n"
-"                                    <strong>(allez dans Accueil > "
-"Applications pour l’installer)</strong>"
+#~ msgid "DHL Express Connector"
+#~ msgstr "Connecteur DHL Express"
 
-msgid "Compute shipping costs and ship with Easypost"
-msgstr "Calculer les frais d'expédition et expédier avec Easypost"
+#~ msgid "Default Return Name"
+#~ msgstr "Nom de retour par défaut"
 
-msgid "Compute shipping costs and ship with Envia.com"
-msgstr "Calculer les frais d'expédition et expédier avec Envia.com"
+#~ msgid "Demo Address and Name"
+#~ msgstr "Adresse et nom démo"
 
-msgid "Compute shipping costs and ship with FedEx"
-msgstr "Calculer les frais d'expédition et expédier avec FedEx"
+#~ msgid "Easypost Connector"
+#~ msgstr "Connecteur Easypost"
 
-msgid ""
-"Compute shipping costs and ship with FedEx<br/>\n"
-"                                    <strong>(please go to Home&gt;Apps to "
-"install)</strong>"
-msgstr ""
-"Calculer les frais de livraison et expédier avec FedEx<br/>\n"
-"                                    <strong>(allez dans Accueil > "
-"Applications pour l’installer)</strong>"
+#~ msgid "Envia.com Connector"
+#~ msgstr "Connecteur Envia.com"
 
-msgid "Compute shipping costs and ship with Sendcloud"
-msgstr "Calculer les frais d'expédition et expédier avec Sendcloud"
+#~ msgid "FedEx Connector"
+#~ msgstr "Connecteur FedEx"
 
-msgid "Compute shipping costs and ship with Shiprocket"
-msgstr "Calculer les frais d'expédition et expédier avec Shiprocket"
+#~ msgid "Generate Serials/Lots"
+#~ msgstr "Générer des numéros de série/lot"
 
-msgid "Compute shipping costs and ship with Starshipit"
-msgstr "Calculer les frais d'expédition et expédier avec Starshipit"
+#~ msgid "Import Serials/Lots"
+#~ msgstr "Importer des numéros de série/lot"
 
-msgid "Compute shipping costs and ship with UPS"
-msgstr "Calculer les frais d'expédition et expédier avec UPS"
+#~ msgid "Nothing to check the availability for."
+#~ msgstr "Pas de vérification de disponibilité à effectuer"
 
-msgid ""
-"Compute shipping costs and ship with UPS<br/>\n"
-"                                    <strong>(please go to Home&gt;Apps to "
-"install)</strong>"
-msgstr ""
-"Calculer les frais de livraison et expédier avec UPS<br/>\n"
-"                                    <strong>(allez dans Accueil > "
-"Applications pour l’installer)</strong>"
+#~ msgid ""
+#~ "Please put this document inside your return parcel.<br/>\n"
+#~ "                                Your parcel must be sent to this address:"
+#~ msgstr ""
+#~ "Veuillez placer ce document à l'intérieur de votre colis de retour.<br/>\n"
+#~ "                                Votre colis doit être envoyé à cette "
+#~ "adresse :"
 
-msgid "Compute shipping costs and ship with USPS"
-msgstr "Calculer les frais d'expédition et expédier avec USPS"
+#~ msgid "Sendcloud Connector"
+#~ msgstr "Connecteur SendCloud"
 
-msgid ""
-"Compute shipping costs and ship with USPS<br/>\n"
-"                                    <strong>(please go to Home&gt;Apps to "
-"install)</strong>"
-msgstr ""
-"Calculer les frais de livraison et expédier avec USPS<br/>\n"
-"                                    <strong>(allez dans Accueil > "
-"Applications pour l’installer)</strong>"
+#~ msgid "Shipping Connectors"
+#~ msgstr "Connecteurs d'expédition"
 
-msgid "Compute shipping costs and ship with bpost"
-msgstr "Calculer les frais d'expédition et expédier avec bpost"
+#~ msgid "Shiprocket Connector"
+#~ msgstr "Connecteur Shiprocket"
 
-msgid "DHL Connector"
-msgstr "Connecteur DHL"
+#~ msgid "Starshipit Connector"
+#~ msgstr "Connecteur Starshipit"
 
-msgid "DHL Express Connector"
-msgstr "Connecteur DHL Express"
+#~ msgid ""
+#~ "Technical field used to compute whether the button \"Check Availability\" "
+#~ "should be displayed."
+#~ msgstr ""
+#~ "Champ technique indiquant si le bouton \"Vérifier la disponibilité\" doit "
+#~ "être affiché ou non."
 
-msgid "Default Return Name"
-msgstr "Nom de retour par défaut"
+#~ msgid "UPS Connector"
+#~ msgstr "Connecteur UPS"
 
-msgid "Demo Address and Name"
-msgstr "Adresse et nom démo"
+#~ msgid "USPS Connector"
+#~ msgstr "Connecteur USPS"
 
-msgid "Easypost Connector"
-msgstr "Connecteur Easypost"
+#~ msgid "Website Messages"
+#~ msgstr "Messages du site web"
 
-msgid "Envia.com Connector"
-msgstr "Connecteur Envia.com"
+#~ msgid "Website communication history"
+#~ msgstr "Historique de communication du site web"
 
-msgid "FedEx Connector"
-msgstr "Connecteur FedEx"
+#~ msgid "bpost Connector"
+#~ msgstr "Connecteur Bpost"
 
-msgid "Generate Serials/Lots"
-msgstr "Générer des numéros de série/lot"
+#~ msgid "Demo Lot/SN"
+#~ msgstr "Démo Lot/NS"
 
-msgid "Import Serials/Lots"
-msgstr "Importer des numéros de série/lot"
+#~ msgid "Demo Product"
+#~ msgstr "Produit démo"
 
-msgid "Nothing to check the availability for."
-msgstr "Pas de vérification de disponibilité à effectuer"
+#~ msgid "Final Location"
+#~ msgstr "Emplacement final"
 
-msgid ""
-"Please put this document inside your return parcel.<br/>\n"
-"                                Your parcel must be sent to this address:"
-msgstr ""
-"Veuillez placer ce document à l'intérieur de votre colis de retour.<br/>\n"
-"                                Votre colis doit être envoyé à cette "
-"adresse :"
+#~ msgid ""
+#~ "The operation brings the products to the intermediate location.But this "
+#~ "operation is part of a chain of operations targeting the final location."
+#~ msgstr ""
+#~ "L'opération amène les produits à l'emplacement intermédiaire. Cependant, "
+#~ "cette opération fait partie d'une chaîne d'opérations visant "
+#~ "l'emplacement final."
 
-msgid "Sendcloud Connector"
-msgstr "Connecteur SendCloud"
+#~ msgid "On hand:"
+#~ msgstr "Disponible :"
 
-msgid "Shipping Connectors"
-msgstr "Connecteurs d'expédition"
-
-msgid "Shiprocket Connector"
-msgstr "Connecteur Shiprocket"
-
-msgid "Starshipit Connector"
-msgstr "Connecteur Starshipit"
-
-msgid ""
-"Technical field used to compute whether the button \"Check Availability\" "
-"should be displayed."
-msgstr ""
-"Champ technique indiquant si le bouton \"Vérifier la disponibilité\" doit "
-"être affiché ou non."
-
-msgid "UPS Connector"
-msgstr "Connecteur UPS"
-
-msgid "USPS Connector"
-msgstr "Connecteur USPS"
-
-msgid "Website Messages"
-msgstr "Messages du site web"
-
-msgid "Website communication history"
-msgstr "Historique de communication du site web"
-
-msgid "bpost Connector"
-msgstr "Connecteur Bpost"
-
-msgid "Demo Lot/SN"
-msgstr "Démo Lot/NS"
-
-msgid "Demo Product"
-msgstr "Produit démo"
-
-msgid "Final Location"
-msgstr "Emplacement final"
-
-msgid ""
-"The operation brings the products to the intermediate location.But this "
-"operation is part of a chain of operations targeting the final location."
-msgstr ""
-"L'opération amène les produits à l'emplacement intermédiaire. Cependant, "
-"cette opération fait partie d'une chaîne d'opérations visant l'emplacement "
-"final."
-
-msgid "On hand:"
-msgstr "Disponible :"
-
-msgid "Real Quantity"
-msgstr "Quantité réelle"
+#~ msgid "Real Quantity"
+#~ msgstr "Quantité réelle"

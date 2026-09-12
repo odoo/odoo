@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:44+0000\n"
+"POT-Creation-Date: 2026-09-11 17:41+0000\n"
 "PO-Revision-Date: 2026-08-31 21:21+0000\n"
 "Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-s19-4/project/"
@@ -88,9 +88,33 @@ msgstr "การวิเคราะห์งานของ %(name)s"
 
 #. module: project
 #. odoo-python
+#: code:addons/project/models/project_project.py:0
+msgid "%(name)s's Time by Stage"
+msgstr ""
+
+#. module: project
+#. odoo-python
 #: code:addons/project/models/res_partner.py:0
 msgid "%(partner_name)s's Tasks"
 msgstr "งานของ%(partner_name)s"
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/account_analytic_line.py:0
+msgid "%(sign)s%(hours)sh"
+msgstr ""
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/account_analytic_line.py:0
+msgid "%(sign)s%(hours)sh %(minutes)sm"
+msgstr ""
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/account_analytic_line.py:0
+msgid "%(sign)s%(minutes)sm"
+msgstr ""
 
 #. module: project
 #. odoo-python
@@ -852,6 +876,11 @@ msgid "Accept Emails From"
 msgstr "ยอมรับฟอร์มอีเมล"
 
 #. module: project
+#: model:ir.model,name:project.model_res_groups
+msgid "Access Groups"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_collaborator_wizard__access_mode
 msgid "Access Mode"
 msgstr "โหมดการเข้าถึง"
@@ -1110,6 +1139,11 @@ msgid "Analytic Account"
 msgstr "บัญชีวิเคราะห์"
 
 #. module: project
+#: model:ir.model,name:project.model_account_analytic_line
+msgid "Analytic Line"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.actions.act_window,help:project.action_project_task_burndown_chart_report
 msgid ""
 "Analyze how quickly your team is completing your project's tasks and check "
@@ -1120,6 +1154,7 @@ msgstr ""
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_project_task_user_tree
+#: model_terms:ir.actions.act_window,help:project.action_project_time_by_stage_report
 msgid ""
 "Analyze the progress of your projects and the performance of your employees."
 msgstr "วิเคราะห์ความคืบหน้าของโปรเจ็กต์และประสิทธิภาพของพนักงานของคุณ"
@@ -1234,12 +1269,14 @@ msgstr "มอบหมายให้"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__user_ids
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__user_ids
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__user_ids
 #: model:ir.model.fields,field_description:project.field_project_template_role_to_users_map__user_ids
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__user_ids
 #: model_terms:ir.ui.view,arch_db:project.open_view_blocked_by_list_view
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_tree
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_fsm_base
 msgid "Assignees"
 msgstr "ผู้รับมอบหมาย"
@@ -1513,6 +1550,7 @@ msgid "Close the sub-tasks list"
 msgstr "ปิดรายการงานย่อย"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Closed"
 msgstr "ปิดแล้ว"
@@ -1523,12 +1561,14 @@ msgid "Closed Depending on Tasks"
 msgstr "ปิดลงตามงานต่างๆ"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Closed On"
 msgstr "ปิดเมื่อ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__is_closed
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__is_closed
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__is_closed
 msgid "Closed state"
 msgstr "สถานะปิด"
@@ -1587,8 +1627,10 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project__company_id
 #: model:ir.model.fields,field_description:project.field_project_project_stage__company_id
 #: model:ir.model.fields,field_description:project.field_project_task__company_id
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__company_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__company_id
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_search
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Company"
 msgstr "บริษัท"
@@ -1700,6 +1742,7 @@ msgid ""
 msgstr "สร้าง <b>กิจกรรม</b> เพื่อกำหนดสิ่งที่ต้องทำหรือกำหนดเวลาการประชุม"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__create_date
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__create_date
 msgid "Create Date"
 msgstr "วันที่สร้าง"
@@ -1830,6 +1873,7 @@ msgid "Created on"
 msgstr "สร้างเมื่อ"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Creation Date"
@@ -1851,7 +1895,9 @@ msgstr "ข้อความตีกลับที่กำหนดเอง
 #: model:ir.model.fields,field_description:project.field_project_project__partner_id
 #: model:ir.model.fields,field_description:project.field_project_task__partner_id
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__partner_id
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__partner_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__partner_id
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Customer"
@@ -1993,9 +2039,11 @@ msgstr "วันก่อนที่จะไม่มีความเคล
 #: model:ir.model.fields,field_description:project.field_project_milestone__deadline
 #: model:ir.model.fields,field_description:project.field_project_task__date_deadline
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__date_deadline
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__date_deadline
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__date_deadline
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_kanban
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_base
 msgid "Deadline"
 msgstr "วันครบกำหนด"
@@ -2158,6 +2206,7 @@ msgstr "ละทิ้ง"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_account_analytic_account__display_name
+#: model:ir.model.fields,field_description:project.field_account_analytic_line__display_name
 #: model:ir.model.fields,field_description:project.field_digest_digest__display_name
 #: model:ir.model.fields,field_description:project.field_ir_ui_menu__display_name
 #: model:ir.model.fields,field_description:project.field_mail_activity__display_name
@@ -2176,6 +2225,7 @@ msgstr "ละทิ้ง"
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__display_name
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__display_name
 #: model:ir.model.fields,field_description:project.field_project_task_stage_personal__display_name
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__display_name
 #: model:ir.model.fields,field_description:project.field_project_task_type__display_name
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__display_name
 #: model:ir.model.fields,field_description:project.field_project_template_create_wizard__display_name
@@ -2183,6 +2233,7 @@ msgstr "ละทิ้ง"
 #: model:ir.model.fields,field_description:project.field_project_update__display_name
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__display_name
 #: model:ir.model.fields,field_description:project.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:project.field_res_groups__display_name
 #: model:ir.model.fields,field_description:project.field_res_partner__display_name
 #: model:ir.model.fields,field_description:project.field_res_users__display_name
 #: model:ir.model.fields,field_description:project.field_res_users_settings__display_name
@@ -2422,6 +2473,7 @@ msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_base
 msgid "Future"
 msgstr "อนาคต"
@@ -2539,6 +2591,7 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__2
+#: model:ir.model.fields.selection,name:project.selection__project_task_stage_report__priority__2
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__priority__2
 msgid "High priority"
 msgstr "ระดับความสำคัญสูง"
@@ -2586,6 +2639,7 @@ msgstr "โปรเจ็กต์นี้เป็นอย่างไรบ
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_account_analytic_account__id
+#: model:ir.model.fields,field_description:project.field_account_analytic_line__id
 #: model:ir.model.fields,field_description:project.field_digest_digest__id
 #: model:ir.model.fields,field_description:project.field_ir_ui_menu__id
 #: model:ir.model.fields,field_description:project.field_mail_activity__id
@@ -2604,6 +2658,7 @@ msgstr "โปรเจ็กต์นี้เป็นอย่างไรบ
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__id
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__id
 #: model:ir.model.fields,field_description:project.field_project_task_stage_personal__id
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__id
 #: model:ir.model.fields,field_description:project.field_project_task_type__id
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__id
 #: model:ir.model.fields,field_description:project.field_project_template_create_wizard__id
@@ -2611,6 +2666,7 @@ msgstr "โปรเจ็กต์นี้เป็นอย่างไรบ
 #: model:ir.model.fields,field_description:project.field_project_update__id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__id
 #: model:ir.model.fields,field_description:project.field_res_config_settings__id
+#: model:ir.model.fields,field_description:project.field_res_groups__id
 #: model:ir.model.fields,field_description:project.field_res_partner__id
 #: model:ir.model.fields,field_description:project.field_res_users__id
 #: model:ir.model.fields,field_description:project.field_res_users_settings__id
@@ -2829,11 +2885,13 @@ msgid "Kitchen Assembly"
 msgstr "การประกอบครัว"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Last 30 Days"
 msgstr "30 วันที่ผ่านมา"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Last 365 Days"
 msgstr "365 วันที่ผ่านมา"
@@ -2854,6 +2912,7 @@ msgstr "คะแนนล่าสุด (1-5)"
 #: model:ir.model.fields,field_description:project.field_project_project__date_last_stage_update
 #: model:ir.model.fields,field_description:project.field_project_task__date_last_stage_update
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__date_last_stage_update
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__date_last_stage_update
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__date_last_stage_update
 msgid "Last Stage Update"
 msgstr "อัปเดตสถานะสุดท้าย"
@@ -3015,6 +3074,7 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__0
+#: model:ir.model.fields.selection,name:project.selection__project_task_stage_report__priority__0
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__priority__0
 msgid "Low priority"
 msgstr "ระดับความสำคัญต่ำ"
@@ -3086,6 +3146,7 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__1
+#: model:ir.model.fields.selection,name:project.selection__project_task_stage_report__priority__1
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__priority__1
 msgid "Medium priority"
 msgstr "ลำดับความสำคัญระดับปานกลาง"
@@ -3126,7 +3187,9 @@ msgstr "ข้อความ"
 #: code:addons/project/controllers/portal.py:0
 #: model:ir.model.fields,field_description:project.field_project_task__milestone_id
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__milestone_id
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__milestone_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__milestone_id
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Milestone"
 msgstr "ไมล์สโตน"
@@ -3187,6 +3250,7 @@ msgstr "โปรเจ็กต์ของฉัน"
 #: model:ir.ui.menu,name:project.menu_project_management_my_tasks
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_fsm_base
 msgid "My Tasks"
 msgstr "งานของฉัน"
@@ -3364,6 +3428,7 @@ msgstr "ยังไม่มีคะแนนจากลูกค้า"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_project_task_burndown_chart_report
 #: model_terms:ir.actions.act_window,help:project.action_project_task_user_tree
+#: model_terms:ir.actions.act_window,help:project.action_project_time_by_stage_report
 msgid "No data yet!"
 msgstr "ยังไม่มีข้อมูล!"
 
@@ -3528,6 +3593,7 @@ msgstr "อนุญาตให้ใช้เฉพาะรูปภาพ jp
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__is_open
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Open"
 msgstr "เปิด"
@@ -3573,6 +3639,7 @@ msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_base
 msgid "Overdue"
 msgstr "เกินกำหนด"
@@ -3730,8 +3797,10 @@ msgstr "จัดลำดับความสำคัญของงานโ
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #: model:ir.model.fields,field_description:project.field_project_task__priority
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__priority
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__priority
 #: model:project.tags,name:project.project_tags_16
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Priority"
 msgstr "ระดับความสำคัญ"
@@ -3777,6 +3846,7 @@ msgstr "ความคืบหน้า"
 #: model:ir.model.fields,field_description:project.field_project_milestone__project_id
 #: model:ir.model.fields,field_description:project.field_project_task__project_id
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__project_id
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__project_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__project_id
 #: model:ir.module.module,shortdesc:base.module_project
 #: model:ir.ui.menu,name:project.menu_main_pm
@@ -4181,6 +4251,8 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__task_properties
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__task_properties
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_base
 msgid "Properties"
@@ -4501,6 +4573,7 @@ msgstr "บทบาทต่อผู้ใช้"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__is_rotting
 #: model:ir.model.fields,field_description:project.field_project_task__is_rotting
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Rotting"
@@ -4671,6 +4744,7 @@ msgstr "ส่งคำเชิญ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__sequence
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__sequence
 #: model:ir.model.fields,field_description:project.field_project_task_type__sequence
 msgid "Sequence"
 msgstr "ลำดับ"
@@ -4866,18 +4940,30 @@ msgstr "สปริ้นท์อยู่ในระหว่างการ
 #: model:ir.model.fields,field_description:project.field_project_project__stage_id
 #: model:ir.model.fields,field_description:project.field_project_task__stage_id
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__stage_id
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__stage_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__stage_id
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Stage"
 msgstr "ขั้นตอน"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_pivot
+msgid "Stage Analysis"
+msgstr ""
+
+#. module: project
 #: model:mail.message.subtype,name:project.mt_task_stage
 msgid "Stage Changed"
 msgstr "สถานะได้มีการเปลี่ยนแปลงแล้ว"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_graph
+msgid "Stage Chart"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_stage__name
@@ -4996,10 +5082,12 @@ msgstr "การพิมพ์เสื้อยืด"
 #: model:ir.model.fields,field_description:project.field_project_project__tag_ids
 #: model:ir.model.fields,field_description:project.field_project_task__tag_ids
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__tag_ids
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__tag_ids
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__tag_ids
 #: model:ir.ui.menu,name:project.menu_project_tags_act
 #: model_terms:ir.ui.view,arch_db:project.project_tags_form_view
 #: model_terms:ir.ui.view,arch_db:project.project_tags_tree_view
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Tags"
 msgstr "แท็ก"
@@ -5009,6 +5097,7 @@ msgstr "แท็ก"
 #: code:addons/project/static/src/webclient/share_target/project_share_target_item.js:0
 #: model:ir.model,name:project.model_project_task
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__task_ids
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__task_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__task_id
 #: model:ir.model.fields,field_description:project.field_task_share_wizard__task_id
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -5126,6 +5215,7 @@ msgid "Task Templates"
 msgstr "เทมเพลตงาน"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__name
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__name
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form
 #: model_terms:ir.ui.view,arch_db:project.quick_create_task_form
@@ -5182,6 +5272,11 @@ msgid "Task templates cannot be shared."
 msgstr "ไม่สามารถแชร์เทมเพลตงานได้"
 
 #. module: project
+#: model:ir.model,name:project.model_project_task_stage_report
+msgid "Task time spent per stage"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_track_depending_tasks
 msgid "Task:"
 msgstr "งาน:"
@@ -5206,6 +5301,7 @@ msgstr "งาน:"
 #: model_terms:ir.ui.view,arch_db:project.portal_my_project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_tree_main_base
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_card
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_graph
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_pivot
@@ -5459,6 +5555,7 @@ msgstr "เดือนนี้"
 #: code:addons/project/models/project_task.py:0
 #: model:project.task.type,name:project.project_personal_stage_admin_2
 #: model:project.task.type,name:project.project_personal_stage_demo_2
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 msgid "This Week"
 msgstr "สัปดาห์นี้"
 
@@ -5592,6 +5689,19 @@ msgid "Time Management"
 msgstr "การจัดการเวลา"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__time_spent
+msgid "Time Spent"
+msgstr ""
+
+#. module: project
+#: model:ir.actions.act_window,name:project.action_project_time_by_stage_report
+#: model:ir.embedded.actions,name:project.project_embedded_action_time_by_stage
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
+msgid "Time by Stage"
+msgstr ""
+
+#. module: project
 #: model:digest.tip,name:project.digest_tip_project_9
 msgid "Tip: Access your project easily"
 msgstr ""
@@ -5696,6 +5806,7 @@ msgstr ""
 #: code:addons/project/models/project_task.py:0
 #: model:project.task.type,name:project.project_personal_stage_admin_1
 #: model:project.task.type,name:project.project_personal_stage_demo_1
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 msgid "Today"
 msgstr "วันนี้"
 
@@ -5834,6 +5945,7 @@ msgstr "อัปเดต"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__3
+#: model:ir.model.fields.selection,name:project.selection__project_task_stage_report__priority__3
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__priority__3
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Urgent"
@@ -5980,6 +6092,7 @@ msgstr "การมองเห็น"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Visible to all"
 msgstr "มองเห็นได้ทุกคน"

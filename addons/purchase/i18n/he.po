@@ -34,7 +34,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:44+0000\n"
+"POT-Creation-Date: 2026-09-11 17:41+0000\n"
 "PO-Revision-Date: 2026-08-31 20:18+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -82,6 +82,28 @@ msgstr ""
 msgid ""
 "%(matched_lines_count)s bill lines matched, %(unmatched_lines_count)s "
 "unmatched remaining."
+msgstr ""
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/wizard/accrued_orders.py:0
+msgid ""
+"%(order)s - %(order_line)s; %(qty_billed)s billed, %(qty_received)s received "
+"at %(unit_price)s"
+msgstr ""
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/wizard/accrued_orders.py:0
+msgid ""
+"%(order)s - %(order_line)s; %(quantity_billed)s Billed, %"
+"(quantity_received)s Received at %(unit_price)s each"
+msgstr ""
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/wizard/accrued_orders.py:0
+msgid "%(order)s - %(order_line)s; price difference for %(product)s"
 msgstr ""
 
 #. module: purchase
@@ -526,6 +548,11 @@ msgid "A warning can be set on a product or a customer (Purchase)"
 msgstr "ניתן להגדיר אזהרה על מוצר או על לקוח (רכש)"
 
 #. module: purchase
+#: model:ir.model,name:purchase.model_res_groups
+msgid "Access Groups"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__access_warning
 msgid "Access warning"
 msgstr "אזהרת גישה"
@@ -549,9 +576,48 @@ msgid "Account Move"
 msgstr "תנועת חשבון"
 
 #. module: purchase
-#: model:ir.actions.act_window,name:purchase.action_accrued_expense_entry
+#: model:ir.model.fields,help:purchase.field_product_category__property_account_billed_not_received_id
+msgid ""
+"Account holding the accrued value of the goods billed but not received yet. "
+"With perpetual valuation, it counterbalances the stock valuation account at "
+"closing."
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_product_category__property_account_bills_to_receive_id
+msgid ""
+"Account holding the accrued value of the goods received but not billed yet. "
+"With perpetual valuation, it counterbalances the stock valuation account at "
+"closing."
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__accrual_move_ids
+msgid "Accrual Entries"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order_line__accrual_move_ids
+msgid ""
+"Accrual entries generated for this line, so it isn't accrued again while one "
+"is still standing (posted, not yet reversed or cancelled)."
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.server,name:purchase.action_accrued_expense_entry_purchase_order_line
 msgid "Accrued Expense Entry"
 msgstr "רישום הוצאות נצבר"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_account_accrued_orders_wizard
+msgid "Accrued Orders Wizard"
+msgstr ""
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/wizard/accrued_orders.py:0
+msgid "Accrued total"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -901,6 +967,11 @@ msgid "Bill to Purchase Order"
 msgstr "חיוב של הזמנת הרכש"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__bill_to_receive
+msgid "Bill to Receive"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_invoiced_at_date
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -911,6 +982,17 @@ msgstr "חויב"
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__billed_amount_untaxed
 msgid "Billed Amount Untaxed"
 msgstr "סכום חיוב ללא מע\"מ"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_product_category__property_account_billed_not_received_id
+#: model:ir.model.fields,field_description:purchase.field_res_company__account_billed_not_received_id
+msgid "Billed Not Received Account"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_product_category__property_account_billed_not_received_active
+msgid "Billed Not Received Account Active"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_invoiced
@@ -942,6 +1024,17 @@ msgstr "חשבוניות"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 msgid "Bills Received"
 msgstr "חשבוניות שהתקבלו"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_product_category__property_account_bills_to_receive_id
+#: model:ir.model.fields,field_description:purchase.field_res_company__account_bills_to_receive_id
+msgid "Bills to Receive Account"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_product_category__property_account_bills_to_receive_active
+msgid "Bills to Receive Account Active"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__user_id
@@ -1257,6 +1350,7 @@ msgstr "מתאר את התאריך שבו יש לאשר את הצעת המחיר
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__name
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
 msgid "Description"
 msgstr "תיאור"
@@ -1268,6 +1362,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_history_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "Disc.%"
@@ -1295,6 +1390,7 @@ msgid "Display Matching Tag"
 msgstr ""
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_account_accrued_orders_wizard__display_name
 #: model:ir.model.fields,field_description:purchase.field_account_analytic_account__display_name
 #: model:ir.model.fields,field_description:purchase.field_account_analytic_applicability__display_name
 #: model:ir.model.fields,field_description:purchase.field_account_move__display_name
@@ -1302,6 +1398,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase.field_account_tax__display_name
 #: model:ir.model.fields,field_description:purchase.field_bill_to_po_wizard__display_name
 #: model:ir.model.fields,field_description:purchase.field_ir_actions_report__display_name
+#: model:ir.model.fields,field_description:purchase.field_product_category__display_name
 #: model:ir.model.fields,field_description:purchase.field_product_product__display_name
 #: model:ir.model.fields,field_description:purchase.field_product_supplierinfo__display_name
 #: model:ir.model.fields,field_description:purchase.field_product_template__display_name
@@ -1312,6 +1409,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__display_name
 #: model:ir.model.fields,field_description:purchase.field_res_company__display_name
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:purchase.field_res_groups__display_name
 #: model:ir.model.fields,field_description:purchase.field_res_partner__display_name
 msgid "Display Name"
 msgstr "שם לתצוגה"
@@ -1433,6 +1531,12 @@ msgid "Forbidden values on non-accountable purchase order line"
 msgstr "ערכים אסורים בשורת הזמנת רכש שאינה מובאת בחשבון חשבונאית"
 
 #. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.product_product_purchase_tree_view
+#: model_terms:ir.ui.view,arch_db:purchase.product_template_purchase_tree_view
+msgid "Forecasted"
+msgstr ""
+
+#. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/account_invoice.py:0
 msgid "From %s"
@@ -1477,6 +1581,18 @@ msgid "Get warnings in orders for products or vendors"
 msgstr "קבל אזהרות בהזמנות על מוצרים או ספקים"
 
 #. module: purchase
+#. odoo-python
+#: code:addons/purchase/wizard/accrued_orders.py:0
+msgid "Goods Billed not Received (perpetual valuation)"
+msgstr ""
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/wizard/accrued_orders.py:0
+msgid "Goods Received not Billed (perpetual valuation)"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__product_type
 msgid ""
 "Goods are tangible materials and merchandise you provide.\n"
@@ -1501,6 +1617,7 @@ msgid "Hide cancelled lines"
 msgstr "הסתר שורות מבוטלות"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_account_accrued_orders_wizard__id
 #: model:ir.model.fields,field_description:purchase.field_account_analytic_account__id
 #: model:ir.model.fields,field_description:purchase.field_account_analytic_applicability__id
 #: model:ir.model.fields,field_description:purchase.field_account_move__id
@@ -1508,6 +1625,7 @@ msgstr "הסתר שורות מבוטלות"
 #: model:ir.model.fields,field_description:purchase.field_account_tax__id
 #: model:ir.model.fields,field_description:purchase.field_bill_to_po_wizard__id
 #: model:ir.model.fields,field_description:purchase.field_ir_actions_report__id
+#: model:ir.model.fields,field_description:purchase.field_product_category__id
 #: model:ir.model.fields,field_description:purchase.field_product_product__id
 #: model:ir.model.fields,field_description:purchase.field_product_supplierinfo__id
 #: model:ir.model.fields,field_description:purchase.field_product_template__id
@@ -1518,6 +1636,7 @@ msgstr "הסתר שורות מבוטלות"
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__id
 #: model:ir.model.fields,field_description:purchase.field_res_company__id
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__id
+#: model:ir.model.fields,field_description:purchase.field_res_groups__id
 #: model:ir.model.fields,field_description:purchase.field_res_partner__id
 msgid "ID"
 msgstr "מזהה"
@@ -1664,6 +1783,11 @@ msgstr "פקודת יומן"
 #: model:ir.model,name:purchase.model_account_move_line
 msgid "Journal Item"
 msgstr "תנועת יומן"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__label
+msgid "Label"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_bill_to_po_wizard__write_uid
@@ -2379,6 +2503,11 @@ msgid "Portal Access URL"
 msgstr "כתובת גישה לפורטל"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__prepaid_expense
+msgid "Prepaid Expense"
+msgstr ""
+
+#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Preview the reminder email by sending it to yourself."
 msgstr "תצוגה מקדימה של המייל באמצעות שליחה לכתובת של עצמך"
@@ -2417,6 +2546,7 @@ msgid "Product"
 msgstr "מוצר"
 
 #. module: purchase
+#: model:ir.model,name:purchase.model_product_category
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__category_id
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Product Category"
@@ -2816,6 +2946,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "Quantity"
 msgstr "כמות"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
+msgid ""
+"Quantity on hand minus outgoing quantity from Sales Orders plus incoming "
+"quantity from Purchase Orders"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -3552,6 +3689,12 @@ msgid "Total Billed"
 msgstr "סה\"כ לחיוב"
 
 #. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.product_product_purchase_tree_view
+#: model_terms:ir.ui.view,arch_db:purchase.product_template_purchase_tree_view
+msgid "Total Forecasted"
+msgstr ""
+
+#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 msgid "Total Purchased"
 msgstr "סה\"כ שנרכש"
@@ -3595,11 +3738,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_history_pivot
 msgid "Total purchased amount"
 msgstr "סה\"כ כמות שנרכשה"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__translated_product_name
-msgid "Translated Product Name"
-msgstr ""
 
 #. module: purchase
 #. odoo-javascript
@@ -3743,10 +3881,12 @@ msgid "Variant Grid Entry"
 msgstr "וריאנט מתצוגת רשת"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_product_product__sold_by_vendor_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__partner_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__partner_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__partner_id
 #: model_terms:ir.ui.view,arch_db:purchase.product_template_search_view_purchase
+#: model_terms:ir.ui.view,arch_db:purchase.product_view_search_catalog_inherit
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_history_tree

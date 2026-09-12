@@ -13,11 +13,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-08-31 15:03+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"POT-Creation-Date: 2026-09-11 17:42+0000\n"
+"PO-Revision-Date: 2026-09-09 14:01+0000\n"
+"Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
-"projects/odoo-s19-4/im_livechat/zh_Hant/>\n"
+"projects/odoo-master/im_livechat/zh_Hant/>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -123,6 +123,12 @@ msgstr ""
 
 #. module: im_livechat
 #. odoo-python
+#: code:addons/im_livechat/models/res_users.py:0
+msgid "%(visitor)s authenticated as %(user)s."
+msgstr ""
+
+#. module: im_livechat
+#. odoo-python
 #: code:addons/im_livechat/models/chatbot_script.py:0
 msgid ""
 "'%(input_email)s' does not look like a valid email. Can you please try again?"
@@ -158,7 +164,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/messaging_menu_item_patch.js:0
 msgid "< 1m"
-msgstr ""
+msgstr "< 1 分鐘"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
@@ -913,6 +919,7 @@ msgstr "討論群組"
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__display_name
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_expertise__display_name
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__display_name
+#: model:ir.model.fields,field_description:im_livechat.field_ir_http__display_name
 #: model:ir.model.fields,field_description:im_livechat.field_ir_qweb__display_name
 #: model:ir.model.fields,field_description:im_livechat.field_ir_websocket__display_name
 #: model:ir.model.fields,field_description:im_livechat.field_mail_message__display_name
@@ -1132,6 +1139,11 @@ msgid "Guest"
 msgstr "訪客"
 
 #. module: im_livechat
+#: model:ir.model,name:im_livechat.model_ir_http
+msgid "HTTP Routing"
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__handled_by_agent
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
 msgid "Handled by Agent"
@@ -1296,6 +1308,7 @@ msgstr "我有一個關於定價問題"
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__id
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_expertise__id
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__id
+#: model:ir.model.fields,field_description:im_livechat.field_ir_http__id
 #: model:ir.model.fields,field_description:im_livechat.field_ir_qweb__id
 #: model:ir.model.fields,field_description:im_livechat.field_ir_websocket__id
 #: model:ir.model.fields,field_description:im_livechat.field_mail_message__id
@@ -2808,9 +2821,11 @@ msgid "View Contact"
 msgstr ""
 
 #. module: im_livechat
+#. odoo-javascript
 #. odoo-python
 #: code:addons/im_livechat/controllers/main.py:0
 #: code:addons/im_livechat/models/im_livechat_channel.py:0
+#: code:addons/im_livechat/static/src/core/common/channel_member_list_patch.js:0
 #: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel_member__livechat_member_type__visitor
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_member_history__livechat_member_type__visitor
 msgid "Visitor"

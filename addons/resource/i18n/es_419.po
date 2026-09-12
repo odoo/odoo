@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:46+0000\n"
+"POT-Creation-Date: 2026-09-11 17:43+0000\n"
 "PO-Revision-Date: 2026-08-31 19:44+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -346,6 +346,8 @@ msgid "Forever"
 msgstr "Siempre"
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__4
 msgid "Friday"
 msgstr "Viernes"
@@ -496,6 +498,8 @@ msgid "Material Resources"
 msgstr ""
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__0
 msgid "Monday"
 msgstr "Lunes"
@@ -556,6 +560,11 @@ msgid "Phone"
 msgstr "Teléfono"
 
 #. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_tree
+msgid "Preview"
+msgstr ""
+
+#. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 msgid "Provided datetimes needs to be timezoned"
@@ -592,6 +601,16 @@ msgstr "Ocurrencias excluidas de la recurrencia"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__recurrency_type
 msgid "Recurrency Type"
 msgstr "Tipo de recurrencia"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__reference_calendar_id
+msgid "Reference Calendar"
+msgstr ""
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_calendar__reference_calendar_id
+msgid "Reference working hours used to compute the full-time equivalent."
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource__user_id
@@ -674,6 +693,8 @@ msgstr ""
 "laborales a la semana pare definir su nivel de eficacia."
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__5
 msgid "Saturday"
 msgstr "Sábado"
@@ -734,6 +755,8 @@ msgid "Starting Date of Time Off"
 msgstr "Fecha de inicio del tiempo personal"
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__6
 msgid "Sunday"
 msgstr "Domingo"
@@ -834,6 +857,8 @@ msgstr ""
 "200%, la duración esperada será de 30 minutos."
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__3
 msgid "Thursday"
 msgstr "Jueves"
@@ -879,6 +904,8 @@ msgid "Total duration of attendances cannot exceed 24 hours"
 msgstr "La duración total de las asistencias no puede superar las 24 horas"
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__1
 msgid "Tuesday"
 msgstr "Martes"
@@ -907,12 +934,26 @@ msgid "Variable"
 msgstr "Variable"
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_many2one/resource_calendar_many2one.js:0
+msgid "Variable (%(days)s %(dayLabel)s - %(hours)sh)"
+msgstr ""
+
+#. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
+msgid "Variable (%(days)s days - %(hours)sh)"
+msgstr ""
+
+#. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 #: model_terms:ir.ui.view,arch_db:resource.resource_resource_form
 msgid "Visible to all"
 msgstr "Visible para todos"
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__2
 msgid "Wednesday"
 msgstr "Miércoles"
@@ -947,6 +988,7 @@ msgstr "Número de recursos de trabajo"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__work_time_rate
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Work Time Rate"
 msgstr "Tasa de tiempo de trabajo"
 
@@ -975,6 +1017,12 @@ msgstr "Trabajar hasta"
 #: model:ir.model.fields,field_description:resource.field_resource_mixin__resource_calendar_id
 msgid "Working Hours"
 msgstr "Horas laborales"
+
+#. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
+msgid "Working Hours by Day"
+msgstr ""
 
 #. module: resource
 #. odoo-python
@@ -1017,100 +1065,117 @@ msgstr ""
 msgid "You cannot compute the intervals without a calendar on no resource."
 msgstr "No puedes calcular los intervalos sin un calendario en un recurso."
 
-msgid "2 Week's Calendar"
-msgstr "Calendario de 2 semanas"
-
-msgid "<span class=\"ms-2\">hours/day</span>"
-msgstr "<span class=\"ms-2\">horas/día</span>"
-
-msgid "<span class=\"ms-2\">hours/week</span>"
-msgstr "<span class=\"ms-2\">horas/semana</span>"
-
-msgid "<span>hours/week</span>"
-msgstr "<span>horas/semana</span>"
-
-msgid ""
-"Are you sure you want to switch to a 1-week calendar? All work entries will "
-"be lost."
+#. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_many2one/resource_calendar_many2one.js:0
+msgid "day"
 msgstr ""
-"¿Está seguro de que desea cambiar a un calendario de 1 semana? Se perderán "
-"todas las entradas de trabajo."
 
-msgid ""
-"Are you sure you want to switch to a 2-week calendar? All work entries will "
-"be lost."
+#. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_many2one/resource_calendar_many2one.js:0
+msgid "days"
 msgstr ""
-"¿Está seguro de que desea cambiar a un calendario de 2 semanas? Se perderán "
-"todas las entradas de trabajo."
 
-msgid "Attendances can't overlap."
-msgstr "No se pueden superponer las asistencias."
-
-msgid "Avg"
-msgstr "Promedio"
-
-msgid "Calendar in 2 weeks mode"
-msgstr "Calendario en modo de 2 semanas"
-
-msgid "Explanation"
-msgstr "Explicación"
-
-msgid "First"
-msgstr "Primera"
-
-msgid "First week"
-msgstr "Primera semana"
-
-msgid "Required Full Time"
-msgstr "Tiempo completo necesario"
-
-msgid "Second"
-msgstr "Segundo"
-
-msgid "Second week"
-msgstr "Segunda semana"
-
-msgid "Switch"
-msgstr "Cambio"
-
-msgid "Switch to 1-week calendar"
-msgstr "Cambiar a calendario de 1 semana"
-
-msgid "Switch to 2-weeks calendar"
-msgstr "Cambiar a calendario de 2 semanas"
-
-msgid ""
-"The current week (from %(first_day)s to %(last_day)s) corresponds to %"
-"(number)s week."
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "from company"
 msgstr ""
-"La semana actual (del %(first_day)s al %(last_day)s) corresponde a la semana "
-"%(number)s."
 
-msgid "Total"
-msgstr "Total"
+#~ msgid "2 Week's Calendar"
+#~ msgstr "Calendario de 2 semanas"
 
-msgid "Week 1 Working Hours"
-msgstr "Horas laborales de la semana 1"
+#~ msgid "<span class=\"ms-2\">hours/day</span>"
+#~ msgstr "<span class=\"ms-2\">horas/día</span>"
 
-msgid "Week 2 Working Hours"
-msgstr "Horas laborales de la semana 2"
+#~ msgid "<span class=\"ms-2\">hours/week</span>"
+#~ msgstr "<span class=\"ms-2\">horas/semana</span>"
 
-msgid "Week Number"
-msgstr "Número de semana"
+#~ msgid "<span>hours/week</span>"
+#~ msgstr "<span>horas/semana</span>"
 
-msgid "Working Time 1st Week"
-msgstr "Tiempo de trabajo de la primera semana"
+#~ msgid ""
+#~ "Are you sure you want to switch to a 1-week calendar? All work entries "
+#~ "will be lost."
+#~ msgstr ""
+#~ "¿Está seguro de que desea cambiar a un calendario de 1 semana? Se "
+#~ "perderán todas las entradas de trabajo."
 
-msgid "Working Time 2nd Week"
-msgstr "Tiempo de trabajo de la segunda semana"
+#~ msgid ""
+#~ "Are you sure you want to switch to a 2-week calendar? All work entries "
+#~ "will be lost."
+#~ msgstr ""
+#~ "¿Está seguro de que desea cambiar a un calendario de 2 semanas? Se "
+#~ "perderán todas las entradas de trabajo."
 
-msgid ""
-"You cannot define hours and duration based attendances for the same day."
-msgstr ""
-"No puedes definir asistencias por horas y por duración para el mismo día."
+#~ msgid "Attendances can't overlap."
+#~ msgstr "No se pueden superponer las asistencias."
 
-msgid "even"
-msgstr "par"
+#~ msgid "Avg"
+#~ msgstr "Promedio"
 
-msgid "odd"
-msgstr "impar"
+#~ msgid "Calendar in 2 weeks mode"
+#~ msgstr "Calendario en modo de 2 semanas"
+
+#~ msgid "Explanation"
+#~ msgstr "Explicación"
+
+#~ msgid "First"
+#~ msgstr "Primera"
+
+#~ msgid "First week"
+#~ msgstr "Primera semana"
+
+#~ msgid "Required Full Time"
+#~ msgstr "Tiempo completo necesario"
+
+#~ msgid "Second"
+#~ msgstr "Segundo"
+
+#~ msgid "Second week"
+#~ msgstr "Segunda semana"
+
+#~ msgid "Switch"
+#~ msgstr "Cambio"
+
+#~ msgid "Switch to 1-week calendar"
+#~ msgstr "Cambiar a calendario de 1 semana"
+
+#~ msgid "Switch to 2-weeks calendar"
+#~ msgstr "Cambiar a calendario de 2 semanas"
+
+#~ msgid ""
+#~ "The current week (from %(first_day)s to %(last_day)s) corresponds to %"
+#~ "(number)s week."
+#~ msgstr ""
+#~ "La semana actual (del %(first_day)s al %(last_day)s) corresponde a la "
+#~ "semana %(number)s."
+
+#~ msgid "Total"
+#~ msgstr "Total"
+
+#~ msgid "Week 1 Working Hours"
+#~ msgstr "Horas laborales de la semana 1"
+
+#~ msgid "Week 2 Working Hours"
+#~ msgstr "Horas laborales de la semana 2"
+
+#~ msgid "Week Number"
+#~ msgstr "Número de semana"
+
+#~ msgid "Working Time 1st Week"
+#~ msgstr "Tiempo de trabajo de la primera semana"
+
+#~ msgid "Working Time 2nd Week"
+#~ msgstr "Tiempo de trabajo de la segunda semana"
+
+#~ msgid ""
+#~ "You cannot define hours and duration based attendances for the same day."
+#~ msgstr ""
+#~ "No puedes definir asistencias por horas y por duración para el mismo día."
+
+#~ msgid "even"
+#~ msgstr "par"
+
+#~ msgid "odd"
+#~ msgstr "impar"

@@ -22,8 +22,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-06 17:49+0000\n"
-"PO-Revision-Date: 2026-06-19 05:05+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-09-10 13:11+0000\n"
+"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-master/base/"
 "de/>\n"
 "Language: de\n"
@@ -31,7 +31,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users_apikeys_description__scope
@@ -87,7 +87,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__time_format__%i:%m:%s_%p
 msgid " 1:00:00 PM"
-msgstr " 13:00:00"
+msgstr " 13:00 Uhr"
 
 #. module: base
 #. odoo-python
@@ -98,12 +98,12 @@ msgstr "„group_by“-Wert muss eine Zeichenkette %(attribute)s=„%(value)s“
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__accesses_count
 msgid "# Access Rights"
-msgstr "# Zugriffsrechte"
+msgstr "Anzahl Zugriffsrechte"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__groups_count
 msgid "# Groups"
-msgstr "# Gruppen"
+msgstr "Anzahl Gruppen"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
@@ -113,7 +113,7 @@ msgstr "Anzahl Datensätze"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__all_users_count
 msgid "# Users"
-msgstr "# Benutzer"
+msgstr "Anzahl Benutzer"
 
 #. module: base
 #. odoo-python
@@ -833,8 +833,8 @@ msgid ""
 "<span class=\"o_form_label\" colspan=\"2\">Click on Update below to start "
 "the process...</span>"
 msgstr ""
-"<span class=\"o_form_label\" colspan=\"2\">Klicken Sie unten auf "
-"Aktualisieren, um den Prozess zu starten ...</span>"
+"<span class=\"o_form_label\" colspan=\"2\">Klicken Sie unten auf „"
+"Aktualisieren“, um den Prozess zu starten.</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -1288,7 +1288,7 @@ msgid ""
 "and is used by domestic money transfer protocols (from/to bank accounts in "
 "the same country)."
 msgstr ""
-"Eine Bankleitzahl (oder Routing-Nummer) bezieht sich auf eine Bank, eine "
+"Eine Clearing-Nummer (oder Routing-Nummer) bezieht sich auf eine Bank, eine "
 "Filiale oder einen Standort und wird von inländischen "
 "Geldtransferprotokollen (von/zu Bankkonten im selben Land) verwendet."
 
@@ -3409,7 +3409,7 @@ msgstr "Geplantes Update anwenden"
 #: model:ir.actions.act_window,name:base.action_view_base_module_upgrade
 #: model:ir.ui.menu,name:base.menu_view_base_module_upgrade
 msgid "Apply Schedule Upgrades"
-msgstr ""
+msgstr "Zeitplan-Upgrades anwenden"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_appointment
@@ -4446,7 +4446,7 @@ msgstr "BIC/SWIFT"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0 model:res.country,vat_label:base.hk
 msgid "BRN"
-msgstr ""
+msgstr "BRN"
 
 #. module: base
 #. odoo-python
@@ -4520,7 +4520,7 @@ msgstr "Bankkonto"
 #. module: base
 #: model:ir.model,name:base.model_clearing_label
 msgid "Bank Account Clearing Number Label"
-msgstr "Bezeichnung der Bankleitzahl der Kontonummer"
+msgstr "Bezeichnung der Clearing-Nummer der Kontonummer"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_partner_bank_account_form
@@ -5618,12 +5618,12 @@ msgstr "Stadt"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__clearing_label_id
 msgid "Clearing Label"
-msgstr "Bezeichnung der Bankleitzahl"
+msgstr "Bezeichnung der Clearing-Nummer"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__clearing_number
 msgid "Clearing Number"
-msgstr "Bankleitzahl"
+msgstr "Clearing-Nummer"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__update_m2m_operation__clear
@@ -9256,6 +9256,9 @@ msgid ""
 "Field \"%(field_name)s\" in related path \"%(related_field)s\" is not "
 "searchable. Non-searchable fields cannot be used in related fields."
 msgstr ""
+"Das Feld „%(field_name)s “ im zugehörigen Pfad „%(related_field)s“ ist nicht "
+"durchsuchbar. Nicht durchsuchbare Felder können nicht in zugehörigen Feldern "
+"verwendet werden."
 
 #. module: base
 #. odoo-python
@@ -10221,7 +10224,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__all_group_ids
 msgid "Groups and implied groups"
-msgstr "Gruppen und implizierte Gruppen"
+msgstr "Gruppen und untergeordnete Gruppen"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__group_ids
@@ -11104,12 +11107,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_groups__implied_ids
 #: model_terms:ir.ui.view,arch_db:base.view_groups_form
 msgid "Implied Groups"
-msgstr "Implizierte Gruppen"
+msgstr "Untergeordnete Gruppen"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_groups_list
 msgid "Implied groups"
-msgstr "Implizierte Gruppen"
+msgstr "Untergeordnete Gruppen"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_groups_search
@@ -11122,7 +11125,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_groups__implied_by_ids
 #: model_terms:ir.ui.view,arch_db:base.view_groups_form
 msgid "Implying Groups"
-msgstr "Implizierte Gruppen"
+msgstr "Übergeordnete Gruppen"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_import_language
@@ -11847,8 +11850,8 @@ msgstr "Israel"
 msgid ""
 "It is not possible to remove implied group %(group)s from users %(users)s"
 msgstr ""
-"Es ist nicht möglich, implizierte Gruppen %(group)s aus Benutzern %(users)s "
-"zu entfernen."
+"Es ist nicht möglich, untergeordnete Gruppen %(group)s aus Benutzern %(users)"
+"s zu entfernen."
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_3
@@ -12951,7 +12954,7 @@ msgstr "Malawi"
 #. module: base
 #: model:res.country,name:base.my
 msgid "Malaysia"
-msgstr "Malaysien"
+msgstr "Malaysia"
 
 #. module: base
 #. odoo-python
@@ -14146,6 +14149,8 @@ msgid ""
 "Not enough workers to generate the PDF. Please try another engine or upgrade "
 "your setup."
 msgstr ""
+"Nicht genügend Worker, um die PDF-Datei zu erstellen. Bitte versuchen Sie es "
+"mit einer anderen Engine oder aktualisieren Sie Ihre Konfiguration."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_access__note
@@ -15328,7 +15333,7 @@ msgstr "Muster zum Formatieren"
 #: model:res.company,pay_now_label:base.demo_company_id
 #: model:res.company,pay_now_label:base.main_company
 msgid "Pay now"
-msgstr "Jetzt bezahlen"
+msgstr "Zahlungspflichtig bestellen"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_payment
@@ -15338,7 +15343,7 @@ msgstr "Zahlung"
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_payment_custom
 msgid "Payment Custom"
-msgstr ""
+msgstr "Benutzerdefinierte Zahlung"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_payment_providers
@@ -17180,7 +17185,7 @@ msgstr "Bereich"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_users_apikeys_view_kanban
 msgid "Scope:"
-msgstr "Umfang:"
+msgstr "Bereich:"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_groups_privilege
@@ -17721,7 +17726,7 @@ msgstr "API-Schlüssel anzeigen"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__show_clearing_number
 msgid "Show Clearing Number"
-msgstr "Bankleitzahl anzeigen"
+msgstr "Clearing-Nummer anzeigen"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__show_code_history
@@ -18125,7 +18130,7 @@ msgstr "Straße"
 #: model_terms:ir.ui.view,arch_db:base.view_partner_bank_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Street 2..."
-msgstr "Straße 2 ..."
+msgstr "Adresszeile 2 ..."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_company_form
@@ -19008,7 +19013,7 @@ msgstr "Folgende Variablen können verwendet werden:"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_groups__all_implied_ids
 msgid "The group itself with all its implied groups."
-msgstr "Die Gruppe selbst mit allen implizierten Gruppen."
+msgstr "Die Gruppe selbst mit allen untergeordneten Gruppen."
 
 #. module: base
 #. odoo-python
@@ -19268,7 +19273,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base/models/ir_actions_report.py:0
 msgid "The pdf engine on this system is not working."
-msgstr ""
+msgstr "Die PDF-Engine auf diesem System funktioniert nicht."
 
 #. module: base
 #. odoo-python
@@ -19449,6 +19454,10 @@ msgid ""
 "rendering method. HTML means the report will be opened directly in your "
 "browser, PDF means the report will be generated and downloaded by the user."
 msgstr ""
+"Die Art des Berichts, der ausgegeben wird; jeder Bericht hat seine eigene "
+"Ausgabemethode. „HTML“ bedeutet, dass der Bericht direkt in Ihrem Browser "
+"geöffnet wird; „PDF“ bedeutet, dass der Bericht generiert und vom Benutzer "
+"heruntergeladen wird."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_filters__user_ids
@@ -19988,12 +19997,12 @@ msgstr "Übergang: Wahr"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__all_implied_ids
 msgid "Transitively Implied Groups"
-msgstr "Transitiv implizierte Gruppen"
+msgstr "Transitiv untergeordnete Gruppen"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__all_implied_by_ids
 msgid "Transitively Implying Groups"
-msgstr "Transitiv implizierende Gruppen"
+msgstr "Transitiv übergeordnete Gruppen"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__translate
@@ -20340,6 +20349,8 @@ msgstr ""
 msgid ""
 "Unable to find the pdf engine on this system. The PDF can not be created."
 msgstr ""
+"Die PDF-Engine konnte auf diesem System nicht gefunden werden. Die PDF-Datei "
+"kann nicht erstellt werden."
 
 #. module: base
 #. odoo-python
@@ -20618,7 +20629,7 @@ msgstr "App-Liste aktualisieren"
 #. module: base
 #: model:ir.model,name:base.model_base_module_update
 msgid "Update Module"
-msgstr "Module aktualisieren"
+msgstr "Modul aktualisieren"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
@@ -20975,13 +20986,13 @@ msgstr "Benutzerprotokoll"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__all_user_ids
 msgid "Users and implied users"
-msgstr "Benutzer und implizierte Benutzer"
+msgstr "Benutzer und untergeordnete Benutzer"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_groups.py:0
 msgid "Users and implied users of %(group)s"
-msgstr "Benutzer und implizierte Benutzer von %(group)s"
+msgstr "Benutzer und untergeordnete Benutzer von %(group)s"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_groups__user_ids
@@ -22373,7 +22384,7 @@ msgstr "enthält keine übersetzbaren Begriffe.<br/>"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_module_update__state__done
 msgid "done"
-msgstr "erledigt"
+msgstr "abgeschlossen"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:46+0000\n"
+"POT-Creation-Date: 2026-09-11 17:43+0000\n"
 "PO-Revision-Date: 2026-08-31 17:59+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -142,6 +142,11 @@ msgstr ""
 "                <br/>"
 
 #. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.pay_on_delivery_form
+msgid "A payment totaling"
+msgstr ""
+
+#. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking_type__batch_max_weight
 msgid ""
 "A transfer will not be automatically added to batches that will exceed this "
@@ -155,9 +160,19 @@ msgid "Action while validating Delivery Orders."
 msgstr "Azione durante la convalida degli ordini di consegna."
 
 #. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_type_form_delivery
+msgid "All"
+msgstr ""
+
+#. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__allowed_carrier_ids
 msgid "Allowed Carrier"
 msgstr "Corriere consentito"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_pay_on_delivery__amount_to_collect
+msgid "Amount To Collect"
+msgstr ""
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_route__shipping_selectable
@@ -204,6 +219,7 @@ msgid "Batch Transfer"
 msgstr ""
 
 #. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.pay_on_delivery_form
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
 msgid "Cancel"
 msgstr "Annulla"
@@ -246,6 +262,12 @@ msgstr "Nome Vettore"
 
 #. module: stock_delivery
 #. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+msgid "Collect Payment"
+msgstr ""
+
+#. module: stock_delivery
+#. odoo-python
 #: code:addons/stock_delivery/models/ir_actions_report.py:0
 msgid "Configure a printer to print this report: '%s'"
 msgstr "Configura una stampante per stampare il resoconto: '%s'"
@@ -259,6 +281,11 @@ msgid ""
 msgstr ""
 "Configura il corriere per generare etichette in formato PDF oppure utilizza "
 "una stampante ZPL/ePOS per stampare %s dal chatter."
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.pay_on_delivery_form
+msgid "Confirm Payment"
+msgstr ""
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_res_partner
@@ -275,6 +302,21 @@ msgstr "Costo: %(price).2f %(currency)s"
 #: model:ir.model,website_form_label:stock_delivery.model_res_partner
 msgid "Create a Customer"
 msgstr "Crea cliente"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_pay_on_delivery__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_pay_on_delivery__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_pay_on_delivery__currency_id
+msgid "Currency"
+msgstr ""
 
 #. module: stock_delivery
 #: model:ir.module.module,shortdesc:base.module_stock_delivery
@@ -312,6 +354,7 @@ msgstr "Paese di destinazione"
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_carrier__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_delivery_carrier__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_ir_actions_report__display_name
+#: model:ir.model.fields,field_description:stock_delivery.field_pay_on_delivery__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_product_product__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_product_template__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_res_partner__display_name
@@ -389,6 +432,7 @@ msgstr "Codice SA"
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_carrier__id
 #: model:ir.model.fields,field_description:stock_delivery.field_delivery_carrier__id
 #: model:ir.model.fields,field_description:stock_delivery.field_ir_actions_report__id
+#: model:ir.model.fields,field_description:stock_delivery.field_pay_on_delivery__id
 #: model:ir.model.fields,field_description:stock_delivery.field_product_product__id
 #: model:ir.model.fields,field_description:stock_delivery.field_product_template__id
 #: model:ir.model.fields,field_description:stock_delivery.field_res_partner__id
@@ -427,6 +471,16 @@ msgid "Is Return Picking"
 msgstr "È un prelievo di reso"
 
 #. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_pay_on_delivery__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_pay_on_delivery__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: stock_delivery
 #: model:ir.ui.menu,name:stock_delivery.manage_printers_action
 msgid "Manage Printers"
 msgstr "Gestisci stampanti"
@@ -453,6 +507,11 @@ msgid "OK"
 msgstr "OK"
 
 #. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_pay_on_delivery__order_ids
+msgid "Order"
+msgstr ""
+
+#. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_product_product__country_of_origin
 #: model:ir.model.fields,field_description:stock_delivery.field_product_template__country_of_origin
 msgid "Origin of Goods"
@@ -468,6 +527,12 @@ msgstr "Collo"
 #: code:addons/stock_delivery/wizard/stock_put_in_pack.py:0
 msgid "Package too heavy!"
 msgstr "Collo troppo pesante!"
+
+#. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_pay_on_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.pay_on_delivery_form
+msgid "Pay on Delivery"
+msgstr ""
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_picking_type
@@ -718,6 +783,15 @@ msgstr "Regole di consegna non corrispondenti."
 
 #. module: stock_delivery
 #. odoo-python
+#: code:addons/stock_delivery/wizard/pay_on_delivery.py:0
+msgid ""
+"These transfers are for orders that are paid on delivery, and the amounts "
+"still due are in different currencies. Validate the transfers one currency "
+"at a time to collect them."
+msgstr ""
+
+#. module: stock_delivery
+#. odoo-python
 #: code:addons/stock_delivery/models/ir_actions_report.py:0
 msgid ""
 "This action is meant to print %s attachments from the chatter: none was "
@@ -879,3 +953,10 @@ msgstr ""
 "                    stamparli automaticamente al momento della convalida, è "
 "necessario configurare una stampante nel\n"
 "                    modulo di reportistica.<br/>"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.pay_on_delivery_form
+msgid ""
+"must be collected for\n"
+"                the delivery of the following orders:"
+msgstr ""

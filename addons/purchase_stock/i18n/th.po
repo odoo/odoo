@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:41+0000\n"
+"POT-Creation-Date: 2026-09-11 17:42+0000\n"
 "PO-Revision-Date: 2026-08-31 17:27+0000\n"
 "Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -335,7 +335,6 @@ msgid "Destination Location Type"
 msgstr "ประเภทสถานที่ปลายทาง"
 
 #. module: purchase_stock
-#: model:ir.model.fields,field_description:purchase_stock.field_account_move__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_product_product__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_product_replenish__display_name
@@ -473,19 +472,12 @@ msgid "Go back to the purchase order to generate the vendor bill."
 msgstr "กลับไปที่ใบสั่งซื้อเพื่อสร้างใบเรียกเก็บเงินของผู้ขาย"
 
 #. module: purchase_stock
-#. odoo-javascript
-#: code:addons/purchase_stock/static/src/stock_valuation/stock_valuation_report.js:0
-msgid "Goods Received Not Invoiced"
-msgstr ""
-
-#. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_res_partner__group_rfq
 #: model:ir.model.fields,field_description:purchase_stock.field_res_users__group_rfq
 msgid "Group RFQ"
 msgstr ""
 
 #. module: purchase_stock
-#: model:ir.model.fields,field_description:purchase_stock.field_account_move__id
 #: model:ir.model.fields,field_description:purchase_stock.field_account_move_line__id
 #: model:ir.model.fields,field_description:purchase_stock.field_product_product__id
 #: model:ir.model.fields,field_description:purchase_stock.field_product_replenish__id
@@ -539,11 +531,6 @@ msgstr "จัดส่งแล้ว"
 #: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__is_installed_sale
 msgid "Is the Sale Module Installed"
 msgstr "มีการติดตั้งโมดูลการขายแล้ว"
-
-#. module: purchase_stock
-#: model:ir.model,name:purchase_stock.model_account_move
-msgid "Journal Entry"
-msgstr "รายการสมุดรายวัน"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_account_move_line
@@ -793,8 +780,6 @@ msgid "Purchase Order Line"
 msgstr "รายการคำสั่งซื้อ"
 
 #. module: purchase_stock
-#. odoo-javascript
-#: code:addons/purchase_stock/static/src/stock_valuation/stock_valuation_report.js:0
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_lot__purchase_order_ids
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__purchase_id
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_help_message_template
@@ -1235,6 +1220,11 @@ msgid "Vendors"
 msgstr "ผู้จำหน่าย"
 
 #. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.product_product_tree_view_stock
+msgid "View Forecast"
+msgstr ""
+
+#. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_warehouse
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_report__picking_type_id
 msgid "Warehouse"
@@ -1329,14 +1319,17 @@ msgstr ""
 msgid "x"
 msgstr ""
 
-msgid "<strong>Incoterm:</strong>"
-msgstr "<strong>Incoterm:</strong>"
+#~ msgid "Journal Entry"
+#~ msgstr "รายการสมุดรายวัน"
 
-msgid "Incoterm Location"
-msgstr "ตำแหน่ง Incoterm"
+#~ msgid "<strong>Incoterm:</strong>"
+#~ msgstr "<strong>Incoterm:</strong>"
 
-msgid "Location from procurement"
-msgstr "ที่ตั้งจากการจัดซื้อจัดจ้าง"
+#~ msgid "Incoterm Location"
+#~ msgstr "ตำแหน่ง Incoterm"
 
-msgid "Stock Valuation"
-msgstr "การประเมินมูลค่าสต็อก"
+#~ msgid "Location from procurement"
+#~ msgstr "ที่ตั้งจากการจัดซื้อจัดจ้าง"
+
+#~ msgid "Stock Valuation"
+#~ msgstr "การประเมินมูลค่าสต็อก"

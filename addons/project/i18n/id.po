@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:44+0000\n"
+"POT-Creation-Date: 2026-09-11 17:41+0000\n"
 "PO-Revision-Date: 2026-09-04 05:11+0000\n"
 "Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -84,9 +84,33 @@ msgstr "Analisis Tugas %(name)s"
 
 #. module: project
 #. odoo-python
+#: code:addons/project/models/project_project.py:0
+msgid "%(name)s's Time by Stage"
+msgstr ""
+
+#. module: project
+#. odoo-python
 #: code:addons/project/models/res_partner.py:0
 msgid "%(partner_name)s's Tasks"
 msgstr "Tugas %(partner_name)s"
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/account_analytic_line.py:0
+msgid "%(sign)s%(hours)sh"
+msgstr ""
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/account_analytic_line.py:0
+msgid "%(sign)s%(hours)sh %(minutes)sm"
+msgstr ""
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/account_analytic_line.py:0
+msgid "%(sign)s%(minutes)sm"
+msgstr ""
 
 #. module: project
 #. odoo-python
@@ -854,6 +878,11 @@ msgid "Accept Emails From"
 msgstr "Menerima Email Dari"
 
 #. module: project
+#: model:ir.model,name:project.model_res_groups
+msgid "Access Groups"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_collaborator_wizard__access_mode
 msgid "Access Mode"
 msgstr "Mode Akses"
@@ -1114,6 +1143,11 @@ msgid "Analytic Account"
 msgstr "Akun Analitik"
 
 #. module: project
+#: model:ir.model,name:project.model_account_analytic_line
+msgid "Analytic Line"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.actions.act_window,help:project.action_project_task_burndown_chart_report
 msgid ""
 "Analyze how quickly your team is completing your project's tasks and check "
@@ -1124,6 +1158,7 @@ msgstr ""
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_project_task_user_tree
+#: model_terms:ir.actions.act_window,help:project.action_project_time_by_stage_report
 msgid ""
 "Analyze the progress of your projects and the performance of your employees."
 msgstr "Analisa progress project Anda dan performa karyawan Anda."
@@ -1240,12 +1275,14 @@ msgstr "Ditugaskan untuk"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__user_ids
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__user_ids
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__user_ids
 #: model:ir.model.fields,field_description:project.field_project_template_role_to_users_map__user_ids
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__user_ids
 #: model_terms:ir.ui.view,arch_db:project.open_view_blocked_by_list_view
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_tree
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_fsm_base
 msgid "Assignees"
 msgstr "Petugas"
@@ -1525,6 +1562,7 @@ msgid "Close the sub-tasks list"
 msgstr "Tutup daftar subtugas"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Closed"
 msgstr "Ditutup"
@@ -1535,12 +1573,14 @@ msgid "Closed Depending on Tasks"
 msgstr "Ditutup Tergantung Tugas"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Closed On"
 msgstr "Ditutup Pada"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__is_closed
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__is_closed
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__is_closed
 msgid "Closed state"
 msgstr "State tertutup"
@@ -1602,8 +1642,10 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project__company_id
 #: model:ir.model.fields,field_description:project.field_project_project_stage__company_id
 #: model:ir.model.fields,field_description:project.field_project_task__company_id
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__company_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__company_id
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_search
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Company"
 msgstr "Perusahaan"
@@ -1717,6 +1759,7 @@ msgstr ""
 "meeting."
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__create_date
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__create_date
 msgid "Create Date"
 msgstr "Tanggal dibuat"
@@ -1850,6 +1893,7 @@ msgid "Created on"
 msgstr "Dibuat pada"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Creation Date"
@@ -1871,7 +1915,9 @@ msgstr "Pesan Kustom yang Dikembalikan"
 #: model:ir.model.fields,field_description:project.field_project_project__partner_id
 #: model:ir.model.fields,field_description:project.field_project_task__partner_id
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__partner_id
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__partner_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__partner_id
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Customer"
@@ -2021,9 +2067,11 @@ msgstr "Hari sampai busuk"
 #: model:ir.model.fields,field_description:project.field_project_milestone__deadline
 #: model:ir.model.fields,field_description:project.field_project_task__date_deadline
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__date_deadline
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__date_deadline
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__date_deadline
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_kanban
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_base
 msgid "Deadline"
 msgstr "Batas waktu"
@@ -2194,6 +2242,7 @@ msgstr "Buang"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_account_analytic_account__display_name
+#: model:ir.model.fields,field_description:project.field_account_analytic_line__display_name
 #: model:ir.model.fields,field_description:project.field_digest_digest__display_name
 #: model:ir.model.fields,field_description:project.field_ir_ui_menu__display_name
 #: model:ir.model.fields,field_description:project.field_mail_activity__display_name
@@ -2212,6 +2261,7 @@ msgstr "Buang"
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__display_name
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__display_name
 #: model:ir.model.fields,field_description:project.field_project_task_stage_personal__display_name
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__display_name
 #: model:ir.model.fields,field_description:project.field_project_task_type__display_name
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__display_name
 #: model:ir.model.fields,field_description:project.field_project_template_create_wizard__display_name
@@ -2219,6 +2269,7 @@ msgstr "Buang"
 #: model:ir.model.fields,field_description:project.field_project_update__display_name
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__display_name
 #: model:ir.model.fields,field_description:project.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:project.field_res_groups__display_name
 #: model:ir.model.fields,field_description:project.field_res_partner__display_name
 #: model:ir.model.fields,field_description:project.field_res_users__display_name
 #: model:ir.model.fields,field_description:project.field_res_users_settings__display_name
@@ -2460,6 +2511,7 @@ msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_base
 msgid "Future"
 msgstr "Masa Depan"
@@ -2583,6 +2635,7 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__2
+#: model:ir.model.fields.selection,name:project.selection__project_task_stage_report__priority__2
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__priority__2
 msgid "High priority"
 msgstr "Prioritas tinggi"
@@ -2630,6 +2683,7 @@ msgstr "Bagaimana perkembangan project ini?"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_account_analytic_account__id
+#: model:ir.model.fields,field_description:project.field_account_analytic_line__id
 #: model:ir.model.fields,field_description:project.field_digest_digest__id
 #: model:ir.model.fields,field_description:project.field_ir_ui_menu__id
 #: model:ir.model.fields,field_description:project.field_mail_activity__id
@@ -2648,6 +2702,7 @@ msgstr "Bagaimana perkembangan project ini?"
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__id
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__id
 #: model:ir.model.fields,field_description:project.field_project_task_stage_personal__id
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__id
 #: model:ir.model.fields,field_description:project.field_project_task_type__id
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__id
 #: model:ir.model.fields,field_description:project.field_project_template_create_wizard__id
@@ -2655,6 +2710,7 @@ msgstr "Bagaimana perkembangan project ini?"
 #: model:ir.model.fields,field_description:project.field_project_update__id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__id
 #: model:ir.model.fields,field_description:project.field_res_config_settings__id
+#: model:ir.model.fields,field_description:project.field_res_groups__id
 #: model:ir.model.fields,field_description:project.field_res_partner__id
 #: model:ir.model.fields,field_description:project.field_res_users__id
 #: model:ir.model.fields,field_description:project.field_res_users_settings__id
@@ -2885,11 +2941,13 @@ msgid "Kitchen Assembly"
 msgstr "Pengerjaan Dapur"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Last 30 Days"
 msgstr "30 Hari Terakhir"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Last 365 Days"
 msgstr "365 Hari Terakhir"
@@ -2910,6 +2968,7 @@ msgstr "Rating Terakhir (1-5)"
 #: model:ir.model.fields,field_description:project.field_project_project__date_last_stage_update
 #: model:ir.model.fields,field_description:project.field_project_task__date_last_stage_update
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__date_last_stage_update
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__date_last_stage_update
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__date_last_stage_update
 msgid "Last Stage Update"
 msgstr "Update Tahap Terakhir"
@@ -3073,6 +3132,7 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__0
+#: model:ir.model.fields.selection,name:project.selection__project_task_stage_report__priority__0
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__priority__0
 msgid "Low priority"
 msgstr "Prioritas rendah"
@@ -3147,6 +3207,7 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__1
+#: model:ir.model.fields.selection,name:project.selection__project_task_stage_report__priority__1
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__priority__1
 msgid "Medium priority"
 msgstr "Prioritas medium"
@@ -3187,7 +3248,9 @@ msgstr "Pesan"
 #: code:addons/project/controllers/portal.py:0
 #: model:ir.model.fields,field_description:project.field_project_task__milestone_id
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__milestone_id
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__milestone_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__milestone_id
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Milestone"
 msgstr "Milestone"
@@ -3248,6 +3311,7 @@ msgstr "Project"
 #: model:ir.ui.menu,name:project.menu_project_management_my_tasks
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_fsm_base
 msgid "My Tasks"
 msgstr "Tugas Saya"
@@ -3427,6 +3491,7 @@ msgstr "Belum ada rating pelanggan"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_project_task_burndown_chart_report
 #: model_terms:ir.actions.act_window,help:project.action_project_task_user_tree
+#: model_terms:ir.actions.act_window,help:project.action_project_time_by_stage_report
 msgid "No data yet!"
 msgstr "Belum ada data!"
 
@@ -3591,6 +3656,7 @@ msgstr "Hanya format jpeg, png, bmp dan tiff yang diizinkan sebagai lampiran."
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__is_open
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Open"
 msgstr "Terbuka"
@@ -3638,6 +3704,7 @@ msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_base
 msgid "Overdue"
 msgstr "Terlambat"
@@ -3801,8 +3868,10 @@ msgstr "Prioritaskan tugas dengan menandai yang penting menggunakan"
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #: model:ir.model.fields,field_description:project.field_project_task__priority
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__priority
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__priority
 #: model:project.tags,name:project.project_tags_16
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Priority"
 msgstr "Prioritas"
@@ -3848,6 +3917,7 @@ msgstr "Kemajuan"
 #: model:ir.model.fields,field_description:project.field_project_milestone__project_id
 #: model:ir.model.fields,field_description:project.field_project_task__project_id
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__project_id
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__project_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__project_id
 #: model:ir.module.module,shortdesc:base.module_project
 #: model:ir.ui.menu,name:project.menu_main_pm
@@ -4260,6 +4330,8 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__task_properties
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__task_properties
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_base
 msgid "Properties"
@@ -4584,6 +4656,7 @@ msgstr "Peran Ke User"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__is_rotting
 #: model:ir.model.fields,field_description:project.field_project_task__is_rotting
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Rotting"
@@ -4756,6 +4829,7 @@ msgstr "Kirim Undangan"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__sequence
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__sequence
 #: model:ir.model.fields,field_description:project.field_project_task_type__sequence
 msgid "Sequence"
 msgstr "Urutan"
@@ -4957,18 +5031,30 @@ msgstr "Sprint sedang Berlangsung"
 #: model:ir.model.fields,field_description:project.field_project_project__stage_id
 #: model:ir.model.fields,field_description:project.field_project_task__stage_id
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__stage_id
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__stage_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__stage_id
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Stage"
 msgstr "Tahapan"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_pivot
+msgid "Stage Analysis"
+msgstr ""
+
+#. module: project
 #: model:mail.message.subtype,name:project.mt_task_stage
 msgid "Stage Changed"
 msgstr "Tahapan Diubah"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_graph
+msgid "Stage Chart"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_stage__name
@@ -5088,10 +5174,12 @@ msgstr "Pencetakan T-shirt"
 #: model:ir.model.fields,field_description:project.field_project_project__tag_ids
 #: model:ir.model.fields,field_description:project.field_project_task__tag_ids
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__tag_ids
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__tag_ids
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__tag_ids
 #: model:ir.ui.menu,name:project.menu_project_tags_act
 #: model_terms:ir.ui.view,arch_db:project.project_tags_form_view
 #: model_terms:ir.ui.view,arch_db:project.project_tags_tree_view
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Tags"
 msgstr "Label"
@@ -5101,6 +5189,7 @@ msgstr "Label"
 #: code:addons/project/static/src/webclient/share_target/project_share_target_item.js:0
 #: model:ir.model,name:project.model_project_task
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__task_ids
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__task_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__task_id
 #: model:ir.model.fields,field_description:project.field_task_share_wizard__task_id
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -5218,6 +5307,7 @@ msgid "Task Templates"
 msgstr "Templat Tugas"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__name
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__name
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form
 #: model_terms:ir.ui.view,arch_db:project.quick_create_task_form
@@ -5275,6 +5365,11 @@ msgid "Task templates cannot be shared."
 msgstr "Template tugas tidak dapat dibagikan."
 
 #. module: project
+#: model:ir.model,name:project.model_project_task_stage_report
+msgid "Task time spent per stage"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_track_depending_tasks
 msgid "Task:"
 msgstr "Tugas:"
@@ -5299,6 +5394,7 @@ msgstr "Tugas:"
 #: model_terms:ir.ui.view,arch_db:project.portal_my_project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_tree_main_base
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_card
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_graph
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_pivot
@@ -5558,6 +5654,7 @@ msgstr "Bulan Ini"
 #: code:addons/project/models/project_task.py:0
 #: model:project.task.type,name:project.project_personal_stage_admin_2
 #: model:project.task.type,name:project.project_personal_stage_demo_2
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 msgid "This Week"
 msgstr "Pekan Ini"
 
@@ -5705,6 +5802,19 @@ msgid "Time Management"
 msgstr "Manajemen Waktu"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__time_spent
+msgid "Time Spent"
+msgstr ""
+
+#. module: project
+#: model:ir.actions.act_window,name:project.action_project_time_by_stage_report
+#: model:ir.embedded.actions,name:project.project_embedded_action_time_by_stage
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
+msgid "Time by Stage"
+msgstr ""
+
+#. module: project
 #: model:digest.tip,name:project.digest_tip_project_9
 msgid "Tip: Access your project easily"
 msgstr ""
@@ -5811,6 +5921,7 @@ msgstr ""
 #: code:addons/project/models/project_task.py:0
 #: model:project.task.type,name:project.project_personal_stage_admin_1
 #: model:project.task.type,name:project.project_personal_stage_demo_1
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 msgid "Today"
 msgstr "Hari Ini"
 
@@ -5952,6 +6063,7 @@ msgstr "Pembaruan"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__3
+#: model:ir.model.fields.selection,name:project.selection__project_task_stage_report__priority__3
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__priority__3
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Urgent"
@@ -6099,6 +6211,7 @@ msgstr "Visibilitas"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Visible to all"
 msgstr "Terlihat untuk semua"

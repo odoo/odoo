@@ -13,14 +13,15 @@
 # "Manon Rondou (ronm)" <ronm@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # Philippe Lang <philippe.lang@colab.ch>, 2025.
+# "Cécile Collart (cco)" <cco@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-08-31 20:40+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: French <https://translate.odoo.com/projects/odoo-s19-4/hr/fr/"
+"POT-Creation-Date: 2026-09-11 17:41+0000\n"
+"PO-Revision-Date: 2026-09-09 14:04+0000\n"
+"Last-Translator: \"Cécile Collart (cco)\" <cco@odoo.com>\n"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-master/hr/fr/"
 ">\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -833,7 +834,6 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__additional_note
-#: model:ir.model.fields,field_description:hr.field_hr_version__additional_note
 #: model:ir.model.fields,field_description:hr.field_res_users__additional_note
 msgid "Additional Note"
 msgstr "Note additionnelle"
@@ -1383,12 +1383,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr.res_users_action_my
 msgid "Change my Preferences"
 msgstr "Changer mes préférences"
-
-#. module: hr
-#. odoo-javascript
-#: code:addons/hr/static/src/components/employee_chat/employee_chat.xml:0
-msgid "Chat"
-msgstr "Messagerie instantanée"
 
 #. module: hr
 #: model:hr.job,name:hr.job_cto
@@ -2175,12 +2169,6 @@ msgid "Discover our products."
 msgstr "Découvrez nos produits."
 
 #. module: hr
-#. odoo-javascript
-#: code:addons/hr/static/src/components/employee_chat/employee_chat.xml:0
-msgid "Discuss"
-msgstr ""
-
-#. module: hr
 #: model:ir.model,name:hr.model_discuss_channel
 msgid "Discussion Channel"
 msgstr "Canal de discussion"
@@ -2217,6 +2205,7 @@ msgstr "Date de licenciement"
 #: model:ir.model.fields,field_description:hr.field_mail_activity_plan_template__display_name
 #: model:ir.model.fields,field_description:hr.field_mail_activity_schedule__display_name
 #: model:ir.model.fields,field_description:hr.field_mail_alias__display_name
+#: model:ir.model.fields,field_description:hr.field_publisher_warranty_contract__display_name
 #: model:ir.model.fields,field_description:hr.field_res_company__display_name
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:hr.field_res_partner__display_name
@@ -3209,6 +3198,7 @@ msgstr "Responsable des Ressources humaines"
 #: model:ir.model.fields,field_description:hr.field_mail_activity_plan_template__id
 #: model:ir.model.fields,field_description:hr.field_mail_activity_schedule__id
 #: model:ir.model.fields,field_description:hr.field_mail_alias__id
+#: model:ir.model.fields,field_description:hr.field_publisher_warranty_contract__id
 #: model:ir.model.fields,field_description:hr.field_res_company__id
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__id
 #: model:ir.model.fields,field_description:hr.field_res_partner__id
@@ -4128,7 +4118,6 @@ msgstr "Non spécifié"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__note
-#: model_terms:ir.ui.view,arch_db:hr.hr_version_list_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Note"
 msgstr "Note"
@@ -4834,8 +4823,8 @@ msgstr "Expérience avérée en matière d'innovation"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Provide additional information about this version..."
-msgstr "Donnez des informations supplémentaires sur cette version…"
+msgid "Provide additional information about this employee..."
+msgstr ""
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -4852,6 +4841,11 @@ msgstr "Date de naissance publique"
 #: model:ir.model,name:hr.model_hr_employee_public
 msgid "Public Employee"
 msgstr "Employé public"
+
+#. module: hr
+#: model:ir.model,name:hr.model_publisher_warranty_contract
+msgid "Publisher Warranty Contract"
+msgstr ""
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
@@ -6001,6 +5995,7 @@ msgstr "Messages non lus"
 #: code:addons/hr/static/src/components/hr_presence_status/hr_presence_status.js:0
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Unspecified"
 msgstr "Non spécifié"
 
@@ -6145,6 +6140,11 @@ msgstr "L'utilisateur est au bureau et en ligne"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__user_partner_id
 msgid "User's partner"
 msgstr "Partenaire de l'utilisateur"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Usual Work Location"
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_job_view_kanban
@@ -6892,16 +6892,22 @@ msgstr "travail"
 msgid "work_permit_name"
 msgstr "work_permit_name"
 
-msgid ""
-"<i class=\"oi oi-fw me-2 text-primary\" data-icon=\"luggage\" title=\"Job "
-"Position\"/>"
-msgstr ""
-"<i class=\"oi oi-fw me-2 text-primary\" data-icon=\"luggage\" "
-"title=\"Poste\"/>"
+#~ msgid "Chat"
+#~ msgstr "Messagerie instantanée"
 
-msgid ""
-"<i class=\"oi oi-fw me-2 text-primary\" data-icon=\"work\" "
-"title=\"Contract\"/>"
-msgstr ""
-"<i class=\"oi oi-fw me-2 text-primary\" data-icon=\"work\" title=\"Contrat\"/"
-">"
+#~ msgid "Provide additional information about this version..."
+#~ msgstr "Donnez des informations supplémentaires sur cette version…"
+
+#~ msgid ""
+#~ "<i class=\"oi oi-fw me-2 text-primary\" data-icon=\"luggage\" title=\"Job "
+#~ "Position\"/>"
+#~ msgstr ""
+#~ "<i class=\"oi oi-fw me-2 text-primary\" data-icon=\"luggage\" "
+#~ "title=\"Poste\"/>"
+
+#~ msgid ""
+#~ "<i class=\"oi oi-fw me-2 text-primary\" data-icon=\"work\" "
+#~ "title=\"Contract\"/>"
+#~ msgstr ""
+#~ "<i class=\"oi oi-fw me-2 text-primary\" data-icon=\"work\" "
+#~ "title=\"Contrat\"/>"

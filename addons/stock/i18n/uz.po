@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:44+0000\n"
+"POT-Creation-Date: 2026-09-11 17:41+0000\n"
 "PO-Revision-Date: 2026-08-31 21:20+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-s19-4/stock/"
@@ -227,6 +227,12 @@ msgid ""
 msgstr ""
 "%(operations)s %(warehouse)s omborida standart manba yoki belgilangan "
 "joylarga ega, shuning uchun uni arxivlay olmaysiz."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking_type.py:0
+msgid "%(picking_type)s : Detailed Moves"
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -663,11 +669,6 @@ msgid "<span class=\"col-6\">Waiting</span>"
 msgstr "<span class=\"col-6\">Kutmoqda</span>"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
-msgid "<span class=\"col-6\">Waves</span>"
-msgstr ""
-
-#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_delivery_no_package_section_line
 #, fuzzy
 msgid "<span class=\"ms-1\">Products with no package assigned</span>"
@@ -682,15 +683,15 @@ msgstr "<span class=\"mt0 float-start\">Belgilangan paket yo‘q</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid ""
-"<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\" "
-"style=\"white-space: nowrap;\">Wave Grouping</span>"
+"<span class=\"o_form_label fw-bold\" invisible=\"batch_creation_type == "
+"'manual'\">Grouping by</span>"
 msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid ""
-"<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\">Batch "
-"Grouping</span>"
+"<span class=\"o_form_label fw-bold\" invisible=\"batch_creation_type == "
+"'manual'\">Maximum</span>"
 msgstr ""
 
 #. module: stock
@@ -880,6 +881,11 @@ msgstr "<span>Paket turi: </span>"
 #, fuzzy
 msgid "<span>Remaining quantities not yet delivered:</span>"
 msgstr "<span>Hali yetkazib berilmagan qolgan miqdorlar:</span>"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
+msgid "<span>View</span>"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
@@ -1214,6 +1220,11 @@ msgid "A warning can be set on a partner (Stock)"
 msgstr "Hamkorga ogohlantirish berish mumkin (Zaxira)"
 
 #. module: stock
+#: model:ir.model,name:stock.model_res_groups
+msgid "Access Groups"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__action
 #, fuzzy
 msgid "Action"
@@ -1330,6 +1341,11 @@ msgid "Add a lot/serial number"
 msgstr "Partiya/seriya raqamini qo‘shish"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_picking_view_batch_tree_ref
+msgid "Add a move line"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_location_form
 #, fuzzy
 msgid "Add a new location"
@@ -1346,6 +1362,11 @@ msgstr "Yangi yo‘nalish qo‘shish"
 #, fuzzy
 msgid "Add a new storage category"
 msgstr "Yangi saqlash toifasini qo‘shish"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_picking_view_batch_tree_ref
+msgid "Add a transfer"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -1415,21 +1436,20 @@ msgid "Add to"
 msgstr ""
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_move_line.py:0
 #: model_terms:ir.ui.view,arch_db:stock.stock_add_to_wave_form
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_tree_detailed
-msgid "Add to Wave"
+msgid "Add to Batch"
 msgstr ""
 
 #. module: stock
+#: model:ir.actions.act_window,name:stock.stock_add_to_wave_action_stock_picking
 #: model:ir.actions.act_window,name:stock.stock_picking_to_batch_action_stock_picking
 msgid "Add to batch"
 msgstr ""
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.stock_add_to_wave_action_stock_picking
-msgid "Add to wave"
+#: model:ir.actions.act_window,name:stock.action_add_move_lines
+msgid "Add: Move Lines"
 msgstr ""
 
 #. module: stock
@@ -1499,7 +1519,7 @@ msgid "After next month last year"
 msgstr "O‘tgan yilning keyingi oyidan so‘ng"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 #, fuzzy
 msgid "All"
 msgstr "Barchasi"
@@ -1808,6 +1828,12 @@ msgstr "So‘rash"
 
 #. module: stock
 #. odoo-javascript
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+msgid "Assign"
+msgstr ""
+
+#. module: stock
+#. odoo-javascript
 #: code:addons/stock/static/src/allocation_report/allocation_report.xml:0
 #, fuzzy
 msgid "Assign All"
@@ -1824,6 +1850,12 @@ msgstr "Egasini tayinlash"
 #, fuzzy
 msgid "Assign to"
 msgstr "Tayinlash"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/allocation_report/allocation_report.xml:0
+msgid "Assigned"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__child_package_dest_ids
@@ -1948,6 +1980,7 @@ msgid "Automate"
 msgstr "Avtomatlashtirish"
 
 #. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__batch_creation_type__auto
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
 #, fuzzy
 msgid "Automatic"
@@ -1992,6 +2025,7 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_batch
+#: model:ir.model.fields,help:stock.field_stock_picking_type__batch_creation_type
 msgid ""
 "Automatically put pickings into batches as they are confirmed when possible."
 msgstr ""
@@ -2149,8 +2183,8 @@ msgid "Batch"
 msgstr ""
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
-msgid "Batch & Wave Transfers"
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__batch_creation_type
+msgid "Batch Creation"
 msgstr ""
 
 #. module: stock
@@ -2168,6 +2202,7 @@ msgstr ""
 #: code:addons/stock/models/stock_picking_batch.py:0
 #: model:ir.actions.report,name:stock.action_report_picking_batch
 #: model:ir.model,name:stock.model_stock_picking_batch
+#: model:ir.model.fields,field_description:stock.field_stock_add_to_wave__wave_id
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__batch_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking__batch_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking_batch__name
@@ -2179,6 +2214,7 @@ msgid "Batch Transfer"
 msgstr ""
 
 #. module: stock
+#: model:ir.model,name:stock.model_stock_add_to_wave
 #: model:ir.model,name:stock.model_stock_picking_to_batch
 msgid "Batch Transfer Line"
 msgstr ""
@@ -2186,6 +2222,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_picking_batch_action
 #: model:ir.ui.menu,name:stock.stock_picking_batch_menu
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Batch Transfers"
 msgstr ""
 
@@ -2201,7 +2238,6 @@ msgid "Batch associated to this transfer"
 msgstr ""
 
 #. module: stock
-#: model_terms:ir.actions.act_window,help:stock.action_picking_tree_wave
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_batch_action
 msgid "Batch transfers"
 msgstr ""
@@ -2213,16 +2249,21 @@ msgid "Batch transfers cannot be merged with wave transfers and vice versa."
 msgstr ""
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking_batch.py:0
+msgid "Batch transfers have been merged into the following transfer"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.actions.act_window,help:stock.stock_picking_batch_action
+msgid "Batch transfers lines"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_picking_batch
 #, fuzzy
 msgid "Batch, Wave & Cluster Transfers"
 msgstr "Partiyali, to‘lqinli va guruhlangan o‘tkazmalar"
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_picking_batch.py:0
-msgid "Batch/Wave transfers have been merged into the following transfer"
-msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -2416,6 +2457,14 @@ msgid "Cannot remove the location of a non empty package"
 msgstr "Bo‘sh bo‘lmagan paket joylashuvini olib tashlash mumkin emas"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+msgid ""
+"Cannot reset move to draft.\n"
+"Quantity not enough, product might have been used in some transfer."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__capacity_ids
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
 #, fuzzy
@@ -2571,18 +2620,6 @@ msgid "Choose destination location"
 msgstr "Belgilangan manzilni tanlang"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
-msgid ""
-"Choose how many days of demand are covered by the Minimum level based on the "
-"average daily demand.\rThis number of days should at least be equal to "
-"Replenishment Lead Times - Availability Time to not run out of stock while "
-"waiting for a new replenishment to arrive. Include extra days of safety to "
-"buffer unusual situations.\r\rGreen if > Replenishment Lead Times - "
-"Availability Time\rOrange if = Replenishment Lead Times - Availability "
-"Time\rRed if < Replenishment Lead Times - Availability Time"
-msgstr ""
-
-#. module: stock
 #: model:ir.model,name:stock.model_lot_label_layout
 #, fuzzy
 msgid "Choose the sheet layout to print lot labels"
@@ -2615,7 +2652,6 @@ msgid "Closest Location"
 msgstr "Eng yaqin joylashuv"
 
 #. module: stock
-#: model_terms:ir.actions.act_window,help:stock.action_picking_tree_wave
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_batch_action
 msgid "Cluster transfers"
 msgstr ""
@@ -2878,11 +2914,6 @@ msgstr "Tayyor terish soni"
 #, fuzzy
 msgid "Count Picking Waiting"
 msgstr "Kutilayotgan terish soni"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_wave
-msgid "Count Picking Wave"
-msgstr ""
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_inventory
@@ -3270,6 +3301,11 @@ msgid "Date Category"
 msgstr "Sana toifasi"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__wave_date_granularity
+msgid "Date Precision"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__date
 #, fuzzy
 msgid "Date Scheduled"
@@ -3315,6 +3351,11 @@ msgid "Date for next planned inventory based on cyclic schedule."
 msgstr "Davriy jadval asosida keyingi rejali inventarizatsiya o‘tkazish sanasi"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+msgid "Date if same"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__date_done
 #, fuzzy
 msgid "Date of Transfer"
@@ -3331,6 +3372,11 @@ msgstr "Ushbu joyda oxirgi inventarizatsiya o‘tkazilgan sana"
 #, fuzzy
 msgid "Date to Reserve"
 msgstr "Band qilish sanasi"
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__wave_date_granularity__day
+msgid "Day"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__annual_inventory_day
@@ -3364,6 +3410,19 @@ msgstr "Kunlar"
 #, fuzzy
 msgid "Days To Order"
 msgstr "Buyurtmagacha kunlar"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_replenishment_info__min_coverage
+msgid ""
+"Days of demand covered by Minimum level:\n"
+"Should be ≥ Replenishment Time - Sales Availability Time to avoid stock-outs "
+"during replenishment time.\n"
+"Include extra days of safety to buffer unusual situations.\n"
+"\n"
+"Green if > Replenishment Time - Sales Availability Time\n"
+"Orange if = Replenishment Time - Sales Availability Time\n"
+"Red if < Replenishment Time - Sales Availability Time"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__reservation_days_before_priority
@@ -3899,6 +3958,12 @@ msgid "Destination route"
 msgstr "Yetkazib berish yo‘nalishi"
 
 #. module: stock
+#: model:ir.actions.act_window,name:stock.action_picking_detailed_moves
+#: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
+msgid "Detailed Moves"
+msgstr ""
+
+#. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #: code:addons/stock/models/stock_picking.py:0
@@ -4003,6 +4068,7 @@ msgstr "Yuk xatlarida partiya va seriya raqamlarini ko‘rsatish"
 #: model:ir.model.fields,field_description:stock.field_report_stock_report_stock_rule__display_name
 #: model:ir.model.fields,field_description:stock.field_res_company__display_name
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:stock.field_res_groups__display_name
 #: model:ir.model.fields,field_description:stock.field_res_partner__display_name
 #: model:ir.model.fields,field_description:stock.field_res_users__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_add_to_wave__display_name
@@ -4325,6 +4391,12 @@ msgid "Exp %s"
 msgstr "Muddati %s"
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/client_actions/stock_traceability_report_backend.xml:0
+msgid "Expand"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__products_availability_state__expected
 #, fuzzy
 msgid "Expected"
@@ -4623,6 +4695,7 @@ msgstr "Foydalanish uchun erkin"
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__location_id
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_body_print
+#: model_terms:ir.ui.view,arch_db:stock.stock_picking_view_list_create_from_batch
 #: model_terms:ir.ui.view,arch_db:stock.view_move_tree
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
 #, fuzzy
@@ -4688,6 +4761,11 @@ msgstr "Kelgusi tushumlar"
 #, fuzzy
 msgid "General"
 msgstr "Umumiy"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+msgid "General Source Location"
+msgstr ""
 
 #. module: stock
 #. odoo-javascript
@@ -4757,6 +4835,11 @@ msgstr "Omborlarga o‘tish"
 #, fuzzy
 msgid "Goods Receipt Note"
 msgstr "Tovar qabul qilish dalolatnomasi"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__wave_group_by_date
+msgid "Group by Date"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__batch_group_by_dest_loc
@@ -4901,6 +4984,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_report_stock_report_stock_rule__id
 #: model:ir.model.fields,field_description:stock.field_res_company__id
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__id
+#: model:ir.model.fields,field_description:stock.field_res_groups__id
 #: model:ir.model.fields,field_description:stock.field_res_partner__id
 #: model:ir.model.fields,field_description:stock.field_res_users__id
 #: model:ir.model.fields,field_description:stock.field_stock_add_to_wave__id
@@ -5037,8 +5121,8 @@ msgstr "Agar o‘rnatilsa, amallar ushbu paketga joylashtiriladi"
 #. odoo-python
 #: code:addons/stock/models/stock_picking_type.py:0
 msgid ""
-"If the Automatic Batches feature is enabled, at least one 'Group by' option "
-"must be selected."
+"If the Automatic Batches feature is enabled, at least one 'Grouping by' "
+"option must be selected."
 msgstr ""
 
 #. module: stock
@@ -5130,16 +5214,6 @@ msgstr ""
 "tarkibini avtomatik ravishda chop etadi."
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_product_labels
-#, fuzzy
-msgid ""
-"If this checkbox is ticked, Odoo will automatically print the product labels "
-"of a picking when it is validated."
-msgstr ""
-"Agar bu katakcha belgilansa, Odoo tasdiqlanganda mahsulot yorliqlarini "
-"avtomatik ravishda chop etadi."
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_reception_report_labels
 #, fuzzy
 msgid ""
@@ -5175,6 +5249,13 @@ msgstr ""
 msgid ""
 "If this checkbox is ticked, Odoo will automatically show the allocation "
 "report (if there are moves to allocate to) when validating."
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_product_labels
+msgid ""
+"If this checkbox is ticked, Odoo will show the allocation report (if there "
+"are moves to allocate to.)"
 msgstr ""
 
 #. module: stock
@@ -6142,7 +6223,6 @@ msgid "Latest product availability status of the picking"
 msgstr "Terishning so‘nggi mahsulot mavjudligi holati"
 
 #. module: stock
-#: model_terms:ir.actions.act_window,help:stock.action_picking_tree_wave
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_batch_action
 msgid ""
 "Launch picking orders by aisle or area and regroup at packing zone. Ideal "
@@ -6233,6 +6313,11 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_add_to_wave__line_ids
 msgid "Line"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+msgid "Lines"
 msgstr ""
 
 #. module: stock
@@ -6616,6 +6701,11 @@ msgstr ""
 #, fuzzy
 msgid "Manual"
 msgstr "Qo‘llanma"
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__batch_creation_type__manual
+msgid "Manual Only"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__auto__manual
@@ -7079,7 +7169,6 @@ msgstr "Hech qachon qiymatlarni belgilamaslik"
 #. odoo-python
 #: code:addons/stock/models/stock_picking_batch.py:0
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__state__draft
-#: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #, fuzzy
 msgid "New"
@@ -7498,6 +7587,11 @@ msgid "Open"
 msgstr "Ochiq"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__open_button_style
+msgid "Open Button Style"
+msgstr ""
+
+#. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid "Open: Stock Move"
@@ -7522,6 +7616,7 @@ msgstr "Operatsiya miqdorlari"
 #: model:ir.model.fields,field_description:stock.field_stock_picking_batch__picking_type_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__name
 #: model:ir.model.fields,field_description:stock.field_stock_rule__picking_type_id
+#: model_terms:ir.ui.view,arch_db:stock.stock_picking_batch_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 #: model_terms:ir.ui.view,arch_db:stock.view_pickingtype_filter
@@ -8302,7 +8397,6 @@ msgid "Pick Type"
 msgstr "Tanlash turi"
 
 #. module: stock
-#: model_terms:ir.actions.act_window,help:stock.action_picking_tree_wave
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_batch_action
 msgid ""
 "Pick multiple orders in one trip and prepare orders as you pick. This "
@@ -8424,6 +8518,11 @@ msgid "Preceding operations"
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking_type__wave_date_granularity
+msgid "Precision to consider when grouping waves."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__route_id
 #: model:ir.model.fields,field_description:stock.field_stock_replenish_mixin__route_id
 #, fuzzy
@@ -8447,15 +8546,6 @@ msgid "Prepare Batch"
 msgstr ""
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.action_prepare_wave
-#: model:ir.actions.act_window,name:stock.action_prepare_wave_for_picking_type
-#: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
-#: model_terms:ir.ui.view,arch_db:stock.stock_picking_wave_kanban
-#: model_terms:ir.ui.view,arch_db:stock.stock_picking_wave_tree
-msgid "Prepare Wave"
-msgstr ""
-
-#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "Presence depends on the operation category."
 msgstr ""
@@ -8476,6 +8566,11 @@ msgstr ""
 #, fuzzy
 msgid "Price Unit"
 msgstr "Narx birligi"
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__open_button_style__primary
+msgid "Primary"
+msgstr ""
 
 #. module: stock
 #. odoo-javascript
@@ -8736,6 +8831,11 @@ msgstr "Mahsulotni to‘ldirish aralashmasi"
 #, fuzzy
 msgid "Product Routes Report"
 msgstr "Mahsulot yo‘nalishlari hisoboti"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+msgid "Product Source Location"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_tmpl_id
@@ -9278,7 +9378,6 @@ msgstr "Reytinglar"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__state__assigned
-#: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 #, fuzzy
@@ -9457,7 +9556,6 @@ msgid "Refresh"
 msgstr ""
 
 #. module: stock
-#: model_terms:ir.actions.act_window,help:stock.action_picking_tree_wave
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_batch_action
 msgid ""
 "Regroup multiple orders into one picking and consolidate at the packing zone."
@@ -9608,7 +9706,7 @@ msgid "Replenishment"
 msgstr "To‘ldirish"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
+#: model:ir.model.fields,help:stock.field_stock_replenishment_info__replenish_frequency
 msgid ""
 "Replenishment Frequency: choose how many days there are between "
 "replenishment requests to optimize the balance between your storage costs "
@@ -9766,7 +9864,6 @@ msgstr "Qisman qadoqlarni zaxiralash"
 
 #. module: stock
 #. odoo-javascript
-#: code:addons/stock/static/src/allocation_report/allocation_report.xml:0
 #: code:addons/stock/static/src/allocation_report/out_line/out_line.js:0
 msgid "Reserved"
 msgstr ""
@@ -10288,6 +10385,11 @@ msgstr "Havolani qidirish"
 #, fuzzy
 msgid "Search not supported without a value."
 msgstr "Qiymat kiritilmagan holda qidiruv qo‘llab-quvvatlanmaydi."
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__open_button_style__secondary
+msgid "Secondary"
+msgstr ""
 
 #. module: stock
 #. odoo-javascript
@@ -10884,7 +10986,6 @@ msgstr "Boshlang‘ich hujjat"
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__default_location_src_id
 #: model:ir.model.fields,field_description:stock.field_stock_rule__location_src_id
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
-#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 #: model_terms:ir.ui.view,arch_db:stock.view_scrap_move_list
 #, fuzzy
 msgid "Source Location"
@@ -10959,6 +11060,11 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_picking_type__wave_group_by_product
 msgid ""
 "Split transfers by product then group transfers that have the same product."
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking_type__wave_group_by_date
+msgid "Split transfers by their date."
 msgstr ""
 
 #. module: stock
@@ -11626,12 +11732,14 @@ msgstr "Ketma-ketlikdagi birinchisi standart hisoblanadi."
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
 #: code:addons/stock/wizard/stock_picking_to_batch.py:0
 msgid "The following batch transfer has been created"
 msgstr ""
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
 #: code:addons/stock/wizard/stock_picking_to_batch.py:0
 msgid "The following batch transfer has been updated"
 msgstr ""
@@ -11651,18 +11759,6 @@ msgid ""
 "check their states and operation types.\n"
 "\n"
 "Incompatibilities: %(incompatible_transfers)s"
-msgstr ""
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_move_line.py:0
-msgid "The following wave transfer has been created"
-msgstr ""
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_move_line.py:0
-msgid "The following wave transfer has been updated"
 msgstr ""
 
 #. module: stock
@@ -11856,7 +11952,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_picking_batch.py:0
 msgid ""
-"The sequence '%(sequence)s' is misconfigured. Its prefix should end with a "
+"The sequence 'picking.batch' is misconfigured. Its prefix should end with a "
 "'/' separator."
 msgstr ""
 
@@ -12254,6 +12350,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__location_dest_id
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_body_print
+#: model_terms:ir.ui.view,arch_db:stock.stock_picking_view_list_create_from_batch
 #: model_terms:ir.ui.view,arch_db:stock.view_move_tree
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
 #, fuzzy
@@ -12475,7 +12572,6 @@ msgstr "Kuzatuvchanlik"
 
 #. module: stock
 #. odoo-javascript
-#: code:addons/stock/static/src/client_actions/stock_traceability_report_backend.js:0
 #: code:addons/stock/static/src/client_actions/stock_traceability_report_backend.xml:0
 #: model:ir.actions.client,name:stock.action_stock_report
 #: model:ir.model,name:stock.model_stock_traceability_report
@@ -12623,7 +12719,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_batch_card
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_batch_form
-#: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
 #, fuzzy
 msgid "Transfers"
@@ -12726,6 +12822,12 @@ msgstr ""
 #, fuzzy
 msgid "Type of the exception activity on record."
 msgstr "Qaydda istisnoli faoliyat turi."
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+msgid "Unassign"
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -12972,7 +13074,6 @@ msgid "Vendor Locations"
 msgstr "Yetkazib beruvchi joylashuvlari"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_package_history_list
 #, fuzzy
 msgid "View"
@@ -12989,12 +13090,6 @@ msgstr "Mavjudlikni ko‘rish"
 #, fuzzy
 msgid "View Diagram"
 msgstr "Diagrammani ko‘rish"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_product_template_tree
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_product_tree
-msgid "View Forecast"
-msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__view_location_id
@@ -13065,7 +13160,6 @@ msgstr "WH/Zaxira"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__state__confirmed
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__state__confirmed
-#: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 #, fuzzy
 msgid "Waiting"
@@ -13251,25 +13345,14 @@ msgid "Wave Product Categories"
 msgstr ""
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_add_to_wave__wave_id
-msgid "Wave Transfer"
+#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__wave_date_granularity__week
+msgid "Week"
 msgstr ""
 
 #. module: stock
-#: model:ir.model,name:stock.model_stock_add_to_wave
-msgid "Wave Transfer Line"
-msgstr ""
-
-#. module: stock
-#: model:ir.actions.act_window,name:stock.action_picking_tree_wave
-#: model:ir.ui.menu,name:stock.stock_picking_wave_menu
-msgid "Wave Transfers"
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.actions.act_window,help:stock.action_picking_tree_wave
-#: model_terms:ir.actions.act_window,help:stock.stock_picking_batch_action
-msgid "Wave transfers"
+#. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+msgid "Week %d"
 msgstr ""
 
 #. module: stock
@@ -14047,23 +14130,15 @@ msgid "]<br/>min:"
 msgstr "]<br/>min:"
 
 #. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_add_to_wave__mode__new
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_to_batch__mode__new
 msgid "a new batch transfer"
 msgstr ""
 
 #. module: stock
-#: model:ir.model.fields.selection,name:stock.selection__stock_add_to_wave__mode__new
-msgid "a new wave transfer"
-msgstr ""
-
-#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_add_to_wave__mode__existing
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_to_batch__mode__existing
 msgid "an existing batch transfer"
-msgstr ""
-
-#. module: stock
-#: model:ir.model.fields.selection,name:stock.selection__stock_add_to_wave__mode__existing
-msgid "an existing wave transfer"
 msgstr ""
 
 #. module: stock
@@ -14108,7 +14183,6 @@ msgstr "kun oldin/"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
 msgid "days)"
 msgstr ""
 
@@ -14355,304 +14429,321 @@ msgstr ""
 "{{ object.name or 'mavjud emas' }})"
 
 #, fuzzy
-msgid "Andrwep"
-msgstr "Antverpen"
+#~ msgid ""
+#~ "If this checkbox is ticked, Odoo will automatically print the product "
+#~ "labels of a picking when it is validated."
+#~ msgstr ""
+#~ "Agar bu katakcha belgilansa, Odoo tasdiqlanganda mahsulot yorliqlarini "
+#~ "avtomatik ravishda chop etadi."
 
 #, fuzzy
-msgid "DEMO_DATE"
-msgstr "DEMO_DATE"
+#~ msgid "Andrwep"
+#~ msgstr "Antverpen"
 
 #, fuzzy
-msgid "DEMO_ORIGIN_DISPLAY_NAME"
-msgstr "DEMO_ORIGIN_DISPLAY_NAME"
+#~ msgid "DEMO_DATE"
+#~ msgstr "DEMO_DATE"
 
 #, fuzzy
-msgid "DEMO_PARTNER_NAME"
-msgstr "DEMO_SHERIK_NOMI"
+#~ msgid "DEMO_ORIGIN_DISPLAY_NAME"
+#~ msgstr "DEMO_ORIGIN_DISPLAY_NAME"
 
 #, fuzzy
-msgid "DEMO_PRODUCT_DISPLAY_NAME"
-msgstr "DEMO_PRODUCT_DISPLAY_NAME"
+#~ msgid "DEMO_PARTNER_NAME"
+#~ msgstr "DEMO_SHERIK_NOMI"
 
 #, fuzzy
-msgid "DEMO_QUANTITY"
-msgstr "DEMO_MIQDORI"
+#~ msgid "DEMO_PRODUCT_DISPLAY_NAME"
+#~ msgstr "DEMO_PRODUCT_DISPLAY_NAME"
 
 #, fuzzy
-msgid "DEMO_SOURCE_DISPLAY_NAME"
-msgstr "DEMO_SOURCE_DISPLAY_NAME"
+#~ msgid "DEMO_QUANTITY"
+#~ msgstr "DEMO_MIQDORI"
 
 #, fuzzy
-msgid "DEMO_UOM"
-msgstr "DEMO_UOM"
+#~ msgid "DEMO_SOURCE_DISPLAY_NAME"
+#~ msgstr "DEMO_SOURCE_DISPLAY_NAME"
 
 #, fuzzy
-msgid "Demo Display Name"
-msgstr "Namoyish ko‘rsatish nomi"
+#~ msgid "DEMO_UOM"
+#~ msgstr "DEMO_UOM"
 
 #, fuzzy
-msgid "Dispatch Management System"
-msgstr "Jo‘natmalarni boshqarish tizimi"
+#~ msgid "Demo Display Name"
+#~ msgstr "Namoyish ko‘rsatish nomi"
 
 #, fuzzy
-msgid "Expected Delivery:"
-msgstr "Kutilayotgan yetkazib berish:"
+#~ msgid "Dispatch Management System"
+#~ msgstr "Jo‘natmalarni boshqarish tizimi"
 
 #, fuzzy
-msgid ""
-"If this checkbox is ticked, Odoo will automatically show the reception "
-"report (if there are moves to allocate to) when validating."
-msgstr ""
-"Agar ushbu katakcha belgilangan bo‘lsa, Odoo tasdiqlash paytida qabul qilish "
-"hisobotini (agar taqsimlanadigan harakatlar mavjud bo‘lsa) avtomatik "
-"ravishda ko‘rsatadi."
+#~ msgid "Expected Delivery:"
+#~ msgstr "Kutilayotgan yetkazib berish:"
 
 #, fuzzy
-msgid "No %s selected or a delivery order selected"
-msgstr "%s tanlanmagan yoki yetkazib berish buyurtmasi tanlanmagan"
+#~ msgid ""
+#~ "If this checkbox is ticked, Odoo will automatically show the reception "
+#~ "report (if there are moves to allocate to) when validating."
+#~ msgstr ""
+#~ "Agar ushbu katakcha belgilangan bo‘lsa, Odoo tasdiqlash paytida qabul "
+#~ "qilish hisobotini (agar taqsimlanadigan harakatlar mavjud bo‘lsa) "
+#~ "avtomatik ravishda ko‘rsatadi."
 
 #, fuzzy
-msgid "Print Label"
-msgstr "Yorliq chop etish"
+#~ msgid "No %s selected or a delivery order selected"
+#~ msgstr "%s tanlanmagan yoki yetkazib berish buyurtmasi tanlanmagan"
 
 #, fuzzy
-msgid "Reason"
-msgstr "Sabab"
+#~ msgid "Print Label"
+#~ msgstr "Yorliq chop etish"
 
 #, fuzzy
-msgid "Show Reception Report at Validation"
-msgstr "Tasdiqlashda qabul qilish hisobotini ko‘rsatish"
+#~ msgid "Reason"
+#~ msgstr "Sabab"
 
 #, fuzzy
-msgid "Stock Reception Report"
-msgstr "Zaxirani qabul qilish hisoboti"
+#~ msgid "Show Reception Report at Validation"
+#~ msgstr "Tasdiqlashda qabul qilish hisobotini ko‘rsatish"
 
 #, fuzzy
-msgid "This report cannot be used for done and not done %s at the same time"
-msgstr ""
-"Bu hisobotdan bir vaqtning o‘zida bajarilgan va bajarilmagan %s uchun "
-"foydalanib bo‘lmaydi"
+#~ msgid "Stock Reception Report"
+#~ msgstr "Zaxirani qabul qilish hisoboti"
 
 #, fuzzy
-msgid "Transport management: organize packs in your fleet, or carriers."
-msgstr ""
-"Transport boshqaruvi: transport vositalaringiz yoki tashuvchilardagi "
-"paketlarni tashkil eting."
+#~ msgid "This report cannot be used for done and not done %s at the same time"
+#~ msgstr ""
+#~ "Bu hisobotdan bir vaqtning o‘zida bajarilgan va bajarilmagan %s uchun "
+#~ "foydalanib bo‘lmaydi"
 
 #, fuzzy
-msgid "Use Reception Report"
-msgstr "Qabul qilish hisobotidan foydalanish"
+#~ msgid "Transport management: organize packs in your fleet, or carriers."
+#~ msgstr ""
+#~ "Transport boshqaruvi: transport vositalaringiz yoki tashuvchilardagi "
+#~ "paketlarni tashkil eting."
 
 #, fuzzy
-msgid ""
-"<i class=\"fa fa-exclamation-triangle\"/>\n"
-"                                All products could not be reserved. Click on "
-"the \"Check Availability\" button to try to reserve products."
-msgstr ""
-"<i class=\"fa fa-exclamation-triangle\"/> Hamma mahsulotlarni band qilib "
-"bo‘lmadi. Mahsulotlarni band qilishga qayta urinish uchun \"Mavjudligini "
-"tekshirish\" tugmasini bosing."
+#~ msgid "Use Reception Report"
+#~ msgstr "Qabul qilish hisobotidan foydalanish"
 
 #, fuzzy
-msgid "Check Availability"
-msgstr "Mavjudligini tekshirish"
+#~ msgid ""
+#~ "<i class=\"fa fa-exclamation-triangle\"/>\n"
+#~ "                                All products could not be reserved. Click "
+#~ "on the \"Check Availability\" button to try to reserve products."
+#~ msgstr ""
+#~ "<i class=\"fa fa-exclamation-triangle\"/> Hamma mahsulotlarni band qilib "
+#~ "bo‘lmadi. Mahsulotlarni band qilishga qayta urinish uchun \"Mavjudligini "
+#~ "tekshirish\" tugmasini bosing."
 
 #, fuzzy
-msgid "Click or press enter to add a description"
-msgstr "Tavsif qo‘shish uchun bosing yoki Enter tugmasini bosing"
+#~ msgid "Check Availability"
+#~ msgstr "Mavjudligini tekshirish"
 
 #, fuzzy
-msgid "Compute shipping costs and ship with DHL"
-msgstr "Yetkazib berish xarajatlarini hisoblash va DHL orqali jo‘natish"
+#~ msgid "Click or press enter to add a description"
+#~ msgstr "Tavsif qo‘shish uchun bosing yoki Enter tugmasini bosing"
 
 #, fuzzy
-msgid ""
-"Compute shipping costs and ship with DHL<br/>\n"
-"                                    <strong>(please go to Home&gt;Apps to "
-"install)</strong>"
-msgstr ""
-"Yetkazib berish xarajatlarini hisoblash va DHL orqali jo‘natish<br/> "
-"<strong>(o‘rnatish uchun Asosiy sahifa > Ilovalar bo‘limiga o‘ting)</strong>"
+#~ msgid "Compute shipping costs and ship with DHL"
+#~ msgstr "Yetkazib berish xarajatlarini hisoblash va DHL orqali jo‘natish"
 
 #, fuzzy
-msgid "Compute shipping costs and ship with Easypost"
-msgstr "Yetkazib berish xarajatlarini hisoblash va Easypost orqali jo‘natish"
+#~ msgid ""
+#~ "Compute shipping costs and ship with DHL<br/>\n"
+#~ "                                    <strong>(please go to Home&gt;Apps to "
+#~ "install)</strong>"
+#~ msgstr ""
+#~ "Yetkazib berish xarajatlarini hisoblash va DHL orqali jo‘natish<br/> "
+#~ "<strong>(o‘rnatish uchun Asosiy sahifa > Ilovalar bo‘limiga o‘ting)</"
+#~ "strong>"
 
 #, fuzzy
-msgid "Compute shipping costs and ship with Envia.com"
-msgstr "Yetkazib berish xarajatlarini hisoblash va Envia.com orqali jo‘natish"
+#~ msgid "Compute shipping costs and ship with Easypost"
+#~ msgstr ""
+#~ "Yetkazib berish xarajatlarini hisoblash va Easypost orqali jo‘natish"
 
 #, fuzzy
-msgid "Compute shipping costs and ship with FedEx"
-msgstr "Yetkazib berish xarajatlarini hisoblash va FedEx orqali jo‘natish"
+#~ msgid "Compute shipping costs and ship with Envia.com"
+#~ msgstr ""
+#~ "Yetkazib berish xarajatlarini hisoblash va Envia.com orqali jo‘natish"
 
 #, fuzzy
-msgid ""
-"Compute shipping costs and ship with FedEx<br/>\n"
-"                                    <strong>(please go to Home&gt;Apps to "
-"install)</strong>"
-msgstr ""
-"Yetkazib berish xarajatlarini hisoblash va FedEx orqali jo‘natish<br/> "
-"<strong>(o‘rnatish uchun Asosiy sahifa > Ilovalar bo‘limiga o‘ting)</strong>"
+#~ msgid "Compute shipping costs and ship with FedEx"
+#~ msgstr "Yetkazib berish xarajatlarini hisoblash va FedEx orqali jo‘natish"
 
 #, fuzzy
-msgid "Compute shipping costs and ship with Sendcloud"
-msgstr "Yetkazib berish xarajatlarini hisoblash va Sendcloud orqali jo‘natish"
+#~ msgid ""
+#~ "Compute shipping costs and ship with FedEx<br/>\n"
+#~ "                                    <strong>(please go to Home&gt;Apps to "
+#~ "install)</strong>"
+#~ msgstr ""
+#~ "Yetkazib berish xarajatlarini hisoblash va FedEx orqali jo‘natish<br/> "
+#~ "<strong>(o‘rnatish uchun Asosiy sahifa > Ilovalar bo‘limiga o‘ting)</"
+#~ "strong>"
 
 #, fuzzy
-msgid "Compute shipping costs and ship with Shiprocket"
-msgstr "Yetkazib berish xarajatlarini hisoblash va Shiprocket orqali jo‘natish"
+#~ msgid "Compute shipping costs and ship with Sendcloud"
+#~ msgstr ""
+#~ "Yetkazib berish xarajatlarini hisoblash va Sendcloud orqali jo‘natish"
 
 #, fuzzy
-msgid "Compute shipping costs and ship with Starshipit"
-msgstr "Yetkazib berish xarajatlarini hisoblash va Starshipit orqali jo‘natish"
+#~ msgid "Compute shipping costs and ship with Shiprocket"
+#~ msgstr ""
+#~ "Yetkazib berish xarajatlarini hisoblash va Shiprocket orqali jo‘natish"
 
 #, fuzzy
-msgid "Compute shipping costs and ship with UPS"
-msgstr "Yetkazib berish xarajatlarini hisoblash va UPS orqali jo‘natish"
+#~ msgid "Compute shipping costs and ship with Starshipit"
+#~ msgstr ""
+#~ "Yetkazib berish xarajatlarini hisoblash va Starshipit orqali jo‘natish"
 
 #, fuzzy
-msgid ""
-"Compute shipping costs and ship with UPS<br/>\n"
-"                                    <strong>(please go to Home&gt;Apps to "
-"install)</strong>"
-msgstr ""
-"Yetkazib berish xarajatlarini hisoblash va UPS orqali jo‘natish<br/> "
-"<strong>(o‘rnatish uchun Asosiy sahifa > Ilovalar bo‘limiga o‘ting)</strong>"
+#~ msgid "Compute shipping costs and ship with UPS"
+#~ msgstr "Yetkazib berish xarajatlarini hisoblash va UPS orqali jo‘natish"
 
 #, fuzzy
-msgid "Compute shipping costs and ship with USPS"
-msgstr "Yetkazib berish xarajatlarini hisoblash va USPS orqali jo‘natish"
+#~ msgid ""
+#~ "Compute shipping costs and ship with UPS<br/>\n"
+#~ "                                    <strong>(please go to Home&gt;Apps to "
+#~ "install)</strong>"
+#~ msgstr ""
+#~ "Yetkazib berish xarajatlarini hisoblash va UPS orqali jo‘natish<br/> "
+#~ "<strong>(o‘rnatish uchun Asosiy sahifa > Ilovalar bo‘limiga o‘ting)</"
+#~ "strong>"
 
 #, fuzzy
-msgid ""
-"Compute shipping costs and ship with USPS<br/>\n"
-"                                    <strong>(please go to Home&gt;Apps to "
-"install)</strong>"
-msgstr ""
-"Yetkazib berish xarajatlarini hisoblash va USPS orqali jo‘natish<br/> "
-"<strong>(o‘rnatish uchun Asosiy sahifa > Ilovalar bo‘limiga o‘ting)</strong>"
+#~ msgid "Compute shipping costs and ship with USPS"
+#~ msgstr "Yetkazib berish xarajatlarini hisoblash va USPS orqali jo‘natish"
 
 #, fuzzy
-msgid "Compute shipping costs and ship with bpost"
-msgstr "Yetkazib berish xarajatlarini hisoblash va bpost orqali jo‘natish"
+#~ msgid ""
+#~ "Compute shipping costs and ship with USPS<br/>\n"
+#~ "                                    <strong>(please go to Home&gt;Apps to "
+#~ "install)</strong>"
+#~ msgstr ""
+#~ "Yetkazib berish xarajatlarini hisoblash va USPS orqali jo‘natish<br/> "
+#~ "<strong>(o‘rnatish uchun Asosiy sahifa > Ilovalar bo‘limiga o‘ting)</"
+#~ "strong>"
 
 #, fuzzy
-msgid "DHL Connector"
-msgstr "DHL ulagichi"
+#~ msgid "Compute shipping costs and ship with bpost"
+#~ msgstr "Yetkazib berish xarajatlarini hisoblash va bpost orqali jo‘natish"
 
 #, fuzzy
-msgid "DHL Express Connector"
-msgstr "DHL tezkor ulagichi"
+#~ msgid "DHL Connector"
+#~ msgstr "DHL ulagichi"
 
 #, fuzzy
-msgid "Default Return Name"
-msgstr "Standart qaytarish nomi"
+#~ msgid "DHL Express Connector"
+#~ msgstr "DHL tezkor ulagichi"
 
 #, fuzzy
-msgid "Demo Address and Name"
-msgstr "Namoyish manzili va nomi"
+#~ msgid "Default Return Name"
+#~ msgstr "Standart qaytarish nomi"
 
 #, fuzzy
-msgid "Easypost Connector"
-msgstr "Easypost ulagichi"
+#~ msgid "Demo Address and Name"
+#~ msgstr "Namoyish manzili va nomi"
 
 #, fuzzy
-msgid "Envia.com Connector"
-msgstr "Envia.com ulagichi"
+#~ msgid "Easypost Connector"
+#~ msgstr "Easypost ulagichi"
 
 #, fuzzy
-msgid "FedEx Connector"
-msgstr "FedEx ulagichi"
+#~ msgid "Envia.com Connector"
+#~ msgstr "Envia.com ulagichi"
 
 #, fuzzy
-msgid "Generate Serials/Lots"
-msgstr "Seriyalar/partiyalar yaratish"
+#~ msgid "FedEx Connector"
+#~ msgstr "FedEx ulagichi"
 
 #, fuzzy
-msgid "Import Serials/Lots"
-msgstr "Seriya raqamlari/Partiyalarni import qilish"
+#~ msgid "Generate Serials/Lots"
+#~ msgstr "Seriyalar/partiyalar yaratish"
 
 #, fuzzy
-msgid "Nothing to check the availability for."
-msgstr "Mavjudligini tekshirish uchun hech narsa yo‘q."
+#~ msgid "Import Serials/Lots"
+#~ msgstr "Seriya raqamlari/Partiyalarni import qilish"
 
 #, fuzzy
-msgid ""
-"Please put this document inside your return parcel.<br/>\n"
-"                                Your parcel must be sent to this address:"
-msgstr ""
-"Iltimos, bu hujjatni qaytarish paketingiz ichiga joylang.<br/> Paketingiz "
-"quyidagi manzilga yuborilishi shart:"
+#~ msgid "Nothing to check the availability for."
+#~ msgstr "Mavjudligini tekshirish uchun hech narsa yo‘q."
 
 #, fuzzy
-msgid "Sendcloud Connector"
-msgstr "Sendcloud ulagichi"
+#~ msgid ""
+#~ "Please put this document inside your return parcel.<br/>\n"
+#~ "                                Your parcel must be sent to this address:"
+#~ msgstr ""
+#~ "Iltimos, bu hujjatni qaytarish paketingiz ichiga joylang.<br/> Paketingiz "
+#~ "quyidagi manzilga yuborilishi shart:"
 
 #, fuzzy
-msgid "Shipping Connectors"
-msgstr "Yuk tashish ulagichlari"
+#~ msgid "Sendcloud Connector"
+#~ msgstr "Sendcloud ulagichi"
 
 #, fuzzy
-msgid "Shiprocket Connector"
-msgstr "Shiprocket ulagichi"
+#~ msgid "Shipping Connectors"
+#~ msgstr "Yuk tashish ulagichlari"
 
 #, fuzzy
-msgid "Starshipit Connector"
-msgstr "Starshipit ulagichi"
+#~ msgid "Shiprocket Connector"
+#~ msgstr "Shiprocket ulagichi"
 
 #, fuzzy
-msgid ""
-"Technical field used to compute whether the button \"Check Availability\" "
-"should be displayed."
-msgstr ""
-"\"Mavjudligini tekshirish\" tugmasi ko‘rsatilishi kerakligini hisoblash "
-"uchun ishlatiladigan texnik maydon."
+#~ msgid "Starshipit Connector"
+#~ msgstr "Starshipit ulagichi"
 
 #, fuzzy
-msgid "UPS Connector"
-msgstr "UPS ulagichi"
+#~ msgid ""
+#~ "Technical field used to compute whether the button \"Check Availability\" "
+#~ "should be displayed."
+#~ msgstr ""
+#~ "\"Mavjudligini tekshirish\" tugmasi ko‘rsatilishi kerakligini hisoblash "
+#~ "uchun ishlatiladigan texnik maydon."
 
 #, fuzzy
-msgid "USPS Connector"
-msgstr "USPS ulagichi"
+#~ msgid "UPS Connector"
+#~ msgstr "UPS ulagichi"
 
 #, fuzzy
-msgid "Website Messages"
-msgstr "Veb-sayt xabarlari"
+#~ msgid "USPS Connector"
+#~ msgstr "USPS ulagichi"
 
 #, fuzzy
-msgid "Website communication history"
-msgstr "Veb-sayt muloqot tarixi"
+#~ msgid "Website Messages"
+#~ msgstr "Veb-sayt xabarlari"
 
 #, fuzzy
-msgid "bpost Connector"
-msgstr "bpost ulanishi"
+#~ msgid "Website communication history"
+#~ msgstr "Veb-sayt muloqot tarixi"
 
 #, fuzzy
-msgid "Demo Lot/SN"
-msgstr "Namoyish partiya/seriya raqami"
+#~ msgid "bpost Connector"
+#~ msgstr "bpost ulanishi"
 
 #, fuzzy
-msgid "Demo Product"
-msgstr "Namoyish mahsulot"
+#~ msgid "Demo Lot/SN"
+#~ msgstr "Namoyish partiya/seriya raqami"
 
 #, fuzzy
-msgid "Final Location"
-msgstr "Yakuniy joy"
+#~ msgid "Demo Product"
+#~ msgstr "Namoyish mahsulot"
 
 #, fuzzy
-msgid ""
-"The operation brings the products to the intermediate location.But this "
-"operation is part of a chain of operations targeting the final location."
-msgstr ""
-"Bu operatsiya mahsulotlarni oraliq joyga olib keladi. Ammo bu operatsiya "
-"yakuniy joyga yo‘naltirilgan operatsiyalar zanjirining bir qismidir."
+#~ msgid "Final Location"
+#~ msgstr "Yakuniy joy"
 
 #, fuzzy
-msgid "On hand:"
-msgstr "Mavjud:"
+#~ msgid ""
+#~ "The operation brings the products to the intermediate location.But this "
+#~ "operation is part of a chain of operations targeting the final location."
+#~ msgstr ""
+#~ "Bu operatsiya mahsulotlarni oraliq joyga olib keladi. Ammo bu operatsiya "
+#~ "yakuniy joyga yo‘naltirilgan operatsiyalar zanjirining bir qismidir."
 
 #, fuzzy
-msgid "Real Quantity"
-msgstr "Haqiqiy miqdor"
+#~ msgid "On hand:"
+#~ msgstr "Mavjud:"
+
+#, fuzzy
+#~ msgid "Real Quantity"
+#~ msgstr "Haqiqiy miqdor"

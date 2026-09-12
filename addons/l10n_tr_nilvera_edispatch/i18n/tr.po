@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 18:23+0000\n"
+"POT-Creation-Date: 2026-09-11 18:14+0000\n"
 "PO-Revision-Date: 2026-08-31 15:08+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -208,8 +208,8 @@ msgstr "Teslimat Notları"
 
 #. module: l10n_tr_nilvera_edispatch
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_edispatch.field_stock_picking__l10n_tr_nilvera_dispatch_type
-msgid "Dispatch Type"
-msgstr "İrsaliye Tipi"
+msgid "Dispatch Handling"
+msgstr ""
 
 #. module: l10n_tr_nilvera_edispatch
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_edispatch.field_account_edi_xml_ubl_tr__display_name
@@ -320,6 +320,11 @@ msgstr ""
 #: code:addons/l10n_tr_nilvera_edispatch/models/stock_picking.py:0
 msgid "Imported E-Receipts"
 msgstr "İçe Aktarılan e-İrsaliyeler"
+
+#. module: l10n_tr_nilvera_edispatch
+#: model:ir.model.fields.selection,name:l10n_tr_nilvera_edispatch.selection__stock_picking__l10n_tr_nilvera_dispatch_type__is_despatch
+msgid "Invoice Serves as e-Dispatch"
+msgstr ""
 
 #. module: l10n_tr_nilvera_edispatch
 #: model:ir.model,name:l10n_tr_nilvera_edispatch.model_account_move
@@ -462,14 +467,6 @@ msgstr "Plaka Numarası"
 
 #. module: l10n_tr_nilvera_edispatch
 #. odoo-python
-#: code:addons/l10n_tr_nilvera_edispatch/models/account_move_send.py:0
-msgid ""
-"Please ensure the e-Dispatch Order field has all related orders before "
-"sending the invoice to Nilvera."
-msgstr ""
-
-#. module: l10n_tr_nilvera_edispatch
-#. odoo-python
 #: code:addons/l10n_tr_nilvera_edispatch/models/stock_picking.py:0
 msgid "Please validate the transfer first to generate the XML"
 msgstr "XML oluşturmak için lütfen önce transferi onaylayın/doğrulayın"
@@ -546,11 +543,6 @@ msgid "State"
 msgstr "İl"
 
 #. module: l10n_tr_nilvera_edispatch
-#: model:ir.model,name:l10n_tr_nilvera_edispatch.model_stock_picking
-msgid "Stock Picking - Delivery Guide (Uruguay)"
-msgstr ""
-
-#. module: l10n_tr_nilvera_edispatch
 #. odoo-python
 #: code:addons/l10n_tr_nilvera_edispatch/models/res_partner.py:0
 msgid "Street"
@@ -597,6 +589,22 @@ msgid "The file(s): %s must be of type XML."
 msgstr "Dosya(lar): %s XML türünde olmalıdır."
 
 #. module: l10n_tr_nilvera_edispatch
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_edispatch/models/account_move_send.py:0
+msgid ""
+"The following invoice(s) have deliveries, but no e-Dispatch Orders are "
+"selected. Please verify that this information is correct before sending."
+msgstr ""
+
+#. module: l10n_tr_nilvera_edispatch
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_edispatch/models/account_move_send.py:0
+msgid ""
+"The following invoice(s) will be sent as an e-Dispatch Invoice. Please make "
+"sure this is correct before sending."
+msgstr ""
+
+#. module: l10n_tr_nilvera_edispatch
 #: model:ir.model.fields,help:l10n_tr_nilvera_edispatch.field_res_partner__l10n_tr_nilvera_edispatch_customs_zip
 #: model:ir.model.fields,help:l10n_tr_nilvera_edispatch.field_res_users__l10n_tr_nilvera_edispatch_customs_zip
 msgid ""
@@ -613,6 +621,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_edispatch.field_stock_picking__l10n_tr_nilvera_trailer_plate_ids
 msgid "Trailer Plates"
 msgstr "Römork Plakaları"
+
+#. module: l10n_tr_nilvera_edispatch
+#: model:ir.model,name:l10n_tr_nilvera_edispatch.model_stock_picking
+msgid "Transfer"
+msgstr ""
 
 #. module: l10n_tr_nilvera_edispatch
 #: model:ir.module.module,shortdesc:base.module_l10n_tr_nilvera_edispatch
@@ -681,8 +694,10 @@ msgstr ""
 
 #. module: l10n_tr_nilvera_edispatch
 #: model:ir.model.fields,help:l10n_tr_nilvera_edispatch.field_stock_picking__l10n_tr_nilvera_dispatch_type
-msgid "Used to populate the type of dispatch."
-msgstr "Sevk türünü doldurmak için kullanılır."
+msgid ""
+"Used to populate the type of dispatch. 'Invoice Serves as e-Dispatch' is "
+"only applicable for e-Archive Customers."
+msgstr ""
 
 #. module: l10n_tr_nilvera_edispatch
 #: model:ir.model.fields,help:l10n_tr_nilvera_edispatch.field_stock_picking__l10n_tr_nilvera_carrier_id
@@ -818,5 +833,11 @@ msgstr ""
 msgid "Şoför"
 msgstr "Şoför"
 
-msgid "e-Receipt uploaded successfully."
-msgstr "e-İrsaliye başarıyla yüklendi."
+#~ msgid "Dispatch Type"
+#~ msgstr "İrsaliye Tipi"
+
+#~ msgid "Used to populate the type of dispatch."
+#~ msgstr "Sevk türünü doldurmak için kullanılır."
+
+#~ msgid "e-Receipt uploaded successfully."
+#~ msgstr "e-İrsaliye başarıyla yüklendi."

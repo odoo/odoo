@@ -8,10 +8,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.4a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 18:22+0000\n"
-"PO-Revision-Date: 2026-08-31 12:56+0000\n"
+"POT-Creation-Date: 2026-09-11 18:14+0000\n"
+"PO-Revision-Date: 2026-09-09 14:12+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
-"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-s19-4/"
+"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-master/"
 "l10n_sa_edi/ar/>\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
@@ -181,11 +181,6 @@ msgid "Attachment Name"
 msgstr ""
 
 #. module: l10n_sa_edi
-#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_move_form
-msgid "Blocking Invoice"
-msgstr "الفاتورة المعطلة"
-
-#. module: l10n_sa_edi
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_res_partner__l10n_sa_edi_building_number
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_res_users__l10n_sa_edi_building_number
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.address_form_fields
@@ -219,12 +214,6 @@ msgstr "الشهادة"
 #: code:addons/l10n_sa_edi/models/certificate.py:0
 msgid "Certificate Template Name"
 msgstr ""
-
-#. module: l10n_sa_edi
-#. odoo-python
-#: code:addons/l10n_sa_edi/models/account_move.py:0
-msgid "Chain Head"
-msgstr "بداية السلسلة"
 
 #. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.sa_partner_address_form
@@ -443,12 +432,6 @@ msgid "Enter the OTP"
 msgstr "أدخل الرقم السري لمرة واحدة"
 
 #. module: l10n_sa_edi
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__l10n_sa_edi_document__state__error
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__l10n_sa_edi_log__state__error
-msgid "Error"
-msgstr ""
-
-#. module: l10n_sa_edi
 #. odoo-python
 #: code:addons/l10n_sa_edi/models/l10n_sa_edi_document.py:0
 msgid "Error: Invoice rejected by ZATCA"
@@ -464,12 +447,6 @@ msgstr "خطأ: لم تتم تهيئة دفتر اليومية"
 #: code:addons/l10n_sa_edi/models/l10n_sa_edi_document.py:0
 msgid "Error: Something went wrong when sending to ZATCA"
 msgstr ""
-
-#. module: l10n_sa_edi
-#. odoo-python
-#: code:addons/l10n_sa_edi/models/l10n_sa_edi_document.py:0
-msgid "Error: This invoice is blocked due to %s. Please check it."
-msgstr "خطأ: هذه الفاتورة محظورة بسبب %s. يرجى التحقق من ذلك."
 
 #. module: l10n_sa_edi
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_account_journal__l10n_sa_production_csid_validity
@@ -611,6 +588,11 @@ msgid "Invoice submission to ZATCA returned errors"
 msgstr "حدثت أخطاء عند إرسال الفواتير إلى زاتكا"
 
 #. module: l10n_sa_edi
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_l10n_sa_edi_log__is_latest_log
+msgid "Is Latest Log"
+msgstr ""
+
+#. module: l10n_sa_edi
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_res_company__l10n_sa_edi_is_production
 msgid "Is Production"
 msgstr "الانتاج"
@@ -683,11 +665,6 @@ msgstr "L10N Sa Csr"
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_res_company__l10n_sa_edi_building_number
 msgid "L10N Sa Edi Building Number"
 msgstr "L10N Sa Edi رقم المبنى"
-
-#. module: l10n_sa_edi
-#: model:ir.model.fields,field_description:l10n_sa_edi.field_l10n_sa_edi_log__l10n_sa_edi_chain_head_id
-msgid "L10N Sa Edi Chain Head"
-msgstr ""
 
 #. module: l10n_sa_edi
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_account_bank_statement_line__l10n_sa_edi_document_id
@@ -844,16 +821,6 @@ msgid ""
 msgstr ""
 "عذرًا! ملف/ملفات الفاتورة بصيغة PDF مرتبطة بمستند EDI مُعتمد ولا يمكن حذفها "
 "وفقًا لأنظمة ZATCA: %s"
-
-#. module: l10n_sa_edi
-#. odoo-python
-#: code:addons/l10n_sa_edi/models/account_journal.py:0
-msgid ""
-"Oops! The journal is stuck. Please submit the pending invoices to ZATCA and "
-"try again."
-msgstr ""
-"عذراً! هناك مشكلة في دفتر اليومية. يرجى إرسال الفواتير المعلقة إلى زاتكا "
-"(ZATCA) ثم إعادة المحاولة."
 
 #. module: l10n_sa_edi
 #. odoo-python
@@ -1195,12 +1162,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_account_tax__ubl_cii_tax_exemption_reason_code
 msgid "Tax Exemption Reason Code"
 msgstr ""
-
-#. module: l10n_sa_edi
-#: model:ir.model.fields,help:l10n_sa_edi.field_l10n_sa_edi_document__l10n_sa_edi_chain_head_id
-msgid ""
-"Technical field to know if the chain has been stopped by a previous invoice"
-msgstr "حقل تقني لمعرفة ما إذا كانت السلسلة قد توقفت بسبب فاتورة سابقة"
 
 #. module: l10n_sa_edi
 #: model:ir.model.fields,help:l10n_sa_edi.field_account_journal__l10n_sa_csr
@@ -1606,11 +1567,6 @@ msgid "ZATCA chain index"
 msgstr "مؤشر سلسلة زاتكا"
 
 #. module: l10n_sa_edi
-#: model:ir.model.fields,field_description:l10n_sa_edi.field_l10n_sa_edi_document__l10n_sa_edi_chain_head_id
-msgid "ZATCA chain stopping document"
-msgstr ""
-
-#. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.sa_partner_address_form
 msgid "ZIP"
 msgstr "ZIP"
@@ -1645,32 +1601,53 @@ msgstr "urn:oasis:names:specification:ubl:signature:1"
 msgid "urn:oasis:names:specification:ubl:signature:Invoice"
 msgstr "urn:oasis:names:specification:ubl:signature:Invoice"
 
-msgid "700 Number"
-msgstr "700 رقم"
+#~ msgid "Blocking Invoice"
+#~ msgstr "الفاتورة المعطلة"
 
-msgid "Commercial Registration Number"
-msgstr "رقم التسجيل التجاري"
+#~ msgid "Chain Head"
+#~ msgstr "بداية السلسلة"
 
-msgid "Exemption Reason Code"
-msgstr "كود سبب الإعفاء"
+#~ msgid "Error: This invoice is blocked due to %s. Please check it."
+#~ msgstr "خطأ: هذه الفاتورة محظورة بسبب %s. يرجى التحقق من ذلك."
 
-msgid "GCC ID"
-msgstr "معرّف مجلس التعاون الخليجي"
+#~ msgid ""
+#~ "Oops! The journal is stuck. Please submit the pending invoices to ZATCA "
+#~ "and try again."
+#~ msgstr ""
+#~ "عذراً! هناك مشكلة في دفتر اليومية. يرجى إرسال الفواتير المعلقة إلى زاتكا "
+#~ "(ZATCA) ثم إعادة المحاولة."
 
-msgid "Iqama Number"
-msgstr "رقم إقامة "
+#~ msgid ""
+#~ "Technical field to know if the chain has been stopped by a previous "
+#~ "invoice"
+#~ msgstr "حقل تقني لمعرفة ما إذا كانت السلسلة قد توقفت بسبب فاتورة سابقة"
 
-msgid "National ID"
-msgstr "الهوية الوطنية"
+#~ msgid "700 Number"
+#~ msgstr "700 رقم"
 
-msgid "Other ID"
-msgstr "معرف آخر"
+#~ msgid "Commercial Registration Number"
+#~ msgstr "رقم التسجيل التجاري"
 
-msgid "Passport ID"
-msgstr "معرف جواز السفر"
+#~ msgid "Exemption Reason Code"
+#~ msgstr "كود سبب الإعفاء"
 
-msgid "Tax Exemption Reason Code (ZATCA)"
-msgstr "كود سبب الإعفاء (زاتكا)"
+#~ msgid "GCC ID"
+#~ msgstr "معرّف مجلس التعاون الخليجي"
 
-msgid "Tax Identification Number"
-msgstr "رقم التعريف الضريبي"
+#~ msgid "Iqama Number"
+#~ msgstr "رقم إقامة "
+
+#~ msgid "National ID"
+#~ msgstr "الهوية الوطنية"
+
+#~ msgid "Other ID"
+#~ msgstr "معرف آخر"
+
+#~ msgid "Passport ID"
+#~ msgstr "معرف جواز السفر"
+
+#~ msgid "Tax Exemption Reason Code (ZATCA)"
+#~ msgstr "كود سبب الإعفاء (زاتكا)"
+
+#~ msgid "Tax Identification Number"
+#~ msgstr "رقم التعريف الضريبي"

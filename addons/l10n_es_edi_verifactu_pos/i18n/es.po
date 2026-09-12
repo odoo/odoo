@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 18:19+0000\n"
+"POT-Creation-Date: 2026-09-11 18:11+0000\n"
 "PO-Revision-Date: 2026-08-31 15:07+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -113,6 +113,11 @@ msgid "ID"
 msgstr "ID"
 
 #. module: l10n_es_edi_verifactu_pos
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_verifactu_pos.view_pos_order_form_inherit_l10n_es_pos_verifactu
+msgid "Invoice Type"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu_pos
 #: model_terms:ir.ui.view,arch_db:l10n_es_edi_verifactu_pos.pos_order_receipt
 msgid "Invoice:"
 msgstr ""
@@ -157,31 +162,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_es_edi_verifactu_pos.pos_order_receipt
 msgid "QR tributario:"
 msgstr "QR tributario:"
-
-#. module: l10n_es_edi_verifactu_pos
-#: model:ir.model.fields.selection,name:l10n_es_edi_verifactu_pos.selection__pos_order__l10n_es_edi_verifactu_refund_reason__r1
-msgid "R1: Art 80.1 and 80.2 and error of law"
-msgstr "R1: Art. 80.1 y 80.2 y error fundado en derecho"
-
-#. module: l10n_es_edi_verifactu_pos
-#: model:ir.model.fields.selection,name:l10n_es_edi_verifactu_pos.selection__pos_order__l10n_es_edi_verifactu_refund_reason__r2
-msgid "R2: Art. 80.3"
-msgstr "R2: Art. 80.3"
-
-#. module: l10n_es_edi_verifactu_pos
-#: model:ir.model.fields.selection,name:l10n_es_edi_verifactu_pos.selection__pos_order__l10n_es_edi_verifactu_refund_reason__r3
-msgid "R3: Art. 80.4"
-msgstr "R3: Art. 80.4"
-
-#. module: l10n_es_edi_verifactu_pos
-#: model:ir.model.fields.selection,name:l10n_es_edi_verifactu_pos.selection__pos_order__l10n_es_edi_verifactu_refund_reason__r4
-msgid "R4: Rest"
-msgstr "R4: Resto"
-
-#. module: l10n_es_edi_verifactu_pos
-#: model:ir.model.fields.selection,name:l10n_es_edi_verifactu_pos.selection__pos_order__l10n_es_edi_verifactu_refund_reason__r5
-msgid "R5: Corrective invoices concerning simplified invoices"
-msgstr "R5: Facturas rectificativas en facturas simplificadas"
 
 #. module: l10n_es_edi_verifactu_pos
 #: model:ir.model.fields.selection,name:l10n_es_edi_verifactu_pos.selection__pos_order__l10n_es_edi_verifactu_state__registered_with_errors
@@ -256,7 +236,7 @@ msgid "Veri*Factu QR Code"
 msgstr "Código QR de Veri*Factu"
 
 #. module: l10n_es_edi_verifactu_pos
-#: model:ir.model.fields,field_description:l10n_es_edi_verifactu_pos.field_pos_order__l10n_es_edi_verifactu_refund_reason
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu_pos.field_pos_order__l10n_es_invoice_type
 msgid "Veri*Factu Refund Reason"
 msgstr "Motivo de reembolso de Veri*Factu"
 
@@ -321,9 +301,24 @@ msgstr ""
 msgid "You have to specify a refund reason."
 msgstr "Debe especificar un motivo de reembolso."
 
-msgid ""
-"Veri*Factu documents can only be generated for paid or posted Point of Sale "
-"Orders."
-msgstr ""
-"Los documentos Veri*Factu solo se pueden generar para pedidos de TPV pagados "
-"o publicados."
+#~ msgid "R1: Art 80.1 and 80.2 and error of law"
+#~ msgstr "R1: Art. 80.1 y 80.2 y error fundado en derecho"
+
+#~ msgid "R2: Art. 80.3"
+#~ msgstr "R2: Art. 80.3"
+
+#~ msgid "R3: Art. 80.4"
+#~ msgstr "R3: Art. 80.4"
+
+#~ msgid "R4: Rest"
+#~ msgstr "R4: Resto"
+
+#~ msgid "R5: Corrective invoices concerning simplified invoices"
+#~ msgstr "R5: Facturas rectificativas en facturas simplificadas"
+
+#~ msgid ""
+#~ "Veri*Factu documents can only be generated for paid or posted Point of "
+#~ "Sale Orders."
+#~ msgstr ""
+#~ "Los documentos Veri*Factu solo se pueden generar para pedidos de TPV "
+#~ "pagados o publicados."

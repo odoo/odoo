@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:42+0000\n"
+"POT-Creation-Date: 2026-09-11 17:42+0000\n"
 "PO-Revision-Date: 2026-08-31 16:44+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -123,11 +123,6 @@ msgstr ""
 "    </p> \n"
 "</div>\n"
 "            "
-
-#. module: delivery
-#: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
-msgid "<i class=\"oi me-1\" data-icon=\"east\"/>Get rate"
-msgstr "<i class=\"oi me-1\" data-icon=\"east\"/>获取费率"
 
 #. module: delivery
 #. odoo-python
@@ -314,6 +309,16 @@ msgid "Carrier"
 msgstr "承运商"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__carrier_prices
+msgid "Carrier Prices"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__carrier_prices_dumped
+msgid "Carrier Prices Dumped"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__payment_provider__custom_mode__cash_on_delivery
 msgid "Cash On Delivery"
 msgstr "货到付款"
@@ -328,7 +333,20 @@ msgstr "货到付款"
 #. module: delivery
 #. odoo-python
 #: code:addons/delivery/models/payment_provider.py:0
+msgid "Cash on delivery is only allowed if a sales order exists"
+msgstr ""
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/payment_provider.py:0
 msgid "Cash on delivery not allowed by selected delivery method"
+msgstr ""
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/payment_provider.py:0
+msgid ""
+"Cash on delivery not allowed to pay less than the order remaining balance"
 msgstr ""
 
 #. module: delivery
@@ -370,6 +388,7 @@ msgstr "内容"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__display_price
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__delivery_cost
 msgid "Cost"
 msgstr "成本"
 
@@ -448,6 +467,11 @@ msgid "Delivery Costs"
 msgstr ""
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__delivery_currency_id
+msgid "Delivery Currency"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__delivery_message
 #: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_message
 msgid "Delivery Message"
@@ -462,6 +486,7 @@ msgstr "发货消息"
 #: model:ir.model.fields,field_description:delivery.field_sale_order__carrier_id
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_so_list
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_tree
 msgid "Delivery Method"
 msgstr "交货方式"
@@ -584,6 +609,7 @@ msgstr "决定显示顺序"
 #: model:ir.model.fields,field_description:delivery.field_ir_module_module__display_name
 #: model:ir.model.fields,field_description:delivery.field_payment_method__display_name
 #: model:ir.model.fields,field_description:delivery.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:delivery.field_payment_transaction__display_name
 #: model:ir.model.fields,field_description:delivery.field_product_category__display_name
 #: model:ir.model.fields,field_description:delivery.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:delivery.field_res_partner__display_name
@@ -689,6 +715,12 @@ msgid "Get Rate and Create Shipment"
 msgstr "获取费率并创建运单/面单"
 
 #. module: delivery
+#. odoo-javascript
+#: code:addons/delivery/static/src/widgets/carrier_rates_loader.xml:0
+msgid "Get all rates"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model,name:delivery.model_ir_http
 msgid "HTTP Routing"
 msgstr "HTTP 路由"
@@ -704,6 +736,7 @@ msgstr "HTTP 路由"
 #: model:ir.model.fields,field_description:delivery.field_ir_module_module__id
 #: model:ir.model.fields,field_description:delivery.field_payment_method__id
 #: model:ir.model.fields,field_description:delivery.field_payment_provider__id
+#: model:ir.model.fields,field_description:delivery.field_payment_transaction__id
 #: model:ir.model.fields,field_description:delivery.field_product_category__id
 #: model:ir.model.fields,field_description:delivery.field_res_config_settings__id
 #: model:ir.model.fields,field_description:delivery.field_res_partner__id
@@ -770,6 +803,11 @@ msgid "Invoicing Policy"
 msgstr "开票政策"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__is_loading_prices
+msgid "Is Loading Prices"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__is_delivery
 msgid "Is a Delivery"
 msgstr "是交货"
@@ -793,6 +831,12 @@ msgstr "最后更新人"
 #: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__write_date
 msgid "Last Updated on"
 msgstr "上次更新日期"
+
+#. module: delivery
+#. odoo-javascript
+#: code:addons/delivery/static/src/widgets/carrier_rates_loader.xml:0
+msgid "Loading Rates"
+msgstr ""
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.delivery_local_delivery
@@ -872,6 +916,11 @@ msgid "Note Reference"
 msgstr ""
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__show_delivery_rates_button
+msgid "Number of carriers"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard__note_line_ids
 msgid "Operations"
 msgstr ""
@@ -900,6 +949,11 @@ msgstr ""
 #: model:ir.model,name:delivery.model_payment_provider
 msgid "Payment Provider"
 msgstr "支付提供商"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_payment_transaction
+msgid "Payment Transaction"
+msgstr ""
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -1100,7 +1154,7 @@ msgid "The Poste"
 msgstr "邮政"
 
 #. module: delivery
-#: model_terms:payment.provider,done_msg:delivery.payment_provider_cod
+#: model_terms:payment.provider,pending_msg:delivery.payment_provider_cod
 msgid "The delivery staff will collect payment upon delivery."
 msgstr "送货人员将在送货时收取货款。"
 
@@ -1173,6 +1227,11 @@ msgstr "该百分比将被计入运费。"
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__total_weight
 msgid "Total Order Weight"
 msgstr "订单总重量"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
+msgid "Total Weight"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__tracking_url
@@ -1301,9 +1360,9 @@ msgid "Your payment has been cancelled."
 msgstr "您的支付已被取消。"
 
 #. module: delivery
-#: model_terms:payment.provider,pending_msg:delivery.payment_provider_cod
-msgid "Your payment has been processed but is waiting for approval."
-msgstr "您的付款已经处理，但正在等待批准。"
+#: model_terms:payment.provider,done_msg:delivery.payment_provider_cod
+msgid "Your payment has been processed."
+msgstr ""
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_zip_prefix_list
@@ -1333,3 +1392,9 @@ msgid ""
 msgstr ""
 "{{ object.so_id.company_id.name }} 发货确认（参考编号{{ object.so_id.name or "
 "'n/a' }} ）"
+
+#~ msgid "<i class=\"oi me-1\" data-icon=\"east\"/>Get rate"
+#~ msgstr "<i class=\"oi me-1\" data-icon=\"east\"/>获取费率"
+
+#~ msgid "Your payment has been processed but is waiting for approval."
+#~ msgstr "您的付款已经处理，但正在等待批准。"

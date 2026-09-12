@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:44+0000\n"
+"POT-Creation-Date: 2026-09-11 17:41+0000\n"
 "PO-Revision-Date: 2026-08-31 17:11+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -514,10 +514,42 @@ msgid ""
 msgstr ""
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_view_kanban_templates
+msgid "<i class=\"oi me-1\" role=\"img\" data-icon=\"archive\"/>Archive"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_view_kanban_templates
+msgid "<i class=\"oi me-1\" role=\"img\" data-icon=\"brush\"/>Use this"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_view_kanban_templates
+msgid "<i class=\"oi me-1\" role=\"img\" data-icon=\"content_copy\"/>Duplicate"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_view_kanban_templates
+msgid "<i class=\"oi me-1\" role=\"img\" data-icon=\"delete\"/>Delete"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_view_kanban_templates
+msgid "<i class=\"oi me-1\" role=\"img\" data-icon=\"unarchive\"/>Unarchive"
+msgstr ""
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
 msgid ""
 "<i class=\"oi me-2\" data-icon=\"crisis_alert\" role=\"img\" aria-"
 "label=\"Lead/Opportunity\"/>"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_view_kanban_templates
+msgid ""
+"<i class=\"oi me-2\" title=\"Mailing Model\" role=\"img\" data-"
+"icon=\"crisis_alert\"/>"
 msgstr ""
 
 #. module: mass_mailing
@@ -810,6 +842,14 @@ msgid "A sample of"
 msgstr "Una muestra de"
 
 #. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/components/mass_mailing_save_as_template_cog_menu/mass_mailing_save_as_template_cog_menu.js:0
+msgid ""
+"A similar template with subject %(subject)s and model %(modelName)s already "
+"exists.\\n\\nDo you want to proceed ?"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__ab_testing_winner_mailing_id
 msgid "A/B Campaign Winner Mailing"
 msgstr "Correo ganador de la campaña A/B"
@@ -886,6 +926,11 @@ msgstr "IR A LAS OPCIONES DE TODAS FORMAS"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/snippets/mass_mailing_images_snippets.xml:0
 msgid "About our product line"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_res_groups
+msgid "Access Groups"
 msgstr ""
 
 #. module: mass_mailing
@@ -1196,6 +1241,8 @@ msgid "Apply changes"
 msgstr "Aplicar cambios"
 
 #. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/views/mailing_template_kanban_view/mailing_template_kanban_record.js:0
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_kanban
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
@@ -1205,10 +1252,17 @@ msgstr "Archivar"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_form
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_search
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_view_search_templates
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
 msgid "Archived"
 msgstr "Archivado"
+
+#. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/views/mailing_template_kanban_view/mailing_template_kanban_record.js:0
+msgid "Are you sure that you want to archive this record?"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.page_mailing_confirm_unsubscribe
@@ -1772,9 +1826,25 @@ msgid "Circle"
 msgstr ""
 
 #. module: mass_mailing
+#: model_terms:ir.actions.act_window,help:mass_mailing.mailing_mailing_action_templates
+msgid ""
+"Click <i class=\"oi\" role=\"img\" data-icon=\"more_vert\"></i> and select "
+"<b>Save as Template</b> to save your mailings,<br>\n"
+"                or create a new Template from scratch."
+msgstr ""
+
+#. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
-msgid "Click on the star to add this mailing to your templates."
+msgid ""
+"Click on the \"Save as Template\" button to add this mailing to your "
+"templates."
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
+msgid "Click on the actions gear icon."
 msgstr ""
 
 #. module: mass_mailing
@@ -2123,6 +2193,17 @@ msgid "Created"
 msgstr ""
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_view_list_template
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_view_search_templates
+msgid "Created By"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_view_search_templates
+msgid "Created On"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__create_uid
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_import__create_uid
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_to_list__create_uid
@@ -2314,14 +2395,14 @@ msgstr ""
 
 #. module: mass_mailing
 #. odoo-javascript
-#: code:addons/mass_mailing/static/src/snippets/mass_mailing_text_snippets.xml:0
-msgid "Design for the soul"
+#: code:addons/mass_mailing/static/src/components/mass_mailing_save_as_template_cog_menu/mass_mailing_save_as_template_cog_menu.js:0
+msgid "Design added to your Template Library!"
 msgstr ""
 
 #. module: mass_mailing
 #. odoo-javascript
-#: code:addons/mass_mailing/static/src/themes/theme_selector/theme_selector.js:0
-msgid "Design removed from the templates!"
+#: code:addons/mass_mailing/static/src/snippets/mass_mailing_text_snippets.xml:0
+msgid "Design for the soul"
 msgstr ""
 
 #. module: mass_mailing
@@ -2438,6 +2519,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace_report__display_name
 #: model:ir.model.fields,field_description:mass_mailing.field_res_company__display_name
 #: model:ir.model.fields,field_description:mass_mailing.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:mass_mailing.field_res_groups__display_name
 #: model:ir.model.fields,field_description:mass_mailing.field_res_partner__display_name
 #: model:ir.model.fields,field_description:mass_mailing.field_res_users__display_name
 #: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__display_name
@@ -2445,6 +2527,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:mass_mailing.field_utm_source__display_name
 msgid "Display Name"
 msgstr "Nombre para mostrar"
+
+#. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/components/mass_mailing_save_as_template_cog_menu/mass_mailing_save_as_template_cog_menu.js:0
+msgid "Do not save"
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__res_id
@@ -2862,16 +2950,6 @@ msgid "Fair pricing"
 msgstr ""
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__favorite
-msgid "Favorite"
-msgstr "Favorito"
-
-#. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__favorite_date
-msgid "Favorite Date"
-msgstr "Fecha favorita"
-
-#. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/snippets/mass_mailing_columns_snippets.xml:0
 msgid "Feature One"
@@ -3201,6 +3279,7 @@ msgstr "Recibo demasiados correos de esta lista"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace_report__id
 #: model:ir.model.fields,field_description:mass_mailing.field_res_company__id
 #: model:ir.model.fields,field_description:mass_mailing.field_res_config_settings__id
+#: model:ir.model.fields,field_description:mass_mailing.field_res_groups__id
 #: model:ir.model.fields,field_description:mass_mailing.field_res_partner__id
 #: model:ir.model.fields,field_description:mass_mailing.field_res_users__id
 #: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__id
@@ -3448,6 +3527,11 @@ msgstr "Es un seguidor"
 #: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__is_mailing_campaign_activated
 msgid "Is Mailing Campaign Activated"
 msgstr "La campaña de correo está activada"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__is_template
+msgid "Is Template"
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__ab_testing_is_winner_mailing
@@ -4305,8 +4389,14 @@ msgid "My Mailings"
 msgstr "Mis correos"
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_view_search_templates
+msgid "My Templates"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__name
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_tree
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_view_search_templates
 msgid "Name"
 msgstr "Nombre"
 
@@ -4442,6 +4532,11 @@ msgid "No Recipient replied to your mailing yet!"
 msgstr ""
 
 #. module: mass_mailing
+#: model_terms:ir.actions.act_window,help:mass_mailing.mailing_mailing_action_templates
+msgid "No Templates Yet"
+msgstr ""
+
+#. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_contact_import.py:0
 msgid ""
@@ -4467,6 +4562,12 @@ msgstr "¡Todavía no hay información!"
 #: model_terms:ir.actions.act_window,help:mass_mailing.mailing_subscription_optout_action
 msgid "No data yet."
 msgstr "Todavía no hay datos."
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/models/mailing.py:0
+msgid "No design has been created yet!"
+msgstr ""
 
 #. module: mass_mailing
 #. odoo-python
@@ -5311,12 +5412,6 @@ msgstr ""
 
 #. module: mass_mailing
 #. odoo-javascript
-#: code:addons/mass_mailing/static/src/themes/theme_selector/theme_selector.xml:0
-msgid "Remove from Templates"
-msgstr "Eliminar de plantillas"
-
-#. module: mass_mailing
-#. odoo-javascript
 #: code:addons/mass_mailing/static/src/editor/plugins/mass_mailing_link_plugin.js:0
 msgid "Removes referrer information sent to the target site"
 msgstr ""
@@ -5464,6 +5559,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/components/company_update_dialog.xml:0
 #: code:addons/mass_mailing/static/src/builder/mass_mailing_builder.xml:0
+#: code:addons/mass_mailing/static/src/components/mass_mailing_save_as_template_cog_menu/mass_mailing_save_as_template_cog_menu.js:0
 msgid "Save"
 msgstr ""
 
@@ -5483,6 +5579,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/fields/domain_savable_field/domain_savable_field.js:0
 msgid "Save As a Dynamic List"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/components/mass_mailing_save_as_template_cog_menu/mass_mailing_save_as_template_cog_menu.xml:0
+msgid "Save as Template"
 msgstr ""
 
 #. module: mass_mailing
@@ -5863,6 +5965,12 @@ msgstr "Firma"
 
 #. module: mass_mailing
 #. odoo-javascript
+#: code:addons/mass_mailing/static/src/components/mass_mailing_save_as_template_cog_menu/mass_mailing_save_as_template_cog_menu.js:0
+msgid "Similar template found!"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/snippets/mass_mailing_columns_snippets.xml:0
 msgid "Simple"
 msgstr ""
@@ -6144,6 +6252,16 @@ msgid "Take Future Schedule Date"
 msgstr "Tomar fecha futura del horario"
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_view_list_template
+msgid "Target"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_view_search_templates
+msgid "Target Model"
+msgstr ""
+
+#. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/snippets/mass_mailing_text_snippets.xml:0
 msgid "Tax free"
@@ -6161,13 +6279,37 @@ msgstr ""
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/options/masonry_block_template_option.xml:0
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Template"
 msgstr "Plantilla"
+
+#. module: mass_mailing
+#: model:ir.actions.act_window,name:mass_mailing.mailing_mailing_action_templates
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_view_search_templates
+msgid "Template Library"
+msgstr ""
 
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/models/mailing_contact.py:0
 msgid "Template for Mailing Contacts"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.ui.menu,name:mass_mailing.mass_mailing_template_menu
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_view_list_template
+msgid "Templates"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/models/mailing.py:0
+msgid "Templates are only supported for Email mailings."
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_view_search_templates
+msgid "Templates that are assigned to me"
 msgstr ""
 
 #. module: mass_mailing
@@ -6723,6 +6865,17 @@ msgstr "Úselo ahora"
 
 #. module: mass_mailing
 #. odoo-javascript
+#: code:addons/mass_mailing/static/src/themes/theme_selector/theme_selector.xml:0
+msgid "Use the Save as Template under the"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid "Use this"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/snippets/mass_mailing_columns_snippets.xml:0
 msgid "Use this block for an offer, update, or new release."
 msgstr ""
@@ -6940,11 +7093,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:mass_mailing.mailing_mailing_schedule_date_action
 msgid "When do you want to send your mailing?"
 msgstr "¿Cuándo quiere enviar su correo?"
-
-#. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__favorite_date
-msgid "When this mailing was added in the favorites"
-msgstr "Cuando se añadió este correo a los favoritos"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -7267,6 +7415,12 @@ msgstr ""
 
 #. module: mass_mailing
 #. odoo-javascript
+#: code:addons/mass_mailing/static/src/themes/theme_selector/theme_selector.xml:0
+msgid "button to save your mailings to your Template Library."
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/components/mailing_preview_iframe/mailing_preview_iframe.xml:0
 msgid "close"
 msgstr ""
@@ -7328,8 +7482,8 @@ msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.constraint,message:mass_mailing.constraint_mailing_mailing_email_from
-msgid "email from is required for mailing"
-msgstr "el remitente del correo es obligatorio para el correo"
+msgid "email from is required for non-template 'mail' mailings"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_send_test_form
@@ -7526,3 +7680,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_tree
 msgid "✉ Blacklisted"
 msgstr ""
+
+#~ msgid "Favorite"
+#~ msgstr "Favorito"
+
+#~ msgid "Favorite Date"
+#~ msgstr "Fecha favorita"
+
+#~ msgid "Remove from Templates"
+#~ msgstr "Eliminar de plantillas"
+
+#~ msgid "When this mailing was added in the favorites"
+#~ msgstr "Cuando se añadió este correo a los favoritos"
+
+#~ msgid "email from is required for mailing"
+#~ msgstr "el remitente del correo es obligatorio para el correo"

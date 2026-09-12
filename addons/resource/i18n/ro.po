@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:46+0000\n"
+"POT-Creation-Date: 2026-09-11 17:43+0000\n"
 "PO-Revision-Date: 2026-08-31 19:45+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -345,6 +345,8 @@ msgid "Forever"
 msgstr ""
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__4
 msgid "Friday"
 msgstr "Vineri"
@@ -495,6 +497,8 @@ msgid "Material Resources"
 msgstr ""
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__0
 msgid "Monday"
 msgstr "Luni"
@@ -555,6 +559,11 @@ msgid "Phone"
 msgstr "Telefon"
 
 #. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_tree
+msgid "Preview"
+msgstr ""
+
+#. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 msgid "Provided datetimes needs to be timezoned"
@@ -590,6 +599,16 @@ msgstr ""
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__recurrency_type
 msgid "Recurrency Type"
+msgstr ""
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__reference_calendar_id
+msgid "Reference Calendar"
+msgstr ""
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_calendar__reference_calendar_id
+msgid "Reference working hours used to compute the full-time equivalent."
 msgstr ""
 
 #. module: resource
@@ -674,6 +693,8 @@ msgstr ""
 "lucru saptamanal."
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__5
 msgid "Saturday"
 msgstr "Sâmbătă"
@@ -734,6 +755,8 @@ msgid "Starting Date of Time Off"
 msgstr "Data de începere a concediului de odihnă"
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__6
 msgid "Sunday"
 msgstr "Duminică"
@@ -828,6 +851,8 @@ msgstr ""
 "așteptată va fi de 30 de minute."
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__3
 msgid "Thursday"
 msgstr "Joi"
@@ -873,6 +898,8 @@ msgid "Total duration of attendances cannot exceed 24 hours"
 msgstr ""
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__1
 msgid "Tuesday"
 msgstr "Marți"
@@ -901,12 +928,26 @@ msgid "Variable"
 msgstr ""
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_many2one/resource_calendar_many2one.js:0
+msgid "Variable (%(days)s %(dayLabel)s - %(hours)sh)"
+msgstr ""
+
+#. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
+msgid "Variable (%(days)s days - %(hours)sh)"
+msgstr ""
+
+#. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 #: model_terms:ir.ui.view,arch_db:resource.resource_resource_form
 msgid "Visible to all"
 msgstr "Vizibil pentru toți"
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__2
 msgid "Wednesday"
 msgstr "Miercuri"
@@ -941,6 +982,7 @@ msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__work_time_rate
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Work Time Rate"
 msgstr "Rată timp de lucru"
 
@@ -969,6 +1011,12 @@ msgstr "Lucru până la"
 #: model:ir.model.fields,field_description:resource.field_resource_mixin__resource_calendar_id
 msgid "Working Hours"
 msgstr "Program de lucru"
+
+#. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
+msgid "Working Hours by Day"
+msgstr ""
 
 #. module: resource
 #. odoo-python
@@ -1009,49 +1057,66 @@ msgstr ""
 msgid "You cannot compute the intervals without a calendar on no resource."
 msgstr ""
 
-msgid ""
-"Are you sure you want to switch to a 1-week calendar? All work entries will "
-"be lost."
+#. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_many2one/resource_calendar_many2one.js:0
+msgid "day"
 msgstr ""
-"Sunteți sigur că doriți să treceți la un calendar de 1 săptămână? Toate "
-"înregistrările de lucru vor fi pierdute."
 
-msgid ""
-"Are you sure you want to switch to a 2-week calendar? All work entries will "
-"be lost."
+#. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_many2one/resource_calendar_many2one.js:0
+msgid "days"
 msgstr ""
-"Sunteți sigur că doriți să treceți la un calendar de 2 săptămâni? Toate "
-"înregistrările de lucru vor fi pierdute."
 
-msgid "Attendances can't overlap."
-msgstr "Prezențele nu se pot suprapune."
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "from company"
+msgstr ""
 
-msgid "Avg"
-msgstr "Medie"
+#~ msgid ""
+#~ "Are you sure you want to switch to a 1-week calendar? All work entries "
+#~ "will be lost."
+#~ msgstr ""
+#~ "Sunteți sigur că doriți să treceți la un calendar de 1 săptămână? Toate "
+#~ "înregistrările de lucru vor fi pierdute."
 
-msgid "Calendar in 2 weeks mode"
-msgstr "Mod calendar în 2 săptămâni"
+#~ msgid ""
+#~ "Are you sure you want to switch to a 2-week calendar? All work entries "
+#~ "will be lost."
+#~ msgstr ""
+#~ "Sunteți sigur că doriți să treceți la un calendar de 2 săptămâni? Toate "
+#~ "înregistrările de lucru vor fi pierdute."
 
-msgid "Explanation"
-msgstr "Explicație"
+#~ msgid "Attendances can't overlap."
+#~ msgstr "Prezențele nu se pot suprapune."
 
-msgid "First"
-msgstr "Primul/a"
+#~ msgid "Avg"
+#~ msgstr "Medie"
 
-msgid "First week"
-msgstr "Prima săptămână"
+#~ msgid "Calendar in 2 weeks mode"
+#~ msgstr "Mod calendar în 2 săptămâni"
 
-msgid "Second"
-msgstr "Al doilea (a doua)"
+#~ msgid "Explanation"
+#~ msgstr "Explicație"
 
-msgid "Second week"
-msgstr "A doua săptămână"
+#~ msgid "First"
+#~ msgstr "Primul/a"
 
-msgid "Switch"
-msgstr "Schimbare (switch)"
+#~ msgid "First week"
+#~ msgstr "Prima săptămână"
 
-msgid "Total"
-msgstr "Total"
+#~ msgid "Second"
+#~ msgstr "Al doilea (a doua)"
 
-msgid "Week Number"
-msgstr "Numărul săptămânii"
+#~ msgid "Second week"
+#~ msgstr "A doua săptămână"
+
+#~ msgid "Switch"
+#~ msgstr "Schimbare (switch)"
+
+#~ msgid "Total"
+#~ msgstr "Total"
+
+#~ msgid "Week Number"
+#~ msgstr "Numărul săptămânii"

@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:44+0000\n"
+"POT-Creation-Date: 2026-09-11 17:42+0000\n"
 "PO-Revision-Date: 2026-08-31 19:41+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -101,24 +101,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_timesheet/models/account_analytic_line.py:0
 msgid "%(project_name)s (%(sign)s%(hours)sh)"
-msgstr ""
-
-#. module: hr_timesheet
-#. odoo-python
-#: code:addons/hr_timesheet/models/account_analytic_line.py:0
-msgid "%(sign)s%(hours)sh"
-msgstr ""
-
-#. module: hr_timesheet
-#. odoo-python
-#: code:addons/hr_timesheet/models/account_analytic_line.py:0
-msgid "%(sign)s%(hours)sh %(minutes)sm"
-msgstr ""
-
-#. module: hr_timesheet
-#. odoo-python
-#: code:addons/hr_timesheet/models/account_analytic_line.py:0
-msgid "%(sign)s%(minutes)sm"
 msgstr ""
 
 #. module: hr_timesheet
@@ -358,6 +340,25 @@ msgid "Call client and discuss project"
 msgstr "Pokličite stranko in se pogovorite o projektu"
 
 #. module: hr_timesheet
+#: model:res.groups,comment:hr_timesheet.group_timesheet_manager
+msgid ""
+"Can manage and approve all timesheets, with access to reporting and "
+"configuration."
+msgstr ""
+
+#. module: hr_timesheet
+#: model:res.groups,comment:hr_timesheet.group_hr_timesheet_approver
+msgid ""
+"Can manage timesheets for all employees, but can only approve timesheets and "
+"billing targets for their team members. Has access to reporting."
+msgstr ""
+
+#. module: hr_timesheet
+#: model:res.groups,comment:hr_timesheet.group_hr_timesheet_user
+msgid "Can only manage their own timesheets."
+msgstr ""
+
+#. module: hr_timesheet
 #. odoo-javascript
 #: code:addons/hr_timesheet/static/src/views/timesheet_calendar/timesheet_calendar_model.js:0
 msgid "Choose an employee to create their timesheet."
@@ -479,7 +480,6 @@ msgstr ""
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__department_id
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__department_id
-#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 msgid "Department"
 msgstr "Oddelek"
 
@@ -676,7 +676,6 @@ msgstr "Beleženje časa na opravilih"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__manager_id
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__manager_id
-#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 msgid "Manager"
 msgstr "Upravitelj"
 
@@ -707,6 +706,11 @@ msgstr "Mejnik"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_update_view_search_inherit
 msgid "My Department's Updates"
 msgstr "Posodobitve mojega oddelka"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
+msgid "My Projects/Tasks"
+msgstr ""
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_update_view_search_inherit
@@ -793,7 +797,6 @@ msgstr "Nadurno delo"
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__parent_task_id
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__parent_task_id
-#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 msgid "Parent Task"
 msgstr "Nadrejeno opravilo"
 

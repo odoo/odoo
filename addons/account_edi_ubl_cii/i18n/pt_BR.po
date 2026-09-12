@@ -11,10 +11,10 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-04 17:44+0000\n"
-"PO-Revision-Date: 2026-08-31 19:36+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-09-12 17:32+0000\n"
+"Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
-"s19-4/account_edi_ubl_cii/pt_BR/>\n"
+"master/account_edi_ubl_cii/pt_BR/>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,6 +44,24 @@ msgid ""
 "present in the `EAS list\n"
 "<https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/>`_.\n"
 msgstr ""
+"\n"
+"Módulo de faturamento eletrônico\n"
+"===========================\n"
+"\n"
+"Permite exportar e importar os formatos: E-FFF, UBL Bis 3, EHF3, NLCIUS, "
+"Factur-X (CII), XRechnung (UBL).\n"
+"Ao gerar o PDF na fatura, o PDF será incorporado ao arquivo XML para todos "
+"os formatos UBL. Isso permite que o\n"
+"destinatário recupere o PDF apenas com o arquivo XML. Observe que **o EHF3 "
+"está totalmente implementado pelo UBL Bis 3** (`referência\n"
+"<https://anskaffelser.dev/postaward/g3/spec/current/billing-3.0/norway/"
+"#_implementation>`_).\n"
+"\n"
+"Observe que E-FFF, NLCIUS e XRechnung (UBL) estão disponíveis apenas para "
+"empresas belgas, holandesas e alemãs,\n"
+"respectivamente. O UBL Bis 3 está disponível apenas para empresas cujo país "
+"esteja presente na `lista EAS\n"
+"<https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/>`_.\n"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -194,7 +212,7 @@ msgstr "BIS3 DE (XRechnung)"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_cii
 msgid "Base helpers for CII"
-msgstr ""
+msgstr "Auxiliares básicos para CII"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_ubl
@@ -516,7 +534,7 @@ msgstr "Exportar fora da UE"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_cii
 msgid "Factur-x/ZUGFeRD CII 2.2.0"
-msgstr ""
+msgstr "Factur-x/ZUGFeRD CII 2.2.0"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__au
@@ -679,7 +697,7 @@ msgstr "Linhas agrupadas por imposto"
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_bank_statement_line__has_grouped_lines
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move__has_grouped_lines
 msgid "Has Grouped Lines"
-msgstr ""
+msgstr "Possui linhas agrupadas"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__9910
@@ -727,7 +745,7 @@ msgstr "Kennitala Islândia"
 #. module: account_edi_ubl_cii
 #: model:ir.module.module,shortdesc:base.module_account_edi_ubl_cii
 msgid "Import/Export electronic invoices with UBL/CII"
-msgstr ""
+msgstr "Importação/exportação de faturas eletrônicas com UBL/CII"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__0202
@@ -788,7 +806,7 @@ msgstr "O código UNECE é suportado?"
 #: model:ir.model.fields,help:account_edi_ubl_cii.field_account_bank_statement_line__has_grouped_lines
 #: model:ir.model.fields,help:account_edi_ubl_cii.field_account_move__has_grouped_lines
 msgid "Is move lines Grouped"
-msgstr ""
+msgstr "Está com linhas de movimentação agrupadas"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__0097

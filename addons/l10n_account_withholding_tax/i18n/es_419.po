@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 18:17+0000\n"
+"POT-Creation-Date: 2026-09-11 18:10+0000\n"
 "PO-Revision-Date: 2026-08-31 16:49+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -147,6 +147,13 @@ msgstr "Compañía"
 #: model:ir.model,name:l10n_account_withholding_tax.model_res_config_settings
 msgid "Config Settings"
 msgstr "Ajustes de configuración"
+
+#. module: l10n_account_withholding_tax
+#: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register_withholding_line__country_code
+#: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_withholding_line__country_code
+#: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_withholding_line__country_code
+msgid "Country Code"
+msgstr ""
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register_withholding_line__create_uid
@@ -470,6 +477,15 @@ msgid "Tax"
 msgstr "Impuesto"
 
 #. module: l10n_account_withholding_tax
+#: model:ir.model.fields,help:l10n_account_withholding_tax.field_account_payment_register_withholding_line__country_code
+#: model:ir.model.fields,help:l10n_account_withholding_tax.field_account_payment_withholding_line__country_code
+#: model:ir.model.fields,help:l10n_account_withholding_tax.field_account_withholding_line__country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+
+#. module: l10n_account_withholding_tax
 #. odoo-python
 #: code:addons/l10n_account_withholding_tax/models/account_withholding_line.py:0
 msgid ""
@@ -552,9 +568,13 @@ msgstr ""
 
 #. module: l10n_account_withholding_tax
 #: model_terms:ir.ui.view,arch_db:l10n_account_withholding_tax.view_account_payment_form
-#: model_terms:ir.ui.view,arch_db:l10n_account_withholding_tax.view_account_payment_register_form
 msgid "Total Withheld Amount"
 msgstr "Importe total retenido"
+
+#. module: l10n_account_withholding_tax
+#: model_terms:ir.ui.view,arch_db:l10n_account_withholding_tax.view_account_payment_register_form
+msgid "Total withheld:"
+msgstr ""
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register_withholding_line__type_tax_use
@@ -630,7 +650,7 @@ msgstr "Retener y pagar"
 
 #. module: l10n_account_withholding_tax
 #: model_terms:ir.ui.view,arch_db:l10n_account_withholding_tax.view_account_payment_form
-#: model_terms:ir.ui.view,arch_db:l10n_account_withholding_tax.view_account_payment_register_form
+#: model_terms:ir.ui.view,arch_db:l10n_account_withholding_tax.view_account_tax_search_inherit_l10n_account_withholding_tax
 msgid "Withholding"
 msgstr "Retencion"
 
@@ -723,6 +743,11 @@ msgstr "Base de retención"
 #: model_terms:ir.ui.view,arch_db:l10n_account_withholding_tax.res_config_settings_form
 msgid "Withholding:"
 msgstr "Retención:"
+
+#. module: l10n_account_withholding_tax
+#: model_terms:ir.ui.view,arch_db:l10n_account_withholding_tax.view_account_payment_register_form
+msgid "Withholdings"
+msgstr ""
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model,name:l10n_account_withholding_tax.model_account_withholding_line

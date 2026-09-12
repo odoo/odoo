@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:44+0000\n"
+"POT-Creation-Date: 2026-09-11 17:44+0000\n"
 "PO-Revision-Date: 2026-08-31 14:44+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-4/portal/"
@@ -69,13 +69,6 @@ msgstr ""
 "                                        로그인 정보를 복사하십시오 ("
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
-msgid ""
-"<br/>\n"
-"                            If you want to modify it, update"
-msgstr ""
-
-#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_footer
 msgid ""
 "<i class=\"fw-light oi me-2\" data-icon=\"keyboard_arrow_left\"/>Discard"
@@ -89,19 +82,14 @@ msgid ""
 msgstr ""
 
 #. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.my_addresses
+msgid "<i class=\"oi me-1\" data-icon=\"add\"/>Add"
+msgstr ""
+
+#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
 msgid "<i class=\"oi me-1\" data-icon=\"east\"/>Back to edit mode"
 msgstr "<i class=\"oi me-1\" data-icon=\"east\"/>편집 모드로 돌아가기"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.my_addresses
-msgid "<i class=\"oi me-2\" data-icon=\"add\"/>Add Address"
-msgstr "<i class=\"oi me-2\" data-icon=\"add\"/>주소 추가"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.profile_picture_card
-msgid "<i class=\"oi oi-filled\" data-icon=\"edit\" title=\"Edit\"/>"
-msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.side_content
@@ -152,34 +140,12 @@ msgstr ""
 "label=\"Next\" title=\"Next\"/>"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.profile_picture_card
-msgid "<i class=\"oi\" data-icon=\"delete\" title=\"Clear\"/>"
-msgstr ""
-
-#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid ""
 "<i title=\"Documentation\" class=\"oi oi-fw o_button_icon\" data-"
 "icon=\"info\"/>"
 msgstr ""
 "<i title=\"문서\" class=\"oi oi-fw o_button_icon\" data-icon=\"info\"/>"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
-msgid ""
-"<small class=\"form-text text-muted\">\n"
-"                    Changing country is not allowed once document(s) have\n"
-"                    been issued for your account. Please contact us directly "
-"for this\n"
-"                    operation.\n"
-"                </small>"
-msgstr ""
-"<small class=\"form-text text-muted\">\n"
-"                    계정에 대한 문서 발급이 완료된 후에는 국가를\n"
-"                    변경할 수 없습니다. 관련된 작업에 대해서는 직접 연락주시"
-"기\n"
-"                    바랍니다.\n"
-"                </small>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.pager
@@ -251,6 +217,12 @@ msgstr "승인 및 서명하기"
 #: model:ir.model.fields,field_description:portal.field_portal_share__access_warning
 msgid "Access warning"
 msgstr "사용 권한 경고"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+msgid "Account Details"
+msgstr ""
 
 #. module: portal
 #. odoo-python
@@ -339,9 +311,13 @@ msgstr "청구지 주소"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_management
-#: model_terms:ir.ui.view,arch_db:portal.my_addresses
 msgid "Billing address"
 msgstr "청구지 주소"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.my_addresses
+msgid "Billing addresses"
+msgstr ""
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_entry__category
@@ -359,6 +335,14 @@ msgstr "비밀번호 변경"
 msgid ""
 "Changing %(field_description)s is not allowed once document(s) have been "
 "issued for your account. Please contact us directly for this operation."
+msgstr ""
+
+#. module: portal
+#. odoo-python
+#: code:addons/portal/controllers/portal.py:0
+msgid ""
+"Changing country is not allowed once document(s) have been issued for your "
+"account. Please contact us directly for this operation."
 msgstr ""
 
 #. module: portal
@@ -383,8 +367,8 @@ msgid "City"
 msgstr "시/군/구"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.profile_picture_card
-msgid "Clear"
+#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
+msgid "City..."
 msgstr ""
 
 #. module: portal
@@ -409,8 +393,8 @@ msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
-msgid "Company Name"
-msgstr "회사명"
+msgid "Company"
+msgstr ""
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_entry__is_config_card
@@ -459,11 +443,6 @@ msgid "Contact"
 msgstr "연락처"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
-msgid "Contact Details"
-msgstr "연락처 상세 내용"
-
-#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Contacts"
 msgstr "연락처"
@@ -475,6 +454,7 @@ msgid "Could not save file %s"
 msgstr "파일을 저장할 수 없습니다 %s"
 
 #. module: portal
+#: model:ir.model,name:portal.model_res_country
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "Country"
 msgstr "국가"
@@ -549,9 +529,13 @@ msgstr "배송 주소"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_management
-#: model_terms:ir.ui.view,arch_db:portal.my_addresses
 msgid "Delivery address"
 msgstr "배송 주소"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.my_addresses
+msgid "Delivery addresses"
+msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -607,6 +591,7 @@ msgstr "작성 취소"
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__display_name
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__display_name
 #: model:ir.model.fields,field_description:portal.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:portal.field_res_country__display_name
 #: model:ir.model.fields,field_description:portal.field_res_partner__display_name
 #: model:ir.model.fields,field_description:portal.field_res_users_apikeys_description__display_name
 msgid "Display Name"
@@ -623,11 +608,6 @@ msgstr "%s 일 후 만기"
 #: code:addons/portal/static/src/interactions/sidebar.js:0
 msgid "Due today"
 msgstr "오늘 만기"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.profile_picture_card
-msgid "Edit"
-msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_card
@@ -724,6 +704,7 @@ msgstr "홈"
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__id
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__id
 #: model:ir.model.fields,field_description:portal.field_res_config_settings__id
+#: model:ir.model.fields,field_description:portal.field_res_country__id
 #: model:ir.model.fields,field_description:portal.field_res_partner__id
 #: model:ir.model.fields,field_description:portal.field_res_users_apikeys_description__id
 msgid "ID"
@@ -739,6 +720,11 @@ msgid ""
 msgstr ""
 "외부인을 위한 주문은 백엔드를 통해 생성할 수 있습니다. 이름이나 이메일 주소"
 "를 수정하려면 계정 설정에서 변경하거나 관리자에게 문의하시기 바랍니다."
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
+msgid "If you want to modify it, update"
+msgstr ""
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_entry__image
@@ -879,6 +865,11 @@ msgstr "내 계정"
 #: model_terms:ir.ui.view,arch_db:portal.my_addresses
 msgid "My addresses"
 msgstr "내 주소"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
+msgid "Name"
+msgstr ""
 
 #. module: portal
 #. odoo-javascript
@@ -1357,7 +1348,7 @@ msgstr "사용자"
 
 #. module: portal
 #. odoo-python
-#: code:addons/portal/controllers/portal.py:0
+#: code:addons/portal/models/res_country.py:0
 msgid "VAT"
 msgstr "부가가치세"
 
@@ -1463,11 +1454,6 @@ msgstr "귀하의 연락처"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
-msgid "Your name"
-msgstr "귀하의 성명"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "Zip Code"
 msgstr "우편번호"
 
@@ -1524,3 +1510,31 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "your account details"
 msgstr "계정 세부 정보"
+
+#~ msgid "<i class=\"oi me-2\" data-icon=\"add\"/>Add Address"
+#~ msgstr "<i class=\"oi me-2\" data-icon=\"add\"/>주소 추가"
+
+#~ msgid ""
+#~ "<small class=\"form-text text-muted\">\n"
+#~ "                    Changing country is not allowed once document(s) "
+#~ "have\n"
+#~ "                    been issued for your account. Please contact us "
+#~ "directly for this\n"
+#~ "                    operation.\n"
+#~ "                </small>"
+#~ msgstr ""
+#~ "<small class=\"form-text text-muted\">\n"
+#~ "                    계정에 대한 문서 발급이 완료된 후에는 국가를\n"
+#~ "                    변경할 수 없습니다. 관련된 작업에 대해서는 직접 연락주"
+#~ "시기\n"
+#~ "                    바랍니다.\n"
+#~ "                </small>"
+
+#~ msgid "Company Name"
+#~ msgstr "회사명"
+
+#~ msgid "Contact Details"
+#~ msgstr "연락처 상세 내용"
+
+#~ msgid "Your name"
+#~ msgstr "귀하의 성명"

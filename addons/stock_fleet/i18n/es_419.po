@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:43+0000\n"
+"POT-Creation-Date: 2026-09-11 17:43+0000\n"
 "PO-Revision-Date: 2026-08-31 16:56+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -116,6 +116,11 @@ msgid "Annexed documents"
 msgstr "Documentos adjuntos"
 
 #. module: stock_fleet
+#: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_type__auto_print_cmr_report
+msgid "Auto Print Consignment Note (CMR)"
+msgstr ""
+
+#. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Balance"
 msgstr "Balance"
@@ -194,6 +199,7 @@ msgstr "Consignatario (nombre, dirección, país)"
 #. module: stock_fleet
 #: model:ir.actions.report,name:stock_fleet.action_report_cmr
 #: model:ir.actions.report,name:stock_fleet.action_report_cmr_batch
+#: model_terms:ir.ui.view,arch_db:stock_fleet.view_picking_type_form
 msgid "Consignment Note (CMR)"
 msgstr "Carta de porte (CMR)"
 
@@ -318,6 +324,13 @@ msgid "ID"
 msgstr "ID"
 
 #. module: stock_fleet
+#: model:ir.model.fields,help:stock_fleet.field_stock_picking_type__auto_print_cmr_report
+msgid ""
+"If this checkbox is ticked, Odoo will automatically print the Consignment "
+"Note (CMR) of a delivery when it is validated."
+msgstr ""
+
+#. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Letter"
 msgstr "Carta"
@@ -386,11 +399,6 @@ msgstr "Número"
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Number of packages"
 msgstr "Número de paquetes"
-
-#. module: stock_fleet
-#: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
-msgid "Operation Type"
-msgstr "Tipo de operación"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
@@ -656,3 +664,6 @@ msgstr "Código postal"
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_form
 msgid "semi-truck"
 msgstr "trailer"
+
+#~ msgid "Operation Type"
+#~ msgstr "Tipo de operación"

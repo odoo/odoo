@@ -13,11 +13,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-08-31 14:16+0000\n"
+"POT-Creation-Date: 2026-09-11 17:42+0000\n"
+"PO-Revision-Date: 2026-09-11 09:32+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
-"projects/odoo-s19-4/calendar/zh_Hant/>\n"
+"projects/odoo-master/calendar/zh_Hant/>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,9 +58,33 @@ msgstr ""
 
 #. module: calendar
 #. odoo-python
+#: code:addons/calendar/models/calendar_alarm_manager.py:0
+msgid "%(date_start)s, %(time_start)s - %(date_stop)s, %(time_stop)s"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_alarm_manager.py:0
+msgid "%(date_start)s, %(time_start)s - %(time_stop)s"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 msgid "%(day)s at (%(start)s To %(end)s) (%(timezone)s)"
 msgstr "%(day)s 於 (%(start)s 到 %(end)s) (%(timezone)s)"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_alarm_manager.py:0
+msgid "%(time_start)s - %(date_stop)s, %(time_stop)s"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_alarm_manager.py:0
+msgid "%(time_start)s - %(time_stop)s"
+msgstr ""
 
 #. module: calendar
 #. odoo-python
@@ -92,6 +116,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.js:0
 msgid "(No Title)"
+msgstr ""
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_filter_section.js:0
+msgid "+ Add guests"
 msgstr ""
 
 #. module: calendar
@@ -1364,6 +1394,7 @@ msgstr "日曆"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_alarm_view_form
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_alarm_view_kanban
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_alarm_tree
 msgid "Calendar Alarm"
 msgstr "日曆警示"
@@ -1453,11 +1484,6 @@ msgid "Calendar: Reminder"
 msgstr "例如:日曆：提醒"
 
 #. module: calendar
-#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_calendar
-msgid "Calendars"
-msgstr ""
-
-#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__can_edit_body
 msgid "Can Edit Body"
 msgstr "允許編輯內文"
@@ -1471,11 +1497,6 @@ msgid ""
 msgstr ""
 "檢查組織者是否獨自參加活動，即是否只有組織者沒有拒絕\n"
 "        活動（僅當組織者不是唯一的參與者時）"
-
-#. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_filters__partner_checked
-msgid "Checked"
-msgstr "已檢查"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__external_calendar_provider
@@ -1890,6 +1911,11 @@ msgid "Event Recurrence Rule"
 msgstr "活動循環規則"
 
 #. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_type_tree
+msgid "Event Tag"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__display_time
 msgid "Event Time"
 msgstr "活動時間"
@@ -2117,6 +2143,11 @@ msgstr "HTTP 路由"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__has_message
 msgid "Has Message"
 msgstr "有訊息"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_res_users_settings__calendar_hide_my
+msgid "Hide My Calendar from Calendar"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__interval__hours
@@ -2349,7 +2380,7 @@ msgstr "郵件 Tz"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__activity_type_icon
 msgid "Material Symbols icon e.g. checklist"
-msgstr ""
+msgstr "Material 符號圖示，例如：檢查清單"
 
 #. module: calendar
 #. odoo-javascript
@@ -2365,6 +2396,11 @@ msgid "Me"
 msgstr "我"
 
 #. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_calendar
+msgid "Meet with"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__mail_activity_type__category__meeting
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Meeting"
@@ -2376,16 +2412,15 @@ msgid "Meeting Activities"
 msgstr ""
 
 #. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_res_partner__meeting_display_label
+#: model:ir.model.fields,field_description:calendar.field_res_users__meeting_display_label
+msgid "Meeting Display Label"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__name
 msgid "Meeting Subject"
 msgstr "會議主題"
-
-#. module: calendar
-#: model:ir.actions.act_window,name:calendar.action_calendar_event_type
-#: model:ir.ui.menu,name:calendar.menu_calendar_event_type
-#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_type_tree
-msgid "Meeting Types"
-msgstr "會議類型"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__videocall_location
@@ -2398,6 +2433,8 @@ msgid "Meeting linked"
 msgstr "會議已連接"
 
 #. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/res_partner.py:0
 #: model:ir.actions.act_window,name:calendar.action_calendar_event
 #: model:ir.model.fields,field_description:calendar.field_res_partner__meeting_ids
 #: model:ir.model.fields,field_description:calendar.field_res_users__meeting_ids
@@ -2405,7 +2442,6 @@ msgstr "會議已連接"
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
-#: model_terms:ir.ui.view,arch_db:calendar.view_partners_form
 msgid "Meetings"
 msgstr "會議"
 
@@ -2491,6 +2527,12 @@ msgid "My Meetings"
 msgstr "我的會議"
 
 #. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/side_panel/attendee_calendar_side_panel.xml:0
+msgid "My calendars"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__name
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__name
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__name
@@ -2534,6 +2576,14 @@ msgid "Next Activity Type"
 msgstr ""
 
 #. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/res_partner.py:0
+#: model:ir.model.fields,field_description:calendar.field_res_partner__meeting_next_date
+#: model:ir.model.fields,field_description:calendar.field_res_users__meeting_next_date
+msgid "Next Meeting"
+msgstr ""
+
+#. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/activity/attendee_calendar_activity_list_popover_item.xml:0
 msgid "Next Week"
@@ -2551,6 +2601,12 @@ msgstr "否"
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "No I'm not going."
 msgstr "我無法到場。"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/res_partner.py:0
+msgid "No Meetings"
+msgstr ""
 
 #. module: calendar
 #. odoo-javascript
@@ -2662,6 +2718,8 @@ msgstr "確定"
 
 #. module: calendar
 #. odoo-javascript
+#. odoo-python
+#: code:addons/calendar/models/calendar_alarm_manager.py:0
 #: code:addons/calendar/static/src/core/web/activity_patch.xml:0
 msgid "Online"
 msgstr ""
@@ -3056,12 +3114,6 @@ msgid "Show as"
 msgstr "顯示全部"
 
 #. module: calendar
-#. odoo-javascript
-#: code:addons/calendar/static/src/js/services/calendar_notification_service.js:0
-msgid "Snooze"
-msgstr "延後"
-
-#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__start
 msgid "Start"
 msgstr "開始"
@@ -3183,7 +3235,11 @@ msgid "Tag name already exists!"
 msgstr "標籤名稱已存在!"
 
 #. module: calendar
+#: model:ir.actions.act_window,name:calendar.action_calendar_event_type
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__categ_ids
+#: model:ir.ui.menu,name:calendar.calendar_submenu_event_type
+#: model:ir.ui.menu,name:calendar.menu_calendar_event_type
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_type_tree
 msgid "Tags"
 msgstr "標籤"
 
@@ -3353,6 +3409,7 @@ msgstr "星期二"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__alarm_type
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_alarm_view_search
 msgid "Type"
 msgstr "類型"
 
@@ -3645,174 +3702,187 @@ msgstr "{{ object.event_id.name }}：更新日期"
 msgid "{{object.name}}: Event update"
 msgstr "{{object.name}}：活動更新"
 
-msgid ""
-"<div style=\"font-size: 13px; color: #374151;\">\n"
-"    <t t-set=\"mail_tz\" t-value=\"object._get_mail_tz() or "
-"ctx.get('mail_tz')\"/>\n"
-"    <t t-set=\"event_name\" t-value=\"object.name or ''\"/>\n"
-"    <t t-set=\"event_organizer\" t-value=\"object.user_id.name or ''\"/>\n"
-"    <h1 style=\"font-size: 18px; font-weight: bold; color: #374151; margin-"
-"bottom: 28px;\">\n"
-"        Event canceled\n"
-"        <img src=\"/calendar/static/src/img/times-circle.png\" "
-"style=\"border:0; width: 24px; height: 24px; margin-left: 10px; text-"
-"decoration:none; vertical-align: bottom;\"/>\n"
-"    </h1>\n"
-"    <p style=\"margin: 0;\">\n"
-"        Hello,<br/>\n"
-"        <span style=\"display: block; margin-top: 8px;\">\n"
-"            This is to inform you that the event <strong t-out=\"event_name "
-"or ''\">Follow-up for Project proposal</strong> <t t-"
-"if=\"event_organizer\">organized by </t><t t-out=\"event_organizer or "
-"''\">Colleen Diaz</t> has been canceled and removed from your calendar.\n"
-"        </span>\n"
-"    </p>\n"
-"    <div style=\"margin: 32px 0 0;\">\n"
-"        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-"
-"weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};"
-"\">Details</h2>\n"
-"        <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"font-"
-"size: 13px; color: #374151;\">\n"
-"            <tr>\n"
-"                <td style=\"width: 100px; color: #676F7B;\">Date &amp; Time</"
-"td>\n"
-"                <td style=\"font-weight: bold;\">\n"
-"                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz "
-"if not object.allday else None, dt_format='EEEE', lang_code=object.env.lang)"
-"\">Tuesday</t>\n"
-"                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz "
-"if not object.allday else None, dt_format='d', lang_code=object.env.lang)"
-"\">4</t>\n"
-"                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz "
-"if not object.allday else None, dt_format='MMMM y', "
-"lang_code=object.env.lang)\">May 2021</t>\n"
-"                    <t t-if=\"not object.allday\">\n"
-"                        <t t-out=\"format_time(time=object.start, "
-"tz=mail_tz, time_format='short', lang_code=object.env.lang)\">11:00 AM</t>\n"
-"                        <t t-if=\"mail_tz\">\n"
-"                            <span style=\"font-size: 11px; font-weight: "
-"normal;\">\n"
-"                                (<t t-out=\"mail_tz or ''\">Europe/Brussels</"
-"t>)\n"
-"                            </span>\n"
-"                        </t>\n"
-"                    </t>\n"
-"                </td>\n"
-"            </tr>\n"
-"            <tr t-if=\"not object.allday and object.duration\">\n"
-"                <td style=\"width: 100px; padding-top: 6px; color: #676F7B;"
-"\">Duration</td>\n"
-"                <td style=\"padding-top: 6px;\"><t t-out=\"('%dH%02d' % "
-"(object.duration,round(object.duration*60)%60))\">0H30</t></td>\n"
-"            </tr>\n"
-"            <tr t-if=\"object.location\">\n"
-"                <td style=\"width: 100px; padding-top: 6px; color: #676F7B;"
-"\">Location</td>\n"
-"                <td style=\"padding-top: 6px;\"><t t-out=\"object.location "
-"or ''\">Bruxelles</t></td>\n"
-"            </tr>\n"
-"        </table>\n"
-"    </div>\n"
-"    <p style=\"margin: 32px 0 0;\">\n"
-"        If you have any questions or concerns, please feel free to contact "
-"us. <br/>\n"
-"        Best regards,\n"
-"        <span style=\"display: block; margin-top: 8px;\">The Calendar Team</"
-"span>\n"
-"    </p>\n"
-"</div>\n"
-"            "
-msgstr ""
-"<div style=\"font-size: 13px; color: #374151;\">\n"
-"    <t t-set=\"mail_tz\" t-value=\"object._get_mail_tz() or "
-"ctx.get('mail_tz')\"/>\n"
-"    <t t-set=\"event_name\" t-value=\"object.name or ''\"/>\n"
-"    <t t-set=\"event_organizer\" t-value=\"object.user_id.name or ''\"/>\n"
-"    <h1 style=\"font-size: 18px; font-weight: bold; color: #374151; margin-"
-"bottom: 28px;\">\n"
-"        活動取消\n"
-"        <img src=\"/calendar/static/src/img/times-circle.png\" "
-"style=\"border:0; width: 24px; height: 24px; margin-left: 10px; text-"
-"decoration:none; vertical-align: bottom;\"/>\n"
-"    </h1>\n"
-"    <p style=\"margin: 0;\">\n"
-"        你好，<br/>\n"
-"        <span style=\"display: block; margin-top: 8px;\">\n"
-"            謹此通知你，「<strong t-out=\"event_name or ''\">專案項目提案跟進"
-"</strong>」活動<t t-if=\"event_organizer\">（由 </t><t t-"
-"out=\"event_organizer or ''\">Colleen Diaz</t><t t-if=\"event_organizer\"> 安"
-"排）</t>已取消，並已從你的日曆移除。\n"
-"        </span>\n"
-"    </p>\n"
-"    <div style=\"margin: 32px 0 0;\">\n"
-"        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-"
-"weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};"
-"\">活動詳情</h2>\n"
-"        <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"font-"
-"size: 13px; color: #374151;\">\n"
-"            <tr>\n"
-"                <td style=\"width: 100px; color: #676F7B;\">日期及時間</td>\n"
-"                <td style=\"font-weight: bold;\">\n"
-"                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz "
-"if not object.allday else None, dt_format='MMMM y', "
-"lang_code=object.env.lang)\">2021 年 5 月</t> \n"
-"                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz "
-"if not object.allday else None, dt_format='d', lang_code=object.env.lang)"
-"\">4 日</t>\n"
-"                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz "
-"if not object.allday else None, dt_format='EEEE', lang_code=object.env.lang)"
-"\">星期二</t>\n"
-"                    <t t-if=\"not object.allday\">\n"
-"                        <t t-out=\"format_time(time=object.start, "
-"tz=mail_tz, time_format='short', lang_code=object.env.lang)\">11:00 AM</t>\n"
-"                        <t t-if=\"mail_tz\">\n"
-"                            <span style=\"font-size: 11px; font-weight: "
-"normal;\">\n"
-"                                (<t t-out=\"mail_tz or ''\">Europe/Brussels</"
-"t>)\n"
-"                            </span>\n"
-"                        </t>\n"
-"                    </t>\n"
-"                </td>\n"
-"            </tr>\n"
-"            <tr t-if=\"not object.allday and object.duration\">\n"
-"                <td style=\"width: 100px; padding-top: 6px; color: #676F7B;"
-"\">時長</td>\n"
-"                <td style=\"padding-top: 6px;\"><t t-out=\"('%d 小時 %02d 分"
-"鐘' % (object.duration,round(object.duration*60)%60))\">0 小時 30 分鐘</t></"
-"td>\n"
-"            </tr>\n"
-"            <tr t-if=\"object.location\">\n"
-"                <td style=\"width: 100px; padding-top: 6px; color: #676F7B;"
-"\">地點</td>\n"
-"                <td style=\"padding-top: 6px;\"><t t-out=\"object.location "
-"or ''\">布魯塞爾</t></td>\n"
-"            </tr>\n"
-"        </table>\n"
-"    </div>\n"
-"    <p style=\"margin: 32px 0 0;\">\n"
-"        如有任何疑問或顧慮，歡迎聯絡我們。<br/>\n"
-"        順祝  安康\n"
-"        <span style=\"display: block; margin-top: 8px;\">日曆程式團隊</"
-"span>\n"
-"    </p>\n"
-"</div>\n"
-"            "
+#~ msgid "Checked"
+#~ msgstr "已檢查"
 
-msgid ""
-"<i class=\"fa fa-9x fa-calendar p-3\" title=\"Calendar\" aria-"
-"hidden=\"true\"/>"
-msgstr ""
-"<i class=\"fa fa-9x fa-calendar p-3\" title=\"日曆\" aria-hidden=\"true\"/>"
+#~ msgid "Meeting Types"
+#~ msgstr "會議類型"
 
-msgid "Schedule a meeting in your calendar"
-msgstr "在你的日曆中安排會議"
+#~ msgid "Snooze"
+#~ msgstr "延後"
 
-msgid "Stop synchro"
-msgstr "停止同步"
+#~ msgid ""
+#~ "<div style=\"font-size: 13px; color: #374151;\">\n"
+#~ "    <t t-set=\"mail_tz\" t-value=\"object._get_mail_tz() or "
+#~ "ctx.get('mail_tz')\"/>\n"
+#~ "    <t t-set=\"event_name\" t-value=\"object.name or ''\"/>\n"
+#~ "    <t t-set=\"event_organizer\" t-value=\"object.user_id.name or ''\"/>\n"
+#~ "    <h1 style=\"font-size: 18px; font-weight: bold; color: #374151; "
+#~ "margin-bottom: 28px;\">\n"
+#~ "        Event canceled\n"
+#~ "        <img src=\"/calendar/static/src/img/times-circle.png\" "
+#~ "style=\"border:0; width: 24px; height: 24px; margin-left: 10px; text-"
+#~ "decoration:none; vertical-align: bottom;\"/>\n"
+#~ "    </h1>\n"
+#~ "    <p style=\"margin: 0;\">\n"
+#~ "        Hello,<br/>\n"
+#~ "        <span style=\"display: block; margin-top: 8px;\">\n"
+#~ "            This is to inform you that the event <strong t-"
+#~ "out=\"event_name or ''\">Follow-up for Project proposal</strong> <t t-"
+#~ "if=\"event_organizer\">organized by </t><t t-out=\"event_organizer or "
+#~ "''\">Colleen Diaz</t> has been canceled and removed from your calendar.\n"
+#~ "        </span>\n"
+#~ "    </p>\n"
+#~ "    <div style=\"margin: 32px 0 0;\">\n"
+#~ "        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-"
+#~ "weight: bold; color: {{user.company_id.email_secondary_color or "
+#~ "'#875A7B'}};\">Details</h2>\n"
+#~ "        <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" "
+#~ "style=\"font-size: 13px; color: #374151;\">\n"
+#~ "            <tr>\n"
+#~ "                <td style=\"width: 100px; color: #676F7B;\">Date &amp; "
+#~ "Time</td>\n"
+#~ "                <td style=\"font-weight: bold;\">\n"
+#~ "                    <t t-out=\"format_datetime(dt=object.start, "
+#~ "tz=mail_tz if not object.allday else None, dt_format='EEEE', "
+#~ "lang_code=object.env.lang)\">Tuesday</t>\n"
+#~ "                    <t t-out=\"format_datetime(dt=object.start, "
+#~ "tz=mail_tz if not object.allday else None, dt_format='d', "
+#~ "lang_code=object.env.lang)\">4</t>\n"
+#~ "                    <t t-out=\"format_datetime(dt=object.start, "
+#~ "tz=mail_tz if not object.allday else None, dt_format='MMMM y', "
+#~ "lang_code=object.env.lang)\">May 2021</t>\n"
+#~ "                    <t t-if=\"not object.allday\">\n"
+#~ "                        <t t-out=\"format_time(time=object.start, "
+#~ "tz=mail_tz, time_format='short', lang_code=object.env.lang)\">11:00 AM</"
+#~ "t>\n"
+#~ "                        <t t-if=\"mail_tz\">\n"
+#~ "                            <span style=\"font-size: 11px; font-weight: "
+#~ "normal;\">\n"
+#~ "                                (<t t-out=\"mail_tz or ''\">Europe/"
+#~ "Brussels</t>)\n"
+#~ "                            </span>\n"
+#~ "                        </t>\n"
+#~ "                    </t>\n"
+#~ "                </td>\n"
+#~ "            </tr>\n"
+#~ "            <tr t-if=\"not object.allday and object.duration\">\n"
+#~ "                <td style=\"width: 100px; padding-top: 6px; color: "
+#~ "#676F7B;\">Duration</td>\n"
+#~ "                <td style=\"padding-top: 6px;\"><t t-out=\"('%dH%02d' % "
+#~ "(object.duration,round(object.duration*60)%60))\">0H30</t></td>\n"
+#~ "            </tr>\n"
+#~ "            <tr t-if=\"object.location\">\n"
+#~ "                <td style=\"width: 100px; padding-top: 6px; color: "
+#~ "#676F7B;\">Location</td>\n"
+#~ "                <td style=\"padding-top: 6px;\"><t t-"
+#~ "out=\"object.location or ''\">Bruxelles</t></td>\n"
+#~ "            </tr>\n"
+#~ "        </table>\n"
+#~ "    </div>\n"
+#~ "    <p style=\"margin: 32px 0 0;\">\n"
+#~ "        If you have any questions or concerns, please feel free to "
+#~ "contact us. <br/>\n"
+#~ "        Best regards,\n"
+#~ "        <span style=\"display: block; margin-top: 8px;\">The Calendar "
+#~ "Team</span>\n"
+#~ "    </p>\n"
+#~ "</div>\n"
+#~ "            "
+#~ msgstr ""
+#~ "<div style=\"font-size: 13px; color: #374151;\">\n"
+#~ "    <t t-set=\"mail_tz\" t-value=\"object._get_mail_tz() or "
+#~ "ctx.get('mail_tz')\"/>\n"
+#~ "    <t t-set=\"event_name\" t-value=\"object.name or ''\"/>\n"
+#~ "    <t t-set=\"event_organizer\" t-value=\"object.user_id.name or ''\"/>\n"
+#~ "    <h1 style=\"font-size: 18px; font-weight: bold; color: #374151; "
+#~ "margin-bottom: 28px;\">\n"
+#~ "        活動取消\n"
+#~ "        <img src=\"/calendar/static/src/img/times-circle.png\" "
+#~ "style=\"border:0; width: 24px; height: 24px; margin-left: 10px; text-"
+#~ "decoration:none; vertical-align: bottom;\"/>\n"
+#~ "    </h1>\n"
+#~ "    <p style=\"margin: 0;\">\n"
+#~ "        你好，<br/>\n"
+#~ "        <span style=\"display: block; margin-top: 8px;\">\n"
+#~ "            謹此通知你，「<strong t-out=\"event_name or ''\">專案項目提案"
+#~ "跟進</strong>」活動<t t-if=\"event_organizer\">（由 </t><t t-"
+#~ "out=\"event_organizer or ''\">Colleen Diaz</t><t t-"
+#~ "if=\"event_organizer\"> 安排）</t>已取消，並已從你的日曆移除。\n"
+#~ "        </span>\n"
+#~ "    </p>\n"
+#~ "    <div style=\"margin: 32px 0 0;\">\n"
+#~ "        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-"
+#~ "weight: bold; color: {{user.company_id.email_secondary_color or "
+#~ "'#875A7B'}};\">活動詳情</h2>\n"
+#~ "        <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" "
+#~ "style=\"font-size: 13px; color: #374151;\">\n"
+#~ "            <tr>\n"
+#~ "                <td style=\"width: 100px; color: #676F7B;\">日期及時間</"
+#~ "td>\n"
+#~ "                <td style=\"font-weight: bold;\">\n"
+#~ "                    <t t-out=\"format_datetime(dt=object.start, "
+#~ "tz=mail_tz if not object.allday else None, dt_format='MMMM y', "
+#~ "lang_code=object.env.lang)\">2021 年 5 月</t> \n"
+#~ "                    <t t-out=\"format_datetime(dt=object.start, "
+#~ "tz=mail_tz if not object.allday else None, dt_format='d', "
+#~ "lang_code=object.env.lang)\">4 日</t>\n"
+#~ "                    <t t-out=\"format_datetime(dt=object.start, "
+#~ "tz=mail_tz if not object.allday else None, dt_format='EEEE', "
+#~ "lang_code=object.env.lang)\">星期二</t>\n"
+#~ "                    <t t-if=\"not object.allday\">\n"
+#~ "                        <t t-out=\"format_time(time=object.start, "
+#~ "tz=mail_tz, time_format='short', lang_code=object.env.lang)\">11:00 AM</"
+#~ "t>\n"
+#~ "                        <t t-if=\"mail_tz\">\n"
+#~ "                            <span style=\"font-size: 11px; font-weight: "
+#~ "normal;\">\n"
+#~ "                                (<t t-out=\"mail_tz or ''\">Europe/"
+#~ "Brussels</t>)\n"
+#~ "                            </span>\n"
+#~ "                        </t>\n"
+#~ "                    </t>\n"
+#~ "                </td>\n"
+#~ "            </tr>\n"
+#~ "            <tr t-if=\"not object.allday and object.duration\">\n"
+#~ "                <td style=\"width: 100px; padding-top: 6px; color: "
+#~ "#676F7B;\">時長</td>\n"
+#~ "                <td style=\"padding-top: 6px;\"><t t-out=\"('%d 小時 %02d "
+#~ "分鐘' % (object.duration,round(object.duration*60)%60))\">0 小時 30 分鐘</"
+#~ "t></td>\n"
+#~ "            </tr>\n"
+#~ "            <tr t-if=\"object.location\">\n"
+#~ "                <td style=\"width: 100px; padding-top: 6px; color: "
+#~ "#676F7B;\">地點</td>\n"
+#~ "                <td style=\"padding-top: 6px;\"><t t-"
+#~ "out=\"object.location or ''\">布魯塞爾</t></td>\n"
+#~ "            </tr>\n"
+#~ "        </table>\n"
+#~ "    </div>\n"
+#~ "    <p style=\"margin: 32px 0 0;\">\n"
+#~ "        如有任何疑問或顧慮，歡迎聯絡我們。<br/>\n"
+#~ "        順祝  安康\n"
+#~ "        <span style=\"display: block; margin-top: 8px;\">日曆程式團隊</"
+#~ "span>\n"
+#~ "    </p>\n"
+#~ "</div>\n"
+#~ "            "
 
-msgid "Synchro is paused"
-msgstr "同步已暫停"
+#~ msgid ""
+#~ "<i class=\"fa fa-9x fa-calendar p-3\" title=\"Calendar\" aria-"
+#~ "hidden=\"true\"/>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-9x fa-calendar p-3\" title=\"日曆\" aria-hidden=\"true\"/"
+#~ ">"
 
-msgid "Today's Meetings"
-msgstr "今天的會議"
+#~ msgid "Schedule a meeting in your calendar"
+#~ msgstr "在你的日曆中安排會議"
+
+#~ msgid "Stop synchro"
+#~ msgstr "停止同步"
+
+#~ msgid "Synchro is paused"
+#~ msgstr "同步已暫停"
+
+#~ msgid "Today's Meetings"
+#~ msgstr "今天的會議"

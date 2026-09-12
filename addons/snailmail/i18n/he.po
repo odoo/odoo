@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:43+0000\n"
+"POT-Creation-Date: 2026-09-11 17:43+0000\n"
 "PO-Revision-Date: 2026-08-31 20:27+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -106,6 +106,12 @@ msgid "Both sides"
 msgstr "שני הצדדים"
 
 #. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/core/notification_model_patch.js:0
+msgid "Bounced"
+msgstr ""
+
+#. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__credit_error
 msgid "CREDIT_ERROR"
 msgstr ""
@@ -178,6 +184,12 @@ msgstr "נוצר על-ידי"
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__create_date
 msgid "Created on"
 msgstr "נוצר ב-"
+
+#. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/core/notification_model_patch.js:0
+msgid "Dispatched"
+msgstr ""
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_ir_actions_report__display_name
@@ -266,6 +278,11 @@ msgid "Invalid recipient name."
 msgstr ""
 
 #. module: snailmail
+#: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__letter_undeliverable
+msgid "LETTER_UNDELIVERABLE"
+msgstr ""
+
+#. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__write_uid
 msgid "Last Updated by"
 msgstr "עודכן לאחרונה על-ידי"
@@ -282,10 +299,28 @@ msgid "Letter"
 msgstr "מכתב"
 
 #. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/core/notification_model_patch.js:0
+msgid "Letter Undeliverable"
+msgstr ""
+
+#. module: snailmail
+#. odoo-python
+#: code:addons/snailmail/controller/snailmail_webhook.py:0
+msgid "Letter is delivered successfully"
+msgstr ""
+
+#. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 msgid "Letter sent by post with Snailmail"
 msgstr "מכתב נשלח בדואר רגיל"
+
+#. module: snailmail
+#. odoo-python
+#: code:addons/snailmail/controller/snailmail_webhook.py:0
+msgid "Letter was unable to be delivered"
+msgstr ""
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_list
@@ -371,6 +406,11 @@ msgstr "הדפס את שני הצדדים"
 #: model:ir.model.fields,field_description:snailmail.field_res_config_settings__snailmail_color
 msgid "Print In Color"
 msgstr "הדפס בצבע"
+
+#. module: snailmail
+#: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__state__process
+msgid "Processing"
+msgstr ""
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__partner_id
@@ -487,8 +527,18 @@ msgid "Snailmail Trial Error"
 msgstr ""
 
 #. module: snailmail
+#: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_undeliverable
+msgid "Snailmail Undeliverable"
+msgstr ""
+
+#. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_error
 msgid "Snailmail Unknown Error"
+msgstr ""
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__letter_uid
+msgid "Snailmail letter ID"
 msgstr ""
 
 #. module: snailmail
@@ -555,13 +605,15 @@ msgstr ""
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
-msgid "The document to be sent exceeds the maximum allowed limit of 8 pages."
+msgid ""
+"The document has been accepted by postal service provider and is being "
+"processed.<br>The tracking id is %s"
 msgstr ""
 
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
-msgid "The document was correctly sent by post.<br>The tracking id is %s"
+msgid "The document to be sent exceeds the maximum allowed limit of 8 pages."
 msgstr ""
 
 #. module: snailmail
@@ -599,9 +651,11 @@ msgstr ""
 #: model:ir.model.fields,help:snailmail.field_snailmail_letter__state
 msgid ""
 "When a letter is created, the status is 'Pending'.\n"
-"If the letter is correctly sent, the status goes in 'Sent',\n"
-"If not, it will got in state 'Error' and the error message will be displayed "
-"in the field 'Error Message'."
+"If the letter is correctly sent to provider, the status goes in 'process',\n"
+"If the provider confirms the letter is delivered, the status goes in "
+"'Sent'.\n"
+"If not sent or delivered, it will got in state 'Error' and the error message "
+"will be displayed in the field 'Error Message'."
 msgstr ""
 
 #. module: snailmail

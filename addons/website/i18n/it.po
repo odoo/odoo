@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:44+0000\n"
+"POT-Creation-Date: 2026-09-11 17:41+0000\n"
 "PO-Revision-Date: 2026-08-31 18:42+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -415,12 +415,6 @@ msgid "+ Field"
 msgstr "+ Campo"
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
-msgid "+ New"
-msgstr "+ Nuovo"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "+ New Website"
 msgstr "+ Nuovo Sito Web"
@@ -791,6 +785,7 @@ msgstr "5x"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_numbers_charts
+#: model_terms:ir.ui.view,arch_db:website.s_text_chart
 msgid ""
 "75% of clients have been using the service for over a decade consistently."
 msgstr "Il 75% dei clienti usa il servizio da oltre dieci anni regolarmente."
@@ -933,8 +928,10 @@ msgstr ""
 "a>"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_chart_text
 #: model_terms:ir.ui.view,arch_db:website.s_image_text
 #: model_terms:ir.ui.view,arch_db:website.s_image_text_overlap
+#: model_terms:ir.ui.view,arch_db:website.s_text_chart
 #: model_terms:ir.ui.view,arch_db:website.s_text_image
 msgid ""
 "<a href=\"#\" class=\"btn btn-secondary o_translate_inline\">Learn more</a>"
@@ -3384,6 +3381,11 @@ msgid "Access Denied"
 msgstr "Accesso negato"
 
 #. module: website
+#: model:ir.model,name:website.model_res_groups
+msgid "Access Groups"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__access_token
 msgid "Access Token"
 msgstr "Token di accesso"
@@ -3684,6 +3686,12 @@ msgstr "Aggiungi una nuova scheda"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option_plugin.js:0
+msgid "Add a new field after this one"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/form/form_option_plugin.js:0
 msgid "Add a new field at the end"
 msgstr "Aggiungi un nuovo campo alla fine"
 
@@ -3769,12 +3777,6 @@ msgstr "Aggiungi altri domini qui"
 #: code:addons/website/static/src/components/dialog/add_page_dialog.xml:0
 msgid "Add page template"
 msgstr "Aggiungi modello pagina"
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/form/form_option_plugin.js:0
-msgid "Add some content after this field"
-msgstr "Aggiungi del contenuto dopo questo campo"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_page__is_new_page_template
@@ -5703,13 +5705,10 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/customize_website_plugin.js:0
 msgid ""
-"Changing theme requires to leave the editor. This will save all your "
-"changes, are you sure you want to proceed? Be careful that changing the "
-"theme will reset all your color customizations."
+"Changing the theme requires leaving the editor. This will save all your "
+"changes. Are you sure you want to proceed? Be aware that changing the theme "
+"will reset some layout, color, and style customizations."
 msgstr ""
-"Per cambiare il tema è necessario uscire dall'editor. Verranno salvate tutte "
-"le modifiche. Procedere veramente? Attenzione, la variazione del tema "
-"comporta l'azzeramento di tutte le personalizzazioni colore."
 
 #. module: website
 #. odoo-javascript
@@ -5723,6 +5722,11 @@ msgstr "Limite di caratteri"
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Chart"
 msgstr "Grafico"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Chart - Text"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -7592,6 +7596,7 @@ msgid "Discover more <i class=\"oi align-middle ms-1\" data-icon=\"east\"/>"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_chart_text
 #: model_terms:ir.ui.view,arch_db:website.s_image_text
 msgid "Discover new opportunities"
 msgstr "Scopri nuove opportunità"
@@ -7784,6 +7789,7 @@ msgstr "Mostra dentro"
 #: model:ir.model.fields,field_description:website.field_portal_wizard_user__display_name
 #: model:ir.model.fields,field_description:website.field_res_company__display_name
 #: model:ir.model.fields,field_description:website.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:website.field_res_groups__display_name
 #: model:ir.model.fields,field_description:website.field_res_lang__display_name
 #: model:ir.model.fields,field_description:website.field_res_partner__display_name
 #: model:ir.model.fields,field_description:website.field_res_users__display_name
@@ -8501,6 +8507,7 @@ msgid "Enhance contrast and brightness"
 msgstr "Migliora contrasto e luminosità"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_text_chart
 #: model_terms:ir.ui.view,arch_db:website.s_text_image
 #: model_terms:ir.ui.view,arch_db:website.s_text_image_full
 msgid "Enhance your experience"
@@ -8784,8 +8791,8 @@ msgstr ""
 "dalla creatività spontanea, contiene storie che aspettano di essere scoperte."
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/options/searchbar_option.xml:0
+#. odoo-python
+#: code:addons/website/models/website.py:0
 msgid "Everything"
 msgstr "Tutti"
 
@@ -10229,6 +10236,21 @@ msgid "Header Position"
 msgstr "Posizione intestazione"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_website__header_search_type
+msgid "Header Search Scope"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_website__header_search_order_by
+msgid "Header Search Sort"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_website__header_search_limit
+msgid "Header Search Suggestions"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_theme_website_page__header_text_color
 #: model:ir.model.fields,field_description:website.field_website_page__header_text_color
 #: model:ir.model.fields,field_description:website.field_website_page_options_mixin__header_text_color
@@ -10734,6 +10756,7 @@ msgstr "Voglio"
 #: model:ir.model.fields,field_description:website.field_portal_wizard_user__id
 #: model:ir.model.fields,field_description:website.field_res_company__id
 #: model:ir.model.fields,field_description:website.field_res_config_settings__id
+#: model:ir.model.fields,field_description:website.field_res_groups__id
 #: model:ir.model.fields,field_description:website.field_res_lang__id
 #: model:ir.model.fields,field_description:website.field_res_partner__id
 #: model:ir.model.fields,field_description:website.field_res_users__id
@@ -13878,8 +13901,8 @@ msgstr "Nessuna condizione"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
-msgid "No links found, you are safe to delete."
-msgstr "Nessun link trovato, puoi eliminarlo tranquillamente."
+msgid "No links referring to this page have been found. You may delete it."
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -14056,6 +14079,13 @@ msgstr "Nulla"
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 msgid "Number"
 msgstr "Numero"
+
+#. module: website
+#: model:ir.model.fields,help:website.field_website__header_search_limit
+msgid ""
+"Number of autocomplete suggestions of the header search bar, 0 to disable "
+"them."
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_language_count
@@ -14614,6 +14644,11 @@ msgid "Order by"
 msgstr "Ordina per"
 
 #. module: website
+#: model:ir.model.fields,help:website.field_website__header_search_order_by
+msgid "Order in which the header search bar sorts its results."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_achievements_list
 msgid "Organization Certification"
 msgstr "Certificazione organizzazione"
@@ -15144,8 +15179,8 @@ msgstr "Pagina a partire da una copia"
 #. module: website
 #. odoo-javascript
 #. odoo-python
+#: code:addons/website/models/website.py:0
 #: code:addons/website/models/website_page.py:0
-#: code:addons/website/static/src/builder/plugins/options/searchbar_option.xml:0
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #: model:ir.ui.menu,name:website.menu_website_pages_list
 #: model_terms:ir.ui.view,arch_db:website.list_website_public_pages
@@ -15762,6 +15797,11 @@ msgstr "Prodotti"
 #: model_terms:ir.ui.view,arch_db:website.external_snippets
 msgid "Products Carousel"
 msgstr "Carosello prodotti"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.external_snippets
+msgid "Products Grid"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -18287,12 +18327,14 @@ msgid "Start saving  <span class=\"oi\" data-icon=\"east\" role=\"img\"/>"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_chart_text
 #: model_terms:ir.ui.view,arch_db:website.s_image_hexagonal
 #: model_terms:ir.ui.view,arch_db:website.s_image_text
 #: model_terms:ir.ui.view,arch_db:website.s_image_text_box
 #: model_terms:ir.ui.view,arch_db:website.s_image_text_overlap
 #: model_terms:ir.ui.view,arch_db:website.s_mockup_image
 #: model_terms:ir.ui.view,arch_db:website.s_tabs
+#: model_terms:ir.ui.view,arch_db:website.s_text_chart
 #: model_terms:ir.ui.view,arch_db:website.s_text_image
 msgid "Start with the customer – find out what they want and give it to them."
 msgstr "Inizia con il cliente: scopri quello che cerca e dagli la soluzione."
@@ -18311,6 +18353,11 @@ msgid ""
 msgstr ""
 "Rimani informato sulle nostre ultime notizie e scopri cosa succederà nelle "
 "prossime settimane."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_chart_text
+msgid "Steady year-over-year growth driven by continuous product improvements."
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -18777,6 +18824,11 @@ msgstr "Prova robots.txt con la console di Google Search"
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Text"
 msgstr "Testo"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Text - Chart"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20141,6 +20193,11 @@ msgid ""
 msgstr ""
 "Digitare \"<i class=\"confirm_word\">sì</i>\" nella casella sottostante per "
 "confermare."
+
+#. module: website
+#: model:ir.model.fields,help:website.field_website__header_search_type
+msgid "Type of records the header search bar searches within."
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_rewrite__redirect_type
@@ -21962,6 +22019,7 @@ msgstr "Scrivi uno o due paragrafi che descrivono il tuo prodotto o servizio."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_card_offset
+#: model_terms:ir.ui.view,arch_db:website.s_chart_text
 #: model_terms:ir.ui.view,arch_db:website.s_features_image
 #: model_terms:ir.ui.view,arch_db:website.s_features_wall
 #: model_terms:ir.ui.view,arch_db:website.s_image_features
@@ -21970,6 +22028,7 @@ msgstr "Scrivi uno o due paragrafi che descrivono il tuo prodotto o servizio."
 #: model_terms:ir.ui.view,arch_db:website.s_image_text_box
 #: model_terms:ir.ui.view,arch_db:website.s_image_text_overlap
 #: model_terms:ir.ui.view,arch_db:website.s_mockup_image
+#: model_terms:ir.ui.view,arch_db:website.s_text_chart
 #: model_terms:ir.ui.view,arch_db:website.s_text_image
 #: model_terms:ir.ui.view,arch_db:website.s_text_image_full
 msgid ""
@@ -22722,6 +22781,22 @@ msgid ""
 "contacts, collect, submission, input, fields, questionnaire, survey, "
 "registration, request, images, pictures, photos, illustration, media, "
 "visual, get-in-touch"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid ""
+"content, articles, story, stories, combination, graphs, tables, diagrams, "
+"line, plot, bars, metrics, figures, data-visualization, statistics, stats, "
+"analytics, infographic, report"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid ""
+"content, articles, story, stories, combination, graphs, tables, diagrams, "
+"pie, doughnut, plot, bars, metrics, figures, data-visualization, statistics, "
+"stats, analytics, infographic, report"
 msgstr ""
 
 #. module: website
@@ -23961,3 +24036,21 @@ msgstr "✽  Pizze"
 #: model_terms:ir.ui.view,arch_db:website.s_key_benefits
 msgid "✽  What We Offer"
 msgstr "✽  Cosa offriamo"
+
+#~ msgid "+ New"
+#~ msgstr "+ Nuovo"
+
+#~ msgid "Add some content after this field"
+#~ msgstr "Aggiungi del contenuto dopo questo campo"
+
+#~ msgid ""
+#~ "Changing theme requires to leave the editor. This will save all your "
+#~ "changes, are you sure you want to proceed? Be careful that changing the "
+#~ "theme will reset all your color customizations."
+#~ msgstr ""
+#~ "Per cambiare il tema è necessario uscire dall'editor. Verranno salvate "
+#~ "tutte le modifiche. Procedere veramente? Attenzione, la variazione del "
+#~ "tema comporta l'azzeramento di tutte le personalizzazioni colore."
+
+#~ msgid "No links found, you are safe to delete."
+#~ msgstr "Nessun link trovato, puoi eliminarlo tranquillamente."

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:44+0000\n"
+"POT-Creation-Date: 2026-09-11 17:42+0000\n"
 "PO-Revision-Date: 2026-08-31 20:08+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-s19-4/mail/uz/"
@@ -182,6 +182,26 @@ msgstr "%(channel name)s kanalidan %(author name)s"
 #, fuzzy
 msgid "%(author)s started a call."
 msgstr "%(author)s qo‘ng‘iroqni boshladi."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_thread.py:0
+msgid "%(author)s started a poll: \"%(question)s\"."
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_thread.py:0
+msgid "%(author)s's poll \"%(question)s\" has closed."
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_thread.py:0
+msgid ""
+"%(author)s's poll \"%(question)s\" has closed. Winning answer: \"%"
+"(answer)s\"."
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -517,6 +537,12 @@ msgid "%s (Email Template)"
 msgstr "%s (Elektron pochta andozasi)"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.js:0
+msgid "%s are not valid email addresses"
+msgstr ""
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 #, fuzzy
@@ -529,6 +555,12 @@ msgstr "%s yaratildi"
 #, fuzzy
 msgid "%s days overdue"
 msgstr "%s kun kechikkan"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.js:0
+msgid "%s is not a valid email address"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -1116,6 +1148,16 @@ msgstr "Kanal a'zosi hamkor yoki mehmon bo‘lishi shart."
 msgid "A channel of type 'chat' cannot have more than two users."
 msgstr ""
 "\"Chat\" turidagi kanalda ikkitadan ortiq foydalanuvchi bo‘lishi mumkin emas."
+
+#. module: mail
+#: model:ir.model.constraint,message:mail.constraint_discuss_channel_member_indices_chat_check
+msgid "A chat must have member indices."
+msgstr ""
+
+#. module: mail
+#: model:ir.model.constraint,message:mail.constraint_discuss_channel_member_indices_unique
+msgid "A chat should have unique member combination."
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -1873,7 +1915,6 @@ msgstr "Reja sanasidan keyin"
 #: model:ir.model.fields.selection,name:mail.selection__hr_work_entry_type__activity_exception_decoration__warning
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_exception_decoration__warning
 #: model:ir.model.fields.selection,name:mail.selection__ir_cron__activity_exception_decoration__warning
-#: model:ir.model.fields.selection,name:mail.selection__l10n_id_efaktur_coretax_document__activity_exception_decoration__warning
 #: model:ir.model.fields.selection,name:mail.selection__lunch_supplier__activity_exception_decoration__warning
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_exception_decoration__warning
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__decoration_type__warning
@@ -3215,6 +3256,12 @@ msgstr "Tayyor javoblar"
 
 #. module: mail
 #. odoo-python
+#: code:addons/mail/models/res_config_settings.py:0
+msgid "Cannot activate custom SFU client without providing a source."
+msgstr ""
+
+#. module: mail
+#. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, fuzzy
 msgid "Cannot change authorized group of sub-channel: %(channels)s."
@@ -3245,6 +3292,12 @@ msgstr ""
 #, fuzzy
 msgid "Cannot change the channel type of: %(channel_names)s"
 msgstr "Quyidagi kanallarning turini o‘zgartirib bo‘lmaydi: %(channel_names)s"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/discuss/discuss_channel.py:0
+msgid "Cannot change the member combination of: %(channel_names)s"
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -3718,6 +3771,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/device_select.js:0
 msgid "Click to Activate"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/message.js:0
+msgid "Click to see delivery errors"
 msgstr ""
 
 #. module: mail
@@ -4529,6 +4588,11 @@ msgstr "Moslashtirilgan ICE serverlari"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "Custom SFU Bundle"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 #, fuzzy
 msgid "Custom SFU Server"
 msgstr "Moslashtirilgan SFU serveri"
@@ -5047,6 +5111,7 @@ msgstr ""
 #: code:addons/mail/static/src/core/web/follower_subtype_dialog.xml:0
 #: code:addons/mail/static/src/core/web/recipients_input_tags_list_popover.xml:0
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_command_palette.xml:0
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form_sfu_client_source
 #, fuzzy
 msgid "Discard"
 msgstr "Bekor qilish"
@@ -5540,6 +5605,11 @@ msgid "Edit"
 msgstr "Tahrirlash"
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "Edit Client Bundle"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/follower.xml:0
 #: code:addons/mail/static/src/core/web/follower_list.xml:0
@@ -5559,6 +5629,24 @@ msgstr "Rejalashtirilgan xabarni tahrirlash"
 #, fuzzy
 msgid "Edit Scheduled Note"
 msgstr "Rejalashtirilgan eslatmani tahrirlash"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer_actions.js:0
+msgid "Edit in Full Composer"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.js:0
+msgid "Editing message"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.js:0
+msgid "Editing note"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist_remove__email
@@ -5649,6 +5737,11 @@ msgstr "Elektron pochta xatosi: %(modelName)s"
 #, fuzzy
 msgid "Email Mass Mailing"
 msgstr "Ommaviy elektron pochta jo‘natish"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_compose_message__email_notification_allow_header
+msgid "Email Notification Allow Header"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__email_layout_xmlid
@@ -5943,7 +6036,6 @@ msgstr ""
 #: model:ir.model.fields.selection,name:mail.selection__hr_work_entry_type__activity_exception_decoration__danger
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_exception_decoration__danger
 #: model:ir.model.fields.selection,name:mail.selection__ir_cron__activity_exception_decoration__danger
-#: model:ir.model.fields.selection,name:mail.selection__l10n_id_efaktur_coretax_document__activity_exception_decoration__danger
 #: model:ir.model.fields.selection,name:mail.selection__lunch_supplier__activity_exception_decoration__danger
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_exception_decoration__danger
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__decoration_type__danger
@@ -8262,6 +8354,12 @@ msgid "Keep conversations organized and easy to follow"
 msgstr ""
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/chatter/web/mail_composer_form.js:0
+msgid "Keep editing"
+msgstr ""
+
+#. module: mail
 #: model:ir.model,name:mail.model_discuss_call_history
 #, fuzzy
 msgid "Keep the call history"
@@ -8533,6 +8631,12 @@ msgstr "Chiqish"
 #, fuzzy
 msgid "Leave Conversation"
 msgstr "Suhbatni tark etish"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/chatter/web/mail_composer_form.js:0
+msgid "Leaving will stop editing this message."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule_line__line_description
@@ -9169,6 +9273,11 @@ msgstr ""
 #, fuzzy
 msgid "Member Count"
 msgstr "A'zolar soni"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_discuss_channel__member_indices
+msgid "Member Indices"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -10685,6 +10794,11 @@ msgid "Only channels can be read-only."
 msgstr ""
 
 #. module: mail
+#: model:ir.model.constraint,message:mail.constraint_discuss_channel_member_indices_channel_check
+msgid "Only chat should have member indices."
+msgstr ""
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/ir_model.py:0
 #, fuzzy
@@ -11118,7 +11232,6 @@ msgstr "Chiquvchi pochta serveri"
 #: model:ir.model.fields.selection,name:mail.selection__hr_work_entry_type__activity_state__overdue
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_state__overdue
 #: model:ir.model.fields.selection,name:mail.selection__ir_cron__activity_state__overdue
-#: model:ir.model.fields.selection,name:mail.selection__l10n_id_efaktur_coretax_document__activity_state__overdue
 #: model:ir.model.fields.selection,name:mail.selection__lunch_supplier__activity_state__overdue
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity__state__overdue
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_state__overdue
@@ -11530,7 +11643,6 @@ msgstr "Rejaga asoslangan jadvallash faqat hujjatlarda mavjud."
 #: model:ir.model.fields.selection,name:mail.selection__hr_work_entry_type__activity_state__planned
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_state__planned
 #: model:ir.model.fields.selection,name:mail.selection__ir_cron__activity_state__planned
-#: model:ir.model.fields.selection,name:mail.selection__l10n_id_efaktur_coretax_document__activity_state__planned
 #: model:ir.model.fields.selection,name:mail.selection__lunch_supplier__activity_state__planned
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity__state__planned
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_state__planned
@@ -12444,6 +12556,13 @@ msgid "Replace Emoji"
 msgstr ""
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid ""
+"Replace the default SFU client bundle, it should be compatible with the SFU "
+"server you are using"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__reply_to_mode
 #, fuzzy
 msgid "Replies"
@@ -12760,6 +12879,19 @@ msgid "Rtc Session"
 msgstr "Rtc sessiyasi"
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/res_config_settings.py:0
+#: model:ir.model.fields,field_description:mail.field_res_config_settings__sfu_client_source
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form_sfu_client_source
+msgid "SFU Client Bundle"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_res_config_settings__sfu_client_source
+msgid "SFU JS client bundle loaded by every SFU participant"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__sfu_server_url
 #, fuzzy
 msgid "SFU Server URL"
@@ -12816,9 +12948,11 @@ msgstr "Sotuvchi"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/scheduled_date_field/scheduled_date_dialog.xml:0
+#: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 #: model_terms:ir.ui.view,arch_db:mail.mail_scheduled_message_view_form
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form_sfu_client_source
 #, fuzzy
 msgid "Save"
 msgstr "Saqlash"
@@ -13276,6 +13410,12 @@ msgstr "Yuborish va yopish"
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/view_dialog/avatar_user_form_view_dialog.xml:0
 msgid "Send & New Invitation"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/message_actions_patch.js:0
+msgid "Send Again"
 msgstr ""
 
 #. module: mail
@@ -14054,6 +14194,12 @@ msgstr "Yozib olishni to‘xtatish"
 #, fuzzy
 msgid "Stop Sharing Screen"
 msgstr "Ekran ulashishni to‘xtatish"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/chatter/web/mail_composer_form.js:0
+msgid "Stop editing"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -15289,7 +15435,6 @@ msgstr ""
 #: model:ir.model.fields.selection,name:mail.selection__hr_work_entry_type__activity_state__today
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_state__today
 #: model:ir.model.fields.selection,name:mail.selection__ir_cron__activity_state__today
-#: model:ir.model.fields.selection,name:mail.selection__l10n_id_efaktur_coretax_document__activity_state__today
 #: model:ir.model.fields.selection,name:mail.selection__lunch_supplier__activity_state__today
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity__state__today
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_state__today
@@ -15977,6 +16122,11 @@ msgstr "Kameradan foydalanish"
 #, fuzzy
 msgid "Use Custom Email Servers"
 msgstr "Maxsus elektron pochta serverlaridan foydalanish"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_config_settings__use_custom_sfu_client
+msgid "Use Custom SFU Bundle"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -17807,7 +17957,7 @@ msgstr "kanalga qo‘shildi"
 
 #. module: mail
 #. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
+#: code:addons/mail/models/discuss/discuss_channel_member.py:0
 #, fuzzy
 msgid "left the channel"
 msgstr "kanalni tark etdi"
@@ -18155,166 +18305,169 @@ msgid "🔒 Private"
 msgstr ""
 
 #, fuzzy
-msgid "Default user"
-msgstr "Standart foydalanuvchi"
+#~ msgid "Default user"
+#~ msgstr "Standart foydalanuvchi"
 
 #, fuzzy
-msgid "Unassigned"
-msgstr "Tayinlanmagan"
+#~ msgid "Unassigned"
+#~ msgstr "Tayinlanmagan"
 
 #, fuzzy
-msgid ""
-"When selecting \"Default user\" assignment, you must specify a responsible."
-msgstr ""
-"\"Standart foydalanuvchi\" vazifasini tanlashda mas'ul shaxsni "
-"ko‘rsatishingiz shart."
+#~ msgid ""
+#~ "When selecting \"Default user\" assignment, you must specify a "
+#~ "responsible."
+#~ msgstr ""
+#~ "\"Standart foydalanuvchi\" vazifasini tanlashda mas'ul shaxsni "
+#~ "ko‘rsatishingiz shart."
 
 #, fuzzy
-msgid "%(name)s <%(email)s>"
-msgstr "%(name)s <%(email)s>"
+#~ msgid "%(name)s <%(email)s>"
+#~ msgstr "%(name)s <%(email)s>"
 
 #, fuzzy
-msgid ""
-"<p><b>Write a message</b> to the members of the channel here.</p> <p>You can "
-"notify someone with <i>'@'</i> or link another channel with <i>'#'</i>. "
-"Start your message with <i>'/'</i> to get the list of possible commands.</p>"
-msgstr ""
-"<p><b>Kanal a'zolariga</b> bu yerda xabar yozing.</p> <p><i>'@'</i> belgisi "
-"orqali biror kishini eslatib o‘tishingiz yoki <i>'#'</i> belgisi yordamida "
-"boshqa kanalni bog‘lashingiz mumkin. Mavjud buyruqlar ro‘yxatini ko‘rish "
-"uchun xabarni <i>'/'</i> belgisi bilan boshlang.</p>"
+#~ msgid ""
+#~ "<p><b>Write a message</b> to the members of the channel here.</p> <p>You "
+#~ "can notify someone with <i>'@'</i> or link another channel with <i>'#'</"
+#~ "i>. Start your message with <i>'/'</i> to get the list of possible "
+#~ "commands.</p>"
+#~ msgstr ""
+#~ "<p><b>Kanal a'zolariga</b> bu yerda xabar yozing.</p> <p><i>'@'</i> "
+#~ "belgisi orqali biror kishini eslatib o‘tishingiz yoki <i>'#'</i> belgisi "
+#~ "yordamida boshqa kanalni bog‘lashingiz mumkin. Mavjud buyruqlar "
+#~ "ro‘yxatini ko‘rish uchun xabarni <i>'/'</i> belgisi bilan boshlang.</p>"
 
 #, fuzzy
-msgid "Activity Settings"
-msgstr "Faoliyat sozlamalari"
+#~ msgid "Activity Settings"
+#~ msgstr "Faoliyat sozlamalari"
 
 #, fuzzy
-msgid "Activity type"
-msgstr "Faoliyat turi"
+#~ msgid "Activity type"
+#~ msgstr "Faoliyat turi"
 
 #, fuzzy
-msgid "Comma-separated ids of recipient partners"
-msgstr "Qabul qiluvchi hamkorlarning vergul bilan ajratilgan identifikatorlari"
+#~ msgid "Comma-separated ids of recipient partners"
+#~ msgstr ""
+#~ "Qabul qiluvchi hamkorlarning vergul bilan ajratilgan identifikatorlari"
 
 #, fuzzy
-msgid ""
-"Comma-separated ids of recipient partners (placeholders may be used here)"
-msgstr ""
-"Qabul qiluvchi hamkorlarning vergul bilan ajratilgan identifikatorlari (bu "
-"yerda o‘rin to‘ldiruvchilar ishlatilishi mumkin)"
+#~ msgid ""
+#~ "Comma-separated ids of recipient partners (placeholders may be used here)"
+#~ msgstr ""
+#~ "Qabul qiluvchi hamkorlarning vergul bilan ajratilgan identifikatorlari "
+#~ "(bu yerda o‘rin to‘ldiruvchilar ishlatilishi mumkin)"
 
 #, fuzzy
-msgid "Copy Link"
-msgstr "Havoladan nusxa olish"
+#~ msgid "Copy Link"
+#~ msgstr "Havoladan nusxa olish"
 
 #, fuzzy
-msgid "Created"
-msgstr "Yaratildi"
+#~ msgid "Created"
+#~ msgstr "Yaratildi"
 
 #, fuzzy
-msgid "Default deadline for the activities..."
-msgstr "Faoliyatlar uchun standart muddat..."
+#~ msgid "Default deadline for the activities..."
+#~ msgstr "Faoliyatlar uchun standart muddat..."
 
 #, fuzzy
-msgid "Feedback:"
-msgstr "Fikr-mulohaza:"
+#~ msgid "Feedback:"
+#~ msgstr "Fikr-mulohaza:"
 
 #, fuzzy
-msgid "Hide sidebar"
-msgstr "Yon panelni yashirish"
+#~ msgid "Hide sidebar"
+#~ msgstr "Yon panelni yashirish"
 
 #, fuzzy
-msgid "Join call"
-msgstr "Qo‘ng‘iroqqa qo‘shilish"
+#~ msgid "Join call"
+#~ msgstr "Qo‘ng‘iroqqa qo‘shilish"
 
 #, fuzzy
-msgid "Next Activity"
-msgstr "Keyingi faoliyat"
+#~ msgid "Next Activity"
+#~ msgstr "Keyingi faoliyat"
 
 #, fuzzy
-msgid "No one else is here."
-msgstr "Bu yerda boshqa hech kim yo‘q."
+#~ msgid "No one else is here."
+#~ msgstr "Bu yerda boshqa hech kim yo‘q."
 
 #, fuzzy
-msgid "Notify everyone"
-msgstr "Hammani xabardor qilish"
+#~ msgid "Notify everyone"
+#~ msgstr "Hammani xabardor qilish"
 
 #, fuzzy
-msgid "Ongoing call"
-msgstr "Davom etayotgan qo‘ng‘iroq"
+#~ msgid "Ongoing call"
+#~ msgstr "Davom etayotgan qo‘ng‘iroq"
 
 #, fuzzy
-msgid "Original note:"
-msgstr "Asl eslatma:"
+#~ msgid "Original note:"
+#~ msgstr "Asl eslatma:"
 
 #, fuzzy
-msgid "Search for a channel..."
-msgstr "Kanal qidirish..."
+#~ msgid "Search for a channel..."
+#~ msgstr "Kanal qidirish..."
 
 #, fuzzy
-msgid "Show sidebar"
-msgstr "Yon panelni ko‘rsatish"
+#~ msgid "Show sidebar"
+#~ msgstr "Yon panelni ko‘rsatish"
 
 #, fuzzy
-msgid "Stop camera"
-msgstr "Kamerani o‘chirish"
+#~ msgid "Stop camera"
+#~ msgstr "Kamerani o‘chirish"
 
 #, fuzzy
-msgid "Upload Avatar"
-msgstr "Avatar yuklash"
+#~ msgid "Upload Avatar"
+#~ msgstr "Avatar yuklash"
 
 #, fuzzy
-msgid ""
-"You cannot delete those groups, as the Whole Company group is required by "
-"other modules."
-msgstr ""
-"Butun kompaniya guruhi boshqa modullar uchun zarur bo‘lgani sababli, bu "
-"guruhlarni o‘chira olmaysiz."
+#~ msgid ""
+#~ "You cannot delete those groups, as the Whole Company group is required by "
+#~ "other modules."
+#~ msgstr ""
+#~ "Butun kompaniya guruhi boshqa modullar uchun zarur bo‘lgani sababli, bu "
+#~ "guruhlarni o‘chira olmaysiz."
 
 #, fuzzy
-msgid "You have been invited to #%s"
-msgstr "#%s ga taklif qilindingiz"
+#~ msgid "You have been invited to #%s"
+#~ msgstr "#%s ga taklif qilindingiz"
 
 #, fuzzy
-msgid "Edit Subscription of %(name)s"
-msgstr "%(name)s obunasini tahrirlash"
+#~ msgid "Edit Subscription of %(name)s"
+#~ msgstr "%(name)s obunasini tahrirlash"
 
 #, fuzzy
-msgid "Edit subscription"
-msgstr "Obunani tahrirlash"
+#~ msgid "Edit subscription"
+#~ msgstr "Obunani tahrirlash"
 
 #, fuzzy
-msgid "The duration of voice messages is limited to 1 minute."
-msgstr "Ovozli xabarlarning davomiyligi 1 daqiqa bilan cheklangan."
+#~ msgid "The duration of voice messages is limited to 1 minute."
+#~ msgstr "Ovozli xabarlarning davomiyligi 1 daqiqa bilan cheklangan."
 
 #, fuzzy
-msgid "The subscription preferences were successfully applied."
-msgstr "Obuna sozlamalari muvaffaqiyatli qo‘llanildi."
+#~ msgid "The subscription preferences were successfully applied."
+#~ msgstr "Obuna sozlamalari muvaffaqiyatli qo‘llanildi."
 
 #, fuzzy
-msgid "Blur video background"
-msgstr "Video orqa fonini xiralashtirish"
+#~ msgid "Blur video background"
+#~ msgstr "Video orqa fonini xiralashtirish"
 
 #, fuzzy
-msgid "Log RTC events"
-msgstr "RTC hodisalarini qayd etish"
+#~ msgid "Log RTC events"
+#~ msgstr "RTC hodisalarini qayd etish"
 
 #, fuzzy
-msgid "Search Sub Channels"
-msgstr "Quyi kanallarni qidirish"
+#~ msgid "Search Sub Channels"
+#~ msgstr "Quyi kanallarni qidirish"
 
 #, fuzzy
-msgid "Search in progress"
-msgstr "Qidiruv davom etmoqda"
+#~ msgid "Search in progress"
+#~ msgstr "Qidiruv davom etmoqda"
 
 #, fuzzy
-msgid "Show video participants only"
-msgstr "Faqat video ishtirokchilarini ko‘rsatish"
+#~ msgid "Show video participants only"
+#~ msgstr "Faqat video ishtirokchilarini ko‘rsatish"
 
 #, fuzzy
-msgid "The conversation is empty."
-msgstr "Joriy foydalanuvchi shablonni tahrirlashi mumkin."
+#~ msgid "The conversation is empty."
+#~ msgstr "Joriy foydalanuvchi shablonni tahrirlashi mumkin."
 
 #, fuzzy
-msgid "Search button"
-msgstr "Qidirish tugmasi"
+#~ msgid "Search button"
+#~ msgstr "Qidirish tugmasi"

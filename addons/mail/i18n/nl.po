@@ -16,11 +16,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:44+0000\n"
-"PO-Revision-Date: 2026-08-31 20:05+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
-"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-4/mail/nl/"
-">\n"
+"POT-Creation-Date: 2026-09-11 17:42+0000\n"
+"PO-Revision-Date: 2026-09-11 11:36+0000\n"
+"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-master/mail/"
+"nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -185,6 +185,26 @@ msgid "%(author)s started a call."
 msgstr "%(author)s is een gesprek gestart."
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_thread.py:0
+msgid "%(author)s started a poll: \"%(question)s\"."
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_thread.py:0
+msgid "%(author)s's poll \"%(question)s\" has closed."
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_thread.py:0
+msgid ""
+"%(author)s's poll \"%(question)s\" has closed. Winning answer: \"%"
+"(answer)s\"."
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/mail_poll_model.js:0
 msgid ""
@@ -337,7 +357,7 @@ msgstr "%(followersCount)s Volgers"
 #. odoo-python
 #: code:addons/mail/models/discuss/mail_guest.py:0
 msgid "%(guest_name)s (External)"
-msgstr ""
+msgstr "%(guest_name)s (Extern)"
 
 #. module: mail
 #. odoo-python
@@ -503,6 +523,12 @@ msgid "%s (Email Template)"
 msgstr "%s (e-mailsjabloon)"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.js:0
+msgid "%s are not valid email addresses"
+msgstr ""
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid "%s created"
@@ -513,6 +539,12 @@ msgstr "%s aangemaakt"
 #: code:addons/mail/static/src/core/web/activity_list_popover_item.js:0
 msgid "%s days overdue"
 msgstr "%s dagen te laat"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.js:0
+msgid "%s is not a valid email address"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -1089,6 +1121,16 @@ msgstr "Een kanaallid moet een partner of een gast zijn."
 msgid "A channel of type 'chat' cannot have more than two users."
 msgstr ""
 "Een kanaal van het type 'chat' mag niet meer dan twee gebruikers hebben."
+
+#. module: mail
+#: model:ir.model.constraint,message:mail.constraint_discuss_channel_member_indices_chat_check
+msgid "A chat must have member indices."
+msgstr ""
+
+#. module: mail
+#: model:ir.model.constraint,message:mail.constraint_discuss_channel_member_indices_unique
+msgid "A chat should have unique member combination."
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -1781,7 +1823,6 @@ msgstr "Na plandatum"
 #: model:ir.model.fields.selection,name:mail.selection__hr_work_entry_type__activity_exception_decoration__warning
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_exception_decoration__warning
 #: model:ir.model.fields.selection,name:mail.selection__ir_cron__activity_exception_decoration__warning
-#: model:ir.model.fields.selection,name:mail.selection__l10n_id_efaktur_coretax_document__activity_exception_decoration__warning
 #: model:ir.model.fields.selection,name:mail.selection__lunch_supplier__activity_exception_decoration__warning
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_exception_decoration__warning
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__decoration_type__warning
@@ -3006,6 +3047,12 @@ msgstr "Standaardantwoorden"
 
 #. module: mail
 #. odoo-python
+#: code:addons/mail/models/res_config_settings.py:0
+msgid "Cannot activate custom SFU client without providing a source."
+msgstr ""
+
+#. module: mail
+#. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "Cannot change authorized group of sub-channel: %(channels)s."
 msgstr ""
@@ -3036,6 +3083,12 @@ msgstr ""
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "Cannot change the channel type of: %(channel_names)s"
 msgstr "Kan het kanaaltype niet wijzigen van: %(channel_names)s"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/discuss/discuss_channel.py:0
+msgid "Cannot change the member combination of: %(channel_names)s"
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -3394,7 +3447,7 @@ msgstr ""
 #. module: mail
 #: model:ir.module.module,summary:base.module_mail
 msgid "Chat, mail gateway and private channels"
-msgstr ""
+msgstr "Chat, mail-gateway en privékanalen"
 
 #. module: mail
 #. odoo-javascript
@@ -3480,6 +3533,12 @@ msgstr ""
 #: code:addons/mail/static/src/discuss/call/common/device_select.js:0
 msgid "Click to Activate"
 msgstr "Klik om te activeren"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/message.js:0
+msgid "Click to see delivery errors"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -4218,6 +4277,11 @@ msgstr "Aangepaste ICE-servers"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "Custom SFU Bundle"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Custom SFU Server"
 msgstr "Aangepaste SFU-server"
 
@@ -4680,6 +4744,7 @@ msgstr "Achtergrondvervaging uitschakelen"
 #: code:addons/mail/static/src/core/web/follower_subtype_dialog.xml:0
 #: code:addons/mail/static/src/core/web/recipients_input_tags_list_popover.xml:0
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_command_palette.xml:0
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form_sfu_client_source
 msgid "Discard"
 msgstr "Negeren"
 
@@ -5148,6 +5213,11 @@ msgid "Edit"
 msgstr "Bewerken"
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "Edit Client Bundle"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/follower.xml:0
 #: code:addons/mail/static/src/core/web/follower_list.xml:0
@@ -5165,6 +5235,24 @@ msgstr "Gepland bericht bewerken"
 #: code:addons/mail/models/mail_scheduled_message.py:0
 msgid "Edit Scheduled Note"
 msgstr "Geplande notitie bewerken"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer_actions.js:0
+msgid "Edit in Full Composer"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.js:0
+msgid "Editing message"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.js:0
+msgid "Editing note"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist_remove__email
@@ -5243,6 +5331,11 @@ msgstr "E-mail mislukt: %(modelName)s"
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__composition_mode__mass_mail
 msgid "Email Mass Mailing"
 msgstr "E-mail bulkmailing"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_compose_message__email_notification_allow_header
+msgid "Email Notification Allow Header"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__email_layout_xmlid
@@ -5512,7 +5605,6 @@ msgstr "Voer je naam in"
 #: model:ir.model.fields.selection,name:mail.selection__hr_work_entry_type__activity_exception_decoration__danger
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_exception_decoration__danger
 #: model:ir.model.fields.selection,name:mail.selection__ir_cron__activity_exception_decoration__danger
-#: model:ir.model.fields.selection,name:mail.selection__l10n_id_efaktur_coretax_document__activity_exception_decoration__danger
 #: model:ir.model.fields.selection,name:mail.selection__lunch_supplier__activity_exception_decoration__danger
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_exception_decoration__danger
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__decoration_type__danger
@@ -7631,6 +7723,12 @@ msgid "Keep conversations organized and easy to follow"
 msgstr "Houd gesprekken overzichtelijk en gemakkelijk te volgen"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/chatter/web/mail_composer_form.js:0
+msgid "Keep editing"
+msgstr ""
+
+#. module: mail
 #: model:ir.model,name:mail.model_discuss_call_history
 msgid "Keep the call history"
 msgstr "Gespreksgeschiedenis behouden"
@@ -7879,6 +7977,12 @@ msgstr "Verlaten"
 #: code:addons/mail/static/src/discuss/core/common/thread_actions.js:0
 msgid "Leave Conversation"
 msgstr "Verlaat gesprek"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/chatter/web/mail_composer_form.js:0
+msgid "Leaving will stop editing this message."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule_line__line_description
@@ -8447,6 +8551,11 @@ msgstr "Acties van leden"
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__member_count
 msgid "Member Count"
 msgstr "Aantal leden"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_discuss_channel__member_indices
+msgid "Member Indices"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -9834,6 +9943,11 @@ msgid "Only channels can be read-only."
 msgstr "Alleen kanalen kunnen alleen-lezen zijn."
 
 #. module: mail
+#: model:ir.model.constraint,message:mail.constraint_discuss_channel_member_indices_channel_check
+msgid "Only chat should have member indices."
+msgstr ""
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/ir_model.py:0
 msgid "Only custom models can be modified."
@@ -10233,7 +10347,6 @@ msgstr "Uitgaande e-mailserver"
 #: model:ir.model.fields.selection,name:mail.selection__hr_work_entry_type__activity_state__overdue
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_state__overdue
 #: model:ir.model.fields.selection,name:mail.selection__ir_cron__activity_state__overdue
-#: model:ir.model.fields.selection,name:mail.selection__l10n_id_efaktur_coretax_document__activity_state__overdue
 #: model:ir.model.fields.selection,name:mail.selection__lunch_supplier__activity_state__overdue
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity__state__overdue
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_state__overdue
@@ -10608,7 +10721,6 @@ msgstr ""
 #: model:ir.model.fields.selection,name:mail.selection__hr_work_entry_type__activity_state__planned
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_state__planned
 #: model:ir.model.fields.selection,name:mail.selection__ir_cron__activity_state__planned
-#: model:ir.model.fields.selection,name:mail.selection__l10n_id_efaktur_coretax_document__activity_state__planned
 #: model:ir.model.fields.selection,name:mail.selection__lunch_supplier__activity_state__planned
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity__state__planned
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_state__planned
@@ -11453,6 +11565,13 @@ msgid "Replace Emoji"
 msgstr ""
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid ""
+"Replace the default SFU client bundle, it should be compatible with the SFU "
+"server you are using"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__reply_to_mode
 msgid "Replies"
 msgstr "Antwoorden"
@@ -11737,6 +11856,19 @@ msgid "Rtc Session"
 msgstr "Rtc-sessie"
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/res_config_settings.py:0
+#: model:ir.model.fields,field_description:mail.field_res_config_settings__sfu_client_source
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form_sfu_client_source
+msgid "SFU Client Bundle"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_res_config_settings__sfu_client_source
+msgid "SFU JS client bundle loaded by every SFU participant"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__sfu_server_url
 msgid "SFU Server URL"
 msgstr "SFU-server-URL"
@@ -11786,9 +11918,11 @@ msgstr "Verkoper"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/scheduled_date_field/scheduled_date_dialog.xml:0
+#: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 #: model_terms:ir.ui.view,arch_db:mail.mail_scheduled_message_view_form
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form_sfu_client_source
 msgid "Save"
 msgstr "Opslaan"
 
@@ -12200,6 +12334,12 @@ msgstr "Verzenden & Sluiten"
 #: code:addons/mail/static/src/views/web/view_dialog/avatar_user_form_view_dialog.xml:0
 msgid "Send & New Invitation"
 msgstr "Verzenden & nieuwe uitnodiging"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/message_actions_patch.js:0
+msgid "Send Again"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -12907,6 +13047,12 @@ msgstr "Stop met opnemen"
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
 msgid "Stop Sharing Screen"
 msgstr "Stop met het scherm te delen"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/chatter/web/mail_composer_form.js:0
+msgid "Stop editing"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -14045,7 +14191,6 @@ msgstr "Aan:"
 #: model:ir.model.fields.selection,name:mail.selection__hr_work_entry_type__activity_state__today
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_state__today
 #: model:ir.model.fields.selection,name:mail.selection__ir_cron__activity_state__today
-#: model:ir.model.fields.selection,name:mail.selection__l10n_id_efaktur_coretax_document__activity_state__today
 #: model:ir.model.fields.selection,name:mail.selection__lunch_supplier__activity_state__today
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity__state__today
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_state__today
@@ -14673,6 +14818,11 @@ msgstr "Camera gebruiken"
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__external_email_server_default
 msgid "Use Custom Email Servers"
 msgstr "Aangepaste e-mailservers gebruiken"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_config_settings__use_custom_sfu_client
+msgid "Use Custom SFU Bundle"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -16360,7 +16510,7 @@ msgstr "werd lid van het kanaal"
 
 #. module: mail
 #. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
+#: code:addons/mail/models/discuss/discuss_channel_member.py:0
 msgid "left the channel"
 msgstr "heeft het kanaal verlaten"
 

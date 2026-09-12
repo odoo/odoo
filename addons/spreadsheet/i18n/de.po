@@ -10,10 +10,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:46+0000\n"
-"PO-Revision-Date: 2026-09-02 14:08+0000\n"
+"POT-Creation-Date: 2026-09-11 17:43+0000\n"
+"PO-Revision-Date: 2026-09-10 13:11+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
-"Language-Team: German <https://translate.odoo.com/projects/odoo-s19-4/"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-master/"
 "spreadsheet/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -80,13 +80,13 @@ msgstr "% der Zeilensumme"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "%(col2Header)s vs %(col1Header)s"
-msgstr ""
+msgstr "%(col2Header)s vs. %(col1Header)s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "%(count)s matches in '%(sheetName)s'"
-msgstr ""
+msgstr "%(count)s Übereinstimmungen in „%(sheetName)s“"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -98,7 +98,7 @@ msgstr "%(count)s Übereinstimmungen in allen Blättern"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "%(count)s matches in range %(range)s of '%(sheetName)s'"
-msgstr ""
+msgstr "%(count)s Übereinstimmungen im Bereich %(range)s von „%(sheetName)s“"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -152,13 +152,13 @@ msgstr "%(newPivotName)s (Pivot #%(formulaId)s)"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "%(num1Header)s vs %(num2Header)s by %(catHeader)s"
-msgstr ""
+msgstr "%(num1Header)s vs. %(num2Header)s von %(catHeader)s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "%(numHeader)s by %(cat1Header)s and %(cat2Header)s"
-msgstr ""
+msgstr "%(numHeader)s von %(cat1Header)s und %(cat2Header)s"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2082,6 +2082,13 @@ msgstr ""
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"Cannot perform this action on merged cells. Unmerge the cells and try again."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Cannot remove duplicates for an unknown reason"
 msgstr "Duplikate können nicht ohne bekannten Grund entfernt werden."
 
@@ -3089,13 +3096,7 @@ msgstr "Wechselkurs"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/currency/plugins/currency.js:0
-msgid "Currency not available for this company."
-msgstr "Währung nicht für dieses Unternehmen verfügbar."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/currency/plugins/currency.js:0
+#: code:addons/spreadsheet/static/src/currency/formulas.js:0
 msgid "Currency rate unavailable."
 msgstr "Wechselkurs nicht verfügbar."
 
@@ -4507,7 +4508,7 @@ msgstr "Filter"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/global_filters/plugins/global_filters_core_view_plugin.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_functions.js:0
 msgid "Filter \"%(filter_name)s\" not found"
 msgstr "Filter „%(filter_name)s“ nicht gefunden"
 
@@ -4938,7 +4939,7 @@ msgstr "Zukünftiger Wert des Kapitals aus einer Reihe von Raten."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "GEOMEAN requires strictly positive values."
-msgstr ""
+msgstr "GEOMEAN erfordert ausschließlich positive Werte."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7108,7 +7109,7 @@ msgstr "Keine Spalten"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "No content to print"
 msgstr "Kein zu druckender Inhalt"
 
@@ -7997,6 +7998,12 @@ msgstr "Druckvorschau"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Print content"
 msgstr "Inhalt drucken"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Print preview"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -14231,16 +14238,6 @@ msgstr "Dieser Vorgang ist bei Mehrfachauswahlen nicht zulässig."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"This operation is not possible due to a merge. Please remove the merges "
-"first than try again."
-msgstr ""
-"Dieser Vorgang ist aufgrund einer Zusammenführung nicht möglich. Bitte "
-"entfernen Sie zuerst die Zusammenführungen und versuchen Sie es dann erneut."
-
-#. module: spreadsheet
-#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "This pivot has no cell missing on this sheet"
 msgstr "Die Pivot-Tabelle hat keine Zelle, die in diesem Blatt fehlt"
@@ -16145,32 +16142,44 @@ msgstr ""
 msgid "yesterday"
 msgstr "gestern"
 
-msgid "%(matches)s matches in %(sheetName)s"
-msgstr "%(matches)s Übereinstimmungen in %(sheetName)s"
+#~ msgid "Currency not available for this company."
+#~ msgstr "Währung nicht für dieses Unternehmen verfügbar."
 
-msgid "%(matches)s matches in range %(range)s of %(sheetName)s"
-msgstr "%(matches)s Übereinstimmungen in Bereich %(range)s von %(sheetName)s"
+#~ msgid ""
+#~ "This operation is not possible due to a merge. Please remove the merges "
+#~ "first than try again."
+#~ msgstr ""
+#~ "Dieser Vorgang ist aufgrund einer Zusammenführung nicht möglich. Bitte "
+#~ "entfernen Sie zuerst die Zusammenführungen und versuchen Sie es dann "
+#~ "erneut."
 
-msgid "%s matches in all sheets"
-msgstr "%s Übereinstimmungen in allen Blättern"
+#~ msgid "%(matches)s matches in %(sheetName)s"
+#~ msgstr "%(matches)s Übereinstimmungen in %(sheetName)s"
 
-msgid "At least one measure and/or dimension is not correct."
-msgstr "Mindestens ein Wert und/oder eine Dimension ist nicht korrekt."
+#~ msgid "%(matches)s matches in range %(range)s of %(sheetName)s"
+#~ msgstr ""
+#~ "%(matches)s Übereinstimmungen in Bereich %(range)s von %(sheetName)s"
 
-msgid "Change color"
-msgstr "Farbe ändern"
+#~ msgid "%s matches in all sheets"
+#~ msgstr "%s Übereinstimmungen in allen Blättern"
 
-msgid "Filters"
-msgstr "Filter"
+#~ msgid "At least one measure and/or dimension is not correct."
+#~ msgstr "Mindestens ein Wert und/oder eine Dimension ist nicht korrekt."
 
-msgid "First day of the month preceding a date."
-msgstr "Erster Tag des Monats vor einem Datum."
+#~ msgid "Change color"
+#~ msgstr "Farbe ändern"
 
-msgid "Last day of the month following a date."
-msgstr "Letzter Tag des Monats, der auf ein Datum folgt."
+#~ msgid "Filters"
+#~ msgstr "Filter"
 
-msgid "Show Filters"
-msgstr "Filter anzeigen"
+#~ msgid "First day of the month preceding a date."
+#~ msgstr "Erster Tag des Monats vor einem Datum."
 
-msgid "x"
-msgstr "x"
+#~ msgid "Last day of the month following a date."
+#~ msgstr "Letzter Tag des Monats, der auf ein Datum folgt."
+
+#~ msgid "Show Filters"
+#~ msgstr "Filter anzeigen"
+
+#~ msgid "x"
+#~ msgstr "x"

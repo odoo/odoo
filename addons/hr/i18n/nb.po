@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:41+0000\n"
+"POT-Creation-Date: 2026-09-11 17:41+0000\n"
 "PO-Revision-Date: 2026-08-31 20:42+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Norwegian Bokmål <https://translate.odoo.com/projects/odoo-"
@@ -769,7 +769,6 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__additional_note
-#: model:ir.model.fields,field_description:hr.field_hr_version__additional_note
 #: model:ir.model.fields,field_description:hr.field_res_users__additional_note
 msgid "Additional Note"
 msgstr "Tilleggsnotat"
@@ -1303,12 +1302,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr.res_users_action_my
 msgid "Change my Preferences"
 msgstr "Endre mine valg"
-
-#. module: hr
-#. odoo-javascript
-#: code:addons/hr/static/src/components/employee_chat/employee_chat.xml:0
-msgid "Chat"
-msgstr "Chat"
 
 #. module: hr
 #: model:hr.job,name:hr.job_cto
@@ -2085,12 +2078,6 @@ msgid "Discover our products."
 msgstr ""
 
 #. module: hr
-#. odoo-javascript
-#: code:addons/hr/static/src/components/employee_chat/employee_chat.xml:0
-msgid "Discuss"
-msgstr ""
-
-#. module: hr
 #: model:ir.model,name:hr.model_discuss_channel
 msgid "Discussion Channel"
 msgstr "Diskusjonskanal"
@@ -2127,6 +2114,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_mail_activity_plan_template__display_name
 #: model:ir.model.fields,field_description:hr.field_mail_activity_schedule__display_name
 #: model:ir.model.fields,field_description:hr.field_mail_alias__display_name
+#: model:ir.model.fields,field_description:hr.field_publisher_warranty_contract__display_name
 #: model:ir.model.fields,field_description:hr.field_res_company__display_name
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:hr.field_res_partner__display_name
@@ -3097,6 +3085,7 @@ msgstr "Human Resources-leder"
 #: model:ir.model.fields,field_description:hr.field_mail_activity_plan_template__id
 #: model:ir.model.fields,field_description:hr.field_mail_activity_schedule__id
 #: model:ir.model.fields,field_description:hr.field_mail_alias__id
+#: model:ir.model.fields,field_description:hr.field_publisher_warranty_contract__id
 #: model:ir.model.fields,field_description:hr.field_res_company__id
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__id
 #: model:ir.model.fields,field_description:hr.field_res_partner__id
@@ -4011,7 +4000,6 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__note
-#: model_terms:ir.ui.view,arch_db:hr.hr_version_list_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Note"
 msgstr "Notat"
@@ -4694,7 +4682,7 @@ msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Provide additional information about this version..."
+msgid "Provide additional information about this employee..."
 msgstr ""
 
 #. module: hr
@@ -4712,6 +4700,11 @@ msgstr ""
 #: model:ir.model,name:hr.model_hr_employee_public
 msgid "Public Employee"
 msgstr "Offentlig ansatt"
+
+#. module: hr
+#: model:ir.model,name:hr.model_publisher_warranty_contract
+msgid "Publisher Warranty Contract"
+msgstr ""
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
@@ -5804,6 +5797,7 @@ msgstr "Uleste meldinger"
 #: code:addons/hr/static/src/components/hr_presence_status/hr_presence_status.js:0
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Unspecified"
 msgstr ""
 
@@ -5947,6 +5941,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee__user_partner_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__user_partner_id
 msgid "User's partner"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Usual Work Location"
 msgstr ""
 
 #. module: hr
@@ -6631,15 +6630,18 @@ msgstr ""
 msgid "work_permit_name"
 msgstr ""
 
-msgid ""
-"<b>Congratulations!</b> May I recommend you to setup an <a "
-"href=\"%s\">onboarding plan?</a>"
-msgstr ""
-"<b>Gratulerer!</b> Kan jeg anbefale å sette opp en <a href=\"%s\">plan for "
-"onboarding?</a>"
+#~ msgid "Chat"
+#~ msgstr "Chat"
 
-msgid "Website Messages"
-msgstr "Meldinger fra nettsted"
+#~ msgid ""
+#~ "<b>Congratulations!</b> May I recommend you to setup an <a "
+#~ "href=\"%s\">onboarding plan?</a>"
+#~ msgstr ""
+#~ "<b>Gratulerer!</b> Kan jeg anbefale å sette opp en <a href=\"%s\">plan "
+#~ "for onboarding?</a>"
 
-msgid "Website communication history"
-msgstr "Kommunikasjonshistorikk for nettsted"
+#~ msgid "Website Messages"
+#~ msgstr "Meldinger fra nettsted"
+
+#~ msgid "Website communication history"
+#~ msgstr "Kommunikasjonshistorikk for nettsted"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.4a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 18:17+0000\n"
+"POT-Creation-Date: 2026-09-11 18:10+0000\n"
 "PO-Revision-Date: 2026-08-31 16:49+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -146,6 +146,13 @@ msgstr "Perusahaan"
 #: model:ir.model,name:l10n_account_withholding_tax.model_res_config_settings
 msgid "Config Settings"
 msgstr "Pengaturan Konfigurasi"
+
+#. module: l10n_account_withholding_tax
+#: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register_withholding_line__country_code
+#: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_withholding_line__country_code
+#: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_withholding_line__country_code
+msgid "Country Code"
+msgstr ""
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register_withholding_line__create_uid
@@ -466,6 +473,15 @@ msgid "Tax"
 msgstr "Pajak"
 
 #. module: l10n_account_withholding_tax
+#: model:ir.model.fields,help:l10n_account_withholding_tax.field_account_payment_register_withholding_line__country_code
+#: model:ir.model.fields,help:l10n_account_withholding_tax.field_account_payment_withholding_line__country_code
+#: model:ir.model.fields,help:l10n_account_withholding_tax.field_account_withholding_line__country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+
+#. module: l10n_account_withholding_tax
 #. odoo-python
 #: code:addons/l10n_account_withholding_tax/models/account_withholding_line.py:0
 msgid ""
@@ -542,9 +558,13 @@ msgstr ""
 
 #. module: l10n_account_withholding_tax
 #: model_terms:ir.ui.view,arch_db:l10n_account_withholding_tax.view_account_payment_form
-#: model_terms:ir.ui.view,arch_db:l10n_account_withholding_tax.view_account_payment_register_form
 msgid "Total Withheld Amount"
 msgstr "Jumlah Total Pemotongan"
+
+#. module: l10n_account_withholding_tax
+#: model_terms:ir.ui.view,arch_db:l10n_account_withholding_tax.view_account_payment_register_form
+msgid "Total withheld:"
+msgstr ""
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register_withholding_line__type_tax_use
@@ -620,7 +640,7 @@ msgstr ""
 
 #. module: l10n_account_withholding_tax
 #: model_terms:ir.ui.view,arch_db:l10n_account_withholding_tax.view_account_payment_form
-#: model_terms:ir.ui.view,arch_db:l10n_account_withholding_tax.view_account_payment_register_form
+#: model_terms:ir.ui.view,arch_db:l10n_account_withholding_tax.view_account_tax_search_inherit_l10n_account_withholding_tax
 msgid "Withholding"
 msgstr "Pemotongan"
 
@@ -715,25 +735,30 @@ msgid "Withholding:"
 msgstr "Pemotongan:"
 
 #. module: l10n_account_withholding_tax
+#: model_terms:ir.ui.view,arch_db:l10n_account_withholding_tax.view_account_payment_register_form
+msgid "Withholdings"
+msgstr ""
+
+#. module: l10n_account_withholding_tax
 #: model:ir.model,name:l10n_account_withholding_tax.model_account_withholding_line
 msgid "withholding line"
 msgstr "baris pemotongan"
 
-msgid ""
-"If enabled, this tax will not affect your accounts until the registration of "
-"payments."
-msgstr ""
-"Bila diaktifkan, pajak ini tidak akan berdampak ke akun Anda sampai "
-"pendaftaran pembayaran."
+#~ msgid ""
+#~ "If enabled, this tax will not affect your accounts until the registration "
+#~ "of payments."
+#~ msgstr ""
+#~ "Bila diaktifkan, pajak ini tidak akan berdampak ke akun Anda sampai "
+#~ "pendaftaran pembayaran."
 
-msgid "Please enter the withholding number for the tax %(tax_name)s"
-msgstr "Silakan masukkan angka pemotongan untuk pajak %(tax_name)s"
+#~ msgid "Please enter the withholding number for the tax %(tax_name)s"
+#~ msgstr "Silakan masukkan angka pemotongan untuk pajak %(tax_name)s"
 
-msgid "Withhold On Payment"
-msgstr "Potong Pada Pembayaran"
+#~ msgid "Withhold On Payment"
+#~ msgstr "Potong Pada Pembayaran"
 
-msgid "Withhold Tax Amounts"
-msgstr "Jumlah Pajak yang Dipotong"
+#~ msgid "Withhold Tax Amounts"
+#~ msgstr "Jumlah Pajak yang Dipotong"
 
-msgid "Withhold tax amounts from the payment amount."
-msgstr "Jumlah pajak yang dipotong dari jumlah pembayaran."
+#~ msgid "Withhold tax amounts from the payment amount."
+#~ msgstr "Jumlah pajak yang dipotong dari jumlah pembayaran."

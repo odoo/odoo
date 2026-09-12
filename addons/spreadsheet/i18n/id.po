@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:46+0000\n"
+"POT-Creation-Date: 2026-09-11 17:43+0000\n"
 "PO-Revision-Date: 2026-08-31 19:24+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -2039,6 +2039,13 @@ msgstr "Tidak dapat membuka link karena sheet yang terhubung disembunyikkan."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"Cannot perform this action on merged cells. Unmerge the cells and try again."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Cannot remove duplicates for an unknown reason"
 msgstr "Tidak dapat menghapus duplikat untuk alasan yang tidak diketahui"
 
@@ -3031,13 +3038,7 @@ msgstr "Kurs Mata Uang"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/currency/plugins/currency.js:0
-msgid "Currency not available for this company."
-msgstr "Mata uang tidak tersedia untuk perusahaan ini"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/currency/plugins/currency.js:0
+#: code:addons/spreadsheet/static/src/currency/formulas.js:0
 msgid "Currency rate unavailable."
 msgstr "Nilai kurs mata uang tidak tersedia."
 
@@ -4442,7 +4443,7 @@ msgstr "Saring"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/global_filters/plugins/global_filters_core_view_plugin.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_functions.js:0
 msgid "Filter \"%(filter_name)s\" not found"
 msgstr "Filter \"%(filter_name)s\" tidak ditemukan"
 
@@ -7015,7 +7016,7 @@ msgstr "Tidak ada kolom"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "No content to print"
 msgstr ""
 
@@ -7896,6 +7897,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Print content"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Print preview"
 msgstr ""
 
 #. module: spreadsheet
@@ -13991,16 +13998,6 @@ msgstr "Operasi ini tidak diizinkan dengan lebih dari satu pilihan."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"This operation is not possible due to a merge. Please remove the merges "
-"first than try again."
-msgstr ""
-"Operasi ini tidak dapat dilakukan oleh karena merge. Mohon hapus merge "
-"terlebih dahulu dan coba lagi."
-
-#. module: spreadsheet
-#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "This pivot has no cell missing on this sheet"
 msgstr "Pivot ini tidak memiliki cell yang hilang di sheet ini"
@@ -15850,29 +15847,39 @@ msgstr ""
 msgid "yesterday"
 msgstr "kemarin"
 
-msgid "%(matches)s matches in %(sheetName)s"
-msgstr "%(matches)s cocok di %(sheetName)s"
+#~ msgid "Currency not available for this company."
+#~ msgstr "Mata uang tidak tersedia untuk perusahaan ini"
 
-msgid "%(matches)s matches in range %(range)s of %(sheetName)s"
-msgstr "%(matches)s cocok di range %(range)s dari %(sheetName)s"
+#~ msgid ""
+#~ "This operation is not possible due to a merge. Please remove the merges "
+#~ "first than try again."
+#~ msgstr ""
+#~ "Operasi ini tidak dapat dilakukan oleh karena merge. Mohon hapus merge "
+#~ "terlebih dahulu dan coba lagi."
 
-msgid "%s matches in all sheets"
-msgstr "%s cocok di semua sheet"
+#~ msgid "%(matches)s matches in %(sheetName)s"
+#~ msgstr "%(matches)s cocok di %(sheetName)s"
 
-msgid "At least one measure and/or dimension is not correct."
-msgstr "Setidaknya satu ukuran dan/atau dimensi tidak tepat."
+#~ msgid "%(matches)s matches in range %(range)s of %(sheetName)s"
+#~ msgstr "%(matches)s cocok di range %(range)s dari %(sheetName)s"
 
-msgid "Change color"
-msgstr "Ubah warna"
+#~ msgid "%s matches in all sheets"
+#~ msgstr "%s cocok di semua sheet"
 
-msgid "Filters"
-msgstr "Penyaring"
+#~ msgid "At least one measure and/or dimension is not correct."
+#~ msgstr "Setidaknya satu ukuran dan/atau dimensi tidak tepat."
 
-msgid "First day of the month preceding a date."
-msgstr "Hari pertama bulan sebelum tanggal."
+#~ msgid "Change color"
+#~ msgstr "Ubah warna"
 
-msgid "Last day of the month following a date."
-msgstr "Tanggal terakhir bulan mengikuti tanggal."
+#~ msgid "Filters"
+#~ msgstr "Penyaring"
 
-msgid "Show Filters"
-msgstr "Tunjukkan Filter"
+#~ msgid "First day of the month preceding a date."
+#~ msgstr "Hari pertama bulan sebelum tanggal."
+
+#~ msgid "Last day of the month following a date."
+#~ msgstr "Tanggal terakhir bulan mengikuti tanggal."
+
+#~ msgid "Show Filters"
+#~ msgstr "Tunjukkan Filter"

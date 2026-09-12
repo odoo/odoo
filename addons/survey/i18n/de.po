@@ -15,11 +15,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-09-04 12:56+0000\n"
+"POT-Creation-Date: 2026-09-11 17:42+0000\n"
+"PO-Revision-Date: 2026-09-09 13:52+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
-"Language-Team: German <https://translate.odoo.com/projects/odoo-s19-4/survey/"
-"de/>\n"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-master/"
+"survey/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -141,28 +141,6 @@ msgstr "6650 km"
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p3_q3_sug1
 msgid "99 years"
 msgstr "99 Jahre"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
-msgid ""
-"<br/>\n"
-"                                    <span class=\"text-muted\">Completed</"
-"span>"
-msgstr ""
-"<br/>\n"
-"                                    <span class=\"text-"
-"muted\">Abgeschlossen</span>"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
-msgid ""
-"<br/>\n"
-"                                    <span class=\"text-muted\">Registered</"
-"span>"
-msgstr ""
-"<br/>\n"
-"                                    <span class=\"text-muted\">Registriert</"
-"span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
@@ -351,6 +329,12 @@ msgstr ""
 ">Umfrage bearbeiten"
 
 #. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
+msgid ""
+"<i class=\"oi oi-filled\" data-icon=\"share\" role=\"img\" title=\"Share\"/>"
+msgstr ""
+
+#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
 msgid ""
 "<i class=\"oi oi-fw me-2\" data-icon=\"bar_chart\" aria-hidden=\"true\"/"
@@ -480,11 +464,6 @@ msgstr "<span class=\"list-group-item py-1 px-2\">Max.</span>"
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
 msgid "<span class=\"list-group-item py-1 px-2\">Min</span>"
 msgstr "<span class=\"list-group-item py-1 px-2\">Min.</span>"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
-msgid "<span class=\"mx-1\">-</span>"
-msgstr "<span class=\"mx-1\">-</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -617,6 +596,11 @@ msgid "<span>%</span>"
 msgstr "<span>%</span>"
 
 #. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
+msgid "<span>-</span>"
+msgstr ""
+
+#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
 msgid "<span>All surveys</span>"
 msgstr "<span>Alle Umfragen</span>"
@@ -625,6 +609,11 @@ msgstr "<span>Alle Umfragen</span>"
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
 msgid "<span>Completed surveys</span>"
 msgstr "<span>Abgeschlossene Umfragen</span>"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
+msgid "<span>Completed</span>"
+msgstr ""
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
@@ -645,6 +634,11 @@ msgstr "<span>Bestanden und Nicht Bestanden</span>"
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
 msgid "<span>Passed only</span>"
 msgstr "<span>Nur Bestanden</span>"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
+msgid "<span>Registered</span>"
+msgstr ""
 
 #. module: survey
 #. odoo-python
@@ -1172,6 +1166,7 @@ msgstr "Leistungsnachweis für"
 #. odoo-python
 #: code:addons/survey/models/templates/survey_survey.py:0
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_tree
 msgid "Certification"
 msgstr "Zertifizierung"
@@ -3789,6 +3784,11 @@ msgid "Restricted to"
 msgstr "Eingeschränkt auf"
 
 #. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
+msgid "Results"
+msgstr ""
+
+#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_button_retake
 msgid "Retry"
 msgstr "Wiederholen"
@@ -5595,3 +5595,24 @@ msgid ""
 msgstr ""
 "⚠️ Diese Frage steht vor einigen oder allen Auslösern und könnte übersprungen "
 "werden."
+
+#~ msgid ""
+#~ "<br/>\n"
+#~ "                                    <span class=\"text-muted\">Completed</"
+#~ "span>"
+#~ msgstr ""
+#~ "<br/>\n"
+#~ "                                    <span class=\"text-"
+#~ "muted\">Abgeschlossen</span>"
+
+#~ msgid ""
+#~ "<br/>\n"
+#~ "                                    <span class=\"text-"
+#~ "muted\">Registered</span>"
+#~ msgstr ""
+#~ "<br/>\n"
+#~ "                                    <span class=\"text-"
+#~ "muted\">Registriert</span>"
+
+#~ msgid "<span class=\"mx-1\">-</span>"
+#~ msgstr "<span class=\"mx-1\">-</span>"

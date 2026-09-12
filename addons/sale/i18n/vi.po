@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:46+0000\n"
+"POT-Creation-Date: 2026-09-11 17:43+0000\n"
 "PO-Revision-Date: 2026-08-31 17:34+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -74,6 +74,22 @@ msgstr "# Đơn bán hàng"
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "%(attribute)s: %(values)s"
 msgstr "%(attribute)s: %(values)s"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/accrued_orders.py:0
+msgid ""
+"%(order)s - %(order_line)s; %(qty_invoiced)s invoiced, %(qty_delivered)s "
+"delivered at %(unit_price)s"
+msgstr ""
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/accrued_orders.py:0
+msgid ""
+"%(order)s - %(order_line)s; %(quantity_invoiced)s Invoiced, %"
+"(quantity_delivered)s Delivered at %(unit_price)s each"
+msgstr ""
 
 #. module: sale
 #. odoo-python
@@ -859,6 +875,11 @@ msgstr ""
 "                            <span class=\"d-block d-md-none\">Mã</span>"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.product_document_kanban
+msgid "<span class=\"flex-shrink-0\">Accessible</span>"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_form
 msgid "<span class=\"o_stat_text\">Revenues</span>"
 msgstr ""
@@ -925,11 +946,6 @@ msgstr ""
 "<span><b>Chúc mừng</b>, báo giá đầu tiên của bạn đã được gửi!<br> Hãy kiểm "
 "tra email để xác nhận báo giá.\n"
 "</span>"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.product_document_kanban
-msgid "<span>Accessible</span>"
-msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1131,6 +1147,11 @@ msgid "Accept &amp; Sign"
 msgstr "Chấp nhận &amp; ký"
 
 #. module: sale
+#: model:ir.model,name:sale.model_res_groups
+msgid "Access Groups"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_warning
 msgid "Access warning"
 msgstr "Cảnh báo truy cập"
@@ -1154,10 +1175,48 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_accrued_revenue_entry
-#: model:ir.actions.act_window,name:sale.action_accrued_revenue_entry_sale_order_line
+#: model:ir.model.fields,help:sale.field_product_category__property_account_invoices_to_issue_id
+msgid ""
+"Account holding the accrued value of the goods delivered but not invoiced "
+"yet. With perpetual valuation, it counterbalances the stock valuation "
+"account at closing."
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_product_category__property_account_invoiced_not_delivered_id
+msgid ""
+"Account holding the accrued value of the goods invoiced but not delivered "
+"yet. With perpetual valuation, it counterbalances the stock valuation "
+"account at closing."
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__accrual_move_ids
+msgid "Accrual Entries"
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order_line__accrual_move_ids
+msgid ""
+"Accrual entries generated for this line, so it isn't accrued again while one "
+"is still standing (posted, not yet reversed or cancelled)."
+msgstr ""
+
+#. module: sale
+#: model:ir.model,name:sale.model_account_accrued_orders_wizard
+msgid "Accrued Orders Wizard"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.server,name:sale.action_accrued_revenue_entry_sale_order_line
 msgid "Accrued Revenue Entry"
 msgstr "Bút toán doanh thu tích luỹ"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/accrued_orders.py:0
+msgid "Accrued total"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_needaction
@@ -1328,6 +1387,16 @@ msgstr "Đồng bộ Amazon"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Amount"
 msgstr "Số tiền"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order__amount_unpaid
+msgid "Amount Remaining"
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order__amount_unpaid
+msgid "Amount left to pay to avoid double payment or double invoicing."
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -2111,6 +2180,11 @@ msgid "Default product used for discounts"
 msgstr "Sản phẩm mặc định được sử dụng cho chiết khấu"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__deferred_revenue
+msgid "Deferred Revenue"
+msgstr ""
+
+#. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/sale_order_line_field/sale_order_line_field.xml:0
 msgid "Delete"
@@ -2123,6 +2197,7 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered_at_date
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Delivered"
 msgstr "Đã giao"
@@ -2311,6 +2386,7 @@ msgid "Display Draft Invoice Warning"
 msgstr "Hiện thị cảnh báo hoá đơn nháp"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_account_accrued_orders_wizard__display_name
 #: model:ir.model.fields,field_description:sale.field_account_analytic_applicability__display_name
 #: model:ir.model.fields,field_description:sale.field_account_analytic_line__display_name
 #: model:ir.model.fields,field_description:sale.field_account_invoice_report__display_name
@@ -2324,12 +2400,14 @@ msgstr "Hiện thị cảnh báo hoá đơn nháp"
 #: model:ir.model.fields,field_description:sale.field_payment_provider__display_name
 #: model:ir.model.fields,field_description:sale.field_payment_transaction__display_name
 #: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__display_name
+#: model:ir.model.fields,field_description:sale.field_product_category__display_name
 #: model:ir.model.fields,field_description:sale.field_product_document__display_name
 #: model:ir.model.fields,field_description:sale.field_product_pricelist_item__display_name
 #: model:ir.model.fields,field_description:sale.field_product_product__display_name
 #: model:ir.model.fields,field_description:sale.field_product_template__display_name
 #: model:ir.model.fields,field_description:sale.field_res_company__display_name
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:sale.field_res_groups__display_name
 #: model:ir.model.fields,field_description:sale.field_res_partner__display_name
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__display_name
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__display_name
@@ -2620,13 +2698,6 @@ msgid "Followers (Partners)"
 msgstr "Người theo dõi (Đối tác)"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.product_pricelist_item_form
-msgid ""
-"For formula or fixed pricing, the original price isn’t shown in\n"
-"                            sale orders."
-msgstr ""
-
-#. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_section_fields_null
 msgid ""
 "Forbidden section quantity or section UoM on non section sale order line"
@@ -2723,6 +2794,18 @@ msgid "Go ahead and send the quotation."
 msgstr "Hãy tiếp tục và gửi báo giá."
 
 #. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/accrued_orders.py:0
+msgid "Goods Delivered not Invoiced (perpetual valuation)"
+msgstr ""
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/accrued_orders.py:0
+msgid "Goods Invoiced not Delivered (perpetual valuation)"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__product_type
 msgid ""
 "Goods are tangible materials and merchandise you provide.\n"
@@ -2777,6 +2860,7 @@ msgid "Has down payments"
 msgstr "Có khoản trả trước"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_account_accrued_orders_wizard__id
 #: model:ir.model.fields,field_description:sale.field_account_analytic_applicability__id
 #: model:ir.model.fields,field_description:sale.field_account_analytic_line__id
 #: model:ir.model.fields,field_description:sale.field_account_invoice_report__id
@@ -2790,12 +2874,14 @@ msgstr "Có khoản trả trước"
 #: model:ir.model.fields,field_description:sale.field_payment_provider__id
 #: model:ir.model.fields,field_description:sale.field_payment_transaction__id
 #: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__id
+#: model:ir.model.fields,field_description:sale.field_product_category__id
 #: model:ir.model.fields,field_description:sale.field_product_document__id
 #: model:ir.model.fields,field_description:sale.field_product_pricelist_item__id
 #: model:ir.model.fields,field_description:sale.field_product_product__id
 #: model:ir.model.fields,field_description:sale.field_product_template__id
 #: model:ir.model.fields,field_description:sale.field_res_company__id
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__id
+#: model:ir.model.fields,field_description:sale.field_res_groups__id
 #: model:ir.model.fields,field_description:sale.field_res_partner__id
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__id
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__id
@@ -2884,13 +2970,6 @@ msgstr "Nhập mẫu sản phẩm"
 #: code:addons/sale/static/src/views/sale_file_upload_kanban/sale_file_upload_kanban_renderer.js:0
 #: code:addons/sale/static/src/views/sale_file_upload_list/sale_file_upload_list_renderer.js:0
 msgid "Import a request for quotation from a customer"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.product_pricelist_item_form
-msgid ""
-"In sale order line original price is unit price and discount is in\n"
-"                            discount column."
 msgstr ""
 
 #. module: sale
@@ -3033,6 +3112,11 @@ msgid "Invoice ordered quantities as soon as this service is sold."
 msgstr "Xuất hóa đơn số lượng đã đặt ngay khi dịch vụ này được bán."
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__invoice_to_be_issued
+msgid "Invoice to be Issued"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_invoiced_at_date
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoiced"
@@ -3042,6 +3126,17 @@ msgstr "Đã xuất hóa đơn"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__amount_invoiced
 msgid "Invoiced Amount"
 msgstr "Số tiền đã lập hoá đơn"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_category__property_account_invoiced_not_delivered_id
+#: model:ir.model.fields,field_description:sale.field_res_company__account_invoiced_not_delivered_id
+msgid "Invoiced Not Delivered Account"
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_category__property_account_invoiced_not_delivered_active
+msgid "Invoiced Not Delivered Account Active"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_invoiced
@@ -3077,6 +3172,17 @@ msgstr "Phân tích hóa đơn"
 #: model:ir.model,name:sale.model_account_invoice_report
 msgid "Invoices Statistics"
 msgstr "Thống kê hóa đơn"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_category__property_account_invoices_to_issue_id
+#: model:ir.model.fields,field_description:sale.field_res_company__account_invoices_to_issue_id
+msgid "Invoices to be Issued Account"
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_category__property_account_invoices_to_issue_active
+msgid "Invoices to be Issued Account Active"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3179,6 +3285,11 @@ msgstr "Bút toán"
 #: model:ir.model,name:sale.model_account_move_line
 msgid "Journal Item"
 msgstr "Hạng mục bút toán"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__label
+msgid "Label"
+msgstr ""
 
 #. module: sale
 #. odoo-javascript
@@ -3370,11 +3481,6 @@ msgstr ""
 "hàng và theo dõi giờ làm việc."
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_margin
-msgid "Margins"
-msgstr "Biên lợi nhuận"
-
-#. module: sale
 #: model:ir.actions.server,name:sale.model_sale_order_action_quotation_sent
 msgid "Mark as Sent"
 msgstr ""
@@ -3545,6 +3651,11 @@ msgid "No, go back"
 msgstr ""
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
+msgid "Not Available"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Not Cancelled"
@@ -3552,6 +3663,7 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__delivery_status__pending
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 #, fuzzy
 msgid "Not Delivered"
 msgstr "Chưa giao"
@@ -3871,6 +3983,7 @@ msgstr "Dòng phần chính"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__delivery_status__partial
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 #, fuzzy
 msgid "Partially Delivered"
 msgstr "Đã giao một phần"
@@ -4092,6 +4205,7 @@ msgid "Product Catalog"
 msgstr "Danh mục sản phẩm"
 
 #. module: sale
+#: model:ir.model,name:sale.model_product_category
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__categ_id
 #: model:ir.model.fields,field_description:sale.field_sale_report__categ_id
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -4942,6 +5056,11 @@ msgid "Shipping"
 msgstr "Vận chuyển"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
+msgid "Shipping Status"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_shopee
 msgid "Shopee Sync"
 msgstr "Đồng bộ Shopee"
@@ -4955,11 +5074,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Show all records whose next activity date is past"
 msgstr "Hiển thị tất cả các bản ghi có ngày hoạt động tiếp theo đã quá hạn"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Show margins on orders"
-msgstr "Hiển thị biên lợi nhuận cho đơn hàng"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5055,6 +5169,7 @@ msgstr "Email cụ thể"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__delivery_status__started
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 #, fuzzy
 msgid "Started"
 msgstr "Đã bắt đầu"
@@ -5391,15 +5506,6 @@ msgstr ""
 "không phải sau khi giao hàng."
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid ""
-"The margin is computed as the sum of product sales prices minus the cost set "
-"in their detail form."
-msgstr ""
-"Biên lợi nhuận được tính bằng tổng giá bán trừ chi phí được thiết lập trong "
-"biểu mẫu chi tiết."
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "The new invoice will deduct draft invoices linked to this sale order."
 msgstr "Hoá đơn mới sẽ khấu trừ hoá đơn nháp liên kết với đơn bán hàng này."
@@ -5695,6 +5801,12 @@ msgid "Total Advantage"
 msgstr ""
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.product_product_sale_tree_view
+#: model_terms:ir.ui.view,arch_db:sale.product_template_sale_tree_view
+msgid "Total Free To Use"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_tax
 msgid "Total Tax"
 msgstr "Tổng thuế"
@@ -5742,12 +5854,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_order__transaction_ids
 msgid "Transactions"
 msgstr "Giao dịch"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_line__translated_product_name
-#, fuzzy
-msgid "Translated Product Name"
-msgstr "Tên sản phẩm đã dịch"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__type_name
@@ -6227,6 +6333,13 @@ msgid "you confirm acceptance on behalf of"
 msgstr ""
 
 #. module: sale
+#: model:mail.template,subject:sale.mail_template_sale_confirmation
+msgid ""
+"{{ object.company_id.name }} Order {{ object.name or 'n/a' }} "
+"{{ object.client_order_ref and ('(' + object.client_order_ref + ')') or '' }}"
+msgstr ""
+
+#. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_payment_executed
 msgid ""
 "{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state "
@@ -6236,14 +6349,6 @@ msgstr ""
 "{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state "
 "== 'pending') and 'Đơn hàng đang chờ' or 'Đơn hàng' }} (Mã {{ object.name or "
 "'không có' }})"
-
-#. module: sale
-#: model:mail.template,subject:sale.mail_template_sale_confirmation
-msgid ""
-"{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state "
-"== 'pending') and 'Pending Order' or 'Order' }} {{ object.name or 'n/a' }} "
-"{{ object.client_order_ref and ('(' + object.client_order_ref + ')') or '' }}"
-msgstr ""
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_proforma
@@ -6260,27 +6365,44 @@ msgid ""
 "{{ object.client_order_ref and ('(' + object.client_order_ref + ')') or '' }}"
 msgstr ""
 
-msgid ""
-"<i class=\"oi oi-fw me-1\" data-icon=\"payments\" aria-label=\"Quotations\" "
-"role=\"img\"/>"
-msgstr ""
-"<i class=\"oi oi-fw me-1\" data-icon=\"payments\" aria-label=\"Báo giá\" "
-"role=\"img\"/>"
+#~ msgid "Margins"
+#~ msgstr "Biên lợi nhuận"
 
-msgid "<i class=\"oi me-1\" data-icon=\"print\"/>View Details"
-msgstr "<i class=\"oi me-1\" data-icon=\"print\"/> Xem chi tiết"
+#~ msgid "Show margins on orders"
+#~ msgstr "Hiển thị biên lợi nhuận cho đơn hàng"
 
-msgid "<i class=\"oi oi-filled\" data-icon=\"chat_bubble\"/> Feedback"
-msgstr "<i class=\"oi oi-filled\" data-icon=\"chat_bubble\"/> Phản hồi"
+#~ msgid ""
+#~ "The margin is computed as the sum of product sales prices minus the cost "
+#~ "set in their detail form."
+#~ msgstr ""
+#~ "Biên lợi nhuận được tính bằng tổng giá bán trừ chi phí được thiết lập "
+#~ "trong biểu mẫu chi tiết."
 
-msgid "<i class=\"oi oi-fw\" data-icon=\"check\"/> Authorized"
-msgstr "<i class=\"oi oi-fw\" data-icon=\"check\"/> Được ủy quyền"
+#, fuzzy
+#~ msgid "Translated Product Name"
+#~ msgstr "Tên sản phẩm đã dịch"
 
-msgid "<i class=\"oi oi-fw\" data-icon=\"check\"/> Paid"
-msgstr "<i class=\"oi oi-fw\" data-icon=\"check\"/> Đã thanh toán"
+#~ msgid ""
+#~ "<i class=\"oi oi-fw me-1\" data-icon=\"payments\" aria-"
+#~ "label=\"Quotations\" role=\"img\"/>"
+#~ msgstr ""
+#~ "<i class=\"oi oi-fw me-1\" data-icon=\"payments\" aria-label=\"Báo giá\" "
+#~ "role=\"img\"/>"
 
-msgid "<i class=\"oi oi-fw\" data-icon=\"check\"/> Reversed"
-msgstr "<i class=\"oi oi-fw\" data-icon=\"check\"/> Đã hoàn lại"
+#~ msgid "<i class=\"oi me-1\" data-icon=\"print\"/>View Details"
+#~ msgstr "<i class=\"oi me-1\" data-icon=\"print\"/> Xem chi tiết"
 
-msgid "<i class=\"oi oi-fw\" data-icon=\"schedule\"/> Waiting Payment"
-msgstr "<i class=\"oi oi-fw\" data-icon=\"schedule\"/> Đang chờ thanh toán"
+#~ msgid "<i class=\"oi oi-filled\" data-icon=\"chat_bubble\"/> Feedback"
+#~ msgstr "<i class=\"oi oi-filled\" data-icon=\"chat_bubble\"/> Phản hồi"
+
+#~ msgid "<i class=\"oi oi-fw\" data-icon=\"check\"/> Authorized"
+#~ msgstr "<i class=\"oi oi-fw\" data-icon=\"check\"/> Được ủy quyền"
+
+#~ msgid "<i class=\"oi oi-fw\" data-icon=\"check\"/> Paid"
+#~ msgstr "<i class=\"oi oi-fw\" data-icon=\"check\"/> Đã thanh toán"
+
+#~ msgid "<i class=\"oi oi-fw\" data-icon=\"check\"/> Reversed"
+#~ msgstr "<i class=\"oi oi-fw\" data-icon=\"check\"/> Đã hoàn lại"
+
+#~ msgid "<i class=\"oi oi-fw\" data-icon=\"schedule\"/> Waiting Payment"
+#~ msgstr "<i class=\"oi oi-fw\" data-icon=\"schedule\"/> Đang chờ thanh toán"

@@ -13,11 +13,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-08-31 16:33+0000\n"
+"POT-Creation-Date: 2026-09-11 17:41+0000\n"
+"PO-Revision-Date: 2026-09-11 09:33+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
-"projects/odoo-s19-4/hr_recruitment/zh_Hant/>\n"
+"projects/odoo-master/hr_recruitment/zh_Hant/>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -618,6 +618,11 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr "當建立別名的新記錄時，一個Python字典被提供作為預設值."
+
+#. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_res_groups
+msgid "Access Groups"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_needaction
@@ -1567,6 +1572,7 @@ msgstr "在申請表上顯示履歷"
 #: model:ir.model.fields,field_description:hr_recruitment.field_mail_activity_schedule__display_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_company__display_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_res_groups__display_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_partner__display_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_users__display_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_talent_pool_add_applicants__display_name
@@ -1909,6 +1915,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_recruitment.field_mail_activity_schedule__id
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_company__id
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings__id
+#: model:ir.model.fields,field_description:hr_recruitment.field_res_groups__id
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_partner__id
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_users__id
 #: model:ir.model.fields,field_description:hr_recruitment.field_talent_pool_add_applicants__id
@@ -2162,7 +2169,6 @@ msgid "Job Position Created"
 msgstr "已建立工作職缺"
 
 #. module: hr_recruitment
-#: model:mail.message.subtype,description:hr_recruitment.mt_job_new
 #: model:mail.message.subtype,name:hr_recruitment.mt_job_new
 msgid "Job Position created"
 msgstr "工作職缺已建立"
@@ -2420,7 +2426,7 @@ msgstr ""
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__activity_type_icon
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__activity_type_icon
 msgid "Material Symbols icon e.g. checklist"
-msgstr ""
+msgstr "Material 符號圖示，例如：檢查清單"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__salary_max

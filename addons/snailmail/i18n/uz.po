@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:43+0000\n"
+"POT-Creation-Date: 2026-09-11 17:43+0000\n"
 "PO-Revision-Date: 2026-08-31 20:27+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -111,6 +111,12 @@ msgid "Both sides"
 msgstr "Ikki tomonlama"
 
 #. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/core/notification_model_patch.js:0
+msgid "Bounced"
+msgstr ""
+
+#. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__credit_error
 #, fuzzy
 msgid "CREDIT_ERROR"
@@ -197,6 +203,12 @@ msgstr "Yaratuvchi"
 #, fuzzy
 msgid "Created on"
 msgstr "Yaratilgan sana"
+
+#. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/core/notification_model_patch.js:0
+msgid "Dispatched"
+msgstr ""
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_ir_actions_report__display_name
@@ -298,6 +310,11 @@ msgid "Invalid recipient name."
 msgstr "Noto‘g‘ri qabul qiluvchi nomi."
 
 #. module: snailmail
+#: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__letter_undeliverable
+msgid "LETTER_UNDELIVERABLE"
+msgstr ""
+
+#. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__write_uid
 #, fuzzy
 msgid "Last Updated by"
@@ -317,11 +334,29 @@ msgid "Letter"
 msgstr "Xat"
 
 #. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/core/notification_model_patch.js:0
+msgid "Letter Undeliverable"
+msgstr ""
+
+#. module: snailmail
+#. odoo-python
+#: code:addons/snailmail/controller/snailmail_webhook.py:0
+msgid "Letter is delivered successfully"
+msgstr ""
+
+#. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, fuzzy
 msgid "Letter sent by post with Snailmail"
 msgstr "Snailmail orqali pochta bilan yuborilgan xat"
+
+#. module: snailmail
+#. odoo-python
+#: code:addons/snailmail/controller/snailmail_webhook.py:0
+msgid "Letter was unable to be delivered"
+msgstr ""
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_list
@@ -422,6 +457,11 @@ msgstr "Ikki tomonlama chop etish"
 #, fuzzy
 msgid "Print In Color"
 msgstr "Rangli chop etish"
+
+#. module: snailmail
+#: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__state__process
+msgid "Processing"
+msgstr ""
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__partner_id
@@ -560,10 +600,20 @@ msgid "Snailmail Trial Error"
 msgstr "Oddiy pochta sinov xatosi"
 
 #. module: snailmail
+#: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_undeliverable
+msgid "Snailmail Undeliverable"
+msgstr ""
+
+#. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_error
 #, fuzzy
 msgid "Snailmail Unknown Error"
 msgstr "Oddiy pochta noma'lum xatosi"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__letter_uid
+msgid "Snailmail letter ID"
+msgstr ""
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_mail__snailmail_error
@@ -642,15 +692,16 @@ msgstr "Hamkorning mamlakati Oddiy pochta xizmati doirasiga kirmaydi."
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
-msgid "The document to be sent exceeds the maximum allowed limit of 8 pages."
+msgid ""
+"The document has been accepted by postal service provider and is being "
+"processed.<br>The tracking id is %s"
 msgstr ""
 
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
-#, fuzzy
-msgid "The document was correctly sent by post.<br>The tracking id is %s"
-msgstr "Hujjat pochta orqali to‘g‘ri yuborildi.<br>Kuzatuv raqami: %s"
+msgid "The document to be sent exceeds the maximum allowed limit of 8 pages."
+msgstr ""
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_mail__message_type
@@ -696,16 +747,14 @@ msgstr ""
 
 #. module: snailmail
 #: model:ir.model.fields,help:snailmail.field_snailmail_letter__state
-#, fuzzy
 msgid ""
 "When a letter is created, the status is 'Pending'.\n"
-"If the letter is correctly sent, the status goes in 'Sent',\n"
-"If not, it will got in state 'Error' and the error message will be displayed "
-"in the field 'Error Message'."
+"If the letter is correctly sent to provider, the status goes in 'process',\n"
+"If the provider confirms the letter is delivered, the status goes in "
+"'Sent'.\n"
+"If not sent or delivered, it will got in state 'Error' and the error message "
+"will be displayed in the field 'Error Message'."
 msgstr ""
-"Xat yaratilganda, uning holati \"Kutilmoqda\" bo‘ladi. Agar xat to‘g‘ri "
-"yuborilsa, holat \"Yuborildi\" ga o‘zgaradi. Aks holda, u \"Xato\" holatiga "
-"o‘tadi va xato xabari \"Xato xabari\" maydonida ko‘rsatiladi."
 
 #. module: snailmail
 #. odoo-python
@@ -735,3 +784,18 @@ msgstr ""
 #, fuzzy
 msgid "Zip"
 msgstr "Zip"
+
+#, fuzzy
+#~ msgid "The document was correctly sent by post.<br>The tracking id is %s"
+#~ msgstr "Hujjat pochta orqali to‘g‘ri yuborildi.<br>Kuzatuv raqami: %s"
+
+#, fuzzy
+#~ msgid ""
+#~ "When a letter is created, the status is 'Pending'.\n"
+#~ "If the letter is correctly sent, the status goes in 'Sent',\n"
+#~ "If not, it will got in state 'Error' and the error message will be "
+#~ "displayed in the field 'Error Message'."
+#~ msgstr ""
+#~ "Xat yaratilganda, uning holati \"Kutilmoqda\" bo‘ladi. Agar xat to‘g‘ri "
+#~ "yuborilsa, holat \"Yuborildi\" ga o‘zgaradi. Aks holda, u \"Xato\" "
+#~ "holatiga o‘tadi va xato xabari \"Xato xabari\" maydonida ko‘rsatiladi."

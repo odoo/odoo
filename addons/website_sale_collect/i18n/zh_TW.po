@@ -13,11 +13,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:43+0000\n"
-"PO-Revision-Date: 2026-08-31 19:17+0000\n"
+"POT-Creation-Date: 2026-09-11 17:44+0000\n"
+"PO-Revision-Date: 2026-09-09 14:10+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
-"projects/odoo-s19-4/website_sale_collect/zh_Hant/>\n"
+"projects/odoo-master/website_sale_collect/zh_Hant/>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -60,17 +60,10 @@ msgstr "<span class=\"small\">|</span>"
 
 #. module: website_sale_collect
 #. odoo-javascript
-#: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
 #: code:addons/website_sale_collect/static/src/js/location_selector/location/location.xml:0
 #, fuzzy
 msgid "Available"
 msgstr "可用"
-
-#. module: website_sale_collect
-#. odoo-javascript
-#: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
-msgid "Change store"
-msgstr "變更商店"
 
 #. module: website_sale_collect
 #: model:ir.module.module,shortdesc:base.module_website_sale_collect
@@ -117,6 +110,12 @@ msgid "Delivery Methods"
 msgstr "送貨方式"
 
 #. module: website_sale_collect
+#. odoo-javascript
+#: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
+msgid "Delivery available"
+msgstr ""
+
+#. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.in_store_delivery_method
 msgid "Delivery method"
 msgstr "送貨方式"
@@ -136,6 +135,18 @@ msgid "Display Name"
 msgstr "顯示名稱"
 
 #. module: website_sale_collect
+#. odoo-javascript
+#: code:addons/website_sale_collect/static/src/js/location_selector/map_container/map_container.xml:0
+msgid "Exceptional closing from"
+msgstr ""
+
+#. module: website_sale_collect
+#. odoo-javascript
+#: code:addons/website_sale_collect/static/src/js/location_selector/map_container/map_container.xml:0
+msgid "Exceptional closing on"
+msgstr ""
+
+#. module: website_sale_collect
 #: model:ir.model.fields,field_description:website_sale_collect.field_delivery_carrier__id
 #: model:ir.model.fields,field_description:website_sale_collect.field_payment_method__id
 #: model:ir.model.fields,field_description:website_sale_collect.field_payment_provider__id
@@ -153,6 +164,18 @@ msgstr "識別號"
 #: model:ir.model.fields,field_description:website_sale_collect.field_website__in_store_dm_id
 msgid "In-store Delivery Method"
 msgstr "實體店送貨方式"
+
+#. module: website_sale_collect
+#. odoo-python
+#: code:addons/website_sale_collect/models/payment_provider.py:0
+msgid "In-store is only allowed if a sales order exists"
+msgstr ""
+
+#. module: website_sale_collect
+#. odoo-python
+#: code:addons/website_sale_collect/models/payment_provider.py:0
+msgid "In-store not allowed to pay less than the order remaining balance"
+msgstr ""
 
 #. module: website_sale_collect
 #. odoo-python
@@ -214,6 +237,18 @@ msgid "Pick up in store"
 msgstr "到店自取"
 
 #. module: website_sale_collect
+#. odoo-javascript
+#: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
+msgid "Pickup"
+msgstr ""
+
+#. module: website_sale_collect
+#. odoo-javascript
+#: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
+msgid "Pickup available"
+msgstr ""
+
+#. module: website_sale_collect
 #. odoo-python
 #: code:addons/website_sale_collect/models/sale_order.py:0
 msgid "Please choose a store to collect your order."
@@ -260,13 +295,25 @@ msgstr "與聯絡方式相同"
 #. module: website_sale_collect
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
-msgid "Select store"
-msgstr "選擇商店"
+msgid "Select a Store"
+msgstr ""
 
 #. module: website_sale_collect
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
 msgid "Selected country:"
+msgstr ""
+
+#. module: website_sale_collect
+#. odoo-javascript
+#: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
+msgid "Shipping"
+msgstr ""
+
+#. module: website_sale_collect
+#. odoo-javascript
+#: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
+msgid "Shipping method"
 msgstr ""
 
 #. module: website_sale_collect
@@ -346,7 +393,7 @@ msgid "Your order will be ready on %s."
 msgstr ""
 
 #. module: website_sale_collect
-#: model_terms:payment.provider,done_msg:website_sale_collect.payment_provider_on_site
+#: model_terms:payment.provider,pending_msg:website_sale_collect.payment_provider_on_site
 msgid "Your order will be ready soon."
 msgstr ""
 
@@ -361,10 +408,15 @@ msgid "Your payment has been cancelled."
 msgstr "您的付款已被取消。"
 
 #. module: website_sale_collect
-#: model_terms:payment.provider,pending_msg:website_sale_collect.payment_provider_on_site
-#, fuzzy
-msgid "Your payment has been processed but is waiting for approval."
-msgstr "你的付款已處理，但正等候批准。"
+#: model_terms:payment.provider,done_msg:website_sale_collect.payment_provider_on_site
+msgid "Your payment has been processed."
+msgstr "你的付款已處理。"
+
+#. module: website_sale_collect
+#. odoo-javascript
+#: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.js:0
+msgid "from %(date)s"
+msgstr ""
 
 #. module: website_sale_collect
 #. odoo-javascript
@@ -373,14 +425,27 @@ msgstr "你的付款已處理，但正等候批准。"
 msgid "in stock"
 msgstr ""
 
-msgid "%(available_qty)s/%(line_qty)s available at this location"
-msgstr "此位置可用數量：%(available_qty)s / %(line_qty)s"
+#. module: website_sale_collect
+#. odoo-javascript
+#: code:addons/website_sale_collect/static/src/js/location_selector/map_container/map_container.xml:0
+msgid "to"
+msgstr ""
 
-msgid "Sorry, we are unable to ship your order."
-msgstr "抱歉，您的訂單我們無法運送"
+#~ msgid "Change store"
+#~ msgstr "變更商店"
 
-msgid "Your payment has been processed."
-msgstr "你的付款已處理。"
+#~ msgid "Select store"
+#~ msgstr "選擇商店"
 
-msgid "no in-store delivery methods available"
-msgstr "沒有店內取貨方式可用"
+#, fuzzy
+#~ msgid "Your payment has been processed but is waiting for approval."
+#~ msgstr "你的付款已處理，但正等候批准。"
+
+#~ msgid "%(available_qty)s/%(line_qty)s available at this location"
+#~ msgstr "此位置可用數量：%(available_qty)s / %(line_qty)s"
+
+#~ msgid "Sorry, we are unable to ship your order."
+#~ msgstr "抱歉，您的訂單我們無法運送"
+
+#~ msgid "no in-store delivery methods available"
+#~ msgstr "沒有店內取貨方式可用"

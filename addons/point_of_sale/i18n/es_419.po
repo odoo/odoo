@@ -10,11 +10,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:44+0000\n"
-"PO-Revision-Date: 2026-08-31 13:48+0000\n"
+"POT-Creation-Date: 2026-09-11 17:41+0000\n"
+"PO-Revision-Date: 2026-09-09 22:11+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
-"odoo-s19-4/point_of_sale/es_419/>\n"
+"odoo-master/point_of_sale/es_419/>\n"
 "Language: es_419\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,7 +53,7 @@ msgstr "% de desc."
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_orderline_receipt_information
 msgid "% discount off on"
-msgstr ""
+msgstr "% de descuento en"
 
 #. module: point_of_sale
 #. odoo-python
@@ -747,6 +747,11 @@ msgid "Access Denied"
 msgstr "Acceso denegado"
 
 #. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_res_groups
+msgid "Access Groups"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__access_token
 msgid "Access Token"
 msgstr "Token de acceso"
@@ -800,13 +805,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accounting"
 msgstr "Contabilidad"
-
-#. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config__journal_id
-#: model:ir.model.fields,help:point_of_sale.field_pos_order__sale_journal
-#: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_journal_id
-msgid "Accounting journal used to post POS session receipts and invoices."
-msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -1584,7 +1582,6 @@ msgstr "Regresar"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/login_screen/login_screen.js:0
 msgid "Backend"
 msgstr "Backend"
@@ -1701,7 +1698,7 @@ msgstr "Regla del código de barras"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
+#: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
 msgid "Barcode Scanner"
 msgstr "Lector de códigos de barras"
 
@@ -2020,7 +2017,6 @@ msgstr "Entrada y salida de efectivo"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Cash In/Out"
 msgstr "Entrada/salida de efectivo"
@@ -2407,6 +2403,7 @@ msgstr "Cliente"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/chose_combo_popup/chose_combo_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/product_configurator_popup/product_configurator_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
@@ -2421,7 +2418,6 @@ msgstr "Cerrar"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Close Register"
 msgstr "Cerrar caja registradora"
@@ -2449,6 +2445,7 @@ msgid "Closed Register"
 msgstr "Caja registradora cerrada"
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_tree
 msgid "Closing"
 msgstr "Bloqueando"
@@ -2481,6 +2478,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Closing Entry by product"
 msgstr "Asiento de cierre por producto"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__closing_journal_id
+#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_closing_journal_id
+msgid "Closing Journal"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__session_closing_mode
@@ -2965,12 +2968,6 @@ msgid "Create Partner"
 msgstr "Crear contacto"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
-msgid "Create Product"
-msgstr "Crear producto"
-
-#. module: point_of_sale
 #: model:ir.model,website_form_label:point_of_sale.model_res_partner
 msgid "Create a Customer"
 msgstr "Crear un cliente"
@@ -3142,8 +3139,6 @@ msgid "Customer Account"
 msgstr "Cuenta de cliente"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Customer Display"
 msgstr "Pantalla del cliente"
@@ -3681,6 +3676,7 @@ msgstr "Descuentos"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_country__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_res_country_state__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_res_currency__display_name
+#: model:ir.model.fields,field_description:point_of_sale.field_res_groups__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_res_lang__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_res_partner__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users__display_name
@@ -4548,6 +4544,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_res_country__id
 #: model:ir.model.fields,field_description:point_of_sale.field_res_country_state__id
 #: model:ir.model.fields,field_description:point_of_sale.field_res_currency__id
+#: model:ir.model.fields,field_description:point_of_sale.field_res_groups__id
 #: model:ir.model.fields,field_description:point_of_sale.field_res_lang__id
 #: model:ir.model.fields,field_description:point_of_sale.field_res_partner__id
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users__id
@@ -4723,12 +4720,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_form_view
 msgid "Information about your product."
 msgstr "Información sobre su producto."
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
-msgid "Install App"
-msgstr "Instalar aplicación"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_payment_method_form
@@ -4990,6 +4981,26 @@ msgid "Journal Item"
 msgstr ""
 
 #. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__journal_id
+#: model:ir.model.fields,help:point_of_sale.field_pos_order__sale_journal
+#: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_journal_id
+msgid "Journal used for customer invoices and refunds credit notes. "
+msgstr ""
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid ""
+"Journal used for the customer invoices, and for the session closing entries "
+"when no Closing Journal is set."
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__closing_journal_id
+#: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_closing_journal_id
+msgid "Journal used specifically for PoS session closing and reverse entries"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_payment_method_kanban
 msgid "Journal:"
 msgstr "Diario:"
@@ -5026,7 +5037,7 @@ msgstr "Lámpara LED"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
+#: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
 msgid "LNA"
 msgstr "LNA"
 
@@ -5297,7 +5308,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
+#: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
 msgid "Local Network Access"
 msgstr "Acceso a la red local"
 
@@ -5499,7 +5510,7 @@ msgstr "Márgenes y costos"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_type_icon
 msgid "Material Symbols icon e.g. checklist"
-msgstr ""
+msgstr "Icono de Material Symbols, por ejemplo, checklist"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6259,6 +6270,141 @@ msgid ""
 "interaction history, profiles, and more.\n"
 "\n"
 msgstr ""
+"Punto de venta de Odoo\n"
+"-----------------------------\n"
+"\n"
+"La aplicación Punto de venta de Odoo\n"
+"ofrece una interfaz estética que no requiere instalación y que funciona\n"
+"en dispositivos modernos con y sin conexión a internet.\n"
+"\n"
+"Está completamente integrada al inventario y la contabilidad de la empresa, "
+"así que tendrás estadísticas\n"
+"en tiempo real y consolidación de la información de todas tus tiendas sin "
+"tener que usar otras\n"
+"aplicaciones.\n"
+"\n"
+"Trabaja con los dispositivos que ya tienes\n"
+"---------------------------------------\n"
+"\n"
+"### En tu navegador \n"
+"\n"
+"La aplicación PdV de Odoo funciona en todos los dispositivos que pueden "
+"mostrar\n"
+"sitios web, con poca o ninguna configuración.\n"
+"\n"
+"### ¿Pantalla táctil o teclado?\n"
+"\n"
+"Punto de venta funciona a la perfección en cualquier dispositivo táctil, ya "
+"sea\n"
+"una tableta táctil como un iPad o terminales de pantalla táctil resistiva\n"
+"sin teclado.\n"
+"\n"
+"### Básculas e impresoras\n"
+"\n"
+"Los lectores de código de barras y las impresoras son compatibles sin "
+"necesidad de\n"
+"configurarlas. Las básculas, cajas registradoras y otros periféricos "
+"funcionan con la API del\n"
+"proxy.\n"
+"\n"
+"Con y sin internet\n"
+"------------------\n"
+"\n"
+"### El PdV siempre será estable, incluso si tu conexión no lo es\n"
+"\n"
+"Abre nuevas tiendas con solo una conexión a internet: **sin instalación, "
+"sin\n"
+"necesidad de hardware específico**. Funciona en cualquier **iPad, tableta, "
+"laptop** o \n"
+"una máquina de PdV industrial.\n"
+"\n"
+"Necesitas conexión a internet para iniciar el Punto de venta, pero este "
+"permanecerá\n"
+"en línea incluso si la pierdes.\n"
+"\n"
+"\n"
+"Una interfaz estética\n"
+"----------------------------\n"
+"\n"
+"### Simple y llamativa\n"
+"\n"
+"Despídete de los softwares de PdV poco estéticos y anticuados. Disfruta la "
+"interfaz web de Odoo,\n"
+"está diseñada para vendedores modernos.\n"
+"\n"
+"### Diseñado para la productividad\n"
+"\n"
+"Ya sea para un restaurante o una tienda, puedes activar varias órdenes\n"
+"de forma simultánea para que tus clientes no tengan que esperar.\n"
+"\n"
+"### Una búsqueda increíblemente rápida\n"
+"\n"
+"Escanea productos, navega por categorías jerárquicas u obtén información "
+"rápida\n"
+"sobre los productos con un filtro ultrarrápido que abarca todo tu "
+"catálogo..\n"
+"\n"
+"Gestión de inventarios integrada\n"
+"-------------------------------\n"
+"\n"
+"Consolida todos tus equipos de ventas en tiempo real: tiendas, comercio\n"
+"electrónico y equipos de ventas. Obtén control del inventario en tiempo real "
+"y\n"
+"pronósticos precisos para gestionar las compras.\n"
+"\n"
+"Accede a un sistema completo de gestión de almacenes: consulta la "
+"disponibilidad\n"
+"de los productos, activa solicitudes de reabastecimiento y mucho más.\n"
+"\n"
+"Ofrece servicios al cliente en la tienda\n"
+"----------------------------------\n"
+"\n"
+"Proporciona una excelente experiencia de compra con servicios integrados en "
+"la tienda.\n"
+"Gestiona reparaciones, da seguimiento a garantías, atiende reclamos de "
+"clientes,\n"
+"planifica órdenes de entrega y mucho más.\n"
+"\n"
+"Integración con Facturación y Contabilidad\n"
+"----------------------------------\n"
+"\n"
+"Crea facturas para clientes con unos cuantos clics. Controla las ventas y el "
+"efectivo\n"
+"en tiempo real y usa los potentes reportes de Odoo para tomar mejores "
+"decisiones\n"
+"y mejorar la eficiencia de tu tienda.\n"
+"\n"
+"Olvídate de integrar varios programas. Odoo registra de forma automática "
+"todas\n"
+"las operaciones de ventas e inventario en tu libro mayor.\n"
+"\n"
+"Datos unificados en todas tus tiendas\n"
+"------------------------------\n"
+"\n"
+"Aplica nuevos productos, estrategias de precios y promociones de forma "
+"automática\n"
+"en las tiendas que elijas. Trabaja con una base de clientes unificada. No "
+"necesitas\n"
+"una interfaz compleja para gestionar una estrategia global en todas tus "
+"tiendas..\n"
+"\n"
+"Con Odoo como sistema central, cuentas con una solución que se adapta tanto "
+"a\n"
+"pequeñas tiendas como a grandes multinacionales.\n"
+"\n"
+"Conoce a tus clientes, dentro y fuera de la tienda\n"
+"--------------------------------------\n"
+"\n"
+"Las marcas exitosas integran todas las relaciones de sus clientes a través "
+"de\n"
+"todos sus canales para crear perfiles precisos y comunicarse con ellos "
+"durante sus decisiones de\n"
+"compra, ya sea en la tienda o en línea.\n"
+"\n"
+"Con Odoo obtienes una vista completa de tus clientes, incluyendo ventas "
+"multicanal,\n"
+"historial de interacciones, perfiles y mucho más.\n"
+"\n"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6419,6 +6565,12 @@ msgid "Open Customer Display"
 msgstr "Abrir pantalla para clientes"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
+msgid "Open Menu"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__open_session_ids
 msgid "Open PoS sessions that are using this payment method."
 msgstr "Sesiones de PdV abiertas que utilizan este método de pago."
@@ -6531,6 +6683,13 @@ msgstr "Productos opcionales"
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "Optional Products:"
 msgstr "Productos opcionales:"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid ""
+"Optional journal for the session closing entries, to keep their sequence and "
+"their options apart from the customer invoices."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_product_product__pos_optional_product_ids
@@ -6713,6 +6872,11 @@ msgstr "Órdenes"
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_order_all_filtered
 msgid "Orders Analysis"
 msgstr "Análisis de órdenes"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Orders journal"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7422,6 +7586,12 @@ msgid "Point of Sale Category"
 msgstr "Categoría de Punto de venta"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_journal.py:0
+msgid "Point of Sale Closing"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_search
 msgid "Point of Sale Config"
 msgstr "Configuración del punto de venta"
@@ -7889,12 +8059,6 @@ msgstr "Historial de impresión"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
-msgid "Print Report"
-msgstr "Imprimir reporte"
-
-#. module: point_of_sale
-#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/sale_details_button/sale_details_button.xml:0
 msgid "Print a report with all the sales of the current PoS Session"
 msgstr "Imprima un reporte con todas las ventas de la sesión de PdV actual"
@@ -8023,7 +8187,6 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/select_default_printer_popup/select_default_printer_popup.xml:0
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_printer_form
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_printers
@@ -8552,7 +8715,6 @@ msgstr "Volver a cargar"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/confirmation_dialog/confirmation_dialog.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/error_dialog/error_dialog.js:0
 #: code:addons/point_of_sale/static/src/app/components/popups/error_dialog/error_dialog.xml:0
@@ -9592,6 +9754,7 @@ msgstr "Existencias, configurador de productos, reabastecimiento, descuentos"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 msgid "Stop"
 msgstr "Detener"
@@ -11473,17 +11636,6 @@ msgstr ""
 "del producto entre la información del producto."
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
-msgid ""
-"Whenever you close a session, one entry is generated in the following "
-"accounting journal for all the orders not invoiced. Invoices are recorded in "
-"accounting separately."
-msgstr ""
-"Cada vez que cierra una sesión se genera un asiento en el siguiente registro "
-"contable para todas las órdenes no facturadas. Las facturas se registran en "
-"la contabilidad por separado."
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/select_default_printer_popup/select_default_printer_popup.xml:0
 msgid "Which one would you like to use as default for this device?"
@@ -12210,7 +12362,7 @@ msgstr "en"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "open orders planned for later."
-msgstr ""
+msgstr "órdenes pendientes planificadas para después."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -12293,3 +12445,21 @@ msgstr "con un valor de"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt_product_line
 msgid "x"
 msgstr "x"
+
+#~ msgid "Create Product"
+#~ msgstr "Crear producto"
+
+#~ msgid "Install App"
+#~ msgstr "Instalar aplicación"
+
+#~ msgid "Print Report"
+#~ msgstr "Imprimir reporte"
+
+#~ msgid ""
+#~ "Whenever you close a session, one entry is generated in the following "
+#~ "accounting journal for all the orders not invoiced. Invoices are recorded "
+#~ "in accounting separately."
+#~ msgstr ""
+#~ "Cada vez que cierra una sesión se genera un asiento en el siguiente "
+#~ "registro contable para todas las órdenes no facturadas. Las facturas se "
+#~ "registran en la contabilidad por separado."

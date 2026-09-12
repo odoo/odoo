@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:44+0000\n"
+"POT-Creation-Date: 2026-09-11 17:41+0000\n"
 "PO-Revision-Date: 2026-08-31 14:29+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-s19-4/mrp/"
@@ -200,6 +200,11 @@ msgstr "'Готовая продукция - %s' % object.name"
 #: model:ir.actions.report,print_report_name:mrp.action_report_mrp_mo_overview
 msgid "'MO Overview - %s' % object.display_name"
 msgstr "'Обзор МО - %s' % object.display_name"
+
+#. module: mrp
+#: model:ir.actions.report,print_report_name:mrp.action_report_mrp_packages
+msgid "'Packages - %s' % (object.name)"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_production_order
@@ -452,6 +457,11 @@ msgid "<span class=\"o_stat_text\">Manufacturing</span>"
 msgstr "<span class=\"o_stat_text\">Производство</span>"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "<span class=\"o_stat_text\">Moves</span>"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "<span class=\"o_stat_text\">OEE</span>"
 msgstr "<span class=\"o_stat_text\">OEE</span>"
@@ -470,6 +480,11 @@ msgstr "<span class=\"o_stat_text\">Операции<br/>Производите�
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Overview</span>"
 msgstr "<span class=\"o_stat_text\">Обзор</span>"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "<span class=\"o_stat_text\">Packages</span>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -705,6 +720,11 @@ msgid ""
 msgstr "Продукт с комплектной спецификацией не может иметь правил восполнения."
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_res_groups
+msgid "Access Groups"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_rule__action
 msgid "Action"
 msgstr "Действие"
@@ -902,11 +922,6 @@ msgstr "Распределение"
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
 msgid "Allocation Report"
 msgstr "Отчет о распределении"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
-msgid "Allocation Report Labels"
-msgstr "Ярлыки отчетов о распределении"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__allow_workorder_dependencies
@@ -1234,6 +1249,7 @@ msgstr ""
 "связанных обратных заказов"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__barcode
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__barcode
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
 msgid "Barcode"
@@ -2294,6 +2310,11 @@ msgid "Destination Location"
 msgstr "Место назначения"
 
 #. module: mrp
+#: model:ir.actions.act_window,name:mrp.action_detailed_operations
+msgid "Detailed Operations"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Details"
 msgstr "Детали"
@@ -2361,11 +2382,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_report_stock_report_stock_rule__display_name
 #: model:ir.model.fields,field_description:mrp.field_res_company__display_name
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:mrp.field_res_groups__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_allocation_report__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_forecasted_product_product__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_lot__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_move__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_move_line__display_name
+#: model:ir.model.fields,field_description:mrp.field_stock_package__display_name
+#: model:ir.model.fields,field_description:mrp.field_stock_package_history__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_picking__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_quant__display_name
@@ -2911,11 +2935,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_report_stock_report_stock_rule__id
 #: model:ir.model.fields,field_description:mrp.field_res_company__id
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__id
+#: model:ir.model.fields,field_description:mrp.field_res_groups__id
 #: model:ir.model.fields,field_description:mrp.field_stock_allocation_report__id
 #: model:ir.model.fields,field_description:mrp.field_stock_forecasted_product_product__id
 #: model:ir.model.fields,field_description:mrp.field_stock_lot__id
 #: model:ir.model.fields,field_description:mrp.field_stock_move__id
 #: model:ir.model.fields,field_description:mrp.field_stock_move_line__id
+#: model:ir.model.fields,field_description:mrp.field_stock_package__id
+#: model:ir.model.fields,field_description:mrp.field_stock_package_history__id
 #: model:ir.model.fields,field_description:mrp.field_stock_picking__id
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__id
 #: model:ir.model.fields,field_description:mrp.field_stock_quant__id
@@ -3379,6 +3406,11 @@ msgid "Link between products and their UoMs"
 msgstr ""
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "List view of detailed operations"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__location_id
 msgid "Location"
 msgstr "Местоположение"
@@ -3653,6 +3685,7 @@ msgstr "Тип производственной операции"
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__mo_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__production_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__production_id
+#: model:ir.model.fields,field_description:mrp.field_stock_package_history__production_id
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -4451,9 +4484,42 @@ msgid "PDF"
 msgstr "PDF"
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_stock_package
+msgid "Package"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
+msgid "Package Content"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__package_history_ids
+msgid "Package History"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
+msgid "Package Label"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "Package barcode"
 msgstr "Штрих-код упаковки"
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_production.py:0
+#: model:ir.actions.report,name:mrp.action_report_mrp_packages
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Packages"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__packages_count
+msgid "Packages Count"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__bom_id
@@ -4735,8 +4801,18 @@ msgstr "Печать"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
+msgid "Print label as:"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
 msgid "Print labels as:"
 msgstr "Печатайте этикетки как:"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
+msgid "Print on \"Put in Pack\""
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
@@ -5340,6 +5416,11 @@ msgid "Reserved"
 msgstr "Зарезервировано"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Reset to Draft"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__resource_id
 msgid "Resource"
 msgstr "Ресурс"
@@ -5402,6 +5483,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__message_has_sms_error
 msgid "SMS Delivery error"
 msgstr "Ошибка доставки SMS"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter__barcode
+msgid "Scan to select the workcenter in shopfloor."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split_line__date
@@ -5527,6 +5613,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_replenishment_tree_view
 msgid "Set as Bill of Materials"
 msgstr "Установить как спецификацию"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Set to In Progress"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_configuration
@@ -5832,6 +5923,11 @@ msgid "Stock Moves"
 msgstr "Движения по складам"
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_stock_package_history
+msgid "Stock Package History"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model,name:mrp.model_stock_forecasted_product_product
 msgid "Stock Replenishment Report"
 msgstr "Отчет о пополнении запасов"
@@ -5976,6 +6072,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "The backorder %s has been created."
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.constraint,message:mrp.constraint_mrp_workcenter_barcode_company_uniq
+msgid "The barcode for a workcenter must be unique per company."
 msgstr ""
 
 #. module: mrp
@@ -6407,6 +6508,12 @@ msgid "To Produce"
 msgstr "Производить"
 
 #. module: mrp
+#. odoo-javascript
+#: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
+msgid "To Replenish"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__search_date_category__today
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Today"
@@ -6584,8 +6691,8 @@ msgid "Unable to split with more than the quantity to produce."
 msgstr "Невозможно разделить больше, чем нужно для производства."
 
 #. module: mrp
+#: model:ir.actions.server,name:mrp.action_production_order_unbuild
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__unbuild_id
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "Unbuild"
 msgstr "Unbuild"
@@ -6803,6 +6910,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "Visible to all"
 msgstr "Видно всем"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_move_line__visual_lot_name
+msgid "Visual Pre-generated Lot"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__reservation_state__confirmed
@@ -7528,156 +7640,161 @@ msgstr "реальная продолжительность"
 msgid "split"
 msgstr "сплит"
 
-msgid "Allocation Report for Manufacturing Orders"
-msgstr "Отчет о распределении производственных заказов"
+#~ msgid "Allocation Report Labels"
+#~ msgstr "Ярлыки отчетов о распределении"
 
-msgid "Create backorder"
-msgstr "Создать резервный заказ"
+#~ msgid "Allocation Report for Manufacturing Orders"
+#~ msgstr "Отчет о распределении производственных заказов"
 
-msgid "MRP Reception Report"
-msgstr "Отчет о приеме на производство"
+#~ msgid "Create backorder"
+#~ msgstr "Создать резервный заказ"
 
-msgid "No Backorder"
-msgstr "Нет заказа на возврат"
+#~ msgid "MRP Reception Report"
+#~ msgstr "Отчет о приеме на производство"
 
-msgid "Produce All"
-msgstr "Производить все"
+#~ msgid "No Backorder"
+#~ msgstr "Нет заказа на возврат"
 
-msgid "Set Quantities & Validate"
-msgstr "Установка количества и проверка"
+#~ msgid "Produce All"
+#~ msgstr "Производить все"
 
-msgid "Show Produce"
-msgstr "Показать продукцию"
+#~ msgid "Set Quantities & Validate"
+#~ msgstr "Установка количества и проверка"
 
-msgid "Show Produce All"
-msgstr "Показать все"
+#~ msgid "Show Produce"
+#~ msgstr "Показать продукцию"
 
-msgid "Stock Reception Report"
-msgstr "Отчет о приеме акций"
+#~ msgid "Show Produce All"
+#~ msgstr "Показать все"
 
-msgid "Technical field to check if produce all button can be shown"
-msgstr ""
-"Техническое поле для проверки возможности отображения кнопки \"Произвести все"
+#~ msgid "Stock Reception Report"
+#~ msgstr "Отчет о приеме акций"
 
-msgid "Technical field to check if produce button can be shown"
-msgstr ""
-"Техническое поле для проверки возможности отображения кнопки производства"
+#~ msgid "Technical field to check if produce all button can be shown"
+#~ msgstr ""
+#~ "Техническое поле для проверки возможности отображения кнопки \"Произвести "
+#~ "все"
 
-msgid "Use Reception Report with Manufacturing Orders"
-msgstr "Использование отчета \"Прием\" с производственными заказами"
+#~ msgid "Technical field to check if produce button can be shown"
+#~ msgstr ""
+#~ "Техническое поле для проверки возможности отображения кнопки производства"
 
-msgid ""
-"View and allocate production quantities to customer orders or other "
-"manufacturing orders"
-msgstr ""
-"Просмотр и распределение произведенных количеств по заказам клиентов или "
-"другим производственным заказам"
+#~ msgid "Use Reception Report with Manufacturing Orders"
+#~ msgstr "Использование отчета \"Прием\" с производственными заказами"
 
-msgid "Check availability"
-msgstr "Проверить наличие"
+#~ msgid ""
+#~ "View and allocate production quantities to customer orders or other "
+#~ "manufacturing orders"
+#~ msgstr ""
+#~ "Просмотр и распределение произведенных количеств по заказам клиентов или "
+#~ "другим производственным заказам"
 
-msgid ""
-"Create operation level dependencies that will influence both planning and "
-"the status of work orders upon MO confirmation. If this feature is ticked, "
-"and nothing is specified, Odoo will assume that all operations can be "
-"started simultaneously."
-msgstr ""
-"Создайте зависимости на уровне операций, которые будут влиять как на "
-"планирование, так и на статус рабочих заказов при подтверждении МО. Если эта "
-"функция отмечена, но ничего не указано, Odoo будет считать, что все операции "
-"могут быть начаты одновременно."
+#~ msgid "Check availability"
+#~ msgstr "Проверить наличие"
 
-msgid "MO Cancelled"
-msgstr "Производственный заказ отменен"
+#~ msgid ""
+#~ "Create operation level dependencies that will influence both planning and "
+#~ "the status of work orders upon MO confirmation. If this feature is "
+#~ "ticked, and nothing is specified, Odoo will assume that all operations "
+#~ "can be started simultaneously."
+#~ msgstr ""
+#~ "Создайте зависимости на уровне операций, которые будут влиять как на "
+#~ "планирование, так и на статус рабочих заказов при подтверждении МО. Если "
+#~ "эта функция отмечена, но ничего не указано, Odoo будет считать, что все "
+#~ "операции могут быть начаты одновременно."
 
-msgid "MO Confirmed"
-msgstr "Производственный заказ подтвержден"
+#~ msgid "MO Cancelled"
+#~ msgstr "Производственный заказ отменен"
 
-msgid "MO Done"
-msgstr "Производственный заказ выполнен"
+#~ msgid "MO Confirmed"
+#~ msgstr "Производственный заказ подтвержден"
 
-msgid "MO Progress"
-msgstr "Производственный заказ в процессе"
+#~ msgid "MO Done"
+#~ msgstr "Производственный заказ выполнен"
 
-msgid "MO To Close"
-msgstr "Производственный заказ к закрытию"
+#~ msgid "MO Progress"
+#~ msgstr "Производственный заказ в процессе"
 
-msgid "Operation Dependencies"
-msgstr "Зависимости операций"
+#~ msgid "MO To Close"
+#~ msgstr "Производственный заказ к закрытию"
 
-msgid ""
-"Set the order that work orders should be processed in. Activate the feature "
-"within each BoM's Miscellaneous tab"
-msgstr ""
-"Установите порядок, в котором должны обрабатываться рабочие заказы. "
-"Активируйте функцию на вкладке \"Разное\" каждого BoM"
+#~ msgid "Operation Dependencies"
+#~ msgstr "Зависимости операций"
 
-msgid "The number of products already handled by this work order"
-msgstr "Количество произведённых продуктов по этому производственному заданию."
+#~ msgid ""
+#~ "Set the order that work orders should be processed in. Activate the "
+#~ "feature within each BoM's Miscellaneous tab"
+#~ msgstr ""
+#~ "Установите порядок, в котором должны обрабатываться рабочие заказы. "
+#~ "Активируйте функцию на вкладке \"Разное\" каждого BoM"
+
+#~ msgid "The number of products already handled by this work order"
+#~ msgstr ""
+#~ "Количество произведённых продуктов по этому производственному заданию."
 
 #, fuzzy
-msgid "Time Remaining"
-msgstr "Оставшееся время"
+#~ msgid "Time Remaining"
+#~ msgstr "Оставшееся время"
 
-msgid "Total To Consume"
-msgstr "Всего к употреблению"
+#~ msgid "Total To Consume"
+#~ msgstr "Всего к употреблению"
 
-msgid "Unbuild: %s"
-msgstr "Unbuild: %s"
+#~ msgid "Unbuild: %s"
+#~ msgstr "Unbuild: %s"
 
-msgid "Use Operation Dependencies"
-msgstr "Использование зависимостей операций"
+#~ msgid "Use Operation Dependencies"
+#~ msgstr "Использование зависимостей операций"
 
-msgid "Website Messages"
-msgstr "Веб-сайт сообщения"
+#~ msgid "Website Messages"
+#~ msgstr "Веб-сайт сообщения"
 
-msgid "Website communication history"
-msgstr "История общений с сайта"
+#~ msgid "Website communication history"
+#~ msgstr "История общений с сайта"
 
-msgid "days"
-msgstr "дней"
+#~ msgid "days"
+#~ msgstr "дней"
 
-msgid "Final Location from procurement"
-msgstr "Конечная локация из закупки"
+#~ msgid "Final Location from procurement"
+#~ msgstr "Конечная локация из закупки"
 
-msgid ""
-"<p class=\"o_view_nocontent_smiling_face\">\n"
-"                        Upload files to your product\n"
-"                    </p><p>\n"
-"                        Use this feature to store any files, like drawings "
-"or specifications.\n"
-"                    </p>"
-msgstr ""
-"<p class=\"o_view_nocontent_smiling_face\">\n"
-"                        Загрузить файлы к вашему продукту\n"
-"                    </p><p>\n"
-"                        Используйте эту функцию для хранения любых файлов, "
-"например, чертежей или спецификаций.\n"
-"                    </p>"
+#~ msgid ""
+#~ "<p class=\"o_view_nocontent_smiling_face\">\n"
+#~ "                        Upload files to your product\n"
+#~ "                    </p><p>\n"
+#~ "                        Use this feature to store any files, like "
+#~ "drawings or specifications.\n"
+#~ "                    </p>"
+#~ msgstr ""
+#~ "<p class=\"o_view_nocontent_smiling_face\">\n"
+#~ "                        Загрузить файлы к вашему продукту\n"
+#~ "                    </p><p>\n"
+#~ "                        Используйте эту функцию для хранения любых "
+#~ "файлов, например, чертежей или спецификаций.\n"
+#~ "                    </p>"
 
-msgid "Attachments Count"
-msgstr "Счетчик вложений"
+#~ msgid "Attachments Count"
+#~ msgstr "Счетчик вложений"
 
-msgid "Files attached to the product."
-msgstr "Файлы, прилагаемые к продукту."
+#~ msgid "Files attached to the product."
+#~ msgstr "Файлы, прилагаемые к продукту."
 
-msgid "Hidden"
-msgstr "Скрытый"
+#~ msgid "Hidden"
+#~ msgstr "Скрытый"
 
-msgid ""
-"Leave hidden if document only accessible on product form.\n"
-"Select Bill of Materials to visualise this document as a product attachment "
-"when this product is in a bill of material."
-msgstr ""
-"Скройте документ, если его нужно видеть только в карточке товара. \n"
-"Чтобы документ отображался как вложение и в спецификации, установите флажок "
-"«Спецификация»."
+#~ msgid ""
+#~ "Leave hidden if document only accessible on product form.\n"
+#~ "Select Bill of Materials to visualise this document as a product "
+#~ "attachment when this product is in a bill of material."
+#~ msgstr ""
+#~ "Скройте документ, если его нужно видеть только в карточке товара. \n"
+#~ "Чтобы документ отображался как вложение и в спецификации, установите "
+#~ "флажок «Спецификация»."
 
-msgid "MRP : Visible at"
-msgstr "MRP: Отображается в"
+#~ msgid "MRP : Visible at"
+#~ msgstr "MRP: Отображается в"
 
-msgid "Product Attachments"
-msgstr "Приложения к продуктам"
+#~ msgid "Product Attachments"
+#~ msgstr "Приложения к продуктам"
 
-msgid "Product Document"
-msgstr "Документ товара"
+#~ msgid "Product Document"
+#~ msgstr "Документ товара"

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:41+0000\n"
+"POT-Creation-Date: 2026-09-11 17:42+0000\n"
 "PO-Revision-Date: 2026-08-31 20:29+0000\n"
 "Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -92,14 +92,9 @@ msgid "AVCO Value"
 msgstr "AVCO Value"
 
 #. module: stock_account
-#: model:ir.model,name:stock_account.model_account_account
-msgid "Account"
-msgstr "Akun"
-
-#. module: stock_account
-#: model:ir.model,name:stock_account.model_account_chart_template
-msgid "Account Chart Template"
-msgstr "Templat Bagan Akun"
+#: model:ir.model,name:stock_account.model_res_groups
+msgid "Access Groups"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_move__cogs_aml_ids
@@ -116,13 +111,6 @@ msgstr "Tanggal Akuntansi"
 #: model_terms:ir.ui.view,arch_db:stock_account.view_location_form_inherit
 msgid "Accounting Information"
 msgstr "Informasi Akuntansi"
-
-#. module: stock_account
-#. odoo-javascript
-#: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.js:0
-#: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.xml:0
-msgid "Accrual"
-msgstr "Akrual"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
@@ -171,12 +159,6 @@ msgstr ""
 "produk untuk mengupdate harga biaya mereka."
 
 #. module: stock_account
-#. odoo-javascript
-#: code:addons/stock_account/static/src/stock_valuation/filters/filter_warehouses.xml:0
-msgid "All Warehouses"
-msgstr ""
-
-#. module: stock_account
 #: model:ir.model,name:stock_account.model_account_analytic_account
 msgid "Analytic Account"
 msgstr "Akun Analitik"
@@ -192,35 +174,12 @@ msgid "Analytic Plan"
 msgstr "Rencana Analitik"
 
 #. module: stock_account
-#. odoo-javascript
-#: code:addons/stock_account/static/src/stock_valuation/filters/filter_date.xml:0
-msgid "As of"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_account_account__account_stock_variation_id
-#: model:ir.model.fields,help:stock_account.field_product_category__account_stock_variation_id
-msgid ""
-"At closing, register the inventory variation of the period into a specific "
-"account"
-msgstr "Pada closing, daftarkan variasi inventaris periode ke akun spesifik"
-
-#. module: stock_account
-#. odoo-javascript
-#: code:addons/stock_account/static/src/stock_valuation/filters/filter_date.xml:0
-msgid "At the date of"
-msgstr ""
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__avg_cost
 #: model:ir.model.fields,field_description:stock_account.field_stock_lot__avg_cost
 msgid "Average Cost"
 msgstr "Rata-Rata Ongkos"
 
 #. module: stock_account
-#: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__average
-#: model:ir.model.fields.selection,name:stock_account.selection__product_template__cost_method__average
-#: model:ir.model.fields.selection,name:stock_account.selection__res_company__cost_method__average
 #: model:ir.model.fields.selection,name:stock_account.selection__stock_quant__cost_method__average
 msgid "Average Cost (AVCO)"
 msgstr "Biaya Rata-Rata (AVCO)"
@@ -256,23 +215,6 @@ msgstr ""
 #: code:addons/stock_account/models/res_company.py:0
 msgid "Closing: Location Reclassification - [%(account)s]"
 msgstr "Closing: Reklasifikasi Lokasi - [%(account)s]"
-
-#. module: stock_account
-#. odoo-python
-#: code:addons/stock_account/models/res_company.py:0
-msgid "Closing: Stock Variation Global for company [%(company)s]"
-msgstr "Closing: Variasi Global Stok untuk perusahaan [%(company)s]"
-
-#. module: stock_account
-#. odoo-python
-#: code:addons/stock_account/models/res_company.py:0
-msgid "Closing: Stock Variation Over Period"
-msgstr "Closing: Variasi Stok Selama Periode"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_account_move_line__cogs_origin_id
-msgid "Cogs Origin"
-msgstr "Origin Cogs"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_res_company
@@ -331,15 +273,6 @@ msgid "Costing Method"
 msgstr "Metode penetapan biaya"
 
 #. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_account_account__account_stock_expense_id
-msgid ""
-"Counterpart used at closing for accounting adjustments to inventory "
-"valuation."
-msgstr ""
-"Bandingan yang digunakan pada closing untuk penyesuaian akuntansi untuk "
-"valuasi inventaris."
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_picking__country_code
 #: model:ir.model.fields,field_description:stock_account.field_stock_picking_type__country_code
 msgid "Country Code"
@@ -354,12 +287,6 @@ msgstr "Dibuat oleh"
 #: model:ir.model.fields,field_description:stock_account.field_product_value__create_date
 msgid "Created on"
 msgstr "Dibuat pada"
-
-#. module: stock_account
-#. odoo-javascript
-#: code:addons/stock_account/static/src/stock_valuation/line/line.xml:0
-msgid "Credit"
-msgstr "Kredit"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__currency_id
@@ -384,11 +311,6 @@ msgid "Current Value Details"
 msgstr "Detail Value Saat Ini"
 
 #. module: stock_account
-#: model:ir.model.fields.selection,name:stock_account.selection__res_company__inventory_period__daily
-msgid "Daily"
-msgstr "Harian"
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__date
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__date
 msgid "Date"
@@ -405,12 +327,6 @@ msgstr ""
 "otomatis. Bila kosong, tanggal inventaris akan digunakan."
 
 #. module: stock_account
-#. odoo-javascript
-#: code:addons/stock_account/static/src/stock_valuation/line/line.xml:0
-msgid "Debit"
-msgstr "Debit"
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__description
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__description
 msgid "Description"
@@ -422,19 +338,18 @@ msgid "Display Lots & Serial Numbers on Invoices"
 msgstr "Tampilkan Nomor Seri & Lot pada Faktur"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_account_account__display_name
 #: model:ir.model.fields,field_description:stock_account.field_account_analytic_account__display_name
 #: model:ir.model.fields,field_description:stock_account.field_account_analytic_plan__display_name
-#: model:ir.model.fields,field_description:stock_account.field_account_chart_template__display_name
 #: model:ir.model.fields,field_description:stock_account.field_account_move__display_name
 #: model:ir.model.fields,field_description:stock_account.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:stock_account.field_account_stock_valuation_report__display_name
 #: model:ir.model.fields,field_description:stock_account.field_product_category__display_name
 #: model:ir.model.fields,field_description:stock_account.field_product_product__display_name
 #: model:ir.model.fields,field_description:stock_account.field_product_template__display_name
 #: model:ir.model.fields,field_description:stock_account.field_product_value__display_name
 #: model:ir.model.fields,field_description:stock_account.field_res_company__display_name
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__display_name
-#: model:ir.model.fields,field_description:stock_account.field_stock_account_stock_valuation_report__display_name
+#: model:ir.model.fields,field_description:stock_account.field_res_groups__display_name
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__display_name
 #: model:ir.model.fields,field_description:stock_account.field_stock_forecasted_product_product__display_name
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory_adjustment_name__display_name
@@ -452,30 +367,6 @@ msgstr "Nama Tampilan"
 #: model:res.groups,name:stock_account.group_lot_on_invoice
 msgid "Display Serial & Lot Number on Invoices"
 msgstr "Tampilkan Nomor Seri & Lot pada Faktur"
-
-#. module: stock_account
-#. odoo-javascript
-#. odoo-python
-#: code:addons/stock_account/report/stock_valuation_report.py:0
-#: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.xml:0
-msgid "Ending Stock"
-msgstr "Stok Akhir"
-
-#. module: stock_account
-#. odoo-python
-#: code:addons/stock_account/models/res_company.py:0
-msgid "Everything is correctly closed"
-msgstr "Semuanya dengan tepat di-tutup"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_account_account__account_stock_expense_id
-msgid "Expense Account"
-msgstr "Akun Beban"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_account_account__account_stock_expense_active
-msgid "Expense Account Active"
-msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_account_id
@@ -501,30 +392,18 @@ msgid "For %(quantity)s %(uom)s (%(price_unit)s per %(uom)s)"
 msgstr "Untuk %(quantity)s %(uom)s (%(price_unit)s per %(uom)s)"
 
 #. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_account_form
-msgid "For Perpetual Continental Only"
-msgstr ""
-
-#. module: stock_account
-#. odoo-javascript
-#: code:addons/stock_account/static/src/stock_valuation/buttons_bar/buttons_bar.xml:0
-msgid "Generate Entry"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_account_account__id
 #: model:ir.model.fields,field_description:stock_account.field_account_analytic_account__id
 #: model:ir.model.fields,field_description:stock_account.field_account_analytic_plan__id
-#: model:ir.model.fields,field_description:stock_account.field_account_chart_template__id
 #: model:ir.model.fields,field_description:stock_account.field_account_move__id
 #: model:ir.model.fields,field_description:stock_account.field_account_move_line__id
+#: model:ir.model.fields,field_description:stock_account.field_account_stock_valuation_report__id
 #: model:ir.model.fields,field_description:stock_account.field_product_category__id
 #: model:ir.model.fields,field_description:stock_account.field_product_product__id
 #: model:ir.model.fields,field_description:stock_account.field_product_template__id
 #: model:ir.model.fields,field_description:stock_account.field_product_value__id
 #: model:ir.model.fields,field_description:stock_account.field_res_company__id
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__id
-#: model:ir.model.fields,field_description:stock_account.field_stock_account_stock_valuation_report__id
+#: model:ir.model.fields,field_description:stock_account.field_res_groups__id
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__id
 #: model:ir.model.fields,field_description:stock_account.field_stock_forecasted_product_product__id
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory_adjustment_name__id
@@ -554,14 +433,6 @@ msgid "If checked, the valuation will be specific by Lot/Serial number."
 msgstr "Bila dicentang, nilai akan khusus berdasarkan nomor Seri/Lot."
 
 #. module: stock_account
-#. odoo-javascript
-#. odoo-python
-#: code:addons/stock_account/report/stock_valuation_report.py:0
-#: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.xml:0
-msgid "Initial Balance"
-msgstr "Saldo Awal"
-
-#. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_location.py:0
 msgid "Invalid search operator or value"
@@ -573,12 +444,6 @@ msgid "Inventory Adjustment Reference / Reason"
 msgstr "Referensi / Alasan Inventory Adjustment"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_account_bank_statement_line__inventory_closing
-#: model:ir.model.fields,field_description:stock_account.field_account_move__inventory_closing
-msgid "Inventory Closing"
-msgstr "Closing Inventaris"
-
-#. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_location
 msgid "Inventory Location"
 msgstr "Lokasi Inventaris"
@@ -586,25 +451,10 @@ msgstr "Lokasi Inventaris"
 #. module: stock_account
 #. odoo-javascript
 #. odoo-python
-#: code:addons/stock_account/report/stock_valuation_report.py:0
+#: code:addons/stock_account/report/account_stock_valuation_report.py:0
 #: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.js:0
-#: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.xml:0
 msgid "Inventory Loss"
 msgstr "Kerugian Persediaan"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_res_company__inventory_period
-msgid "Inventory Period"
-msgstr "Periode Inventaris"
-
-#. module: stock_account
-#. odoo-python
-#: code:addons/stock_account/models/account_chart_template.py:0
-#: model:ir.actions.client,name:stock_account.action_report_stock_valuation
-#: model:ir.model.fields,field_description:stock_account.field_product_category__property_valuation
-#: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form_stock
-msgid "Inventory Valuation"
-msgstr "Penilaian Stok Persediaan"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_account_move_line__cogs_move_ids
@@ -647,16 +497,6 @@ msgid "Is valued inside the company"
 msgstr "Apakah dinilai di dalam perusahaan"
 
 #. module: stock_account
-#. odoo-python
-#: code:addons/stock_account/models/res_company.py:0
-msgid ""
-"It exists closing entries after the selected date. Cancel them before "
-"generate an entry prior to them"
-msgstr ""
-"Tersedia entri closing setelah tanggal terpilih. Batalkan sebelum membuat "
-"entri sebelum mereka"
-
-#. module: stock_account
 #: model:ir.model,name:stock_account.model_account_move
 msgid "Journal Entry"
 msgstr "Entri Jurnal"
@@ -664,12 +504,6 @@ msgstr "Entri Jurnal"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_move_line
 msgid "Journal Item"
-msgstr "Item Jurnal"
-
-#. module: stock_account
-#. odoo-python
-#: code:addons/stock_account/models/res_company.py:0
-msgid "Journal Items"
 msgstr "Item Jurnal"
 
 #. module: stock_account
@@ -713,19 +547,9 @@ msgid "Lots & Serial numbers will appear on the invoice"
 msgstr "Nomor Seri & Lot akan muncul pada faktur"
 
 #. module: stock_account
-#: model:ir.model.fields.selection,name:stock_account.selection__res_company__inventory_period__manual
-msgid "Manual"
-msgstr "Manual"
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__value_manual
 msgid "Manual Value"
 msgstr "Value Manual"
-
-#. module: stock_account
-#: model:ir.model.fields.selection,name:stock_account.selection__res_company__inventory_period__monthly
-msgid "Monthly"
-msgstr "Bulanan"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__move_id
@@ -744,77 +568,9 @@ msgid "Only is set (= True) is supported in search for remaining_qty."
 msgstr "Only is set (= True) is supported in search for remaining_qty."
 
 #. module: stock_account
-#. odoo-python
-#: code:addons/stock_account/models/product.py:0
-msgid ""
-"Only the value 'periodic' and 'real_time' are accepted to search on "
-"valuation field."
-msgstr ""
-"Hanya value 'periodic' dan 'real_time' diterima untuk dicari di field "
-"valuation."
-
-#. module: stock_account
-#. odoo-javascript
-#: code:addons/stock_account/static/src/stock_valuation/filters/filter_options.xml:0
-msgid "Options"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__periodic
-#: model:ir.model.fields.selection,name:stock_account.selection__product_template__valuation__periodic
-#: model:ir.model.fields.selection,name:stock_account.selection__res_company__inventory_valuation__periodic
-msgid "Periodic (at closing)"
-msgstr "Berkala (pada penutupan)"
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_category__property_valuation
-msgid ""
-"Periodic: The accounting entries are suggested manually in the inventory "
-"valuation report.\n"
-"        Perpetual: An accounting entry is automatically created to value the "
-"inventory when a product is billed or invoiced.\n"
-"        "
-msgstr ""
-"Periodik: Entri-entri akuntansi disarankan secara manual di laporan valuasi "
-"inventaris.\n"
-"        Perpetual: Entri akuntansi secara otomatis dibuat untuk menilai "
-"inventaris saat produk ditagih atau difaktur.\n"
-"        "
-
-#. module: stock_account
-#: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__real_time
-#: model:ir.model.fields.selection,name:stock_account.selection__product_template__valuation__real_time
-#: model:ir.model.fields.selection,name:stock_account.selection__res_company__inventory_valuation__real_time
-msgid "Perpetual (at invoicing)"
-msgstr "Perpetual (pada pemfakturan)"
-
-#. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_picking_type
 msgid "Picking Type"
 msgstr "Tipe Picking"
-
-#. module: stock_account
-#. odoo-python
-#: code:addons/stock_account/models/res_company.py:0
-msgid "Please set the Journal for Inventory Valuation in the settings."
-msgstr "Silakan tetapkan Jurnal untuk Valuasi Inventaris di pengaturan."
-
-#. module: stock_account
-#. odoo-python
-#: code:addons/stock_account/models/res_company.py:0
-msgid ""
-"Please set the Valuation Account for Inventory Valuation in the settings."
-msgstr "Silakan tetapkan Akun valuasi untuk Valuasi Inventaris di pengaturan."
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_category__property_price_difference_account_id
-msgid "Price Difference Account"
-msgstr "Akun Perbedaan Harga"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_category__property_price_difference_account_active
-msgid "Price Difference Account Active"
-msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__price_unit
@@ -922,9 +678,6 @@ msgstr "Harus Menunjukkan Tanggal Akuntansi"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__standard_price
-#: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__standard
-#: model:ir.model.fields.selection,name:stock_account.selection__product_template__cost_method__standard
-#: model:ir.model.fields.selection,name:stock_account.selection__res_company__cost_method__standard
 #: model:ir.model.fields.selection,name:stock_account.selection__stock_quant__cost_method__standard
 msgid "Standard Price"
 msgstr "Standar Harga"
@@ -936,44 +689,13 @@ msgid ""
 "the product.\n"
 "        Average Cost (AVCO): The products are valued at weighted average "
 "cost.\n"
-"        First In First Out (FIFO): The products are valued supposing those "
-"that enter the company first will also leave it first.\n"
 "        "
 msgstr ""
-"Standard Price: Produk akan dihargai pada harga standar yang ditetapkan pada "
-"produk\n"
-"        Average Cost (AVCO): Produk akan dihargai dengan weighted average "
-"cost.\n"
-"        First In First Out (FIFO): Produk akan dihargai dengan asumsi produk "
-"yang masuk perusahaan terlebih dahulu juga akan keluar terlebih dahulu.\n"
-"        "
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_avco_report
 msgid "Stock AVCO Justifier"
 msgstr "Justifier Stock AVCO"
-
-#. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
-msgid "Stock Account"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.actions.server,name:stock_account.ir_cron_post_stock_valuation_ir_actions_server
-msgid "Stock Account: Inventory Valuation Closing"
-msgstr "Akun Stok: Valuasi Closing Inventaris"
-
-#. module: stock_account
-#. odoo-python
-#: code:addons/stock_account/models/res_company.py:0
-msgid "Stock Closing"
-msgstr "Closing Stok"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_journal
-#: model:ir.model.fields,field_description:stock_account.field_res_company__account_stock_journal_id
-msgid "Stock Journal"
-msgstr "Jurnal Stok"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move
@@ -992,40 +714,14 @@ msgstr "Laporan Replenishment Stok"
 #. module: stock_account
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_account_forecasted/forecasted_header.js:0
-#: model:ir.model,name:stock_account.model_stock_account_stock_valuation_report
+#: model:ir.model,name:stock_account.model_account_stock_valuation_report
 msgid "Stock Valuation"
 msgstr "Stock Valuation"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_valuation_account_id
-#: model:ir.model.fields,field_description:stock_account.field_res_company__account_stock_valuation_id
 #: model:ir.model.fields,field_description:stock_account.field_stock_location__valuation_account_id
 msgid "Stock Valuation Account"
 msgstr "Akun Valuasi stok"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_valuation_account_active
-msgid "Stock Valuation Account Active"
-msgstr ""
-
-#. module: stock_account
-#. odoo-javascript
-#. odoo-python
-#: code:addons/stock_account/report/stock_valuation_report.py:0
-#: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.xml:0
-#: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
-msgid "Stock Variation"
-msgstr "Variasi Stok"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_category__account_stock_variation_id
-msgid "Stock Variation Account"
-msgstr "Akun Variasi Stok"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_category__account_stock_variation_active
-msgid "Stock Variation Account Active"
-msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product__company_currency_id
@@ -1135,9 +831,6 @@ msgstr "User"
 
 #. module: stock_account
 #: model:ir.actions.act_window,name:stock_account.stock_move_valuation_action
-#: model:ir.model.fields,field_description:stock_account.field_product_product__valuation
-#: model:ir.model.fields,field_description:stock_account.field_product_template__valuation
-#: model:ir.model.fields,field_description:stock_account.field_res_company__inventory_valuation
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 msgid "Valuation"
 msgstr "Penilaian"
@@ -1195,46 +888,9 @@ msgstr ""
 "        Digunakan untuk menghitung margin pada sale order."
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_account_account__account_stock_variation_id
-msgid "Variation Account"
-msgstr "Akun Variasi"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_account_account__account_stock_variation_active
-msgid "Variation Account Active"
-msgstr ""
-
-#. module: stock_account
 #: model:ir.module.module,shortdesc:base.module_stock_account
 msgid "WMS Accounting"
 msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_category__property_stock_valuation_account_id
-msgid ""
-"When automated inventory valuation is enabled on a product, this account "
-"will hold the current value of the products."
-msgstr ""
-"Saat inventory valuation otomatis diaktifkan pada produk, akun ini akan "
-"memegang current value product."
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_category__property_stock_journal
-msgid ""
-"When doing automated inventory valuation, this is the Accounting Journal in "
-"which entries will be automatically posted when stock moves are processed."
-msgstr ""
-"Saat melakukan inventory valuation otomatis, ini adalah Jurnal Akuntansi di "
-"mana entri akan secara otomatis dipost saat pergerakan stok diproses."
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_category__property_price_difference_account_id
-msgid ""
-"With perpetual valuation, this account will hold the price difference "
-"between the standard price and the bill price."
-msgstr ""
-"Dengan perpetual valuation, akun ini akan memegang perbedaan harga antara "
-"harga standar dan harga tagihan."
 
 #. module: stock_account
 #. odoo-python
@@ -1242,13 +898,6 @@ msgstr ""
 msgid "You can only adjust valuation for one move at a time."
 msgstr ""
 "Anda hanya dapat menyesuaikan valuasi untuk satu pergerakan di satu waktu."
-
-#. module: stock_account
-#. odoo-python
-#: code:addons/stock_account/models/product.py:0
-msgid "You can only use the '=' operator to search on valuation field."
-msgstr ""
-"Anda hanya dapat menggunakan operator '=' untuk mencari di field valuation."
 
 #. module: stock_account
 #. odoo-python
@@ -1277,13 +926,189 @@ msgstr "stock_move_id"
 msgid "units"
 msgstr "units"
 
-msgid ""
-"Value of the product (automatically computed in AVCO).\n"
-"        Used to value the product when the purchase cost is not known (e.g. "
-"inventory adjustment).\n"
-"        Used to compute margins on sale orders."
-msgstr ""
-"Value produk (otomatis dihitung di AVCO).\n"
-"        Digunakan untuk menilai produk saat biaya pembelian tidak diketahui "
-"(contoh penyesuaian inventaris).\n"
-"        Digunakan untuk menghitung margin pada sale order."
+#~ msgid "Account"
+#~ msgstr "Akun"
+
+#~ msgid "Account Chart Template"
+#~ msgstr "Templat Bagan Akun"
+
+#~ msgid "Accrual"
+#~ msgstr "Akrual"
+
+#~ msgid ""
+#~ "At closing, register the inventory variation of the period into a "
+#~ "specific account"
+#~ msgstr "Pada closing, daftarkan variasi inventaris periode ke akun spesifik"
+
+#~ msgid "Closing: Stock Variation Global for company [%(company)s]"
+#~ msgstr "Closing: Variasi Global Stok untuk perusahaan [%(company)s]"
+
+#~ msgid "Closing: Stock Variation Over Period"
+#~ msgstr "Closing: Variasi Stok Selama Periode"
+
+#~ msgid "Cogs Origin"
+#~ msgstr "Origin Cogs"
+
+#~ msgid ""
+#~ "Counterpart used at closing for accounting adjustments to inventory "
+#~ "valuation."
+#~ msgstr ""
+#~ "Bandingan yang digunakan pada closing untuk penyesuaian akuntansi untuk "
+#~ "valuasi inventaris."
+
+#~ msgid "Credit"
+#~ msgstr "Kredit"
+
+#~ msgid "Daily"
+#~ msgstr "Harian"
+
+#~ msgid "Debit"
+#~ msgstr "Debit"
+
+#~ msgid "Ending Stock"
+#~ msgstr "Stok Akhir"
+
+#~ msgid "Everything is correctly closed"
+#~ msgstr "Semuanya dengan tepat di-tutup"
+
+#~ msgid "Expense Account"
+#~ msgstr "Akun Beban"
+
+#~ msgid "Initial Balance"
+#~ msgstr "Saldo Awal"
+
+#~ msgid "Inventory Closing"
+#~ msgstr "Closing Inventaris"
+
+#~ msgid "Inventory Period"
+#~ msgstr "Periode Inventaris"
+
+#~ msgid "Inventory Valuation"
+#~ msgstr "Penilaian Stok Persediaan"
+
+#~ msgid ""
+#~ "It exists closing entries after the selected date. Cancel them before "
+#~ "generate an entry prior to them"
+#~ msgstr ""
+#~ "Tersedia entri closing setelah tanggal terpilih. Batalkan sebelum membuat "
+#~ "entri sebelum mereka"
+
+#~ msgid "Journal Items"
+#~ msgstr "Item Jurnal"
+
+#~ msgid "Manual"
+#~ msgstr "Manual"
+
+#~ msgid "Monthly"
+#~ msgstr "Bulanan"
+
+#~ msgid ""
+#~ "Only the value 'periodic' and 'real_time' are accepted to search on "
+#~ "valuation field."
+#~ msgstr ""
+#~ "Hanya value 'periodic' dan 'real_time' diterima untuk dicari di field "
+#~ "valuation."
+
+#~ msgid "Periodic (at closing)"
+#~ msgstr "Berkala (pada penutupan)"
+
+#~ msgid ""
+#~ "Periodic: The accounting entries are suggested manually in the inventory "
+#~ "valuation report.\n"
+#~ "        Perpetual: An accounting entry is automatically created to value "
+#~ "the inventory when a product is billed or invoiced.\n"
+#~ "        "
+#~ msgstr ""
+#~ "Periodik: Entri-entri akuntansi disarankan secara manual di laporan "
+#~ "valuasi inventaris.\n"
+#~ "        Perpetual: Entri akuntansi secara otomatis dibuat untuk menilai "
+#~ "inventaris saat produk ditagih atau difaktur.\n"
+#~ "        "
+
+#~ msgid "Perpetual (at invoicing)"
+#~ msgstr "Perpetual (pada pemfakturan)"
+
+#~ msgid "Please set the Journal for Inventory Valuation in the settings."
+#~ msgstr "Silakan tetapkan Jurnal untuk Valuasi Inventaris di pengaturan."
+
+#~ msgid ""
+#~ "Please set the Valuation Account for Inventory Valuation in the settings."
+#~ msgstr ""
+#~ "Silakan tetapkan Akun valuasi untuk Valuasi Inventaris di pengaturan."
+
+#~ msgid "Price Difference Account"
+#~ msgstr "Akun Perbedaan Harga"
+
+#~ msgid ""
+#~ "Standard Price: The products are valued at their standard cost defined on "
+#~ "the product.\n"
+#~ "        Average Cost (AVCO): The products are valued at weighted average "
+#~ "cost.\n"
+#~ "        First In First Out (FIFO): The products are valued supposing "
+#~ "those that enter the company first will also leave it first.\n"
+#~ "        "
+#~ msgstr ""
+#~ "Standard Price: Produk akan dihargai pada harga standar yang ditetapkan "
+#~ "pada produk\n"
+#~ "        Average Cost (AVCO): Produk akan dihargai dengan weighted average "
+#~ "cost.\n"
+#~ "        First In First Out (FIFO): Produk akan dihargai dengan asumsi "
+#~ "produk yang masuk perusahaan terlebih dahulu juga akan keluar terlebih "
+#~ "dahulu.\n"
+#~ "        "
+
+#~ msgid "Stock Account: Inventory Valuation Closing"
+#~ msgstr "Akun Stok: Valuasi Closing Inventaris"
+
+#~ msgid "Stock Closing"
+#~ msgstr "Closing Stok"
+
+#~ msgid "Stock Journal"
+#~ msgstr "Jurnal Stok"
+
+#~ msgid "Stock Variation"
+#~ msgstr "Variasi Stok"
+
+#~ msgid "Stock Variation Account"
+#~ msgstr "Akun Variasi Stok"
+
+#~ msgid "Variation Account"
+#~ msgstr "Akun Variasi"
+
+#~ msgid ""
+#~ "When automated inventory valuation is enabled on a product, this account "
+#~ "will hold the current value of the products."
+#~ msgstr ""
+#~ "Saat inventory valuation otomatis diaktifkan pada produk, akun ini akan "
+#~ "memegang current value product."
+
+#~ msgid ""
+#~ "When doing automated inventory valuation, this is the Accounting Journal "
+#~ "in which entries will be automatically posted when stock moves are "
+#~ "processed."
+#~ msgstr ""
+#~ "Saat melakukan inventory valuation otomatis, ini adalah Jurnal Akuntansi "
+#~ "di mana entri akan secara otomatis dipost saat pergerakan stok diproses."
+
+#~ msgid ""
+#~ "With perpetual valuation, this account will hold the price difference "
+#~ "between the standard price and the bill price."
+#~ msgstr ""
+#~ "Dengan perpetual valuation, akun ini akan memegang perbedaan harga antara "
+#~ "harga standar dan harga tagihan."
+
+#~ msgid "You can only use the '=' operator to search on valuation field."
+#~ msgstr ""
+#~ "Anda hanya dapat menggunakan operator '=' untuk mencari di field "
+#~ "valuation."
+
+#~ msgid ""
+#~ "Value of the product (automatically computed in AVCO).\n"
+#~ "        Used to value the product when the purchase cost is not known "
+#~ "(e.g. inventory adjustment).\n"
+#~ "        Used to compute margins on sale orders."
+#~ msgstr ""
+#~ "Value produk (otomatis dihitung di AVCO).\n"
+#~ "        Digunakan untuk menilai produk saat biaya pembelian tidak "
+#~ "diketahui (contoh penyesuaian inventaris).\n"
+#~ "        Digunakan untuk menghitung margin pada sale order."

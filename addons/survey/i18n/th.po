@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:41+0000\n"
+"POT-Creation-Date: 2026-09-11 17:42+0000\n"
 "PO-Revision-Date: 2026-08-31 19:54+0000\n"
 "Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-s19-4/survey/"
@@ -140,28 +140,6 @@ msgstr "6650 กม."
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p3_q3_sug1
 msgid "99 years"
 msgstr "99 ปี"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
-msgid ""
-"<br/>\n"
-"                                    <span class=\"text-muted\">Completed</"
-"span>"
-msgstr ""
-"<br/>\n"
-"                                    <span class=\"text-muted\">เสร็จสมบูรณ์</"
-"span>"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
-msgid ""
-"<br/>\n"
-"                                    <span class=\"text-muted\">Registered</"
-"span>"
-msgstr ""
-"<br/>\n"
-"                                    <span class=\"text-muted\">ลงทะเบียน</"
-"span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
@@ -348,6 +326,12 @@ msgid ""
 msgstr ""
 
 #. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
+msgid ""
+"<i class=\"oi oi-filled\" data-icon=\"share\" role=\"img\" title=\"Share\"/>"
+msgstr ""
+
+#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
 msgid ""
 "<i class=\"oi oi-fw me-2\" data-icon=\"bar_chart\" aria-hidden=\"true\"/"
@@ -455,11 +439,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
 msgid "<span class=\"list-group-item py-1 px-2\">Min</span>"
 msgstr ""
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
-msgid "<span class=\"mx-1\">-</span>"
-msgstr "<span class=\"mx-1\">-</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -583,6 +562,11 @@ msgid "<span>%</span>"
 msgstr "<span>%</span>"
 
 #. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
+msgid "<span>-</span>"
+msgstr ""
+
+#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
 msgid "<span>All surveys</span>"
 msgstr "<span>แบบสอบถามทั้งหมด</span>"
@@ -591,6 +575,11 @@ msgstr "<span>แบบสอบถามทั้งหมด</span>"
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
 msgid "<span>Completed surveys</span>"
 msgstr "<span>แบบสอบถามที่เสร็จสมบูรณ์</span>"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
+msgid "<span>Completed</span>"
+msgstr ""
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
@@ -611,6 +600,11 @@ msgstr "<span>ผ่านและไม่ผ่าน</span>"
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
 msgid "<span>Passed only</span>"
 msgstr "<span>ผ่านเท่านั้น</span>"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
+msgid "<span>Registered</span>"
+msgstr ""
 
 #. module: survey
 #. odoo-python
@@ -1121,6 +1115,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/survey/models/templates/survey_survey.py:0
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_tree
 msgid "Certification"
 msgstr "ใบรับรอง"
@@ -3659,6 +3654,11 @@ msgid "Restricted to"
 msgstr "ถูกจำกัดไว้ที่"
 
 #. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
+msgid "Results"
+msgstr ""
+
+#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_button_retake
 msgid "Retry"
 msgstr "ลองใหม่"
@@ -5395,3 +5395,24 @@ msgid ""
 "⚠️ This question is positioned before some or all of its triggers and could "
 "be skipped."
 msgstr "⚠️ คำถามนี้อยู่ในตำแหน่งก่อนการกระตุ้นบางส่วนหรือทั้งหมดและจึงจะสามารถข้ามได้"
+
+#~ msgid ""
+#~ "<br/>\n"
+#~ "                                    <span class=\"text-muted\">Completed</"
+#~ "span>"
+#~ msgstr ""
+#~ "<br/>\n"
+#~ "                                    <span class=\"text-muted\">เสร็จสมบูรณ์</"
+#~ "span>"
+
+#~ msgid ""
+#~ "<br/>\n"
+#~ "                                    <span class=\"text-"
+#~ "muted\">Registered</span>"
+#~ msgstr ""
+#~ "<br/>\n"
+#~ "                                    <span class=\"text-muted\">ลงทะเบียน</"
+#~ "span>"
+
+#~ msgid "<span class=\"mx-1\">-</span>"
+#~ msgstr "<span class=\"mx-1\">-</span>"

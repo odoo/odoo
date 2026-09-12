@@ -11,10 +11,10 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-04 17:44+0000\n"
-"PO-Revision-Date: 2026-08-31 19:35+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-09-11 20:06+0000\n"
+"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
-"odoo-s19-4/account_edi_ubl_cii/es_419/>\n"
+"odoo-master/account_edi_ubl_cii/es_419/>\n"
 "Language: es_419\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,6 +44,24 @@ msgid ""
 "present in the `EAS list\n"
 "<https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/>`_.\n"
 msgstr ""
+"\n"
+"Módulo de facturación electrónica\n"
+"=================================\n"
+"\n"
+"Permite exportar e importar los siguientes formatos: E-FFF, UBL Bis 3, EHF3, "
+"NLCIUS, Factur-X (CII), XRechnung (UBL).\n"
+"Al generar el PDF de la factura, el PDF se inserta en el XML para todos los "
+"formatos UBL. Esto permite que el\n"
+"receptor obtenga el PDF solo con el archivo XML. Ten en cuenta que **EHF3 "
+"está implementado por completo mediante UBL Bis 3** (`referencia\n"
+"<https://anskaffelser.dev/postaward/g3/spec/current/billing-3.0/norway/"
+"#_implementation>`_).\n"
+"\n"
+"Ten en cuenta que E-FFF, NLCIUS y XRechnung (UBL) solo están disponibles "
+"para empresas belgas, neerlandesas y alemanas,\n"
+"respectivamente. UBL Bis 3 solo está disponible para empresas cuyo país "
+"aparezca en la `lista EAS\n"
+"<https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/>`_.\n"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -194,7 +212,7 @@ msgstr "BIS3 DE (XRechnung)"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_cii
 msgid "Base helpers for CII"
-msgstr ""
+msgstr "Ayudantes base para CII"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_ubl
@@ -516,7 +534,7 @@ msgstr "Exportar fuera de la UE"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_cii
 msgid "Factur-x/ZUGFeRD CII 2.2.0"
-msgstr ""
+msgstr "Factur-x/ZUGFeRD CII 2.2.0"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__au
@@ -680,7 +698,7 @@ msgstr "Líneas agrupadas por impuesto"
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_bank_statement_line__has_grouped_lines
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move__has_grouped_lines
 msgid "Has Grouped Lines"
-msgstr ""
+msgstr "Tiene líneas agrupadas"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__9910
@@ -728,7 +746,7 @@ msgstr "Islandia - Kennitala"
 #. module: account_edi_ubl_cii
 #: model:ir.module.module,shortdesc:base.module_account_edi_ubl_cii
 msgid "Import/Export electronic invoices with UBL/CII"
-msgstr ""
+msgstr "Importar/Exportar facturas electrónicas con UBL/CII"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__0202
@@ -1016,6 +1034,12 @@ msgid ""
 "met, the customer will be liable for the payment of the tax, interest, and "
 "penalties due in relation to this condition."
 msgstr ""
+"Inversión del sujeto pasivo: A falta de una objeción por escrito dentro del "
+"mes siguiente a la recepción de la factura, se considerará que el cliente "
+"reconoce que es un sujeto pasivo obligado a presentar declaraciones "
+"periódicas. Si esta condición no se cumple, el cliente será responsable del "
+"pago del impuesto, intereses y sanciones correspondientes en relación con "
+"esta condición."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__9947
@@ -2176,7 +2200,7 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-f
 msgid "VATEX-FR-F - Second-hand sales"
-msgstr ""
+msgstr "VATEX-FR-F - Ventas de segunda mano"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-franchise
@@ -2186,12 +2210,12 @@ msgstr "VATEX-FR-FRANCHISE - IVA doméstico de franquicia de Francia en base"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-i
 msgid "VATEX-FR-I - Sales of works of art"
-msgstr ""
+msgstr "VATEX-FR-I - Ventas de obras de arte"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-j
 msgid "VATEX-FR-J - Sales of antiques"
-msgstr ""
+msgstr "VATEX-FR-J - Ventas de antigüedades"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__9953
@@ -2236,7 +2260,7 @@ msgstr "Solo puedes agrupar líneas de una factura"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 msgid "You need at least two lines to group them."
-msgstr ""
+msgstr "Necesitas al menos dos líneas para agruparlas."
 
 #. module: account_edi_ubl_cii
 #. odoo-python

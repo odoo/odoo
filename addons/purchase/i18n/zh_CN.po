@@ -16,11 +16,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:44+0000\n"
-"PO-Revision-Date: 2026-08-31 20:21+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"POT-Creation-Date: 2026-09-11 17:41+0000\n"
+"PO-Revision-Date: 2026-09-09 13:53+0000\n"
+"Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-s19-4/purchase/zh_Hans/>\n"
+"projects/odoo-master/purchase/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -63,6 +63,28 @@ msgstr ""
 msgid ""
 "%(matched_lines_count)s bill lines matched, %(unmatched_lines_count)s "
 "unmatched remaining."
+msgstr ""
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/wizard/accrued_orders.py:0
+msgid ""
+"%(order)s - %(order_line)s; %(qty_billed)s billed, %(qty_received)s received "
+"at %(unit_price)s"
+msgstr ""
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/wizard/accrued_orders.py:0
+msgid ""
+"%(order)s - %(order_line)s; %(quantity_billed)s Billed, %"
+"(quantity_received)s Received at %(unit_price)s each"
+msgstr ""
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/wizard/accrued_orders.py:0
+msgid "%(order)s - %(order_line)s; price difference for %(product)s"
 msgstr ""
 
 #. module: purchase
@@ -611,6 +633,11 @@ msgid "A warning can be set on a product or a customer (Purchase)"
 msgstr "可基于产品或客户进行报警设置（采购）"
 
 #. module: purchase
+#: model:ir.model,name:purchase.model_res_groups
+msgid "Access Groups"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__access_warning
 msgid "Access warning"
 msgstr "访问警告信息"
@@ -633,9 +660,48 @@ msgid "Account Move"
 msgstr "会计凭证"
 
 #. module: purchase
-#: model:ir.actions.act_window,name:purchase.action_accrued_expense_entry
+#: model:ir.model.fields,help:purchase.field_product_category__property_account_billed_not_received_id
+msgid ""
+"Account holding the accrued value of the goods billed but not received yet. "
+"With perpetual valuation, it counterbalances the stock valuation account at "
+"closing."
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_product_category__property_account_bills_to_receive_id
+msgid ""
+"Account holding the accrued value of the goods received but not billed yet. "
+"With perpetual valuation, it counterbalances the stock valuation account at "
+"closing."
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__accrual_move_ids
+msgid "Accrual Entries"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order_line__accrual_move_ids
+msgid ""
+"Accrual entries generated for this line, so it isn't accrued again while one "
+"is still standing (posted, not yet reversed or cancelled)."
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.server,name:purchase.action_accrued_expense_entry_purchase_order_line
 msgid "Accrued Expense Entry"
 msgstr "应计费用分录"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_account_accrued_orders_wizard
+msgid "Accrued Orders Wizard"
+msgstr ""
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/wizard/accrued_orders.py:0
+msgid "Accrued total"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -986,6 +1052,11 @@ msgid "Bill to Purchase Order"
 msgstr "账单到采购订单"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__bill_to_receive
+msgid "Bill to Receive"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_invoiced_at_date
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -996,6 +1067,17 @@ msgstr "已开单"
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__billed_amount_untaxed
 msgid "Billed Amount Untaxed"
 msgstr "未税账单金额"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_product_category__property_account_billed_not_received_id
+#: model:ir.model.fields,field_description:purchase.field_res_company__account_billed_not_received_id
+msgid "Billed Not Received Account"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_product_category__property_account_billed_not_received_active
+msgid "Billed Not Received Account Active"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_invoiced
@@ -1027,6 +1109,17 @@ msgstr "账单"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 msgid "Bills Received"
 msgstr "账单已收到"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_product_category__property_account_bills_to_receive_id
+#: model:ir.model.fields,field_description:purchase.field_res_company__account_bills_to_receive_id
+msgid "Bills to Receive Account"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_product_category__property_account_bills_to_receive_active
+msgid "Bills to Receive Account Active"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__user_id
@@ -1339,6 +1432,7 @@ msgstr "描述报价确认和转换为采购订单的日期。"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__name
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
 msgid "Description"
 msgstr "描述"
@@ -1350,6 +1444,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_history_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "Disc.%"
@@ -1377,6 +1472,7 @@ msgid "Display Matching Tag"
 msgstr ""
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_account_accrued_orders_wizard__display_name
 #: model:ir.model.fields,field_description:purchase.field_account_analytic_account__display_name
 #: model:ir.model.fields,field_description:purchase.field_account_analytic_applicability__display_name
 #: model:ir.model.fields,field_description:purchase.field_account_move__display_name
@@ -1384,6 +1480,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase.field_account_tax__display_name
 #: model:ir.model.fields,field_description:purchase.field_bill_to_po_wizard__display_name
 #: model:ir.model.fields,field_description:purchase.field_ir_actions_report__display_name
+#: model:ir.model.fields,field_description:purchase.field_product_category__display_name
 #: model:ir.model.fields,field_description:purchase.field_product_product__display_name
 #: model:ir.model.fields,field_description:purchase.field_product_supplierinfo__display_name
 #: model:ir.model.fields,field_description:purchase.field_product_template__display_name
@@ -1394,6 +1491,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__display_name
 #: model:ir.model.fields,field_description:purchase.field_res_company__display_name
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:purchase.field_res_groups__display_name
 #: model:ir.model.fields,field_description:purchase.field_res_partner__display_name
 msgid "Display Name"
 msgstr "显示名称"
@@ -1513,6 +1611,12 @@ msgid "Forbidden values on non-accountable purchase order line"
 msgstr "禁止在不可计算的采购订单明细项上有值"
 
 #. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.product_product_purchase_tree_view
+#: model_terms:ir.ui.view,arch_db:purchase.product_template_purchase_tree_view
+msgid "Forecasted"
+msgstr ""
+
+#. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/account_invoice.py:0
 msgid "From %s"
@@ -1557,6 +1661,18 @@ msgid "Get warnings in orders for products or vendors"
 msgstr "在订单中提醒产品或供应商的相关预警信息"
 
 #. module: purchase
+#. odoo-python
+#: code:addons/purchase/wizard/accrued_orders.py:0
+msgid "Goods Billed not Received (perpetual valuation)"
+msgstr ""
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/wizard/accrued_orders.py:0
+msgid "Goods Received not Billed (perpetual valuation)"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__product_type
 msgid ""
 "Goods are tangible materials and merchandise you provide.\n"
@@ -1581,6 +1697,7 @@ msgid "Hide cancelled lines"
 msgstr "隐藏已取消明细行"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_account_accrued_orders_wizard__id
 #: model:ir.model.fields,field_description:purchase.field_account_analytic_account__id
 #: model:ir.model.fields,field_description:purchase.field_account_analytic_applicability__id
 #: model:ir.model.fields,field_description:purchase.field_account_move__id
@@ -1588,6 +1705,7 @@ msgstr "隐藏已取消明细行"
 #: model:ir.model.fields,field_description:purchase.field_account_tax__id
 #: model:ir.model.fields,field_description:purchase.field_bill_to_po_wizard__id
 #: model:ir.model.fields,field_description:purchase.field_ir_actions_report__id
+#: model:ir.model.fields,field_description:purchase.field_product_category__id
 #: model:ir.model.fields,field_description:purchase.field_product_product__id
 #: model:ir.model.fields,field_description:purchase.field_product_supplierinfo__id
 #: model:ir.model.fields,field_description:purchase.field_product_template__id
@@ -1598,6 +1716,7 @@ msgstr "隐藏已取消明细行"
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__id
 #: model:ir.model.fields,field_description:purchase.field_res_company__id
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__id
+#: model:ir.model.fields,field_description:purchase.field_res_groups__id
 #: model:ir.model.fields,field_description:purchase.field_res_partner__id
 msgid "ID"
 msgstr "ID"
@@ -1740,6 +1859,11 @@ msgstr "日记账分录"
 #: model:ir.model,name:purchase.model_account_move_line
 msgid "Journal Item"
 msgstr "日记账项目"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__label
+msgid "Label"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_bill_to_po_wizard__write_uid
@@ -2450,6 +2574,11 @@ msgid "Portal Access URL"
 msgstr "门户网站访问网址"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__prepaid_expense
+msgid "Prepaid Expense"
+msgstr ""
+
+#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Preview the reminder email by sending it to yourself."
 msgstr "预览提醒电子邮件，将其发送给自己。"
@@ -2488,6 +2617,7 @@ msgid "Product"
 msgstr "产品"
 
 #. module: purchase
+#: model:ir.model,name:purchase.model_product_category
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__category_id
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Product Category"
@@ -2887,6 +3017,13 @@ msgstr "待开立发票数量"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "Quantity"
 msgstr "数量"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
+msgid ""
+"Quantity on hand minus outgoing quantity from Sales Orders plus incoming "
+"quantity from Purchase Orders"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -3620,6 +3757,12 @@ msgid "Total Billed"
 msgstr "总计费"
 
 #. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.product_product_purchase_tree_view
+#: model_terms:ir.ui.view,arch_db:purchase.product_template_purchase_tree_view
+msgid "Total Forecasted"
+msgstr ""
+
+#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 msgid "Total Purchased"
 msgstr "总计采购"
@@ -3663,11 +3806,6 @@ msgstr "货币总计"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_history_pivot
 msgid "Total purchased amount"
 msgstr "采购总额"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__translated_product_name
-msgid "Translated Product Name"
-msgstr "已翻译的产品名称"
 
 #. module: purchase
 #. odoo-javascript
@@ -3810,10 +3948,12 @@ msgid "Variant Grid Entry"
 msgstr "变体表格输入"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_product_product__sold_by_vendor_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__partner_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__partner_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__partner_id
 #: model_terms:ir.ui.view,arch_db:purchase.product_template_search_view_purchase
+#: model_terms:ir.ui.view,arch_db:purchase.product_view_search_catalog_inherit
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_history_tree
@@ -4109,3 +4249,6 @@ msgid ""
 "{{ object.company_id.name }} Request for Quotation (Ref {{ object.name or 'n/"
 "a' }})"
 msgstr ""
+
+#~ msgid "Translated Product Name"
+#~ msgstr "已翻译的产品名称"

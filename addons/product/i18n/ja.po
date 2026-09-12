@@ -16,10 +16,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:45+0000\n"
-"PO-Revision-Date: 2026-09-02 03:10+0000\n"
+"POT-Creation-Date: 2026-09-11 17:43+0000\n"
+"PO-Revision-Date: 2026-09-10 07:24+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
-"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-4/"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-master/"
 "product/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -68,18 +68,6 @@ msgstr "製品数"
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid ""
-"%(base)s with a %(discount)s %% %(discount_type)s and %(surcharge)s extra "
-"fee\n"
-"Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %"
-"(total_amount)s"
-msgstr ""
-"%(base)s 割引 %(discount)s %% %(discount_type)s と %(surcharge)s 追加料金\n"
-"例: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s"
-
-#. module: product
-#. odoo-python
-#: code:addons/product/models/product_pricelist_item.py:0
-msgid ""
 "%(item_name)s: end date (%(end_date)s) should be after start date (%"
 "(start_date)s)"
 msgstr ""
@@ -91,18 +79,6 @@ msgstr ""
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% %(discount_type)s on %(base)s %(extra)s"
 msgstr "%(percentage)s %% %(discount_type)s  %(base)s %(extra)s"
-
-#. module: product
-#. odoo-python
-#: code:addons/product/models/product_pricelist_item.py:0
-msgid "%(percentage)s %% discount on %(pricelist)s"
-msgstr "%(percentage)s %% 割引 %(pricelist)s上"
-
-#. module: product
-#. odoo-python
-#: code:addons/product/models/product_pricelist_item.py:0
-msgid "%(percentage)s %% discount on sales price"
-msgstr "%(percentage)s %% 販売価格より割引"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_label_contour_marks
@@ -154,10 +130,8 @@ msgstr "- %(amount)s 割引"
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
-msgid ""
-"- Barcode \"%(barcode)s\" already assigned to product(s): %(product_list)s"
+msgid "- Barcode \"%(barcode)s\" already assigned to %(product_list)s"
 msgstr ""
-"- バーコード \"%(barcode)s\" は既にプロダクト: %(product_list)sに割当済です"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__create_variant
@@ -258,11 +232,6 @@ msgstr ""
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "<b>Tip: want to round at 9.99?</b>"
-msgstr "<b>ヒント: 9.99で切り上げますか?</b>"
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid ""
 "<i class=\"oi mx-2 oe_edit_only\" data-icon=\"east\" aria-label=\"Arrow "
 "icon\" title=\"Arrow\"/>"
@@ -283,6 +252,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
 msgid "<span class=\"o_stat_text\"> Products</span>"
 msgstr "<span class=\"o_stat_text\"> プロダクト</span>"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
+msgid "<span class=\"o_stat_text\">Daily Rates</span>"
+msgstr ""
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.uom_uom_view_form
@@ -310,19 +284,14 @@ msgid "<span class=\"text-muted\">On Hand</span>"
 msgstr ""
 
 #. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid "<span class=\"text-nowrap\">% on</span>"
+msgstr ""
+
+#. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "<span> - </span>"
 msgstr "<span> - </span>"
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "<span>%</span>"
-msgstr "<span>%</span>"
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "<span>on</span>"
-msgstr "<span>以下の：</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -423,6 +392,11 @@ msgid "A storable product is a product for which you manage stock."
 msgstr "在庫可能品は、在庫を管理する対象となるプロダクトのことです。"
 
 #. module: product
+#: model:ir.model,name:product.model_res_groups
+msgid "Access Groups"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__access_token
 msgid "Access Token"
 msgstr "アクセストークン"
@@ -503,6 +477,7 @@ msgstr "活動タイプアイコン"
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/order_line/order_line.xml:0
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Add"
 msgstr "追加"
 
@@ -572,12 +547,6 @@ msgid "All"
 msgstr "すべて"
 
 #. module: product
-#. odoo-python
-#: code:addons/product/models/product_pricelist_item.py:0
-msgid "All Categories"
-msgstr "全カテゴリ"
-
-#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
 msgid "All Companies"
 msgstr ""
@@ -602,7 +571,7 @@ msgstr "全プロダクト"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "All categories"
-msgstr "全カテゴリ"
+msgstr "すべてのカテゴリ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_tree
@@ -659,14 +628,19 @@ msgid "Applied On"
 msgstr "適用対象"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_pricelist_item__applied_on
-msgid "Apply On"
-msgstr "適用対象"
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_calendar
+msgid "Applied on"
+msgstr ""
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "Apply To"
-msgstr "対象"
+msgid "Apply"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__applied_on
+msgid "Apply On"
+msgstr "適用対象"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
@@ -841,6 +815,7 @@ msgstr ""
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
+#: code:addons/product/models/product_template.py:0
 msgid ""
 "Barcode(s) already assigned:\n"
 "\n"
@@ -899,11 +874,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__base
 msgid "Based on"
 msgstr "基準"
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "Based price"
-msgstr "基本価格"
 
 #. module: product
 #: model:res.groups,name:product.group_product_pricelist
@@ -991,7 +961,6 @@ msgstr "カテゴリ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__categ_id
-#: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__display_applied_on__2_product_category
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Category"
@@ -1392,6 +1361,13 @@ msgid "Cyan"
 msgstr "Cyan"
 
 #. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist.py:0
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_calendar
+msgid "Daily Rates"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__db_datas
 msgid "Database Data"
 msgstr "データベースデータ"
@@ -1519,7 +1495,7 @@ msgid "Determine the display order"
 msgstr "表示順序を決定します"
 
 #. module: product
-#: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__compute_price__percentage
+#: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__compute_price__discount
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Discount"
 msgstr "割引"
@@ -1533,11 +1509,6 @@ msgstr "割引 (%)"
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__price_discounted
 msgid "Discounted Price"
 msgstr "値引価格"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_pricelist_item__display_applied_on
-msgid "Display Applied On"
-msgstr "適用を表示"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_ir_attachment__display_name
@@ -1573,6 +1544,7 @@ msgstr "適用を表示"
 #: model:ir.model.fields,field_description:product.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:product.field_res_country_group__display_name
 #: model:ir.model.fields,field_description:product.field_res_currency__display_name
+#: model:ir.model.fields,field_description:product.field_res_groups__display_name
 #: model:ir.model.fields,field_description:product.field_res_partner__display_name
 #: model:ir.model.fields,field_description:product.field_uom_uom__display_name
 #: model:ir.model.fields,field_description:product.field_update_product_attribute_value__display_name
@@ -1727,6 +1699,11 @@ msgstr ""
 "ファイルのエクスポートにエラーが発生しました。もう一度やり直して下さい。"
 
 #. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid "Example:"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__excluded_value_ids
 msgid "Exclude For"
 msgstr "除外"
@@ -1874,8 +1851,6 @@ msgstr ""
 "品が含まれます。"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_product_tree_view
-#: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_view_list_qty
 msgid "Forecasted"
 msgstr "予測"
@@ -1890,11 +1865,6 @@ msgstr "予測数量"
 #: model:ir.model.fields,field_description:product.field_product_label_layout__print_format
 msgid "Format"
 msgstr "フォーマット"
-
-#. module: product
-#: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__compute_price__formula
-msgid "Formula"
-msgstr "計算式"
 
 #. module: product
 #: model:product.template,name:product.consu_delivery_03_product_template
@@ -2055,6 +2025,16 @@ msgid "Hotel Accommodation"
 msgstr "ホテル宿泊"
 
 #. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist_item__compute_price
+msgid ""
+"How the price is derived from the base price.\n"
+"Discount: a percentage taken off it.\n"
+"Surcharge: a percentage added on top of it.\n"
+"Fixed Price: a set amount, ignoring the base price entirely.\n"
+"Activate the discount settings to show the discount to the customer."
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_ir_attachment__id
 #: model:ir.model.fields,field_description:product.field_product_attribute__id
 #: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__id
@@ -2088,6 +2068,7 @@ msgstr "ホテル宿泊"
 #: model:ir.model.fields,field_description:product.field_res_config_settings__id
 #: model:ir.model.fields,field_description:product.field_res_country_group__id
 #: model:ir.model.fields,field_description:product.field_res_currency__id
+#: model:ir.model.fields,field_description:product.field_res_groups__id
 #: model:ir.model.fields,field_description:product.field_res_partner__id
 #: model:ir.model.fields,field_description:product.field_uom_uom__id
 #: model:ir.model.fields,field_description:product.field_update_product_attribute_value__id
@@ -2471,6 +2452,11 @@ msgid "Lines"
 msgstr "行"
 
 #. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_document_kanban
+msgid "Link"
+msgstr ""
+
+#. module: product
 #: model:ir.model,name:product.model_product_uom
 msgid "Link between products and their UoMs"
 msgstr "プロダクトと単位のリンク"
@@ -2522,12 +2508,6 @@ msgstr "プロダクトバリアントを管理"
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Margins"
 msgstr "マージン"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_markup
-#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "Markup"
-msgstr "マークアップ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_maroon
@@ -2594,11 +2574,6 @@ msgstr "MIMEタイプ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "Min Qty"
-msgstr "最小数量"
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Min. Margin"
 msgstr "最小マージン"
 
@@ -2616,6 +2591,11 @@ msgstr "最小数量"
 #: model:product.template,description_sale:product.product_product_8_product_template
 msgid "Minimalist wooden desk for executive use"
 msgstr "エグゼクティブ向けミニマルな木製デスク"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid "Minimum Quantity"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_update_product_attribute_value__mode
@@ -3035,11 +3015,6 @@ msgid "Pepsi"
 msgstr "Pepsi"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_pricelist_item__percent_price
-msgid "Percentage Price"
-msgstr "価格に対するパーセント"
-
-#. module: product
 #: model:product.attribute.value,name:product.pav_brand_philips
 msgid "Philips"
 msgstr "Philips"
@@ -3053,6 +3028,11 @@ msgstr "ピル"
 #: model:product.attribute.value,name:product.pav_color_pink
 msgid "Pink"
 msgstr "ピンク"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__is_plain_discount
+msgid "Plain Discount"
+msgstr ""
 
 #. module: product
 #. odoo-javascript
@@ -3112,6 +3092,7 @@ msgid ""
 msgstr "ボタンを押すだけで、座位から立位まで数秒で楽に調整することができます。"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__price
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view_from_product
 msgid "Price"
 msgstr "価格"
@@ -3139,11 +3120,6 @@ msgid "Price Rules"
 msgstr "価格ルール"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "Price Type"
-msgstr "価格タイプ"
-
-#. module: product
 #: model:ir.model.fields,help:product.field_product_product__list_price
 #: model:ir.model.fields,help:product.field_product_template__list_price
 msgid "Price at which the product is sold to customers."
@@ -3166,7 +3142,6 @@ msgstr "価格表"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__applied_on
-#: model:ir.model.fields,help:product.field_product_pricelist_item__display_applied_on
 msgid "Pricelist Item applicable on selected option"
 msgstr "選択したオプションに該当する価格表の項目"
 
@@ -3253,7 +3228,6 @@ msgstr "デスクと椅子が付いた個室"
 #: model:ir.model.fields,field_description:product.field_product_template__product_variant_id
 #: model:ir.model.fields,field_description:product.field_product_uom__product_id
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__applied_on__1_product
-#: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__display_applied_on__1_product
 #: model_terms:ir.ui.view,arch_db:product.product_kanban_view
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
 #: model_terms:ir.ui.view,arch_db:product.product_search_form_view
@@ -4078,6 +4052,13 @@ msgid "Supplier Pricelist"
 msgstr "仕入先価格表"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_markup
+#: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__compute_price__markup
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid "Surcharge"
+msgstr ""
+
+#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_tag_form_view
 msgid "Tag"
 msgstr "タグ"
@@ -4401,17 +4382,9 @@ msgid "Today Activities"
 msgstr "本日の活動"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_product_tree_view
-#: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_view_list_qty
 msgid "Total Forecasted"
 msgstr "予測合計"
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_product_tree_view
-#: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
-msgid "Total Free To Use"
-msgstr ""
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_product_tree_view
@@ -4522,7 +4495,6 @@ msgid "Unit Name"
 msgstr "単位名"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_pricelist_item__price
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__price
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -4603,13 +4575,6 @@ msgstr "アップセル / クロスセル"
 #: model:ir.model.fields,field_description:product.field_product_document__url
 msgid "Url"
 msgstr "URL"
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_pricelist_item__compute_price
-msgid ""
-"Use the discount rules and activate the discount settings in order to show "
-"discount to customer."
-msgstr "割引ルールを使用し、顧客に割引を表示するために割引設定を有効化します。"
 
 #. module: product
 #. odoo-python
@@ -4907,6 +4872,11 @@ msgid "What to expect ?"
 msgstr "どのような動作が期待されるか？"
 
 #. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist_item__is_plain_discount
+msgid "Whether the rule lowers the price by exactly its discount percentage."
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_tag__visible_to_customers
 msgid "Whether the tag is displayed to customers."
 msgstr "タグが顧客に表示されるかどうか"
@@ -4976,18 +4946,6 @@ msgid ""
 "You are deactivating the pricelist feature. Every active pricelist will be "
 "archived."
 msgstr "価格表機能を停止しています。すべての有効な価格表はアーカイブされます。"
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_pricelist_item__percent_price
-#: model:ir.model.fields,help:product.field_product_pricelist_item__price_discount
-msgid "You can apply a mark-up by setting a negative discount."
-msgstr ""
-"マイナスの割引(負の値)を設定することで、上乗せ(マークアップ)を適用できます。"
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_pricelist_item__price_markup
-msgid "You can apply a mark-up on the cost"
-msgstr "原価にマークアップを適用できます"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
@@ -5373,12 +5331,6 @@ msgid "each variant"
 msgstr ""
 
 #. module: product
-#. odoo-python
-#: code:addons/product/models/product_pricelist_item.py:0
-msgid "markup"
-msgstr "マークアップ"
-
-#. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "pdf"
@@ -5404,9 +5356,22 @@ msgid "product cost"
 msgstr "プロダクト原価"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "round off to 10.00 and set an extra at -0.01"
-msgstr "10.00に丸め、-0.01で追加設定します。"
+#. odoo-python
+#: code:addons/product/models/product_product.py:0
+msgid "product: %(name)s"
+msgstr ""
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_product.py:0
+msgid "product: %(product_name)s"
+msgstr ""
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_product.py:0
+msgid "product: %(product_name)s with variant: %(variant_name)s"
+msgstr ""
 
 #. module: product
 #. odoo-python
@@ -5414,6 +5379,12 @@ msgstr "10.00に丸め、-0.01で追加設定します。"
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "sales price"
 msgstr "販売価格"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+msgid "surcharge"
+msgstr ""
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -5425,3 +5396,82 @@ msgstr "to"
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "xlsx"
 msgstr "xlsx"
+
+#~ msgid ""
+#~ "%(base)s with a %(discount)s %% %(discount_type)s and %(surcharge)s extra "
+#~ "fee\n"
+#~ "Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %"
+#~ "(total_amount)s"
+#~ msgstr ""
+#~ "%(base)s 割引 %(discount)s %% %(discount_type)s と %(surcharge)s 追加料"
+#~ "金\n"
+#~ "例: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %"
+#~ "(total_amount)s"
+
+#~ msgid "%(percentage)s %% discount on %(pricelist)s"
+#~ msgstr "%(percentage)s %% 割引 %(pricelist)s上"
+
+#~ msgid "%(percentage)s %% discount on sales price"
+#~ msgstr "%(percentage)s %% 販売価格より割引"
+
+#~ msgid ""
+#~ "- Barcode \"%(barcode)s\" already assigned to product(s): %(product_list)s"
+#~ msgstr ""
+#~ "- バーコード \"%(barcode)s\" は既にプロダクト: %(product_list)sに割当済で"
+#~ "す"
+
+#~ msgid "<b>Tip: want to round at 9.99?</b>"
+#~ msgstr "<b>ヒント: 9.99で切り上げますか?</b>"
+
+#~ msgid "<span>%</span>"
+#~ msgstr "<span>%</span>"
+
+#~ msgid "<span>on</span>"
+#~ msgstr "<span>以下の：</span>"
+
+#~ msgid "All Categories"
+#~ msgstr "すべてのカテゴリ"
+
+#~ msgid "Apply To"
+#~ msgstr "対象"
+
+#~ msgid "Based price"
+#~ msgstr "基本価格"
+
+#~ msgid "Display Applied On"
+#~ msgstr "適用を表示"
+
+#~ msgid "Formula"
+#~ msgstr "計算式"
+
+#~ msgid "Markup"
+#~ msgstr "マークアップ"
+
+#~ msgid "Min Qty"
+#~ msgstr "最小数量"
+
+#~ msgid "Percentage Price"
+#~ msgstr "価格に対するパーセント"
+
+#~ msgid "Price Type"
+#~ msgstr "価格タイプ"
+
+#~ msgid ""
+#~ "Use the discount rules and activate the discount settings in order to "
+#~ "show discount to customer."
+#~ msgstr ""
+#~ "割引ルールを使用し、顧客に割引を表示するために割引設定を有効化します。"
+
+#~ msgid "You can apply a mark-up by setting a negative discount."
+#~ msgstr ""
+#~ "マイナスの割引(負の値)を設定することで、上乗せ(マークアップ)を適用できま"
+#~ "す。"
+
+#~ msgid "You can apply a mark-up on the cost"
+#~ msgstr "原価にマークアップを適用できます"
+
+#~ msgid "markup"
+#~ msgstr "マークアップ"
+
+#~ msgid "round off to 10.00 and set an extra at -0.01"
+#~ msgstr "10.00に丸め、-0.01で追加設定します。"

@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:44+0000\n"
+"POT-Creation-Date: 2026-09-11 17:41+0000\n"
 "PO-Revision-Date: 2026-08-31 14:27+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-4/mrp/ko/"
@@ -195,6 +195,11 @@ msgstr "'완제품 - %s' % object.name"
 #: model:ir.actions.report,print_report_name:mrp.action_report_mrp_mo_overview
 msgid "'MO Overview - %s' % object.display_name"
 msgstr "'제조주문서 현황 - %s' % object.display_name"
+
+#. module: mrp
+#: model:ir.actions.report,print_report_name:mrp.action_report_mrp_packages
+msgid "'Packages - %s' % (object.name)"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_production_order
@@ -424,6 +429,11 @@ msgid "<span class=\"o_stat_text\">Manufacturing</span>"
 msgstr "<span class=\"o_stat_text\">제조</span>"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "<span class=\"o_stat_text\">Moves</span>"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "<span class=\"o_stat_text\">OEE</span>"
 msgstr "<span class=\"o_stat_text\">OEE</span>"
@@ -442,6 +452,11 @@ msgstr "<span class=\"o_stat_text\">작업 <br/>실적</span>"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Overview</span>"
 msgstr "<span class=\"o_stat_text\">현황</span>"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "<span class=\"o_stat_text\">Packages</span>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -678,6 +693,11 @@ msgstr ""
 "키트 형식의 자재명세서가 있는 품목에는 재주문 규칙을 설정할 수 없습니다."
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_res_groups
+msgid "Access Groups"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_rule__action
 msgid "Action"
 msgstr "추가 작업"
@@ -872,11 +892,6 @@ msgstr "할당"
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
 msgid "Allocation Report"
 msgstr "할당 보고서"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
-msgid "Allocation Report Labels"
-msgstr "할당 보고서 라벨"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__allow_workorder_dependencies
@@ -1195,6 +1210,7 @@ msgid "Backorder sequence, if equals to 0 means there is not related backorder"
 msgstr "잔여주문 순서가 0이면 관련 잔여주문이 없음을 의미합니다."
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__barcode
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__barcode
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
 msgid "Barcode"
@@ -2239,6 +2255,11 @@ msgid "Destination Location"
 msgstr "목적지 위치"
 
 #. module: mrp
+#: model:ir.actions.act_window,name:mrp.action_detailed_operations
+msgid "Detailed Operations"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Details"
 msgstr "세부 정보"
@@ -2306,11 +2327,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_report_stock_report_stock_rule__display_name
 #: model:ir.model.fields,field_description:mrp.field_res_company__display_name
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:mrp.field_res_groups__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_allocation_report__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_forecasted_product_product__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_lot__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_move__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_move_line__display_name
+#: model:ir.model.fields,field_description:mrp.field_stock_package__display_name
+#: model:ir.model.fields,field_description:mrp.field_stock_package_history__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_picking__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_quant__display_name
@@ -2845,11 +2869,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_report_stock_report_stock_rule__id
 #: model:ir.model.fields,field_description:mrp.field_res_company__id
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__id
+#: model:ir.model.fields,field_description:mrp.field_res_groups__id
 #: model:ir.model.fields,field_description:mrp.field_stock_allocation_report__id
 #: model:ir.model.fields,field_description:mrp.field_stock_forecasted_product_product__id
 #: model:ir.model.fields,field_description:mrp.field_stock_lot__id
 #: model:ir.model.fields,field_description:mrp.field_stock_move__id
 #: model:ir.model.fields,field_description:mrp.field_stock_move_line__id
+#: model:ir.model.fields,field_description:mrp.field_stock_package__id
+#: model:ir.model.fields,field_description:mrp.field_stock_package_history__id
 #: model:ir.model.fields,field_description:mrp.field_stock_picking__id
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__id
 #: model:ir.model.fields,field_description:mrp.field_stock_quant__id
@@ -3304,6 +3331,11 @@ msgid "Link between products and their UoMs"
 msgstr ""
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "List view of detailed operations"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__location_id
 msgid "Location"
 msgstr "위치"
@@ -3574,6 +3606,7 @@ msgstr "제조 생산 관리 유형"
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__mo_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__production_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__production_id
+#: model:ir.model.fields,field_description:mrp.field_stock_package_history__production_id
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -4369,9 +4402,42 @@ msgid "PDF"
 msgstr "PDF"
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_stock_package
+msgid "Package"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
+msgid "Package Content"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__package_history_ids
+msgid "Package History"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
+msgid "Package Label"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "Package barcode"
 msgstr "패키지 바코드"
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_production.py:0
+#: model:ir.actions.report,name:mrp.action_report_mrp_packages
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Packages"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__packages_count
+msgid "Packages Count"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__bom_id
@@ -4645,8 +4711,18 @@ msgstr "인쇄"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
+msgid "Print label as:"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
 msgid "Print labels as:"
 msgstr "라벨 인쇄:"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
+msgid "Print on \"Put in Pack\""
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
@@ -5246,6 +5322,11 @@ msgid "Reserved"
 msgstr "예약 수량"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Reset to Draft"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__resource_id
 msgid "Resource"
 msgstr "리소스"
@@ -5306,6 +5387,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__message_has_sms_error
 msgid "SMS Delivery error"
 msgstr "SMS 전송 에러"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter__barcode
+msgid "Scan to select the workcenter in shopfloor."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split_line__date
@@ -5431,6 +5517,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_replenishment_tree_view
 msgid "Set as Bill of Materials"
 msgstr "자재명세서로 설정"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Set to In Progress"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_configuration
@@ -5731,6 +5822,11 @@ msgid "Stock Moves"
 msgstr "재고 이동"
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_stock_package_history
+msgid "Stock Package History"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model,name:mrp.model_stock_forecasted_product_product
 msgid "Stock Replenishment Report"
 msgstr "재고 재보충 보고서"
@@ -5871,6 +5967,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "The backorder %s has been created."
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.constraint,message:mrp.constraint_mrp_workcenter_barcode_company_uniq
+msgid "The barcode for a workcenter must be unique per company."
 msgstr ""
 
 #. module: mrp
@@ -6283,6 +6384,12 @@ msgid "To Produce"
 msgstr "생산 대기"
 
 #. module: mrp
+#. odoo-javascript
+#: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
+msgid "To Replenish"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__search_date_category__today
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Today"
@@ -6460,8 +6567,8 @@ msgid "Unable to split with more than the quantity to produce."
 msgstr "생산할 수량을 초과하여 분할할 수 없습니다."
 
 #. module: mrp
+#: model:ir.actions.server,name:mrp.action_production_order_unbuild
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__unbuild_id
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "Unbuild"
 msgstr "해체"
@@ -6676,6 +6783,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "Visible to all"
 msgstr "모든 사람에게 표시"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_move_line__visual_lot_name
+msgid "Visual Pre-generated Lot"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__reservation_state__confirmed
@@ -7374,157 +7486,161 @@ msgstr "실제 소요 시간"
 msgid "split"
 msgstr "분할"
 
-msgid "Allocation Report for Manufacturing Orders"
-msgstr "제조 주문에 대한 할당 보고서"
+#~ msgid "Allocation Report Labels"
+#~ msgstr "할당 보고서 라벨"
 
-msgid "Create backorder"
-msgstr "잔여주문 생성"
+#~ msgid "Allocation Report for Manufacturing Orders"
+#~ msgstr "제조 주문에 대한 할당 보고서"
 
-msgid "MRP Reception Report"
-msgstr "MRP 수취 보고서"
+#~ msgid "Create backorder"
+#~ msgstr "잔여주문 생성"
 
-msgid "No Backorder"
-msgstr "잔여주문 없음"
+#~ msgid "MRP Reception Report"
+#~ msgstr "MRP 수취 보고서"
 
-msgid "Operation Category"
-msgstr "작업 카테고리"
+#~ msgid "No Backorder"
+#~ msgstr "잔여주문 없음"
 
-msgid "Produce All"
-msgstr "전체 생산"
+#~ msgid "Operation Category"
+#~ msgstr "작업 카테고리"
 
-msgid "Set Quantities & Validate"
-msgstr "수량 설정 & 승인"
+#~ msgid "Produce All"
+#~ msgstr "전체 생산"
 
-msgid "Show Produce"
-msgstr "생산 보기"
+#~ msgid "Set Quantities & Validate"
+#~ msgstr "수량 설정 & 승인"
 
-msgid "Show Produce All"
-msgstr "전체 생산 보기"
+#~ msgid "Show Produce"
+#~ msgstr "생산 보기"
 
-msgid "Stock Reception Report"
-msgstr "재고 입고 보고서"
+#~ msgid "Show Produce All"
+#~ msgstr "전체 생산 보기"
 
-msgid "Technical field to check if produce all button can be shown"
-msgstr "전체 생산 버튼 표시 가능 여부를 확인하는 데 사용되는 기술 필드입니다."
+#~ msgid "Stock Reception Report"
+#~ msgstr "재고 입고 보고서"
 
-msgid "Technical field to check if produce button can be shown"
-msgstr "생산 버튼 표시 가능 여부를 확인하는 데 사용되는 기술 필드입니다."
+#~ msgid "Technical field to check if produce all button can be shown"
+#~ msgstr ""
+#~ "전체 생산 버튼 표시 가능 여부를 확인하는 데 사용되는 기술 필드입니다."
 
-msgid "Use Reception Report with Manufacturing Orders"
-msgstr "제조 주문과 관련된 수취 보고서 사용"
+#~ msgid "Technical field to check if produce button can be shown"
+#~ msgstr "생산 버튼 표시 가능 여부를 확인하는 데 사용되는 기술 필드입니다."
 
-msgid ""
-"View and allocate production quantities to customer orders or other "
-"manufacturing orders"
-msgstr "고객 주문 또는 기타 제조 주문에 대한 생산 수량 확인 및 할당"
+#~ msgid "Use Reception Report with Manufacturing Orders"
+#~ msgstr "제조 주문과 관련된 수취 보고서 사용"
 
-msgid "Check availability"
-msgstr "적용 여부 확인"
+#~ msgid ""
+#~ "View and allocate production quantities to customer orders or other "
+#~ "manufacturing orders"
+#~ msgstr "고객 주문 또는 기타 제조 주문에 대한 생산 수량 확인 및 할당"
 
-msgid ""
-"Create operation level dependencies that will influence both planning and "
-"the status of work orders upon MO confirmation. If this feature is ticked, "
-"and nothing is specified, Odoo will assume that all operations can be "
-"started simultaneously."
-msgstr ""
-"제조 주문 확인 시 계획 및 작업 지시 상황에 영향을 미치는 작업 수준 종속성을 "
-"생성합니다. 해당 기능을 설정하고 아무런 추가 사항을 지정하지 않은 경우 Odoo"
-"는 모든 작업을 동시에 시작할 수 있다고 가정합니다."
+#~ msgid "Check availability"
+#~ msgstr "적용 여부 확인"
 
-msgid "MO Cancelled"
-msgstr "MO 취소됨"
+#~ msgid ""
+#~ "Create operation level dependencies that will influence both planning and "
+#~ "the status of work orders upon MO confirmation. If this feature is "
+#~ "ticked, and nothing is specified, Odoo will assume that all operations "
+#~ "can be started simultaneously."
+#~ msgstr ""
+#~ "제조 주문 확인 시 계획 및 작업 지시 상황에 영향을 미치는 작업 수준 종속성"
+#~ "을 생성합니다. 해당 기능을 설정하고 아무런 추가 사항을 지정하지 않은 경우 "
+#~ "Odoo는 모든 작업을 동시에 시작할 수 있다고 가정합니다."
 
-msgid "MO Confirmed"
-msgstr "MO 확인됨"
+#~ msgid "MO Cancelled"
+#~ msgstr "MO 취소됨"
 
-msgid "MO Done"
-msgstr "MO 완료"
+#~ msgid "MO Confirmed"
+#~ msgstr "MO 확인됨"
 
-msgid "MO Planned"
-msgstr "MO 계획"
+#~ msgid "MO Done"
+#~ msgstr "MO 완료"
 
-msgid "MO Progress"
-msgstr "MO 진행"
+#~ msgid "MO Planned"
+#~ msgstr "MO 계획"
 
-msgid "MO To Close"
-msgstr "MO 닫기"
+#~ msgid "MO Progress"
+#~ msgstr "MO 진행"
 
-msgid "Operation Dependencies"
-msgstr "작업 종속성"
+#~ msgid "MO To Close"
+#~ msgstr "MO 닫기"
 
-msgid ""
-"Set the order that work orders should be processed in. Activate the feature "
-"within each BoM's Miscellaneous tab"
-msgstr ""
-"작업지시서를 처리할 순서를 설정합니다. 각 자재명세서의 기타 탭에서 해당 기능"
-"을 활성화할 수 있습니다."
+#~ msgid "Operation Dependencies"
+#~ msgstr "작업 종속성"
 
-msgid "The number of products already handled by this work order"
-msgstr "해당 작업 지시에 의해 이미 처리된 품목 수"
+#~ msgid ""
+#~ "Set the order that work orders should be processed in. Activate the "
+#~ "feature within each BoM's Miscellaneous tab"
+#~ msgstr ""
+#~ "작업지시서를 처리할 순서를 설정합니다. 각 자재명세서의 기타 탭에서 해당 기"
+#~ "능을 활성화할 수 있습니다."
+
+#~ msgid "The number of products already handled by this work order"
+#~ msgstr "해당 작업 지시에 의해 이미 처리된 품목 수"
 
 #, fuzzy
-msgid "Time Remaining"
-msgstr "남은 시간"
+#~ msgid "Time Remaining"
+#~ msgstr "남은 시간"
 
-msgid "Total To Consume"
-msgstr "총 소요량"
+#~ msgid "Total To Consume"
+#~ msgstr "총 소요량"
 
-msgid "Unbuild: %s"
-msgstr "해체: %s"
+#~ msgid "Unbuild: %s"
+#~ msgstr "해체: %s"
 
-msgid "Use Operation Dependencies"
-msgstr "작업 종속성 사용"
+#~ msgid "Use Operation Dependencies"
+#~ msgstr "작업 종속성 사용"
 
-msgid "Website Messages"
-msgstr "웹사이트 메시지"
+#~ msgid "Website Messages"
+#~ msgstr "웹사이트 메시지"
 
-msgid "Website communication history"
-msgstr "웹사이트 대화 이력"
+#~ msgid "Website communication history"
+#~ msgstr "웹사이트 대화 이력"
 
-msgid "days"
-msgstr "일"
+#~ msgid "days"
+#~ msgstr "일"
 
-msgid "Final Location from procurement"
-msgstr "최종 조달 위치"
+#~ msgid "Final Location from procurement"
+#~ msgstr "최종 조달 위치"
 
-msgid ""
-"<p class=\"o_view_nocontent_smiling_face\">\n"
-"                        Upload files to your product\n"
-"                    </p><p>\n"
-"                        Use this feature to store any files, like drawings "
-"or specifications.\n"
-"                    </p>"
-msgstr ""
-"<p class=\"o_view_nocontent_smiling_face\">\n"
-"                        제품 파일을 업로드합니다\n"
-"                    </p><p>\n"
-"                        이 기능을 사용하면 도면이나 제품 사양과 같은 파일을 "
-"저장할 수 있습니다.\n"
-"                    </p>"
+#~ msgid ""
+#~ "<p class=\"o_view_nocontent_smiling_face\">\n"
+#~ "                        Upload files to your product\n"
+#~ "                    </p><p>\n"
+#~ "                        Use this feature to store any files, like "
+#~ "drawings or specifications.\n"
+#~ "                    </p>"
+#~ msgstr ""
+#~ "<p class=\"o_view_nocontent_smiling_face\">\n"
+#~ "                        제품 파일을 업로드합니다\n"
+#~ "                    </p><p>\n"
+#~ "                        이 기능을 사용하면 도면이나 제품 사양과 같은 파일"
+#~ "을 저장할 수 있습니다.\n"
+#~ "                    </p>"
 
-msgid "Attachments Count"
-msgstr "첨부 파일 수"
+#~ msgid "Attachments Count"
+#~ msgstr "첨부 파일 수"
 
-msgid "Files attached to the product."
-msgstr "품목에 첨부된 파일."
+#~ msgid "Files attached to the product."
+#~ msgstr "품목에 첨부된 파일."
 
-msgid "Hidden"
-msgstr "숨김"
+#~ msgid "Hidden"
+#~ msgstr "숨김"
 
-msgid ""
-"Leave hidden if document only accessible on product form.\n"
-"Select Bill of Materials to visualise this document as a product attachment "
-"when this product is in a bill of material."
-msgstr ""
-"문서가 제품 양식에서만 액세스할 수 있는 경우에는 숨긴 상태로 유지합니다.\n"
-"제품이 자재명세서에 포함된 경우 이 문서를 제품 첨부 파일로 표시하려면 자재명"
-"세서를 선택합니다."
+#~ msgid ""
+#~ "Leave hidden if document only accessible on product form.\n"
+#~ "Select Bill of Materials to visualise this document as a product "
+#~ "attachment when this product is in a bill of material."
+#~ msgstr ""
+#~ "문서가 제품 양식에서만 액세스할 수 있는 경우에는 숨긴 상태로 유지합니다.\n"
+#~ "제품이 자재명세서에 포함된 경우 이 문서를 제품 첨부 파일로 표시하려면 자재"
+#~ "명세서를 선택합니다."
 
-msgid "MRP : Visible at"
-msgstr "MRP : 다음에서 표시"
+#~ msgid "MRP : Visible at"
+#~ msgstr "MRP : 다음에서 표시"
 
-msgid "Product Attachments"
-msgstr "품목 첨부파일"
+#~ msgid "Product Attachments"
+#~ msgstr "품목 첨부파일"
 
-msgid "Product Document"
-msgstr "제품 관련 문서"
+#~ msgid "Product Document"
+#~ msgstr "제품 관련 문서"

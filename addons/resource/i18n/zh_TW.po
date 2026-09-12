@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:46+0000\n"
+"POT-Creation-Date: 2026-09-11 17:43+0000\n"
 "PO-Revision-Date: 2026-08-31 19:45+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -339,6 +339,8 @@ msgid "Forever"
 msgstr ""
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__4
 msgid "Friday"
 msgstr "星期五"
@@ -482,6 +484,8 @@ msgid "Material Resources"
 msgstr ""
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__0
 msgid "Monday"
 msgstr "星期一"
@@ -540,6 +544,11 @@ msgid "Phone"
 msgstr "電話"
 
 #. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_tree
+msgid "Preview"
+msgstr ""
+
+#. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 msgid "Provided datetimes needs to be timezoned"
@@ -575,6 +584,16 @@ msgstr ""
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__recurrency_type
 msgid "Recurrency Type"
+msgstr ""
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__reference_calendar_id
+msgid "Reference Calendar"
+msgstr ""
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_calendar__reference_calendar_id
+msgid "Reference working hours used to compute the full-time equivalent."
 msgstr ""
 
 #. module: resource
@@ -657,6 +676,8 @@ msgstr ""
 "定其效率和工作量."
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__5
 msgid "Saturday"
 msgstr "星期六"
@@ -717,6 +738,8 @@ msgid "Starting Date of Time Off"
 msgstr "休假開始日期"
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__6
 msgid "Sunday"
 msgstr "星期日"
@@ -805,6 +828,8 @@ msgstr ""
 "鐘."
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__3
 msgid "Thursday"
 msgstr "星期四"
@@ -850,6 +875,8 @@ msgid "Total duration of attendances cannot exceed 24 hours"
 msgstr ""
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__1
 msgid "Tuesday"
 msgstr "星期二"
@@ -878,12 +905,26 @@ msgid "Variable"
 msgstr ""
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_many2one/resource_calendar_many2one.js:0
+msgid "Variable (%(days)s %(dayLabel)s - %(hours)sh)"
+msgstr ""
+
+#. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
+msgid "Variable (%(days)s days - %(hours)sh)"
+msgstr ""
+
+#. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 #: model_terms:ir.ui.view,arch_db:resource.resource_resource_form
 msgid "Visible to all"
 msgstr "向全部人顯示"
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__2
 msgid "Wednesday"
 msgstr "星期三"
@@ -916,6 +957,7 @@ msgstr "工作資源數目"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__work_time_rate
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Work Time Rate"
 msgstr "工時對全職比率"
 
@@ -942,6 +984,12 @@ msgstr "工作至"
 #: model:ir.model.fields,field_description:resource.field_resource_mixin__resource_calendar_id
 msgid "Working Hours"
 msgstr "工作時間"
+
+#. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
+msgid "Working Hours by Day"
+msgstr ""
 
 #. module: resource
 #. odoo-python
@@ -982,51 +1030,68 @@ msgstr ""
 msgid "You cannot compute the intervals without a calendar on no resource."
 msgstr ""
 
-msgid "<span class=\"ms-2\">hours/week</span>"
-msgstr "<span class=\"ms-2\">小時/星期</span>"
+#. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_many2one/resource_calendar_many2one.js:0
+msgid "day"
+msgstr ""
 
-msgid "<span>hours/week</span>"
-msgstr "<span>小時/星期</span>"
+#. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_many2one/resource_calendar_many2one.js:0
+msgid "days"
+msgstr ""
 
-msgid ""
-"Are you sure you want to switch to a 1-week calendar? All work entries will "
-"be lost."
-msgstr "確定要切換至一星期日曆檢視？所有工作記項都將遺失。"
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "from company"
+msgstr ""
 
-msgid ""
-"Are you sure you want to switch to a 2-week calendar? All work entries will "
-"be lost."
-msgstr "確定要切換至兩星期日曆檢視？所有工作記項都將遺失。"
+#~ msgid "<span class=\"ms-2\">hours/week</span>"
+#~ msgstr "<span class=\"ms-2\">小時/星期</span>"
 
-msgid "Attendances can't overlap."
-msgstr "出勤時間不能重疊."
+#~ msgid "<span>hours/week</span>"
+#~ msgstr "<span>小時/星期</span>"
 
-msgid "Avg"
-msgstr "平均"
+#~ msgid ""
+#~ "Are you sure you want to switch to a 1-week calendar? All work entries "
+#~ "will be lost."
+#~ msgstr "確定要切換至一星期日曆檢視？所有工作記項都將遺失。"
 
-msgid "Calendar in 2 weeks mode"
-msgstr "雙週模式下的日曆"
+#~ msgid ""
+#~ "Are you sure you want to switch to a 2-week calendar? All work entries "
+#~ "will be lost."
+#~ msgstr "確定要切換至兩星期日曆檢視？所有工作記項都將遺失。"
 
-msgid "Explanation"
-msgstr "說明"
+#~ msgid "Attendances can't overlap."
+#~ msgstr "出勤時間不能重疊."
 
-msgid "First"
-msgstr "第一個"
+#~ msgid "Avg"
+#~ msgstr "平均"
 
-msgid "First week"
-msgstr "第一週"
+#~ msgid "Calendar in 2 weeks mode"
+#~ msgstr "雙週模式下的日曆"
 
-msgid "Second"
-msgstr "第二個"
+#~ msgid "Explanation"
+#~ msgstr "說明"
 
-msgid "Second week"
-msgstr "第二週"
+#~ msgid "First"
+#~ msgstr "第一個"
 
-msgid "Switch"
-msgstr "轉換"
+#~ msgid "First week"
+#~ msgstr "第一週"
 
-msgid "Total"
-msgstr "總計"
+#~ msgid "Second"
+#~ msgstr "第二個"
 
-msgid "Week Number"
-msgstr "週數"
+#~ msgid "Second week"
+#~ msgstr "第二週"
+
+#~ msgid "Switch"
+#~ msgstr "轉換"
+
+#~ msgid "Total"
+#~ msgstr "總計"
+
+#~ msgid "Week Number"
+#~ msgstr "週數"

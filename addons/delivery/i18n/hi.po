@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:42+0000\n"
+"POT-Creation-Date: 2026-09-11 17:42+0000\n"
 "PO-Revision-Date: 2026-08-31 16:43+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -87,11 +87,6 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
-
-#. module: delivery
-#: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
-msgid "<i class=\"oi me-1\" data-icon=\"east\"/>Get rate"
-msgstr "<i class=\"oi me-1\" data-icon=\"east\"/>रेट पाएं"
 
 #. module: delivery
 #. odoo-python
@@ -278,6 +273,16 @@ msgid "Carrier"
 msgstr "कैरियर"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__carrier_prices
+msgid "Carrier Prices"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__carrier_prices_dumped
+msgid "Carrier Prices Dumped"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__payment_provider__custom_mode__cash_on_delivery
 msgid "Cash On Delivery"
 msgstr "कैश ऑन डिलीवरी"
@@ -292,7 +297,20 @@ msgstr "कैश ऑन डिलीवरी"
 #. module: delivery
 #. odoo-python
 #: code:addons/delivery/models/payment_provider.py:0
+msgid "Cash on delivery is only allowed if a sales order exists"
+msgstr ""
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/payment_provider.py:0
 msgid "Cash on delivery not allowed by selected delivery method"
+msgstr ""
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/payment_provider.py:0
+msgid ""
+"Cash on delivery not allowed to pay less than the order remaining balance"
 msgstr ""
 
 #. module: delivery
@@ -334,6 +352,7 @@ msgstr "कॉन्टेंट"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__display_price
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__delivery_cost
 msgid "Cost"
 msgstr "कीमत"
 
@@ -412,6 +431,11 @@ msgid "Delivery Costs"
 msgstr ""
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__delivery_currency_id
+msgid "Delivery Currency"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__delivery_message
 #: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_message
 msgid "Delivery Message"
@@ -426,6 +450,7 @@ msgstr "डिलीवरी मैसेज"
 #: model:ir.model.fields,field_description:delivery.field_sale_order__carrier_id
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_so_list
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_tree
 msgid "Delivery Method"
 msgstr "डिलीवरी का तरीका"
@@ -548,6 +573,7 @@ msgstr "दिखाने का क्रम तय करें"
 #: model:ir.model.fields,field_description:delivery.field_ir_module_module__display_name
 #: model:ir.model.fields,field_description:delivery.field_payment_method__display_name
 #: model:ir.model.fields,field_description:delivery.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:delivery.field_payment_transaction__display_name
 #: model:ir.model.fields,field_description:delivery.field_product_category__display_name
 #: model:ir.model.fields,field_description:delivery.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:delivery.field_res_partner__display_name
@@ -656,6 +682,12 @@ msgid "Get Rate and Create Shipment"
 msgstr "रेट पाएं और शिपमेंट बनाएं"
 
 #. module: delivery
+#. odoo-javascript
+#: code:addons/delivery/static/src/widgets/carrier_rates_loader.xml:0
+msgid "Get all rates"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model,name:delivery.model_ir_http
 msgid "HTTP Routing"
 msgstr "एचटीपीपी राउटिंग"
@@ -671,6 +703,7 @@ msgstr "एचटीपीपी राउटिंग"
 #: model:ir.model.fields,field_description:delivery.field_ir_module_module__id
 #: model:ir.model.fields,field_description:delivery.field_payment_method__id
 #: model:ir.model.fields,field_description:delivery.field_payment_provider__id
+#: model:ir.model.fields,field_description:delivery.field_payment_transaction__id
 #: model:ir.model.fields,field_description:delivery.field_product_category__id
 #: model:ir.model.fields,field_description:delivery.field_res_config_settings__id
 #: model:ir.model.fields,field_description:delivery.field_res_partner__id
@@ -738,6 +771,11 @@ msgid "Invoicing Policy"
 msgstr "इनवॉइसिंग की नीति"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__is_loading_prices
+msgid "Is Loading Prices"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__is_delivery
 msgid "Is a Delivery"
 msgstr "डिलीवरी है"
@@ -761,6 +799,12 @@ msgstr "इन्होंने आखिरी बार अपडेट क�
 #: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__write_date
 msgid "Last Updated on"
 msgstr "आखिरी बार अपडेट हुआ"
+
+#. module: delivery
+#. odoo-javascript
+#: code:addons/delivery/static/src/widgets/carrier_rates_loader.xml:0
+msgid "Loading Rates"
+msgstr ""
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.delivery_local_delivery
@@ -840,6 +884,11 @@ msgid "Note Reference"
 msgstr ""
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__show_delivery_rates_button
+msgid "Number of carriers"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard__note_line_ids
 msgid "Operations"
 msgstr ""
@@ -868,6 +917,11 @@ msgstr ""
 #: model:ir.model,name:delivery.model_payment_provider
 msgid "Payment Provider"
 msgstr "पेमेंट प्रोवाइडर"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_payment_transaction
+msgid "Payment Transaction"
+msgstr ""
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -1070,7 +1124,7 @@ msgid "The Poste"
 msgstr ""
 
 #. module: delivery
-#: model_terms:payment.provider,done_msg:delivery.payment_provider_cod
+#: model_terms:payment.provider,pending_msg:delivery.payment_provider_cod
 msgid "The delivery staff will collect payment upon delivery."
 msgstr "डिलीवरी करते समय पैसे लिए जाएंगे।"
 
@@ -1146,6 +1200,11 @@ msgstr "यह प्रतिशत शिपिंग की कीमत म�
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__total_weight
 msgid "Total Order Weight"
 msgstr "कुल ऑर्डर का वज़न"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
+msgid "Total Weight"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__tracking_url
@@ -1270,8 +1329,8 @@ msgid "Your payment has been cancelled."
 msgstr "आपका भुगतान रद्द हो गया है।"
 
 #. module: delivery
-#: model_terms:payment.provider,pending_msg:delivery.payment_provider_cod
-msgid "Your payment has been processed but is waiting for approval."
+#: model_terms:payment.provider,done_msg:delivery.payment_provider_cod
+msgid "Your payment has been processed."
 msgstr ""
 
 #. module: delivery
@@ -1301,3 +1360,6 @@ msgid ""
 "{{ object.so_id.company_id.name }} Shipping Confirmation (Ref "
 "{{ object.so_id.name or 'n/a' }})"
 msgstr ""
+
+#~ msgid "<i class=\"oi me-1\" data-icon=\"east\"/>Get rate"
+#~ msgstr "<i class=\"oi me-1\" data-icon=\"east\"/>रेट पाएं"

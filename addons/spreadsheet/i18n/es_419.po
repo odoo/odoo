@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:46+0000\n"
+"POT-Creation-Date: 2026-09-11 17:43+0000\n"
 "PO-Revision-Date: 2026-08-31 19:22+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -2063,6 +2063,13 @@ msgstr "No es posible abrir el enlace porque la hoja vinculada está oculta."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"Cannot perform this action on merged cells. Unmerge the cells and try again."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Cannot remove duplicates for an unknown reason"
 msgstr "No se pudieron eliminar los duplicados por un motivo desconocido."
 
@@ -3071,13 +3078,7 @@ msgstr "Tasa de cambio"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/currency/plugins/currency.js:0
-msgid "Currency not available for this company."
-msgstr "La moneda no está disponible para esta empresa."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/currency/plugins/currency.js:0
+#: code:addons/spreadsheet/static/src/currency/formulas.js:0
 msgid "Currency rate unavailable."
 msgstr "Tasa de cambio no disponible."
 
@@ -4490,7 +4491,7 @@ msgstr "Filtro"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/global_filters/plugins/global_filters_core_view_plugin.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_functions.js:0
 msgid "Filter \"%(filter_name)s\" not found"
 msgstr "No se encontró el filtro \"%(filter_name)s\""
 
@@ -7083,7 +7084,7 @@ msgstr "Sin columnas"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "No content to print"
 msgstr "No hay contenido por imprimir"
 
@@ -7968,6 +7969,12 @@ msgstr "Previsualizar impresión"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Print content"
 msgstr "Imprimir contenido"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Print preview"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -14135,16 +14142,6 @@ msgstr "Esta operación no se permite con selecciones múltiples."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"This operation is not possible due to a merge. Please remove the merges "
-"first than try again."
-msgstr ""
-"Esta operación no es posible debido a una combinación. Elimine primero las "
-"combinaciones e inténtelo de nuevo."
-
-#. module: spreadsheet
-#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "This pivot has no cell missing on this sheet"
 msgstr "Esta tabla dinámica no tiene ninguna celda faltante en esta hoja"
@@ -16016,32 +16013,42 @@ msgstr ""
 msgid "yesterday"
 msgstr "ayer"
 
-msgid "%(matches)s matches in %(sheetName)s"
-msgstr "%(matches)s coincidencias en %(sheetName)s"
+#~ msgid "Currency not available for this company."
+#~ msgstr "La moneda no está disponible para esta empresa."
 
-msgid "%(matches)s matches in range %(range)s of %(sheetName)s"
-msgstr "%(matches)s coincidencias en el rango %(range)s de %(sheetName)s"
+#~ msgid ""
+#~ "This operation is not possible due to a merge. Please remove the merges "
+#~ "first than try again."
+#~ msgstr ""
+#~ "Esta operación no es posible debido a una combinación. Elimine primero "
+#~ "las combinaciones e inténtelo de nuevo."
 
-msgid "%s matches in all sheets"
-msgstr "%s coincidencias en todas las hojas"
+#~ msgid "%(matches)s matches in %(sheetName)s"
+#~ msgstr "%(matches)s coincidencias en %(sheetName)s"
 
-msgid "At least one measure and/or dimension is not correct."
-msgstr "Al menos una medida o dimensión es incorrecta."
+#~ msgid "%(matches)s matches in range %(range)s of %(sheetName)s"
+#~ msgstr "%(matches)s coincidencias en el rango %(range)s de %(sheetName)s"
 
-msgid "Change color"
-msgstr "Cambiar color"
+#~ msgid "%s matches in all sheets"
+#~ msgstr "%s coincidencias en todas las hojas"
 
-msgid "Filters"
-msgstr "Filtros"
+#~ msgid "At least one measure and/or dimension is not correct."
+#~ msgstr "Al menos una medida o dimensión es incorrecta."
 
-msgid "First day of the month preceding a date."
-msgstr "Primer día del mes anterior a una fecha."
+#~ msgid "Change color"
+#~ msgstr "Cambiar color"
 
-msgid "Last day of the month following a date."
-msgstr "Último día del mes después de una fecha."
+#~ msgid "Filters"
+#~ msgstr "Filtros"
 
-msgid "Show Filters"
-msgstr "Mostrar filtros"
+#~ msgid "First day of the month preceding a date."
+#~ msgstr "Primer día del mes anterior a una fecha."
 
-msgid "x"
-msgstr "x"
+#~ msgid "Last day of the month following a date."
+#~ msgstr "Último día del mes después de una fecha."
+
+#~ msgid "Show Filters"
+#~ msgstr "Mostrar filtros"
+
+#~ msgid "x"
+#~ msgstr "x"

@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:44+0000\n"
+"POT-Creation-Date: 2026-09-11 17:41+0000\n"
 "PO-Revision-Date: 2026-08-31 14:30+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-s19-4/mrp/th/"
@@ -202,6 +202,11 @@ msgstr "'สินค้าสำเร็จรูป - %s' % object.name"
 #: model:ir.actions.report,print_report_name:mrp.action_report_mrp_mo_overview
 msgid "'MO Overview - %s' % object.display_name"
 msgstr "'ภาพรวมของ MO - %s' % object.display_name"
+
+#. module: mrp
+#: model:ir.actions.report,print_report_name:mrp.action_report_mrp_packages
+msgid "'Packages - %s' % (object.name)"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_production_order
@@ -449,6 +454,11 @@ msgid "<span class=\"o_stat_text\">Manufacturing</span>"
 msgstr "<span class=\"o_stat_text\">การผลิต</span>"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "<span class=\"o_stat_text\">Moves</span>"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "<span class=\"o_stat_text\">OEE</span>"
 msgstr "<span class=\"o_stat_text\">OEE</span>"
@@ -467,6 +477,11 @@ msgstr "<span class=\"o_stat_text\">ประสิทธิภาพ<br/>กา
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Overview</span>"
 msgstr "<span class=\"o_stat_text\">ภาพรวม</span>"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "<span class=\"o_stat_text\">Packages</span>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -703,6 +718,11 @@ msgid ""
 msgstr "สินค้าที่มีรายการวัสดุประเภทชุดอุปกรณ์ไม่สามารถมีกฎการเติมสต็อกโดยอัตโนมัติ"
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_res_groups
+msgid "Access Groups"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_rule__action
 msgid "Action"
 msgstr "การดำเนินการ"
@@ -896,11 +916,6 @@ msgstr "การจัดสรร"
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
 msgid "Allocation Report"
 msgstr "รายงานการจัดสรร"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
-msgid "Allocation Report Labels"
-msgstr "ฉลากรายงานการจัดสรร"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__allow_workorder_dependencies
@@ -1216,6 +1231,7 @@ msgid "Backorder sequence, if equals to 0 means there is not related backorder"
 msgstr "ลำดับคำสั่งซื้อล่วงหน้า ถ้าเท่ากับ 0 หมายความว่าไม่มีสินค้าค้างส่งที่เกี่ยวข้อง"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__barcode
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__barcode
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
 msgid "Barcode"
@@ -2258,6 +2274,11 @@ msgid "Destination Location"
 msgstr "ตำแหน่งปลายทาง"
 
 #. module: mrp
+#: model:ir.actions.act_window,name:mrp.action_detailed_operations
+msgid "Detailed Operations"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Details"
 msgstr "รายละเอียด"
@@ -2328,11 +2349,14 @@ msgstr "แสดง"
 #: model:ir.model.fields,field_description:mrp.field_report_stock_report_stock_rule__display_name
 #: model:ir.model.fields,field_description:mrp.field_res_company__display_name
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:mrp.field_res_groups__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_allocation_report__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_forecasted_product_product__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_lot__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_move__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_move_line__display_name
+#: model:ir.model.fields,field_description:mrp.field_stock_package__display_name
+#: model:ir.model.fields,field_description:mrp.field_stock_package_history__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_picking__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_quant__display_name
@@ -2868,11 +2892,14 @@ msgstr "ชั่วโมงต่อสัปดาห์"
 #: model:ir.model.fields,field_description:mrp.field_report_stock_report_stock_rule__id
 #: model:ir.model.fields,field_description:mrp.field_res_company__id
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__id
+#: model:ir.model.fields,field_description:mrp.field_res_groups__id
 #: model:ir.model.fields,field_description:mrp.field_stock_allocation_report__id
 #: model:ir.model.fields,field_description:mrp.field_stock_forecasted_product_product__id
 #: model:ir.model.fields,field_description:mrp.field_stock_lot__id
 #: model:ir.model.fields,field_description:mrp.field_stock_move__id
 #: model:ir.model.fields,field_description:mrp.field_stock_move_line__id
+#: model:ir.model.fields,field_description:mrp.field_stock_package__id
+#: model:ir.model.fields,field_description:mrp.field_stock_package_history__id
 #: model:ir.model.fields,field_description:mrp.field_stock_picking__id
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__id
 #: model:ir.model.fields,field_description:mrp.field_stock_quant__id
@@ -3320,6 +3347,11 @@ msgid "Link between products and their UoMs"
 msgstr "ผูกกันระหว่างสินค้าและหน่วยวัดของแต่ละสินค้า"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "List view of detailed operations"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__location_id
 msgid "Location"
 msgstr "สถานที่"
@@ -3590,6 +3622,7 @@ msgstr "ประเภทการปฏิบัติการผลิต"
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__mo_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__production_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__production_id
+#: model:ir.model.fields,field_description:mrp.field_stock_package_history__production_id
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -4391,9 +4424,42 @@ msgid "PDF"
 msgstr "PDF"
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_stock_package
+msgid "Package"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
+msgid "Package Content"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__package_history_ids
+msgid "Package History"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
+msgid "Package Label"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "Package barcode"
 msgstr "บาร์โค้ดแพ็คเกจ"
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_production.py:0
+#: model:ir.actions.report,name:mrp.action_report_mrp_packages
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Packages"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__packages_count
+msgid "Packages Count"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__bom_id
@@ -4668,8 +4734,18 @@ msgstr "พิมพ์"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
+msgid "Print label as:"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
 msgid "Print labels as:"
 msgstr "พิมพ์ฉลากเป็น:"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
+msgid "Print on \"Put in Pack\""
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
@@ -5271,6 +5347,11 @@ msgid "Reserved"
 msgstr "สำรองแล้ว"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Reset to Draft"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__resource_id
 msgid "Resource"
 msgstr "แหล่งข้อมูล"
@@ -5332,6 +5413,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__message_has_sms_error
 msgid "SMS Delivery error"
 msgstr "ข้อผิดพลาดในการส่ง SMS"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter__barcode
+msgid "Scan to select the workcenter in shopfloor."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split_line__date
@@ -5457,6 +5543,11 @@ msgstr "กำหนดปริมาณที่น้อยกว่าคว
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_replenishment_tree_view
 msgid "Set as Bill of Materials"
 msgstr "ตั้งเป็นใบรายการวัสดุ"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Set to In Progress"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_configuration
@@ -5759,6 +5850,11 @@ msgid "Stock Moves"
 msgstr "ย้ายสต็อก"
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_stock_package_history
+msgid "Stock Package History"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model,name:mrp.model_stock_forecasted_product_product
 msgid "Stock Replenishment Report"
 msgstr "รายงานการเติมสต็อก"
@@ -5900,6 +5996,11 @@ msgstr ""
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "The backorder %s has been created."
 msgstr "สร้างการสั่งซื้อล่วงหน้า %s แล้ว"
+
+#. module: mrp
+#: model:ir.model.constraint,message:mrp.constraint_mrp_workcenter_barcode_company_uniq
+msgid "The barcode for a workcenter must be unique per company."
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -6307,6 +6408,12 @@ msgid "To Produce"
 msgstr "ที่ต้องผลิต"
 
 #. module: mrp
+#. odoo-javascript
+#: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
+msgid "To Replenish"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__search_date_category__today
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Today"
@@ -6484,8 +6591,8 @@ msgid "Unable to split with more than the quantity to produce."
 msgstr "ไม่สามารถแบ่งได้มากกว่าจำนวนที่ผลิตได้"
 
 #. module: mrp
+#: model:ir.actions.server,name:mrp.action_production_order_unbuild
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__unbuild_id
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "Unbuild"
 msgstr "รื้อ"
@@ -6702,6 +6809,11 @@ msgstr "ดูการวางแผน"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "Visible to all"
 msgstr "มองเห็นได้ทุกคน"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_move_line__visual_lot_name
+msgid "Visual Pre-generated Lot"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__reservation_state__confirmed
@@ -7392,148 +7504,152 @@ msgstr "ระยะเวลาจริง"
 msgid "split"
 msgstr "แยก"
 
-msgid "Allocation Report for Manufacturing Orders"
-msgstr "รายงานการจัดสรรสำหรับใบสั่งผลิต"
+#~ msgid "Allocation Report Labels"
+#~ msgstr "ฉลากรายงานการจัดสรร"
 
-msgid "Create backorder"
-msgstr "สร้างคำสั่งล่วงหน้า"
+#~ msgid "Allocation Report for Manufacturing Orders"
+#~ msgstr "รายงานการจัดสรรสำหรับใบสั่งผลิต"
 
-msgid "MRP Reception Report"
-msgstr "รายงานการรับสินค้า MRP"
+#~ msgid "Create backorder"
+#~ msgstr "สร้างคำสั่งล่วงหน้า"
 
-msgid "No Backorder"
-msgstr "ไม่สร้างคำสั่งล่วงหน้า"
+#~ msgid "MRP Reception Report"
+#~ msgstr "รายงานการรับสินค้า MRP"
 
-msgid "Produce All"
-msgstr "ผลิตทั้งหมด"
+#~ msgid "No Backorder"
+#~ msgstr "ไม่สร้างคำสั่งล่วงหน้า"
 
-msgid "Set Quantities & Validate"
-msgstr "กำหนดปริมาณและตรวจสอบ"
+#~ msgid "Produce All"
+#~ msgstr "ผลิตทั้งหมด"
 
-msgid "Show Produce"
-msgstr "แสดงผลผลิต"
+#~ msgid "Set Quantities & Validate"
+#~ msgstr "กำหนดปริมาณและตรวจสอบ"
 
-msgid "Show Produce All"
-msgstr "แสดงผลผลิตทั้งหมด"
+#~ msgid "Show Produce"
+#~ msgstr "แสดงผลผลิต"
 
-msgid "Stock Reception Report"
-msgstr "รายงานการรับสต็อก"
+#~ msgid "Show Produce All"
+#~ msgstr "แสดงผลผลิตทั้งหมด"
 
-msgid "Technical field to check if produce all button can be shown"
-msgstr "ข้อมูลทางเทคนิคเพื่อตรวจสอบว่าสามารถแสดงปุ่มผลิตทั้งหมดได้หรือไม่"
+#~ msgid "Stock Reception Report"
+#~ msgstr "รายงานการรับสต็อก"
 
-msgid "Technical field to check if produce button can be shown"
-msgstr "ข้อมูลทางเทคนิคเพื่อตรวจสอบว่าสามารถแสดงปุ่มผลิตได้หรือไม่"
+#~ msgid "Technical field to check if produce all button can be shown"
+#~ msgstr "ข้อมูลทางเทคนิคเพื่อตรวจสอบว่าสามารถแสดงปุ่มผลิตทั้งหมดได้หรือไม่"
 
-msgid "Use Reception Report with Manufacturing Orders"
-msgstr "ใช้รายงานการรับสินค้ากับใบสั่งผลิต"
+#~ msgid "Technical field to check if produce button can be shown"
+#~ msgstr "ข้อมูลทางเทคนิคเพื่อตรวจสอบว่าสามารถแสดงปุ่มผลิตได้หรือไม่"
 
-msgid ""
-"View and allocate production quantities to customer orders or other "
-"manufacturing orders"
-msgstr "ดูและจัดสรรปริมาณการผลิตตามคำสั่งซื้อของลูกค้าหรือใบสั่งผลิตอื่นๆ"
+#~ msgid "Use Reception Report with Manufacturing Orders"
+#~ msgstr "ใช้รายงานการรับสินค้ากับใบสั่งผลิต"
 
-msgid "Check availability"
-msgstr "ตรวจสอบความพร้อม"
+#~ msgid ""
+#~ "View and allocate production quantities to customer orders or other "
+#~ "manufacturing orders"
+#~ msgstr "ดูและจัดสรรปริมาณการผลิตตามคำสั่งซื้อของลูกค้าหรือใบสั่งผลิตอื่นๆ"
 
-msgid ""
-"Create operation level dependencies that will influence both planning and "
-"the status of work orders upon MO confirmation. If this feature is ticked, "
-"and nothing is specified, Odoo will assume that all operations can be "
-"started simultaneously."
-msgstr ""
-"สร้างการขึ้นต่อกันของระดับการปฏิบัติงานที่จะมีอิทธิพลต่อทั้งการวางแผนและสถานะของใบสั่งงานตามการยืนยัน "
-"MO หากเลือกฟีเจอร์นี้และไม่ได้ระบุไว้ Odoo จะถือว่าการดำเนินการทั้งหมดสามารถเริ่มต้นพร้อมกันได้"
+#~ msgid "Check availability"
+#~ msgstr "ตรวจสอบความพร้อม"
 
-msgid "MO Cancelled"
-msgstr "MO ยกเลิกแล้ว"
+#~ msgid ""
+#~ "Create operation level dependencies that will influence both planning and "
+#~ "the status of work orders upon MO confirmation. If this feature is "
+#~ "ticked, and nothing is specified, Odoo will assume that all operations "
+#~ "can be started simultaneously."
+#~ msgstr ""
+#~ "สร้างการขึ้นต่อกันของระดับการปฏิบัติงานที่จะมีอิทธิพลต่อทั้งการวางแผนและสถานะของใบสั่งงานตามการยืนยัน "
+#~ "MO หากเลือกฟีเจอร์นี้และไม่ได้ระบุไว้ Odoo "
+#~ "จะถือว่าการดำเนินการทั้งหมดสามารถเริ่มต้นพร้อมกันได้"
 
-msgid "MO Confirmed"
-msgstr "MO ยืนยันแล้ว"
+#~ msgid "MO Cancelled"
+#~ msgstr "MO ยกเลิกแล้ว"
 
-msgid "MO Done"
-msgstr "MO เสร็จสิ้น"
+#~ msgid "MO Confirmed"
+#~ msgstr "MO ยืนยันแล้ว"
 
-msgid "MO Progress"
-msgstr "MO กำลังดำเนินการ"
+#~ msgid "MO Done"
+#~ msgstr "MO เสร็จสิ้น"
 
-msgid "MO To Close"
-msgstr "MO กำลังปิด"
+#~ msgid "MO Progress"
+#~ msgstr "MO กำลังดำเนินการ"
 
-msgid "Operation Dependencies"
-msgstr "การดำเนินงานที่ขึ้นต่อกัน"
+#~ msgid "MO To Close"
+#~ msgstr "MO กำลังปิด"
 
-msgid ""
-"Set the order that work orders should be processed in. Activate the feature "
-"within each BoM's Miscellaneous tab"
-msgstr ""
-"ตั้งค่าลำดับที่ควรดำเนินการใบสั่งงาน เปิดใช้งานฟีเจอร์ภายในแท็บเบ็ดเตล็ดของ BoM แต่ละแท็บ"
+#~ msgid "Operation Dependencies"
+#~ msgstr "การดำเนินงานที่ขึ้นต่อกัน"
 
-msgid "The number of products already handled by this work order"
-msgstr "จำนวนสินค้าที่จัดการโดยคำสั่งงานนี้แล้ว"
+#~ msgid ""
+#~ "Set the order that work orders should be processed in. Activate the "
+#~ "feature within each BoM's Miscellaneous tab"
+#~ msgstr ""
+#~ "ตั้งค่าลำดับที่ควรดำเนินการใบสั่งงาน เปิดใช้งานฟีเจอร์ภายในแท็บเบ็ดเตล็ดของ BoM แต่ละแท็บ"
+
+#~ msgid "The number of products already handled by this work order"
+#~ msgstr "จำนวนสินค้าที่จัดการโดยคำสั่งงานนี้แล้ว"
 
 #, fuzzy
-msgid "Time Remaining"
-msgstr "เวลาคงเหลือ"
+#~ msgid "Time Remaining"
+#~ msgstr "เวลาคงเหลือ"
 
-msgid "Total To Consume"
-msgstr "การบริโภคทั้งหมด"
+#~ msgid "Total To Consume"
+#~ msgstr "การบริโภคทั้งหมด"
 
-msgid "Unbuild: %s"
-msgstr "รื้อ: %s"
+#~ msgid "Unbuild: %s"
+#~ msgstr "รื้อ: %s"
 
-msgid "Use Operation Dependencies"
-msgstr "ใช้การพึ่งพาการดำเนินการ"
+#~ msgid "Use Operation Dependencies"
+#~ msgstr "ใช้การพึ่งพาการดำเนินการ"
 
-msgid "Website Messages"
-msgstr "ข้อความเว็บไซต์"
+#~ msgid "Website Messages"
+#~ msgstr "ข้อความเว็บไซต์"
 
-msgid "Website communication history"
-msgstr "ประวัติการสื่อสารของเว็บไซต์"
+#~ msgid "Website communication history"
+#~ msgstr "ประวัติการสื่อสารของเว็บไซต์"
 
-msgid "days"
-msgstr "วัน"
+#~ msgid "days"
+#~ msgstr "วัน"
 
-msgid "Final Location from procurement"
-msgstr "ตำแหน่งสุดท้ายจากการจัดซื้อ"
+#~ msgid "Final Location from procurement"
+#~ msgstr "ตำแหน่งสุดท้ายจากการจัดซื้อ"
 
-msgid ""
-"<p class=\"o_view_nocontent_smiling_face\">\n"
-"                        Upload files to your product\n"
-"                    </p><p>\n"
-"                        Use this feature to store any files, like drawings "
-"or specifications.\n"
-"                    </p>"
-msgstr ""
-"<p class=\"o_view_nocontent_smiling_face\">\n"
-"                       อัปโหลดไฟล์ไปยังสินค้าของคุณ\n"
-"                    </p><p>\n"
-"                       ใช้ฟีเจอร์นี้เพื่อจัดเก็บไฟล์ใดๆ เช่น ภาพวาดหรือข้อมูลจำเพาะ\n"
-"                    </p>"
+#~ msgid ""
+#~ "<p class=\"o_view_nocontent_smiling_face\">\n"
+#~ "                        Upload files to your product\n"
+#~ "                    </p><p>\n"
+#~ "                        Use this feature to store any files, like "
+#~ "drawings or specifications.\n"
+#~ "                    </p>"
+#~ msgstr ""
+#~ "<p class=\"o_view_nocontent_smiling_face\">\n"
+#~ "                       อัปโหลดไฟล์ไปยังสินค้าของคุณ\n"
+#~ "                    </p><p>\n"
+#~ "                       ใช้ฟีเจอร์นี้เพื่อจัดเก็บไฟล์ใดๆ เช่น ภาพวาดหรือข้อมูลจำเพาะ\n"
+#~ "                    </p>"
 
-msgid "Attachments Count"
-msgstr "จำนวนสิ่งที่แนบมา"
+#~ msgid "Attachments Count"
+#~ msgstr "จำนวนสิ่งที่แนบมา"
 
-msgid "Files attached to the product."
-msgstr "ไฟล์ที่แนบมากับสินค้า"
+#~ msgid "Files attached to the product."
+#~ msgstr "ไฟล์ที่แนบมากับสินค้า"
 
-msgid "Hidden"
-msgstr "ซ่อนแล้ว"
+#~ msgid "Hidden"
+#~ msgstr "ซ่อนแล้ว"
 
-msgid ""
-"Leave hidden if document only accessible on product form.\n"
-"Select Bill of Materials to visualise this document as a product attachment "
-"when this product is in a bill of material."
-msgstr ""
-"ปล่อยการซ่อนไว้หากเอกสารเข้าถึงได้เฉพาะในแบบฟอร์มผลิตภัณฑ์เท่านั้น\n"
-"เลือก รายการวัสดุ เพื่อให้เห็นภาพเอกสารนี้เป็นเอกสารแนบของผลิตภัณฑ์ "
-"เมื่อผลิตภัณฑ์นี้อยู่ในรายการวัสดุ"
+#~ msgid ""
+#~ "Leave hidden if document only accessible on product form.\n"
+#~ "Select Bill of Materials to visualise this document as a product "
+#~ "attachment when this product is in a bill of material."
+#~ msgstr ""
+#~ "ปล่อยการซ่อนไว้หากเอกสารเข้าถึงได้เฉพาะในแบบฟอร์มผลิตภัณฑ์เท่านั้น\n"
+#~ "เลือก รายการวัสดุ เพื่อให้เห็นภาพเอกสารนี้เป็นเอกสารแนบของผลิตภัณฑ์ "
+#~ "เมื่อผลิตภัณฑ์นี้อยู่ในรายการวัสดุ"
 
-msgid "MRP : Visible at"
-msgstr "MRP : สามารถดูได้ที่"
+#~ msgid "MRP : Visible at"
+#~ msgstr "MRP : สามารถดูได้ที่"
 
-msgid "Product Attachments"
-msgstr "การแนบสินค้า"
+#~ msgid "Product Attachments"
+#~ msgstr "การแนบสินค้า"
 
-msgid "Product Document"
-msgstr "เอกสารสินค้า"
+#~ msgid "Product Document"
+#~ msgstr "เอกสารสินค้า"

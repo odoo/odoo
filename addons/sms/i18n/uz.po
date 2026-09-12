@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:43+0000\n"
+"POT-Creation-Date: 2026-09-11 17:43+0000\n"
 "PO-Revision-Date: 2026-08-31 17:07+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-s19-4/sms/uz/"
@@ -123,6 +123,11 @@ msgstr ""
 "class=\"o_stat_text\">Kontekst harakatni</span>"
 
 #. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
+msgid "<span class=\"text-muted\">To</span>"
+msgstr ""
+
+#. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 #, fuzzy
 msgid ""
@@ -148,10 +153,22 @@ msgstr ""
 "hosil qiling</span>"
 
 #. module: sms
+#. odoo-python
+#: code:addons/sms/wizard/sms_composer.py:0
+msgid "A message can only be scheduled in comment mode"
+msgstr ""
+
+#. module: sms
 #: model:ir.model.constraint,message:sms.constraint_sms_tracker_sms_uuid_unique
 #, fuzzy
 msgid "A record for this UUID already exists"
 msgstr "Bu UUID uchun yozuv allaqachon mavjud"
+
+#. module: sms
+#. odoo-python
+#: code:addons/sms/wizard/sms_composer.py:0
+msgid "A scheduled date is needed to schedule a message"
+msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_account_code__account_id
@@ -337,6 +354,12 @@ msgid "Country-specific Registration Required"
 msgstr "Mamlakatga xos ro‘yxatdan o‘tish talab qilinadi"
 
 #. module: sms
+#. odoo-python
+#: code:addons/sms/wizard/sms_composer.py:0
+msgid "Create an SMS Template"
+msgstr ""
+
+#. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_account_code__create_uid
 #: model:ir.model.fields,field_description:sms.field_sms_account_phone__create_uid
 #: model:ir.model.fields,field_description:sms.field_sms_account_sender__create_uid
@@ -409,6 +432,7 @@ msgstr "Yetkazildi"
 #: model:ir.model.fields,field_description:sms.field_mail_followers__display_name
 #: model:ir.model.fields,field_description:sms.field_mail_message__display_name
 #: model:ir.model.fields,field_description:sms.field_mail_notification__display_name
+#: model:ir.model.fields,field_description:sms.field_mail_scheduled_message__display_name
 #: model:ir.model.fields,field_description:sms.field_mail_thread__display_name
 #: model:ir.model.fields,field_description:sms.field_res_company__display_name
 #: model:ir.model.fields,field_description:sms.field_sms_account_code__display_name
@@ -458,6 +482,17 @@ msgstr "Hujjat modeli nomi"
 #, fuzzy
 msgid "Duplicate"
 msgstr "Nusxa olish"
+
+#. module: sms
+#. odoo-python
+#: code:addons/sms/models/mail_scheduled_message.py:0
+msgid "Edit Scheduled SMS"
+msgstr ""
+
+#. module: sms
+#: model:ir.model.fields.selection,name:sms.selection__mail_scheduled_message__send_method__email
+msgid "Email"
+msgstr ""
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_thread
@@ -538,6 +573,7 @@ msgstr "IAP hisobi"
 #: model:ir.model.fields,field_description:sms.field_mail_followers__id
 #: model:ir.model.fields,field_description:sms.field_mail_message__id
 #: model:ir.model.fields,field_description:sms.field_mail_notification__id
+#: model:ir.model.fields,field_description:sms.field_mail_scheduled_message__id
 #: model:ir.model.fields,field_description:sms.field_mail_thread__id
 #: model:ir.model.fields,field_description:sms.field_res_company__id
 #: model:ir.model.fields,field_description:sms.field_sms_account_code__id
@@ -592,6 +628,12 @@ msgstr "ID"
 #, fuzzy
 msgid "If checked, some messages have a delivery error."
 msgstr "Belgilangan bo‘lsa, ba'zi xabarlarda yetkazib berish xatosi mavjud."
+
+#. module: sms
+#. odoo-python
+#: code:addons/sms/wizard/sms_composer.py:0
+msgid "Impossible to determine the model for the template."
+msgstr ""
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__outgoing
@@ -874,6 +916,12 @@ msgstr ""
 "profilida saqlanadi."
 
 #. module: sms
+#. odoo-python
+#: code:addons/sms/wizard/sms_composer.py:0
+msgid "Please provide a name for the template."
+msgstr ""
+
+#. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_composer__composition_mode__comment
 #, fuzzy
 msgid "Post on a document"
@@ -1018,6 +1066,7 @@ msgstr "Qayta urinib ko‘rish"
 #: model:ir.model.fields,field_description:sms.field_mail_notification__sms_id
 #: model:ir.model.fields.selection,name:sms.selection__mail_message__message_type__sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__notification_type__sms
+#: model:ir.model.fields.selection,name:sms.selection__mail_scheduled_message__send_method__sms
 #: model:ir.ui.menu,name:sms.sms_sms_menu
 #: model_terms:ir.ui.view,arch_db:sms.sms_tsms_view_form
 #, fuzzy
@@ -1231,11 +1280,49 @@ msgid "Sanitized Number"
 msgstr "Tozalangan raqam"
 
 #. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form_template_save
+msgid "Save Template"
+msgstr ""
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form_template_save
+msgid "Save as SMS Template"
+msgstr ""
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
+msgid "Schedule"
+msgstr ""
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_composer__scheduled_date
+msgid "Scheduled Date"
+msgstr ""
+
+#. module: sms
+#: model:ir.model,name:sms.model_mail_scheduled_message
+#: model:ir.model.fields,field_description:sms.field_sms_composer__mail_scheduled_message_id
+msgid "Scheduled Message"
+msgstr ""
+
+#. module: sms
+#. odoo-python
+#: code:addons/sms/wizard/sms_composer.py:0
+msgid "Scheduling messages is only supported on mail.thread models."
+msgstr ""
+
+#. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_search
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_search
 #, fuzzy
 msgid "Search SMS Templates"
 msgstr "SMS shablonlarini qidirish"
+
+#. module: sms
+#. odoo-javascript
+#: code:addons/sms/static/src/components/sms_widget/sms_composer_template_selector.js:0
+msgid "Select a Template"
+msgstr ""
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -1249,6 +1336,11 @@ msgstr "Yuborish"
 #, fuzzy
 msgid "Send %(template_name)s"
 msgstr "%(template_name)s yuborish"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_mail_scheduled_message__send_method
+msgid "Send Method"
+msgstr ""
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_tree
@@ -1433,6 +1525,11 @@ msgid "Template Filename"
 msgstr "Shablon fayl nomi"
 
 #. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_composer__template_name
+msgid "Template Name"
+msgstr ""
+
+#. module: sms
 #: model:ir.actions.act_window,name:sms.sms_template_preview_action
 #, fuzzy
 msgid "Template Preview"
@@ -1547,12 +1644,6 @@ msgstr ""
 #, fuzzy
 msgid "This phone number/account has been banned from our service."
 msgstr "Ushbu telefon raqami/hisob xizmatimizdan taqiqlangan."
-
-#. module: sms
-#: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
-#, fuzzy
-msgid "To"
-msgstr "Kimga"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_ir_actions_server__state
@@ -1830,6 +1921,11 @@ msgid "e.g. en_US or {{ object.partner_id.lang }}"
 msgstr "masalan, en_US yoki {{ object.partner_id.lang }}"
 
 #. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form_template_save
+msgid "e.g: Send order confirmation"
+msgstr ""
+
+#. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 #, fuzzy
 msgid "out of"
@@ -1852,5 +1948,9 @@ msgid "record:"
 msgstr "yozuv:"
 
 #, fuzzy
-msgid "Base"
-msgstr "Asos"
+#~ msgid "To"
+#~ msgstr "Kimga"
+
+#, fuzzy
+#~ msgid "Base"
+#~ msgstr "Asos"

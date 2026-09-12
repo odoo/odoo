@@ -10,9 +10,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-04 17:44+0000\n"
-"PO-Revision-Date: 2026-08-31 19:35+0000\n"
+"PO-Revision-Date: 2026-09-11 13:32+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
-"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-4/"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-master/"
 "account_edi_ubl_cii/fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
@@ -43,6 +43,24 @@ msgid ""
 "present in the `EAS list\n"
 "<https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/>`_.\n"
 msgstr ""
+"\n"
+"Sähköisen laksutuksen moduuli\n"
+"===========================\n"
+"\n"
+"Mahdollistaa seuraavien formaattien viennin ja tuonnin: E-FFF, UBL Bis 3, "
+"EHF3, NLCIUS, Factur-X (CII), XRechnung (UBL).\n"
+"Luotaessa PDF-tiedostoa laskusta, se upotetaan xml-tiedostoon kaikkien UBL-"
+"formaattien osalta. Tämä mahdollistaa sen, että\n"
+"vastaanottaja voi hakea PDF-tiedoston pelkän xml-tiedoston avulla. Huomaa, "
+"että **EHF3 on täysin toteutettu UBL Bis 3 kautta** (`viite\n"
+"<https://anskaffelser.dev/postaward/g3/spec/current/billing-3.0/norway/"
+"#_implementation>`_).\n"
+"\n"
+"Huomaa, että E-FFF, NLCIUS ja XRechnung (UBL) ovat käytettävissä vain "
+"belgialaisille, hollantilaisille ja saksalaisille yrityksille\n"
+"vastaavassa järjestyksessä. UBL Bis 3 on käytettävissä vain yrityksille, "
+"joiden maa sisältyy `EAS-luetteloon\n"
+"<https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/>`_.\n"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -191,7 +209,7 @@ msgstr "BIS3 DE (XRechnung)"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_cii
 msgid "Base helpers for CII"
-msgstr ""
+msgstr "CII-perusapuvälineet"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_ubl
@@ -505,7 +523,7 @@ msgstr "Vienti EU:n ulkopuolelle"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_cii
 msgid "Factur-x/ZUGFeRD CII 2.2.0"
-msgstr ""
+msgstr "Factur-x/ZUGFeRD CII 2.2.0"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__au
@@ -666,7 +684,7 @@ msgstr "Verojen perusteella ryhmitellyt rivit"
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_bank_statement_line__has_grouped_lines
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move__has_grouped_lines
 msgid "Has Grouped Lines"
-msgstr ""
+msgstr "Sisältää ryhmiteltyjä rivejä"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__9910
@@ -714,7 +732,7 @@ msgstr "Islannin Kennitala"
 #. module: account_edi_ubl_cii
 #: model:ir.module.module,shortdesc:base.module_account_edi_ubl_cii
 msgid "Import/Export electronic invoices with UBL/CII"
-msgstr ""
+msgstr "Sähköisten laskujen tuonti/vienti UBL/CII:n avulla"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__0202
@@ -775,7 +793,7 @@ msgstr "Unece-koodi on tuettu"
 #: model:ir.model.fields,help:account_edi_ubl_cii.field_account_bank_statement_line__has_grouped_lines
 #: model:ir.model.fields,help:account_edi_ubl_cii.field_account_move__has_grouped_lines
 msgid "Is move lines Grouped"
-msgstr ""
+msgstr "Siirtorivit on ryhmitelty"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__0097
@@ -953,8 +971,7 @@ msgstr "Täytä kumppanin ALV-tunnus tai Peppol-osoite."
 msgid ""
 "Please fill in your company's VAT or Peppol Address to generate a complete "
 "XML file."
-msgstr ""
-"Täytä yrityksesi ALV tai Peppol-osoite täyden XML-tiedoston luomiseksi."
+msgstr "Täytä yrityksesi ALV tai Peppol-osoite täyden XML-tiedoston luomiseksi."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -995,6 +1012,11 @@ msgid ""
 "met, the customer will be liable for the payment of the tax, interest, and "
 "penalties due in relation to this condition."
 msgstr ""
+"Käänteinen veloitus: Jos asiakas ei esitä kirjallista vastalausetta yhden "
+"kuukauden kuluessa laskun vastaanottamisesta, hänen katsotaan ymmärtävänsä "
+"olevan verovelvollinen, jonka on täytettävä veroilmoitus säännöllisesti. Jos "
+"tätä ehtoa ei täytetä, asiakas on velvollinen maksamaan tästä ehdosta "
+"johtuvat verot, korot ja sakot."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__9947
@@ -1195,8 +1217,8 @@ msgid ""
 "line for product '%(product)s' because it is not compatible with the "
 "product's Unit of Measure '%(product_uom)s'. The UoM was left empty."
 msgstr ""
-"Mittayksikkö '%(uom)s' (koodista '%(code)s') ohitettiin tuotteen '%"
-"(product)s' rivillä, koska se ei ole yhteensopiva tuotteen mittayksikön '%"
+"Mittayksikkö '%(uom)s' (koodista '%(code)s') ohitettiin tuotteen '%(product)"
+"s' rivillä, koska se ei ole yhteensopiva tuotteen mittayksikön '%"
 "(product_uom)s' kanssa. Mittayksikkö jätettiin tyhjäksi."
 
 #. module: account_edi_ubl_cii
@@ -2136,7 +2158,7 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-f
 msgid "VATEX-FR-F - Second-hand sales"
-msgstr ""
+msgstr "VATEX-FR-F - Käytettyjen tavaroiden myynti"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-franchise
@@ -2146,12 +2168,12 @@ msgstr "VATEX-FR-FRANCHISE - Ranskan kotimainen ALV (franchise in base)"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-i
 msgid "VATEX-FR-I - Sales of works of art"
-msgstr ""
+msgstr "VATEX-FR-I – Taideteosten myynti"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-j
 msgid "VATEX-FR-J - Sales of antiques"
-msgstr ""
+msgstr "VATEX-FR-J - Antiikkiesineiden myynti"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__9953
@@ -2197,7 +2219,7 @@ msgstr "Voit ryhmitellä vain laskun rivejä"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 msgid "You need at least two lines to group them."
-msgstr ""
+msgstr "Tarvitset vähintään kaksi riviä, jotta voit ryhmitellä ne."
 
 #. module: account_edi_ubl_cii
 #. odoo-python

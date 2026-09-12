@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:44+0000\n"
+"POT-Creation-Date: 2026-09-11 17:41+0000\n"
 "PO-Revision-Date: 2026-08-31 15:55+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Norwegian Bokmål <https://translate.odoo.com/projects/odoo-"
@@ -126,6 +126,12 @@ msgstr "#Laget av: %s"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/wizard/accrued_orders.py:0
+msgid "%(accrual_type)s entry as of %(date)s"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 msgid "%(action)s for journal %(journal)s"
 msgstr "%(action)s for journal %(journal)s"
@@ -215,40 +221,6 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/wizard/accrued_orders.py:0
-msgid ""
-"%(order)s - %(order_line)s; %(qty_invoiced)s invoiced, %(qty_delivered)s "
-"delivered at %(unit_price)s"
-msgstr ""
-
-#. module: account
-#. odoo-python
-#: code:addons/account/wizard/accrued_orders.py:0
-msgid ""
-"%(order)s - %(order_line)s; %(quantity_billed)s Billed, %"
-"(quantity_received)s Received at %(unit_price)s each"
-msgstr ""
-"%(order)s - %(order_line)s; %(quantity_billed)s Fakturert, %"
-"(quantity_received)s Mottatt den %(unit_price)s hver"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/wizard/accrued_orders.py:0
-msgid ""
-"%(order)s - %(order_line)s; %(quantity_invoiced)s Invoiced, %"
-"(quantity_delivered)s Delivered at %(unit_price)s each"
-msgstr ""
-"%(order)s - %(order_line)s; %(quantity_invoiced)s Fakturert, %"
-"(quantity_delivered)s Levert på %(unit_price)s hver seg"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/wizard/accrued_orders.py:0
-msgid "%(order)s - %(order_line)s; price difference for %(product)s"
-msgstr ""
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%(partner_name)s has reached its credit limit of: %(credit_limit)s"
 msgstr "%(partner_name)s har nådd sin kredittgrense på: %(credit_limit)s"
@@ -310,6 +282,14 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_document_import_mixin.py:0
 msgid "'%(filename)s' (type=%(type)s)"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_report.py:0
+msgid ""
+"'active' field of account.report shouldn't be directly written to in data "
+"files. Use active_fallback. (Detected while loading %(file_path)s)"
 msgstr ""
 
 #. module: account
@@ -399,17 +379,6 @@ msgid "... (View all)"
 msgstr "... (Vis alle)"
 
 #. module: account
-#: model:account.tax,name:account.24_tax_PT2
-#: model:account.tax,name:account.24_tax_ST2
-msgid "0% EXEMPT"
-msgstr ""
-
-#. module: account
-#: model:account.tax,name:account.24_tax_ST7
-msgid "0% EXPORT"
-msgstr ""
-
-#. module: account
 #: model:account.tax,name:account.21_sale_export_tax_template
 msgid "0% Exports"
 msgstr ""
@@ -430,44 +399,6 @@ msgid "100.00 USD"
 msgstr "100.00 USD"
 
 #. module: account
-#: model:account.tax,name:account.24_tax_PT4
-#: model:account.tax,name:account.24_tax_ST4
-msgid "12% (Non-Luxury Good)"
-msgstr ""
-
-#. module: account
-#: model:account.tax,name:account.24_tax_PT7
-msgid "12% IM"
-msgstr ""
-
-#. module: account
-#: model:account.tax,name:account.24_tax_luxury_pemungut_ppn
-msgid "12% Luxury Pemungut PPN"
-msgstr ""
-
-#. module: account
-#: model:account.tax,name:account.24_tax_luxury_wapu
-#: model_terms:account.tax,description:account.24_tax_luxury_wapu
-msgid "12% Luxury WAPU"
-msgstr ""
-
-#. module: account
-#: model:account.tax,name:account.24_tax_PT6
-msgid "12% NCR"
-msgstr ""
-
-#. module: account
-#: model:account.tax,name:account.24_tax_pemungut_ppn
-msgid "12% Pemungut PPN"
-msgstr ""
-
-#. module: account
-#: model:account.tax,name:account.24_tax_wapu
-#: model_terms:account.tax,description:account.24_tax_wapu
-msgid "12% WAPU"
-msgstr ""
-
-#. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
 msgid "15 Days"
 msgstr "15 dager"
@@ -476,27 +407,6 @@ msgstr "15 dager"
 #: model:account.payment.term,name:account.account_payment_term_30days_early_discount
 msgid "2/7 Net 30"
 msgstr "2/7 Net 30"
-
-#. module: account
-#: model:account.tax,name:account.24_tax_PT5
-#: model:account.tax,name:account.24_tax_luxury_sales
-msgid "20% (STLG)"
-msgstr ""
-
-#. module: account
-#: model_terms:account.tax,description:account.24_tax_sltg_wapu
-msgid "20% SLTG WAPU"
-msgstr ""
-
-#. module: account
-#: model:account.tax,name:account.24_tax_stlg_pemungut_ppn
-msgid "20% STLG Pemungut PPN"
-msgstr ""
-
-#. module: account
-#: model:account.tax,name:account.24_tax_sltg_wapu
-msgid "20% STLG WAPU"
-msgstr ""
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_21days
@@ -826,6 +736,11 @@ msgstr "<em>Fakturakladd</em>"
 msgid ""
 "<i class=\"o_button_icon oi me-2\" data-icon=\"east\"/> Configure Alias "
 "Domain"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.address_form_additional_identifiers
+msgid "<i class=\"oi me-1\" data-icon=\"add\"/>Add identifier"
 msgstr ""
 
 #. module: account
@@ -1213,6 +1128,13 @@ msgid "<span> Bill</span>"
 msgstr "<span> Faktura</span>"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
+msgid ""
+"<span> already exists for this period. Posting this entry will replace it.</"
+"span>"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span> due on </span>"
 msgstr "<span>Forventet </span>"
@@ -1249,6 +1171,11 @@ msgstr "<span>Beløp I Valuta</span>"
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Amount</span>"
 msgstr "<span>Beløp</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
+msgid "<span>An accrual entry of </span>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1966,6 +1893,14 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/partner.py:0
+msgid ""
+"A partner cannot have both an individual identifier (%(individual)s) and a "
+"company identifier (%(company)s)."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_payment.py:0
 msgid ""
 "A payment with an outstanding account cannot be confirmed without having a "
@@ -1991,6 +1926,22 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
+msgid ""
+"A statement (%(statement_name)s) belonging to a hashed journal (%"
+"(journal_code)s) cannot be draft."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+msgid ""
+"A statement (%(statement_name)s) belonging to a hashed journal (%"
+"(journal_code)s) cannot having an ending balance that is negative."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
 msgid "A statement should only contain lines from the same journal."
 msgstr ""
 "En utskrift skal kun inneholde linjer \n"
@@ -2007,11 +1958,6 @@ msgstr "En tagg med samme navn og anvendbarhet finnes allerede i dette landet."
 #: code:addons/account/models/account_move_line.py:0
 msgid "A temporary number can not be used in a real matching"
 msgstr "Et midlertidig nummer kan ikke brukes i en faktisk avstemming."
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_12210600
-msgid "AC units, movable power systems (Group 2)."
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__abnormal_amount_partner_ids
@@ -2245,7 +2191,6 @@ msgid "Account Parents"
 msgstr ""
 
 #. module: account
-#: model:account.account,name:account.24_l10n_id_21100010
 #: model:ir.model.fields,field_description:account.field_res_partner__property_account_payable_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_account_payable_id
 msgid "Account Payable"
@@ -2263,16 +2208,10 @@ msgid "Account Prefix Placeholder"
 msgstr ""
 
 #. module: account
-#: model:account.account,name:account.24_l10n_id_11210010
 #: model:ir.model.fields,field_description:account.field_res_partner__property_account_receivable_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_account_receivable_id
 msgid "Account Receivable"
 msgstr "Kundefordringskonto"
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_11210011
-msgid "Account Receivable (PoS)"
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__property_account_receivable_active
@@ -2471,6 +2410,11 @@ msgid "Account with Entries"
 msgstr "Konto med poster"
 
 #. module: account
+#: model:ir.actions.server,name:account.ir_cron_post_stock_valuation_ir_actions_server
+msgid "Account: Inventory Valuation Closing"
+msgstr ""
+
+#. module: account
 #: model:ir.actions.server,name:account.ir_cron_auto_post_draft_entry_ir_actions_server
 msgid ""
 "Account: Post draft entries with auto_post enabled and accounting date up to "
@@ -2481,7 +2425,6 @@ msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_accounting
-#: model:account.account,name:account.24_l10n_id_66110110
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
 #: model:ir.ui.menu,name:account.account_account_menu
 #: model:ir.ui.menu,name:account.menu_finance_entries
@@ -2542,11 +2485,6 @@ msgstr "Regnskapsrapport-linje"
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Accounting documents"
 msgstr "Regnskapsdokumenter"
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_66110110
-msgid "Accounting service expenses"
-msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -2611,6 +2549,11 @@ msgid "Accrual Moves"
 msgstr "Periodiseringsbevegelser"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__accrual_type
+msgid "Accrual Type"
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid ""
@@ -2619,10 +2562,12 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-javascript
 #. odoo-python
-#: code:addons/account/wizard/accrued_orders.py:0
-msgid "Accrued %(entry_type)s entry as of %(date)s"
-msgstr "Periodisering %(entry_type)s opprettelse fra den %(date)s"
+#: code:addons/account/report/account_stock_valuation_report.py:0
+#: code:addons/account/static/src/components/stock_valuation/stock_valuation_report.xml:0
+msgid "Accruals"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -2630,150 +2575,25 @@ msgid "Accrued Account"
 msgstr "Opptjent konto"
 
 #. module: account
+#: model:account.account,name:account.21_accrued_expenses
+msgid "Accrued Expenses"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.21_accrued_income
+msgid "Accrued Income"
+msgstr ""
+
+#. module: account
 #: model:ir.model,name:account.model_account_accrued_orders_wizard
 msgid "Accrued Orders Wizard"
 msgstr "Veiviser for påløpte ordre"
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_25110110
-msgid "Accrued Payable BPJS Kesehatan"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_25110020
-msgid "Accrued Payable BPJS Ketenagakerjaan"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_25110060
-msgid "Accrued Payable Bank"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_25110080
-msgid "Accrued Payable Business License"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_25110100
-msgid "Accrued Payable Education"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_25110010
-msgid "Accrued Payable Electricity"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_25110090
-msgid "Accrued Payable Insurance"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_25110070
-msgid "Accrued Payable PBB"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_25110050
-msgid "Accrued Payable Security Management"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_25110040
-msgid "Accrued Payable Telp & Internet"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_25110030
-msgid "Accrued Payable Water"
-msgstr ""
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "Accrued total"
 msgstr "Opptjent total"
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_12281700
-msgid "Accum. Amortization - Software Licenses"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_12281430
-msgid "Accum. Depr. - Appliances"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_12281600
-msgid "Accum. Depr. - Building Installations"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_12281210
-msgid "Accum. Depr. - Buildings Non-Permanent"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_12281200
-msgid "Accum. Depr. - Buildings Permanent"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_12281410
-msgid "Accum. Depr. - Communication Devices"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_12281510
-msgid "Accum. Depr. - Furniture (Metal/Mixed)"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_12281500
-msgid "Accum. Depr. - Furniture (Wood/Rattan)"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_12281630
-msgid "Accum. Depr. - Heavy Construction Equip"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_12281620
-msgid "Accum. Depr. - Heavy Machinery"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_12281320
-msgid "Accum. Depr. - Heavy Vehicles"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_12281400
-msgid "Accum. Depr. - IT Equipment"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_12281610
-msgid "Accum. Depr. - Light Machinery"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_12281300
-msgid "Accum. Depr. - Motorcycles"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_12281420
-msgid "Accum. Depr. - Office Electronics"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_12281310
-msgid "Accum. Depr. - Operational Vehicles"
-msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_buildings
@@ -2859,6 +2679,7 @@ msgstr "Aktiver for å opprette salgskvittering"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__active
 #: model:ir.model.fields,field_description:account.field_account_account_tag__active
+#: model:ir.model.fields,field_description:account.field_account_cash_rounding__active
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__active
 #: model:ir.model.fields,field_description:account.field_account_incoterms__active
 #: model:ir.model.fields,field_description:account.field_account_journal__active
@@ -2870,9 +2691,20 @@ msgstr "Aktiver for å opprette salgskvittering"
 #: model:ir.model.fields,field_description:account.field_account_tax__active
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__active
 #: model:ir.model.fields.selection,name:account.selection__account_lock_exception__state__active
+#: model_terms:ir.ui.view,arch_db:account.rounding_search_view
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Active"
 msgstr "Aktiv"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_report__active_fallback
+msgid "Active Fallback"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_report__active_selection
+msgid "Active Selection"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__activity_ids
@@ -3057,6 +2889,12 @@ msgid "Add contacts to notify..."
 msgstr "Legg til kontakter som skal varsles..."
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/interactions/portal_additional_identifiers.js:0
+msgid "Add identifier"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Add your terms & conditions at the bottom of invoices/orders/quotations"
 msgstr "Legg til dine vilkår og betingelser nederst på fakturaer/ordre/tilbud"
@@ -3065,11 +2903,6 @@ msgstr "Legg til dine vilkår og betingelser nederst på fakturaer/ordre/tilbud"
 #. odoo-javascript
 #: code:addons/account/static/src/components/mail_attachments/account_move_send_attachments_selector.xml:0
 msgid "Add..."
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_61100050
-msgid "Additional payroll expense under the Gross Up method"
 msgstr ""
 
 #. module: account
@@ -3139,24 +2972,13 @@ msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_administration_fees
-#: model:account.account,name:account.24_l10n_id_66110180
 msgid "Administration Fees"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_66110180
-msgid "Administrative fees"
 msgstr ""
 
 #. module: account
 #: model:res.groups,name:account.group_account_manager
 msgid "Administrator"
 msgstr "Administrator"
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_28110010
-msgid "Advance Sales"
-msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
@@ -3169,18 +2991,8 @@ msgid "Advanced Settings"
 msgstr "Avanserte innstillinger"
 
 #. module: account
-#: model:account.account,name:account.24_l10n_id_66110250
-msgid "Advertising"
-msgstr ""
-
-#. module: account
 #: model:account.account,name:account.22_account_account_us_marketing
 msgid "Advertising & Marketing"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_66110250
-msgid "Advertising and promotion expenses"
 msgstr ""
 
 #. module: account
@@ -3211,15 +3023,11 @@ msgid "Airfare"
 msgstr ""
 
 #. module: account
-#: model:account.account,description:account.24_l10n_id_66110210
-msgid "Airfare expenses"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__alerts
 #: model:ir.model.fields,field_description:account.field_account_move__alerts
 #: model:ir.model.fields,field_description:account.field_account_move_send_batch_wizard__alerts
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__alerts
+#: model:ir.model.fields,field_description:account.field_account_payment__alerts
 msgid "Alerts"
 msgstr "Varsler"
 
@@ -3322,20 +3130,6 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_secure_entries_wizard__unreconciled_bank_statement_line_ids
 msgid "All unreconciled bank statement lines before the selected date."
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_67100060
-msgid ""
-"Allocation of cost for computing hardware, including servers, laptops, "
-"desktops, and networking gear."
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_67100120
-msgid ""
-"Allocation of cost for integrated systems like electrical wiring, plumbing, "
-"and HVAC systems."
 msgstr ""
 
 #. module: account
@@ -3446,11 +3240,6 @@ msgstr ""
 "debetlinjens utenlandske valuta."
 
 #. module: account
-#: model:account.account,name:account.24_l10n_id_67100160
-msgid "Amortization Exp - Software Licenses"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__amount
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__amount
@@ -3543,21 +3332,6 @@ msgid "Amount:"
 msgstr "Beløp:"
 
 #. module: account
-#: model:account.account,description:account.24_l10n_id_11210010
-msgid "Amounts owed by customers for sales"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_11210020
-msgid "Amounts owed by employees (advances, loans)"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_21100010
-msgid "Amounts owed to the company by customers"
-msgstr ""
-
-#. module: account
 #: model:ir.actions.act_window,name:account.action_amounts_to_settle
 msgid "Amounts to Settle"
 msgstr "Åpne poster"
@@ -3618,6 +3392,12 @@ msgstr ""
 msgid ""
 "An error occurred when computing the inalterability. All entries have to be "
 "reconciled."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/controllers/portal.py:0
+msgid "An individual identifier cannot be combined with a VAT number."
 msgstr ""
 
 #. module: account
@@ -3790,11 +3570,6 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: model:account.account,name:account.24_l10n_id_12210430
-msgid "Appliances"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__applicability
 msgid "Applicability"
 msgstr "Anvendbarhet"
@@ -3860,6 +3635,7 @@ msgstr "Arkiver"
 #: model_terms:ir.ui.view,arch_db:account.account_incoterms_view_search
 #: model_terms:ir.ui.view,arch_db:account.account_tag_view_form
 #: model_terms:ir.ui.view,arch_db:account.account_tag_view_search
+#: model_terms:ir.ui.view,arch_db:account.rounding_form_view
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_filter
@@ -3883,6 +3659,12 @@ msgid "Are you sure? This will perform the following operations:\n"
 msgstr ""
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/stock_valuation/filters/filter_date.xml:0
+msgid "As of"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__autopost_bills__ask
 msgid "Ask after 3 validations without edits"
 msgstr ""
@@ -3900,11 +3682,6 @@ msgid "Asset"
 msgstr "Eiendel"
 
 #. module: account
-#: model:account.account,name:account.24_l10n_id_65110152
-msgid "Asset Maintenance Costs"
-msgstr ""
-
-#. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_type_selection/account_type_selection.js:0
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
@@ -3917,6 +3694,22 @@ msgid "At Date"
 msgstr "Ikke forfalt"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_account__account_stock_variation_id
+#: model:ir.model.fields,help:account.field_product_category__account_stock_variation_id
+msgid ""
+"At closing, register the inventory variation of the period into a specific "
+"account"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+msgid ""
+"At least one transaction in the statement is prior the last posted statement "
+"line (%s)"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__to_beginning_of_fiscalyear
 msgid "At the beginning of the fiscal year"
 msgstr "På begynnelsen av regnskapsåret."
@@ -3925,6 +3718,12 @@ msgstr "På begynnelsen av regnskapsåret."
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__to_beginning_of_period
 msgid "At the beginning of the period"
 msgstr "I begynnelsen av perioden"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/stock_valuation/filters/filter_date.xml:0
+msgid "At the date of"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_send_wizard_form
@@ -3992,11 +3791,6 @@ msgstr "Reviderbar"
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__8
 msgid "August"
 msgstr "August"
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_31100010
-msgid "Authorized Capital"
-msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_auto_insurance
@@ -4168,6 +3962,18 @@ msgid "Available Pdf Report"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment__available_return_partner_bank_ids
+msgid "Available Return Partner Bank"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__product_category__property_cost_method__average
+#: model:ir.model.fields.selection,name:account.selection__product_template__cost_method__average
+#: model:ir.model.fields.selection,name:account.selection__res_company__cost_method__average
+msgid "Average Cost (AVCO)"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__price_average
 msgid "Average Price"
 msgstr "Gjennomsnittspris"
@@ -4189,11 +3995,6 @@ msgstr ""
 #: code:addons/account/models/chart_template.py:0
 msgid "BILL"
 msgstr "FAKTURA"
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_61100060
-msgid "BPJS Expense"
-msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -4254,11 +4055,9 @@ msgstr "Saldo-prosent kan ikke være 0"
 #: code:addons/account/models/account_journal.py:0
 #: code:addons/account/models/chart_template.py:0
 #: model:account.account,name:account.21_bank_journal_default_account_163
-#: model:account.account,name:account.22_bank_journal_default_account_499
-#: model:account.account,name:account.24_l10n_id_11120004
+#: model:account.account,name:account.22_bank_journal_default_account_296
 #: model:account.journal,name:account.21_bank
 #: model:account.journal,name:account.22_bank
-#: model:account.journal,name:account.24_bank
 #: model:ir.model.fields,field_description:account.field_res_partner__bank_account_count
 #: model:ir.model.fields,field_description:account.field_res_users__bank_account_count
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__bank
@@ -4336,11 +4135,6 @@ msgid "Bank Accounts"
 msgstr "Bankkonti"
 
 #. module: account
-#: model:account.account,name:account.24_l10n_id_65110020
-msgid "Bank Administration Fees"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_statements_source
 msgid "Bank Feeds"
 msgstr "Banktilkobling"
@@ -4350,10 +4144,8 @@ msgstr "Banktilkobling"
 #: code:addons/account/models/chart_template.py:0
 #: model:account.account,name:account.21_expense_finance
 #: model:account.account,name:account.22_account_account_us_bank_fees
-#: model:account.account,name:account.24_l10n_id_66110340
 #: model:account.reconcile.model,name:account.21_bank_fees_reco
 #: model:account.reconcile.model,name:account.22_bank_fees_reco
-#: model:account.reconcile.model,name:account.24_bank_fees_reco
 msgid "Bank Fees"
 msgstr "Bankgebyr"
 
@@ -4376,11 +4168,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_res_company__bank_journal_ids
 msgid "Bank Journals"
 msgstr "Bankjournaler"
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_22110010
-msgid "Bank Loan"
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_name
@@ -4437,7 +4224,6 @@ msgid "Bank Statements"
 msgstr "Kontoutskrift"
 
 #. module: account
-#: model:account.account,name:account.24_l10n_id_11120001
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_suspense_account_id
 msgid "Bank Suspense"
 msgstr "Suspensjonskonto"
@@ -4447,7 +4233,6 @@ msgstr "Suspensjonskonto"
 #: code:addons/account/models/chart_template.py:0
 #: model:account.account,name:account.21_account_journal_suspense_account_id
 #: model:account.account,name:account.22_account_journal_suspense_account_id
-#: model:account.account,name:account.24_account_journal_suspense_account_id
 msgid "Bank Suspense Account"
 msgstr "Bank suspensjonskonto"
 
@@ -4498,16 +4283,6 @@ msgid "Bank of odoo"
 msgstr "Odoo bank"
 
 #. module: account
-#: model:account.account,description:account.24_l10n_id_65110020
-msgid "Bank service and administration fees"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_66110340
-msgid "Bank service charges"
-msgstr ""
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Bank settings"
@@ -4540,11 +4315,6 @@ msgid "Bank transactions and payments:"
 msgstr ""
 
 #. module: account
-#: model:account.account,description:account.24_l10n_id_25110060
-msgid "Bank-related fees accrued"
-msgstr ""
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 msgid "Bank: Balance"
@@ -4555,11 +4325,6 @@ msgstr "Bank: Saldo"
 #: code:addons/account/static/src/components/many2many_tags_banks/many2many_tags_banks.js:0
 msgid "Banks"
 msgstr "Banker"
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_66110280
-msgid "Bar & Restaurant"
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__base
@@ -4710,6 +4475,17 @@ msgstr "Faktura Referanse"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/report/account_stock_valuation_report.py:0
+msgid "Billed Not Received"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_accrued_orders_wizard__accrual_type__billed_not_received
+msgid "Billed not received"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/controllers/portal.py:0
 #: code:addons/account/models/account_journal_dashboard.py:0
 #: model:ir.actions.act_window,name:account.action_move_in_invoice
@@ -4748,6 +4524,12 @@ msgid "Bills to Pay"
 msgstr "Fakturaer til betaling"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/report/account_stock_valuation_report.py:0
+msgid "Bills to Receive"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bills to Validate"
 msgstr "Bekreft faktura"
@@ -4759,8 +4541,8 @@ msgid "Bills to pay"
 msgstr "Fakturaer til betaling"
 
 #. module: account
-#: model:account.account,name:account.21_to_receive_pay
 #: model:account.account,name:account.22_account_account_us_to_receive_pay
+#: model:ir.model.fields.selection,name:account.selection__account_accrued_orders_wizard__accrual_type__bill_to_receive
 msgid "Bills to receive"
 msgstr "Regninger å motta"
 
@@ -4782,11 +4564,6 @@ msgstr "Blokkert"
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__body_has_template_value
 msgid "Body content is the same as the template"
 msgstr "Hovedinnhold er det samme som malen"
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_61100020
-msgid "Bonuses and benefits for employees"
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__boolean
@@ -4821,48 +4598,13 @@ msgid "Budgets"
 msgstr "Budsjetter"
 
 #. module: account
-#: model:account.account,name:account.24_l10n_id_12210600
-msgid "Building Installations (Movable)"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_65110153
-msgid "Building Maintenance Costs"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_11410010
-msgid "Building Rent"
-msgstr ""
-
-#. module: account
 #: model:account.account,name:account.22_account_account_us_buildings
 msgid "Buildings"
 msgstr ""
 
 #. module: account
-#: model:account.account,name:account.24_l10n_id_12210210
-msgid "Buildings - Non-Permanent"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_12210200
-msgid "Buildings - Permanent"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_66110260
-msgid "Business Gift"
-msgstr ""
-
-#. module: account
 #: model:ir.model,name:account.model_account_document_import_mixin
 msgid "Business document import mixin"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_25110080
-msgid "Business license fees accrued"
 msgstr ""
 
 #. module: account
@@ -5117,21 +4859,6 @@ msgid "Capital"
 msgstr "Capital"
 
 #. module: account
-#: model:account.account,name:account.24_l10n_id_31210010
-msgid "Capital Reserves"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_31100020
-msgid "Capital actually paid by shareholders"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_31100030
-msgid "Capital committed but not yet paid by shareholders"
-msgstr ""
-
-#. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_invoice
 #: model_terms:ir.actions.act_window,help:account.action_move_in_invoice_type
 msgid ""
@@ -5147,9 +4874,7 @@ msgstr "Overfør til"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
-#: model:account.account,name:account.21_cash_journal_default_account_509
-#: model:account.account,name:account.24_l10n_id_11110001
-#: model:account.journal,name:account.24_cash
+#: model:account.account,name:account.21_cash_journal_default_account_306
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__cash
 #: model_terms:ir.ui.view,arch_db:account.account_bank_statement_line_view_search_cashflow
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -5163,12 +4888,12 @@ msgid "Cash Account"
 msgstr "Kontant-konto"
 
 #. module: account
-#: model:account.account,name:account.21_cash_journal_default_account_506
+#: model:account.account,name:account.21_cash_journal_default_account_303
 msgid "Cash Bakery"
 msgstr ""
 
 #. module: account
-#: model:account.account,name:account.21_cash_journal_default_account_508
+#: model:account.account,name:account.21_cash_journal_default_account_305
 msgid "Cash Bar"
 msgstr ""
 
@@ -5201,7 +4926,6 @@ msgstr "Kontantmetode kilde"
 #: code:addons/account/models/chart_template.py:0
 #: model:account.journal,name:account.21_caba
 #: model:account.journal,name:account.22_caba
-#: model:account.journal,name:account.24_caba
 msgid "Cash Basis Taxes"
 msgstr "Kontantmetode avgifter"
 
@@ -5211,7 +4935,7 @@ msgid "Cash Basis Transition Account"
 msgstr "Kontantbasis overgangskonto"
 
 #. module: account
-#: model:account.account,name:account.21_cash_journal_default_account_505
+#: model:account.account,name:account.21_cash_journal_default_account_302
 msgid "Cash Clothes Shop"
 msgstr ""
 
@@ -5225,7 +4949,6 @@ msgstr "Kontantdifferanse utgift"
 #: code:addons/account/models/chart_template.py:0
 #: model:account.account,name:account.21_cash_diff_income
 #: model:account.account,name:account.22_account_account_us_cash_diff_income
-#: model:account.account,name:account.24_l10n_id_99900002
 msgid "Cash Difference Gain"
 msgstr "Kontantdifferanse gevinst"
 
@@ -5239,7 +4962,6 @@ msgstr "Kontant differanse inntekt"
 #: code:addons/account/models/chart_template.py:0
 #: model:account.account,name:account.21_cash_diff_expense
 #: model:account.account,name:account.22_account_account_us_cash_diff_expense
-#: model:account.account,name:account.24_l10n_id_99900001
 msgid "Cash Difference Loss"
 msgstr "Kontant differanse tap"
 
@@ -5248,7 +4970,6 @@ msgstr "Kontant differanse tap"
 #: code:addons/account/models/chart_template.py:0
 #: model:account.account,name:account.21_cash_discount_gain
 #: model:account.account,name:account.22_account_account_us_cash_discount_gain
-#: model:account.account,name:account.24_l10n_id_99900004
 msgid "Cash Discount Gain"
 msgstr "Kontantrabatt gevinst"
 
@@ -5257,7 +4978,6 @@ msgstr "Kontantrabatt gevinst"
 #: code:addons/account/models/chart_template.py:0
 #: model:account.account,name:account.21_cash_discount_loss
 #: model:account.account,name:account.22_account_account_us_cash_discount_loss
-#: model:account.account,name:account.24_l10n_id_99900003
 msgid "Cash Discount Loss"
 msgstr "Kontantrabatt tap"
 
@@ -5277,13 +4997,7 @@ msgid "Cash Discount Write-Off Loss Account"
 msgstr "Tapkonto for avskrivning av kontantrabatt"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_journal_dashboard.py:0
-msgid "Cash Flow"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.21_cash_journal_default_account_504
+#: model:account.account,name:account.21_cash_journal_default_account_301
 msgid "Cash Furn. Shop"
 msgstr ""
 
@@ -5302,21 +5016,27 @@ msgid "Cash Out"
 msgstr ""
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
-#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-msgid "Cash Registers"
-msgstr "Kontantkasser"
-
-#. module: account
-#: model:account.account,name:account.21_cash_journal_default_account_507
+#: model:account.account,name:account.21_cash_journal_default_account_304
 msgid "Cash Restaurant"
 msgstr "Kontantrestaurant"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_company__cash_rounding_loss_account_id
+#: model:ir.model.fields,field_description:account.field_res_config_settings__cash_rounding_loss_account_id
+msgid "Cash Rounding Loss Account"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_cash_rounding_id
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_cash_rounding_id
 msgid "Cash Rounding Method"
 msgstr "Kontant avrundingsmetode"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_company__cash_rounding_profit_account_id
+#: model:ir.model.fields,field_description:account.field_res_config_settings__cash_rounding_profit_account_id
+msgid "Cash Rounding Profit Account"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
@@ -5531,6 +5251,18 @@ msgid "Closing"
 msgstr ""
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/company.py:0
+msgid "Closing: Stock Variation Global for company [%(company)s]"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/company.py:0
+msgid "Closing: Stock Variation Over Period"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__code
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__code
 #: model:ir.model.fields,field_description:account.field_account_code_mapping__code
@@ -5563,6 +5295,11 @@ msgid "Code Store"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__cogs_origin_id
+msgid "Cogs Origin"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Collect customer payments in one-click using Euro SEPA Service"
 msgstr "Samle kundebetalinger med ett klikk ved hjelp av Euro SEPA-tjenesten."
@@ -5575,11 +5312,6 @@ msgid ""
 msgstr ""
 "Samle informasjon og produsere statistikk om handelen med varer i Europa med "
 "Intrastat."
-
-#. module: account
-#: model:account.tax.group,name:account.24_l10n_id_tax_group_vat_collector
-msgid "Collected by VAT Collector"
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__color
@@ -5639,11 +5371,6 @@ msgstr "Kommersiell partners land"
 #. module: account
 #: model:account.account,name:account.22_account_account_us_common_stock
 msgid "Common Stock"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_12210410
-msgid "Communication Devices"
 msgstr ""
 
 #. module: account
@@ -5717,11 +5444,6 @@ msgid "Company "
 msgstr ""
 
 #. module: account
-#: model:account.account,description:account.24_l10n_id_61100060
-msgid "Company BPJS contribution expense"
-msgstr ""
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "Company Bank Account"
 msgstr "Firma bankkonto"
@@ -5766,11 +5488,6 @@ msgid "Company Vat Placeholder"
 msgstr ""
 
 #. module: account
-#: model:account.account,description:account.24_l10n_id_11120004
-msgid "Company bank account for transactions"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__has_chart_of_accounts
 msgid "Company has a chart of accounts"
 msgstr "Firmaet har en kontoplan"
@@ -5794,21 +5511,6 @@ msgstr "Firma tilknyttet denne journalen"
 #: model:account.account,description:account.22_account_account_us_other_employees_benefits
 msgid ""
 "Company's personnel costs excluding compensations, contributions and vouchers"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_31100010
-msgid "Companys authorized capital"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_11110001
-msgid "Companys main cash on hand"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_61100040
-msgid "Compensation expenses for employees"
 msgstr ""
 
 #. module: account
@@ -5842,11 +5544,6 @@ msgid "Computers"
 msgstr "Datamaskiner"
 
 #. module: account
-#: model:account.account,description:account.24_l10n_id_12210400
-msgid "Computers, laptops, servers (Group 1)."
-msgstr ""
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.rounding_form_view
 msgid "Conditions"
 msgstr ""
@@ -5868,6 +5565,8 @@ msgid "Configuration review"
 msgstr "Konfigurasjonsgjennomgang"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
 #: model:onboarding.onboarding.step,button_text:account.onboarding_onboarding_step_fiscal_year
 msgid "Configure"
 msgstr "Konfigurer"
@@ -5957,16 +5656,6 @@ msgid "Construction of buildings and costs associated to buildings"
 msgstr ""
 
 #. module: account
-#: model:account.account,name:account.24_l10n_id_65110030
-msgid "Consultant Fees"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_66110120
-msgid "Consumables"
-msgstr ""
-
-#. module: account
 #: model:ir.model,name:account.model_res_partner
 msgid "Contact"
 msgstr "Kontakt"
@@ -6001,86 +5690,6 @@ msgid "Continue with the default document layout."
 msgstr ""
 
 #. module: account
-#: model:account.account,description:account.24_l10n_id_12281430
-msgid "Contra account for Appliances depreciation."
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_12281600
-msgid "Contra account for Building Installations depreciation."
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_12281410
-msgid "Contra account for Communication Devices depreciation."
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_12281630
-msgid "Contra account for Heavy Construction Equipment depreciation."
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_12281620
-msgid "Contra account for Heavy Machinery depreciation."
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_12281320
-msgid "Contra account for Heavy Vehicles depreciation."
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_12281400
-msgid "Contra account for IT Equipment depreciation."
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_12281610
-msgid "Contra account for Light Machinery depreciation."
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_12281510
-msgid "Contra account for Metal/Mixed Furniture depreciation."
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_12281300
-msgid "Contra account for Motorcycles depreciation."
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_12281210
-msgid "Contra account for Non-Permanent Building depreciation."
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_12281420
-msgid "Contra account for Office Electronics depreciation."
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_12281310
-msgid "Contra account for Operational Vehicles depreciation."
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_12281200
-msgid "Contra account for Permanent Building depreciation."
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_12281700
-msgid "Contra account for Software Licenses amortization."
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_12281500
-msgid "Contra account for Wood/Rattan Furniture depreciation."
-msgstr ""
-
-#. module: account
 #: model:ir.ui.menu,name:account.account_audit_control_menu
 msgid "Control"
 msgstr "Kontroll"
@@ -6106,45 +5715,16 @@ msgid "Cool, it looks like you don't have any amount to settle."
 msgstr ""
 
 #. module: account
-#: model:account.account,description:account.24_l10n_id_21210040
-msgid "Corporate tax payable (PPh 25)"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_21100014
-msgid "Corporate tax payable for the year (PPh 29)"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_11210014
-msgid "Corporate tax receivable for the year (PPh 28A)"
-msgstr ""
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Corrupted data on journal entry with id %(id)s (%(name)s)."
 msgstr ""
 
 #. module: account
-#: model:account.account,description:account.24_l10n_id_67100140
-msgid ""
-"Cost allocation for large-scale production lines, industrial plant "
-"machinery, and stationary power plants."
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_67100040
-msgid ""
-"Cost allocation for standard company cars, SUVs, and vans used for "
-"administrative and daily business tasks."
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_67100090
-msgid ""
-"Cost allocation for utility equipment like refrigerators, microwaves, and "
-"air conditioning units."
+#: model:ir.model.fields,field_description:account.field_product_product__cost_method
+#: model:ir.model.fields,field_description:account.field_product_template__cost_method
+#: model:ir.model.fields,field_description:account.field_res_company__cost_method
+msgid "Cost Method"
 msgstr ""
 
 #. module: account
@@ -6155,7 +5735,6 @@ msgstr ""
 #. module: account
 #: model:account.account,name:account.21_cost_of_goods_sold
 #: model:account.account,name:account.22_account_account_us_cost_of_goods_sold
-#: model:account.account,name:account.24_l10n_id_51000010
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__cogs
 msgid "Cost of Goods Sold"
 msgstr "Kostnader av varesalg"
@@ -6183,13 +5762,8 @@ msgid "Cost of revenue"
 msgstr "Kostnad for inntekter"
 
 #. module: account
-#: model:account.account,description:account.24_l10n_id_65110153
-msgid "Costs for maintaining buildings"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_65110090
-msgid "Costs for shipping goods"
+#: model:ir.model.fields,field_description:account.field_product_category__property_cost_method
+msgid "Costing Method"
 msgstr ""
 
 #. module: account
@@ -6208,16 +5782,6 @@ msgstr ""
 #. module: account
 #: model:account.account,description:account.22_account_account_us_marketing
 msgid "Costs related to promoting the business, such as ads, campaigns, etc"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_65110040
-msgid "Costs related to rentals"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_65110152
-msgid "Costs to maintain fixed assets"
 msgstr ""
 
 #. module: account
@@ -6261,6 +5825,13 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Counterpart Items"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_account__account_stock_expense_id
+msgid ""
+"Counterpart used at closing for accounting adjustments to inventory "
+"valuation."
 msgstr ""
 
 #. module: account
@@ -6754,11 +6325,6 @@ msgid "Credit limit specific to this partner."
 msgstr "Kredittgrense spesifikk for denne partneren."
 
 #. module: account
-#: model_terms:account.tax,description:account.24_tax_PT7
-msgid "Creditable Input VAT from Imports and Foreign Sources"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__cumulated_balance
 msgid "Cumulated Balance"
 msgstr "Akkumulert saldo"
@@ -6969,11 +6535,6 @@ msgid "Customer Credit Note"
 msgstr "Kundekreditnota"
 
 #. module: account
-#: model:account.account,name:account.24_l10n_id_28110020
-msgid "Customer Deposit"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_analytic_line__category__invoice
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__move_type__out_invoice
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__out_invoice
@@ -7064,8 +6625,6 @@ msgid "CustomerInvoices"
 msgstr ""
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_journal_dashboard.py:0
 #: model:ir.actions.act_window,name:account.res_partner_action_customer
 #: model:ir.ui.menu,name:account.menu_account_customer
 #: model:ir.ui.menu,name:account.menu_finance_receivables
@@ -7121,6 +6680,11 @@ msgstr "LEVERT PÅ STED ULASTET"
 #: model:account.incoterms,name:account.incoterm_DDP
 msgid "DELIVERED DUTY PAID"
 msgstr "LEVERT AVGIFT BETALT"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__res_company__inventory_period__daily
+msgid "Daily"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.open_account_journal_dashboard_kanban
@@ -7466,7 +7030,6 @@ msgstr ""
 #. module: account
 #: model:account.account,name:account.21_deferred_revenue
 #: model:account.account,name:account.22_account_account_us_deferred_revenue
-#: model:account.account,name:account.24_l10n_id_28110030
 msgid "Deferred Revenue"
 msgstr "Utsatt inntekt"
 
@@ -7562,31 +7125,6 @@ msgid "Demo Stock Account"
 msgstr "Demo Stock Account"
 
 #. module: account
-#: model:account.account,name:account.24_l10n_id_81100020
-msgid "Deposit Income"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_22110020
-msgid "Deposit for leasing agreements"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_28110020
-msgid "Deposits received from customers"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_21100020
-msgid "Deposits received from shareholders"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_21100030
-msgid "Deposits received from third parties"
-msgstr ""
-
-#. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_merge_wizard.py:0
 msgid "Deprecated"
@@ -7602,81 +7140,6 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__expense_depreciation
 msgid "Depreciation"
 msgstr "Avskrivning"
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_67100090
-msgid "Depreciation Exp - Appliances"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_67100120
-msgid "Depreciation Exp - Building Installations"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_67100020
-msgid "Depreciation Exp - Buildings Non-Permanent"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_67100010
-msgid "Depreciation Exp - Buildings Permanent"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_67100070
-msgid "Depreciation Exp - Communication Devices"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_67100110
-msgid "Depreciation Exp - Furniture (Metal/Mixed)"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_67100100
-msgid "Depreciation Exp - Furniture (Wood/Rattan)"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_67100150
-msgid "Depreciation Exp - Heavy Construction Equip"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_67100140
-msgid "Depreciation Exp - Heavy Machinery"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_67100050
-msgid "Depreciation Exp - Heavy Vehicles"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_67100060
-msgid "Depreciation Exp - IT Equipment"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_67100130
-msgid "Depreciation Exp - Light Machinery"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_67100030
-msgid "Depreciation Exp - Motorcycles"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_67100080
-msgid "Depreciation Exp - Office Electronics"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_67100040
-msgid "Depreciation Exp - Operational Vehicles"
-msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_expense_buildings
@@ -7714,49 +7177,8 @@ msgid "Depreciation Expense - Vehicles"
 msgstr ""
 
 #. module: account
-#: model:account.account,description:account.24_l10n_id_67100110
-msgid ""
-"Depreciation for durable furniture like steel filing cabinets and metal-"
-"framed workstations."
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_67100100
-msgid ""
-"Depreciation for furniture made primarily of organic materials, such as "
-"wooden desks and cabinets."
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_67100050
-msgid ""
-"Depreciation for large-scale transport assets such as dump trucks, prime "
-"movers, or large buses."
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_67100080
-msgid ""
-"Depreciation for office peripherals such as printers, scanners, "
-"photocopiers, and projectors."
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_67100150
-msgid ""
-"Depreciation for site-specific machinery like excavators, cranes, and "
-"bulldozers."
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_67100030
-msgid ""
-"Depreciation of two-wheeled motorized vehicles used for business operations "
-"or delivery."
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__description
+#: model:ir.model.fields,field_description:account.field_account_move_line__name
 #: model:ir.model.fields,field_description:account.field_account_tax__description
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 #: model_terms:ir.ui.view,arch_db:account.view_message_tree_audit_log
@@ -7826,11 +7248,6 @@ msgid ""
 "Digitize your PDF or scanned documents with OCR and Artificial Intelligence"
 msgstr ""
 "Digitaliser PDF- eller skannede dokumenter med OCR og kunstig intelligens."
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_51000010
-msgid "Direct cost of goods sold"
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__direction_sign
@@ -7935,11 +7352,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Discount of %(amount)s if paid within %(days)s days"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_42000070
-msgid "Discounts given to customers on sales"
 msgstr ""
 
 #. module: account
@@ -8071,6 +7483,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_root__display_name
 #: model:ir.model.fields,field_description:account.field_account_secure_entries_wizard__display_name
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__display_name
+#: model:ir.model.fields,field_description:account.field_account_stock_valuation_report__display_name
 #: model:ir.model.fields,field_description:account.field_account_tax__display_name
 #: model:ir.model.fields,field_description:account.field_account_tax_group__display_name
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__display_name
@@ -8261,7 +7674,6 @@ msgstr "Domeneformel snarvei"
 #. module: account
 #: model:account.fiscal.position,name:account.21_template_generic_domestic_fiscal_position
 #: model:account.fiscal.position,name:account.22_account_fiscal_position_us_domestic
-#: model:account.fiscal.position,name:account.24_l10n_id_domestic_fiscal_position
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Domestic"
@@ -8284,11 +7696,6 @@ msgid "Down"
 msgstr "Ned"
 
 #. module: account
-#: model:account.account,name:account.24_l10n_id_11800000
-msgid "Down Payment"
-msgstr ""
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 msgid "Download"
@@ -8304,6 +7711,8 @@ msgstr ""
 "skatteavslutningsposten."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send_batch_wizard.py:0
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__draft
 #: model:ir.model.fields.selection,name:account.selection__account_move__state__draft
 #: model:ir.model.fields.selection,name:account.selection__account_move__status_in_payment__draft
@@ -8477,6 +7886,11 @@ msgid "Duplicate Bank Partner"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__duplicate_entry_id
+msgid "Duplicate Entry"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__duplicate_payment_ids
 #: model:ir.model.fields,field_description:account.field_account_payment_register__duplicate_payment_ids
 msgid "Duplicate Payment"
@@ -8618,16 +8032,6 @@ msgid "Education and training fees not including food and drinks"
 msgstr ""
 
 #. module: account
-#: model:account.account,description:account.24_l10n_id_25110100
-msgid "Education-related expenses accrued"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_25110010
-msgid "Electricity expenses accrued but not yet paid"
-msgstr ""
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Electronic Data Interchange"
 msgstr "Electronic Data Interchange"
@@ -8688,44 +8092,14 @@ msgid "Emails"
 msgstr "E-post"
 
 #. module: account
-#: model:account.account,name:account.24_l10n_id_61100020
-msgid "Employee Bonus / Benefits"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_11210020
-msgid "Employee Liabilities"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_61100030
-msgid "Employee Overtime Pay"
-msgstr ""
-
-#. module: account
 #: model:account.account,name:account.21_employee_payroll_taxes
 #: model:account.account,name:account.22_account_account_us_employee_payroll_taxes
 msgid "Employee Payroll Taxes"
 msgstr "Ansattes lønnsskatt"
 
 #. module: account
-#: model:account.account,name:account.24_l10n_id_61100010
-msgid "Employee Salary"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_61100100
-msgid "Employee tax-related benefits (PPh 21)"
-msgstr ""
-
-#. module: account
 #: model:account.account,name:account.22_account_account_us_commissions
 msgid "Employees Commissions"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_61100040
-msgid "Employees Compensation"
 msgstr ""
 
 #. module: account
@@ -8812,6 +8186,14 @@ msgstr "Slutten av påfølgende måned"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_balance_end_real
 msgid "Ending Balance"
 msgstr "Utgående saldo"
+
+#. module: account
+#. odoo-javascript
+#. odoo-python
+#: code:addons/account/report/account_stock_valuation_report.py:0
+#: code:addons/account/static/src/components/stock_valuation/stock_valuation_report.xml:0
+msgid "Ending Stock"
+msgstr ""
 
 #. module: account
 #. odoo-javascript
@@ -8971,6 +8353,12 @@ msgid "Even magicians can't post nothing!"
 msgstr ""
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/company.py:0
+msgid "Everything is correctly closed"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__example_amount
 msgid "Example Amount"
 msgstr "Eksempelbeløp"
@@ -8996,11 +8384,6 @@ msgid "Example:"
 msgstr "Eksempel:"
 
 #. module: account
-#: model:account.account,description:account.24_l10n_id_12210630
-msgid "Excavators, cranes, bulldozers (Group 4)."
-msgstr ""
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_lock_exception.py:0
 msgid "Exception"
@@ -9011,7 +8394,6 @@ msgstr "Unntak"
 #: code:addons/account/models/chart_template.py:0
 #: model:account.journal,name:account.21_exch
 #: model:account.journal,name:account.22_exch
-#: model:account.journal,name:account.24_exch
 msgid "Exchange Difference"
 msgstr "Vekseldifferanse"
 
@@ -9060,12 +8442,6 @@ msgid "Exclude this journal item from Reminder reports."
 msgstr ""
 
 #. module: account
-#: model_terms:account.tax,description:account.24_tax_PT2
-#: model_terms:account.tax,description:account.24_tax_ST2
-msgid "Exempt"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__expected_currency_rate
 #: model:ir.model.fields,field_description:account.field_account_move__expected_currency_rate
 msgid "Expected Currency Rate"
@@ -9078,15 +8454,14 @@ msgstr "Forventer en kontoplan"
 
 #. module: account
 #. odoo-javascript
-#. odoo-python
 #: code:addons/account/static/src/components/account_type_selection/account_type_selection.js:0
-#: code:addons/account/wizard/accrued_orders.py:0
 #: model:ir.model.fields.selection,name:account.selection__account_account__internal_group__expense
 #: model:ir.model.fields.selection,name:account.selection__account_automatic_entry_wizard__account_type__expense
 msgid "Expense"
 msgstr "Utlegg"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_account__account_stock_expense_id
 #: model:ir.model.fields,field_description:account.field_product_category__property_account_expense_categ_id
 #: model:ir.model.fields,field_description:account.field_product_product__property_account_expense_id
 #: model:ir.model.fields,field_description:account.field_product_template__property_account_expense_id
@@ -9096,6 +8471,7 @@ msgid "Expense Account"
 msgstr "Kostnadskonto"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_account__account_stock_expense_active
 #: model:ir.model.fields,field_description:account.field_product_product__property_account_expense_active
 #: model:ir.model.fields,field_description:account.field_product_template__property_account_expense_active
 #: model:ir.model.fields,field_description:account.field_res_config_settings__expense_account_active
@@ -9112,41 +8488,10 @@ msgstr "Utgiftsoppsamlingskonto"
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 #: model:account.account,name:account.21_expense
-#: model:account.account,name:account.24_l10n_id_61100000
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__expense
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Expenses"
 msgstr "Utgifter"
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_66110120
-msgid "Expenses for consumable items"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_66110300
-msgid "Expenses for employee training and documentation"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_66110280
-msgid "Expenses for meals at bars and restaurants"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_63110040
-msgid "Expenses for office equipment"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_64110050
-msgid "Expenses for postal services"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_66110100
-msgid "Expenses for raw materials used in production"
-msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_meals
@@ -9166,34 +8511,9 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: model:account.account,description:account.24_l10n_id_11210040
-msgid "Expenses paid in advance for goods or services"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_66110170
-msgid "Expenses paid to subcontractors"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_63110030
-msgid "Expenses related to R&D activities"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_66110150
-msgid "Expenses related to studies or projects"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_lock_exception__state__expired
 msgid "Expired"
 msgstr "Utløpt"
-
-#. module: account
-#: model_terms:account.tax,description:account.24_tax_ST7
-msgid "Export"
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_column__expression_label
@@ -9280,13 +8600,9 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: model:account.account,description:account.24_l10n_id_12210620
-msgid "Factory production lines (Group 3)."
-msgstr ""
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_tax.py:0
+#: model:ir.model.fields.selection,name:account.selection__account_report__active_selection__false
 msgid "False"
 msgstr "Usann"
 
@@ -9320,26 +8636,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__state_ids
 msgid "Federal States"
 msgstr "Føderale stater"
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_65110000
-msgid "Fees"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_65110010
-msgid "Fees for licenses"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_65110030
-msgid "Fees paid to consultants"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_66110330
-msgid "Fees related to importing goods"
-msgstr ""
 
 #. module: account
 #. odoo-javascript
@@ -9391,16 +8687,6 @@ msgstr "Finansjournal"
 #: model:account.account.tag,name:account.account_tag_financing
 msgid "Financing Activities"
 msgstr "Finansaktivitet"
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_65110052
-msgid "Fire Insurance"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_65110052
-msgid "Fire insurance premiums"
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__first_date
@@ -9504,6 +8790,7 @@ msgstr "Regnskapsår"
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__position_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__fiscal_position_id
 #: model:ir.model.fields,field_description:account.field_account_move__fiscal_position_id
+#: model:ir.model.fields,field_description:account.field_account_move_line__fiscal_position_id
 #: model:ir.model.fields,field_description:account.field_account_tax__fiscal_position_ids
 #: model:ir.model.fields,field_description:account.field_res_company__fiscal_position_ids
 #: model:ir.model.fields,field_description:account.field_res_partner__property_account_position_id
@@ -9529,6 +8816,7 @@ msgstr "Regnskapsårets slutt"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__fiscal_position_id
 #: model:ir.model.fields,help:account.field_account_move__fiscal_position_id
+#: model:ir.model.fields,help:account.field_account_move_line__fiscal_position_id
 msgid ""
 "Fiscal positions are used to adapt taxes and accounts for particular "
 "customers or sales orders/invoices. The default value comes from the "
@@ -9562,11 +8850,6 @@ msgstr "Fast"
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Fixed Assets"
 msgstr "Anleggsmidler"
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_66110210
-msgid "Flights"
-msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_airfare
@@ -9633,11 +8916,6 @@ msgid "Followers (Partners)"
 msgstr "Følgere (partnere)"
 
 #. module: account
-#: model:account.account,description:account.24_l10n_id_66110290
-msgid "Food expenses for receptions and deliveries"
-msgstr ""
-
-#. module: account
 #: model:account.account,description:account.22_account_account_us_food
 msgid ""
 "Food or drinks incurred outside of bars or restaurants, like receptions, "
@@ -9650,8 +8928,8 @@ msgid "Food: Catering & Delivery"
 msgstr ""
 
 #. module: account
-#: model:account.account,name:account.24_l10n_id_66110290
-msgid "Food: Reception & Delivery"
+#: model_terms:ir.ui.view,arch_db:account.view_account_form
+msgid "For Perpetual Continental Only"
 msgstr ""
 
 #. module: account
@@ -9725,14 +9003,12 @@ msgstr "Fremmed valuta"
 #. module: account
 #: model:account.account,name:account.21_income_currency_exchange
 #: model:account.account,name:account.22_account_account_us_income_currency_exchange
-#: model:account.account,name:account.24_l10n_id_81100030
 msgid "Foreign Exchange Gain"
 msgstr "Valutagevinst"
 
 #. module: account
 #: model:account.account,name:account.21_expense_currency_exchange
 #: model:account.account,name:account.22_account_account_us_expense_currency_exchange
-#: model:account.account,name:account.24_l10n_id_91100020
 msgid "Foreign Exchange Loss"
 msgstr "Valutatap"
 
@@ -9749,7 +9025,6 @@ msgstr ""
 #. module: account
 #: model:account.fiscal.position,name:account.21_template_generic_export_fiscal_position
 #: model:account.fiscal.position,name:account.22_account_fiscal_position_us_export
-#: model:account.fiscal.position,name:account.24_l10n_id_foreign_trade_fiscal_position
 msgid "Foreign Trade"
 msgstr ""
 
@@ -9889,11 +9164,6 @@ msgid "Fuel"
 msgstr "Drivstoff"
 
 #. module: account
-#: model:account.account,description:account.24_l10n_id_66110010
-msgid "Fuel expenses for vehicles"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__installments_mode__full
 msgid "Full Amount"
 msgstr ""
@@ -9915,43 +9185,16 @@ msgid "Full access, including configuration rights."
 msgstr ""
 
 #. module: account
-#: model:account.account,description:account.24_l10n_id_19999991
-msgid "Funds being transferred between accounts"
-msgstr ""
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #: model:account.account,name:account.21_transfer_account_id
 #: model:account.account,name:account.22_transfer_account_id
-#: model:account.account,name:account.24_l10n_id_19999991
-#: model:account.account,name:account.24_transfer_account_id
 msgid "Funds in Transit"
 msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_furniture
 msgid "Furniture & Fixtures"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_12210510
-msgid "Furniture (Metal/Mixed)"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_12210500
-msgid "Furniture (Wood/Rattan)"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_12210510
-msgid "Furniture made of metal or mixed materials (Group 2)."
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_12210500
-msgid "Furniture made of wood or rattan (Group 1)."
 msgstr ""
 
 #. module: account
@@ -9989,70 +9232,25 @@ msgid "Gain Exchange Rate Account Active"
 msgstr ""
 
 #. module: account
-#: model:account.account,description:account.24_l10n_id_99900002
-msgid "Gain due to cash differences"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_99900004
-msgid "Gain due to cash discounts received"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_81100030
-msgid "Gain from foreign currency fluctuations"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_81100050
-msgid "Gain on Sale of Fixed Assets"
-msgstr ""
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "General"
 msgstr "Generelt"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_general_subcontracting
-#: model:account.account,name:account.24_l10n_id_66110170
 msgid "General Subcontracting"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_61100000
-msgid "General company expenses"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_65110000
-msgid "General fees incurred by the company"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_65110050
-msgid "General insurance expenses"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_65110150
-msgid "General maintenance expenses"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_66110000
-msgid "General office supply expenses"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_65110070
-msgid "General taxes paid by the company"
 msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_send_wizard_form
 msgid "Generate"
 msgstr "Generer"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/stock_valuation/buttons_bar/buttons_bar.xml:0
+msgid "Generate Entries"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -10086,11 +9284,6 @@ msgstr ""
 #: model:ir.model,name:account.model_report_account_report_hash_integrity
 msgid "Get hash integrity result as PDF."
 msgstr "Hent hash-integritetsresultat som PDF."
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_66110260
-msgid "Gifts for business purposes"
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__global_location_number
@@ -10128,23 +9321,6 @@ msgstr "God skyldner"
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Goods"
 msgstr "Varer"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/wizard/accrued_orders.py:0
-msgid "Goods Delivered not Invoiced (perpetual valuation)"
-msgstr ""
-
-#. module: account
-#. odoo-python
-#: code:addons/account/wizard/accrued_orders.py:0
-msgid "Goods Invoiced not Delivered (perpetual valuation)"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_66110190
-msgid "Goods for Resale"
-msgstr ""
 
 #. module: account
 #. odoo-python
@@ -10238,12 +9414,6 @@ msgid "Has Accounting Entries"
 msgstr "Har regnskapsoppføringer"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__has_biggest_tax_cash_rounding_line
-#: model:ir.model.fields,field_description:account.field_account_move__has_biggest_tax_cash_rounding_line
-msgid "Has Biggest Tax Cash Rounding Line"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__has_draft_move_duplicate
 #: model:ir.model.fields,field_description:account.field_account_move__has_draft_move_duplicate
 msgid "Has Draft Move Duplicate"
@@ -10334,28 +9504,8 @@ msgid "Hash integrity result PDF"
 msgstr "Hash integritetsresultat PDF"
 
 #. module: account
-#: model:account.account,description:account.24_l10n_id_25110110
-msgid "Health insurance accrued expenses"
-msgstr ""
-
-#. module: account
 #: model:account.account,name:account.22_account_account_us_healthcare
 msgid "Healthcare Benefits"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_12210630
-msgid "Heavy Construction Equipment"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_12210620
-msgid "Heavy Machinery"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_12210320
-msgid "Heavy Vehicles"
 msgstr ""
 
 #. module: account
@@ -10433,16 +9583,6 @@ msgid "Highlight Send Button"
 msgstr ""
 
 #. module: account
-#: model:account.account,name:account.24_l10n_id_39000000
-msgid "Historical Balance"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_39000000
-msgid "Historical balance from previous periods"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__holder_name
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__holder_name
 msgid "Holder Name"
@@ -10454,18 +9594,12 @@ msgid "Horizontal Split Side"
 msgstr ""
 
 #. module: account
-#: model:account.account,description:account.24_l10n_id_66110220
-msgid "Hotel accommodation expenses"
-msgstr ""
-
-#. module: account
 #: model:account.account,description:account.22_account_account_us_hotels
 msgid "Hotel or accommodation expenses incurred during business trips"
 msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_hotels
-#: model:account.account,name:account.24_l10n_id_66110220
 msgid "Hotels"
 msgstr ""
 
@@ -10481,11 +9615,6 @@ msgstr "Hvordan totalt avgiftsbeløp beregnes i ordrer og fakturaer"
 #, fuzzy
 msgid "IBAN"
 msgstr "IBAN"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid "ICE:"
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__id
@@ -10538,6 +9667,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_root__id
 #: model:ir.model.fields,field_description:account.field_account_secure_entries_wizard__id
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__id
+#: model:ir.model.fields,field_description:account.field_account_stock_valuation_report__id
 #: model:ir.model.fields,field_description:account.field_account_tax__id
 #: model:ir.model.fields,field_description:account.field_account_tax_group__id
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__id
@@ -10602,11 +9732,6 @@ msgstr "INV0001"
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "INV001"
 msgstr "INV001"
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_12210400
-msgid "IT Equipment"
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__activity_exception_icon
@@ -10790,6 +9915,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_bank_statement__is_journal_hash
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__restrict_mode_hash_table
 #: model:ir.model.fields,help:account.field_account_journal__restrict_mode_hash_table
 #: model:ir.model.fields,help:account.field_account_move__restrict_mode_hash_table
@@ -10880,7 +10006,6 @@ msgstr "Importer .qif-filer"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_import_fees
-#: model:account.account,name:account.24_l10n_id_66110330
 msgid "Import Fees"
 msgstr ""
 
@@ -10960,6 +10085,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.rounding_search_view
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Inactive"
 msgstr "Inaktiv"
@@ -11029,37 +10155,6 @@ msgstr "Inntektskonto"
 #: model:ir.model.fields,field_description:account.field_product_template__property_account_income_active
 #: model:ir.model.fields,field_description:account.field_res_config_settings__income_account_active
 msgid "Income Account Active"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_65110070
-msgid "Income Tax Expenses (CIT)"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_81100020
-msgid "Income from deposits"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_81100010
-msgid "Income from interest earned"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_28110030
-msgid "Income received in advance for goods or services"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_61100120
-msgid ""
-"Income tax for PPh 4(2) withheld directly at the time of the transaction"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_61100110
-msgid "Income tax for PPh22 withheld on trade or commercial activities"
 msgstr ""
 
 #. module: account
@@ -11157,6 +10252,14 @@ msgid "Information"
 msgstr "Informasjon"
 
 #. module: account
+#. odoo-javascript
+#. odoo-python
+#: code:addons/account/report/account_stock_valuation_report.py:0
+#: code:addons/account/static/src/components/stock_valuation/stock_valuation_report.xml:0
+msgid "Initial Balance"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Initial Setup"
 msgstr ""
@@ -11183,28 +10286,8 @@ msgid "Installments Switch Html"
 msgstr ""
 
 #. module: account
-#: model:account.account,name:account.24_l10n_id_65110050
-msgid "Insurance Costs"
-msgstr ""
-
-#. module: account
 #: model:account.account,name:account.22_us_group_655
 msgid "Insurance Expenses"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_65110054
-msgid "Insurance covering legal matters"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_65110055
-msgid "Insurance covering professional liabilities"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_65110051
-msgid "Insurance for company vehicles"
 msgstr ""
 
 #. module: account
@@ -11213,30 +10296,10 @@ msgid "Insurance for damage caused to third parties"
 msgstr ""
 
 #. module: account
-#: model:account.account,description:account.24_l10n_id_65110053
-msgid "Insurance for professional risks"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_25110090
-msgid "Insurance premiums accrued but unpaid"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_11410020
-msgid "Insurance premiums paid in advance"
-msgstr ""
-
-#. module: account
 #: model:account.account,description:account.22_account_account_us_compensation_insurance
 msgid ""
 "Insurance premiums that cover medical costs and wage replacement for "
 "employees injured on the job"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_12210700
-msgid "Intangible software assets (Group 1)."
 msgstr ""
 
 #. module: account
@@ -11256,28 +10319,8 @@ msgid "Inter-Banks Transfer Account"
 msgstr "Interbank overføringskonto"
 
 #. module: account
-#: model:account.account,name:account.24_l10n_id_91100010
-msgid "Interest Expense"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_81100010
-msgid "Interest Income"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_91100010
-msgid "Interest paid on loans and debts"
-msgstr ""
-
-#. module: account
 #: model:account.account,description:account.22_account_account_us_loan_interest_expense
 msgid "Interest paid on loans or lines of credit"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_29000000
-msgid "Interim Stock"
 msgstr ""
 
 #. module: account
@@ -11326,7 +10369,6 @@ msgstr ""
 #: code:addons/account/models/chart_template.py:0
 #: model:account.reconcile.model,name:account.21_internal_transfer_reco
 #: model:account.reconcile.model,name:account.22_internal_transfer_reco
-#: model:account.reconcile.model,name:account.24_internal_transfer_reco
 #: model:ir.actions.act_window,name:account.action_account_payments_transfer
 msgid "Internal Transfers"
 msgstr "Interne overføringer"
@@ -11445,16 +10487,31 @@ msgid "Invalid token"
 msgstr ""
 
 #. module: account
-#: model:account.account,name:account.24_l10n_id_11300180
-msgid "Inventory"
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__inventory_closing
+#: model:ir.model.fields,field_description:account.field_account_move__inventory_closing
+msgid "Inventory Closing"
 msgstr ""
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/stock_valuation/stock_valuation_report.xml:0
+msgid "Inventory Loss"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_company__inventory_period
+msgid "Inventory Period"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
 #: model:account.account,name:account.21_stock_valuation
 #: model:account.account,name:account.22_account_account_us_inventory_valuation
 #: model:account.journal,name:account.21_inventory_valuation
 #: model:account.journal,name:account.22_inventory_valuation
-#: model:account.journal,name:account.24_inventory_valuation
+#: model:ir.actions.client,name:account.action_report_stock_valuation
+#: model:ir.model.fields,field_description:account.field_product_category__property_valuation
 msgid "Inventory Valuation"
 msgstr "Lagerbeholdingverdi"
 
@@ -11470,11 +10527,6 @@ msgid "Inventory Variation"
 msgstr ""
 
 #. module: account
-#: model:account.account,description:account.24_l10n_id_11300180
-msgid "Inventory items not classified under main stock"
-msgstr ""
-
-#. module: account
 #: model:account.account.tag,name:account.account_tag_investing
 msgid "Investing & Extraordinary Activities"
 msgstr "Investeringer og ekstraordinære aktiviteter"
@@ -11483,6 +10535,7 @@ msgstr "Investeringer og ekstraordinære aktiviteter"
 #. odoo-javascript
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/static/src/components/account_batch_sending_summary/account_batch_sending_summary.xml:0
 #: code:addons/account/static/src/components/receipt_selector/receipt_selector.js:0
 #: model:ir.model.fields.selection,name:account.selection__account_analytic_applicability__business_domain__invoice
 #: model:ir.model.fields.selection,name:account.selection__account_payment__reconciled_invoices_type__invoice
@@ -11577,12 +10630,6 @@ msgstr "Faktura har utestående"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_incoterm_placeholder
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_incoterm_placeholder
 msgid "Invoice Incoterm Placeholder"
-msgstr ""
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_journal_dashboard.py:0
-msgid "Invoice Layout"
 msgstr ""
 
 #. module: account
@@ -11762,6 +10809,17 @@ msgstr "Fakturert"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/report/account_stock_valuation_report.py:0
+msgid "Invoiced Not Delivered"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_accrued_orders_wizard__accrual_type__invoiced_not_delivered
+msgid "Invoiced not delivered"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/controllers/portal.py:0
 #: code:addons/account/models/account_move.py:0
 #: model:ir.actions.act_window,name:account.action_move_out_invoice
@@ -11848,6 +10906,17 @@ msgstr "Fakturaer sendt med suksess."
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Invoices to Validate"
 msgstr "Ubekreftede fakturaer"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/report/account_stock_valuation_report.py:0
+msgid "Invoices to be Issued"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_accrued_orders_wizard__accrual_type__invoice_to_be_issued
+msgid "Invoices to be issued"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__reconciled_bill_ids
@@ -12013,6 +11082,11 @@ msgid "Is Sent"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement__is_statement_posted
+msgid "Is Statement Posted"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_storno
 #: model:ir.model.fields,field_description:account.field_account_move__is_storno
 msgid "Is Storno"
@@ -12044,6 +11118,14 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_move__is_being_sent
 msgid "Is the move being sent asynchronously"
 msgstr "Blir bevegelsen sendt asynkront"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/company.py:0
+msgid ""
+"It exists closing entries after the selected date. Cancel them before "
+"generate an entry prior to them"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__is_move_sent
@@ -12211,6 +11293,7 @@ msgstr "Journal objektetikett"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/company.py:0
 #: model:ir.actions.act_window,name:account.action_account_moves_all
 #: model:ir.actions.act_window,name:account.action_account_moves_all_a
 #: model:ir.actions.act_window,name:account.action_account_moves_all_grouped_matching
@@ -12368,11 +11451,6 @@ msgstr ""
 "konfigurert, vil kostnadskontoen på produktkategorien bli brukt."
 
 #. module: account
-#: model:account.account,description:account.24_l10n_id_12210430
-msgid "Kitchen and pantry electronics (Group 1)."
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue_value
 msgid "Kpi Account Total Revenue Value"
 msgstr "KPI-konto totalt inntektsbeløp"
@@ -12382,7 +11460,7 @@ msgstr "KPI-konto totalt inntektsbeløp"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/accrued_orders.py:0
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__payment_ref
-#: model:ir.model.fields,field_description:account.field_account_move_line__name
+#: model:ir.model.fields,field_description:account.field_account_move_line__label
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_label
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__label
 #: model:ir.model.fields,field_description:account.field_account_report_expression__label
@@ -12412,18 +11490,8 @@ msgid "Label sanitize"
 msgstr ""
 
 #. module: account
-#: model:account.account,name:account.24_l10n_id_12210100
-msgid "Land"
-msgstr ""
-
-#. module: account
 #: model:account.account,name:account.22_account_account_us_land
 msgid "Land (not built)"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_12210100
-msgid "Land ownership rights (non-depreciable)."
 msgstr ""
 
 #. module: account
@@ -12596,11 +11664,6 @@ msgid "Learn more"
 msgstr "Lær mer"
 
 #. module: account
-#: model:account.account,name:account.24_l10n_id_22110020
-msgid "Leasing Deposit"
-msgstr ""
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
 #: model_terms:ir.ui.view,arch_db:account.setup_credit_card_account_wizard
 msgid "Leave empty to create new"
@@ -12642,11 +11705,6 @@ msgid "Legal"
 msgstr ""
 
 #. module: account
-#: model:account.account,name:account.24_l10n_id_66110140
-msgid "Legal Expenses"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__invoice_legal_notes
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
@@ -12654,20 +11712,10 @@ msgid "Legal Notes"
 msgstr ""
 
 #. module: account
-#: model:account.account,name:account.24_l10n_id_65110054
-msgid "Legal Protection Insurance"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__note
 #: model:ir.model.fields,help:account.field_account_tax__invoice_legal_notes
 msgid "Legal mentions that have to be printed on the invoices."
 msgstr "Lovpålagte merknader som må trykkes på fakturaene."
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_66110140
-msgid "Legal service expenses"
-msgstr ""
 
 #. module: account
 #. odoo-python
@@ -12724,16 +11772,6 @@ msgid "Licenses or computer services (like repairs or upgrades)"
 msgstr ""
 
 #. module: account
-#: model:account.account,name:account.24_l10n_id_65110010
-msgid "Licensing Fees"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_12210610
-msgid "Light Machinery"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__open_on
 msgid "Limit the date for the Residual (at date) fields."
 msgstr ""
@@ -12762,7 +11800,6 @@ msgstr "Linje \"%s\" definerer seg selv som sin forelder."
 #. module: account
 #: model:account.reconcile.model,name:account.21_reconcile_from_label
 #: model:account.reconcile.model,name:account.22_reconcile_from_label
-#: model:account.reconcile.model,name:account.24_reconcile_from_label
 msgid "Line with Bank Fees"
 msgstr "Linje med bankgebyrer"
 
@@ -12802,11 +11839,6 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_loan_extract
 msgid "Loans Digitization"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_22110010
-msgid "Loans obtained from banks"
 msgstr ""
 
 #. module: account
@@ -12864,11 +11896,6 @@ msgid "Logo"
 msgstr "Logo"
 
 #. module: account
-#: model:ir.ui.menu,name:account.account_logs_menu
-msgid "Logs"
-msgstr "Logger"
-
-#. module: account
 #: model:onboarding.onboarding.step,done_text:account.onboarding_onboarding_step_base_document_layout
 #: model:onboarding.onboarding.step,done_text:account.onboarding_onboarding_step_company_data
 msgid "Looks great!"
@@ -12883,6 +11910,7 @@ msgstr "Tap"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_cash_rounding__loss_account_id
 #: model:ir.model.fields,field_description:account.field_account_journal__loss_account_id
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Loss Account"
 msgstr "Tapskonto"
 
@@ -12900,41 +11928,6 @@ msgstr "Tap vekslings pris konto."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__expense_currency_exchange_account_active
 msgid "Loss Exchange Rate Account Active"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_99900001
-msgid "Loss due to cash differences"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_99900003
-msgid "Loss due to cash discounts given"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_91100020
-msgid "Loss from foreign currency fluctuations"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_91100030
-msgid "Loss from selling fixed assets"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_91100030
-msgid "Loss on Sale of Fixed Assets"
-msgstr ""
-
-#. module: account
-#: model:account.tax.group,name:account.24_l10n_id_tax_group_luxury_goods
-msgid "Luxury Good Taxes"
-msgstr ""
-
-#. module: account
-#: model_terms:account.tax,description:account.24_tax_luxury_pemungut_ppn
-msgid "Luxury Goods to WAPU"
 msgstr ""
 
 #. module: account
@@ -12992,21 +11985,6 @@ msgid "Main currency of your company"
 msgstr "Firmaets hovedvaluta"
 
 #. module: account
-#: model:account.account,name:account.24_l10n_id_65110150
-msgid "Maintenance Costs"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_66110030
-msgid "Maintenance and service costs for vehicles"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_65110151
-msgid "Maintenance services for office"
-msgstr ""
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
 msgid "Make Accrual Entries"
 msgstr "Lag periodiseringsoppføringer"
@@ -13018,6 +11996,7 @@ msgstr "Administrasjon"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__trigger__manual
+#: model:ir.model.fields.selection,name:account.selection__res_company__inventory_period__manual
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_sending_method__manual
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Manual"
@@ -13268,16 +12247,6 @@ msgid "Meals & Entertainment"
 msgstr ""
 
 #. module: account
-#: model:account.account,name:account.24_l10n_id_66110200
-msgid "Membership Fees"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_66110200
-msgid "Membership and subscription fees"
-msgstr ""
-
-#. module: account
 #: model:account.account,description:account.22_account_account_us_subscriptions
 msgid "Membership fees for industry groups, professional associations, etc"
 msgstr ""
@@ -13396,34 +12365,8 @@ msgstr ""
 #: code:addons/account/models/chart_template.py:0
 #: model:account.journal,name:account.21_general
 #: model:account.journal,name:account.22_general
-#: model:account.journal,name:account.24_general
 msgid "Miscellaneous Operations"
 msgstr "Diverse operasjoner"
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_69000000
-msgid "Miscellaneous company expenses"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_81100040
-msgid "Miscellaneous income"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_63110041
-msgid "Miscellaneous office necessities"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_66110270
-msgid "Miscellaneous personnel-related costs"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_66110240
-msgid "Miscellaneous travel expenses"
-msgstr ""
 
 #. module: account
 #. odoo-python
@@ -13453,11 +12396,6 @@ msgstr "Mangler utenlandske valutaer på delbetalinger med ID-er: %s"
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_accountable_required_fields
 msgid "Missing required account on accountable line."
 msgstr "Mangler nødvendig konto på den ansvarlige linjen."
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_12210410
-msgid "Mobile phones, tablets, fax (Group 1)."
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__model_id
@@ -13498,6 +12436,7 @@ msgstr "Overvåk produktmarginene dine fra fakturaer."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__auto_post__monthly
+#: model:ir.model.fields.selection,name:account.selection__res_company__inventory_period__monthly
 msgid "Monthly"
 msgstr "Månedlig"
 
@@ -13505,11 +12444,6 @@ msgstr "Månedlig"
 #. odoo-javascript
 #: code:addons/account/static/src/components/currency_form/open_decimal_precision_btn_template.xml:0
 msgid "More precision on Product Prices"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_12210300
-msgid "Motorcycles"
 msgstr ""
 
 #. module: account
@@ -13638,6 +12572,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__name_placeholder
+#: model:ir.model.fields,field_description:account.field_account_cash_rounding__name_placeholder
 #: model:ir.model.fields,field_description:account.field_account_journal__name_placeholder
 #: model:ir.model.fields,field_description:account.field_account_move__name_placeholder
 msgid "Name Placeholder"
@@ -13696,12 +12631,6 @@ msgstr "Innestede gruppeskatter er ikke tillatt."
 #: model:account.report.column,name:account.generic_tax_report_tax_account_column_net
 msgid "Net"
 msgstr "Netto"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_journal_dashboard.py:0
-msgid "Net Margin"
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term__early_pay_discount_computation__excluded
@@ -13841,6 +12770,12 @@ msgstr "Ingen banktransaksjon"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/wizard/account_move_send_batch_wizard.py:0
+msgid "No Partner"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_payment.py:0
 msgid "No Payment Method"
 msgstr ""
@@ -13923,6 +12858,12 @@ msgid "No possible action found with the selected lines."
 msgstr "Ingen mulig handling funnet med de valgte linjene."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "No rounding applied"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__non_deductible_amount
 msgid "Non Deductible Amount"
 msgstr ""
@@ -13958,11 +12899,6 @@ msgid "Non Trade Receivable"
 msgstr "Ikke-handsels mottak"
 
 #. module: account
-#: model_terms:account.tax,description:account.24_tax_PT6
-msgid "Non-Creditable Standard Rate Input VAT"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__asset_non_current
 msgid "Non-current Assets"
 msgstr "Langsiktige eiendeler"
@@ -13979,11 +12915,6 @@ msgstr "Langsiktige forpliktelser"
 #: model:account.account,name:account.22_account_account_us_non_current_assets
 msgid "Non-current assets"
 msgstr "Anleggsmidler"
-
-#. module: account
-#: model:account.tax.group,name:account.24_l10n_id_tax_group_non_luxury_goods
-msgid "Non-luxury Good Taxes"
-msgstr ""
 
 #. module: account
 #. odoo-python
@@ -14241,16 +13172,6 @@ msgid "Off-Balance Sheet"
 msgstr "Ubalansert oppstilling"
 
 #. module: account
-#: model:account.account,name:account.24_l10n_id_12210420
-msgid "Office Electronics"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_63110040
-msgid "Office Equipment"
-msgstr ""
-
-#. module: account
 #: model:account.account,name:account.22_us_group_651
 msgid "Office Expenses"
 msgstr ""
@@ -14266,25 +13187,17 @@ msgid "Office Maintenance"
 msgstr ""
 
 #. module: account
-#: model:account.account,name:account.24_l10n_id_65110151
-msgid "Office Maintenance Services"
-msgstr ""
-
-#. module: account
 #: model:account.account,name:account.22_account_account_us_office_rent
-#: model:account.account,name:account.24_l10n_id_65110042
 msgid "Office Rent"
 msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_office_services
-#: model:account.account,name:account.24_l10n_id_66110020
 msgid "Office Services"
 msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_office_supplies
-#: model:account.account,name:account.24_l10n_id_66110000
 msgid "Office Supplies"
 msgstr "Kontorutstyr"
 
@@ -14363,11 +13276,6 @@ msgid "One or more lines require a 100% analytic distribution."
 msgstr ""
 
 #. module: account
-#: model:account.account,name:account.24_l10n_id_31510020
-msgid "Ongoing Profit & Loss"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__only_tax_exigible
 msgid "Only Tax Exigible Lines"
 msgstr "Kun avgiftspliktige linjer"
@@ -14411,6 +13319,14 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 msgid "Only posted/cancelled journal entries can be reset to draft."
 msgstr "Kun bokførte/annullerte journalføringer kan tilbakestilles til kladd."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/product.py:0
+msgid ""
+"Only the value 'periodic' and 'real_time' are accepted to search on "
+"valuation field."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -14515,11 +13431,6 @@ msgid "Operation Templates"
 msgstr "Operasjonsmaler"
 
 #. module: account
-#: model:account.account,name:account.24_l10n_id_12210310
-msgid "Operational Vehicles"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_hide_0_lines__optional
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_hierarchy__optional
 msgid "Optional"
@@ -14614,7 +13525,6 @@ msgid "Other Employees Benefits"
 msgstr ""
 
 #. module: account
-#: model:account.account,name:account.24_l10n_id_69000000
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__expense_other
 msgid "Other Expenses"
 msgstr ""
@@ -14622,7 +13532,6 @@ msgstr ""
 #. module: account
 #: model:account.account,name:account.21_other_income
 #: model:account.account,name:account.22_account_account_us_other_income
-#: model:account.account,name:account.24_l10n_id_81100040
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__income_other
 msgid "Other Income"
 msgstr "Annen inntekt"
@@ -14631,21 +13540,6 @@ msgstr "Annen inntekt"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Other Info"
 msgstr "Annen informasjon"
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_63110041
-msgid "Other Necessities"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_66110270
-msgid "Other Personnel Costs"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_66110240
-msgid "Other Travel Costs"
-msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_other_property
@@ -14698,8 +13592,6 @@ msgstr "Utesteående beløp"
 #: code:addons/account/models/chart_template.py:0
 #: model:account.account,name:account.21_account_journal_payment_credit_account_id
 #: model:account.account,name:account.22_account_journal_payment_credit_account_id
-#: model:account.account,name:account.24_account_journal_payment_credit_account_id
-#: model:account.account,name:account.24_l10n_id_11120003
 msgid "Outstanding Payments"
 msgstr "Utestående betalinger"
 
@@ -14713,8 +13605,6 @@ msgstr "Kontoer for utestående betalinger"
 #: code:addons/account/models/chart_template.py:0
 #: model:account.account,name:account.21_account_journal_payment_debit_account_id
 #: model:account.account,name:account.22_account_journal_payment_debit_account_id
-#: model:account.account,name:account.24_account_journal_payment_debit_account_id
-#: model:account.account,name:account.24_l10n_id_11120002
 msgid "Outstanding Receipts"
 msgstr "Utestående kvitteringer"
 
@@ -14781,21 +13671,10 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: model:account.account,description:account.24_l10n_id_61100030
-msgid "Overtime pay for employees"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_31100040
-msgid "Owner withdrawals from the company"
-msgstr ""
-
-#. module: account
 #: model:account.account,name:account.21_owner_current_account
 #: model:account.account,name:account.22_account_account_us_owner_current_account
 #: model:account.reconcile.model,name:account.21_owner_current_account_model
 #: model:account.reconcile.model,name:account.22_owner_current_account_model
-#: model:account.reconcile.model,name:account.24_owner_current_account_model
 msgid "Owner's Current Account"
 msgstr ""
 
@@ -14843,38 +13722,11 @@ msgid "PEPPOL eligible"
 msgstr "PEPPOL kvalifisert"
 
 #. module: account
-#: model:account.account,name:account.24_l10n_id_61100110
-msgid "PPh 22 Final"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_11210014
-msgid "PPh 28A"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_21100014
-msgid "PPh 29"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_61100120
-msgid "PPh 4(2) Final"
-msgstr ""
-
-#. module: account
-#: model_terms:account.tax,description:account.24_tax_PT1
-msgid "PT1"
-msgstr ""
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Package"
 msgstr "Pakke"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_journal_dashboard.py:0
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__paid
 #: model:ir.model.fields.selection,name:account.selection__account_move__payment_state__paid
 #: model:ir.model.fields.selection,name:account.selection__account_move__status_in_payment__paid
@@ -14890,11 +13742,6 @@ msgstr "Betalt"
 #: code:addons/account/models/account_payment.py:0
 msgid "Paid Bills"
 msgstr "Betalte regninger"
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_31100020
-msgid "Paid Capital"
-msgstr ""
 
 #. module: account
 #. odoo-python
@@ -14944,11 +13791,6 @@ msgstr "Partnerrapport"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__parent_id
 msgid "Parent Section Line"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_66110040
-msgid "Parking and toll fees for vehicles"
 msgstr ""
 
 #. module: account
@@ -15073,24 +13915,8 @@ msgid "Partners Missing a bank account"
 msgstr ""
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/partner.py:0
-msgid "Partners that are used in hashed entries cannot be merged."
-msgstr "Partnere som brukes i hashede oppføringer kan ikke slås sammen."
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
 msgid "Partners with same bank"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_12210310
-msgid "Passenger cars, sedans, vans (Group 2)."
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_31510010
-msgid "Past Profit & Loss"
 msgstr ""
 
 #. module: account
@@ -15112,6 +13938,8 @@ msgid "Pay your bills in one-click using Euro SEPA Service / ISO20022"
 msgstr ""
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_journal_dashboard.py:0
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__liability_payable
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_account_type__payable
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -15128,11 +13956,6 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_account_type__both
 msgid "Payable and receivable"
 msgstr "Kortsiktig gjeld og fordringer"
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_11120003
-msgid "Payables due but not yet paid"
-msgstr ""
 
 #. module: account
 #. odoo-python
@@ -15244,6 +14067,8 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__qr_code_method
 #: model:ir.model.fields,field_description:account.field_account_move__qr_code_method
+#: model:ir.model.fields,field_description:account.field_res_partner__qr_code_method
+#: model:ir.model.fields,field_description:account.field_res_users__qr_code_method
 msgid "Payment QR-code"
 msgstr "Betalings QR-kode"
 
@@ -15325,11 +14150,6 @@ msgstr "Betalingstype"
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
 msgid "Payment must be in paid state to be reconciled."
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_11120005
-msgid "Payment processing account via Stripe"
 msgstr ""
 
 #. module: account
@@ -15436,11 +14256,6 @@ msgid "Payments linked to an Asset Cash account cannot be reconciled."
 msgstr ""
 
 #. module: account
-#: model:account.account,description:account.24_l10n_id_11800000
-msgid "Payments made in advance for goods or services"
-msgstr ""
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid ""
 "Payments related to partners with no bank account specified will be skipped."
@@ -15460,11 +14275,6 @@ msgstr ""
 #. module: account
 #: model:account.account,name:account.22_account_account_us_payroll_tax
 msgid "Payroll Tax"
-msgstr ""
-
-#. module: account
-#: model:account.fiscal.position,name:account.24_l10n_id_pemungut_ppn
-msgid "Pemungut PPN"
 msgstr ""
 
 #. module: account
@@ -15529,6 +14339,13 @@ msgid "Period Comparison"
 msgstr "Periode-sammenligning"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__product_category__property_valuation__periodic
+#: model:ir.model.fields.selection,name:account.selection__product_template__valuation__periodic
+#: model:ir.model.fields.selection,name:account.selection__res_company__inventory_valuation__periodic
+msgid "Periodic (at closing)"
+msgstr ""
+
+#. module: account
 #: model:account.account,description:account.22_account_account_us_expense_buildings
 msgid "Periodic depreciation expense for building assets."
 msgstr ""
@@ -15564,34 +14381,20 @@ msgid "Periodic depreciation expense for vehicle assets."
 msgstr ""
 
 #. module: account
-#: model:account.account,description:account.24_l10n_id_67100070
+#: model:ir.model.fields,help:account.field_product_category__property_valuation
 msgid ""
-"Periodic expense for mobile phones, PBX systems, and other "
-"telecommunications hardware."
+"Periodic: The accounting entries are suggested manually in the inventory "
+"valuation report.\n"
+"        Perpetual: An accounting entry is automatically created to value the "
+"inventory when a product is billed or invoiced.\n"
+"        "
 msgstr ""
 
 #. module: account
-#: model:account.account,description:account.24_l10n_id_67100130
-msgid ""
-"Periodic expense for small-scale industrial tools, small generators, and "
-"portable equipment."
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_67100020
-msgid ""
-"Periodic expense for temporary or semi-permanent structures (e.g., sheds, "
-"containers) with a shorter lifespan."
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_12210200
-msgid "Permanent structures (Concrete/Brick) - 20 Years."
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_11110010
-msgid "Petty Cash"
+#: model:ir.model.fields.selection,name:account.selection__product_category__property_valuation__real_time
+#: model:ir.model.fields.selection,name:account.selection__product_template__valuation__real_time
+#: model:ir.model.fields.selection,name:account.selection__res_company__inventory_valuation__real_time
+msgid "Perpetual (at invoicing)"
 msgstr ""
 
 #. module: account
@@ -15622,19 +14425,9 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: model:account.account,name:account.24_l10n_id_63110010
-msgid "Phone & Internet"
-msgstr ""
-
-#. module: account
 #: model:account.account,description:account.22_account_account_us_internet
 msgid ""
 "Phone and internet bills from your telco provider for business operations"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_12210420
-msgid "Photocopiers, projectors (Group 2)."
 msgstr ""
 
 #. module: account
@@ -15684,6 +14477,19 @@ msgid "Please set a strictly positive rounding value."
 msgstr "Angi en utelukkende positiv avrundingsverdi."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/company.py:0
+msgid "Please set the Journal for Inventory Valuation in the settings."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/company.py:0
+msgid ""
+"Please set the Valuation Account for Inventory Valuation in the settings."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid "Please use the following communication for your payment:"
 msgstr "Vennligst merk betalingen med:"
@@ -15723,11 +14529,6 @@ msgid "Post Entry?"
 msgstr ""
 
 #. module: account
-#: model:account.account,name:account.24_l10n_id_64110050
-msgid "Post Necessities"
-msgstr ""
-
-#. module: account
 #: model:ir.actions.server,name:account.action_account_confirm_payments
 msgid "Post Payments"
 msgstr "Poster betalinger"
@@ -15763,11 +14564,6 @@ msgstr "Skrevet bilagsregistrering"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_payment_filter
 msgid "Posted Journal Items"
 msgstr "Posterte bilagslinjer"
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_61100100
-msgid "Pph 21 Benefit"
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_group__preceding_subtotal
@@ -15833,74 +14629,9 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: model:account.account,name:account.24_l10n_id_11410030
-msgid "Prepaid Advertisement-Fee"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_11210040
-msgid "Prepaid Expense"
-msgstr ""
-
-#. module: account
 #: model:account.account,name:account.21_prepayments
 #: model:account.account,name:account.22_account_account_us_prepaid_expenses
 msgid "Prepaid Expenses"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_11410020
-msgid "Prepaid Insurance"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_11510010
-msgid "Prepaid Tax PPh 21"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_11510020
-msgid "Prepaid Tax PPh 22"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_11510030
-msgid "Prepaid Tax PPh 23"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_11510040
-msgid "Prepaid Tax PPh 25"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_11410030
-msgid "Prepaid advertising fees"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_11510040
-msgid "Prepaid corporate income tax installment (PPh 25)"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_11510010
-msgid "Prepaid employee income tax (PPh 21)"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_11410010
-msgid "Prepaid rent for office or building facilities"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_11510020
-msgid "Prepaid tax on imports/exports (PPh 22)"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_11510030
-msgid "Prepaid withholding tax on services (PPh 23)"
 msgstr ""
 
 #. module: account
@@ -15949,9 +14680,15 @@ msgid "Price"
 msgstr "Pris"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_product_category__property_price_difference_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__price_difference_account_id
 msgid "Price Difference Account"
 msgstr "Prisdifferansekonto"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_product_category__property_price_difference_account_active
+msgid "Price Difference Account Active"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__price_include
@@ -15999,11 +14736,6 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__non_deductible_account_active
 msgid "Private Share Account Active"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_31100040
-msgid "Prive (Personal Retrieval)"
 msgstr ""
 
 #. module: account
@@ -16084,6 +14816,8 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/stock_valuation/stock_valuation_report.js:0
 #: model:ir.actions.act_window,name:account.product_product_action_purchasable
 #: model:ir.actions.act_window,name:account.product_product_action_sellable
 #: model:ir.model.fields.selection,name:account.selection__account_account_tag__applicability__products
@@ -16093,7 +14827,6 @@ msgid "Products"
 msgstr "Produkter"
 
 #. module: account
-#: model:account.account,name:account.21_to_receive_rec
 #: model:account.account,name:account.22_account_account_us_to_receive_rec
 msgid "Products to receive"
 msgstr "Produkter å motta"
@@ -16111,13 +14844,11 @@ msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_professional_insurance
-#: model:account.account,name:account.24_l10n_id_65110053
 msgid "Professional Insurance"
 msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_professional_liability_insurance
-#: model:account.account,name:account.24_l10n_id_65110055
 msgid "Professional Liability Insurance"
 msgstr ""
 
@@ -16130,27 +14861,13 @@ msgstr "Resultatrapport"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_cash_rounding__profit_account_id
 #: model:ir.model.fields,field_description:account.field_account_journal__profit_account_id
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Profit Account"
 msgstr "Fortjenestekonto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__profit_account_active
 msgid "Profit Account Active"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_31510010
-msgid "Profit and loss carried over from previous periods"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_31510020
-msgid "Profit and loss for the current period"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_81100050
-msgid "Profit from selling fixed assets"
 msgstr ""
 
 #. module: account
@@ -16164,11 +14881,6 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__analytic_profitability
 msgid "Profitability"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_99999900
-msgid "Profits or losses not yet distributed"
 msgstr ""
 
 #. module: account
@@ -16205,20 +14917,7 @@ msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_property_tax
-#: model:account.account,name:account.24_l10n_id_65110071
-#: model:account.account,name:account.24_l10n_id_66110320
 msgid "Property Tax"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_25110070
-msgid "Property tax accrued (PBB)"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_65110071
-#: model:account.account,description:account.24_l10n_id_66110320
-msgid "Property tax expenses"
 msgstr ""
 
 #. module: account
@@ -16236,13 +14935,7 @@ msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_public_transportation
-#: model:account.account,name:account.24_l10n_id_66110230
 msgid "Public Transportation"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_66110230
-msgid "Public transport expenses"
 msgstr ""
 
 #. module: account
@@ -16305,7 +14998,6 @@ msgstr ""
 #: code:addons/account/models/chart_template.py:0
 #: model:account.journal,name:account.21_purchase
 #: model:account.journal,name:account.22_purchase
-#: model:account.journal,name:account.24_purchase
 #: model:ir.actions.act_window,name:account.action_account_moves_journal_purchase
 #: model:ir.model.fields.selection,name:account.selection__account_tax__type_tax_use__purchase
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
@@ -16313,11 +15005,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Purchases"
 msgstr "Innkjøp"
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_66110190
-msgid "Purchases for resale"
-msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_improvements
@@ -16409,7 +15096,6 @@ msgstr "Vurderinger"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_raw_materials
-#: model:account.account,name:account.24_l10n_id_66110100
 msgid "Raw Materials"
 msgstr ""
 
@@ -16441,6 +15127,8 @@ msgid "Receipts"
 msgstr "Mottak"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_journal_dashboard.py:0
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__asset_receivable
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_account_type__receivable
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -16451,16 +15139,6 @@ msgstr "Fordring"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__receivable_account_id
 msgid "Receivable Account"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_11120002
-msgid "Receivables expected but not yet collected"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_11210011
-msgid "Receivables generated from Point-of-Sale transactions"
 msgstr ""
 
 #. module: account
@@ -16658,11 +15336,6 @@ msgid "Refunds"
 msgstr "Kreditnotaer"
 
 #. module: account
-#: model:account.account,description:account.24_l10n_id_42000060
-msgid "Refunds given to customers"
-msgstr ""
-
-#. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
 #: model_terms:ir.actions.act_window,help:account.action_credit_statement_tree
 msgid "Register a bank statement"
@@ -16749,6 +15422,13 @@ msgstr ""
 
 #. module: account
 #. odoo-javascript
+#: code:addons/account/static/src/interactions/portal_additional_identifiers.js:0
+#: model_terms:ir.ui.view,arch_db:account.address_form_additional_identifiers
+msgid "Remove"
+msgstr ""
+
+#. module: account
+#. odoo-javascript
 #: code:addons/account/static/src/components/tax_totals/tax_totals.xml:0
 msgid "Remove Rounding Method"
 msgstr ""
@@ -16784,21 +15464,6 @@ msgstr "Leie"
 #. module: account
 #: model:account.account,description:account.22_account_account_us_office_rent
 msgid "Rent or lease of buildings"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_65110040
-msgid "Rental Costs"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_65110042
-msgid "Rental costs for office space"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_65110041
-msgid "Rental costs for vehicles"
 msgstr ""
 
 #. module: account
@@ -16872,13 +15537,6 @@ msgid "Reporting"
 msgstr "Rapportering"
 
 #. module: account
-#: model:account.account,description:account.24_l10n_id_66110130
-msgid ""
-"Represents the difference in value between Opening Stock and Closing Stock "
-"for the period."
-msgstr ""
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Request Cancel"
@@ -16896,19 +15554,9 @@ msgid "Res Partner Bank"
 msgstr "Res Partner Bank"
 
 #. module: account
-#: model:account.account,name:account.24_l10n_id_63110030
-msgid "Research & Development"
-msgstr ""
-
-#. module: account
 #: model:ir.actions.act_window,name:account.action_account_resequence
 msgid "Resequence"
 msgstr "Re-sekvenser"
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_31210010
-msgid "Reserves set aside from profits"
-msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -16944,12 +15592,6 @@ msgstr "Gjenværende beløp"
 #: model:ir.model.fields,field_description:account.field_account_move_line__amount_residual_currency
 msgid "Residual Amount in Currency"
 msgstr "Restbeløp i valuta."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_journal_dashboard.py:0
-msgid "Residual amount"
-msgstr "Residualbeløp"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_payment_tree
@@ -16996,9 +15638,13 @@ msgid "Retirement plans costs (401K match)"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment__return_partner_bank_id
+msgid "Returns Bank Account"
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
-#: code:addons/account/wizard/accrued_orders.py:0
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue
 #: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__revenue
 #: model:ir.model.fields.selection,name:account.selection__account_automatic_entry_wizard__account_type__income
@@ -17010,16 +15656,6 @@ msgstr "Omsetning"
 #: model:ir.model.fields,field_description:account.field_res_company__revenue_accrual_account_id
 msgid "Revenue Accrual Account"
 msgstr "Inntektsføringskonto."
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_41000010
-msgid "Revenue from goods or services sold"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_28110010
-msgid "Revenue received in advance from customers"
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__account_id
@@ -17272,11 +15908,6 @@ msgid "SEPA QR Codes"
 msgstr ""
 
 #. module: account
-#: model:account.tax.group,name:account.24_l10n_id_tax_group_stlg
-msgid "SLTG"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_has_sms_error
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__message_has_sms_error
 #: model:ir.model.fields,field_description:account.field_account_journal__message_has_sms_error
@@ -17296,38 +15927,13 @@ msgid "SO123"
 msgstr "SO123"
 
 #. module: account
-#: model_terms:account.tax,description:account.24_tax_ST1
-msgid "ST1"
-msgstr ""
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
 msgid "STANDARD TERMS AND CONDITIONS OF SALE"
 msgstr "STANDARD VILKÅR OG BETINGELSER FOR SALG"
 
 #. module: account
-#: model:account.account,name:account.24_l10n_id_21100012
-msgid "STLG Payable"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_11210013
-msgid "STLG Receivable"
-msgstr ""
-
-#. module: account
 #: model:account.account,name:account.22_account_account_us_salaries
 msgid "Salaries & Wages"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_61100010
-msgid "Salaries paid to employees"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_21100040
-msgid "Salary Deposit"
 msgstr ""
 
 #. module: account
@@ -17342,11 +15948,6 @@ msgid "Salary Payable"
 msgstr "Lønn til betaling"
 
 #. module: account
-#: model:account.account,description:account.24_l10n_id_21100040
-msgid "Salary payable to employees"
-msgstr ""
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Sale"
 msgstr "Salg"
@@ -17359,10 +15960,8 @@ msgstr "Salgskvittering"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
-#: model:account.account,name:account.24_l10n_id_41000010
 #: model:account.journal,name:account.21_sale
 #: model:account.journal,name:account.22_sale
-#: model:account.journal,name:account.24_sale
 #: model:ir.actions.act_window,name:account.action_account_moves_journal_sales
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__sale
 #: model:ir.model.fields.selection,name:account.selection__account_tax__type_tax_use__sale
@@ -17377,11 +15976,6 @@ msgstr "Salg"
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_use_credit_limit
 msgid "Sales Credit Limit"
 msgstr "Salg kredittgrense"
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_42000070
-msgid "Sales Discount"
-msgstr ""
 
 #. module: account
 #: model:account.account,name:account.21_expense_sales
@@ -17407,27 +16001,11 @@ msgid "Sales Receipt Created"
 msgstr "Salgskvittering opprettet"
 
 #. module: account
-#: model:account.account,name:account.24_l10n_id_42000060
-msgid "Sales Refund"
-msgstr ""
-
-#. module: account
 #: model:account.account,name:account.22_account_account_us_sales_tax
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding_sale_tax
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Sales Tax"
 msgstr "Salgsavgifter"
-
-#. module: account
-#: model_terms:account.tax,description:account.24_tax_PT5
-#: model_terms:account.tax,description:account.24_tax_luxury_sales
-msgid "Sales Tax on Luxury Goods (STLG)"
-msgstr ""
-
-#. module: account
-#: model_terms:account.tax,description:account.24_tax_stlg_pemungut_ppn
-msgid "Sales Tax on Luxury Goods (STLG) to WAPU"
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_product__taxes_id
@@ -17610,6 +16188,7 @@ msgid "Secure Journal Entries"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement__is_journal_hash
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__restrict_mode_hash_table
 #: model:ir.model.fields,field_description:account.field_account_journal__restrict_mode_hash_table
 #: model:ir.model.fields,field_description:account.field_account_move__restrict_mode_hash_table
@@ -17641,11 +16220,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move__access_token
 msgid "Security Token"
 msgstr "Sikkerhets-token"
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_25110050
-msgid "Security management fees accrued"
-msgstr ""
 
 #. module: account
 #. odoo-python
@@ -18012,11 +16586,6 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: model:account.account,description:account.24_l10n_id_66110020
-msgid "Services used in office operations"
-msgstr ""
-
-#. module: account
 #: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_company_data
 msgid "Set Company Data"
 msgstr ""
@@ -18114,6 +16683,12 @@ msgid "Setup Credit Card Account"
 msgstr ""
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_journal_dashboard.py:0
+msgid "Setup Your Invoice Layout"
+msgstr ""
+
+#. module: account
 #: model:ir.actions.server,name:account.model_account_move_action_share
 msgid "Share"
 msgstr "Del"
@@ -18121,16 +16696,6 @@ msgstr "Del"
 #. module: account
 #: model:ir.model,name:account.model_account_move_send
 msgid "Shared Send Invoice Wizard Functions"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_21100020
-msgid "Shareholder Deposit"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_65110090
-msgid "Shipping Costs"
 msgstr ""
 
 #. module: account
@@ -18300,51 +16865,19 @@ msgid "Show journal on dashboard"
 msgstr "Vis journal på dashbord"
 
 #. module: account
-#: model:account.account,description:account.24_l10n_id_11110010
-msgid "Small cash fund for minor expenses"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_12210610
-msgid "Small generators, pumps, tools (Group 2)."
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_snailmail_account
 msgid "Snailmail"
 msgstr "Tradisjonell post"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_social_security
-#: model:account.account,name:account.24_l10n_id_66110310
 msgid "Social Security"
 msgstr ""
 
 #. module: account
-#: model:account.account,description:account.24_l10n_id_66110310
-msgid "Social security contributions"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_25110020
-msgid "Social security contributions accrued"
-msgstr ""
-
-#. module: account
 #: model:account.account,name:account.22_account_account_us_software
-#: model:account.account,name:account.24_l10n_id_66110160
 msgid "Software"
 msgstr "Programvare"
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_12210700
-msgid "Software Licenses"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_66110160
-msgid "Software-related expenses"
-msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
@@ -18438,13 +16971,20 @@ msgstr ""
 "eventuelle lignende gjentakende fakturaer."
 
 #. module: account
-#: model_terms:account.tax,description:account.24_tax_PT3
-msgid "Standard Rate for Luxury Goods &amp; Services"
+#: model:ir.model.fields.selection,name:account.selection__product_category__property_cost_method__standard
+#: model:ir.model.fields.selection,name:account.selection__product_template__cost_method__standard
+#: model:ir.model.fields.selection,name:account.selection__res_company__cost_method__standard
+msgid "Standard Price"
 msgstr ""
 
 #. module: account
-#: model_terms:account.tax,description:account.24_tax_PT4
-msgid "Standard Rate for Non-Luxury Goods &amp; Services"
+#: model:ir.model.fields,help:account.field_product_category__property_cost_method
+msgid ""
+"Standard Price: The products are valued at their standard cost defined on "
+"the product.\n"
+"        Average Cost (AVCO): The products are valued at weighted average "
+"cost.\n"
+"        "
 msgstr ""
 
 #. module: account
@@ -18518,6 +17058,7 @@ msgid "Statement lines"
 msgstr "Uttalelse-linje"
 
 #. module: account
+#: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_line_ids
 #: model:ir.model.fields,field_description:account.field_account_move__statement_line_ids
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -18592,13 +17133,55 @@ msgid "Step completed!"
 msgstr "Trinn fullført!"
 
 #. module: account
-#: model:account.account,name:account.24_l10n_id_66110130
+#: model_terms:ir.ui.view,arch_db:account.view_category_property_form
+msgid "Stock Account"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/company.py:0
+msgid "Stock Closing"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_product_category__property_stock_journal
+#: model:ir.model.fields,field_description:account.field_res_company__account_stock_journal_id
+msgid "Stock Journal"
+msgstr ""
+
+#. module: account
+#: model:ir.model,name:account.model_account_stock_valuation_report
+msgid "Stock Valuation"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_product_category__property_stock_valuation_account_id
+#: model:ir.model.fields,field_description:account.field_res_company__account_stock_valuation_id
+msgid "Stock Valuation Account"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_product_category__property_stock_valuation_account_active
+msgid "Stock Valuation Account Active"
+msgstr ""
+
+#. module: account
+#. odoo-javascript
+#. odoo-python
+#: code:addons/account/report/account_stock_valuation_report.py:0
+#: code:addons/account/static/src/components/stock_valuation/stock_valuation_report.xml:0
+#: model_terms:ir.ui.view,arch_db:account.view_category_property_form
 msgid "Stock Variation"
 msgstr ""
 
 #. module: account
-#: model:account.account,description:account.24_l10n_id_29000000
-msgid "Stock temporarily recorded during inventory processing"
+#: model:ir.model.fields,field_description:account.field_product_category__account_stock_variation_id
+msgid "Stock Variation Account"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_product_category__account_stock_variation_active
+msgid "Stock Variation Account Active"
 msgstr ""
 
 #. module: account
@@ -18649,16 +17232,6 @@ msgstr "Kun på angitte datoer"
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__figure_type__string
 msgid "String"
 msgstr "Uttrykk"
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_11120005
-msgid "Stripe Issuing"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_66110150
-msgid "Studies & Works"
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__subformula
@@ -18723,12 +17296,6 @@ msgid "Supplier Rank"
 msgstr "Leverandørrangering"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_journal_dashboard.py:0
-msgid "Suppliers"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__suspense_account_id
 msgid "Suspense Account"
 msgstr "Suspensjonskonto"
@@ -18742,20 +17309,6 @@ msgstr ""
 #: model:ir.actions.server,name:account.action_move_switch_move_type
 msgid "Switch into invoice/credit note"
 msgstr "Bytt til faktura/kreditnota"
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_67100010
-msgid ""
-"Systematic allocation of the cost of long-term, durable structures (e.g., "
-"concrete/brick) over their useful life."
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_67100160
-msgid ""
-"Systematic write-off of the cost of intangible software assets and licenses "
-"over their legal or useful life."
-msgstr ""
 
 #. module: account
 #: model:account.tax,name:account.22_account_tax_us_demo_tx_state
@@ -19011,16 +17564,6 @@ msgid "Tax Advance Account"
 msgstr "Skatteforskuddskonto"
 
 #. module: account
-#: model:account.account,name:account.24_l10n_id_61100050
-msgid "Tax Allowance Expense"
-msgstr ""
-
-#. module: account
-#: model:account.cash.rounding,name:account.24_cash_rounding_id_half_up
-msgid "Tax Amount Rounding (IDR)"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__tax_calculation_rounding_method
 msgid "Tax Calculation Rounding Method"
 msgstr "Metode for avrunding av skatteberegning"
@@ -19077,11 +17620,6 @@ msgid "Tax Excluded"
 msgstr "Uten mva."
 
 #. module: account
-#: model:account.tax.group,name:account.24_l10n_id_tax_group_exempt
-msgid "Tax Exempted"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__tax_exigibility
 msgid "Tax Exigibility"
 msgstr "Avgift beretiggelse"
@@ -19114,7 +17652,6 @@ msgstr "Avgiftsgruppe"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_base_document_layout__vat
-#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Tax ID"
 msgstr "Skatt ID"
 
@@ -19168,39 +17705,9 @@ msgid "Tax Payable"
 msgstr "Avgift til betaling"
 
 #. module: account
-#: model:account.account,name:account.24_l10n_id_21210050
-msgid "Tax Payable 4 (2)"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_group__tax_payable_account_id
 msgid "Tax Payable Account"
 msgstr "Skattekostnadskonto"
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_21210010
-msgid "Tax Payable PPh 21"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_21210020
-msgid "Tax Payable PPh 22"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_21210030
-msgid "Tax Payable PPh 23"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_21210040
-msgid "Tax Payable PPh 25"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_21210060
-msgid "Tax Payable PPh 26"
-msgstr ""
 
 #. module: account
 #: model:account.account,name:account.21_tax_receivable
@@ -19308,49 +17815,9 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: model:account.account,description:account.24_l10n_id_21210010
-msgid "Tax payable for employee income (PPh 21)"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_21210020
-msgid "Tax payable for export/import (PPh 22)"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_21210030
-msgid "Tax payable on services (PPh 23)"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_21210060
-msgid "Tax payable on services and income for foreign taxpayers (PPh 26)"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_21210050
-msgid "Tax payable under Article 4(2)"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__is_used
 msgid "Tax used"
 msgstr "Avgift brukt"
-
-#. module: account
-#: model_terms:account.tax,description:account.24_tax_ST4
-msgid "Taxable Goods Other Than Luxury Goods"
-msgstr ""
-
-#. module: account
-#: model_terms:account.tax,description:account.24_tax_pemungut_ppn
-msgid "Taxable Goods Other Than Luxury Goods to WAPU"
-msgstr ""
-
-#. module: account
-#: model_terms:account.tax,description:account.24_tax_ST3
-msgid "Taxable Luxury Goods"
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__taxable_supply_date
@@ -19368,7 +17835,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 #: model:account.account,name:account.22_us_group_8
-#: model:account.tax.group,name:account.24_default_tax_group
 #: model:ir.actions.act_window,name:account.action_tax_form
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__tax_ids
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_ids
@@ -19414,11 +17880,6 @@ msgid ""
 msgstr ""
 "Avgifter som kan kreves ved betaling og på faktura kan ikke blandes på samme "
 "journalpost hvis de deler en tagg."
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_65110072
-msgid "Taxes for company vehicles"
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__display_invoice_tax_company_currency
@@ -19507,18 +17968,8 @@ msgid "Technology"
 msgstr ""
 
 #. module: account
-#: model:account.account,description:account.24_l10n_id_63110010
-msgid "Telecommunication expenses"
-msgstr ""
-
-#. module: account
 #: model:account.account,name:account.22_account_account_us_internet
 msgid "Telephone & Internet"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_25110040
-msgid "Telephone and internet expenses accrued"
 msgstr ""
 
 #. module: account
@@ -19578,16 +18029,6 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__account_fiscal_position__foreign_vat_header_mode__templates_found
 msgid "Templates Found"
 msgstr "Maler funnet"
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_11120001
-msgid "Temporary account for unclear bank transactions"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_12210210
-msgid "Temporary structures or site offices - 10 Years."
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__term_key
@@ -19904,6 +18345,14 @@ msgid ""
 msgstr ""
 "Kontantbasisoppføringene som er opprettet fra skatter på denne posten, når "
 "linjene avstemmes."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The cash rounding method \"%(name)s\" has no Profit/Loss Accounts set, so no "
+"rounding line can be added."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -20230,6 +18679,14 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_journal.py:0
+msgid ""
+"The journal (%(journal_code)s) has some hashed statements so the type cannot "
+"be changed"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_bank_statement_line.py:0
 msgid ""
 "The journal entry %s reached an invalid state regarding its related "
@@ -20269,6 +18726,14 @@ msgstr "Journalen som fakturaen skal lastes opp i, er ikke spesifisert. "
 #: code:addons/account/models/account_analytic_line.py:0
 msgid "The journal item is not linked to the correct financial account"
 msgstr "Journalposten er ikke knyttet til riktig finanskonto"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+msgid ""
+"The journal of this statement (%(statement_name)) is hashed, the statement "
+"cannot be reset to draft"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_day
@@ -20790,11 +19255,6 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: model:account.account,name:account.24_l10n_id_21100030
-msgid "Third-Party Deposit"
-msgstr ""
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Thirty one dollar and Five cents"
 msgstr "31 dollar og fem cent"
@@ -20895,6 +19355,12 @@ msgstr ""
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "This can only be used on journal items"
 msgstr "Dette kan kun brukes på journalposter"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "This document has no tax amount to adjust."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -21265,8 +19731,11 @@ msgstr "Dagens aktiviteter"
 
 #. module: account
 #. odoo-javascript
+#. odoo-python
+#: code:addons/account/models/account_journal_dashboard.py:0
 #: code:addons/account/static/src/components/product_catalog/search/search_panel/search_panel.xml:0
 #: code:addons/account/static/src/components/tax_totals/tax_totals.xml:0
+#: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__duplicate_price_total
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_total
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__price_total
 #: model:ir.model.fields,field_description:account.field_account_move__amount_total
@@ -21313,6 +19782,12 @@ msgid "Total Debit"
 msgstr "Total debet"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/report/account_stock_valuation_report.py:0
+msgid "Total Inventory Valuation"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__total_invoiced
 #: model:ir.model.fields,field_description:account.field_res_users__total_invoiced
 msgid "Total Invoiced"
@@ -21353,6 +19828,11 @@ msgstr "Totalt gjenværende i valuta"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_cash_rounding
 msgid "Total Rounding"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "Total Rounding Accounts:"
 msgstr ""
 
 #. module: account
@@ -21446,7 +19926,6 @@ msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_training
-#: model:account.account,name:account.24_l10n_id_66110300
 msgid "Training and Documentation"
 msgstr ""
 
@@ -21517,11 +19996,6 @@ msgid "Transfer to %s"
 msgstr "Overfør til %s"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_move_line__translated_product_name
-msgid "Translated Product Name"
-msgstr ""
-
-#. module: account
 #: model:account.account,name:account.22_us_group_661
 msgid "Travel Expenses"
 msgstr ""
@@ -21546,13 +20020,9 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: model:account.account,description:account.24_l10n_id_12210320
-msgid "Trucks, buses, forklifts (Group 2)."
-msgstr ""
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_tax.py:0
+#: model:ir.model.fields.selection,name:account.selection__account_report__active_selection__true
 msgid "True"
 msgstr "Sann"
 
@@ -21564,11 +20034,6 @@ msgstr "Sann"
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
 msgid "Trusted"
 msgstr "Betrodd"
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_12210300
-msgid "Two-wheeled vehicles (Group 1)."
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__account_type
@@ -21643,7 +20108,6 @@ msgstr "Ikke definert enda"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_undistributed_profits
-#: model:account.account,name:account.24_l10n_id_99999900
 msgid "Undistributed Profits/Losses"
 msgstr "Ufordelte overskudd/tap"
 
@@ -21716,16 +20180,9 @@ msgid "Unmerge account"
 msgstr ""
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_journal_dashboard.py:0
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Unpaid"
 msgstr "Ubetalt"
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_31100030
-msgid "Unpaid Capital"
-msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -22060,11 +20517,6 @@ msgid "Utility bills for water, gas, electricity, heating, etc"
 msgstr ""
 
 #. module: account
-#: model:account.account,description:account.24_l10n_id_63110020
-msgid "Utility expenses for office"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,help:account.field_account_accrued_orders_wizard__currency_id
 #: model:ir.model.fields,help:account.field_account_partial_reconcile__company_currency_id
 msgid "Utility field to express amount currency"
@@ -22079,63 +20531,8 @@ msgstr ""
 "Verktøyfelt for å uttrykke om journalposten er underlagt stornoregnskap"
 
 #. module: account
-#: model_terms:account.tax,description:account.24_tax_ST0
-msgid "VAT Not Collected"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_21100011
-msgid "VAT Payable"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_21100012
-msgid "VAT Payable - luxury goods from the net of Input and Output VAT."
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_21100011
-msgid "VAT Payable from the net of Input and Output VAT."
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_11210030
-msgid "VAT Purchase"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_11210012
-msgid "VAT Receivable"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_11210013
-msgid "VAT Receivable - luxury goods from the net of Input and Output VAT."
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_11210012
-msgid "VAT Receivable from the net of Input and Output VAT."
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_21221010
-msgid "VAT Sales"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_21221010
-msgid "VAT collected on sales"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_l10n_eu_account_vies
 msgid "VAT number validation with VIES"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_11210030
-msgid "VAT paid on purchases"
 msgstr ""
 
 #. module: account
@@ -22177,6 +20574,13 @@ msgid "Validated"
 msgstr "Validert"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_product_product__valuation
+#: model:ir.model.fields,field_description:account.field_product_template__valuation
+#: model:ir.model.fields,field_description:account.field_res_company__inventory_valuation
+msgid "Valuation"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__value
 msgid "Value"
 msgstr "Verdi"
@@ -22215,6 +20619,16 @@ msgid "Variants"
 msgstr "Varianter"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_account__account_stock_variation_id
+msgid "Variation Account"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_account__account_stock_variation_active
+msgid "Variation Account Active"
+msgstr ""
+
+#. module: account
 #: model:account.account,description:account.22_account_account_us_office_supplies
 msgid ""
 "Various supplies bought for your workplace or office, like pencils, paper, "
@@ -22222,44 +20636,8 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: model:account.account,name:account.24_l10n_id_66110010
-msgid "Vehicle Fuel"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_65110051
-msgid "Vehicle Insurance"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_65110154
-msgid "Vehicle Maintenance"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_66110040
-msgid "Vehicle Parking & Toll Fee"
-msgstr ""
-
-#. module: account
 #: model:account.account,name:account.22_account_account_us_vehicle_rent
-#: model:account.account,name:account.24_l10n_id_65110041
 msgid "Vehicle Rent"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_66110030
-msgid "Vehicle Service"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_65110072
-msgid "Vehicle Taxes"
-msgstr ""
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_65110154
-msgid "Vehicle maintenance expenses"
 msgstr ""
 
 #. module: account
@@ -22429,25 +20807,9 @@ msgid ""
 msgstr ""
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid "Warning for Cash Rounding Method: %s"
-msgstr "Advarsel for kontantavrundingsmetode: %s"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_secure_entries_wizard__warnings
 msgid "Warnings"
 msgstr "Advarsler"
-
-#. module: account
-#: model:account.account,description:account.24_l10n_id_25110030
-msgid "Water expenses accrued but not yet paid"
-msgstr ""
-
-#. module: account
-#: model:account.account,name:account.24_l10n_id_63110020
-msgid "Water, Electricity, Gas"
-msgstr ""
 
 #. module: account
 #. odoo-python
@@ -22492,6 +20854,13 @@ msgstr ""
 "kryssreferert gjennom dette feltet"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_product_category__property_stock_valuation_account_id
+msgid ""
+"When automated inventory valuation is enabled on a product, this account "
+"will hold the current value of the products."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__print_on_new_page
 msgid ""
 "When checked this line and everything after it will be printed on a new page."
@@ -22513,6 +20882,13 @@ msgstr ""
 "verdi."
 
 #. module: account
+#: model:ir.model.fields,help:account.field_product_category__property_stock_journal
+msgid ""
+"When doing automated inventory valuation, this is the Accounting Journal in "
+"which entries will be automatically posted when stock moves are processed."
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_report.py:0
 msgid ""
@@ -22531,6 +20907,13 @@ msgstr "Om denne journalen skal vises på dashbordet eller ikke"
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__new_journal_name
 msgid "Will be used to name the Journal related to this bank account"
 msgstr "Vil bli brukt til å navngi journalen knyttet til denne bankkontoen"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_product_category__property_price_difference_account_id
+msgid ""
+"With perpetual valuation, this account will hold the price difference "
+"between the standard price and the bill price."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -22598,12 +20981,6 @@ msgstr "Årlig"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Yes, confirm and secure them now."
-msgstr ""
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/account_batch_sending_summary/account_batch_sending_summary.xml:0
-msgid "You are about to send"
 msgstr ""
 
 #. module: account
@@ -22697,6 +21074,12 @@ msgstr "Du kan bare rekkefølge varer fra samme journal"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You can only switch the type of a draft document."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/product.py:0
+msgid "You can only use the '=' operator to search on valuation field."
 msgstr ""
 
 #. module: account
@@ -23393,12 +21776,6 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid "You must specify the Profit Account (company dependent)"
-msgstr "Du må spesifisere Profit Account (selskapsavhengig)"
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/account_tax.py:0
 msgid "You must use non-trade accounts for tax groups."
 msgstr ""
@@ -23451,16 +21828,6 @@ msgstr "Dine fakturaer"
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
 msgid "ZIP"
 msgstr "Postnummer"
-
-#. module: account
-#: model_terms:account.tax,description:account.24_tax_PT0
-msgid "Zero-Rated"
-msgstr ""
-
-#. module: account
-#: model:account.tax.group,name:account.24_l10n_id_tax_group_0
-msgid "Zero-rated Taxes"
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__zip
@@ -24059,3 +22426,38 @@ msgid ""
 "{{ object.company_id.name }} {{ object.payment_receipt_title }} (Ref "
 "{{ object.name or 'n/a' }})"
 msgstr ""
+
+#~ msgid ""
+#~ "%(order)s - %(order_line)s; %(quantity_billed)s Billed, %"
+#~ "(quantity_received)s Received at %(unit_price)s each"
+#~ msgstr ""
+#~ "%(order)s - %(order_line)s; %(quantity_billed)s Fakturert, %"
+#~ "(quantity_received)s Mottatt den %(unit_price)s hver"
+
+#~ msgid ""
+#~ "%(order)s - %(order_line)s; %(quantity_invoiced)s Invoiced, %"
+#~ "(quantity_delivered)s Delivered at %(unit_price)s each"
+#~ msgstr ""
+#~ "%(order)s - %(order_line)s; %(quantity_invoiced)s Fakturert, %"
+#~ "(quantity_delivered)s Levert på %(unit_price)s hver seg"
+
+#~ msgid "Accrued %(entry_type)s entry as of %(date)s"
+#~ msgstr "Periodisering %(entry_type)s opprettelse fra den %(date)s"
+
+#~ msgid "Cash Registers"
+#~ msgstr "Kontantkasser"
+
+#~ msgid "Logs"
+#~ msgstr "Logger"
+
+#~ msgid "Partners that are used in hashed entries cannot be merged."
+#~ msgstr "Partnere som brukes i hashede oppføringer kan ikke slås sammen."
+
+#~ msgid "Residual amount"
+#~ msgstr "Residualbeløp"
+
+#~ msgid "Warning for Cash Rounding Method: %s"
+#~ msgstr "Advarsel for kontantavrundingsmetode: %s"
+
+#~ msgid "You must specify the Profit Account (company dependent)"
+#~ msgstr "Du må spesifisere Profit Account (selskapsavhengig)"

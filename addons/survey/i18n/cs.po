@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:41+0000\n"
+"POT-Creation-Date: 2026-09-11 17:42+0000\n"
 "PO-Revision-Date: 2026-08-31 19:50+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Czech <https://translate.odoo.com/projects/odoo-s19-4/survey/"
@@ -146,28 +146,6 @@ msgstr "6650 km"
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p3_q3_sug1
 msgid "99 years"
 msgstr "99let"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
-msgid ""
-"<br/>\n"
-"                                    <span class=\"text-muted\">Completed</"
-"span>"
-msgstr ""
-"<br/>\n"
-"                                    <span class=\"text-muted\">Dokončeno</"
-"span>"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
-msgid ""
-"<br/>\n"
-"                                    <span class=\"text-muted\">Registered</"
-"span>"
-msgstr ""
-"<br/>\n"
-"                                    <span class=\"text-muted\">Registrováno</"
-"span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
@@ -353,6 +331,12 @@ msgid ""
 msgstr ""
 
 #. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
+msgid ""
+"<i class=\"oi oi-filled\" data-icon=\"share\" role=\"img\" title=\"Share\"/>"
+msgstr ""
+
+#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
 msgid ""
 "<i class=\"oi oi-fw me-2\" data-icon=\"bar_chart\" aria-hidden=\"true\"/"
@@ -458,11 +442,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
 msgid "<span class=\"list-group-item py-1 px-2\">Min</span>"
 msgstr ""
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
-msgid "<span class=\"mx-1\">-</span>"
-msgstr "<span class=\"mx-1\">-</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -578,6 +557,11 @@ msgid "<span>%</span>"
 msgstr "<span>%</span>"
 
 #. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
+msgid "<span>-</span>"
+msgstr ""
+
+#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
 msgid "<span>All surveys</span>"
 msgstr "<span>Všechny průzkumy</span>"
@@ -586,6 +570,11 @@ msgstr "<span>Všechny průzkumy</span>"
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
 msgid "<span>Completed surveys</span>"
 msgstr "<span>Dokončené průzkumy</span>"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
+msgid "<span>Completed</span>"
+msgstr ""
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
@@ -606,6 +595,11 @@ msgstr "<span>Prošel a neuspěl</span>"
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
 msgid "<span>Passed only</span>"
 msgstr "<span>Pouze prošel</span>"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
+msgid "<span>Registered</span>"
+msgstr ""
 
 #. module: survey
 #. odoo-python
@@ -1121,6 +1115,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/survey/models/templates/survey_survey.py:0
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_tree
 msgid "Certification"
 msgstr "Cetrifikace"
@@ -3686,6 +3681,11 @@ msgid "Restricted to"
 msgstr ""
 
 #. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
+msgid "Results"
+msgstr ""
+
+#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_button_retake
 msgid "Retry"
 msgstr "Opakovat"
@@ -5448,3 +5448,24 @@ msgid ""
 "⚠️ This question is positioned before some or all of its triggers and could "
 "be skipped."
 msgstr ""
+
+#~ msgid ""
+#~ "<br/>\n"
+#~ "                                    <span class=\"text-muted\">Completed</"
+#~ "span>"
+#~ msgstr ""
+#~ "<br/>\n"
+#~ "                                    <span class=\"text-muted\">Dokončeno</"
+#~ "span>"
+
+#~ msgid ""
+#~ "<br/>\n"
+#~ "                                    <span class=\"text-"
+#~ "muted\">Registered</span>"
+#~ msgstr ""
+#~ "<br/>\n"
+#~ "                                    <span class=\"text-"
+#~ "muted\">Registrováno</span>"
+
+#~ msgid "<span class=\"mx-1\">-</span>"
+#~ msgstr "<span class=\"mx-1\">-</span>"

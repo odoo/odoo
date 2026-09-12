@@ -11,10 +11,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:46+0000\n"
-"PO-Revision-Date: 2026-08-31 16:59+0000\n"
+"POT-Creation-Date: 2026-09-11 17:43+0000\n"
+"PO-Revision-Date: 2026-09-09 14:02+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
-"Language-Team: German <https://translate.odoo.com/projects/odoo-s19-4/"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-master/"
 "web_tour/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -56,6 +56,11 @@ msgid "A tour already exists with this name . Tour's name must be unique!"
 msgstr ""
 "Es existiert bereits eine Tour mit diesem Namen. Der Name der Tour muss "
 "einzigartig sein!"
+
+#. module: web_tour
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__active
+msgid "Active"
+msgstr ""
 
 #. module: web_tour
 #. odoo-javascript
@@ -175,7 +180,7 @@ msgstr "Anzeigename"
 
 #. module: web_tour
 #. odoo-javascript
-#: code:addons/web_tour/static/src/tour_service.js:0
+#: code:addons/web_tour/static/src/tour_recorder/tour_recorder_command_provider.js:0
 msgid "Enable the tour recorder"
 msgstr "Tour-Aufzeichnung aktivieren"
 
@@ -229,7 +234,7 @@ msgstr "Name"
 
 #. module: web_tour
 #. odoo-javascript
-#: code:addons/web_tour/static/src/onboarding_item.xml:0
+#: code:addons/web_tour/static/src/widgets/onboarding_item.xml:0
 #: code:addons/web_tour/static/src/widgets/tour_start.xml:0
 #: model:ir.model.fields,field_description:web_tour.field_res_users__tour_enabled
 msgid "Onboarding"

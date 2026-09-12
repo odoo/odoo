@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.5a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 18:20+0000\n"
+"POT-Creation-Date: 2026-09-11 18:13+0000\n"
 "PO-Revision-Date: 2026-08-31 12:56+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -39,33 +39,33 @@ msgstr ""
 
 #. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.report_invoice_document
-msgid "<b>CIG: </b>"
-msgstr "<b>CIG: </b>"
+msgid "<span class=\"fw-bold\">CIG: </span>"
+msgstr ""
 
 #. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.report_invoice_document
-msgid "<b>CUP: </b>"
-msgstr "<b>CUP: </b>"
+msgid "<span class=\"fw-bold\">CUP: </span>"
+msgstr ""
 
 #. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.report_invoice_document
-msgid "<b>Document Date: </b>"
-msgstr "<b>Data documento: </b>"
+msgid "<span class=\"fw-bold\">Issue Date: </span>"
+msgstr ""
 
 #. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.report_invoice_document
-msgid "<b>Stamp Duty: </b>"
-msgstr "<b>Imposta di bollo: </b>"
+msgid "<span class=\"fw-bold\">Order or Convention Code: </span>"
+msgstr ""
 
 #. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.report_invoice_document
-msgid "<b>Transport Document: </b>"
-msgstr "<b>Documento di trasporto: </b>"
+msgid "<span class=\"fw-bold\">Transport Document(s): </span>"
+msgstr ""
 
 #. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.report_invoice_document
-msgid "<br/><b>Payment Conditions:</b>"
-msgstr "<br/><b>Condizioni di pagamento:</b>"
+msgid "<span class=\"fw-bold\">Via: </span>"
+msgstr ""
 
 #. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.res_config_settings_view_form
@@ -97,6 +97,11 @@ msgstr ""
 "                                </span>"
 
 #. module: l10n_it_edi
+#: model_terms:ir.ui.view,arch_db:l10n_it_edi.report_invoice_document
+msgid "<strong>Fiscal Code: </strong>"
+msgstr ""
+
+#. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_edi_state__accepted_by_pa_partner
 msgid "Accepted by Partner"
 msgstr "Accettata dal partner"
@@ -115,6 +120,11 @@ msgstr "Modello piano dei conti"
 #: model:ir.model,name:l10n_it_edi.model_account_edi_proxy_client_user
 msgid "Account EDI proxy user"
 msgstr "Conto EDI utente proxy"
+
+#. module: l10n_it_edi
+#: model_terms:ir.ui.view,arch_db:l10n_it_edi.report_invoice_document
+msgid "Additional information"
+msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_origin_document_type__agreement
@@ -343,6 +353,7 @@ msgstr "Il codice destinatario (SDI) deve avere da 6 a 7 caratteri."
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_move__display_name
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_move_send__display_name
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_payment_method_line__display_name
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_payment_register__display_name
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_tax__display_name
 #: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_ddt__display_name
 #: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_document_type__display_name
@@ -483,6 +494,7 @@ msgstr "Inoltro al partner in corso"
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_move__id
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_move_send__id
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_payment_method_line__id
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_payment_register__id
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_tax__id
 #: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_ddt__id
 #: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_document_type__id
@@ -602,6 +614,12 @@ msgstr ""
 #: model:ir.model,name:l10n_it_edi.model_account_move
 msgid "Journal Entry"
 msgstr "Registrazione contabile"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_bank_statement_line__l10n_it_available_document_type_ids
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_move__l10n_it_available_document_type_ids
+msgid "L10N It Available Document Type"
+msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_bank_statement_line__l10n_it_document_type
@@ -832,6 +850,11 @@ msgstr ""
 "effettivamente versato risultante dall'ultimo bilancio"
 
 #. module: l10n_it_edi
+#: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_document_type__move_types
+msgid "Move Types"
+msgstr ""
+
+#. module: l10n_it_edi
 #: model:ir.model.fields,help:l10n_it_edi.field_res_partner__l10n_it_pa_index
 #: model:ir.model.fields,help:l10n_it_edi.field_res_users__l10n_it_pa_index
 msgid ""
@@ -931,6 +954,11 @@ msgstr ""
 "Paese."
 
 #. module: l10n_it_edi
+#: model:ir.model,name:l10n_it_edi.model_account_payment_register
+msgid "Pay"
+msgstr ""
+
+#. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.account_invoice_form_l10n_it
 msgid "Payment Method"
 msgstr "Metodo di pagamento"
@@ -1023,17 +1051,13 @@ msgid "Public Investment Unique Identifier"
 msgstr "Codice identificativo unico di investimento pubblico"
 
 #. module: l10n_it_edi
-#: model:ir.model.fields.selection,name:l10n_it_edi.selection__l10n_it_document_type__type__purchase
-msgid "Purchase"
-msgstr "Acquisto"
-
-#. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_origin_document_type__purchase_order
 msgid "Purchase Order"
 msgstr "Ordine d'acquisto"
 
 #. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.account_invoice_form_l10n_it
+#: model_terms:ir.ui.view,arch_db:l10n_it_edi.report_invoice_document
 msgid "Reference Document"
 msgstr "Documento di riferimento"
 
@@ -1064,11 +1088,6 @@ msgstr "Stato SDI"
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_move__l10n_it_edi_transaction
 msgid "SDI Transaction ID"
 msgstr "ID transazione SDI"
-
-#. module: l10n_it_edi
-#: model:ir.model.fields.selection,name:l10n_it_edi.selection__l10n_it_document_type__type__sale
-msgid "Sale"
-msgstr "Vendita"
 
 #. module: l10n_it_edi
 #. odoo-python
@@ -1185,14 +1204,9 @@ msgid "Stamp Duty"
 msgstr "Imposta di bollo"
 
 #. module: l10n_it_edi
-#: model_terms:ir.ui.view,arch_db:l10n_it_edi.report_invoice_document
-msgid "TP01 pagamento a rate"
-msgstr "TP01 pagamento a rate"
-
-#. module: l10n_it_edi
-#: model_terms:ir.ui.view,arch_db:l10n_it_edi.report_invoice_document
-msgid "TP02 pagamento completo"
-msgstr "TP02 pagamento completo"
+#: model_terms:ir.ui.view,arch_db:l10n_it_edi.document_tax_totals_inherit_stamp_duty
+msgid "Stamp duty"
+msgstr ""
 
 #. module: l10n_it_edi
 #. odoo-python
@@ -1600,7 +1614,6 @@ msgid "Transport informations from XML file:"
 msgstr "Informazioni di trasporto dal file XML:"
 
 #. module: l10n_it_edi
-#: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_document_type__type
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.account_invoice_form_l10n_it
 msgid "Type"
 msgstr "Tipo"
@@ -2223,9 +2236,10 @@ msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_withholding_reason__w
-msgid "[W] Income from 2015 tinders subject to law art. 25-ter D.P.R. 600/1973"
+msgid ""
+"[W] Income from tenders subject to Art. 25-ter of Presidential Decree "
+"600/1973"
 msgstr ""
-"[W] Redditi da tinder 2015 soggetti alla legge art. 25-ter D.P.R. 600/1973"
 
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_withholding_reason__x
@@ -2331,78 +2345,114 @@ msgstr "withholding_no_enasarco"
 msgid "zip"
 msgstr "CAP"
 
-msgid ""
-"<i class=\"fa fa-warning\" role=\"img\" title=\"EDI (Italy)\"/><span "
-"class=\"mx-1\">E-invoicing (Italy)</span>"
-msgstr ""
-"<i class=\"fa fa-warning\" role=\"img\" title=\"EDI (Italy)\"/><span "
-"class=\"mx-1\">Fatturazione elettronica (Italia)</span>"
+#~ msgid "<b>CIG: </b>"
+#~ msgstr "<b>CIG: </b>"
 
-msgid "Being Sent To SdI"
-msgstr "In invio a SdI"
+#~ msgid "<b>CUP: </b>"
+#~ msgstr "<b>CUP: </b>"
 
-msgid "Dati Bollo"
-msgstr "Dati Bollo"
+#~ msgid "<b>Document Date: </b>"
+#~ msgstr "<b>Data documento: </b>"
 
-msgid "FatturaPA Attachment"
-msgstr "Allegato FatturaPA"
+#~ msgid "<b>Stamp Duty: </b>"
+#~ msgstr "<b>Imposta di bollo: </b>"
 
-msgid "FatturaPA Transaction"
-msgstr "Transazione FatturaPA"
+#~ msgid "<b>Transport Document: </b>"
+#~ msgstr "<b>Documento di trasporto: </b>"
 
-msgid "L10N It Edi Attachment File"
-msgstr "File allegato L10N It Edi"
+#~ msgid "<br/><b>Payment Conditions:</b>"
+#~ msgstr "<br/><b>Condizioni di pagamento:</b>"
 
-msgid "L10N It Edi Header"
-msgstr "Intestazione L10N It Edi"
+#~ msgid "Purchase"
+#~ msgstr "Acquisto"
 
-msgid "Origin Document Date"
-msgstr "Data documento di origine"
+#~ msgid "Sale"
+#~ msgstr "Vendita"
 
-msgid "Origin Document Name"
-msgstr "Nome documento di origine"
+#~ msgid "TP01 pagamento a rate"
+#~ msgstr "TP01 pagamento a rate"
 
-msgid "Origin Document Type"
-msgstr "Tipo documento di origine"
+#~ msgid "TP02 pagamento completo"
+#~ msgstr "TP02 pagamento completo"
 
-msgid "Requires user signature"
-msgstr "Richiede Firma Utente"
+#~ msgid ""
+#~ "[W] Income from 2015 tinders subject to law art. 25-ter D.P.R. 600/1973"
+#~ msgstr ""
+#~ "[W] Redditi da tinder 2015 soggetti alla legge art. 25-ter D.P.R. 600/1973"
 
-msgid "SdI Accepted, Accepted by the PA Partner"
-msgstr "SdI Accettato, Accettato dal partner PA"
+#~ msgid ""
+#~ "<i class=\"fa fa-warning\" role=\"img\" title=\"EDI (Italy)\"/><span "
+#~ "class=\"mx-1\">E-invoicing (Italy)</span>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-warning\" role=\"img\" title=\"EDI (Italy)\"/><span "
+#~ "class=\"mx-1\">Fatturazione elettronica (Italia)</span>"
 
-msgid "SdI Accepted, Forward to Partner Failed"
-msgstr "SdI Accettato, Inoltro al partner fallito"
+#~ msgid "Being Sent To SdI"
+#~ msgstr "In invio a SdI"
 
-msgid "SdI Accepted, Forwarded to Partner"
-msgstr "SdI Accettato, Inoltrato al partner"
+#~ msgid "Dati Bollo"
+#~ msgstr "Dati Bollo"
 
-msgid "SdI Accepted, Forwarding to Partner"
-msgstr "SdI Accettato, Inoltro al partner"
+#~ msgid "FatturaPA Attachment"
+#~ msgstr "Allegato FatturaPA"
 
-msgid "SdI Accepted, PA Partner Expired Terms"
-msgstr "SdI Accettato, Termini scaduti per il partner PA"
+#~ msgid "FatturaPA Transaction"
+#~ msgstr "Transazione FatturaPA"
 
-msgid "SdI Accepted, Rejected by the PA Partner"
-msgstr "SdI Accettato, Rifiutato dal partner PA"
+#~ msgid "L10N It Edi Attachment File"
+#~ msgstr "File allegato L10N It Edi"
 
-msgid "SdI Processing"
-msgstr "SdI in elaborazione"
+#~ msgid "L10N It Edi Header"
+#~ msgstr "Intestazione L10N It Edi"
 
-msgid "SdI Rejected"
-msgstr "SdI Rifiutato"
+#~ msgid "Origin Document Date"
+#~ msgstr "Data documento di origine"
 
-msgid ""
-"User description of the current state, with hints to make the flow progress"
-msgstr ""
-"Descrizione utente dello stato attuale, con suggerimenti per far progredire "
-"il flusso"
+#~ msgid "Origin Document Name"
+#~ msgstr "Nome documento di origine"
 
-msgid "Bank account not found, useful informations from XML file:"
-msgstr "Conto bancario non trovato, informazioni utili dal file XML:"
+#~ msgid "Origin Document Type"
+#~ msgstr "Tipo documento di origine"
 
-msgid "Partner not found, useful informations from XML file:"
-msgstr "Partner non trovato, informazioni utili dal file XML:"
+#~ msgid "Requires user signature"
+#~ msgstr "Richiede Firma Utente"
 
-msgid "Payment due date invalid in XML file: %s"
-msgstr "Data scadenza pagamento non valida nel file XML: %s"
+#~ msgid "SdI Accepted, Accepted by the PA Partner"
+#~ msgstr "SdI Accettato, Accettato dal partner PA"
+
+#~ msgid "SdI Accepted, Forward to Partner Failed"
+#~ msgstr "SdI Accettato, Inoltro al partner fallito"
+
+#~ msgid "SdI Accepted, Forwarded to Partner"
+#~ msgstr "SdI Accettato, Inoltrato al partner"
+
+#~ msgid "SdI Accepted, Forwarding to Partner"
+#~ msgstr "SdI Accettato, Inoltro al partner"
+
+#~ msgid "SdI Accepted, PA Partner Expired Terms"
+#~ msgstr "SdI Accettato, Termini scaduti per il partner PA"
+
+#~ msgid "SdI Accepted, Rejected by the PA Partner"
+#~ msgstr "SdI Accettato, Rifiutato dal partner PA"
+
+#~ msgid "SdI Processing"
+#~ msgstr "SdI in elaborazione"
+
+#~ msgid "SdI Rejected"
+#~ msgstr "SdI Rifiutato"
+
+#~ msgid ""
+#~ "User description of the current state, with hints to make the flow "
+#~ "progress"
+#~ msgstr ""
+#~ "Descrizione utente dello stato attuale, con suggerimenti per far "
+#~ "progredire il flusso"
+
+#~ msgid "Bank account not found, useful informations from XML file:"
+#~ msgstr "Conto bancario non trovato, informazioni utili dal file XML:"
+
+#~ msgid "Partner not found, useful informations from XML file:"
+#~ msgstr "Partner non trovato, informazioni utili dal file XML:"
+
+#~ msgid "Payment due date invalid in XML file: %s"
+#~ msgstr "Data scadenza pagamento non valida nel file XML: %s"

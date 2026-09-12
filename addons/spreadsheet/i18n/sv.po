@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:46+0000\n"
+"POT-Creation-Date: 2026-09-11 17:43+0000\n"
 "PO-Revision-Date: 2026-09-03 07:11+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -1969,6 +1969,13 @@ msgstr ""
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"Cannot perform this action on merged cells. Unmerge the cells and try again."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Cannot remove duplicates for an unknown reason"
 msgstr "Det går inte att ta bort dubbletter av okänd anledning"
 
@@ -2946,13 +2953,7 @@ msgstr "Valutakurs"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/currency/plugins/currency.js:0
-msgid "Currency not available for this company."
-msgstr "Valuta ej tillgänglig för detta företag."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/currency/plugins/currency.js:0
+#: code:addons/spreadsheet/static/src/currency/formulas.js:0
 msgid "Currency rate unavailable."
 msgstr "Valutakurs ej tillgänglig."
 
@@ -4346,7 +4347,7 @@ msgstr "Filtrera"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/global_filters/plugins/global_filters_core_view_plugin.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_functions.js:0
 msgid "Filter \"%(filter_name)s\" not found"
 msgstr "Filter \"%(filter_name)s\" hittades inte"
 
@@ -6867,7 +6868,7 @@ msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "No content to print"
 msgstr ""
 
@@ -7732,6 +7733,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Print content"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Print preview"
 msgstr ""
 
 #. module: spreadsheet
@@ -13580,16 +13587,6 @@ msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"This operation is not possible due to a merge. Please remove the merges "
-"first than try again."
-msgstr ""
-"Denna operation är inte möjlig på grund av en sammanslagning. Ta bort "
-"sammanslagningarna först och försök sedan igen."
-
-#. module: spreadsheet
-#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "This pivot has no cell missing on this sheet"
 msgstr ""
@@ -15405,32 +15402,42 @@ msgstr ""
 msgid "yesterday"
 msgstr "igår"
 
-#, fuzzy
-msgid "%(matches)s matches in %(sheetName)s"
-msgstr "%(matches)s matchningar i %(sheetName)s"
+#~ msgid "Currency not available for this company."
+#~ msgstr "Valuta ej tillgänglig för detta företag."
+
+#~ msgid ""
+#~ "This operation is not possible due to a merge. Please remove the merges "
+#~ "first than try again."
+#~ msgstr ""
+#~ "Denna operation är inte möjlig på grund av en sammanslagning. Ta bort "
+#~ "sammanslagningarna först och försök sedan igen."
 
 #, fuzzy
-msgid "%(matches)s matches in range %(range)s of %(sheetName)s"
-msgstr "%(matches)s matchningar i intervall %(range)s av %(sheetName)s"
+#~ msgid "%(matches)s matches in %(sheetName)s"
+#~ msgstr "%(matches)s matchningar i %(sheetName)s"
 
 #, fuzzy
-msgid "%s matches in all sheets"
-msgstr "%s matcher i alla ark"
+#~ msgid "%(matches)s matches in range %(range)s of %(sheetName)s"
+#~ msgstr "%(matches)s matchningar i intervall %(range)s av %(sheetName)s"
 
 #, fuzzy
-msgid "Change color"
-msgstr "Ändra färg"
-
-msgid "Filters"
-msgstr "Filter"
+#~ msgid "%s matches in all sheets"
+#~ msgstr "%s matcher i alla ark"
 
 #, fuzzy
-msgid "First day of the month preceding a date."
-msgstr "Första dagen i den månad som föregår ett datum."
+#~ msgid "Change color"
+#~ msgstr "Ändra färg"
+
+#~ msgid "Filters"
+#~ msgstr "Filter"
 
 #, fuzzy
-msgid "Last day of the month following a date."
-msgstr "Sista dagen i månaden efter ett datum."
+#~ msgid "First day of the month preceding a date."
+#~ msgstr "Första dagen i den månad som föregår ett datum."
 
-msgid "Show Filters"
-msgstr "Visa filter"
+#, fuzzy
+#~ msgid "Last day of the month following a date."
+#~ msgstr "Sista dagen i månaden efter ett datum."
+
+#~ msgid "Show Filters"
+#~ msgstr "Visa filter"

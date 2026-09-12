@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:44+0000\n"
+"POT-Creation-Date: 2026-09-11 17:41+0000\n"
 "PO-Revision-Date: 2026-08-31 13:55+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -775,6 +775,11 @@ msgid "Access Denied"
 msgstr "Ruxsat berilmadi"
 
 #. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_res_groups
+msgid "Access Groups"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__access_token
 #, fuzzy
 msgid "Access Token"
@@ -835,13 +840,6 @@ msgstr ""
 #, fuzzy
 msgid "Accounting"
 msgstr "Buxgalteriya hisobi"
-
-#. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config__journal_id
-#: model:ir.model.fields,help:point_of_sale.field_pos_order__sale_journal
-#: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_journal_id
-msgid "Accounting journal used to post POS session receipts and invoices."
-msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -1701,7 +1699,6 @@ msgstr "Orqaga"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/login_screen/login_screen.js:0
 #, fuzzy
 msgid "Backend"
@@ -1831,7 +1828,7 @@ msgstr "Shtrix-kod qoidasi"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
+#: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
 msgid "Barcode Scanner"
 msgstr ""
 
@@ -2187,7 +2184,6 @@ msgstr "Naqd pul kirimi / chiqimi"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 #, fuzzy
 msgid "Cash In/Out"
@@ -2614,6 +2610,7 @@ msgstr "Mijoz"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/chose_combo_popup/chose_combo_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/product_configurator_popup/product_configurator_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
@@ -2629,7 +2626,6 @@ msgstr "Yopish"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 #, fuzzy
 msgid "Close Register"
@@ -2662,6 +2658,7 @@ msgid "Closed Register"
 msgstr "Yopiq ro‘yxat"
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_tree
 #, fuzzy
 msgid "Closing"
@@ -2698,6 +2695,12 @@ msgstr ""
 #, fuzzy
 msgid "Closing Entry by product"
 msgstr "Mahsulot bo‘yicha yakuniy yozuv"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__closing_journal_id
+#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_closing_journal_id
+msgid "Closing Journal"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__session_closing_mode
@@ -3225,12 +3228,6 @@ msgid "Create Partner"
 msgstr ""
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
-msgid "Create Product"
-msgstr ""
-
-#. module: point_of_sale
 #: model:ir.model,website_form_label:point_of_sale.model_res_partner
 #, fuzzy
 msgid "Create a Customer"
@@ -3419,8 +3416,6 @@ msgid "Customer Account"
 msgstr "Mijoz hisobi"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 #, fuzzy
 msgid "Customer Display"
@@ -4020,6 +4015,7 @@ msgstr "Chegirmalar"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_country__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_res_country_state__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_res_currency__display_name
+#: model:ir.model.fields,field_description:point_of_sale.field_res_groups__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_res_lang__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_res_partner__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users__display_name
@@ -4965,6 +4961,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_res_country__id
 #: model:ir.model.fields,field_description:point_of_sale.field_res_country_state__id
 #: model:ir.model.fields,field_description:point_of_sale.field_res_currency__id
+#: model:ir.model.fields,field_description:point_of_sale.field_res_groups__id
 #: model:ir.model.fields,field_description:point_of_sale.field_res_lang__id
 #: model:ir.model.fields,field_description:point_of_sale.field_res_partner__id
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users__id
@@ -5153,12 +5150,6 @@ msgstr ""
 #, fuzzy
 msgid "Information about your product."
 msgstr "Mahsulotingiz haqidagi ma'lumot."
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
-msgid "Install App"
-msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_payment_method_form
@@ -5451,6 +5442,26 @@ msgid "Journal Item"
 msgstr ""
 
 #. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__journal_id
+#: model:ir.model.fields,help:point_of_sale.field_pos_order__sale_journal
+#: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_journal_id
+msgid "Journal used for customer invoices and refunds credit notes. "
+msgstr ""
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid ""
+"Journal used for the customer invoices, and for the session closing entries "
+"when no Closing Journal is set."
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__closing_journal_id
+#: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_closing_journal_id
+msgid "Journal used specifically for PoS session closing and reverse entries"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_payment_method_kanban
 msgid "Journal:"
 msgstr ""
@@ -5488,7 +5499,7 @@ msgstr "LED chiroq"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
+#: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
 msgid "LNA"
 msgstr ""
 
@@ -5777,7 +5788,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
+#: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
 msgid "Local Network Access"
 msgstr ""
 
@@ -6987,6 +6998,12 @@ msgid "Open Customer Display"
 msgstr "Mijoz displeyini ochish"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
+msgid "Open Menu"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__open_session_ids
 #, fuzzy
 msgid "Open PoS sessions that are using this payment method."
@@ -7114,6 +7131,13 @@ msgstr "Qo‘shimcha mahsulotlar"
 #, fuzzy
 msgid "Optional Products:"
 msgstr "Qo‘shimcha mahsulotlar:"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid ""
+"Optional journal for the session closing entries, to keep their sequence and "
+"their options apart from the customer invoices."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_product_product__pos_optional_product_ids
@@ -7315,6 +7339,11 @@ msgstr "Buyurtmalar"
 #, fuzzy
 msgid "Orders Analysis"
 msgstr "Buyurtmalar tahlili"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Orders journal"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8102,6 +8131,12 @@ msgid "Point of Sale Category"
 msgstr "Savdo nuqtasi toifasi"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_journal.py:0
+msgid "Point of Sale Closing"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_search
 #, fuzzy
 msgid "Point of Sale Config"
@@ -8625,12 +8660,6 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
-msgid "Print Report"
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/sale_details_button/sale_details_button.xml:0
 #, fuzzy
 msgid "Print a report with all the sales of the current PoS Session"
@@ -8768,7 +8797,6 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/select_default_printer_popup/select_default_printer_popup.xml:0
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_printer_form
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_printers
@@ -9360,7 +9388,6 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/confirmation_dialog/confirmation_dialog.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/error_dialog/error_dialog.js:0
 #: code:addons/point_of_sale/static/src/app/components/popups/error_dialog/error_dialog.xml:0
@@ -10511,6 +10538,7 @@ msgstr "Zaxira, mahsulot konfiguratori, to‘ldirish, chegirmalar"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 #, fuzzy
 msgid "Stop"
@@ -12559,18 +12587,6 @@ msgstr ""
 "ma'lumotlari orasida mahsulot marjasi va tannarxini ko‘rishi mumkin."
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
-#, fuzzy
-msgid ""
-"Whenever you close a session, one entry is generated in the following "
-"accounting journal for all the orders not invoiced. Invoices are recorded in "
-"accounting separately."
-msgstr ""
-"Har safar seansni yopganingizda, hisobvaraq-faktura qilinmagan barcha "
-"buyurtmalar uchun quyidagi buxgalteriya jurnalida bitta yozuv hosil bo‘ladi. "
-"Hisobvaraq-fakturalar buxgalteriya hisobida alohida qayd etiladi."
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/select_default_printer_popup/select_default_printer_popup.xml:0
 msgid "Which one would you like to use as default for this device?"
@@ -13417,105 +13433,116 @@ msgid "x"
 msgstr ""
 
 #, fuzzy
-msgid "Thank you."
-msgstr "Rahmat."
+#~ msgid ""
+#~ "Whenever you close a session, one entry is generated in the following "
+#~ "accounting journal for all the orders not invoiced. Invoices are recorded "
+#~ "in accounting separately."
+#~ msgstr ""
+#~ "Har safar seansni yopganingizda, hisobvaraq-faktura qilinmagan barcha "
+#~ "buyurtmalar uchun quyidagi buxgalteriya jurnalida bitta yozuv hosil "
+#~ "bo‘ladi. Hisobvaraq-fakturalar buxgalteriya hisobida alohida qayd etiladi."
 
 #, fuzzy
-msgid "Welcome."
-msgstr "Xush kelibsiz."
+#~ msgid "Thank you."
+#~ msgstr "Rahmat."
 
 #, fuzzy
-msgid "<span class=\"oe_inline\"><b>Skip Preview Screen</b></span>"
-msgstr ""
-"<span class=\"oe_inline\"><b>Ko‘rib chiqish oynasini o‘tkazib yuborish</b></"
-"span>"
+#~ msgid "Welcome."
+#~ msgstr "Xush kelibsiz."
 
 #, fuzzy
-msgid "A request is still being processed in the background. Please wait."
-msgstr "So‘rov hali fonda qayta ishlanmoqda. Iltimos, kuting."
+#~ msgid "<span class=\"oe_inline\"><b>Skip Preview Screen</b></span>"
+#~ msgstr ""
+#~ "<span class=\"oe_inline\"><b>Ko‘rib chiqish oynasini o‘tkazib yuborish</"
+#~ "b></span>"
 
 #, fuzzy
-msgid "Basic Receipt"
-msgstr "Oddiy chek"
+#~ msgid "A request is still being processed in the background. Please wait."
+#~ msgstr "So‘rov hali fonda qayta ishlanmoqda. Iltimos, kuting."
 
 #, fuzzy
-msgid "Epson Printer IP Address"
-msgstr "Epson printer IP manzili"
+#~ msgid "Basic Receipt"
+#~ msgstr "Oddiy chek"
 
 #, fuzzy
-msgid ""
-"Local IP address of an Epson receipt printer, or its serial number if the "
-"'Automatic Certificate Update' option is enabled in the printer settings."
-msgstr ""
-"Epson kvitansiya printerining mahalliy IP-manzili yoki printer sozlamalarida "
-"\"Sertifikatni avtomatik yangilash\" opsiyasi yoqilgan bo‘lsa, uning seriya "
-"raqami."
+#~ msgid "Epson Printer IP Address"
+#~ msgstr "Epson printer IP manzili"
 
 #, fuzzy
-msgid "Print Basic Receipt"
-msgstr "Asosiy chekni chop etish"
+#~ msgid ""
+#~ "Local IP address of an Epson receipt printer, or its serial number if the "
+#~ "'Automatic Certificate Update' option is enabled in the printer settings."
+#~ msgstr ""
+#~ "Epson kvitansiya printerining mahalliy IP-manzili yoki printer "
+#~ "sozlamalarida \"Sertifikatni avtomatik yangilash\" opsiyasi yoqilgan "
+#~ "bo‘lsa, uning seriya raqami."
 
 #, fuzzy
-msgid "Print Full Receipt"
-msgstr "To‘liq chekni chop etish"
+#~ msgid "Print Basic Receipt"
+#~ msgstr "Asosiy chekni chop etish"
 
 #, fuzzy
-msgid "Print Receipt"
-msgstr "Chekni chop etish"
+#~ msgid "Print Full Receipt"
+#~ msgstr "To‘liq chekni chop etish"
 
 #, fuzzy
-msgid "Print basic ticket without prices. Can be used for gifts."
-msgstr "Narxlarsiz asosiy chekni chop etish. Sovg‘alar uchun ishlatish mumkin."
+#~ msgid "Print Receipt"
+#~ msgstr "Chekni chop etish"
 
 #, fuzzy
-msgid "Skip Preview Screen"
-msgstr "Oldindan ko‘rish ekranini o‘tkazib yuborish"
+#~ msgid "Print basic ticket without prices. Can be used for gifts."
+#~ msgstr ""
+#~ "Narxlarsiz asosiy chekni chop etish. Sovg‘alar uchun ishlatish mumkin."
 
 #, fuzzy
-msgid ""
-"The receipt screen will be skipped if the receipt can be printed "
-"automatically."
-msgstr ""
-"Agar chekni avtomatik chop etish mumkin bo‘lsa, chek ekrani o‘tkazib "
-"yuboriladi."
+#~ msgid "Skip Preview Screen"
+#~ msgstr "Oldindan ko‘rish ekranini o‘tkazib yuborish"
 
 #, fuzzy
-msgid "Website Messages"
-msgstr "Veb-sayt xabarlari"
+#~ msgid ""
+#~ "The receipt screen will be skipped if the receipt can be printed "
+#~ "automatically."
+#~ msgstr ""
+#~ "Agar chekni avtomatik chop etish mumkin bo‘lsa, chek ekrani o‘tkazib "
+#~ "yuboriladi."
 
 #, fuzzy
-msgid "Website communication history"
-msgstr "Veb-saytning aloqa tarixi"
+#~ msgid "Website Messages"
+#~ msgstr "Veb-sayt xabarlari"
 
 #, fuzzy
-msgid "Info"
-msgstr "Ma'lumot"
+#~ msgid "Website communication history"
+#~ msgstr "Veb-saytning aloqa tarixi"
 
 #, fuzzy
-msgid "Last preparation change"
-msgstr "Oxirgi tayyorgarlik o‘zgarishi"
+#~ msgid "Info"
+#~ msgstr "Ma'lumot"
 
 #, fuzzy
-msgid "Last printed state of the order"
-msgstr "Buyurtmaning oxirgi chop etilgan holati"
+#~ msgid "Last preparation change"
+#~ msgstr "Oxirgi tayyorgarlik o‘zgarishi"
 
 #, fuzzy
-msgid "Order Outdated"
-msgstr "Buyurtma eskirgan"
+#~ msgid "Last printed state of the order"
+#~ msgstr "Buyurtmaning oxirgi chop etilgan holati"
 
 #, fuzzy
-msgid "Point Of Sale"
-msgstr "Savdo nuqtasi"
+#~ msgid "Order Outdated"
+#~ msgstr "Buyurtma eskirgan"
 
 #, fuzzy
-msgid ""
-"The order has been modified on another device. If you have modified existing "
-"order lines, check that your changes have not been overwritten.\n"
-"\n"
-"The order will be sent to the server with the last changes made on this "
-"device."
-msgstr ""
-"Buyurtma boshqa qurilmada o‘zgartirilgan. Agar mavjud buyurtma qatorlarini "
-"o‘zgartirgan bo‘lsangiz, o‘zgarishlaringiz qayta yozilmaganini tekshiring.  "
-"Buyurtma ushbu qurilmada kiritilgan oxirgi o‘zgarishlar bilan serverga "
-"yuboriladi."
+#~ msgid "Point Of Sale"
+#~ msgstr "Savdo nuqtasi"
+
+#, fuzzy
+#~ msgid ""
+#~ "The order has been modified on another device. If you have modified "
+#~ "existing order lines, check that your changes have not been overwritten.\n"
+#~ "\n"
+#~ "The order will be sent to the server with the last changes made on this "
+#~ "device."
+#~ msgstr ""
+#~ "Buyurtma boshqa qurilmada o‘zgartirilgan. Agar mavjud buyurtma "
+#~ "qatorlarini o‘zgartirgan bo‘lsangiz, o‘zgarishlaringiz qayta "
+#~ "yozilmaganini tekshiring.  Buyurtma ushbu qurilmada kiritilgan oxirgi "
+#~ "o‘zgarishlar bilan serverga yuboriladi."

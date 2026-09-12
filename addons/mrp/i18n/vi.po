@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:44+0000\n"
+"POT-Creation-Date: 2026-09-11 17:41+0000\n"
 "PO-Revision-Date: 2026-08-31 14:30+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -199,6 +199,11 @@ msgstr "'Thành phẩm - %s' % object.name"
 #: model:ir.actions.report,print_report_name:mrp.action_report_mrp_mo_overview
 msgid "'MO Overview - %s' % object.display_name"
 msgstr "'Tổng quan MO - %s' % object.display_name"
+
+#. module: mrp
+#: model:ir.actions.report,print_report_name:mrp.action_report_mrp_packages
+msgid "'Packages - %s' % (object.name)"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_production_order
@@ -454,6 +459,11 @@ msgid "<span class=\"o_stat_text\">Manufacturing</span>"
 msgstr "<span class=\"o_stat_text\">Sản xuất</span>"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "<span class=\"o_stat_text\">Moves</span>"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "<span class=\"o_stat_text\">OEE</span>"
 msgstr "<span class=\"o_stat_text\">OEE</span>"
@@ -472,6 +482,11 @@ msgstr "<span class=\"o_stat_text\">Hiệu suất<br/> Hoạt động</span>"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Overview</span>"
 msgstr "<span class=\"o_stat_text\">Tổng quan</span>"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "<span class=\"o_stat_text\">Packages</span>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -709,6 +724,11 @@ msgstr ""
 "hàng."
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_res_groups
+msgid "Access Groups"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_rule__action
 msgid "Action"
 msgstr "Tác vụ"
@@ -904,11 +924,6 @@ msgstr "Phân bổ"
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
 msgid "Allocation Report"
 msgstr "Báo cáo phân bổ"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
-msgid "Allocation Report Labels"
-msgstr "Nhãn báo cáo phân bổ"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__allow_workorder_dependencies
@@ -1234,6 +1249,7 @@ msgstr ""
 "liên quan."
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__barcode
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__barcode
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
 msgid "Barcode"
@@ -2290,6 +2306,11 @@ msgid "Destination Location"
 msgstr "Vị trí đích"
 
 #. module: mrp
+#: model:ir.actions.act_window,name:mrp.action_detailed_operations
+msgid "Detailed Operations"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Details"
 msgstr "Chi tiết"
@@ -2362,11 +2383,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_report_stock_report_stock_rule__display_name
 #: model:ir.model.fields,field_description:mrp.field_res_company__display_name
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:mrp.field_res_groups__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_allocation_report__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_forecasted_product_product__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_lot__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_move__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_move_line__display_name
+#: model:ir.model.fields,field_description:mrp.field_stock_package__display_name
+#: model:ir.model.fields,field_description:mrp.field_stock_package_history__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_picking__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_quant__display_name
@@ -2911,11 +2935,14 @@ msgstr "Giờ mỗi tuần"
 #: model:ir.model.fields,field_description:mrp.field_report_stock_report_stock_rule__id
 #: model:ir.model.fields,field_description:mrp.field_res_company__id
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__id
+#: model:ir.model.fields,field_description:mrp.field_res_groups__id
 #: model:ir.model.fields,field_description:mrp.field_stock_allocation_report__id
 #: model:ir.model.fields,field_description:mrp.field_stock_forecasted_product_product__id
 #: model:ir.model.fields,field_description:mrp.field_stock_lot__id
 #: model:ir.model.fields,field_description:mrp.field_stock_move__id
 #: model:ir.model.fields,field_description:mrp.field_stock_move_line__id
+#: model:ir.model.fields,field_description:mrp.field_stock_package__id
+#: model:ir.model.fields,field_description:mrp.field_stock_package_history__id
 #: model:ir.model.fields,field_description:mrp.field_stock_picking__id
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__id
 #: model:ir.model.fields,field_description:mrp.field_stock_quant__id
@@ -3377,6 +3404,11 @@ msgid "Link between products and their UoMs"
 msgstr ""
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "List view of detailed operations"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__location_id
 msgid "Location"
 msgstr "Vị trí"
@@ -3647,6 +3679,7 @@ msgstr "Loại hoạt động sản xuất"
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__mo_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__production_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__production_id
+#: model:ir.model.fields,field_description:mrp.field_stock_package_history__production_id
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -4442,9 +4475,42 @@ msgid "PDF"
 msgstr "PDF"
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_stock_package
+msgid "Package"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
+msgid "Package Content"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__package_history_ids
+msgid "Package History"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
+msgid "Package Label"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "Package barcode"
 msgstr "Mã vạch kiện hàng"
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_production.py:0
+#: model:ir.actions.report,name:mrp.action_report_mrp_packages
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Packages"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__packages_count
+msgid "Packages Count"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__bom_id
@@ -4719,8 +4785,18 @@ msgstr "In"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
+msgid "Print label as:"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
 msgid "Print labels as:"
 msgstr "In nhãn dưới dạng:"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
+msgid "Print on \"Put in Pack\""
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
@@ -5320,6 +5396,11 @@ msgid "Reserved"
 msgstr "Đặt trước"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Reset to Draft"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__resource_id
 msgid "Resource"
 msgstr "Tài nguyên"
@@ -5382,6 +5463,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__message_has_sms_error
 msgid "SMS Delivery error"
 msgstr "Lỗi gửi SMS"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter__barcode
+msgid "Scan to select the workcenter in shopfloor."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split_line__date
@@ -5507,6 +5593,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_replenishment_tree_view
 msgid "Set as Bill of Materials"
 msgstr "Đặt làm Danh mục vật tư"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Set to In Progress"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_configuration
@@ -5809,6 +5900,11 @@ msgid "Stock Moves"
 msgstr "Dịch chuyển tồn kho"
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_stock_package_history
+msgid "Stock Package History"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model,name:mrp.model_stock_forecasted_product_product
 msgid "Stock Replenishment Report"
 msgstr "Báo cáo bổ sung hàng tồn kho"
@@ -5954,6 +6050,11 @@ msgstr ""
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "The backorder %s has been created."
 msgstr "Đơn hàng tách kiện %s đã được tạo."
+
+#. module: mrp
+#: model:ir.model.constraint,message:mrp.constraint_mrp_workcenter_barcode_company_uniq
+msgid "The barcode for a workcenter must be unique per company."
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -6373,6 +6474,12 @@ msgid "To Produce"
 msgstr "Cần sản xuất"
 
 #. module: mrp
+#. odoo-javascript
+#: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
+msgid "To Replenish"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__search_date_category__today
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Today"
@@ -6551,8 +6658,8 @@ msgid "Unable to split with more than the quantity to produce."
 msgstr "Không thể tách với số lượng nhiều hơn số lượng cần sản xuất."
 
 #. module: mrp
+#: model:ir.actions.server,name:mrp.action_production_order_unbuild
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__unbuild_id
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "Unbuild"
 msgstr "Tháo gỡ"
@@ -6768,6 +6875,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "Visible to all"
 msgstr "Hiển thị với tất cả"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_move_line__visual_lot_name
+msgid "Visual Pre-generated Lot"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__reservation_state__confirmed
@@ -7484,164 +7596,169 @@ msgstr "thời lượng thực tế"
 msgid "split"
 msgstr "tách"
 
-msgid "Allocation Report for Manufacturing Orders"
-msgstr "Báo cáo phân bổ cho lệnh sản xuất"
+#~ msgid "Allocation Report Labels"
+#~ msgstr "Nhãn báo cáo phân bổ"
 
-msgid "Create backorder"
-msgstr "Tạo đơn hàng tách kiện"
+#~ msgid "Allocation Report for Manufacturing Orders"
+#~ msgstr "Báo cáo phân bổ cho lệnh sản xuất"
 
-msgid "MRP Reception Report"
-msgstr "Báo cáo biên nhận sản xuất"
+#~ msgid "Create backorder"
+#~ msgstr "Tạo đơn hàng tách kiện"
 
-msgid "No Backorder"
-msgstr "Không có đơn hàng tách kiện"
+#~ msgid "MRP Reception Report"
+#~ msgstr "Báo cáo biên nhận sản xuất"
 
-msgid "Operation Category"
-msgstr "Danh mục hoạt động"
+#~ msgid "No Backorder"
+#~ msgstr "Không có đơn hàng tách kiện"
 
-msgid "Produce All"
-msgstr "Sản xuất tất cả"
+#~ msgid "Operation Category"
+#~ msgstr "Danh mục hoạt động"
 
-msgid "Set Quantities & Validate"
-msgstr "Đặt số lượng & xác nhận"
+#~ msgid "Produce All"
+#~ msgstr "Sản xuất tất cả"
 
-msgid "Show Produce"
-msgstr "Hiển thị sản xuất"
+#~ msgid "Set Quantities & Validate"
+#~ msgstr "Đặt số lượng & xác nhận"
 
-msgid "Show Produce All"
-msgstr "Hiển thị sản xuất tất cả"
+#~ msgid "Show Produce"
+#~ msgstr "Hiển thị sản xuất"
 
-msgid "Stock Reception Report"
-msgstr "Báo cáo nhập kho"
+#~ msgid "Show Produce All"
+#~ msgstr "Hiển thị sản xuất tất cả"
 
-msgid "Technical field to check if produce all button can be shown"
-msgstr ""
-"Trường kỹ thuật để kiểm tra xem nút sản xuất tất cả có thể hiển thị hay không"
+#~ msgid "Stock Reception Report"
+#~ msgstr "Báo cáo nhập kho"
 
-msgid "Technical field to check if produce button can be shown"
-msgstr "Trường kỹ thuật để kiểm tra xem nút sản xuất có thể hiển thị hay không"
+#~ msgid "Technical field to check if produce all button can be shown"
+#~ msgstr ""
+#~ "Trường kỹ thuật để kiểm tra xem nút sản xuất tất cả có thể hiển thị hay "
+#~ "không"
 
-msgid "Use Reception Report with Manufacturing Orders"
-msgstr "Sử dụng báo cáo biên nhận kèm lệnh sản xuất"
+#~ msgid "Technical field to check if produce button can be shown"
+#~ msgstr ""
+#~ "Trường kỹ thuật để kiểm tra xem nút sản xuất có thể hiển thị hay không"
 
-msgid ""
-"View and allocate production quantities to customer orders or other "
-"manufacturing orders"
-msgstr ""
-"Xem và phân bổ số lượng sản xuất cho các đơn đặt hàng của khách hàng hoặc "
-"các lệnh sản xuất khác"
+#~ msgid "Use Reception Report with Manufacturing Orders"
+#~ msgstr "Sử dụng báo cáo biên nhận kèm lệnh sản xuất"
 
-msgid "Check availability"
-msgstr "Kiểm tra tình trạng còn hàng"
+#~ msgid ""
+#~ "View and allocate production quantities to customer orders or other "
+#~ "manufacturing orders"
+#~ msgstr ""
+#~ "Xem và phân bổ số lượng sản xuất cho các đơn đặt hàng của khách hàng hoặc "
+#~ "các lệnh sản xuất khác"
 
-msgid ""
-"Create operation level dependencies that will influence both planning and "
-"the status of work orders upon MO confirmation. If this feature is ticked, "
-"and nothing is specified, Odoo will assume that all operations can be "
-"started simultaneously."
-msgstr ""
-"Tạo các hạng mục phụ thuộc ở cấp độ hoạt động sẽ ảnh hưởng đến cả việc lập "
-"kế hoạch và trạng thái của các công đoạn khi xác nhận MO. Nếu tính năng này "
-"được chọn và không có gì được chỉ định, thì Odoo sẽ cho rằng mọi hoạt động "
-"đều có thể được bắt đầu cùng lúc."
+#~ msgid "Check availability"
+#~ msgstr "Kiểm tra tình trạng còn hàng"
 
-msgid "Custom Work Order Dependencies"
-msgstr "Hạng mục phụ thuộc của công đoạn tuỳ chỉnh"
+#~ msgid ""
+#~ "Create operation level dependencies that will influence both planning and "
+#~ "the status of work orders upon MO confirmation. If this feature is "
+#~ "ticked, and nothing is specified, Odoo will assume that all operations "
+#~ "can be started simultaneously."
+#~ msgstr ""
+#~ "Tạo các hạng mục phụ thuộc ở cấp độ hoạt động sẽ ảnh hưởng đến cả việc "
+#~ "lập kế hoạch và trạng thái của các công đoạn khi xác nhận MO. Nếu tính "
+#~ "năng này được chọn và không có gì được chỉ định, thì Odoo sẽ cho rằng mọi "
+#~ "hoạt động đều có thể được bắt đầu cùng lúc."
 
-msgid "MO Cancelled"
-msgstr "MO Đã bị huỷ"
+#~ msgid "Custom Work Order Dependencies"
+#~ msgstr "Hạng mục phụ thuộc của công đoạn tuỳ chỉnh"
 
-msgid "MO Confirmed"
-msgstr "MO Đã xác nhận"
+#~ msgid "MO Cancelled"
+#~ msgstr "MO Đã bị huỷ"
 
-msgid "MO Done"
-msgstr "MO Hoàn tất"
+#~ msgid "MO Confirmed"
+#~ msgstr "MO Đã xác nhận"
 
-msgid "MO Planned"
-msgstr "MO đã được lên kế hoạch"
+#~ msgid "MO Done"
+#~ msgstr "MO Hoàn tất"
 
-msgid "MO Progress"
-msgstr "MO Đang thực hiện"
+#~ msgid "MO Planned"
+#~ msgstr "MO đã được lên kế hoạch"
 
-msgid "MO To Close"
-msgstr "MO cần đóng"
+#~ msgid "MO Progress"
+#~ msgstr "MO Đang thực hiện"
 
-msgid "Operation Dependencies"
-msgstr "Hạng mục phụ thuộc của hoạt động"
+#~ msgid "MO To Close"
+#~ msgstr "MO cần đóng"
 
-msgid ""
-"Set the order that work orders should be processed in. Activate the feature "
-"within each BoM's Miscellaneous tab"
-msgstr ""
-"Đặt trình tự mà các công đoạn sẽ được xử lý. Kích hoạt tính năng này trong "
-"mỗi tab Thông tin khác của BoM"
+#~ msgid "Operation Dependencies"
+#~ msgstr "Hạng mục phụ thuộc của hoạt động"
 
-msgid "The number of products already handled by this work order"
-msgstr "Số lượng sản phẩm mà công đoạn này đã xử lý"
+#~ msgid ""
+#~ "Set the order that work orders should be processed in. Activate the "
+#~ "feature within each BoM's Miscellaneous tab"
+#~ msgstr ""
+#~ "Đặt trình tự mà các công đoạn sẽ được xử lý. Kích hoạt tính năng này "
+#~ "trong mỗi tab Thông tin khác của BoM"
+
+#~ msgid "The number of products already handled by this work order"
+#~ msgstr "Số lượng sản phẩm mà công đoạn này đã xử lý"
 
 #, fuzzy
-msgid "Time Remaining"
-msgstr "Thời gian còn lại"
+#~ msgid "Time Remaining"
+#~ msgstr "Thời gian còn lại"
 
-msgid "Total To Consume"
-msgstr "Tổng cần sử dụng"
+#~ msgid "Total To Consume"
+#~ msgstr "Tổng cần sử dụng"
 
-msgid "Unbuild: %s"
-msgstr "Tháo gỡ: %s"
+#~ msgid "Unbuild: %s"
+#~ msgstr "Tháo gỡ: %s"
 
-msgid "Use Operation Dependencies"
-msgstr "Sử dụng hạng mục phụ thuộc của hoạt động"
+#~ msgid "Use Operation Dependencies"
+#~ msgstr "Sử dụng hạng mục phụ thuộc của hoạt động"
 
-msgid "Website Messages"
-msgstr "Thông báo trên trang web"
+#~ msgid "Website Messages"
+#~ msgstr "Thông báo trên trang web"
 
-msgid "Website communication history"
-msgstr "Lịch sử trao đổi qua trang web"
+#~ msgid "Website communication history"
+#~ msgstr "Lịch sử trao đổi qua trang web"
 
-msgid "days"
-msgstr "ngày"
+#~ msgid "days"
+#~ msgstr "ngày"
 
-msgid "Final Location from procurement"
-msgstr "Vị trí cuối cùng từ đơn mua sắm"
+#~ msgid "Final Location from procurement"
+#~ msgstr "Vị trí cuối cùng từ đơn mua sắm"
 
-msgid ""
-"<p class=\"o_view_nocontent_smiling_face\">\n"
-"                        Upload files to your product\n"
-"                    </p><p>\n"
-"                        Use this feature to store any files, like drawings "
-"or specifications.\n"
-"                    </p>"
-msgstr ""
-"<p class=\"o_view_nocontent_smiling_face\">\n"
-"                        Tải lên tập tin cho sản phẩm của bạn\n"
-"                    </p><p>\n"
-"                        Dùng tính năng này để lưu các tập tin như bản vẽ "
-"hoặc thông số kĩ thuật.\n"
-"                    </p>"
+#~ msgid ""
+#~ "<p class=\"o_view_nocontent_smiling_face\">\n"
+#~ "                        Upload files to your product\n"
+#~ "                    </p><p>\n"
+#~ "                        Use this feature to store any files, like "
+#~ "drawings or specifications.\n"
+#~ "                    </p>"
+#~ msgstr ""
+#~ "<p class=\"o_view_nocontent_smiling_face\">\n"
+#~ "                        Tải lên tập tin cho sản phẩm của bạn\n"
+#~ "                    </p><p>\n"
+#~ "                        Dùng tính năng này để lưu các tập tin như bản vẽ "
+#~ "hoặc thông số kĩ thuật.\n"
+#~ "                    </p>"
 
-msgid "Attachments Count"
-msgstr "Số lượng tệp đính kèm"
+#~ msgid "Attachments Count"
+#~ msgstr "Số lượng tệp đính kèm"
 
-msgid "Files attached to the product."
-msgstr "Tệp đính kèm với sản phẩm"
+#~ msgid "Files attached to the product."
+#~ msgstr "Tệp đính kèm với sản phẩm"
 
-msgid "Hidden"
-msgstr "Ẩn"
+#~ msgid "Hidden"
+#~ msgstr "Ẩn"
 
-msgid ""
-"Leave hidden if document only accessible on product form.\n"
-"Select Bill of Materials to visualise this document as a product attachment "
-"when this product is in a bill of material."
-msgstr ""
-"Để ẩn nếu tài liệu chỉ có thể truy cập được trên biểu mẫu sản phẩm.\n"
-"Chọn Danh mục vật tư để trực quan hóa tài liệu này dưới dạng tệp đính kèm "
-"sản phẩm khi sản phẩm này nằm trong danh mục vật tư."
+#~ msgid ""
+#~ "Leave hidden if document only accessible on product form.\n"
+#~ "Select Bill of Materials to visualise this document as a product "
+#~ "attachment when this product is in a bill of material."
+#~ msgstr ""
+#~ "Để ẩn nếu tài liệu chỉ có thể truy cập được trên biểu mẫu sản phẩm.\n"
+#~ "Chọn Danh mục vật tư để trực quan hóa tài liệu này dưới dạng tệp đính kèm "
+#~ "sản phẩm khi sản phẩm này nằm trong danh mục vật tư."
 
-msgid "MRP : Visible at"
-msgstr "MRP: Hiển thị ở"
+#~ msgid "MRP : Visible at"
+#~ msgstr "MRP: Hiển thị ở"
 
-msgid "Product Attachments"
-msgstr "Tệp đính kèm sản phẩm"
+#~ msgid "Product Attachments"
+#~ msgstr "Tệp đính kèm sản phẩm"
 
-msgid "Product Document"
-msgstr "Tài liệu sản phẩm"
+#~ msgid "Product Document"
+#~ msgstr "Tài liệu sản phẩm"

@@ -13,11 +13,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:46+0000\n"
-"PO-Revision-Date: 2026-08-31 19:32+0000\n"
+"POT-Creation-Date: 2026-09-11 17:43+0000\n"
+"PO-Revision-Date: 2026-09-09 13:53+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
-"projects/odoo-s19-4/spreadsheet/zh_Hant/>\n"
+"projects/odoo-master/spreadsheet/zh_Hant/>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1969,6 +1969,13 @@ msgstr ""
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"Cannot perform this action on merged cells. Unmerge the cells and try again."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Cannot remove duplicates for an unknown reason"
 msgstr "未能刪除重複項，原因未明"
 
@@ -2946,13 +2953,7 @@ msgstr "匯率"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/currency/plugins/currency.js:0
-msgid "Currency not available for this company."
-msgstr "此公司不可使用貨幣功能。"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/currency/plugins/currency.js:0
+#: code:addons/spreadsheet/static/src/currency/formulas.js:0
 msgid "Currency rate unavailable."
 msgstr "貨幣匯率不可用。"
 
@@ -4333,7 +4334,7 @@ msgstr "篩選"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/global_filters/plugins/global_filters_core_view_plugin.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_functions.js:0
 msgid "Filter \"%(filter_name)s\" not found"
 msgstr "找不到篩選器「%(filter_name)s」"
 
@@ -6851,7 +6852,7 @@ msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "No content to print"
 msgstr ""
 
@@ -7716,6 +7717,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Print content"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Print preview"
 msgstr ""
 
 #. module: spreadsheet
@@ -13564,14 +13571,6 @@ msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"This operation is not possible due to a merge. Please remove the merges "
-"first than try again."
-msgstr "由於合併，該操作無法實現。請先刪除合併，然後再試一次。"
-
-#. module: spreadsheet
-#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "This pivot has no cell missing on this sheet"
 msgstr "此資料樞紐分析表，在此工作表上沒有缺漏儲存格"
@@ -15389,32 +15388,40 @@ msgstr ""
 msgid "yesterday"
 msgstr "昨天"
 
-#, fuzzy
-msgid "%(matches)s matches in %(sheetName)s"
-msgstr "找到 %(matches)s 項符合，試算表：%(sheetName)s"
+#~ msgid "Currency not available for this company."
+#~ msgstr "此公司不可使用貨幣功能。"
+
+#~ msgid ""
+#~ "This operation is not possible due to a merge. Please remove the merges "
+#~ "first than try again."
+#~ msgstr "由於合併，該操作無法實現。請先刪除合併，然後再試一次。"
 
 #, fuzzy
-msgid "%(matches)s matches in range %(range)s of %(sheetName)s"
-msgstr "找到 %(matches)s 項符合，範圍：%(range)s，試算表：%(sheetName)s"
+#~ msgid "%(matches)s matches in %(sheetName)s"
+#~ msgstr "找到 %(matches)s 項符合，試算表：%(sheetName)s"
 
 #, fuzzy
-msgid "%s matches in all sheets"
-msgstr "所有試算表找到 %s 項符合"
+#~ msgid "%(matches)s matches in range %(range)s of %(sheetName)s"
+#~ msgstr "找到 %(matches)s 項符合，範圍：%(range)s，試算表：%(sheetName)s"
 
 #, fuzzy
-msgid "Change color"
-msgstr "變更顏色"
-
-msgid "Filters"
-msgstr "篩選"
+#~ msgid "%s matches in all sheets"
+#~ msgstr "所有試算表找到 %s 項符合"
 
 #, fuzzy
-msgid "First day of the month preceding a date."
-msgstr "日期前一個月的第一天。"
+#~ msgid "Change color"
+#~ msgstr "變更顏色"
+
+#~ msgid "Filters"
+#~ msgstr "篩選"
 
 #, fuzzy
-msgid "Last day of the month following a date."
-msgstr "日期後一個月的最後一天。"
+#~ msgid "First day of the month preceding a date."
+#~ msgstr "日期前一個月的第一天。"
 
-msgid "Show Filters"
-msgstr "顯示篩選器"
+#, fuzzy
+#~ msgid "Last day of the month following a date."
+#~ msgstr "日期後一個月的最後一天。"
+
+#~ msgid "Show Filters"
+#~ msgstr "顯示篩選器"

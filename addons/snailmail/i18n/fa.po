@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:43+0000\n"
+"POT-Creation-Date: 2026-09-11 17:43+0000\n"
 "PO-Revision-Date: 2026-08-31 20:27+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Persian <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -100,6 +100,12 @@ msgid "Both sides"
 msgstr "در هر دو طرف"
 
 #. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/core/notification_model_patch.js:0
+msgid "Bounced"
+msgstr ""
+
+#. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__credit_error
 msgid "CREDIT_ERROR"
 msgstr "ارور اعتبار"
@@ -172,6 +178,12 @@ msgstr "ایجاد شده توسط"
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__create_date
 msgid "Created on"
 msgstr "ایجادشده در"
+
+#. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/core/notification_model_patch.js:0
+msgid "Dispatched"
+msgstr ""
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_ir_actions_report__display_name
@@ -260,6 +272,11 @@ msgid "Invalid recipient name."
 msgstr "نام گیرنده نامعتبر است."
 
 #. module: snailmail
+#: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__letter_undeliverable
+msgid "LETTER_UNDELIVERABLE"
+msgstr ""
+
+#. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__write_uid
 msgid "Last Updated by"
 msgstr "آخرین تغییر توسط"
@@ -276,10 +293,28 @@ msgid "Letter"
 msgstr "نامه"
 
 #. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/core/notification_model_patch.js:0
+msgid "Letter Undeliverable"
+msgstr ""
+
+#. module: snailmail
+#. odoo-python
+#: code:addons/snailmail/controller/snailmail_webhook.py:0
+msgid "Letter is delivered successfully"
+msgstr ""
+
+#. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 msgid "Letter sent by post with Snailmail"
 msgstr "نامه ارسال شده از طریق پست با Snailmail"
+
+#. module: snailmail
+#. odoo-python
+#: code:addons/snailmail/controller/snailmail_webhook.py:0
+msgid "Letter was unable to be delivered"
+msgstr ""
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_list
@@ -365,6 +400,11 @@ msgstr "<span>چاپ در هر دو طرف</span>"
 #: model:ir.model.fields,field_description:snailmail.field_res_config_settings__snailmail_color
 msgid "Print In Color"
 msgstr "چاپ رنگی"
+
+#. module: snailmail
+#: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__state__process
+msgid "Processing"
+msgstr ""
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__partner_id
@@ -481,9 +521,19 @@ msgid "Snailmail Trial Error"
 msgstr "خطای آزمایشی پست حلزونی"
 
 #. module: snailmail
+#: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_undeliverable
+msgid "Snailmail Undeliverable"
+msgstr ""
+
+#. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_error
 msgid "Snailmail Unknown Error"
 msgstr "خطای ناشناخته پست حلزونی"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__letter_uid
+msgid "Snailmail letter ID"
+msgstr ""
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_mail__snailmail_error
@@ -551,14 +601,16 @@ msgstr "کشور شریک توسط اسنیل میل پوشش داده نمی‌
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
-msgid "The document to be sent exceeds the maximum allowed limit of 8 pages."
+msgid ""
+"The document has been accepted by postal service provider and is being "
+"processed.<br>The tracking id is %s"
 msgstr ""
 
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
-msgid "The document was correctly sent by post.<br>The tracking id is %s"
-msgstr "<br>سند به درستی از طریق پست ارسال شد. شناسه پیگیری %sرا دارد"
+msgid "The document to be sent exceeds the maximum allowed limit of 8 pages."
+msgstr ""
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_mail__message_type
@@ -604,14 +656,12 @@ msgstr ""
 #: model:ir.model.fields,help:snailmail.field_snailmail_letter__state
 msgid ""
 "When a letter is created, the status is 'Pending'.\n"
-"If the letter is correctly sent, the status goes in 'Sent',\n"
-"If not, it will got in state 'Error' and the error message will be displayed "
-"in the field 'Error Message'."
+"If the letter is correctly sent to provider, the status goes in 'process',\n"
+"If the provider confirms the letter is delivered, the status goes in "
+"'Sent'.\n"
+"If not sent or delivered, it will got in state 'Error' and the error message "
+"will be displayed in the field 'Error Message'."
 msgstr ""
-"وقتی که یک نامه ایجاد می‌شود، وضعیت آن 'در انتظار' است.\n"
-"اگر نامه به درستی ارسال شود، وضعیت به 'ارسال شده' تغییر می‌کند،\n"
-"در غیر این صورت، به وضعیت 'خطا' خواهد رفت و پیام خطا در فیلد 'پیغام خطا' "
-"نمایش داده خواهد شد."
 
 #. module: snailmail
 #. odoo-python
@@ -638,3 +688,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__zip
 msgid "Zip"
 msgstr "کدپستی"
+
+#~ msgid "The document was correctly sent by post.<br>The tracking id is %s"
+#~ msgstr "<br>سند به درستی از طریق پست ارسال شد. شناسه پیگیری %sرا دارد"
+
+#~ msgid ""
+#~ "When a letter is created, the status is 'Pending'.\n"
+#~ "If the letter is correctly sent, the status goes in 'Sent',\n"
+#~ "If not, it will got in state 'Error' and the error message will be "
+#~ "displayed in the field 'Error Message'."
+#~ msgstr ""
+#~ "وقتی که یک نامه ایجاد می‌شود، وضعیت آن 'در انتظار' است.\n"
+#~ "اگر نامه به درستی ارسال شود، وضعیت به 'ارسال شده' تغییر می‌کند،\n"
+#~ "در غیر این صورت، به وضعیت 'خطا' خواهد رفت و پیام خطا در فیلد 'پیغام خطا' "
+#~ "نمایش داده خواهد شد."

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:44+0000\n"
+"POT-Creation-Date: 2026-09-11 17:41+0000\n"
 "PO-Revision-Date: 2026-08-31 18:52+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-s19-4/website/"
@@ -435,12 +435,6 @@ msgid "+ Field"
 msgstr ""
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
-msgid "+ New"
-msgstr ""
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 #, fuzzy
 msgid "+ New Website"
@@ -834,6 +828,7 @@ msgstr "5x"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_numbers_charts
+#: model_terms:ir.ui.view,arch_db:website.s_text_chart
 #, fuzzy
 msgid ""
 "75% of clients have been using the service for over a decade consistently."
@@ -996,8 +991,10 @@ msgstr ""
 "<a href=\"#\" class=\"btn btn-secondary o_translate_inline\">Hujjatlar</a>"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_chart_text
 #: model_terms:ir.ui.view,arch_db:website.s_image_text
 #: model_terms:ir.ui.view,arch_db:website.s_image_text_overlap
+#: model_terms:ir.ui.view,arch_db:website.s_text_chart
 #: model_terms:ir.ui.view,arch_db:website.s_text_image
 #, fuzzy
 msgid ""
@@ -3425,6 +3422,11 @@ msgid "Access Denied"
 msgstr "Kirish taqiqlangan"
 
 #. module: website
+#: model:ir.model,name:website.model_res_groups
+msgid "Access Groups"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__access_token
 #, fuzzy
 msgid "Access Token"
@@ -3752,6 +3754,12 @@ msgstr "Yangi karta qo‘shish"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option_plugin.js:0
+msgid "Add a new field after this one"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/form/form_option_plugin.js:0
 #, fuzzy
 msgid "Add a new field at the end"
 msgstr "Oxiriga yangi maydon qo‘shish"
@@ -3843,12 +3851,6 @@ msgstr "Boshqa domenlarni shu yerga qo‘shing"
 #, fuzzy
 msgid "Add page template"
 msgstr "Sahifa shablonini qo‘shish"
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/form/form_option_plugin.js:0
-msgid "Add some content after this field"
-msgstr ""
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_page__is_new_page_template
@@ -5990,15 +5992,11 @@ msgstr ""
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/customize_website_plugin.js:0
-#, fuzzy
 msgid ""
-"Changing theme requires to leave the editor. This will save all your "
-"changes, are you sure you want to proceed? Be careful that changing the "
-"theme will reset all your color customizations."
+"Changing the theme requires leaving the editor. This will save all your "
+"changes. Are you sure you want to proceed? Be aware that changing the theme "
+"will reset some layout, color, and style customizations."
 msgstr ""
-"Mavzuni o‘zgartirish muharrirdan chiqishni talab qiladi. Bu barcha "
-"o‘zgarishlaringizni saqlaydi. Davom etishni xohlaysizmi? Ehtiyot bo‘ling, "
-"mavzu o‘zgartirilsa, barcha rang sozlamalaringiz asl holatiga qaytariladi."
 
 #. module: website
 #. odoo-javascript
@@ -6013,6 +6011,11 @@ msgstr ""
 #, fuzzy
 msgid "Chart"
 msgstr "Grafik"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Chart - Text"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -8074,6 +8077,7 @@ msgid "Discover more <i class=\"oi align-middle ms-1\" data-icon=\"east\"/>"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_chart_text
 #: model_terms:ir.ui.view,arch_db:website.s_image_text
 msgid "Discover new opportunities"
 msgstr ""
@@ -8292,6 +8296,7 @@ msgstr "Ichida ko‘rsatish"
 #: model:ir.model.fields,field_description:website.field_portal_wizard_user__display_name
 #: model:ir.model.fields,field_description:website.field_res_company__display_name
 #: model:ir.model.fields,field_description:website.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:website.field_res_groups__display_name
 #: model:ir.model.fields,field_description:website.field_res_lang__display_name
 #: model:ir.model.fields,field_description:website.field_res_partner__display_name
 #: model:ir.model.fields,field_description:website.field_res_users__display_name
@@ -9075,6 +9080,7 @@ msgid "Enhance contrast and brightness"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_text_chart
 #: model_terms:ir.ui.view,arch_db:website.s_text_image
 #: model_terms:ir.ui.view,arch_db:website.s_text_image_full
 msgid "Enhance your experience"
@@ -9378,8 +9384,8 @@ msgid ""
 msgstr ""
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/options/searchbar_option.xml:0
+#. odoo-python
+#: code:addons/website/models/website.py:0
 msgid "Everything"
 msgstr ""
 
@@ -10980,6 +10986,21 @@ msgid "Header Position"
 msgstr "Sarlavha joylashuvi"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_website__header_search_type
+msgid "Header Search Scope"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_website__header_search_order_by
+msgid "Header Search Sort"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_website__header_search_limit
+msgid "Header Search Suggestions"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_theme_website_page__header_text_color
 #: model:ir.model.fields,field_description:website.field_website_page__header_text_color
 #: model:ir.model.fields,field_description:website.field_website_page_options_mixin__header_text_color
@@ -11538,6 +11559,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_portal_wizard_user__id
 #: model:ir.model.fields,field_description:website.field_res_company__id
 #: model:ir.model.fields,field_description:website.field_res_config_settings__id
+#: model:ir.model.fields,field_description:website.field_res_groups__id
 #: model:ir.model.fields,field_description:website.field_res_lang__id
 #: model:ir.model.fields,field_description:website.field_res_partner__id
 #: model:ir.model.fields,field_description:website.field_res_users__id
@@ -15049,7 +15071,7 @@ msgstr "Shart yo‘q"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
-msgid "No links found, you are safe to delete."
+msgid "No links referring to this page have been found. You may delete it."
 msgstr ""
 
 #. module: website
@@ -15242,6 +15264,13 @@ msgstr "Hech narsa"
 #, fuzzy
 msgid "Number"
 msgstr "Raqam"
+
+#. module: website
+#: model:ir.model.fields,help:website.field_website__header_search_limit
+msgid ""
+"Number of autocomplete suggestions of the header search bar, 0 to disable "
+"them."
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_language_count
@@ -15849,6 +15878,11 @@ msgid "Order by"
 msgstr "Saralash:"
 
 #. module: website
+#: model:ir.model.fields,help:website.field_website__header_search_order_by
+msgid "Order in which the header search bar sorts its results."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_achievements_list
 msgid "Organization Certification"
 msgstr ""
@@ -16419,8 +16453,8 @@ msgstr "Mendan nusxa olingan sahifa"
 #. module: website
 #. odoo-javascript
 #. odoo-python
+#: code:addons/website/models/website.py:0
 #: code:addons/website/models/website_page.py:0
-#: code:addons/website/static/src/builder/plugins/options/searchbar_option.xml:0
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #: model:ir.ui.menu,name:website.menu_website_pages_list
 #: model_terms:ir.ui.view,arch_db:website.list_website_public_pages
@@ -17117,6 +17151,11 @@ msgstr "Mahsulotlar"
 #, fuzzy
 msgid "Products Carousel"
 msgstr "Mahsulotlar karuseli"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.external_snippets
+msgid "Products Grid"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -19891,12 +19930,14 @@ msgid "Start saving  <span class=\"oi\" data-icon=\"east\" role=\"img\"/>"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_chart_text
 #: model_terms:ir.ui.view,arch_db:website.s_image_hexagonal
 #: model_terms:ir.ui.view,arch_db:website.s_image_text
 #: model_terms:ir.ui.view,arch_db:website.s_image_text_box
 #: model_terms:ir.ui.view,arch_db:website.s_image_text_overlap
 #: model_terms:ir.ui.view,arch_db:website.s_mockup_image
 #: model_terms:ir.ui.view,arch_db:website.s_tabs
+#: model_terms:ir.ui.view,arch_db:website.s_text_chart
 #: model_terms:ir.ui.view,arch_db:website.s_text_image
 #, fuzzy
 msgid "Start with the customer – find out what they want and give it to them."
@@ -19919,6 +19960,11 @@ msgid ""
 msgstr ""
 "So‘nggi yangiliklarimizdan xabardor bo‘ling va kelgusi haftalarda nima "
 "bo‘lishini bilib oling."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_chart_text
+msgid "Steady year-over-year growth driven by continuous product improvements."
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -20439,6 +20485,11 @@ msgstr "Robots.txt faylingizni Google Search Console yordamida tekshiring"
 #, fuzzy
 msgid "Text"
 msgstr "Matn"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Text - Chart"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -21923,6 +21974,11 @@ msgid ""
 msgstr ""
 "Tasdiqlashni istasangiz, quyidagi katakchaga '<i class=\"confirm_word\">ha</"
 "i>' deb yozing."
+
+#. module: website
+#: model:ir.model.fields,help:website.field_website__header_search_type
+msgid "Type of records the header search bar searches within."
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_rewrite__redirect_type
@@ -23906,6 +23962,7 @@ msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_card_offset
+#: model_terms:ir.ui.view,arch_db:website.s_chart_text
 #: model_terms:ir.ui.view,arch_db:website.s_features_image
 #: model_terms:ir.ui.view,arch_db:website.s_features_wall
 #: model_terms:ir.ui.view,arch_db:website.s_image_features
@@ -23914,6 +23971,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_image_text_box
 #: model_terms:ir.ui.view,arch_db:website.s_image_text_overlap
 #: model_terms:ir.ui.view,arch_db:website.s_mockup_image
+#: model_terms:ir.ui.view,arch_db:website.s_text_chart
 #: model_terms:ir.ui.view,arch_db:website.s_text_image
 #: model_terms:ir.ui.view,arch_db:website.s_text_image_full
 #, fuzzy
@@ -24713,6 +24771,22 @@ msgid ""
 "contacts, collect, submission, input, fields, questionnaire, survey, "
 "registration, request, images, pictures, photos, illustration, media, "
 "visual, get-in-touch"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid ""
+"content, articles, story, stories, combination, graphs, tables, diagrams, "
+"line, plot, bars, metrics, figures, data-visualization, statistics, stats, "
+"analytics, infographic, report"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid ""
+"content, articles, story, stories, combination, graphs, tables, diagrams, "
+"pie, doughnut, plot, bars, metrics, figures, data-visualization, statistics, "
+"stats, analytics, infographic, report"
 msgstr ""
 
 #. module: website
@@ -25989,1070 +26063,1094 @@ msgid "✽  What We Offer"
 msgstr "✽ Biz nimalarni taklif etamiz"
 
 #, fuzzy
-msgid ""
-"<span class=\"o_footer_copyright_name me-2 small\">Copyright &amp;copy; "
-"Company name</span>"
-msgstr ""
-"<span class=\"o_footer_copyright_name me-2 small\">Mualliflik huquqi "
-"&amp;copy; Kompaniya nomi</span>"
+#~ msgid ""
+#~ "Changing theme requires to leave the editor. This will save all your "
+#~ "changes, are you sure you want to proceed? Be careful that changing the "
+#~ "theme will reset all your color customizations."
+#~ msgstr ""
+#~ "Mavzuni o‘zgartirish muharrirdan chiqishni talab qiladi. Bu barcha "
+#~ "o‘zgarishlaringizni saqlaydi. Davom etishni xohlaysizmi? Ehtiyot bo‘ling, "
+#~ "mavzu o‘zgartirilsa, barcha rang sozlamalaringiz asl holatiga qaytariladi."
 
 #, fuzzy
-msgid "Donation Button"
-msgstr "Ehson tugmasi"
+#~ msgid ""
+#~ "<span class=\"o_footer_copyright_name me-2 small\">Copyright &amp;copy; "
+#~ "Company name</span>"
+#~ msgstr ""
+#~ "<span class=\"o_footer_copyright_name me-2 small\">Mualliflik huquqi "
+#~ "&amp;copy; Kompaniya nomi</span>"
 
 #, fuzzy
-msgid "4 steps"
-msgstr "4 qadam"
+#~ msgid "Donation Button"
+#~ msgstr "Ehson tugmasi"
 
 #, fuzzy
-msgid "<b>Add</b> the selected image."
-msgstr "Tanlangan rasmni <b>qo‘shing</b>."
+#~ msgid "4 steps"
+#~ msgstr "4 qadam"
 
 #, fuzzy
-msgid "<b>Click Edit</b> dropdown"
-msgstr "<b>Tahrirlash</b> menyusini oching"
+#~ msgid "<b>Add</b> the selected image."
+#~ msgstr "Tanlangan rasmni <b>qo‘shing</b>."
 
 #, fuzzy
-msgid "<b>Click Edit</b> to start designing your homepage."
-msgstr ""
-"Bosh sahifangizni loyihalashni boshlash uchun <b>Tahrirlash</b> tugmasini "
-"bosing."
+#~ msgid "<b>Click Edit</b> dropdown"
+#~ msgstr "<b>Tahrirlash</b> menyusini oching"
 
 #, fuzzy
-msgid "<b>Click on a snippet</b> to access its options menu."
-msgstr "Parametrlar menyusiga kirish uchun <b>parcha ustiga bosing</b>."
+#~ msgid "<b>Click Edit</b> to start designing your homepage."
+#~ msgstr ""
+#~ "Bosh sahifangizni loyihalashni boshlash uchun <b>Tahrirlash</b> tugmasini "
+#~ "bosing."
 
 #, fuzzy
-msgid "<b>Click on a text</b> to start editing it."
-msgstr "Tahrirlashni boshlash uchun <b>matn ustiga bosing</b>."
+#~ msgid "<b>Click on a snippet</b> to access its options menu."
+#~ msgstr "Parametrlar menyusiga kirish uchun <b>parcha ustiga bosing</b>."
 
 #, fuzzy
-msgid "<b>Click</b> on this column to access its options."
-msgstr "Parametrlariga kirish uchun ushbu ustun ustiga <b>bosing</b>."
+#~ msgid "<b>Click on a text</b> to start editing it."
+#~ msgstr "Tahrirlashni boshlash uchun <b>matn ustiga bosing</b>."
 
 #, fuzzy
-msgid "<b>Click</b> on this header to configure it."
-msgstr "Uni sozlash uchun ushbu sarlavha ustiga <b>bosing</b>."
+#~ msgid "<b>Click</b> on this column to access its options."
+#~ msgstr "Parametrlariga kirish uchun ushbu ustun ustiga <b>bosing</b>."
 
 #, fuzzy
-msgid "<b>Click</b> on this option to change the %s of the block."
-msgstr "Blokning %s ni o‘zgartirish uchun ushbu parametr ustiga <b>bosing</b>."
+#~ msgid "<b>Click</b> on this header to configure it."
+#~ msgstr "Uni sozlash uchun ushbu sarlavha ustiga <b>bosing</b>."
 
 #, fuzzy
-msgid ""
-"<b>Customize</b> any block through this menu. Try to change the background "
-"color of this block."
-msgstr ""
-"Bu menyu orqali istalgan blokni <b>moslashtiring</b>. Ushbu blokning fon "
-"rangini o‘zgartirishga urinib ko‘ring."
+#~ msgid "<b>Click</b> on this option to change the %s of the block."
+#~ msgstr ""
+#~ "Blokning %s ni o‘zgartirish uchun ushbu parametr ustiga <b>bosing</b>."
 
 #, fuzzy
-msgid ""
-"<b>Customize</b> any block through this menu. Try to change the background "
-"image of this block."
-msgstr ""
-"Bu menyu orqali istalgan blokni <b>moslashtiring</b>. Ushbu blokning fon "
-"rasmini o‘zgartirishga urinib ko‘ring."
+#~ msgid ""
+#~ "<b>Customize</b> any block through this menu. Try to change the "
+#~ "background color of this block."
+#~ msgstr ""
+#~ "Bu menyu orqali istalgan blokni <b>moslashtiring</b>. Ushbu blokning fon "
+#~ "rangini o‘zgartirishga urinib ko‘ring."
 
 #, fuzzy
-msgid "<b>Double click on an image</b> to change it with one of your choice."
-msgstr ""
-"<b>Rasmni o‘zingiz tanlagan boshqa rasm bilan almashtirish uchun unga ikki "
-"marta bosing</b>."
+#~ msgid ""
+#~ "<b>Customize</b> any block through this menu. Try to change the "
+#~ "background image of this block."
+#~ msgstr ""
+#~ "Bu menyu orqali istalgan blokni <b>moslashtiring</b>. Ushbu blokning fon "
+#~ "rasmini o‘zgartirishga urinib ko‘ring."
 
 #, fuzzy
-msgid "<b>Select</b> a %s."
-msgstr "%sni <b>tanlang</b>."
+#~ msgid ""
+#~ "<b>Double click on an image</b> to change it with one of your choice."
+#~ msgstr ""
+#~ "<b>Rasmni o‘zingiz tanlagan boshqa rasm bilan almashtirish uchun unga "
+#~ "ikki marta bosing</b>."
 
 #, fuzzy
-msgid "<b>Select</b> a Color Palette."
-msgstr "Rang palitrasini <b>tanlang</b>."
+#~ msgid "<b>Select</b> a %s."
+#~ msgstr "%sni <b>tanlang</b>."
 
 #, fuzzy
-msgid "<b>Slide</b> this button to change the %s padding"
-msgstr "%s chegarasini o‘zgartirish uchun bu tugmani <b>suring</b>"
+#~ msgid "<b>Select</b> a Color Palette."
+#~ msgstr "Rang palitrasini <b>tanlang</b>."
 
 #, fuzzy
-msgid "<b>Slide</b> this button to change the column size."
-msgstr "Ustun hajmini o‘zgartirish uchun bu tugmani <b>suring</b>."
+#~ msgid "<b>Slide</b> this button to change the %s padding"
+#~ msgstr "%s chegarasini o‘zgartirish uchun bu tugmani <b>suring</b>"
 
 #, fuzzy
-msgid ""
-"<span class=\"carousel-control-next-icon\" aria-hidden=\"true\"/>\n"
-"                            <span class=\"visually-hidden\">Next</span>"
-msgstr ""
-"<span class=\"carousel-control-next-icon\" aria-hidden=\"true\"/> <span "
-"class=\"visually-hidden\">Keyingisi</span>"
+#~ msgid "<b>Slide</b> this button to change the column size."
+#~ msgstr "Ustun hajmini o‘zgartirish uchun bu tugmani <b>suring</b>."
 
 #, fuzzy
-msgid ""
-"<span class=\"carousel-control-next-icon\" aria-hidden=\"true\"/>\n"
-"                        <span class=\"visually-hidden\">Next</span>"
-msgstr ""
-"<span class=\"carousel-control-next-icon\" aria-hidden=\"true\"/> <span "
-"class=\"visually-hidden\">Keyingisi</span>"
+#~ msgid ""
+#~ "<span class=\"carousel-control-next-icon\" aria-hidden=\"true\"/>\n"
+#~ "                            <span class=\"visually-hidden\">Next</span>"
+#~ msgstr ""
+#~ "<span class=\"carousel-control-next-icon\" aria-hidden=\"true\"/> <span "
+#~ "class=\"visually-hidden\">Keyingisi</span>"
 
 #, fuzzy
-msgid ""
-"<span class=\"carousel-control-next-icon\" aria-hidden=\"true\"/>\n"
-"                <span class=\"visually-hidden\">Next</span>"
-msgstr ""
-"<span class=\"carousel-control-next-icon\" aria-hidden=\"true\"/> <span "
-"class=\"visually-hidden\">Keyingisi</span>"
+#~ msgid ""
+#~ "<span class=\"carousel-control-next-icon\" aria-hidden=\"true\"/>\n"
+#~ "                        <span class=\"visually-hidden\">Next</span>"
+#~ msgstr ""
+#~ "<span class=\"carousel-control-next-icon\" aria-hidden=\"true\"/> <span "
+#~ "class=\"visually-hidden\">Keyingisi</span>"
 
 #, fuzzy
-msgid ""
-"<span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"/>\n"
-"                            <span class=\"visually-hidden\">Previous</span>"
-msgstr ""
-"<span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"/> <span "
-"class=\"visually-hidden\">Oldingisi</span>"
+#~ msgid ""
+#~ "<span class=\"carousel-control-next-icon\" aria-hidden=\"true\"/>\n"
+#~ "                <span class=\"visually-hidden\">Next</span>"
+#~ msgstr ""
+#~ "<span class=\"carousel-control-next-icon\" aria-hidden=\"true\"/> <span "
+#~ "class=\"visually-hidden\">Keyingisi</span>"
 
 #, fuzzy
-msgid ""
-"<span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"/>\n"
-"                        <span class=\"visually-hidden\">Previous</span>"
-msgstr ""
-"<span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"/> <span "
-"class=\"visually-hidden\">Oldingisi</span>"
+#~ msgid ""
+#~ "<span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"/>\n"
+#~ "                            <span class=\"visually-hidden\">Previous</"
+#~ "span>"
+#~ msgstr ""
+#~ "<span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"/> <span "
+#~ "class=\"visually-hidden\">Oldingisi</span>"
 
 #, fuzzy
-msgid ""
-"<span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"/>\n"
-"                    <span class=\"visually-hidden\">Previous</span>"
-msgstr ""
-"<span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"/> <span "
-"class=\"visually-hidden\">Oldingi</span>"
+#~ msgid ""
+#~ "<span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"/>\n"
+#~ "                        <span class=\"visually-hidden\">Previous</span>"
+#~ msgstr ""
+#~ "<span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"/> <span "
+#~ "class=\"visually-hidden\">Oldingisi</span>"
 
 #, fuzzy
-msgid ""
-"<span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"/>\n"
-"                <span class=\"visually-hidden\">Previous</span>"
-msgstr ""
-"<span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"/> <span "
-"class=\"visually-hidden\">Oldingi</span>"
+#~ msgid ""
+#~ "<span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"/>\n"
+#~ "                    <span class=\"visually-hidden\">Previous</span>"
+#~ msgstr ""
+#~ "<span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"/> <span "
+#~ "class=\"visually-hidden\">Oldingi</span>"
 
 #, fuzzy
-msgid "A PUNCHY HEADLINE"
-msgstr "TA'SIRCHAN SARLAVHA"
+#~ msgid ""
+#~ "<span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"/>\n"
+#~ "                <span class=\"visually-hidden\">Previous</span>"
+#~ msgstr ""
+#~ "<span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"/> <span "
+#~ "class=\"visually-hidden\">Oldingi</span>"
 
 #, fuzzy
-msgid "About"
-msgstr "Haqida"
+#~ msgid "A PUNCHY HEADLINE"
+#~ msgstr "TA'SIRCHAN SARLAVHA"
 
 #, fuzzy
-msgid "About Me"
-msgstr "Men haqimda"
+#~ msgid "About"
+#~ msgstr "Haqida"
 
 #, fuzzy
-msgid ""
-"Achieve holistic health with personalized nutritional advice that "
-"complements your workouts, promoting overall well-being."
-msgstr ""
-"Mashqlaringizni to‘ldiradigan va umumiy farovonlikni oshiradigan shaxsiy "
-"ovqatlanish maslahatlari bilan yaxlit salomatlikka erishing."
+#~ msgid "About Me"
+#~ msgstr "Men haqimda"
 
 #, fuzzy
-msgid "Activating the last features."
-msgstr "So‘nggi funksiyalar faollashtirilmoqda."
+#~ msgid ""
+#~ "Achieve holistic health with personalized nutritional advice that "
+#~ "complements your workouts, promoting overall well-being."
+#~ msgstr ""
+#~ "Mashqlaringizni to‘ldiradigan va umumiy farovonlikni oshiradigan shaxsiy "
+#~ "ovqatlanish maslahatlari bilan yaxlit salomatlikka erishing."
 
 #, fuzzy
-msgid "Activating your %s."
-msgstr "%s faollashtirilmoqda."
+#~ msgid "Activating the last features."
+#~ msgstr "So‘nggi funksiyalar faollashtirilmoqda."
 
 #, fuzzy
-msgid "Adding features."
-msgstr "Funksiyalar qo‘shilmoqda."
+#~ msgid "Activating your %s."
+#~ msgstr "%s faollashtirilmoqda."
 
 #, fuzzy
-msgid ""
-"Adjust volume, skip tracks, answer calls, and activate voice assistants with "
-"a simple tap, keeping your hands free and your focus on what matters most."
-msgstr ""
-"Tovush balandligini sozlang, qo‘shiqlarni o‘tkazib yuboring, qo‘ng‘iroqlarga "
-"javob bering va ovozli yordamchilarni oddiy teginish bilan faollashtiring. "
-"Shunda qo‘llaringiz bo‘sh qoladi va eng muhim narsalarga e'tibor qarata "
-"olasiz."
+#~ msgid "Adding features."
+#~ msgstr "Funksiyalar qo‘shilmoqda."
 
 #, fuzzy
-msgid "All You Can Eat"
-msgstr "Cheksiz taomlar"
+#~ msgid ""
+#~ "Adjust volume, skip tracks, answer calls, and activate voice assistants "
+#~ "with a simple tap, keeping your hands free and your focus on what matters "
+#~ "most."
+#~ msgstr ""
+#~ "Tovush balandligini sozlang, qo‘shiqlarni o‘tkazib yuboring, "
+#~ "qo‘ng‘iroqlarga javob bering va ovozli yordamchilarni oddiy teginish "
+#~ "bilan faollashtiring. Shunda qo‘llaringiz bo‘sh qoladi va eng muhim "
+#~ "narsalarga e'tibor qarata olasiz."
 
 #, fuzzy
-msgid "All-Day Comfort"
-msgstr "Kun bo‘yi qulaylik"
+#~ msgid "All You Can Eat"
+#~ msgstr "Cheksiz taomlar"
 
 #, fuzzy
-msgid "Amazing Sound Quality"
-msgstr "Ajoyib ovoz sifati"
+#~ msgid "All-Day Comfort"
+#~ msgstr "Kun bo‘yi qulaylik"
 
 #, fuzzy
-msgid "Backend"
-msgstr "Orqa tomon"
+#~ msgid "Amazing Sound Quality"
+#~ msgstr "Ajoyib ovoz sifati"
 
 #, fuzzy
-msgid "Basic"
-msgstr "Asosiy"
+#~ msgid "Backend"
+#~ msgstr "Orqa tomon"
 
 #, fuzzy
-msgid "Beef Carpaccio, Filet Mignon 8oz and Cheesecake"
-msgstr "Mol go‘shti karpachcho, 8 unsiyali Filet Mignon va pishloqli tort"
+#~ msgid "Basic"
+#~ msgstr "Asosiy"
 
 #, fuzzy
-msgid "Book your table today"
-msgstr "Bugun stolingizni band qiling"
+#~ msgid "Beef Carpaccio, Filet Mignon 8oz and Cheesecake"
+#~ msgstr "Mol go‘shti karpachcho, 8 unsiyali Filet Mignon va pishloqli tort"
 
 #, fuzzy
-msgid ""
-"But before deleting, make sure you update all links referring to it. That "
-"way, your customers won't bump into the not-so-famous 404 error page."
-msgstr ""
-"Ammo o‘chirishdan oldin unga bog‘langan barcha havolalarni yangilang. Shunda "
-"mijozlaringiz unchalik mashhur bo‘lmagan 404 xato sahifasiga duch "
-"kelmaydilar."
+#~ msgid "Book your table today"
+#~ msgstr "Bugun stolingizni band qiling"
 
 #, fuzzy
-msgid ""
-"But before deleting, make sure you update all links referring to them. That "
-"way, your customers won't bump into the not-so-famous 404 error page."
-msgstr ""
-"Ammo o‘chirishdan oldin ularga bog‘langan barcha havolalarni yangilang. "
-"Shunda mijozlaringiz unchalik mashhur bo‘lmagan 404 xato sahifasiga duch "
-"kelmaydilar."
+#~ msgid ""
+#~ "But before deleting, make sure you update all links referring to it. That "
+#~ "way, your customers won't bump into the not-so-famous 404 error page."
+#~ msgstr ""
+#~ "Ammo o‘chirishdan oldin unga bog‘langan barcha havolalarni yangilang. "
+#~ "Shunda mijozlaringiz unchalik mashhur bo‘lmagan 404 xato sahifasiga duch "
+#~ "kelmaydilar."
 
 #, fuzzy
-msgid ""
-"By Crafting unique and compelling brand identities that leave a lasting "
-"impact."
-msgstr ""
-"O‘ziga xos va jozibali brend identifikatorlarini yaratish orqali uzoq "
-"muddatli taassurot qoldirish."
+#~ msgid ""
+#~ "But before deleting, make sure you update all links referring to them. "
+#~ "That way, your customers won't bump into the not-so-famous 404 error page."
+#~ msgstr ""
+#~ "Ammo o‘chirishdan oldin ularga bog‘langan barcha havolalarni yangilang. "
+#~ "Shunda mijozlaringiz unchalik mashhur bo‘lmagan 404 xato sahifasiga duch "
+#~ "kelmaydilar."
 
 #, fuzzy
-msgid "Carousel indicator"
-msgstr "Karusel ko‘rsatkichi"
+#~ msgid ""
+#~ "By Crafting unique and compelling brand identities that leave a lasting "
+#~ "impact."
+#~ msgstr ""
+#~ "O‘ziga xos va jozibali brend identifikatorlarini yaratish orqali uzoq "
+#~ "muddatli taassurot qoldirish."
 
 #, fuzzy
-msgid "Choose"
-msgstr "Tanlash"
+#~ msgid "Carousel indicator"
+#~ msgstr "Karusel ko‘rsatkichi"
 
 #, fuzzy
-msgid "Click here to go back to block tab."
-msgstr "Blok oynasiga qaytish uchun bu yerga bosing."
+#~ msgid "Choose"
+#~ msgstr "Tanlash"
 
 #, fuzzy
-msgid "Click on the <b>%s</b> building block."
-msgstr "<b>%s</b> qurilish blokini bosing."
+#~ msgid "Click here to go back to block tab."
+#~ msgstr "Blok oynasiga qaytish uchun bu yerga bosing."
 
 #, fuzzy
-msgid "Click on the <b>%s</b> category."
-msgstr "<b>%s</b> toifasini bosing."
+#~ msgid "Click on the <b>%s</b> building block."
+#~ msgstr "<b>%s</b> qurilish blokini bosing."
 
 #, fuzzy
-msgid "Clients"
-msgstr "Mijozlar"
+#~ msgid "Click on the <b>%s</b> category."
+#~ msgstr "<b>%s</b> toifasini bosing."
 
 #, fuzzy
-msgid "Coming Soon"
-msgstr "Tez orada"
+#~ msgid "Clients"
+#~ msgstr "Mijozlar"
 
 #, fuzzy
-msgid "Configuring your %s."
-msgstr "%s sozlanmoqda."
+#~ msgid "Coming Soon"
+#~ msgstr "Tez orada"
 
 #, fuzzy
-msgid "Consulting"
-msgstr "Maslahat"
+#~ msgid "Configuring your %s."
+#~ msgstr "%s sozlanmoqda."
 
 #, fuzzy
-msgid ""
-"Contact us today to embark on your path to a healthier, more vibrant you. "
-"Your fitness journey begins here."
-msgstr ""
-"Sog‘lom va tetik hayot sari yo‘lingizni bugun biz bilan boshlang. Fitnes "
-"sayohatingiz shu yerdan boshlanadi."
+#~ msgid "Consulting"
+#~ msgstr "Maslahat"
 
 #, fuzzy
-msgid "Crafting Your Digital Success Story"
-msgstr "Raqamli muvaffaqiyat hikoyangizni yaratish"
+#~ msgid ""
+#~ "Contact us today to embark on your path to a healthier, more vibrant you. "
+#~ "Your fitness journey begins here."
+#~ msgstr ""
+#~ "Sog‘lom va tetik hayot sari yo‘lingizni bugun biz bilan boshlang. Fitnes "
+#~ "sayohatingiz shu yerdan boshlanadi."
 
 #, fuzzy
-msgid "Crystal Clear Sound"
-msgstr "Tiniq ovoz"
+#~ msgid "Crafting Your Digital Success Story"
+#~ msgstr "Raqamli muvaffaqiyat hikoyangizni yaratish"
 
 #, fuzzy
-msgid "Designed to provide an immersive audio experience on the go."
-msgstr "Yo‘lda immersiv audio tajribani ta'minlash uchun mo‘ljallangan."
+#~ msgid "Crystal Clear Sound"
+#~ msgstr "Tiniq ovoz"
 
 #, fuzzy
-msgid "Detect"
-msgstr "Aniqlash"
+#~ msgid "Designed to provide an immersive audio experience on the go."
+#~ msgstr "Yo‘lda immersiv audio tajribani ta'minlash uchun mo‘ljallangan."
 
 #, fuzzy
-msgid "Digital Consulting Expertise"
-msgstr "Raqamli maslahat berish bo‘yicha mutaxassislik"
+#~ msgid "Detect"
+#~ msgstr "Aniqlash"
 
 #, fuzzy
-msgid "Discover New <strong>Opportunities</strong>"
-msgstr "Yangi <strong>Imkoniyatlar</strong>ni kashf eting"
+#~ msgid "Digital Consulting Expertise"
+#~ msgstr "Raqamli maslahat berish bo‘yicha mutaxassislik"
 
 #, fuzzy
-msgid "Discover Our Univers"
-msgstr "Bizning olamimizni kashf eting"
+#~ msgid "Discover New <strong>Opportunities</strong>"
+#~ msgstr "Yangi <strong>Imkoniyatlar</strong>ni kashf eting"
 
 #, fuzzy
-msgid ""
-"Discover our comprehensive marketing service designed to amplify your "
-"brand's reach and impact."
-msgstr ""
-"Brendingiz ta'siri va qamrovini kuchaytirish uchun mo‘ljallangan keng "
-"qamrovli marketing xizmatimiz bilan tanishing."
+#~ msgid "Discover Our Univers"
+#~ msgstr "Bizning olamimizni kashf eting"
 
 #, fuzzy
-msgid "Drag the <b>%s</b> block and drop it at the bottom of the page."
-msgstr "<b>%s</b> blokini ushlab, sahifaning pastki qismiga olib boring."
+#~ msgid ""
+#~ "Discover our comprehensive marketing service designed to amplify your "
+#~ "brand's reach and impact."
+#~ msgstr ""
+#~ "Brendingiz ta'siri va qamrovini kuchaytirish uchun mo‘ljallangan keng "
+#~ "qamrovli marketing xizmatimiz bilan tanishing."
 
 #, fuzzy
-msgid "EchoTunes Wireless Earbuds"
-msgstr "EchoTunes simsiz quloqchinlar"
+#~ msgid "Drag the <b>%s</b> block and drop it at the bottom of the page."
+#~ msgstr "<b>%s</b> blokini ushlab, sahifaning pastki qismiga olib boring."
 
 #, fuzzy
-msgid ""
-"EchoTunes comes with customizable ear tip sizes that provide a secure and "
-"comfortable fit."
-msgstr ""
-"EchoTunes xavfsiz va qulay o‘tirishni ta'minlovchi moslashuvchan quloq uchi "
-"o‘lchamlari bilan birga keladi."
+#~ msgid "EchoTunes Wireless Earbuds"
+#~ msgstr "EchoTunes simsiz quloqchinlar"
 
 #, fuzzy
-msgid "Elevate Your Audio Journey Today"
-msgstr "Bugun audio sayohatingizni yuksaltiring"
+#~ msgid ""
+#~ "EchoTunes comes with customizable ear tip sizes that provide a secure and "
+#~ "comfortable fit."
+#~ msgstr ""
+#~ "EchoTunes xavfsiz va qulay o‘tirishni ta'minlovchi moslashuvchan quloq "
+#~ "uchi o‘lchamlari bilan birga keladi."
 
 #, fuzzy
-msgid "Elevate Your Brand With Us"
-msgstr "Biz bilan brendingizni yuksaltiring"
+#~ msgid "Elevate Your Audio Journey Today"
+#~ msgstr "Bugun audio sayohatingizni yuksaltiring"
 
 #, fuzzy
-msgid ""
-"Embark on a journey through time as we share the story of our humble "
-"beginnings. What started as a simple idea in a garage has evolved into an "
-"innovative force in the industry."
-msgstr ""
-"Bizning kamtarona boshlanishimiz haqidagi hikoyani tinglab, vaqt bo‘ylab "
-"sayohatga chiqing. Garajdagi oddiy g‘oya sifatida boshlangan narsa bugun "
-"sohaning innovatsion kuchiga aylandi."
+#~ msgid "Elevate Your Brand With Us"
+#~ msgstr "Biz bilan brendingizni yuksaltiring"
 
 #, fuzzy
-msgid ""
-"Empowering your business through strategic digital insights and expertise."
-msgstr ""
-"Strategik raqamli bilim va tajribalar orqali biznesingizni rivojlantirish."
+#~ msgid ""
+#~ "Embark on a journey through time as we share the story of our humble "
+#~ "beginnings. What started as a simple idea in a garage has evolved into an "
+#~ "innovative force in the industry."
+#~ msgstr ""
+#~ "Bizning kamtarona boshlanishimiz haqidagi hikoyani tinglab, vaqt bo‘ylab "
+#~ "sayohatga chiqing. Garajdagi oddiy g‘oya sifatida boshlangan narsa bugun "
+#~ "sohaning innovatsion kuchiga aylandi."
 
 #, fuzzy
-msgid "Enabling your %s."
-msgstr "%s faollashtirilmoqda."
+#~ msgid ""
+#~ "Empowering your business through strategic digital insights and expertise."
+#~ msgstr ""
+#~ "Strategik raqamli bilim va tajribalar orqali biznesingizni rivojlantirish."
 
 #, fuzzy
-msgid "Enhance Your <strong>Experience</strong>"
-msgstr "<strong>Tajribangizni</strong> boyiting"
+#~ msgid "Enabling your %s."
+#~ msgstr "%s faollashtirilmoqda."
 
 #, fuzzy
-msgid "Every Friday From 6PM to 7PM !"
-msgstr "Har juma kuni soat 18:00 dan 19:00 gacha!"
+#~ msgid "Enhance Your <strong>Experience</strong>"
+#~ msgstr "<strong>Tajribangizni</strong> boyiting"
 
 #, fuzzy
-msgid ""
-"Experience a digital transformation like never before with our range of "
-"innovative solutions, designed to illuminate your brand's potential."
-msgstr ""
-"Innovatsion yechimlarimiz orqali brendingiz salohiyatini yoritishga "
-"mo‘ljallangan misli ko‘rilmagan raqamli o‘zgarishni his eting."
+#~ msgid "Every Friday From 6PM to 7PM !"
+#~ msgstr "Har juma kuni soat 18:00 dan 19:00 gacha!"
 
 #, fuzzy
-msgid ""
-"Experience the power of our software without breaking the bank – choose a "
-"plan that suits you best and start unlocking its full potential today."
-msgstr ""
-"Byudjetingizga mos keladigan rejani tanlab, dasturiy ta'minotimiz kuchini "
-"bugun sinab ko‘ring va uning barcha imkoniyatlaridan foydalanishni boshlang."
+#~ msgid ""
+#~ "Experience a digital transformation like never before with our range of "
+#~ "innovative solutions, designed to illuminate your brand's potential."
+#~ msgstr ""
+#~ "Innovatsion yechimlarimiz orqali brendingiz salohiyatini yoritishga "
+#~ "mo‘ljallangan misli ko‘rilmagan raqamli o‘zgarishni his eting."
 
 #, fuzzy
-msgid "Experienced fullstack developer."
-msgstr "Tajribali fullstack dasturchi."
+#~ msgid ""
+#~ "Experience the power of our software without breaking the bank – choose a "
+#~ "plan that suits you best and start unlocking its full potential today."
+#~ msgstr ""
+#~ "Byudjetingizga mos keladigan rejani tanlab, dasturiy ta'minotimiz kuchini "
+#~ "bugun sinab ko‘ring va uning barcha imkoniyatlaridan foydalanishni "
+#~ "boshlang."
 
 #, fuzzy
-msgid ""
-"Experienced in effective project management, adept at leading cross-"
-"functional teams and delivering successful outcomes with a strategic "
-"approach."
-msgstr ""
-"Samarali loyiha boshqaruvida tajribali, turli sohalararo jamoalarga "
-"rahbarlik qilish va strategik yondashuv orqali muvaffaqiyatli natijalarga "
-"erishish qobiliyatiga ega."
+#~ msgid "Experienced fullstack developer."
+#~ msgstr "Tajribali fullstack dasturchi."
 
 #, fuzzy
-msgid ""
-"Explore our captivating gallery, a visual journey showcasing our finest work "
-"and creative projects. Immerse yourself in a collection of images that "
-"capture the essence of our craftsmanship, innovation, and dedication to "
-"excellence."
-msgstr ""
-"Eng sara ishlarimiz va ijodiy loyihalarimizni aks ettiruvchi maftunkor "
-"galereyamizni kashf eting. Hunarmandchiligimiz, innovatsiyalarimiz va "
-"mukammallikka bo‘lgan sadoqatimiz mohiyatini aks ettiruvchi tasvirlar "
-"to‘plamiga sho‘ng‘ing."
+#~ msgid ""
+#~ "Experienced in effective project management, adept at leading cross-"
+#~ "functional teams and delivering successful outcomes with a strategic "
+#~ "approach."
+#~ msgstr ""
+#~ "Samarali loyiha boshqaruvida tajribali, turli sohalararo jamoalarga "
+#~ "rahbarlik qilish va strategik yondashuv orqali muvaffaqiyatli natijalarga "
+#~ "erishish qobiliyatiga ega."
 
 #, fuzzy
-msgid ""
-"Founder and chief visionary, Tony is the driving force behind the company. "
-"He loves to keep his hands full by participating in the development of the "
-"software, marketing, and customer experience strategies."
-msgstr ""
-"Asoschisi va bosh g‘oyachi Toni kompaniyaning harakatlantiruvchi kuchidir. U "
-"dasturiy ta'minot ishlab chiqish, marketing va mijozlar tajribasini "
-"yaxshilash strategiyalarida ishtirok etishni yoqtiradi."
+#~ msgid ""
+#~ "Explore our captivating gallery, a visual journey showcasing our finest "
+#~ "work and creative projects. Immerse yourself in a collection of images "
+#~ "that capture the essence of our craftsmanship, innovation, and dedication "
+#~ "to excellence."
+#~ msgstr ""
+#~ "Eng sara ishlarimiz va ijodiy loyihalarimizni aks ettiruvchi maftunkor "
+#~ "galereyamizni kashf eting. Hunarmandchiligimiz, innovatsiyalarimiz va "
+#~ "mukammallikka bo‘lgan sadoqatimiz mohiyatini aks ettiruvchi tasvirlar "
+#~ "to‘plamiga sho‘ng‘ing."
 
 #, fuzzy
-msgid ""
-"Founder, Tony is the driving force behind the company. He loves to keep his "
-"hands full by participating in the development of the software, marketing, "
-"and UX strategies."
-msgstr ""
-"Asoschisi Toni kompaniyaning harakatlantiruvchi kuchidir. U dasturiy "
-"ta'minot ishlab chiqish, marketing va foydalanuvchi tajribasi "
-"strategiyalarida ishtirok etishni yoqtiradi."
+#~ msgid ""
+#~ "Founder and chief visionary, Tony is the driving force behind the "
+#~ "company. He loves to keep his hands full by participating in the "
+#~ "development of the software, marketing, and customer experience "
+#~ "strategies."
+#~ msgstr ""
+#~ "Asoschisi va bosh g‘oyachi Toni kompaniyaning harakatlantiruvchi "
+#~ "kuchidir. U dasturiy ta'minot ishlab chiqish, marketing va mijozlar "
+#~ "tajribasini yaxshilash strategiyalarida ishtirok etishni yoqtiradi."
 
 #, fuzzy
-msgid ""
-"Founder, Tony is the driving force behind the company. He loves to keep his "
-"hands full by participating in the development of the software, marketing, "
-"and customer experience."
-msgstr ""
-"Asoschisi Toni kompaniyaning harakatlantiruvchi kuchidir. U dasturiy "
-"ta'minot ishlab chiqish, marketing va mijozlar tajribasini yaxshilashda "
-"ishtirok etishni yoqtiradi."
+#~ msgid ""
+#~ "Founder, Tony is the driving force behind the company. He loves to keep "
+#~ "his hands full by participating in the development of the software, "
+#~ "marketing, and UX strategies."
+#~ msgstr ""
+#~ "Asoschisi Toni kompaniyaning harakatlantiruvchi kuchidir. U dasturiy "
+#~ "ta'minot ishlab chiqish, marketing va foydalanuvchi tajribasi "
+#~ "strategiyalarida ishtirok etishni yoqtiradi."
 
 #, fuzzy
-msgid ""
-"From SEO to social media, we create campaigns that not only get you noticed "
-"but also drive engagement and conversions."
-msgstr ""
-"SEOdan tortib ijtimoiy tarmoqlargacha, biz sizni nafaqat e'tiborga oladigan, "
-"balki mijozlarni jalb qiladigan va konversiyalarni oshiradigan kampaniyalar "
-"yaratamiz."
+#~ msgid ""
+#~ "Founder, Tony is the driving force behind the company. He loves to keep "
+#~ "his hands full by participating in the development of the software, "
+#~ "marketing, and customer experience."
+#~ msgstr ""
+#~ "Asoschisi Toni kompaniyaning harakatlantiruvchi kuchidir. U dasturiy "
+#~ "ta'minot ishlab chiqish, marketing va mijozlar tajribasini yaxshilashda "
+#~ "ishtirok etishni yoqtiradi."
 
 #, fuzzy
-msgid ""
-"From revitalizing your visual identity to realigning your messaging for the "
-"digital landscape, we'll guide you through a strategic process that ensures "
-"your brand remains relevant and resonates with your audience."
-msgstr ""
-"Vizual identifikatsiyangizni yangilashdan tortib xabarlaringizni raqamli "
-"muhitga moslashtirguncha, biz sizni brendingizning dolzarbligi va "
-"auditoriyangizga ta'sirini ta'minlaydigan strategik jarayonga yo‘naltiramiz."
+#~ msgid ""
+#~ "From SEO to social media, we create campaigns that not only get you "
+#~ "noticed but also drive engagement and conversions."
+#~ msgstr ""
+#~ "SEOdan tortib ijtimoiy tarmoqlargacha, biz sizni nafaqat e'tiborga "
+#~ "oladigan, balki mijozlarni jalb qiladigan va konversiyalarni oshiradigan "
+#~ "kampaniyalar yaratamiz."
 
 #, fuzzy
-msgid "Frontend"
-msgstr "Frontend"
+#~ msgid ""
+#~ "From revitalizing your visual identity to realigning your messaging for "
+#~ "the digital landscape, we'll guide you through a strategic process that "
+#~ "ensures your brand remains relevant and resonates with your audience."
+#~ msgstr ""
+#~ "Vizual identifikatsiyangizni yangilashdan tortib xabarlaringizni raqamli "
+#~ "muhitga moslashtirguncha, biz sizni brendingizning dolzarbligi va "
+#~ "auditoriyangizga ta'sirini ta'minlaydigan strategik jarayonga "
+#~ "yo‘naltiramiz."
 
 #, fuzzy
-msgid "Go to the Theme tab"
-msgstr "Mavzu bo‘limiga o‘tish"
+#~ msgid "Frontend"
+#~ msgstr "Frontend"
 
 #, fuzzy
-msgid "Good job! It's time to <b>Save</b> your work."
-msgstr "Barakalla! Ishingizni <b>Saqlash</b> vaqti keldi."
+#~ msgid "Go to the Theme tab"
+#~ msgstr "Mavzu bo‘limiga o‘tish"
 
 #, fuzzy
-msgid ""
-"Great stories have a <b>personality</b>. Consider telling a great story that "
-"provides personality. Writing a story with personality for potential clients "
-"will assist with making a relationship connection. This shows up in small "
-"quirks like word choices or phrases. Write from your point of view, not from "
-"someone else's experience."
-msgstr ""
-"Ajoyib hikoyalarda <b>o‘ziga xoslik bor</b>. Shaxsiyatni namoyon etadigan "
-"ajoyib hikoya aytib berishni o‘ylab ko‘ring. Potensial mijozlar uchun o‘ziga "
-"xos uslubda hikoya yozish munosabatlarni bog‘lashga yordam beradi. Bu so‘z "
-"tanlash yoki iboralar kabi kichik xususiyatlarda namoyon bo‘ladi. Boshqaning "
-"tajribasidan emas, o‘z nuqtai nazaringizdan yozing."
+#~ msgid "Good job! It's time to <b>Save</b> your work."
+#~ msgstr "Barakalla! Ishingizni <b>Saqlash</b> vaqti keldi."
 
 #, fuzzy
-msgid "Growth Rate"
-msgstr "O‘sish sur'ati"
+#~ msgid ""
+#~ "Great stories have a <b>personality</b>. Consider telling a great story "
+#~ "that provides personality. Writing a story with personality for potential "
+#~ "clients will assist with making a relationship connection. This shows up "
+#~ "in small quirks like word choices or phrases. Write from your point of "
+#~ "view, not from someone else's experience."
+#~ msgstr ""
+#~ "Ajoyib hikoyalarda <b>o‘ziga xoslik bor</b>. Shaxsiyatni namoyon etadigan "
+#~ "ajoyib hikoya aytib berishni o‘ylab ko‘ring. Potensial mijozlar uchun "
+#~ "o‘ziga xos uslubda hikoya yozish munosabatlarni bog‘lashga yordam beradi. "
+#~ "Bu so‘z tanlash yoki iboralar kabi kichik xususiyatlarda namoyon bo‘ladi. "
+#~ "Boshqaning tajribasidan emas, o‘z nuqtai nazaringizdan yozing."
 
 #, fuzzy
-msgid "Happy Hour"
-msgstr "Xursandchilik soati"
+#~ msgid "Growth Rate"
+#~ msgstr "O‘sish sur'ati"
 
 #, fuzzy
-msgid "Hello, I'm Tony Fred"
-msgstr "Salom, men Toni Fredman"
+#~ msgid "Happy Hour"
+#~ msgstr "Xursandchilik soati"
 
 #, fuzzy
-msgid ""
-"I'm a fullstack developer with a background in management. My analytical "
-"skills, coupled with effective communication, enable me to lead cross-"
-"functional teams to success."
-msgstr ""
-"Men boshqaruv sohasida tajribaga ega to‘liq stack dasturchiman. Tahliliy "
-"ko‘nikmalarim va samarali muloqot qobiliyatim turli sohalar bo‘yicha "
-"jamoalarni muvaffaqiyatga yetaklash imkonini beradi."
+#~ msgid "Hello, I'm Tony Fred"
+#~ msgstr "Salom, men Toni Fredman"
 
 #, fuzzy
-msgid "Installing your %s."
-msgstr "%s o‘rnatilmoqda"
+#~ msgid ""
+#~ "I'm a fullstack developer with a background in management. My analytical "
+#~ "skills, coupled with effective communication, enable me to lead cross-"
+#~ "functional teams to success."
+#~ msgstr ""
+#~ "Men boshqaruv sohasida tajribaga ega to‘liq stack dasturchiman. Tahliliy "
+#~ "ko‘nikmalarim va samarali muloqot qobiliyatim turli sohalar bo‘yicha "
+#~ "jamoalarni muvaffaqiyatga yetaklash imkonini beradi."
 
 #, fuzzy
-msgid "Integrating your %s."
-msgstr "%s integratsiya qilinmoqda"
+#~ msgid "Installing your %s."
+#~ msgstr "%s o‘rnatilmoqda"
 
 #, fuzzy
-msgid "Intuitive Touch Controls"
-msgstr "Intuitiv sensorli boshqaruv elementlari"
+#~ msgid "Integrating your %s."
+#~ msgstr "%s integratsiya qilinmoqda"
 
 #, fuzzy
-msgid ""
-"It's time to elevate your fitness journey with coaching that's as unique as "
-"you are. Choose your path, embrace the guidance, and transform your life."
-msgstr ""
-"O‘zingiz kabi noyob bo‘lgan murabbiylik bilan jismoniy tayyorgarligingizni "
-"yangi bosqichga ko‘tarish vaqti keldi. Yo‘lingizni tanlang, yo‘l-yo‘riqlarni "
-"qabul qiling va hayotingizni o‘zgartiring."
+#~ msgid "Intuitive Touch Controls"
+#~ msgstr "Intuitiv sensorli boshqaruv elementlari"
 
 #, fuzzy
-msgid ""
-"Join us for a remarkable dining experience that blends exquisite flavors "
-"with a warm ambiance."
-msgstr ""
-"Noyob ta'mlarni iliq muhit bilan uyg‘unlashtirgan ajoyib taom tajribasi "
-"uchun bizga qo‘shiling."
+#~ msgid ""
+#~ "It's time to elevate your fitness journey with coaching that's as unique "
+#~ "as you are. Choose your path, embrace the guidance, and transform your "
+#~ "life."
+#~ msgstr ""
+#~ "O‘zingiz kabi noyob bo‘lgan murabbiylik bilan jismoniy "
+#~ "tayyorgarligingizni yangi bosqichga ko‘tarish vaqti keldi. Yo‘lingizni "
+#~ "tanlang, yo‘l-yo‘riqlarni qabul qiling va hayotingizni o‘zgartiring."
 
 #, fuzzy
-msgid "Landing Pages"
-msgstr "Tushish sahifalari"
+#~ msgid ""
+#~ "Join us for a remarkable dining experience that blends exquisite flavors "
+#~ "with a warm ambiance."
+#~ msgstr ""
+#~ "Noyob ta'mlarni iliq muhit bilan uyg‘unlashtirgan ajoyib taom tajribasi "
+#~ "uchun bizga qo‘shiling."
 
 #, fuzzy
-msgid ""
-"Let's collaborate to create innovative solutions that stand out in the "
-"digital landscape. Reach out today and let's build something extraordinary "
-"together."
-msgstr ""
-"Keling, raqamli olamda ajralib turadigan innovatsion yechimlarni yaratish "
-"uchun hamkorlik qilaylik. Bugun biz bilan bog‘laning va birgalikda "
-"g‘ayriodatiy narsa yarataylik."
+#~ msgid "Landing Pages"
+#~ msgstr "Tushish sahifalari"
 
 #, fuzzy
-msgid "Let's do it"
-msgstr "Qani, boshladik"
+#~ msgid ""
+#~ "Let's collaborate to create innovative solutions that stand out in the "
+#~ "digital landscape. Reach out today and let's build something "
+#~ "extraordinary together."
+#~ msgstr ""
+#~ "Keling, raqamli olamda ajralib turadigan innovatsion yechimlarni yaratish "
+#~ "uchun hamkorlik qilaylik. Bugun biz bilan bog‘laning va birgalikda "
+#~ "g‘ayriodatiy narsa yarataylik."
 
 #, fuzzy
-msgid ""
-"Let's turn your vision into reality. Contact us today to set your brand on "
-"the path to digital excellence with us."
-msgstr ""
-"Keling, g‘oyangizni haqiqatga aylantiraylik. Brendingizni biz bilan raqamli "
-"mukammallikka yo‘naltirish uchun bugunoq biz bilan bog‘laning."
+#~ msgid "Let's do it"
+#~ msgstr "Qani, boshladik"
 
 #, fuzzy
-msgid "Management"
-msgstr "Boshqaruv"
+#~ msgid ""
+#~ "Let's turn your vision into reality. Contact us today to set your brand "
+#~ "on the path to digital excellence with us."
+#~ msgstr ""
+#~ "Keling, g‘oyangizni haqiqatga aylantiraylik. Brendingizni biz bilan "
+#~ "raqamli mukammallikka yo‘naltirish uchun bugunoq biz bilan bog‘laning."
 
 #, fuzzy
-msgid "Marketing"
-msgstr "Marketing"
+#~ msgid "Management"
+#~ msgstr "Boshqaruv"
 
 #, fuzzy
-msgid ""
-"Mastering frontend craftsmanship with expertise in HTML, CSS, and JavaScript "
-"to craft captivating and responsive user experiences."
-msgstr ""
-"HTML, CSS va JavaScript bo‘yicha mutaxassislik bilan frontend mahoratini "
-"egallab, jozibador va moslashuvchan foydalanuvchi tajribasini yaratish."
+#~ msgid "Marketing"
+#~ msgstr "Marketing"
 
 #, fuzzy
-msgid "Mediterranean buffet of starters, main dishes and desserts"
-msgstr ""
-"O‘rta yer dengizi bufeti: boshlang‘ich taomlar, asosiy taomlar va desertlar"
+#~ msgid ""
+#~ "Mastering frontend craftsmanship with expertise in HTML, CSS, and "
+#~ "JavaScript to craft captivating and responsive user experiences."
+#~ msgstr ""
+#~ "HTML, CSS va JavaScript bo‘yicha mutaxassislik bilan frontend mahoratini "
+#~ "egallab, jozibador va moslashuvchan foydalanuvchi tajribasini yaratish."
 
 #, fuzzy
-msgid "Meet The Team"
-msgstr "Jamoa bilan tanishing"
+#~ msgid "Mediterranean buffet of starters, main dishes and desserts"
+#~ msgstr ""
+#~ "O‘rta yer dengizi bufeti: boshlang‘ich taomlar, asosiy taomlar va "
+#~ "desertlar"
 
 #, fuzzy
-msgid "Menu One"
-msgstr "Birinchi menyu"
+#~ msgid "Meet The Team"
+#~ msgstr "Jamoa bilan tanishing"
 
 #, fuzzy
-msgid "Menu Two"
-msgstr "Ikkinchi menyu"
+#~ msgid "Menu One"
+#~ msgstr "Birinchi menyu"
 
 #, fuzzy
-msgid ""
-"Mich loves taking on challenges. With his multi-year experience as "
-"Commercial Director in the software industry, Mich has helped the company to "
-"get where it is today."
-msgstr ""
-"Mich qiyinchiliklarni yengishni yaxshi ko‘radi. Dasturiy ta'minot sohasida "
-"Tijorat direktori sifatidagi ko‘p yillik tajribasi bilan Mich kompaniyaning "
-"bugungi mavqega erishishiga hissa qo‘shdi."
+#~ msgid "Menu Two"
+#~ msgstr "Ikkinchi menyu"
 
 #, fuzzy
-msgid "Multi Website Published Mixin"
-msgstr "Ko‘p saytli nashr etilgan aralashma"
+#~ msgid ""
+#~ "Mich loves taking on challenges. With his multi-year experience as "
+#~ "Commercial Director in the software industry, Mich has helped the company "
+#~ "to get where it is today."
+#~ msgstr ""
+#~ "Mich qiyinchiliklarni yengishni yaxshi ko‘radi. Dasturiy ta'minot "
+#~ "sohasida Tijorat direktori sifatidagi ko‘p yillik tajribasi bilan Mich "
+#~ "kompaniyaning bugungi mavqega erishishiga hissa qo‘shdi."
 
 #, fuzzy
-msgid "My Skills"
-msgstr "Mening ko‘nikmalarim"
+#~ msgid "Multi Website Published Mixin"
+#~ msgstr "Ko‘p saytli nashr etilgan aralashma"
 
 #, fuzzy
-msgid "Nutritional Guidance"
-msgstr "Ovqatlanish bo‘yicha ko‘rsatmalar"
+#~ msgid "My Skills"
+#~ msgstr "Mening ko‘nikmalarim"
 
 #, fuzzy
-msgid "OR"
-msgstr "YOKI"
+#~ msgid "Nutritional Guidance"
+#~ msgstr "Ovqatlanish bo‘yicha ko‘rsatmalar"
 
 #, fuzzy
-msgid "On-the-Go Charging"
-msgstr "Yo‘lda quvvatlash"
+#~ msgid "OR"
+#~ msgstr "YOKI"
 
 #, fuzzy
-msgid "Our Approach"
-msgstr "Yondashuvimiz"
+#~ msgid "On-the-Go Charging"
+#~ msgstr "Yo‘lda quvvatlash"
 
 #, fuzzy
-msgid ""
-"Our Coaching combines personalized fitness plans with mindfulness practices, "
-"ensuring you achieve harmony in your body and peace in your mind."
-msgstr ""
-"Bizning mashg‘ulotlarimiz shaxsiy fitnes rejalarini ongli amaliyotlar bilan "
-"uyg‘unlashtiradi, bu esa tanangizda muvozanat va ongingizda xotirjamlikka "
-"erishishingizni kafolatlaydi."
+#~ msgid "Our Approach"
+#~ msgstr "Yondashuvimiz"
 
 #, fuzzy
-msgid "Our Goals"
-msgstr "Maqsadlarimiz"
+#~ msgid ""
+#~ "Our Coaching combines personalized fitness plans with mindfulness "
+#~ "practices, ensuring you achieve harmony in your body and peace in your "
+#~ "mind."
+#~ msgstr ""
+#~ "Bizning mashg‘ulotlarimiz shaxsiy fitnes rejalarini ongli amaliyotlar "
+#~ "bilan uyg‘unlashtiradi, bu esa tanangizda muvozanat va ongingizda "
+#~ "xotirjamlikka erishishingizni kafolatlaydi."
 
 #, fuzzy
-msgid "Our Menus"
-msgstr "Taomnomalarimiz"
+#~ msgid "Our Goals"
+#~ msgstr "Maqsadlarimiz"
 
 #, fuzzy
-msgid "Our Mission"
-msgstr "Vazifamiz"
+#~ msgid "Our Menus"
+#~ msgstr "Taomnomalarimiz"
 
 #, fuzzy
-msgid "Our Offer"
-msgstr "Taklifimiz"
+#~ msgid "Our Mission"
+#~ msgstr "Vazifamiz"
 
 #, fuzzy
-msgid "Our Offices"
-msgstr "Ofislarimiz"
+#~ msgid "Our Offer"
+#~ msgstr "Taklifimiz"
 
 #, fuzzy
-msgid "Our Story"
-msgstr "Tariximiz"
+#~ msgid "Our Offices"
+#~ msgstr "Ofislarimiz"
 
 #, fuzzy
-msgid "Our Values"
-msgstr "Qadriyatlarimiz"
+#~ msgid "Our Story"
+#~ msgstr "Tariximiz"
 
 #, fuzzy
-msgid ""
-"Our experienced fitness coaches design workouts that align with your goals, "
-"fitness level, and preferences."
-msgstr ""
-"Tajribali fitnes murabbiylarimiz sizning maqsadlaringiz, jismoniy "
-"tayyorgarlik darajangiz va afzalliklaringizga mos keladigan mashg‘ulotlarni "
-"ishlab chiqadi."
+#~ msgid "Our Values"
+#~ msgstr "Qadriyatlarimiz"
 
 #, fuzzy
-msgid ""
-"Our mission is to create transformative experiences and foster growth, "
-"driven by a relentless pursuit of innovation and a commitment to exceeding "
-"expectations."
-msgstr ""
-"Bizning maqsadimiz innovatsiyalarga tinimsiz intilish va kutilganidan ham "
-"yuqori natijalarga erishish orqali o‘zgaruvchan tajribalar yaratish va "
-"rivojlanishni rag‘batlantirishdir."
+#~ msgid ""
+#~ "Our experienced fitness coaches design workouts that align with your "
+#~ "goals, fitness level, and preferences."
+#~ msgstr ""
+#~ "Tajribali fitnes murabbiylarimiz sizning maqsadlaringiz, jismoniy "
+#~ "tayyorgarlik darajangiz va afzalliklaringizga mos keladigan "
+#~ "mashg‘ulotlarni ishlab chiqadi."
 
 #, fuzzy
-msgid ""
-"Our seasoned consultants provide tailored guidance, leveraging their deep "
-"industry knowledge to analyze your current strategies, identify "
-"opportunities, and formulate data-driven recommendations."
-msgstr ""
-"Tajribali maslahatchilarimiz sohaga oid chuqur bilimlaridan foydalanib, "
-"joriy strategiyalaringizni tahlil qiladi, imkoniyatlarni aniqlaydi va "
-"ma'lumotlarga asoslangan tavsiyalarni ishlab chiqib, sizga moslashtirilgan "
-"yo‘l-yo‘riqlar beradi."
+#~ msgid ""
+#~ "Our mission is to create transformative experiences and foster growth, "
+#~ "driven by a relentless pursuit of innovation and a commitment to "
+#~ "exceeding expectations."
+#~ msgstr ""
+#~ "Bizning maqsadimiz innovatsiyalarga tinimsiz intilish va kutilganidan ham "
+#~ "yuqori natijalarga erishish orqali o‘zgaruvchan tajribalar yaratish va "
+#~ "rivojlanishni rag‘batlantirishdir."
 
 #, fuzzy
-msgid ""
-"Our software plans are designed to cater to a variety of needs, ensuring "
-"that you find the perfect fit for your requirements. From individual users "
-"to businesses of all sizes, we offer pricing options that provide "
-"exceptional value without compromising on features or performance."
-msgstr ""
-"Dasturiy ta'minotimiz rejalari turli ehtiyojlarni qondirish uchun ishlab "
-"chiqilgan bo‘lib, talablaringizga to‘liq mos kelishini ta'minlaydi. Yakka "
-"foydalanuvchilardan tortib barcha hajmdagi korxonalargacha, biz funksiyalar "
-"yoki samaradorlikka putur yetkazmagan holda ajoyib qiymatni ta'minlovchi "
-"narxlash variantlarini taklif qilamiz."
+#~ msgid ""
+#~ "Our seasoned consultants provide tailored guidance, leveraging their deep "
+#~ "industry knowledge to analyze your current strategies, identify "
+#~ "opportunities, and formulate data-driven recommendations."
+#~ msgstr ""
+#~ "Tajribali maslahatchilarimiz sohaga oid chuqur bilimlaridan foydalanib, "
+#~ "joriy strategiyalaringizni tahlil qiladi, imkoniyatlarni aniqlaydi va "
+#~ "ma'lumotlarga asoslangan tavsiyalarni ishlab chiqib, sizga "
+#~ "moslashtirilgan yo‘l-yo‘riqlar beradi."
 
 #, fuzzy
-msgid ""
-"Our values shape our culture, influence our decisions, and guide us in "
-"providing exceptional service. They reflect our dedication to integrity, "
-"collaboration, and client satisfaction."
-msgstr ""
-"Qadriyatlarimiz madaniyatimizni shakllantiradi, qarorlarimizga ta'sir "
-"ko‘rsatadi va ajoyib xizmat ko‘rsatishda bizga yo‘l ko‘rsatadi. Ular "
-"halollik, hamkorlik va mijozlar mamnuniyatiga bo‘lgan sadoqatimizni aks "
-"ettiradi."
+#~ msgid ""
+#~ "Our software plans are designed to cater to a variety of needs, ensuring "
+#~ "that you find the perfect fit for your requirements. From individual "
+#~ "users to businesses of all sizes, we offer pricing options that provide "
+#~ "exceptional value without compromising on features or performance."
+#~ msgstr ""
+#~ "Dasturiy ta'minotimiz rejalari turli ehtiyojlarni qondirish uchun ishlab "
+#~ "chiqilgan bo‘lib, talablaringizga to‘liq mos kelishini ta'minlaydi. Yakka "
+#~ "foydalanuvchilardan tortib barcha hajmdagi korxonalargacha, biz "
+#~ "funksiyalar yoki samaradorlikka putur yetkazmagan holda ajoyib qiymatni "
+#~ "ta'minlovchi narxlash variantlarini taklif qilamiz."
 
 #, fuzzy
-msgid "Personalized Fitness"
-msgstr "Shaxsiylashtirilgan fitnes"
+#~ msgid ""
+#~ "Our values shape our culture, influence our decisions, and guide us in "
+#~ "providing exceptional service. They reflect our dedication to integrity, "
+#~ "collaboration, and client satisfaction."
+#~ msgstr ""
+#~ "Qadriyatlarimiz madaniyatimizni shakllantiradi, qarorlarimizga ta'sir "
+#~ "ko‘rsatadi va ajoyib xizmat ko‘rsatishda bizga yo‘l ko‘rsatadi. Ular "
+#~ "halollik, hamkorlik va mijozlar mamnuniyatiga bo‘lgan sadoqatimizni aks "
+#~ "ettiradi."
 
 #, fuzzy
-msgid "Personalized Workouts"
-msgstr "Shaxsiylashtirilgan mashqlar"
+#~ msgid "Personalized Fitness"
+#~ msgstr "Shaxsiylashtirilgan fitnes"
 
 #, fuzzy
-msgid "Pricing Plans"
-msgstr "Narxlash rejalari"
+#~ msgid "Personalized Workouts"
+#~ msgstr "Shaxsiylashtirilgan mashqlar"
 
 #, fuzzy
-msgid ""
-"Proficient in backend development, specializing in Python, Django, and "
-"database management to create efficient and scalable solutions."
-msgstr ""
-"Backend dasturlashda malakali, samarali va kengaytiriladigan yechimlarni "
-"yaratish uchun Python, Django va ma'lumotlar bazasini boshqarishga "
-"ixtisoslashgan."
+#~ msgid "Pricing Plans"
+#~ msgstr "Narxlash rejalari"
 
 #, fuzzy
-msgid "Progress Tracking"
-msgstr "Jarayonni kuzatish"
+#~ msgid ""
+#~ "Proficient in backend development, specializing in Python, Django, and "
+#~ "database management to create efficient and scalable solutions."
+#~ msgstr ""
+#~ "Backend dasturlashda malakali, samarali va kengaytiriladigan yechimlarni "
+#~ "yaratish uchun Python, Django va ma'lumotlar bazasini boshqarishga "
+#~ "ixtisoslashgan."
 
 #, fuzzy
-msgid "Public User"
-msgstr "Ommaviy foydalanuvchi"
+#~ msgid "Progress Tracking"
+#~ msgstr "Jarayonni kuzatish"
 
 #, fuzzy
-msgid "Punycode Domain"
-msgstr "Punikod domeni"
+#~ msgid "Public User"
+#~ msgstr "Ommaviy foydalanuvchi"
 
 #, fuzzy
-msgid "Questions?"
-msgstr "Savollar bormi?"
+#~ msgid "Punycode Domain"
+#~ msgstr "Punikod domeni"
 
 #, fuzzy
-msgid "Ready to Embrace Your Fitness Journey?"
-msgstr "Fitnes sayohatingizni boshlashga tayyormisiz?"
+#~ msgid "Questions?"
+#~ msgstr "Savollar bormi?"
 
 #, fuzzy
-msgid "Ready to bring your digital vision to life?"
-msgstr "Raqamli g‘oyangizni hayotga tatbiq etishga tayyormisiz?"
+#~ msgid "Ready to Embrace Your Fitness Journey?"
+#~ msgstr "Fitnes sayohatingizni boshlashga tayyormisiz?"
 
 #, fuzzy
-msgid "Ready to embark on a journey of digital transformation?"
-msgstr "Raqamli o‘zgarish sayohatiga chiqishga tayyormisiz?"
+#~ msgid "Ready to bring your digital vision to life?"
+#~ msgstr "Raqamli g‘oyangizni hayotga tatbiq etishga tayyormisiz?"
 
 #, fuzzy
-msgid ""
-"Ready to embark on your auditory adventure? Order your EchoTunes Wireless "
-"Earbuds today and let the symphony begin."
-msgstr ""
-"Ovozli sarguzashtni boshlashga tayyormisiz? EchoTunes simsiz quloqchinlarini "
-"bugunoq buyurtma qiling va simfoniya boshlansin."
+#~ msgid "Ready to embark on a journey of digital transformation?"
+#~ msgstr "Raqamli o‘zgarish sayohatiga chiqishga tayyormisiz?"
 
 #, fuzzy
-msgid "Ready to make these web pages disappear into thin air? Are you sure?"
-msgstr ""
-"Bu veb-sahifalarni havoga uchirishga tayyormisiz? Ishonchingiz komilmi?"
+#~ msgid ""
+#~ "Ready to embark on your auditory adventure? Order your EchoTunes Wireless "
+#~ "Earbuds today and let the symphony begin."
+#~ msgstr ""
+#~ "Ovozli sarguzashtni boshlashga tayyormisiz? EchoTunes simsiz "
+#~ "quloqchinlarini bugunoq buyurtma qiling va simfoniya boshlansin."
 
 #, fuzzy
-msgid "Ready to make this web page disappear into thin air? Are you sure?"
-msgstr "Bu veb-sahifani havoga uchirishga tayyormisiz? Ishonchingiz komilmi?"
+#~ msgid "Ready to make these web pages disappear into thin air? Are you sure?"
+#~ msgstr ""
+#~ "Bu veb-sahifalarni havoga uchirishga tayyormisiz? Ishonchingiz komilmi?"
 
 #, fuzzy
-msgid "Rebranding"
-msgstr "Qayta brendlash"
+#~ msgid "Ready to make this web page disappear into thin air? Are you sure?"
+#~ msgstr ""
+#~ "Bu veb-sahifani havoga uchirishga tayyormisiz? Ishonchingiz komilmi?"
 
 #, fuzzy
-msgid "Record Rule"
-msgstr "Yozuv qoidasi"
+#~ msgid "Rebranding"
+#~ msgstr "Qayta brendlash"
 
 #, fuzzy
-msgid "Secure and Comfortable Fit"
-msgstr "Xavfsiz va qulay o‘rnatish"
+#~ msgid "Record Rule"
+#~ msgstr "Yozuv qoidasi"
 
 #, fuzzy
-msgid "Setting up your %s."
-msgstr "%s sozlanmoqda."
+#~ msgid "Secure and Comfortable Fit"
+#~ msgstr "Xavfsiz va qulay o‘rnatish"
 
 #, fuzzy
-msgid ""
-"Step into our past and witness the transformation of a simple idea into an "
-"innovative force. Our journey, born in a garage, reflects the power of "
-"passion and hard work."
-msgstr ""
-"O‘tmishimizga nazar soling va oddiy g‘oyaning innovatsion kuchga aylanishiga "
-"guvoh bo‘ling. Garajda boshlangan sayohatimiz ishtiyoq va mehnatning "
-"qudratini aks ettiradi."
+#~ msgid "Setting up your %s."
+#~ msgstr "%s sozlanmoqda."
 
 #, fuzzy
-msgid "Strategic Marketing Solutions"
-msgstr "Strategik marketing yechimlari"
+#~ msgid ""
+#~ "Step into our past and witness the transformation of a simple idea into "
+#~ "an innovative force. Our journey, born in a garage, reflects the power of "
+#~ "passion and hard work."
+#~ msgstr ""
+#~ "O‘tmishimizga nazar soling va oddiy g‘oyaning innovatsion kuchga "
+#~ "aylanishiga guvoh bo‘ling. Garajda boshlangan sayohatimiz ishtiyoq va "
+#~ "mehnatning qudratini aks ettiradi."
 
 #, fuzzy
-msgid "Strength Training:"
-msgstr "Kuch mashqlari:"
+#~ msgid "Strategic Marketing Solutions"
+#~ msgstr "Strategik marketing yechimlari"
 
 #, fuzzy
-msgid "Team spotlight"
-msgstr "Jamoa diqqat markazi"
+#~ msgid "Strength Training:"
+#~ msgstr "Kuch mashqlari:"
 
 #, fuzzy
-msgid ""
-"The compact charging case offers convenient on-the-go charging with a "
-"battery life that lasts up to 17h, you can enjoy your favorite tunes without "
-"interruption."
-msgstr ""
-"Ixcham zaryadlash qutisi 17 soatgacha davom etadigan batareya quvvati bilan "
-"qulay mobil zaryadlashni ta'minlaydi, sevimli kuylaringizdan uzluksiz "
-"bahramand bo‘lishingiz mumkin."
+#~ msgid "Team spotlight"
+#~ msgstr "Jamoa diqqat markazi"
 
 #, fuzzy
-msgid ""
-"This coaching program offers specialized strength-focused workouts, "
-"nutrition guidance, and expert coaching. Elevate your fitness level and "
-"achieve feats you never thought possible."
-msgstr ""
-"Ushbu murabbiylik dasturi kuchga yo‘naltirilgan maxsus mashg‘ulotlar, "
-"ovqatlanish bo‘yicha ko‘rsatmalar va ekspert murabbiylikni taklif etadi. "
-"Jismoniy tayyorgarlik darajangizni oshiring va ilgari imkonsiz deb o‘ylagan "
-"yutuqlarga erishing."
+#~ msgid ""
+#~ "The compact charging case offers convenient on-the-go charging with a "
+#~ "battery life that lasts up to 17h, you can enjoy your favorite tunes "
+#~ "without interruption."
+#~ msgstr ""
+#~ "Ixcham zaryadlash qutisi 17 soatgacha davom etadigan batareya quvvati "
+#~ "bilan qulay mobil zaryadlashni ta'minlaydi, sevimli kuylaringizdan "
+#~ "uzluksiz bahramand bo‘lishingiz mumkin."
 
 #, fuzzy
-msgid "To what purpose?"
-msgstr "Qanday maqsadda?"
+#~ msgid ""
+#~ "This coaching program offers specialized strength-focused workouts, "
+#~ "nutrition guidance, and expert coaching. Elevate your fitness level and "
+#~ "achieve feats you never thought possible."
+#~ msgstr ""
+#~ "Ushbu murabbiylik dasturi kuchga yo‘naltirilgan maxsus mashg‘ulotlar, "
+#~ "ovqatlanish bo‘yicha ko‘rsatmalar va ekspert murabbiylikni taklif etadi. "
+#~ "Jismoniy tayyorgarlik darajangizni oshiring va ilgari imkonsiz deb "
+#~ "o‘ylagan yutuqlarga erishing."
 
 #, fuzzy
-msgid "Transform Your Brand"
-msgstr "Brendingizni o‘zgartiring"
+#~ msgid "To what purpose?"
+#~ msgstr "Qanday maqsadda?"
 
 #, fuzzy
-msgid "Vegetable Salad, Beef Burger and Mango Ice Cream"
-msgstr "Sabzavotli salat, mol go‘shtli burger va mangoli muzqaymoq"
+#~ msgid "Transform Your Brand"
+#~ msgstr "Brendingizni o‘zgartiring"
 
 #, fuzzy
-msgid "View more themes"
-msgstr "Ko‘proq mavzularni ko‘rish"
+#~ msgid "Vegetable Salad, Beef Burger and Mango Ice Cream"
+#~ msgstr "Sabzavotli salat, mol go‘shtli burger va mangoli muzqaymoq"
 
 #, fuzzy
-msgid "We Are Coming Soon"
-msgstr "Tez orada kelayapmiz"
+#~ msgid "View more themes"
+#~ msgstr "Ko‘proq mavzularni ko‘rish"
 
 #, fuzzy
-msgid "We Are Down for Maintenance"
-msgstr "Biz texnik xizmat ko‘rsatish uchun vaqtincha ishlamayapmiz"
+#~ msgid "We Are Coming Soon"
+#~ msgstr "Tez orada kelayapmiz"
 
 #, fuzzy
-msgid ""
-"We believe that every fitness journey is unique. Our approach begins with "
-"understanding your fitness aspirations, your current lifestyle, and any "
-"challenges you face."
-msgstr ""
-"Biz har bir salomatlik yo‘lining o‘ziga xosligiga ishonamiz. Yondashuvimiz "
-"sizning sog‘lom turmush tarziga intilishingizni, hozirgi hayot tarzingizni "
-"va duch kelayotgan qiyinchiliklaringizni tushunishdan boshlanadi."
+#~ msgid "We Are Down for Maintenance"
+#~ msgstr "Biz texnik xizmat ko‘rsatish uchun vaqtincha ishlamayapmiz"
 
 #, fuzzy
-msgid "We found these links:"
-msgstr "Quyidagi havolalarni topdik:"
+#~ msgid ""
+#~ "We believe that every fitness journey is unique. Our approach begins with "
+#~ "understanding your fitness aspirations, your current lifestyle, and any "
+#~ "challenges you face."
+#~ msgstr ""
+#~ "Biz har bir salomatlik yo‘lining o‘ziga xosligiga ishonamiz. "
+#~ "Yondashuvimiz sizning sog‘lom turmush tarziga intilishingizni, hozirgi "
+#~ "hayot tarzingizni va duch kelayotgan qiyinchiliklaringizni tushunishdan "
+#~ "boshlanadi."
 
 #, fuzzy
-msgid ""
-"We monitor your progress meticulously, adjusting your plan as needed to "
-"ensure continuous improvement and results."
-msgstr ""
-"Uzluksiz takomillashish va natijalarni ta'minlash uchun rejangizni zarur "
-"hollarda o‘zgartirib, jarayoningizni sinchkovlik bilan kuzatib boramiz."
+#~ msgid "We found these links:"
+#~ msgstr "Quyidagi havolalarni topdik:"
 
 #, fuzzy
-msgid ""
-"We're driven by the aspiration to redefine industry standards, to exceed the "
-"expectations of our clients, and to foster a culture of continuous growth."
-msgstr ""
-"Biz sohada yangi standartlarni o‘rnatish, mijozlarimiz kutganidan ham yuqori "
-"natijalarga erishish va uzluksiz rivojlanish madaniyatini shakllantirish "
-"istagi bilan harakatlanamiz."
+#~ msgid ""
+#~ "We monitor your progress meticulously, adjusting your plan as needed to "
+#~ "ensure continuous improvement and results."
+#~ msgstr ""
+#~ "Uzluksiz takomillashish va natijalarni ta'minlash uchun rejangizni zarur "
+#~ "hollarda o‘zgartirib, jarayoningizni sinchkovlik bilan kuzatib boramiz."
 
 #, fuzzy
-msgid "Website Domain should be unique."
-msgstr "Veb-sayt domeni noyob bo‘lishi kerak."
+#~ msgid ""
+#~ "We're driven by the aspiration to redefine industry standards, to exceed "
+#~ "the expectations of our clients, and to foster a culture of continuous "
+#~ "growth."
+#~ msgstr ""
+#~ "Biz sohada yangi standartlarni o‘rnatish, mijozlarimiz kutganidan ham "
+#~ "yuqori natijalarga erishish va uzluksiz rivojlanish madaniyatini "
+#~ "shakllantirish istagi bilan harakatlanamiz."
 
 #, fuzzy
-msgid "Weight Loss Transformation"
-msgstr "Vazn yo‘qotish o‘zgarishi"
+#~ msgid "Website Domain should be unique."
+#~ msgstr "Veb-sayt domeni noyob bo‘lishi kerak."
 
 #, fuzzy
-msgid ""
-"Welcome to our comprehensive range of Tailored Fitness Coaching Services, "
-"with personalized workouts, customized nutrition plans, and unwavering "
-"support, we're committed to helping you achieve lasting results that align "
-"with your aspirations."
-msgstr ""
-"Moslashtirilgan fitnes murabbiylik xizmatlarimizning keng qamrovli "
-"to‘plamiga xush kelibsiz. Shaxsiy mashg‘ulotlar, moslashtirilgan ovqatlanish "
-"rejalari va doimiy qo‘llab-quvvatlash bilan biz sizning maqsadlaringizga mos "
-"keladigan uzoq muddatli natijalarga erishishingizga yordam berishga "
-"intilamiz."
+#~ msgid "Weight Loss Transformation"
+#~ msgstr "Vazn yo‘qotish o‘zgarishi"
 
 #, fuzzy
-msgid "Wellness Coaching"
-msgstr "Salomatlik murabbiyligi"
+#~ msgid ""
+#~ "Welcome to our comprehensive range of Tailored Fitness Coaching Services, "
+#~ "with personalized workouts, customized nutrition plans, and unwavering "
+#~ "support, we're committed to helping you achieve lasting results that "
+#~ "align with your aspirations."
+#~ msgstr ""
+#~ "Moslashtirilgan fitnes murabbiylik xizmatlarimizning keng qamrovli "
+#~ "to‘plamiga xush kelibsiz. Shaxsiy mashg‘ulotlar, moslashtirilgan "
+#~ "ovqatlanish rejalari va doimiy qo‘llab-quvvatlash bilan biz sizning "
+#~ "maqsadlaringizga mos keladigan uzoq muddatli natijalarga erishishingizga "
+#~ "yordam berishga intilamiz."
 
 #, fuzzy
-msgid "What Makes Me Proud"
-msgstr "Meni nima faxrlantiradi"
+#~ msgid "Wellness Coaching"
+#~ msgstr "Salomatlik murabbiyligi"
 
 #, fuzzy
-msgid "Wireless Freedom"
-msgstr "Simsiz erkinlik"
+#~ msgid "What Makes Me Proud"
+#~ msgstr "Meni nima faxrlantiradi"
 
 #, fuzzy
-msgid ""
-"With personalized fitness plans, tailored nutrition guidance, and consistent "
-"support, you'll shed unwanted pounds while building healthy habits that last."
-msgstr ""
-"Shaxsiy fitnes rejalari, moslashtirilgan ovqatlanish bo‘yicha yo‘l-yo‘riqlar "
-"va doimiy qo‘llab-quvvatlash bilan ortiqcha kilogrammlardan xalos bo‘lasiz "
-"va uzoq muddatli sog‘lom odatlarni shakllantirasiz."
+#~ msgid "Wireless Freedom"
+#~ msgstr "Simsiz erkinlik"
 
 #, fuzzy
-msgid ""
-"Your brand is your story. We help you tell it through cohesive visual "
-"identity and messaging that resonates with your audience."
-msgstr ""
-"Brendingiz - bu sizning hikoyangiz. Biz sizga auditoriyangizga ta'sir "
-"qiladigan yaxlit vizual identifikatsiya va xabarlar orqali uni yetkazishga "
-"yordam beramiz."
+#~ msgid ""
+#~ "With personalized fitness plans, tailored nutrition guidance, and "
+#~ "consistent support, you'll shed unwanted pounds while building healthy "
+#~ "habits that last."
+#~ msgstr ""
+#~ "Shaxsiy fitnes rejalari, moslashtirilgan ovqatlanish bo‘yicha yo‘l-"
+#~ "yo‘riqlar va doimiy qo‘llab-quvvatlash bilan ortiqcha kilogrammlardan "
+#~ "xalos bo‘lasiz va uzoq muddatli sog‘lom odatlarni shakllantirasiz."
 
 #, fuzzy
-msgid "a new image"
-msgstr "yangi rasm"
+#~ msgid ""
+#~ "Your brand is your story. We help you tell it through cohesive visual "
+#~ "identity and messaging that resonates with your audience."
+#~ msgstr ""
+#~ "Brendingiz - bu sizning hikoyangiz. Biz sizga auditoriyangizga ta'sir "
+#~ "qiladigan yaxlit vizual identifikatsiya va xabarlar orqali uni "
+#~ "yetkazishga yordam beramiz."
 
 #, fuzzy
-msgid "blog"
-msgstr "blog"
+#~ msgid "a new image"
+#~ msgstr "yangi rasm"
 
 #, fuzzy
-msgid "develop the brand"
-msgstr "brendni rivojlantirish"
+#~ msgid "blog"
+#~ msgstr "blog"
 
 #, fuzzy
-msgid "e-learning platform"
-msgstr "elektron ta'lim platformasi"
+#~ msgid "develop the brand"
+#~ msgstr "brendni rivojlantirish"
 
 #, fuzzy
-msgid "e.g. /my-awesome-page"
-msgstr "masalan, /ajoyib-sahifam"
+#~ msgid "e-learning platform"
+#~ msgstr "elektron ta'lim platformasi"
 
 #, fuzzy
-msgid "e.g. /your-website-page"
-msgstr "masalan, /veb-saytingiz-sahifasi"
+#~ msgid "e.g. /my-awesome-page"
+#~ msgstr "masalan, /ajoyib-sahifam"
 
 #, fuzzy
-msgid "forum"
-msgstr "forum"
+#~ msgid "e.g. /your-website-page"
+#~ msgstr "masalan, /veb-saytingiz-sahifasi"
 
 #, fuzzy
-msgid "get leads"
-msgstr "potensial mijozlar topish"
+#~ msgid "forum"
+#~ msgstr "forum"
 
 #, fuzzy
-msgid "inform customers"
-msgstr "mijozlarga ma'lumot berish"
+#~ msgid "get leads"
+#~ msgstr "potensial mijozlar topish"
 
 #, fuzzy
-msgid "online appointment system"
-msgstr "onlayn uchrashuv tizimi"
+#~ msgid "inform customers"
+#~ msgstr "mijozlarga ma'lumot berish"
 
 #, fuzzy
-msgid "online store"
-msgstr "onlayn do‘kon"
+#~ msgid "online appointment system"
+#~ msgstr "onlayn uchrashuv tizimi"
 
 #, fuzzy
-msgid "perfect website?"
-msgstr "mukammal veb-sayt"
+#~ msgid "online store"
+#~ msgstr "onlayn do‘kon"
 
 #, fuzzy
-msgid "recruitment platform"
-msgstr "ishga qabul qilish platformasi"
+#~ msgid "perfect website?"
+#~ msgstr "mukammal veb-sayt"
 
 #, fuzzy
-msgid "schedule appointments"
-msgstr "uchrashuvlarni rejalashtirish"
+#~ msgid "recruitment platform"
+#~ msgstr "ishga qabul qilish platformasi"
 
 #, fuzzy
-msgid "sell more"
-msgstr "ko‘proq sotish"
+#~ msgid "schedule appointments"
+#~ msgstr "uchrashuvlarni rejalashtirish"
 
 #, fuzzy
-msgid ""
-"<span class=\"pe-1\">We use cookies to provide you a better user experience "
-"on this website.</span>\n"
-"                                            <a href=\"/cookie-policy\" "
-"class=\"o_cookies_bar_text_policy btn btn-link btn-sm px-0 "
-"o_translate_inline\">Cookie Policy</a>"
-msgstr ""
-"<span class=\"pe-1\">Ushbu veb-saytda sizga yaxshiroq foydalanuvchi "
-"tajribasini taqdim etish uchun kuki-fayllardan foydalanamiz.</span> <a "
-"href=\"/cookie-policy\" class=\"o_cookies_bar_text_policy btn btn-link btn-"
-"sm px-0 o_translate_inline\">Kuki-fayllar siyosati</a>"
+#~ msgid "sell more"
+#~ msgstr "ko‘proq sotish"
 
 #, fuzzy
-msgid "The language of the keyword and related keywords."
-msgstr "Kalit so‘z va u bilan bog‘liq kalit so‘zlarning tili."
+#~ msgid ""
+#~ "<span class=\"pe-1\">We use cookies to provide you a better user "
+#~ "experience on this website.</span>\n"
+#~ "                                            <a href=\"/cookie-policy\" "
+#~ "class=\"o_cookies_bar_text_policy btn btn-link btn-sm px-0 "
+#~ "o_translate_inline\">Cookie Policy</a>"
+#~ msgstr ""
+#~ "<span class=\"pe-1\">Ushbu veb-saytda sizga yaxshiroq foydalanuvchi "
+#~ "tajribasini taqdim etish uchun kuki-fayllardan foydalanamiz.</span> <a "
+#~ "href=\"/cookie-policy\" class=\"o_cookies_bar_text_policy btn btn-link "
+#~ "btn-sm px-0 o_translate_inline\">Kuki-fayllar siyosati</a>"
 
 #, fuzzy
-msgid "Translate the whole content with AI"
-msgstr "Butun kontentni sun'iy intellekt yordamida tarjima qilish"
+#~ msgid "The language of the keyword and related keywords."
+#~ msgstr "Kalit so‘z va u bilan bog‘liq kalit so‘zlarning tili."
 
 #, fuzzy
-msgid "Google Analytics"
-msgstr "Google Analytics"
+#~ msgid "Translate the whole content with AI"
+#~ msgstr "Butun kontentni sun'iy intellekt yordamida tarjima qilish"
 
 #, fuzzy
-msgid "How to get my Measurement ID"
-msgstr "O‘lchov identifikatorini qanday olish mumkin"
+#~ msgid "Google Analytics"
+#~ msgstr "Google Analytics"
 
 #, fuzzy
-msgid "Measurement ID or Tag"
-msgstr "O‘lchov ID yoki tegi"
+#~ msgid "How to get my Measurement ID"
+#~ msgstr "O‘lchov identifikatorini qanday olish mumkin"
 
 #, fuzzy
-msgid "Track visits using Google Analytics or Google Tag Manager"
-msgstr ""
-"Google Analytics yoki Google Tag Manager yordamida tashriflarni kuzatish"
+#~ msgid "Measurement ID or Tag"
+#~ msgstr "O‘lchov ID yoki tegi"
 
 #, fuzzy
-msgid "UTM Campaign"
-msgstr "UTM kampaniyasi"
+#~ msgid "Track visits using Google Analytics or Google Tag Manager"
+#~ msgstr ""
+#~ "Google Analytics yoki Google Tag Manager yordamida tashriflarni kuzatish"
 
 #, fuzzy
-msgid "UTM Medium"
-msgstr "UTM vositasi"
+#~ msgid "UTM Campaign"
+#~ msgstr "UTM kampaniyasi"
 
 #, fuzzy
-msgid "UTM Source"
-msgstr "UTM manbasi"
+#~ msgid "UTM Medium"
+#~ msgstr "UTM vositasi"
 
 #, fuzzy
-msgid "Add predefined error message"
-msgstr "Oldindan belgilangan xato xabarini qo‘shish"
+#~ msgid "UTM Source"
+#~ msgstr "UTM manbasi"
+
+#, fuzzy
+#~ msgid "Add predefined error message"
+#~ msgstr "Oldindan belgilangan xato xabarini qo‘shish"

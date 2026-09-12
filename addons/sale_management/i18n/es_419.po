@@ -9,11 +9,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:40+0000\n"
-"PO-Revision-Date: 2026-08-31 18:06+0000\n"
+"POT-Creation-Date: 2026-09-11 17:41+0000\n"
+"PO-Revision-Date: 2026-09-10 21:07+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
-"odoo-s19-4/sale_management/es_419/>\n"
+"odoo-master/sale_management/es_419/>\n"
 "Language: es_419\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,6 +56,36 @@ msgid ""
 "* My Quotations\n"
 "* Monthly Turnover (Graph)\n"
 msgstr ""
+"\n"
+"Gestiona cotizaciones y órdenes de ventas\n"
+"==================================\n"
+"\n"
+"Esta aplicación te permite gestionar tus objetivos de venta de forma eficaz "
+"y eficiente al\n"
+"dar seguimiento a todas las órdenes de venta y su historial.\n"
+"\n"
+"Gestiona todo el flujo de trabajo de ventas:\n"
+"\n"
+"* **Cotización** -> **Orden de venta** -> **Factura**\n"
+"\n"
+"Preferencias (solo con Gestión de almacenes instalada)\n"
+"------------------------------------------------------\n"
+"\n"
+"Si también instalaste Gestión de almacenes, puedes gestionar las siguientes "
+"preferencias:\n"
+"\n"
+"* Envío: elige si la entrega será completa o parcial\n"
+"* Facturación: elige cómo se pagarán las facturas\n"
+"* Incoterms: términos de comercio internacional\n"
+"\n"
+"Con este módulo puedes personalizar el reporte de órdenes de venta y "
+"facturas con\n"
+"categorías, subtotales o saltos de página.\n"
+"\n"
+"El tablero de gerente de ventas incluirá\n"
+"------------------------------------------------\n"
+"* Mis cotizaciones \n"
+"* Volumen de ventas mensual (gráfico)\n"
 
 #. module: sale_management
 #. odoo-python
@@ -116,9 +146,20 @@ msgid "Attribute Values"
 msgstr ""
 
 #. module: sale_management
+#. odoo-javascript
+#: code:addons/sale_management/static/src/components/product_catalog/kanban_controller.js:0
+msgid "Back to Template"
+msgstr ""
+
+#. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__user_has_access
 msgid "Can User access"
 msgstr "El usuario puede acceder"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "Catalog"
+msgstr ""
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__collapse_composition
@@ -215,6 +256,11 @@ msgstr "Nombre en pantalla"
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__display_type
 msgid "Display Type"
 msgstr "Mostrar tipo"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "Enter a Description"
+msgstr ""
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_no_variant_attribute_value_ids
@@ -316,6 +362,11 @@ msgstr "Diario"
 #: model:ir.model.fields,field_description:sale_management.field_digest_digest__kpi_all_sale_total_value
 msgid "Kpi All Sale Total Value"
 msgstr "Valor total de todos los KPI de ventas"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__label
+msgid "Label"
+msgstr ""
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__write_uid
@@ -808,16 +859,16 @@ msgstr "días"
 msgid "e.g. Standard Consultancy Package"
 msgstr "Por ejemplo, Paquete estándar de consultoría"
 
-msgid "Config Settings"
-msgstr "Ajustes de configuración"
+#~ msgid "Config Settings"
+#~ msgstr "Ajustes de configuración"
 
-msgid "Create standardized offers with default products"
-msgstr "Crear ofertas estandarizadas con productos predeterminados"
+#~ msgid "Create standardized offers with default products"
+#~ msgstr "Crear ofertas estandarizadas con productos predeterminados"
 
-msgid "Missing required product and UoM on accountable sale quote line."
-msgstr ""
-"Falta el producto requerido y la UdM en la línea de cotización de venta "
-"contable."
+#~ msgid "Missing required product and UoM on accountable sale quote line."
+#~ msgstr ""
+#~ "Falta el producto requerido y la UdM en la línea de cotización de venta "
+#~ "contable."
 
-msgid "Invoicing Journal"
-msgstr "Diario de facturación"
+#~ msgid "Invoicing Journal"
+#~ msgstr "Diario de facturación"

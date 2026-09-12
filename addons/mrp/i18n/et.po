@@ -29,7 +29,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:44+0000\n"
+"POT-Creation-Date: 2026-09-11 17:41+0000\n"
 "PO-Revision-Date: 2026-08-31 14:26+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Estonian <https://translate.odoo.com/projects/odoo-s19-4/mrp/"
@@ -212,6 +212,11 @@ msgstr "'Valmistooted - %s' % object.name"
 #: model:ir.actions.report,print_report_name:mrp.action_report_mrp_mo_overview
 msgid "'MO Overview - %s' % object.display_name"
 msgstr "'Tootmistellimuse ülevaade - %s' % object.display_name"
+
+#. module: mrp
+#: model:ir.actions.report,print_report_name:mrp.action_report_mrp_packages
+msgid "'Packages - %s' % (object.name)"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_production_order
@@ -463,6 +468,11 @@ msgid "<span class=\"o_stat_text\">Manufacturing</span>"
 msgstr "<span class=\"o_stat_text\">Tootmine</span>"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "<span class=\"o_stat_text\">Moves</span>"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "<span class=\"o_stat_text\">OEE</span>"
 msgstr "<span class=\"o_stat_text\">Üldine tootluse aja eesmärk</span>"
@@ -481,6 +491,11 @@ msgstr "<span class=\"o_stat_text\">Operatsioonid<br/>Tootlikkus</span>"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Overview</span>"
 msgstr "<span class=\"o_stat_text\">Ülevaade</span>"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "<span class=\"o_stat_text\">Packages</span>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -716,6 +731,11 @@ msgid ""
 msgstr "Komplekti-tüüpi retseptil ei saa olla juurdetellimisreeglit."
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_res_groups
+msgid "Access Groups"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_rule__action
 msgid "Action"
 msgstr "Tegevus"
@@ -913,11 +933,6 @@ msgstr "Taotlus"
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
 msgid "Allocation Report"
 msgstr "Eraldamise aruanne"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
-msgid "Allocation Report Labels"
-msgstr "Erladamisaruande etiketid"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__allow_workorder_dependencies
@@ -1241,6 +1256,7 @@ msgstr ""
 "Järelsaatelehe järjestus, kui=0, tähendab, et seotud järelsaateleht puudub"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__barcode
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__barcode
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
 msgid "Barcode"
@@ -2297,6 +2313,11 @@ msgid "Destination Location"
 msgstr "Sihtkoht"
 
 #. module: mrp
+#: model:ir.actions.act_window,name:mrp.action_detailed_operations
+msgid "Detailed Operations"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Details"
 msgstr "Detailid"
@@ -2364,11 +2385,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_report_stock_report_stock_rule__display_name
 #: model:ir.model.fields,field_description:mrp.field_res_company__display_name
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:mrp.field_res_groups__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_allocation_report__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_forecasted_product_product__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_lot__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_move__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_move_line__display_name
+#: model:ir.model.fields,field_description:mrp.field_stock_package__display_name
+#: model:ir.model.fields,field_description:mrp.field_stock_package_history__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_picking__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_quant__display_name
@@ -2910,11 +2934,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_report_stock_report_stock_rule__id
 #: model:ir.model.fields,field_description:mrp.field_res_company__id
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__id
+#: model:ir.model.fields,field_description:mrp.field_res_groups__id
 #: model:ir.model.fields,field_description:mrp.field_stock_allocation_report__id
 #: model:ir.model.fields,field_description:mrp.field_stock_forecasted_product_product__id
 #: model:ir.model.fields,field_description:mrp.field_stock_lot__id
 #: model:ir.model.fields,field_description:mrp.field_stock_move__id
 #: model:ir.model.fields,field_description:mrp.field_stock_move_line__id
+#: model:ir.model.fields,field_description:mrp.field_stock_package__id
+#: model:ir.model.fields,field_description:mrp.field_stock_package_history__id
 #: model:ir.model.fields,field_description:mrp.field_stock_picking__id
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__id
 #: model:ir.model.fields,field_description:mrp.field_stock_quant__id
@@ -3368,6 +3395,11 @@ msgid "Link between products and their UoMs"
 msgstr ""
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "List view of detailed operations"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__location_id
 msgid "Location"
 msgstr "Asukoht"
@@ -3638,6 +3670,7 @@ msgstr "Tootmistoimingu tüüp"
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__mo_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__production_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__production_id
+#: model:ir.model.fields,field_description:mrp.field_stock_package_history__production_id
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -4435,9 +4468,42 @@ msgid "PDF"
 msgstr "PDF"
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_stock_package
+msgid "Package"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
+msgid "Package Content"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__package_history_ids
+msgid "Package History"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
+msgid "Package Label"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "Package barcode"
 msgstr "Pakendi triipkood"
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_production.py:0
+#: model:ir.actions.report,name:mrp.action_report_mrp_packages
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Packages"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__packages_count
+msgid "Packages Count"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__bom_id
@@ -4716,8 +4782,18 @@ msgstr "Prindi"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
+msgid "Print label as:"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
 msgid "Print labels as:"
 msgstr "Prindi etikette järgmisel kujul:"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
+msgid "Print on \"Put in Pack\""
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
@@ -5317,6 +5393,11 @@ msgid "Reserved"
 msgstr "Reserveeritud"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Reset to Draft"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__resource_id
 msgid "Resource"
 msgstr "Ressurss"
@@ -5379,6 +5460,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__message_has_sms_error
 msgid "SMS Delivery error"
 msgstr "Sõnumi kohaletoimetamise viga"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter__barcode
+msgid "Scan to select the workcenter in shopfloor."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split_line__date
@@ -5504,6 +5590,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_replenishment_tree_view
 msgid "Set as Bill of Materials"
 msgstr "Määra retseptiks"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Set to In Progress"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_configuration
@@ -5806,6 +5897,11 @@ msgid "Stock Moves"
 msgstr "Laosiirded"
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_stock_package_history
+msgid "Stock Package History"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model,name:mrp.model_stock_forecasted_product_product
 msgid "Stock Replenishment Report"
 msgstr "Lao juurdetellimise aruanne"
@@ -5948,6 +6044,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "The backorder %s has been created."
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.constraint,message:mrp.constraint_mrp_workcenter_barcode_company_uniq
+msgid "The barcode for a workcenter must be unique per company."
 msgstr ""
 
 #. module: mrp
@@ -6366,6 +6467,12 @@ msgid "To Produce"
 msgstr "Tooda"
 
 #. module: mrp
+#. odoo-javascript
+#: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
+msgid "To Replenish"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__search_date_category__today
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Today"
@@ -6544,8 +6651,8 @@ msgstr ""
 "Pole võimalik poolitada rohkema kogusega, kui esialgselt planeeriti toota."
 
 #. module: mrp
+#: model:ir.actions.server,name:mrp.action_production_order_unbuild
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__unbuild_id
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "Unbuild"
 msgstr "Lammuta"
@@ -6760,6 +6867,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "Visible to all"
 msgstr "Nähtav kõigile"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_move_line__visual_lot_name
+msgid "Visual Pre-generated Lot"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__reservation_state__confirmed
@@ -7465,154 +7577,158 @@ msgstr "tegelik kestus"
 msgid "split"
 msgstr "poolita"
 
-msgid "Allocation Report for Manufacturing Orders"
-msgstr "Tootmistellimuste jaotamise aruanne"
+#~ msgid "Allocation Report Labels"
+#~ msgstr "Erladamisaruande etiketid"
 
-msgid "Create backorder"
-msgstr "Loo järeltellimus"
+#~ msgid "Allocation Report for Manufacturing Orders"
+#~ msgstr "Tootmistellimuste jaotamise aruanne"
 
-msgid "MRP Reception Report"
-msgstr "MRP jaotamise aruanne"
+#~ msgid "Create backorder"
+#~ msgstr "Loo järeltellimus"
 
-msgid "No Backorder"
-msgstr "Järelsaatelehte pole"
+#~ msgid "MRP Reception Report"
+#~ msgstr "MRP jaotamise aruanne"
 
-msgid "Produce All"
-msgstr "Tooda kõik"
+#~ msgid "No Backorder"
+#~ msgstr "Järelsaatelehte pole"
 
-msgid "Set Quantities & Validate"
-msgstr "Määra kogused ja kinnita"
+#~ msgid "Produce All"
+#~ msgstr "Tooda kõik"
 
-msgid "Show Produce"
-msgstr "Näita Tooteid"
+#~ msgid "Set Quantities & Validate"
+#~ msgstr "Määra kogused ja kinnita"
 
-msgid "Show Produce All"
-msgstr "Näita Tooda kõik"
+#~ msgid "Show Produce"
+#~ msgstr "Näita Tooteid"
 
-msgid "Stock Reception Report"
-msgstr "Laovastuvõtu aruanne"
+#~ msgid "Show Produce All"
+#~ msgstr "Näita Tooda kõik"
 
-msgid "Technical field to check if produce all button can be shown"
-msgstr "Tehniline väli, et kontrollida, kas \"Tooda kõik\" nuppu saab kuvada"
+#~ msgid "Stock Reception Report"
+#~ msgstr "Laovastuvõtu aruanne"
 
-msgid "Technical field to check if produce button can be shown"
-msgstr "Tehniline väli, et kontrollida, kas \"Tooda\" nuppu saab kuvada"
+#~ msgid "Technical field to check if produce all button can be shown"
+#~ msgstr ""
+#~ "Tehniline väli, et kontrollida, kas \"Tooda kõik\" nuppu saab kuvada"
 
-msgid "Use Reception Report with Manufacturing Orders"
-msgstr "Kasuta vastuvõtuaruannet tootmistellimustega"
+#~ msgid "Technical field to check if produce button can be shown"
+#~ msgstr "Tehniline väli, et kontrollida, kas \"Tooda\" nuppu saab kuvada"
 
-msgid ""
-"View and allocate production quantities to customer orders or other "
-"manufacturing orders"
-msgstr ""
-"Vaata ja jaota tootmiskoguseid klienditellimustele või teistele "
-"tootmistellimustele"
+#~ msgid "Use Reception Report with Manufacturing Orders"
+#~ msgstr "Kasuta vastuvõtuaruannet tootmistellimustega"
 
-msgid "Check availability"
-msgstr "Kontrolli laoseisu"
+#~ msgid ""
+#~ "View and allocate production quantities to customer orders or other "
+#~ "manufacturing orders"
+#~ msgstr ""
+#~ "Vaata ja jaota tootmiskoguseid klienditellimustele või teistele "
+#~ "tootmistellimustele"
 
-msgid ""
-"Create operation level dependencies that will influence both planning and "
-"the status of work orders upon MO confirmation. If this feature is ticked, "
-"and nothing is specified, Odoo will assume that all operations can be "
-"started simultaneously."
-msgstr ""
-"Looge operatsioonitaseme sõltuvused, mis mõjutavad MO kinnitamisel nii "
-"planeerimist kui ka töökäskude olekut. Kui see funktsioon on valitud ja "
-"midagi pole määratud, eeldab Odoo, et kõiki toiminguid saab käivitada "
-"üheaegselt."
+#~ msgid "Check availability"
+#~ msgstr "Kontrolli laoseisu"
 
-msgid "MO Cancelled"
-msgstr "MO tühistatud"
+#~ msgid ""
+#~ "Create operation level dependencies that will influence both planning and "
+#~ "the status of work orders upon MO confirmation. If this feature is "
+#~ "ticked, and nothing is specified, Odoo will assume that all operations "
+#~ "can be started simultaneously."
+#~ msgstr ""
+#~ "Looge operatsioonitaseme sõltuvused, mis mõjutavad MO kinnitamisel nii "
+#~ "planeerimist kui ka töökäskude olekut. Kui see funktsioon on valitud ja "
+#~ "midagi pole määratud, eeldab Odoo, et kõiki toiminguid saab käivitada "
+#~ "üheaegselt."
 
-msgid "MO Confirmed"
-msgstr "MO kinnitatud"
+#~ msgid "MO Cancelled"
+#~ msgstr "MO tühistatud"
 
-msgid "MO Done"
-msgstr "Tootmistellimus tehtud"
+#~ msgid "MO Confirmed"
+#~ msgstr "MO kinnitatud"
 
-msgid "MO Progress"
-msgstr "MO edenemine"
+#~ msgid "MO Done"
+#~ msgstr "Tootmistellimus tehtud"
 
-msgid "MO To Close"
-msgstr "MO sulgeda"
+#~ msgid "MO Progress"
+#~ msgstr "MO edenemine"
 
-msgid "Operation Dependencies"
-msgstr "Operatsiooni sõltuvused"
+#~ msgid "MO To Close"
+#~ msgstr "MO sulgeda"
 
-msgid ""
-"Set the order that work orders should be processed in. Activate the feature "
-"within each BoM's Miscellaneous tab"
-msgstr ""
-"Määrake töökäskude töötlemise järjekord. Aktiveerige funktsioon iga BoMi "
-"vahekaardil Miscellaneous"
+#~ msgid "Operation Dependencies"
+#~ msgstr "Operatsiooni sõltuvused"
 
-msgid "The number of products already handled by this work order"
-msgstr "Selle töökäsuga juba töödeldud toodete arv"
+#~ msgid ""
+#~ "Set the order that work orders should be processed in. Activate the "
+#~ "feature within each BoM's Miscellaneous tab"
+#~ msgstr ""
+#~ "Määrake töökäskude töötlemise järjekord. Aktiveerige funktsioon iga BoMi "
+#~ "vahekaardil Miscellaneous"
+
+#~ msgid "The number of products already handled by this work order"
+#~ msgstr "Selle töökäsuga juba töödeldud toodete arv"
 
 #, fuzzy
-msgid "Time Remaining"
-msgstr "Aega jäänud"
+#~ msgid "Time Remaining"
+#~ msgstr "Aega jäänud"
 
-msgid "Total To Consume"
-msgstr "Kokku tarbida"
+#~ msgid "Total To Consume"
+#~ msgstr "Kokku tarbida"
 
-msgid "Unbuild: %s"
-msgstr "Võta lahti: %s"
+#~ msgid "Unbuild: %s"
+#~ msgstr "Võta lahti: %s"
 
-msgid "Use Operation Dependencies"
-msgstr "Kasuta operatsiooni sõltuvusi"
+#~ msgid "Use Operation Dependencies"
+#~ msgstr "Kasuta operatsiooni sõltuvusi"
 
-msgid "Website Messages"
-msgstr "Veebilehe sõnumid"
+#~ msgid "Website Messages"
+#~ msgstr "Veebilehe sõnumid"
 
-msgid "Website communication history"
-msgstr "Veebilehe suhtluse ajalugu"
+#~ msgid "Website communication history"
+#~ msgstr "Veebilehe suhtluse ajalugu"
 
-msgid "days"
-msgstr "päev(a)"
+#~ msgid "days"
+#~ msgstr "päev(a)"
 
-msgid "Final Location from procurement"
-msgstr "Lõplik asukoht hankimisest"
+#~ msgid "Final Location from procurement"
+#~ msgstr "Lõplik asukoht hankimisest"
 
-msgid ""
-"<p class=\"o_view_nocontent_smiling_face\">\n"
-"                        Upload files to your product\n"
-"                    </p><p>\n"
-"                        Use this feature to store any files, like drawings "
-"or specifications.\n"
-"                    </p>"
-msgstr ""
-"<p class=\"o_view_nocontent_smiling_face\">\n"
-"                        Laadige tootele failid üles\n"
-"                    </p><p>\n"
-"                        Kasutage seda võimalust failide säilitamiseks, nt "
-"joonistused või täpsustused.\n"
-"                    </p>"
+#~ msgid ""
+#~ "<p class=\"o_view_nocontent_smiling_face\">\n"
+#~ "                        Upload files to your product\n"
+#~ "                    </p><p>\n"
+#~ "                        Use this feature to store any files, like "
+#~ "drawings or specifications.\n"
+#~ "                    </p>"
+#~ msgstr ""
+#~ "<p class=\"o_view_nocontent_smiling_face\">\n"
+#~ "                        Laadige tootele failid üles\n"
+#~ "                    </p><p>\n"
+#~ "                        Kasutage seda võimalust failide säilitamiseks, nt "
+#~ "joonistused või täpsustused.\n"
+#~ "                    </p>"
 
-msgid "Attachments Count"
-msgstr "Manuste arv"
+#~ msgid "Attachments Count"
+#~ msgstr "Manuste arv"
 
-msgid "Files attached to the product."
-msgstr "Tootele lisatud failid."
+#~ msgid "Files attached to the product."
+#~ msgstr "Tootele lisatud failid."
 
-msgid "Hidden"
-msgstr "Peidetud"
+#~ msgid "Hidden"
+#~ msgstr "Peidetud"
 
-msgid ""
-"Leave hidden if document only accessible on product form.\n"
-"Select Bill of Materials to visualise this document as a product attachment "
-"when this product is in a bill of material."
-msgstr ""
-"Jäta nähtamatuks, kui dokument on saadaval ainult tootevormis.\n"
-"Vali materjalide loetelu (BoM), et visualiseerida see dokument toote "
-"lisandina, kui see toode on materjalide loetelus."
+#~ msgid ""
+#~ "Leave hidden if document only accessible on product form.\n"
+#~ "Select Bill of Materials to visualise this document as a product "
+#~ "attachment when this product is in a bill of material."
+#~ msgstr ""
+#~ "Jäta nähtamatuks, kui dokument on saadaval ainult tootevormis.\n"
+#~ "Vali materjalide loetelu (BoM), et visualiseerida see dokument toote "
+#~ "lisandina, kui see toode on materjalide loetelus."
 
-msgid "MRP : Visible at"
-msgstr "MRP : Nähtav"
+#~ msgid "MRP : Visible at"
+#~ msgstr "MRP : Nähtav"
 
-msgid "Product Attachments"
-msgstr "Toote manused"
+#~ msgid "Product Attachments"
+#~ msgstr "Toote manused"
 
-msgid "Product Document"
-msgstr "Tootedokument"
+#~ msgid "Product Document"
+#~ msgstr "Tootedokument"

@@ -10,11 +10,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:44+0000\n"
-"PO-Revision-Date: 2026-09-04 16:59+0000\n"
+"POT-Creation-Date: 2026-09-11 17:41+0000\n"
+"PO-Revision-Date: 2026-09-10 16:11+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
-"odoo-s19-4/website/es_419/>\n"
+"odoo-master/website/es_419/>\n"
 "Language: es_419\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -403,12 +403,6 @@ msgid "+ Field"
 msgstr "+ Campo"
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
-msgid "+ New"
-msgstr "+ Nuevo"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "+ New Website"
 msgstr "+ Nuevo sitio web"
@@ -779,6 +773,7 @@ msgstr "5x"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_numbers_charts
+#: model_terms:ir.ui.view,arch_db:website.s_text_chart
 msgid ""
 "75% of clients have been using the service for over a decade consistently."
 msgstr ""
@@ -926,8 +921,10 @@ msgstr ""
 "a>"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_chart_text
 #: model_terms:ir.ui.view,arch_db:website.s_image_text
 #: model_terms:ir.ui.view,arch_db:website.s_image_text_overlap
+#: model_terms:ir.ui.view,arch_db:website.s_text_chart
 #: model_terms:ir.ui.view,arch_db:website.s_text_image
 msgid ""
 "<a href=\"#\" class=\"btn btn-secondary o_translate_inline\">Learn more</a>"
@@ -3394,6 +3391,11 @@ msgid "Access Denied"
 msgstr "Acceso denegado"
 
 #. module: website
+#: model:ir.model,name:website.model_res_groups
+msgid "Access Groups"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__access_token
 msgid "Access Token"
 msgstr "Token de acceso"
@@ -3694,6 +3696,12 @@ msgstr "Agregar una nueva tarjeta"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option_plugin.js:0
+msgid "Add a new field after this one"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/form/form_option_plugin.js:0
 msgid "Add a new field at the end"
 msgstr "Agregar un nuevo campo al final"
 
@@ -3780,12 +3788,6 @@ msgstr "Agregue otros dominios aquí"
 #: code:addons/website/static/src/components/dialog/add_page_dialog.xml:0
 msgid "Add page template"
 msgstr "Agregar plantilla de página"
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/form/form_option_plugin.js:0
-msgid "Add some content after this field"
-msgstr "Agrega contenido después de este campo"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_page__is_new_page_template
@@ -5714,13 +5716,10 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/customize_website_plugin.js:0
 msgid ""
-"Changing theme requires to leave the editor. This will save all your "
-"changes, are you sure you want to proceed? Be careful that changing the "
-"theme will reset all your color customizations."
+"Changing the theme requires leaving the editor. This will save all your "
+"changes. Are you sure you want to proceed? Be aware that changing the theme "
+"will reset some layout, color, and style customizations."
 msgstr ""
-"Para cambiar el tema debes salir del editor. Esto guardará todos tus "
-"cambios. ¿De verdad quieres continuar? Ten en cuenta que cambiar el tema "
-"restablecerá todas tus personalizaciones de color."
 
 #. module: website
 #. odoo-javascript
@@ -5734,6 +5733,11 @@ msgstr "Límite de caracteres"
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Chart"
 msgstr "Gráfico"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Chart - Text"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -7602,6 +7606,7 @@ msgid "Discover more <i class=\"oi align-middle ms-1\" data-icon=\"east\"/>"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_chart_text
 #: model_terms:ir.ui.view,arch_db:website.s_image_text
 msgid "Discover new opportunities"
 msgstr "Descubre nuevas oportunidades"
@@ -7794,6 +7799,7 @@ msgstr "Mostrar adentro"
 #: model:ir.model.fields,field_description:website.field_portal_wizard_user__display_name
 #: model:ir.model.fields,field_description:website.field_res_company__display_name
 #: model:ir.model.fields,field_description:website.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:website.field_res_groups__display_name
 #: model:ir.model.fields,field_description:website.field_res_lang__display_name
 #: model:ir.model.fields,field_description:website.field_res_partner__display_name
 #: model:ir.model.fields,field_description:website.field_res_users__display_name
@@ -8508,6 +8514,7 @@ msgid "Enhance contrast and brightness"
 msgstr "Mejorar el contraste y el brillo"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_text_chart
 #: model_terms:ir.ui.view,arch_db:website.s_text_image
 #: model_terms:ir.ui.view,arch_db:website.s_text_image_full
 msgid "Enhance your experience"
@@ -8791,8 +8798,8 @@ msgstr ""
 "ser descubiertas."
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/options/searchbar_option.xml:0
+#. odoo-python
+#: code:addons/website/models/website.py:0
 msgid "Everything"
 msgstr "Todo"
 
@@ -10234,6 +10241,21 @@ msgid "Header Position"
 msgstr "Posición del encabezado"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_website__header_search_type
+msgid "Header Search Scope"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_website__header_search_order_by
+msgid "Header Search Sort"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_website__header_search_limit
+msgid "Header Search Suggestions"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_theme_website_page__header_text_color
 #: model:ir.model.fields,field_description:website.field_website_page__header_text_color
 #: model:ir.model.fields,field_description:website.field_website_page_options_mixin__header_text_color
@@ -10738,6 +10760,7 @@ msgstr "Quiero"
 #: model:ir.model.fields,field_description:website.field_portal_wizard_user__id
 #: model:ir.model.fields,field_description:website.field_res_company__id
 #: model:ir.model.fields,field_description:website.field_res_config_settings__id
+#: model:ir.model.fields,field_description:website.field_res_groups__id
 #: model:ir.model.fields,field_description:website.field_res_lang__id
 #: model:ir.model.fields,field_description:website.field_res_partner__id
 #: model:ir.model.fields,field_description:website.field_res_users__id
@@ -13877,8 +13900,8 @@ msgstr "Sin condición"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
-msgid "No links found, you are safe to delete."
-msgstr "No encontramos enlaces, puedes eliminarla sin problema."
+msgid "No links referring to this page have been found. You may delete it."
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -14056,6 +14079,13 @@ msgstr "Nada"
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 msgid "Number"
 msgstr "Número"
+
+#. module: website
+#: model:ir.model.fields,help:website.field_website__header_search_limit
+msgid ""
+"Number of autocomplete suggestions of the header search bar, 0 to disable "
+"them."
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_language_count
@@ -14277,6 +14307,153 @@ msgid ""
 "Schedule, organize, promote or sell events online; conferences, trainings, "
 "webinars, etc.\n"
 msgstr ""
+"Creador de sitios web de Odoo\n"
+"--------------------\n"
+"\n"
+"Crea un <a href=\"https://www.odoo.com/app/website\">sitio web gratuito</a> "
+"e increíble\n"
+"que podrás personalizar con facilidad con el <a href=\"https://www.odoo.com/"
+"app/website\">creador de sitios web</a> de Odoo.\n"
+"\n"
+"Crea un sitio web de nivel empresarial con nuestro creador de sitios web "
+"fácil de usar. Usa bloques\n"
+"de creación diseñados a la medida y edita todo en línea.\n"
+"\n"
+"Aprovecha los beneficios de nuestras funciones empresariales listas para "
+"usar: comercio electrónico, eventos, blogs,\n"
+"empleos, referencias de clientes, llamadas a la acción, etc.\n"
+"\n"
+"Edita todo en línea\n"
+"--------------------\n"
+"\n"
+"Crea sitios web llamativos sin necesidad de contar con conocimientos "
+"técnicos. El enfoque único de Odoo para \"editar\n"
+"en línea\" hace que crear un sitio web sea muy fácil. Olvídate de trabajar "
+"con\n"
+"un backend complejo, solo tienes que hacer clic en cualquier lugar para "
+"cambiar el contenido que quieras.\n"
+"\n"
+"\"¿Quieres cambiar el precio de un producto o ponerlo en negritas? ¿Quieres "
+"cambiar\n"
+"el título de un blog?\" Solo haz clic y cámbialo. Lo que ves es lo que "
+"recibes, de verdad.\n"
+"\n"
+"Increíble y tan hermoso que te robará el aliento\n"
+"---------------------------------\n"
+"\n"
+"Los bloques de creación de Odoo te permitirán diseñar sitios web modernos "
+"que no podrás crear\n"
+"con editores WYSIWYG tradicionales de páginas web.\n"
+"\n"
+"Ya sea para las descripciones de productos, blogs o páginas estáticas, no "
+"necesitas ser\n"
+"un diseñador profesional para crear contenido estético. Solo arrastra, "
+"suelta y\n"
+"personaliza tus bloques de creación.\n"
+"\n"
+"Listo para que lo uses de inmediato en tu empresa\n"
+"--------------------------------\n"
+"\n"
+"Activa funciones empresariales con un solo clic, como comercio "
+"electrónico, \n"
+"llamadas a la acción, empleos, eventos, referencias de clientes, blogs, "
+"etc.\n"
+"\n"
+"El backend de otras plataformas de comercio electrónico y sistemas de "
+"gestión de contenido tradicionales no está bien diseñado porque no es\n"
+"su enfoque principal. Con la integración de Odoo te beneficiarás del mejor "
+"software\n"
+"de gestión para monitorear órdenes, postulantes a las vacantes, leads, etc.\n"
+"\n"
+"Una gran experiencia en dispositivos móviles\n"
+"-------------------------\n"
+"\n"
+"Obtén un sitio web fácil de usar en tu celular gracias a nuestro diseño "
+"responsivo basado en\n"
+"Bootstrap. Todas las páginas se adaptan en automático al tamaño de la "
+"pantalla (\n"
+"celulares, tabletas, computadoras de escritorio). No tienes que preocuparte "
+"por el contenido en los celulares,\n"
+"se adapta de forma predeterminada.\n"
+"\n"
+"Herramientas SEO al alcance de tus manos\n"
+"-----------------------------\n"
+"\n"
+"La herramienta *Promocionar* sugiere palabras clave de acuerdo con los "
+"términos más buscados en Google.\n"
+"Las herramientas de optimización para buscadores se pueden utilizar de "
+"inmediato, sin tener que\n"
+"configurarlas.\n"
+"\n"
+"Google Analytics rastrea los eventos del carrito de compras de forma "
+"predeterminada. El mapa del sitio web y el\n"
+"contenido estructurado se crean en automático para que Google pueda "
+"indexarlos.\n"
+"\n"
+"Varios idiomas sin complicaciones\n"
+"-------------------------\n"
+"\n"
+"Traduce tu sitio web a varios idiomas sin problemas. Odoo propone\n"
+"y aplica traducciones en automático en tus páginas, según los cambios que "
+"hagas \n"
+"en la página principal.\n"
+"\n"
+"Plantillas para diseñadores\n"
+"---------------------------\n"
+"\n"
+"Las plantillas son increíbles y fáciles de personalizar. No necesitas "
+"escribir código para crear\n"
+"nuevas páginas, plantillas o bloques de creación. Usamos una estructura HTML "
+"limpia, con CSS de \n"
+"[Bootstrap](http://getbootstrap.com/).\n"
+"\n"
+"Personaliza todas las páginas al instante con un editor de plantillas "
+"integrado. Distribuye\n"
+"tu trabajo con facilidad como un módulo de Odoo.\n"
+"\n"
+"Diseño de cuadrícula fluida\n"
+"--------------------\n"
+"\n"
+"Solo tienes que arrastrar y soltar bloques de creación para diseñar páginas "
+"perfectas. Muévelos o cambia su tamaño\n"
+"para adaptarlos al diseño que estás buscando.\n"
+"\n"
+"Los bloques de creación se basan en un sistema de cuadrícula fluida que es "
+"responsivo y está optimizado para celulares.\n"
+"Con este sistema puedes escalar hasta 12 columnas a medida que el tamaño del "
+"dispositivo o la ventana de visualización\n"
+"aumenta.\n"
+"\n"
+"Plantillas profesionales\n"
+"-------------------\n"
+"\n"
+"Diseña una plantilla personalizada o vuelve a usar una plantilla predefinida "
+"para personalizar el diseño y\n"
+"la experiencia en tu sitio web.\n"
+"\n"
+"Prueba las paletas de colores con facilidad. Puedes cambiar el tema en "
+"cualquier momento con solo un\n"
+"clic.\n"
+"\n"
+"Integrado con las otras aplicaciones de Odoo\n"
+"-------------------------\n"
+"\n"
+"### Comercio electrónico\n"
+"\n"
+"Promociona productos, vende en línea y optimiza la experiencia de compra de "
+"tus clientes.\n"
+"\n"
+"\n"
+"### Blogs\n"
+"\n"
+"Escribe noticias, atrae a nuevos visitantes e incentiva la lealtad de tus "
+"clientes.\n"
+"\n"
+"\n"
+"### Eventos en línea\n"
+"\n"
+"Programa, organiza, promociona y vende eventos en línea, como conferencias, "
+"capacitaciones, webinarios, entre otros.\n"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_key_images
@@ -14615,6 +14792,11 @@ msgstr "Ordenar"
 #: code:addons/website/static/src/builder/plugins/options/searchbar_option.xml:0
 msgid "Order by"
 msgstr "Ordenar por"
+
+#. module: website
+#: model:ir.model.fields,help:website.field_website__header_search_order_by
+msgid "Order in which the header search bar sorts its results."
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_achievements_list
@@ -15145,8 +15327,8 @@ msgstr "Página que utiliza una copia mía"
 #. module: website
 #. odoo-javascript
 #. odoo-python
+#: code:addons/website/models/website.py:0
 #: code:addons/website/models/website_page.py:0
-#: code:addons/website/static/src/builder/plugins/options/searchbar_option.xml:0
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #: model:ir.ui.menu,name:website.menu_website_pages_list
 #: model_terms:ir.ui.view,arch_db:website.list_website_public_pages
@@ -15766,6 +15948,11 @@ msgstr "Productos"
 #: model_terms:ir.ui.view,arch_db:website.external_snippets
 msgid "Products Carousel"
 msgstr "Carrusel de productos"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.external_snippets
+msgid "Products Grid"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -18291,12 +18478,14 @@ msgid "Start saving  <span class=\"oi\" data-icon=\"east\" role=\"img\"/>"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_chart_text
 #: model_terms:ir.ui.view,arch_db:website.s_image_hexagonal
 #: model_terms:ir.ui.view,arch_db:website.s_image_text
 #: model_terms:ir.ui.view,arch_db:website.s_image_text_box
 #: model_terms:ir.ui.view,arch_db:website.s_image_text_overlap
 #: model_terms:ir.ui.view,arch_db:website.s_mockup_image
 #: model_terms:ir.ui.view,arch_db:website.s_tabs
+#: model_terms:ir.ui.view,arch_db:website.s_text_chart
 #: model_terms:ir.ui.view,arch_db:website.s_text_image
 msgid "Start with the customer – find out what they want and give it to them."
 msgstr "Empieza con el cliente: descubre lo que quiere y dáselo."
@@ -18315,6 +18504,11 @@ msgid ""
 msgstr ""
 "Manténgase al día de todas nuestras novedades y descubra qué pasará en las "
 "próximas semanas."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_chart_text
+msgid "Steady year-over-year growth driven by continuous product improvements."
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -18782,6 +18976,11 @@ msgstr "Prueba tus robots.txt con Google Search Console"
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Text"
 msgstr "Texto"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Text - Chart"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20148,6 +20347,11 @@ msgid ""
 "confirm."
 msgstr ""
 "Escriba '<i class=\"confirm_word\">sí</i>' a continuación si desea confirmar."
+
+#. module: website
+#: model:ir.model.fields,help:website.field_website__header_search_type
+msgid "Type of records the header search bar searches within."
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_rewrite__redirect_type
@@ -21977,6 +22181,7 @@ msgstr "Escriba uno o dos párrafos que describan su producto o servicios."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_card_offset
+#: model_terms:ir.ui.view,arch_db:website.s_chart_text
 #: model_terms:ir.ui.view,arch_db:website.s_features_image
 #: model_terms:ir.ui.view,arch_db:website.s_features_wall
 #: model_terms:ir.ui.view,arch_db:website.s_image_features
@@ -21985,6 +22190,7 @@ msgstr "Escriba uno o dos párrafos que describan su producto o servicios."
 #: model_terms:ir.ui.view,arch_db:website.s_image_text_box
 #: model_terms:ir.ui.view,arch_db:website.s_image_text_overlap
 #: model_terms:ir.ui.view,arch_db:website.s_mockup_image
+#: model_terms:ir.ui.view,arch_db:website.s_text_chart
 #: model_terms:ir.ui.view,arch_db:website.s_text_image
 #: model_terms:ir.ui.view,arch_db:website.s_text_image_full
 msgid ""
@@ -22735,6 +22941,22 @@ msgid ""
 "contacts, collect, submission, input, fields, questionnaire, survey, "
 "registration, request, images, pictures, photos, illustration, media, "
 "visual, get-in-touch"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid ""
+"content, articles, story, stories, combination, graphs, tables, diagrams, "
+"line, plot, bars, metrics, figures, data-visualization, statistics, stats, "
+"analytics, infographic, report"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid ""
+"content, articles, story, stories, combination, graphs, tables, diagrams, "
+"pie, doughnut, plot, bars, metrics, figures, data-visualization, statistics, "
+"stats, analytics, infographic, report"
 msgstr ""
 
 #. module: website
@@ -23976,3 +24198,21 @@ msgstr "✽  Pizzas"
 #: model_terms:ir.ui.view,arch_db:website.s_key_benefits
 msgid "✽  What We Offer"
 msgstr "✽  Qué ofrecemos"
+
+#~ msgid "+ New"
+#~ msgstr "+ Nuevo"
+
+#~ msgid "Add some content after this field"
+#~ msgstr "Agrega contenido después de este campo"
+
+#~ msgid ""
+#~ "Changing theme requires to leave the editor. This will save all your "
+#~ "changes, are you sure you want to proceed? Be careful that changing the "
+#~ "theme will reset all your color customizations."
+#~ msgstr ""
+#~ "Para cambiar el tema debes salir del editor. Esto guardará todos tus "
+#~ "cambios. ¿De verdad quieres continuar? Ten en cuenta que cambiar el tema "
+#~ "restablecerá todas tus personalizaciones de color."
+
+#~ msgid "No links found, you are safe to delete."
+#~ msgstr "No encontramos enlaces, puedes eliminarla sin problema."

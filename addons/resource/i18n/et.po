@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:46+0000\n"
+"POT-Creation-Date: 2026-09-11 17:43+0000\n"
 "PO-Revision-Date: 2026-08-31 19:44+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Estonian <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -350,6 +350,8 @@ msgid "Forever"
 msgstr ""
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__4
 msgid "Friday"
 msgstr "Reede"
@@ -493,6 +495,8 @@ msgid "Material Resources"
 msgstr ""
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__0
 msgid "Monday"
 msgstr "Esmaspäev"
@@ -551,6 +555,11 @@ msgid "Phone"
 msgstr "Telefon"
 
 #. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_tree
+msgid "Preview"
+msgstr ""
+
+#. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 msgid "Provided datetimes needs to be timezoned"
@@ -586,6 +595,16 @@ msgstr ""
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__recurrency_type
 msgid "Recurrency Type"
+msgstr ""
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__reference_calendar_id
+msgid "Reference Calendar"
+msgstr ""
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_calendar__reference_calendar_id
+msgid "Reference working hours used to compute the full-time equivalent."
 msgstr ""
 
 #. module: resource
@@ -669,6 +688,8 @@ msgstr ""
 "workload based on their weekly working hours."
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__5
 msgid "Saturday"
 msgstr "Laupäev"
@@ -727,6 +748,8 @@ msgid "Starting Date of Time Off"
 msgstr "Puudumise alguskuupäev"
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__6
 msgid "Sunday"
 msgstr "Pühapäev"
@@ -817,6 +840,8 @@ msgstr ""
 "eeldatav kestus 30 minutit."
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__3
 msgid "Thursday"
 msgstr "Neljapäev"
@@ -862,6 +887,8 @@ msgid "Total duration of attendances cannot exceed 24 hours"
 msgstr ""
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__1
 msgid "Tuesday"
 msgstr "Teisipäev"
@@ -890,12 +917,26 @@ msgid "Variable"
 msgstr ""
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_many2one/resource_calendar_many2one.js:0
+msgid "Variable (%(days)s %(dayLabel)s - %(hours)sh)"
+msgstr ""
+
+#. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
+msgid "Variable (%(days)s days - %(hours)sh)"
+msgstr ""
+
+#. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 #: model_terms:ir.ui.view,arch_db:resource.resource_resource_form
 msgid "Visible to all"
 msgstr "Nähtav kõigile"
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__2
 msgid "Wednesday"
 msgstr "Kolmapäev"
@@ -928,6 +969,7 @@ msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__work_time_rate
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Work Time Rate"
 msgstr "Tööaja määr"
 
@@ -954,6 +996,12 @@ msgstr "Töötab kuni"
 #: model:ir.model.fields,field_description:resource.field_resource_mixin__resource_calendar_id
 msgid "Working Hours"
 msgstr "Tööaeg"
+
+#. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
+msgid "Working Hours by Day"
+msgstr ""
 
 #. module: resource
 #. odoo-python
@@ -994,35 +1042,52 @@ msgstr ""
 msgid "You cannot compute the intervals without a calendar on no resource."
 msgstr ""
 
-msgid "Attendances can't overlap."
-msgstr "Kohalolekud ei saa kattuda."
+#. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_many2one/resource_calendar_many2one.js:0
+msgid "day"
+msgstr ""
 
-msgid "Avg"
-msgstr "Keskmine"
+#. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_many2one/resource_calendar_many2one.js:0
+msgid "days"
+msgstr ""
 
-msgid "Calendar in 2 weeks mode"
-msgstr "Kalender 2 nädala vaates"
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "from company"
+msgstr ""
 
-msgid "Explanation"
-msgstr "Selgitus"
+#~ msgid "Attendances can't overlap."
+#~ msgstr "Kohalolekud ei saa kattuda."
 
-msgid "First"
-msgstr "Esimene"
+#~ msgid "Avg"
+#~ msgstr "Keskmine"
 
-msgid "First week"
-msgstr "Esimene nädal"
+#~ msgid "Calendar in 2 weeks mode"
+#~ msgstr "Kalender 2 nädala vaates"
 
-msgid "Second"
-msgstr "Teine"
+#~ msgid "Explanation"
+#~ msgstr "Selgitus"
 
-msgid "Second week"
-msgstr "Teine nädal"
+#~ msgid "First"
+#~ msgstr "Esimene"
 
-msgid "Switch"
-msgstr "Vahetus"
+#~ msgid "First week"
+#~ msgstr "Esimene nädal"
 
-msgid "Total"
-msgstr "Kokku"
+#~ msgid "Second"
+#~ msgstr "Teine"
 
-msgid "Week Number"
-msgstr "Nädala number"
+#~ msgid "Second week"
+#~ msgstr "Teine nädal"
+
+#~ msgid "Switch"
+#~ msgstr "Vahetus"
+
+#~ msgid "Total"
+#~ msgstr "Kokku"
+
+#~ msgid "Week Number"
+#~ msgstr "Nädala number"

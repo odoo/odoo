@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:41+0000\n"
+"POT-Creation-Date: 2026-09-11 17:42+0000\n"
 "PO-Revision-Date: 2026-08-31 17:26+0000\n"
 "Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -336,7 +336,6 @@ msgid "Destination Location Type"
 msgstr "Место назначения Тип местоположения"
 
 #. module: purchase_stock
-#: model:ir.model.fields,field_description:purchase_stock.field_account_move__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_product_product__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_product_replenish__display_name
@@ -482,19 +481,12 @@ msgid "Go back to the purchase order to generate the vendor bill."
 msgstr "Вернитесь к заказу на покупку, чтобы сформировать счет поставщика."
 
 #. module: purchase_stock
-#. odoo-javascript
-#: code:addons/purchase_stock/static/src/stock_valuation/stock_valuation_report.js:0
-msgid "Goods Received Not Invoiced"
-msgstr "Товары получены, счета не выставлены"
-
-#. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_res_partner__group_rfq
 #: model:ir.model.fields,field_description:purchase_stock.field_res_users__group_rfq
 msgid "Group RFQ"
 msgstr "Группировать запросы котировок"
 
 #. module: purchase_stock
-#: model:ir.model.fields,field_description:purchase_stock.field_account_move__id
 #: model:ir.model.fields,field_description:purchase_stock.field_account_move_line__id
 #: model:ir.model.fields,field_description:purchase_stock.field_product_product__id
 #: model:ir.model.fields,field_description:purchase_stock.field_product_replenish__id
@@ -548,11 +540,6 @@ msgstr "Отправлено"
 #: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__is_installed_sale
 msgid "Is the Sale Module Installed"
 msgstr "Модуль «Продажи» установлен"
-
-#. module: purchase_stock
-#: model:ir.model,name:purchase_stock.model_account_move
-msgid "Journal Entry"
-msgstr "Запись в журнале"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_account_move_line
@@ -803,8 +790,6 @@ msgid "Purchase Order Line"
 msgstr "Позиция заказа на покупку"
 
 #. module: purchase_stock
-#. odoo-javascript
-#: code:addons/purchase_stock/static/src/stock_valuation/stock_valuation_report.js:0
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_lot__purchase_order_ids
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__purchase_id
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_help_message_template
@@ -1255,6 +1240,11 @@ msgid "Vendors"
 msgstr "Продавцы"
 
 #. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.product_product_tree_view_stock
+msgid "View Forecast"
+msgstr ""
+
+#. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_warehouse
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_report__picking_type_id
 msgid "Warehouse"
@@ -1349,14 +1339,20 @@ msgstr ""
 msgid "x"
 msgstr "x"
 
-msgid "<strong>Incoterm:</strong>"
-msgstr "<strong>Инкотерм:</strong>"
+#~ msgid "Goods Received Not Invoiced"
+#~ msgstr "Товары получены, счета не выставлены"
 
-msgid "Incoterm Location"
-msgstr "Инкотерм Местонахождение"
+#~ msgid "Journal Entry"
+#~ msgstr "Запись в журнале"
 
-msgid "Location from procurement"
-msgstr "Местоположение из закупки"
+#~ msgid "<strong>Incoterm:</strong>"
+#~ msgstr "<strong>Инкотерм:</strong>"
 
-msgid "Stock Valuation"
-msgstr "Оценка запасов"
+#~ msgid "Incoterm Location"
+#~ msgstr "Инкотерм Местонахождение"
+
+#~ msgid "Location from procurement"
+#~ msgstr "Местоположение из закупки"
+
+#~ msgid "Stock Valuation"
+#~ msgstr "Оценка запасов"

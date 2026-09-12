@@ -37,7 +37,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:44+0000\n"
+"POT-Creation-Date: 2026-09-11 17:41+0000\n"
 "PO-Revision-Date: 2026-08-31 13:49+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -706,6 +706,11 @@ msgid "Access Denied"
 msgstr "הגישה נדחתה"
 
 #. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_res_groups
+msgid "Access Groups"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__access_token
 msgid "Access Token"
 msgstr "אסימון גישה"
@@ -757,13 +762,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accounting"
 msgstr "הנהלת חשבונות"
-
-#. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config__journal_id
-#: model:ir.model.fields,help:point_of_sale.field_pos_order__sale_journal
-#: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_journal_id
-msgid "Accounting journal used to post POS session receipts and invoices."
-msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -1523,7 +1521,6 @@ msgstr "חזור"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/login_screen/login_screen.js:0
 msgid "Backend"
 msgstr "השאר משמרת פתוחה"
@@ -1638,7 +1635,7 @@ msgstr "כלל ברקוד"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
+#: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
 msgid "Barcode Scanner"
 msgstr ""
 
@@ -1956,7 +1953,6 @@ msgstr "מזומן נכנס\\ יוצא"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Cash In/Out"
 msgstr "מזומן נכנס/ יוצא"
@@ -2330,6 +2326,7 @@ msgstr "לקוח"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/chose_combo_popup/chose_combo_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/product_configurator_popup/product_configurator_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
@@ -2344,7 +2341,6 @@ msgstr "סגור"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Close Register"
 msgstr "סגור קופה"
@@ -2372,6 +2368,7 @@ msgid "Closed Register"
 msgstr "קופה סגורה"
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_tree
 msgid "Closing"
 msgstr "סגירה"
@@ -2404,6 +2401,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Closing Entry by product"
 msgstr "פקודת יומן סוגרת לפי מוצר"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__closing_journal_id
+#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_closing_journal_id
+msgid "Closing Journal"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__session_closing_mode
@@ -2879,12 +2882,6 @@ msgid "Create Partner"
 msgstr ""
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
-msgid "Create Product"
-msgstr ""
-
-#. module: point_of_sale
 #: model:ir.model,website_form_label:point_of_sale.model_res_partner
 msgid "Create a Customer"
 msgstr "יצירת לקוח"
@@ -3054,8 +3051,6 @@ msgid "Customer Account"
 msgstr "חשבון לקוח"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Customer Display"
 msgstr "תצוגת לקוח"
@@ -3587,6 +3582,7 @@ msgstr "הנחות"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_country__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_res_country_state__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_res_currency__display_name
+#: model:ir.model.fields,field_description:point_of_sale.field_res_groups__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_res_lang__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_res_partner__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users__display_name
@@ -4425,6 +4421,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_res_country__id
 #: model:ir.model.fields,field_description:point_of_sale.field_res_country_state__id
 #: model:ir.model.fields,field_description:point_of_sale.field_res_currency__id
+#: model:ir.model.fields,field_description:point_of_sale.field_res_groups__id
 #: model:ir.model.fields,field_description:point_of_sale.field_res_lang__id
 #: model:ir.model.fields,field_description:point_of_sale.field_res_partner__id
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users__id
@@ -4590,12 +4587,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_form_view
 msgid "Information about your product."
 msgstr "מידע אודות המוצר שלך ."
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
-msgid "Install App"
-msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_payment_method_form
@@ -4849,6 +4840,26 @@ msgid "Journal Item"
 msgstr ""
 
 #. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__journal_id
+#: model:ir.model.fields,help:point_of_sale.field_pos_order__sale_journal
+#: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_journal_id
+msgid "Journal used for customer invoices and refunds credit notes. "
+msgstr ""
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid ""
+"Journal used for the customer invoices, and for the session closing entries "
+"when no Closing Journal is set."
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__closing_journal_id
+#: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_closing_journal_id
+msgid "Journal used specifically for PoS session closing and reverse entries"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_payment_method_kanban
 msgid "Journal:"
 msgstr ""
@@ -4883,7 +4894,7 @@ msgstr "מנורת לד"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
+#: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
 msgid "LNA"
 msgstr ""
 
@@ -5137,7 +5148,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
+#: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
 msgid "Local Network Access"
 msgstr ""
 
@@ -6226,6 +6237,12 @@ msgid "Open Customer Display"
 msgstr ""
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
+msgid "Open Menu"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__open_session_ids
 msgid "Open PoS sessions that are using this payment method."
 msgstr "פתח משמרות קופה המשתמשות באמצעי תשלום זה."
@@ -6338,6 +6355,13 @@ msgstr "מוצרים אופציונליים"
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "Optional Products:"
 msgstr "מוצרים אופציונליים"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid ""
+"Optional journal for the session closing entries, to keep their sequence and "
+"their options apart from the customer invoices."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_product_product__pos_optional_product_ids
@@ -6515,6 +6539,11 @@ msgstr "הזמנות"
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_order_all_filtered
 msgid "Orders Analysis"
 msgstr "ניתוח נתוני הזמנות"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Orders journal"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7212,6 +7241,12 @@ msgid "Point of Sale Category"
 msgstr "קטגוריה של קופה"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_journal.py:0
+msgid "Point of Sale Closing"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_search
 msgid "Point of Sale Config"
 msgstr "תצורת קופה"
@@ -7676,12 +7711,6 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
-msgid "Print Report"
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/sale_details_button/sale_details_button.xml:0
 msgid "Print a report with all the sales of the current PoS Session"
 msgstr "הדפס דוח עם כל מכירות משמרת הקופה הנוכחית"
@@ -7808,7 +7837,6 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/select_default_printer_popup/select_default_printer_popup.xml:0
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_printer_form
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_printers
@@ -8333,7 +8361,6 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/confirmation_dialog/confirmation_dialog.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/error_dialog/error_dialog.js:0
 #: code:addons/point_of_sale/static/src/app/components/popups/error_dialog/error_dialog.xml:0
@@ -9358,6 +9385,7 @@ msgstr "מלאי, תצורת מוצר, חידוש מלאי, הנחות"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 msgid "Stop"
 msgstr "עצור"
@@ -11112,16 +11140,6 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
-msgid ""
-"Whenever you close a session, one entry is generated in the following "
-"accounting journal for all the orders not invoiced. Invoices are recorded in "
-"accounting separately."
-msgstr ""
-"בכל פעם שאתה סוגר משמרת, נוצרת רשומה אחת ביומן הנהלת חשבונות שלהלן עבור כל "
-"ההזמנות שלא חויבו. חשבוניות נרשמות בהנהלת חשבונות בנפרד."
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/select_default_printer_popup/select_default_printer_popup.xml:0
 msgid "Which one would you like to use as default for this device?"
@@ -11883,3 +11901,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt_product_line
 msgid "x"
 msgstr ""
+
+#~ msgid ""
+#~ "Whenever you close a session, one entry is generated in the following "
+#~ "accounting journal for all the orders not invoiced. Invoices are recorded "
+#~ "in accounting separately."
+#~ msgstr ""
+#~ "בכל פעם שאתה סוגר משמרת, נוצרת רשומה אחת ביומן הנהלת חשבונות שלהלן עבור "
+#~ "כל ההזמנות שלא חויבו. חשבוניות נרשמות בהנהלת חשבונות בנפרד."

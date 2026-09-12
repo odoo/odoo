@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.4a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 18:17+0000\n"
+"POT-Creation-Date: 2026-09-11 18:10+0000\n"
 "PO-Revision-Date: 2026-08-31 20:15+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -227,6 +227,11 @@ msgid "Argentinean - Stock"
 msgstr ""
 
 #. module: l10n_ar_stock
+#: model:ir.model,name:l10n_ar_stock.model_stock_picking_batch
+msgid "Batch Transfer"
+msgstr ""
+
+#. module: l10n_ar_stock
 #: model:ir.model.fields,field_description:l10n_ar_stock.field_stock_picking_type__l10n_ar_cai_authorization_code
 msgid "CAI"
 msgstr "CAI"
@@ -352,6 +357,7 @@ msgstr "El envío de los remitos está ocurriendo en segundo plano."
 
 #. module: l10n_ar_stock
 #: model:ir.model.fields,field_description:l10n_ar_stock.field_stock_picking__display_name
+#: model:ir.model.fields,field_description:l10n_ar_stock.field_stock_picking_batch__display_name
 #: model:ir.model.fields,field_description:l10n_ar_stock.field_stock_picking_type__display_name
 msgid "Display Name"
 msgstr "Nombre mostrado"
@@ -374,7 +380,14 @@ msgid "Generate Delivery Guide"
 msgstr "Generar Remito"
 
 #. module: l10n_ar_stock
+#: model:ir.actions.server,name:l10n_ar_stock.action_generate_delivery_guide_for_batch
+#: model_terms:ir.ui.view,arch_db:l10n_ar_stock.stock_picking_batch_form
+msgid "Generate Delivery Guides"
+msgstr ""
+
+#. module: l10n_ar_stock
 #: model:ir.model.fields,field_description:l10n_ar_stock.field_stock_picking__id
+#: model:ir.model.fields,field_description:l10n_ar_stock.field_stock_picking_batch__id
 #: model:ir.model.fields,field_description:l10n_ar_stock.field_stock_picking_type__id
 msgid "ID"
 msgstr "ID"
@@ -393,6 +406,16 @@ msgstr "L10N Ar Permitir Enviar Remito"
 #: model:ir.model.fields,field_description:l10n_ar_stock.field_stock_picking__l10n_ar_delivery_guide_cron_user_id
 msgid "L10N Ar Delivery Guide Cron User"
 msgstr "Usuario cron de los remitos"
+
+#. module: l10n_ar_stock
+#: model:ir.model.fields,field_description:l10n_ar_stock.field_stock_picking_batch__l10n_ar_show_generate_delivery_guide
+msgid "L10N Ar Show Generate Delivery Guide"
+msgstr ""
+
+#. module: l10n_ar_stock
+#: model:ir.model.fields,field_description:l10n_ar_stock.field_stock_picking_batch__l10n_ar_show_send_delivery_guide
+msgid "L10N Ar Show Send Delivery Guide"
+msgstr ""
 
 #. module: l10n_ar_stock
 #: model:ir.model.fields,field_description:l10n_ar_stock.field_stock_picking_type__l10n_ar_next_delivery_number
@@ -428,6 +451,12 @@ msgid "Send Delivery Guide"
 msgstr "Enviar Remito"
 
 #. module: l10n_ar_stock
+#: model:ir.actions.server,name:l10n_ar_stock.action_send_delivery_guide_for_batch
+#: model_terms:ir.ui.view,arch_db:l10n_ar_stock.stock_picking_batch_form
+msgid "Send Delivery Guides"
+msgstr ""
+
+#. module: l10n_ar_stock
 #. odoo-python
 #: code:addons/l10n_ar_stock/models/stock_picking.py:0
 msgid "Sent Delivery Guides"
@@ -452,11 +481,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_ar_stock.report_delivery_document
 msgid "Sequence to:"
 msgstr ""
-
-#. module: l10n_ar_stock
-#: model:ir.model,name:l10n_ar_stock.model_stock_picking
-msgid "Stock Picking - Delivery Guide (Uruguay)"
-msgstr "Recolección de inventario - Remito"
 
 #. module: l10n_ar_stock
 #. odoo-python
@@ -486,6 +510,11 @@ msgstr ""
 "%(errors)s"
 
 #. module: l10n_ar_stock
+#: model:ir.model,name:l10n_ar_stock.model_stock_picking
+msgid "Transfer"
+msgstr ""
+
+#. module: l10n_ar_stock
 #: model:mail.template,subject:l10n_ar_stock.email_template_ar_remitos_delivery_guide
 msgid ""
 "{{ object.company_id.name }} Document (Ref "
@@ -493,3 +522,6 @@ msgid ""
 msgstr ""
 "Documento de {{ object.company_id.name }} (Ref "
 "{{ object.l10n_ar_delivery_guide_number }})"
+
+#~ msgid "Stock Picking - Delivery Guide (Uruguay)"
+#~ msgstr "Recolección de inventario - Remito"

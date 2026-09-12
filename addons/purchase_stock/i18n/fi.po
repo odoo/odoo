@@ -24,10 +24,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-09-03 07:44+0000\n"
+"POT-Creation-Date: 2026-09-11 17:42+0000\n"
+"PO-Revision-Date: 2026-09-09 13:52+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
-"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-4/"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-master/"
 "purchase_stock/fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
@@ -348,7 +348,6 @@ msgid "Destination Location Type"
 msgstr "Kohdepaikan tyyppi"
 
 #. module: purchase_stock
-#: model:ir.model.fields,field_description:purchase_stock.field_account_move__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_product_product__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_product_replenish__display_name
@@ -494,19 +493,12 @@ msgid "Go back to the purchase order to generate the vendor bill."
 msgstr "Palaa ostotilaukseen ja luo toimittajan lasku."
 
 #. module: purchase_stock
-#. odoo-javascript
-#: code:addons/purchase_stock/static/src/stock_valuation/stock_valuation_report.js:0
-msgid "Goods Received Not Invoiced"
-msgstr "Vastaanotetut laskuttamattomat tuotteet"
-
-#. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_res_partner__group_rfq
 #: model:ir.model.fields,field_description:purchase_stock.field_res_users__group_rfq
 msgid "Group RFQ"
 msgstr "Ryhmittele tarjouspyynnöt"
 
 #. module: purchase_stock
-#: model:ir.model.fields,field_description:purchase_stock.field_account_move__id
 #: model:ir.model.fields,field_description:purchase_stock.field_account_move_line__id
 #: model:ir.model.fields,field_description:purchase_stock.field_product_product__id
 #: model:ir.model.fields,field_description:purchase_stock.field_product_replenish__id
@@ -560,11 +552,6 @@ msgstr "On toimitettu"
 #: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__is_installed_sale
 msgid "Is the Sale Module Installed"
 msgstr "Myynti-moduuli on asennettu"
-
-#. module: purchase_stock
-#: model:ir.model,name:purchase_stock.model_account_move
-msgid "Journal Entry"
-msgstr "Päiväkirjan kirjaus"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_account_move_line
@@ -815,8 +802,6 @@ msgid "Purchase Order Line"
 msgstr "Ostotilausrivi"
 
 #. module: purchase_stock
-#. odoo-javascript
-#: code:addons/purchase_stock/static/src/stock_valuation/stock_valuation_report.js:0
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_lot__purchase_order_ids
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__purchase_id
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_help_message_template
@@ -1267,6 +1252,11 @@ msgid "Vendors"
 msgstr "Toimittajat"
 
 #. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.product_product_tree_view_stock
+msgid "View Forecast"
+msgstr ""
+
+#. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_warehouse
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_report__picking_type_id
 msgid "Warehouse"
@@ -1362,14 +1352,20 @@ msgstr ""
 msgid "x"
 msgstr "x"
 
-msgid "<strong>Incoterm:</strong>"
-msgstr "<strong>Incoterm:</strong>"
+#~ msgid "Goods Received Not Invoiced"
+#~ msgstr "Vastaanotetut laskuttamattomat tuotteet"
 
-msgid "Incoterm Location"
-msgstr "Incotermin sijainti"
+#~ msgid "Journal Entry"
+#~ msgstr "Päiväkirjan kirjaus"
 
-msgid "Location from procurement"
-msgstr "Lopullinen sijainti hankinnasta"
+#~ msgid "<strong>Incoterm:</strong>"
+#~ msgstr "<strong>Incoterm:</strong>"
 
-msgid "Stock Valuation"
-msgstr "Varaston arvonmääritys"
+#~ msgid "Incoterm Location"
+#~ msgstr "Incotermin sijainti"
+
+#~ msgid "Location from procurement"
+#~ msgstr "Lopullinen sijainti hankinnasta"
+
+#~ msgid "Stock Valuation"
+#~ msgstr "Varaston arvonmääritys"

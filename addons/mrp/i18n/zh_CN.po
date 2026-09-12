@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:44+0000\n"
+"POT-Creation-Date: 2026-09-11 17:41+0000\n"
 "PO-Revision-Date: 2026-08-31 14:30+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -199,6 +199,11 @@ msgstr "'成品-%s' % object.name"
 #: model:ir.actions.report,print_report_name:mrp.action_report_mrp_mo_overview
 msgid "'MO Overview - %s' % object.display_name"
 msgstr "'物料清单（BOM）概述-%s' % object.display_name"
+
+#. module: mrp
+#: model:ir.actions.report,print_report_name:mrp.action_report_mrp_packages
+msgid "'Packages - %s' % (object.name)"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_production_order
@@ -447,6 +452,11 @@ msgid "<span class=\"o_stat_text\">Manufacturing</span>"
 msgstr "<span class=\"o_stat_text\">制造</span>"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "<span class=\"o_stat_text\">Moves</span>"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "<span class=\"o_stat_text\">OEE</span>"
 msgstr "<span class=\"o_stat_text\">设备综合效率</span>"
@@ -465,6 +475,11 @@ msgstr "<span class=\"o_stat_text\">作业<br/>效能</span>"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Overview</span>"
 msgstr "<span class=\"o_stat_text\">预览</span>"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "<span class=\"o_stat_text\">Packages</span>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -703,6 +718,11 @@ msgid ""
 msgstr "具有套件类型物料清单（BOM）的产品不能具有重新订购规则。"
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_res_groups
+msgid "Access Groups"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_rule__action
 msgid "Action"
 msgstr "操作"
@@ -896,11 +916,6 @@ msgstr "分配"
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
 msgid "Allocation Report"
 msgstr "分配报表"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
-msgid "Allocation Report Labels"
-msgstr "分配报表标签"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__allow_workorder_dependencies
@@ -1213,6 +1228,7 @@ msgid "Backorder sequence, if equals to 0 means there is not related backorder"
 msgstr "欠单序列，如果等于0，则表示无相关欠单"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__barcode
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__barcode
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
 msgid "Barcode"
@@ -2246,6 +2262,11 @@ msgid "Destination Location"
 msgstr "目标库位"
 
 #. module: mrp
+#: model:ir.actions.act_window,name:mrp.action_detailed_operations
+msgid "Detailed Operations"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Details"
 msgstr "详情"
@@ -2316,11 +2337,14 @@ msgstr "显示"
 #: model:ir.model.fields,field_description:mrp.field_report_stock_report_stock_rule__display_name
 #: model:ir.model.fields,field_description:mrp.field_res_company__display_name
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:mrp.field_res_groups__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_allocation_report__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_forecasted_product_product__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_lot__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_move__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_move_line__display_name
+#: model:ir.model.fields,field_description:mrp.field_stock_package__display_name
+#: model:ir.model.fields,field_description:mrp.field_stock_package_history__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_picking__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_quant__display_name
@@ -2854,11 +2878,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_report_stock_report_stock_rule__id
 #: model:ir.model.fields,field_description:mrp.field_res_company__id
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__id
+#: model:ir.model.fields,field_description:mrp.field_res_groups__id
 #: model:ir.model.fields,field_description:mrp.field_stock_allocation_report__id
 #: model:ir.model.fields,field_description:mrp.field_stock_forecasted_product_product__id
 #: model:ir.model.fields,field_description:mrp.field_stock_lot__id
 #: model:ir.model.fields,field_description:mrp.field_stock_move__id
 #: model:ir.model.fields,field_description:mrp.field_stock_move_line__id
+#: model:ir.model.fields,field_description:mrp.field_stock_package__id
+#: model:ir.model.fields,field_description:mrp.field_stock_package_history__id
 #: model:ir.model.fields,field_description:mrp.field_stock_picking__id
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__id
 #: model:ir.model.fields,field_description:mrp.field_stock_quant__id
@@ -3298,6 +3325,11 @@ msgid "Link between products and their UoMs"
 msgstr ""
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "List view of detailed operations"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__location_id
 msgid "Location"
 msgstr "位置"
@@ -3568,6 +3600,7 @@ msgstr "制造作业类型"
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__mo_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__production_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__production_id
+#: model:ir.model.fields,field_description:mrp.field_stock_package_history__production_id
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -4357,9 +4390,42 @@ msgid "PDF"
 msgstr "PDF"
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_stock_package
+msgid "Package"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
+msgid "Package Content"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__package_history_ids
+msgid "Package History"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
+msgid "Package Label"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "Package barcode"
 msgstr "包装条形码"
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_production.py:0
+#: model:ir.actions.report,name:mrp.action_report_mrp_packages
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Packages"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__packages_count
+msgid "Packages Count"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__bom_id
@@ -4633,8 +4699,18 @@ msgstr "打印"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
+msgid "Print label as:"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
 msgid "Print labels as:"
 msgstr "打印标签为"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
+msgid "Print on \"Put in Pack\""
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
@@ -5236,6 +5312,11 @@ msgid "Reserved"
 msgstr "已预留"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Reset to Draft"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__resource_id
 msgid "Resource"
 msgstr "资源"
@@ -5296,6 +5377,11 @@ msgstr "依据物料清单上定义的各道工序创建工单，以此管理车
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__message_has_sms_error
 msgid "SMS Delivery error"
 msgstr "短信发送错误"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter__barcode
+msgid "Scan to select the workcenter in shopfloor."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split_line__date
@@ -5421,6 +5507,11 @@ msgstr "设置一个小于初始需求的数量，以拆分制造订单。"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_replenishment_tree_view
 msgid "Set as Bill of Materials"
 msgstr "设为物料清单"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Set to In Progress"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_configuration
@@ -5721,6 +5812,11 @@ msgid "Stock Moves"
 msgstr "库存移动"
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_stock_package_history
+msgid "Stock Package History"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model,name:mrp.model_stock_forecasted_product_product
 msgid "Stock Replenishment Report"
 msgstr "库存补货报表"
@@ -5861,6 +5957,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "The backorder %s has been created."
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.constraint,message:mrp.constraint_mrp_workcenter_barcode_company_uniq
+msgid "The barcode for a workcenter must be unique per company."
 msgstr ""
 
 #. module: mrp
@@ -6263,6 +6364,12 @@ msgid "To Produce"
 msgstr "待生产"
 
 #. module: mrp
+#. odoo-javascript
+#: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
+msgid "To Replenish"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__search_date_category__today
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Today"
@@ -6440,8 +6547,8 @@ msgid "Unable to split with more than the quantity to produce."
 msgstr "分拆不能超出待生产数量。"
 
 #. module: mrp
+#: model:ir.actions.server,name:mrp.action_production_order_unbuild
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__unbuild_id
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "Unbuild"
 msgstr "分解"
@@ -6655,6 +6762,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "Visible to all"
 msgstr "对所有人可见"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_move_line__visual_lot_name
+msgid "Visual Pre-generated Lot"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__reservation_state__confirmed
@@ -7339,150 +7451,153 @@ msgstr "实际时长"
 msgid "split"
 msgstr "拆分"
 
-msgid "Allocation Report for Manufacturing Orders"
-msgstr "制造订单分配报表"
+#~ msgid "Allocation Report Labels"
+#~ msgstr "分配报表标签"
 
-msgid "Create backorder"
-msgstr "创建欠单"
+#~ msgid "Allocation Report for Manufacturing Orders"
+#~ msgstr "制造订单分配报表"
 
-msgid "MRP Reception Report"
-msgstr "物料需求计划（MRP）接收报表"
+#~ msgid "Create backorder"
+#~ msgstr "创建欠单"
 
-msgid "No Backorder"
-msgstr "无欠单"
+#~ msgid "MRP Reception Report"
+#~ msgstr "物料需求计划（MRP）接收报表"
 
-#, fuzzy
-msgid "Operation Category"
-msgstr "操作类别"
-
-msgid "Produce All"
-msgstr "生产全部"
-
-msgid "Set Quantities & Validate"
-msgstr "设置数量和验证"
-
-msgid "Show Produce"
-msgstr "显示生产"
-
-msgid "Show Produce All"
-msgstr "显示生产全部"
-
-msgid "Stock Reception Report"
-msgstr "库存接收报表"
-
-msgid "Technical field to check if produce all button can be shown"
-msgstr "查看是否显示“生产全部”按钮的技术字段"
-
-msgid "Technical field to check if produce button can be shown"
-msgstr "查看是否显示“生产”按钮的技术字段"
-
-msgid "Use Reception Report with Manufacturing Orders"
-msgstr "将接收报表与制造订单一起使用"
-
-msgid ""
-"View and allocate production quantities to customer orders or other "
-"manufacturing orders"
-msgstr "查看并分配客户订单或其他制造订单的生产数量"
-
-msgid "Check availability"
-msgstr "检查可用性"
-
-msgid ""
-"Create operation level dependencies that will influence both planning and "
-"the status of work orders upon MO confirmation. If this feature is ticked, "
-"and nothing is specified, Odoo will assume that all operations can be "
-"started simultaneously."
-msgstr ""
-"创建会影响制造订单（MO）确定后安排和工单状态的作业级依赖项。如果勾选该功能，"
-"且未指定任何内容，Odoo将假定所有作业可以同时开始。"
-
-msgid "MO Cancelled"
-msgstr "MO 已取消"
-
-msgid "MO Confirmed"
-msgstr "MO 已确认"
-
-msgid "MO Done"
-msgstr "MO 已完成"
-
-msgid "MO Progress"
-msgstr "制造订单进度"
-
-msgid "MO To Close"
-msgstr "待关闭制造订单"
-
-msgid "Operation Dependencies"
-msgstr "作业依赖性"
-
-msgid ""
-"Set the order that work orders should be processed in. Activate the feature "
-"within each BoM's Miscellaneous tab"
-msgstr "设置工单处理顺序。在各物料清单（BOM）的杂项标签中启用该功能"
-
-msgid "The number of products already handled by this work order"
-msgstr "该工单已处理的产品数量"
+#~ msgid "No Backorder"
+#~ msgstr "无欠单"
 
 #, fuzzy
-msgid "Time Remaining"
-msgstr "剩余时间"
+#~ msgid "Operation Category"
+#~ msgstr "操作类别"
 
-msgid "Total To Consume"
-msgstr "待消耗总计"
+#~ msgid "Produce All"
+#~ msgstr "生产全部"
 
-msgid "Unbuild: %s"
-msgstr "分解：%s"
+#~ msgid "Set Quantities & Validate"
+#~ msgstr "设置数量和验证"
 
-msgid "Use Operation Dependencies"
-msgstr "使用作业依赖性"
+#~ msgid "Show Produce"
+#~ msgstr "显示生产"
 
-msgid "Website Messages"
-msgstr "网站消息"
+#~ msgid "Show Produce All"
+#~ msgstr "显示生产全部"
 
-msgid "Website communication history"
-msgstr "网站沟通记录"
+#~ msgid "Stock Reception Report"
+#~ msgstr "库存接收报表"
 
-msgid "days"
-msgstr "天"
+#~ msgid "Technical field to check if produce all button can be shown"
+#~ msgstr "查看是否显示“生产全部”按钮的技术字段"
 
-msgid "Final Location from procurement"
-msgstr "采购物资最终位置"
+#~ msgid "Technical field to check if produce button can be shown"
+#~ msgstr "查看是否显示“生产”按钮的技术字段"
 
-msgid ""
-"<p class=\"o_view_nocontent_smiling_face\">\n"
-"                        Upload files to your product\n"
-"                    </p><p>\n"
-"                        Use this feature to store any files, like drawings "
-"or specifications.\n"
-"                    </p>"
-msgstr ""
-"<p class=\"o_view_nocontent_smiling_face\">\n"
-"                        上传文件至产品\n"
-"                    </p><p>\n"
-"                        使用该功能保存任何文件，如图纸或规范。\n"
-"                    </p>"
+#~ msgid "Use Reception Report with Manufacturing Orders"
+#~ msgstr "将接收报表与制造订单一起使用"
 
-msgid "Attachments Count"
-msgstr "附件数量"
+#~ msgid ""
+#~ "View and allocate production quantities to customer orders or other "
+#~ "manufacturing orders"
+#~ msgstr "查看并分配客户订单或其他制造订单的生产数量"
 
-msgid "Files attached to the product."
-msgstr "附至产品的文件。"
+#~ msgid "Check availability"
+#~ msgstr "检查可用性"
 
-msgid "Hidden"
-msgstr "隐藏"
+#~ msgid ""
+#~ "Create operation level dependencies that will influence both planning and "
+#~ "the status of work orders upon MO confirmation. If this feature is "
+#~ "ticked, and nothing is specified, Odoo will assume that all operations "
+#~ "can be started simultaneously."
+#~ msgstr ""
+#~ "创建会影响制造订单（MO）确定后安排和工单状态的作业级依赖项。如果勾选该功"
+#~ "能，且未指定任何内容，Odoo将假定所有作业可以同时开始。"
 
-msgid ""
-"Leave hidden if document only accessible on product form.\n"
-"Select Bill of Materials to visualise this document as a product attachment "
-"when this product is in a bill of material."
-msgstr ""
-"如果文档只能在产品表单中访问，则保持隐藏。\n"
-"选择“物料清单”，当该产品在物料清单中时，将此文档可视化为产品附件。"
+#~ msgid "MO Cancelled"
+#~ msgstr "MO 已取消"
 
-msgid "MRP : Visible at"
-msgstr "MRP ：可见于"
+#~ msgid "MO Confirmed"
+#~ msgstr "MO 已确认"
 
-msgid "Product Attachments"
-msgstr "产品附件"
+#~ msgid "MO Done"
+#~ msgstr "MO 已完成"
 
-msgid "Product Document"
-msgstr "产品文件"
+#~ msgid "MO Progress"
+#~ msgstr "制造订单进度"
+
+#~ msgid "MO To Close"
+#~ msgstr "待关闭制造订单"
+
+#~ msgid "Operation Dependencies"
+#~ msgstr "作业依赖性"
+
+#~ msgid ""
+#~ "Set the order that work orders should be processed in. Activate the "
+#~ "feature within each BoM's Miscellaneous tab"
+#~ msgstr "设置工单处理顺序。在各物料清单（BOM）的杂项标签中启用该功能"
+
+#~ msgid "The number of products already handled by this work order"
+#~ msgstr "该工单已处理的产品数量"
+
+#, fuzzy
+#~ msgid "Time Remaining"
+#~ msgstr "剩余时间"
+
+#~ msgid "Total To Consume"
+#~ msgstr "待消耗总计"
+
+#~ msgid "Unbuild: %s"
+#~ msgstr "分解：%s"
+
+#~ msgid "Use Operation Dependencies"
+#~ msgstr "使用作业依赖性"
+
+#~ msgid "Website Messages"
+#~ msgstr "网站消息"
+
+#~ msgid "Website communication history"
+#~ msgstr "网站沟通记录"
+
+#~ msgid "days"
+#~ msgstr "天"
+
+#~ msgid "Final Location from procurement"
+#~ msgstr "采购物资最终位置"
+
+#~ msgid ""
+#~ "<p class=\"o_view_nocontent_smiling_face\">\n"
+#~ "                        Upload files to your product\n"
+#~ "                    </p><p>\n"
+#~ "                        Use this feature to store any files, like "
+#~ "drawings or specifications.\n"
+#~ "                    </p>"
+#~ msgstr ""
+#~ "<p class=\"o_view_nocontent_smiling_face\">\n"
+#~ "                        上传文件至产品\n"
+#~ "                    </p><p>\n"
+#~ "                        使用该功能保存任何文件，如图纸或规范。\n"
+#~ "                    </p>"
+
+#~ msgid "Attachments Count"
+#~ msgstr "附件数量"
+
+#~ msgid "Files attached to the product."
+#~ msgstr "附至产品的文件。"
+
+#~ msgid "Hidden"
+#~ msgstr "隐藏"
+
+#~ msgid ""
+#~ "Leave hidden if document only accessible on product form.\n"
+#~ "Select Bill of Materials to visualise this document as a product "
+#~ "attachment when this product is in a bill of material."
+#~ msgstr ""
+#~ "如果文档只能在产品表单中访问，则保持隐藏。\n"
+#~ "选择“物料清单”，当该产品在物料清单中时，将此文档可视化为产品附件。"
+
+#~ msgid "MRP : Visible at"
+#~ msgstr "MRP ：可见于"
+
+#~ msgid "Product Attachments"
+#~ msgstr "产品附件"
+
+#~ msgid "Product Document"
+#~ msgstr "产品文件"

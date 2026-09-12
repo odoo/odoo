@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:46+0000\n"
+"POT-Creation-Date: 2026-09-11 17:43+0000\n"
 "PO-Revision-Date: 2026-08-31 21:04+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
@@ -54,12 +54,6 @@ msgstr "Nº do editor de código"
 #: code:addons/web/static/src/webclient/debug/debug_items.xml:0
 msgid "# Lines"
 msgstr "Nº de linhas"
-
-#. module: web
-#. odoo-python
-#: code:addons/web/controllers/export.py:0
-msgid "%(property_string)s (%(parent_name)s)"
-msgstr "%(property_string)s (%(parent_name)s)"
 
 #. module: web
 #. odoo-javascript
@@ -962,6 +956,12 @@ msgstr "Nome do aplicativo"
 #: code:addons/web/static/src/core/datetime/datetime_picker_popover.xml:0
 msgid "Apply"
 msgstr "Aplicar"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.js:0
+msgid "Apply changes"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -2412,6 +2412,12 @@ msgstr "Excluir regra"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
+msgid "Delete the template"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/webclient/offline_systray/offline_systray.js:0
 msgid "Deleted"
 msgstr "Excluído"
@@ -2521,6 +2527,7 @@ msgstr "Descartar todas as alterações"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/form/form_error_dialog/form_error_dialog.xml:0
+#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 msgid "Discard changes"
 msgstr "Descartar alterações"
 
@@ -2845,6 +2852,12 @@ msgstr "Editar na caixa de diálogo"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
+msgid "Edit template name and/or fields"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2many_tags/many2many_tags_field.js:0
 #: code:addons/web/static/src/views/view_components/group_config_menu.js:0
 msgid "Edit: %s"
@@ -2966,6 +2979,12 @@ msgid "European"
 msgstr "Europeu"
 
 #. module: web
+#. odoo-python
+#: code:addons/web/controllers/export.py:0
+msgid "Excel Workbook (.xlsx)"
+msgstr ""
+
+#. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/res_user_group_ids_field/res_user_group_ids_popover.xml:0
 msgid "Exclusively implies"
@@ -2997,12 +3016,6 @@ msgstr "Exportar"
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 msgid "Export Data"
 msgstr "Exportar dados"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
-msgid "Export Format:"
-msgstr "Formato de exportação:"
 
 #. module: web
 #. odoo-python
@@ -3284,6 +3297,12 @@ msgstr ""
 #: code:addons/web/static/src/core/session/check_identity.xml:0
 msgid "Forgot password?"
 msgstr "Esqueceu a senha?"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
+msgid "Format"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -3617,12 +3636,6 @@ msgstr ""
 #: code:addons/web/static/src/core/pwa/install_prompt.xml:0
 msgid "How to get the application"
 msgstr "Como obter o aplicativo"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
-msgid "I want to update data (import-compatible export)"
-msgstr "Quero atualizar os dados (importação compatível com exportação)"
 
 #. module: web
 #. odoo-javascript
@@ -4233,6 +4246,12 @@ msgstr "Rótulo:"
 #: code:addons/web/static/src/views/kanban/kanban_renderer.xml:0
 msgid "Lack of inspiration?"
 msgstr "Falta de inspiração?"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
+msgid "Languages"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -4927,12 +4946,6 @@ msgstr "Muçulmano"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.js:0
-msgid "My Odoo.com Account"
-msgstr "Minha conta Odoo.com"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/webclient/user_menu/user_menu_items.js:0
 msgid "My Preferences"
 msgstr "Minhas preferências"
 
@@ -5022,13 +5035,6 @@ msgstr "Novo design"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.js:0
-#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
-msgid "New template"
-msgstr "Novo modelo"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/views/fields/relational_utils.js:0
 msgid "New:"
 msgstr "Novo:"
@@ -5105,6 +5111,12 @@ msgstr "Sem propriedades"
 #: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 msgid "No Update:"
 msgstr "Sem atualização:"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.js:0
+msgid "No changes to apply"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -5803,6 +5815,12 @@ msgid "Pivot settings"
 msgstr "Definições de pivô"
 
 #. module: web
+#. odoo-python
+#: code:addons/web/controllers/export.py:0
+msgid "Plain Text (.csv)"
+msgstr ""
+
+#. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/ui/block_ui.js:0
 msgid "Please be patient."
@@ -5813,12 +5831,6 @@ msgstr "Pedimos um pouco de paciência."
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 msgid "Please complete your properties before adding a new one"
 msgstr "Preencha as propriedades antes de adicionar novas"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.js:0
-msgid "Please enter save field list name"
-msgstr "Insira o nome da lista de campos salva"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_view_form_inherit_view
@@ -6548,8 +6560,8 @@ msgstr "Salvar Visualização"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
-msgid "Save as:"
-msgstr "Salvar como:"
+msgid "Save as export template"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -6614,6 +6626,12 @@ msgstr "Pesquisar mais…"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
+msgid "Search fields"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/commands/default_providers.js:0
 msgid "Search for a command..."
 msgstr "Pesquisar comandos…"
@@ -6649,6 +6667,7 @@ msgstr "Buscar usuários…"
 #: code:addons/web/static/src/core/model_field_selector/model_field_selector_popover.xml:0
 #: code:addons/web/static/src/search/search_bar/offline_search_bar.xml:0
 #: code:addons/web/static/src/search/search_bar/search_bar.xml:0
+#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 #: code:addons/web/static/src/webclient/settings_form_view/settings_form_view.xml:0
 #: code:addons/web/static/src/webclient/switch_company_menu/switch_company_menu.xml:0
 msgid "Search..."
@@ -6742,6 +6761,12 @@ msgstr "Selecione um campo"
 #: code:addons/web/static/src/views/fields/domain/domain_field.xml:0
 msgid "Select a model to add a filter."
 msgstr "Selecione um modelo para adicionar um filtro."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
+msgid "Select a template..."
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -6895,6 +6920,12 @@ msgstr "Definir estado do Kanban como %s"
 #: code:addons/web/static/src/views/fields/priority/priority_field.js:0
 msgid "Set priority..."
 msgstr "Definir prioridade…"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
+msgid "Set the template name..."
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -7355,12 +7386,6 @@ msgstr "CPF/CNPJ"
 #: code:addons/web/static/src/core/colorlist/colorlist.js:0
 msgid "Teal"
 msgstr "Azul-esverdeado"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
-msgid "Template:"
-msgstr "Modelo:"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
@@ -8051,6 +8076,12 @@ msgstr "Ação do servidor não suportada"
 #: code:addons/web/static/src/views/pivot/pivot_view.js:0
 msgid "Untitled"
 msgstr "Sem título"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
+msgid "Updatable fields only"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -27804,3 +27835,27 @@ msgstr "秘"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "空"
 msgstr "空"
+
+#~ msgid "%(property_string)s (%(parent_name)s)"
+#~ msgstr "%(property_string)s (%(parent_name)s)"
+
+#~ msgid "Export Format:"
+#~ msgstr "Formato de exportação:"
+
+#~ msgid "I want to update data (import-compatible export)"
+#~ msgstr "Quero atualizar os dados (importação compatível com exportação)"
+
+#~ msgid "My Odoo.com Account"
+#~ msgstr "Minha conta Odoo.com"
+
+#~ msgid "New template"
+#~ msgstr "Novo modelo"
+
+#~ msgid "Please enter save field list name"
+#~ msgstr "Insira o nome da lista de campos salva"
+
+#~ msgid "Save as:"
+#~ msgstr "Salvar como:"
+
+#~ msgid "Template:"
+#~ msgstr "Modelo:"

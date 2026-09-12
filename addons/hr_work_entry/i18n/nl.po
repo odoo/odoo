@@ -12,10 +12,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:44+0000\n"
-"PO-Revision-Date: 2026-08-31 14:55+0000\n"
+"POT-Creation-Date: 2026-09-11 17:42+0000\n"
+"PO-Revision-Date: 2026-09-11 11:36+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
-"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-4/"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-master/"
 "hr_work_entry/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
@@ -124,6 +124,8 @@ msgid ""
 "A working schedule not linked to a company cannot have a country defined on "
 "one of its work entry types."
 msgstr ""
+"Bij 'werktijden' die niet aan een bedrijf zijn gekoppeld, mag bij de "
+"werkboekingstypes geen land zijn ingesteld."
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_adoption_company
@@ -1336,9 +1338,13 @@ msgstr "IW1"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_work_incapacity_worker_second_week
-#: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_work_incapacity_worker_second_week_short_term_employee
 msgid "IW2"
 msgstr "IW2"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_work_incapacity_worker_second_week_short_term_employee
+msgid "IW2EMP"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_work_incapacity
@@ -1983,7 +1989,7 @@ msgstr "OU"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_overtime_recoverable
-msgid "OT2"
+msgid "OT26"
 msgstr ""
 
 #. module: hr_work_entry
@@ -2763,7 +2769,6 @@ msgstr "SPT"
 #: model:hr.work.entry.type,display_code:hr_work_entry.au_work_entry_type_sick_leave
 #: model:hr.work.entry.type,display_code:hr_work_entry.bd_work_entry_type_sick_leave
 #: model:hr.work.entry.type,display_code:hr_work_entry.be_work_entry_type_sick_leave
-#: model:hr.work.entry.type,display_code:hr_work_entry.be_work_entry_type_sick_leave_without_certificate
 #: model:hr.work.entry.type,display_code:hr_work_entry.ch_work_entry_type_sick_leave
 #: model:hr.work.entry.type,display_code:hr_work_entry.fr_work_entry_type_sick_leave
 #: model:hr.work.entry.type,display_code:hr_work_entry.generic_work_entry_type_sick_leave
@@ -2796,6 +2801,11 @@ msgstr "SPT"
 #: model:hr.work.entry.type,display_code:hr_work_entry.us_work_entry_type_sick_leave
 msgid "STO"
 msgstr "ZV"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.be_work_entry_type_sick_leave_without_certificate
+msgid "STOWC"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_strike
@@ -2861,7 +2871,7 @@ msgstr "Second Degree Relatives Compassionate Leave"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__resource_calendar_selectable
 msgid "Selectable in Working Schedule"
-msgstr ""
+msgstr "Selecteerbaar in werktijden"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_senior_time_off
@@ -3180,7 +3190,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid ""
 "Tells whether this time type can be selected in working schedules or not"
-msgstr ""
+msgstr "Geeft aan of dit tijdtype kan worden geselecteerd in werkschema's"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_temporary_economic_unemployement_employee
@@ -3553,9 +3563,13 @@ msgstr "WAP"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_work_accident_second_week
-#: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_work_accident_second_week_short_term_employee
 msgid "WAS"
 msgstr "WAS"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_work_accident_second_week_short_term_employee
+msgid "WASEMP"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_work_accident_unpaid
@@ -3699,7 +3713,7 @@ msgstr "Vergoedingen na arbeidsongeval"
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid "Working Schedule"
-msgstr ""
+msgstr "Werktijden"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry_type__count_as__working_time
@@ -3773,95 +3787,95 @@ msgstr "bv. WERK100,VERLOF210, OUT..."
 msgid "workentries_"
 msgstr "workentries_"
 
-msgid "Birth Leave (Father / Co-parent)"
-msgstr "Geboorteverlof (Vader / Co-ouder)"
+#~ msgid "Birth Leave (Father / Co-parent)"
+#~ msgstr "Geboorteverlof (Vader / Co-ouder)"
 
-msgid "Brief Holiday (Birth)"
-msgstr "Geboorteverlof"
+#~ msgid "Brief Holiday (Birth)"
+#~ msgstr "Geboorteverlof"
 
-msgid "Child Adoption / Long-Term Foster Care"
-msgstr "Adoptie van kinderen / Langdurige pleegzorg"
+#~ msgid "Child Adoption / Long-Term Foster Care"
+#~ msgstr "Adoptie van kinderen / Langdurige pleegzorg"
 
-msgid "Child Ceremony (Communion / Secular Youth)"
-msgstr "Kinderceremonie (Communie / Secular Youth)"
+#~ msgid "Child Ceremony (Communion / Secular Youth)"
+#~ msgstr "Kinderceremonie (Communie / Secular Youth)"
 
-msgid "Civic or Judicial Duty"
-msgstr "Burgerlijke of gerechtelijke plicht"
+#~ msgid "Civic or Judicial Duty"
+#~ msgstr "Burgerlijke of gerechtelijke plicht"
 
-msgid "Death (One Day Leave)"
-msgstr "Overlijden (één dag verlof)"
+#~ msgid "Death (One Day Leave)"
+#~ msgstr "Overlijden (één dag verlof)"
 
-msgid "Death of Extended Family Member"
-msgstr "Overlijden van een familielid"
+#~ msgid "Death of Extended Family Member"
+#~ msgstr "Overlijden van een familielid"
 
-msgid "Death of Parent or In-law"
-msgstr "Overlijden van een (schoon)ouder"
+#~ msgid "Death of Parent or In-law"
+#~ msgstr "Overlijden van een (schoon)ouder"
 
-msgid "Death of Partner or Child"
-msgstr "Overlijden van partner of kind"
+#~ msgid "Death of Partner or Child"
+#~ msgstr "Overlijden van partner of kind"
 
-msgid "Double Time Hours"
-msgstr "Dubbele uren"
+#~ msgid "Double Time Hours"
+#~ msgstr "Dubbele uren"
 
-msgid "Marriage (Employee)"
-msgstr "Bruiloft (Werknemer)"
+#~ msgid "Marriage (Employee)"
+#~ msgstr "Bruiloft (Werknemer)"
 
-msgid "Marriage of a Family Member"
-msgstr "Bruiloft van een familielid"
+#~ msgid "Marriage of a Family Member"
+#~ msgstr "Bruiloft van een familielid"
 
-msgid "Overtime Hours (Paid at 150%)"
-msgstr "Overuren (betaald tegen 150%)"
+#~ msgid "Overtime Hours (Paid at 150%)"
+#~ msgstr "Overuren (betaald tegen 150%)"
 
-msgid "Prophylactic Time Off"
-msgstr "Preventief verlof"
+#~ msgid "Prophylactic Time Off"
+#~ msgstr "Preventief verlof"
 
-msgid "Retro Overtime Hours"
-msgstr "Achterstallige overuren"
+#~ msgid "Retro Overtime Hours"
+#~ msgstr "Achterstallige overuren"
 
-msgid "Retro Regular Pay Hours"
-msgstr "Achterstallige reguliere werkuren"
+#~ msgid "Retro Regular Pay Hours"
+#~ msgstr "Achterstallige reguliere werkuren"
 
-msgid "Small Unemployment (Brief Holiday)"
-msgstr "Klein verlet (korte vakantie)"
+#~ msgid "Small Unemployment (Brief Holiday)"
+#~ msgstr "Klein verlet (korte vakantie)"
 
-msgid "Urgent Family or Social Reason (Unpaid)"
-msgstr "Dwingende reden (familiaal, sociaal)(Onbetaald)"
+#~ msgid "Urgent Family or Social Reason (Unpaid)"
+#~ msgstr "Dwingende reden (familiaal, sociaal)(Onbetaald)"
 
-msgid "VY1"
-msgstr "VY1"
+#~ msgid "VY1"
+#~ msgstr "VY1"
 
-msgid "VY2"
-msgstr "VY2"
+#~ msgid "VY2"
+#~ msgstr "VY2"
 
-msgid ""
-"Vacation that a worker was unable to take due to certain suspensions and "
-"which is taken during the first year following the vacation year"
-msgstr ""
-"Verlof dat een arbeider vanwege bepaalde schorsingen niet heeft kunnen "
-"opnemen en dat wordt opgenomen tijdens het eerste jaar volgend op het "
-"verlofjaar"
+#~ msgid ""
+#~ "Vacation that a worker was unable to take due to certain suspensions and "
+#~ "which is taken during the first year following the vacation year"
+#~ msgstr ""
+#~ "Verlof dat een arbeider vanwege bepaalde schorsingen niet heeft kunnen "
+#~ "opnemen en dat wordt opgenomen tijdens het eerste jaar volgend op het "
+#~ "verlofjaar"
 
-msgid ""
-"Vacation that a worker was unable to take due to certain suspensions and "
-"which is taken during the second year following the vacation year"
-msgstr ""
-"Verlof dat een arbeider bepaalde schorsingen niet heeft kunnen opnemen en "
-"dat wordt opgenomen in het tweede jaar volgend op het verlofjaar"
+#~ msgid ""
+#~ "Vacation that a worker was unable to take due to certain suspensions and "
+#~ "which is taken during the second year following the vacation year"
+#~ msgstr ""
+#~ "Verlof dat een arbeider bepaalde schorsingen niet heeft kunnen opnemen en "
+#~ "dat wordt opgenomen in het tweede jaar volgend op het verlofjaar"
 
-msgid "Work Entry Type"
-msgstr "Type werkboeking"
+#~ msgid "Work Entry Type"
+#~ msgstr "Type werkboeking"
 
-msgid "Configuration"
-msgstr "Configuratie"
+#~ msgid "Configuration"
+#~ msgstr "Configuratie"
 
-msgid "Time"
-msgstr "Tijd"
+#~ msgid "Time"
+#~ msgstr "Tijd"
 
-msgid "Week Days Overtime"
-msgstr "Overuren op weekdagen"
+#~ msgid "Week Days Overtime"
+#~ msgstr "Overuren op weekdagen"
 
-msgid "Working Schedules"
-msgstr "Werktijden"
+#~ msgid "Working Schedules"
+#~ msgstr "Werktijden"
 
-msgid "Time Type Name"
-msgstr "Naam tijdtype"
+#~ msgid "Time Type Name"
+#~ msgstr "Naam tijdtype"

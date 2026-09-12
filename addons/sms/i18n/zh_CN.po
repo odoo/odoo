@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:43+0000\n"
+"POT-Creation-Date: 2026-09-11 17:43+0000\n"
 "PO-Revision-Date: 2026-08-31 17:07+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -121,6 +121,11 @@ msgstr ""
 "                                <span class=\"o_stat_text\">上下文操作</span>"
 
 #. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
+msgid "<span class=\"text-muted\">To</span>"
+msgstr ""
+
+#. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid ""
 "<span class=\"text-warning\" invisible=\"not no_record\">No records</span>"
@@ -141,9 +146,21 @@ msgstr ""
 "                        <span>确保已设置国家在</span>"
 
 #. module: sms
+#. odoo-python
+#: code:addons/sms/wizard/sms_composer.py:0
+msgid "A message can only be scheduled in comment mode"
+msgstr ""
+
+#. module: sms
 #: model:ir.model.constraint,message:sms.constraint_sms_tracker_sms_uuid_unique
 msgid "A record for this UUID already exists"
 msgstr "该 UUID 的记录已经存在"
+
+#. module: sms
+#. odoo-python
+#: code:addons/sms/wizard/sms_composer.py:0
+msgid "A scheduled date is needed to schedule a message"
+msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_account_code__account_id
@@ -298,6 +315,12 @@ msgid "Country-specific Registration Required"
 msgstr "需要进行国别注册"
 
 #. module: sms
+#. odoo-python
+#: code:addons/sms/wizard/sms_composer.py:0
+msgid "Create an SMS Template"
+msgstr ""
+
+#. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_account_code__create_uid
 #: model:ir.model.fields,field_description:sms.field_sms_account_phone__create_uid
 #: model:ir.model.fields,field_description:sms.field_sms_account_sender__create_uid
@@ -363,6 +386,7 @@ msgstr "已发货"
 #: model:ir.model.fields,field_description:sms.field_mail_followers__display_name
 #: model:ir.model.fields,field_description:sms.field_mail_message__display_name
 #: model:ir.model.fields,field_description:sms.field_mail_notification__display_name
+#: model:ir.model.fields,field_description:sms.field_mail_scheduled_message__display_name
 #: model:ir.model.fields,field_description:sms.field_mail_thread__display_name
 #: model:ir.model.fields,field_description:sms.field_res_company__display_name
 #: model:ir.model.fields,field_description:sms.field_sms_account_code__display_name
@@ -406,6 +430,17 @@ msgstr "文档模型名称"
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_duplicate
 msgid "Duplicate"
 msgstr "复制"
+
+#. module: sms
+#. odoo-python
+#: code:addons/sms/models/mail_scheduled_message.py:0
+msgid "Edit Scheduled SMS"
+msgstr ""
+
+#. module: sms
+#: model:ir.model.fields.selection,name:sms.selection__mail_scheduled_message__send_method__email
+msgid "Email"
+msgstr ""
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_thread
@@ -474,6 +509,7 @@ msgstr "IAP 账户"
 #: model:ir.model.fields,field_description:sms.field_mail_followers__id
 #: model:ir.model.fields,field_description:sms.field_mail_message__id
 #: model:ir.model.fields,field_description:sms.field_mail_notification__id
+#: model:ir.model.fields,field_description:sms.field_mail_scheduled_message__id
 #: model:ir.model.fields,field_description:sms.field_mail_thread__id
 #: model:ir.model.fields,field_description:sms.field_res_company__id
 #: model:ir.model.fields,field_description:sms.field_sms_account_code__id
@@ -526,6 +562,12 @@ msgstr "ID"
 #: model:ir.model.fields,help:sms.field_res_users__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "如果勾选此项， 某些消息将出现发送错误。"
+
+#. module: sms
+#. odoo-python
+#: code:addons/sms/wizard/sms_composer.py:0
+msgid "Impossible to determine the model for the template."
+msgstr ""
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__outgoing
@@ -763,6 +805,12 @@ msgid ""
 msgstr "收件人的电话号码。如果更改，将记录在收件人的个人资料中。"
 
 #. module: sms
+#. odoo-python
+#: code:addons/sms/wizard/sms_composer.py:0
+msgid "Please provide a name for the template."
+msgstr ""
+
+#. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_composer__composition_mode__comment
 msgid "Post on a document"
 msgstr "提交在文件上"
@@ -884,6 +932,7 @@ msgstr "重试"
 #: model:ir.model.fields,field_description:sms.field_mail_notification__sms_id
 #: model:ir.model.fields.selection,name:sms.selection__mail_message__message_type__sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__notification_type__sms
+#: model:ir.model.fields.selection,name:sms.selection__mail_scheduled_message__send_method__sms
 #: model:ir.ui.menu,name:sms.sms_sms_menu
 #: model_terms:ir.ui.view,arch_db:sms.sms_tsms_view_form
 msgid "SMS"
@@ -1072,10 +1121,48 @@ msgid "Sanitized Number"
 msgstr "净化数量"
 
 #. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form_template_save
+msgid "Save Template"
+msgstr ""
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form_template_save
+msgid "Save as SMS Template"
+msgstr ""
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
+msgid "Schedule"
+msgstr ""
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_composer__scheduled_date
+msgid "Scheduled Date"
+msgstr ""
+
+#. module: sms
+#: model:ir.model,name:sms.model_mail_scheduled_message
+#: model:ir.model.fields,field_description:sms.field_sms_composer__mail_scheduled_message_id
+msgid "Scheduled Message"
+msgstr ""
+
+#. module: sms
+#. odoo-python
+#: code:addons/sms/wizard/sms_composer.py:0
+msgid "Scheduling messages is only supported on mail.thread models."
+msgstr ""
+
+#. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_search
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_search
 msgid "Search SMS Templates"
 msgstr "搜索短信息模板"
+
+#. module: sms
+#. odoo-javascript
+#: code:addons/sms/static/src/components/sms_widget/sms_composer_template_selector.js:0
+msgid "Select a Template"
+msgstr ""
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -1087,6 +1174,11 @@ msgstr "发送"
 #: code:addons/sms/models/ir_actions_server.py:0
 msgid "Send %(template_name)s"
 msgstr "传送 %(template_name)s"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_mail_scheduled_message__send_method
+msgid "Send Method"
+msgstr ""
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_tree
@@ -1241,6 +1333,11 @@ msgid "Template Filename"
 msgstr "模板文件名"
 
 #. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_composer__template_name
+msgid "Template Name"
+msgstr ""
+
+#. module: sms
 #: model:ir.actions.act_window,name:sms.sms_template_preview_action
 msgid "Template Preview"
 msgstr "模板预览"
@@ -1334,11 +1431,6 @@ msgstr "此电话号码被列入短信营销黑名单。点击取消黑名单。
 #: code:addons/sms/tools/sms_api.py:0
 msgid "This phone number/account has been banned from our service."
 msgstr "此电话号码/帐户已被禁止使用我们的服务。"
-
-#. module: sms
-#: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
-msgid "To"
-msgstr "至"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_ir_actions_server__state
@@ -1577,6 +1669,11 @@ msgid "e.g. en_US or {{ object.partner_id.lang }}"
 msgstr "例如：en_US或{{ object.partner_id.lang }}。"
 
 #. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form_template_save
+msgid "e.g: Send order confirmation"
+msgstr ""
+
+#. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "out of"
 msgstr "之外"
@@ -1592,3 +1689,6 @@ msgstr "收件人的电话号码无效，将不会收到此短信。"
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "record:"
 msgstr "记录："
+
+#~ msgid "To"
+#~ msgstr "至"

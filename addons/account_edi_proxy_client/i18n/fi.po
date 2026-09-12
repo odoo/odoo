@@ -8,10 +8,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-08-31 19:18+0000\n"
+"POT-Creation-Date: 2026-09-11 17:42+0000\n"
+"PO-Revision-Date: 2026-09-10 13:11+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
-"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-4/"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-master/"
 "account_edi_proxy_client/fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
@@ -36,6 +36,19 @@ msgid ""
 "- Authentication offers an additionnal level of security to avoid "
 "impersonification, in case someone gains to the user's database.\n"
 msgstr ""
+"\n"
+"Tämä moduuli lisää yleisiä ominaisuuksia Odoo tietokannan rekisteröimiseksi "
+"välityspalvelimeen, joka vastaa tietojen vastaanottamisesta (web-palveluiden "
+"pyyntöjen kautta).\n"
+"- Edi_proxy_user -käyttäjällä on yksilöllinen tunniste tietyssä proxy-"
+"tyypissä (esim. l10n_it_edi, peppol), jonka\n"
+"avulla käyttäjä voidaan tunnistaa tämän vastaanottaessa hänelle osoitetun "
+"asiakirjan. Se on liitetty tiettyyn yritykseen tietyssä\n"
+"Odoo-tietokannassa.\n"
+"- Salausominaisuuksien avulla voidaan purkaa kaikki käyttäjän tiedot, kun ne "
+"vastaanotetaan välityspalvelimelta.\n"
+"- Tunnistautuminen tarjoaa lisäturvatason, jolla vältetään toisena henkilönä "
+"esiintyminen, jos joku pääsee käsiksi käyttäjän tietokantaan.\n"
 
 #. module: account_edi_proxy_client
 #. odoo-python
@@ -44,6 +57,12 @@ msgid ""
 "A user already exists with theses credentials on our server. Please check "
 "your information."
 msgstr "Palvelimellamme on jo käyttäjä näillä tunnuksilla. Tarkista tietosi."
+
+#. module: account_edi_proxy_client
+#. odoo-python
+#: code:addons/account_edi_proxy_client/models/account_edi_proxy_user.py:0
+msgid "A user already exists with this identification."
+msgstr ""
 
 #. module: account_edi_proxy_client
 #: model:ir.model,name:account_edi_proxy_client.model_account_edi_proxy_client_user
@@ -167,7 +186,7 @@ msgstr "Välityspalvelimen tyyppi"
 #. module: account_edi_proxy_client
 #: model:ir.module.module,shortdesc:base.module_account_edi_proxy_client
 msgid "Proxy features for account_edi"
-msgstr ""
+msgstr "Account_edi -välityspalvelinominaisuudet"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__refresh_token

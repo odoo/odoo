@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:41+0000\n"
+"POT-Creation-Date: 2026-09-11 17:42+0000\n"
 "PO-Revision-Date: 2026-08-31 14:16+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -61,10 +61,34 @@ msgstr ""
 
 #. module: calendar
 #. odoo-python
+#: code:addons/calendar/models/calendar_alarm_manager.py:0
+msgid "%(date_start)s, %(time_start)s - %(date_stop)s, %(time_stop)s"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_alarm_manager.py:0
+msgid "%(date_start)s, %(time_start)s - %(time_stop)s"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 #, fuzzy
 msgid "%(day)s at (%(start)s To %(end)s) (%(timezone)s)"
 msgstr "%(day)s kuni (%(start)sdan %(end)sgacha) (%(timezone)s)"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_alarm_manager.py:0
+msgid "%(time_start)s - %(date_stop)s, %(time_stop)s"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_alarm_manager.py:0
+msgid "%(time_start)s - %(time_stop)s"
+msgstr ""
 
 #. module: calendar
 #. odoo-python
@@ -98,6 +122,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.js:0
 msgid "(No Title)"
+msgstr ""
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_filter_section.js:0
+msgid "+ Add guests"
 msgstr ""
 
 #. module: calendar
@@ -1417,6 +1447,7 @@ msgstr "Taqvim"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_alarm_view_form
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_alarm_view_kanban
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_alarm_tree
 #, fuzzy
 msgid "Calendar Alarm"
@@ -1522,11 +1553,6 @@ msgid "Calendar: Reminder"
 msgstr "Taqvim: Eslatma"
 
 #. module: calendar
-#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_calendar
-msgid "Calendars"
-msgstr ""
-
-#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__can_edit_body
 #, fuzzy
 msgid "Can Edit Body"
@@ -1543,12 +1569,6 @@ msgstr ""
 "Tashkilotchi hodisada yolg‘iz ekanligini tekshiring, ya'ni tashkilotchi "
 "hodisani rad etmagan yagona shaxs bo‘lsa (faqat tashkilotchi yagona "
 "ishtirokchi bo‘lmasa)"
-
-#. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_filters__partner_checked
-#, fuzzy
-msgid "Checked"
-msgstr "Belgilangan"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__external_calendar_provider
@@ -2031,6 +2051,11 @@ msgid "Event Recurrence Rule"
 msgstr "Tadbirning takrorlanish qoidasi"
 
 #. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_type_tree
+msgid "Event Tag"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__display_time
 #, fuzzy
 msgid "Event Time"
@@ -2292,6 +2317,11 @@ msgstr "HTTP yo‘naltirish"
 #, fuzzy
 msgid "Has Message"
 msgstr "Xabar mavjud"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_res_users_settings__calendar_hide_my
+msgid "Hide My Calendar from Calendar"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__interval__hours
@@ -2576,6 +2606,11 @@ msgid "Me"
 msgstr "Men"
 
 #. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_calendar
+msgid "Meet with"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__mail_activity_type__category__meeting
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 #, fuzzy
@@ -2588,18 +2623,16 @@ msgid "Meeting Activities"
 msgstr ""
 
 #. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_res_partner__meeting_display_label
+#: model:ir.model.fields,field_description:calendar.field_res_users__meeting_display_label
+msgid "Meeting Display Label"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__name
 #, fuzzy
 msgid "Meeting Subject"
 msgstr "Uchrashuv mavzusi"
-
-#. module: calendar
-#: model:ir.actions.act_window,name:calendar.action_calendar_event_type
-#: model:ir.ui.menu,name:calendar.menu_calendar_event_type
-#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_type_tree
-#, fuzzy
-msgid "Meeting Types"
-msgstr "Uchrashuv turlari"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__videocall_location
@@ -2614,6 +2647,8 @@ msgid "Meeting linked"
 msgstr "Uchrashuvga bog‘langan"
 
 #. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/res_partner.py:0
 #: model:ir.actions.act_window,name:calendar.action_calendar_event
 #: model:ir.model.fields,field_description:calendar.field_res_partner__meeting_ids
 #: model:ir.model.fields,field_description:calendar.field_res_users__meeting_ids
@@ -2621,7 +2656,6 @@ msgstr "Uchrashuvga bog‘langan"
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
-#: model_terms:ir.ui.view,arch_db:calendar.view_partners_form
 #, fuzzy
 msgid "Meetings"
 msgstr "Uchrashuvlar"
@@ -2720,6 +2754,12 @@ msgid "My Meetings"
 msgstr "Mening uchrashuvlarim"
 
 #. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/side_panel/attendee_calendar_side_panel.xml:0
+msgid "My calendars"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__name
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__name
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__name
@@ -2767,6 +2807,14 @@ msgid "Next Activity Type"
 msgstr ""
 
 #. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/res_partner.py:0
+#: model:ir.model.fields,field_description:calendar.field_res_partner__meeting_next_date
+#: model:ir.model.fields,field_description:calendar.field_res_users__meeting_next_date
+msgid "Next Meeting"
+msgstr ""
+
+#. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/activity/attendee_calendar_activity_list_popover_item.xml:0
 msgid "Next Week"
@@ -2786,6 +2834,12 @@ msgstr "Yo‘q"
 #, fuzzy
 msgid "No I'm not going."
 msgstr "Yo‘q, bormayman"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/res_partner.py:0
+msgid "No Meetings"
+msgstr ""
 
 #. module: calendar
 #. odoo-javascript
@@ -2918,6 +2972,8 @@ msgstr "OK"
 
 #. module: calendar
 #. odoo-javascript
+#. odoo-python
+#: code:addons/calendar/models/calendar_alarm_manager.py:0
 #: code:addons/calendar/static/src/core/web/activity_patch.xml:0
 msgid "Online"
 msgstr ""
@@ -3377,13 +3433,6 @@ msgid "Show as"
 msgstr "Quyidagicha ko‘rsatish"
 
 #. module: calendar
-#. odoo-javascript
-#: code:addons/calendar/static/src/js/services/calendar_notification_service.js:0
-#, fuzzy
-msgid "Snooze"
-msgstr "Kechiktirish"
-
-#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__start
 #, fuzzy
 msgid "Start"
@@ -3516,7 +3565,11 @@ msgid "Tag name already exists!"
 msgstr "Teg nomi allaqachon mavjud!"
 
 #. module: calendar
+#: model:ir.actions.act_window,name:calendar.action_calendar_event_type
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__categ_ids
+#: model:ir.ui.menu,name:calendar.calendar_submenu_event_type
+#: model:ir.ui.menu,name:calendar.menu_calendar_event_type
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_type_tree
 #, fuzzy
 msgid "Tags"
 msgstr "Teglar"
@@ -3709,6 +3762,7 @@ msgstr "Seshanba"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__alarm_type
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_alarm_view_search
 #, fuzzy
 msgid "Type"
 msgstr "Turi"
@@ -4042,183 +4096,197 @@ msgid "{{object.name}}: Event update"
 msgstr "{{object.name}}: Tadbir yangilanishi"
 
 #, fuzzy
-msgid ""
-"<div style=\"font-size: 13px; color: #374151;\">\n"
-"    <t t-set=\"mail_tz\" t-value=\"object._get_mail_tz() or "
-"ctx.get('mail_tz')\"/>\n"
-"    <t t-set=\"event_name\" t-value=\"object.name or ''\"/>\n"
-"    <t t-set=\"event_organizer\" t-value=\"object.user_id.name or ''\"/>\n"
-"    <h1 style=\"font-size: 18px; font-weight: bold; color: #374151; margin-"
-"bottom: 28px;\">\n"
-"        Event canceled\n"
-"        <img src=\"/calendar/static/src/img/times-circle.png\" "
-"style=\"border:0; width: 24px; height: 24px; margin-left: 10px; text-"
-"decoration:none; vertical-align: bottom;\"/>\n"
-"    </h1>\n"
-"    <p style=\"margin: 0;\">\n"
-"        Hello,<br/>\n"
-"        <span style=\"display: block; margin-top: 8px;\">\n"
-"            This is to inform you that the event <strong t-out=\"event_name "
-"or ''\">Follow-up for Project proposal</strong> <t t-"
-"if=\"event_organizer\">organized by </t><t t-out=\"event_organizer or "
-"''\">Colleen Diaz</t> has been canceled and removed from your calendar.\n"
-"        </span>\n"
-"    </p>\n"
-"    <div style=\"margin: 32px 0 0;\">\n"
-"        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-"
-"weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};"
-"\">Details</h2>\n"
-"        <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"font-"
-"size: 13px; color: #374151;\">\n"
-"            <tr>\n"
-"                <td style=\"width: 100px; color: #676F7B;\">Date &amp; Time</"
-"td>\n"
-"                <td style=\"font-weight: bold;\">\n"
-"                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz "
-"if not object.allday else None, dt_format='EEEE', lang_code=object.env.lang)"
-"\">Tuesday</t>\n"
-"                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz "
-"if not object.allday else None, dt_format='d', lang_code=object.env.lang)"
-"\">4</t>\n"
-"                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz "
-"if not object.allday else None, dt_format='MMMM y', "
-"lang_code=object.env.lang)\">May 2021</t>\n"
-"                    <t t-if=\"not object.allday\">\n"
-"                        <t t-out=\"format_time(time=object.start, "
-"tz=mail_tz, time_format='short', lang_code=object.env.lang)\">11:00 AM</t>\n"
-"                        <t t-if=\"mail_tz\">\n"
-"                            <span style=\"font-size: 11px; font-weight: "
-"normal;\">\n"
-"                                (<t t-out=\"mail_tz or ''\">Europe/Brussels</"
-"t>)\n"
-"                            </span>\n"
-"                        </t>\n"
-"                    </t>\n"
-"                </td>\n"
-"            </tr>\n"
-"            <tr t-if=\"not object.allday and object.duration\">\n"
-"                <td style=\"width: 100px; padding-top: 6px; color: #676F7B;"
-"\">Duration</td>\n"
-"                <td style=\"padding-top: 6px;\"><t t-out=\"('%dH%02d' % "
-"(object.duration,round(object.duration*60)%60))\">0H30</t></td>\n"
-"            </tr>\n"
-"            <tr t-if=\"object.location\">\n"
-"                <td style=\"width: 100px; padding-top: 6px; color: #676F7B;"
-"\">Location</td>\n"
-"                <td style=\"padding-top: 6px;\"><t t-out=\"object.location "
-"or ''\">Bruxelles</t></td>\n"
-"            </tr>\n"
-"        </table>\n"
-"    </div>\n"
-"    <p style=\"margin: 32px 0 0;\">\n"
-"        If you have any questions or concerns, please feel free to contact "
-"us. <br/>\n"
-"        Best regards,\n"
-"        <span style=\"display: block; margin-top: 8px;\">The Calendar Team</"
-"span>\n"
-"    </p>\n"
-"</div>\n"
-"            "
-msgstr ""
-"<div style=\"font-size: 13px; color: #374151;\">\n"
-"    <t t-set=\"mail_tz\" t-value=\"object._get_mail_tz() or "
-"ctx.get('mail_tz')\"/>\n"
-"    <t t-set=\"event_name\" t-value=\"object.name or ''\"/>\n"
-"    <t t-set=\"event_organizer\" t-value=\"object.user_id.name or ''\"/>\n"
-"    <h1 style=\"font-size: 18px; font-weight: bold; color: #374151; margin-"
-"bottom: 28px;\">\n"
-"        Tadbir bekor qilindi\n"
-"        <img src=\"/calendar/static/src/img/times-circle.png\" "
-"style=\"border:0; width: 24px; height: 24px; margin-left: 10px; text-"
-"decoration:none; vertical-align: bottom;\"/>\n"
-"    </h1>\n"
-"    <p style=\"margin: 0;\">\n"
-"        Assalomu alaykum,<br/>\n"
-"        <span style=\"display: block; margin-top: 8px;\">\n"
-"            Ushbu xat orqali sizni <strong t-out=\"event_name or ''\">Loyiha "
-"taklifi bo‘yicha kuzatuv</strong> nomli tadbir <t t-"
-"if=\"event_organizer\">tashkilotchisi </t><t t-out=\"event_organizer or "
-"''\">Colleen Diaz</t> tomonidan bekor qilingani va taqvimingizdan olib "
-"tashlangani haqida xabardor qilmoqchimiz.         </span>\n"
-"    </p>\n"
-"    <div style=\"margin: 32px 0 0;\">\n"
-"        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-"
-"weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};"
-"\">Tafsilotlar</h2>\n"
-"        <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"font-"
-"size: 13px; color: #374151;\">\n"
-"            <tr>\n"
-"                <td style=\"width: 100px; color: #676F7B;\">Sana &amp; Vaqt</"
-"td>\n"
-"                <td style=\"font-weight: bold;\">\n"
-"                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz "
-"if not object.allday else None, dt_format='EEEE', lang_code=object.env.lang)"
-"\">Seshanba</t>\n"
-"                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz "
-"if not object.allday else None, dt_format='d', lang_code=object.env.lang)"
-"\">4</t>\n"
-"                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz "
-"if not object.allday else None, dt_format='MMMM y', "
-"lang_code=object.env.lang)\">may 2021</t>\n"
-"                    <t t-if=\"not object.allday\">\n"
-"                        <t t-out=\"format_time(time=object.start, "
-"tz=mail_tz, time_format='short', lang_code=object.env.lang)\">11:00</t>\n"
-"                        <t t-if=\"mail_tz\">\n"
-"                            <span style=\"font-size: 11px; font-weight: "
-"normal;\">\n"
-"                                (<t t-out=\"mail_tz or ''\">Yevropa/"
-"Bryussel</t>)\n"
-"                            </span>\n"
-"                        </t>\n"
-"                    </t>\n"
-"                </td>\n"
-"            </tr>\n"
-"            <tr t-if=\"not object.allday and object.duration\">\n"
-"                <td style=\"width: 100px; padding-top: 6px; color: #676F7B;"
-"\">Davomiyligi</td>\n"
-"                <td style=\"padding-top: 6px;\"><t t-out=\"('%dS%02d' % "
-"(object.duration,round(object.duration*60)%60))\">0S30</t></td>\n"
-"            </tr>\n"
-"            <tr t-if=\"object.location\">\n"
-"                <td style=\"width: 100px; padding-top: 6px; color: #676F7B;"
-"\">Manzil</td>\n"
-"                <td style=\"padding-top: 6px;\"><t t-out=\"object.location "
-"or ''\">Bryussel</t></td>\n"
-"            </tr>\n"
-"        </table>\n"
-"    </div>\n"
-"    <p style=\"margin: 32px 0 0;\">\n"
-"        Agar sizda biron-bir savol yoki muammo bo‘lsa, iltimos, biz bilan "
-"bog‘lanishdan tortinmang.<br/>\n"
-"        Hurmat bilan,\n"
-"        <span style=\"display: block; margin-top: 8px;\">Taqvim jamoasi</"
-"span>\n"
-"    </p>\n"
-"</div> "
+#~ msgid "Checked"
+#~ msgstr "Belgilangan"
 
 #, fuzzy
-msgid ""
-"<i class=\"fa fa-9x fa-calendar p-3\" title=\"Calendar\" aria-"
-"hidden=\"true\"/>"
-msgstr ""
-"<i class=\"fa fa-9x fa-calendar p-3\" title=\"Taqvim\" aria-hidden=\"true\"/>"
+#~ msgid "Meeting Types"
+#~ msgstr "Uchrashuv turlari"
 
 #, fuzzy
-msgid "Schedule a meeting in your calendar"
-msgstr "Taqvimingizda uchrashuv rejalashtirish"
+#~ msgid "Snooze"
+#~ msgstr "Kechiktirish"
 
 #, fuzzy
-msgid "Stop synchro"
-msgstr "Sinxronlashni to‘xtatish"
+#~ msgid ""
+#~ "<div style=\"font-size: 13px; color: #374151;\">\n"
+#~ "    <t t-set=\"mail_tz\" t-value=\"object._get_mail_tz() or "
+#~ "ctx.get('mail_tz')\"/>\n"
+#~ "    <t t-set=\"event_name\" t-value=\"object.name or ''\"/>\n"
+#~ "    <t t-set=\"event_organizer\" t-value=\"object.user_id.name or ''\"/>\n"
+#~ "    <h1 style=\"font-size: 18px; font-weight: bold; color: #374151; "
+#~ "margin-bottom: 28px;\">\n"
+#~ "        Event canceled\n"
+#~ "        <img src=\"/calendar/static/src/img/times-circle.png\" "
+#~ "style=\"border:0; width: 24px; height: 24px; margin-left: 10px; text-"
+#~ "decoration:none; vertical-align: bottom;\"/>\n"
+#~ "    </h1>\n"
+#~ "    <p style=\"margin: 0;\">\n"
+#~ "        Hello,<br/>\n"
+#~ "        <span style=\"display: block; margin-top: 8px;\">\n"
+#~ "            This is to inform you that the event <strong t-"
+#~ "out=\"event_name or ''\">Follow-up for Project proposal</strong> <t t-"
+#~ "if=\"event_organizer\">organized by </t><t t-out=\"event_organizer or "
+#~ "''\">Colleen Diaz</t> has been canceled and removed from your calendar.\n"
+#~ "        </span>\n"
+#~ "    </p>\n"
+#~ "    <div style=\"margin: 32px 0 0;\">\n"
+#~ "        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-"
+#~ "weight: bold; color: {{user.company_id.email_secondary_color or "
+#~ "'#875A7B'}};\">Details</h2>\n"
+#~ "        <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" "
+#~ "style=\"font-size: 13px; color: #374151;\">\n"
+#~ "            <tr>\n"
+#~ "                <td style=\"width: 100px; color: #676F7B;\">Date &amp; "
+#~ "Time</td>\n"
+#~ "                <td style=\"font-weight: bold;\">\n"
+#~ "                    <t t-out=\"format_datetime(dt=object.start, "
+#~ "tz=mail_tz if not object.allday else None, dt_format='EEEE', "
+#~ "lang_code=object.env.lang)\">Tuesday</t>\n"
+#~ "                    <t t-out=\"format_datetime(dt=object.start, "
+#~ "tz=mail_tz if not object.allday else None, dt_format='d', "
+#~ "lang_code=object.env.lang)\">4</t>\n"
+#~ "                    <t t-out=\"format_datetime(dt=object.start, "
+#~ "tz=mail_tz if not object.allday else None, dt_format='MMMM y', "
+#~ "lang_code=object.env.lang)\">May 2021</t>\n"
+#~ "                    <t t-if=\"not object.allday\">\n"
+#~ "                        <t t-out=\"format_time(time=object.start, "
+#~ "tz=mail_tz, time_format='short', lang_code=object.env.lang)\">11:00 AM</"
+#~ "t>\n"
+#~ "                        <t t-if=\"mail_tz\">\n"
+#~ "                            <span style=\"font-size: 11px; font-weight: "
+#~ "normal;\">\n"
+#~ "                                (<t t-out=\"mail_tz or ''\">Europe/"
+#~ "Brussels</t>)\n"
+#~ "                            </span>\n"
+#~ "                        </t>\n"
+#~ "                    </t>\n"
+#~ "                </td>\n"
+#~ "            </tr>\n"
+#~ "            <tr t-if=\"not object.allday and object.duration\">\n"
+#~ "                <td style=\"width: 100px; padding-top: 6px; color: "
+#~ "#676F7B;\">Duration</td>\n"
+#~ "                <td style=\"padding-top: 6px;\"><t t-out=\"('%dH%02d' % "
+#~ "(object.duration,round(object.duration*60)%60))\">0H30</t></td>\n"
+#~ "            </tr>\n"
+#~ "            <tr t-if=\"object.location\">\n"
+#~ "                <td style=\"width: 100px; padding-top: 6px; color: "
+#~ "#676F7B;\">Location</td>\n"
+#~ "                <td style=\"padding-top: 6px;\"><t t-"
+#~ "out=\"object.location or ''\">Bruxelles</t></td>\n"
+#~ "            </tr>\n"
+#~ "        </table>\n"
+#~ "    </div>\n"
+#~ "    <p style=\"margin: 32px 0 0;\">\n"
+#~ "        If you have any questions or concerns, please feel free to "
+#~ "contact us. <br/>\n"
+#~ "        Best regards,\n"
+#~ "        <span style=\"display: block; margin-top: 8px;\">The Calendar "
+#~ "Team</span>\n"
+#~ "    </p>\n"
+#~ "</div>\n"
+#~ "            "
+#~ msgstr ""
+#~ "<div style=\"font-size: 13px; color: #374151;\">\n"
+#~ "    <t t-set=\"mail_tz\" t-value=\"object._get_mail_tz() or "
+#~ "ctx.get('mail_tz')\"/>\n"
+#~ "    <t t-set=\"event_name\" t-value=\"object.name or ''\"/>\n"
+#~ "    <t t-set=\"event_organizer\" t-value=\"object.user_id.name or ''\"/>\n"
+#~ "    <h1 style=\"font-size: 18px; font-weight: bold; color: #374151; "
+#~ "margin-bottom: 28px;\">\n"
+#~ "        Tadbir bekor qilindi\n"
+#~ "        <img src=\"/calendar/static/src/img/times-circle.png\" "
+#~ "style=\"border:0; width: 24px; height: 24px; margin-left: 10px; text-"
+#~ "decoration:none; vertical-align: bottom;\"/>\n"
+#~ "    </h1>\n"
+#~ "    <p style=\"margin: 0;\">\n"
+#~ "        Assalomu alaykum,<br/>\n"
+#~ "        <span style=\"display: block; margin-top: 8px;\">\n"
+#~ "            Ushbu xat orqali sizni <strong t-out=\"event_name or "
+#~ "''\">Loyiha taklifi bo‘yicha kuzatuv</strong> nomli tadbir <t t-"
+#~ "if=\"event_organizer\">tashkilotchisi </t><t t-out=\"event_organizer or "
+#~ "''\">Colleen Diaz</t> tomonidan bekor qilingani va taqvimingizdan olib "
+#~ "tashlangani haqida xabardor qilmoqchimiz.         </span>\n"
+#~ "    </p>\n"
+#~ "    <div style=\"margin: 32px 0 0;\">\n"
+#~ "        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-"
+#~ "weight: bold; color: {{user.company_id.email_secondary_color or "
+#~ "'#875A7B'}};\">Tafsilotlar</h2>\n"
+#~ "        <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" "
+#~ "style=\"font-size: 13px; color: #374151;\">\n"
+#~ "            <tr>\n"
+#~ "                <td style=\"width: 100px; color: #676F7B;\">Sana &amp; "
+#~ "Vaqt</td>\n"
+#~ "                <td style=\"font-weight: bold;\">\n"
+#~ "                    <t t-out=\"format_datetime(dt=object.start, "
+#~ "tz=mail_tz if not object.allday else None, dt_format='EEEE', "
+#~ "lang_code=object.env.lang)\">Seshanba</t>\n"
+#~ "                    <t t-out=\"format_datetime(dt=object.start, "
+#~ "tz=mail_tz if not object.allday else None, dt_format='d', "
+#~ "lang_code=object.env.lang)\">4</t>\n"
+#~ "                    <t t-out=\"format_datetime(dt=object.start, "
+#~ "tz=mail_tz if not object.allday else None, dt_format='MMMM y', "
+#~ "lang_code=object.env.lang)\">may 2021</t>\n"
+#~ "                    <t t-if=\"not object.allday\">\n"
+#~ "                        <t t-out=\"format_time(time=object.start, "
+#~ "tz=mail_tz, time_format='short', lang_code=object.env.lang)\">11:00</t>\n"
+#~ "                        <t t-if=\"mail_tz\">\n"
+#~ "                            <span style=\"font-size: 11px; font-weight: "
+#~ "normal;\">\n"
+#~ "                                (<t t-out=\"mail_tz or ''\">Yevropa/"
+#~ "Bryussel</t>)\n"
+#~ "                            </span>\n"
+#~ "                        </t>\n"
+#~ "                    </t>\n"
+#~ "                </td>\n"
+#~ "            </tr>\n"
+#~ "            <tr t-if=\"not object.allday and object.duration\">\n"
+#~ "                <td style=\"width: 100px; padding-top: 6px; color: "
+#~ "#676F7B;\">Davomiyligi</td>\n"
+#~ "                <td style=\"padding-top: 6px;\"><t t-out=\"('%dS%02d' % "
+#~ "(object.duration,round(object.duration*60)%60))\">0S30</t></td>\n"
+#~ "            </tr>\n"
+#~ "            <tr t-if=\"object.location\">\n"
+#~ "                <td style=\"width: 100px; padding-top: 6px; color: "
+#~ "#676F7B;\">Manzil</td>\n"
+#~ "                <td style=\"padding-top: 6px;\"><t t-"
+#~ "out=\"object.location or ''\">Bryussel</t></td>\n"
+#~ "            </tr>\n"
+#~ "        </table>\n"
+#~ "    </div>\n"
+#~ "    <p style=\"margin: 32px 0 0;\">\n"
+#~ "        Agar sizda biron-bir savol yoki muammo bo‘lsa, iltimos, biz bilan "
+#~ "bog‘lanishdan tortinmang.<br/>\n"
+#~ "        Hurmat bilan,\n"
+#~ "        <span style=\"display: block; margin-top: 8px;\">Taqvim jamoasi</"
+#~ "span>\n"
+#~ "    </p>\n"
+#~ "</div> "
 
 #, fuzzy
-msgid "Synchro is paused"
-msgstr "Sinxronlash to‘xtatib turildi"
+#~ msgid ""
+#~ "<i class=\"fa fa-9x fa-calendar p-3\" title=\"Calendar\" aria-"
+#~ "hidden=\"true\"/>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-9x fa-calendar p-3\" title=\"Taqvim\" aria-"
+#~ "hidden=\"true\"/>"
 
 #, fuzzy
-msgid "<span> guests</span>"
-msgstr "<span> ta mehmon</span>"
+#~ msgid "Schedule a meeting in your calendar"
+#~ msgstr "Taqvimingizda uchrashuv rejalashtirish"
 
 #, fuzzy
-msgid "Today's Meetings"
-msgstr "Bugungi uchrashuvlar"
+#~ msgid "Stop synchro"
+#~ msgstr "Sinxronlashni to‘xtatish"
+
+#, fuzzy
+#~ msgid "Synchro is paused"
+#~ msgstr "Sinxronlash to‘xtatib turildi"
+
+#, fuzzy
+#~ msgid "<span> guests</span>"
+#~ msgstr "<span> ta mehmon</span>"
+
+#, fuzzy
+#~ msgid "Today's Meetings"
+#~ msgstr "Bugungi uchrashuvlar"

@@ -14,9 +14,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-04 17:46+0000\n"
-"PO-Revision-Date: 2026-08-31 18:57+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-09-11 13:32+0000\n"
+"Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
+"Language-Team: Italian <https://translate.odoo.com/projects/odoo-master/"
 "website_event_track/it/>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -54,7 +54,7 @@ msgstr "%(name)s, %(function)s presso %(company)s"
 #. odoo-python
 #: code:addons/website_event_track/controllers/location_display.py:0
 msgid "%(start_time)s – %(end_time)s"
-msgstr ""
+msgstr "%(start_time)s – %(end_time)s"
 
 #. module: website_event_track
 #. odoo-python
@@ -176,6 +176,10 @@ msgid ""
 "                <span>Last updated at</span>\n"
 "                <time/>"
 msgstr ""
+"<i class=\"oi me-1 align-middle\" data-icon=\"link_off\" aria-"
+"hidden=\"true\"/>\n"
+"                <span>Ultimo aggiornamento il</span>\n"
+"                <time/>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_search
@@ -194,7 +198,7 @@ msgstr "<span class=\"d-none d-md-block\">&amp;bull;</span>"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_event_view_form
 msgid "<span class=\"o_stat_text\">Track Locations</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Posizioni tracce</span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -238,6 +242,8 @@ msgid ""
 "<span class=\"o_wevent_location_display_live_badge d-inline-block align-"
 "middle me-2 bg-danger rounded-pill\"/>Live Now"
 msgstr ""
+"<span class=\"o_wevent_location_display_live_badge d-inline-block align-"
+"middle me-2 bg-danger rounded-pill\"/>In diretta ora"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
@@ -1166,7 +1172,7 @@ msgstr "Aggiungere la presentazione alla tua agenda?"
 #. module: website_event_track
 #: model:ir.module.module,shortdesc:base.module_website_event_track
 msgid "Advanced Events"
-msgstr ""
+msgstr "Eventi avanzati"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track19
@@ -1422,7 +1428,7 @@ msgstr "Indice colore"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__location_display_upcoming_track_count
 msgid "Coming Up Sessions"
-msgstr ""
+msgstr "Prossime sessioni"
 
 #. module: website_event_track
 #. odoo-python
@@ -1438,7 +1444,7 @@ msgstr "A breve..."
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_location_display_content
 msgid "Coming up"
-msgstr ""
+msgstr "Prossimamente"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__company_id
@@ -1728,7 +1734,7 @@ msgstr "E-mail*"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_location_display_empty_state
 msgid "End of the day"
-msgstr ""
+msgstr "A fine giornata"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_event
@@ -2356,12 +2362,12 @@ msgstr "Luogo"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__location_display_background
 msgid "Location Display Background"
-msgstr ""
+msgstr "Sfondo visualizzazione posizione"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location__location_display_url
 msgid "Location Display Link"
-msgstr ""
+msgstr "Link visualizzazione posizione"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_13
@@ -2405,7 +2411,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__activity_type_icon
 msgid "Material Symbols icon e.g. checklist"
-msgstr ""
+msgstr "Icona dei simboli dei materiali, ad es. lista di controllo"
 
 #. module: website_event_track
 #: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__1
@@ -2528,7 +2534,7 @@ msgstr "Non ci sono ancora visitatori!"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_location_display_empty_state
 msgid "No talks today"
-msgstr ""
+msgstr "Nessuna presentazione oggi"
 
 #. module: website_event_track
 #. odoo-javascript
@@ -2567,12 +2573,12 @@ msgstr "Nota: le etichette non colorate non saranno disponibili nel sito web."
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_location_display_empty_state
 msgid "Nothing is scheduled in this room today."
-msgstr ""
+msgstr "Oggi non è previsto alcun evento in questa sala."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_location_display_content
 msgid "Nothing planned right now"
-msgstr ""
+msgstr "Al momento non c'è nulla in programma"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_needaction_counter
@@ -2652,6 +2658,58 @@ msgid ""
 "You can activate a blog for each event allowing you to communicate on "
 "specific events. Visitors can subscribe to news to get informed."
 msgstr ""
+"Organizza Eventi, Formazioni & Webinar\n"
+"-------------------------------------\n"
+"\n"
+"### Pianifica, Promuovi, Vendi, Organizza\n"
+"\n"
+"Beneficia di funzionalità aggiuntive per ogni evento: pagine multiple, "
+"sponsor, conferenze multiple, modulo di proposta di conferenze, calendario, "
+"notizie relative all'evento, documenti (diapositive di presentazione), menu "
+"specifici per l'evento.\n"
+"\n"
+"Organizza le tue Presentazioni\n"
+"--------------------\n"
+"\n"
+"### Dalla proposta di conferenza alla pubblicazione\n"
+"\n"
+"Aggiungi un modulo di proposta di conferenza ai tuoi eventi per consentire "
+"ai visitatori di proporre argomenti e oratori. Organizza il processo di "
+"convalida per ogni conferenza et pianificale facilmente.\n"
+"\n"
+"L'esculsiva integrazione frontend e backend di Odoo facilita "
+"l'organizzazione e la pubblicazione. Crea facilmente interessanti biografie "
+"degli oratori e descrizioni delle conferenze.\n"
+"\n"
+"Calendario e elenco delle conferenze\n"
+"------------------------\n"
+"\n"
+"### Un'interfaccia utente efficace\n"
+"\n"
+"Beneficia di un calendario perfetto per ogni evento pubblicato "
+"automaticamente sul tuo sito Web. Consenti ai visitatori di cercare e "
+"scorrere facilmente le conferenze e di filtrare per etichetta, posizione o "
+"oratore.\n"
+"\n"
+"Gestisci gli Sponsor\n"
+"---------------\n"
+"\n"
+"### Vendi un sistema di sponsorizzazione, promuovi i tuoi sponsor\n"
+"\n"
+"Aggiungi sponsor ai tuoi eventi e pubblica sponsor per livello (ad esempio, "
+"bronzo, argento, oro) in fondo a ogni pagina dell'evento.\n"
+"\n"
+"Vendi sistemi di sponsorizzazione online tramite il modulo e-commerce di "
+"Odooo per una completa integrazione del ciclo di vendita.\n"
+"\n"
+"Comunica in Modo Efficiente\n"
+"-----------------------\n"
+"\n"
+"### Attiva un blog per alcuni eventi\n"
+"\n"
+"Puoi attivare un blog per ogni evento. Esso ti consente di comunicare su "
+"eventi specifici. I Visitatori possono iscriversi alle notizie per essere "
+"informati."
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_20
@@ -2950,7 +3008,7 @@ msgstr "Relatori"
 #. module: website_event_track
 #: model:ir.module.module,summary:base.module_website_event_track
 msgid "Sponsors, Tracks, Agenda, Event News"
-msgstr ""
+msgstr "Sponsor, tracce, agenda, notizie dell'evento"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__stage_id
@@ -3077,12 +3135,12 @@ msgstr "Grazie per la proposta."
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_location_display_empty_state
 msgid "Thanks for joining us."
-msgstr ""
+msgstr "Grazie per aver partecipato."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_location_display_empty_state
 msgid "That’s all for today"
-msgstr ""
+msgstr "Per oggi è tutto"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__website_absolute_url
@@ -3108,7 +3166,7 @@ msgstr "Il nuovo modo di promuovere le tue creazioni"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_location_display_content
 msgid "The next session will begin shortly."
-msgstr ""
+msgstr "La prossima sessione inizierà a breve."
 
 #. module: website_event_track
 #. odoo-python
@@ -3247,7 +3305,7 @@ msgstr "Attività odierne"
 #. odoo-python
 #: code:addons/website_event_track/controllers/location_display.py:0
 msgid "Tomorrow · %(date_label)s"
-msgstr ""
+msgstr "Domani · %(date_label)s"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_22

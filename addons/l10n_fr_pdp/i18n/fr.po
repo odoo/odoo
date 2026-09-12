@@ -7,10 +7,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.4a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 18:19+0000\n"
-"PO-Revision-Date: 2026-09-04 11:11+0000\n"
+"POT-Creation-Date: 2026-09-11 18:12+0000\n"
+"PO-Revision-Date: 2026-09-09 13:58+0000\n"
 "Last-Translator: \"Cécile Collart (cco)\" <cco@odoo.com>\n"
-"Language-Team: French <https://translate.odoo.com/projects/odoo-s19-4/"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-master/"
 "l10n_fr_pdp/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -82,29 +82,10 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.res_config_settings_view_form
 msgid ""
 "<span class=\"text-muted\">\n"
-"                                    Enable e-reporting &amp; sending of "
-"invoices to the PPF\n"
+"                                    Enable e-reporting\n"
 "                                </span>\n"
 "                                <br/>"
 msgstr ""
-"<span class=\"text-muted\">\n"
-"                                    Activer l’e-reporting &amp; l’envoi des "
-"factures au PPF\n"
-"                                </span>\n"
-"                                <br/>"
-
-#. module: l10n_fr_pdp
-#: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.res_config_settings_view_form
-msgid ""
-"<span class=\"text-muted\">\n"
-"                                    Participate in the pilot phase\n"
-"                                </span>\n"
-"                                <br/>"
-msgstr ""
-"<span class=\"text-muted\">\n"
-"                                    Participer à la phase pilote\n"
-"                                </span>\n"
-"                                <br/>"
 
 #. module: l10n_fr_pdp
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.res_config_settings_view_form
@@ -148,6 +129,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.res_config_settings_view_form
 msgid "<span><strong>Disconnected from the Approved Platform!</strong></span>"
 msgstr "<span><strong>Déconnecté de la Plateforme Agréée !</strong></span>"
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_edi_proxy_user.py:0
+msgid ""
+"A French e-invoicing response with Response Code '%(status)s' could not be "
+"sent to the Approved Platform."
+msgstr ""
 
 #. module: l10n_fr_pdp
 #. odoo-python
@@ -227,6 +216,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_pdp_response_wizard__note
 msgid "Additional note"
 msgstr "Note complémentaire"
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_move.py:0
+msgid "Address country code must contain two letters%s."
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_move.py:0
+msgid "Address zip code must not exceed 10 characters%s."
+msgstr ""
 
 #. module: l10n_fr_pdp
 #. odoo-python
@@ -368,6 +369,16 @@ msgid "Available Statuses"
 msgstr "Statuts disponibles"
 
 #. module: l10n_fr_pdp
+#: model:ir.model.fields.selection,name:l10n_fr_pdp.selection__pdp_response_wizard__reason_code__coord_banc_err
+msgid "Bank Account Information Error"
+msgstr ""
+
+#. module: l10n_fr_pdp
+#: model:ir.model,name:l10n_fr_pdp.model_account_edi_cii
+msgid "Base helpers for CII"
+msgstr ""
+
+#. module: l10n_fr_pdp
 #: model:ir.model,name:l10n_fr_pdp.model_account_edi_ubl
 msgid "Base helpers for UBL"
 msgstr "Outils de base pour l’UBL"
@@ -459,6 +470,12 @@ msgid "Closed"
 msgstr "Fermé"
 
 #. module: l10n_fr_pdp
+#: model:ir.model,name:l10n_fr_pdp.model_account_edi_common
+msgid ""
+"Common functions for EDI documents: generate the data, the constraints, etc"
+msgstr ""
+
+#. module: l10n_fr_pdp
 #: model:ir.model,name:l10n_fr_pdp.model_res_company
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_l10n_fr_pdp_reports_flow__company_id
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_pdp_registration__company_id
@@ -477,8 +494,14 @@ msgid "Complete Registration"
 msgstr "Terminer l’inscription"
 
 #. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_peppol_response.py:0
 #: model:ir.model.fields.selection,name:l10n_fr_pdp.selection__account_move__l10n_fr_pdp_status__completed
+#: model:ir.model.fields.selection,name:l10n_fr_pdp.selection__account_move__peppol_move_state__completed
+#: model:ir.model.fields.selection,name:l10n_fr_pdp.selection__account_peppol_response__pdp_ref_response_code__completed
+#: model:ir.model.fields.selection,name:l10n_fr_pdp.selection__account_peppol_response__response_code__completed
 #: model:ir.model.fields.selection,name:l10n_fr_pdp.selection__l10n_fr_pdp_reports_flow__state__completed
+#: model:ir.model.fields.selection,name:l10n_fr_pdp.selection__pdp_response_wizard__status__completed
 msgid "Completed"
 msgstr "Terminé"
 
@@ -605,6 +628,8 @@ msgid "Discount granted"
 msgstr "Remise accordée"
 
 #. module: l10n_fr_pdp
+#: model:ir.model.fields,field_description:l10n_fr_pdp.field_account_edi_cii__display_name
+#: model:ir.model.fields,field_description:l10n_fr_pdp.field_account_edi_common__display_name
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_account_edi_proxy_client_user__display_name
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_account_edi_ubl__display_name
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_account_edi_xml_cii__display_name
@@ -820,9 +845,15 @@ msgid "Errors:"
 msgstr ""
 
 #. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/pdp_flow_xml_builder.py:0
+msgid "Exempt from tax"
+msgstr ""
+
+#. module: l10n_fr_pdp
 #: model:ir.model,name:l10n_fr_pdp.model_account_edi_xml_cii
-msgid "Factur-x/XRechnung CII 2.2.0"
-msgstr "Factur-x/XRechnung CII 2.2.0"
+msgid "Factur-x/ZUGFeRD CII 2.2.0"
+msgstr ""
 
 #. module: l10n_fr_pdp
 #: model:ir.model.fields.selection,name:l10n_fr_pdp.selection__res_company__pdp_kyc_status__fail
@@ -922,10 +953,10 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.res_config_settings_view_form
 msgid ""
 "For information: French administration annuaire can be updated once a day so "
-"your validation should be done tomorrow."
+"your validation should be done tomorrow. If you requested a migration from "
+"another PA, registration may take up to two weeks, depending on their "
+"response time."
 msgstr ""
-"Pour information : l’annuaire de l’administration française peut être mis à "
-"jour une fois par jour, votre validation devrait donc être effectuée demain."
 
 #. module: l10n_fr_pdp
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_pdp
@@ -1014,6 +1045,8 @@ msgid "Has Message"
 msgstr "A un message"
 
 #. module: l10n_fr_pdp
+#: model:ir.model.fields,field_description:l10n_fr_pdp.field_account_edi_cii__id
+#: model:ir.model.fields,field_description:l10n_fr_pdp.field_account_edi_common__id
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_account_edi_proxy_client_user__id
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_account_edi_ubl__id
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_account_edi_xml_cii__id
@@ -1094,6 +1127,7 @@ msgstr ""
 
 #. module: l10n_fr_pdp
 #. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_edi_common.py:0
 #: code:addons/l10n_fr_pdp/models/account_move.py:0
 msgid ""
 "In the event of late payment, a flat-rate fee of €40 for collection costs "
@@ -1122,6 +1156,16 @@ msgstr "Taux de TVA incorrect"
 #: model:ir.model.fields.selection,name:l10n_fr_pdp.selection__pdp_response_wizard__reason_code__adr_err
 msgid "Incorrect electronic billing address"
 msgstr "Adresse de facturation électronique incorrecte"
+
+#. module: l10n_fr_pdp
+#: model:ir.model.fields.selection,name:l10n_fr_pdp.selection__pdp_response_wizard__reason_code__siret_err
+msgid "Incorrect or missing SIRET number"
+msgstr ""
+
+#. module: l10n_fr_pdp
+#: model:ir.model.fields.selection,name:l10n_fr_pdp.selection__pdp_response_wizard__reason_code__ref_err
+msgid "Incorrect reference"
+msgstr ""
 
 #. module: l10n_fr_pdp
 #. odoo-python
@@ -1274,6 +1318,7 @@ msgstr "Mis à jour le"
 
 #. module: l10n_fr_pdp
 #. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_edi_common.py:0
 #: code:addons/l10n_fr_pdp/models/account_move.py:0
 msgid ""
 "Late payment penalties at an annual rate of 10% are applied if the payment "
@@ -1380,6 +1425,16 @@ msgid "Missing address zip code%s."
 msgstr "Code postal de l’adresse manquant%s."
 
 #. module: l10n_fr_pdp
+#: model:ir.model.fields.selection,name:l10n_fr_pdp.selection__pdp_response_wizard__reason_code__justif_abs
+msgid "Missing or Insufficient Supporting Documentation"
+msgstr ""
+
+#. module: l10n_fr_pdp
+#: model:ir.model.fields.selection,name:l10n_fr_pdp.selection__pdp_response_wizard__reason_code__code_routage_err
+msgid "Missing or incorrect CODE_ROUTAGE"
+msgstr ""
+
+#. module: l10n_fr_pdp
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_l10n_fr_pdp_reports_flow__move_ids
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_pdp_response_wizard__move_ids
 msgid "Move"
@@ -1453,6 +1508,7 @@ msgstr ""
 
 #. module: l10n_fr_pdp
 #. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_edi_common.py:0
 #: code:addons/l10n_fr_pdp/models/account_move.py:0
 msgid "No discount for early payment."
 msgstr "Aucune remise pour paiement anticipé."
@@ -1682,6 +1738,12 @@ msgid "Partner cannot receive format"
 msgstr "Le partenaire ne peut pas recevoir ce format"
 
 #. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_move.py:0
+msgid "Partner country code must contain two letters%s."
+msgstr ""
+
+#. module: l10n_fr_pdp
 #: model:ir.model.fields.selection,name:l10n_fr_pdp.selection__res_partner__pdp_verification_display_state__pdp_valid
 msgid "Partner is in the annuaire"
 msgstr "Le partenaire est dans l’annuaire"
@@ -1820,7 +1882,6 @@ msgstr "Code de périodicité"
 
 #. module: l10n_fr_pdp
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_res_config_settings__l10n_fr_pdp_pilot_phase
-#: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.pdp_registration_form
 msgid "Pilot Phase"
 msgstr "Phase pilote"
 
@@ -2118,10 +2179,15 @@ msgid "Send via French electronic invoicing"
 msgstr "Envoyer via la facturation électronique française"
 
 #. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_peppol_response.py:0
 #: model:ir.model.fields.selection,name:l10n_fr_pdp.selection__account_move__l10n_fr_pdp_status__sent
 #: model:ir.model.fields.selection,name:l10n_fr_pdp.selection__account_move__pdp_ppf_lifecycle_state__sent
 #: model:ir.model.fields.selection,name:l10n_fr_pdp.selection__account_move__pdp_ppf_move_state__sent
+#: model:ir.model.fields.selection,name:l10n_fr_pdp.selection__account_move__peppol_move_state__sent
 #: model:ir.model.fields.selection,name:l10n_fr_pdp.selection__account_peppol_response__pdp_ppf_state__sent
+#: model:ir.model.fields.selection,name:l10n_fr_pdp.selection__account_peppol_response__pdp_ref_response_code__sent
+#: model:ir.model.fields.selection,name:l10n_fr_pdp.selection__account_peppol_response__response_code__sent
 #: model:ir.model.fields.selection,name:l10n_fr_pdp.selection__l10n_fr_pdp_reports_flow__state__sent
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.l10n_fr_pdp_reports_view_flow_form
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.l10n_fr_pdp_reports_view_flow_search
@@ -2287,6 +2353,22 @@ msgid "Success"
 msgstr "Réussite"
 
 #. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_peppol_response.py:0
+#: model:ir.model.fields.selection,name:l10n_fr_pdp.selection__account_move__peppol_move_state__suspended
+#: model:ir.model.fields.selection,name:l10n_fr_pdp.selection__account_peppol_response__pdp_ref_response_code__suspended
+#: model:ir.model.fields.selection,name:l10n_fr_pdp.selection__account_peppol_response__response_code__suspended
+#: model:ir.model.fields.selection,name:l10n_fr_pdp.selection__pdp_response_wizard__status__suspended
+msgid "Suspended"
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_move.py:0
+msgid "Tax %(tax)s is not supported by French e-reporting%(ref_move)s."
+msgstr ""
+
+#. module: l10n_fr_pdp
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.l10n_fr_pdp_list_view_move_ereporting
 msgid "Tax Excluded"
 msgstr ""
@@ -2369,6 +2451,12 @@ msgstr "Le proxy PDP n’a renvoyé aucun identifiant de suivi du flux."
 #: code:addons/l10n_fr_pdp/wizard/pdp_registration.py:0
 msgid "The SIREN of the company could not be determined."
 msgstr "Le SIREN de la société n’a pas pu être déterminé."
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_move.py:0
+msgid "The company SIREN is missing or invalid."
+msgstr ""
 
 #. module: l10n_fr_pdp
 #. odoo-python
@@ -2484,6 +2572,12 @@ msgstr "Cela n’est possible que pour la 'plateforme agréée'."
 
 #. module: l10n_fr_pdp
 #. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_edi_xml_ubl_21_fr.py:0
+msgid "This partner is behind Chorus PRO. Please install the module '%s'"
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
 #: code:addons/l10n_fr_pdp/wizard/pdp_response_wizard.py:0
 msgid "To refuse an invoice please enter a Note."
 msgstr "Pour refuser une facture, veuillez saisir une note."
@@ -2493,6 +2587,18 @@ msgstr "Pour refuser une facture, veuillez saisir une note."
 #: code:addons/l10n_fr_pdp/wizard/pdp_response_wizard.py:0
 msgid "To refuse an invoice please select a Reason Code."
 msgstr "Pour refuser une facture, veuillez sélectionner un code de motif."
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/wizard/pdp_response_wizard.py:0
+msgid "To suspend an invoice please enter a Note."
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/wizard/pdp_response_wizard.py:0
+msgid "To suspend an invoice please select a Reason Code."
+msgstr ""
 
 #. module: l10n_fr_pdp
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.l10n_fr_pdp_list_view_move_ereporting
@@ -2579,6 +2685,12 @@ msgstr "Transaction inconnue"
 #: code:addons/l10n_fr_pdp/models/account_edi_proxy_user.py:0
 msgid "Unsupported response status: '%s'."
 msgstr "Statut de réponse non pris en charge : ' %s'."
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_move.py:0
+msgid "VAT number for %s must not exceed 18 characters."
+msgstr ""
 
 #. module: l10n_fr_pdp
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.l10n_fr_pdp_reports_view_flow_form
@@ -2766,3 +2878,38 @@ msgstr ""
 #: model:ir.model.fields.selection,name:l10n_fr_pdp.selection__account_peppol_response__pdp_ppf_state__received
 msgid "received"
 msgstr "reçu"
+
+#~ msgid ""
+#~ "<span class=\"text-muted\">\n"
+#~ "                                    Enable e-reporting &amp; sending of "
+#~ "invoices to the PPF\n"
+#~ "                                </span>\n"
+#~ "                                <br/>"
+#~ msgstr ""
+#~ "<span class=\"text-muted\">\n"
+#~ "                                    Activer l’e-reporting &amp; l’envoi "
+#~ "des factures au PPF\n"
+#~ "                                </span>\n"
+#~ "                                <br/>"
+
+#~ msgid ""
+#~ "<span class=\"text-muted\">\n"
+#~ "                                    Participate in the pilot phase\n"
+#~ "                                </span>\n"
+#~ "                                <br/>"
+#~ msgstr ""
+#~ "<span class=\"text-muted\">\n"
+#~ "                                    Participer à la phase pilote\n"
+#~ "                                </span>\n"
+#~ "                                <br/>"
+
+#~ msgid "Factur-x/XRechnung CII 2.2.0"
+#~ msgstr "Factur-x/XRechnung CII 2.2.0"
+
+#~ msgid ""
+#~ "For information: French administration annuaire can be updated once a day "
+#~ "so your validation should be done tomorrow."
+#~ msgstr ""
+#~ "Pour information : l’annuaire de l’administration française peut être mis "
+#~ "à jour une fois par jour, votre validation devrait donc être effectuée "
+#~ "demain."

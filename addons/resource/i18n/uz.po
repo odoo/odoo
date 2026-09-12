@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:46+0000\n"
+"POT-Creation-Date: 2026-09-11 17:43+0000\n"
 "PO-Revision-Date: 2026-08-31 19:45+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -370,6 +370,8 @@ msgid "Forever"
 msgstr ""
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__4
 #, fuzzy
 msgid "Friday"
@@ -538,6 +540,8 @@ msgid "Material Resources"
 msgstr ""
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__0
 #, fuzzy
 msgid "Monday"
@@ -605,6 +609,11 @@ msgid "Phone"
 msgstr "Telefon"
 
 #. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_tree
+msgid "Preview"
+msgstr ""
+
+#. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 #, fuzzy
@@ -642,6 +651,16 @@ msgstr ""
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__recurrency_type
 msgid "Recurrency Type"
+msgstr ""
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__reference_calendar_id
+msgid "Reference Calendar"
+msgstr ""
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_calendar__reference_calendar_id
+msgid "Reference working hours used to compute the full-time equivalent."
 msgstr ""
 
 #. module: resource
@@ -736,6 +755,8 @@ msgstr ""
 "belgilashingiz mumkin."
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__5
 #, fuzzy
 msgid "Saturday"
@@ -806,6 +827,8 @@ msgid "Starting Date of Time Off"
 msgstr "Ta'tilning boshlanish sanasi"
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__6
 #, fuzzy
 msgid "Sunday"
@@ -903,6 +926,8 @@ msgstr ""
 "davomiylik 30 daqiqa bo‘ladi."
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__3
 #, fuzzy
 msgid "Thursday"
@@ -953,6 +978,8 @@ msgid "Total duration of attendances cannot exceed 24 hours"
 msgstr ""
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__1
 #, fuzzy
 msgid "Tuesday"
@@ -984,6 +1011,18 @@ msgid "Variable"
 msgstr ""
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_many2one/resource_calendar_many2one.js:0
+msgid "Variable (%(days)s %(dayLabel)s - %(hours)sh)"
+msgstr ""
+
+#. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
+msgid "Variable (%(days)s days - %(hours)sh)"
+msgstr ""
+
+#. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 #: model_terms:ir.ui.view,arch_db:resource.resource_resource_form
 #, fuzzy
@@ -991,6 +1030,8 @@ msgid "Visible to all"
 msgstr "Hammaga ko‘rinadigan"
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__2
 #, fuzzy
 msgid "Wednesday"
@@ -1030,6 +1071,7 @@ msgstr "Mehnat resurslari soni"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__work_time_rate
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 #, fuzzy
 msgid "Work Time Rate"
 msgstr "Ish vaqti me'yori"
@@ -1063,6 +1105,12 @@ msgstr "Ish tugashi"
 #, fuzzy
 msgid "Working Hours"
 msgstr "Ish soatlari"
+
+#. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
+msgid "Working Hours by Day"
+msgstr ""
 
 #. module: resource
 #. odoo-python
@@ -1106,122 +1154,139 @@ msgstr ""
 msgid "You cannot compute the intervals without a calendar on no resource."
 msgstr ""
 
-#, fuzzy
-msgid "2 Week's Calendar"
-msgstr "2 haftalik taqvim"
-
-#, fuzzy
-msgid "<span class=\"ms-2\">hours/day</span>"
-msgstr "<span class=\"ms-2\">soat/kun</span>"
-
-#, fuzzy
-msgid "<span class=\"ms-2\">hours/week</span>"
-msgstr "<span class=\"ms-2\">soat/hafta</span>"
-
-#, fuzzy
-msgid "<span>hours/week</span>"
-msgstr "<span>soat/hafta</span>"
-
-#, fuzzy
-msgid ""
-"Are you sure you want to switch to a 1-week calendar? All work entries will "
-"be lost."
+#. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_many2one/resource_calendar_many2one.js:0
+msgid "day"
 msgstr ""
-"Rostdan ham 1 haftalik taqvimga o‘tmoqchimisiz? Barcha ish yozuvlari "
-"yo‘qoladi."
 
-#, fuzzy
-msgid ""
-"Are you sure you want to switch to a 2-week calendar? All work entries will "
-"be lost."
+#. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_many2one/resource_calendar_many2one.js:0
+msgid "days"
 msgstr ""
-"Rostdan ham 2 haftalik taqvimga o‘tmoqchimisiz? Barcha ish yozuvlari "
-"yo‘qoladi."
 
-#, fuzzy
-msgid "Attendances can't overlap."
-msgstr "Davomatlar bir-biriga mos kelmasligi kerak."
-
-#, fuzzy
-msgid "Avg"
-msgstr "O‘rtacha"
-
-#, fuzzy
-msgid "Calendar in 2 weeks mode"
-msgstr "2 haftalik rejim taqvimi"
-
-#, fuzzy
-msgid "Explanation"
-msgstr "Tushuntirish"
-
-#, fuzzy
-msgid "First"
-msgstr "Birinchi"
-
-#, fuzzy
-msgid "First week"
-msgstr "Birinchi hafta"
-
-#, fuzzy
-msgid "Required Full Time"
-msgstr "Talab qilingan to‘liq vaqt"
-
-#, fuzzy
-msgid "Second"
-msgstr "Soniya"
-
-#, fuzzy
-msgid "Second week"
-msgstr "Ikkinchi hafta"
-
-#, fuzzy
-msgid "Switch"
-msgstr "Almashtirish"
-
-#, fuzzy
-msgid "Switch to 1-week calendar"
-msgstr "1 haftalik taqvimga o‘tish"
-
-#, fuzzy
-msgid "Switch to 2-weeks calendar"
-msgstr "2 haftalik taqvimga o‘tish"
-
-#, fuzzy
-msgid ""
-"The current week (from %(first_day)s to %(last_day)s) corresponds to %"
-"(number)s week."
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "from company"
 msgstr ""
-"Joriy hafta (%(first_day)s dan %(last_day)s gacha) %(number)s haftaga "
-"to‘g‘ri keladi."
 
 #, fuzzy
-msgid "Total"
-msgstr "Jami"
+#~ msgid "2 Week's Calendar"
+#~ msgstr "2 haftalik taqvim"
 
 #, fuzzy
-msgid "Week 1 Working Hours"
-msgstr "1-hafta ish soatlari"
+#~ msgid "<span class=\"ms-2\">hours/day</span>"
+#~ msgstr "<span class=\"ms-2\">soat/kun</span>"
 
 #, fuzzy
-msgid "Week 2 Working Hours"
-msgstr "2-hafta ish soatlari"
+#~ msgid "<span class=\"ms-2\">hours/week</span>"
+#~ msgstr "<span class=\"ms-2\">soat/hafta</span>"
 
 #, fuzzy
-msgid "Week Number"
-msgstr "Hafta raqami"
+#~ msgid "<span>hours/week</span>"
+#~ msgstr "<span>soat/hafta</span>"
 
 #, fuzzy
-msgid "Working Time 1st Week"
-msgstr "1-hafta ish vaqti"
+#~ msgid ""
+#~ "Are you sure you want to switch to a 1-week calendar? All work entries "
+#~ "will be lost."
+#~ msgstr ""
+#~ "Rostdan ham 1 haftalik taqvimga o‘tmoqchimisiz? Barcha ish yozuvlari "
+#~ "yo‘qoladi."
 
 #, fuzzy
-msgid "Working Time 2nd Week"
-msgstr "2-hafta ish vaqti"
+#~ msgid ""
+#~ "Are you sure you want to switch to a 2-week calendar? All work entries "
+#~ "will be lost."
+#~ msgstr ""
+#~ "Rostdan ham 2 haftalik taqvimga o‘tmoqchimisiz? Barcha ish yozuvlari "
+#~ "yo‘qoladi."
 
 #, fuzzy
-msgid "even"
-msgstr "juft"
+#~ msgid "Attendances can't overlap."
+#~ msgstr "Davomatlar bir-biriga mos kelmasligi kerak."
 
 #, fuzzy
-msgid "odd"
-msgstr "toq"
+#~ msgid "Avg"
+#~ msgstr "O‘rtacha"
+
+#, fuzzy
+#~ msgid "Calendar in 2 weeks mode"
+#~ msgstr "2 haftalik rejim taqvimi"
+
+#, fuzzy
+#~ msgid "Explanation"
+#~ msgstr "Tushuntirish"
+
+#, fuzzy
+#~ msgid "First"
+#~ msgstr "Birinchi"
+
+#, fuzzy
+#~ msgid "First week"
+#~ msgstr "Birinchi hafta"
+
+#, fuzzy
+#~ msgid "Required Full Time"
+#~ msgstr "Talab qilingan to‘liq vaqt"
+
+#, fuzzy
+#~ msgid "Second"
+#~ msgstr "Soniya"
+
+#, fuzzy
+#~ msgid "Second week"
+#~ msgstr "Ikkinchi hafta"
+
+#, fuzzy
+#~ msgid "Switch"
+#~ msgstr "Almashtirish"
+
+#, fuzzy
+#~ msgid "Switch to 1-week calendar"
+#~ msgstr "1 haftalik taqvimga o‘tish"
+
+#, fuzzy
+#~ msgid "Switch to 2-weeks calendar"
+#~ msgstr "2 haftalik taqvimga o‘tish"
+
+#, fuzzy
+#~ msgid ""
+#~ "The current week (from %(first_day)s to %(last_day)s) corresponds to %"
+#~ "(number)s week."
+#~ msgstr ""
+#~ "Joriy hafta (%(first_day)s dan %(last_day)s gacha) %(number)s haftaga "
+#~ "to‘g‘ri keladi."
+
+#, fuzzy
+#~ msgid "Total"
+#~ msgstr "Jami"
+
+#, fuzzy
+#~ msgid "Week 1 Working Hours"
+#~ msgstr "1-hafta ish soatlari"
+
+#, fuzzy
+#~ msgid "Week 2 Working Hours"
+#~ msgstr "2-hafta ish soatlari"
+
+#, fuzzy
+#~ msgid "Week Number"
+#~ msgstr "Hafta raqami"
+
+#, fuzzy
+#~ msgid "Working Time 1st Week"
+#~ msgstr "1-hafta ish vaqti"
+
+#, fuzzy
+#~ msgid "Working Time 2nd Week"
+#~ msgstr "2-hafta ish vaqti"
+
+#, fuzzy
+#~ msgid "even"
+#~ msgstr "juft"
+
+#, fuzzy
+#~ msgid "odd"
+#~ msgstr "toq"

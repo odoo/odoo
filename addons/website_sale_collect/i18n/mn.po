@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:43+0000\n"
+"POT-Creation-Date: 2026-09-11 17:44+0000\n"
 "PO-Revision-Date: 2026-08-31 21:23+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Mongolian <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -53,17 +53,10 @@ msgstr ""
 
 #. module: website_sale_collect
 #. odoo-javascript
-#: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
 #: code:addons/website_sale_collect/static/src/js/location_selector/location/location.xml:0
 #, fuzzy
 msgid "Available"
 msgstr "Бэлэн"
-
-#. module: website_sale_collect
-#. odoo-javascript
-#: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
-msgid "Change store"
-msgstr ""
 
 #. module: website_sale_collect
 #: model:ir.module.module,shortdesc:base.module_website_sale_collect
@@ -114,6 +107,12 @@ msgid "Delivery Methods"
 msgstr "Хүргэлтийн арга"
 
 #. module: website_sale_collect
+#. odoo-javascript
+#: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
+msgid "Delivery available"
+msgstr ""
+
+#. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.in_store_delivery_method
 msgid "Delivery method"
 msgstr ""
@@ -134,6 +133,18 @@ msgid "Display Name"
 msgstr "Дэлгэрэнгүй нэр"
 
 #. module: website_sale_collect
+#. odoo-javascript
+#: code:addons/website_sale_collect/static/src/js/location_selector/map_container/map_container.xml:0
+msgid "Exceptional closing from"
+msgstr ""
+
+#. module: website_sale_collect
+#. odoo-javascript
+#: code:addons/website_sale_collect/static/src/js/location_selector/map_container/map_container.xml:0
+msgid "Exceptional closing on"
+msgstr ""
+
+#. module: website_sale_collect
 #: model:ir.model.fields,field_description:website_sale_collect.field_delivery_carrier__id
 #: model:ir.model.fields,field_description:website_sale_collect.field_payment_method__id
 #: model:ir.model.fields,field_description:website_sale_collect.field_payment_provider__id
@@ -151,6 +162,18 @@ msgstr "ID"
 #. module: website_sale_collect
 #: model:ir.model.fields,field_description:website_sale_collect.field_website__in_store_dm_id
 msgid "In-store Delivery Method"
+msgstr ""
+
+#. module: website_sale_collect
+#. odoo-python
+#: code:addons/website_sale_collect/models/payment_provider.py:0
+msgid "In-store is only allowed if a sales order exists"
+msgstr ""
+
+#. module: website_sale_collect
+#. odoo-python
+#: code:addons/website_sale_collect/models/payment_provider.py:0
+msgid "In-store not allowed to pay less than the order remaining balance"
 msgstr ""
 
 #. module: website_sale_collect
@@ -215,6 +238,18 @@ msgid "Pick up in store"
 msgstr ""
 
 #. module: website_sale_collect
+#. odoo-javascript
+#: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
+msgid "Pickup"
+msgstr ""
+
+#. module: website_sale_collect
+#. odoo-javascript
+#: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
+msgid "Pickup available"
+msgstr ""
+
+#. module: website_sale_collect
 #. odoo-python
 #: code:addons/website_sale_collect/models/sale_order.py:0
 msgid "Please choose a store to collect your order."
@@ -265,13 +300,25 @@ msgstr ""
 #. module: website_sale_collect
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
-msgid "Select store"
+msgid "Select a Store"
 msgstr ""
 
 #. module: website_sale_collect
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
 msgid "Selected country:"
+msgstr ""
+
+#. module: website_sale_collect
+#. odoo-javascript
+#: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
+msgid "Shipping"
+msgstr ""
+
+#. module: website_sale_collect
+#. odoo-javascript
+#: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
+msgid "Shipping method"
 msgstr ""
 
 #. module: website_sale_collect
@@ -353,7 +400,7 @@ msgid "Your order will be ready on %s."
 msgstr ""
 
 #. module: website_sale_collect
-#: model_terms:payment.provider,done_msg:website_sale_collect.payment_provider_on_site
+#: model_terms:payment.provider,pending_msg:website_sale_collect.payment_provider_on_site
 msgid "Your order will be ready soon."
 msgstr ""
 
@@ -370,8 +417,14 @@ msgid "Your payment has been cancelled."
 msgstr "Таны төлбөр цуцлагдлаа."
 
 #. module: website_sale_collect
-#: model_terms:payment.provider,pending_msg:website_sale_collect.payment_provider_on_site
-msgid "Your payment has been processed but is waiting for approval."
+#: model_terms:payment.provider,done_msg:website_sale_collect.payment_provider_on_site
+msgid "Your payment has been processed."
+msgstr ""
+
+#. module: website_sale_collect
+#. odoo-javascript
+#: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.js:0
+msgid "from %(date)s"
 msgstr ""
 
 #. module: website_sale_collect
@@ -379,4 +432,10 @@ msgstr ""
 #: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
 #: code:addons/website_sale_collect/static/src/js/location_selector/location/location.xml:0
 msgid "in stock"
+msgstr ""
+
+#. module: website_sale_collect
+#. odoo-javascript
+#: code:addons/website_sale_collect/static/src/js/location_selector/map_container/map_container.xml:0
+msgid "to"
 msgstr ""

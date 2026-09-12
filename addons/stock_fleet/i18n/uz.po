@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:43+0000\n"
+"POT-Creation-Date: 2026-09-11 17:43+0000\n"
 "PO-Revision-Date: 2026-08-31 16:57+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -125,6 +125,11 @@ msgid "Annexed documents"
 msgstr ""
 
 #. module: stock_fleet
+#: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_type__auto_print_cmr_report
+msgid "Auto Print Consignment Note (CMR)"
+msgstr ""
+
+#. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Balance"
 msgstr ""
@@ -207,6 +212,7 @@ msgstr ""
 #. module: stock_fleet
 #: model:ir.actions.report,name:stock_fleet.action_report_cmr
 #: model:ir.actions.report,name:stock_fleet.action_report_cmr_batch
+#: model_terms:ir.ui.view,arch_db:stock_fleet.view_picking_type_form
 msgid "Consignment Note (CMR)"
 msgstr ""
 
@@ -342,6 +348,13 @@ msgid "ID"
 msgstr "ID"
 
 #. module: stock_fleet
+#: model:ir.model.fields,help:stock_fleet.field_stock_picking_type__auto_print_cmr_report
+msgid ""
+"If this checkbox is ticked, Odoo will automatically print the Consignment "
+"Note (CMR) of a delivery when it is validated."
+msgstr ""
+
+#. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Letter"
 msgstr ""
@@ -415,12 +428,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Number of packages"
 msgstr ""
-
-#. module: stock_fleet
-#: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
-#, fuzzy
-msgid "Operation Type"
-msgstr "Operatsiya turi"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
@@ -710,3 +717,7 @@ msgstr "Pochta indeksi"
 #, fuzzy
 msgid "semi-truck"
 msgstr "Yarimimdodli yuk mashinasi"
+
+#, fuzzy
+#~ msgid "Operation Type"
+#~ msgstr "Operatsiya turi"

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:42+0000\n"
+"POT-Creation-Date: 2026-09-11 17:43+0000\n"
 "PO-Revision-Date: 2026-08-31 15:16+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Serbian (Latin script) <https://translate.odoo.com/projects/"
@@ -249,6 +249,7 @@ msgstr "Duguje"
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_line__display_name
 #: model:ir.model.fields,field_description:mrp_account.field_account_move__display_name
 #: model:ir.model.fields,field_description:mrp_account.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_account_stock_valuation_report__display_name
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__display_name
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__display_name
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__display_name
@@ -260,7 +261,6 @@ msgstr "Duguje"
 #: model:ir.model.fields,field_description:mrp_account.field_product_template__display_name
 #: model:ir.model.fields,field_description:mrp_account.field_report_mrp_report_mo_overview__display_name
 #: model:ir.model.fields,field_description:mrp_account.field_res_company__display_name
-#: model:ir.model.fields,field_description:mrp_account.field_stock_account_stock_valuation_report__display_name
 #: model:ir.model.fields,field_description:mrp_account.field_stock_move__display_name
 msgid "Display Name"
 msgstr "Naziv za prikaz"
@@ -291,6 +291,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_line__id
 #: model:ir.model.fields,field_description:mrp_account.field_account_move__id
 #: model:ir.model.fields,field_description:mrp_account.field_account_move_line__id
+#: model:ir.model.fields,field_description:mrp_account.field_account_stock_valuation_report__id
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__id
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__id
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__id
@@ -302,7 +303,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp_account.field_product_template__id
 #: model:ir.model.fields,field_description:mrp_account.field_report_mrp_report_mo_overview__id
 #: model:ir.model.fields,field_description:mrp_account.field_res_company__id
-#: model:ir.model.fields,field_description:mrp_account.field_stock_account_stock_valuation_report__id
 #: model:ir.model.fields,field_description:mrp_account.field_stock_move__id
 msgid "ID"
 msgstr "ID"
@@ -483,7 +483,7 @@ msgid "Stock Move"
 msgstr "Premeštanje zaliha"
 
 #. module: mrp_account
-#: model:ir.model,name:mrp_account.model_stock_account_stock_valuation_report
+#: model:ir.model,name:mrp_account.model_account_stock_valuation_report
 msgid "Stock Valuation"
 msgstr ""
 
@@ -624,5 +624,5 @@ msgstr ""
 msgid "[WC] %s"
 msgstr ""
 
-msgid "Units"
-msgstr "Kom"
+#~ msgid "Units"
+#~ msgstr "Kom"

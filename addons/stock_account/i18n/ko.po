@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:41+0000\n"
+"POT-Creation-Date: 2026-09-11 17:42+0000\n"
 "PO-Revision-Date: 2026-08-31 20:29+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -92,14 +92,9 @@ msgid "AVCO Value"
 msgstr "AVCO 값"
 
 #. module: stock_account
-#: model:ir.model,name:stock_account.model_account_account
-msgid "Account"
-msgstr "계정"
-
-#. module: stock_account
-#: model:ir.model,name:stock_account.model_account_chart_template
-msgid "Account Chart Template"
-msgstr "계정과목 일람표 서식"
+#: model:ir.model,name:stock_account.model_res_groups
+msgid "Access Groups"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_move__cogs_aml_ids
@@ -116,13 +111,6 @@ msgstr "회계 날짜"
 #: model_terms:ir.ui.view,arch_db:stock_account.view_location_form_inherit
 msgid "Accounting Information"
 msgstr "회계 정보"
-
-#. module: stock_account
-#. odoo-javascript
-#: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.js:0
-#: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.xml:0
-msgid "Accrual"
-msgstr "누적"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
@@ -170,12 +158,6 @@ msgstr ""
 "니다."
 
 #. module: stock_account
-#. odoo-javascript
-#: code:addons/stock_account/static/src/stock_valuation/filters/filter_warehouses.xml:0
-msgid "All Warehouses"
-msgstr ""
-
-#. module: stock_account
 #: model:ir.model,name:stock_account.model_account_analytic_account
 msgid "Analytic Account"
 msgstr "분석 계정"
@@ -191,35 +173,12 @@ msgid "Analytic Plan"
 msgstr "분석 계획"
 
 #. module: stock_account
-#. odoo-javascript
-#: code:addons/stock_account/static/src/stock_valuation/filters/filter_date.xml:0
-msgid "As of"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_account_account__account_stock_variation_id
-#: model:ir.model.fields,help:stock_account.field_product_category__account_stock_variation_id
-msgid ""
-"At closing, register the inventory variation of the period into a specific "
-"account"
-msgstr ""
-
-#. module: stock_account
-#. odoo-javascript
-#: code:addons/stock_account/static/src/stock_valuation/filters/filter_date.xml:0
-msgid "At the date of"
-msgstr ""
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__avg_cost
 #: model:ir.model.fields,field_description:stock_account.field_stock_lot__avg_cost
 msgid "Average Cost"
 msgstr "평균비용"
 
 #. module: stock_account
-#: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__average
-#: model:ir.model.fields.selection,name:stock_account.selection__product_template__cost_method__average
-#: model:ir.model.fields.selection,name:stock_account.selection__res_company__cost_method__average
 #: model:ir.model.fields.selection,name:stock_account.selection__stock_quant__cost_method__average
 msgid "Average Cost (AVCO)"
 msgstr "평균법 (AVCO)"
@@ -255,23 +214,6 @@ msgstr ""
 #: code:addons/stock_account/models/res_company.py:0
 msgid "Closing: Location Reclassification - [%(account)s]"
 msgstr "마감: 위치 재분류 - [%(account)s]"
-
-#. module: stock_account
-#. odoo-python
-#: code:addons/stock_account/models/res_company.py:0
-msgid "Closing: Stock Variation Global for company [%(company)s]"
-msgstr ""
-
-#. module: stock_account
-#. odoo-python
-#: code:addons/stock_account/models/res_company.py:0
-msgid "Closing: Stock Variation Over Period"
-msgstr "마감: 기간별 재고 세부 옵션"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_account_move_line__cogs_origin_id
-msgid "Cogs Origin"
-msgstr "원산지 매출원가"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_res_company
@@ -330,13 +272,6 @@ msgid "Costing Method"
 msgstr "원가계산법"
 
 #. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_account_account__account_stock_expense_id
-msgid ""
-"Counterpart used at closing for accounting adjustments to inventory "
-"valuation."
-msgstr ""
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_picking__country_code
 #: model:ir.model.fields,field_description:stock_account.field_stock_picking_type__country_code
 msgid "Country Code"
@@ -351,12 +286,6 @@ msgstr "작성자"
 #: model:ir.model.fields,field_description:stock_account.field_product_value__create_date
 msgid "Created on"
 msgstr "작성일자"
-
-#. module: stock_account
-#. odoo-javascript
-#: code:addons/stock_account/static/src/stock_valuation/line/line.xml:0
-msgid "Credit"
-msgstr "대변"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__currency_id
@@ -381,11 +310,6 @@ msgid "Current Value Details"
 msgstr "현재 값 세부 정보"
 
 #. module: stock_account
-#: model:ir.model.fields.selection,name:stock_account.selection__res_company__inventory_period__daily
-msgid "Daily"
-msgstr "매일"
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__date
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__date
 msgid "Date"
@@ -402,12 +326,6 @@ msgstr ""
 "가 사용됩니다."
 
 #. module: stock_account
-#. odoo-javascript
-#: code:addons/stock_account/static/src/stock_valuation/line/line.xml:0
-msgid "Debit"
-msgstr "차변"
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__description
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__description
 msgid "Description"
@@ -419,19 +337,18 @@ msgid "Display Lots & Serial Numbers on Invoices"
 msgstr "청구서에 로트 및 일련번호 표시"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_account_account__display_name
 #: model:ir.model.fields,field_description:stock_account.field_account_analytic_account__display_name
 #: model:ir.model.fields,field_description:stock_account.field_account_analytic_plan__display_name
-#: model:ir.model.fields,field_description:stock_account.field_account_chart_template__display_name
 #: model:ir.model.fields,field_description:stock_account.field_account_move__display_name
 #: model:ir.model.fields,field_description:stock_account.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:stock_account.field_account_stock_valuation_report__display_name
 #: model:ir.model.fields,field_description:stock_account.field_product_category__display_name
 #: model:ir.model.fields,field_description:stock_account.field_product_product__display_name
 #: model:ir.model.fields,field_description:stock_account.field_product_template__display_name
 #: model:ir.model.fields,field_description:stock_account.field_product_value__display_name
 #: model:ir.model.fields,field_description:stock_account.field_res_company__display_name
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__display_name
-#: model:ir.model.fields,field_description:stock_account.field_stock_account_stock_valuation_report__display_name
+#: model:ir.model.fields,field_description:stock_account.field_res_groups__display_name
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__display_name
 #: model:ir.model.fields,field_description:stock_account.field_stock_forecasted_product_product__display_name
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory_adjustment_name__display_name
@@ -449,30 +366,6 @@ msgstr "표시명"
 #: model:res.groups,name:stock_account.group_lot_on_invoice
 msgid "Display Serial & Lot Number on Invoices"
 msgstr "청구서에 일련번호 및 로트 번호 표시"
-
-#. module: stock_account
-#. odoo-javascript
-#. odoo-python
-#: code:addons/stock_account/report/stock_valuation_report.py:0
-#: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.xml:0
-msgid "Ending Stock"
-msgstr "기말 재고"
-
-#. module: stock_account
-#. odoo-python
-#: code:addons/stock_account/models/res_company.py:0
-msgid "Everything is correctly closed"
-msgstr "모두 알맞게 종료되었습니다"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_account_account__account_stock_expense_id
-msgid "Expense Account"
-msgstr "경비 계정"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_account_account__account_stock_expense_active
-msgid "Expense Account Active"
-msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_account_id
@@ -496,30 +389,18 @@ msgid "For %(quantity)s %(uom)s (%(price_unit)s per %(uom)s)"
 msgstr ""
 
 #. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_account_form
-msgid "For Perpetual Continental Only"
-msgstr "대륙식 영구 재고법에만 적용"
-
-#. module: stock_account
-#. odoo-javascript
-#: code:addons/stock_account/static/src/stock_valuation/buttons_bar/buttons_bar.xml:0
-msgid "Generate Entry"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_account_account__id
 #: model:ir.model.fields,field_description:stock_account.field_account_analytic_account__id
 #: model:ir.model.fields,field_description:stock_account.field_account_analytic_plan__id
-#: model:ir.model.fields,field_description:stock_account.field_account_chart_template__id
 #: model:ir.model.fields,field_description:stock_account.field_account_move__id
 #: model:ir.model.fields,field_description:stock_account.field_account_move_line__id
+#: model:ir.model.fields,field_description:stock_account.field_account_stock_valuation_report__id
 #: model:ir.model.fields,field_description:stock_account.field_product_category__id
 #: model:ir.model.fields,field_description:stock_account.field_product_product__id
 #: model:ir.model.fields,field_description:stock_account.field_product_template__id
 #: model:ir.model.fields,field_description:stock_account.field_product_value__id
 #: model:ir.model.fields,field_description:stock_account.field_res_company__id
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__id
-#: model:ir.model.fields,field_description:stock_account.field_stock_account_stock_valuation_report__id
+#: model:ir.model.fields,field_description:stock_account.field_res_groups__id
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__id
 #: model:ir.model.fields,field_description:stock_account.field_stock_forecasted_product_product__id
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory_adjustment_name__id
@@ -548,14 +429,6 @@ msgid "If checked, the valuation will be specific by Lot/Serial number."
 msgstr "이 옵션을 선택하면 평가가 로트/일련번호에만 적용됩니다."
 
 #. module: stock_account
-#. odoo-javascript
-#. odoo-python
-#: code:addons/stock_account/report/stock_valuation_report.py:0
-#: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.xml:0
-msgid "Initial Balance"
-msgstr "기초 잔고"
-
-#. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_location.py:0
 msgid "Invalid search operator or value"
@@ -567,12 +440,6 @@ msgid "Inventory Adjustment Reference / Reason"
 msgstr "재고 조정 참조 / 이유"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_account_bank_statement_line__inventory_closing
-#: model:ir.model.fields,field_description:stock_account.field_account_move__inventory_closing
-msgid "Inventory Closing"
-msgstr "재고 관리 마감"
-
-#. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_location
 msgid "Inventory Location"
 msgstr "재고 위치"
@@ -580,25 +447,10 @@ msgstr "재고 위치"
 #. module: stock_account
 #. odoo-javascript
 #. odoo-python
-#: code:addons/stock_account/report/stock_valuation_report.py:0
+#: code:addons/stock_account/report/account_stock_valuation_report.py:0
 #: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.js:0
-#: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.xml:0
 msgid "Inventory Loss"
 msgstr "재고 손실"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_res_company__inventory_period
-msgid "Inventory Period"
-msgstr "재고 기간"
-
-#. module: stock_account
-#. odoo-python
-#: code:addons/stock_account/models/account_chart_template.py:0
-#: model:ir.actions.client,name:stock_account.action_report_stock_valuation
-#: model:ir.model.fields,field_description:stock_account.field_product_category__property_valuation
-#: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form_stock
-msgid "Inventory Valuation"
-msgstr "재고 자산 평가"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_account_move_line__cogs_move_ids
@@ -641,14 +493,6 @@ msgid "Is valued inside the company"
 msgstr "회사 내 가치 평가 여부"
 
 #. module: stock_account
-#. odoo-python
-#: code:addons/stock_account/models/res_company.py:0
-msgid ""
-"It exists closing entries after the selected date. Cancel them before "
-"generate an entry prior to them"
-msgstr ""
-
-#. module: stock_account
 #: model:ir.model,name:stock_account.model_account_move
 msgid "Journal Entry"
 msgstr "전표 입력"
@@ -656,12 +500,6 @@ msgstr "전표 입력"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_move_line
 msgid "Journal Item"
-msgstr "전표 항목"
-
-#. module: stock_account
-#. odoo-python
-#: code:addons/stock_account/models/res_company.py:0
-msgid "Journal Items"
 msgstr "전표 항목"
 
 #. module: stock_account
@@ -705,19 +543,9 @@ msgid "Lots & Serial numbers will appear on the invoice"
 msgstr "로트 및 일련번호가 청구서에 표시됩니다."
 
 #. module: stock_account
-#: model:ir.model.fields.selection,name:stock_account.selection__res_company__inventory_period__manual
-msgid "Manual"
-msgstr "수동"
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__value_manual
 msgid "Manual Value"
 msgstr "수기 값"
-
-#. module: stock_account
-#: model:ir.model.fields.selection,name:stock_account.selection__res_company__inventory_period__monthly
-msgid "Monthly"
-msgstr "매월"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__move_id
@@ -736,70 +564,9 @@ msgid "Only is set (= True) is supported in search for remaining_qty."
 msgstr ""
 
 #. module: stock_account
-#. odoo-python
-#: code:addons/stock_account/models/product.py:0
-msgid ""
-"Only the value 'periodic' and 'real_time' are accepted to search on "
-"valuation field."
-msgstr ""
-
-#. module: stock_account
-#. odoo-javascript
-#: code:addons/stock_account/static/src/stock_valuation/filters/filter_options.xml:0
-msgid "Options"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__periodic
-#: model:ir.model.fields.selection,name:stock_account.selection__product_template__valuation__periodic
-#: model:ir.model.fields.selection,name:stock_account.selection__res_company__inventory_valuation__periodic
-msgid "Periodic (at closing)"
-msgstr "단기채 (마감 시)"
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_category__property_valuation
-msgid ""
-"Periodic: The accounting entries are suggested manually in the inventory "
-"valuation report.\n"
-"        Perpetual: An accounting entry is automatically created to value the "
-"inventory when a product is billed or invoiced.\n"
-"        "
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__real_time
-#: model:ir.model.fields.selection,name:stock_account.selection__product_template__valuation__real_time
-#: model:ir.model.fields.selection,name:stock_account.selection__res_company__inventory_valuation__real_time
-msgid "Perpetual (at invoicing)"
-msgstr "장기채 (청구서 발행 시)"
-
-#. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_picking_type
 msgid "Picking Type"
 msgstr "선별 유형"
-
-#. module: stock_account
-#. odoo-python
-#: code:addons/stock_account/models/res_company.py:0
-msgid "Please set the Journal for Inventory Valuation in the settings."
-msgstr ""
-
-#. module: stock_account
-#. odoo-python
-#: code:addons/stock_account/models/res_company.py:0
-msgid ""
-"Please set the Valuation Account for Inventory Valuation in the settings."
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_category__property_price_difference_account_id
-msgid "Price Difference Account"
-msgstr "가격 차이 반영 계정"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_category__property_price_difference_account_active
-msgid "Price Difference Account Active"
-msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__price_unit
@@ -907,9 +674,6 @@ msgstr "회계 날짜 표시"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__standard_price
-#: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__standard
-#: model:ir.model.fields.selection,name:stock_account.selection__product_template__cost_method__standard
-#: model:ir.model.fields.selection,name:stock_account.selection__res_company__cost_method__standard
 #: model:ir.model.fields.selection,name:stock_account.selection__stock_quant__cost_method__standard
 msgid "Standard Price"
 msgstr "표준 가격"
@@ -921,42 +685,13 @@ msgid ""
 "the product.\n"
 "        Average Cost (AVCO): The products are valued at weighted average "
 "cost.\n"
-"        First In First Out (FIFO): The products are valued supposing those "
-"that enter the company first will also leave it first.\n"
 "        "
 msgstr ""
-"표준원가법: 품목에 지정되어 있는 표준 원가로 계산합니다.\n"
-"        평균법 (AVCO): 가중 평균 비용으로 계산합니다.\n"
-"        선입선출법 (FIFO): 먼저 회사로 입고된 품목을 먼저 출고시키는 것을 가"
-"정하여 계산합니다.\n"
-"        "
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_avco_report
 msgid "Stock AVCO Justifier"
 msgstr "재고 AVCO 설명"
-
-#. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
-msgid "Stock Account"
-msgstr "재고 계정"
-
-#. module: stock_account
-#: model:ir.actions.server,name:stock_account.ir_cron_post_stock_valuation_ir_actions_server
-msgid "Stock Account: Inventory Valuation Closing"
-msgstr "재고 계정: 재고 가치 평가 마감"
-
-#. module: stock_account
-#. odoo-python
-#: code:addons/stock_account/models/res_company.py:0
-msgid "Stock Closing"
-msgstr "재고 마감"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_journal
-#: model:ir.model.fields,field_description:stock_account.field_res_company__account_stock_journal_id
-msgid "Stock Journal"
-msgstr "재고 전표"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move
@@ -975,40 +710,14 @@ msgstr "재고 재보충 보고서"
 #. module: stock_account
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_account_forecasted/forecasted_header.js:0
-#: model:ir.model,name:stock_account.model_stock_account_stock_valuation_report
+#: model:ir.model,name:stock_account.model_account_stock_valuation_report
 msgid "Stock Valuation"
 msgstr "재고 평가"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_valuation_account_id
-#: model:ir.model.fields,field_description:stock_account.field_res_company__account_stock_valuation_id
 #: model:ir.model.fields,field_description:stock_account.field_stock_location__valuation_account_id
 msgid "Stock Valuation Account"
 msgstr "재고 평가 계정"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_valuation_account_active
-msgid "Stock Valuation Account Active"
-msgstr ""
-
-#. module: stock_account
-#. odoo-javascript
-#. odoo-python
-#: code:addons/stock_account/report/stock_valuation_report.py:0
-#: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.xml:0
-#: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
-msgid "Stock Variation"
-msgstr "재고 변동"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_category__account_stock_variation_id
-msgid "Stock Variation Account"
-msgstr "재고 세부 옵션 계정"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_category__account_stock_variation_active
-msgid "Stock Variation Account Active"
-msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product__company_currency_id
@@ -1116,9 +825,6 @@ msgstr "사용자"
 
 #. module: stock_account
 #: model:ir.actions.act_window,name:stock_account.stock_move_valuation_action
-#: model:ir.model.fields,field_description:stock_account.field_product_product__valuation
-#: model:ir.model.fields,field_description:stock_account.field_product_template__valuation
-#: model:ir.model.fields,field_description:stock_account.field_res_company__inventory_valuation
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 msgid "Valuation"
 msgstr "평가"
@@ -1176,54 +882,14 @@ msgstr ""
 "        또한 판매 주문의 마진 계산에도 사용됩니다."
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_account_account__account_stock_variation_id
-msgid "Variation Account"
-msgstr "변동 계정"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_account_account__account_stock_variation_active
-msgid "Variation Account Active"
-msgstr ""
-
-#. module: stock_account
 #: model:ir.module.module,shortdesc:base.module_stock_account
 msgid "WMS Accounting"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_category__property_stock_valuation_account_id
-msgid ""
-"When automated inventory valuation is enabled on a product, this account "
-"will hold the current value of the products."
-msgstr ""
-"제품에서 자동 재고 평가가 활성화되면 이 계정에 제품의 현재 가치가 유지됩니다."
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_category__property_stock_journal
-msgid ""
-"When doing automated inventory valuation, this is the Accounting Journal in "
-"which entries will be automatically posted when stock moves are processed."
-msgstr ""
-"자동화된 재고가치 평가 시, 이 항목은 재고 이동을 진행할 때 자동으로 발행되는 "
-"회계 전표입니다."
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_category__property_price_difference_account_id
-msgid ""
-"With perpetual valuation, this account will hold the price difference "
-"between the standard price and the bill price."
 msgstr ""
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "You can only adjust valuation for one move at a time."
-msgstr ""
-
-#. module: stock_account
-#. odoo-python
-#: code:addons/stock_account/models/product.py:0
-msgid "You can only use the '=' operator to search on valuation field."
 msgstr ""
 
 #. module: stock_account
@@ -1253,13 +919,130 @@ msgstr "stock_move_id"
 msgid "units"
 msgstr "기준"
 
-msgid ""
-"Value of the product (automatically computed in AVCO).\n"
-"        Used to value the product when the purchase cost is not known (e.g. "
-"inventory adjustment).\n"
-"        Used to compute margins on sale orders."
-msgstr ""
-"품목 가치입니다 (AVCO에서 자동 계산). \n"
-"          매입가를 모를 경우 품목 가치 평가를 하기 위해 사용합니다 (예: 재고 "
-"조정 시). \n"
-"           판매주문서에서 마진을 계산할 때 사용합니다."
+#~ msgid "Account"
+#~ msgstr "계정"
+
+#~ msgid "Account Chart Template"
+#~ msgstr "계정과목 일람표 서식"
+
+#~ msgid "Accrual"
+#~ msgstr "누적"
+
+#~ msgid "Closing: Stock Variation Over Period"
+#~ msgstr "마감: 기간별 재고 세부 옵션"
+
+#~ msgid "Cogs Origin"
+#~ msgstr "원산지 매출원가"
+
+#~ msgid "Credit"
+#~ msgstr "대변"
+
+#~ msgid "Daily"
+#~ msgstr "매일"
+
+#~ msgid "Debit"
+#~ msgstr "차변"
+
+#~ msgid "Ending Stock"
+#~ msgstr "기말 재고"
+
+#~ msgid "Everything is correctly closed"
+#~ msgstr "모두 알맞게 종료되었습니다"
+
+#~ msgid "Expense Account"
+#~ msgstr "경비 계정"
+
+#~ msgid "For Perpetual Continental Only"
+#~ msgstr "대륙식 영구 재고법에만 적용"
+
+#~ msgid "Initial Balance"
+#~ msgstr "기초 잔고"
+
+#~ msgid "Inventory Closing"
+#~ msgstr "재고 관리 마감"
+
+#~ msgid "Inventory Period"
+#~ msgstr "재고 기간"
+
+#~ msgid "Inventory Valuation"
+#~ msgstr "재고 자산 평가"
+
+#~ msgid "Journal Items"
+#~ msgstr "전표 항목"
+
+#~ msgid "Manual"
+#~ msgstr "수동"
+
+#~ msgid "Monthly"
+#~ msgstr "매월"
+
+#~ msgid "Periodic (at closing)"
+#~ msgstr "단기채 (마감 시)"
+
+#~ msgid "Perpetual (at invoicing)"
+#~ msgstr "장기채 (청구서 발행 시)"
+
+#~ msgid "Price Difference Account"
+#~ msgstr "가격 차이 반영 계정"
+
+#~ msgid ""
+#~ "Standard Price: The products are valued at their standard cost defined on "
+#~ "the product.\n"
+#~ "        Average Cost (AVCO): The products are valued at weighted average "
+#~ "cost.\n"
+#~ "        First In First Out (FIFO): The products are valued supposing "
+#~ "those that enter the company first will also leave it first.\n"
+#~ "        "
+#~ msgstr ""
+#~ "표준원가법: 품목에 지정되어 있는 표준 원가로 계산합니다.\n"
+#~ "        평균법 (AVCO): 가중 평균 비용으로 계산합니다.\n"
+#~ "        선입선출법 (FIFO): 먼저 회사로 입고된 품목을 먼저 출고시키는 것을 "
+#~ "가정하여 계산합니다.\n"
+#~ "        "
+
+#~ msgid "Stock Account"
+#~ msgstr "재고 계정"
+
+#~ msgid "Stock Account: Inventory Valuation Closing"
+#~ msgstr "재고 계정: 재고 가치 평가 마감"
+
+#~ msgid "Stock Closing"
+#~ msgstr "재고 마감"
+
+#~ msgid "Stock Journal"
+#~ msgstr "재고 전표"
+
+#~ msgid "Stock Variation"
+#~ msgstr "재고 변동"
+
+#~ msgid "Stock Variation Account"
+#~ msgstr "재고 세부 옵션 계정"
+
+#~ msgid "Variation Account"
+#~ msgstr "변동 계정"
+
+#~ msgid ""
+#~ "When automated inventory valuation is enabled on a product, this account "
+#~ "will hold the current value of the products."
+#~ msgstr ""
+#~ "제품에서 자동 재고 평가가 활성화되면 이 계정에 제품의 현재 가치가 유지됩니"
+#~ "다."
+
+#~ msgid ""
+#~ "When doing automated inventory valuation, this is the Accounting Journal "
+#~ "in which entries will be automatically posted when stock moves are "
+#~ "processed."
+#~ msgstr ""
+#~ "자동화된 재고가치 평가 시, 이 항목은 재고 이동을 진행할 때 자동으로 발행되"
+#~ "는 회계 전표입니다."
+
+#~ msgid ""
+#~ "Value of the product (automatically computed in AVCO).\n"
+#~ "        Used to value the product when the purchase cost is not known "
+#~ "(e.g. inventory adjustment).\n"
+#~ "        Used to compute margins on sale orders."
+#~ msgstr ""
+#~ "품목 가치입니다 (AVCO에서 자동 계산). \n"
+#~ "          매입가를 모를 경우 품목 가치 평가를 하기 위해 사용합니다 (예: 재"
+#~ "고 조정 시). \n"
+#~ "           판매주문서에서 마진을 계산할 때 사용합니다."

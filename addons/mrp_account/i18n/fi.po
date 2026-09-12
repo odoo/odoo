@@ -18,10 +18,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:42+0000\n"
-"PO-Revision-Date: 2026-09-02 08:06+0000\n"
+"POT-Creation-Date: 2026-09-11 17:43+0000\n"
+"PO-Revision-Date: 2026-09-10 14:40+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
-"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-4/"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-master/"
 "mrp_account/fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
@@ -133,27 +133,27 @@ msgstr "Laskentakohde"
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__analytic_distribution
 msgid "Analytic Distribution"
-msgstr "Analyyttinen jako"
+msgstr "Laskentakohteiden kohdistus"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "Analyyttinen rivi"
+msgstr "Laskentakohderivi"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_account_analytic_applicability
 msgid "Analytic Plan's Applicabilities"
-msgstr "Analyysisuunnitelman sovellettavuus"
+msgstr "Laskentakohderyhmän sovellettavuus"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__analytic_precision
 msgid "Analytic Precision"
-msgstr "Analyyttinen tarkkuus"
+msgstr "Laskennallinen tarkkuus"
 
 #. module: mrp_account
 #: model:ir.module.module,summary:base.module_mrp_account
 msgid "Analytic accounting in Manufacturing"
-msgstr ""
+msgstr "Laskentakohteet tuotannossa"
 
 #. module: mrp_account
 #. odoo-python
@@ -257,6 +257,7 @@ msgstr "Debit"
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_line__display_name
 #: model:ir.model.fields,field_description:mrp_account.field_account_move__display_name
 #: model:ir.model.fields,field_description:mrp_account.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_account_stock_valuation_report__display_name
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__display_name
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__display_name
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__display_name
@@ -268,7 +269,6 @@ msgstr "Debit"
 #: model:ir.model.fields,field_description:mrp_account.field_product_template__display_name
 #: model:ir.model.fields,field_description:mrp_account.field_report_mrp_report_mo_overview__display_name
 #: model:ir.model.fields,field_description:mrp_account.field_res_company__display_name
-#: model:ir.model.fields,field_description:mrp_account.field_stock_account_stock_valuation_report__display_name
 #: model:ir.model.fields,field_description:mrp_account.field_stock_move__display_name
 msgid "Display Name"
 msgstr "Näyttönimi"
@@ -299,6 +299,7 @@ msgstr "Ylimääräinen yksikkökustannus"
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_line__id
 #: model:ir.model.fields,field_description:mrp_account.field_account_move__id
 #: model:ir.model.fields,field_description:mrp_account.field_account_move_line__id
+#: model:ir.model.fields,field_description:mrp_account.field_account_stock_valuation_report__id
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__id
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__id
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__id
@@ -310,7 +311,6 @@ msgstr "Ylimääräinen yksikkökustannus"
 #: model:ir.model.fields,field_description:mrp_account.field_product_template__id
 #: model:ir.model.fields,field_description:mrp_account.field_report_mrp_report_mo_overview__id
 #: model:ir.model.fields,field_description:mrp_account.field_res_company__id
-#: model:ir.model.fields,field_description:mrp_account.field_stock_account_stock_valuation_report__id
 #: model:ir.model.fields,field_description:mrp_account.field_stock_move__id
 msgid "ID"
 msgstr "ID"
@@ -493,7 +493,7 @@ msgid "Stock Move"
 msgstr "Varastosiirto"
 
 #. module: mrp_account
-#: model:ir.model,name:mrp_account.model_stock_account_stock_valuation_report
+#: model:ir.model,name:mrp_account.model_account_stock_valuation_report
 msgid "Stock Valuation"
 msgstr "Varaston arvonmääritys"
 
@@ -642,14 +642,14 @@ msgstr "Työpisteen tuottavuusloki"
 msgid "[WC] %s"
 msgstr "[WC] %s"
 
-msgid "Acme Corp."
-msgstr "Acme Corp."
+#~ msgid "Acme Corp."
+#~ msgstr "Acme Corp."
 
-msgid "Laptop"
-msgstr "Kannettava tietokone"
+#~ msgid "Laptop"
+#~ msgstr "Kannettava tietokone"
 
-msgid "REF123"
-msgstr "REF123"
+#~ msgid "REF123"
+#~ msgstr "REF123"
 
-msgid "Units"
-msgstr "Kpl"
+#~ msgid "Units"
+#~ msgstr "Kpl"

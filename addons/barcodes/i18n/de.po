@@ -12,10 +12,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-08-31 16:03+0000\n"
+"POT-Creation-Date: 2026-09-11 17:42+0000\n"
+"PO-Revision-Date: 2026-09-09 13:52+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
-"Language-Team: German <https://translate.odoo.com/projects/odoo-s19-4/"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-master/"
 "barcodes/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -28,7 +28,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
 msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*'?"
-msgstr " „*“ ist kein gültiges Regex-Barcode-Muster. Meinten Sie „.*“?"
+msgstr ""
+" „*“ ist kein gültiges Barcode-Muster für den regulären Ausdruck. Meinten "
+"Sie „.*“?"
 
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
@@ -42,12 +44,12 @@ msgid ""
 "                                if the regular expression matches a prefix "
 "of the barcode."
 msgstr ""
-"<i>Barcode-Nomenklaturen</i> legen fest, wie Barcodes erkannt und eingestuft "
+"<i>Barcode-Nomenklaturen</i> legen fest, wie Barcodes erkannt und zugeordnet "
 "werden.\n"
 "                                Wenn ein Barcode eingelesen wird, wird er "
 "der <i>ersten</i> passenden Regel mit\n"
 "                                passendem Muster zugeordnet. Die Syntax der "
-"Muster entspricht der regulärer Ausdrücke.\n"
+"Muster entspricht der Syntax regulärer Ausdrücke.\n"
 "                                Ein Barcode erfüllt dann die Regel, wenn der "
 "reguläre Ausdruck mit dem Präfix des \n"
 "                                Barcode übereinstimmt."
@@ -64,7 +66,7 @@ msgstr ""
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
 msgid "Add a new barcode nomenclature"
-msgstr "Eine neue Barcode-Nomenklatur hinzufügen"
+msgstr "Neue Barcode-Nomenklatur hinzufügen"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__alias
@@ -90,11 +92,11 @@ msgstr "Ein internes Kennzeichen für diese Barcode-Nomenklatur"
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__any
 msgid "Any"
-msgstr "Beliebige"
+msgstr "Beliebig"
 
 #. module: barcodes
 #. odoo-javascript
-#: code:addons/barcodes/static/src/components/manual_barcode.xml:0
+#: code:addons/barcodes/static/src/components/barcode_input.xml:0
 msgid "Apply"
 msgstr "Anwenden"
 
@@ -122,7 +124,7 @@ msgstr "Barcode-Nomenklaturen"
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__pattern
 msgid "Barcode Pattern"
-msgstr "Barcodemuster"
+msgstr "Barcode-Muster"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcode_rule
@@ -140,6 +142,14 @@ msgstr "Der Barcode muss mit `042` beginnen"
 #: code:addons/barcodes/static/src/barcode_handlers.js:0
 msgid "Barcode: %(barcode)s"
 msgstr "Barcode: %(barcode)s"
+
+#. module: barcodes
+#. odoo-javascript
+#: code:addons/barcodes/static/src/components/barcode_view.xml:0
+msgid ""
+"Click the icon in the browser on the left of the address bar and toggle "
+"Camera permissions."
+msgstr ""
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_res_company
@@ -174,12 +184,18 @@ msgstr "EAN-13"
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_nomenclature__upc_ean_conv__ean2upc
 msgid "EAN-13 to UPC-A"
-msgstr "EAN-13 zu UPC-A"
+msgstr "EAN-13 in UPC-A"
 
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__ean8
 msgid "EAN-8"
 msgstr "EAN-8"
+
+#. module: barcodes
+#. odoo-javascript
+#: code:addons/barcodes/static/src/components/barcode_view.xml:0
+msgid "Edit access to scan"
+msgstr ""
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__encoding
@@ -188,9 +204,9 @@ msgstr "Codierung"
 
 #. module: barcodes
 #. odoo-javascript
-#: code:addons/barcodes/static/src/components/manual_barcode.js:0
-msgid "Enter a barcode..."
-msgstr "Geben Sie einen Barcode ein ..."
+#: code:addons/barcodes/static/src/components/barcode_input.js:0
+msgid "Enter a barcode"
+msgstr ""
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_ir_http
@@ -221,6 +237,12 @@ msgstr "Zuletzt aktualisiert am"
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_nomenclature__upc_ean_conv__none
 msgid "Never"
 msgstr "Niemals"
+
+#. module: barcodes
+#. odoo-javascript
+#: code:addons/barcodes/static/src/components/barcode_view.xml:0
+msgid "No access to your camera"
+msgstr ""
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_res_company__nomenclature_id
@@ -321,7 +343,7 @@ msgid ""
 "There is a syntax error in the barcode pattern %(pattern)s: a rule can only "
 "contain one pair of braces."
 msgstr ""
-"Es gibt einen Syntaxfehler in den Barcode-Mustern %(pattern)s: eine Regel "
+"Es gibt einen Syntaxfehler in den Barcode-Mustern %(pattern)s: Eine Regel "
 "kann nur ein Paar geschweifte Klammern enthalten."
 
 #. module: barcodes
@@ -331,7 +353,7 @@ msgid ""
 "There is a syntax error in the barcode pattern %(pattern)s: braces can only "
 "contain N's followed by D's."
 msgstr ""
-"Es gibt einen Syntaxfehler im Barcode-Muster %(pattern)s: geschweifte "
+"Es gibt einen Syntaxfehler im Barcode-Muster %(pattern)s: Geschweifte "
 "Klammern können nur Ns gefolgt von Ds enthalten."
 
 #. module: barcodes
@@ -340,7 +362,8 @@ msgstr ""
 msgid ""
 "There is a syntax error in the barcode pattern %(pattern)s: empty braces."
 msgstr ""
-"Es gibt einen Syntaxfehler in den Barcodemustern %(pattern)s: leere Klammern."
+"Es gibt einen Syntaxfehler in den Barcode-Mustern %(pattern)s: leere "
+"Klammern."
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__encoding
@@ -362,10 +385,10 @@ msgid ""
 "setting determines if a UPC/EAN barcode should be automatically converted in "
 "one way or another when trying to match a rule with the other encoding."
 msgstr ""
-"UPC-Codes können in EAN durch voranstellen einer Null konvertiert werden. "
-"Diese Einstellung legt fest, ob diese Umwandlung automatisch, in die eine "
-"oder andere Richtung, erfolgen soll, wenn nach Regelübereinstimmung der "
-"jeweils anderen Codierung gesucht wird."
+"UPC-Codes können in EAN-Codes durch Voranstellen einer Null umgewandelt "
+"werden. Diese Einstellung legt fest, ob diese Umwandlung automatisch in die "
+"eine oder andere Richtung erfolgen soll, wenn nach einer "
+"Regelübereinstimmung die jeweils andere Codierung gesucht wird."
 
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__upca
@@ -375,7 +398,7 @@ msgstr "UPC-A"
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_nomenclature__upc_ean_conv__upc2ean
 msgid "UPC-A to EAN-13"
-msgstr "UPC-A zu EAN-13"
+msgstr "UPC-A in EAN-13"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__upc_ean_conv
@@ -397,8 +420,8 @@ msgstr "Unbekannter Barcode-Befehl"
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__sequence
 msgid "Used to order rules such that rules with a smaller sequence match first"
 msgstr ""
-"Verwendet, um Regeln zu sortieren, sodass solche mit kleinerer Nummer zuerst "
-"geprüft werden."
+"Wird verwendet, um Regeln zu sortieren, sodass solche mit kleinerer Nummer "
+"zuerst geprüft werden"
 
 #. module: barcodes
 #. odoo-python
@@ -408,3 +431,6 @@ msgid ""
 msgstr ""
 "Sie können „%(name)s“ nicht löschen, da es sich um die Standard-Barcode-"
 "Nomenklatur handelt."
+
+#~ msgid "Enter a barcode..."
+#~ msgstr "Barcode eingeben …"

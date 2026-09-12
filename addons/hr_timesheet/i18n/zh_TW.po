@@ -13,11 +13,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:44+0000\n"
-"PO-Revision-Date: 2026-08-31 19:41+0000\n"
+"POT-Creation-Date: 2026-09-11 17:42+0000\n"
+"PO-Revision-Date: 2026-09-09 14:11+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
-"projects/odoo-s19-4/hr_timesheet/zh_Hant/>\n"
+"projects/odoo-master/hr_timesheet/zh_Hant/>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -94,24 +94,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_timesheet/models/account_analytic_line.py:0
 msgid "%(project_name)s (%(sign)s%(hours)sh)"
-msgstr ""
-
-#. module: hr_timesheet
-#. odoo-python
-#: code:addons/hr_timesheet/models/account_analytic_line.py:0
-msgid "%(sign)s%(hours)sh"
-msgstr ""
-
-#. module: hr_timesheet
-#. odoo-python
-#: code:addons/hr_timesheet/models/account_analytic_line.py:0
-msgid "%(sign)s%(hours)sh %(minutes)sm"
-msgstr ""
-
-#. module: hr_timesheet
-#. odoo-python
-#: code:addons/hr_timesheet/models/account_analytic_line.py:0
-msgid "%(sign)s%(minutes)sm"
 msgstr ""
 
 #. module: hr_timesheet
@@ -349,6 +331,25 @@ msgid "Call client and discuss project"
 msgstr "致電客戶並討論專案項目"
 
 #. module: hr_timesheet
+#: model:res.groups,comment:hr_timesheet.group_timesheet_manager
+msgid ""
+"Can manage and approve all timesheets, with access to reporting and "
+"configuration."
+msgstr ""
+
+#. module: hr_timesheet
+#: model:res.groups,comment:hr_timesheet.group_hr_timesheet_approver
+msgid ""
+"Can manage timesheets for all employees, but can only approve timesheets and "
+"billing targets for their team members. Has access to reporting."
+msgstr ""
+
+#. module: hr_timesheet
+#: model:res.groups,comment:hr_timesheet.group_hr_timesheet_user
+msgid "Can only manage their own timesheets."
+msgstr ""
+
+#. module: hr_timesheet
 #. odoo-javascript
 #: code:addons/hr_timesheet/static/src/views/timesheet_calendar/timesheet_calendar_model.js:0
 msgid "Choose an employee to create their timesheet."
@@ -467,7 +468,6 @@ msgstr ""
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__department_id
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__department_id
-#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 msgid "Department"
 msgstr "部門"
 
@@ -664,7 +664,6 @@ msgstr "記錄任務的時間"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__manager_id
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__manager_id
-#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 msgid "Manager"
 msgstr "經理"
 
@@ -695,6 +694,11 @@ msgstr "里程碑"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_update_view_search_inherit
 msgid "My Department's Updates"
 msgstr "我部門的最新情況"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
+msgid "My Projects/Tasks"
+msgstr ""
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_update_view_search_inherit
@@ -781,7 +785,6 @@ msgstr "逾時"
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__parent_task_id
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__parent_task_id
-#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 msgid "Parent Task"
 msgstr "上級任務"
 

@@ -16,10 +16,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:44+0000\n"
-"PO-Revision-Date: 2026-09-04 04:09+0000\n"
+"POT-Creation-Date: 2026-09-11 17:41+0000\n"
+"PO-Revision-Date: 2026-09-11 06:33+0000\n"
 "Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
-"Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-4/"
+"Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-master/"
 "point_of_sale/id/>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
@@ -741,6 +741,11 @@ msgid "Access Denied"
 msgstr "Akses Ditolak"
 
 #. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_res_groups
+msgid "Access Groups"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__access_token
 msgid "Access Token"
 msgstr "Token Akses"
@@ -794,13 +799,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accounting"
 msgstr "Akuntansi"
-
-#. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config__journal_id
-#: model:ir.model.fields,help:point_of_sale.field_pos_order__sale_journal
-#: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_journal_id
-msgid "Accounting journal used to post POS session receipts and invoices."
-msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -1580,7 +1578,6 @@ msgstr "Kembali"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/login_screen/login_screen.js:0
 msgid "Backend"
 msgstr "Backend"
@@ -1695,7 +1692,7 @@ msgstr "Peraturan Barcode"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
+#: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
 msgid "Barcode Scanner"
 msgstr "Barcode Scanner"
 
@@ -2014,7 +2011,6 @@ msgstr "Tunai Masuk / Keluar"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Cash In/Out"
 msgstr "Kas Masuk/Keluar"
@@ -2393,6 +2389,7 @@ msgstr "Klien"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/chose_combo_popup/chose_combo_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/product_configurator_popup/product_configurator_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
@@ -2407,7 +2404,6 @@ msgstr "Tutup"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Close Register"
 msgstr "Tutup Kasir"
@@ -2435,6 +2431,7 @@ msgid "Closed Register"
 msgstr "Tutup Kasir"
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_tree
 msgid "Closing"
 msgstr "Closing"
@@ -2467,6 +2464,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Closing Entry by product"
 msgstr "Entri Penutup berdasarkan produk"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__closing_journal_id
+#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_closing_journal_id
+msgid "Closing Journal"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__session_closing_mode
@@ -2946,12 +2949,6 @@ msgid "Create Partner"
 msgstr "Buat Partner"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
-msgid "Create Product"
-msgstr "Buat Produk"
-
-#. module: point_of_sale
 #: model:ir.model,website_form_label:point_of_sale.model_res_partner
 msgid "Create a Customer"
 msgstr "Buat Pelanggan"
@@ -3123,8 +3120,6 @@ msgid "Customer Account"
 msgstr "Akun Pelanggan"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Customer Display"
 msgstr "Tampilan Pelanggan"
@@ -3660,6 +3655,7 @@ msgstr "Diskon"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_country__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_res_country_state__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_res_currency__display_name
+#: model:ir.model.fields,field_description:point_of_sale.field_res_groups__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_res_lang__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_res_partner__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users__display_name
@@ -4518,6 +4514,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_res_country__id
 #: model:ir.model.fields,field_description:point_of_sale.field_res_country_state__id
 #: model:ir.model.fields,field_description:point_of_sale.field_res_currency__id
+#: model:ir.model.fields,field_description:point_of_sale.field_res_groups__id
 #: model:ir.model.fields,field_description:point_of_sale.field_res_lang__id
 #: model:ir.model.fields,field_description:point_of_sale.field_res_partner__id
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users__id
@@ -4694,12 +4691,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_form_view
 msgid "Information about your product."
 msgstr "Informasi mengenai produk Anda."
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
-msgid "Install App"
-msgstr "Instal App"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_payment_method_form
@@ -4960,6 +4951,26 @@ msgid "Journal Item"
 msgstr ""
 
 #. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__journal_id
+#: model:ir.model.fields,help:point_of_sale.field_pos_order__sale_journal
+#: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_journal_id
+msgid "Journal used for customer invoices and refunds credit notes. "
+msgstr ""
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid ""
+"Journal used for the customer invoices, and for the session closing entries "
+"when no Closing Journal is set."
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__closing_journal_id
+#: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_closing_journal_id
+msgid "Journal used specifically for PoS session closing and reverse entries"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_payment_method_kanban
 msgid "Journal:"
 msgstr "Jurnal:"
@@ -4996,7 +5007,7 @@ msgstr "Lampu LED"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
+#: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
 msgid "LNA"
 msgstr "LNA"
 
@@ -5266,7 +5277,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
+#: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
 msgid "Local Network Access"
 msgstr "Local Network Access"
 
@@ -6389,6 +6400,12 @@ msgid "Open Customer Display"
 msgstr "Buka Tampilan Pelanggan"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
+msgid "Open Menu"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__open_session_ids
 msgid "Open PoS sessions that are using this payment method."
 msgstr "Buka sesi POS yang menggunakan metode pembayaran ini."
@@ -6501,6 +6518,13 @@ msgstr "Pilihan produk"
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "Optional Products:"
 msgstr "Produk Opsional:"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid ""
+"Optional journal for the session closing entries, to keep their sequence and "
+"their options apart from the customer invoices."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_product_product__pos_optional_product_ids
@@ -6683,6 +6707,11 @@ msgstr "Order"
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_order_all_filtered
 msgid "Orders Analysis"
 msgstr "Analisis Order"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Orders journal"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7391,6 +7420,12 @@ msgid "Point of Sale Category"
 msgstr "Kategori Point of Sale"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_journal.py:0
+msgid "Point of Sale Closing"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_search
 msgid "Point of Sale Config"
 msgstr "Konfigurasi Point of Sale"
@@ -7637,7 +7672,7 @@ msgstr "Nama Pengguna Sesi POS"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__open_session_ids
 msgid "Pos Sessions"
-msgstr "Sesi-Sesi POS"
+msgstr "Sesi POS"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7858,12 +7893,6 @@ msgstr "Riwayat Cetak"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
-msgid "Print Report"
-msgstr "Cetak Laporan"
-
-#. module: point_of_sale
-#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/sale_details_button/sale_details_button.xml:0
 msgid "Print a report with all the sales of the current PoS Session"
 msgstr "Cetak laporan dengan semua sale pada Sesi POS saat ini"
@@ -7992,7 +8021,6 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/select_default_printer_popup/select_default_printer_popup.xml:0
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_printer_form
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_printers
@@ -8521,7 +8549,6 @@ msgstr "Muat ulang"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/confirmation_dialog/confirmation_dialog.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/error_dialog/error_dialog.js:0
 #: code:addons/point_of_sale/static/src/app/components/popups/error_dialog/error_dialog.xml:0
@@ -9558,6 +9585,7 @@ msgstr "Stok, konfigurator produk, replenenishment, diskon"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 msgid "Stop"
 msgstr "Stop"
@@ -11412,17 +11440,6 @@ msgstr ""
 "produk di antara informasi Produk."
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
-msgid ""
-"Whenever you close a session, one entry is generated in the following "
-"accounting journal for all the orders not invoiced. Invoices are recorded in "
-"accounting separately."
-msgstr ""
-"Setiap kali Anda menutup sesi, sebuah entri dibuat pada jurnal akuntansi "
-"berikut ini untuk semua order yang belum difakturkan. Faktur direkam di "
-"akuntansi secara terpisah."
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/select_default_printer_popup/select_default_printer_popup.xml:0
 msgid "Which one would you like to use as default for this device?"
@@ -12226,3 +12243,21 @@ msgstr "dengan nilai"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt_product_line
 msgid "x"
 msgstr "x"
+
+#~ msgid "Create Product"
+#~ msgstr "Buat Produk"
+
+#~ msgid "Install App"
+#~ msgstr "Instal App"
+
+#~ msgid "Print Report"
+#~ msgstr "Cetak Laporan"
+
+#~ msgid ""
+#~ "Whenever you close a session, one entry is generated in the following "
+#~ "accounting journal for all the orders not invoiced. Invoices are recorded "
+#~ "in accounting separately."
+#~ msgstr ""
+#~ "Setiap kali Anda menutup sesi, sebuah entri dibuat pada jurnal akuntansi "
+#~ "berikut ini untuk semua order yang belum difakturkan. Faktur direkam di "
+#~ "akuntansi secara terpisah."

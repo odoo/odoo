@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:46+0000\n"
+"POT-Creation-Date: 2026-09-11 17:43+0000\n"
 "PO-Revision-Date: 2026-08-31 19:44+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -342,6 +342,8 @@ msgid "Forever"
 msgstr ""
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__4
 msgid "Friday"
 msgstr "الجمعة"
@@ -489,6 +491,8 @@ msgid "Material Resources"
 msgstr ""
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__0
 msgid "Monday"
 msgstr "الاثنين"
@@ -548,6 +552,11 @@ msgid "Phone"
 msgstr "رقم الهاتف"
 
 #. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_tree
+msgid "Preview"
+msgstr ""
+
+#. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 msgid "Provided datetimes needs to be timezoned"
@@ -583,6 +592,16 @@ msgstr ""
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__recurrency_type
 msgid "Recurrency Type"
+msgstr ""
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__reference_calendar_id
+msgid "Reference Calendar"
+msgstr ""
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_calendar__reference_calendar_id
+msgid "Reference working hours used to compute the full-time equivalent."
 msgstr ""
 
 #. module: resource
@@ -666,6 +685,8 @@ msgstr ""
 "الأسبوعية."
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__5
 msgid "Saturday"
 msgstr "السبت"
@@ -726,6 +747,8 @@ msgid "Starting Date of Time Off"
 msgstr "تاريخ بدء الإجازة"
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__6
 msgid "Sunday"
 msgstr "الأحد"
@@ -815,6 +838,8 @@ msgstr ""
 "المتوقعة 30 دقيقة."
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__3
 msgid "Thursday"
 msgstr "الخميس"
@@ -860,6 +885,8 @@ msgid "Total duration of attendances cannot exceed 24 hours"
 msgstr ""
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__1
 msgid "Tuesday"
 msgstr "الثلاثاء"
@@ -888,12 +915,26 @@ msgid "Variable"
 msgstr ""
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_many2one/resource_calendar_many2one.js:0
+msgid "Variable (%(days)s %(dayLabel)s - %(hours)sh)"
+msgstr ""
+
+#. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
+msgid "Variable (%(days)s days - %(hours)sh)"
+msgstr ""
+
+#. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 #: model_terms:ir.ui.view,arch_db:resource.resource_resource_form
 msgid "Visible to all"
 msgstr "مرئي للكل"
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__2
 msgid "Wednesday"
 msgstr "الأربعاء"
@@ -926,6 +967,7 @@ msgstr "عدد موارد العمل"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__work_time_rate
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Work Time Rate"
 msgstr "معدل وقت العمل"
 
@@ -952,6 +994,12 @@ msgstr "العمل إلى"
 #: model:ir.model.fields,field_description:resource.field_resource_mixin__resource_calendar_id
 msgid "Working Hours"
 msgstr "ساعات العمل"
+
+#. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
+msgid "Working Hours by Day"
+msgstr ""
 
 #. module: resource
 #. odoo-python
@@ -992,55 +1040,72 @@ msgstr ""
 msgid "You cannot compute the intervals without a calendar on no resource."
 msgstr ""
 
-msgid "<span class=\"ms-2\">hours/week</span>"
-msgstr "<span class=\"ms-2\">ساعات/الأسبوع</span>"
-
-msgid "<span>hours/week</span>"
-msgstr "<span>ساعات/الأسبوع</span>"
-
-msgid ""
-"Are you sure you want to switch to a 1-week calendar? All work entries will "
-"be lost."
+#. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_many2one/resource_calendar_many2one.js:0
+msgid "day"
 msgstr ""
-"هل أنت متأكد من أنك ترغب في الانتقال إلى تقويم الأسبوع الواحد؟ سوف تفقد كافة "
-"قيود العمل."
 
-msgid ""
-"Are you sure you want to switch to a 2-week calendar? All work entries will "
-"be lost."
+#. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_many2one/resource_calendar_many2one.js:0
+msgid "days"
 msgstr ""
-"هل أنت متأكد من أنك ترغب في الانتقال إلى تقويم الأسبوعين؟ سوف تفقد كافة قيود "
-"العمل."
 
-msgid "Attendances can't overlap."
-msgstr "لا يمكن أن يتداخل الحضور"
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "from company"
+msgstr ""
 
-msgid "Avg"
-msgstr "المتوسط"
+#~ msgid "<span class=\"ms-2\">hours/week</span>"
+#~ msgstr "<span class=\"ms-2\">ساعات/الأسبوع</span>"
 
-msgid "Calendar in 2 weeks mode"
-msgstr "التقويم بوضعية الأسبوعين"
+#~ msgid "<span>hours/week</span>"
+#~ msgstr "<span>ساعات/الأسبوع</span>"
 
-msgid "Explanation"
-msgstr "التفسير"
+#~ msgid ""
+#~ "Are you sure you want to switch to a 1-week calendar? All work entries "
+#~ "will be lost."
+#~ msgstr ""
+#~ "هل أنت متأكد من أنك ترغب في الانتقال إلى تقويم الأسبوع الواحد؟ سوف تفقد "
+#~ "كافة قيود العمل."
 
-msgid "First"
-msgstr "الأول"
+#~ msgid ""
+#~ "Are you sure you want to switch to a 2-week calendar? All work entries "
+#~ "will be lost."
+#~ msgstr ""
+#~ "هل أنت متأكد من أنك ترغب في الانتقال إلى تقويم الأسبوعين؟ سوف تفقد كافة "
+#~ "قيود العمل."
 
-msgid "First week"
-msgstr "الأسبوع الأول"
+#~ msgid "Attendances can't overlap."
+#~ msgstr "لا يمكن أن يتداخل الحضور"
 
-msgid "Second"
-msgstr "الثاني"
+#~ msgid "Avg"
+#~ msgstr "المتوسط"
 
-msgid "Second week"
-msgstr "الأسبوع الثاني"
+#~ msgid "Calendar in 2 weeks mode"
+#~ msgstr "التقويم بوضعية الأسبوعين"
 
-msgid "Switch"
-msgstr "تبديل"
+#~ msgid "Explanation"
+#~ msgstr "التفسير"
 
-msgid "Total"
-msgstr "الإجمالي"
+#~ msgid "First"
+#~ msgstr "الأول"
 
-msgid "Week Number"
-msgstr "رقم الأسبوع"
+#~ msgid "First week"
+#~ msgstr "الأسبوع الأول"
+
+#~ msgid "Second"
+#~ msgstr "الثاني"
+
+#~ msgid "Second week"
+#~ msgstr "الأسبوع الثاني"
+
+#~ msgid "Switch"
+#~ msgstr "تبديل"
+
+#~ msgid "Total"
+#~ msgstr "الإجمالي"
+
+#~ msgid "Week Number"
+#~ msgstr "رقم الأسبوع"

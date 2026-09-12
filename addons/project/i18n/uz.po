@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:44+0000\n"
+"POT-Creation-Date: 2026-09-11 17:41+0000\n"
 "PO-Revision-Date: 2026-08-31 17:46+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-s19-4/project/"
@@ -90,10 +90,34 @@ msgstr "%(name)s ning vazifalar tahlili"
 
 #. module: project
 #. odoo-python
+#: code:addons/project/models/project_project.py:0
+msgid "%(name)s's Time by Stage"
+msgstr ""
+
+#. module: project
+#. odoo-python
 #: code:addons/project/models/res_partner.py:0
 #, fuzzy
 msgid "%(partner_name)s's Tasks"
 msgstr "%(partner_name)s ning vazifalari"
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/account_analytic_line.py:0
+msgid "%(sign)s%(hours)sh"
+msgstr ""
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/account_analytic_line.py:0
+msgid "%(sign)s%(hours)sh %(minutes)sm"
+msgstr ""
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/account_analytic_line.py:0
+msgid "%(sign)s%(minutes)sm"
+msgstr ""
 
 #. module: project
 #. odoo-python
@@ -789,6 +813,11 @@ msgid "Accept Emails From"
 msgstr "Xatlarni qabul qilish manzili"
 
 #. module: project
+#: model:ir.model,name:project.model_res_groups
+msgid "Access Groups"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_collaborator_wizard__access_mode
 #, fuzzy
 msgid "Access Mode"
@@ -1083,6 +1112,11 @@ msgid "Analytic Account"
 msgstr "Tahliliy hisob"
 
 #. module: project
+#: model:ir.model,name:project.model_account_analytic_line
+msgid "Analytic Line"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.actions.act_window,help:project.action_project_task_burndown_chart_report
 #, fuzzy
 msgid ""
@@ -1094,6 +1128,7 @@ msgstr ""
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_project_task_user_tree
+#: model_terms:ir.actions.act_window,help:project.action_project_time_by_stage_report
 #, fuzzy
 msgid ""
 "Analyze the progress of your projects and the performance of your employees."
@@ -1223,12 +1258,14 @@ msgstr "Tayinlangan shaxs"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__user_ids
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__user_ids
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__user_ids
 #: model:ir.model.fields,field_description:project.field_project_template_role_to_users_map__user_ids
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__user_ids
 #: model_terms:ir.ui.view,arch_db:project.open_view_blocked_by_list_view
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_tree
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_fsm_base
 #, fuzzy
 msgid "Assignees"
@@ -1539,6 +1576,7 @@ msgid "Close the sub-tasks list"
 msgstr "Kichik vazifalar ro‘yxatini yopish"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 #, fuzzy
 msgid "Closed"
@@ -1551,6 +1589,7 @@ msgid "Closed Depending on Tasks"
 msgstr "Vazifalarga qarab yopiq"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 #, fuzzy
 msgid "Closed On"
@@ -1558,6 +1597,7 @@ msgstr "Yopilgan"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__is_closed
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__is_closed
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__is_closed
 #, fuzzy
 msgid "Closed state"
@@ -1620,8 +1660,10 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project__company_id
 #: model:ir.model.fields,field_description:project.field_project_project_stage__company_id
 #: model:ir.model.fields,field_description:project.field_project_task__company_id
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__company_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__company_id
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_search
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #, fuzzy
 msgid "Company"
@@ -1753,6 +1795,7 @@ msgstr ""
 "<b>faoliyatlar</b> yarating."
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__create_date
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__create_date
 #, fuzzy
 msgid "Create Date"
@@ -1898,6 +1941,7 @@ msgid "Created on"
 msgstr "Yaratilgan sana"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 #, fuzzy
@@ -1922,7 +1966,9 @@ msgstr "Maxsus qaytarilgan xabar"
 #: model:ir.model.fields,field_description:project.field_project_project__partner_id
 #: model:ir.model.fields,field_description:project.field_project_task__partner_id
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__partner_id
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__partner_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__partner_id
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #, fuzzy
@@ -2083,9 +2129,11 @@ msgstr "Eskirish kunlari"
 #: model:ir.model.fields,field_description:project.field_project_milestone__deadline
 #: model:ir.model.fields,field_description:project.field_project_task__date_deadline
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__date_deadline
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__date_deadline
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__date_deadline
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_kanban
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_base
 #, fuzzy
 msgid "Deadline"
@@ -2275,6 +2323,7 @@ msgstr "Bekor qilish"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_account_analytic_account__display_name
+#: model:ir.model.fields,field_description:project.field_account_analytic_line__display_name
 #: model:ir.model.fields,field_description:project.field_digest_digest__display_name
 #: model:ir.model.fields,field_description:project.field_ir_ui_menu__display_name
 #: model:ir.model.fields,field_description:project.field_mail_activity__display_name
@@ -2293,6 +2342,7 @@ msgstr "Bekor qilish"
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__display_name
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__display_name
 #: model:ir.model.fields,field_description:project.field_project_task_stage_personal__display_name
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__display_name
 #: model:ir.model.fields,field_description:project.field_project_task_type__display_name
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__display_name
 #: model:ir.model.fields,field_description:project.field_project_template_create_wizard__display_name
@@ -2300,6 +2350,7 @@ msgstr "Bekor qilish"
 #: model:ir.model.fields,field_description:project.field_project_update__display_name
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__display_name
 #: model:ir.model.fields,field_description:project.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:project.field_res_groups__display_name
 #: model:ir.model.fields,field_description:project.field_res_partner__display_name
 #: model:ir.model.fields,field_description:project.field_res_users__display_name
 #: model:ir.model.fields,field_description:project.field_res_users_settings__display_name
@@ -2572,6 +2623,7 @@ msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_base
 #, fuzzy
 msgid "Future"
@@ -2707,6 +2759,7 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__2
+#: model:ir.model.fields.selection,name:project.selection__project_task_stage_report__priority__2
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__priority__2
 #, fuzzy
 msgid "High priority"
@@ -2762,6 +2815,7 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_account_analytic_account__id
+#: model:ir.model.fields,field_description:project.field_account_analytic_line__id
 #: model:ir.model.fields,field_description:project.field_digest_digest__id
 #: model:ir.model.fields,field_description:project.field_ir_ui_menu__id
 #: model:ir.model.fields,field_description:project.field_mail_activity__id
@@ -2780,6 +2834,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__id
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__id
 #: model:ir.model.fields,field_description:project.field_project_task_stage_personal__id
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__id
 #: model:ir.model.fields,field_description:project.field_project_task_type__id
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__id
 #: model:ir.model.fields,field_description:project.field_project_template_create_wizard__id
@@ -2787,6 +2842,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_update__id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__id
 #: model:ir.model.fields,field_description:project.field_res_config_settings__id
+#: model:ir.model.fields,field_description:project.field_res_groups__id
 #: model:ir.model.fields,field_description:project.field_res_partner__id
 #: model:ir.model.fields,field_description:project.field_res_users__id
 #: model:ir.model.fields,field_description:project.field_res_users_settings__id
@@ -3046,12 +3102,14 @@ msgid "Kitchen Assembly"
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 #, fuzzy
 msgid "Last 30 Days"
 msgstr "So‘nggi 30 kun"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 #, fuzzy
 msgid "Last 365 Days"
@@ -3075,6 +3133,7 @@ msgstr "So‘nggi baholash (1-5)"
 #: model:ir.model.fields,field_description:project.field_project_project__date_last_stage_update
 #: model:ir.model.fields,field_description:project.field_project_task__date_last_stage_update
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__date_last_stage_update
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__date_last_stage_update
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__date_last_stage_update
 #, fuzzy
 msgid "Last Stage Update"
@@ -3257,6 +3316,7 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__0
+#: model:ir.model.fields.selection,name:project.selection__project_task_stage_report__priority__0
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__priority__0
 #, fuzzy
 msgid "Low priority"
@@ -3334,6 +3394,7 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__1
+#: model:ir.model.fields.selection,name:project.selection__project_task_stage_report__priority__1
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__priority__1
 #, fuzzy
 msgid "Medium priority"
@@ -3380,7 +3441,9 @@ msgstr "Xabarlar"
 #: code:addons/project/controllers/portal.py:0
 #: model:ir.model.fields,field_description:project.field_project_task__milestone_id
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__milestone_id
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__milestone_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__milestone_id
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 #, fuzzy
 msgid "Milestone"
@@ -3450,6 +3513,7 @@ msgstr "Loyihalarim"
 #: model:ir.ui.menu,name:project.menu_project_management_my_tasks
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_fsm_base
 #, fuzzy
 msgid "My Tasks"
@@ -3653,6 +3717,7 @@ msgstr "Hali mijoz reytinglari yo‘q"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_project_task_burndown_chart_report
 #: model_terms:ir.actions.act_window,help:project.action_project_task_user_tree
+#: model_terms:ir.actions.act_window,help:project.action_project_time_by_stage_report
 #, fuzzy
 msgid "No data yet!"
 msgstr "Hozircha ma'lumotlar yo‘q!"
@@ -3839,6 +3904,7 @@ msgstr "Faqat jpeg, png, bmp va tiff formatidagi rasmlarni biriktirish mumkin."
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__is_open
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 #, fuzzy
 msgid "Open"
@@ -3891,6 +3957,7 @@ msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_base
 #, fuzzy
 msgid "Overdue"
@@ -4077,8 +4144,10 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #: model:ir.model.fields,field_description:project.field_project_task__priority
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__priority
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__priority
 #: model:project.tags,name:project.project_tags_16
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 #, fuzzy
 msgid "Priority"
@@ -4127,6 +4196,7 @@ msgstr "Jarayon"
 #: model:ir.model.fields,field_description:project.field_project_milestone__project_id
 #: model:ir.model.fields,field_description:project.field_project_task__project_id
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__project_id
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__project_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__project_id
 #: model:ir.module.module,shortdesc:base.module_project
 #: model:ir.ui.menu,name:project.menu_main_pm
@@ -4555,6 +4625,8 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__task_properties
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__task_properties
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_base
 #, fuzzy
@@ -4927,6 +4999,7 @@ msgstr "Foydalanuvchilarga rol berish"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__is_rotting
 #: model:ir.model.fields,field_description:project.field_project_task__is_rotting
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 #, fuzzy
@@ -5116,6 +5189,7 @@ msgstr "Taklifnoma yuborish"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__sequence
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__sequence
 #: model:ir.model.fields,field_description:project.field_project_task_type__sequence
 #, fuzzy
 msgid "Sequence"
@@ -5330,9 +5404,11 @@ msgstr "Sprint davom etmoqda"
 #: model:ir.model.fields,field_description:project.field_project_project__stage_id
 #: model:ir.model.fields,field_description:project.field_project_task__stage_id
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__stage_id
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__stage_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__stage_id
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 #, fuzzy
@@ -5340,10 +5416,20 @@ msgid "Stage"
 msgstr "Bosqich"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_pivot
+msgid "Stage Analysis"
+msgstr ""
+
+#. module: project
 #: model:mail.message.subtype,name:project.mt_task_stage
 #, fuzzy
 msgid "Stage Changed"
 msgstr "Bosqich o‘zgartirildi"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_graph
+msgid "Stage Chart"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_stage__name
@@ -5475,10 +5561,12 @@ msgstr "Futbolka bosib chiqarish"
 #: model:ir.model.fields,field_description:project.field_project_project__tag_ids
 #: model:ir.model.fields,field_description:project.field_project_task__tag_ids
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__tag_ids
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__tag_ids
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__tag_ids
 #: model:ir.ui.menu,name:project.menu_project_tags_act
 #: model_terms:ir.ui.view,arch_db:project.project_tags_form_view
 #: model_terms:ir.ui.view,arch_db:project.project_tags_tree_view
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #, fuzzy
 msgid "Tags"
@@ -5489,6 +5577,7 @@ msgstr "Teglar"
 #: code:addons/project/static/src/webclient/share_target/project_share_target_item.js:0
 #: model:ir.model,name:project.model_project_task
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__task_ids
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__task_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__task_id
 #: model:ir.model.fields,field_description:project.field_task_share_wizard__task_id
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -5625,6 +5714,7 @@ msgid "Task Templates"
 msgstr "Vazifa andozalari"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__name
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__name
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form
 #: model_terms:ir.ui.view,arch_db:project.quick_create_task_form
@@ -5691,6 +5781,11 @@ msgid "Task templates cannot be shared."
 msgstr ""
 
 #. module: project
+#: model:ir.model,name:project.model_project_task_stage_report
+msgid "Task time spent per stage"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_track_depending_tasks
 #, fuzzy
 msgid "Task:"
@@ -5716,6 +5811,7 @@ msgstr "Vazifa:"
 #: model_terms:ir.ui.view,arch_db:project.portal_my_project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_tree_main_base
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_card
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_graph
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_pivot
@@ -6010,6 +6106,7 @@ msgstr "Shu oy"
 #: code:addons/project/models/project_task.py:0
 #: model:project.task.type,name:project.project_personal_stage_admin_2
 #: model:project.task.type,name:project.project_personal_stage_demo_2
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #, fuzzy
 msgid "This Week"
 msgstr "Shu hafta"
@@ -6167,6 +6264,19 @@ msgid "Time Management"
 msgstr "Vaqtni boshqarish"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_stage_report__time_spent
+msgid "Time Spent"
+msgstr ""
+
+#. module: project
+#: model:ir.actions.act_window,name:project.action_project_time_by_stage_report
+#: model:ir.embedded.actions,name:project.project_embedded_action_time_by_stage
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
+#: model_terms:ir.ui.view,arch_db:project.view_project_card
+msgid "Time by Stage"
+msgstr ""
+
+#. module: project
 #: model:digest.tip,name:project.digest_tip_project_9
 msgid "Tip: Access your project easily"
 msgstr ""
@@ -6282,6 +6392,7 @@ msgstr ""
 #: code:addons/project/models/project_task.py:0
 #: model:project.task.type,name:project.project_personal_stage_admin_1
 #: model:project.task.type,name:project.project_personal_stage_demo_1
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #, fuzzy
 msgid "Today"
 msgstr "Bugun"
@@ -6444,6 +6555,7 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__3
+#: model:ir.model.fields.selection,name:project.selection__project_task_stage_report__priority__3
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__priority__3
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 #, fuzzy
@@ -6603,6 +6715,7 @@ msgstr "Ko‘rinuvchanlik"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
+#: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 #, fuzzy
 msgid "Visible to all"
@@ -7144,37 +7257,37 @@ msgid "🔒 Private"
 msgstr "🔒 Shaxsiy"
 
 #, fuzzy
-msgid "Create a Project"
-msgstr "Loyiha yaratish"
+#~ msgid "Create a Project"
+#~ msgstr "Loyiha yaratish"
 
 #, fuzzy
-msgid "Create a Project from Template %s"
-msgstr "%s shablonidan loyiha yaratish"
+#~ msgid "Create a Project from Template %s"
+#~ msgstr "%s shablonidan loyiha yaratish"
 
 #, fuzzy
-msgid "Create tasks by email:"
-msgstr "Vazifalarni elektron pochta orqali yaratish:"
+#~ msgid "Create tasks by email:"
+#~ msgstr "Vazifalarni elektron pochta orqali yaratish:"
 
 #, fuzzy
-msgid "Website Messages"
-msgstr "Veb-sayt xabarlari"
+#~ msgid "Website Messages"
+#~ msgstr "Veb-sayt xabarlari"
 
 #, fuzzy
-msgid "Website communication history"
-msgstr "Veb-sayt muloqot tarixi"
+#~ msgid "Website communication history"
+#~ msgstr "Veb-sayt muloqot tarixi"
 
 #, fuzzy
-msgid "Communication history"
-msgstr "Muloqot tarixi"
+#~ msgid "Communication history"
+#~ msgstr "Muloqot tarixi"
 
 #, fuzzy
-msgid "State readonly"
-msgstr "Faqat o‘qish uchun holat"
+#~ msgid "State readonly"
+#~ msgstr "Faqat o‘qish uchun holat"
 
 #, fuzzy
-msgid "<span>Progress</span>"
-msgstr "<span>Jarayon</span>"
+#~ msgid "<span>Progress</span>"
+#~ msgstr "<span>Jarayon</span>"
 
 #, fuzzy
-msgid "<span>Status</span>"
-msgstr "<span>Holat</span>"
+#~ msgid "<span>Status</span>"
+#~ msgstr "<span>Holat</span>"

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:42+0000\n"
+"POT-Creation-Date: 2026-09-11 17:42+0000\n"
 "PO-Revision-Date: 2026-08-31 16:44+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -93,11 +93,6 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 "            "
-msgstr ""
-
-#. module: delivery
-#: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
-msgid "<i class=\"oi me-1\" data-icon=\"east\"/>Get rate"
 msgstr ""
 
 #. module: delivery
@@ -305,6 +300,16 @@ msgid "Carrier"
 msgstr "Tashuvchi"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__carrier_prices
+msgid "Carrier Prices"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__carrier_prices_dumped
+msgid "Carrier Prices Dumped"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__payment_provider__custom_mode__cash_on_delivery
 #, fuzzy
 msgid "Cash On Delivery"
@@ -321,7 +326,20 @@ msgstr "Yetkazib berilganda naqd to‘lov"
 #. module: delivery
 #. odoo-python
 #: code:addons/delivery/models/payment_provider.py:0
+msgid "Cash on delivery is only allowed if a sales order exists"
+msgstr ""
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/payment_provider.py:0
 msgid "Cash on delivery not allowed by selected delivery method"
+msgstr ""
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/payment_provider.py:0
+msgid ""
+"Cash on delivery not allowed to pay less than the order remaining balance"
 msgstr ""
 
 #. module: delivery
@@ -367,6 +385,7 @@ msgstr "Tarkib"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__display_price
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__delivery_cost
 #, fuzzy
 msgid "Cost"
 msgstr "Narx"
@@ -456,6 +475,11 @@ msgid "Delivery Costs"
 msgstr ""
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__delivery_currency_id
+msgid "Delivery Currency"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__delivery_message
 #: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_message
 #, fuzzy
@@ -471,6 +495,7 @@ msgstr "Yetkazib berish xabari"
 #: model:ir.model.fields,field_description:delivery.field_sale_order__carrier_id
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_so_list
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_tree
 #, fuzzy
 msgid "Delivery Method"
@@ -604,6 +629,7 @@ msgstr "Ko‘rsatish tartibini belgilash"
 #: model:ir.model.fields,field_description:delivery.field_ir_module_module__display_name
 #: model:ir.model.fields,field_description:delivery.field_payment_method__display_name
 #: model:ir.model.fields,field_description:delivery.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:delivery.field_payment_transaction__display_name
 #: model:ir.model.fields,field_description:delivery.field_product_category__display_name
 #: model:ir.model.fields,field_description:delivery.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:delivery.field_res_partner__display_name
@@ -729,6 +755,12 @@ msgid "Get Rate and Create Shipment"
 msgstr "Narxni olish va jo‘natmani yaratish"
 
 #. module: delivery
+#. odoo-javascript
+#: code:addons/delivery/static/src/widgets/carrier_rates_loader.xml:0
+msgid "Get all rates"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model,name:delivery.model_ir_http
 #, fuzzy
 msgid "HTTP Routing"
@@ -745,6 +777,7 @@ msgstr "HTTP yo‘naltirish"
 #: model:ir.model.fields,field_description:delivery.field_ir_module_module__id
 #: model:ir.model.fields,field_description:delivery.field_payment_method__id
 #: model:ir.model.fields,field_description:delivery.field_payment_provider__id
+#: model:ir.model.fields,field_description:delivery.field_payment_transaction__id
 #: model:ir.model.fields,field_description:delivery.field_product_category__id
 #: model:ir.model.fields,field_description:delivery.field_res_config_settings__id
 #: model:ir.model.fields,field_description:delivery.field_res_partner__id
@@ -824,6 +857,11 @@ msgid "Invoicing Policy"
 msgstr "Hisob-faktura siyosati"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__is_loading_prices
+msgid "Is Loading Prices"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__is_delivery
 #, fuzzy
 msgid "Is a Delivery"
@@ -850,6 +888,12 @@ msgstr "Oxirgi yangilagan"
 #, fuzzy
 msgid "Last Updated on"
 msgstr "Oxirgi yangilangan sana"
+
+#. module: delivery
+#. odoo-javascript
+#: code:addons/delivery/static/src/widgets/carrier_rates_loader.xml:0
+msgid "Loading Rates"
+msgstr ""
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.delivery_local_delivery
@@ -943,6 +987,11 @@ msgid "Note Reference"
 msgstr ""
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__show_delivery_rates_button
+msgid "Number of carriers"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard__note_line_ids
 msgid "Operations"
 msgstr ""
@@ -974,6 +1023,12 @@ msgstr ""
 #, fuzzy
 msgid "Payment Provider"
 msgstr "To‘lov provayderi"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_payment_transaction
+#, fuzzy
+msgid "Payment Transaction"
+msgstr "To‘lov operatsiyasi"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -1203,7 +1258,7 @@ msgid "The Poste"
 msgstr "Pochta"
 
 #. module: delivery
-#: model_terms:payment.provider,done_msg:delivery.payment_provider_cod
+#: model_terms:payment.provider,pending_msg:delivery.payment_provider_cod
 #, fuzzy
 msgid "The delivery staff will collect payment upon delivery."
 msgstr ""
@@ -1296,6 +1351,11 @@ msgstr "Ushbu foiz yuk tashish narxiga qo‘shiladi."
 #, fuzzy
 msgid "Total Order Weight"
 msgstr "Buyurtmaning umumiy og‘irligi"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
+msgid "Total Weight"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__tracking_url
@@ -1435,9 +1495,10 @@ msgid "Your payment has been cancelled."
 msgstr "To‘lovingiz bekor qilindi."
 
 #. module: delivery
-#: model_terms:payment.provider,pending_msg:delivery.payment_provider_cod
-msgid "Your payment has been processed but is waiting for approval."
-msgstr ""
+#: model_terms:payment.provider,done_msg:delivery.payment_provider_cod
+#, fuzzy
+msgid "Your payment has been processed."
+msgstr "To‘lovingiz qayta ishlandi."
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_zip_prefix_list
@@ -1472,15 +1533,7 @@ msgid ""
 msgstr ""
 
 #, fuzzy
-msgid "Payment Transaction"
-msgstr "To‘lov operatsiyasi"
-
-#, fuzzy
-msgid "Your payment has been processed."
-msgstr "To‘lovingiz qayta ishlandi."
-
-#, fuzzy
-msgid "cash on delivery not allowed by selected delivery method"
-msgstr ""
-"tanlangan yetkazib berish usulida yetkazib berishda naqd pul to‘lovi ruxsat "
-"etilmagan"
+#~ msgid "cash on delivery not allowed by selected delivery method"
+#~ msgstr ""
+#~ "tanlangan yetkazib berish usulida yetkazib berishda naqd pul to‘lovi "
+#~ "ruxsat etilmagan"

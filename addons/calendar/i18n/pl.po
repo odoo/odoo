@@ -30,7 +30,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:41+0000\n"
+"POT-Creation-Date: 2026-09-11 17:42+0000\n"
 "PO-Revision-Date: 2026-08-31 14:15+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -77,9 +77,33 @@ msgstr ""
 
 #. module: calendar
 #. odoo-python
+#: code:addons/calendar/models/calendar_alarm_manager.py:0
+msgid "%(date_start)s, %(time_start)s - %(date_stop)s, %(time_stop)s"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_alarm_manager.py:0
+msgid "%(date_start)s, %(time_start)s - %(time_stop)s"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 msgid "%(day)s at (%(start)s To %(end)s) (%(timezone)s)"
 msgstr "%(day)s o (%(start)s do %(end)s) (%(timezone)s)"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_alarm_manager.py:0
+msgid "%(time_start)s - %(date_stop)s, %(time_stop)s"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_alarm_manager.py:0
+msgid "%(time_start)s - %(time_stop)s"
+msgstr ""
 
 #. module: calendar
 #. odoo-python
@@ -112,6 +136,12 @@ msgstr ""
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.js:0
 msgid "(No Title)"
 msgstr "(Bez tytułu)"
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_filter_section.js:0
+msgid "+ Add guests"
+msgstr ""
 
 #. module: calendar
 #. odoo-javascript
@@ -1388,6 +1418,7 @@ msgstr "Kalendarz"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_alarm_view_form
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_alarm_view_kanban
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_alarm_tree
 msgid "Calendar Alarm"
 msgstr "Alarm kalendarza"
@@ -1477,11 +1508,6 @@ msgid "Calendar: Reminder"
 msgstr "Kalendarz: Przypomnienie"
 
 #. module: calendar
-#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_calendar
-msgid "Calendars"
-msgstr ""
-
-#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__can_edit_body
 msgid "Can Edit Body"
 msgstr "Można edytować treść"
@@ -1496,11 +1522,6 @@ msgstr ""
 "Sprawdź czy organizator jest sam w wydarzeniu, tzn. czy organizator jest "
 "jedyną osobą, która nie odmówiła\n"
 " udziału w wydarzeniu (tylko jeśli organizator nie jest jedynym uczestnikiem)"
-
-#. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_filters__partner_checked
-msgid "Checked"
-msgstr "Zaznaczone"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__external_calendar_provider
@@ -1920,6 +1941,11 @@ msgid "Event Recurrence Rule"
 msgstr "Reguła powtarzania wydarzeń"
 
 #. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_type_tree
+msgid "Event Tag"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__display_time
 msgid "Event Time"
 msgstr "Czas wydarzenia"
@@ -2146,6 +2172,11 @@ msgstr "HTTP Routing"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__has_message
 msgid "Has Message"
 msgstr "Ma wiadomość"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_res_users_settings__calendar_hide_my
+msgid "Hide My Calendar from Calendar"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__interval__hours
@@ -2401,6 +2432,11 @@ msgid "Me"
 msgstr "Ja"
 
 #. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_calendar
+msgid "Meet with"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__mail_activity_type__category__meeting
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Meeting"
@@ -2412,16 +2448,15 @@ msgid "Meeting Activities"
 msgstr "Działania w ramach spotkania"
 
 #. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_res_partner__meeting_display_label
+#: model:ir.model.fields,field_description:calendar.field_res_users__meeting_display_label
+msgid "Meeting Display Label"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__name
 msgid "Meeting Subject"
 msgstr "Temat spotkania"
-
-#. module: calendar
-#: model:ir.actions.act_window,name:calendar.action_calendar_event_type
-#: model:ir.ui.menu,name:calendar.menu_calendar_event_type
-#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_type_tree
-msgid "Meeting Types"
-msgstr "Typy spotkań"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__videocall_location
@@ -2434,6 +2469,8 @@ msgid "Meeting linked"
 msgstr "Spotkanie powiązane"
 
 #. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/res_partner.py:0
 #: model:ir.actions.act_window,name:calendar.action_calendar_event
 #: model:ir.model.fields,field_description:calendar.field_res_partner__meeting_ids
 #: model:ir.model.fields,field_description:calendar.field_res_users__meeting_ids
@@ -2441,7 +2478,6 @@ msgstr "Spotkanie powiązane"
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
-#: model_terms:ir.ui.view,arch_db:calendar.view_partners_form
 msgid "Meetings"
 msgstr "Spotkania"
 
@@ -2527,6 +2563,12 @@ msgid "My Meetings"
 msgstr "Moje spotkania"
 
 #. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/side_panel/attendee_calendar_side_panel.xml:0
+msgid "My calendars"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__name
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__name
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__name
@@ -2570,6 +2612,14 @@ msgid "Next Activity Type"
 msgstr "Typ następnej aktywności"
 
 #. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/res_partner.py:0
+#: model:ir.model.fields,field_description:calendar.field_res_partner__meeting_next_date
+#: model:ir.model.fields,field_description:calendar.field_res_users__meeting_next_date
+msgid "Next Meeting"
+msgstr ""
+
+#. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/activity/attendee_calendar_activity_list_popover_item.xml:0
 msgid "Next Week"
@@ -2587,6 +2637,12 @@ msgstr "Nie"
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "No I'm not going."
 msgstr "Nie idę."
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/res_partner.py:0
+msgid "No Meetings"
+msgstr ""
 
 #. module: calendar
 #. odoo-javascript
@@ -2699,6 +2755,8 @@ msgstr "OK"
 
 #. module: calendar
 #. odoo-javascript
+#. odoo-python
+#: code:addons/calendar/models/calendar_alarm_manager.py:0
 #: code:addons/calendar/static/src/core/web/activity_patch.xml:0
 msgid "Online"
 msgstr ""
@@ -3101,12 +3159,6 @@ msgid "Show as"
 msgstr "Wyświetl jako"
 
 #. module: calendar
-#. odoo-javascript
-#: code:addons/calendar/static/src/js/services/calendar_notification_service.js:0
-msgid "Snooze"
-msgstr "Drzemka"
-
-#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__start
 msgid "Start"
 msgstr "Uruchom"
@@ -3228,7 +3280,11 @@ msgid "Tag name already exists!"
 msgstr "Nazwa etykiety już istnieje!"
 
 #. module: calendar
+#: model:ir.actions.act_window,name:calendar.action_calendar_event_type
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__categ_ids
+#: model:ir.ui.menu,name:calendar.calendar_submenu_event_type
+#: model:ir.ui.menu,name:calendar.menu_calendar_event_type
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_type_tree
 msgid "Tags"
 msgstr "Tagi"
 
@@ -3398,6 +3454,7 @@ msgstr "Wtorek"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__alarm_type
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_alarm_view_search
 msgid "Type"
 msgstr "Typ"
 
@@ -3696,3 +3753,12 @@ msgstr "{{ object.event_id.name }}: Data zaktualizowana"
 #: model:mail.template,subject:calendar.calendar_template_meeting_update
 msgid "{{object.name}}: Event update"
 msgstr "{{object.name}}:: Wydarzenie zaktualizowane"
+
+#~ msgid "Checked"
+#~ msgstr "Zaznaczone"
+
+#~ msgid "Meeting Types"
+#~ msgstr "Typy spotkań"
+
+#~ msgid "Snooze"
+#~ msgstr "Drzemka"

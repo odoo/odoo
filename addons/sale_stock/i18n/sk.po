@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:43+0000\n"
+"POT-Creation-Date: 2026-09-11 17:43+0000\n"
 "PO-Revision-Date: 2026-08-31 19:47+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Slovak <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -176,12 +176,6 @@ msgid ""
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.model,name:sale_stock.model_account_accrued_orders_wizard
-#, fuzzy
-msgid "Accrued Orders Wizard"
-msgstr "Sprievodca vytvorením dohadných položiek"
-
-#. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, fuzzy
@@ -293,12 +287,6 @@ msgid "Default Warehouse"
 msgstr "Predvolený sklad"
 
 #. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
-#, fuzzy
-msgid "Delivered"
-msgstr "Doručené"
-
-#. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
 msgid "Delivery"
@@ -329,7 +317,6 @@ msgid "Delivery:"
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_account_accrued_orders_wizard__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_account_move__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_product_template__display_name
@@ -432,20 +419,12 @@ msgid "Free Qty Today"
 msgstr "Dostupné množstvo dnes"
 
 #. module: sale_stock
-#. odoo-javascript
-#: code:addons/sale_stock/static/src/stock_valuation/stock_valuation_report.js:0
-#, fuzzy
-msgid "Goods Delivered Not Invoiced"
-msgstr "Tovar dodaný, nefakturované"
-
-#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__show_json_popover
 #, fuzzy
 msgid "Has late picking"
 msgstr "Má omeškaný presun"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_account_accrued_orders_wizard__id
 #: model:ir.model.fields,field_description:sale_stock.field_account_move__id
 #: model:ir.model.fields,field_description:sale_stock.field_account_move_line__id
 #: model:ir.model.fields,field_description:sale_stock.field_product_template__id
@@ -623,18 +602,6 @@ msgid "No products are available to return."
 msgstr ""
 
 #. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
-#, fuzzy
-msgid "Not Available"
-msgstr "Nedostupné"
-
-#. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
-#, fuzzy
-msgid "Not Delivered"
-msgstr "Nedodané"
-
-#. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, fuzzy
@@ -659,12 +626,6 @@ msgstr "Zapnuté"
 #: model:return.reason,name:sale_stock.return_reason_order_by_mistake
 msgid "Ordered by mistake"
 msgstr ""
-
-#. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
-#, fuzzy
-msgid "Partially Delivered"
-msgstr "Čiastočne dodané"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -829,8 +790,6 @@ msgid "Sale Line"
 msgstr "Položka predaja"
 
 #. module: sale_stock
-#. odoo-javascript
-#: code:addons/sale_stock/static/src/stock_valuation/stock_valuation_report.js:0
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
 msgid "Sale Orders"
 msgstr "Objednávky predaja"
@@ -929,18 +888,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_policy
 msgid "Shipping Policy"
 msgstr "Podmienky dopravy"
-
-#. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
-#, fuzzy
-msgid "Shipping Status"
-msgstr "Stav expedície"
-
-#. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
-#, fuzzy
-msgid "Started"
-msgstr "Spustené"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
@@ -1110,3 +1057,35 @@ msgstr "spracované namiesto"
 #, fuzzy
 msgid "will be late."
 msgstr "bude oneskorená."
+
+#, fuzzy
+#~ msgid "Accrued Orders Wizard"
+#~ msgstr "Sprievodca vytvorením dohadných položiek"
+
+#, fuzzy
+#~ msgid "Delivered"
+#~ msgstr "Doručené"
+
+#, fuzzy
+#~ msgid "Goods Delivered Not Invoiced"
+#~ msgstr "Tovar dodaný, nefakturované"
+
+#, fuzzy
+#~ msgid "Not Available"
+#~ msgstr "Nedostupné"
+
+#, fuzzy
+#~ msgid "Not Delivered"
+#~ msgstr "Nedodané"
+
+#, fuzzy
+#~ msgid "Partially Delivered"
+#~ msgstr "Čiastočne dodané"
+
+#, fuzzy
+#~ msgid "Shipping Status"
+#~ msgstr "Stav expedície"
+
+#, fuzzy
+#~ msgid "Started"
+#~ msgstr "Spustené"

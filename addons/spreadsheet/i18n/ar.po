@@ -10,10 +10,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:46+0000\n"
-"PO-Revision-Date: 2026-08-31 19:19+0000\n"
+"POT-Creation-Date: 2026-09-11 17:43+0000\n"
+"PO-Revision-Date: 2026-09-09 13:59+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
-"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-s19-4/"
+"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-master/"
 "spreadsheet/ar/>\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
@@ -1971,6 +1971,13 @@ msgstr ""
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"Cannot perform this action on merged cells. Unmerge the cells and try again."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Cannot remove duplicates for an unknown reason"
 msgstr "لا يمكن إزالة النسخ المكررة لسبب غير معروف."
 
@@ -2948,13 +2955,7 @@ msgstr "سعر صرف العملة"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/currency/plugins/currency.js:0
-msgid "Currency not available for this company."
-msgstr "العملة غير متاحة لهذه الشركة."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/currency/plugins/currency.js:0
+#: code:addons/spreadsheet/static/src/currency/formulas.js:0
 msgid "Currency rate unavailable."
 msgstr "سعر صرف العملة غير متاح."
 
@@ -4342,7 +4343,7 @@ msgstr "عامل التصفية"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/global_filters/plugins/global_filters_core_view_plugin.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_functions.js:0
 msgid "Filter \"%(filter_name)s\" not found"
 msgstr "لم يتم العثور على الفلتر\"%(filter_name)s\""
 
@@ -6862,7 +6863,7 @@ msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "No content to print"
 msgstr ""
 
@@ -7731,6 +7732,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Print content"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Print preview"
 msgstr ""
 
 #. module: spreadsheet
@@ -13584,16 +13591,6 @@ msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"This operation is not possible due to a merge. Please remove the merges "
-"first than try again."
-msgstr ""
-"لا يمكن تنفيذ العملية بسبب الدمج. الرجاء إزالة الدمج أولاً ثم المحاولة من "
-"جديد."
-
-#. module: spreadsheet
-#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "This pivot has no cell missing on this sheet"
 msgstr "لا يحتوي هذا الجدول المحوري على خلايا مفقودة في هذه الورقة"
@@ -15414,32 +15411,42 @@ msgstr ""
 msgid "yesterday"
 msgstr "بالأمس"
 
-#, fuzzy
-msgid "%(matches)s matches in %(sheetName)s"
-msgstr "%(matches)s نتائج في %(sheetName)s"
+#~ msgid "Currency not available for this company."
+#~ msgstr "العملة غير متاحة لهذه الشركة."
+
+#~ msgid ""
+#~ "This operation is not possible due to a merge. Please remove the merges "
+#~ "first than try again."
+#~ msgstr ""
+#~ "لا يمكن تنفيذ العملية بسبب الدمج. الرجاء إزالة الدمج أولاً ثم المحاولة من "
+#~ "جديد."
 
 #, fuzzy
-msgid "%(matches)s matches in range %(range)s of %(sheetName)s"
-msgstr "%(matches)s نتائج مطابقة في النطاق %(range)s من %(sheetName)s"
+#~ msgid "%(matches)s matches in %(sheetName)s"
+#~ msgstr "%(matches)s نتائج في %(sheetName)s"
 
 #, fuzzy
-msgid "%s matches in all sheets"
-msgstr "%s مطابق في كافة الأوراق"
+#~ msgid "%(matches)s matches in range %(range)s of %(sheetName)s"
+#~ msgstr "%(matches)s نتائج مطابقة في النطاق %(range)s من %(sheetName)s"
 
 #, fuzzy
-msgid "Change color"
-msgstr "تغيير اللون"
-
-msgid "Filters"
-msgstr "عوامل التصفية"
+#~ msgid "%s matches in all sheets"
+#~ msgstr "%s مطابق في كافة الأوراق"
 
 #, fuzzy
-msgid "First day of the month preceding a date."
-msgstr "اليوم الأول من الشهر السابق للتاريخ."
+#~ msgid "Change color"
+#~ msgstr "تغيير اللون"
+
+#~ msgid "Filters"
+#~ msgstr "عوامل التصفية"
 
 #, fuzzy
-msgid "Last day of the month following a date."
-msgstr "آخر يوم من الشهر بعد التاريخ."
+#~ msgid "First day of the month preceding a date."
+#~ msgstr "اليوم الأول من الشهر السابق للتاريخ."
 
-msgid "Show Filters"
-msgstr "إظهار عوامل التصفية"
+#, fuzzy
+#~ msgid "Last day of the month following a date."
+#~ msgstr "آخر يوم من الشهر بعد التاريخ."
+
+#~ msgid "Show Filters"
+#~ msgstr "إظهار عوامل التصفية"

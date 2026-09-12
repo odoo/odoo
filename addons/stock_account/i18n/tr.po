@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:41+0000\n"
+"POT-Creation-Date: 2026-09-11 17:42+0000\n"
 "PO-Revision-Date: 2026-08-31 20:30+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -105,14 +105,9 @@ msgid "AVCO Value"
 msgstr "AVCO Değer"
 
 #. module: stock_account
-#: model:ir.model,name:stock_account.model_account_account
-msgid "Account"
-msgstr "Hesap"
-
-#. module: stock_account
-#: model:ir.model,name:stock_account.model_account_chart_template
-msgid "Account Chart Template"
-msgstr "Hesap Planı Şablonu"
+#: model:ir.model,name:stock_account.model_res_groups
+msgid "Access Groups"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_move__cogs_aml_ids
@@ -129,13 +124,6 @@ msgstr "Muhasebe Tarihi"
 #: model_terms:ir.ui.view,arch_db:stock_account.view_location_form_inherit
 msgid "Accounting Information"
 msgstr "Muhasebe Bilgisi"
-
-#. module: stock_account
-#. odoo-javascript
-#: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.js:0
-#: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.xml:0
-msgid "Accrual"
-msgstr "Tahakkuk"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
@@ -183,12 +171,6 @@ msgstr ""
 "ürün maliyetlerinin üzerine yükleyin."
 
 #. module: stock_account
-#. odoo-javascript
-#: code:addons/stock_account/static/src/stock_valuation/filters/filter_warehouses.xml:0
-msgid "All Warehouses"
-msgstr ""
-
-#. module: stock_account
 #: model:ir.model,name:stock_account.model_account_analytic_account
 msgid "Analytic Account"
 msgstr "Analitik Hesap"
@@ -204,35 +186,12 @@ msgid "Analytic Plan"
 msgstr ""
 
 #. module: stock_account
-#. odoo-javascript
-#: code:addons/stock_account/static/src/stock_valuation/filters/filter_date.xml:0
-msgid "As of"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_account_account__account_stock_variation_id
-#: model:ir.model.fields,help:stock_account.field_product_category__account_stock_variation_id
-msgid ""
-"At closing, register the inventory variation of the period into a specific "
-"account"
-msgstr "Kapanışta, dönemin envanter değişimini belirli bir hesaba kaydedin"
-
-#. module: stock_account
-#. odoo-javascript
-#: code:addons/stock_account/static/src/stock_valuation/filters/filter_date.xml:0
-msgid "At the date of"
-msgstr ""
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__avg_cost
 #: model:ir.model.fields,field_description:stock_account.field_stock_lot__avg_cost
 msgid "Average Cost"
 msgstr "Ortalama Maliyet"
 
 #. module: stock_account
-#: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__average
-#: model:ir.model.fields.selection,name:stock_account.selection__product_template__cost_method__average
-#: model:ir.model.fields.selection,name:stock_account.selection__res_company__cost_method__average
 #: model:ir.model.fields.selection,name:stock_account.selection__stock_quant__cost_method__average
 msgid "Average Cost (AVCO)"
 msgstr "Ortalama Maliyet (AVCO)"
@@ -268,23 +227,6 @@ msgstr ""
 #: code:addons/stock_account/models/res_company.py:0
 msgid "Closing: Location Reclassification - [%(account)s]"
 msgstr "Kapanış Konum Yeniden Sınıflandırma - [%(account)s]"
-
-#. module: stock_account
-#. odoo-python
-#: code:addons/stock_account/models/res_company.py:0
-msgid "Closing: Stock Variation Global for company [%(company)s]"
-msgstr "Kapanış: Şirket için Stok Değişimi Global [%(company)s]"
-
-#. module: stock_account
-#. odoo-python
-#: code:addons/stock_account/models/res_company.py:0
-msgid "Closing: Stock Variation Over Period"
-msgstr "Kapanış: Dönem İçi Stok Değişimi"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_account_move_line__cogs_origin_id
-msgid "Cogs Origin"
-msgstr "Cogs Kökeni"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_res_company
@@ -343,15 +285,6 @@ msgid "Costing Method"
 msgstr "Maliyet Yöntemi"
 
 #. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_account_account__account_stock_expense_id
-msgid ""
-"Counterpart used at closing for accounting adjustments to inventory "
-"valuation."
-msgstr ""
-"Envanter değerlemesine ilişkin muhasebe düzeltmeleri için kapanışta "
-"kullanılan karşılık."
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_picking__country_code
 #: model:ir.model.fields,field_description:stock_account.field_stock_picking_type__country_code
 msgid "Country Code"
@@ -366,12 +299,6 @@ msgstr "Tarafından oluşturuldu"
 #: model:ir.model.fields,field_description:stock_account.field_product_value__create_date
 msgid "Created on"
 msgstr "Oluşturuldu"
-
-#. module: stock_account
-#. odoo-javascript
-#: code:addons/stock_account/static/src/stock_valuation/line/line.xml:0
-msgid "Credit"
-msgstr "Alacak"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__currency_id
@@ -396,11 +323,6 @@ msgid "Current Value Details"
 msgstr "Güncel Değer Detayları"
 
 #. module: stock_account
-#: model:ir.model.fields.selection,name:stock_account.selection__res_company__inventory_period__daily
-msgid "Daily"
-msgstr "Günlük"
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__date
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__date
 msgid "Date"
@@ -417,12 +339,6 @@ msgstr ""
 "tarih. Boşsa, envanter tarihi kullanılacaktır."
 
 #. module: stock_account
-#. odoo-javascript
-#: code:addons/stock_account/static/src/stock_valuation/line/line.xml:0
-msgid "Debit"
-msgstr "Borç"
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__description
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__description
 msgid "Description"
@@ -434,19 +350,18 @@ msgid "Display Lots & Serial Numbers on Invoices"
 msgstr "Faturalarda Lot & Seri Numaraları Göster"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_account_account__display_name
 #: model:ir.model.fields,field_description:stock_account.field_account_analytic_account__display_name
 #: model:ir.model.fields,field_description:stock_account.field_account_analytic_plan__display_name
-#: model:ir.model.fields,field_description:stock_account.field_account_chart_template__display_name
 #: model:ir.model.fields,field_description:stock_account.field_account_move__display_name
 #: model:ir.model.fields,field_description:stock_account.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:stock_account.field_account_stock_valuation_report__display_name
 #: model:ir.model.fields,field_description:stock_account.field_product_category__display_name
 #: model:ir.model.fields,field_description:stock_account.field_product_product__display_name
 #: model:ir.model.fields,field_description:stock_account.field_product_template__display_name
 #: model:ir.model.fields,field_description:stock_account.field_product_value__display_name
 #: model:ir.model.fields,field_description:stock_account.field_res_company__display_name
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__display_name
-#: model:ir.model.fields,field_description:stock_account.field_stock_account_stock_valuation_report__display_name
+#: model:ir.model.fields,field_description:stock_account.field_res_groups__display_name
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__display_name
 #: model:ir.model.fields,field_description:stock_account.field_stock_forecasted_product_product__display_name
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory_adjustment_name__display_name
@@ -464,30 +379,6 @@ msgstr "İsim Göster"
 #: model:res.groups,name:stock_account.group_lot_on_invoice
 msgid "Display Serial & Lot Number on Invoices"
 msgstr "Faturalarda Seri Numara & Lotları Göster"
-
-#. module: stock_account
-#. odoo-javascript
-#. odoo-python
-#: code:addons/stock_account/report/stock_valuation_report.py:0
-#: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.xml:0
-msgid "Ending Stock"
-msgstr "Bitiş Stoku"
-
-#. module: stock_account
-#. odoo-python
-#: code:addons/stock_account/models/res_company.py:0
-msgid "Everything is correctly closed"
-msgstr "Her şey doğru şekilde kapatıldı"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_account_account__account_stock_expense_id
-msgid "Expense Account"
-msgstr "Gider Hesabı"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_account_account__account_stock_expense_active
-msgid "Expense Account Active"
-msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_account_id
@@ -513,30 +404,18 @@ msgid "For %(quantity)s %(uom)s (%(price_unit)s per %(uom)s)"
 msgstr "%(quantity)s %(uom)s için ( %(uom)s başına%(price_unit)s )"
 
 #. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_account_form
-msgid "For Perpetual Continental Only"
-msgstr "Sadece Daimi Kıta için"
-
-#. module: stock_account
-#. odoo-javascript
-#: code:addons/stock_account/static/src/stock_valuation/buttons_bar/buttons_bar.xml:0
-msgid "Generate Entry"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_account_account__id
 #: model:ir.model.fields,field_description:stock_account.field_account_analytic_account__id
 #: model:ir.model.fields,field_description:stock_account.field_account_analytic_plan__id
-#: model:ir.model.fields,field_description:stock_account.field_account_chart_template__id
 #: model:ir.model.fields,field_description:stock_account.field_account_move__id
 #: model:ir.model.fields,field_description:stock_account.field_account_move_line__id
+#: model:ir.model.fields,field_description:stock_account.field_account_stock_valuation_report__id
 #: model:ir.model.fields,field_description:stock_account.field_product_category__id
 #: model:ir.model.fields,field_description:stock_account.field_product_product__id
 #: model:ir.model.fields,field_description:stock_account.field_product_template__id
 #: model:ir.model.fields,field_description:stock_account.field_product_value__id
 #: model:ir.model.fields,field_description:stock_account.field_res_company__id
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__id
-#: model:ir.model.fields,field_description:stock_account.field_stock_account_stock_valuation_report__id
+#: model:ir.model.fields,field_description:stock_account.field_res_groups__id
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__id
 #: model:ir.model.fields,field_description:stock_account.field_stock_forecasted_product_product__id
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory_adjustment_name__id
@@ -567,14 +446,6 @@ msgid "If checked, the valuation will be specific by Lot/Serial number."
 msgstr "İşaretlenirse, değerleme Lot/Seri numarasına göre spesifik olacaktır."
 
 #. module: stock_account
-#. odoo-javascript
-#. odoo-python
-#: code:addons/stock_account/report/stock_valuation_report.py:0
-#: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.xml:0
-msgid "Initial Balance"
-msgstr "Başlangıç Bakiyesi"
-
-#. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_location.py:0
 msgid "Invalid search operator or value"
@@ -586,12 +457,6 @@ msgid "Inventory Adjustment Reference / Reason"
 msgstr "Stok Düzeltmesi Referansı / Sebebi"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_account_bank_statement_line__inventory_closing
-#: model:ir.model.fields,field_description:stock_account.field_account_move__inventory_closing
-msgid "Inventory Closing"
-msgstr ""
-
-#. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_location
 msgid "Inventory Location"
 msgstr ""
@@ -599,25 +464,10 @@ msgstr ""
 #. module: stock_account
 #. odoo-javascript
 #. odoo-python
-#: code:addons/stock_account/report/stock_valuation_report.py:0
+#: code:addons/stock_account/report/account_stock_valuation_report.py:0
 #: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.js:0
-#: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.xml:0
 msgid "Inventory Loss"
 msgstr "Envanter Zararı"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_res_company__inventory_period
-msgid "Inventory Period"
-msgstr "Envanter Dönemi"
-
-#. module: stock_account
-#. odoo-python
-#: code:addons/stock_account/models/account_chart_template.py:0
-#: model:ir.actions.client,name:stock_account.action_report_stock_valuation
-#: model:ir.model.fields,field_description:stock_account.field_product_category__property_valuation
-#: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form_stock
-msgid "Inventory Valuation"
-msgstr "Envanter Değerleme"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_account_move_line__cogs_move_ids
@@ -660,14 +510,6 @@ msgid "Is valued inside the company"
 msgstr "Şirket içinde değer görür"
 
 #. module: stock_account
-#. odoo-python
-#: code:addons/stock_account/models/res_company.py:0
-msgid ""
-"It exists closing entries after the selected date. Cancel them before "
-"generate an entry prior to them"
-msgstr ""
-
-#. module: stock_account
 #: model:ir.model,name:stock_account.model_account_move
 msgid "Journal Entry"
 msgstr "Yevmiye Kaydı"
@@ -676,12 +518,6 @@ msgstr "Yevmiye Kaydı"
 #: model:ir.model,name:stock_account.model_account_move_line
 msgid "Journal Item"
 msgstr "Yevmiye Kalemi"
-
-#. module: stock_account
-#. odoo-python
-#: code:addons/stock_account/models/res_company.py:0
-msgid "Journal Items"
-msgstr "Yevmiye Kalemleri"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__justification
@@ -724,19 +560,9 @@ msgid "Lots & Serial numbers will appear on the invoice"
 msgstr "Lot ve Seri numaraları faturada görünecektir"
 
 #. module: stock_account
-#: model:ir.model.fields.selection,name:stock_account.selection__res_company__inventory_period__manual
-msgid "Manual"
-msgstr "Manuel"
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__value_manual
 msgid "Manual Value"
 msgstr "Manuel Değer"
-
-#. module: stock_account
-#: model:ir.model.fields.selection,name:stock_account.selection__res_company__inventory_period__monthly
-msgid "Monthly"
-msgstr "Aylık"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__move_id
@@ -755,79 +581,9 @@ msgid "Only is set (= True) is supported in search for remaining_qty."
 msgstr ""
 
 #. module: stock_account
-#. odoo-python
-#: code:addons/stock_account/models/product.py:0
-msgid ""
-"Only the value 'periodic' and 'real_time' are accepted to search on "
-"valuation field."
-msgstr ""
-"Değerleme alanında arama yapmak için yalnızca 'periodic' ve 'real_time' "
-"değerleri kabul edilir."
-
-#. module: stock_account
-#. odoo-javascript
-#: code:addons/stock_account/static/src/stock_valuation/filters/filter_options.xml:0
-msgid "Options"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__periodic
-#: model:ir.model.fields.selection,name:stock_account.selection__product_template__valuation__periodic
-#: model:ir.model.fields.selection,name:stock_account.selection__res_company__inventory_valuation__periodic
-msgid "Periodic (at closing)"
-msgstr "Periyodik (kapanışta)"
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_category__property_valuation
-msgid ""
-"Periodic: The accounting entries are suggested manually in the inventory "
-"valuation report.\n"
-"        Perpetual: An accounting entry is automatically created to value the "
-"inventory when a product is billed or invoiced.\n"
-"        "
-msgstr ""
-"Periyodik: Muhasebe girişleri envanter değerleme raporunda manuel olarak "
-"önerilir.\n"
-"        Sürekli: Bir ürün faturalandırıldığında veya fatura edildiğinde "
-"envanterini değerlemek için otomatik olarak bir muhasebe girişi "
-"oluşturulur.\n"
-"        "
-
-#. module: stock_account
-#: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__real_time
-#: model:ir.model.fields.selection,name:stock_account.selection__product_template__valuation__real_time
-#: model:ir.model.fields.selection,name:stock_account.selection__res_company__inventory_valuation__real_time
-msgid "Perpetual (at invoicing)"
-msgstr "Sürekli (faturalandırmada)"
-
-#. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_picking_type
 msgid "Picking Type"
 msgstr "Toplama Türü"
-
-#. module: stock_account
-#. odoo-python
-#: code:addons/stock_account/models/res_company.py:0
-msgid "Please set the Journal for Inventory Valuation in the settings."
-msgstr "Lütfen ayarlardan Envanter Değerleme Yevmiyesini ayarlayın."
-
-#. module: stock_account
-#. odoo-python
-#: code:addons/stock_account/models/res_company.py:0
-msgid ""
-"Please set the Valuation Account for Inventory Valuation in the settings."
-msgstr ""
-"Lütfen ayarlardan Envanter Değerlemesi için Değerleme Hesabını ayarlayın."
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_category__property_price_difference_account_id
-msgid "Price Difference Account"
-msgstr "Fiyat Farkı Hesabı"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_category__property_price_difference_account_active
-msgid "Price Difference Account Active"
-msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__price_unit
@@ -936,9 +692,6 @@ msgstr "Muhasebe Tarihini Göstermelidir"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__standard_price
-#: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__standard
-#: model:ir.model.fields.selection,name:stock_account.selection__product_template__cost_method__standard
-#: model:ir.model.fields.selection,name:stock_account.selection__res_company__cost_method__standard
 #: model:ir.model.fields.selection,name:stock_account.selection__stock_quant__cost_method__standard
 msgid "Standard Price"
 msgstr "Standart Maliyet"
@@ -950,44 +703,13 @@ msgid ""
 "the product.\n"
 "        Average Cost (AVCO): The products are valued at weighted average "
 "cost.\n"
-"        First In First Out (FIFO): The products are valued supposing those "
-"that enter the company first will also leave it first.\n"
 "        "
 msgstr ""
-"Standart Maliyet : Ürünler tanımlanan standart maliyetlerine göre "
-"değerlenir.\n"
-"Ortalama Maliyet (AVCO): Ürünler ağırlıklı ortalama maliyetine göre "
-"değerlenir.\n"
-"First in First Out (FIFO): Ürünler,  şirkete önce girenlerin, ilk önce de "
-"çıkacaklarını var sayar.\n"
-"        "
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_avco_report
 msgid "Stock AVCO Justifier"
 msgstr "Stok AVCO Gerekçelendirici"
-
-#. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
-msgid "Stock Account"
-msgstr "Stok Hesabı"
-
-#. module: stock_account
-#: model:ir.actions.server,name:stock_account.ir_cron_post_stock_valuation_ir_actions_server
-msgid "Stock Account: Inventory Valuation Closing"
-msgstr "Stok Hesabı: Envanter Değerleme Kapanışı"
-
-#. module: stock_account
-#. odoo-python
-#: code:addons/stock_account/models/res_company.py:0
-msgid "Stock Closing"
-msgstr "Stok Kapanışı"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_journal
-#: model:ir.model.fields,field_description:stock_account.field_res_company__account_stock_journal_id
-msgid "Stock Journal"
-msgstr "Stok Yevmiyesi"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move
@@ -1006,40 +728,14 @@ msgstr "Stok İkmal Raporu"
 #. module: stock_account
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_account_forecasted/forecasted_header.js:0
-#: model:ir.model,name:stock_account.model_stock_account_stock_valuation_report
+#: model:ir.model,name:stock_account.model_account_stock_valuation_report
 msgid "Stock Valuation"
 msgstr "Stok Değerleme"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_valuation_account_id
-#: model:ir.model.fields,field_description:stock_account.field_res_company__account_stock_valuation_id
 #: model:ir.model.fields,field_description:stock_account.field_stock_location__valuation_account_id
 msgid "Stock Valuation Account"
 msgstr "Stok Değerleme Hesabı"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_valuation_account_active
-msgid "Stock Valuation Account Active"
-msgstr ""
-
-#. module: stock_account
-#. odoo-javascript
-#. odoo-python
-#: code:addons/stock_account/report/stock_valuation_report.py:0
-#: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.xml:0
-#: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
-msgid "Stock Variation"
-msgstr "Stok Varyasyonu"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_category__account_stock_variation_id
-msgid "Stock Variation Account"
-msgstr "Stok Değişim Hesabı"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_category__account_stock_variation_active
-msgid "Stock Variation Account Active"
-msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product__company_currency_id
@@ -1149,9 +845,6 @@ msgstr "Kullanıcı"
 
 #. module: stock_account
 #: model:ir.actions.act_window,name:stock_account.stock_move_valuation_action
-#: model:ir.model.fields,field_description:stock_account.field_product_product__valuation
-#: model:ir.model.fields,field_description:stock_account.field_product_template__valuation
-#: model:ir.model.fields,field_description:stock_account.field_res_company__inventory_valuation
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 msgid "Valuation"
 msgstr "Değerleme"
@@ -1209,60 +902,15 @@ msgstr ""
 "        Satış siparişlerinde marjları hesaplamak için kullanılır."
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_account_account__account_stock_variation_id
-msgid "Variation Account"
-msgstr "Varyasyon Hesabı"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_account_account__account_stock_variation_active
-msgid "Variation Account Active"
-msgstr ""
-
-#. module: stock_account
 #: model:ir.module.module,shortdesc:base.module_stock_account
 msgid "WMS Accounting"
 msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_category__property_stock_valuation_account_id
-msgid ""
-"When automated inventory valuation is enabled on a product, this account "
-"will hold the current value of the products."
-msgstr ""
-"Bir üründe otomatik envanter değerlemesi etkinleştirildiğinde, bu hesap "
-"ürünlerin geçerli değerini tutacaktır."
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_category__property_stock_journal
-msgid ""
-"When doing automated inventory valuation, this is the Accounting Journal in "
-"which entries will be automatically posted when stock moves are processed."
-msgstr ""
-"Otomatik envanter değerlemesi yapılırken, bu, stok hareketleri işlendiğinde "
-"girişlerin otomatik olarak kaydedileceği Muhasebe Yevmiyesi'dir."
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_category__property_price_difference_account_id
-msgid ""
-"With perpetual valuation, this account will hold the price difference "
-"between the standard price and the bill price."
-msgstr ""
-"Sürekli değerlemede, bu hesap standart fiyat ile fatura fiyatı arasındaki "
-"fiyat farkını tutacaktır."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "You can only adjust valuation for one move at a time."
 msgstr "Bir seferde yalnızca bir hamle için değerlemeyi ayarlayabilirsiniz."
-
-#. module: stock_account
-#. odoo-python
-#: code:addons/stock_account/models/product.py:0
-msgid "You can only use the '=' operator to search on valuation field."
-msgstr ""
-"Değerleme alanında arama yapmak için yalnızca '=' operatörünü "
-"kullanabilirsiniz."
 
 #. module: stock_account
 #. odoo-python
@@ -1291,13 +939,186 @@ msgstr "stock_move_id"
 msgid "units"
 msgstr "Birimler"
 
-msgid ""
-"Value of the product (automatically computed in AVCO).\n"
-"        Used to value the product when the purchase cost is not known (e.g. "
-"inventory adjustment).\n"
-"        Used to compute margins on sale orders."
-msgstr ""
-"Ürünün değeri (AVCO'da otomatik olarak hesaplanır).\n"
-"Satın alma maliyeti bilinmediğinde (örneğin stok düzeltmesi) ürünü "
-"değerlemek için kullanılır.\n"
-"Satış siparişlerindeki marjları hesaplamak için kullanılır."
+#~ msgid "Account"
+#~ msgstr "Hesap"
+
+#~ msgid "Account Chart Template"
+#~ msgstr "Hesap Planı Şablonu"
+
+#~ msgid "Accrual"
+#~ msgstr "Tahakkuk"
+
+#~ msgid ""
+#~ "At closing, register the inventory variation of the period into a "
+#~ "specific account"
+#~ msgstr "Kapanışta, dönemin envanter değişimini belirli bir hesaba kaydedin"
+
+#~ msgid "Closing: Stock Variation Global for company [%(company)s]"
+#~ msgstr "Kapanış: Şirket için Stok Değişimi Global [%(company)s]"
+
+#~ msgid "Closing: Stock Variation Over Period"
+#~ msgstr "Kapanış: Dönem İçi Stok Değişimi"
+
+#~ msgid "Cogs Origin"
+#~ msgstr "Cogs Kökeni"
+
+#~ msgid ""
+#~ "Counterpart used at closing for accounting adjustments to inventory "
+#~ "valuation."
+#~ msgstr ""
+#~ "Envanter değerlemesine ilişkin muhasebe düzeltmeleri için kapanışta "
+#~ "kullanılan karşılık."
+
+#~ msgid "Credit"
+#~ msgstr "Alacak"
+
+#~ msgid "Daily"
+#~ msgstr "Günlük"
+
+#~ msgid "Debit"
+#~ msgstr "Borç"
+
+#~ msgid "Ending Stock"
+#~ msgstr "Bitiş Stoku"
+
+#~ msgid "Everything is correctly closed"
+#~ msgstr "Her şey doğru şekilde kapatıldı"
+
+#~ msgid "Expense Account"
+#~ msgstr "Gider Hesabı"
+
+#~ msgid "For Perpetual Continental Only"
+#~ msgstr "Sadece Daimi Kıta için"
+
+#~ msgid "Initial Balance"
+#~ msgstr "Başlangıç Bakiyesi"
+
+#~ msgid "Inventory Period"
+#~ msgstr "Envanter Dönemi"
+
+#~ msgid "Inventory Valuation"
+#~ msgstr "Envanter Değerleme"
+
+#~ msgid "Journal Items"
+#~ msgstr "Yevmiye Kalemleri"
+
+#~ msgid "Manual"
+#~ msgstr "Manuel"
+
+#~ msgid "Monthly"
+#~ msgstr "Aylık"
+
+#~ msgid ""
+#~ "Only the value 'periodic' and 'real_time' are accepted to search on "
+#~ "valuation field."
+#~ msgstr ""
+#~ "Değerleme alanında arama yapmak için yalnızca 'periodic' ve 'real_time' "
+#~ "değerleri kabul edilir."
+
+#~ msgid "Periodic (at closing)"
+#~ msgstr "Periyodik (kapanışta)"
+
+#~ msgid ""
+#~ "Periodic: The accounting entries are suggested manually in the inventory "
+#~ "valuation report.\n"
+#~ "        Perpetual: An accounting entry is automatically created to value "
+#~ "the inventory when a product is billed or invoiced.\n"
+#~ "        "
+#~ msgstr ""
+#~ "Periyodik: Muhasebe girişleri envanter değerleme raporunda manuel olarak "
+#~ "önerilir.\n"
+#~ "        Sürekli: Bir ürün faturalandırıldığında veya fatura edildiğinde "
+#~ "envanterini değerlemek için otomatik olarak bir muhasebe girişi "
+#~ "oluşturulur.\n"
+#~ "        "
+
+#~ msgid "Perpetual (at invoicing)"
+#~ msgstr "Sürekli (faturalandırmada)"
+
+#~ msgid "Please set the Journal for Inventory Valuation in the settings."
+#~ msgstr "Lütfen ayarlardan Envanter Değerleme Yevmiyesini ayarlayın."
+
+#~ msgid ""
+#~ "Please set the Valuation Account for Inventory Valuation in the settings."
+#~ msgstr ""
+#~ "Lütfen ayarlardan Envanter Değerlemesi için Değerleme Hesabını ayarlayın."
+
+#~ msgid "Price Difference Account"
+#~ msgstr "Fiyat Farkı Hesabı"
+
+#~ msgid ""
+#~ "Standard Price: The products are valued at their standard cost defined on "
+#~ "the product.\n"
+#~ "        Average Cost (AVCO): The products are valued at weighted average "
+#~ "cost.\n"
+#~ "        First In First Out (FIFO): The products are valued supposing "
+#~ "those that enter the company first will also leave it first.\n"
+#~ "        "
+#~ msgstr ""
+#~ "Standart Maliyet : Ürünler tanımlanan standart maliyetlerine göre "
+#~ "değerlenir.\n"
+#~ "Ortalama Maliyet (AVCO): Ürünler ağırlıklı ortalama maliyetine göre "
+#~ "değerlenir.\n"
+#~ "First in First Out (FIFO): Ürünler,  şirkete önce girenlerin, ilk önce de "
+#~ "çıkacaklarını var sayar.\n"
+#~ "        "
+
+#~ msgid "Stock Account"
+#~ msgstr "Stok Hesabı"
+
+#~ msgid "Stock Account: Inventory Valuation Closing"
+#~ msgstr "Stok Hesabı: Envanter Değerleme Kapanışı"
+
+#~ msgid "Stock Closing"
+#~ msgstr "Stok Kapanışı"
+
+#~ msgid "Stock Journal"
+#~ msgstr "Stok Yevmiyesi"
+
+#~ msgid "Stock Variation"
+#~ msgstr "Stok Varyasyonu"
+
+#~ msgid "Stock Variation Account"
+#~ msgstr "Stok Değişim Hesabı"
+
+#~ msgid "Variation Account"
+#~ msgstr "Varyasyon Hesabı"
+
+#~ msgid ""
+#~ "When automated inventory valuation is enabled on a product, this account "
+#~ "will hold the current value of the products."
+#~ msgstr ""
+#~ "Bir üründe otomatik envanter değerlemesi etkinleştirildiğinde, bu hesap "
+#~ "ürünlerin geçerli değerini tutacaktır."
+
+#~ msgid ""
+#~ "When doing automated inventory valuation, this is the Accounting Journal "
+#~ "in which entries will be automatically posted when stock moves are "
+#~ "processed."
+#~ msgstr ""
+#~ "Otomatik envanter değerlemesi yapılırken, bu, stok hareketleri "
+#~ "işlendiğinde girişlerin otomatik olarak kaydedileceği Muhasebe "
+#~ "Yevmiyesi'dir."
+
+#~ msgid ""
+#~ "With perpetual valuation, this account will hold the price difference "
+#~ "between the standard price and the bill price."
+#~ msgstr ""
+#~ "Sürekli değerlemede, bu hesap standart fiyat ile fatura fiyatı arasındaki "
+#~ "fiyat farkını tutacaktır."
+
+#~ msgid "You can only use the '=' operator to search on valuation field."
+#~ msgstr ""
+#~ "Değerleme alanında arama yapmak için yalnızca '=' operatörünü "
+#~ "kullanabilirsiniz."
+
+#~ msgid ""
+#~ "Value of the product (automatically computed in AVCO).\n"
+#~ "        Used to value the product when the purchase cost is not known "
+#~ "(e.g. inventory adjustment).\n"
+#~ "        Used to compute margins on sale orders."
+#~ msgstr ""
+#~ "Ürünün değeri (AVCO'da otomatik olarak hesaplanır).\n"
+#~ "Satın alma maliyeti bilinmediğinde (örneğin stok düzeltmesi) ürünü "
+#~ "değerlemek için kullanılır.\n"
+#~ "Satış siparişlerindeki marjları hesaplamak için kullanılır."
