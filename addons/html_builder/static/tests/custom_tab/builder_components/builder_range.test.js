@@ -234,6 +234,38 @@ test("should syncronize previews", async () => {
     await expect(".options-container input[type='number']").toHaveProperty("value", 10);
 });
 
+test("number input arrow changes should be committed after debounce", async () => {
+    addBuilderAction({
+        customAction: class extends BuilderAction {
+            static id = "customAction";
+            getValue({ editingElement }) {
+                return editingElement.textContent;
+            }
+            apply({ editingElement, value, isPreviewing }) {
+                expect.step(`customAction isPreviewing: ${isPreviewing}`);
+                editingElement.textContent = value;
+            }
+        },
+    });
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderRange withNumberInput="true" action="'customAction'"/>`,
+    });
+    freezeTime();
+    await setupHTMLBuilder(`
+        <div class="test-options-target">10</div>
+    `);
+
+    await contains(":iframe .test-options-target").click();
+    await contains(".options-container input[type='number']").keyDown("ArrowUp");
+    expect.verifySteps(["customAction isPreviewing: true"]);
+    expect(":iframe .test-options-target").toHaveInnerHTML("11");
+
+    await advanceTime(550);
+    expect.verifySteps(["customAction isPreviewing: false"]);
+    expect(":iframe .test-options-target").toHaveInnerHTML("11");
+});
+
 test("number input should have the same min, max and step as the range input", async () => {
     addBuilderAction({
         customAction: class extends BuilderAction {
@@ -455,8 +487,6 @@ test("should map range from 0 to 100 scale when empty convertorRatio object is p
     await contains(".options-container input[type='number']").focus();
     await press("ArrowUp");
     await advanceTime(750);
-    // Since the values are not committed when pressing the up/down arrow keys,
-    // we expect the change to be applied only once which is preview operation.
-    expect.verifySteps(["applied -1.84"]);
+    expect.verifySteps(["applied -1.84", "applied -1.84"]);
     expect(".options-container input[type='number']").toHaveProperty("value", 5);
 });

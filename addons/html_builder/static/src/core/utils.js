@@ -1078,10 +1078,10 @@ export function useVisibilityObserver(contentName, callback) {
     );
 }
 
-export function useInputDebouncedCommit(ref) {
+export function useInputDebouncedCommit(ref, commit) {
     const comp = useComponent();
     return useDebounced(() => {
-        const normalizedDisplayValue = comp.commit(ref.el.value);
+        const normalizedDisplayValue = (commit || comp.commit)(ref.el.value);
         ref.el.value = normalizedDisplayValue;
     }, 550);
     // ↑ 500 is the delay when holding keydown between the 1st and 2nd event
