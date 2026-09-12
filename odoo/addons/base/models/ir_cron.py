@@ -873,7 +873,7 @@ class IrCron(models.Model):
         ctx = self.env.context
         progress = self.env['ir.cron.progress'].sudo().browse(ctx.get('ir_cron_progress_id'))
         if not progress:
-            # not called during a cron, just commit
+            _logger.warning("_commit_progress not called during a cron, just commit", stack_info=True)
             self.env.cr.commit()
             return float('inf')
         assert processed >= 0, 'processed must be positive'
@@ -895,6 +895,8 @@ class IrCron(models.Model):
     @api.model
     def _rollback_progress(self) -> None:
         """The rollback with the same logic as the commit for cron jobs."""
+        if not self.env.context.get('ir_cron_progress_id'):
+            _logger.warning("_rollback_progress not called during a cron, just rollback", stack_info=True)
         self.env.cr.rollback()
 
     def action_open_parent_action(self):
