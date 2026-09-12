@@ -525,6 +525,9 @@ export class Message extends Component {
 
     /** @param {HTMLElement} bodyEl */
     renderEmbeddedCodeBlocks(bodyEl) {
+        if (this.message.message_type && this.message.message_type.includes("email")) {
+            return [];
+        }
         const { name, Component, getProps } = readonlySyntaxHighlightingEmbedding;
         const selector = `[data-embedded='${name}']`;
         const embeddedElements = [...bodyEl.querySelectorAll(selector)];
