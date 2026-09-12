@@ -447,7 +447,7 @@ export class FormCompiler extends ViewCompiler {
         const statusBar = createElement("div", {
             "t-att-class": "{ 'shadow-sm': __comp__.state.isStatusbarStickyPinned }",
         });
-        statusBar.className = "o_form_statusbar d-flex justify-content-between py-2";
+        statusBar.className = "o_form_statusbar d-flex justify-content-between pb-2";
         const buttons = [];
         const others = [];
         for (const child of el.childNodes) {
