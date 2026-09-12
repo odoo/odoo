@@ -15,9 +15,10 @@ import psycopg2.errors
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, sql_db
-from odoo.exceptions import LockError, UserError
+from odoo.exceptions import ConcurrencyError, LockError, UserError
 from odoo.http.dispatcher import serialize_exception
 from odoo.modules import Manifest
+from odoo.sql_db import PG_CONCURRENCY_EXCEPTIONS_TO_RETRY
 from odoo.tools import SQL, config
 from odoo.tools.constants import GC_UNLINK_LIMIT
 
@@ -511,7 +512,10 @@ class IrCron(models.Model):
                             log_level = logging.WARNING
                 else:
                     log_level = logging.ERROR
-                    if progress.remaining and progress.done:
+                    if isinstance(exception, (*PG_CONCURRENCY_EXCEPTIONS_TO_RETRY, ConcurrencyError, LockError)):
+                        log_level = logging.WARNING
+                        reschedule_in = 60
+                    elif progress.remaining and progress.done:
                         # The cron action failed but was nonetheless able to
                         # commit some progress.
                         # (hopefully this failure is temporary)

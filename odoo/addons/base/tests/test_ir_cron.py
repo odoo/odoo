@@ -300,6 +300,13 @@ class TestIrCron(TransactionCase, CronMixinCase):
                 raise ValueError
             return f, state
 
+        def concurrency_f(cron):
+            state = {'call_count': 0}
+            def f(self):
+                state['call_count'] += 1
+                raise ConcurrencyError
+            return f, state
+
         CASES = [
             #                 IN                    |                 OUT
             #       callback, curr_failures, trigger, ready, done_count, fail_count, active,
@@ -310,6 +317,7 @@ class TestIrCron(TransactionCase, CronMixinCase):
             (      success_5,             0,   False,  True,          1,          0,  True),
             (      success_5, almost_failed,   False,  True,          1,          0,  True),
             (       end_time,             0,    True,  True,        120,          0,  True),
+            (  concurrency_f,             0,   False, False,          0,          1,  True),  # will become ready
             (        failure,             0,   False, False,          0,          1,  True),
             (        failure, almost_failed,   False, False,          0,          0, False),
             (failure_partial,             0,   False,  True,          1,          1,  True),
