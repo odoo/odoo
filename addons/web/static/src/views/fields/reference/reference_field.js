@@ -1,7 +1,8 @@
-import { Component, computed, proxy, t, untrack, useEffect, useProps } from "@odoo/owl";
+import { Component, computed, proxy, signal, t, untrack, useEffect, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useRecordObserver } from "@web/model/relational_model/utils";
+import { SelectMenu } from "@web/core/select_menu/select_menu";
 import { computeM2OProps, Many2One } from "../many2one/many2one";
 import { extractM2OFieldProps, many2OneFieldProps } from "../many2one/many2one_field";
 
@@ -41,9 +42,10 @@ export const referenceFieldProps = {
 
 export class ReferenceField extends Component {
     static template = "web.ReferenceField";
-    static components = { Many2One };
+    static components = { Many2One, SelectMenu };
 
     props = useProps(referenceFieldProps);
+    rootRef = signal.ref();
 
     isCharField = computed(() => this.props.record.fields[this.props.name].type === "char");
 
@@ -91,6 +93,15 @@ export class ReferenceField extends Component {
                 }
             });
         }
+
+        /** Keep the model selector out of the tab order once a relation is set, so
+         *  Tab moves directly to the many2one input instead of the model selector. */
+        useEffect(() => {
+            const input = this.rootRef()?.querySelector(".o_select_menu input");
+            if (input) {
+                input.tabIndex = this.getRelation() ? -1 : 0;
+            }
+        });
     }
 
     get m2oProps() {
@@ -107,6 +118,9 @@ export class ReferenceField extends Component {
             return this.props.record.fields[this.props.name].selection;
         }
         return [];
+    }
+    get choices() {
+        return this.selection.map(([value, label]) => ({ value, label }));
     }
 
     get hideModelSelector() {

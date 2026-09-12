@@ -159,7 +159,8 @@ class CalendarEvent(models.Model):
         return [
             (model.model, model.name)
             for model in self.env['ir.model'].sudo().search(
-                [('is_mail_thread', '=', True), ('abstract', '=', False), ('transient', '=', False)])
+                [('is_mail_activity', '=', True), ('abstract', '=', False), ('transient', '=', False),
+                 ('model', 'not in', ['ir.cron', 'ir.actions.server', 'base.automation'])])
         ]
 
     # description

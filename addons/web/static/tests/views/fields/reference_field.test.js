@@ -1,10 +1,11 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { click, edit, press, queryAllValues, queryFirst, select } from "@odoo/hoot-dom";
+import { click, edit, press, queryAllTexts, queryFirst } from "@odoo/hoot-dom";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import {
     clickSave,
     contains,
     defineModels,
+    editSelectMenu,
     fields,
     mockService,
     models,
@@ -135,10 +136,11 @@ test("ReferenceField can quick create models", async () => {
         arch: /* xml */ `<form><field name="reference" /></form>`,
     });
 
-    await click("select");
-    await select("partner");
+    await editSelectMenu(".o_field_widget[name='reference'] .o_select_menu input", {
+        value: "Partner",
+    });
     await animationFrame();
-    await click(".o_field_widget[name='reference'] input");
+    await click(".o_field_widget[name='reference'] .o-autocomplete--input");
     await edit("new partner");
     await runAllTimers();
     await click(".o_field_widget[name='reference'] .o_m2o_dropdown_option_create");
@@ -150,7 +152,7 @@ test("ReferenceField can quick create models", async () => {
     expect.verifySteps([
         "get_views",
         "onchange",
-        "web_name_search", // for the select
+        "web_name_search", // for the select menu
         "web_name_search", // for the spawned many2one
         "name_create",
         "web_save",
@@ -164,10 +166,11 @@ test("ReferenceField respects no_quick_create", async () => {
         arch: /* xml */ `<form><field name="reference" options="{'no_quick_create': 1}" /></form>`,
     });
 
-    await click("select");
-    await select("partner");
+    await editSelectMenu(".o_field_widget[name='reference'] .o_select_menu input", {
+        value: "Partner",
+    });
     await animationFrame();
-    await click(".o_field_widget[name='reference'] input");
+    await click(".o_field_widget[name='reference'] .o-autocomplete--input");
     await edit("new partner");
     await runAllTimers();
     expect(".ui-autocomplete .o_m2o_dropdown_option").toHaveCount(1, {
@@ -256,7 +259,7 @@ test("ReferenceField in modal write mode", async () => {
     });
 
     // Current Form
-    expect(".o_field_widget[name=reference] option:checked").toHaveText("Product", {
+    expect(".o_field_widget[name=reference] .o_select_menu input").toHaveValue("Product", {
         message: "The reference field's model should be Product",
     });
     expect(".o_field_widget[name=reference] .o-autocomplete--input").toHaveValue("xphone", {
@@ -268,9 +271,12 @@ test("ReferenceField in modal write mode", async () => {
 
     // In modal
     expect(".modal-lg").toHaveCount(1, { message: "there should be one modal opened" });
-    expect(".modal-lg .o_field_widget[name=reference] option:checked").toHaveText("Product", {
-        message: "The reference field's model should be Product",
-    });
+    expect(".modal-lg .o_field_widget[name=reference] .o_select_menu input").toHaveValue(
+        "Product",
+        {
+            message: "The reference field's model should be Product",
+        }
+    );
     expect(".modal-lg .o_field_widget[name=reference] .o-autocomplete--input").toHaveValue("xpad", {
         message: "The reference field's record should be xpad",
     });
@@ -342,19 +348,23 @@ test("reference in form view", async () => {
     expect(".o_field_many2one_selection").toHaveCount(1, {
         message: "should contain one many2one",
     });
-    expect(".o_field_widget select").toHaveValue("product", {
-        message: "widget should contain one select with the model",
+    expect(".o_field_widget[name=reference] .o_select_menu input").toHaveValue("Product", {
+        message: "widget should contain one select menu with the model",
     });
-    expect(".o_field_widget input").toHaveValue("xphone", {
+    expect(".o_field_widget[name=reference] .o-autocomplete--input").toHaveValue("xphone", {
         message: "widget should contain one input with the record",
     });
 
-    expect(queryAllValues(".o_field_widget select > option")).toEqual(
-        ["", "product", "partner.type", "partner"],
+    await click(".o_field_widget[name=reference] .o_select_menu input");
+    await animationFrame();
+    expect(queryAllTexts(".o_select_menu_item")).toEqual(
+        ["Partner", "Partner Type", "Product"],
         {
             message: "the options should be correctly set",
         }
     );
+    await click(".o_select_menu_item:contains(Product)");
+    await animationFrame();
 
     await click(".o_external_button");
     await animationFrame();
@@ -366,19 +376,21 @@ test("reference in form view", async () => {
     await click(".o_dialog:not(.o_inactive_modal) .o_form_button_cancel");
     await animationFrame();
 
-    await select("partner.type", { target: ".o_field_widget select" });
+    await editSelectMenu(".o_field_widget[name=reference] .o_select_menu input", {
+        value: "Partner Type",
+    });
     await animationFrame();
 
-    expect(".o_field_widget input").toHaveValue("", {
+    expect(".o_field_widget[name=reference] .o-autocomplete--input").toHaveValue("", {
         message: "many2one value should be reset after model change",
     });
 
-    await click(".o_field_widget[name=reference] input");
+    await click(".o_field_widget[name=reference] .o-autocomplete--input");
     await animationFrame();
     await click(".o_field_widget[name=reference] .ui-menu-item");
 
     await clickSave();
-    expect(".o_field_widget[name=reference] input").toHaveValue("gold", {
+    expect(".o_field_widget[name=reference] .o-autocomplete--input").toHaveValue("gold", {
         message: "should contain a link with the new value",
     });
 });
@@ -396,16 +408,14 @@ test("Many2One 'Search more...' updates on resModel change", async () => {
     });
 
     // Selecting a relation
-    await click("div.o_field_reference select.o_input");
-    await select("partner.type");
+    await editSelectMenu("div.o_field_reference .o_select_menu input", { value: "Partner Type" });
 
     // Selecting another relation
-    await click("div.o_field_reference select.o_input");
-    await select("product");
+    await editSelectMenu("div.o_field_reference .o_select_menu input", { value: "Product" });
     await animationFrame();
 
     // Opening the Search more... option
-    await click("div.o_field_reference input.o_input");
+    await click("div.o_field_reference .o-autocomplete--input");
     await animationFrame();
     await click("div.o_field_reference .o_m2o_dropdown_option_search_more");
     await animationFrame();
@@ -476,11 +486,11 @@ test("interact with reference field changed by onchange", async () => {
     await click(".o_field_boolean input");
     await animationFrame();
 
-    expect(".o_field_widget[name=reference] select").toHaveValue("partner");
+    expect(".o_field_widget[name=reference] .o_select_menu input").toHaveValue("Partner");
 
     // manually update reference field
-    queryFirst(".o_field_widget[name=reference] input").tabIndex = 0;
-    await click(".o_field_widget[name=reference] input");
+    queryFirst(".o_field_widget[name=reference] .o-autocomplete--input").tabIndex = 0;
+    await click(".o_field_widget[name=reference] .o-autocomplete--input");
     await edit("aaa");
     await runAllTimers();
     await click(".ui-autocomplete .ui-menu-item");
@@ -519,10 +529,10 @@ test("default_get and onchange with a reference field", async () => {
         `,
     });
 
-    expect(".o_field_widget[name='reference'] select").toHaveValue("product", {
+    expect(".o_field_widget[name='reference'] .o_select_menu input").toHaveValue("Product", {
         message: "reference field model should be correctly set",
     });
-    expect(".o_field_widget[name='reference'] input").toHaveValue("xphone", {
+    expect(".o_field_widget[name='reference'] .o-autocomplete--input").toHaveValue("xphone", {
         message: "reference field value should be correctly set",
     });
 
@@ -531,10 +541,10 @@ test("default_get and onchange with a reference field", async () => {
     await edit(12, { confirm: "enter" });
     await animationFrame();
 
-    expect(".o_field_widget[name='reference'] select").toHaveValue("partner.type", {
+    expect(".o_field_widget[name='reference'] .o_select_menu input").toHaveValue("Partner Type", {
         message: "reference field model should be correctly set",
     });
-    expect(".o_field_widget[name='reference'] input").toHaveValue("gold", {
+    expect(".o_field_widget[name='reference'] .o-autocomplete--input").toHaveValue("gold", {
         message: "reference field value should be correctly set",
     });
 });
@@ -629,11 +639,11 @@ test("reference and list navigation", async () => {
     // edit first row
     await click(".o_data_row .o_data_cell");
     await animationFrame();
-    expect(".o_data_row [name='reference'] input").toBeFocused();
+    expect(".o_data_row [name='reference'] .o-autocomplete--input").toBeFocused();
 
     await press("Tab");
     await animationFrame();
-    expect(".o_data_row:nth-child(2) [name='reference'] select").toBeFocused();
+    expect(".o_data_row:nth-child(2) [name='reference'] .o_select_menu input").toBeFocused();
 });
 
 test("ReferenceField with model_field option", async () => {
@@ -653,7 +663,7 @@ test("ReferenceField with model_field option", async () => {
             </form>
         `,
     });
-    expect("select").toHaveCount(0, {
+    expect(".o_select_menu").toHaveCount(0, {
         message: "the selection list of the reference field should not exist.",
     });
     expect(".o_field_widget[name='reference'] input").toHaveValue("", {
@@ -708,7 +718,7 @@ test("ReferenceField with model_field option (model_field not synchronized with 
         `,
     });
 
-    expect("select").toHaveCount(0, {
+    expect(".o_select_menu").toHaveCount(0, {
         message: "the selection list of the reference field should not exist.",
     });
     expect(".o_field_widget[name='model_id'] input").toHaveValue("Product", {
@@ -908,18 +918,18 @@ test("model selector is displayed only when it should be", async () => {
         `,
     });
 
-    expect(".o_inner_group:eq(0) select").toHaveCount(0, {
+    expect(".o_inner_group:eq(0) .o_select_menu").toHaveCount(0, {
         message:
             "the selection list of the reference field should not exist when model_field is specified.",
     });
-    expect(".o_inner_group:eq(1) select").toHaveCount(0, {
+    expect(".o_inner_group:eq(1) .o_select_menu").toHaveCount(0, {
         message:
             "the selection list of the reference field should not exist when model_field is specified and hide_model=True.",
     });
-    expect(".o_inner_group:eq(2) select").toHaveCount(0, {
+    expect(".o_inner_group:eq(2) .o_select_menu").toHaveCount(0, {
         message: "the selection list of the reference field should not exist when hide_model=True.",
     });
-    expect(".o_inner_group:eq(3) select").toHaveCount(1, {
+    expect(".o_inner_group:eq(3) .o_select_menu").toHaveCount(1, {
         message:
             "the selection list of the reference field should exist when hide_model=False and no model_field specified.",
     });
