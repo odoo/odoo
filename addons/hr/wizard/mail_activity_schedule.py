@@ -64,7 +64,7 @@ class MailActivitySchedule(models.TransientModel):
                 continue
             domain = literal_eval(scheduler.employee_id_domain)
             scheduler.employee_id = self.env.context.get('default_employee_id') or self._get_log_default_record(
-                'hr.employee', domain, order=None,
+                'hr.employee', domain,
             )
 
     @api.depends_context('log_contact_id', 'log_channel_partner_ids')

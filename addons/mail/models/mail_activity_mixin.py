@@ -506,29 +506,46 @@ class MailActivityMixin(models.AbstractModel):
     @api.model
     def name_search(self, name='', domain=None, operator='ilike', limit=100):
         """ When logging a call (see `mail.activity.schedule`), offer the records about
-        whoever attended it first: they are the ones the user is after. """
-        priority_domain = self._get_call_log_priority_domain()
-        if priority_domain.is_false():
+        whoever attended it first, then those about their family, and only then the rest
+        (see `_get_call_log_priority_domains`): the closer a record is to the call, the
+        likelier the user is after it. """
+        tiers = self._get_call_log_priority_domains()
+        if not tiers:
             return super().name_search(name, domain, operator, limit)
         domain = Domain(domain if domain is not None else Domain.TRUE)
-        matched = super().name_search(name, domain & priority_domain, operator, limit)
-        if limit and len(matched) >= limit:
-            return matched
-        return matched + super().name_search(
-            name, domain & ~priority_domain, operator, limit and limit - len(matched),
-        )
+        matched = []
+        # everything a previous tier offered, which the next ones must not offer again:
+        # a record may well be about one partner of a tier and about another of the next
+        offered = Domain.FALSE
+        for tier in (*tiers, Domain.TRUE):
+            if limit and len(matched) >= limit:
+                break
+            matched += super().name_search(
+                name, domain & tier & ~offered, operator, limit and limit - len(matched),
+            )
+            offered |= tier
+        return matched
 
     @api.model
-    def _get_call_log_priority_domain(self):
-        """ Records about one of the partners named by the ``log_channel_partner_ids``
-        context key, set when logging a call.
+    def _get_call_log_priority_domains(self):
+        """ The records the wizard offers first when logging a call, most relevant first:
+        those about whoever attended it, then those about the companies they work for,
+        then those about their colleagues (see `res.partner._get_call_log_partner_tiers`).
 
-        :return: a ``Domain``, ``FALSE`` when no call is being logged, leaving the order
-            of the model alone"""
-        partner_ids = self.env.context.get('log_channel_partner_ids')
-        if not partner_ids:
-            return Domain.FALSE
+        :return: a list of ``Domain``, empty when no call is being logged, leaving the
+            order of the model alone"""
+        return [
+            self._get_call_log_partner_domain(partners)
+            for partners in self.env['res.partner']._get_call_log_partner_tiers()
+        ]
+
+    @api.model
+    def _get_call_log_partner_domain(self, partners):
+        """ The records about one of the given partners.
+
+        :param partners: a ``res.partner`` recordset
+        :return: a ``Domain``, ``FALSE`` when the model is about no partner at all"""
         return Domain.OR(
-            Domain(fname, 'in', partner_ids)
+            Domain(fname, 'in', partners.ids)
             for fname in self._mail_get_partner_fields()
         )

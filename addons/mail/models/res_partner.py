@@ -58,11 +58,30 @@ class ResPartner(models.Model):
         return dict((partner.id, partner) for partner in self)
 
     @api.model
-    def _get_call_log_priority_domain(self):
+    def _get_call_log_partner_domain(self, partners):
         """ A contact is not about a partner through a field: it is that partner. """
-        if partner_ids := self.env.context.get('log_channel_partner_ids'):
-            return Domain('id', 'in', partner_ids)
-        return super()._get_call_log_priority_domain()
+        return Domain('id', 'in', partners.ids)
+
+    @api.model
+    def _get_call_log_partner_tiers(self):
+        """ The partners a call was held with, grouped by how close a document about them
+        is expected to be to that call, closest first: whoever attended it, then the
+        companies they work for, then their colleagues
+        (see `mail.activity.mixin.name_search`).
+
+        :return: a list of ``res.partner`` recordsets, void tiers left out, empty when no
+            call is being logged"""
+        partner_ids = self.env.context.get('log_channel_partner_ids')
+        if not partner_ids:
+            return []
+        # an archived contact still had the call: what it is about does not depend on it
+        attendees = self.with_context(active_test=False).browse(partner_ids).exists()
+        companies = attendees.commercial_partner_id - attendees
+        family = self.with_context(active_test=False).search(
+            [('id', 'child_of', attendees.commercial_partner_id.ids)],
+        )
+        colleagues = family - attendees - companies
+        return [tier for tier in (attendees, companies, colleagues) if tier]
 
     def _search_commercial_partners(self, active_test=True):
         """Return all partners belonging to self's commercial entity, the

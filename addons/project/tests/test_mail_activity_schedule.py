@@ -33,3 +33,25 @@ class TestProjectActivityLog(TransactionCase):
         self.assertEqual(offered[0], attendee_task.id, "the task of an attendee comes first")
         self.assertIn(other_task.id, offered, "a task about nobody who attended is still offered")
         self.assertEqual(wizard.task_id, attendee_task, "the wizard starts on a task of an attendee")
+
+    def test_log_call_starts_on_the_task_offered_first(self):
+        """The wizard fills its field in with the task at the top of its dropdown: what a
+        user reads there is what picking the first one offered would have given them."""
+        attendee = self.env["res.partner"].create({"name": "Call Attendee"})
+        project = self.env["project.project"].create({"name": "Test Project"})
+        # the newest task comes last, the model ordering tasks by sequence before id
+        first, newest = self.env["project.task"].create([
+            {"name": "Test Task", "partner_id": attendee.id, "project_id": project.id, "sequence": 1},
+            {"name": "Test Newest Task", "partner_id": attendee.id, "project_id": project.id, "sequence": 10},
+        ])
+        context = {"log_channel_partner_ids": attendee.ids, "log_contact_id": self.env.user.partner_id.id}
+        wizard = self.env["mail.activity.schedule"].with_context(**context).new({
+            "res_model_selection": "project.task",
+        })
+
+        domain = literal_eval(wizard.task_id_domain)
+        offered = self.env["project.task"].with_context(**context).name_search(domain=domain)
+
+        self.assertEqual(offered[0][0], first.id)
+        self.assertEqual(wizard.task_id, first, "the task offered first, not the newest one")
+        self.assertNotEqual(wizard.task_id, newest)

@@ -79,6 +79,31 @@ class TestCallHistoryLog(MailCommon):
         offered = self.env["res.partner"].with_context(**context).name_search("AAA", domain)
         self.assertEqual([id_ for id_, _name in offered], (attendee | other).ids)
 
+    def test_log_meeting_offers_the_family_of_the_contacts_next(self):
+        """After the records of whoever attended the call come those of their family:
+        the companies they work for first, then their colleagues there."""
+        company = self.env["res.partner"].create({"name": "AAA Company", "is_company": True})
+        attendee, colleague = self.env["res.partner"].create([
+            {"name": "AAA Attendee", "parent_id": company.id},
+            {"name": "AAA Colleague", "parent_id": company.id},
+        ])
+        outsider = self.env["res.partner"].create({"name": "AAA Outsider"})
+        self.channel._add_members(partners=attendee)
+        everyone = company | attendee | colleague | outsider
+        domain = [("id", "in", everyone.ids)]
+        # left to its own order, the model offers the company before whoever attended
+        self.assertEqual(
+            [id_ for id_, _name in self.env["res.partner"].name_search("AAA", domain)],
+            (company | attendee | colleague | outsider).ids,
+        )
+        context = self.call_history.action_log_meeting()["context"]
+
+        offered = self.env["res.partner"].with_context(**context).name_search("AAA", domain)
+
+        self.assertEqual(
+            [id_ for id_, _name in offered], (attendee | company | colleague | outsider).ids,
+        )
+
     def test_log_meeting_offers_every_record_the_wizard_allows(self):
         """Records unrelated to the call are pushed down the list, never dropped from it."""
         attendee = self.env["res.partner"].create({"name": "ZZZ Call Attendee"})

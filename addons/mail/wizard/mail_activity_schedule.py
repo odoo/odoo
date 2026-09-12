@@ -335,9 +335,16 @@ class MailActivitySchedule(models.TransientModel):
                 domain &= Domain('category', '=', category)
             scheduler.activity_type_id_domain = domain
 
+    @api.depends('res_model_selection', 'contact_id_domain')
     @api.depends_context('log_contact_id')
     def _compute_contact_id(self):
-        self.contact_id = self.env.context.get('log_contact_id')
+        for scheduler in self:
+            if scheduler.contact_id or scheduler.res_model_selection != 'res.partner':
+                continue
+            domain = ast.literal_eval(scheduler.contact_id_domain or '[]')
+            scheduler.contact_id = self.env.context.get('log_contact_id') or self._get_log_default_record(
+                'res.partner', domain,
+            )
 
     @api.depends_context('log_contact_id', 'log_channel_partner_ids')
     def _compute_contact_id_domain(self):
@@ -372,17 +379,15 @@ class MailActivitySchedule(models.TransientModel):
         return self.env['res.partner'].browse(self.env.context.get('log_contact_id'))
 
     @api.model
-    def _get_log_default_record(self, model_name, domain, order='id desc'):
-        """ The record the wizard offers by default for a model, when logging a call:
-        the most recent of those it lists first, so that a call is never offered a
-        record about nobody who took part in it.
+    def _get_log_default_record(self, model_name, domain):
+        """ The record the wizard offers by default for a model, when logging a call: the
+        first one its list offers (see `mail.activity.mixin.name_search`), so that what a
+        user reads in the field is what they would have picked at the top of its dropdown.
 
-        :return: a recordset of ``model_name``, void when nothing is worth offering"""
+        :return: a recordset of ``model_name``, void when it offers nothing at all"""
         model = self.env[model_name]
-        priority_domain = model._get_call_log_priority_domain()
-        if not priority_domain.is_false():
-            domain = Domain(domain) & priority_domain
-        return model.search(domain, limit=1, order=order)
+        offered = model.name_search('', domain, limit=1)
+        return model.browse(offered[0][0]) if offered else model
 
     @api.depends('call_history_id.end_dt')
     def _compute_is_call_ongoing(self):
