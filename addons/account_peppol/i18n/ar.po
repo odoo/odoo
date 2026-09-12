@@ -11,9 +11,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-31 17:38+0000\n"
-"PO-Revision-Date: 2026-08-03 01:26+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"POT-Creation-Date: 2026-09-11 17:41+0000\n"
+"PO-Revision-Date: 2026-09-12 09:33+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-17/"
 "account_peppol/ar/>\n"
 "Language: ar\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: account_peppol
 #. odoo-python
@@ -39,8 +39,8 @@ msgid ""
 "<u>mandatory as of January 2026</u> - don't wait to register."
 msgstr ""
 "<br/>\n"
-"                                In Belgium, electronic invoicing is <u>"
-"mandatory as of January 2026</u> - don't wait to register."
+"                                In Belgium, electronic invoicing is "
+"<u>mandatory as of January 2026</u> - don't wait to register."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
@@ -395,12 +395,48 @@ msgid ""
 msgstr ""
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.js:0
+#, python-format
+msgid "French Company Registration"
+msgstr ""
+
+#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/tools/peppol_errors.py:0
 #, python-format
 msgid ""
 "If you are not subject to VAT, you should not have a VAT number on your "
 "company/contacts and your clients should not have one either."
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"If you want to register for the French e-invoicing, first install the PDP "
+"module: France - E-Invoicing (Approved Platform)."
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"If you want to register for the French e-invoicing, first install the PDP "
+"module: France - E-Invoicing (Approved Platform).\n"
+"The module was not found. Please update the available apps first."
+msgstr ""
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.js:0
+#, python-format
+msgid ""
+"If you want to use the French E-Invoicing via Approved Platform, please "
+"consider installing the module `France - E-Invoicing (Approved Platform)` "
+"before registering here. Are you sure you want to continue?"
 msgstr ""
 
 #. module: account_peppol
@@ -419,11 +455,19 @@ msgstr "دفتر يومية الفواتير الواردة "
 
 #. module: account_peppol
 #. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid "Install module"
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send.py:0
 #, python-format
 msgid "Invoice %s is too big to send via peppol (64MB limit)"
 msgstr ""
-"الفاتورة %s كبيرة جدًا بحيث لا يمكن إرسالها عبر peppol (الحد الأقصى 64 ميجابايت)"
+"الفاتورة %s كبيرة جدًا بحيث لا يمكن إرسالها عبر peppol (الحد الأقصى 64 "
+"ميجابايت)"
 
 #. module: account_peppol
 #. odoo-python
@@ -1123,6 +1167,13 @@ msgstr ""
 "known as 'Endpoint ID'."
 
 #. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid "Update Apps List"
+msgstr "تحديث قائمة التطبيقات"
+
+#. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
 #, python-format
@@ -1212,8 +1263,8 @@ msgid ""
 "Please change the journal used for Peppol reception before changing the type "
 "of this journal."
 msgstr ""
-"لا يمكنك تغيير نوع دفتر اليومية المستخدم لاستلام فواتير Peppol إلى نوع مختلف عن "
-"'Purchase'.\n"
+"لا يمكنك تغيير نوع دفتر اليومية المستخدم لاستلام فواتير Peppol إلى نوع مختلف "
+"عن 'Purchase'.\n"
 "يرجى تغيير دفتر اليومية المستخدم لاستلام Peppol قبل تغيير نوع هذا الدفتر."
 
 #. module: account_peppol
@@ -1242,8 +1293,8 @@ msgid ""
 "You will not be able to send or receive Peppol documents in Odoo anymore. "
 "Are you sure you want to proceed?"
 msgstr ""
-"لن تكون قادراً على استلام مستندات Peppol في أودو بعد الآن. هل أنت متأكد من أنك "
-"ترغب في الاستمرار؟ "
+"لن تكون قادراً على استلام مستندات Peppol في أودو بعد الآن. هل أنت متأكد من "
+"أنك ترغب في الاستمرار؟ "
 
 #. module: account_peppol
 #. odoo-javascript

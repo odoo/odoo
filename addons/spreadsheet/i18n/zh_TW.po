@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-24 17:38+0000\n"
+"POT-Creation-Date: 2026-09-11 17:42+0000\n"
 "PO-Revision-Date: 2026-08-07 00:26+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -198,7 +198,8 @@ msgstr ""
 msgid ""
 "A boolean; if TRUE, empty cells selected in the text arguments won't be "
 "included in the result."
-msgstr "真假值，如果為 TRUE（真），文字引數選取的空白儲存格，不會包含在結果內。 "
+msgstr ""
+"真假值，如果為 TRUE（真），文字引數選取的空白儲存格，不會包含在結果內。 "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -274,7 +275,8 @@ msgstr "需要最小範圍限制值"
 msgid ""
 "A number indicating which numbering system to use to represent weekdays. By "
 "default, counts starting with Sunday = 1."
-msgstr "數字，表示使用哪種編號系統，去代表一週內的各天。預設以星期日 = 1 開始數算。"
+msgstr ""
+"數字，表示使用哪種編號系統，去代表一週內的各天。預設以星期日 = 1 開始數算。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -416,11 +418,11 @@ msgid ""
 "number of days between start_date and end_date, assuming start_date and "
 "end_date were no more than one year apart)."
 msgstr ""
-"時間單位的文本縮寫。可接受的取值有：Y（start_date 和 end_date 之間的整年數）"
-"、M（start_date 和 end_date 之間的整月數）、D（start_date 和 end_date 之間的"
-"天數）、MD（在整月數之後，start_date 和 end_date之間的天數）、YM（在整年數之"
-"後，start_date 和 end_date 之間的整月數）、YD（在假設 start_date 和 end_date "
-"相差不超過一年的情況下，start_date 和 end_date 之間的天數）。"
+"時間單位的文本縮寫。可接受的取值有：Y（start_date 和 end_date 之間的整年"
+"數）、M（start_date 和 end_date 之間的整月數）、D（start_date 和 end_date 之"
+"間的天數）、MD（在整月數之後，start_date 和 end_date之間的天數）、YM（在整年"
+"數之後，start_date 和 end_date 之間的整月數）、YD（在假設 start_date 和 "
+"end_date 相差不超過一年的情況下，start_date 和 end_date 之間的天數）。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -565,7 +567,8 @@ msgid ""
 "Additional ranges over which to evaluate the additional criteria. The "
 "filtered set will be the intersection of the sets produced by each criterion-"
 "range pair."
-msgstr "評估附加標準的其他範圍。過濾後的集合將是每個標準範圍對產生的集合的交集。"
+msgstr ""
+"評估附加標準的其他範圍。過濾後的集合將是每個標準範圍對產生的集合的交集。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1363,6 +1366,14 @@ msgstr "不可隱藏工作表內的所有欄。"
 #, python-format
 msgid "Cannot hide all the rows of a sheet."
 msgstr "不可隱藏工作表內的所有列。"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid ""
+"Cannot perform this action on merged cells. Unmerge the cells and try again."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3009,7 +3020,8 @@ msgstr ""
 msgid ""
 "Function ${name} has at mandatory arguments declared after optional ones. "
 "All optional arguments must be after all mandatory arguments."
-msgstr "函數 ${name} 在可選引數之後宣告強制引數。所有可選引數必須在所有必需引數之後。"
+msgstr ""
+"函數 ${name} 在可選引數之後宣告強制引數。所有可選引數必須在所有必需引數之後。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3515,8 +3527,8 @@ msgid ""
 "specified range) is sorted, in which case the closest match for search_key "
 "will be returned."
 msgstr ""
-"指示要搜尋的欄（指定範圍的第一欄）是否已排序，如果已排序，則傳回與 search_key"
-"(搜尋鍵)最接近的匹配項。"
+"指示要搜尋的欄（指定範圍的第一欄）是否已排序，如果已排序，則傳回與 "
+"search_key(搜尋鍵)最接近的匹配項。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3527,8 +3539,8 @@ msgid ""
 "range) is sorted, in which case the closest match for search_key will be "
 "returned."
 msgstr ""
-"指示要搜尋的列（指定範圍的第一列）是否已排序，如果已排序，則傳回與 search_key"
-"(搜尋鍵)最接近的匹配項。"
+"指示要搜尋的列（指定範圍的第一列）是否已排序，如果已排序，則傳回與 "
+"search_key(搜尋鍵)最接近的匹配項。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3749,7 +3761,8 @@ msgstr "無效的公式"
 msgid ""
 "Invalid function name %s. Function names can exclusively contain "
 "alphanumerical values separated by dots (.) or underscore (_)"
-msgstr "函數名 %s 無效。函數名只能包含由英式句點（.）或底線（_）分隔的英數字串值。"
+msgstr ""
+"函數名 %s 無效。函數名只能包含由英式句點（.）或底線（_）分隔的英數字串值。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4892,9 +4905,9 @@ msgid ""
 "found, a non-exact match may be returned."
 msgstr ""
 "使用該函數的一種方法是提供一個排序列或欄 search_array，使用第二個引數 "
-"result_range 檢索 search_key。另一種方法是將這兩個引數合併為一個 search_array"
-"，搜索第一列或欄，然後從數組的最後一列或欄傳回一個值。如果找不到 search_key，"
-"則可能傳回一個非精確符合的值。"
+"result_range 檢索 search_key。另一種方法是將這兩個引數合併為一個 "
+"search_array，搜索第一列或欄，然後從數組的最後一列或欄傳回一個值。如果找不到 "
+"search_key，則可能傳回一個非精確符合的值。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4966,7 +4979,8 @@ msgstr "只貼上值"
 msgid ""
 "Pasting from the context menu is not supported in this browser. Use keyboard "
 "shortcuts ctrl+c / ctrl+v instead."
-msgstr "此瀏覽器不支援從上下文菜單貼上。可改為使用鍵盤快捷鍵 Ctrl+C 及 Ctrl+V。"
+msgstr ""
+"此瀏覽器不支援從上下文菜單貼上。可改為使用鍵盤快捷鍵 Ctrl+C 及 Ctrl+V。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6122,7 +6136,8 @@ msgstr "貨幣符號"
 msgid ""
 "TRUE or FALSE indicating whether to sort sort_column in ascending order. "
 "FALSE sorts in descending order."
-msgstr "以真假值表示是否對 sort_column 作遞增排序。設為 FALSE（假）表示遞減排序。"
+msgstr ""
+"以真假值表示是否對 sort_column 作遞增排序。設為 FALSE（假）表示遞減排序。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6444,8 +6459,8 @@ msgid ""
 "The array or range of values that will be subtracted from corresponding "
 "entries in array_x, the result squared, and all such results added together."
 msgstr ""
-"將從 array_x 中的相應條目中減去的數組或值範圍、結果平方，然後所有此類結果相加"
-"。"
+"將從 array_x 中的相應條目中減去的數組或值範圍、結果平方，然後所有此類結果相"
+"加。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6799,8 +6814,8 @@ msgid ""
 "The date for which to determine the day of the week. Must be a reference to "
 "a cell containing a date, a function returning a date type, or a number."
 msgstr ""
-"要確定星期的日期。必須是指向包含日期的儲存格、傳回日期類型的函數或數字的引用"
-"。"
+"要確定星期的日期。必須是指向包含日期的儲存格、傳回日期類型的函數或數字的引"
+"用。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6810,8 +6825,8 @@ msgid ""
 "The date for which to determine the week number. Must be a reference to a "
 "cell containing a date, a function returning a date type, or a number."
 msgstr ""
-"要確定星期的日期。必須是指向包含日期的儲存格、傳回日期類型的函數或數字的引用"
-"。"
+"要確定星期的日期。必須是指向包含日期的儲存格、傳回日期類型的函數或數字的引"
+"用。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7443,7 +7458,8 @@ msgstr ""
 msgid ""
 "The function [[FUNCTION_NAME]] has an argument with value '%s'. It should be "
 "one of: %s."
-msgstr "函數 [[FUNCTION_NAME]] 有一個值為 '%s' 的引數。它應該是以下引數之一：%s。"
+msgstr ""
+"函數 [[FUNCTION_NAME]] 有一個值為 '%s' 的引數。它應該是以下引數之一：%s。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8557,7 +8573,8 @@ msgstr "要取平均值的範圍。"
 msgid ""
 "The range to average. If not included, criteria_range is used for the "
 "average instead."
-msgstr "平均值的取值範圍。如果不包含 criteria_range，平均值將使用 criteria_range。"
+msgstr ""
+"平均值的取值範圍。如果不包含 criteria_range，平均值將使用 criteria_range。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10030,15 +10047,6 @@ msgstr "多項選擇均不允許執行此操作。"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, python-format
-msgid ""
-"This operation is not possible due to a merge. Please remove the merges "
-"first than try again."
-msgstr "由於合併，該操作無法實現。請先刪除合併，然後再試一次。"
-
-#. module: spreadsheet
-#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "This range is invalid"
@@ -10817,8 +10825,8 @@ msgid ""
 "Wraps the provided row or column of cells by columns after a specified "
 "number of elements to form a new array."
 msgstr ""
-"在指定的元素數量之後，通過欄將提供的列或欄的儲存格包裹起來，形成一個新的數組"
-"。"
+"在指定的元素數量之後，通過欄將提供的列或欄的儲存格包裹起來，形成一個新的數"
+"組。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10828,8 +10836,8 @@ msgid ""
 "Wraps the provided row or column of cells by rows after a specified number "
 "of elements to form a new array."
 msgstr ""
-"在指定的元素數量之後，通過列將提供的列或欄的儲存格包裹起來，形成一個新的數組"
-"。"
+"在指定的元素數量之後，通過列將提供的列或欄的儲存格包裹起來，形成一個新的數"
+"組。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11172,6 +11180,12 @@ msgstr "x"
 #, python-format
 msgid "yesterday"
 msgstr "昨天"
+
+#, python-format
+#~ msgid ""
+#~ "This operation is not possible due to a merge. Please remove the merges "
+#~ "first than try again."
+#~ msgstr "由於合併，該操作無法實現。請先刪除合併，然後再試一次。"
 
 #, python-format
 #~ msgid ""
