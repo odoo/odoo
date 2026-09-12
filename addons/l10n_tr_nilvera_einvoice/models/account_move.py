@@ -11,11 +11,12 @@ from markupsafe import Markup
 
 from odoo import _, Command, api, fields, models
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import SQL
+from odoo.tools import SQL, float_compare
 
 from odoo.addons.l10n_tr_nilvera.lib.nilvera_client import _get_nilvera_client
 from odoo.addons.l10n_tr_nilvera_einvoice.const import (
     CATEGORY_MOVE_TYPE_MAP,
+    EXEMPTION_CODE_TYPES,
     GIB_INVOICE_SCENARIO_SELECTION,
     GIB_INVOICE_TYPE_SELECTION,
     GIB_RETURN_INVOICE_TYPES,
@@ -99,7 +100,7 @@ class AccountMove(models.Model):
         compute='_compute_l10n_tr_gib_invoice_type',
         store=True,
         readonly=False,
-        default='SATIS',
+        recursive=True,
         string="GIB Invoice Type",
         selection=GIB_INVOICE_TYPE_SELECTION,
         help="Specifies the official GİB classification for the e-invoice/e-archive, which "
@@ -150,15 +151,23 @@ class AccountMove(models.Model):
         store=True,
         readonly=False,
         string="Exemption Reason",
-        help="The official GİB tax exemption reason. \n"
+        help="The official GİB tax exemption reason, or, for a withholding invoice, the "
+        "official GİB withholding reason. \n"
         "This field is mandatory if the 'GIB Invoice Type' is set to "
-        "'Registered for Export' or 'Tax Exempt'",
+        "'Registered for Export', 'Tax Exempt' or 'Withholding'.",
     )
-    l10n_tr_exemption_code_domain_list = fields.Json(
-        compute='_compute_l10n_tr_exemption_code_domain_list',
-        help="Technical field (not for users). Used to dynamically filter the "
-        "list of available exemption codes based on the selected "
-        "GIB Invoice Type or other criteria.",
+    l10n_tr_available_exemption_code_ids = fields.Many2many(
+        comodel_name='l10n_tr_nilvera_einvoice.account.tax.code',
+        compute='_compute_l10n_tr_available_exemption_code_ids',
+        help="Technical field (not for users). The GİB codes available on this invoice, from "
+        "the selected GIB Invoice Type and, for a withholding invoice, from the ratio its "
+        "lines withhold.",
+    )
+    l10n_tr_withholding_ratio = fields.Float(
+        compute='_compute_l10n_tr_withholding_ratio',
+        help="Technical field (not for users). The VAT fraction the invoice lines withhold, "
+        "0.9 for a 9/10 withholding, 0 when they withhold nothing or withhold at "
+        "several ratios.",
     )
     l10n_tr_zero_vat_warning = fields.Boolean(compute="_compute_l10n_tr_l10n_tr_zero_vat_warning")
     l10n_tr_nilvera_customer_status = fields.Selection(
@@ -249,27 +258,90 @@ class AccountMove(models.Model):
         for invoice in self:
             invoice.l10n_tr_zero_vat_warning = exempt_zero_tax and invoice.l10n_tr_gib_invoice_type == 'SATIS' and exempt_zero_tax in invoice.line_ids.tax_ids
 
-    @api.depends("l10n_tr_gib_invoice_scenario", "l10n_tr_gib_invoice_type", "l10n_tr_is_export_invoice")
-    def _compute_l10n_tr_exemption_code_domain_list(self):
+    @api.depends('invoice_line_ids.tax_ids.children_tax_ids.amount')
+    def _compute_l10n_tr_withholding_ratio(self):
         for record in self:
-            domain = []
-            if record.l10n_tr_is_export_invoice:
-                domain = ["export_exception"]
-            elif record.l10n_tr_gib_invoice_type == "ISTISNA":
-                domain.extend(("exception", "export_exception"))
-            elif record.l10n_tr_gib_invoice_type == "IHRACKAYITLI":
-                domain = ["export_registration"]
-            record.l10n_tr_exemption_code_domain_list = domain
+            # Only what we issue: an incoming document keeps the type its supplier sent.
+            if not record.is_sale_document(include_receipts=True):
+                record.l10n_tr_withholding_ratio = 0.0
+                continue
+            record.l10n_tr_withholding_ratio = record.invoice_line_ids.tax_ids._l10n_tr_get_withholding_ratio()
 
-    @api.depends("l10n_tr_gib_invoice_scenario", "l10n_tr_is_export_invoice")
+    @api.depends(
+        "l10n_tr_gib_invoice_type",
+        "l10n_tr_is_export_invoice",
+        "l10n_tr_withholding_ratio",
+    )
+    def _compute_l10n_tr_available_exemption_code_ids(self):
+        codes = self.env['l10n_tr_nilvera_einvoice.account.tax.code'].search([])
+        for record in self:
+            if record.l10n_tr_is_export_invoice:
+                code_types = {'export_exception'}
+            else:
+                code_types = EXEMPTION_CODE_TYPES.get(record.l10n_tr_gib_invoice_type, set())
+            record_codes = codes.filtered(lambda code: code.code_type in code_types)
+            if 'withholding' in code_types:
+                # Only keep the reasons matching the rate the lines actually withhold.
+                ratio = record.l10n_tr_withholding_ratio
+                record_codes = record_codes.filtered(
+                    lambda code: float_compare(code.percentage, ratio, precision_digits=4) == 0,
+                )
+            record.l10n_tr_available_exemption_code_ids = record_codes
+
+    @api.depends(
+        "l10n_tr_gib_invoice_scenario",
+        "l10n_tr_is_export_invoice",
+        "move_type",
+        "reversed_entry_id.l10n_tr_gib_invoice_type",
+        "l10n_tr_withholding_ratio",
+    )
     def _compute_l10n_tr_gib_invoice_type(self):
         for record in self:
-            record.l10n_tr_gib_invoice_type = 'ISTISNA' if record.l10n_tr_is_export_invoice else False
+            # Off the lines, not the position: it only applies on `Update Taxes and Accounts`.
+            withholds = record.l10n_tr_withholding_ratio
+            if record.l10n_tr_is_export_invoice:
+                record.l10n_tr_gib_invoice_type = 'ISTISNA'
+            elif record.move_type == 'out_refund':
+                # A return mirrors the invoice it reverses, which is what `_reverse_moves` writes.
+                origin_withholds = record.reversed_entry_id.l10n_tr_gib_invoice_type == 'TEVKIFAT'
+                record.l10n_tr_gib_invoice_type = 'TEVKIFATIADE' if origin_withholds or withholds else 'IADE'
+            elif withholds:
+                record.l10n_tr_gib_invoice_type = 'TEVKIFAT'
+            else:
+                record.l10n_tr_gib_invoice_type = 'SATIS'
 
-    @api.depends("l10n_tr_gib_invoice_scenario", "l10n_tr_gib_invoice_type", "partner_id")
+    @api.depends(
+        "l10n_tr_gib_invoice_scenario",
+        "l10n_tr_gib_invoice_type",
+        "partner_id",
+        "l10n_tr_available_exemption_code_ids",
+    )
     def _compute_l10n_tr_exemption_code_id(self):
         for record in self:
-            record.l10n_tr_exemption_code_id = False
+            code = record.l10n_tr_exemption_code_id
+            if not record._l10n_tr_reason_is_consistent():
+                available_codes = record.l10n_tr_available_exemption_code_ids
+                # only one reason fits the ratio, e.g. 3/10, so there is nothing to choose
+                code = available_codes if len(available_codes) == 1 else False
+            record.l10n_tr_exemption_code_id = code
+
+    def _l10n_tr_reason_is_consistent(self):
+        """Whether the reason on this invoice still fits its type and its line taxes.
+
+        Checked against the reason itself, not against the available ids, so a reason
+        created on the spot for a ratio no shipped GİB code covers survives a recompute.
+        """
+        self.ensure_one()
+        code = self.l10n_tr_exemption_code_id
+        if not code:
+            return False
+        if self.l10n_tr_is_export_invoice:
+            return code.code_type == 'export_exception'
+        if code.code_type not in EXEMPTION_CODE_TYPES.get(self.l10n_tr_gib_invoice_type, set()):
+            return False
+        if code.code_type != 'withholding':
+            return True
+        return float_compare(code.percentage, self.l10n_tr_withholding_ratio, precision_digits=4) == 0
 
     @api.depends('partner_id')
     def _compute_l10n_tr_sales_type(self):
