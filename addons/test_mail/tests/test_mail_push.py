@@ -19,6 +19,8 @@ from markupsafe import Markup
 from unittest.mock import patch
 from types import SimpleNamespace
 
+_original_prepare_payload = odoo.addons.mail.models.mail_thread.MailThread._notify_by_web_push_prepare_payload
+
 
 @tagged('post_install', '-at_install', 'mail_push')
 class TestWebPushNotification(SMSCommon):
@@ -610,6 +612,18 @@ class TestWebPushNotification(SMSCommon):
                     'Encrypted size should be exactly the base payload size + body size + encryption overhead.'
                 )
 
+    def _force_raw_body_payload(self, message, **kwargs):
+        payload = _original_prepare_payload(self, message, **kwargs)
+        # force message id to make payload comparison simpler
+        payload['options']['data']['message_id'] = 1
+        return payload
+
+    @patch.object(
+        odoo.addons.mail.models.mail_thread.MailThread,
+        '_notify_by_web_push_prepare_payload',
+        side_effect=_force_raw_body_payload,
+        autospec=True,
+    )
     @patch.object(
         odoo.addons.mail.models.mail_thread.Session, 'post', return_value=SimpleNamespace(status_code=201, text='Ok')
     )
@@ -621,7 +635,7 @@ class TestWebPushNotification(SMSCommon):
         odoo.addons.mail.tools.web_push, '_encrypt_payload',
         wraps=odoo.addons.mail.tools.web_push._encrypt_payload,
     )
-    def test_push_notifications_truncate_payload_mocked_size_limit(self, web_push_encrypt_payload_mock, thread_push_mock, session_post_mock):
+    def test_push_notifications_truncate_payload_mocked_size_limit(self, web_push_encrypt_payload_mock, thread_push_mock, session_post_mock, prepare_mock):
         """Illustrative test for text contents truncation.
 
         We want to ensure we truncate utf-8 values properly based on maximum payload size.
