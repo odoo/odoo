@@ -38,8 +38,6 @@ class AccountChartTemplate(models.AbstractModel):
             'account_tax_group_us_demo_4_25': {
                 'name': "Tax 4.25%",
                 'country_id': 'base.us',
-                'tax_payable_account_id': 'account_account_us_tax_payable',
-                'tax_receivable_account_id': 'account_account_us_tax_receivable',
             },
         }
 

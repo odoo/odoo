@@ -313,11 +313,6 @@
                     <field name="company_id" column_invisible="True"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="country_code" column_invisible="True"/>
-
-                    <field name="tax_payable_account_id"/>
-                    <field name="tax_receivable_account_id"/>
-                    <field name="advance_tax_payment_account_id"/>
-
                     <field name="preceding_subtotal" optional="hide"/>
                 </list>
             </field>
@@ -339,9 +334,6 @@
                                 <field name="pos_receipt_label" string="Label on PoS Receipts" groups="base.group_no_one"/>
                             </group>
                             <group>
-                                <field name="tax_payable_account_id"/>
-                                <field name="tax_receivable_account_id"/>
-                                <field name="advance_tax_payment_account_id"/>
                                 <field name="preceding_subtotal"/>
                             </group>
                         </group>

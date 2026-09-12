@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo auto_sequence="1">
-    <record id="tax_report" model="account.report">
-        <field name="name">Tax Report</field>
-        <field name="name@pt">Declaração de Imposto</field>
+    <record id="icms_tax_report" model="account.report">
+        <field name="name">ICMS</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
         <field name="country_id" ref="base.br"/>
         <field name="allow_foreign_vat" eval="True"/>
         <field name="availability_condition">country</field>
         <field name="column_ids">
-            <record id="tax_report_balance" model="account.report.column">
+            <record id="icms_tax_report_balance" model="account.report.column">
                 <field name="name">Balance</field>
                 <field name="name@pt">Saldo</field>
                 <field name="expression_label">balance</field>
@@ -63,6 +62,22 @@
                     </record>
                 </field>
             </record>
+        </field>
+    </record>
+    <record id="icms_st_tax_report" model="account.report">
+        <field name="name">ICMS ST</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.br"/>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="icms_st_tax_report_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="name@pt">Saldo</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
             <record id="tax_report_icmsst" model="account.report.line">
                 <field name="name">ICMS Subist</field>
                 <field name="name@pt">ICMS - Substituição Tributária</field>
@@ -95,6 +110,22 @@
                     </record>
                 </field>
             </record>
+        </field>
+    </record>
+    <record id="irpj_tax_report" model="account.report">
+        <field name="name">IRPJ</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.br"/>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="irpj_tax_report_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="name@pt">Saldo</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
             <record id="tax_report_irpj" model="account.report.line">
                 <field name="name">IRPJ</field>
                 <field name="name@pt">IRPJ</field>
@@ -159,6 +190,22 @@
                     </record>
                 </field>
             </record>
+        </field>
+    </record>
+    <record id="iss_tax_report" model="account.report">
+        <field name="name">ISS</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.br"/>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="iss_tax_report_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="name@pt">Saldo</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
             <record id="tax_report_issqn" model="account.report.line">
                 <field name="name">ISSQN</field>
                 <field name="name@pt">ISSQN</field>
@@ -191,6 +238,22 @@
                     </record>
                 </field>
             </record>
+        </field>
+    </record>
+    <record id="csll_tax_report" model="account.report">
+        <field name="name">CSLL</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.br"/>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="csll_tax_report_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="name@pt">Saldo</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
             <record id="tax_report_csll" model="account.report.line">
                 <field name="name">CSLL</field>
                 <field name="name@pt">CSLL</field>
@@ -223,6 +286,22 @@
                     </record>
                 </field>
             </record>
+        </field>
+    </record>
+    <record id="cofins_tax_report" model="account.report">
+        <field name="name">COFINS</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.br"/>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="cofins_tax_report_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="name@pt">Saldo</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
             <record id="tax_report_cofins" model="account.report.line">
                 <field name="name">COFINS</field>
                 <field name="name@pt">COFINS</field>
@@ -263,6 +342,22 @@
                     </record>
                 </field>
             </record>
+        </field>
+    </record>
+    <record id="pis_tax_report" model="account.report">
+        <field name="name">PIS</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.br"/>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="pis_tax_report_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="name@pt">Saldo</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
             <record id="tax_report_pis" model="account.report.line">
                 <field name="name">PIS</field>
                 <field name="name@pt">PIS</field>
@@ -303,6 +398,22 @@
                     </record>
                 </field>
             </record>
+        </field>
+    </record>
+    <record id="ipi_tax_report" model="account.report">
+        <field name="name">IPI</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.br"/>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="ipi_tax_report_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="name@pt">Saldo</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
             <record id="tax_report_ipi" model="account.report.line">
                 <field name="name">IPI</field>
                 <field name="name@pt">IPI</field>
@@ -352,6 +463,22 @@
                     </record>
                 </field>
             </record>
+        </field>
+    </record>
+    <record id="ii_tax_report" model="account.report">
+        <field name="name">II</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.br"/>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="ii_tax_report_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="name@pt">Saldo</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
             <record id="tax_report_ii" model="account.report.line">
                 <field name="name">II</field>
                 <field name="name@pt">II</field>
@@ -384,6 +511,22 @@
                     </record>
                 </field>
             </record>
+        </field>
+    </record>
+    <record id="inss_tax_report" model="account.report">
+        <field name="name">INSS</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.br"/>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="inss_tax_report_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="name@pt">Saldo</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
             <record id="tax_report_inss" model="account.report.line">
                 <field name="name">INSS</field>
                 <field name="name@pt">INSS</field>
@@ -416,6 +559,22 @@
                     </record>
                 </field>
             </record>
+        </field>
+    </record>
+    <record id="is_tax_report" model="account.report">
+        <field name="name">IS</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.br"/>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="is_tax_report_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="name@pt">Saldo</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
             <record id="tax_report_is" model="account.report.line">
                 <field name="name">IS</field>
                 <field name="aggregation_formula">IS_1.balance + IS_2.balance</field>
@@ -474,6 +633,22 @@
                     </record>
                 </field>
             </record>
+        </field>
+    </record>
+    <record id="cbs_tax_report" model="account.report">
+        <field name="name">CBS</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.br"/>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="cbs_tax_report_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="name@pt">Saldo</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
             <record id="tax_report_cbs" model="account.report.line">
                 <field name="name">CBS</field>
                 <field name="aggregation_formula">CBS_1.balance + CBS_2.balance</field>
@@ -503,6 +678,254 @@
                     </record>
                 </field>
             </record>
+            <record id="tax_report_cbspc" model="account.report.line">
+                <field name="name">CBSPC</field>
+                <field name="aggregation_formula">CBSPC_1.balance + CBSPC_2.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_report_cbspc_1" model="account.report.line">
+                        <field name="name">CBSPC base</field>
+                        <field name="code">CBSPC_1</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_cbspc_1_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">CBSPC_1</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_cbspc_2" model="account.report.line">
+                        <field name="name">CBSPC tax</field>
+                        <field name="code">CBSPC_2</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_cbspc_2_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">CBSPC_2</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_cbspcsp" model="account.report.line">
+                <field name="name">CBSPCSP</field>
+                <field name="aggregation_formula">CBSPCSP_1.balance + CBSPCSP_2.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_report_cbspcsp_1" model="account.report.line">
+                        <field name="name">CBSPCSP base</field>
+                        <field name="code">CBSPCSP_1</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_cbspcsp_1_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">CBSPCSP_1</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_cbspcsp_2" model="account.report.line">
+                        <field name="name">CBSPCSP tax</field>
+                        <field name="code">CBSPCSP_2</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_cbspcsp_2_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">CBSPCSP_2</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_cbsr" model="account.report.line">
+                <field name="name">CBSR</field>
+                <field name="aggregation_formula">CBSR_1.balance + CBSR_2.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_report_cbsr_1" model="account.report.line">
+                        <field name="name">CBSR base</field>
+                        <field name="code">CBSR_1</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_cbsr_1_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">CBSR_1</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_cbsr_2" model="account.report.line">
+                        <field name="name">CBSR tax</field>
+                        <field name="code">CBSR_2</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_cbsr_2_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">CBSR_2</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_cbsd" model="account.report.line">
+                <field name="name">CBSD</field>
+                <field name="aggregation_formula">CBSD_1.balance + CBSD_2.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_report_cbsd_1" model="account.report.line">
+                        <field name="name">CBSD base</field>
+                        <field name="code">CBSD_1</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_cbsd_1_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">CBSD_1</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_cbsd_2" model="account.report.line">
+                        <field name="name">CBSD tax</field>
+                        <field name="code">CBSD_2</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_cbsd_2_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">CBSD_2</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_cbssw" model="account.report.line">
+                <field name="name">CBSSW</field>
+                <field name="aggregation_formula">CBSSW_1.balance + CBSSW_2.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_report_cbssw_1" model="account.report.line">
+                        <field name="name">CBSSW base</field>
+                        <field name="code">CBSSW_1</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_cbssw_1_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">CBSSW_1</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_cbssw_2" model="account.report.line">
+                        <field name="name">CBSSW tax</field>
+                        <field name="code">CBSSW_2</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_cbssw_2_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">CBSSW_2</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_cbspw" model="account.report.line">
+                <field name="name">CBSPW</field>
+                <field name="aggregation_formula">CBSPW_1.balance + CBSPW_2.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_report_cbspw_1" model="account.report.line">
+                        <field name="name">CBSPW base</field>
+                        <field name="code">CBSPW_1</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_cbspw_1_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">CBSPW_1</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_cbspw_2" model="account.report.line">
+                        <field name="name">CBSPW tax</field>
+                        <field name="code">CBSPW_2</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_cbspw_2_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">CBSPW_2</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_cbsgc" model="account.report.line">
+                <field name="name">CBSGC</field>
+                <field name="aggregation_formula">CBSGC_1.balance + CBSGC_2.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_report_cbsgc_1" model="account.report.line">
+                        <field name="name">CBSGC base</field>
+                        <field name="code">CBSGC_1</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_cbsgc_1_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">CBSGC_1</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_cbsgc_2" model="account.report.line">
+                        <field name="name">CBSGC tax</field>
+                        <field name="code">CBSGC_2</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_cbsgc_2_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">CBSGC_2</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_cbstc" model="account.report.line">
+                <field name="name">CBSTC</field>
+                <field name="aggregation_formula">CBSTC_1.balance + CBSTC_2.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_report_cbstc_1" model="account.report.line">
+                        <field name="name">CBSTC base</field>
+                        <field name="code">CBSTC_1</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_cbstc_1_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">CBSTC_1</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_cbstc_2" model="account.report.line">
+                        <field name="name">CBSTC tax</field>
+                        <field name="code">CBSTC_2</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_cbstc_2_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">CBSTC_2</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+    <record id="ibs_tax_report" model="account.report">
+        <field name="name">IBS</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.br"/>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="ibs_tax_report_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="name@pt">Saldo</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
             <record id="tax_report_ibs" model="account.report.line">
                 <field name="name">IBS</field>
                 <field name="aggregation_formula">IBS_1.balance + IBS_2.balance</field>
@@ -590,35 +1013,6 @@
                     </record>
                 </field>
             </record>
-            <record id="tax_report_cbspc" model="account.report.line">
-                <field name="name">CBSPC</field>
-                <field name="aggregation_formula">CBSPC_1.balance + CBSPC_2.balance</field>
-                <field name="hierarchy_level">0</field>
-                <field name="children_ids">
-                    <record id="tax_report_cbspc_1" model="account.report.line">
-                        <field name="name">CBSPC base</field>
-                        <field name="code">CBSPC_1</field>
-                        <field name="expression_ids">
-                            <record id="tax_report_cbspc_1_tag" model="account.report.expression">
-                                <field name="label">balance</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">CBSPC_1</field>
-                            </record>
-                        </field>
-                    </record>
-                    <record id="tax_report_cbspc_2" model="account.report.line">
-                        <field name="name">CBSPC tax</field>
-                        <field name="code">CBSPC_2</field>
-                        <field name="expression_ids">
-                            <record id="tax_report_cbspc_2_tag" model="account.report.expression">
-                                <field name="label">balance</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">CBSPC_2</field>
-                            </record>
-                        </field>
-                    </record>
-                </field>
-            </record>
             <record id="tax_report_ibspc" model="account.report.line">
                 <field name="name">IBSPC</field>
                 <field name="aggregation_formula">IBSPC_1.balance + IBSPC_2.balance</field>
@@ -648,35 +1042,6 @@
                     </record>
                 </field>
             </record>
-            <record id="tax_report_cbspcsp" model="account.report.line">
-                <field name="name">CBSPCSP</field>
-                <field name="aggregation_formula">CBSPCSP_1.balance + CBSPCSP_2.balance</field>
-                <field name="hierarchy_level">0</field>
-                <field name="children_ids">
-                    <record id="tax_report_cbspcsp_1" model="account.report.line">
-                        <field name="name">CBSPCSP base</field>
-                        <field name="code">CBSPCSP_1</field>
-                        <field name="expression_ids">
-                            <record id="tax_report_cbspcsp_1_tag" model="account.report.expression">
-                                <field name="label">balance</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">CBSPCSP_1</field>
-                            </record>
-                        </field>
-                    </record>
-                    <record id="tax_report_cbspcsp_2" model="account.report.line">
-                        <field name="name">CBSPCSP tax</field>
-                        <field name="code">CBSPCSP_2</field>
-                        <field name="expression_ids">
-                            <record id="tax_report_cbspcsp_2_tag" model="account.report.expression">
-                                <field name="label">balance</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">CBSPCSP_2</field>
-                            </record>
-                        </field>
-                    </record>
-                </field>
-            </record>
             <record id="tax_report_ibspcsc" model="account.report.line">
                 <field name="name">IBSPCSC</field>
                 <field name="aggregation_formula">IBSPCSC_1.balance + IBSPCSC_2.balance</field>
@@ -701,35 +1066,6 @@
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">IBSPCSC_2</field>
-                            </record>
-                        </field>
-                    </record>
-                </field>
-            </record>
-            <record id="tax_report_cbsr" model="account.report.line">
-                <field name="name">CBSR</field>
-                <field name="aggregation_formula">CBSR_1.balance + CBSR_2.balance</field>
-                <field name="hierarchy_level">0</field>
-                <field name="children_ids">
-                    <record id="tax_report_cbsr_1" model="account.report.line">
-                        <field name="name">CBSR base</field>
-                        <field name="code">CBSR_1</field>
-                        <field name="expression_ids">
-                            <record id="tax_report_cbsr_1_tag" model="account.report.expression">
-                                <field name="label">balance</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">CBSR_1</field>
-                            </record>
-                        </field>
-                    </record>
-                    <record id="tax_report_cbsr_2" model="account.report.line">
-                        <field name="name">CBSR tax</field>
-                        <field name="code">CBSR_2</field>
-                        <field name="expression_ids">
-                            <record id="tax_report_cbsr_2_tag" model="account.report.expression">
-                                <field name="label">balance</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">CBSR_2</field>
                             </record>
                         </field>
                     </record>
@@ -788,35 +1124,6 @@
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">IBSMR_2</field>
-                            </record>
-                        </field>
-                    </record>
-                </field>
-            </record>
-            <record id="tax_report_cbsd" model="account.report.line">
-                <field name="name">CBSD</field>
-                <field name="aggregation_formula">CBSD_1.balance + CBSD_2.balance</field>
-                <field name="hierarchy_level">0</field>
-                <field name="children_ids">
-                    <record id="tax_report_cbsd_1" model="account.report.line">
-                        <field name="name">CBSD base</field>
-                        <field name="code">CBSD_1</field>
-                        <field name="expression_ids">
-                            <record id="tax_report_cbsd_1_tag" model="account.report.expression">
-                                <field name="label">balance</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">CBSD_1</field>
-                            </record>
-                        </field>
-                    </record>
-                    <record id="tax_report_cbsd_2" model="account.report.line">
-                        <field name="name">CBSD tax</field>
-                        <field name="code">CBSD_2</field>
-                        <field name="expression_ids">
-                            <record id="tax_report_cbsd_2_tag" model="account.report.expression">
-                                <field name="label">balance</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">CBSD_2</field>
                             </record>
                         </field>
                     </record>
@@ -904,64 +1211,6 @@
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">IBSMD_2</field>
-                            </record>
-                        </field>
-                    </record>
-                </field>
-            </record>
-            <record id="tax_report_cbssw" model="account.report.line">
-                <field name="name">CBSSW</field>
-                <field name="aggregation_formula">CBSSW_1.balance + CBSSW_2.balance</field>
-                <field name="hierarchy_level">0</field>
-                <field name="children_ids">
-                    <record id="tax_report_cbssw_1" model="account.report.line">
-                        <field name="name">CBSSW base</field>
-                        <field name="code">CBSSW_1</field>
-                        <field name="expression_ids">
-                            <record id="tax_report_cbssw_1_tag" model="account.report.expression">
-                                <field name="label">balance</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">CBSSW_1</field>
-                            </record>
-                        </field>
-                    </record>
-                    <record id="tax_report_cbssw_2" model="account.report.line">
-                        <field name="name">CBSSW tax</field>
-                        <field name="code">CBSSW_2</field>
-                        <field name="expression_ids">
-                            <record id="tax_report_cbssw_2_tag" model="account.report.expression">
-                                <field name="label">balance</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">CBSSW_2</field>
-                            </record>
-                        </field>
-                    </record>
-                </field>
-            </record>
-            <record id="tax_report_cbspw" model="account.report.line">
-                <field name="name">CBSPW</field>
-                <field name="aggregation_formula">CBSPW_1.balance + CBSPW_2.balance</field>
-                <field name="hierarchy_level">0</field>
-                <field name="children_ids">
-                    <record id="tax_report_cbspw_1" model="account.report.line">
-                        <field name="name">CBSPW base</field>
-                        <field name="code">CBSPW_1</field>
-                        <field name="expression_ids">
-                            <record id="tax_report_cbspw_1_tag" model="account.report.expression">
-                                <field name="label">balance</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">CBSPW_1</field>
-                            </record>
-                        </field>
-                    </record>
-                    <record id="tax_report_cbspw_2" model="account.report.line">
-                        <field name="name">CBSPW tax</field>
-                        <field name="code">CBSPW_2</field>
-                        <field name="expression_ids">
-                            <record id="tax_report_cbspw_2_tag" model="account.report.expression">
-                                <field name="label">balance</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">CBSPW_2</field>
                             </record>
                         </field>
                     </record>
@@ -1083,35 +1332,6 @@
                     </record>
                 </field>
             </record>
-            <record id="tax_report_cbsgc" model="account.report.line">
-                <field name="name">CBSGC</field>
-                <field name="aggregation_formula">CBSGC_1.balance + CBSGC_2.balance</field>
-                <field name="hierarchy_level">0</field>
-                <field name="children_ids">
-                    <record id="tax_report_cbsgc_1" model="account.report.line">
-                        <field name="name">CBSGC base</field>
-                        <field name="code">CBSGC_1</field>
-                        <field name="expression_ids">
-                            <record id="tax_report_cbsgc_1_tag" model="account.report.expression">
-                                <field name="label">balance</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">CBSGC_1</field>
-                            </record>
-                        </field>
-                    </record>
-                    <record id="tax_report_cbsgc_2" model="account.report.line">
-                        <field name="name">CBSGC tax</field>
-                        <field name="code">CBSGC_2</field>
-                        <field name="expression_ids">
-                            <record id="tax_report_cbsgc_2_tag" model="account.report.expression">
-                                <field name="label">balance</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">CBSGC_2</field>
-                            </record>
-                        </field>
-                    </record>
-                </field>
-            </record>
             <record id="tax_report_ibsufgc" model="account.report.line">
                 <field name="name">IBSUFGC</field>
                 <field name="aggregation_formula">IBSUFGC_1.balance + IBSUFGC_2.balance</field>
@@ -1199,35 +1419,6 @@
                     </record>
                 </field>
             </record>
-            <record id="tax_report_cbstc" model="account.report.line">
-                <field name="name">CBSTC</field>
-                <field name="aggregation_formula">CBSTC_1.balance + CBSTC_2.balance</field>
-                <field name="hierarchy_level">0</field>
-                <field name="children_ids">
-                    <record id="tax_report_cbstc_1" model="account.report.line">
-                        <field name="name">CBSTC base</field>
-                        <field name="code">CBSTC_1</field>
-                        <field name="expression_ids">
-                            <record id="tax_report_cbstc_1_tag" model="account.report.expression">
-                                <field name="label">balance</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">CBSTC_1</field>
-                            </record>
-                        </field>
-                    </record>
-                    <record id="tax_report_cbstc_2" model="account.report.line">
-                        <field name="name">CBSTC tax</field>
-                        <field name="code">CBSTC_2</field>
-                        <field name="expression_ids">
-                            <record id="tax_report_cbstc_2_tag" model="account.report.expression">
-                                <field name="label">balance</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">CBSTC_2</field>
-                            </record>
-                        </field>
-                    </record>
-                </field>
-            </record>
             <record id="tax_report_ibstc" model="account.report.line">
                 <field name="name">IBSTC</field>
                 <field name="aggregation_formula">IBSTC_1.balance + IBSTC_2.balance</field>
@@ -1252,6 +1443,150 @@
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">IBSTC_2</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+    <record id="icms_fcp_tax_report" model="account.report">
+        <field name="name">ICMS FCP</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.br"/>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="icms_fcp_tax_report_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="name@pt">Saldo</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="tax_report_icmsfcp" model="account.report.line">
+                <field name="name">ICMS FCP</field>
+                <field name="name@pt">ICMS - Fundo de Combate à Pobreza</field>
+                <field name="aggregation_formula">ICMSFCP_1.balance + ICMSFCP_2.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_report_icmsfcp_1" model="account.report.line">
+                        <field name="name">ICMSFCP base</field>
+                        <field name="name@pt">Base ICMS-FCP</field>
+                        <field name="code">ICMSFCP_1</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_icmsfcp_1_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-ICMSFCP_1</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_icmsfcp_2" model="account.report.line">
+                        <field name="name">ICMSFCP tax</field>
+                        <field name="name@pt">Imposto ICMS-FCP</field>
+                        <field name="code">ICMSFCP_2</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_icmsfcp_2_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">ICMSFCP_2</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+    <record id="icms_difal_tax_report" model="account.report">
+        <field name="name">ICMS DIFAL</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.br"/>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="icms_difal_tax_report_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="name@pt">Saldo</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="tax_report_icmsdifal" model="account.report.line">
+                <field name="name">ICMS DIFAL</field>
+                <field name="name@pt">ICMS - Diferencial de Alíquota</field>
+                <field name="aggregation_formula">ICMSDIFAL_1.balance + ICMSDIFAL_2.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_report_icmsdifal_1" model="account.report.line">
+                        <field name="name">ICMSDIFAL base</field>
+                        <field name="name@pt">Base ICMS-DIFAL</field>
+                        <field name="code">ICMSDIFAL_1</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_icmsdifal_1_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-ICMSDIFAL_1</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_icmsdifal_2" model="account.report.line">
+                        <field name="name">ICMSDIFAL tax</field>
+                        <field name="name@pt">Imposto ICMS-DIFAL</field>
+                        <field name="code">ICMSDIFAL_2</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_icmsdifal_2_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">ICMSDIFAL_2</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+    <record id="cprb_tax_report" model="account.report">
+        <field name="name">CPRB</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.br"/>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="cprb_tax_report_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="name@pt">Saldo</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="tax_report_cprb" model="account.report.line">
+                <field name="name">CPRB</field>
+                <field name="name@pt">Contribuição Previdenciária sobre a Receita Bruta</field>
+                <field name="aggregation_formula">CPRB_1.balance + CPRB_2.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_report_cprb_1" model="account.report.line">
+                        <field name="name">CPRB base</field>
+                        <field name="name@pt">Base CPRB</field>
+                        <field name="code">CPRB_1</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_cprb_1_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-CPRB_1</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_cprb_2" model="account.report.line">
+                        <field name="name">CPRB tax</field>
+                        <field name="name@pt">Imposto CPRB</field>
+                        <field name="code">CPRB_2</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_cprb_2_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">CPRB_2</field>
                             </record>
                         </field>
                     </record>
