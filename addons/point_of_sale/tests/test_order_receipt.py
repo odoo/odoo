@@ -490,6 +490,49 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon, CommonPosTest):
         self.assertTrue(data, "the order has one new line, it must produce a ticket")
         return data[0]['extra_data']
 
+    def _delivery_receipt_extra_data(self, identification, source='pos'):
+        preset = self.env['pos.preset'].create({
+            'name': 'Delivery',
+            'identification': identification,
+        })
+        partner = self.env['res.partner'].create({
+            'name': 'John Doe',
+            'street': '12 Rue des Bouchers',
+            'street2': 'Floor 3',
+            'zip': '1000',
+            'city': 'Brussels',
+            'country_id': self.env.ref('base.be').id,
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        order = self._create_receipt_test_order('2026-08-27 11:16:53')
+        order.write({'preset_id': preset.id, 'partner_id': partner.id, 'source': source})
+
+        changes = order._generate_preparation_change_for_categories(set(self.category.ids))
+        receipts = order._generate_preparation_receipt_data(changes)
+        self.assertTrue(receipts)
+        html = str(self.env['ir.qweb']._render('point_of_sale.pos_order_change_receipt', receipts[0]))
+        return receipts[0]['extra_data'], html
+
+    def test_change_receipt_prints_the_address_a_self_order_submitted(self):
+        """
+        Self order asks for the whole address in one field, so it is printed back as
+        submitted. Recomposing it would repeat the city and zip it already contains.
+        """
+        extra_data, html = self._delivery_receipt_extra_data('address', source='mobile')
+
+        self.assertEqual(extra_data['delivery_address'], ['12 Rue des Bouchers'])
+        self.assertIn('12 Rue des Bouchers', html)
+        self.assertNotIn('1000 Brussels', html)
+        self.assertNotIn('Floor 3', html)
+
+    def test_change_receipt_has_no_address_when_the_preset_needs_none(self):
+        """A preset that does not collect an address has nothing to deliver to."""
+        extra_data, html = self._delivery_receipt_extra_data('name')
+
+        self.assertEqual(extra_data['delivery_address'], [])
+        self.assertNotIn('delivery-address', html)
+        self.assertNotIn('Rue des Bouchers', html)
+
     def test_change_receipt_times_use_shop_timezone(self):
         """
         Preparation ticket times must use the shop timezone, not the acting user's,
