@@ -177,10 +177,38 @@ class DeliveryCarrier(models.Model):
         return True
 
     def available_carriers(self, partner, source):
-        return self.filtered(lambda c: c._match(partner, source))
+        # _match_must_have_tags/_match_excluded_tags/_match_weight/_match_volume each
+        # independently recompute data from source.move_ids/order_line, and none of it depends
+        # on which carrier is being checked. Precompute it once here instead of once per
+        # candidate carrier inside .filtered() below (source's lines can be numerous).
+        match_data = self._prepare_source_match_data(source)
+        return self.filtered(lambda c: c._match(partner, source, match_data))
 
-    def _match(self, partner, source):
+    def _prepare_source_match_data(self, source):
+        if source._name == 'sale.order':
+            lines = source.order_line
+            products = lines.product_id
+        elif source._name == 'stock.picking':
+            lines = source.move_ids
+            products = lines.with_prefetch().mapped('product_id')
+        else:
+            raise UserError(_("Invalid source document type"))
+        return {
+            'product_tag_ids': products.all_product_tag_ids,
+            'total_weight': sum(line.product_id.weight * line.product_qty for line in lines),
+            'total_volume': sum(line.product_id.volume * line.product_qty for line in lines),
+        }
+
+    def _match(self, partner, source, match_data=None):
         self.ensure_one()
+        if match_data is not None:
+            return (
+                self._match_address(partner)
+                and (not self.must_have_tag_ids or any(tag in match_data['product_tag_ids'] for tag in self.must_have_tag_ids))
+                and not any(tag in match_data['product_tag_ids'] for tag in self.excluded_tag_ids)
+                and (not self.max_weight or match_data['total_weight'] <= self.max_weight)
+                and (not self.max_volume or match_data['total_volume'] <= self.max_volume)
+            )
         return (
             self._match_address(partner)
             and self._match_must_have_tags(source)
