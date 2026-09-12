@@ -1677,6 +1677,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
             if order_sudo.name in order_sudo.partner_shipping_id.name:
                 # The existing partner was created by `process_express_checkout_delivery_choice`, it
                 # means that the partner is missing information, so we update it.
+                if not shipping_address.get('name'):
+                    shipping_address['name'] = (
+                        billing_address.get('name') or order_sudo.partner_id.name
+                    )
                 order_sudo.partner_shipping_id.write(shipping_address)
                 order_sudo._update_address(
                     order_sudo.partner_shipping_id.id, ['partner_shipping_id']
