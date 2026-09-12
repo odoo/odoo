@@ -998,7 +998,7 @@ export class PivotModel extends Model {
             if (aggregator === "sum_currency") {
                 const currencies =
                     group[metaData.fields[fieldName].currency_field + ":array_agg_distinct"];
-                if (currencies.length === 1) {
+                if (currencies.length === 1 && fieldName in measurements) {
                     return measurements;
                 }
             }
