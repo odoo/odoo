@@ -24,6 +24,7 @@ class TestWebsiteSaleProductAttributeValueConfig(
         cls.computer.company_id = cls.env.company
         cls.computer = cls.computer.with_env(cls.env)
         cls.other_currency = cls.setup_other_currency("GBP")
+        cls.group_user._apply_group(cls.quick_ref("product.group_product_pricelist"))
 
     def test_get_combination_info(self):
         # Setup website.
