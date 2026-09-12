@@ -159,7 +159,13 @@ class IrCron(models.Model):
             raise UserError(self.env._("Job '%s' already executing", self.name))
 
         with ListLogHandler(_logger, logging.ERROR) as capture:
-            self._process_job(cron_cr, job)
+            limit = config['limit_time_real']
+            if limit > 0:
+                # halve the available hard limit
+                end_time = time.monotonic() + limit / 2
+            else:
+                end_time = 0.0
+            self._process_job(cron_cr, job, end_time=end_time)
         if log_record := next((lr for lr in capture if getattr(lr, 'exc_info', None)), None):
             _exc_type, exception, _traceback = log_record.exc_info
             e = RuntimeError()
@@ -213,7 +219,13 @@ class IrCron(models.Model):
         The `cron_cr` is used to lock the currently processed job and relased
         by committing after each job.
         """
-        for job_id in job_ids:
+        # find when we should stop processing
+        limit_time = config['limit_time_real_cron']
+        if limit_time == -1:
+            limit_time = config['limit_time_real']
+        start_time = time.monotonic()
+        end_time = (start_time + min(MIN_TIME_PER_JOB, limit_time - 2 * MIN_TIME_PER_JOB)) if limit_time else float('+inf')
+        for job_number, job_id in enumerate(job_ids, start=1):
             try:
                 job = IrCron._acquire_one_job(cron_cr, job_id)
             except psycopg2.extensions.TransactionRollbackError:
@@ -227,9 +239,14 @@ class IrCron(models.Model):
             # take into account overridings of _process_job() on that database, check_signaling
             registry = api.Environment(cron_cr, api.SUPERUSER_ID, {}).registry
             # run each job in an insolated context from other jobs
-            contextvars.copy_context().run(registry[IrCron._name]._process_job, cron_cr, job)
+            job_end_time = time.monotonic() + MIN_TIME_PER_JOB
+            contextvars.copy_context().run(registry[IrCron._name]._process_job, cron_cr, job, end_time=job_end_time)
             cron_cr.commit()
             _logger.debug("job %s updated and released", job_id)
+            if time.monotonic() >= end_time:
+                _logger.info("Processed %s/%s jobs in %s seconds, getting too close to the hard time limit, bailing out.",
+                    job_number, len(job_ids), time.monotonic() - start_time)
+                break
 
     @staticmethod
     def _check_version(cron_cr):
@@ -407,7 +424,7 @@ class IrCron(models.Model):
         _logger.warning(message)
 
     @classmethod
-    def _process_job(cls, cron_cr: BaseCursor, job) -> None:
+    def _process_job(cls, cron_cr: BaseCursor, job, end_time: float = 0.0) -> None:
         """
         Execute the cron's server action in a dedicated transaction.
 
@@ -465,7 +482,8 @@ class IrCron(models.Model):
         else:
             # run the job and check resulting progress
             start_time = time.monotonic()
-            end_time = start_time + MIN_TIME_PER_JOB
+            if not end_time:
+                end_time = start_time + MIN_TIME_PER_JOB
             server_action_id = job['ir_actions_server_id']
             with cls.pool.cursor() as job_cr:
                 env = api.Environment(job_cr, job['user_id'], {
