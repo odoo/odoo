@@ -13,6 +13,7 @@ declare module "models" {
     }
     export interface DiscussChannel {
         activeRtcSession: RtcSession;
+        activeSpeakers: RtcSession[];
         cancelRtcInvitationTimeout: number|undefined;
         focusAvailableVideo: () => void;
         focusStack: RtcSession[];
@@ -23,14 +24,14 @@ declare module "models" {
         lastSessionIds: Set<number>;
         pin: (session: RtcSession) => void;
         pinnedRtcSession: RtcSession;
-        promoteFullscreen: typeof CALL_PROMOTE_FULLSCREEN[keyof CALL_PROMOTE_FULLSCREEN];
+        pruneSpeakersTimeout: number|undefined;
         rtc_session_ids: RtcSession[];
         showCallView: Readonly<boolean>;
         unpin: () => void;
+        updateActiveSpeakers: () => void;
         updateCallFocusStack: (session: RtcSession) => void;
         useCameraByDefault: null;
         videoCount: number;
-        videoCountNotSelf: number;
         visibleCards: import("@mail/discuss/call/common/call").CardData[];
     }
     export interface MailGuest {

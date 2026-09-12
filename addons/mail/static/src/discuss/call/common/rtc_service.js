@@ -1,7 +1,6 @@
 import { fields, Record } from "@mail/model/export";
 import { BlurManager } from "@mail/discuss/call/common/blur_manager";
 import { CallPermissionDialog } from "@mail/discuss/call/common/call_permission_dialog";
-import { CALL_PROMOTE_FULLSCREEN } from "@mail/discuss/call/common/discuss_channel_model_patch";
 import { CALL_GRID_LAYOUT } from "@mail/discuss/call/common/call_layout";
 import { monitorAudio } from "@mail/utils/common/media_monitoring";
 import { CallPermissionDeniedDialog } from "@mail/discuss/call/common/call_permission_denied_dialog";
@@ -409,11 +408,6 @@ export class Rtc extends Record {
                 this.localSession ||
                 this.store["discuss.channel.rtc.session"].get(this._remotelyHostedSessionId)
             );
-        },
-        onDelete() {
-            if (this.channel) {
-                this.channel.promoteFullscreen = CALL_PROMOTE_FULLSCREEN.INACTIVE;
-            }
         },
     });
     /**
@@ -910,7 +904,7 @@ export class Rtc extends Record {
                 ? VIEW_TO_RESTORE.FULLSCREEN
                 : VIEW_TO_RESTORE.NONE;
         this.store.fullscreenChannel = this.channel;
-        if (browserFullscreen) {
+        if (browserFullscreen || isMobileOS()) {
             this.removeCallNotification("minimize_hint");
         } else {
             this.addCallNotification({

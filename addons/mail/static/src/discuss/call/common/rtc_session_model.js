@@ -93,6 +93,18 @@ export class RtcSession extends Record {
             { immediate: true }
         );
         this.onChange(
+            () => [this.isActuallyTalking],
+            function onChangeIsActuallyTalking(isActuallyTalking) {
+                if (!isActuallyTalking) {
+                    // Start of the grace period during which the participant stays on the main
+                    // stage.
+                    this.stoppedTalkingAt = Date.now();
+                }
+                this.channel?.updateActiveSpeakers();
+            },
+            { immediate: true }
+        );
+        this.onChange(
             () => [this.isVideoStreaming],
             function onChangeIsVideoStreaming(isVideoStreaming) {
                 if (
@@ -154,6 +166,8 @@ export class RtcSession extends Record {
     /** @type {number} value between 0 and 1 that represents volume in % */
     talkingVolume = 0;
     isTalking = false;
+    /** @type {number|undefined} when this session last stopped talking (epoch ms) */
+    stoppedTalkingAt;
     isActuallyTalking = this.computed(() => this.isTalking && !this.isMute);
     isVideoStreaming = this.computed(() => this.is_screen_sharing_on || this.is_camera_on);
     shortStatus = this.computed(() => {

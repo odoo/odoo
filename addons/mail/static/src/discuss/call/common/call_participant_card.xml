@@ -2,23 +2,23 @@
 <templates xml:space="preserve">
 
     <t t-name="discuss.CallParticipantCard">
-        <div class="o-discuss-CallParticipantCard position-relative d-flex flex-column align-items-center justify-content-center mh-100 mw-100"
+        <div class="o-discuss-CallParticipantCard d-flex flex-column align-items-center justify-content-center mh-100 mw-100"
             t-att-class="{
                 'cursor-pointer': (this.props.inset and this.isActiveRtcSession) or !this.rtcSession,
                 'o-isTalking': !this.props.minimized and this.isTalking,
                 'o-isInvitation opacity-50': !this.rtcSession,
                 'o-inset': this.props.inset,
                 'pe-none': this.rtc.screenTrack and !this.rtc.screenTrack.enabled,
-                'o-small': this.props.inset and (this.ui.isSmall or this.props.minimized),
-                'o-active': this.isActiveRtcSession and !this.props.inset and this.props.compact,
                 'p-1 rounded-1': !this.isActiveRtcSession,
             }"
             t-att-aria-label="this.name"
             t-att-data-is-context-menu-available="this.isContextMenuAvailable"
+            t-att-data-surface="this.props.cardData.key"
             t-attf-class="{{ this.props.className }}"
             t-on-click="this.onClick"
             t-on-mousedown="this.onMouseDown"
             t-on-touchmove="this.onTouchMove"
+            t-on-touchend="this.onTouchEnd"
             t-ref="this.root"
             t-att-style="this.cardBgStyle"
         >
@@ -35,7 +35,7 @@
                     </div>
                 </div>
             </t>
-            <CallParticipantVideo t-elif="this.hasVideo" session="this.rtcSession" type="this.props.cardData.type" inset="this.props.inset"/>
+            <CallParticipantVideo t-elif="this.hasVideo" session="this.rtcSession" type="this.props.cardData.type" inset="this.props.inset" isCropped="this.props.isCropped"/>
             <div t-else="" class="o-discuss-CallParticipantCard-avatar d-flex align-items-center justify-content-center h-100 w-100 rounded-3" t-att-class="{ 'o-minimized': this.props.minimized, 'o-isRemoteVideo': this.isRemoteVideo, 'o-selfInCall': this.isActiveCall }" draggable="false">
                 <img t-if="!this.showRemoteWarning" alt="Avatar" class="rounded-circle border-5 object-fit-cover" t-att-src="this.channelMember?.avatarUrl" draggable="false" t-att-class="{
                     'o-isTalking': this.isTalking,
