@@ -40,3 +40,28 @@ test("validSelection", async () => {
     comp.state.zip = "000021";
     expect(Boolean(comp.validSelection)).toBe(true);
 });
+
+test("setPartnerAndOrderName: floating_order_name is always the entered name", async () => {
+    const store = await setupSelfPosEnv();
+    const models = store.models;
+
+    const order = await getFilledSelfOrder(store);
+    const preset = models["pos.preset"].get(1);
+    order.preset_id = preset;
+    const partner = models["res.partner"].get(3);
+    const comp = await mountWithCleanup(PresetInfoPopup, {
+        props: { close: () => {}, getPayload: () => {} },
+    });
+
+    preset.identification = "none";
+    comp.state.name = "Alex";
+    comp.setPartnerAndOrderName(partner);
+    expect(store.currentOrder.floating_order_name).toBe("Alex");
+    expect(store.currentOrder.partner_id).toBe(partner);
+
+    preset.identification = "address";
+    comp.state.name = "Jordan";
+    comp.setPartnerAndOrderName(partner);
+    expect(store.currentOrder.floating_order_name).toBe("Jordan");
+    expect(store.currentOrder.partner_id).toBe(partner);
+});
