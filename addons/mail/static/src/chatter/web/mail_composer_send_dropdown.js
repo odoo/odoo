@@ -1,6 +1,7 @@
 import { MailComposerScheduleDialog } from "@mail/chatter/web/mail_composer_schedule_dialog";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
@@ -20,10 +21,19 @@ class MailComposerSendDropdown extends Component {
         this.actionService = useService("action");
         this.dialogService = useService("dialog");
         this.orm = useService("orm");
+        this.notification = useService("notification");
+        const attachmentUploadService = useService("mail.attachment_upload");
+        this.uploadingAttachments = useState(attachmentUploadService.uploadingAttachmentIds)
         this.buttonState = useState({ disabled: false });
     }
 
     async onClickSend() {
+        if (this.uploadingAttachments.size > 0) {
+            this.notification.add(_t("Please wait while the file is uploading."), {
+                type: "warning",
+            });
+            return;
+        }
         this.buttonState.disabled = true;
         // don't send message if save failed (eg. missing required field )
         if (await this.props.record.save()) {
