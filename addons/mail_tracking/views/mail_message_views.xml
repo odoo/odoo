@@ -1,15 +1,43 @@
 <?xml version="1.0"?>
 <odoo>
     <data>
+        <record id="mail_message_view_list" model="ir.ui.view">
+            <field name="name">mail.message.view.list.inherit.mail.tracking</field>
+            <field name="model">mail.message</field>
+            <field name="inherit_id" ref="mail.view_message_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='res_id']" position="after">
+                    <field name="source_template_id" optional="hide" string="Src Template"/>
+                    <field name="source_view_id" optional="hide" string="Src View"/>
+                </xpath>
+            </field>
+        </record>
+
         <record id="mail_message_view_form_inherit_mail_tracking" model="ir.ui.view">
-            <field name="name">mail.message.view.form.inherit.mail_tracking</field>
+            <field name="name">mail.message.view.form.inherit.mail.tracking</field>
             <field name="model">mail.message</field>
             <field name="inherit_id" ref="mail.mail_message_view_form"/>
             <field name="arch" type="xml">
+                <xpath expr="//field[@name='parent_id']" position="after">
+                    <field name="source_template_id" string="Src Template"/>
+                    <field name="source_view_id" string="Src View"/>
+                </xpath>
                 <xpath expr="//page[@name='recipients']" position="after">
                     <page string="Tracking" name="page_tracking">
                         <field name="tracking_value_ids"/>
                     </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="mail_message_view_search" model="ir.ui.view">
+            <field name="name">mail.message.view.search.inherit.mail.tracking</field>
+            <field name="model">mail.message</field>
+            <field name="inherit_id" ref="mail.view_message_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='group_by_message_type']" position="after">
+                    <filter string="Template" name="group_by_source_template_id" domain="[]" context="{'group_by': 'source_template_id'}"/>
+                    <filter string="View" name="group_by_source_view_id" domain="[]" context="{'group_by': 'source_view_id'}"/>
                 </xpath>
             </field>
         </record>

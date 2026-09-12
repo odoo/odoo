@@ -22,7 +22,7 @@ class MailScheduledMessage(models.Model):
             return self.env['sms.composer']._action_send_sms_comment_record(
                 record=record,
                 body=html2plaintext(self.body, include_references=False) if isinstance(self.body, str) else self.body,
-                is_note=self.is_note,
+                subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note') if self.is_note else False,
             )
 
         return super()._post_message_send(record)
