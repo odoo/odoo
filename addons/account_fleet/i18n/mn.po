@@ -1,25 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* account_fleet
+# * account_fleet
 #
 # Translators:
 # Batmunkh Ganbat <batmunkh.g@bumanit.mn>, 2024
 # Martin Trigaux, 2024
-# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2024
-#
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2024, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2024\n"
-"Language-Team: Mongolian (https://app.transifex.com/odoo/teams/41243/mn/)\n"
+"PO-Revision-Date: 2026-08-28 15:48+0000\n"
+"Last-Translator: Lodoikhuu <baskhuujacara@gmail.com>\n"
+"Language-Team: Mongolian <https://translate.odoo.com/projects/odoo-18/"
+"account_fleet/mn/>\n"
 "Language: mn\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: account_fleet
 #: model_terms:ir.ui.view,arch_db:account_fleet.fleet_vehicle_log_services_view_form
@@ -30,6 +31,11 @@ msgid ""
 "invisible=\"account_move_state == 'posted'\" title=\"Service's "
 "Bill\">Service's Bill</span>"
 msgstr ""
+"<span class=\"o_stat_text text-success\" invisible=\"account_move_state != "
+"'posted'\" title=\"Үйлчилгээний нэхэмжлэл\">Үйлчилгээний нэхэмжлэл</span>\n"
+"                            <span class=\"o_stat_text text-warning\" "
+"invisible=\"account_move_state == 'posted'\" title=\"Үйлчилгээний "
+"нэхэмжлэл\">Үйлчилгээний нэхэмжлэл</span>"
 
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle__account_move_ids
@@ -39,7 +45,7 @@ msgstr "Ажил гүйлгээ"
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle_log_services__account_move_line_id
 msgid "Account Move Line"
-msgstr ""
+msgstr "Ажил гүйлгээний мөр"
 
 #. module: account_fleet
 #. odoo-python
@@ -55,7 +61,7 @@ msgstr "Нэхэмжлэл"
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle__bill_count
 msgid "Bills Count"
-msgstr ""
+msgstr "Нэхэмжлэлийн тоо"
 
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle_log_services__amount
@@ -85,13 +91,13 @@ msgstr "Журналын бичилт"
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_account_move_line__need_vehicle
 msgid "Need Vehicle"
-msgstr ""
+msgstr "Тээврийн хэрэгсэл шаардлагатай"
 
 #. module: account_fleet
 #. odoo-python
 #: code:addons/account_fleet/models/account_move.py:0
 msgid "Service Vendor Bill: %s"
-msgstr ""
+msgstr "Үйлчилгээний нийлүүлэгчийн нэхэмжлэл: %s"
 
 #. module: account_fleet
 #: model:ir.model,name:account_fleet.model_fleet_vehicle_log_services
@@ -122,6 +128,8 @@ msgid ""
 "You cannot delete log services records because one or more of them were bill "
 "created."
 msgstr ""
+"Нэг буюу хэд хэдэн үйлчилгээний бүртгэлд нэхэмжлэл үүссэн тул тэдгээрийг "
+"устгах боломжгүй."
 
 #. module: account_fleet
 #. odoo-python
@@ -130,8 +138,10 @@ msgid ""
 "You cannot modify amount of services linked to an account move line. Do it "
 "on the related accounting entry instead."
 msgstr ""
+"Холбогдох дансны гүйлгээний мөртэй холбоотой үйлчилгээний дүнг өөрчлөх "
+"боломжгүй. Үүний оронд холбогдох санхүүгийн бичилт дээр өөрчилнө үү."
 
 #. module: account_fleet
 #: model_terms:ir.ui.view,arch_db:account_fleet.fleet_vehicle_view_form
 msgid "show the vendor bills for this vehicle"
-msgstr ""
+msgstr "Энэ тээврийн хэрэгслийн нийлүүлэгчийн нэхэмжлэлүүдийг харах"

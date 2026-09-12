@@ -43,7 +43,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:36+0000\n"
-"PO-Revision-Date: 2026-08-12 07:14+0000\n"
+"PO-Revision-Date: 2026-09-10 14:11+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-18/project/"
 "fi/>\n"
@@ -52,7 +52,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: project
 #. odoo-python
@@ -1129,13 +1129,13 @@ msgstr "Varattu aika:"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Analytic"
-msgstr "Analyyttinen"
+msgstr "Kaskennallinen"
 
 #. module: project
 #: model:ir.model,name:project.model_account_analytic_account
 #: model:ir.model.fields,field_description:project.field_project_project__auto_account_id
 msgid "Analytic Account"
-msgstr "Analyyttinen tili"
+msgstr "Laskentakohde"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -4137,7 +4137,7 @@ msgstr "Arvostelu"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_graph
 msgid "Rating (/5)"
-msgstr "Luokitus (/5)"
+msgstr "Arvosana (/5)"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_graph
@@ -4148,7 +4148,7 @@ msgstr "Luokitus (1-5)"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_avg_text
 msgid "Rating Avg Text"
-msgstr "Kekismääräisen luokituksen teksti"
+msgstr "Arvostelun keskimääräinen teksti"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__rating_template_id
@@ -4184,7 +4184,7 @@ msgstr "Arvion tyytyväisyys"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_text
 msgid "Rating Text"
-msgstr "Luokitusteksti"
+msgstr "Arvioinnin teksti"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_count
@@ -4309,7 +4309,7 @@ msgstr "Poista yhteistyökumppani"
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_create/subtask_kanban_create.xml:0
 msgid "Rename"
-msgstr "Uudelleennimeä"
+msgstr "Nimeä uudelleen"
 
 #. module: project
 #: model:account.analytic.account,name:project.analytic_renovations
@@ -4644,13 +4644,13 @@ msgid ""
 "\n"
 "Are you sure you want to proceed?"
 msgstr ""
-"Jotkin valituista analyyttisistä tileistä liittyvät projektiin:\n"
+"Jotkin valituista laskentakohteista liittyvät projektiin:\n"
 "%(accountList)s\n"
 "\n"
-"Näiden tilien arkistointi poistaa mahdollisuuden kirjata työaikakirjanpitoa "
-"vastaavien projektien osalta.\n"
+"Näiden tilien arkistoiminen poistaa mahdollisuuden lisätä työaikakirjauksia "
+"vastaaviin projekteihin.\n"
 "\n"
-"Oletko varma, että haluat jatkaa?"
+"Haluatko varmasti jatkaa?"
 
 #. module: project
 #. odoo-python
@@ -5150,8 +5150,8 @@ msgid ""
 "The project's company cannot be changed if its analytic account has analytic "
 "lines or if more than one project is linked to it."
 msgstr ""
-"Projektin yritystä ei voi muuttaa, jos sen analyyttisellä tilillä on "
-"analyyttisiä rivejä tai jos siihen on liitetty useampi kuin yksi projekti."
+"Projektin yritystä ei voi muuttaa, jos sen laskentakohteessa on "
+"laskentakohderivejä tai jos siihen on liitetty useampi kuin yksi projekti."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_project_project_date_greater
@@ -5283,13 +5283,13 @@ msgid ""
 "\n"
 "Are you sure you want to proceed?"
 msgstr ""
-"Tämä analyyttinen tili liittyy seuraaviin hankkeisiin:\n"
+"Tämä laskentakohde liittyy seuraaviin projekteihin:\n"
 "%(projectList)s\n"
 "\n"
-"Tilin arkistointi poistaa mahdollisuuden kirjata näiden projektien "
-"työaikakirjauksia.\n"
+"Tilin arkistoiminen poistaa mahdollisuuden lisätä työaikakirjauksia näihin "
+"projekteihin.\n"
 "\n"
-"Oletko varma, että haluat jatkaa?"
+"Haluatko varmasti jatkaa?"
 
 #. module: project
 #. odoo-javascript
@@ -5534,8 +5534,8 @@ msgid ""
 "Track project costs, revenues, and margin by setting the analytic account "
 "associated with the project on relevant documents."
 msgstr ""
-"Seuraa projektin kustannuksia, tuloja ja katetta asettamalla projektiin "
-"liittyvä analyyttinen tili asiaankuuluviin asiakirjoihin."
+"Seuraa projektin kustannuksia, tuloja ja katetta määrittämällä projektiin "
+"liittyvä laskentakohde asiaankuuluviin asiakirjoihin."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -5605,7 +5605,7 @@ msgstr "Älä seuraa"
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid "Unknown Analytic Account"
-msgstr "Kustannuspaikka ei ole tiedossa"
+msgstr "Tuntematon laskentakohde"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form

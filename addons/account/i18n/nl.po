@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-10 17:38+0000\n"
-"PO-Revision-Date: 2026-08-19 15:11+0000\n"
+"PO-Revision-Date: 2026-09-09 12:36+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-18/account/"
 "nl/>\n"
@@ -28,7 +28,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -2087,8 +2087,8 @@ msgid ""
 "Account holder name, in case it is different than the name of the Account "
 "Holder"
 msgstr ""
-"Bankrekening naamhouder, indien de naam anders is dan de naam van de "
-"bankrekeninghouder"
+"Naam van de bankrekeninghouder, indien de naam anders is dan de naam op het "
+"contactrecord van de bankrekeninghouder"
 
 #. module: account
 #: model:ir.model,name:account.model_account_merge_wizard
@@ -2138,7 +2138,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__account_dest_id
 msgid "Account to Use Instead"
-msgstr "Rekening om toe te passen"
+msgstr "Vervangende rekening"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__destination_account_id
@@ -2465,7 +2465,7 @@ msgid ""
 "their mobile banking application."
 msgstr ""
 "Voeg een QR-code toe aan je facturen zodat je klanten direct kunnen betalen "
-"met hun mobiel bankapplicatie."
+"met hun mobiele bankapplicatie."
 
 #. module: account
 #. odoo-javascript
@@ -2492,7 +2492,7 @@ msgstr "Voeg een factuurregel toe"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__terms_type__html
 msgid "Add a link to a Web Page"
-msgstr "Voeg een link naar een webpagina toe"
+msgstr "Link naar een webpagina toevoegen"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_form
@@ -2586,7 +2586,7 @@ msgstr "Geavanceerde instellingen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__include_base_amount
 msgid "Affect Base of Subsequent Taxes"
-msgstr "Beïnvloed grondslag van daarop volgende btw's"
+msgstr "Grondslag van daarop volgende btw's beïnvloeden"
 
 #. module: account
 #. odoo-javascript
@@ -3198,7 +3198,7 @@ msgstr "Vraag na 3 validaties zonder bewerkingen"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
 msgid "Ask me later"
-msgstr "Vraag het me later"
+msgstr "Later opnieuw vragen"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__internal_group__asset
@@ -5949,7 +5949,7 @@ msgstr "Dagen na factuurdatum"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__delay_type__days_end_of_month_on_the
 msgid "Days end of month on the"
-msgstr "Dagen einde maand op"
+msgstr "Dagen einde van de maand op"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__days_next_month
@@ -8034,7 +8034,7 @@ msgstr "Groeperen op"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__group_payment
 msgid "Group Payments"
-msgstr "Gegroepeerde betalingen"
+msgstr "Betalingen groeperen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_merge_wizard__is_group_by_name
@@ -8420,8 +8420,8 @@ msgid ""
 "If set, taxes with a higher sequence than this one will be affected by it, "
 "provided they accept it."
 msgstr ""
-"Indien ingesteld, zullen btw’s met een hogere volgorde dan deze worden "
-"beïnvloed, op voorwaarde dat ze deze accepteren."
+"Als dit is ingesteld, zullen hoger gerangschikte btw’s worden beïnvloed door "
+"deze btw, op voorwaarde dat ze deze accepteren."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__is_base_affected
@@ -8748,7 +8748,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_incoterm_id
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_incoterm_id
 msgid "Incoterm"
-msgstr "Leveringscondities"
+msgstr "Incoterm"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__incoterm_location
@@ -8769,7 +8769,7 @@ msgstr "Incoterm standaard code"
 #: model_terms:ir.ui.view,arch_db:account.account_incoterms_view_search
 #: model_terms:ir.ui.view,arch_db:account.view_incoterms_tree
 msgid "Incoterms"
-msgstr "Leveringscondities"
+msgstr "Incoterms"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_incoterms__name
@@ -8944,9 +8944,9 @@ msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
 msgstr ""
-"International Commercial Terms (INCOTERMS) zijn een set van "
-"voorgedefinieerde commerciële voorwaarden die worden gebruikt bij "
-"internationaal transport."
+"International Commercial Terms (Incoterms) zijn een groep van "
+"voorgedefinieerde handelsvoorwaarden die worden gebruikt bij internationaal "
+"transport."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_intrastat
@@ -9842,7 +9842,7 @@ msgstr "Kanban dashboard grafiek"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_resequence_wizard__ordering__keep
 msgid "Keep current order"
-msgstr "Houd de huidige volgorde aan"
+msgstr "Huidige volgorde aanhouden"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -10473,7 +10473,7 @@ msgstr "Markeer als verzonden"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__payment_difference_handling__reconcile
 msgid "Mark as fully paid"
-msgstr "Markeer als volledig betaald"
+msgstr "Markeren als volledig betaald"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_label__match_regex
@@ -10950,7 +10950,7 @@ msgstr "Nooit"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
 msgid "Never for this vendor"
-msgstr "Nooit voor deze verkoper"
+msgstr "Nooit voor deze leverancier"
 
 #. module: account
 #. odoo-python
@@ -12199,7 +12199,7 @@ msgstr "Betaaldatum:"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__payment_difference
 msgid "Payment Difference"
-msgstr "Betaalverschil"
+msgstr "Betalingsverschil"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__payment_difference_handling
@@ -12591,7 +12591,7 @@ msgstr "Verschil boeken in"
 #. module: account
 #: model:ir.actions.server,name:account.action_account_confirm_payments
 msgid "Post Payments"
-msgstr "Boek betalingen"
+msgstr "Betalingen boeken"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__state__posted
@@ -13020,7 +13020,7 @@ msgstr "Reden"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__reason
 msgid "Reason displayed on Credit Note"
-msgstr "Reden welke wordt weergegeven op creditfactuur"
+msgstr "Reden die wordt weergegeven op creditfactuur"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_in_invoice_receipt_tree
@@ -13169,7 +13169,7 @@ msgstr "Recursie gevonden voor btw “%s”."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 msgid "Reduced tax:"
-msgstr "Verminderde belasting:"
+msgstr "Belastingvermindering:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__ref
@@ -13303,7 +13303,7 @@ msgstr "Huur"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_resequence_wizard__ordering__date
 msgid "Reorder by accounting date"
-msgstr "Hernummer op boekingsdatum"
+msgstr "Hernummeren op boekingsdatum"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__repartition_lines_str
@@ -13367,7 +13367,7 @@ msgstr "Res Bank Partner"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_resequence
 msgid "Resequence"
-msgstr "Hernummer"
+msgstr "Hernummeren"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -14504,7 +14504,7 @@ msgstr "Toon dagboek in dashboard"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_snailmail_account
 msgid "Snailmail"
-msgstr "Snailmail"
+msgstr "Briefpost"
 
 #. module: account
 #. odoo-python
@@ -15096,7 +15096,7 @@ msgstr "Snelkoppeling btw-labelformule"
 #: model:ir.model.fields,field_description:account.field_account_tax__type_tax_use
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Tax Type"
-msgstr "Btw-soort"
+msgstr "Btw-type"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__tax_calculation_rounding_method
@@ -15821,7 +15821,7 @@ msgstr "De toegevoegde dagen moet tussen 0 en 31 liggen."
 msgid ""
 "The delivery address will be used in the computation of the fiscal position."
 msgstr ""
-"Het leveringsadres wordt gebruikt bij de berekening van de fiscale positie."
+"Het afleveradres wordt gebruikt bij de berekening van de fiscale positie."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_origin
@@ -16600,7 +16600,8 @@ msgstr "Er zijn geen boekingsregels in de concept fase om te boeken."
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid "There are payments in progress. Make sure you don't pay twice."
-msgstr "Er lopen betalingen. Zorg ervoor dat je niet twee keer betaalt."
+msgstr ""
+"Er zijn betalingen in behandeling. Let op dat je niet twee keer betaalt."
 
 #. module: account
 #. odoo-python
@@ -17950,7 +17951,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required
 msgid "VAT required"
-msgstr "Btw verplicht"
+msgstr "Btw vereist"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form

@@ -15,16 +15,16 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2026-03-21 09:28+0000\n"
+"PO-Revision-Date: 2026-08-24 19:13+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Persian <https://translate.odoo.com/projects/odoo-18/event/fa/"
-">\n"
+"Language-Team: Persian <https://translate.odoo.com/projects/odoo-18/event/"
+"fa/>\n"
 "Language: fa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_partner__event_count
@@ -41,25 +41,25 @@ msgstr "# ارسال‌شده"
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "%(event_name)s (%(count)s seats remaining)"
-msgstr ""
+msgstr "%(event_name)s (%(count)s صندلی باقی‌مانده)"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "%(event_name)s (Sold out)"
-msgstr ""
+msgstr "%(event_name)s (همه فروخته شد)"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
 msgid "%(event_name)s - Registration #%(registration_id)s"
-msgstr ""
+msgstr "%(event_name)s ثبت نام #%(registration_id)s"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
 msgid "%(event_name)s - Registration for %(attendee_name)s"
-msgstr ""
+msgstr "%(event_name)s - ثبت نام %(attendee_name)s"
 
 #. module: event
 #. odoo-python
@@ -71,13 +71,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/event/models/event_ticket.py:0
 msgid "%(ticket_name)s (%(count)s seats remaining)"
-msgstr ""
+msgstr "%(ticket_name)s (%(count)s صندلی باقی‌مانده)"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_ticket.py:0
 msgid "%(ticket_name)s (Sold out)"
-msgstr ""
+msgstr "%(ticket_name)s (همه فروخته شد)"
 
 #. module: event
 #. odoo-python
@@ -94,12 +94,12 @@ msgstr ""
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_attendee_list
 msgid "'Attendee List - %s' % (object.name)"
-msgstr ""
+msgstr "'لیست شرکت‌کننده - %s' % (object.name)"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_registration_attendee_list
 msgid "'Attendee List'"
-msgstr ""
+msgstr "'لیست شرکت‌کننده'"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_registration_badge
@@ -107,11 +107,13 @@ msgid ""
 "'Badge - %s - %s' % ((object.event_id.name or 'Event').replace('/',''), "
 "(object.name or '').replace('/',''))"
 msgstr ""
+"'نشان - %s - %s' % ((object.event_id.name or 'Event').replace('/',''), "
+"(object.name or '').replace('/',''))"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_badge
 msgid "'Badge - %s' % (object.name or 'Event').replace('/','')"
-msgstr ""
+msgstr "'نشان - %s' % (object.name or 'Event').replace('/','')"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_registration_full_page_ticket
@@ -119,11 +121,13 @@ msgid ""
 "'Full Page Ticket - %s - %s' % ((object.event_id.name or "
 "'Event').replace('/',''), (object.name or '').replace('/',''))"
 msgstr ""
+"'بلیت تمام صفحه - %s - %s' % ((object.event_id.name or 'Event').replace('/"
+"',''), (object.name or '').replace('/',''))"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_full_page_ticket
 msgid "'Full Page Ticket - %s' % (object.name or 'Event').replace('/','')"
-msgstr ""
+msgstr "'بلیت تمام صفحه - %s' % (object.name or 'رویداد').replace('/','')"
 
 #. module: event
 #. odoo-python
@@ -142,12 +146,12 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_formatted_event_address
 msgid "1000 Brussels"
-msgstr ""
+msgstr "خیابان منصور"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__four_per_sheet
 msgid "4 per sheet"
-msgstr ""
+msgstr "4 در هر ورق"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__96x134
@@ -157,7 +161,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__96x82
 msgid "96x82mm (Badge Printer)"
-msgstr ""
+msgstr "96x82mm (چاپگر نشان)"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -209,6 +213,8 @@ msgid ""
 "<br/>\n"
 "                                            <span class=\"me-1\">from</span>"
 msgstr ""
+"<br/>\n"
+"                                            <span class=\"me-1\">از</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
@@ -216,6 +222,8 @@ msgid ""
 "<br/>\n"
 "                                            <span class=\"me-1\">to</span>"
 msgstr ""
+"<br/>\n"
+"                                            <span class=\"me-1\">تا</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -224,6 +232,9 @@ msgid ""
 "                                        <span class=\"text-muted\">Air your "
 "tracks online through a Youtube integration</span>"
 msgstr ""
+"<br/>\n"
+"                                        <span class=\"text-muted\">یوتیوب را "
+"ادغام کرده و سخنرانی‌های خود را به صورت آنلاین پخش کنید</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -232,6 +243,9 @@ msgid ""
 "                                        <span class=\"text-muted\">Share a "
 "quiz to your attendees once a track is over</span>"
 msgstr ""
+"<br/>\n"
+"                                        <span class=\"text-muted\">بعد از "
+"پایان سخنرانی، به شرکت‌کنندگان آزمون ارسال کنید</span>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -246,7 +260,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "<i class=\"fa fa-building\" title=\"Attendee Company\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-building\" title=\"شرکت شرکت‌کننده\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -266,6 +280,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "<i class=\"fa fa-group mt-1 me-2 text-center\" title=\"Attendees\"/>"
 msgstr ""
+"<i class=\"fa fa-group mt-1 me-2 text-center\" title=\"شرکت‌کننده‌ها\"/>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -288,16 +303,17 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-map-marker mt-1 me-2 text-center ps-1\" title=\"Location\"/>"
 msgstr ""
+"<i class=\"fa fa-map-marker mt-1 me-2 text-center ps-1\" title=\"مکان\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "<i class=\"fa fa-ticket\" title=\"Ticket type\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-ticket\" title=\"نوع بلیت\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "<i class=\"oi oi-arrow-right me-2\" title=\"End date\"/>"
-msgstr ""
+msgstr "<i class=\"oi oi-arrow-right me-2\" title=\"تاریخ پایان\"/>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -309,12 +325,14 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
 msgid "<span class=\"me-1\">to</span>"
-msgstr ""
+msgstr "<span class=\"me-1\">تا</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_badge_card
 msgid "<span class=\"o_event_badge_font_faded\">My Placeholder Company</span>"
 msgstr ""
+"<span class=\"o_event_badge_font_faded\">متغیر جایگزین (Placeholder) شرکت "
+"من</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -323,12 +341,15 @@ msgid ""
 "                                    Registration\n"
 "                                </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                    ثبت نام\n"
+"                                </span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_badge_card
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
 msgid "<span>John Doe</span>"
-msgstr ""
+msgstr "<span>علی داوودی</span>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_registration_mail_template_badge
@@ -1430,7 +1451,7 @@ msgstr "مشخصات بلیطی که می‌خواهید به مشتریانتا
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__a4_french_fold
 msgid "A4 foldable"
-msgstr ""
+msgstr "A4 قابل تا زدن"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__a6
@@ -1489,12 +1510,16 @@ msgid ""
 "Add a navigation menu to your event web pages with schedule, tracks, a track "
 "proposal form, etc."
 msgstr ""
+"به صفحات رویداد در وب سایت یک منوی ناوبری اضافه کنید که حاوی زمان‌بندی‌ها، "
+"برنامه‌ها، فرم پیشنهاد برنامه و غیره است."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Add some internal notes (to do lists, contact info, ...)"
 msgstr ""
+"یادداشت‌های داخلی خود را اضافه کنید (لیست‌های کارهای برای انجام، اطلاعات تماس و "
+"غیره...)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__address_search
@@ -1509,7 +1534,7 @@ msgstr "مدیر"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_exhibitor
 msgid "Advanced Sponsors"
-msgstr ""
+msgstr "اسپانسرهای پیشرفته"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__after_sub
@@ -1534,6 +1559,7 @@ msgid ""
 "All the communication emails sent to attendees will be translated in this "
 "language."
 msgstr ""
+"تمام ایمیل‌های ارتباطی ارسال شده به شرکت‌کننده‌ها به این زبان ترجمه می‌شوند."
 
 #. module: event
 #: model:event.event,name:event.event_6
@@ -1593,7 +1619,7 @@ msgstr "بایگانی شده"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__is_launched
 msgid "Are sales launched"
-msgstr ""
+msgstr "فروش آغاز شده است"
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
@@ -1612,7 +1638,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__once_per_order
 msgid "Ask once per order"
-msgstr ""
+msgstr "پرسش یکبار به ازای هر سفارش"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -1660,13 +1686,13 @@ msgstr "شرکت‌کننده"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__registration_answer_ids
 msgid "Attendee Answers"
-msgstr ""
+msgstr "پاسخ شرکت‌کننده‌ها"
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_event_attendee_list
 #: model:ir.actions.report,name:event.action_report_event_registration_attendee_list
 msgid "Attendee List"
-msgstr ""
+msgstr "لیست شرکت‌کننده"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__name
@@ -1676,12 +1702,12 @@ msgstr "نام شرکت کننده"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__registration_answer_choice_ids
 msgid "Attendee Selection Answers"
-msgstr ""
+msgstr "پاسخ‌های چندجوابی شرکت‌کننده"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.attendee_list
 msgid "Attendee list"
-msgstr ""
+msgstr "لیست شرکت‌کننده"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.act_event_registration_from_event
@@ -1700,7 +1726,7 @@ msgstr "شرکت‌کنندگان"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Auto-Print"
-msgstr ""
+msgstr "چاپ خودکار"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_available
@@ -1721,22 +1747,22 @@ msgstr ""
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_badge_96x82
 msgid "Badge (96x82mm)"
-msgstr ""
+msgstr "نشان (96x82mm)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_image
 msgid "Badge Background"
-msgstr ""
+msgstr "پس‌زمینه نشان"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_format
 msgid "Badge Dimension"
-msgstr ""
+msgstr "ابعاد نشان"
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_event_badge
 msgid "Badge Example"
-msgstr ""
+msgstr "نمونه نشان"
 
 #. module: event
 #. odoo-python
@@ -1760,7 +1786,7 @@ msgstr "بارکد"
 #. module: event
 #: model:ir.actions.client,name:event.event_barcode_action_main_view
 msgid "Barcode Interface"
-msgstr ""
+msgstr "رابط بارکد"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -1770,7 +1796,7 @@ msgstr "نامگذاری بارکد"
 #. module: event
 #: model:ir.model.constraint,message:event.constraint_event_registration_barcode_event_uniq
 msgid "Barcode should be unique"
-msgstr ""
+msgstr "بارکد باید منحصر به فرد باشد"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__before_event
@@ -1812,7 +1838,7 @@ msgstr "رزرو شده توسط"
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_event_booth
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Booth Management"
-msgstr ""
+msgstr "مدیریت غرفه"
 
 #. module: event
 #: model:event.event,subtitle:event.event_5
@@ -1840,7 +1866,7 @@ msgstr "لغو"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Cancel Registration"
-msgstr ""
+msgstr "لغو ثبت نام"
 
 #. module: event
 #: model:event.stage,name:event.event_stage_cancelled
@@ -1852,7 +1878,7 @@ msgstr "لغو شد"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Cancelled registration"
-msgstr ""
+msgstr "ثبت نام لغو شده"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_tag__category_id
@@ -1862,7 +1888,7 @@ msgstr "دسته بندی"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_tag__category_sequence
 msgid "Category Sequence"
-msgstr ""
+msgstr "توالی دسته‌بندی"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -1877,6 +1903,8 @@ msgid ""
 "Choose a template to auto-fill tickets, communications, descriptions and "
 "other fields."
 msgstr ""
+"برای تکمیل خودکار اطلاعات بلیت‌ها، پیام‌ها، توضیحات و سایر فیلدها قالبی را "
+"انتخاب کنید."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__color
@@ -1891,7 +1919,7 @@ msgstr "رنگ پس زمینه"
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_registration_report
 msgid "Come back once you have registrations to overview answers."
-msgstr ""
+msgstr "پس از ایجاد چند ثبت نام، برای بررسی پاسخ‌ها دوباره به اینجا برگردید."
 
 #. module: event
 #: model_terms:res.partner,website_description:event.res_partner_event_1
@@ -1909,7 +1937,7 @@ msgstr "عطف"
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__mail_registration_ids
 msgid "Communication related to event registrations"
-msgstr ""
+msgstr "ارتباطات مربوط به ثبت نام‌های رویداد"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -1954,7 +1982,7 @@ msgstr "کنفرانس"
 #: model:event.event,name:event.event_2
 #: model_terms:event.event,description:event.event_2
 msgid "Conference for Architects"
-msgstr ""
+msgstr "کنفرانس برای معماران"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -1985,7 +2013,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Confirm attendance?"
-msgstr ""
+msgstr "تأیید حضور؟"
 
 #. module: event
 #: model:ir.model,name:event.model_res_partner
@@ -2006,27 +2034,27 @@ msgstr "کشور"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Create Booths and manage their reservations"
-msgstr ""
+msgstr "غرفه ایجاد کنید و رزرو آنها را مدیریت کنید"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_view
 msgid "Create an Event"
-msgstr ""
+msgstr "یک رویداد ایجاد کنید"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_stage_action
 msgid "Create an Event Stage"
-msgstr ""
+msgstr "ایجاد مرحله رویداد"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_tag_category_action_tree
 msgid "Create an Event Tag Category"
-msgstr ""
+msgstr "ایجاد دسته‌بندی برچسب رویداد"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_type
 msgid "Create an Event Template"
-msgstr ""
+msgstr "ایجاد قالب رویداد"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__create_uid
@@ -2106,6 +2134,9 @@ msgid ""
 "you will not be able to sell tickets anymore. Set 0 to ignore this rule set "
 "as unlimited."
 msgstr ""
+"تعداد بلیت‌های موجود را تعریف کنید. اگر تعداد ثبت نام‌ها بیش از حد مشخص شده "
+"باشد، دیگر نمی‌توانید بلیت بفروشید. برای نادیده گرفتن این قانون، عدد 0 را "
+"وارد کنید."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__description
@@ -2157,12 +2188,12 @@ msgstr "نام نمایش داده شده"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Display Sponsors and Exhibitors on your event pages"
-msgstr ""
+msgstr "اسپانسرها و غرفه‌داران را در صفحات رویداد خود نمایش دهید"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_tz
 msgid "Display Timezone"
-msgstr ""
+msgstr "منطقه زمانی نمایشی"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__sequence
@@ -2203,12 +2234,12 @@ msgstr "قالب ایمیل"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Enable barcode scanning"
-msgstr ""
+msgstr "اسکن بارکد را فعال کنید"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_res_config_settings__use_event_barcode
 msgid "Enable or Disable Event Barcode functionality."
-msgstr ""
+msgstr "فعال یا غیرفعال کردن کارکرد بارکد در رویداد"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_end
@@ -2223,17 +2254,18 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__pipe_end
 msgid "End Stage"
-msgstr ""
+msgstr "مرحله پایانی"
 
 #. module: event
 #: model:event.stage,name:event.event_stage_done
 msgid "Ended"
-msgstr ""
+msgstr "پایان یافته"
 
 #. module: event
 #: model:event.event,subtitle:event.event_2
 msgid "Enhance your architectural business and improve professional skills."
 msgstr ""
+"کسب‌وکار معماری خود را ارتقا دهید و مهارت‌های حرفه‌ای خود را بهبود بخشید."
 
 #. module: event
 #. odoo-javascript
@@ -2268,7 +2300,7 @@ msgstr "طبقه بندی رویداد"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_tag_view_form
 msgid "Event Category Tag"
-msgstr ""
+msgstr "برچسب دسته‌بندی رویداد"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_end_date
@@ -2278,7 +2310,7 @@ msgstr "تاریخ پایان رویداد"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Event Gamification"
-msgstr ""
+msgstr "گیمیفیکیشن رویداد"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
@@ -2299,7 +2331,7 @@ msgstr "برنامه ریزهای ایمیل رویداد"
 #. odoo-javascript
 #: code:addons/event/static/src/template_reference_field/field_event_mail_template_reference.js:0
 msgid "Event Mail Template Reference"
-msgstr ""
+msgstr "کد ارجاع قالب پیام رویداد"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_view_activity
@@ -2315,17 +2347,17 @@ msgstr "سازمان رویداد"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_organizer_id
 msgid "Event Organizer"
-msgstr ""
+msgstr "برگزارکننده رویداد"
 
 #. module: event
 #: model:ir.model,name:event.model_event_question
 msgid "Event Question"
-msgstr ""
+msgstr "سؤال رویداد"
 
 #. module: event
 #: model:ir.model,name:event.model_event_question_answer
 msgid "Event Question Answer"
-msgstr ""
+msgstr "پاسخ به سؤال رویداد"
 
 #. module: event
 #: model:ir.model,name:event.model_event_registration
@@ -2338,7 +2370,7 @@ msgstr "ثبت نام رویداد"
 #. module: event
 #: model:ir.model,name:event.model_event_registration_answer
 msgid "Event Registration Answer"
-msgstr ""
+msgstr "پاسخ ثبت نام در رویداد"
 
 #. module: event
 #. odoo-python
@@ -2349,7 +2381,7 @@ msgstr "ثبت‌های مربوط به رویداد"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_user_id
 msgid "Event Responsible"
-msgstr ""
+msgstr "مسئول رویداد"
 
 #. module: event
 #. odoo-python
@@ -2372,13 +2404,13 @@ msgstr ""
 #. module: event
 #: model:ir.model,name:event.model_event_stage
 msgid "Event Stage"
-msgstr ""
+msgstr "مرحله رویداد"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.event_stage_action
 #: model:ir.ui.menu,name:event.event_stage_menu
 msgid "Event Stages"
-msgstr ""
+msgstr "مراحل رویداد"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_begin_date
@@ -2401,7 +2433,7 @@ msgstr "دسته برچسب رویداد"
 #: model:ir.ui.menu,name:event.menu_event_category
 #: model_terms:ir.ui.view,arch_db:event.event_tag_view_tree
 msgid "Event Tags Categories"
-msgstr ""
+msgstr "دسته‌بندی برچسب‌های رویداد"
 
 #. module: event
 #: model:ir.model,name:event.model_event_type
@@ -2420,14 +2452,14 @@ msgstr "قالب بلیط رویداد"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_type_ticket_view_tree_from_type
 msgid "Event Template Tickets"
-msgstr ""
+msgstr "قالب بلیت‌های رویداد"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_type
 #: model:ir.ui.menu,name:event.menu_event_type
 #: model_terms:ir.ui.view,arch_db:event.event_type_view_search
 msgid "Event Templates"
-msgstr ""
+msgstr "قالب‌های رویداد"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_type
@@ -2437,6 +2469,10 @@ msgid ""
 "\"Workshop\",\n"
 "                \"Roadshow\", \"Online Webinar\", etc)."
 msgstr ""
+"قالب‌های رویداد، پیکربندی‌هایی که اغلب استفاده می‌کنید را ترکیب می‌کنند\n"
+"                و معمولاً بر اساس انواع رویدادهایی هستند که سازماندهی می‌کنید "
+"(مانند «کارگاه»،\n"
+"                 «نمایش نقشه راه»، «وبینار آنلاین» و سایر رویدادها)."
 
 #. module: event
 #: model:ir.model,name:event.model_event_event_ticket
@@ -2461,11 +2497,12 @@ msgid ""
 "Event stages are used to track the progress of an Event from its origin "
 "until its conclusion."
 msgstr ""
+"مراحل رویداد برای ردیابی پیشرفت یک رویداد از آغاز تا پایان استفاده می‌شود."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_form_view
 msgid "Event's Ticket"
-msgstr ""
+msgstr "بلیت رویداد"
 
 #. module: event
 #: model:ir.actions.server,name:event.event_mail_scheduler_ir_actions_server
@@ -2475,12 +2512,12 @@ msgstr "رویداد: برنامه ریز ایمیل"
 #. module: event
 #: model:mail.template,name:event.event_registration_mail_template_badge
 msgid "Event: Registration Badge"
-msgstr ""
+msgstr "رویداد: نشان ثبت نام"
 
 #. module: event
 #: model:mail.template,name:event.event_subscription
 msgid "Event: Registration Confirmation"
-msgstr ""
+msgstr "رویداد: تأیید ثبت نام"
 
 #. module: event
 #: model:mail.template,name:event.event_reminder
@@ -2508,7 +2545,7 @@ msgstr "برنامه ریزهای ایمیل رویدادها"
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_tree
 msgid "Events Stage"
-msgstr ""
+msgstr "مرحله رویدادها"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_stage__pipe_end
@@ -2516,6 +2553,8 @@ msgid ""
 "Events will automatically be moved into this stage when they are finished. "
 "The event moved into this stage will automatically be set as green."
 msgstr ""
+"بعد از اتمام، رویدادها به طور خودکار به این مرحله منتقل می‌شوند. رویدادی که "
+"به این مرحله منتقل شده است، به طور خودکار سبز می‌شود."
 
 #. module: event
 #: model_terms:event.event,description:event.event_4
@@ -2530,6 +2569,13 @@ msgid ""
 "studies, methodology or developments. Be there and see directly from the "
 "source the features of the new version!"
 msgstr ""
+"هر سال ما از جامعه، طرف‌های همکار و کاربران نهایی خود دعوت می‌کنیم که بیایند و "
+"با ما ملاقات کنند! این رویداد ایده‌آل برای گرد هم آمدن و ارائه ویژگی‌های جدید، "
+"نقشه راه نسخه‌های آینده، دستاوردهای نرم‌افزار، کارگاه‌ها، نشست‌های آموزشی و "
+"برنامه‌های دیگر است.\n"
+"            این رویداد همچنین فرصتی برای نمایش مطالعات موردی، روش‌ها یا "
+"پیشرفت‌های طرف‌های همکار ما است. تشریف بیاورید و مستقیماً از منبع اصلی ویژگی‌های "
+"نسخه جدید را مشاهده کنید!"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -2556,6 +2602,8 @@ msgid ""
 "Finished events. Odoo will automatically move them to this stage once their "
 "end date has passed."
 msgstr ""
+"رویدادهای پایان یافته در این مرحله قرار می‌گیرند. پس از سپری شدن تاریخ پایان، "
+"اودوو به‌طور خودکار رویدادهای پایان یافته را به این مرحله منتقل می‌کند."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__fold
@@ -2621,7 +2669,7 @@ msgstr ""
 #. module: event
 #: model:event.stage,description:event.event_stage_new
 msgid "Freshly created"
-msgstr ""
+msgstr "تازه ایجاد شده"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_registration
@@ -2630,16 +2678,18 @@ msgid ""
 "From this dashboard you can report, analyze and detect trends regarding your "
 "event registrations."
 msgstr ""
+"از این داشبورد می‌توانید روندهای مربوط به ثبت نام رویدادهای خود را گزارش، "
+"تحلیل و شناسایی کنید."
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_full_page_ticket
 msgid "Full Page Ticket"
-msgstr ""
+msgstr "بلیت تمام صفحه"
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_event_full_page_ticket
 msgid "Full Page Ticket Example"
-msgstr ""
+msgstr "نمونه بلیت تمام صفحه"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -2670,7 +2720,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_state
 msgid "Global communication Status"
-msgstr ""
+msgstr "وضعیت ارتباطات عمومی"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -2680,17 +2730,17 @@ msgstr "نقشه گوگل"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__google_maps_static_api_key
 msgid "Google Maps API key"
-msgstr ""
+msgstr "کلید API نقشه گوگل"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__google_maps_static_api_secret
 msgid "Google Maps API secret"
-msgstr ""
+msgstr "رمز API نقشه گوگل"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__use_google_maps_static_api
 msgid "Google Maps static API"
-msgstr ""
+msgstr "API استاتیک نقشه گوگل"
 
 #. module: event
 #: model:event.event,name:event.event_1
@@ -2701,6 +2751,8 @@ msgstr "مسابقه بزرگ بالن رنو"
 #: model_terms:web_tour.tour,rainbow_man_message:event.event_tour
 msgid "Great! Now all you have to do is wait for your attendees to show up!"
 msgstr ""
+"عالیه! اکنون تنها کاری که باید انجام دهید این است که منتظر حضور شرکت‌کنندگان "
+"باشید!"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__legend_done
@@ -2722,7 +2774,7 @@ msgstr "گروه‌بندی برمبنای"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Guest #"
-msgstr ""
+msgstr "مهمان #"
 
 #. module: event
 #: model_terms:res.partner,website_description:event.res_partner_event_1
@@ -2750,7 +2802,7 @@ msgstr ""
 #. module: event
 #: model:event.event,name:event.event_5
 msgid "Hockey Tournament"
-msgstr ""
+msgstr "مسابقات هاکی"
 
 #. module: event
 #. odoo-javascript
@@ -2767,22 +2819,22 @@ msgstr "ساعت"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
 msgid "How to Fold (1)"
-msgstr ""
+msgstr "نحوه تا زدن (1)"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
 msgid "How to Fold (2)"
-msgstr ""
+msgstr "نحوه تا زدن (2)"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
 msgid "How to Fold (3)"
-msgstr ""
+msgstr "نحوه تا زدن (3)"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
 msgid "How to Fold (4)"
-msgstr ""
+msgstr "نحوه تا زدن (4)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__id
@@ -2812,7 +2864,7 @@ msgstr "شمایل"
 #. odoo-javascript
 #: code:addons/event/static/src/icon_selection_field/icon_selection_field.js:0
 msgid "Icon Selection"
-msgstr ""
+msgstr "انتخاب آیکون"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__activity_exception_icon
@@ -2848,6 +2900,8 @@ msgstr "اگر علامت زده شود، برخی از پیام ها دارای
 msgid ""
 "If ticketing is used, contains the earliest starting sale date of tickets."
 msgstr ""
+"اگر از سیستم صدور بلیت استفاده می‌شود، اولین تاریخ شروع فروش بلیت را شامل "
+"می‌شود."
 
 #. module: event
 #: model_terms:event.event,ticket_instructions:event.event_0
@@ -2893,11 +2947,13 @@ msgid ""
 "Indicates the timezone in which the event dates/times will be displayed on "
 "the website."
 msgstr ""
+"منطقه زمانی که تاریخ و زمان رویدادها در وب سایت نمایش داده می‌شود را مشخص "
+"می‌کند."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Insert dynamic Google Maps in your email templates"
-msgstr ""
+msgstr "در قالب‌های ایمیل، نقشه‌های گوگل را به شکل پویا اضافه کنید"
 
 #. module: event
 #. odoo-javascript
@@ -2920,13 +2976,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
 msgid "Invalid event / ticket choice"
-msgstr ""
+msgstr "انتخاب رویداد/بلیت نامعتبر است"
 
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_barcode.js:0
 msgid "Invalid ticket"
-msgstr ""
+msgstr "بلیت نامعتبر است"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__sale_available
@@ -2941,7 +2997,7 @@ msgstr "منقضی شده"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_finished
 msgid "Is Finished"
-msgstr ""
+msgstr "به پایان رسیده است"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_is_follower
@@ -2952,7 +3008,7 @@ msgstr "آیا دنبال می کند"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_one_day
 msgid "Is One Day"
-msgstr ""
+msgstr "یک روز است"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_ongoing
@@ -2963,11 +3019,12 @@ msgstr "آیا در حال انجام است"
 #: model:ir.model.fields,help:event.field_event_type__seats_max
 msgid "It will select this default maximum value when you choose this event"
 msgstr ""
+"هرگاه این رویداد را انتخاب کنید، این حداکثر مقدارِ پیش‌فرض انتخاب خواهد شد"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "John DOE"
-msgstr ""
+msgstr "علی داوودی"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
@@ -2984,7 +3041,7 @@ msgstr ""
 #: model_terms:event.event,description:event.event_6
 #: model_terms:ir.ui.view,arch_db:event.event_default_descripton
 msgid "Join us for this 24 hours Event"
-msgstr ""
+msgstr "در این رویداد 24 ساعته به ما بپیوندید"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -3034,7 +3091,7 @@ msgstr "30 روز گذشته"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__last_registration_id
 msgid "Last Attendee"
-msgstr ""
+msgstr "آخرین حضور"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__write_uid
@@ -3082,20 +3139,20 @@ msgstr "فعالیتهای اخیر"
 #. odoo-javascript
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 msgid "Let's create your first <b>event</b>."
-msgstr ""
+msgstr "اولین <b>رویداد</b> خود را ایجاد کنید."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_limited
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_limited
 #: model:ir.model.fields,field_description:event.field_event_type_ticket__seats_limited
 msgid "Limit Attendees"
-msgstr ""
+msgstr "محدود کردن شرکت‌کنندگان"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Limit Registrations"
-msgstr ""
+msgstr "محدود کردن ثبت نام"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__has_seats_limitation
@@ -3105,17 +3162,17 @@ msgstr "صندلی‌های محدود"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Live Broadcast"
-msgstr ""
+msgstr "پخش زنده"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track_live
 msgid "Live Mode"
-msgstr ""
+msgstr "حالت زنده"
 
 #. module: event
 #: model:event.event,name:event.event_3
 msgid "Live Music Festival"
-msgstr ""
+msgstr "جشنواره موسیقی زنده"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__notification_type__mail
@@ -3128,23 +3185,23 @@ msgstr "ایمیل"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_registration_ids
 msgid "Mail Registration"
-msgstr ""
+msgstr "ثبت ایمیل"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_mail_ids
 #: model:ir.model.fields,field_description:event.field_event_type__event_type_mail_ids
 msgid "Mail Schedule"
-msgstr ""
+msgstr "زمان‌بندی ایمیل"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration__scheduler_id
 msgid "Mail Scheduler"
-msgstr ""
+msgstr "زمان‌بندی کننده ارسال ایمیل"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_mail_schedulers
 msgid "Mail Schedulers"
-msgstr ""
+msgstr "زمان‌بندی کننده‌های ایمیل"
 
 #. module: event
 #: model:ir.model,name:event.model_event_type_mail
@@ -3154,12 +3211,12 @@ msgstr "برنامه‌ریزی ارسال در دسته‌بندی رویداد
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration__mail_sent
 msgid "Mail Sent"
-msgstr ""
+msgstr "ایمیل ارسال شد"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Manage & publish a schedule with tracks"
-msgstr ""
+msgstr "برنامه زمانی سخنرانی‌ها را مدیریت و منتشر کنید"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -3180,7 +3237,7 @@ msgstr "دموی مارچ"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Mark as Attending"
-msgstr ""
+msgstr "علامت‌گذاری به عنوان شرکت کردن"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
@@ -3197,17 +3254,17 @@ msgstr "حداکثر"
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_max
 #: model:ir.model.fields,field_description:event.field_event_type_ticket__seats_max
 msgid "Maximum Attendees"
-msgstr ""
+msgstr "حداکثر تعداد شرکت‌کنندگان"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__seats_max
 msgid "Maximum Registrations"
-msgstr ""
+msgstr "حداکثر تعداد ثبت نام‌ها"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_tree
 msgid "Maximum Seats"
-msgstr ""
+msgstr "حداکثر صندلی"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__utm_medium_id
@@ -3298,7 +3355,7 @@ msgstr "هنوز هیچ پاسخی وجود ندارد!"
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_registration_action
 msgid "No Attendees expected yet!"
-msgstr ""
+msgstr "انتظار نمی‌رود شرکت‌کننده‌ای وجود داشته باشد!"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.act_event_registration_from_event
@@ -3306,7 +3363,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:event.event_registration_action_kanban
 #: model_terms:ir.actions.act_window,help:event.event_registration_action_stats_from_event
 msgid "No Attendees yet!"
-msgstr ""
+msgstr "هنوز شرکت‌کننده‌ای وجود ندارد!"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__barcode_nomenclature_id
@@ -3330,13 +3387,13 @@ msgstr "یادداشت‌ها"
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_mail
 msgid "Nothing Scheduled yet!"
-msgstr ""
+msgstr "هنوز زمان‌بندی وجود ندارد!"
 
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 msgid "Now that your event is ready, click here to move it to another stage."
-msgstr ""
+msgstr "حالا که رویداد آماده است، برای انتقال آن به مرحله دیگر اینجا کلیک کنید."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_needaction_counter
@@ -3347,17 +3404,17 @@ msgstr "تعداد اقدامات"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_used
 msgid "Number of Attendees"
-msgstr ""
+msgstr "تعداد شرکت‌کنندگان"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_reserved
 msgid "Number of Registrations"
-msgstr ""
+msgstr "تعداد ثبت نام‌ها"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_taken
 msgid "Number of Taken Seats"
-msgstr ""
+msgstr "تعداد صندلی‌های رزرو شده"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_has_error_counter
@@ -3385,7 +3442,7 @@ msgstr "اهداف"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_full_page_ticket_layout
 msgid "Odoo Community Days"
-msgstr ""
+msgstr "روزهای آشنایی با جامعه اودوو"
 
 #. module: event
 #: model_terms:event.event,description:event.event_3
@@ -3396,12 +3453,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Once per Order"
-msgstr ""
+msgstr "یکبار در هر سفارش"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Ongoing Events"
-msgstr ""
+msgstr "رویدادهای جاری"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_3_tag_1
@@ -3412,12 +3469,12 @@ msgstr "آنلاین"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "Online Event"
-msgstr ""
+msgstr "رویداد آنلاین"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Online Exhibitors"
-msgstr ""
+msgstr "غرفه‌داران آنلاین"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_sale
@@ -3427,13 +3484,15 @@ msgstr "بلیط فروشی آنلاین"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Online if not set"
-msgstr ""
+msgstr "اگر تنظیم نشود، آنلاین"
 
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 msgid "Open date range picker.<br/>Pick a Start and End date for your event."
 msgstr ""
+"انتخابگر تاریخ را باز کنید. <br/>برای رویداد زمان شروع و پایان را انتخاب "
+"کنید."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -3445,7 +3504,7 @@ msgstr ""
 #. module: event
 #: model:event.event,name:event.event_7
 msgid "OpenWood Collection Online Reveal"
-msgstr ""
+msgstr "افتتاح آنلاین دکوراسیون داخلی افرا"
 
 #. module: event
 #. odoo-python
@@ -3510,7 +3569,7 @@ msgstr "تلفن"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.attendee_list
 msgid "Phone number"
-msgstr ""
+msgstr "شماره تلفن"
 
 #. module: event
 #: model_terms:event.event,ticket_instructions:event.event_0
@@ -3522,7 +3581,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/event/models/res_config_settings.py:0
 msgid "Please enter a valid base64 secret"
-msgstr ""
+msgstr "رمز base64 معتبری وارد کنید"
 
 #. module: event
 #. odoo-javascript
@@ -3602,7 +3661,7 @@ msgstr "پرسش‌ها"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track_quiz
 msgid "Quiz on Tracks"
-msgstr ""
+msgstr "برگزاری آزمون در برنامه‌ها"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__rating_ids
@@ -3626,6 +3685,8 @@ msgstr "آماده برای مرحله بعد"
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 msgid "Ready to <b>organize events</b> in a few minutes? Let's get started!"
 msgstr ""
+"برای <b>سازماندهی رویدادها</b> در عرض چند دقیقه آماده هستید؟ بیایید شروع "
+"کنیم!"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__legend_blocked
@@ -3666,12 +3727,12 @@ msgstr "تاریخ ثبت"
 #: model:res.groups,name:event.group_event_registration_desk
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Registration Desk"
-msgstr ""
+msgstr "پیشخوان ثبت نام"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__end_sale_datetime
 msgid "Registration End"
-msgstr ""
+msgstr "پایان ثبت نام"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
@@ -3686,38 +3747,38 @@ msgstr "برنامه‌ریز ارسال ایمیل‌های ثبت‌نام"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_mail_form
 msgid "Registration Mails"
-msgstr ""
+msgstr "ایمیل‌های ثبت نام"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__registration_properties_definition
 msgid "Registration Properties"
-msgstr ""
+msgstr "ویژگی‌های ثبت نام"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__start_sale_datetime
 msgid "Registration Start"
-msgstr ""
+msgstr "شروع ثبت نام"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_ticket.py:0
 msgid "Registration for %s"
-msgstr ""
+msgstr "ثبت نام در %s"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_mail_form
 msgid "Registration mail"
-msgstr ""
+msgstr "ایمیل ثبت نام"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_registrations_open
 msgid "Registration open"
-msgstr ""
+msgstr "ثبت نام باز است"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.event_registration_action_stats_from_event
 msgid "Registration statistics"
-msgstr ""
+msgstr "آمار ثبت نام"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__registration_ids
@@ -3736,7 +3797,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_registrations_started
 msgid "Registrations started"
-msgstr ""
+msgstr "ثبت نام‌ها شروع شده"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_reporting_events
@@ -3746,7 +3807,7 @@ msgstr "گزارش"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_reserved
 msgid "Reserved Seats"
-msgstr ""
+msgstr "صندلی‌های رزرو شده"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -3774,12 +3835,12 @@ msgstr "کاربر مسئول"
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_responsive_html_ticket
 msgid "Responsive Html Full Page Ticket"
-msgstr ""
+msgstr "بلیت تمام صفحه ریسپانسیو HTML"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_formatted_event_address
 msgid "Rue de la Paix 123"
-msgstr ""
+msgstr "تقاطع منصور و بهادری، ساختمان سیمرغ"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__mail_state__running
@@ -3796,12 +3857,12 @@ msgstr "خطای تحویل پیامک"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_barcode.xml:0
 msgid "Scan or Tap"
-msgstr ""
+msgstr "اسکن کنید یا ضربه بزنید"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Schedule & Tracks"
-msgstr ""
+msgstr "جدول زمانی و برنامه‌ها"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__scheduled_date
@@ -3814,6 +3875,8 @@ msgid ""
 "Schedule and organize your events: handle registrations, send automated "
 "confirmation emails, sell tickets, etc."
 msgstr ""
+"رویدادهای خود را برنامه‌ریزی و سازماندهی کنید: ثبت نام‌ها را مدیریت کنید، "
+"ایمیل‌های تأیید خودکار ارسال کنید، بلیت بفروشید و غیره."
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__mail_state__scheduled
@@ -3823,12 +3886,12 @@ msgstr "برنامه ریزی شد"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration__scheduled_date
 msgid "Scheduled Time"
-msgstr ""
+msgstr "زمان برنامه‌ریزی شده"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__mail_registration_ids
 msgid "Scheduler Emails"
-msgstr ""
+msgstr "ایمیل‌های ابزار زمان‌بندی"
 
 #. module: event
 #: model_terms:event.event,description:event.event_5
@@ -3844,18 +3907,18 @@ msgstr "محرمانه"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_barcode.xml:0
 msgid "Select Attendee"
-msgstr ""
+msgstr "انتخاب شرکت‌کننده"
 
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Select printer..."
-msgstr ""
+msgstr "چاپگر را انتخاب کنید..."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_answer_view_tree
 msgid "Selected answer"
-msgstr ""
+msgstr "پاسخ انتخاب شده"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_question__question_type__simple_choice
@@ -3865,17 +3928,17 @@ msgstr "انتخاب"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Sell tickets on your website"
-msgstr ""
+msgstr "در داخل وب سایت بلیت بفروشید"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Sell tickets with Point of Sale"
-msgstr ""
+msgstr "از طریق پایانه فروش بلیت بفروشید"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Sell tickets with sales orders"
-msgstr ""
+msgstr "از طریق سفارش فروش بلیت بفروشید"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__notification_type
@@ -3900,16 +3963,18 @@ msgstr "ارسال"
 msgid ""
 "Sent automatically to attendees if there is a reminder defined on the event"
 msgstr ""
+"اگر برای رویداد یادآور تعریف شده باشد به صورت خودکار به شرکت‌کنندگان ارسال "
+"خواهد شد"
 
 #. module: event
 #: model:mail.template,description:event.event_registration_mail_template_badge
 msgid "Sent automatically to someone after they registered to an event"
-msgstr ""
+msgstr "ارسال خودکار برای اشخاص پس از ثبت نام در یک رویداد"
 
 #. module: event
 #: model:mail.template,description:event.event_subscription
 msgid "Sent to attendees after registering to an event"
-msgstr ""
+msgstr "ارسال به شرکت‌کنندگان پس از ثبت نام در رویداد"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__sequence
@@ -3957,7 +4022,7 @@ msgstr "مبدا"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__specific_question_ids
 msgid "Specific Questions"
-msgstr ""
+msgstr "سؤالات اختصاصی"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_2_tag_3
@@ -3984,7 +4049,7 @@ msgstr "نام مرحله"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__description
 msgid "Stage description"
-msgstr ""
+msgstr "توضیح مرحله"
 
 #. module: event
 #: model:event.event.ticket,name:event.event_0_ticket_1
@@ -4008,19 +4073,19 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__start_sale_datetime
 msgid "Start sale date"
-msgstr ""
+msgstr "تاریخ شروع فروش"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_partner__static_map_url
 #: model:ir.model.fields,field_description:event.field_res_users__static_map_url
 msgid "Static Map Url"
-msgstr ""
+msgstr "آدرس URL استاتیک نقشه"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_partner__static_map_url_is_valid
 #: model:ir.model.fields,field_description:event.field_res_users__static_map_url_is_valid
 msgid "Static Map Url Is Valid"
-msgstr ""
+msgstr "آدرس URL استاتیک نقشه معتبر است"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -4051,7 +4116,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Successfully registered!"
-msgstr ""
+msgstr "ثبت نام با موفقیت انجام شد!"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_answer__value_answer_id
@@ -4064,6 +4129,8 @@ msgid ""
 "Tag color. No color means no display in kanban or front-end, to distinguish "
 "internal tags from public categorization tags."
 msgstr ""
+"رنگ برچسب. برای تمایز برچسب‌های شخصی از برچسب‌های دسته‌بندی عمومی استفاده می‌شود"
+"؛ بدون رنگ یعنی عدم نمایش در کانبان یا قسمت کاربری."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__tag_ids
@@ -4081,7 +4148,7 @@ msgstr "گرفته شده"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_taken
 msgid "Taken Seats"
-msgstr ""
+msgstr "صندلی‌های رزرو شده"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
@@ -4109,7 +4176,7 @@ msgstr "پوسته"
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_question__question_type__text_box
 msgid "Text Input"
-msgstr ""
+msgstr "ورودی متن"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_answer__value_text_box
@@ -4141,7 +4208,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "The closing date cannot be earlier than the beginning date."
-msgstr ""
+msgstr "تاریخ بستن نباید قبل از تاریخ شروع باشد."
 
 #. module: event
 #: model:event.stage,description:event.event_stage_cancelled
@@ -4151,7 +4218,7 @@ msgstr ""
 #. module: event
 #: model:event.stage,description:event.event_stage_announced
 msgid "The event has been publicly announced"
-msgstr ""
+msgstr "این رویداد به صورت عمومی اعلام شده است"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__event_registrations_sold_out
@@ -4159,6 +4226,8 @@ msgid ""
 "The event is sold out if no more seats are available on event. If ticketing "
 "is used and all tickets are sold out, the event will be sold out."
 msgstr ""
+"اگر صندلی‌های رویداد به پایان رسیده باشد، موجودی رویداد به صفر می‌‍رسد. اگر از "
+"بلیت استفاده شود و تمام بلیت‌ها فروخته شود، موجودی رویداد به صفر می‌رسد."
 
 #. module: event
 #: model_terms:event.event,description:event.event_7
@@ -4175,6 +4244,9 @@ msgid ""
 "registrations linked to them:\n"
 "- %s"
 msgstr ""
+"با توجه به اینکه یک یا چند ثبت نام به این بلیت‌ها لینک شده است، امکان حذف "
+"آنها وجود ندارد:\n"
+"- %s"
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
@@ -4188,6 +4260,8 @@ msgid ""
 "The stop date cannot be earlier than the start date. Please check ticket %"
 "(ticket_name)s"
 msgstr ""
+"تاریخ پایان نمی‌تواند قبل از تاریخ شروع باشد. لطفاً بلیت %(ticket_name)s را "
+"بررسی نمایید"
 
 #. module: event
 #. odoo-python
@@ -4199,7 +4273,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.constraint,message:event.constraint_event_registration_answer_value_check
 msgid "There must be a suggested value or a text value."
-msgstr ""
+msgstr "باید یک مقدار پیشنهادی یا یک مقدار متنی وجود داشته باشد."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -4222,13 +4296,13 @@ msgstr ""
 #: model:ir.model.fields,help:event.field_event_event__ticket_instructions
 #: model:ir.model.fields,help:event.field_event_type__ticket_instructions
 msgid "This information will be printed on your tickets."
-msgstr ""
+msgstr "این اطلاعات روی بلیت‌های شما چاپ می‌شود."
 
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 msgid "This is the <b>name</b> your guests will see when registering."
-msgstr ""
+msgstr "این <b>نامی</b> است که مهمانان شما هنگام ثبت نام خواهند دید."
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
@@ -4260,13 +4334,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "This ticket is for another event!"
-msgstr ""
+msgstr "این بلیت برای رویداد دیگری است!"
 
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "This ticket is not for an ongoing event"
-msgstr ""
+msgstr "این بلیت برای رویدادی جاری نیست"
 
 #. module: event
 #. odoo-python
@@ -4282,7 +4356,7 @@ msgstr "تیکت"
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Ticket Instructions"
-msgstr ""
+msgstr "دستورالعمل‌های بلیت"
 
 #. module: event
 #. odoo-javascript
@@ -4297,12 +4371,12 @@ msgstr "نوع تیکت"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Ticket already scanned!"
-msgstr ""
+msgstr "بلیت قبلاً اسکن شده است!"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.attendee_list
 msgid "Ticket type"
-msgstr ""
+msgstr "نوع بلیت"
 
 #. module: event
 #. odoo-javascript
@@ -4311,6 +4385,8 @@ msgid ""
 "Ticket types allow you to distinguish your attendees. Let's <b>create</b> a "
 "new one."
 msgstr ""
+"انواع بلیت به شما امکان می‌دهد شرکت‌کنندگان خود را متمایز کنید. یک آیتم جدید<b>"
+"ایجاد کنید</b>."
 
 #. module: event
 #. odoo-python
@@ -4330,12 +4406,12 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_pos_event
 msgid "Tickets with PoS"
-msgstr ""
+msgstr "بلیت در پایانه فروش"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_event_sale
 msgid "Tickets with Sale"
-msgstr ""
+msgstr "بلیت در برنامه فروش"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__default_timezone
@@ -4367,12 +4443,12 @@ msgstr "کل شرکت کنندگان"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Total Registrations for this Event"
-msgstr ""
+msgstr "مجموع ثبت نام‌ها برای این رویداد"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track
 msgid "Tracks and Agenda"
-msgstr ""
+msgstr "برنامه‌ها و دستور جلسه"
 
 #. module: event
 #: model:event.type,name:event.event_type_1
@@ -4394,7 +4470,7 @@ msgstr "راه اندازی"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_type
 msgid "Trigger "
-msgstr ""
+msgstr "زمان اجرا "
 
 #. module: event
 #: model:event.tag.category,name:event.event_tag_category_3
@@ -4435,7 +4511,7 @@ msgstr ""
 msgid ""
 "Under this technical menu you will find all scheduled communication related "
 "to your events."
-msgstr ""
+msgstr "در این منوی فنی، تمام ارتباطات برنامه‌ریزی شده رویدادها را می‌بینید."
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -4467,28 +4543,30 @@ msgstr "آتی/جاری"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__use_barcode
 msgid "Use Barcode"
-msgstr ""
+msgstr "استفاده از بارکد"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__use_event_barcode
 msgid "Use Event Barcode"
-msgstr ""
+msgstr "استفاده از بارکد در رویداد"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_tag_category_action_tree
 msgid "Use Event Tag Categories to classify and organize your event tags."
 msgstr ""
+"برای طبقه‌بندی و سازماندهی برچسب‌های رویداد خود، از دسته‌بندی برچسب‌های رویداد "
+"استفاده کنید."
 
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 msgid "Use the <b>breadcrumbs</b> to go back to your kanban overview."
-msgstr ""
+msgstr "برای برگشت به نمای کلی کانبان از <b>مسیر بالای صفحه</b> استفاده کنید."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_used
 msgid "Used Seats"
-msgstr ""
+msgstr "صندلی‌های استفاده شده"
 
 #. module: event
 #: model:res.groups,name:event.group_event_user
@@ -4518,7 +4596,7 @@ msgstr "مکان"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__address_inline
 msgid "Venue (formatted for one line uses)"
-msgstr ""
+msgstr "محل برگزاری (فرمت شده برای مصارف تک‌سطری)"
 
 #. module: event
 #. odoo-python
@@ -4534,6 +4612,8 @@ msgid ""
 "Wait until Attendees register to your Event or create their registrations "
 "manually."
 msgstr ""
+"صبر کنید تا شرکت‌کنندگان در رویداد ثبت نام کنند، یا ثبت نام‌ها را به صورت دستی "
+"ایجاد کنند."
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -4591,6 +4671,8 @@ msgid ""
 "When the event is scheduled to take place (expressed in your local timezone "
 "on the form view)."
 msgstr ""
+"زمان برنامه‌ریزی شده برای شروع رویداد (که بر حسب منطقه زمانی محلی در نمای فرم "
+"نمایش داده می‌شود)."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__is_ongoing
@@ -4600,12 +4682,12 @@ msgstr "آیا رویداد آغاز شده است"
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_ticket__sale_available
 msgid "Whether it is possible to sell these tickets"
-msgstr ""
+msgstr "اینکه آیا امکان فروش این بلیت‌ها وجود دارد"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_ticket__is_sold_out
 msgid "Whether seats are not available for this ticket."
-msgstr ""
+msgstr "اینکه آیا برای این بلیت صندلی وجود ندارد."
 
 #. module: event
 #: model:event.event.ticket,description:event.event_0_ticket_2
@@ -4633,7 +4715,7 @@ msgstr ""
 #: code:addons/event/models/event_question.py:0
 msgid ""
 "You cannot change the question type of a question that already has answers!"
-msgstr ""
+msgstr "تغییر نوع سؤالی که دارای پاسخ است امکان‌پذیر نیست!"
 
 #. module: event
 #. odoo-python
@@ -4647,65 +4729,65 @@ msgstr ""
 #: code:addons/event/models/event_question_answer.py:0
 msgid ""
 "You cannot delete an answer that has already been selected by attendees."
-msgstr ""
+msgstr "نمی‌توانید پاسخی را که قبلاً توسط شرکت‌کنندگان انتخاب شده است حذف کنید."
 
 #. module: event
 #: model:mail.template,subject:event.event_registration_mail_template_badge
 msgid "Your badge for {{ object.event_id.name }}"
-msgstr ""
+msgstr "نشان شما برای {{ object.event_id.name }}"
 
 #. module: event
 #: model:mail.template,subject:event.event_subscription
 msgid "Your registration at {{ object.event_id.name }}"
-msgstr ""
+msgstr "ثبت نام در {{ object.event_id.name }}"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_tag_category_view_form
 msgid "e.g. \"12-16 years old\""
-msgstr ""
+msgstr "مثال: 12 الی 16 ساله"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_tag_category_view_form
 msgid "e.g. \"Age Category\""
-msgstr ""
+msgstr "مثال: دسته‌بندی سن"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "e.g. \"Azure Interior\""
-msgstr ""
+msgstr "مثال: چوب نگار"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "e.g. \"Do you have any diet restrictions?\""
-msgstr ""
+msgstr "مثال: «آیا محدودیت رژیمی دارید؟»"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
 msgid "e.g. \"Promoting\""
-msgstr ""
+msgstr "مثال: تبلیغ"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_view_form_quick_create
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "e.g. Conference for Architects"
-msgstr ""
+msgstr "مثال: کنفرانس برای معماران"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "e.g. How to get to your event, door closing time, ..."
-msgstr ""
+msgstr "مثال: نحوه حضور در رویداد، زمان بسته شدن درب‌ها و ..."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "e.g. Online Conferences"
-msgstr ""
+msgstr "مثال: کنفرانس‌های آنلاین"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_form_view
 msgid "e.g. VIP Ticket"
-msgstr ""
+msgstr "مثال: بلیت VIP"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -4734,19 +4816,19 @@ msgstr ""
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "in %d days"
-msgstr ""
+msgstr "در %d روز"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "next month"
-msgstr ""
+msgstr "ماه بعد"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "next week"
-msgstr ""
+msgstr "هفته بعد"
 
 #. module: event
 #. odoo-python
@@ -4771,6 +4853,8 @@ msgid ""
 "registrations have started if the current datetime is after the earliest "
 "starting date of tickets."
 msgstr ""
+"اگر تاریخ و زمان فعلی بعد از زودترین تاریخ شروع بلیت‌ها باشد، ثبت نام آغاز "
+"شده است."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_kanban_from_event
