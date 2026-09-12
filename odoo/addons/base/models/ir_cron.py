@@ -2,14 +2,13 @@ from __future__ import annotations
 
 import contextvars
 import copy
-import enum
 import logging
 import math
 import os
 import threading
 import time
 import typing
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta, UTC
 
 import psycopg2
 import psycopg2.errors
@@ -31,7 +30,6 @@ _logger = logging.getLogger(__name__)
 
 BASE_VERSION = Manifest.for_addon('base')['version']
 MAX_FAIL_TIME = timedelta(hours=5)  # chosen with a fair roll of the dice
-MIN_RUNS_PER_JOB = 10
 MIN_TIME_PER_JOB = 120  # seconds
 CONSECUTIVE_TIMEOUT_FOR_FAILURE = 3
 MIN_FAILURE_COUNT_BEFORE_DEACTIVATION = 5
@@ -58,12 +56,6 @@ _intervalTypes = {
     'minutes': lambda interval: relativedelta(minutes=interval),
     'never': lambda _: relativedelta(year=9999),
 }
-
-
-class CompletionStatus(enum.StrEnum):
-    FULLY_DONE = 'fully done'
-    PARTIALLY_DONE = 'partially done'
-    FAILED = 'failed'
 
 
 class ListLogHandler(logging.Handler):
@@ -214,7 +206,7 @@ class IrCron(models.Model):
                 del threading.current_thread().dbname
 
     @staticmethod
-    def _process_jobs_loop(cron_cr: BaseCursor, *, job_ids: Iterable[int] = ()):
+    def _process_jobs_loop(cron_cr: BaseCursor, *, job_ids: Iterable[int] = ()) -> None:
         """ Process ready jobs to run on this database.
 
         The `cron_cr` is used to lock the currently processed job and relased
@@ -426,209 +418,141 @@ class IrCron(models.Model):
         :meth:`_commit_progress` to report how many records are done
         in each batch.
         Those progress notifications are used to determine the job's
-        ``CompletionStatus`` and to determine the next time the cron
+        status and to determine the next time the cron
         will be executed:
 
-        - ``'fully done'``: the cron is rescheduled later, it'll be
+        - fully done: the cron is rescheduled later, it'll be
           executed again after its regular time interval or upon a new
           trigger.
 
-        - ``'partially done'``: the cron is rescheduled ASAP, it'll be
+        - partially done: the cron is rescheduled ASAP, it'll be
           executed again by this or another cron worker once the other
           ready cron jobs have been executed.
 
-        - ``'failed'``: the cron is deactivated if it failed too many
+        - failed: the cron is deactivated if it failed too many
           times over a given time span; otherwise it is rescheduled
           later.
         """
-        env = api.Environment(cron_cr, job['user_id'], {})
-        ir_cron = env[cls._name]
+        # IMPORTANT: when running, updating of cron should be exclusively
+        # done by using direct SQL to avoid any hooks from the ORM
+        cron_id = job['id']
+        cron_name = job['cron_name']
+        IrCronSudo = api.Environment(cron_cr, job['user_id'], {}, su=True)[cls._name]
+        now = cron_cr.now().replace(microsecond=0)
 
-        ir_cron._clear_schedule(job)
-        failed_by_timeout = (
+        # clear the schedule
+        cron_cr.execute("""
+            DELETE FROM ir_cron_trigger
+            WHERE cron_id = %s
+              AND call_at <= %s
+        """, (cron_id, now))
+
+        active = job['active']
+        success = False
+        reschedule_in: int | None = None
+        if (
             job['timed_out_counter'] >= CONSECUTIVE_TIMEOUT_FOR_FAILURE
-            and not job['done']
-        )
-
-        if not failed_by_timeout:
-            status = cls._run_job(job)
-        else:
-            status = CompletionStatus.FAILED
+            and not job['done']  # when we progress, we never fail, right?
+        ):
+            # failed by timeout
             cron_cr.execute("""
                 UPDATE ir_cron_progress
                 SET timed_out_counter = 0
                 WHERE id = %s
             """, (job['progress_id'],))
-            _logger.error("Job %r (%s) timed out", job['cron_name'], job['id'])
-
-        ir_cron._update_failure_count(job, status)
-
-        if status in (CompletionStatus.FULLY_DONE, CompletionStatus.FAILED):
-            ir_cron._reschedule_later(job)
-        elif status == CompletionStatus.PARTIALLY_DONE:
-            ir_cron._reschedule_asap(job)
-            if os.getenv('ODOO_NOTIFY_CRON_CHANGES'):
-                cron_cr.postcommit.add(ir_cron._notifydb)  # See: `_notifydb`
+            _logger.error("Job %r (%s) timed out", cron_name, cron_id)
         else:
-            raise RuntimeError(f"unreachable {status=}")
-
-    @classmethod
-    def _run_job(cls, job) -> CompletionStatus:
-        """
-        Execute the job's server action multiple times until it
-        completes. The completion status is returned.
-
-        It is considered completed when either:
-
-        - the server action doesn't use the progress API, or returned
-          and notified that all records has been processed: ``'fully done'``;
-
-        - the server action returned and notified that there are
-          remaining records to process, but this cron worker ran this
-          server action 10 times already: ``'partially done'``;
-
-        - the server action was able to commit and notify some work done,
-          but later crashed due to an exception: ``'partially done'``;
-
-        - the server action failed due to an exception and no progress
-          was notified: ``'failed'``.
-        """
-        timed_out_counter = job['timed_out_counter']
-
-        with cls.pool.cursor() as job_cr:
+            # run the job and check resulting progress
             start_time = time.monotonic()
-            env = api.Environment(job_cr, job['user_id'], {
-                'lastcall': job['lastcall'],
-                'cron_id': job['id'],
-                'cron_end_time': start_time + MIN_TIME_PER_JOB,
-            })
-            cron = env[cls._name].browse(job['id'])
+            end_time = start_time + MIN_TIME_PER_JOB
+            server_action_id = job['ir_actions_server_id']
+            with cls.pool.cursor() as job_cr:
+                env = api.Environment(job_cr, job['user_id'], {
+                    'lastcall': job['lastcall'],
+                    'cron_id': cron_id,
+                    'cron_end_time': end_time,
+                })
 
-            status = None
-            loop_count = 0
-            _logger.info('Job %r (%s) starting', job['cron_name'], job['id'])
+                _logger.info("Job %r (%s) starting", cron_name, cron_id)
 
-            # stop after MIN_RUNS_PER_JOB runs and MIN_TIME_PER_JOB seconds, or
-            # upon full completion or failure
-            while status is None and (
-                loop_count < MIN_RUNS_PER_JOB
-                or time.monotonic() < env.context['cron_end_time']
-            ):
-                if cls.pool is not env.registry:
-                    # registry changed, retry later
-                    status = CompletionStatus.PARTIALLY_DONE
-                    _logger.info(
-                        'Job %r (%s) %s (registry changed)',
-                        job['cron_name'], job['id'], status,
-                    )
-                    return status
+                progress = env['ir.cron.progress'].sudo().create([{
+                    'cron_id': cron_id,
+                    'remaining': 0,
+                    'done': 0,
+                    # we use timed_out_counter + 1 so that if the current execution
+                    # times out, the counter already takes it into account
+                    'timed_out_counter': 0 if job['timed_out_counter'] is None else job['timed_out_counter'] + 1,
+                }])
+                env.cr.commit()
+                env = env(context=dict(env.context, ir_cron_progress_id=progress.id))
 
-                cron, progress = cron._add_progress(timed_out_counter=timed_out_counter)
-                job_cr.commit()
-
-                success = False
-                call_start_time = time.monotonic()
+                exception = None
                 try:
-                    # signaling check and commit is done inside `_callback`
-                    cron._callback(job['cron_name'], job['ir_actions_server_id'])
+                    env['ir.actions.server'].browse(server_action_id).run()
+                    env.flush_all()
+                    env.cr.commit()
                     success = True
-                except Exception:  # noqa: BLE001
-                    _logger.exception('Job %r (%s) server action #%s failed',
-                        job['cron_name'], job['id'], job['ir_actions_server_id'])
-                finally:
-                    done, remaining = progress.done, progress.remaining
-                    match (success, done, remaining):
-                        case (False, d, r) if d and r:
-                            # The cron action failed but was nonetheless able
-                            # to commit some progress.
-                            # Hopefully this failure is temporary.
-                            pass
+                except Exception as exc:  # ruff: ignore[blind-except]
+                    env.cr.rollback()
+                    exception = exc
 
-                        case (False, _, _):
-                            # The cron action failed, and was unable to commit
-                            # any progress this time. Consider it failed even
-                            # if it progressed in a previous loop iteration.
-                            status = CompletionStatus.FAILED
+                duration = time.monotonic() - start_time
+                if success:
+                    log_level = logging.INFO
+                    if progress.deactivate:
+                        active = False
+                    if progress.remaining:
+                        # The cron was able to determine there are
+                        # remaining records to process.
+                        reschedule_in = 0
+                        if not progress.done:
+                            # ..., but couldn't process any of them.
+                            # (hopefully this condition is temporary)
+                            log_level = logging.WARNING
+                else:
+                    log_level = logging.ERROR
+                    if progress.remaining and progress.done:
+                        # The cron action failed but was nonetheless able to
+                        # commit some progress.
+                        # (hopefully this failure is temporary)
+                        reschedule_in = 0
 
-                        case (True, _, 0):
-                            # The cron action completed. Either it doesn't use
-                            # the progress API, either it reported no remaining
-                            # stuff to process.
-                            status = CompletionStatus.FULLY_DONE
-                            if progress.deactivate:
-                                job['active'] = False
+                _logger.log(log_level,
+                    "Job %r (%s) %s (done %s; remaining %s; duration %.2fs)",
+                    cron_name, cron_id, 'success' if success else 'failed',
+                    progress.done, progress.remaining, duration,
+                    exc_info=exception)
 
-                        case (True, 0, _) if loop_count == 0:
-                            # The cron action was able to determine there are
-                            # remaining records to process, but couldn't
-                            # process any of them.
-                            # Hopefully this condition is temporary.
-                            status = CompletionStatus.PARTIALLY_DONE
-                            _logger.warning("Job %r (%s) processed no record",
-                                job['cron_name'], job['id'])
+                env.cr.execute("""
+                    UPDATE ir_cron_progress
+                    SET timed_out_counter = 0, duration = %s
+                    WHERE id = %s
+                """, (duration, progress.id))
 
-                        case (True, 0, _):
-                            # The cron action was able to determine there are
-                            # remaining records to process, did process some
-                            # records in a previous loop iteration, but
-                            # processed none this time.
-                            status = CompletionStatus.PARTIALLY_DONE
-
-                        case (True, _, _):
-                            # The cron action was able to process some but not
-                            # all records. Loop.
-                            pass
-
-                    loop_count += 1
-                    progress.timed_out_counter = 0
-                    progress.duration = time.monotonic() - call_start_time
-                    timed_out_counter = 0
-                    job_cr.commit()  # ensure we have no leftovers
-
-                    _logger.debug('Job %r (%s) processed %s records, %s records remaining',
-                        job['cron_name'], job['id'], done, remaining)
-
-            status = status or CompletionStatus.PARTIALLY_DONE
-            _logger.info(
-                'Job %r (%s) %s (#loop %s; done %s; remaining %s; duration %.2fs)',
-                job['cron_name'], job['id'], status,
-                loop_count, done, remaining, time.monotonic() - start_time)
-
-        return status
-
-    @api.model
-    def _update_failure_count(self, job: dict, status: CompletionStatus) -> None:
-        """
-        Update cron ``failure_count`` and ``first_failure_date`` given
-        the job's completion status. Deactivate the cron when BOTH the
-        counter reaches ``MIN_FAILURE_COUNT_BEFORE_DEACTIVATION`` AND
-        the time delta reaches ``MIN_DELTA_BEFORE_DEACTIVATION``.
-
-        On ``'fully done'`` and ``'partially done'``, the counter and
-        failure date are reset.
-
-        On ``'failed'`` the counter is increased and the first failure
-        date is set if the counter was 0. In case both thresholds are
-        reached, ``active`` is set to ``False`` and both values are
-        reset.
-        """
-        if status == CompletionStatus.FAILED:
-            now = self.env.cr.now().replace(microsecond=0)
+        # update the state of the cron job
+        if success:
+            # reset failure count and date
+            failure_count = 0
+            first_failure_date = None
+        else:
+            # failed: increment failure counter
             failure_count = job['failure_count'] + 1
             first_failure_date = job['first_failure_date'] or now
-            active = job['active']
+
+            # check whether we should deactivate the cron, or emit a warning
             if (
                 failure_count >= MIN_FAILURE_COUNT_BEFORE_DEACTIVATION
                 and first_failure_date + MIN_DELTA_BEFORE_DEACTIVATION < now
             ):
+                # too many failures, deactivating the cron and resetting counters
                 failure_count = 0
                 first_failure_date = None
                 active = False
-                self._notify_admin(self.env._(
+                IrCronSudo._notify_admin(IrCronSudo.env._(
                     "Cron job %(name)s (%(id)s) has been deactivated after failing %(count)s times. "
                     "More information can be found in the server logs around %(time)s.",
-                    name=repr(job['cron_name']),
-                    id=job['id'],
+                    name=repr(cron_name),
+                    id=cron_id,
                     count=MIN_FAILURE_COUNT_BEFORE_DEACTIVATION,
                     time=now,
                 ))
@@ -643,97 +567,52 @@ class IrCron(models.Model):
                 # throttle: number with 1 digit followed only by 0's
                 and len(str(failure_count).rstrip('0')) == 1
             ):
-                self._notify_admin(self.env._(
+                IrCronSudo._notify_admin(IrCronSudo.env._(
                     "Cron job %(name)s (%(id)s) is failing and will be deactivated if you don't take action. "
                     "More information can be found in the server logs around %(time)s.",
-                    name=repr(job['cron_name']),
-                    id=job['id'],
+                    name=repr(cron_name),
+                    id=cron_id,
                     time=now,
                 ))
-        else:
-            failure_count = 0
-            first_failure_date = None
-            active = job['active']
 
-        self.env.cr.execute("""
+        # create trigger to reschedule asap
+        if reschedule_in is not None and active:
+            _logger.debug("job %r (%s) will execute asap", cron_name, cron_id)
+            cron_cr.execute("""
+                INSERT INTO ir_cron_trigger(cron_id, call_at)
+                VALUES (%s, %s)
+            """, (cron_id, now + timedelta(seconds=reschedule_in)))
+            if os.getenv('ODOO_NOTIFY_CRON_CHANGES'):
+                cron_cr.postcommit.add(IrCronSudo._notifydb)
+
+        nextcall = job['nextcall']
+        if success:
+            # Use the timezone of the user when adding the interval. When adding a
+            # day or more, the user may want to keep the same hour each day.
+            # The interval won't be fixed, but the hour will stay the same,
+            # even when changing DST.
+            interval = _intervalTypes[job['interval_type']](job['interval_number'])
+            while nextcall <= now:
+                nextcall = fields.Datetime.context_timestamp(IrCronSudo, nextcall)
+                nextcall += interval
+                nextcall = nextcall.astimezone(UTC).replace(tzinfo=None)
+
+        cron_cr.execute("""
             UPDATE ir_cron
             SET failure_count = %s,
                 first_failure_date = %s,
+                lastcall = %s,
+                nextcall = %s,
                 active = %s
             WHERE id = %s
         """, [
             failure_count,
             first_failure_date,
+            now,
+            nextcall,
             active,
-            job['id'],
+            cron_id,
         ])
-
-    @api.model
-    def _clear_schedule(self, job):
-        """Remove triggers for the given job."""
-        now = self.env.cr.now().replace(microsecond=0)
-        self.env.cr.execute("""
-            DELETE FROM ir_cron_trigger
-            WHERE cron_id = %s
-              AND call_at <= %s
-        """, [job['id'], now])
-
-    @api.model
-    def _reschedule_later(self, job: dict) -> None:
-        """
-        Reschedule the job to be executed later, after its regular
-        interval or upon a trigger.
-        """
-        now = self.env.cr.now().replace(microsecond=0)
-        nextcall = job['nextcall']
-        # Use the timezone of the user when adding the interval. When adding a
-        # day or more, the user may want to keep the same hour each day.
-        # The interval won't be fixed, but the hour will stay the same,
-        # even when changing DST.
-        interval = _intervalTypes[job['interval_type']](job['interval_number'])
-        while nextcall <= now:
-            nextcall = fields.Datetime.context_timestamp(self, nextcall)
-            nextcall += interval
-            nextcall = nextcall.astimezone(timezone.utc).replace(tzinfo=None)
-
-        self.env.cr.execute("""
-            UPDATE ir_cron
-            SET nextcall = %s,
-                lastcall = %s
-            WHERE id = %s
-        """, [nextcall, now, job['id']])
-
-    @api.model
-    def _reschedule_asap(self, job: dict) -> None:
-        """
-        Reschedule the job to be executed ASAP, after the other cron
-        jobs had a chance to run.
-        """
-        now = self.env.cr.now().replace(microsecond=0)
-        self.env.cr.execute("""
-            INSERT INTO ir_cron_trigger(call_at, cron_id)
-            VALUES (%s, %s)
-        """, [now, job['id']])
-
-    def _callback(self, cron_name, server_action_id):
-        """ Run the method associated to a given job. It takes care of logging
-        and exception handling. Note that the user running the server action
-        is the user calling this method. """
-        self.ensure_one()
-        try:
-            _logger.debug(
-                "cron.object.execute(%r, %d, '*', %r, %d)",
-                self.env.cr.dbname,
-                self.env.uid,
-                cron_name,
-                server_action_id,
-            )
-            self.env['ir.actions.server'].browse(server_action_id).run()
-            self.env.flush_all()
-            self.env.cr.commit()
-        except Exception:
-            self.env.cr.rollback()
-            raise
 
     def write(self, vals):
         try:
@@ -764,14 +643,14 @@ class IrCron(models.Model):
         # Prevent deactivated cron jobs from being re-enabled through side effects on
         # neutralized databases.
         if self.env['ir.config_parameter'].sudo().get_bool('database.is_neutralized'):
-            return True
+            return
 
         active = bool(self.env[model].search_count(domain))
         try:
             self.lock_for_update(allow_referencing=True)
         except LockError:
-            return True
-        return self.write({'active': active})
+            return
+        self.write({'active': active})
 
     def _trigger(self, at: datetime | Iterable[datetime] | None = None, *, coalesce: int = 0):
         """
@@ -852,28 +731,6 @@ class IrCron(models.Model):
             cr.execute(SQL("SELECT %s('cron_trigger', %s)", SQL.identifier(ODOO_NOTIFY_FUNCTION), self.env.cr.dbname))
         _logger.debug("cron workers notified")
 
-    def _add_progress(self, *, timed_out_counter=None):
-        """
-        Create a progress record for the given cron and add it to its
-        context.
-
-        :param int timed_out_counter: the number of times the cron has
-            consecutively timed out
-        :return: a pair ``(cron, progress)``, where the progress has
-            been injected inside the cron's context
-        """
-        progress = self.env['ir.cron.progress'].sudo().create([{
-            'cron_id': self.id,
-            'remaining': 0,
-            'done': 0,
-            # we use timed_out_counter + 1 so that if the current execution
-            # times out, the counter already takes it into account
-            'timed_out_counter': 0 if timed_out_counter is None else timed_out_counter + 1,
-            # set the duration to 10 minutes by default
-            'duration': False if timed_out_counter is None else 600.0,
-        }])
-        return self.with_context(ir_cron_progress_id=progress.id), progress
-
     @api.model
     def _commit_progress(
         self,
@@ -948,7 +805,7 @@ class IrCronTrigger(models.Model):
 
     @api.autovacuum
     def _gc_cron_triggers(self):
-        # active cron jobs are cleared by `_clear_schedule` when the job starts
+        # active cron jobs are cleared when the job starts
         domain = [
             ('call_at', '<', datetime.now() + relativedelta(weeks=-1)),
             ('cron_id.active', '=', False),
