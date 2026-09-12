@@ -1,6 +1,19 @@
 import { Plugin } from "@html_editor/plugin";
+<<<<<<< dda7cae75f245a52d770e53a2ea456f307513465
 import { closestElement, descendants, selectElements } from "@html_editor/utils/dom_traversal";
 import { mergeAdjacentTextNodes, unwrapContents } from "@html_editor/utils/dom";
+||||||| 037c4dc20d56aea6351c90a97d3add1dda054f4c
+import { cleanTrailingBR, mergeAdjacentTextNodes, unwrapContents } from "@html_editor/utils/dom";
+import {
+    childNodes,
+    closestElement,
+    descendants,
+    selectElements,
+} from "@html_editor/utils/dom_traversal";
+=======
+import { cleanTrailingBR, mergeAdjacentTextNodes, unwrapContents } from "@html_editor/utils/dom";
+import { childNodes, closestElement, selectElements } from "@html_editor/utils/dom_traversal";
+>>>>>>> 8dbc0c58fb9883f6e8000250dacb38ff9a5d425d
 import { findInSelection, callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { _t } from "@web/core/l10n/translation";
 import { LinkPopover } from "./link_popover";
@@ -349,11 +362,48 @@ export class LinkPlugin extends Plugin {
                 ev.preventDefault();
             }
         });
-        this.addDomListener(this.editable, "mousedown", () => {
-            this._isNavigatingByMouse = true;
-        });
-        this.addDomListener(this.editable, "keydown", () => {
-            delete this._isNavigatingByMouse;
+        this.addDomListener(this.editable, "pointerdown", (ev) => {
+            const clickedEl = this.document.elementFromPoint(ev.clientX, ev.clientY);
+            if (!clickedEl) {
+                return;
+            }
+            let caretPosition = {};
+            if (this.document.caretPositionFromPoint) {
+                // Firefox API
+                const pos = this.document.caretPositionFromPoint(ev.clientX, ev.clientY);
+                caretPosition = pos;
+            } else if (this.document.caretRangeFromPoint) {
+                // Chrome / Safari API
+                const range = document.caretRangeFromPoint(ev.clientX, ev.clientY);
+                caretPosition.offsetNode = range?.startContainer;
+                caretPosition.offset = range?.startOffset;
+            }
+            const link = caretPosition?.offsetNode && closestElement(caretPosition.offsetNode, "A");
+            if (clickedEl.nodeName === "A" && isZwnbsp(caretPosition.offsetNode)) {
+                // This handles the case of clicking at the start of the button
+                const isFirstFeff = !caretPosition.offsetNode.previousSibling;
+                if (isFirstFeff && caretPosition.offset === 0) {
+                    ev.preventDefault();
+                    this.dependencies.selection.setSelection({
+                        anchorNode: clickedEl,
+                        anchorOffset: 1,
+                    });
+                }
+            } else if (clickedEl.nodeName !== "A" && link) {
+                // This handles the case of clicking outside the link that is
+                // at the start/end of paragraph
+                ev.preventDefault();
+                const anchorFeff =
+                    nodeSize(caretPosition.offsetNode) === caretPosition.offset
+                        ? link.nextSibling
+                        : link.previousSibling;
+                if (anchorFeff) {
+                    this.dependencies.selection.setSelection({
+                        anchorNode: anchorFeff,
+                        anchorOffset: 1,
+                    });
+                }
+            }
         });
         this.addDomListener(this.editable, "auxclick", (ev) => {
             if (ev.button === 1) {
@@ -795,6 +845,7 @@ export class LinkPlugin extends Plugin {
 
     handleSelectionChange(selectionData) {
         const selection = selectionData.editableSelection;
+<<<<<<< dda7cae75f245a52d770e53a2ea456f307513465
         if (
             this._isNavigatingByMouse &&
             selection.isCollapsed &&
@@ -844,6 +895,99 @@ export class LinkPlugin extends Plugin {
         if (!selectionData.currentSelectionIsInEditable || isSelectionInProtected) {
             const popoverEl = document.querySelector(".o-we-linkpopover");
             const anchorNode = document.getSelection()?.anchorNode;
+||||||| 037c4dc20d56aea6351c90a97d3add1dda054f4c
+        const props = {
+            onRemove: () => {
+                this.removeLink();
+                this.overlay.close();
+                this.dependencies.history.addStep();
+            },
+            onCopy: () => {
+                this.overlay.close();
+            },
+            onClose: () => {
+                this.overlay.close();
+                this.removeCurrentLinkIfEmtpy();
+            },
+            getInternalMetaData: this.getInternalMetaData,
+            getExternalMetaData: this.getExternalMetaData,
+            getAttachmentMetadata: this.getAttachmentMetadata,
+            recordInfo: this.config.getRecordInfo?.() || {},
+            type: this.type || "",
+            LinkPopoverState: this.LinkPopoverState,
+        };
+        if (
+            this._isNavigatingByMouse &&
+            selection.isCollapsed &&
+            selectionData.documentSelectionIsInEditable
+        ) {
+            delete this._isNavigatingByMouse;
+            const { startContainer, startOffset, endContainer, endOffset } = selection;
+            const linkElement = closestElement(startContainer, "a");
+            if (
+                linkElement &&
+                linkElement.textContent.startsWith("\uFEFF") &&
+                linkElement.textContent.endsWith("\uFEFF")
+            ) {
+                const linkDescendants = descendants(linkElement);
+
+                // Check if the cursor is positioned at the begining of link.
+                const isCursorAtStartOfLink = isZwnbsp(startContainer)
+                    ? linkDescendants.indexOf(startContainer) === 0
+                    : startContainer.nodeType === Node.TEXT_NODE &&
+                      linkDescendants.indexOf(startContainer) === 1 &&
+                      startOffset === 0;
+
+                // Check if the cursor is positioned at the end of link.
+                const isCursorAtEndOfLink = isZwnbsp(endContainer)
+                    ? linkDescendants.indexOf(endContainer) === linkDescendants.length - 1
+                    : endContainer.nodeType === Node.TEXT_NODE &&
+                      linkDescendants.indexOf(endContainer) === linkDescendants.length - 2 &&
+                      endOffset === nodeSize(endContainer);
+
+                // Handle selection movement.
+                if (isCursorAtStartOfLink || isCursorAtEndOfLink) {
+                    const [targetNode, targetOffset] = isCursorAtStartOfLink
+                        ? leftPos(linkElement)
+                        : rightPos(linkElement);
+                    this.dependencies.selection.setSelection({
+                        anchorNode: targetNode,
+                        anchorOffset: isCursorAtStartOfLink ? targetOffset - 1 : targetOffset + 1,
+                    });
+                    return;
+                }
+            }
+        }
+        if (!selectionData.documentSelectionIsInEditable) {
+            // note that data-prevent-closing-overlay also used in color picker but link popover
+            // and color picker don't open at the same time so it's ok to query like this
+            const popoverEl = document.querySelector("[data-prevent-closing-overlay=true]");
+=======
+        const props = {
+            onRemove: () => {
+                this.removeLink();
+                this.overlay.close();
+                this.dependencies.history.addStep();
+            },
+            onCopy: () => {
+                this.overlay.close();
+            },
+            onClose: () => {
+                this.overlay.close();
+                this.removeCurrentLinkIfEmtpy();
+            },
+            getInternalMetaData: this.getInternalMetaData,
+            getExternalMetaData: this.getExternalMetaData,
+            getAttachmentMetadata: this.getAttachmentMetadata,
+            recordInfo: this.config.getRecordInfo?.() || {},
+            type: this.type || "",
+            LinkPopoverState: this.LinkPopoverState,
+        };
+        if (!selectionData.documentSelectionIsInEditable) {
+            // note that data-prevent-closing-overlay also used in color picker but link popover
+            // and color picker don't open at the same time so it's ok to query like this
+            const popoverEl = document.querySelector("[data-prevent-closing-overlay=true]");
+>>>>>>> 8dbc0c58fb9883f6e8000250dacb38ff9a5d425d
             if (
                 (popoverEl && !selectionData.documentSelection) ||
                 (anchorNode && isElement(anchorNode) && anchorNode.closest(".o-we-linkpopover"))
