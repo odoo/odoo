@@ -229,7 +229,14 @@ class PurchaseOrderLine(models.Model):
         if 'qty_received' in values:
             for line in self:
                 line._track_qty_received(values['qty_received'])
-        return super(PurchaseOrderLine, self).write(values)
+
+        res = super().write(values)
+
+        # Don't recompute the packaging_id if we are setting the quantity of the items and the quantity of packagings
+        if 'product_qty' in values and 'product_packaging_qty' in values and 'product_packaging_id' not in values:
+            self.env.remove_to_compute(self._fields['product_packaging_id'], self)
+
+        return res
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_purchase_or_done(self):
@@ -416,6 +423,10 @@ class PurchaseOrderLine(models.Model):
                         ),
                     },
                 }
+
+    @api.onchange('product_packaging_qty')
+    def _onchange_product_packaging_qty(self):
+        self.env.remove_to_compute(self._fields['product_packaging_id'], self)
 
     @api.depends('product_packaging_id', 'product_uom', 'product_qty')
     def _compute_product_packaging_qty(self):
