@@ -19,7 +19,7 @@
             <xpath expr="//field[@name='country_id']" position="after">
                 <field name="l10n_ke_item_code_id"
                        string="KRA Item Code"
-                       domain="[] if amount_type != 'percent' else [('tax_rate', 'in', ['C','E'] if amount == 0 else ['B'] if amount == 8 else [False])]"
+                       domain="[] if amount_type != 'percent' else [('tax_rate', 'in', ['C','E','D'] if amount == 0 else ['B'] if amount == 8 else ['A'] if amount == 16 else [False])]"
                        invisible="country_code != 'KE'"/>
             </xpath>
         </field>
