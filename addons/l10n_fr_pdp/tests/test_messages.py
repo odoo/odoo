@@ -195,6 +195,24 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
         self.assertTrue(wizard.sending_method_checkboxes['peppol']['readonly'])  # can't select peppol
         self.assertFalse(wizard.alerts)  # there is no alerts
 
+    def test_send_pdp_prod_valid_label(self):
+        """
+        The French e-invoicing label for Peppol should be shown even when there is nothing else
+        to add to it: no mode suffix (we're in prod, not demo/test) and no reason to disable the
+        checkbox (the customer is valid on Peppol).
+        """
+        self.proxy_user.edi_mode = 'prod'  # addendum_mode == ''
+        move = self._create_french_invoice()
+        move.action_post()
+        move.partner_id.peppol_verification_state = 'valid'
+
+        wizard = self.env['account.move.send.wizard'].create({'move_id': move.id})
+        self.assertFalse(wizard._get_peppol_checkbox_addendum_disable_reason())  # addendum_disable_reason == ''
+        self.assertEqual(
+            wizard.sending_method_checkboxes['peppol']['label'],
+            self.env._("French E-Invoicing"),
+        )
+
     def test_resend_error_pdp_message(self):
         # should be able to resend error invoices
         move = self._create_french_invoice()
