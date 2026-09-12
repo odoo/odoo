@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="l10n_pt_report_template_note_document_purpose">
+        <t t-if="res_company.account_fiscal_country_id.code == 'PT'">
+            <div class="row">
+                <div name="l10n_pt_document_purpose" class="mx-auto text-center text-muted">
+                    <t t-if="o and o._name in ('account.move', 'account.payment', 'pos.order', 'stock.picking', 'sale.order')
+                             and o.l10n_pt_at_series_id
+                             and o.l10n_pt_at_series_id.training_series">
+                        Documento emitido para fins de Formação<br/>
+                    </t>
+                    <t t-if="o and (o._name != 'account.move' or proforma)">
+                        Este documento não serve de fatura<br/>
+                    </t>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="l10n_pt_report_template_note_certified_program">
+        <div name="l10n_pt_certified_program" class="flex-grow-1 text-start me-2">
+            <t t-if="o and o._name in ('account.move', 'pos.order', 'stock.picking', 'sale.order') and o.l10n_pt_inalterable_hash_short">
+                <t t-out="o.l10n_pt_inalterable_hash_short"/> - Processado por programa certificado n.º <t t-out="l10n_pt_certification_number"/>/AT
+            </t>
+            <t t-else="">
+                Emitido por programa certificado n.º <t t-out="l10n_pt_certification_number"/>/AT
+            </t>
+        </div>
+    </template>
+
+    <template id="l10n_pt_report_template_print_version_and_cancellation">
+        <t t-if="res_company.account_fiscal_country_id.code == 'PT'
+                 and o and o._name in ('account.move', 'account.payment', 'pos.order', 'stock.picking', 'sale.order')">
+            <div class="row">
+                <div name="l10n_pt_print_version_and_cancellation" class="mx-auto text-muted">
+                    <span id="l10n_pt_print_version">Original</span>
+                    <t t-if="o.state == 'cancel'">
+                        <span class="text-danger"> - Documento Cancelado</span>
+                    </t>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="l10n_pt_report_template_address_training_mode">
+        <div>Odoo</div>
+        <div>Chaussée de Namur 40</div>
+        <div>1367 Ramillies</div>
+        <div>Belgium</div>
+    </template>
+
+    <template id="l10n_pt_report_template_footer">
+        <div class="flex-grow-1 text-start me-2">
+            <span class="text-muted" t-call="l10n_pt_certification.l10n_pt_report_template_note_certified_program"/>
+            <span t-field="company.report_footer"/>
+        </div>
+    </template>
+
+    <template id="l10n_pt_report_template_footer_document_type_and_number_block">
+        <div t-out="dict(o.fields_get(allfields=['l10n_pt_document_type'])['l10n_pt_document_type']['selection'])[o.l10n_pt_document_type]"/>
+        <div class="text-muted" t-out="o.l10n_pt_document_number"/>
+    </template>
+
+    <template id="l10n_pt_report_template_footer_document_type_and_number_oneline">
+        <span t-out="dict(o.fields_get(allfields=['l10n_pt_document_type'])['l10n_pt_document_type']['selection'])[o.l10n_pt_document_type]"
+              class="text-muted"/>
+        <span class="text-muted" t-out="str(o.l10n_pt_document_number) + ', '"/>
+    </template>
+
+    <!-- Add Portuguese requirements to the existing layouts -->
+
+    <template id="l10n_pt_external_layout_standard" inherit_id="web.external_layout_standard">
+        <xpath expr="//div[contains(@t-attf-class, 'article')]" position="inside">
+            <t t-call="l10n_pt_certification.l10n_pt_report_template_note_document_purpose"/>
+        </xpath>
+        <xpath expr="//ul[@name='company_address_list']" position="replace">
+            <!--  Can't put $0 in template-->
+            <t t-if="o and o._name in ('account.move', 'account.payment', 'pos.order', 'stock.picking', 'sale.order')
+                     and o.l10n_pt_at_series_id
+                     and o.l10n_pt_at_series_id.training_series">
+                <t t-call="l10n_pt_certification.l10n_pt_report_template_address_training_mode"/>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+        <xpath expr="//h2[@t-out='layout_document_title']" position="after">
+            <t t-call="l10n_pt_certification.l10n_pt_report_template_print_version_and_cancellation"/>
+        </xpath>
+        <xpath expr="//div[@t-field='company.report_footer']" position="replace">
+            <t t-if="res_company.account_fiscal_country_id.code == 'PT'">
+                <t t-call="l10n_pt_certification.l10n_pt_report_template_footer"/>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+        <xpath expr="//div[@t-if=&quot;report_type == &apos;pdf&apos; and display_name_in_footer&quot;]" position="replace">
+            <t t-if="o and report_type == 'pdf' and o._name in ('account.move', 'account.payment', 'stock.picking', 'sale.order')
+                     and res_company.account_fiscal_country_id.code == 'PT' and o.l10n_pt_document_type">
+                <t t-call="l10n_pt_certification.l10n_pt_report_template_footer_document_type_and_number_block"/>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+    </template>
+
+    <template id="l10n_pt_external_layout_bold" inherit_id="web.external_layout_bold">
+        <xpath expr="//div[contains(@t-attf-class, 'article')]" position="inside">
+            <t t-call="l10n_pt_certification.l10n_pt_report_template_note_document_purpose"/>
+        </xpath>
+        <xpath expr="//ul[@name='company_address_list']" position="replace">
+            <t t-if="o and o._name in ('account.move', 'account.payment', 'pos.order', 'stock.picking', 'sale.order')
+                     and o.l10n_pt_at_series_id
+                     and o.l10n_pt_at_series_id.training_series">
+                <t t-call="l10n_pt_certification.l10n_pt_report_template_address_training_mode"/>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+        <xpath expr="//h2[@t-out='layout_document_title']" position="after">
+            <t t-call="l10n_pt_certification.l10n_pt_report_template_print_version_and_cancellation"/>
+        </xpath>
+        <xpath expr="//span[@t-field='company.report_footer']" position="before">
+            <t t-if="res_company.account_fiscal_country_id.code == 'PT'">
+                <span class="text-muted" t-call="l10n_pt_certification.l10n_pt_report_template_note_certified_program"/>
+            </t>
+        </xpath>
+        <xpath expr="//span[@t-if=&quot;report_type == &apos;pdf&apos; and display_name_in_footer&quot;]" position="replace">
+            <t t-if="o and report_type == 'pdf' and o._name in ('account.move', 'account.payment', 'stock.picking', 'sale.order')
+                     and res_company.account_fiscal_country_id.code == 'PT' and o.l10n_pt_document_type">
+                <t t-call="l10n_pt_certification.l10n_pt_report_template_footer_document_type_and_number_oneline"/>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+    </template>
+
+    <template id="l10n_pt_external_layout_boxed" inherit_id="web.external_layout_boxed">
+        <xpath expr="//div[contains(@t-attf-class, 'article')]" position="inside">
+            <t t-call="l10n_pt_certification.l10n_pt_report_template_note_document_purpose"/>
+        </xpath>
+        <xpath expr="//ul[@name='company_address_list']" position="replace">
+            <t t-if="o and o._name in ('account.move', 'account.payment', 'pos.order', 'stock.picking', 'sale.order')
+                     and o.l10n_pt_at_series_id
+                     and o.l10n_pt_at_series_id.training_series">
+                <t t-call="l10n_pt_certification.l10n_pt_report_template_address_training_mode"/>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+        <xpath expr="//h2[@t-out='layout_document_title']" position="after">
+            <t t-call="l10n_pt_certification.l10n_pt_report_template_print_version_and_cancellation"/>
+        </xpath>
+        <xpath expr="//span[@t-field='company.report_footer']" position="before">
+            <t t-if="res_company.account_fiscal_country_id.code == 'PT'">
+                <span class="text-muted" t-call="l10n_pt_certification.l10n_pt_report_template_note_certified_program"/>
+            </t>
+        </xpath>
+        <xpath expr="//span[@t-if=&quot;report_type == &apos;pdf&apos; and display_name_in_footer&quot;]" position="replace">
+            <t t-if="o and report_type == 'pdf' and o._name in ('account.move', 'account.payment', 'stock.picking', 'sale.order')
+                     and res_company.account_fiscal_country_id.code == 'PT' and o.l10n_pt_document_type">
+                <t t-call="l10n_pt_certification.l10n_pt_report_template_footer_document_type_and_number_oneline"/>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+    </template>
+
+    <template id="l10n_pt_external_layout_striped" inherit_id="web.external_layout_striped">
+        <xpath expr="//div[contains(@t-attf-class, 'article')]" position="inside">
+            <t t-call="l10n_pt_certification.l10n_pt_report_template_note_document_purpose"/>
+        </xpath>
+        <xpath expr="//ul[@name='company_address_list']" position="replace">
+            <t t-if="o and o._name in ('account.move', 'account.payment', 'pos.order', 'stock.picking', 'sale.order')
+                     and o.l10n_pt_at_series_id
+                     and o.l10n_pt_at_series_id.training_series">
+                <t t-call="l10n_pt_certification.l10n_pt_report_template_address_training_mode"/>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+        <xpath expr="//h2[@t-out='layout_document_title']" position="after">
+            <t t-call="l10n_pt_certification.l10n_pt_report_template_print_version_and_cancellation"/>
+        </xpath>
+        <xpath expr="//div[@t-field='company.report_footer']" position="before">
+            <div class="text-muted" t-call="l10n_pt_certification.l10n_pt_report_template_note_certified_program"/>
+        </xpath>
+        <xpath expr="//div[@t-if=&quot;report_type == &apos;pdf&apos; and display_name_in_footer&quot;]" position="replace">
+            <t t-if="o and report_type == 'pdf' and o._name in ('account.move', 'account.payment', 'stock.picking', 'sale.order')
+                     and res_company.account_fiscal_country_id.code == 'PT' and o.l10n_pt_document_type">
+                <t t-call="l10n_pt_certification.l10n_pt_report_template_footer_document_type_and_number_block"/>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+    </template>
+
+    <template id="l10n_pt_external_layout_folder" inherit_id="web.external_layout_folder">
+        <xpath expr="//div[contains(@t-attf-class, 'article')]" position="inside">
+            <t t-call="l10n_pt_certification.l10n_pt_report_template_note_document_purpose"/>
+        </xpath>
+        <xpath expr="//ul[@name='company_address_list']" position="replace">
+            <t t-if="o and o._name in ('account.move', 'account.payment', 'pos.order', 'stock.picking', 'sale.order')
+                     and o.l10n_pt_at_series_id
+                     and o.l10n_pt_at_series_id.training_series">
+                <t t-call="l10n_pt_certification.l10n_pt_report_template_address_training_mode"/>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+        <xpath expr="//h2//t[@t-out='layout_document_title']" position="after">
+            <t t-call="l10n_pt_certification.l10n_pt_report_template_print_version_and_cancellation"/>
+        </xpath>
+        <xpath expr="//div[@t-field='company.report_footer']" position="replace">
+            <t t-if="res_company.account_fiscal_country_id.code == 'PT'">
+                <t t-call="l10n_pt_certification.l10n_pt_report_template_footer"/>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+        <xpath expr="//div[@t-if=&quot;report_type == &apos;pdf&apos; and display_name_in_footer&quot;]" position="replace">
+            <t t-if="o and report_type == 'pdf' and o._name in ('account.move', 'account.payment', 'stock.picking', 'sale.order')
+                     and res_company.account_fiscal_country_id.code == 'PT' and o.l10n_pt_document_type">
+                <t t-call="l10n_pt_certification.l10n_pt_report_template_footer_document_type_and_number_block"/>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+    </template>
+
+    <template id="l10n_pt_external_layout_wave" inherit_id="web.external_layout_wave">
+        <xpath expr="//div[contains(@t-attf-class, 'article')]" position="inside">
+            <t t-call="l10n_pt_certification.l10n_pt_report_template_note_document_purpose"/>
+        </xpath>
+        <xpath expr="//ul[@name='company_address_list']" position="replace">
+            <t t-if="o and o._name in ('account.move', 'account.payment', 'pos.order', 'stock.picking', 'sale.order')
+                     and o.l10n_pt_at_series_id
+                     and o.l10n_pt_at_series_id.training_series">
+                <t t-call="l10n_pt_certification.l10n_pt_report_template_address_training_mode"/>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+        <xpath expr="//h2[@t-out='layout_document_title']" position="after">
+            <t t-call="l10n_pt_certification.l10n_pt_report_template_print_version_and_cancellation"/>
+        </xpath>
+        <xpath expr="//div[@t-field='company.report_footer']" position="before">
+             <div class="text-muted" t-call="l10n_pt_certification.l10n_pt_report_template_note_certified_program"/>
+        </xpath>
+        <xpath expr="//span[@t-if=&quot;report_type == &apos;pdf&apos; and display_name_in_footer&quot;]" position="replace">
+            <t t-if="o and report_type == 'pdf' and o._name in ('account.move', 'account.payment', 'stock.picking', 'sale.order')
+                     and res_company.account_fiscal_country_id.code == 'PT' and o.l10n_pt_document_type">
+                <t t-call="l10n_pt_certification.l10n_pt_report_template_footer_document_type_and_number_oneline"/>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+    </template>
+
+    <template id="l10n_pt_external_layout_bubble" inherit_id="web.external_layout_bubble">
+        <xpath expr="//div[contains(@t-attf-class, 'article')]" position="inside">
+            <t t-call="l10n_pt_certification.l10n_pt_report_template_note_document_purpose"/>
+        </xpath>
+        <xpath expr="//ul[@name='company_address_list']" position="replace">
+            <t t-if="o and o._name in ('account.move', 'account.payment', 'pos.order', 'stock.picking', 'sale.order')
+                     and o.l10n_pt_at_series_id
+                     and o.l10n_pt_at_series_id.training_series">
+                <t t-call="l10n_pt_certification.l10n_pt_report_template_address_training_mode"/>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+        <xpath expr="//h2[@t-out='layout_document_title']" position="after">
+            <t t-call="l10n_pt_certification.l10n_pt_report_template_print_version_and_cancellation"/>
+        </xpath>
+        <xpath expr="//div[@t-field='company.report_footer']" position="before">
+             <div class="text-muted" t-call="l10n_pt_certification.l10n_pt_report_template_note_certified_program"/>
+        </xpath>
+        <xpath expr="//span[@t-if=&quot;report_type == &apos;pdf&apos; and display_name_in_footer&quot;]" position="replace">
+            <t t-if="o and report_type == 'pdf' and o._name in ('account.move', 'account.payment', 'stock.picking', 'sale.order')
+                     and res_company.account_fiscal_country_id.code == 'PT' and o.l10n_pt_document_type">
+                <t t-call="l10n_pt_certification.l10n_pt_report_template_footer_document_type_and_number_oneline"/>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+    </template>
+</odoo>
