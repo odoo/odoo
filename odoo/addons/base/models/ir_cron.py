@@ -574,6 +574,28 @@ class IrCron(models.Model):
                     time=now,
                 ))
 
+        # check for asynchronous deactivation, see action_archive
+        if active:
+            @cron_cr.postcommit.add
+            def check_deactivated():
+                with IrCron.pool.cursor() as cr:
+                    cr.execute("""
+                        SELECT
+                        FROM ir_cron_progress
+                        WHERE cron_id = %s
+                            AND create_date >= %s
+                            AND deactivate IS TRUE
+                        LIMIT 1
+                    """, (cron_id, now))
+                    if cr.fetchone() is not None:
+                        cr.execute("""
+                            UPDATE ir_cron
+                            SET active = false
+                            WHERE id IN (SELECT id FROM ir_cron WHERE id = %s FOR UPDATE SKIP LOCKED)
+                        """, (cron_id,))
+                        if cr.rowcount:
+                            _logger.info('Job %r (%s) deactivated asynchronously', cron_name, cron_id)
+
         # create trigger to reschedule asap
         if reschedule_asap and active:
             _logger.debug('job %r (%s) will execute asap', cron_name, cron_id)
@@ -635,6 +657,19 @@ class IrCron(models.Model):
                 "This cron task is currently being executed and may not be modified "
                 "Please try again in a few minutes"
             )) from None
+
+    def action_archive(self):
+        locked = self.try_lock_for_update(allow_referencing=True)
+        if delayed := self - locked:
+            # just create a progress to indicate deactivation
+            _logger.info("Deactivating asynchronously %s", delayed)
+            self.env['ir.cron.progress'].create([{'cron_id': cron.id, 'deactivate': True} for cron in delayed])
+            if 'bus.bus' in self.env:
+                self.env.user._bus_send('simple_notification', {
+                    'type': 'warning',
+                    'message': self.env._('Deactivating cron jobs asynchronously'),
+                })
+        return super(IrCron, locked).action_archive()
 
     @api.model
     def toggle(self, model, domain):
