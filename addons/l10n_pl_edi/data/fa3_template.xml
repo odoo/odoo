@@ -321,7 +321,7 @@
                 </t>
             </TerminPlatnosci>
             </t>
-            <t t-if="invoice.partner_bank_id">
+            <t t-if="invoice.partner_bank_id and 10 &lt;= len(invoice.partner_bank_id.acc_number.replace(' ', '')) &lt; 35">
                 <RachunekBankowy>
                     <NrRB t-out="invoice.partner_bank_id.acc_number.replace(' ', '')"/>
                     <NazwaBanku t-out="invoice.partner_bank_id.bank_id.name"/>
