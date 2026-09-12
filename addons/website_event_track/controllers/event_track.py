@@ -316,6 +316,8 @@ class EventTrackController(http.Controller):
         start_date = fields.Datetime.from_string(track.date).replace(tzinfo=pytz.utc).astimezone(local_tz)
         start_datetime = self.time_slot_rounder(start_date, 15)
         end_datetime = self.time_slot_rounder(start_datetime + timedelta(hours=(track.duration or 0.25)), 15)
+        next_midnight = (start_datetime + timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
+        end_datetime = min(end_datetime, next_midnight)
         time_slots_count = int(((end_datetime - start_datetime).total_seconds() / 3600) * 4)
 
         time_slots_by_day_start_time = {start_datetime: 0}
