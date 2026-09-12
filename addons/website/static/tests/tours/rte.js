@@ -391,6 +391,10 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
+            content: "Wait for ace editor dialog to be visible",
+            trigger: ".o_resource_editor, .ace_editor",
+        },
+        {
             content: "Check that the editor is not showing translated content (1)",
             trigger: '.ace_text-layer .ace_line:contains("an HTML")',
             run() {
