@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.5a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 18:23+0000\n"
-"PO-Revision-Date: 2026-08-28 18:23+0000\n"
+"POT-Creation-Date: 2026-09-11 18:14+0000\n"
+"PO-Revision-Date: 2026-09-11 18:14+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -28,6 +28,11 @@ msgstr ""
 #. module: l10n_th
 #: model:ir.actions.report,print_report_name:l10n_th.action_report_50_tawi
 msgid "'WHT_%s' % (object.name.replace('/', '-'))"
+msgstr ""
+
+#. module: l10n_th
+#: model:ir.actions.report,print_report_name:l10n_th.action_report_tax_invoice
+msgid "(object._get_tax_invoice_document_title())"
 msgstr ""
 
 #. module: l10n_th
@@ -251,6 +256,12 @@ msgid ""
 msgstr ""
 
 #. module: l10n_th
+#: model:ir.model.fields,field_description:l10n_th.field_l10n_th_tax_invoice__amount_residual
+#: model_terms:ir.ui.view,arch_db:l10n_th.tax_invoice_document_tax_totals
+msgid "Amount Due"
+msgstr ""
+
+#. module: l10n_th
 #: model:ir.model.fields.selection,name:l10n_th.selection__res_partner__l10n_th_company_type__asso
 msgid "Association"
 msgstr ""
@@ -278,6 +289,19 @@ msgid "Can't generate a PayNow QR code with a currency other than THB."
 msgstr ""
 
 #. module: l10n_th
+#: model:ir.model.fields.selection,name:l10n_th.selection__l10n_th_tax_invoice__state__cancel
+msgid "Cancelled"
+msgstr ""
+
+#. module: l10n_th
+#. odoo-python
+#: code:addons/l10n_th/models/l10n_th_tax_invoice.py:0
+msgid "Cancelled %(doc_name)s"
+msgstr ""
+
+#. module: l10n_th
+#: model:ir.model.fields,help:l10n_th.field_account_bank_statement_line__l10n_th_is_vat_registered
+#: model:ir.model.fields,help:l10n_th.field_account_move__l10n_th_is_vat_registered
 #: model:ir.model.fields,help:l10n_th.field_res_company__l10n_th_is_vat_registered
 msgid ""
 "Check this to enable issuing Tax Invoices. Otherwise, only standard invoices"
@@ -290,12 +314,8 @@ msgid "City"
 msgstr ""
 
 #. module: l10n_th
-#: model:ir.actions.report,name:l10n_th.action_report_commercial_invoice
-msgid "Commercial Invoice"
-msgstr ""
-
-#. module: l10n_th
 #: model:ir.model,name:l10n_th.model_res_company
+#: model:ir.model.fields,field_description:l10n_th.field_l10n_th_tax_invoice__company_id
 msgid "Company"
 msgstr ""
 
@@ -332,22 +352,49 @@ msgid "Create a Customer"
 msgstr ""
 
 #. module: l10n_th
-#: model_terms:ir.ui.view,arch_db:l10n_th.report_invoice_document
-msgid "Debit Note"
+#: model:ir.model.fields,field_description:l10n_th.field_l10n_th_tax_invoice__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: l10n_th
+#: model:ir.model.fields,field_description:l10n_th.field_l10n_th_tax_invoice__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: l10n_th
+#: model:ir.model.fields,field_description:l10n_th.field_l10n_th_tax_invoice__currency_id
+msgid "Currency"
+msgstr ""
+
+#. module: l10n_th
+#: model:ir.model.fields,field_description:l10n_th.field_l10n_th_tax_invoice__date
+msgid "Date"
 msgstr ""
 
 #. module: l10n_th
 #: model:ir.model.fields,field_description:l10n_th.field_account_chart_template__display_name
 #: model:ir.model.fields,field_description:l10n_th.field_account_move__display_name
+#: model:ir.model.fields,field_description:l10n_th.field_account_partial_reconcile__display_name
 #: model:ir.model.fields,field_description:l10n_th.field_account_payment__display_name
 #: model:ir.model.fields,field_description:l10n_th.field_account_payment_register__display_name
 #: model:ir.model.fields,field_description:l10n_th.field_account_tax__display_name
-#: model:ir.model.fields,field_description:l10n_th.field_ir_actions_report__display_name
+#: model:ir.model.fields,field_description:l10n_th.field_l10n_th_tax_invoice__display_name
 #: model:ir.model.fields,field_description:l10n_th.field_report_l10n_th_report_50_tawi__display_name
 #: model:ir.model.fields,field_description:l10n_th.field_res_company__display_name
 #: model:ir.model.fields,field_description:l10n_th.field_res_partner__display_name
 #: model:ir.model.fields,field_description:l10n_th.field_res_partner_bank__display_name
 msgid "Display Name"
+msgstr ""
+
+#. module: l10n_th
+#: model:ir.model.fields.selection,name:l10n_th.selection__l10n_th_tax_invoice__state__draft
+msgid "Draft"
+msgstr ""
+
+#. module: l10n_th
+#. odoo-python
+#: code:addons/l10n_th/models/l10n_th_tax_invoice.py:0
+msgid "Draft %(doc_name)s"
 msgstr ""
 
 #. module: l10n_th
@@ -379,10 +426,11 @@ msgstr ""
 #. module: l10n_th
 #: model:ir.model.fields,field_description:l10n_th.field_account_chart_template__id
 #: model:ir.model.fields,field_description:l10n_th.field_account_move__id
+#: model:ir.model.fields,field_description:l10n_th.field_account_partial_reconcile__id
 #: model:ir.model.fields,field_description:l10n_th.field_account_payment__id
 #: model:ir.model.fields,field_description:l10n_th.field_account_payment_register__id
 #: model:ir.model.fields,field_description:l10n_th.field_account_tax__id
-#: model:ir.model.fields,field_description:l10n_th.field_ir_actions_report__id
+#: model:ir.model.fields,field_description:l10n_th.field_l10n_th_tax_invoice__id
 #: model:ir.model.fields,field_description:l10n_th.field_report_l10n_th_report_50_tawi__id
 #: model:ir.model.fields,field_description:l10n_th.field_res_company__id
 #: model:ir.model.fields,field_description:l10n_th.field_res_partner__id
@@ -414,6 +462,11 @@ msgid ""
 msgstr ""
 
 #. module: l10n_th
+#: model:ir.model.fields,field_description:l10n_th.field_l10n_th_tax_invoice__invoice_move_id
+msgid "Invoice Move"
+msgstr ""
+
+#. module: l10n_th
 #: model:ir.model.fields.selection,name:l10n_th.selection__res_partner__l10n_th_company_type__joint_venture
 msgid "Joint Venture"
 msgstr ""
@@ -432,6 +485,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_th.field_res_partner__l10n_th_branch_name
 #: model:ir.model.fields,field_description:l10n_th.field_res_users__l10n_th_branch_name
 msgid "L10N Th Branch Name"
+msgstr ""
+
+#. module: l10n_th
+#: model:ir.model.fields,field_description:l10n_th.field_l10n_th_tax_invoice__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: l10n_th
+#: model:ir.model.fields,field_description:l10n_th.field_l10n_th_tax_invoice__write_date
+msgid "Last Updated on"
 msgstr ""
 
 #. module: l10n_th
@@ -483,12 +546,6 @@ msgstr ""
 
 #. module: l10n_th
 #. odoo-python
-#: code:addons/l10n_th/models/ir_actions_report.py:0
-msgid "Only invoices could be printed."
-msgstr ""
-
-#. module: l10n_th
-#. odoo-python
 #: code:addons/l10n_th/models/account_move.py:0
 msgid "Original Amount"
 msgstr ""
@@ -527,6 +584,26 @@ msgid "Paid by payer (One-time)"
 msgstr ""
 
 #. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.tax_invoice_document_tax_totals
+msgid "Paid on"
+msgstr ""
+
+#. module: l10n_th
+#: model:ir.model,name:l10n_th.model_account_partial_reconcile
+msgid "Partial Reconcile"
+msgstr ""
+
+#. module: l10n_th
+#: model:ir.model.fields,field_description:l10n_th.field_l10n_th_tax_invoice__is_partially_paid
+msgid "Partially Paid"
+msgstr ""
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.report_tax_invoice_document
+msgid "Partially Paid:"
+msgstr ""
+
+#. module: l10n_th
 #: model:ir.model,name:l10n_th.model_account_payment_register
 msgid "Pay"
 msgstr ""
@@ -537,8 +614,23 @@ msgid "Payment"
 msgstr ""
 
 #. module: l10n_th
+#: model:ir.model.fields,field_description:l10n_th.field_l10n_th_tax_invoice__payment_move_id
+msgid "Payment Move"
+msgstr ""
+
+#. module: l10n_th
+#: model:ir.model.fields.selection,name:l10n_th.selection__l10n_th_tax_invoice__state__posted
+msgid "Posted"
+msgstr ""
+
+#. module: l10n_th
 #: model_terms:ir.ui.view,arch_db:l10n_th.view_account_payment_form_inherit_l10n_th
 msgid "Print 50 Tawi"
+msgstr ""
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.view_move_form_th_inherit
+msgid "Print Tax Invoice"
 msgstr ""
 
 #. module: l10n_th
@@ -559,8 +651,14 @@ msgid "Public Company Limited"
 msgstr ""
 
 #. module: l10n_th
-#: model:ir.model,name:l10n_th.model_ir_actions_report
-msgid "Report Action"
+#. odoo-python
+#: code:addons/l10n_th/models/l10n_th_tax_invoice.py:0
+msgid "Receipt / Tax Invoice %(doc_name)s"
+msgstr ""
+
+#. module: l10n_th
+#: model:ir.model.fields,field_description:l10n_th.field_l10n_th_tax_invoice__reference
+msgid "Reference"
 msgstr ""
 
 #. module: l10n_th
@@ -571,6 +669,11 @@ msgstr ""
 #. module: l10n_th
 #: model_terms:ir.ui.view,arch_db:l10n_th.th_partner_address_form
 msgid "State"
+msgstr ""
+
+#. module: l10n_th
+#: model:ir.model.fields,field_description:l10n_th.field_l10n_th_tax_invoice__state
+msgid "Status"
 msgstr ""
 
 #. module: l10n_th
@@ -589,8 +692,41 @@ msgid "Sub-district District"
 msgstr ""
 
 #. module: l10n_th
-#: model_terms:ir.ui.view,arch_db:l10n_th.report_invoice_document
+#: model:ir.model.fields,field_description:l10n_th.field_l10n_th_tax_invoice__tax_group_amounts
+msgid "Tax Group Amounts"
+msgstr ""
+
+#. module: l10n_th
+#: model:ir.actions.report,name:l10n_th.action_report_tax_invoice
+#: model_terms:ir.ui.view,arch_db:l10n_th.view_move_form_th_inherit
 msgid "Tax Invoice"
+msgstr ""
+
+#. module: l10n_th
+#. odoo-python
+#: code:addons/l10n_th/models/l10n_th_tax_invoice.py:0
+msgid "Tax Invoice %(doc_name)s"
+msgstr ""
+
+#. module: l10n_th
+#: model:ir.model,name:l10n_th.model_l10n_th_tax_invoice
+msgid "Tax Invoice Information"
+msgstr ""
+
+#. module: l10n_th
+#: model:ir.model.fields,field_description:l10n_th.field_l10n_th_tax_invoice__tax_invoice_lines
+msgid "Tax Invoice Lines"
+msgstr ""
+
+#. module: l10n_th
+#: model:ir.model.fields,field_description:l10n_th.field_l10n_th_tax_invoice__tax_invoice_number
+msgid "Tax Invoice Number"
+msgstr ""
+
+#. module: l10n_th
+#: model:ir.model.fields,field_description:l10n_th.field_account_bank_statement_line__l10n_th_tax_invoice_ids
+#: model:ir.model.fields,field_description:l10n_th.field_account_move__l10n_th_tax_invoice_ids
+msgid "Tax Invoices"
 msgstr ""
 
 #. module: l10n_th
@@ -604,6 +740,8 @@ msgid "Thailand: Print 50 tawi"
 msgstr ""
 
 #. module: l10n_th
+#: model:ir.model.fields,field_description:l10n_th.field_account_bank_statement_line__l10n_th_is_vat_registered
+#: model:ir.model.fields,field_description:l10n_th.field_account_move__l10n_th_is_vat_registered
 #: model:ir.model.fields,field_description:l10n_th.field_res_company__l10n_th_is_vat_registered
 msgid "Thailand: VAT Registered"
 msgstr ""
@@ -657,6 +795,37 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_th.field_res_partner__l10n_th_title
 #: model:ir.model.fields,field_description:l10n_th.field_res_users__l10n_th_title
 msgid "Title"
+msgstr ""
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.tax_invoice_document_tax_totals
+msgid "Total"
+msgstr ""
+
+#. module: l10n_th
+#: model:ir.model.fields,field_description:l10n_th.field_l10n_th_tax_invoice__total_amount
+#: model_terms:ir.ui.view,arch_db:l10n_th.view_move_form_th_inherit
+msgid "Total Amount"
+msgstr ""
+
+#. module: l10n_th
+#: model:ir.model.fields,field_description:l10n_th.field_l10n_th_tax_invoice__total_on_payment_amount
+msgid "Total On Payment Amount"
+msgstr ""
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.view_move_form_th_inherit
+msgid "Total VAT Amount"
+msgstr ""
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.tax_invoice_document_tax_totals
+msgid "Untaxed Amount"
+msgstr ""
+
+#. module: l10n_th
+#: model:ir.model.fields,field_description:l10n_th.field_l10n_th_tax_invoice__vat_amount
+msgid "VAT Amount"
 msgstr ""
 
 #. module: l10n_th

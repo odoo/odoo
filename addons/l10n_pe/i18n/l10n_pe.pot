@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.5a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 18:22+0000\n"
-"PO-Revision-Date: 2026-08-28 18:22+0000\n"
+"POT-Creation-Date: 2026-09-11 18:14+0000\n"
+"PO-Revision-Date: 2026-09-11 18:14+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,8 +21,20 @@ msgid "Account Chart Template"
 msgstr ""
 
 #. module: l10n_pe
+#. odoo-python
+#: code:addons/l10n_pe/tools/partner_identifiers.py:0
+msgid "Andean Immigration Card."
+msgstr ""
+
+#. module: l10n_pe
 #: model:ir.model.fields.selection,name:l10n_pe.selection__account_tax__l10n_pe_edi_isc_type__02
 msgid "Application of the Fixed Amount"
+msgstr ""
+
+#. module: l10n_pe
+#. odoo-python
+#: code:addons/l10n_pe/tools/partner_identifiers.py:0
+msgid "Carné Permiso Temp. Perman."
 msgstr ""
 
 #. module: l10n_pe
@@ -50,6 +62,7 @@ msgid "Contact"
 msgstr ""
 
 #. module: l10n_pe
+#: model:ir.model,name:l10n_pe.model_res_country
 #: model_terms:ir.ui.view,arch_db:l10n_pe.pe_partner_address_form
 msgid "Country"
 msgstr ""
@@ -70,13 +83,31 @@ msgid "Created on"
 msgstr ""
 
 #. module: l10n_pe
+#. odoo-python
+#: code:addons/l10n_pe/tools/partner_identifiers.py:0
+msgid "Cédula Diplomática de identidad."
+msgstr ""
+
+#. module: l10n_pe
+#. odoo-python
+#: code:addons/l10n_pe/tools/partner_identifiers.py:0
+msgid "DNI"
+msgstr ""
+
+#. module: l10n_pe
+#. odoo-python
+#: code:addons/l10n_pe/tools/partner_identifiers.py:0
+msgid "Diplomatic Identity Card"
+msgstr ""
+
+#. module: l10n_pe
 #: model:ir.model.fields,field_description:l10n_pe.field_account_chart_template__display_name
 #: model:ir.model.fields,field_description:l10n_pe.field_account_move__display_name
 #: model:ir.model.fields,field_description:l10n_pe.field_account_tax__display_name
-#: model:ir.model.fields,field_description:l10n_pe.field_l10n_latam_identification_type__display_name
 #: model:ir.model.fields,field_description:l10n_pe.field_l10n_pe_res_city_district__display_name
 #: model:ir.model.fields,field_description:l10n_pe.field_res_city__display_name
 #: model:ir.model.fields,field_description:l10n_pe.field_res_company__display_name
+#: model:ir.model.fields,field_description:l10n_pe.field_res_country__display_name
 #: model:ir.model.fields,field_description:l10n_pe.field_res_partner__display_name
 msgid "Display Name"
 msgstr ""
@@ -105,6 +136,12 @@ msgstr ""
 #: model:ir.model.fields,help:l10n_pe.field_res_partner__l10n_pe_district
 #: model:ir.model.fields,help:l10n_pe.field_res_users__l10n_pe_district
 msgid "Districts are part of a province or city."
+msgstr ""
+
+#. module: l10n_pe
+#. odoo-python
+#: code:addons/l10n_pe/tools/partner_identifiers.py:0
+msgid "Document without RUC from another country."
 msgstr ""
 
 #. module: l10n_pe
@@ -146,10 +183,10 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_pe.field_account_chart_template__id
 #: model:ir.model.fields,field_description:l10n_pe.field_account_move__id
 #: model:ir.model.fields,field_description:l10n_pe.field_account_tax__id
-#: model:ir.model.fields,field_description:l10n_pe.field_l10n_latam_identification_type__id
 #: model:ir.model.fields,field_description:l10n_pe.field_l10n_pe_res_city_district__id
 #: model:ir.model.fields,field_description:l10n_pe.field_res_city__id
 #: model:ir.model.fields,field_description:l10n_pe.field_res_company__id
+#: model:ir.model.fields,field_description:l10n_pe.field_res_country__id
 #: model:ir.model.fields,field_description:l10n_pe.field_res_partner__id
 msgid "ID"
 msgstr ""
@@ -157,6 +194,12 @@ msgstr ""
 #. module: l10n_pe
 #: model:ir.model.fields.selection,name:l10n_pe.selection__account_tax__l10n_pe_edi_tax_code__1000
 msgid "IGV - General Sales Tax"
+msgstr ""
+
+#. module: l10n_pe
+#. odoo-python
+#: code:addons/l10n_pe/tools/partner_identifiers.py:0
+msgid "IN - Doc Trib PP. JJ."
 msgstr ""
 
 #. module: l10n_pe
@@ -180,18 +223,26 @@ msgid "IVAP - Tax on Sale Paddy Rice"
 msgstr ""
 
 #. module: l10n_pe
-#: model:ir.model,name:l10n_pe.model_l10n_latam_identification_type
-msgid "Identification Types"
+#. odoo-python
+#: code:addons/l10n_pe/tools/partner_identifiers.py:0
+msgid "Identification Number"
+msgstr ""
+
+#. module: l10n_pe
+#: model:ir.model.fields,help:l10n_pe.field_res_partner__l10n_pe_sunat_id_value
+#: model:ir.model.fields,help:l10n_pe.field_res_users__l10n_pe_sunat_id_value
+msgid "Identification number reported to SUNAT."
+msgstr ""
+
+#. module: l10n_pe
+#. odoo-python
+#: code:addons/l10n_pe/tools/partner_identifiers.py:0
+msgid "Identity document of the country of residence"
 msgstr ""
 
 #. module: l10n_pe
 #: model:ir.model,name:l10n_pe.model_account_move
 msgid "Journal Entry"
-msgstr ""
-
-#. module: l10n_pe
-#: model:ir.model.fields,field_description:l10n_pe.field_l10n_latam_identification_type__l10n_pe_vat_code
-msgid "L10N Pe Vat Code"
 msgstr ""
 
 #. module: l10n_pe
@@ -202,6 +253,12 @@ msgstr ""
 #. module: l10n_pe
 #: model:ir.model.fields,field_description:l10n_pe.field_l10n_pe_res_city_district__write_date
 msgid "Last Updated on"
+msgstr ""
+
+#. module: l10n_pe
+#. odoo-python
+#: code:addons/l10n_pe/tools/partner_identifiers.py:0
+msgid "License Permit Temp. Perman."
 msgstr ""
 
 #. module: l10n_pe
@@ -283,8 +340,38 @@ msgid "Name"
 msgstr ""
 
 #. module: l10n_pe
+#. odoo-python
+#: code:addons/l10n_pe/tools/partner_identifiers.py:0
+msgid "National Identity Document."
+msgstr ""
+
+#. module: l10n_pe
+#. odoo-python
+#: code:addons/l10n_pe/tools/partner_identifiers.py:0
+msgid "Non-Domiciled Tax Document"
+msgstr ""
+
+#. module: l10n_pe
 #: model:ir.model.fields.selection,name:l10n_pe.selection__account_tax__l10n_pe_edi_tax_code__9999
 msgid "OTHERS - Other taxes"
+msgstr ""
+
+#. module: l10n_pe
+#: model:ir.model.fields,field_description:l10n_pe.field_res_partner__l10n_pe_sunat_id_value
+#: model:ir.model.fields,field_description:l10n_pe.field_res_users__l10n_pe_sunat_id_value
+msgid "PE Identification Number"
+msgstr ""
+
+#. module: l10n_pe
+#: model:ir.model.fields,field_description:l10n_pe.field_res_partner__l10n_pe_sunat_id_code
+#: model:ir.model.fields,field_description:l10n_pe.field_res_users__l10n_pe_sunat_id_code
+msgid "PE Identification Type Code"
+msgstr ""
+
+#. module: l10n_pe
+#. odoo-python
+#: code:addons/l10n_pe/tools/partner_identifiers.py:0
+msgid "PTP"
 msgstr ""
 
 #. module: l10n_pe
@@ -308,6 +395,26 @@ msgstr ""
 #. module: l10n_pe
 #: model:ir.model.fields.selection,name:l10n_pe.selection__account_tax__l10n_pe_edi_isc_type__03
 msgid "Retail Price System"
+msgstr ""
+
+#. module: l10n_pe
+#: model:ir.model.fields,help:l10n_pe.field_res_partner__l10n_pe_sunat_id_code
+#: model:ir.model.fields,help:l10n_pe.field_res_users__l10n_pe_sunat_id_code
+msgid ""
+"SUNAT identification type code (catálogo 06) derived from the partner "
+"identifiers."
+msgstr ""
+
+#. module: l10n_pe
+#. odoo-python
+#: code:addons/l10n_pe/tools/partner_identifiers.py:0
+msgid "Safe Passage"
+msgstr ""
+
+#. module: l10n_pe
+#. odoo-python
+#: code:addons/l10n_pe/tools/partner_identifiers.py:0
+msgid "Salvoconducto."
 msgstr ""
 
 #. module: l10n_pe
@@ -338,6 +445,30 @@ msgstr ""
 #. module: l10n_pe
 #: model:ir.model.fields.selection,name:l10n_pe.selection__account_tax__l10n_pe_edi_isc_type__01
 msgid "System to value"
+msgstr ""
+
+#. module: l10n_pe
+#. odoo-python
+#: code:addons/l10n_pe/tools/partner_identifiers.py:0
+msgid "TAM"
+msgstr ""
+
+#. module: l10n_pe
+#. odoo-python
+#: code:addons/l10n_pe/tools/partner_identifiers.py:0
+msgid "TIN - Doc Trib PP.NN."
+msgstr ""
+
+#. module: l10n_pe
+#. odoo-python
+#: code:addons/l10n_pe/tools/partner_identifiers.py:0
+msgid "Tax Identification Number"
+msgstr ""
+
+#. module: l10n_pe
+#. odoo-python
+#: code:addons/l10n_pe/tools/partner_identifiers.py:0
+msgid "Temporary Residence Permit (Permiso de residencia temporal)."
 msgstr ""
 
 #. module: l10n_pe

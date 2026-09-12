@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.5a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 18:23+0000\n"
-"PO-Revision-Date: 2026-08-28 18:23+0000\n"
+"POT-Creation-Date: 2026-09-11 18:15+0000\n"
+"PO-Revision-Date: 2026-09-11 18:15+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -58,13 +58,6 @@ msgid ""
 msgstr ""
 
 #. module: l10n_uy
-#. odoo-python
-#: code:addons/l10n_uy/models/res_partner.py:0
-msgid ""
-"3.402.010-1 or 34020101 (CI), 93.402.010-1 (NIE); dots and dash are optional"
-msgstr ""
-
-#. module: l10n_uy
 #: model:ir.model,name:l10n_uy.model_account_chart_template
 msgid "Account Chart Template"
 msgstr ""
@@ -86,8 +79,8 @@ msgstr ""
 
 #. module: l10n_uy
 #. odoo-python
-#: code:addons/l10n_uy/models/res_partner.py:0
-msgid "CI/NIE"
+#: code:addons/l10n_uy/tools/partner_identifiers.py:0
+msgid "CI"
 msgstr ""
 
 #. module: l10n_uy
@@ -106,8 +99,15 @@ msgid "Create a Customer"
 msgstr ""
 
 #. module: l10n_uy
-#: model:ir.model.fields,field_description:l10n_uy.field_l10n_latam_identification_type__l10n_uy_dgi_code
-msgid "DGI Code"
+#. odoo-python
+#: code:addons/l10n_uy/tools/partner_identifiers.py:0
+msgid "Cédula de Identidad (Uruguayan ID card)."
+msgstr ""
+
+#. module: l10n_uy
+#. odoo-python
+#: code:addons/l10n_uy/tools/partner_identifiers.py:0
+msgid "DNI"
 msgstr ""
 
 #. module: l10n_uy
@@ -115,10 +115,15 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_uy.field_account_move__display_name
 #: model:ir.model.fields,field_description:l10n_uy.field_account_tax__display_name
 #: model:ir.model.fields,field_description:l10n_uy.field_l10n_latam_document_type__display_name
-#: model:ir.model.fields,field_description:l10n_uy.field_l10n_latam_identification_type__display_name
 #: model:ir.model.fields,field_description:l10n_uy.field_res_company__display_name
 #: model:ir.model.fields,field_description:l10n_uy.field_res_partner__display_name
 msgid "Display Name"
+msgstr ""
+
+#. module: l10n_uy
+#. odoo-python
+#: code:addons/l10n_uy/tools/partner_identifiers.py:0
+msgid "Documento Nacional de Identidad (AR, BR, CL or PY)."
 msgstr ""
 
 #. module: l10n_uy
@@ -127,13 +132,15 @@ msgid "ETA tax codes mixin"
 msgstr ""
 
 #. module: l10n_uy
-#: model:l10n_latam.identification.type,description:l10n_uy.it_nife
-msgid "Foreign tax identification number"
+#. odoo-python
+#: code:addons/l10n_uy/tools/partner_identifiers.py:0
+msgid "Foreign tax identification number."
 msgstr ""
 
 #. module: l10n_uy
-#: model:l10n_latam.identification.type,description:l10n_uy.it_nie
-msgid "Foreigner Identity Number"
+#. odoo-python
+#: code:addons/l10n_uy/tools/partner_identifiers.py:0
+msgid "Foreigner Identity Number."
 msgstr ""
 
 #. module: l10n_uy
@@ -141,15 +148,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_uy.field_account_move__id
 #: model:ir.model.fields,field_description:l10n_uy.field_account_tax__id
 #: model:ir.model.fields,field_description:l10n_uy.field_l10n_latam_document_type__id
-#: model:ir.model.fields,field_description:l10n_uy.field_l10n_latam_identification_type__id
 #: model:ir.model.fields,field_description:l10n_uy.field_res_company__id
 #: model:ir.model.fields,field_description:l10n_uy.field_res_partner__id
 msgid "ID"
-msgstr ""
-
-#. module: l10n_uy
-#: model:ir.model,name:l10n_uy.model_l10n_latam_identification_type
-msgid "Identification Types"
 msgstr ""
 
 #. module: l10n_uy
@@ -163,13 +164,27 @@ msgid "Latam Document Type"
 msgstr ""
 
 #. module: l10n_uy
-#: model:l10n_latam.identification.type,name:l10n_uy.it_nie
+#. odoo-python
+#: code:addons/l10n_uy/tools/partner_identifiers.py:0
 msgid "NIE"
 msgstr ""
 
 #. module: l10n_uy
-#: model:l10n_latam.identification.type,name:l10n_uy.it_nife
+#. odoo-python
+#: code:addons/l10n_uy/tools/partner_identifiers.py:0
 msgid "NIFE"
+msgstr ""
+
+#. module: l10n_uy
+#. odoo-python
+#: code:addons/l10n_uy/tools/partner_identifiers.py:0
+msgid "Other identification document."
+msgstr ""
+
+#. module: l10n_uy
+#. odoo-python
+#: code:addons/l10n_uy/tools/partner_identifiers.py:0
+msgid "Otros"
 msgstr ""
 
 #. module: l10n_uy
@@ -200,22 +215,6 @@ msgid "Tax Category"
 msgstr ""
 
 #. module: l10n_uy
-#. odoo-python
-#: code:addons/l10n_uy/models/res_partner.py:0
-msgid ""
-"The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid.\n"
-"Note: the expected format is %(expected_format)s"
-msgstr ""
-
-#. module: l10n_uy
-#. odoo-python
-#: code:addons/l10n_uy/models/res_partner.py:0
-msgid ""
-"The %(vat_label)s number [%(wrong_vat)s] for %(partner_label)s does not seem to be valid.\n"
-"Note: the expected format is %(expected_format)s"
-msgstr ""
-
-#. module: l10n_uy
 #: model:ir.model.fields,help:l10n_uy.field_account_tax__l10n_uy_tax_category
 msgid ""
 "UY: Use to group the transactions in the Financial Reports required by DGI"
@@ -229,10 +228,4 @@ msgstr ""
 #. module: l10n_uy
 #: model:ir.model.fields.selection,name:l10n_uy.selection__account_tax__l10n_uy_tax_category__vat
 msgid "VAT"
-msgstr ""
-
-#. module: l10n_uy
-#. odoo-python
-#: code:addons/l10n_uy/models/res_partner.py:0
-msgid "partner [%s]"
 msgstr ""

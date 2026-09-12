@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.5a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 18:22+0000\n"
-"PO-Revision-Date: 2026-08-28 18:22+0000\n"
+"POT-Creation-Date: 2026-09-11 18:14+0000\n"
+"PO-Revision-Date: 2026-09-11 18:14+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -165,11 +165,6 @@ msgid "Attachment Name"
 msgstr ""
 
 #. module: l10n_sa_edi
-#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_move_form
-msgid "Blocking Invoice"
-msgstr ""
-
-#. module: l10n_sa_edi
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_res_partner__l10n_sa_edi_building_number
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_res_users__l10n_sa_edi_building_number
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.address_form_fields
@@ -202,12 +197,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_sa_edi/models/certificate.py:0
 msgid "Certificate Template Name"
-msgstr ""
-
-#. module: l10n_sa_edi
-#. odoo-python
-#: code:addons/l10n_sa_edi/models/account_move.py:0
-msgid "Chain Head"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -425,12 +414,6 @@ msgid "Enter the OTP"
 msgstr ""
 
 #. module: l10n_sa_edi
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__l10n_sa_edi_document__state__error
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__l10n_sa_edi_log__state__error
-msgid "Error"
-msgstr ""
-
-#. module: l10n_sa_edi
 #. odoo-python
 #: code:addons/l10n_sa_edi/models/l10n_sa_edi_document.py:0
 msgid "Error: Invoice rejected by ZATCA"
@@ -445,12 +428,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_sa_edi/models/l10n_sa_edi_document.py:0
 msgid "Error: Something went wrong when sending to ZATCA"
-msgstr ""
-
-#. module: l10n_sa_edi
-#. odoo-python
-#: code:addons/l10n_sa_edi/models/l10n_sa_edi_document.py:0
-msgid "Error: This invoice is blocked due to %s. Please check it."
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -587,6 +564,11 @@ msgid "Invoice submission to ZATCA returned errors"
 msgstr ""
 
 #. module: l10n_sa_edi
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_l10n_sa_edi_log__is_latest_log
+msgid "Is Latest Log"
+msgstr ""
+
+#. module: l10n_sa_edi
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_res_company__l10n_sa_edi_is_production
 msgid "Is Production"
 msgstr ""
@@ -658,11 +640,6 @@ msgstr ""
 #. module: l10n_sa_edi
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_res_company__l10n_sa_edi_building_number
 msgid "L10N Sa Edi Building Number"
-msgstr ""
-
-#. module: l10n_sa_edi
-#: model:ir.model.fields,field_description:l10n_sa_edi.field_l10n_sa_edi_log__l10n_sa_edi_chain_head_id
-msgid "L10N Sa Edi Chain Head"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -807,14 +784,6 @@ msgstr ""
 msgid ""
 "Oops! The invoice PDF(s) are linked to a validated EDI document and cannot "
 "be deleted according to ZATCA rules: %s"
-msgstr ""
-
-#. module: l10n_sa_edi
-#. odoo-python
-#: code:addons/l10n_sa_edi/models/account_journal.py:0
-msgid ""
-"Oops! The journal is stuck. Please submit the pending invoices to ZATCA and "
-"try again."
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -1149,12 +1118,6 @@ msgstr ""
 #. module: l10n_sa_edi
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_account_tax__ubl_cii_tax_exemption_reason_code
 msgid "Tax Exemption Reason Code"
-msgstr ""
-
-#. module: l10n_sa_edi
-#: model:ir.model.fields,help:l10n_sa_edi.field_l10n_sa_edi_document__l10n_sa_edi_chain_head_id
-msgid ""
-"Technical field to know if the chain has been stopped by a previous invoice"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -1546,11 +1509,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_l10n_sa_edi_document__l10n_sa_chain_index
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_zatca_mixin__l10n_sa_chain_index
 msgid "ZATCA chain index"
-msgstr ""
-
-#. module: l10n_sa_edi
-#: model:ir.model.fields,field_description:l10n_sa_edi.field_l10n_sa_edi_document__l10n_sa_edi_chain_head_id
-msgid "ZATCA chain stopping document"
 msgstr ""
 
 #. module: l10n_sa_edi

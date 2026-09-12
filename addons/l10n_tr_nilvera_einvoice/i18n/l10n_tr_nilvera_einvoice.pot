@@ -6,14 +6,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.5a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 18:23+0000\n"
-"PO-Revision-Date: 2026-08-28 18:23+0000\n"
+"POT-Creation-Date: 2026-09-11 18:14+0000\n"
+"PO-Revision-Date: 2026-09-11 18:14+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice.field_l10n_tr_nilvera_einvoice_invoice_sequence__journal_type
+msgid ""
+"\n"
+"        Select 'Sale' for customer invoices journals.\n"
+"        Select 'Purchase' for vendor bills journals.\n"
+"        Select 'Cash', 'Bank' or 'Credit Card' for journals that are used in customer or vendor payments.\n"
+"        Select 'General' for miscellaneous operations journals.\n"
+"        "
+msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
 #: model:ir.module.module,description:base.module_l10n_tr_nilvera_einvoice
@@ -62,6 +73,11 @@ msgstr ""
 #. module: l10n_tr_nilvera_einvoice
 #: model:l10n_tr_nilvera_einvoice.account.tax.code,name:l10n_tr_nilvera_einvoice.account_tax_code_351
 msgid "351 - Other Not Exempt from VAT"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_einvoice.l10n_tr_nilvera_einvoice_view_account_journal_form
+msgid "<b>Invoice Scenario</b> applies only to e-Invoice customers."
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
@@ -150,6 +166,11 @@ msgid ""
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.constraint,message:l10n_tr_nilvera_einvoice.constraint_l10n_tr_nilvera_einvoice_invoice_sequence_name_journal_uniq
+msgid "A journal cannot have two e-Document sequences with the same code."
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
 #: model:res.partner.category,name:l10n_tr_nilvera_einvoice.res_partner_category_aboneno
 msgid "ABONENO"
 msgstr ""
@@ -173,6 +194,11 @@ msgstr ""
 #. module: l10n_tr_nilvera_einvoice
 #: model:ir.model,name:l10n_tr_nilvera_einvoice.model_account_chart_template
 msgid "Account Chart Template"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_l10n_tr_nilvera_einvoice_invoice_sequence__account_id
+msgid "Account Name"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
@@ -200,6 +226,16 @@ msgid "An error occurred. Try again later."
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
+#: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_einvoice.l10n_tr_nilvera_einvoice_invoice_sequence_view_list
+msgid "Any account"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_einvoice.l10n_tr_nilvera_einvoice_invoice_sequence_view_list
+msgid "Any status"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
 #: model:ir.model.fields.selection,name:l10n_tr_nilvera_einvoice.selection__l10n_tr_ticarifatura_response_wizard__response_code__approved
 msgid "Approve"
 msgstr ""
@@ -221,6 +257,7 @@ msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
 #: model:ir.model.fields.selection,name:l10n_tr_nilvera_einvoice.selection__account_move__l10n_tr_gib_invoice_scenario__temelfatura
+#: model:ir.model.fields.selection,name:l10n_tr_nilvera_einvoice.selection__l10n_tr_nilvera_einvoice_invoice_sequence__l10n_tr_gib_invoice_scenario__temelfatura
 msgid "Basic"
 msgstr ""
 
@@ -267,6 +304,13 @@ msgstr ""
 #. module: l10n_tr_nilvera_einvoice
 #: model:ir.model.fields.selection,name:l10n_tr_nilvera_einvoice.selection__account_move__l10n_tr_nilvera_send_status__cancelled
 msgid "Cancelled"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move_send.py:0
+msgid ""
+"Cannot send via Nilvera: One or more line items are missing a tax rate."
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
@@ -360,6 +404,12 @@ msgid "Check reference on Partner(s)"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move_send.py:0
+msgid "Check taxes on Invoice(s)"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
 #: model:ir.model.fields,help:l10n_tr_nilvera_einvoice.field_account_bank_statement_line__l10n_tr_is_export_invoice
 #: model:ir.model.fields,help:l10n_tr_nilvera_einvoice.field_account_move__l10n_tr_is_export_invoice
 msgid "Check this box if this is a product export invoice."
@@ -381,6 +431,11 @@ msgid "Cleaning Service"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_l10n_tr_nilvera_einvoice_invoice_sequence__name
+msgid "Code"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_l10n_tr_nilvera_einvoice_account_tax_code__code_type
 msgid "Code Type"
 msgstr ""
@@ -392,6 +447,7 @@ msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
 #: model:ir.model.fields.selection,name:l10n_tr_nilvera_einvoice.selection__account_move__l10n_tr_gib_invoice_scenario__ticarifatura
+#: model:ir.model.fields.selection,name:l10n_tr_nilvera_einvoice.selection__l10n_tr_nilvera_einvoice_invoice_sequence__l10n_tr_gib_invoice_scenario__ticarifatura
 msgid "Commercial"
 msgstr ""
 
@@ -413,7 +469,13 @@ msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
 #: model:ir.model,name:l10n_tr_nilvera_einvoice.model_res_company
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_l10n_tr_nilvera_einvoice_invoice_sequence__company_id
 msgid "Company"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice.field_l10n_tr_nilvera_einvoice_invoice_sequence__company_id
+msgid "Company related to this journal"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
@@ -450,14 +512,21 @@ msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_l10n_tr_nilvera_einvoice_account_tax_code__create_uid
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_l10n_tr_nilvera_einvoice_invoice_sequence__create_uid
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_l10n_tr_ticarifatura_response_wizard__create_uid
 msgid "Created by"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_l10n_tr_nilvera_einvoice_account_tax_code__create_date
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_l10n_tr_nilvera_einvoice_invoice_sequence__create_date
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_l10n_tr_ticarifatura_response_wizard__create_date
 msgid "Created on"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_l10n_tr_nilvera_einvoice_invoice_sequence__l10n_tr_is_credit_note
+msgid "Credit Note"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
@@ -478,6 +547,16 @@ msgid ""
 "Customer Line Code (11 or fewer characters). Within the scope of the IPAC, "
 "it refers to the reference line number of the exported product item on the "
 "document."
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_l10n_tr_nilvera_einvoice_invoice_sequence__partner_id
+msgid "Customer Name"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_l10n_tr_nilvera_einvoice_invoice_sequence__l10n_tr_nilvera_customer_status
+msgid "Customer Status"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
@@ -565,6 +644,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_account_move_send__display_name
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_account_tax__display_name
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_l10n_tr_nilvera_einvoice_account_tax_code__display_name
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_l10n_tr_nilvera_einvoice_invoice_sequence__display_name
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_l10n_tr_ticarifatura_response_wizard__display_name
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_product_product__display_name
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_product_template__display_name
@@ -576,8 +656,26 @@ msgid "Display Name"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
+#: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_einvoice.l10n_tr_nilvera_einvoice_view_account_journal_form
+msgid ""
+"Documents that match all the conditions below use this series instead\n"
+"                                of the journal code. Each series has its own independent numbering\n"
+"                                sequence."
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
 #: model:ir.model.fields.selection,name:l10n_tr_nilvera_einvoice.selection__account_move__l10n_tr_shipping_type__8
 msgid "Domestic Water Transportation"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields.selection,name:l10n_tr_nilvera_einvoice.selection__l10n_tr_nilvera_einvoice_invoice_sequence__l10n_tr_nilvera_customer_status__earchive
+msgid "E-Archive"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields.selection,name:l10n_tr_nilvera_einvoice.selection__l10n_tr_nilvera_einvoice_invoice_sequence__l10n_tr_nilvera_customer_status__einvoice
+msgid "E-Invoice"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
@@ -626,6 +724,11 @@ msgstr ""
 msgid ""
 "Error sending request:\n"
 "%s"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_einvoice.l10n_tr_nilvera_einvoice_invoice_sequence_view_list
+msgid "Every customer"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
@@ -784,6 +887,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_account_move_send__id
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_account_tax__id
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_l10n_tr_nilvera_einvoice_account_tax_code__id
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_l10n_tr_nilvera_einvoice_invoice_sequence__id
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_l10n_tr_ticarifatura_response_wizard__id
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_product_product__id
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_product_template__id
@@ -812,6 +916,7 @@ msgstr ""
 #. module: l10n_tr_nilvera_einvoice
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_account_bank_statement_line__l10n_tr_gib_invoice_scenario
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_account_move__l10n_tr_gib_invoice_scenario
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_l10n_tr_nilvera_einvoice_invoice_sequence__l10n_tr_gib_invoice_scenario
 msgid "Invoice Scenario"
 msgstr ""
 
@@ -827,6 +932,7 @@ msgid "Invoice Scenarios"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_l10n_tr_nilvera_einvoice_invoice_sequence__l10n_tr_gib_invoice_type
 #: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_einvoice.account_nilvera_view_move_form
 msgid "Invoice Type"
 msgstr ""
@@ -839,6 +945,7 @@ msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
 #: model:ir.model,name:l10n_tr_nilvera_einvoice.model_account_journal
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_l10n_tr_nilvera_einvoice_invoice_sequence__journal_id
 msgid "Journal"
 msgstr ""
 
@@ -874,6 +981,11 @@ msgid "L10N Tr Exemption Code Domain List"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_l10n_tr_nilvera_einvoice_invoice_sequence__l10n_tr_invoice_type_applies
+msgid "L10N Tr Invoice Type Applies"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_account_bank_statement_line__l10n_tr_nilvera_draft_sync_hash
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_account_move__l10n_tr_nilvera_draft_sync_hash
 msgid "L10N Tr Nilvera Draft Sync Hash"
@@ -882,6 +994,11 @@ msgstr ""
 #. module: l10n_tr_nilvera_einvoice
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_account_move_line__l10n_tr_original_line_id
 msgid "L10N Tr Original Line"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_l10n_tr_nilvera_einvoice_invoice_sequence__l10n_tr_scenario_applies
+msgid "L10N Tr Scenario Applies"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
@@ -897,14 +1014,24 @@ msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_l10n_tr_nilvera_einvoice_account_tax_code__write_uid
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_l10n_tr_nilvera_einvoice_invoice_sequence__write_uid
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_l10n_tr_ticarifatura_response_wizard__write_uid
 msgid "Last Updated by"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_l10n_tr_nilvera_einvoice_account_tax_code__write_date
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_l10n_tr_nilvera_einvoice_invoice_sequence__write_date
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_l10n_tr_ticarifatura_response_wizard__write_date
 msgid "Last Updated on"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_einvoice.l10n_tr_nilvera_einvoice_view_account_journal_form
+msgid ""
+"Leave a condition empty to ignore it. Leaving <b>Customer Name</b>,\n"
+"                                <b>Account Name</b>, or <b>Customer Status</b> empty applies the\n"
+"                                series to all partners."
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
@@ -1021,6 +1148,16 @@ msgstr ""
 #. module: l10n_tr_nilvera_einvoice
 #: model:ir.model.fields.selection,name:l10n_tr_nilvera_einvoice.selection__account_move__l10n_tr_sales_type__normal
 msgid "Normal Sale"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields.selection,name:l10n_tr_nilvera_einvoice.selection__l10n_tr_nilvera_einvoice_invoice_sequence__l10n_tr_nilvera_customer_status__not_checked
+msgid "Not Verified"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_einvoice.l10n_tr_nilvera_einvoice_invoice_sequence_view_list
+msgid "Not applicable"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
@@ -1162,6 +1299,11 @@ msgid "Product"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_l10n_tr_nilvera_einvoice_invoice_sequence__l10n_tr_is_export_invoice
+msgid "Product Export Invoice"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
 #: model:ir.model,name:l10n_tr_nilvera_einvoice.model_product_product
 msgid "Product Variant"
 msgstr ""
@@ -1173,6 +1315,7 @@ msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
 #: model:ir.model.fields.selection,name:l10n_tr_nilvera_einvoice.selection__account_move__l10n_tr_gib_invoice_scenario__kamu
+#: model:ir.model.fields.selection,name:l10n_tr_nilvera_einvoice.selection__l10n_tr_nilvera_einvoice_invoice_sequence__l10n_tr_gib_invoice_scenario__kamu
 msgid "Public Sector"
 msgstr ""
 
@@ -1199,6 +1342,7 @@ msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
 #: model:ir.model.fields.selection,name:l10n_tr_nilvera_einvoice.selection__account_move__l10n_tr_gib_invoice_type__ihrackayitli
+#: model:ir.model.fields.selection,name:l10n_tr_nilvera_einvoice.selection__l10n_tr_nilvera_einvoice_invoice_sequence__l10n_tr_gib_invoice_type__ihrackayitli
 msgid "Registered for Export"
 msgstr ""
 
@@ -1246,7 +1390,31 @@ msgid "Response Wizard for Bills of type Ticarifatura E-Invoice"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice.field_l10n_tr_nilvera_einvoice_invoice_sequence__partner_id
+msgid ""
+"Restrict this series to a single customer. Leave empty to apply it to every "
+"customer."
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice.field_l10n_tr_nilvera_einvoice_invoice_sequence__account_id
+msgid ""
+"Restrict this series to partners whose receivable account, or payable "
+"account on vendor documents, is this one. Leave empty to apply it whatever "
+"their account."
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice.field_l10n_tr_nilvera_einvoice_invoice_sequence__l10n_tr_nilvera_customer_status
+msgid ""
+"Restrict this series to partners with this Nilvera status. Selecting a "
+"customer fills it in from that customer. Leave both empty to apply the "
+"series whatever the partner's status."
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
 #: model:ir.model.fields.selection,name:l10n_tr_nilvera_einvoice.selection__account_move__l10n_tr_gib_invoice_type__iade
+#: model:ir.model.fields.selection,name:l10n_tr_nilvera_einvoice.selection__l10n_tr_nilvera_einvoice_invoice_sequence__l10n_tr_gib_invoice_type__iade
 msgid "Return"
 msgstr ""
 
@@ -1270,6 +1438,7 @@ msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
 #: model:ir.model.fields.selection,name:l10n_tr_nilvera_einvoice.selection__account_move__l10n_tr_gib_invoice_type__satis
+#: model:ir.model.fields.selection,name:l10n_tr_nilvera_einvoice.selection__l10n_tr_nilvera_einvoice_invoice_sequence__l10n_tr_gib_invoice_type__satis
 msgid "Sales"
 msgstr ""
 
@@ -1330,6 +1499,11 @@ msgstr ""
 #. module: l10n_tr_nilvera_einvoice
 #: model:ir.model.fields.selection,name:l10n_tr_nilvera_einvoice.selection__account_move__l10n_tr_nilvera_send_status__draft_sent
 msgid "Sent as Draft"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_l10n_tr_nilvera_einvoice_invoice_sequence__sequence
+msgid "Sequence"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
@@ -1462,6 +1636,7 @@ msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
 #: model:ir.model.fields.selection,name:l10n_tr_nilvera_einvoice.selection__account_move__l10n_tr_gib_invoice_type__istisna
+#: model:ir.model.fields.selection,name:l10n_tr_nilvera_einvoice.selection__l10n_tr_nilvera_einvoice_invoice_sequence__l10n_tr_gib_invoice_type__istisna
 msgid "Tax Exempt"
 msgstr ""
 
@@ -1558,6 +1733,41 @@ msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
 #. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/models/l10n_tr_nilvera_einvoice_invoice_sequence.py:0
+msgid ""
+"The e-Document sequence %(name)s must be exactly 3 characters long and "
+"contain only uppercase letters and digits, because Nilvera expects invoice "
+"numbers in the format ABC/2025/00001."
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/models/l10n_tr_nilvera_einvoice_invoice_sequence.py:0
+msgid ""
+"The e-Document sequence %(name)s must leave its GIB Invoice Type empty on a "
+"purchase journal, and set it to Tax Exempt on a product export series, as "
+"required by the regulation."
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/models/l10n_tr_nilvera_einvoice_invoice_sequence.py:0
+msgid ""
+"The e-Document sequence %(name)s sets a Customer Status that does not match "
+"its customer. Leave it empty: it is taken from the customer."
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/models/l10n_tr_nilvera_einvoice_invoice_sequence.py:0
+msgid ""
+"The e-Document sequence %(name)s sets an Invoice Scenario, which only "
+"applies to e-Invoice customers on a sales journal. Vendor bills, product "
+"export invoices and e-Archive customers have no GİB scenario."
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#. odoo-python
 #: code:addons/l10n_tr_nilvera_einvoice/models/account_move_send.py:0
 msgid ""
 "The following company(s) either do not have their country set as Türkiye or "
@@ -1629,6 +1839,24 @@ msgid ""
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice.field_l10n_tr_nilvera_einvoice_invoice_sequence__l10n_tr_gib_invoice_type
+msgid ""
+"The invoice must use this GİB type for the series to apply. Leave it empty "
+"to apply the series whatever the type. Product export invoices are always "
+"Tax Exempt by regulation, and vendor bills have no GİB invoice type, so it "
+"is set or cleared accordingly."
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice.field_l10n_tr_nilvera_einvoice_invoice_sequence__l10n_tr_gib_invoice_scenario
+msgid ""
+"The invoice must use this scenario for the series to apply. Leave it empty "
+"to apply the series whatever the scenario. It does not apply to product "
+"export invoices or to e-Archive customers, so it is cleared and ignored on "
+"those series."
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
 #. odoo-python
 #: code:addons/l10n_tr_nilvera_einvoice/models/account_move_send.py:0
 msgid ""
@@ -1674,6 +1902,15 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_tr_nilvera_einvoice/models/account_move.py:0
 msgid "The response has already been received for this invoice."
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice.field_l10n_tr_nilvera_einvoice_invoice_sequence__name
+msgid ""
+"The series code used in place of the journal code when numbering the "
+"invoice, e.g. 'EXP' produces EXP/2026/00001. This is also the series "
+"registered with Nilvera, which requires exactly 3 uppercase letters or "
+"digits."
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
@@ -1769,6 +2006,16 @@ msgid "Turkish Tax Codes (GIB Codes)"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
+#: model:ir.model,name:l10n_tr_nilvera_einvoice.model_l10n_tr_nilvera_einvoice_invoice_sequence
+msgid "Turkish e-Document Invoice Sequence"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_l10n_tr_nilvera_einvoice_invoice_sequence__journal_type
+msgid "Type"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
 #. odoo-python
 #: code:addons/l10n_tr_nilvera_einvoice/models/account_move_send.py:0
 msgid ""
@@ -1793,6 +2040,14 @@ msgstr ""
 #. module: l10n_tr_nilvera_einvoice
 #: model:ir.model.fields.selection,name:l10n_tr_nilvera_einvoice.selection__account_move__l10n_tr_nilvera_send_status__unknown
 msgid "Unknown"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice.field_account_journal__l10n_tr_einvoice_sequence_ids
+msgid ""
+"Use a different invoice series depending on the characteristics of the "
+"invoice. The first series whose conditions all match replaces the journal "
+"code in the invoice number."
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
@@ -1841,8 +2096,23 @@ msgid "Website Sale"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice.field_l10n_tr_nilvera_einvoice_invoice_sequence__l10n_tr_is_credit_note
+msgid ""
+"When set, the series only applies to credit notes and vendor refunds, "
+"otherwise only to invoices and bills. It is only a choice on purchase "
+"journals: elsewhere the GİB Invoice Type already says it, a Return type "
+"reversing an earlier invoice."
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice.field_l10n_tr_nilvera_einvoice_invoice_sequence__l10n_tr_is_export_invoice
+msgid "When set, the series only applies to product export invoices."
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
 #: model:ir.model.fields.selection,name:l10n_tr_nilvera_einvoice.selection__account_move__l10n_tr_gib_invoice_type__tevkifat
 #: model:ir.model.fields.selection,name:l10n_tr_nilvera_einvoice.selection__l10n_tr_nilvera_einvoice_account_tax_code__code_type__withholding
+#: model:ir.model.fields.selection,name:l10n_tr_nilvera_einvoice.selection__l10n_tr_nilvera_einvoice_invoice_sequence__l10n_tr_gib_invoice_type__tevkifat
 msgid "Withholding"
 msgstr ""
 
@@ -1853,6 +2123,7 @@ msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
 #: model:ir.model.fields.selection,name:l10n_tr_nilvera_einvoice.selection__account_move__l10n_tr_gib_invoice_type__tevkifatiade
+#: model:ir.model.fields.selection,name:l10n_tr_nilvera_einvoice.selection__l10n_tr_nilvera_einvoice_invoice_sequence__l10n_tr_gib_invoice_type__tevkifatiade
 msgid "Withholding Return"
 msgstr ""
 
@@ -1906,6 +2177,13 @@ msgstr ""
 #. module: l10n_tr_nilvera_einvoice
 #: model:ir.model.fields.selection,name:l10n_tr_nilvera_einvoice.selection__account_move__l10n_tr_invoice_scenario_group__earchive
 msgid "e-Archive"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_account_journal__l10n_tr_einvoice_sequence_ids
+#: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_einvoice.l10n_tr_nilvera_einvoice_invoice_sequence_view_list
+#: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_einvoice.l10n_tr_nilvera_einvoice_view_account_journal_form
+msgid "e-Document Sequences"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice

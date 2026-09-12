@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.5a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 18:20+0000\n"
-"PO-Revision-Date: 2026-08-28 18:20+0000\n"
+"POT-Creation-Date: 2026-09-11 18:13+0000\n"
+"PO-Revision-Date: 2026-09-11 18:13+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -32,32 +32,32 @@ msgstr ""
 
 #. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.report_invoice_document
-msgid "<b>CIG: </b>"
+msgid "<span class=\"fw-bold\">CIG: </span>"
 msgstr ""
 
 #. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.report_invoice_document
-msgid "<b>CUP: </b>"
+msgid "<span class=\"fw-bold\">CUP: </span>"
 msgstr ""
 
 #. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.report_invoice_document
-msgid "<b>Document Date: </b>"
+msgid "<span class=\"fw-bold\">Issue Date: </span>"
 msgstr ""
 
 #. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.report_invoice_document
-msgid "<b>Stamp Duty: </b>"
+msgid "<span class=\"fw-bold\">Order or Convention Code: </span>"
 msgstr ""
 
 #. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.report_invoice_document
-msgid "<b>Transport Document: </b>"
+msgid "<span class=\"fw-bold\">Transport Document(s): </span>"
 msgstr ""
 
 #. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.report_invoice_document
-msgid "<br/><b>Payment Conditions:</b>"
+msgid "<span class=\"fw-bold\">Via: </span>"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -74,6 +74,11 @@ msgid ""
 "<span class=\"text-muted\">\n"
 "                                    By checking this box, I authorize Odoo to send and receive my invoices through the Sistema di Interscambio (SDI).\n"
 "                                </span>"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model_terms:ir.ui.view,arch_db:l10n_it_edi.report_invoice_document
+msgid "<strong>Fiscal Code: </strong>"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -94,6 +99,11 @@ msgstr ""
 #. module: l10n_it_edi
 #: model:ir.model,name:l10n_it_edi.model_account_edi_proxy_client_user
 msgid "Account EDI proxy user"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model_terms:ir.ui.view,arch_db:l10n_it_edi.report_invoice_document
+msgid "Additional information"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -313,6 +323,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_move__display_name
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_move_send__display_name
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_payment_method_line__display_name
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_payment_register__display_name
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_tax__display_name
 #: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_ddt__display_name
 #: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_document_type__display_name
@@ -448,6 +459,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_move__id
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_move_send__id
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_payment_method_line__id
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_payment_register__id
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_tax__id
 #: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_ddt__id
 #: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_document_type__id
@@ -562,6 +574,12 @@ msgstr ""
 #. module: l10n_it_edi
 #: model:ir.model,name:l10n_it_edi.model_account_move
 msgid "Journal Entry"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_bank_statement_line__l10n_it_available_document_type_ids
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_move__l10n_it_available_document_type_ids
+msgid "L10N It Available Document Type"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -790,6 +808,11 @@ msgid ""
 msgstr ""
 
 #. module: l10n_it_edi
+#: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_document_type__move_types
+msgid "Move Types"
+msgstr ""
+
+#. module: l10n_it_edi
 #: model:ir.model.fields,help:l10n_it_edi.field_res_partner__l10n_it_pa_index
 #: model:ir.model.fields,help:l10n_it_edi.field_res_users__l10n_it_pa_index
 msgid ""
@@ -876,6 +899,11 @@ msgstr ""
 msgid ""
 "Partner(s) should have a complete address, verify their Street, City, "
 "Zipcode and Country."
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model,name:l10n_it_edi.model_account_payment_register
+msgid "Pay"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -970,17 +998,13 @@ msgid "Public Investment Unique Identifier"
 msgstr ""
 
 #. module: l10n_it_edi
-#: model:ir.model.fields.selection,name:l10n_it_edi.selection__l10n_it_document_type__type__purchase
-msgid "Purchase"
-msgstr ""
-
-#. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_origin_document_type__purchase_order
 msgid "Purchase Order"
 msgstr ""
 
 #. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.account_invoice_form_l10n_it
+#: model_terms:ir.ui.view,arch_db:l10n_it_edi.report_invoice_document
 msgid "Reference Document"
 msgstr ""
 
@@ -1010,11 +1034,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_bank_statement_line__l10n_it_edi_transaction
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_move__l10n_it_edi_transaction
 msgid "SDI Transaction ID"
-msgstr ""
-
-#. module: l10n_it_edi
-#: model:ir.model.fields.selection,name:l10n_it_edi.selection__l10n_it_document_type__type__sale
-msgid "Sale"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -1130,13 +1149,8 @@ msgid "Stamp Duty"
 msgstr ""
 
 #. module: l10n_it_edi
-#: model_terms:ir.ui.view,arch_db:l10n_it_edi.report_invoice_document
-msgid "TP01 pagamento a rate"
-msgstr ""
-
-#. module: l10n_it_edi
-#: model_terms:ir.ui.view,arch_db:l10n_it_edi.report_invoice_document
-msgid "TP02 pagamento completo"
+#: model_terms:ir.ui.view,arch_db:l10n_it_edi.document_tax_totals_inherit_stamp_duty
+msgid "Stamp duty"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -1466,7 +1480,6 @@ msgid "Transport informations from XML file:"
 msgstr ""
 
 #. module: l10n_it_edi
-#: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_document_type__type
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.account_invoice_form_l10n_it
 msgid "Type"
 msgstr ""
@@ -2023,7 +2036,8 @@ msgstr ""
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_withholding_reason__w
 msgid ""
-"[W] Income from 2015 tinders subject to law art. 25-ter D.P.R. 600/1973"
+"[W] Income from tenders subject to Art. 25-ter of Presidential Decree "
+"600/1973"
 msgstr ""
 
 #. module: l10n_it_edi

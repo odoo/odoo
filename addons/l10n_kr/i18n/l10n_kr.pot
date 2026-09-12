@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.5a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 18:21+0000\n"
-"PO-Revision-Date: 2026-08-28 18:21+0000\n"
+"POT-Creation-Date: 2026-09-11 18:13+0000\n"
+"PO-Revision-Date: 2026-09-11 18:13+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -51,23 +51,110 @@ msgid "Cash"
 msgstr ""
 
 #. module: l10n_kr
+#: model:ir.model.fields.selection,name:l10n_kr.selection__account_move__l10n_kr_issuance_type__cash_receipt
+#: model:ir.model.fields.selection,name:l10n_kr.selection__res_partner__l10n_kr_default_issuance_type__cash_receipt
+msgid "Cash Receipt"
+msgstr ""
+
+#. module: l10n_kr
+#: model:ir.model,name:l10n_kr.model_res_partner
+msgid "Contact"
+msgstr ""
+
+#. module: l10n_kr
 #: model_terms:ir.ui.view,arch_db:l10n_kr.kr_partner_address_form
 msgid "Country"
 msgstr ""
 
 #. module: l10n_kr
+#: model:ir.model,website_form_label:l10n_kr.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: l10n_kr
+#: model:ir.model.fields.selection,name:l10n_kr.selection__account_move__l10n_kr_issuance_type__card_payment
+#: model:ir.model.fields.selection,name:l10n_kr.selection__res_partner__l10n_kr_default_issuance_type__card_payment
+msgid "Credit Card"
+msgstr ""
+
+#. module: l10n_kr
+#: model:ir.model.fields,help:l10n_kr.field_res_partner__l10n_kr_default_issuance_type
+#: model:ir.model.fields,help:l10n_kr.field_res_users__l10n_kr_default_issuance_type
+msgid ""
+"Default proof of issuance to use when this partner is set on a sales order "
+"or invoice."
+msgstr ""
+
+#. module: l10n_kr
 #: model:ir.model.fields,field_description:l10n_kr.field_account_chart_template__display_name
+#: model:ir.model.fields,field_description:l10n_kr.field_account_move__display_name
+#: model:ir.model.fields,field_description:l10n_kr.field_res_partner__display_name
 msgid "Display Name"
 msgstr ""
 
 #. module: l10n_kr
 #: model:ir.model.fields,field_description:l10n_kr.field_account_chart_template__id
+#: model:ir.model.fields,field_description:l10n_kr.field_account_move__id
+#: model:ir.model.fields,field_description:l10n_kr.field_res_partner__id
 msgid "ID"
+msgstr ""
+
+#. module: l10n_kr
+#: model:ir.model,name:l10n_kr.model_account_move
+msgid "Journal Entry"
+msgstr ""
+
+#. module: l10n_kr
+#: model:ir.model.fields,help:l10n_kr.field_account_bank_statement_line__l10n_kr_edocument_number
+#: model:ir.model.fields,help:l10n_kr.field_account_move__l10n_kr_edocument_number
+msgid ""
+"Official HomeTax or PG approval number (24 digits for e-Tax Invoices, 9 "
+"digits for Cash Receipts)."
+msgstr ""
+
+#. module: l10n_kr
+#: model:ir.model.fields.selection,name:l10n_kr.selection__account_move__l10n_kr_issuance_type__other
+#: model:ir.model.fields.selection,name:l10n_kr.selection__res_partner__l10n_kr_default_issuance_type__other
+msgid "Other"
+msgstr ""
+
+#. module: l10n_kr
+#: model:ir.model.fields,field_description:l10n_kr.field_account_bank_statement_line__l10n_kr_issuance_type
+#: model:ir.model.fields,field_description:l10n_kr.field_account_move__l10n_kr_issuance_type
+#: model:ir.model.fields,field_description:l10n_kr.field_res_partner__l10n_kr_default_issuance_type
+#: model:ir.model.fields,field_description:l10n_kr.field_res_users__l10n_kr_default_issuance_type
+msgid "Proof of Issuance"
 msgstr ""
 
 #. module: l10n_kr
 #: model:ir.module.module,shortdesc:base.module_l10n_kr
 msgid "Republic of Korea - Accounting"
+msgstr ""
+
+#. module: l10n_kr
+#: model:ir.model.fields,help:l10n_kr.field_account_bank_statement_line__l10n_kr_issuance_type
+#: model:ir.model.fields,help:l10n_kr.field_account_move__l10n_kr_issuance_type
+msgid ""
+"South Korean government-verified proof of issuance used to legally justify "
+"this transaction. Drives which VAT report boxes the transaction is reported "
+"under."
+msgstr ""
+
+#. module: l10n_kr
+#: model:ir.model.fields.selection,name:l10n_kr.selection__account_move__l10n_kr_issuance_type__tax_invoice
+#: model:ir.model.fields.selection,name:l10n_kr.selection__res_partner__l10n_kr_default_issuance_type__tax_invoice
+msgid "Tax Invoice"
+msgstr ""
+
+#. module: l10n_kr
+#: model:ir.model.fields.selection,name:l10n_kr.selection__account_move__l10n_kr_issuance_type__purchaser_tax_invoice
+msgid "Tax Invoice issued by Purchaser"
+msgstr ""
+
+#. module: l10n_kr
+#: model:ir.model.fields.selection,name:l10n_kr.selection__account_move__l10n_kr_issuance_type__tax_exempt_invoice
+#: model:ir.model.fields.selection,name:l10n_kr.selection__res_partner__l10n_kr_default_issuance_type__tax_exempt_invoice
+msgid "Tax-exempt Invoice"
 msgstr ""
 
 #. module: l10n_kr
@@ -78,4 +165,10 @@ msgstr ""
 #. module: l10n_kr
 #: model_terms:ir.ui.view,arch_db:l10n_kr.kr_partner_address_form
 msgid "city/-do"
+msgstr ""
+
+#. module: l10n_kr
+#: model:ir.model.fields,field_description:l10n_kr.field_account_bank_statement_line__l10n_kr_edocument_number
+#: model:ir.model.fields,field_description:l10n_kr.field_account_move__l10n_kr_edocument_number
+msgid "e-Document Number"
 msgstr ""

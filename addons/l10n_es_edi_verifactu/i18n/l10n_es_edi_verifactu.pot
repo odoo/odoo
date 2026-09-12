@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.5a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 18:19+0000\n"
-"PO-Revision-Date: 2026-08-28 18:19+0000\n"
+"POT-Creation-Date: 2026-09-11 18:11+0000\n"
+"PO-Revision-Date: 2026-09-11 18:11+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,6 +21,12 @@ msgstr ""
 msgid ""
 "%(existing_warning)sA Veri*Factu document is waiting to be sent as soon as "
 "possible."
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#. odoo-python
+#: code:addons/l10n_es_edi_verifactu/models/verifactu_document.py:0
+msgid "'%s' is not a valid Veri*Factu Regime Key (ClaveRegimen)."
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
@@ -43,74 +49,26 @@ msgstr ""
 
 #. module: l10n_es_edi_verifactu
 #. odoo-python
-#: code:addons/l10n_es_edi_verifactu/const.py:0
+#: code:addons/l10n_es_edi_verifactu/models/account_tax.py:0
 msgid "11 - Business premises lease"
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
 #. odoo-python
-#: code:addons/l10n_es_edi_verifactu/const.py:0
-msgid "17 - Special regime for retail traders"
-msgstr ""
-
-#. module: l10n_es_edi_verifactu
-#. odoo-python
-#: code:addons/l10n_es_edi_verifactu/models/account_move.py:0
-msgid "17_igic"
-msgstr ""
-
-#. module: l10n_es_edi_verifactu
-#. odoo-python
-#: code:addons/l10n_es_edi_verifactu/models/account_move.py:0
-msgid "17_iva"
-msgstr ""
-
-#. module: l10n_es_edi_verifactu
-#. odoo-python
-#: code:addons/l10n_es_edi_verifactu/const.py:0
+#: code:addons/l10n_es_edi_verifactu/models/account_tax.py:0
 msgid "18 - Equivalence surcharge"
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
 #. odoo-python
-#: code:addons/l10n_es_edi_verifactu/const.py:0
-msgid "18 - Special regime for small businesses or professionals"
-msgstr ""
-
-#. module: l10n_es_edi_verifactu
-#. odoo-python
-#: code:addons/l10n_es_edi_verifactu/models/account_move.py:0
-msgid "18_iva"
-msgstr ""
-
-#. module: l10n_es_edi_verifactu
-#. odoo-python
-#: code:addons/l10n_es_edi_verifactu/const.py:0
-msgid "19 - Exempt domestic operations (Art. 25, Law 19/1994)"
-msgstr ""
-
-#. module: l10n_es_edi_verifactu
-#. odoo-python
-#: code:addons/l10n_es_edi_verifactu/const.py:0
+#: code:addons/l10n_es_edi_verifactu/models/account_tax.py:0
 msgid "19 - REAGYP"
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
 #. odoo-python
-#: code:addons/l10n_es_edi_verifactu/models/account_move.py:0
-msgid "19_iva"
-msgstr ""
-
-#. module: l10n_es_edi_verifactu
-#. odoo-python
-#: code:addons/l10n_es_edi_verifactu/const.py:0
+#: code:addons/l10n_es_edi_verifactu/models/account_tax.py:0
 msgid "20 - Simplified regime"
-msgstr ""
-
-#. module: l10n_es_edi_verifactu
-#. odoo-python
-#: code:addons/l10n_es_edi_verifactu/models/account_move.py:0
-msgid "20_iva"
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
@@ -157,11 +115,6 @@ msgid "Accepted"
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
-#: model:ir.model,name:l10n_es_edi_verifactu.model_account_chart_template
-msgid "Account Chart Template"
-msgstr ""
-
-#. module: l10n_es_edi_verifactu
 #: model_terms:ir.ui.view,arch_db:l10n_es_edi_verifactu.view_account_resequence_inherit_l10n_es_edi_verifactu
 msgid ""
 "Al usar Veri*factu, el número de factura no puede modificarse sin alterar la integridad e\n"
@@ -176,19 +129,8 @@ msgid "All documents in a batch must share the same ObligadoEmision. Got: %s"
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
-#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_tax__l10n_es_applicability
-msgid "Applicability (Spain)"
-msgstr ""
-
-#. module: l10n_es_edi_verifactu
 #: model_terms:ir.ui.view,arch_db:l10n_es_edi_verifactu.res_config_settings_view_form
 msgid "Automatically generate and send Veri*Factu records to the AEAT."
-msgstr ""
-
-#. module: l10n_es_edi_verifactu
-#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_bank_statement_line__l10n_es_edi_verifactu_available_clave_regimens
-#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_move__l10n_es_edi_verifactu_available_clave_regimens
-msgid "Available Veri*Factu Regime Key"
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
@@ -285,7 +227,6 @@ msgid "Created on"
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
-#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_chart_template__display_name
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_move__display_name
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_move_reversal__display_name
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_move_send__display_name
@@ -349,24 +290,11 @@ msgstr ""
 
 #. module: l10n_es_edi_verifactu
 #. odoo-python
-#: code:addons/l10n_es_edi_verifactu/models/account_move.py:0
-msgid "Export"
-msgstr ""
-
-#. module: l10n_es_edi_verifactu
-#. odoo-python
-#: code:addons/l10n_es_edi_verifactu/models/account_move.py:0
-msgid "General regime operation"
-msgstr ""
-
-#. module: l10n_es_edi_verifactu
-#. odoo-python
 #: code:addons/l10n_es_edi_verifactu/models/account_move_send.py:0
 msgid "Go to the journal entry"
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
-#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_chart_template__id
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_move__id
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_move_reversal__id
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_move_send__id
@@ -379,16 +307,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_res_config_settings__id
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_res_partner__id
 msgid "ID"
-msgstr ""
-
-#. module: l10n_es_edi_verifactu
-#: model:ir.model.fields.selection,name:l10n_es_edi_verifactu.selection__account_tax__l10n_es_applicability__03
-msgid "IGIC"
-msgstr ""
-
-#. module: l10n_es_edi_verifactu
-#: model:ir.model.fields.selection,name:l10n_es_edi_verifactu.selection__account_tax__l10n_es_applicability__02
-msgid "IPSI"
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
@@ -439,18 +357,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_document__write_date
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_issuer__write_date
 msgid "Last Updated on"
-msgstr ""
-
-#. module: l10n_es_edi_verifactu
-#. odoo-python
-#: code:addons/l10n_es_edi_verifactu/models/account_move.py:0
-msgid "Leasing of business premises"
-msgstr ""
-
-#. module: l10n_es_edi_verifactu
-#: model:ir.model.fields,help:l10n_es_edi_verifactu.field_res_company__l10n_es_edi_verifactu_special_vat_regime
-#: model:ir.model.fields,help:l10n_es_edi_verifactu.field_res_config_settings__l10n_es_edi_verifactu_special_vat_regime
-msgid "Leave empty for the normal regimen."
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
@@ -521,22 +427,6 @@ msgstr ""
 
 #. module: l10n_es_edi_verifactu
 #. odoo-python
-#: code:addons/l10n_es_edi_verifactu/models/account_move.py:0
-msgid ""
-"Operation under one of the regimes provided for in Chapter XI of Title IX "
-"(OSS and IOSS)."
-msgstr ""
-
-#. module: l10n_es_edi_verifactu
-#. odoo-python
-#: code:addons/l10n_es_edi_verifactu/models/account_move.py:0
-msgid ""
-"Operations of activities included in the Special Regime for Agriculture, "
-"Livestock and Fishing (REAGYP)"
-msgstr ""
-
-#. module: l10n_es_edi_verifactu
-#. odoo-python
 #: code:addons/l10n_es_edi_verifactu/models/account_tax.py:0
 msgid "Other"
 msgstr ""
@@ -547,52 +437,6 @@ msgid ""
 "Partner acting as the 'ObligadoEmision' for this document. For regular "
 "invoices this is the company's own partner. For self-billing vendor bills "
 "this is the vendor."
-msgstr ""
-
-#. module: l10n_es_edi_verifactu
-#: model:ir.model.fields.selection,name:l10n_es_edi_verifactu.selection__account_move__l10n_es_edi_verifactu_refund_reason__r1
-#: model:ir.model.fields.selection,name:l10n_es_edi_verifactu.selection__account_move_reversal__l10n_es_edi_verifactu_refund_reason__r1
-msgid "R1: Art 80.1 and 80.2 and error of law"
-msgstr ""
-
-#. module: l10n_es_edi_verifactu
-#: model:ir.model.fields.selection,name:l10n_es_edi_verifactu.selection__account_move__l10n_es_edi_verifactu_refund_reason__r2
-#: model:ir.model.fields.selection,name:l10n_es_edi_verifactu.selection__account_move_reversal__l10n_es_edi_verifactu_refund_reason__r2
-msgid "R2: Art. 80.3"
-msgstr ""
-
-#. module: l10n_es_edi_verifactu
-#: model:ir.model.fields.selection,name:l10n_es_edi_verifactu.selection__account_move__l10n_es_edi_verifactu_refund_reason__r3
-#: model:ir.model.fields.selection,name:l10n_es_edi_verifactu.selection__account_move_reversal__l10n_es_edi_verifactu_refund_reason__r3
-msgid "R3: Art. 80.4"
-msgstr ""
-
-#. module: l10n_es_edi_verifactu
-#: model:ir.model.fields.selection,name:l10n_es_edi_verifactu.selection__account_move__l10n_es_edi_verifactu_refund_reason__r4
-#: model:ir.model.fields.selection,name:l10n_es_edi_verifactu.selection__account_move_reversal__l10n_es_edi_verifactu_refund_reason__r4
-msgid "R4: Rest"
-msgstr ""
-
-#. module: l10n_es_edi_verifactu
-#: model:ir.model.fields.selection,name:l10n_es_edi_verifactu.selection__account_move__l10n_es_edi_verifactu_refund_reason__r5
-#: model:ir.model.fields.selection,name:l10n_es_edi_verifactu.selection__account_move_reversal__l10n_es_edi_verifactu_refund_reason__r5
-msgid "R5: Corrective invoices concerning simplified invoices"
-msgstr ""
-
-#. module: l10n_es_edi_verifactu
-#: model:ir.model.fields.selection,name:l10n_es_edi_verifactu.selection__res_company__l10n_es_edi_verifactu_special_vat_regime__reagyp
-msgid "REAGYP (Special Regime for Agriculture, Livestock and Fisheries)"
-msgstr ""
-
-#. module: l10n_es_edi_verifactu
-#: model:ir.model.fields.selection,name:l10n_es_edi_verifactu.selection__res_company__l10n_es_edi_verifactu_special_vat_regime__recargo
-msgid "Recargo de Equivalencia"
-msgstr ""
-
-#. module: l10n_es_edi_verifactu
-#. odoo-python
-#: code:addons/l10n_es_edi_verifactu/models/account_move.py:0
-msgid "Recargo de equivalencia"
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
@@ -640,13 +484,6 @@ msgstr ""
 
 #. module: l10n_es_edi_verifactu
 #. odoo-python
-#: code:addons/l10n_es_edi_verifactu/models/account_move.py:0
-#: model:ir.model.fields.selection,name:l10n_es_edi_verifactu.selection__res_company__l10n_es_edi_verifactu_special_vat_regime__simplified
-msgid "Simplified Regime"
-msgstr ""
-
-#. module: l10n_es_edi_verifactu
-#. odoo-python
 #: code:addons/l10n_es_edi_verifactu/models/verifactu_document.py:0
 msgid ""
 "Some of the documents can not be sent. They were sent already or could not "
@@ -656,17 +493,6 @@ msgstr ""
 #. module: l10n_es_edi_verifactu
 #: model:ir.module.module,shortdesc:base.module_l10n_es_edi_verifactu
 msgid "Spain - Veri*Factu"
-msgstr ""
-
-#. module: l10n_es_edi_verifactu
-#: model_terms:ir.ui.view,arch_db:l10n_es_edi_verifactu.res_config_settings_view_form
-msgid "Special VAT Regime"
-msgstr ""
-
-#. module: l10n_es_edi_verifactu
-#. odoo-python
-#: code:addons/l10n_es_edi_verifactu/models/account_move.py:0
-msgid "Special retailer regime"
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
@@ -692,14 +518,6 @@ msgid "Substitution of"
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
-#: model:ir.model.fields,help:l10n_es_edi_verifactu.field_account_bank_statement_line__l10n_es_edi_verifactu_available_clave_regimens
-#: model:ir.model.fields,help:l10n_es_edi_verifactu.field_account_move__l10n_es_edi_verifactu_available_clave_regimens
-msgid ""
-"Technical field to enable a dynamic selection of the field \"Veri*Factu "
-"Regime Key\""
-msgstr ""
-
-#. module: l10n_es_edi_verifactu
 #: model_terms:ir.ui.view,arch_db:l10n_es_edi_verifactu.res_config_settings_view_form
 msgid "Test Environment"
 msgstr ""
@@ -722,14 +540,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_es_edi_verifactu/models/verifactu_document.py:0
 msgid "The SSL certificate could not be validated."
-msgstr ""
-
-#. module: l10n_es_edi_verifactu
-#. odoo-python
-#: code:addons/l10n_es_edi_verifactu/models/account_move.py:0
-msgid ""
-"The Veri*Factu Regime Key is not compatible with the Veri*Factu Tax "
-"Applicability."
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
@@ -900,11 +710,6 @@ msgid "Unsupported `operation` '%s'"
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
-#: model:ir.model.fields.selection,name:l10n_es_edi_verifactu.selection__account_tax__l10n_es_applicability__01
-msgid "VAT"
-msgstr ""
-
-#. module: l10n_es_edi_verifactu
 #. odoo-python
 #: code:addons/l10n_es_edi_verifactu/models/verifactu_document.py:0
 msgid "Validation error: %s"
@@ -975,22 +780,8 @@ msgid "Veri*Factu QR Code"
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
-#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_bank_statement_line__l10n_es_edi_verifactu_refund_reason
-#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_move__l10n_es_edi_verifactu_refund_reason
-#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_move_reversal__l10n_es_edi_verifactu_refund_reason
-msgid "Veri*Factu Refund Reason"
-msgstr ""
-
-#. module: l10n_es_edi_verifactu
-#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_bank_statement_line__l10n_es_edi_verifactu_clave_regimen
-#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_move__l10n_es_edi_verifactu_clave_regimen
-msgid "Veri*Factu Regime Key"
-msgstr ""
-
-#. module: l10n_es_edi_verifactu
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_bank_statement_line__l10n_es_edi_verifactu_required
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_move__l10n_es_edi_verifactu_required
-#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_move_reversal__l10n_es_edi_verifactu_required
 msgid "Veri*Factu Required"
 msgstr ""
 
@@ -1010,12 +801,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_res_company__l10n_es_edi_verifactu_test_environment
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_res_config_settings__l10n_es_edi_verifactu_test_environment
 msgid "Veri*Factu Test Environment"
-msgstr ""
-
-#. module: l10n_es_edi_verifactu
-#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_res_company__l10n_es_edi_verifactu_special_vat_regime
-#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_res_config_settings__l10n_es_edi_verifactu_special_vat_regime
-msgid "Veri*Factu VAT Regime"
 msgstr ""
 
 #. module: l10n_es_edi_verifactu

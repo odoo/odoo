@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.5a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 18:19+0000\n"
-"PO-Revision-Date: 2026-08-28 18:19+0000\n"
+"POT-Creation-Date: 2026-09-11 18:11+0000\n"
+"PO-Revision-Date: 2026-09-11 18:11+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -25,8 +25,22 @@ msgid ""
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.product_normal_form_view_inherit_l10n_eg_eta_edi
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.product_template_only_form_view_inherit_l10n_eg_eta_edi
+msgid ""
+"<i class=\"oi text-muted me-1\" data-icon=\"arrow_forward\"/>\n"
+"                                    Check on the ETA portal"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
 #: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.egyptian_invoice
 msgid "<strong class=\"text-center\">ETA QR Code</strong>"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.product_normal_form_view_inherit_l10n_eg_eta_edi
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.product_template_only_form_view_inherit_l10n_eg_eta_edi
+msgid "<strong>WARNING - This code must match the ETA portal</strong>"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -409,11 +423,6 @@ msgid ""
 msgstr ""
 
 #. module: l10n_eg_edi_eta
-#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_product_template__l10n_eg_eta_code
-msgid "ETA Item code"
-msgstr ""
-
-#. module: l10n_eg_edi_eta
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_account_bank_statement_line__l10n_eg_eta_json_doc_file
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_account_move__l10n_eg_eta_json_doc_file
 msgid "ETA JSON Document"
@@ -435,6 +444,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_res_company__l10n_eg_client_secret
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_res_config_settings__l10n_eg_client_secret
 msgid "ETA Secret"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#. odoo-python
+#: code:addons/l10n_eg_edi_eta/models/account_edi_format.py:0
+msgid ""
+"ETA Submission Failed: Customer Reference exceeds the ETA limit of 100 "
+"characters (including spaces). Please shorten the description and try again."
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -475,6 +492,12 @@ msgid "Egypt E-Invoicing"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.product_normal_form_view_inherit_l10n_eg_eta_edi
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.product_template_only_form_view_inherit_l10n_eg_eta_edi
+msgid "Egypt Electronic Invoicing"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
 #: model:ir.module.module,summary:base.module_l10n_eg_edi_eta
 msgid "Egypt Tax Authority Invoice Integration"
 msgstr ""
@@ -482,12 +505,6 @@ msgstr ""
 #. module: l10n_eg_edi_eta
 #: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.view_account_journal_form_inherit_l10n_eg_edi
 msgid "Egyptian ETA settings"
-msgstr ""
-
-#. module: l10n_eg_edi_eta
-#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.product_normal_form_view_inherit_l10n_eg_eta_edi
-#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.product_template_only_form_view_inherit_l10n_eg_eta_edi
-msgid "Egyptian Electronic Invoicing"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -625,6 +642,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_res_company__l10n_eg_invoicing_threshold
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_res_config_settings__l10n_eg_invoicing_threshold
 msgid "Invoicing Threshold"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_product_template__l10n_eg_eta_code
+msgid "Item code"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -1207,6 +1229,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_account_bank_statement_line__l10n_eg_submission_number
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_account_move__l10n_eg_submission_number
 msgid "Submission ID"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.product_normal_form_view_inherit_l10n_eg_eta_edi
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.product_template_only_form_view_inherit_l10n_eg_eta_edi
+msgid ""
+"Submissions to the Egyptian Tax Authority will be silently rejected if this "
+"code does not match the one registered for this item on the ETA portal."
 msgstr ""
 
 #. module: l10n_eg_edi_eta

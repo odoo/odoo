@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.5a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 18:21+0000\n"
-"PO-Revision-Date: 2026-08-28 18:21+0000\n"
+"POT-Creation-Date: 2026-09-11 18:13+0000\n"
+"PO-Revision-Date: 2026-09-11 18:13+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -24,8 +24,32 @@ msgstr ""
 
 #. module: l10n_jo_edi
 #. odoo-python
+#: code:addons/l10n_jo_edi/models/res_company.py:0
+msgid "\"Client ID\" is missing."
+msgstr ""
+
+#. module: l10n_jo_edi
+#. odoo-python
+#: code:addons/l10n_jo_edi/models/res_company.py:0
+msgid "\"Secret Key\" is missing."
+msgstr ""
+
+#. module: l10n_jo_edi
+#. odoo-python
+#: code:addons/l10n_jo_edi/models/res_company.py:0
+msgid "\"Sequence of Income Source\" is missing."
+msgstr ""
+
+#. module: l10n_jo_edi
+#. odoo-python
+#: code:addons/l10n_jo_edi/models/res_company.py:0
+msgid "\"Taxpayer Type\" is missing."
+msgstr ""
+
+#. module: l10n_jo_edi
+#. odoo-python
 #: code:addons/l10n_jo_edi/models/account_move.py:0
-msgid "%(company)s's Country must be Jordan"
+msgid "%(company)s's \"Country\" must be Jordan"
 msgstr ""
 
 #. module: l10n_jo_edi
@@ -34,13 +58,6 @@ msgstr ""
 msgid ""
 "%s \n"
 "To set: Configuration > Settings > Electronic Invoicing (Jordan)"
-msgstr ""
-
-#. module: l10n_jo_edi
-#: model_terms:ir.ui.view,arch_db:l10n_jo_edi.view_move_form
-msgid ""
-"<span class=\"mx-1\"><b>Warning</b>: this invoice cannot be sent to "
-"JoFotara.</span>"
 msgstr ""
 
 #. module: l10n_jo_edi
@@ -67,20 +84,8 @@ msgid "Activity Number"
 msgstr ""
 
 #. module: l10n_jo_edi
-#. odoo-python
-#: code:addons/l10n_jo_edi/models/res_company.py:0
-msgid "Activity number (Sequence of income source) is missing."
-msgstr ""
-
-#. module: l10n_jo_edi
 #: model:ir.model,name:l10n_jo_edi.model_ir_attachment
 msgid "Attachment"
-msgstr ""
-
-#. module: l10n_jo_edi
-#. odoo-python
-#: code:addons/l10n_jo_edi/models/account_move_send.py:0
-msgid "Check Invoice(s)"
 msgstr ""
 
 #. module: l10n_jo_edi
@@ -89,9 +94,9 @@ msgid "Client ID"
 msgstr ""
 
 #. module: l10n_jo_edi
-#. odoo-python
-#: code:addons/l10n_jo_edi/models/res_company.py:0
-msgid "Client ID is missing."
+#. odoo-javascript
+#: code:addons/l10n_jo_edi/static/src/jo_edi_error_dialog/jo_edi_error_dialog.xml:0
+msgid "Close"
 msgstr ""
 
 #. module: l10n_jo_edi
@@ -112,18 +117,12 @@ msgstr ""
 #. module: l10n_jo_edi
 #. odoo-python
 #: code:addons/l10n_jo_edi/models/account_move.py:0
-msgid "Country (must be Jordan!)"
+msgid "Country"
 msgstr ""
 
 #. module: l10n_jo_edi
 #: model_terms:ir.ui.view,arch_db:l10n_jo_edi.res_config_settings_view_form
 msgid "Demo Mode"
-msgstr ""
-
-#. module: l10n_jo_edi
-#. odoo-python
-#: code:addons/l10n_jo_edi/models/account_move_send.py:0
-msgid "Demo mode is enabled."
 msgstr ""
 
 #. module: l10n_jo_edi
@@ -140,11 +139,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_jo_edi.field_res_company__display_name
 #: model:ir.model.fields,field_description:l10n_jo_edi.field_res_config_settings__display_name
 msgid "Display Name"
-msgstr ""
-
-#. module: l10n_jo_edi
-#: model_terms:ir.ui.view,arch_db:l10n_jo_edi.view_move_form
-msgid "Download XML"
 msgstr ""
 
 #. module: l10n_jo_edi
@@ -171,7 +165,7 @@ msgstr ""
 #. module: l10n_jo_edi
 #. odoo-python
 #: code:addons/l10n_jo_edi/models/account_move_send.py:0
-msgid "Errors when submitting the JoFotara e-invoice:"
+msgid "Error: Invoice was not sent to JoFotara"
 msgstr ""
 
 #. module: l10n_jo_edi
@@ -225,9 +219,10 @@ msgid "Invoice UUID"
 msgstr ""
 
 #. module: l10n_jo_edi
-#. odoo-python
-#: code:addons/l10n_jo_edi/models/account_move_send.py:0
-msgid "JoFotara (Jordan EDI)"
+#. odoo-javascript
+#: code:addons/l10n_jo_edi/static/src/jo_edi_error_dialog/jo_edi_error_dialog.js:0
+#: model_terms:ir.ui.view,arch_db:l10n_jo_edi.view_move_form
+msgid "JoFotara"
 msgstr ""
 
 #. module: l10n_jo_edi
@@ -288,14 +283,14 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_jo_edi/models/account_move_send.py:0
 msgid ""
-"JoFotara e-invoicing was enabled but the following invoices cannot be e-invoiced:\n"
-"%(moves)s\n"
+"JoFotara e-invoicing was enabled but some of the selected invoices cannot be"
+" e-invoiced."
 msgstr ""
 
 #. module: l10n_jo_edi
 #. odoo-python
 #: code:addons/l10n_jo_edi/models/account_move.py:0
-msgid "JoFotara portal cannot process %s VAT with non-digit characters in it"
+msgid "JoFotara portal cannot process %s \"VAT\" with non-digit characters in it"
 msgstr ""
 
 #. module: l10n_jo_edi
@@ -404,6 +399,11 @@ msgid ""
 msgstr ""
 
 #. module: l10n_jo_edi
+#: model_terms:ir.ui.view,arch_db:l10n_jo_edi.view_move_form
+msgid "Payment Method"
+msgstr ""
+
+#. module: l10n_jo_edi
 #. odoo-python
 #: code:addons/l10n_jo_edi/models/account_move.py:0
 msgid "Please define the following for %(company)s: %(missing_fields)s"
@@ -428,14 +428,15 @@ msgstr ""
 #. module: l10n_jo_edi
 #. odoo-python
 #: code:addons/l10n_jo_edi/models/account_move.py:0
-msgid "Please select a payment method before submission."
+msgid "Please select a \"Payment Method\" before submission."
 msgstr ""
 
 #. module: l10n_jo_edi
 #. odoo-python
 #: code:addons/l10n_jo_edi/models/account_move.py:0
 msgid ""
-"Please select an invoice type before submitting this invoice to JoFotara."
+"Please select an \"Invoice Type\" before submitting this invoice to "
+"JoFotara."
 msgstr ""
 
 #. module: l10n_jo_edi
@@ -484,12 +485,6 @@ msgid "Secret Key"
 msgstr ""
 
 #. module: l10n_jo_edi
-#. odoo-python
-#: code:addons/l10n_jo_edi/models/res_company.py:0
-msgid "Secret key is missing."
-msgstr ""
-
-#. module: l10n_jo_edi
 #: model:ir.model.fields.selection,name:l10n_jo_edi.selection__account_move__l10n_jo_edi_state__sent
 msgid "Sent"
 msgstr ""
@@ -505,6 +500,16 @@ msgid "Shared Send Invoice Wizard Functions"
 msgstr ""
 
 #. module: l10n_jo_edi
+#: model_terms:ir.ui.view,arch_db:l10n_jo_edi.report_invoice_document_jo_header
+msgid "THIS IS A DEMO INVOICE"
+msgstr ""
+
+#. module: l10n_jo_edi
+#: model_terms:ir.ui.view,arch_db:l10n_jo_edi.report_invoice_document_jo_header
+msgid "THIS IS NOT A LEGAL DOCUMENT"
+msgstr ""
+
+#. module: l10n_jo_edi
 #. odoo-python
 #: code:addons/l10n_jo_edi/models/account_move.py:0
 msgid "TIN"
@@ -517,14 +522,14 @@ msgstr ""
 
 #. module: l10n_jo_edi
 #. odoo-python
-#: code:addons/l10n_jo_edi/models/res_company.py:0
-msgid "Taxpayer type is missing."
+#: code:addons/l10n_jo_edi/models/account_move_send.py:0
+msgid "To JoFotara"
 msgstr ""
 
 #. module: l10n_jo_edi
 #. odoo-python
-#: code:addons/l10n_jo_edi/models/account_move.py:0
-msgid "The following errors have to be fixed in order to create an XML:\n"
+#: code:addons/l10n_jo_edi/models/account_move_send.py:0
+msgid "To JoFotara (Demo)"
 msgstr ""
 
 #. module: l10n_jo_edi
@@ -536,8 +541,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_jo_edi/models/account_move.py:0
 msgid ""
-"To issue the selected Invoice type, please set the Taxpayer Type to "
-"'Registered in the sales tax' by going to Accounting > Configuration > "
+"To issue the selected \"Invoice Type\", please set the \"Taxpayer Type\" to "
+"\"Registered in the sales tax\" by going to Accounting > Configuration > "
 "Settings > Electronic Invoicing (Jordan)"
 msgstr ""
 
@@ -559,7 +564,13 @@ msgstr ""
 #. module: l10n_jo_edi
 #. odoo-python
 #: code:addons/l10n_jo_edi/models/account_move_send.py:0
-msgid "View Invoice(s)"
+msgid "View Invoices"
+msgstr ""
+
+#. module: l10n_jo_edi
+#. odoo-javascript
+#: code:addons/l10n_jo_edi/static/src/jo_edi_error_dialog/jo_edi_error_dialog.xml:0
+msgid "XML"
 msgstr ""
 
 #. module: l10n_jo_edi

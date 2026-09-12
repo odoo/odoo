@@ -1,0 +1,549 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_eg_edi_pos
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.5a1+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-11 18:11+0000\n"
+"PO-Revision-Date: 2026-09-11 18:11+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: l10n_eg_edi_pos
+#: model:ir.module.module,description:base.module_l10n_eg_edi_pos
+msgid ""
+"\n"
+"Egypt E-Receipts (POS)\n"
+"======================\n"
+"Submits POS sales receipts to the Egyptian Tax Authority (ETA) eReceipt API\n"
+"after order payment. Prints a compliant QR on the receipt when accepted, prints\n"
+"RECEIPT WITHOUT FISCAL VALUE when not, and tracks ETA state per-order.\n"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_pos.view_pos_pos_form
+msgid ""
+"<i class=\"oi\" role=\"img\" title=\"ETA Error\" data-icon=\"warning\"/>\n"
+"                        <span class=\"mx-1\">e-Receipt (Egypt)</span>"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_pos.res_config_settings_view_form
+msgid ""
+"Access the portal based on your environment — Production: "
+"invoicing.eta.gov.eg<br/>Pre-production (testing only): "
+"profile.preprod.eta.gov.eg"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#. odoo-javascript
+#: code:addons/l10n_eg_edi_pos/static/src/overrides/utils/order_payment_validation.js:0
+msgid ""
+"As the Order Value is equal to or above %s EGP, depending on the nature of "
+"the buyer, please either select an Individual Egypt Customer and fill in the"
+" \"Tax ID\" with their National ID, or an Individual non-Egypt Customer."
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#. odoo-python
+#: code:addons/l10n_eg_edi_pos/models/pos_order.py:0
+msgid ""
+"As the Order Value is equal to or above 150,000 EGP, depending on the nature"
+" of the buyer, please either select an Individual Egypt Customer and fill in"
+" the \"Tax ID\" with their National ID or an Individual non-Egypt Customer."
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#. odoo-python
+#: code:addons/l10n_eg_edi_pos/models/pos_order.py:0
+msgid "Cannot issue a receipt to a partner with the same VAT as the branch."
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model:ir.model.fields.selection,name:l10n_eg_edi_pos.selection__pos_payment_method__l10n_eg_edi_pos_payment_code__c
+msgid "Cash"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model:ir.model.fields.selection,name:l10n_eg_edi_pos.selection__pos_payment_method__l10n_eg_edi_pos_payment_code__cc
+msgid "Cash with contractor"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_pos.res_config_settings_view_form
+msgid "Client ID"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_pos.res_config_settings_view_form
+msgid "Client Secret"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model:ir.model,name:l10n_eg_edi_pos.model_res_company
+msgid "Company"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model:ir.model,name:l10n_eg_edi_pos.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model:ir.model.fields,field_description:l10n_eg_edi_pos.field_pos_payment_method__country_code
+msgid "Country Code"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#. odoo-python
+#: code:addons/l10n_eg_edi_pos/models/pos_order.py:0
+msgid "Customer on the return must match the original receipt."
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model:ir.model.fields,field_description:l10n_eg_edi_pos.field_pos_config__display_name
+#: model:ir.model.fields,field_description:l10n_eg_edi_pos.field_pos_order__display_name
+#: model:ir.model.fields,field_description:l10n_eg_edi_pos.field_pos_order_receipt__display_name
+#: model:ir.model.fields,field_description:l10n_eg_edi_pos.field_pos_payment_method__display_name
+#: model:ir.model.fields,field_description:l10n_eg_edi_pos.field_res_company__display_name
+#: model:ir.model.fields,field_description:l10n_eg_edi_pos.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_pos.view_pos_pos_form
+msgid "Download JSON"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_pos.view_pos_pos_form
+msgid "ETA (Egypt)"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#. odoo-python
+#: code:addons/l10n_eg_edi_pos/models/pos_config.py:0
+msgid "ETA Client ID is missing."
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#. odoo-python
+#: code:addons/l10n_eg_edi_pos/models/pos_config.py:0
+msgid "ETA Client Secret is missing."
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#. odoo-javascript
+#: code:addons/l10n_eg_edi_pos/static/src/overrides/screens/feedback_screen.js:0
+#: model:ir.model.fields,field_description:l10n_eg_edi_pos.field_pos_order__l10n_eg_edi_pos_error
+msgid "ETA Error"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model:ir.model.fields,field_description:l10n_eg_edi_pos.field_pos_order__l10n_eg_edi_pos_json_doc_file
+msgid "ETA JSON Document"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model:ir.model.fields,field_description:l10n_eg_edi_pos.field_pos_payment_method__l10n_eg_edi_pos_payment_code
+msgid "ETA Payment Code"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model:ir.model.fields,field_description:l10n_eg_edi_pos.field_pos_order__l10n_eg_edi_pos_qr
+msgid "ETA QR"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_pos.pos_order_receipt_footer
+msgid "ETA QR code"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_pos.view_pos_order_filter
+msgid "ETA Receipt State"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model:ir.model.fields,field_description:l10n_eg_edi_pos.field_pos_order__l10n_eg_edi_pos_state
+msgid "ETA State"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#. odoo-python
+#: code:addons/l10n_eg_edi_pos/models/pos_order.py:0
+msgid "ETA Submission Failed"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model:ir.model.fields,field_description:l10n_eg_edi_pos.field_pos_order__l10n_eg_edi_pos_submission_uuid
+msgid "ETA Submission UUID"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model:ir.model.fields,field_description:l10n_eg_edi_pos.field_pos_order__l10n_eg_edi_pos_uuid
+msgid "ETA UUID"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#. odoo-javascript
+#: code:addons/l10n_eg_edi_pos/static/src/overrides/models/invoice_button.js:0
+#: code:addons/l10n_eg_edi_pos/static/src/overrides/services/pos_store.js:0
+#: code:addons/l10n_eg_edi_pos/static/src/overrides/utils/order_payment_validation.js:0
+msgid "ETA Validation Error"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#. odoo-python
+#: code:addons/l10n_eg_edi_pos/models/pos_config.py:0
+msgid "ETA authentication response is missing a valid expires_in."
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#. odoo-python
+#: code:addons/l10n_eg_edi_pos/models/pos_config.py:0
+msgid "ETA authentication response is missing the access token."
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_pos.res_config_settings_view_form
+msgid "Egypt E-Receipts (ETA)"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model:ir.module.module,shortdesc:base.module_l10n_eg_edi_pos
+msgid "Egypt E-Receipts (POS)"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_pos.res_config_settings_view_form
+msgid "Egypt ETA e-Receipt Configuration Steps:"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#. odoo-javascript
+#: code:addons/l10n_eg_edi_pos/static/src/overrides/screens/ticket_screen.js:0
+#: model:ir.model.fields.selection,name:l10n_eg_edi_pos.selection__pos_order__l10n_eg_edi_pos_state__error
+msgid "Error"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#. odoo-javascript
+#: code:addons/l10n_eg_edi_pos/static/src/overrides/screens/ticket_screen.js:0
+#: model:ir.model.fields.selection,name:l10n_eg_edi_pos.selection__pos_order__l10n_eg_edi_pos_state__error_test
+msgid "Error (Test)"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model:ir.model.fields.selection,name:l10n_eg_edi_pos.selection__pos_payment_method__l10n_eg_edi_pos_payment_code__gc
+msgid "Gift Card"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_pos.res_config_settings_view_form
+msgid ""
+"Go to \"View Taxpayer Profile\", under \"Representatives\", \"ERP\". Click "
+"the three dots (⋮) next to your ERP entry and select Regenerate Secrets."
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model:ir.model.fields,field_description:l10n_eg_edi_pos.field_pos_config__id
+#: model:ir.model.fields,field_description:l10n_eg_edi_pos.field_pos_order__id
+#: model:ir.model.fields,field_description:l10n_eg_edi_pos.field_pos_order_receipt__id
+#: model:ir.model.fields,field_description:l10n_eg_edi_pos.field_pos_payment_method__id
+#: model:ir.model.fields,field_description:l10n_eg_edi_pos.field_res_company__id
+#: model:ir.model.fields,field_description:l10n_eg_edi_pos.field_res_config_settings__id
+msgid "ID"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_pos.res_config_settings_view_form
+msgid ""
+"In Odoo, fill in the fields below using the credentials and device details "
+"retrieved above."
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model:ir.model.fields,field_description:l10n_eg_edi_pos.field_pos_config__l10n_eg_edi_pos_access_token
+msgid "L10N Eg Edi Pos Access Token"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model:ir.model.fields,field_description:l10n_eg_edi_pos.field_pos_config__l10n_eg_edi_pos_last_uuid
+msgid "L10N Eg Edi Pos Last Uuid"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model:ir.model.fields,field_description:l10n_eg_edi_pos.field_pos_config__l10n_eg_edi_pos_token_expiry
+msgid "L10N Eg Edi Pos Token Expiry"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_pos.res_config_settings_view_form
+msgid ""
+"Navigate to the \"Point of Sale\" section and click \"Register Point of "
+"Sale\". Fill in the required details: Branch, Vendor &amp; Model, Active "
+"from, and Serial Number."
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#. odoo-python
+#: code:addons/l10n_eg_edi_pos/models/pos_order.py:0
+msgid ""
+"Negative quantities are only allowed on return orders created from the "
+"original receipt."
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#. odoo-python
+#: code:addons/l10n_eg_edi_pos/models/pos_order.py:0
+msgid "No ETA submission has been recorded yet for this receipt."
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_pos.res_config_settings_view_form
+msgid ""
+"Once POS registered, note down the \"Serial Number\" and \"Branch / Address "
+"Number\"."
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model:ir.model.fields.selection,name:l10n_eg_edi_pos.selection__pos_payment_method__l10n_eg_edi_pos_payment_code__o
+msgid "Others"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model:ir.model.fields,field_description:l10n_eg_edi_pos.field_pos_config__l10n_eg_edi_pos_client_id
+#: model:ir.model.fields,field_description:l10n_eg_edi_pos.field_res_config_settings__pos_l10n_eg_edi_pos_client_id
+msgid "POS ETA Client ID"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model:ir.model.fields,field_description:l10n_eg_edi_pos.field_pos_config__l10n_eg_edi_pos_client_secret
+#: model:ir.model.fields,field_description:l10n_eg_edi_pos.field_res_config_settings__pos_l10n_eg_edi_pos_client_secret
+msgid "POS ETA Client Secret"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model:ir.model.fields,field_description:l10n_eg_edi_pos.field_pos_config__l10n_eg_edi_pos_serial_number
+#: model:ir.model.fields,field_description:l10n_eg_edi_pos.field_res_config_settings__pos_l10n_eg_edi_pos_serial_number
+msgid "POS ETA Serial Number"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#. odoo-python
+#: code:addons/l10n_eg_edi_pos/models/pos_config.py:0
+msgid "POS Serial Number is missing."
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#. odoo-javascript
+#: code:addons/l10n_eg_edi_pos/static/src/overrides/models/invoice_button.js:0
+msgid ""
+"Please synchronize this order with ETA first by clicking on Details > Resend"
+" to ETA"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model:ir.model,name:l10n_eg_edi_pos.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model:ir.model,name:l10n_eg_edi_pos.model_pos_order
+msgid "Point of Sale Order"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model:ir.model,name:l10n_eg_edi_pos.model_pos_order_receipt
+msgid "Point of Sale Order Receipt Generator"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model:ir.model,name:l10n_eg_edi_pos.model_pos_payment_method
+msgid "Point of Sale Payment Method"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model:ir.model.fields.selection,name:l10n_eg_edi_pos.selection__pos_payment_method__l10n_eg_edi_pos_payment_code__p
+msgid "Points"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#. odoo-python
+#: code:addons/l10n_eg_edi_pos/models/pos_order.py:0
+msgid "Product %s has no ETA unit-of-measure code."
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_pos.res_config_settings_view_form
+msgid ""
+"Production and Pre-production portals have separate credentials. Make sure "
+"to update your Odoo instance when switching environments."
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model:ir.model.fields.selection,name:l10n_eg_edi_pos.selection__pos_payment_method__l10n_eg_edi_pos_payment_code__pr
+msgid "Promotion"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_pos.pos_order_receipt_header
+msgid "RECEIPT WITHOUT FISCAL VALUE"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#. odoo-python
+#: code:addons/l10n_eg_edi_pos/models/pos_order.py:0
+msgid "Receipt submitted to ETA."
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#. odoo-javascript
+#: code:addons/l10n_eg_edi_pos/static/src/overrides/screens/ticket_screen.js:0
+#: model:ir.model.fields.selection,name:l10n_eg_edi_pos.selection__pos_order__l10n_eg_edi_pos_state__rejected
+msgid "Rejected"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#. odoo-javascript
+#: code:addons/l10n_eg_edi_pos/static/src/overrides/screens/ticket_screen.js:0
+#: model:ir.model.fields.selection,name:l10n_eg_edi_pos.selection__pos_order__l10n_eg_edi_pos_state__rejected_test
+msgid "Rejected (Test)"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_pos.res_config_settings_view_form
+msgid ""
+"Save your Client ID, Client Secret 1, and Client Secret 2 immediately. You "
+"will not be able to retrieve them again after closing this screen."
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#. odoo-javascript
+#: code:addons/l10n_eg_edi_pos/static/src/overrides/screens/ticket_screen.js:0
+#: model:ir.model.fields.selection,name:l10n_eg_edi_pos.selection__pos_order__l10n_eg_edi_pos_state__sent
+msgid "Sent"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#. odoo-javascript
+#: code:addons/l10n_eg_edi_pos/static/src/overrides/screens/ticket_screen.js:0
+#: model:ir.model.fields.selection,name:l10n_eg_edi_pos.selection__pos_order__l10n_eg_edi_pos_state__sent_test
+msgid "Sent (Test)"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_pos.res_config_settings_view_form
+msgid "Serial Number"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model:ir.model.fields,field_description:l10n_eg_edi_pos.field_pos_config__l10n_eg_edi_pos_enable
+#: model:ir.model.fields,field_description:l10n_eg_edi_pos.field_pos_order__l10n_eg_edi_pos_enable
+#: model:ir.model.fields,field_description:l10n_eg_edi_pos.field_res_config_settings__pos_l10n_eg_edi_pos_enable
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_pos.res_config_settings_view_form
+msgid "Submit POS receipts to ETA"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model:ir.module.module,summary:base.module_l10n_eg_edi_pos
+msgid "Submit POS receipts to the Egyptian Tax Authority"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#. odoo-python
+#: code:addons/l10n_eg_edi_pos/models/pos_order.py:0
+msgid "Tax %s has no ETA tax code."
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model:ir.model.fields,help:l10n_eg_edi_pos.field_pos_payment_method__country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#. odoo-python
+#: code:addons/l10n_eg_edi_pos/models/pos_order.py:0
+msgid "The branch partner is missing required address fields."
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#. odoo-python
+#: code:addons/l10n_eg_edi_pos/models/pos_order.py:0
+msgid ""
+"The original receipt must be submitted to ETA before a return can be issued."
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#. odoo-javascript
+#: code:addons/l10n_eg_edi_pos/static/src/overrides/screens/feedback_screen.js:0
+msgid ""
+"The receipt could not be submitted to ETA.\n"
+"Resend it from Backend > Orders > Select the Order > Resend to ETA.\n"
+"\n"
+"Error message:\n"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#. odoo-python
+#: code:addons/l10n_eg_edi_pos/models/pos_order.py:0
+msgid ""
+"The sales journal is missing ETA branch, branch identifier, or activity "
+"type."
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#. odoo-javascript
+#: code:addons/l10n_eg_edi_pos/static/src/overrides/screens/ticket_screen.js:0
+#: model:ir.model.fields.selection,name:l10n_eg_edi_pos.selection__pos_order__l10n_eg_edi_pos_state__to_send
+msgid "To Send"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#. odoo-python
+#: code:addons/l10n_eg_edi_pos/models/pos_order.py:0
+msgid "Unexpected response from ETA."
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model:ir.model.fields,field_description:l10n_eg_edi_pos.field_pos_config__l10n_eg_edi_pos_preprod
+#: model:ir.model.fields,field_description:l10n_eg_edi_pos.field_res_config_settings__pos_l10n_eg_edi_pos_preprod
+msgid "Use Pre-production Environment"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model:ir.model.fields.selection,name:l10n_eg_edi_pos.selection__pos_payment_method__l10n_eg_edi_pos_payment_code__v
+msgid "Visa"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model:ir.model.fields.selection,name:l10n_eg_edi_pos.selection__pos_payment_method__l10n_eg_edi_pos_payment_code__vc
+msgid "Visa with contractor"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model:ir.model.fields.selection,name:l10n_eg_edi_pos.selection__pos_payment_method__l10n_eg_edi_pos_payment_code__vo
+msgid "Vouchers"
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#. odoo-javascript
+#. odoo-python
+#: code:addons/l10n_eg_edi_pos/models/pos_order.py:0
+#: code:addons/l10n_eg_edi_pos/static/src/overrides/services/pos_store.js:0
+msgid "You're not allowed to issue sales receipts to business buyers."
+msgstr ""
+
+#. module: l10n_eg_edi_pos
+#: model_terms:ir.ui.view,arch_db:l10n_eg_edi_pos.res_config_settings_view_form
+msgid "⚠️ Notes:"
+msgstr ""
