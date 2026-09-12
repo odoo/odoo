@@ -202,6 +202,11 @@ class RepairOrder(models.Model):
         help='Technical field to check when we can reserve quantities')
     picking_type_visible = fields.Boolean(compute='_compute_picking_type_visible')
     can_create_sale_or_invoice = fields.Boolean(compute='_compute_can_create_sale_or_invoice')
+    validate_button_style = fields.Selection([
+        ('primary', 'Primary'),
+        ('secondary', 'Secondary'),
+        ('invisible', 'Invisible'),
+    ], compute='_compute_validate_button_style')
 
     def _compute_picking_type_visible(self):
         repair_type_by_company = dict(self.env['stock.picking.type']._read_group([
@@ -377,6 +382,16 @@ class RepairOrder(models.Model):
     @api.depends('sale_order_id.invoice_ids')
     def _compute_invoice_ids(self):
         self.invoice_ids |= self.sale_order_id.invoice_ids
+
+    @api.depends('state')
+    def _compute_validate_button_style(self):
+        for repair in self:
+            if repair.state in ('cancel', 'done', 'draft'):
+                repair.validate_button_style = 'invisible'
+            elif repair.state == 'confirmed':
+                repair.validate_button_style = 'primary'
+            else:
+                repair.validate_button_style = 'secondary'
 
     def _search_date_category(self, operator, value):
         if operator != 'in':
