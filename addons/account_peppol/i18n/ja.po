@@ -12,9 +12,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-31 17:38+0000\n"
-"PO-Revision-Date: 2026-08-08 06:57+0000\n"
-"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"POT-Creation-Date: 2026-09-11 17:41+0000\n"
+"PO-Revision-Date: 2026-09-12 09:33+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-17/"
 "account_peppol/ja/>\n"
 "Language: ja\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: account_peppol
 #. odoo-python
@@ -39,8 +39,8 @@ msgid ""
 "<u>mandatory as of January 2026</u> - don't wait to register."
 msgstr ""
 "<br/>\n"
-"                                ベルギーでは電子請求が <u>2026年1月より義務"
-"化</u>されます。 - 今すぐご登録ください。"
+"                                ベルギーでは電子請求が <u>2026年1月より義務化"
+"</u>されます。 - 今すぐご登録ください。"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
@@ -94,8 +94,8 @@ msgid ""
 "                                </span>"
 msgstr ""
 "<span>\n"
-"                                    Peppolの接続をOdooに移行する(オプション)"
-":\n"
+"                                    Peppolの接続をOdooに移行する(オプショ"
+"ン):\n"
 "                                </span>"
 
 #. module: account_peppol
@@ -196,7 +196,8 @@ msgstr "アプリケーションステータス："
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid ""
 "By clicking the button below I accept that Odoo may process my e-invoices."
-msgstr "下のボタンを押すことで、私はOdooが電子請求書を処理することに同意します。"
+msgstr ""
+"下のボタンを押すことで、私はOdooが電子請求書を処理することに同意します。"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__sender
@@ -265,8 +266,8 @@ msgid ""
 "             List available at https://docs.peppol.eu/poacc/billing/3.0/"
 "codelist/eas/"
 msgstr ""
-"BIS Billing 3.0およびその派生版のエンドポイントを識別するために使用される"
-"コード。\n"
+"BIS Billing 3.0およびその派生版のエンドポイントを識別するために使用されるコー"
+"ド。\n"
 "             List available at https://docs.peppol.eu/poacc/billing/3.0/"
 "codelist/eas/"
 
@@ -394,12 +395,48 @@ msgid ""
 msgstr ""
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.js:0
+#, python-format
+msgid "French Company Registration"
+msgstr ""
+
+#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/tools/peppol_errors.py:0
 #, python-format
 msgid ""
 "If you are not subject to VAT, you should not have a VAT number on your "
 "company/contacts and your clients should not have one either."
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"If you want to register for the French e-invoicing, first install the PDP "
+"module: France - E-Invoicing (Approved Platform)."
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"If you want to register for the French e-invoicing, first install the PDP "
+"module: France - E-Invoicing (Approved Platform).\n"
+"The module was not found. Please update the available apps first."
+msgstr ""
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.js:0
+#, python-format
+msgid ""
+"If you want to use the French E-Invoicing via Approved Platform, please "
+"consider installing the module `France - E-Invoicing (Approved Platform)` "
+"before registering here. Are you sure you want to continue?"
 msgstr ""
 
 #. module: account_peppol
@@ -415,6 +452,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Incoming Invoices Journal"
 msgstr "受入請求仕訳帳"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid "Install module"
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -476,7 +520,7 @@ msgstr "最終Peppolエンドポイント検証"
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_config_settings__account_peppol_edi_mode__prod
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_config_settings__account_peppol_mode_constraint__prod
 msgid "Live"
-msgstr "有効"
+msgstr "本番"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_migration_key
@@ -911,8 +955,8 @@ msgid ""
 "                                        By clicking the button below I "
 "accept that Odoo may process my e-invoices."
 msgstr ""
-"テストモードでは、テスト用Peppolネットワークにユーザを登録することができます"
-"。\n"
+"テストモードでは、テスト用Peppolネットワークにユーザを登録することができま"
+"す。\n"
 "下のボタンをクリックすると、Odooが電子請求書を処理することに同意します。"
 
 #. module: account_peppol
@@ -976,8 +1020,8 @@ msgid ""
 "documents. Please check and verify their Peppol endpoint and the Electronic "
 "Invoicing format: %s"
 msgstr ""
-"以下の取引先のPeppolドキュメントの受信が正しく設定されていません。Peppol"
-"エンドポイントと電子請求書フォーマットをご確認下さい：%s"
+"以下の取引先のPeppolドキュメントの受信が正しく設定されていません。Peppolエン"
+"ドポイントと電子請求書フォーマットをご確認下さい：%s"
 
 #. module: account_peppol
 #. odoo-python
@@ -1020,8 +1064,8 @@ msgid ""
 "The peppol status of the documents has been reset when switching from Demo "
 "to Live."
 msgstr ""
-"DemoからLiveに切り替えた際、ドキュメントのpeppolステータスが再設定されました"
-"。"
+"DemoからLiveに切り替えた際、ドキュメントのpeppolステータスが再設定されまし"
+"た。"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -1067,7 +1111,8 @@ msgstr "この請求書もすでに"
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 #, python-format
 msgid "This verification code has expired. Please request a new one."
-msgstr "この認証コードは有効期限が切れています。新しいコードをリクエストして下さい。"
+msgstr ""
+"この認証コードは有効期限が切れています。新しいコードをリクエストして下さい。"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1113,6 +1158,13 @@ msgstr ""
 "ID'とも呼ばれます。"
 
 #. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid "Update Apps List"
+msgstr "アプリリストを更新"
+
+#. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
 #, python-format
@@ -1129,7 +1181,8 @@ msgstr "PEPPOLを使用する"
 msgid ""
 "Using the config params, this field specifies which edi modes may be "
 "selected from the UI"
-msgstr "コンフィグパラメータを使って、UIからどのediモードを選択できるかを指定します。"
+msgstr ""
+"コンフィグパラメータを使って、UIからどのediモードを選択できるかを指定します。"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1231,8 +1284,8 @@ msgid ""
 "You will not be able to send or receive Peppol documents in Odoo anymore. "
 "Are you sure you want to proceed?"
 msgstr ""
-"OdooでPeppolドキュメントの送受信ができなくなります。本当にこのまま続けますか"
-"？"
+"OdooでPeppolドキュメントの送受信ができなくなります。本当にこのまま続けます"
+"か？"
 
 #. module: account_peppol
 #. odoo-javascript

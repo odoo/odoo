@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-24 17:38+0000\n"
+"POT-Creation-Date: 2026-09-11 17:42+0000\n"
 "PO-Revision-Date: 2026-08-07 05:00+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -33,7 +33,8 @@ msgstr ""
 msgid ""
 " A string, possible empty, or a reference to a valid string. If empty, the "
 "text will be simply concatenated."
-msgstr "字符串（可能为空）或对有效字符串的引用。如果为空，则文本将简单地连接起来。"
+msgstr ""
+"字符串（可能为空）或对有效字符串的引用。如果为空，则文本将简单地连接起来。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -275,8 +276,8 @@ msgid ""
 "A number indicating which numbering system to use to represent weekdays. By "
 "default, counts starting with Sunday = 1."
 msgstr ""
-"一个数字，表示用于表示工作日的编号系统。默认情况下，从星期天开始计数，星期"
-"天=1。"
+"一个数字，表示用于表示工作日的编号系统。默认情况下，从星期天开始计数，星期天"
+"=1。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -418,11 +419,12 @@ msgid ""
 "number of days between start_date and end_date, assuming start_date and "
 "end_date were no more than one year apart)."
 msgstr ""
-"时间单位的文本缩写。可接受的取值有：\"Y\"（start_date和end_date之间的整年数）"
-"、\"M\"（start_date和end_date之间的整月数）、\"D\"（start_date和end_date之间"
-"的天数）、\"MD\"（在整月数之后，start_date和end_date之间的天数）、\"YM\"（在"
-"整年数之后，start_date和end_date之间的整月数）、\"YD\"（在假设start_date和"
-"end_date相差不超过一年的情况下，start_date和end_date之间的天数）。"
+"时间单位的文本缩写。可接受的取值有：\"Y\"（start_date和end_date之间的整年"
+"数）、\"M\"（start_date和end_date之间的整月数）、\"D\"（start_date和end_date"
+"之间的天数）、\"MD\"（在整月数之后，start_date和end_date之间的天数）、"
+"\"YM\"（在整年数之后，start_date和end_date之间的整月数）、\"YD\"（在假设"
+"start_date和end_date相差不超过一年的情况下，start_date和end_date之间的天"
+"数）。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -567,7 +569,8 @@ msgid ""
 "Additional ranges over which to evaluate the additional criteria. The "
 "filtered set will be the intersection of the sets produced by each criterion-"
 "range pair."
-msgstr "评估附加标准的其他范围。过滤后的集合将是每个标准-范围配对产生的集合的交集。"
+msgstr ""
+"评估附加标准的其他范围。过滤后的集合将是每个标准-范围配对产生的集合的交集。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1365,6 +1368,14 @@ msgstr "无法隐藏工作表的所有列。"
 #, python-format
 msgid "Cannot hide all the rows of a sheet."
 msgstr "无法隐藏工作表的所有行。"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid ""
+"Cannot perform this action on merged cells. Unmerge the cells and try again."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3022,7 +3033,8 @@ msgstr ""
 msgid ""
 "Function ${name} has no-repeatable arguments declared after repeatable ones. "
 "All repeatable arguments must be declared last."
-msgstr "函数${name}的不可重复参数在可重复参数之后声明。所有可重复的参数必须最后声明。"
+msgstr ""
+"函数${name}的不可重复参数在可重复参数之后声明。所有可重复的参数必须最后声明。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3113,7 +3125,8 @@ msgstr "函数 [[FUNCTION_NAME]] 的参数 %s 需要数值，但得到了空值�
 msgid ""
 "Function [[FUNCTION_NAME]] expects the parameter '%s' to be a single value "
 "or a single cell reference, not a range."
-msgstr "函数 [[FUNCTION_NAME]] 要求参数'%s'是单个值或单个单元格引用，而不是一个范围。"
+msgstr ""
+"函数 [[FUNCTION_NAME]] 要求参数'%s'是单个值或单个单元格引用，而不是一个范围。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4892,9 +4905,9 @@ msgid ""
 "found, a non-exact match may be returned."
 msgstr ""
 "使用该函数的一种方法是提供一个排序行或列 search_array，通过第二个参数 "
-"result_range 查找 search_key。另一种方法是将这两个参数合并为一个 search_array"
-"，搜索第一行或第一列，然后从数组的最后一行或最后一列返回一个值。如果未找到 "
-"search_key，则可能返回一个非精确匹配的值。"
+"result_range 查找 search_key。另一种方法是将这两个参数合并为一个 "
+"search_array，搜索第一行或第一列，然后从数组的最后一行或最后一列返回一个值。"
+"如果未找到 search_key，则可能返回一个非精确匹配的值。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6799,8 +6812,8 @@ msgid ""
 "The date for which to determine the day of the week. Must be a reference to "
 "a cell containing a date, a function returning a date type, or a number."
 msgstr ""
-"要确定星期的日期。必须是指向包含日期的单元格、返回日期类型的函数或数字的引用"
-"。"
+"要确定星期的日期。必须是指向包含日期的单元格、返回日期类型的函数或数字的引"
+"用。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6810,8 +6823,8 @@ msgid ""
 "The date for which to determine the week number. Must be a reference to a "
 "cell containing a date, a function returning a date type, or a number."
 msgstr ""
-"要确定周数的日期。必须是指向包含日期的单元格、返回日期类型的函数或数字的引用"
-"。"
+"要确定周数的日期。必须是指向包含日期的单元格、返回日期类型的函数或数字的引"
+"用。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7403,7 +7416,8 @@ msgstr "链接的完整URL用引号括起来。"
 msgid ""
 "The function [[FUNCTION_NAME]] expects a boolean value, but '%s' is a text, "
 "and cannot be coerced to a number."
-msgstr "函数[[FUNCTION_NAME]]期望一个布尔值，但'%s'是一个文本，不能被胁迫成一个数字。"
+msgstr ""
+"函数[[FUNCTION_NAME]]期望一个布尔值，但'%s'是一个文本，不能被胁迫成一个数字。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7413,8 +7427,8 @@ msgid ""
 "The function [[FUNCTION_NAME]] expects a number value between %s and %s "
 "inclusive, but receives %s."
 msgstr ""
-"函数[[FUNCTION_NAME]]希望得到一个介于%s和%s（包括）之间的数值，但接收到的是%s"
-"。"
+"函数[[FUNCTION_NAME]]希望得到一个介于%s和%s（包括）之间的数值，但接收到的"
+"是%s。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7443,7 +7457,8 @@ msgstr ""
 msgid ""
 "The function [[FUNCTION_NAME]] has an argument with value '%s'. It should be "
 "one of: %s."
-msgstr "函数 [[FUNCTION_NAME]] 有一个值为 '%s' 的参数。它应该是以下参数之一：%s。"
+msgstr ""
+"函数 [[FUNCTION_NAME]] 有一个值为 '%s' 的参数。它应该是以下参数之一：%s。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8557,7 +8572,8 @@ msgstr "要平均的范围。"
 msgid ""
 "The range to average. If not included, criteria_range is used for the "
 "average instead."
-msgstr "平均值的取值范围。如果不包含 criteria_range，平均值将使用 criteria_range。"
+msgstr ""
+"平均值的取值范围。如果不包含 criteria_range，平均值将使用 criteria_range。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10030,15 +10046,6 @@ msgstr "多项选择均不允许执行此操作。"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, python-format
-msgid ""
-"This operation is not possible due to a merge. Please remove the merges "
-"first than try again."
-msgstr "由于合并，该操作无法实现。请先删除合并，然后再试一次。"
-
-#. module: spreadsheet
-#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "This range is invalid"
@@ -10818,7 +10825,8 @@ msgstr "自动换行"
 msgid ""
 "Wraps the provided row or column of cells by columns after a specified "
 "number of elements to form a new array."
-msgstr "在指定的元素数量之后，通过列将提供的行或列单元格包裹起来，形成一个新的数组。"
+msgstr ""
+"在指定的元素数量之后，通过列将提供的行或列单元格包裹起来，形成一个新的数组。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10827,7 +10835,8 @@ msgstr "在指定的元素数量之后，通过列将提供的行或列单元格
 msgid ""
 "Wraps the provided row or column of cells by rows after a specified number "
 "of elements to form a new array."
-msgstr "在指定的元素数量之后，通过行将提供的行或列单元格包裹起来，形成一个新的数组。"
+msgstr ""
+"在指定的元素数量之后，通过行将提供的行或列单元格包裹起来，形成一个新的数组。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11170,6 +11179,12 @@ msgstr "x"
 #, python-format
 msgid "yesterday"
 msgstr "昨天"
+
+#, python-format
+#~ msgid ""
+#~ "This operation is not possible due to a merge. Please remove the merges "
+#~ "first than try again."
+#~ msgstr "由于合并，该操作无法实现。请先删除合并，然后再试一次。"
 
 #, python-format
 #~ msgid ""
