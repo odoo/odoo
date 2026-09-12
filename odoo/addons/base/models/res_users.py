@@ -1527,6 +1527,8 @@ class ResUsersApikeys(models.Model):
         max_duration = max(group.api_key_duration for group in self.env.user.all_group_ids) or 1.0
         if date > datetime.datetime.now() + datetime.timedelta(days=max_duration):
             raise ValidationError(_("You cannot exceed %(duration)s days.", duration=max_duration))
+        if date <= datetime.datetime.now():
+            raise ValidationError(_("You cannot set an expiration date in the past."))
 
     def _generate(self, scope, name, expiration_date):
         """Generates an api key.
