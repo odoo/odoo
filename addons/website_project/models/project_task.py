@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from itertools import chain
+
 from odoo import api, models, fields
 
 
@@ -28,3 +30,6 @@ class ProjectTask(models.Model):
                     partner.mobile = task.partner_phone
                 else:
                     partner.phone = task.partner_phone
+
+    def _get_partner_related_fields(self):
+        return chain(super()._get_partner_related_fields(), ("partner_phone",))
