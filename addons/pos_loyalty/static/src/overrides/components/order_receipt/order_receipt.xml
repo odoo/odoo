@@ -5,12 +5,15 @@
         <xpath expr="//div[hasclass('pos-receipt')]//div[hasclass('before-footer')]" position="inside">
             <t t-foreach="props.data.loyaltyStats or []" t-as="_loyaltyStat" t-key="_loyaltyStat.couponId">
                 <!-- Show only if portal_visible. -->
-                <div t-if="_loyaltyStat.program.portal_visible and (_loyaltyStat.points.won || _loyaltyStat.points.spent)" class='loyalty'>
+                <div t-if="_loyaltyStat.program.portal_visible and (_loyaltyStat.points.won || _loyaltyStat.points.spent || _loyaltyStat.points.deducted)" class='loyalty'>
                     <span class="pos-receipt-center-align">
                         <div>--------------------------------</div>
                     </span>
-                    <t t-if='_loyaltyStat.points.won'>
+                    <t t-if='_loyaltyStat.points.won and _loyaltyStat.points.won > 0'>
                         <div><t t-esc="_loyaltyStat.points.name"/> Won: <span t-esc='_loyaltyStat.points.won' class="pos-receipt-right-align"/></div>
+                    </t>
+                    <t t-if='_loyaltyStat.points.deducted and _loyaltyStat.points.deducted > 0'>
+                        <div><t t-esc="_loyaltyStat.points.name"/> Deducted: <span t-esc='_loyaltyStat.points.deducted' class="pos-receipt-right-align"/></div>
                     </t>
                     <t t-if='_loyaltyStat.points.spent'>
                         <div><t t-esc="_loyaltyStat.points.name"/> Spent: <span t-esc='_loyaltyStat.points.spent' class="pos-receipt-right-align"/></div>
