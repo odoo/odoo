@@ -13,7 +13,10 @@ registry.category("web_tour.tours").add("discuss_configuration_tour", {
             run: "click",
         },
         {
-            trigger: ".dropdown-menu a:contains('Notification')",
+            trigger: ".dropdown-menu .dropdown-header:contains('User Settings')",
+        },
+        {
+            trigger: ".dropdown-menu .dropdown-item:contains('Notification')",
             run: "click",
         },
         {
@@ -37,7 +40,10 @@ registry.category("web_tour.tours").add("discuss_configuration_tour", {
             run: "click",
         },
         {
-            trigger: ".dropdown-menu a:contains('Voice & Video')",
+            trigger: ".dropdown-menu .dropdown-header:contains('User Settings')",
+        },
+        {
+            trigger: ".dropdown-menu .dropdown-item:contains('Voice & Video')",
             run: "click",
         },
         {
