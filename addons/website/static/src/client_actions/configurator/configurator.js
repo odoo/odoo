@@ -1,5 +1,5 @@
 import { useEnv, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
-import { location, browser } from "@web/core/browser/browser";
+import { browser } from "@web/core/browser/browser";
 const sessionStorage = browser.sessionStorage;
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { delay } from "@web/core/utils/concurrency";
@@ -31,6 +31,12 @@ import {
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 import { fuzzyLevenshteinLookup } from "@web/core/utils/search";
 import { isBrowserSafari } from "@web/core/browser/feature_detection";
+import {
+    getConfiguratorPreviewUrl,
+    getPreviewIframeDocument,
+    replacePreviewIframeLogo,
+    scalePreviewIframe,
+} from "@website/client_actions/configurator/preview_iframe";
 
 export const ROUTES = {
     descriptionScreen: 1,
@@ -97,7 +103,6 @@ const PALETTES = {
 export const CUSTOM_BG_COLOR_ATTRS = ["menu", "footer"];
 
 const MAX_NBR_DISPLAY_MAIN_THEMES = 6;
-const DESKTOP_PREVIEW_WIDTH = 1440;
 const MIN_INDUSTRY_MATCH_CONFIDENCE = 70;
 const PREVIEW_IMAGE_LIST = [
     "landscape_md_2",
@@ -165,18 +170,24 @@ async function getRecommendedThemes(
     });
 }
 
-async function getIndustryImages(orm, industryId, theme = "") {
+async function getIndustryResources(orm, industryId, theme = "") {
     if (!industryId || industryId <= 0) {
         return {};
     }
     try {
-        return await orm.call("website", "configurator_get_images", [], {
+        return await orm.call("website", "configurator_get_custom_resources", [], {
             industry_id: industryId,
             theme,
         });
     } catch {
         return {};
     }
+}
+
+// Only whether the industry has catalog data matters: the labels themselves
+// are substituted server-side when the preview is rendered.
+function hasCatalogData(catalog) {
+    return !!Object.keys(catalog || {}).length;
 }
 
 function updateRecommendedThemes(state, themes) {
@@ -299,7 +310,7 @@ export class DescriptionScreen extends Component {
         );
 
         this.safariHackFocusedOutDropdown = null;
-        this.fetchImagesRequestId = 0;
+        this.fetchResourcesRequestId = 0;
     }
 
     onMounted() {
@@ -309,6 +320,7 @@ export class DescriptionScreen extends Component {
     async _setSelectedIndustry(label, id) {
         this.state.selectIndustry(label, id);
         this.setImages({});
+        this.setHasCatalog();
         this.fetchPositionings(label);
         if (id === -1) {
             id = await this.findClosestIndustryId(label);
@@ -317,24 +329,29 @@ export class DescriptionScreen extends Component {
             }
             this.state.setIndustryId(id);
         }
-        this.fetchIndustryImages(id);
+        this.fetchIndustryResources(id);
     }
 
     setImages(images) {
         this.state.images = images || {};
     }
 
-    async fetchIndustryImages(industryId) {
-        const requestId = ++this.fetchImagesRequestId;
+    setHasCatalog(catalog) {
+        this.state.hasCatalog = hasCatalogData(catalog);
+    }
+
+    async fetchIndustryResources(industryId) {
+        const requestId = ++this.fetchResourcesRequestId;
         if (!industryId || industryId <= 0) {
             return;
         }
-        const images = await getIndustryImages(this.orm, industryId);
+        const resources = await getIndustryResources(this.orm, industryId);
         if (
-            requestId === this.fetchImagesRequestId &&
+            requestId === this.fetchResourcesRequestId &&
             this.state.selectedIndustry?.id === industryId
         ) {
-            this.setImages(images);
+            this.setImages(resources.images);
+            this.setHasCatalog(resources.catalog);
         }
     }
 
@@ -462,6 +479,7 @@ Return ONLY a JSON object with:
             this.state.selectIndustry();
         }
         this.setImages({});
+        this.setHasCatalog();
         const termsSet = this._splitToSet(term);
         const rawTerms = Array.from(termsSet);
 
@@ -652,6 +670,7 @@ Return ONLY a JSON object with:
         if (!inputValue) {
             this.state.selectIndustry(); // reset
             this.setImages({});
+            this.setHasCatalog();
         }
     }
 }
@@ -1141,21 +1160,12 @@ export class ThemeSelectionScreen extends ApplyConfiguratorScreen {
         for (const iframe of document.querySelectorAll(
             ".o_theme_selection_screen .o_configurator_theme_preview_iframe"
         )) {
-            this.scalePreviewIframe(iframe);
+            scalePreviewIframe(iframe);
         }
     }
 
     getThemePreviewUrl(theme) {
-        const previewUrl = new URL("/website/configurator/preview", location.origin);
-        const palette = this.state.selectedPalette || {};
-        previewUrl.searchParams.set("preview_url", theme.preview_url);
-        previewUrl.searchParams.set("theme_name", theme.name);
-        previewUrl.searchParams.set("industry_id", this.state.selectedIndustry?.id || -1);
-        previewUrl.searchParams.set("is_dark", palette.isDark ? "1" : "0");
-        for (const colorName of ["color1", "color2", "color3", "color4", "color5"]) {
-            previewUrl.searchParams.set(colorName, palette[colorName] || "");
-        }
-        return previewUrl.toString();
+        return getConfiguratorPreviewUrl(this.state, theme.preview_url, theme.name);
     }
 
     /**
@@ -1178,24 +1188,12 @@ export class ThemeSelectionScreen extends ApplyConfiguratorScreen {
         return previewHeaders[(index >= 0 ? index : 0) % previewHeaders.length];
     }
 
-    getPreviewIframeDocument(iframe) {
-        try {
-            const previewDocument = iframe.contentDocument;
-            return previewDocument?.readyState === "complete" ? previewDocument : null;
-        } catch (error) {
-            if (error.name === "SecurityError") {
-                return null;
-            }
-            throw error;
-        }
-    }
-
     replacePreviewIframeHeading(iframe) {
         const previewHeader = this.getPreviewHeader(iframe);
         if (!previewHeader) {
             return;
         }
-        const previewDocument = this.getPreviewIframeDocument(iframe);
+        const previewDocument = getPreviewIframeDocument(iframe);
         if (!previewDocument) {
             return;
         }
@@ -1232,21 +1230,6 @@ export class ThemeSelectionScreen extends ApplyConfiguratorScreen {
         }
     }
 
-    replacePreviewIframeLogo(iframe) {
-        const logo = this.state.logo;
-        if (!logo) {
-            return;
-        }
-        const previewDocument = this.getPreviewIframeDocument(iframe);
-        if (!previewDocument) {
-            return;
-        }
-        const logoImage = previewDocument.querySelector("header img, #top img, .navbar-brand img");
-        if (logoImage) {
-            logoImage.src = logo;
-        }
-    }
-
     updatePreviewIframeHeadings() {
         for (const iframe of document.querySelectorAll(
             ".o_theme_selection_screen .o_configurator_theme_preview_iframe"
@@ -1255,82 +1238,15 @@ export class ThemeSelectionScreen extends ApplyConfiguratorScreen {
         }
     }
 
-    getPreviewIframeContentSize(iframe) {
-        const iframeWindow = iframe.contentWindow;
-        const iframeDocument = this.getPreviewIframeDocument(iframe);
-        const scrollingElement = iframeDocument?.scrollingElement;
-        const documentElement = iframeDocument?.documentElement;
-        const body = iframeDocument?.body;
-        if (!iframeWindow || !scrollingElement || !documentElement) {
-            return null;
-        }
-        return {
-            width: Math.max(
-                DESKTOP_PREVIEW_WIDTH,
-                iframeWindow.innerWidth,
-                scrollingElement.scrollWidth,
-                documentElement.scrollWidth,
-                body?.scrollWidth || 0
-            ),
-            height: Math.max(
-                scrollingElement.scrollHeight,
-                documentElement.scrollHeight,
-                body?.scrollHeight || 0,
-                documentElement.offsetHeight,
-                body?.offsetHeight || 0
-            ),
-        };
-    }
-
-    scalePreviewIframe(iframe) {
-        if (!iframe) {
-            return;
-        }
-
-        const previewContainer = iframe.parentElement;
-        const availableWidth = previewContainer.clientWidth;
-        const availableHeight = previewContainer.clientHeight;
-
-        if (!availableWidth || !availableHeight) {
-            return;
-        }
-
-        iframe.style.setProperty("width", `${DESKTOP_PREVIEW_WIDTH}px`, "important");
-        // Reset to the natural viewport height before measuring
-        const naturalViewportHeight = Math.ceil(
-            availableHeight / Math.min(1, availableWidth / DESKTOP_PREVIEW_WIDTH)
-        );
-        iframe.style.setProperty("height", `${naturalViewportHeight}px`, "important");
-
-        const contentSize = this.getPreviewIframeContentSize(iframe);
-        const iframeWidth = contentSize?.width || DESKTOP_PREVIEW_WIDTH;
-        const scale = Math.min(1, availableWidth / iframeWidth);
-        const fallbackContentHeight = (availableHeight * 2) / scale;
-        const iframeHeight = Math.ceil(contentSize?.height || fallbackContentHeight);
-        // The iframe is scaled, so the scroll distance must use the scaled
-        // height, not the raw document height.
-        const scrollDistance = Math.max(0, iframeHeight * scale - availableHeight);
-
-        iframe.style.setProperty("width", `${iframeWidth}px`, "important");
-        iframe.style.setProperty("height", `${iframeHeight}px`, "important");
-        iframe.style.setProperty(
-            "--o-configurator-iframe-scroll-distance",
-            `${Math.floor(scrollDistance)}px`
-        );
-        iframe.style.setProperty("--o-configurator-iframe-scale", scale);
-        iframe.style.setProperty("transform-origin", "top left");
-        iframe.style.setProperty("flex", "0 0 auto", "important");
-    }
-
     async onPreviewIframeLoad(ev) {
         const iframe = ev.currentTarget;
         this.replacePreviewIframeHeading(iframe);
-        this.replacePreviewIframeLogo(iframe);
+        replacePreviewIframeLogo(iframe, this.state.logo);
         iframe.parentElement.classList.add("o_preview_loaded");
-        this.scalePreviewIframe(iframe);
+        scalePreviewIframe(iframe);
         // The ImageLazyLoading interaction gives lazy images min-height: 1px
         // until they load, so the initial measurement underestimates the page height.
-        const iframeDoc = this.getPreviewIframeDocument(iframe);
+        const iframeDoc = getPreviewIframeDocument(iframe);
         if (!iframeDoc) {
             return;
         }
@@ -1351,7 +1267,7 @@ export class ThemeSelectionScreen extends ApplyConfiguratorScreen {
                     })
             )
         );
-        this.scalePreviewIframe(iframe);
+        scalePreviewIframe(iframe);
     }
 
     async chooseTheme(themeName) {
@@ -1609,12 +1525,12 @@ export class Configurator extends Component {
             delete storedState.selectedPurpose;
             delete storedState.formerSelectedPurpose;
             let themes = [];
-            let images = {};
+            let resources = {};
             if (storedState.selectedIndustry && storedState.selectedPalette) {
                 themes = await getRecommendedThemes(this.orm, storedState);
             }
             if (storedState.selectedIndustry?.id > 0) {
-                images = await getIndustryImages(
+                resources = await getIndustryResources(
                     this.orm,
                     storedState.selectedIndustry.id,
                     themes[0]?.name || ""
@@ -1622,7 +1538,8 @@ export class Configurator extends Component {
             }
             return Object.assign(r, {
                 ...storedState,
-                images,
+                images: resources.images || {},
+                hasCatalog: hasCatalogData(resources.catalog),
                 palettes,
                 themes,
                 previewHeaders: [],
@@ -1649,6 +1566,7 @@ export class Configurator extends Component {
             formerSelectedPositioning: undefined,
             selectedIndustry: undefined,
             images: {},
+            hasCatalog: false,
             selectedPalette: undefined,
             recommendedPalette: undefined,
             styleRecommendation: undefined,
