@@ -555,6 +555,9 @@ class MailMessage(models.Model):
 
         return domain
 
+    def _get_share_domain(self):
+        return SHARE_DOMAIN
+
     def _get_search_domain_share(self):
         if self.env.user._is_internal():
             return Domain.TRUE
