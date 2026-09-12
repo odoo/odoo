@@ -247,25 +247,37 @@ test("full message composer dialog size expand/collapse", async () => {
 
 test("Send message displays the number of notified followers inside a badge", async () => {
     const pyEnv = await startServer();
-    const [partnerId_1, partnerId_2, partnerId_3] = pyEnv["res.partner"].create([
+    const [partnerId_1, partnerId_2, partnerId_3, partnerId_4] = pyEnv["res.partner"].create([
         { name: "Eden Hazard" },
         { name: "Jean Michang" },
+        { name: "Francesco Totti" },
         {},
+    ]);
+    const [mtCommentId] = pyEnv["mail.message.subtype"].search([
+        ["subtype_xmlid", "=", "mail.mt_comment"],
     ]);
     pyEnv["mail.followers"].create([
         {
             partner_id: partnerId_2,
-            res_id: partnerId_3,
+            res_id: partnerId_4,
             res_model: "res.partner",
+            subtype_ids: [mtCommentId],
         },
         {
             partner_id: partnerId_1,
-            res_id: partnerId_3,
+            res_id: partnerId_4,
             res_model: "res.partner",
+            subtype_ids: [mtCommentId],
+        },
+        {
+            partner_id: partnerId_3,
+            res_id: partnerId_4,
+            res_model: "res.partner",
+            subtype_ids: [],
         },
     ]);
     await start();
-    await openFormView("res.partner", partnerId_3);
+    await openFormView("res.partner", partnerId_4);
     await click("button:text('Send message')");
     await contains(".o-mail-RecipientsInput .badge:text('2 Followers')");
 });
