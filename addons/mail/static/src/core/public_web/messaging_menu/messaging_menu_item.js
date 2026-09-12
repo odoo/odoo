@@ -2,6 +2,7 @@ import { ActionList } from "@mail/core/common/action_list";
 import { useMessageActions } from "@mail/core/common/message_actions";
 import { Priority } from "@mail/core/common/priority";
 import { NotificationItem } from "@mail/core/public_web/notification_item";
+import { preventLinkInteraction } from "@mail/utils/common/format";
 import { propSignal, useLongPress } from "@mail/utils/common/hooks";
 
 import { Component, computed, signal, types, useProps } from "@odoo/owl";
@@ -129,10 +130,10 @@ export class MessagingMenuItem extends Component {
         if (!message) {
             return _t("This is the start of your conversation");
         }
-        if (!this.itemPreviewThread) {
-            return message.isSelfAuthored ? message.previewText : message.bodyPreview;
+        if (!this.itemPreviewThread && !message.isSelfAuthored) {
+            return preventLinkInteraction(message.bodyPreview);
         }
-        return message.previewText;
+        return preventLinkInteraction(message.previewText);
     }
 
     get itemPreviewThread() {

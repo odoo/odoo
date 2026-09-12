@@ -82,6 +82,9 @@ export class MessageSeenIndicator extends Component {
     }
 
     openDialog() {
+        if (this.env.inNotificationItem) {
+            return;
+        }
         this.dialog.add(MessageSeenIndicatorDialog, { message: this.props.message });
     }
 }

@@ -676,3 +676,17 @@ export function attClassObjectToString(obj) {
         .map(([key, _]) => key)
         .join(" ");
 }
+
+/**
+ * Prevents interaction with links in the given content.
+ *
+ * @param {string|ReturnType<markup>} content
+ * @returns {ReturnType<markup>}
+ */
+export function preventLinkInteraction(content) {
+    const div = createElementWithContent("div", content);
+    div.querySelectorAll("a").forEach((link) => {
+        link.style.pointerEvents = "none";
+    });
+    return markup(div.innerHTML);
+}
