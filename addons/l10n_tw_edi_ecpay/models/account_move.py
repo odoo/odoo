@@ -460,8 +460,10 @@ class AccountMove(models.Model):
     def _l10n_tw_edi_prepare_item_list(self, json_data, is_allowance=False):
         self.ensure_one()
         item_list = []
+        base_lines = []
         sale_amount = 0
         tax_amount = 0
+        has_negative_lines = False
         AccountTax = self.env['account.tax']
         tax_type, _, _ = self._l10n_tw_edi_determine_tax_types()
         for index, line in enumerate(self.invoice_line_ids.filtered(lambda line: line.display_type == "product"), start=1):
@@ -469,6 +471,7 @@ class AccountMove(models.Model):
             if is_allowance and self.reversed_entry_id.currency_id == self.currency_id:
                 base_line['rate'] = self.reversed_entry_id.invoice_currency_rate  # replace the rate by the original invoice's rate
             AccountTax._add_tax_details_in_base_line(base_line, self.company_id)
+            base_lines.append(base_line)
 
             twd_excluded_amount = base_line['tax_details']['raw_total_excluded']
             twd_included_amount = base_line['tax_details']['raw_total_included']
@@ -477,6 +480,8 @@ class AccountMove(models.Model):
             if self.l10n_tw_edi_is_b2b:
                 item_price = float_round(twd_excluded_amount / quantity, precision_rounding=0.01)
                 item_amount = float_round(twd_excluded_amount, precision_rounding=0.01)
+                if item_price < 0:
+                    has_negative_lines = True
             else:
                 if not is_allowance and line.tax_ids and not line.tax_ids[0].price_include:
                     item_price = float_round(twd_excluded_amount / quantity, precision_rounding=0.01)
@@ -520,9 +525,13 @@ class AccountMove(models.Model):
                 })
             if self.l10n_tw_edi_is_b2b:
                 sale_amount += item_amount
-                tax_amount += base_line["tax_details"]["taxes_data"][0]["raw_tax_amount"]
             else:
                 sale_amount += item_amount_taxed
+
+            if self.l10n_tw_edi_is_b2b:
+                # Only B2B reports TaxAmount/ItemTax to ECPay. Round per tax record here,
+                # like the invoice itself does, so the totals actually match it.
+                AccountTax._round_base_lines_tax_details(base_lines, self.company_id)
 
         # Sale amount adjustment
         amount_on_invoice = self.amount_untaxed_signed if self.l10n_tw_edi_is_b2b and tax_type != "4" else self.amount_total_signed
@@ -562,7 +571,12 @@ class AccountMove(models.Model):
                 json_data["AllowanceAmount"] = self.company_id.currency_id.round(sale_amount)
 
         if self.l10n_tw_edi_is_b2b:
-            json_data["TaxAmount"] = self.company_id.currency_id.round(tax_amount) if tax_type != "4" else 0
+            per_line_tax_amounts = [base_line['tax_details']['taxes_data'][0]['tax_amount'] for base_line in base_lines]
+            json_data["TaxAmount"] = sum(per_line_tax_amounts) if tax_type != "4" else 0
+            if has_negative_lines:
+                # ECPay derives ItemTax itself for positive lines; negative lines (e.g. down payments) need it set explicitly.
+                for index, tax_amount in enumerate(per_line_tax_amounts):
+                    item_list[index]["ItemTax"] = tax_amount
 
     def _l10n_tw_edi_generate_invoice_json(self):
         self.ensure_one()
