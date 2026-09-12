@@ -7331,3 +7331,23 @@ class StockMove(TransactionCase):
         self.assertEqual(picking.date_deadline, move1.date_deadline, 'Picking deadline should be the earliest move deadline')
         move1._action_cancel()
         self.assertEqual(picking.date_deadline, move2.date_deadline, 'Picking deadline should update to the remaining move after cancellation')
+
+    def test_show_quant_create_lots_only(self):
+        """
+        On a create-lots-only delivery, `show_quant` is False for a
+        lot-tracked product and True for a non-tracked one.
+        """
+        picking_type_out = self.env.ref('stock.picking_type_out')
+        picking_type_out.use_create_lots = True
+        picking_type_out.use_existing_lots = False
+        untracked_move, tracked_move = self.env['stock.move'].create([{
+            'name': 'test_show_quant',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+            'picking_type_id': picking_type_out.id,
+        } for product in (self.product, self.product_lot)])
+        self.assertTrue(untracked_move.show_quant)
+        self.assertFalse(tracked_move.show_quant)
