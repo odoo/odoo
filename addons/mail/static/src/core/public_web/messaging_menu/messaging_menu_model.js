@@ -8,6 +8,7 @@ export const MENU_TABS = { BOOKMARK: "bookmark", NOTIFICATION: "notification" };
 export class MessagingMenu extends Record {
     static singleton = true;
 
+    allTabs = this.computed(() => [...this.store.MessagingMenuTab.records.values()]);
     bookmarkTab = fields.One("MessagingMenuTab", {
         compute() {
             if (this.store.self_user?.share !== false) {
@@ -92,8 +93,6 @@ export class MessagingMenu extends Record {
         },
         eager: true,
     });
-    allTabs = fields.Many("MessagingMenuTab", { inverse: "messagingMenuAsTab" });
-    visibleTabs = fields.Many("MessagingMenuTab", { inverse: "messagingMenuAsVisibleTabs" });
     sortedVisibleTabs = fields.Many("MessagingMenuTab", {
         compute() {
             return [...this.visibleTabs].sort(
@@ -101,6 +100,7 @@ export class MessagingMenu extends Record {
             );
         },
     });
+    visibleTabs = this.computed(() => this.allTabs.filter((tab) => tab.appWide && tab.canBeShown));
 
     _computeGlobalCounter() {
         return this.visibleTabs.reduce((sum, t) => sum + (t.important ? t.counter ?? 0 : 0), 0);

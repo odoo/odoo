@@ -60,11 +60,11 @@ export class MessagingMenuTab extends Record {
     setup() {
         super.setup(...arguments);
         this.onChange(
-            () => [this.messagingMenuAsTab],
-            function onChangeMessagingMenuAsTab(messagingMenuAsTab) {
+            () => [this.store.messagingMenu?.initializeCountersFetcher],
+            function onChangeInitializeCountersFetcher(initializeCountersFetcher) {
                 if (
-                    !messagingMenuAsTab ||
-                    messagingMenuAsTab.initializeCountersFetcher.status === "not_fetched"
+                    !initializeCountersFetcher ||
+                    initializeCountersFetcher.status === "not_fetched"
                 ) {
                     return;
                 }
@@ -167,22 +167,6 @@ export class MessagingMenuTab extends Record {
     loadStatusByFilterId = fields.Attr({}, { asProxy: true });
     /** IDs of already loaded records, used to exclude them from `loadMore` requests. */
     loadMoreExcludeIds = this.computed(() => this._computeLoadMoreExcludeIds());
-    messagingMenuAsTab = fields.One("MessagingMenu", {
-        inverse: "allTabs",
-        compute() {
-            return this.store.messagingMenu;
-        },
-    });
-    messagingMenuAsVisibleTabs = fields.One("MessagingMenu", {
-        inverse: "visibleTabs",
-        compute() {
-            if (!this.appWide || !this.canBeShown) {
-                return;
-            }
-            return this.store.messagingMenu;
-        },
-        eager: true,
-    });
     messages = fields.Many("mail.message", { inverse: "messagingMenuTabsAsMessages" });
     sortedMessages = fields.Many("mail.message", {
         compute() {
@@ -199,12 +183,18 @@ export class MessagingMenuTab extends Record {
         // The counter reflects the default filter (when any), so only count loaded
         // messages matching it. `init_counter_ids` is scoped to that domain.
         const defaultFilter = this.defaultFilter;
-        const countableMessages = defaultFilter?.includesMessage
-            ? this.messages.filter((m) => defaultFilter.includesMessage(m))
-            : this.messages;
-        const unloadedUnreadCount = this.init_counter_ids.filter(
-            (id) => !this.store["mail.message"].get(id)
-        ).length;
+        const isCountable = (message) =>
+            defaultFilter?.includesMessage ? defaultFilter.includesMessage(message) : true;
+        const countableMessages = this.messages.filter(isCountable);
+        const countedIds = new Set(countableMessages.map((m) => m.id));
+        const unloadedUnreadCount = this.init_counter_ids.filter((id) => {
+            if (countedIds.has(id)) {
+                return false;
+            }
+            const message = this.store["mail.message"].get(id);
+            // Count a loaded message until its own compute links it to this tab.
+            return !message || (this.includesMessage(message) && isCountable(message));
+        }).length;
         return countableMessages.length + unloadedUnreadCount + this.extraCounter;
     }
 
