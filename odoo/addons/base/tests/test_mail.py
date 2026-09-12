@@ -3,6 +3,7 @@
 
 from markupsafe import Markup
 
+import base64
 import re
 
 from odoo.addons.base.models.ir_mail_server import extract_rfc2822_addresses
@@ -388,6 +389,18 @@ class TestSanitizer(BaseCase):
     #         self.assertIn(ext, new_html)
     #     for ext in test_mail_examples.MSOFFICE_1_OUT:
     #         self.assertNotIn(ext, new_html)
+
+    def test_inline_images_over_the_parser_buffer(self):
+        """ lxml gives back a truncated document once its input buffer has held
+        about 10 million characters, without raising anything. """
+        payload = base64.b64encode(b'x' * 1500000).decode()
+        images = ''.join(f'<img src="data:image/png;base64,{payload}">' for _ in range(6))
+        content = f'<div>{images}<p>Last line of the body</p></div>'
+        self.assertGreater(len(content), 10000000, "the body has to be over the parser limit")
+
+        sanitized = html_sanitize(content)
+        self.assertEqual(sanitized.count(payload), 6, "every image should keep its data")
+        self.assertIn('Last line of the body', sanitized, "the end of the body should be kept")
 
 
 @tagged('mail_sanitize')

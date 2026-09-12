@@ -25,6 +25,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools.float_utils import float_round
 from odoo.tools.image import ImageProcess
+from odoo.tools.mail import restore_inline_images, stash_inline_images
 
 _logger = logging.getLogger(__name__)
 
@@ -1356,7 +1357,8 @@ class MassMailing(models.Model):
         Find VML v:image elements, crop their source images, make an attachement
         out of them and replace their source with an url to the attachement.
         """
-        root = lxml.html.fromstring(html_content)
+        stashed_content, inline_images = stash_inline_images(html_content)
+        root = lxml.html.fromstring(stashed_content)
         did_modify_body = False
 
         conversion_info = []  # list of tuples (image: base64 image, node: lxml node, old_url: string or None, original_id))
@@ -1405,7 +1407,9 @@ class MassMailing(models.Model):
                                 conversion_info.append((base64.b64encode(image.source), node, url, int(node.attrib.get('data-original-id') or "0")))
 
         # Apply the changes.
-        urls = self._create_attachments_from_inline_images([(image, original_id) for (image, _, _, original_id) in conversion_info])
+        urls = self._create_attachments_from_inline_images(
+            [(restore_inline_images(image.decode(), inline_images).encode(), original_id)
+             for (image, _, _, original_id) in conversion_info])
         for ((image, node, old_url, original_id), new_url) in zip(conversion_info, urls):
             did_modify_body = True
             if node.tag == 'img':
@@ -1416,7 +1420,7 @@ class MassMailing(models.Model):
                 node.text = node.text.replace(old_url, new_url)
 
         if did_modify_body:
-            return lxml.html.tostring(root, encoding='unicode')
+            return restore_inline_images(lxml.html.tostring(root, encoding='unicode'), inline_images)
         return html_content
 
     def _create_attachments_from_inline_images(self, b64images):
