@@ -29,7 +29,9 @@ If you need to manage your meetings, you should install the CRM module.
         'data/mail_activity_type_data.xml',
         'data/mail_message_subtype_data.xml',
         'views/mail_activity_views.xml',
+        'views/calendar_calendar_views.xml',
         'views/calendar_templates.xml',
+        'views/calendar_user_views.xml',
         'views/calendar_views.xml',
         'views/res_config_settings_views.xml',
         'views/res_partner_views.xml',
@@ -68,4 +70,5 @@ If you need to manage your meetings, you should install the CRM module.
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
+    'post_init_hook': 'initialize_primary_calendars',
 }

@@ -16,9 +16,7 @@ patch(AttendeeCalendarModel.prototype, {
             (data) => {
                 const startDate = serializeDate(data.range.start);
                 const endDate = serializeDate(data.range.end);
-                const activePartnerIds = data.filterSections.partner_ids?.filters
-                    .filter((partner) => partner.active)
-                    .map((partner) => partner.value)
+                const activePartnerIds = this.getActivePartnerIds(data)
                     .sort()
                     .join(",");
                 return `${startDate},${endDate},${activePartnerIds}`;
@@ -45,9 +43,7 @@ patch(AttendeeCalendarModel.prototype, {
         if (this.meta.scale !== "day" && this.meta.scale !== "week") {
             return [];
         }
-        const activePartnerIds = data.filterSections.partner_ids?.filters
-            .filter((partner) => partner.active)
-            .map((partner) => partner.value);
+        const activePartnerIds = this.getActivePartnerIds(data);
 
         return this.orm.call("res.partner", "get_working_hours_for_all_attendees", [
             activePartnerIds,
@@ -61,9 +57,7 @@ patch(AttendeeCalendarModel.prototype, {
             return [];
         }
         // Update unusualDays to also include the days an employee is not available based on their working schedule.
-        const activePartnerIds = data.filterSections.partner_ids?.filters
-            .filter((partner) => partner.active)
-            .map((partner) => partner.value);
+        const activePartnerIds = this.getActivePartnerIds(data)
 
         return this.orm.call(this.meta.resModel, "get_unusual_days", [
             serializeDate(data.range.start),
@@ -76,7 +70,7 @@ patch(AttendeeCalendarModel.prototype, {
         let attendeeIds;
         const filters = data.filterSections.partner_ids?.filters;
         if (
-            filters &&
+            filters && filters.length > 0 &&
             filters[filters.length - 1].type === "all" &&
             filters[filters.length - 1].active
         ) {
@@ -102,11 +96,8 @@ patch(AttendeeCalendarModel.prototype, {
         this.multiCalendar = Object.values(res).some(
             (location) => location.user_id !== user.userId
         );
-        const filters = data.filterSections.partner_ids?.filters;
-        data.userFilterActive =
-            filters &&
-            (filters.filter((filter) => filter.value === user.partnerId)[0]?.active ||
-                (filters[filters.length - 1].type === "all" && filters[filters.length - 1].active));
+        const filters = data.filterSections.calendar_id?.filters;
+        data.userFilterActive = filters?.length > 0 && (filters.filter((filter) => filter.isPrimary)[0]?.active);
         const events = {};
         let previousDay;
         const rangeInterval = Interval.fromDateTimes(

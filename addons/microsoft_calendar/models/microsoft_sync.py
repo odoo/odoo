@@ -79,6 +79,14 @@ class MicrosoftCalendarSync(models.AbstractModel):
                     if not vals.get('active', True):
                         # We need to delete the event. Cancel is not sufficient. Errors may occur.
                         record._microsoft_delete(record._get_organizer(), record.microsoft_id, timeout=timeout)
+                    # We currently only support syncing events from primary calendars.
+                    elif 'calendar_id' in vals and vals.get('calendar_id') != record._get_event_user_m().primary_calendar_id.id:
+                        record._microsoft_delete(record._get_organizer(), record.microsoft_id, timeout=timeout)
+                        record.write({
+                            'microsoft_id': False,
+                            'ms_universal_event_id': False,
+                            'need_sync_m': False,
+                        })
                     elif fields_to_sync:
                         values = record._microsoft_values(fields_to_sync)
                         if not values:
@@ -98,7 +106,9 @@ class MicrosoftCalendarSync(models.AbstractModel):
             timeout = self._get_microsoft_graph_timeout()
 
             for record in records:
-                if record.need_sync_m and record.active:
+                # We currently only support syncing events from primary calendars.
+                if (record.need_sync_m and record.active and record.calendar_id
+                        and record.calendar_id == record._get_event_user_m().primary_calendar_id):
                     record._microsoft_insert(record._microsoft_values(self._get_microsoft_synced_fields()), timeout=timeout)
         return records
 
@@ -160,7 +170,10 @@ class MicrosoftCalendarSync(models.AbstractModel):
     def _cancel_microsoft(self):
         self.microsoft_id = False
         self.ms_universal_event_id = False
-        self.unlink()
+        # When we move an event to a secondary calendar, we remove it from outlook. This returns a canceled event record
+        # on the next sync. In this case, we still keep the event in odoo. Only delete it if it's still in a synced
+        # primary calendar.
+        self.filtered(lambda e: e.calendar_id.calendar_user_ids.filtered(lambda cu: cu.is_primary)).unlink()
 
     def _sync_recurrence_microsoft2odoo(self, microsoft_events, new_events=None):
         recurrent_masters = new_events.filter(lambda e: e.is_recurrence()) if new_events else []
@@ -181,7 +194,7 @@ class MicrosoftCalendarSync(models.AbstractModel):
             )
             recurrents -= to_create
             base_values = dict(
-                self.env['calendar.event']._microsoft_to_odoo_values(recurrent_master, default_values, with_ids=True),
+                self.env['calendar.event']._microsoft_to_odoo_values(recurrent_master, default_values, with_ids=True, create=True),
                 need_sync_m=False
             )
             to_create_values = []
@@ -191,7 +204,7 @@ class MicrosoftCalendarSync(models.AbstractModel):
                 if recurrent_event.type == 'occurrence':
                     value = self.env['calendar.event']._microsoft_to_odoo_recurrence_values(recurrent_event, base_values)
                 else:
-                    value = self.env['calendar.event']._microsoft_to_odoo_values(recurrent_event, default_values)
+                    value = self.env['calendar.event']._microsoft_to_odoo_values(recurrent_event, default_values, create=True)
 
                 to_create_values += [dict(value, need_sync_m=False)]
 
@@ -298,7 +311,7 @@ class MicrosoftCalendarSync(models.AbstractModel):
 
         # create new events and reccurrences
         odoo_values = [
-            dict(self._microsoft_to_odoo_values(e, with_ids=True), need_sync_m=False)
+            dict(self._microsoft_to_odoo_values(e, with_ids=True, create=True), need_sync_m=False)
             for e in (new - new_recurrence)
         ]
         synced_events = self.with_context(dont_notify=True, skip_contact_description=True)._create_from_microsoft(new, odoo_values)
@@ -461,7 +474,7 @@ class MicrosoftCalendarSync(models.AbstractModel):
 
     @api.model
     def _microsoft_to_odoo_values(
-        self, microsoft_event: MicrosoftEvent, default_reminders=(), default_values=None, with_ids=False
+        self, microsoft_event: MicrosoftEvent, default_reminders=(), default_values=None, with_ids=False, create=False
     ):
         """
         Implements this method to return a dict of Odoo values corresponding

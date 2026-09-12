@@ -64,7 +64,7 @@ class CalendarEvent(models.Model):
     @api.model
     def _get_microsoft_synced_fields(self):
         return {'name', 'description', 'allday', 'start', 'date_end', 'stop',
-                'user_id', 'privacy',
+                'user_id', 'calendar_id', 'privacy',
                 'attendee_ids', 'alarm_ids', 'location', 'show_as', 'active', 'videocall_location'}
 
     @api.model
@@ -87,7 +87,7 @@ class CalendarEvent(models.Model):
         """If microsoft calendar is not syncing, don't send a mail."""
         user_id = self._get_event_user_m()
         if self.with_user(user_id)._check_microsoft_sync_status() and user_id._get_microsoft_sync_status() == "sync_active":
-            return self.microsoft_id or self.need_sync_m
+            return self.calendar_id and (self.microsoft_id or self.need_sync_m)
         return super()._skip_send_mail_status_update()
 
     @api.model_create_multi
@@ -315,6 +315,10 @@ class CalendarEvent(models.Model):
         if custom_lower_bound_range:
             lower_bound = fields.Datetime.subtract(fields.Datetime.now(), days=custom_lower_bound_range)
         domain = Domain([
+            # Do not include events from secondary calendars - doing so would cause issues if we eventually introduce
+            # multi-calendar synchronization to microsoft.
+            ('calendar_id', '!=', False),
+            ('calendar_id.calendar_user_ids', 'any', [('is_primary', '=', True)]),
             ('partner_ids.user_ids', 'in', [self.env.user.id]),
             ('stop', '>', lower_bound),
             ('start', '<', upper_bound),
@@ -328,13 +332,12 @@ class CalendarEvent(models.Model):
 
         return self._extend_microsoft_domain(domain)
 
-
     @api.model
-    def _microsoft_to_odoo_values(self, microsoft_event, default_reminders=(), default_values=None, with_ids=False):
+    def _microsoft_to_odoo_values(self, microsoft_event, default_reminders=(), default_values=None, with_ids=False, create=False):
         if microsoft_event.is_cancelled():
             return {'active': False}
 
-        sensitivity_o2m = {
+        sensitivity_m2o = {
             'normal': 'public',
             'private': 'private',
             'confidential': 'confidential',
@@ -348,13 +351,14 @@ class CalendarEvent(models.Model):
             stop = parse(microsoft_event.end.get('dateTime')).astimezone(timeZone_stop).replace(tzinfo=None) - relativedelta(days=1)
         else:
             stop = parse(microsoft_event.end.get('dateTime')).astimezone(timeZone_stop).replace(tzinfo=None)
+        organizer = microsoft_event.owner_id(self.env)
         values = default_values or {}
         values.update({
             'name': microsoft_event.subject or _("(No title)"),
             'description': microsoft_event.body and microsoft_event.body['content'],
             'location': microsoft_event.location and microsoft_event.location.get('displayName') or False,
-            'user_id': microsoft_event.owner_id(self.env),
-            'privacy': sensitivity_o2m.get(microsoft_event.sensitivity, False),
+            'user_id': organizer,
+            'privacy': sensitivity_m2o.get(microsoft_event.sensitivity, False),
             'attendee_ids': commands_attendee,
             'allday': microsoft_event.isAllDay,
             'start': start,
@@ -362,6 +366,13 @@ class CalendarEvent(models.Model):
             'show_as': 'free' if microsoft_event.showAs == 'free' else 'busy',
             'recurrency': microsoft_event.is_recurrent()
         })
+        # Only set the calendar_id when first creating it from Outlook, or if the user is the organizer
+        # In the situation where multiple non-organizers import the same event, this prevents the evnet from jumping
+        # between their calendars.
+        if create or organizer:
+            values['calendar_id'] = self.env['res.users'].browse(organizer)._find_or_create_primary_calendar().id \
+                if organizer else self.env.user._find_or_create_primary_calendar().id
+
         if commands_partner:
             # Add partner_commands only if set from Microsoft. The write method on calendar_events will
             # override attendee commands if the partner_ids command is set but empty.
@@ -384,7 +395,6 @@ class CalendarEvent(models.Model):
         if with_ids:
             values['microsoft_id'] = microsoft_event.id
             values['ms_universal_event_id'] = microsoft_event.iCalUId
-
 
         if microsoft_event.is_recurrent():
             values['microsoft_recurrence_master_id'] = microsoft_event.seriesMasterId
@@ -483,7 +493,7 @@ class CalendarEvent(models.Model):
                     interval = 'minutes'
                     duration = minutes
                     name = _("%s - At time of event", alarm_type_label)
-                elif minutes % (60*24) == 0:
+                elif minutes % (60 * 24) == 0:
                     interval = 'days'
                     duration = minutes / 60 / 24
                     name = _(
@@ -586,11 +596,12 @@ class CalendarEvent(models.Model):
             sensitivity_o2m = {
                 'public': 'normal',
                 'private': 'private',
+                'members_only': 'private',
                 'confidential': 'confidential',
             }
             # Set default privacy in event according to the organizer's calendar default privacy if defined.
-            if self.user_id:
-                sensitivity_o2m[False] = sensitivity_o2m.get(self.user_id.calendar_default_privacy)
+            if self.calendar_id:
+                sensitivity_o2m[False] = sensitivity_o2m.get(self.calendar_id.calendar_default_privacy)
             else:
                 sensitivity_o2m[False] = 'normal'
             values['sensitivity'] = sensitivity_o2m.get(self.privacy)

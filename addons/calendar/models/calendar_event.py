@@ -30,7 +30,7 @@ from odoo.addons.mail.tools.discuss import Store
 from odoo.tools.intervals import intervals_overlap
 from odoo.tools.translate import _
 from odoo.tools.misc import get_lang, babel_locale_parse
-from odoo.tools import SQL, html2plaintext, html_sanitize, is_html_empty, single_email_re, format_date, format_time
+from odoo.tools import html2plaintext, html_sanitize, is_html_empty, single_email_re, format_date, format_time
 from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
@@ -164,6 +164,10 @@ class CalendarEvent(models.Model):
 
     # description
     name = fields.Char('Meeting Subject', required=True, copy=True)
+    calendar_id = fields.Many2one('calendar.calendar', string='Calendar', index='btree',
+        compute='_compute_calendar_id', store=True, readonly=False, ondelete='cascade',
+        domain=lambda self: self._get_calendar_id_domain())
+    calendar_color = fields.Integer(related='calendar_id.color')
     description = fields.Html('Description',
         help="""When synchronization with an external calendar is active, this description is synchronized \
         with the one of the associated meeting in that external calendar. Any update will be propagated there \
@@ -183,13 +187,15 @@ class CalendarEvent(models.Model):
     privacy = fields.Selection(
         [('public', 'Public'),
          ('private', 'Private'),
-         ('confidential', 'Only internal users')], 'Privacy',
+         ('confidential', 'Only internal users'),
+         ('members_only', 'Shared Calendar Members Only')], 'Privacy',
         help="People to whom this event will be visible.")
     privacy_placeholder = fields.Char(compute='_compute_privacy_placeholder')
     effective_privacy = fields.Selection(
-        [('public', 'Public'), ('private', 'Private'), ('confidential', 'Only internal users')],
+        [('public', 'Public'), ('private', 'Private'),
+         ('confidential', 'Only internal users'), ('members_only', 'Shared Calendar Members Only')],
         'Effective Privacy', help="Whether the event is private, considering the user privacy",
-        compute="_compute_effective_privacy"
+        compute="_compute_effective_privacy", search="_search_effective_privacy"
     )
     show_as = fields.Selection(
         [('free', 'Available'),
@@ -320,6 +326,18 @@ class CalendarEvent(models.Model):
         for event in self:
             event.show_as = 'free' if event.allday else 'busy'
 
+    @api.depends('user_id')
+    def _compute_calendar_id(self):
+        for event in self:
+            if event.user_id != event.calendar_id.owner_id:
+                event.calendar_id = event.user_id._find_or_create_primary_calendar() if event.user_id else False
+
+    def _get_calendar_id_domain(self):
+        return Domain("calendar_user_ids", "any", [
+            ("user_id", "=", self.env.uid),
+            ("access_role", "in", ["writer", "owner"]),
+        ])
+
     @api.depends("attendee_ids")
     def _compute_should_show_status(self):
         for event in self:
@@ -367,10 +385,13 @@ class CalendarEvent(models.Model):
                 'awaiting_count': attendees_count - accepted_count - declined_count - tentative_count
             })
 
-    @api.depends('partner_ids')
+    @api.depends('partner_ids', 'calendar_id')
     @api.depends_context('uid')
     def _compute_user_can_edit(self):
         for event in self:
+            if event.calendar_id and event.calendar_id.id in self.env.user.writable_calendar_ids.ids:
+                event.user_can_edit = True
+                continue
             # By default, only current attendees, the organizer and the creator can edit the event.
             editor_candidates = set(event.partner_ids.user_ids + event.user_id + (event.create_uid or self.env.user))
             # Right before saving the event, old partners must be able to save changes.
@@ -388,10 +409,41 @@ class CalendarEvent(models.Model):
                 lambda a: not (a.email and single_email_re.match(a.email))
             )
 
-    @api.depends('privacy', 'user_id')
+    @api.depends('privacy', 'calendar_id.calendar_default_privacy', 'user_id.primary_calendar_id.calendar_default_privacy')
     def _compute_effective_privacy(self):
         for event in self:
-            event.effective_privacy = event.privacy or event.sudo().user_id.calendar_default_privacy
+            event.effective_privacy = (event.privacy
+                                       or event.sudo().calendar_id.calendar_default_privacy
+                                       or event.user_id._find_or_create_primary_calendar().calendar_default_privacy if event.user_id else 'public')
+
+    def _search_effective_privacy(self, operator, value):
+        if operator not in ('in', 'not in'):
+            return NotImplemented
+
+        privacy_field_domain = Domain('privacy', operator, value)
+        # If no privacy is set on the event, fallback to the calendar default privacy.
+        calendar_default_privacy_domain = Domain.AND([
+            Domain('privacy', '=', False), Domain('calendar_id.calendar_default_privacy', operator, value),
+        ])
+        # If no privacy is set on the event nor on the calendar, fallback to the user default privacy.
+        user_primary_calendar_default_privacy_domain = Domain.AND([
+            Domain('privacy', '=', False),
+            Domain('calendar_id.calendar_default_privacy', '=', False),
+            Domain('user_id.primary_calendar_id.calendar_default_privacy', operator, value),
+        ])
+        # If no privacy is set on the event nor on the calendar or the user, fallback to the public privacy.
+        public_domain_fallback = Domain.AND([
+            Domain('user_id', '=', False),
+            Domain('privacy', '=', False),
+            Domain('calendar_id.calendar_default_privacy', '=', False),
+        ])
+
+        return Domain.OR([
+            privacy_field_domain,
+            calendar_default_privacy_domain,
+            user_primary_calendar_default_privacy_domain,
+            public_domain_fallback,
+        ])
 
     @api.depends('effective_privacy')
     def _compute_privacy_placeholder(self):
@@ -936,9 +988,6 @@ class CalendarEvent(models.Model):
         if any(vals in self._get_recurrent_fields() for vals in values) and not (update_recurrence or values.get('recurrency')):
             raise UserError(_('Unable to save the recurrence with "This Event"'))
 
-        # Check the privacy permissions of the events whose organizer is different from the current user.
-        self.filtered(lambda ev: ev.user_id and self.env.user != ev.user_id)._check_calendar_privacy_write_permissions()
-
         if set(values) == {'videocall_channel_id'}:
             # Attaching the Discuss channel of a meeting is no business change: it must not go
             # through the recurrence machinery below, which would recreate the occurrences from
@@ -948,7 +997,7 @@ class CalendarEvent(models.Model):
         update_alarms = False
         update_time = False
         self._set_videocall_location([values])
-        if 'partner_ids' in values:
+        if values.get('partner_ids'):
             if values['partner_ids'] and isinstance(values['partner_ids'][0], int):
                 # a plain list of ids stands for a `Command.set`, as `_attendees_values` assumes too
                 values['partner_ids'] = [Command.set(values['partner_ids'])]
@@ -1050,26 +1099,36 @@ class CalendarEvent(models.Model):
 
         return True
 
-    def _check_calendar_privacy_write_permissions(self):
-        """
-        Checks if current user can write on the events, raising UserError when the event is private.
-        We need to manually call the default Access Error because we can't add an access rule for checking
-        the calendar defaut privacy of an user from a 'calendar.event' record, since it is a res.users field.
-        Otherwise we would have to create a new computed field on that model, which we don't want.
-        """
-        if not self.env.su:
-            for event in self:
-                if event._check_private_event_conditions():
-                    raise event._make_access_error_message('write', Domain.TRUE)  # noqa: EM101
-
     def _check_private_event_conditions(self):
-        """ Checks if the event is private, returning True if the conditions match and False otherwise. """
+        """ Returning True if the event should be considered private and False otherwise.
+        This check is used so that we can fetch private events and display 'Busy' slots in the calendar,
+        without compromising any of the private fields (see usage in _fetch_query). These conditions
+        should be kept in sync with the conditions defined by the calendar_event_rule_private ACL rule.
+        """
         self.ensure_one()
-        event_is_private = self.privacy == 'private'
-        calendar_is_private = not self.privacy and self.sudo().user_id.calendar_default_privacy == 'private'
-        user_is_not_partner = self.user_id.id != self.env.uid and self.env.user.partner_id not in self.partner_ids
-        user_is_not_creator = self.env.user != (self.create_uid or self.env.user)  # check if user has created the event
-        return (event_is_private or calendar_is_private) and user_is_not_partner and user_is_not_creator
+        if self.effective_privacy == 'public':
+            return False
+
+        # Confidential events are only visible to internal users
+        if self.effective_privacy == 'confidential' and self.env.user._is_internal():
+            return False
+
+        # Organizer, attendees, and event creator should be able to access the event
+        if (self.user_id.id == self.env.uid or
+                self.env.user == self.create_uid or
+                self.env.user.partner_id in self.partner_ids):
+            return False
+
+        # The calendar owner has access to all events in their calednar
+        if self.calendar_id and self.calendar_id.user_access_role == 'owner':
+            return False
+
+        # Events marked as members_only should be shown to all members of the calendar
+        if self.effective_privacy == 'members_only':
+            user_has_calendar_access = self.calendar_id and self.calendar_id.user_access_role in ['owner', 'writer']
+            return not user_has_calendar_access
+
+        return True
 
     @api.depends('privacy', 'user_id')
     def _compute_display_name(self):
@@ -1328,17 +1387,35 @@ class CalendarEvent(models.Model):
         return Domain("start", "<=", end_of_day) & Domain("stop", ">=", start_of_day)
 
     def _get_default_privacy_domain(self):
-        # Sub query user settings from calendars that are not private ('public' and 'confidential').
-        public_calendars_settings = self.env['res.users.settings'].sudo()._search([('calendar_default_privacy', '!=', 'private')]).select(SQL('user_id'))
-        # display public, confidential events and events with default privacy when owner's default privacy is not private
-        return ['|', '|',
-            ('privacy', 'in', ['public', 'confidential']),
-            ('user_id', '=', self.env.user.id),
+        # Sub query user settings from calendars that are not private
+        calendar_domain = Domain(['|',
+            ('calendar_default_privacy', '=', 'public'),
             '&',
-                ('privacy', '=', False),
+                ('calendar_default_privacy', '=', 'members_only'),
+                ('calendar_user_id', '!=', False)])
+
+        if self.env.user._is_internal():
+            calendar_domain = Domain.OR([calendar_domain, Domain('calendar_default_privacy', '=', 'confidential')])
+
+        accessible_calendars = self.env['calendar.calendar'].sudo()._search(calendar_domain)
+
+        # Get public events, events the user is attending or organizing, or events the user has calendar access to
+        event_domain = Domain(['|', '|', '|',
+            ('privacy', '=', 'public'),
+            ('user_id', '=', self.env.user.id),
+            ('partner_ids', 'in', self.env.user.partner_id.id),
+            '&',
+                ('privacy', '=', False),  # fallback to calendar privacy
                 '|',
-                    ('user_id', '=', False),
-                    ('user_id', 'in', public_calendars_settings)]
+                    '&',
+                        ('user_id', '=', False),
+                        ('calendar_id', '=', False),
+                    ('calendar_id', 'in', accessible_calendars)])
+
+        if self.env.user._is_internal():
+            event_domain = Domain.OR([event_domain, Domain('privacy', '=', 'confidential')])
+
+        return event_domain
 
     def _is_event_over(self):
         """Check if the event is over. This method is used to check if the event
@@ -1355,6 +1432,10 @@ class CalendarEvent(models.Model):
 
         # For timed events
         return self.stop and self.stop < now
+
+    def _before_calendar_cascade_unlink(self):
+        """Override this method to perform actions before the cascade unlink of the event when deleting a calendar."""
+        return
 
     # ------------------------------------------------------------
     # ACTIONS
@@ -2010,7 +2091,7 @@ class CalendarEvent(models.Model):
     def _get_public_fields(self):
         return self._get_recurrent_fields() | self._get_time_fields() | self._get_custom_fields() | {
             'id', 'active', 'allday',
-            'duration', 'user_id', 'interval', 'partner_id',
+            'duration', 'user_id', 'interval', 'partner_id', 'calendar_id',
             'count', 'rrule', 'recurrence_id', 'show_as', 'privacy', 'create_uid'}
 
     @api.model
