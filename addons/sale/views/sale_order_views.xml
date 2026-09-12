@@ -462,6 +462,7 @@
                                widget="res_partner_many2one"
                                context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}"
                                placeholder="Type to find a customer..." readonly="state in ['cancel', 'sale']"/>
+                               <!-- the secret sauce -->
                         <field name="partner_invoice_id"
                               groups="account.group_delivery_invoice_address"
                               options="{'no_quick_create': True}"
