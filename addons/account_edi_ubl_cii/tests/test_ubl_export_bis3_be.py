@@ -7,6 +7,8 @@ except ImportError:
     contents = None
 
 from odoo.tests import tagged
+from odoo.tools import file_open
+from freezegun import freeze_time
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install', *TestUblBis3Common.extra_tags)
@@ -613,6 +615,50 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
         )
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_invoice_small_unit_price')
+
+    @freeze_time('2020-01-01')
+    def test_import_lot_of_decimals_in_quantities(self):
+
+        journal = self.company_data["default_journal_purchase"]
+        filename = "test_import_lot_of_decimals_in_quantities"
+        full_file_path = self._get_test_file_path("test_import_lot_of_decimals_in_quantities.xml")
+        with file_open(full_file_path, 'rb') as file:
+            file_content = file.read()
+
+        self.env['account.tax'].create({
+            'name': '15% Purchase Tax',
+            'type_tax_use': 'purchase',
+            'amount_type': 'percent',
+            'amount': 15.0,
+            'company_id': self.env.company.id,
+        })
+
+        attachment = self.env['ir.attachment'].create({
+            'mimetype': 'application/xml',
+            'name': filename,
+            'raw': file_content,
+        })
+        invoice = journal._create_document_from_attachment(attachment.id)
+
+        self.assertRecordValues(
+            invoice.invoice_line_ids,
+            [
+                {
+                    'quantity': 0.93,
+                    'price_unit': 101.35,
+                },
+            ],
+        )
+        self.assertRecordValues(
+            invoice,
+            [
+                {
+                    'amount_untaxed': 94.59,
+                    'amount_tax': 14.19,
+                    'amount_total': 108.78,
+                },
+            ],
+        )
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
