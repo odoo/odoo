@@ -312,7 +312,7 @@ class HrLeave(models.Model):
     @api.depends(
         'virtual_remaining_leaves', 'number_of_days', 'number_of_hours',
         'work_entry_type_id', 'employee_id', 'request_date_from', 'request_date_to',
-        'work_entry_type_request_unit'
+        'work_entry_type_id.unit_of_measure'
     )
     @api.depends_context('default_is_multi_employee')
     def _compute_allocation_warning(self):
@@ -324,7 +324,7 @@ class HrLeave(models.Model):
                 continue
 
             remaining = leave.virtual_remaining_leaves
-            is_hour = leave.work_entry_type_request_unit == 'hour'
+            is_hour = leave.work_entry_type_id.unit_of_measure == 'hour'
             request_amount = leave.number_of_hours if is_hour else leave.number_of_days
             max_excess = leave.work_entry_type_id.max_allowed_negative if leave.work_entry_type_id.allows_negative else 0
 
