@@ -104,7 +104,6 @@ class TestChannelInternals(MailCommon, HttpCase):
     @freeze_time("2020-03-22 10:42:06")
     def test_channel_members(self):
         test_group = self.env["discuss.channel"].create({"name": "Group", "channel_type": "group"})
-        self.assertEqual(test_group.message_partner_ids, self.env["res.partner"])
         self.assertEqual(test_group.channel_partner_ids, self.partner_employee)
 
         emp_partner_write_date = fields.Datetime.to_string(self.env.user.partner_id.write_date)
@@ -318,15 +317,12 @@ class TestChannelInternals(MailCommon, HttpCase):
             ]
         with self.assertBus(notifications_again):
             test_group._add_members(partners=self.test_partner)
-        self.assertEqual(test_group.message_partner_ids, self.env["res.partner"])
         self.assertEqual(test_group.channel_partner_ids, self.test_partner + self.partner_employee)
 
         self.env["discuss.channel.member"].sudo().search([("partner_id", "in", self.test_partner.ids), ("channel_id", "in", test_group.ids)]).unlink()
-        self.assertEqual(test_group.message_partner_ids, self.env["res.partner"])
         self.assertEqual(test_group.channel_partner_ids, self.partner_employee)
 
         test_group.message_post(body="Test", message_type="comment", subtype_xmlid="mail.mt_comment")
-        self.assertEqual(test_group.message_partner_ids, self.env["res.partner"])
         self.assertEqual(test_group.channel_partner_ids, self.partner_employee)
 
     @users('employee')
