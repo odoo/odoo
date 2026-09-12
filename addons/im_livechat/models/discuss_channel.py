@@ -754,7 +754,16 @@ class DiscussChannel(models.Model):
         )
 
     def _store_livechat_extra_fields(self, res: Store.FieldList):
-        pass
+        answered_domain = Domain("user_script_answer_id", "!=", False) | Domain("user_raw_answer", "!=", False)
+        res.many(
+            "chatbot_message_ids",
+            "_store_chatbot_message_fields",
+            # sudo - chatbot.message: can access chatbot answers of a channel we have access to.
+            value=lambda channel: self.env["chatbot.message"].sudo().search_fetch(
+                Domain("discuss_channel_id", "=", channel.id) & answered_domain,
+                ["script_step_id", "user_script_answer_id", "user_raw_answer"],
+            ),
+        )
 
     def _apply_livechat_feedback(self, rate, reason=None):
         """Post customer feedback and apply its rating to the live chat session.

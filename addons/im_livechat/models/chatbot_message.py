@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields
+from odoo.addons.mail.tools.discuss import Store
 
 
 class ChatbotMessage(models.Model):
@@ -30,3 +31,8 @@ class ChatbotMessage(models.Model):
     _channel_id_user_raw_script_answer_id_idx = models.Index(
         "(discuss_channel_id, user_raw_script_answer_id) WHERE user_raw_script_answer_id IS NOT NULL",
     )
+
+    def _store_chatbot_message_fields(self, res: Store.FieldList):
+        res.one("script_step_id", "_store_script_step_fields")
+        res.one("user_script_answer_id", "_store_script_answer_fields")
+        res.attr("user_raw_answer")
