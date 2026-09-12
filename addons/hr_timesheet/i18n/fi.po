@@ -24,7 +24,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-12 17:37+0000\n"
-"PO-Revision-Date: 2026-07-23 16:10+0000\n"
+"PO-Revision-Date: 2026-09-09 08:11+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-18/"
 "hr_timesheet/fi/>\n"
@@ -33,7 +33,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
@@ -89,9 +89,8 @@ msgid ""
 "'%(missing_plan_names)s' analytic plan(s) required on the project '%"
 "(project_name)s' linked to the timesheet."
 msgstr ""
-"'%(missing_plan_names)s' analyyttinen suunnitelma (analyyttiset "
-"suunnitelmat), joka (jotka) vaaditaan työaikakirjauksiin liitetyssä "
-"projektissa '%(project_name)s'."
+"Työaikakirjauksiin linkitetyt projektit '%(project_name)s' vaativat "
+"laskentakohderyhmät '%(missing_plan_names)s'."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -261,17 +260,17 @@ msgstr "Analyysi"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_form
 msgid "Analytic Entry"
-msgstr "Analyyttinen kirjaus"
+msgstr "Laskentakohdekirjaus"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "Analyyttinen rivi"
+msgstr "Laskentakohderivi"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_account_analytic_applicability
 msgid "Analytic Plan's Applicabilities"
-msgstr "Analyysisuunnitelman sovellettavuus"
+msgstr "Laskentakohderyhmän sovellettavuus"
 
 #. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_report
@@ -938,8 +937,8 @@ msgid ""
 "The project, the task and the analytic accounts of the timesheet must belong "
 "to the same company."
 msgstr ""
-"Työaikataulun projektin, tehtävän ja analyyttisten tilien on kuuluttava "
-"samaan yritykseen."
+"Työaikataulun projektin, tehtävän ja laskentakohteiden on kuuluttava samaan "
+"yritykseen."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
@@ -1279,8 +1278,8 @@ msgid ""
 "Timesheets must be created with at least an active analytic account defined "
 "in the plan '%(plan_name)s'."
 msgstr ""
-"Työaikakirjaukset on luotava vähintään aktiivisella analyyttisellä tilillä, "
-"joka on määritelty suunnitelmassa \"%(plan_name)s\"."
+"Työaikakirjaukset on luotava vähintään yhden laskentakohteessa '%(plan_name)"
+"s' määritetyn laskentakohteen kanssa."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1301,9 +1300,9 @@ msgid ""
 "project. Please set one up in the plan '%(plan_name)s' or turn off the "
 "timesheets feature."
 msgstr ""
-"Jotta voit käyttää työaikakirjaustoimintoa, tarvitset analyyttisen tilin "
-"projektillesi. Ota sellainen käyttöön suunnitelmassa '%(plan_name)s' tai ota "
-"työaikakirjausket pois käytöstä."
+"Jotta voit käyttää työaikakirjaustoimintoa, tarvitset laskentakohteen "
+"projektillesi. Ota sellainen käyttöön suunnitelmassa '%(plan_name)s' tai "
+"poista työaikakirjaukset käytöstä."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1447,10 +1446,10 @@ msgid ""
 "                            Please switch to another account, or reactivate "
 "the current one to timesheet on the project."
 msgstr ""
-"Et voi syöttää työaikakirjauksia tähän projektiin, koska se on liitetty "
-"inaktiiviseen analytiikkatiliin.<br/>\n"
-"                            Vaihda toiseen tiliin tai aktivoi nykyinen "
-"tilisi uudelleen, jotta voit tehdä työaikakirjanpitoa projektissa."
+"Et voi syöttää työaikakirjauksia tähän projektiin. Se on linkitetty "
+"laskentakohteeseen, joka ei ole aktiivinen.<br/>\n"
+"                            Vaihda toiseen laskentakohteeseen tai aktivoi "
+"nykyinen, jotta voit tehdä työaikakirjanpitoa projektissa."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
@@ -1459,9 +1458,9 @@ msgid ""
 "analytic account.<br/> Please change this account, or reactivate the current "
 "one to timesheet on the project."
 msgstr ""
-"Et voi kirjata työaikakirjauksia tähän projektiin, koska se on liitetty "
-"inaktiiviseen analytiikkatiliin.<br/> Vaihda tämä tili tai aktivoi nykyinen "
-"tili uudelleen, jotta voit tehdä työaikakirjanpitoa projektissa."
+"Et voi kirjata työaikakirjauksia tähän projektiin. Se on linkitetty "
+"laskentakohteeseen, joka ei ole aktiivinen.<br/> Vaihda laskentakohde tai "
+"aktivoi nykyinen, jotta voit tehdä työaikakirjanpitoa projektissa."
 
 #. module: hr_timesheet
 #. odoo-python

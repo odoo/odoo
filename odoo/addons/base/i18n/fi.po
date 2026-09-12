@@ -52,7 +52,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-16 16:38+0000\n"
-"PO-Revision-Date: 2026-08-21 07:12+0000\n"
+"PO-Revision-Date: 2026-09-11 13:13+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-18/base/fi/>"
 "\n"
@@ -61,7 +61,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at_reports
@@ -3171,7 +3171,7 @@ msgid ""
 "* Cost structure report\n"
 msgstr ""
 "\n"
-"Analyyttinen kirjanpito MRP-valmistusmoduulissa\n"
+"Laskentakohteet Tarvelaskennassa\n"
 "==========================\n"
 "\n"
 "* Kustannusrakenneraportti\n"
@@ -3194,13 +3194,14 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"Analyyttinen kirjanpito MRP:ssä\n"
+"Laskentakohteet Tarvelaskennassa\n"
 "==========================\n"
 "\n"
 "* Kustannusrakenneraportti\n"
 "\n"
-"Mahdollistaa myös tuotteen kustannusten laskemisen sen BoM:n perusteella "
-"käyttäen sen komponenttien ja työkeskustoimintojen kustannuksia.\n"
+"Mahdollistaa myös tuotteen kustannusten laskemisen sen materiaaliluettelon "
+"perusteella, käyttäen sen komponenttien ja työkeskustoimintojen "
+"kustannuksia.\n"
 "Se lisää painikkeen itse tuotteeseen, mutta myös toiminnon tuotteiden "
 "luettelonäkymään.\n"
 "Jos automaattinen varaston arvonmääritys on aktiivinen, tarvittavat "
@@ -3835,12 +3836,12 @@ msgstr ""
 "=======================================\n"
 "Erämaksut mahdollistavat maksujen ryhmittelyn.\n"
 "\n"
-"Niitä käytetään erityisesti, mutta ei ainoastaan, useiden sekkien "
+"Niitä käytetään erityisesti, mutta ei ainoastaan, useiden shekkien "
 "ryhmittelyyn ennen niiden tallettamista pankkiin yhtenä eränä.\n"
 "Tällöin talletettu kokonaissumma näkyy pankkitiliotteessasi yhtenä "
 "tapahtumana.\n"
-"Kun teet täsmäytyksen, valitse vain vastaava erämaksu, jotta kaikki erän "
-"maksut voidaan täsmäyttää.\n"
+"Kun teet täsmäytyksen, valitse vain vastaava erämaksu täsmäyttääksesi kaikki "
+"erän maksut.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_hr_payroll
@@ -5368,15 +5369,15 @@ msgid ""
 "is resulting to 11%.\n"
 msgstr ""
 "\n"
-"E-laskutusominaisuuden tarjoaa DJP (Indonesian verotoimisto). Alkaen 1. "
-"tammikuuta 2025\n"
-"Indonesia käyttää CoreTax- järjestelmää, joka muuttaa E-Fakturin "
+"Sähköisen laskutusominaisuuden tarjoaa DJP (Indonesian verovirasto). Alkaen "
+"1. tammikuuta 2025\n"
+"Indonesia siirtyy käyttämään CoreTax -järjestelmää, joka muuttaa E-Fakturin "
 "tiedostomuotoa ja sisältöä.\n"
 "Olemme siirtymässä CSV-tiedostoista XML-muotoon.\n"
 "Samalla verosääntelyn toistuvien muutosten vuoksi yleisessä E-Faktur-"
 "järjestelmässä\n"
-"veroperuste (DPP) on nyt kerrottava kertoimella 11/12, kun se kerrotaan "
-"12%:n verolla, mikä\n"
+"veroperuste (DPP) on nyt kerrottava kertoimella 11/12 monistettaessa 12% "
+"verolla, mikä\n"
 "johtaa lopputulokseen 11%.\n"
 
 #. module: base
@@ -7017,9 +7018,9 @@ msgid ""
 msgstr ""
 "\n"
 "Luo Intrastat XML-raportin ilmoitusta varten\n"
-"Laskujen perusteella.\n"
-"Lisää Intrastat XML -raporttiin mahdollisuuden määrittää tavaroiden "
-"alkuperämaa ja kumppanin alv.\n"
+"laskujen perusteella.\n"
+"Lisää mahdollisuuden määrittää tavaroiden alkuperämaan ja kumppanin ALV:n "
+"Intrastat XML-raportissa.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lt_intrastat
@@ -12348,7 +12349,7 @@ msgid ""
 "your visitors to subscribe with their phone number.\n"
 msgstr ""
 "\n"
-"Tämä moduuli lisää uuden mallin uutiskirjelohkoon, jonka avulla voidaan\n"
+"Tämä moduuli lisää uuden mallipohjan uutiskirjepalkkiin, jonka avulla\n"
 "kävijät voivat tilata uutiskirjeen puhelinnumerollaan.\n"
 
 #. module: base
@@ -12428,18 +12429,18 @@ msgid ""
 "impersonification, in case someone gains to the user's database.\n"
 msgstr ""
 "\n"
-"Tämä moduuli lisää yleisiä ominaisuuksia Odoo DB:n rekisteröimiseksi "
+"Tämä moduuli lisää yleisiä ominaisuuksia Odoo tietokannan rekisteröimiseksi "
 "välityspalvelimeen, joka vastaa tietojen vastaanottamisesta (web-palveluiden "
 "pyyntöjen kautta).\n"
-"- Edi_proxy_userilla on yksilöllinen tunniste tietyssä proxy-tyypissä (esim. "
-"l10n_it_edi, peppol), joka\n"
-"jonka avulla hänet voidaan tunnistaa, kun hän vastaanottaa hänelle osoitetun "
-"asiakirjan. Se on liitetty tiettyyn yritykseen tietyllä tavalla\n"
-"Odoo-tietokantaan.\n"
+"- Edi_proxy_user -käyttäjällä on yksilöllinen tunniste tietyssä proxy-"
+"tyypissä (esim. l10n_it_edi, peppol), jonka\n"
+"avulla käyttäjä voidaan tunnistaa tämän vastaanottaessa hänelle osoitetun "
+"asiakirjan. Se on liitetty tiettyyn yritykseen tietyssä\n"
+"Odoo-tietokannassa.\n"
 "- Salausominaisuuksien avulla voidaan purkaa kaikki käyttäjän tiedot, kun ne "
-"vastaanotetaan välittäjältä.\n"
-"- Tunnistaminen tarjoaa lisäturvatason, jolla vältetään henkilöityminen, jos "
-"joku pääsee käsiksi käyttäjän tietokantaan.\n"
+"vastaanotetaan välityspalvelimelta.\n"
+"- Tunnistautuminen tarjoaa lisäturvatason, jolla vältetään toisena henkilönä "
+"esiintyminen, jos joku pääsee käsiksi käyttäjän tietokantaan.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_portal
@@ -12980,11 +12981,10 @@ msgid ""
 "take them into account in your stock valuation.\n"
 msgstr ""
 "\n"
-"Tämän moduulin avulla voit helposti lisätä lisäkustannuksia "
-"valmistustilaukseen\n"
-"ja päättää näiden kustannusten jakamisesta varastosiirtojen kesken, jotta "
-"voitte\n"
-"ottaa ne huomioon varaston arvonmäärityksessä.\n"
+"Tämän moduulin avulla voit lisätä tuotantotilaukseen helposti "
+"lisäkustannuksia\n"
+"ja päättää näiden jakamisesta varastosiirtojen kesken. Tämä mahdollistaa\n"
+"niiden huomioimisen varaston arvonmäärityksessä.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_membership
@@ -13209,8 +13209,8 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"Tämä moduuli sisältää Chilen asetuksen tekniset vaatimukset.\n"
-"Asenna tämä, jos käytät myyntipistesovellusta Chilessä.    \n"
+"Tämä moduuli sisältää Chilen säännösten tekniset vaatimukset.\n"
+"Asenna tämä, jos käytät Kassajärjestelmä-sovellusta Chilessä.\n"
 "\n"
 
 #. module: base
@@ -13429,21 +13429,20 @@ msgid ""
 msgstr ""
 "\n"
 "Tämä moduuli mahdollistaa SEPA Direct Debit (SDD) -yhteensopivien XML-"
-"tiedostojen tuottamisen (yhdenmukaiset\n"
-"pain.008.001.02-määrityksen mukainen), joka lähetetään pankkiin, jotta "
-"voidaan\n"
-"kerätä joukko maksuja.\n"
+"tiedostojen luomisen\n"
+"(pain.008.001.02 -määritysten mukaisesti) pankkiin lähetettäväksi ja "
+"joukkomaksujen\n"
+"keräämiseksi.\n"
 "\n"
-"Jotta asiakas voi käyttää tätä maksutapaa, hänen on ensin täytynyt\n"
+"Jotta asiakas voi käyttää tätä maksutapaa, hänen on ensin\n"
 "palautettava yritykselle valtuutus, jossa annetaan suostumus "
 "suoraveloituksen käyttöön.\n"
-"Tämän suostumuksen on oltava koodattu Odoossa \"asiakkaan mandaatiksi\".\n"
+"Tämän suostumuksen on oltava 'asiakkaan valtuutus' Odoossa.\n"
 "\n"
-"Sinun on myös täytettävä seuraavat vaatimukset, jotta voit asianmukaisesti "
-"noudattaa seuraavia vaatimuksia\n"
-"luoda SDD-tiedosto:\n"
+"Sinun on myös täytettävä seuraavat vaatimukset, jotta voit luoda\n"
+"SDD-tiedoston asianmukaisesti:\n"
 "- Yritystililläsi on oltava voimassa oleva IBAN-numero\n"
-"- Yrityksellesi on annettava velkojatunnus (tämä voidaan tehdä kohdassa "
+"- Yritykselläsi on oltava luotonantajan tunnus (tämän voi tehdä kohdassa "
 "Asetukset - Yleiset asetukset - Kirjanpito)\n"
 "- Yrityksesi on määritettävä SDD-maksujen vastaanottamista varten päiväkirja "
 "(jälleen kirjanpitomoduulin asetuksissa)\n"
@@ -13452,12 +13451,13 @@ msgstr ""
 "\n"
 "Odoo ilmoittaa sinulle, jos jokin näistä vaatimuksista ei täyty.\n"
 "\n"
-"Jos haluat rekisteröidä maksun avoimille laskuille, voit käyttää erityistä\n"
-"\"SEPA Direct Debit\" -vaihtoehtoa valitsemalla pankkitili \"Register\" "
-"-kohdassa\n"
-"Maksun kirjaaminen' -ohjattu toiminto. Näyttöön tulee virheilmoitus, jos "
-"voimassa olevaa valtakirjaa ei ole annettu\n"
-"käytettävissä valitun laskun maksun luomista varten.\n"
+"Jos haluat rekisteröidä maksun avoimille laskuille, voit käyttää sille "
+"omistettua\n"
+"'SEPA Direct Debit' -toimintoa valitsemalla pankkitilin ohjatussa "
+"'Rekisteröi\n"
+"maksu' toiminnossa. Näytölle ilmestyy virheilmoitus, jos voimassa olevaa "
+"valtakirjaa ei ole\n"
+"saatavilla valitun laskun maksun luomista varten.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_jp_zengin
@@ -14288,10 +14288,10 @@ msgid ""
 msgstr ""
 "\n"
 "Tämä moduuli tarjoaa perustoiminnot maksujen suorittamiseen tulostamalla "
-"šekkejä.\n"
+"shekkejä.\n"
 "Sitä on käytettävä sellaisten moduulien riippuvuutena, jotka tarjoavat "
-"maakohtaisia šekkimalleja.\n"
-"Šekkiasetukset sijaitsevat kirjanpitopäiväkirjojen määrityssivulla.\n"
+"maakohtaisia shekkimalleja.\n"
+"Shekkiasetukset sijaitsevat kirjanpitopäiväkirjojen asetukset-sivulla.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_enterprise
@@ -14614,8 +14614,8 @@ msgid ""
 "system when using the POS app.\n"
 msgstr ""
 "\n"
-"Tämän moduulin avulla käyttäjä voi lähettää yhdistettyjä laskuja MyInvois-"
-"järjestelmään kassajärjestelmää käyttäessään.\n"
+"Tämän moduulin avulla käyttäjä voi lähettää Kassajärjestelmä-sovelluksella "
+"yhdistettyjä laskuja MyInvois-järjestelmään.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_my_edi
@@ -19611,18 +19611,18 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_analytic
 msgid "Analytic Accounting"
-msgstr "Analyyttinen kirjanpito"
+msgstr "Laskentakohteet"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_analytic_enterprise
 msgid "Analytic Accounting Enterprise"
-msgstr "Kustannuspaikat Enterprise"
+msgstr "Laskentakohteet, Yritys"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_account
 #: model:ir.module.module,summary:base.module_mrp_account_enterprise
 msgid "Analytic accounting in Manufacturing"
-msgstr "Kustannuspaikat valmistuksessa"
+msgstr "Laskentakohteet tuotannossa"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_workorder_hr_account
@@ -20502,7 +20502,7 @@ msgstr "Varat"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_asset
 msgid "Assets Management"
-msgstr "Omistusten hallinta"
+msgstr "Omaisuuden hallinta"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_asset_fleet
@@ -21004,7 +21004,7 @@ msgstr "Avatax Brasilian Verkkokaupan verouudistuksessa"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_avatax_stock
 msgid "Avatax for Inventory"
-msgstr "Avatax for Inventory"
+msgstr "Avatax varastoinnille"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_avatax_sale
@@ -23279,7 +23279,7 @@ msgstr "Sarake, joka viittaa tietueeseen mallitaulukossa"
 #: model_terms:res.partner,website_description:base.res_partner_12
 #: model_terms:res.partner,website_description:base.res_partner_5
 msgid "Come see us live, we hope to meet you!"
-msgstr "Tule katsomaan meitä livenä, toivomme tapaavamme sinut!"
+msgstr "Tule tapaamaan meitä paikan päälle, toivomme tapaavamme sinut!"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__comm10e
@@ -29141,11 +29141,11 @@ msgid ""
 "\n"
 "OFX and QIF imports are available in Enterprise version."
 msgstr ""
-"Ohjattu toiminto, jonka avulla voi tuoda tiliotteita.\n"
+"Ohjattu toiminto pankkitiliotteiden tuomiseen.\n"
 "\n"
-"(Tämä moduuli ei sisällä minkäänlaista tuontiformaattia.)\n"
+"(Tämä moduuli ei sisällä minkään tyyppistä tuontiformaattia.)\n"
 "\n"
-"OFX- ja QIF-tuonti on saatavilla Enterprise-versiossa."
+"OFX- ja QIF-tuonti on saatavilla Yritys-versiossa."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__partner_latitude
@@ -30781,7 +30781,7 @@ msgstr "Sisäänlue CAMT-tiliote"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_import_csv
 msgid "Import CSV Bank Statement"
-msgstr "Sisäänlue CSV-tiliote"
+msgstr "Tuo CSV-tiliote"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_winbooks_import
@@ -30791,12 +30791,12 @@ msgstr "Sisäänlue dataa Winbooksista"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_import_ofx
 msgid "Import OFX Bank Statement"
-msgstr "Sisäänlue OFX-tiliote"
+msgstr "Tuo OFX-tiliote"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_import_qif
 msgid "Import QIF Bank Statement"
-msgstr "Sisäänlue QIF-tiliote"
+msgstr "Tuo QIF-tiliote"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_shopee
@@ -33861,7 +33861,7 @@ msgstr "Alusta verkko-oppimisen hallintaan ja julkaisuihin"
 #. module: base
 #: model:ir.module.module,summary:base.module_account_asset_fleet
 msgid "Manage assets with fleets"
-msgstr "Hallitse omaisuuseriä kuljetuskalustoilla"
+msgstr "Hallinnoi omaisuuseriä kuljetuskalustojen kanssa"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_certificate
@@ -33917,7 +33917,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_accountant
 msgid "Manage financial and analytic accounting"
-msgstr "Hallinnoida taloudellista ja analyyttistä kirjanpitoa"
+msgstr "Hallinnoi taloutta ja laskentakohteita"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_stock
@@ -41184,7 +41184,7 @@ msgstr "Tarjoaa push-ilmoituksen ja uudelleenohjauksen mobiilisovellukseen."
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_edi_proxy_client
 msgid "Proxy features for account_edi"
-msgstr "Account_edi:n välityspalvelimen ominaisuudet"
+msgstr "Account_edi -välityspalvelinominaisuudet"
 
 #. module: base
 #: model:res.groups,name:base.group_public
@@ -45476,7 +45476,7 @@ msgstr "Tenge"
 #: model_terms:res.company,sign_terms_html:base.demo_company_be
 #: model_terms:res.company,sign_terms_html:base.main_company
 msgid "Terms &amp; Conditions"
-msgstr "Toimitusehdot"
+msgstr "Käyttöehdot"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_base_automation

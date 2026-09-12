@@ -17,8 +17,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-03 17:38+0000\n"
-"PO-Revision-Date: 2026-04-14 08:28+0000\n"
-"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
+"PO-Revision-Date: 2026-09-07 16:35+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Persian <https://translate.odoo.com/projects/odoo-18/"
 "point_of_sale/fa/>\n"
 "Language: fa\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: point_of_sale
 #. odoo-python
@@ -38,12 +38,16 @@ msgid ""
 "method to ensure that even the smallest quantity in the original unit does "
 "not round down to zero in the target unit."
 msgstr ""
+"\n"
+"علت مشکل این است که مقدار پس از گرد کردن در تبدیل به صفر می‌رسد. برای رفع این "
+"مشکل، ضریب‌های تبدیل یا روش گرد کردن را تنظیم کنید تا اطمینان حاصل شود که حتی "
+"کوچک‌ترین مقدار در واحد اصلی در واحد هدف به صفر گرد نشود."
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/stock_picking.py:0
 msgid " - From \"%(uom_from)s\" to \"%(uom_to)s\""
-msgstr ""
+msgstr " - از «%(uom_from)s» به «%(uom_to)s»"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_printer__printer_type__iot
@@ -60,13 +64,13 @@ msgstr "٪ تخفیف"
 #. odoo-python
 #: code:addons/point_of_sale/models/stock_warehouse.py:0
 msgid "%(name)s Picking POS"
-msgstr ""
+msgstr "%(name)s برداشت POS"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "%(name)s REFUND"
-msgstr ""
+msgstr "بازپرداخت %(name)s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -74,12 +78,13 @@ msgstr ""
 msgid ""
 "%(old_pm)s changed to %(new_pm)s and from %(old_amount)s to %(new_amount)s"
 msgstr ""
+"%(old_pm)s به %(new_pm)s و از %(old_amount)s به %(new_amount)s تغییر یافت"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "%(old_pm)s changed to %(new_pm)s for %(old_amount)s"
-msgstr ""
+msgstr "%(old_pm)s به %(new_pm)s برای %(old_amount)s تغییر یافت"
 
 #. module: point_of_sale
 #. odoo-python
@@ -91,25 +96,25 @@ msgstr "%(payment_method)s پرداخت نقطه فروش از %(partner)s در 
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "%(product_name)s: Deleted line (quantity: %(qty)s)"
-msgstr ""
+msgstr "%(product_name)s: سطر حذف شده (تعداد: %(qty)s)"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "%(product_name)s: Ordered quantity: %(old_qty)s"
-msgstr ""
+msgstr "%(product_name)s: مقدار سفارش داده شده: %(old_qty)s"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "%(refunded_order)s REFUND"
-msgstr ""
+msgstr "بازپرداخت %(refunded_order)s"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "%(title)s %(product_name)s with %(taxes)s"
-msgstr ""
+msgstr "%(title)s %(product_name)s با %(taxes)s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -141,7 +146,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "%s untaxed"
-msgstr ""
+msgstr "%s بدون مالیات"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -228,6 +233,8 @@ msgid ""
 "(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
 "(company_name)s. </p>"
 msgstr ""
+"<p>%(client_name)s<br/> گرامی، بدینوسیله رسید شما %(is_invoiced)sبرای %"
+"(pos_name)s به مبلغ %(amount)s از %(company_name)s تقدیم می‌گردد. </p>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -235,6 +242,8 @@ msgid ""
 "<span class=\"float-end\" invisible=\"is_total_cost_computed\">To be "
 "determined</span>"
 msgstr ""
+"<span class=\"float-end\" invisible=\"is_total_cost_computed\">تعیین خواهد "
+"شد</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -333,7 +342,7 @@ msgstr "<strong>یادداشت باز کردن نشست:</strong>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "<strong>Source Invoice</strong>"
-msgstr ""
+msgstr "<strong>فاکتور مبدأ</strong>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -350,7 +359,7 @@ msgstr "? کلیک بر روی \"تایید\" پرداخت را تایید اع�
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
 msgid "A"
-msgstr ""
+msgstr "م"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__uuid
@@ -364,12 +373,12 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_note_name_unique
 msgid "A note with this name already exists"
-msgstr ""
+msgstr "یادداشتی با این نام از قبل وجود دارد"
 
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_payment_uuid_unique
 msgid "A payment with this uuid already exists"
-msgstr ""
+msgstr "یک پرداخت با این uuid از قبل وجود دارد"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__login_number
@@ -432,7 +441,7 @@ msgstr "انعام مشتری را بپذیرید یا باقیمانده پول
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept payments with Mercado Pago on a terminal"
-msgstr ""
+msgstr "پذیرش پرداخت با پایانه Mercado Pago"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -447,7 +456,7 @@ msgstr "پرداخت‌ها را با یک پایانه پرداخت PayTM بپ�
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept payments with a Razorpay payment terminal"
-msgstr ""
+msgstr "پذیرش پرداخت با پایانه Razorpay"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -506,6 +515,8 @@ msgid ""
 "Account used as outstanding account when creating accounting payment records "
 "for bank payments."
 msgstr ""
+"حسابی که به هنگام ایجاد رکورد حسابداری پرداخت‌های بانکی به عنوان حساب معوق "
+"استفاده می‌شود."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -540,7 +551,7 @@ msgstr "اقدام مورد نیاز است"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Action cancelled (%(ACTION)s)"
-msgstr ""
+msgstr "عملیات لغو شد (%(ACTION)s)"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -553,7 +564,7 @@ msgstr "کنش‌ها"
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__module_pos_sms
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_module_pos_sms
 msgid "Activate SMS feature for point_of_sale"
-msgstr ""
+msgstr "فعال‌سازی ویژگی پیامک برای پایانه فروش"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__active
@@ -645,7 +656,7 @@ msgstr "افزودن یک یادداشت افتتاحیه..."
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Add internal notes on order lines for the kitchen"
-msgstr ""
+msgstr "برای آیتم‌های سفارش، برای آشپزخانه یادداشت‌های داخلی اضافه کنید"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -657,7 +668,7 @@ msgstr "افزودن به سفارش"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "Added %(payment_method)s with %(amount)s"
-msgstr ""
+msgstr "%(payment_method)s به مبلغ %(amount)s اضافه شد"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -710,7 +721,7 @@ msgstr "ترمینال پرداخت آدین"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_line/partner_line.xml:0
 msgid "All Orders"
-msgstr ""
+msgstr "همه سفارش‌ها"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -805,7 +816,7 @@ msgstr "مقدار تفاوت مجاز"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "Amount for %(old_pm)s changed from %(old_amount)s to %(new_amount)s"
-msgstr ""
+msgstr "مقدار %(old_pm)s از %(old_amount)s به %(new_amount)s تغییر یافت"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__amount_to_balance
@@ -851,12 +862,14 @@ msgid ""
 "An error occurred while closing the session. Unsynced orders will be "
 "available in the next session. The page will be reloaded."
 msgstr ""
+"هنگام بستن نشست خطایی رخ داد. سفارش‌های همگام‌سازی نشده در نشست بعدی در دسترس "
+"خواهند بود. صفحه رفرش خواهد شد."
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/data_service.js:0
 msgid "An error occurred while loading the Point of Sale: \n"
-msgstr ""
+msgstr "هنگام بارگذاری پایانه فروش خطایی رخ داد:\n"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__name
@@ -871,12 +884,12 @@ msgstr "شناسه داخلی چاپگر"
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_order_line_uuid_unique
 msgid "An order line with this uuid already exists"
-msgstr ""
+msgstr "یک سطر سفارش با این uuid از قبل وجود دارد"
 
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_order_uuid_unique
 msgid "An order with this uuid already exists"
-msgstr ""
+msgstr "یک سفارش با این uuid از قبل وجود دارد"
 
 #. module: point_of_sale
 #. odoo-python
@@ -887,7 +900,7 @@ msgstr "در حال حاضر یک نشست دیگر برای این پایانه
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_apple_pie_product_template
 msgid "Apple Pie"
-msgstr ""
+msgstr "پای سیب"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -931,11 +944,13 @@ msgid ""
 "At least one bank account must be defined on the journal to allow "
 "registering QR code payments with Bank apps."
 msgstr ""
+"برای امکان ثبت پرداخت‌های کد QR با برنامه‌های بانکی باید حداقل یک حساب بانکی "
+"در دفتر روزنامه تعریف شود."
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__res_company__point_of_sale_update_stock_quantities__closing
 msgid "At the session closing"
-msgstr ""
+msgstr "در پایان نشست"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_company__point_of_sale_update_stock_quantities
@@ -1020,7 +1035,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_avatax
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_module_pos_avatax
 msgid "AvaTax PoS Integration"
-msgstr ""
+msgstr "یکپارچه‌سازی AvaTax با پایانه فروش"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -1030,7 +1045,7 @@ msgstr "در دسترس"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__available_payment_method_ids
 msgid "Available Payment Methods"
-msgstr ""
+msgstr "روش‌های پرداخت موجود"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_available_categ_ids
@@ -1080,7 +1095,7 @@ msgstr "تصویر پس زمینه"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__customer_display_bg_img_name
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_customer_display_bg_img_name
 msgid "Background Image Name"
-msgstr ""
+msgstr "نام تصویر پس‌زمینه"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_userlabel
@@ -1090,19 +1105,19 @@ msgstr "شناسه نشان"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_bagel_product_template
 msgid "Bagel"
-msgstr ""
+msgstr "شیرینی دایره‌ای"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.js:0
 msgid "Bakery"
-msgstr ""
+msgstr "نانوایی"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "Bakery Shop"
-msgstr ""
+msgstr "نانوایی و نان فانتزی"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1120,7 +1135,7 @@ msgstr "بانک"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_payment_method.py:0
 msgid "Bank App (QR Code)"
-msgstr ""
+msgstr "برنامه بانکی (کد QR)"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__bank_payment_ids
@@ -1163,7 +1178,7 @@ msgstr "اسکنر بارکد/کارت خوان"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__basic_receipt
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_basic_receipt
 msgid "Basic Receipt"
-msgstr ""
+msgstr "رسید ساده"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_difference
@@ -1221,7 +1236,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__card_brand
 msgid "Brand of card"
-msgstr ""
+msgstr "صادرکننده کارت"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pos_category_breads
@@ -1237,7 +1252,7 @@ msgstr "بافر:"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_bus_mixin
 msgid "Bus Mixin"
-msgstr ""
+msgstr "میکسین باس"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_butter_croissant_product_template
@@ -1248,7 +1263,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/order_change_receipt_template.xml:0
 msgid "By:"
-msgstr ""
+msgstr "توسط:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_print_via_proxy
@@ -1288,19 +1303,19 @@ msgstr "لغو"
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 #: model:ir.actions.server,name:point_of_sale.pos_order_set_cancel
 msgid "Cancel Order"
-msgstr ""
+msgstr "لغو سفارش"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/navbar/closing_popup/closing_popup.js:0
 msgid "Cancel Orders"
-msgstr ""
+msgstr "لغو سفارش‌ها"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/qr_code_popup/qr_code_popup.js:0
 msgid "Cancel Payment"
-msgstr ""
+msgstr "لغو پرداخت"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1336,18 +1351,18 @@ msgstr "کارت"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__card_no
 msgid "Card Number(Last 4 Digit)"
-msgstr ""
+msgstr "شماره کارت (4 رقم آخر)"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__cardholder_name
 msgid "Card Owner name"
-msgstr ""
+msgstr "نام صاحب کارت"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_payment_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Card's Brand"
-msgstr ""
+msgstr "صادرکننده کارت"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1382,25 +1397,25 @@ msgstr "پول نقد %(session_name)s"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "Cash Bakery"
-msgstr ""
+msgstr "نقدی نانوایی"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "Cash Clothes Shop"
-msgstr ""
+msgstr "نقدی فروشگاه لباس"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/navbar/closing_popup/closing_popup.xml:0
 msgid "Cash Count"
-msgstr ""
+msgstr "شمارش نقدی"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "Cash Furn. Shop"
-msgstr ""
+msgstr "نقدی فروشگاه مبلمان"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1412,7 +1427,7 @@ msgstr "پول نقد ورودی"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/navbar/closing_popup/closing_popup.xml:0
 msgid "Cash In / Out"
-msgstr ""
+msgstr "ورود/خروج وجه نقد"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1485,19 +1500,19 @@ msgstr "کنترل نقدی - افتتاحیه"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Cash difference observed during the counting (Loss) - closing"
-msgstr ""
+msgstr "تفاوت نقدی مشاهده شده در شمارش (زیان) - بسته شدن"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Cash difference observed during the counting (Profit) - closing"
-msgstr ""
+msgstr "تفاوت نقدی مشاهده شده در شمارش (سود) - بسته شدن"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Cash drawer opened (%(ACTION)s)"
-msgstr ""
+msgstr "کشوی پول باز شد (%(ACTION)s)"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1689,30 +1704,30 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/generic_components/list_container/list_container.js:0
 msgid "Choose an order"
-msgstr ""
+msgstr "یک سفارش انتخاب کنید"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_company__point_of_sale_ticket_portal_url_display_mode
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__point_of_sale_ticket_portal_url_display_mode
 msgid "Choose how the URL to the portal will be print on the receipt."
-msgstr ""
+msgstr "نحوه چاپ URL به پورتال را روی رسید مشخص کنید."
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
 msgid "Choose the tax you want to apply"
-msgstr ""
+msgstr "مالیاتی را که می‌خواهید اعمال کنید، انتخاب کنید"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.xml:0
 msgid "Choose your store"
-msgstr ""
+msgstr "فروشگاه خود را انتخاب کنید"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_cinnamon_roll_product_template
 msgid "Cinnamon Roll"
-msgstr ""
+msgstr "رول دارچین"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_classic_brown_jacket_product_template
@@ -1760,7 +1775,7 @@ msgstr "بستن"
 #: code:addons/point_of_sale/static/src/app/navbar/closing_popup/closing_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/navbar/navbar.xml:0
 msgid "Close Register"
-msgstr ""
+msgstr "بستن صندوق"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_form_pos_close_session_wizard
@@ -1786,7 +1801,7 @@ msgstr "بسته و پست شده"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Closed Register"
-msgstr ""
+msgstr "رجیستر بسته شده"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_tree
@@ -1810,7 +1825,7 @@ msgstr "تاریخ بسته شدن"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_is_closing_entry_by_product
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Closing Entry by product"
-msgstr ""
+msgstr "ثبت پایانی بر اساس محصول"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__closing_notes
@@ -1821,7 +1836,7 @@ msgstr "یادداشت های بستن نشست ها"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/navbar/closing_popup/closing_popup.xml:0
 msgid "Closing Register"
-msgstr ""
+msgstr "بستن صندوق"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1833,7 +1848,7 @@ msgstr "بستن جلسه"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Closing counted: %s \n"
-msgstr ""
+msgstr "شمارش پایانی: %s \n"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1845,13 +1860,13 @@ msgstr "تفاوت بستن در %(payment_method)s (%(session)s)"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Closing difference: %s \n"
-msgstr ""
+msgstr "اختلاف پایانی: %s \n"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Closing expected: %s \n"
-msgstr ""
+msgstr "مورد انتظار پایانی: %s \n"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1875,7 +1890,7 @@ msgstr "جامه لباس"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "Clothes Shop"
-msgstr ""
+msgstr "فروشگاه لباس"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__value
@@ -1895,7 +1910,7 @@ msgstr "سکه ها/فاکتورها"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/money_details_popup/money_details_popup.xml:0
 msgid "Coins/Notes"
-msgstr ""
+msgstr "سکه‌ها/اسکناس‌ها"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__color
@@ -2053,7 +2068,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/errors/error_handlers.js:0
 msgid "Connection Lost"
-msgstr ""
+msgstr "اتصال قطع شد"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2065,7 +2080,7 @@ msgstr "خطای اتصال"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/customer_display/utils.js:0
 msgid "Connection failed"
-msgstr ""
+msgstr "اتصال ناموفق بود"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2091,7 +2106,7 @@ msgstr "اتصال به چاپگر انجام نشد"
 msgid ""
 "Connection to the server has been lost. Please check your internet "
 "connection."
-msgstr ""
+msgstr "اتصال به سرور قطع شد. لطفاً اتصال اینترنت خود را بررسی کنید."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2115,7 +2130,7 @@ msgstr "ادامه فروش"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/errors/error_handlers.js:0
 msgid "Continue with limited functionality"
-msgstr ""
+msgstr "ادامه با عملکرد محدود"
 
 #. module: point_of_sale
 #. odoo-python
@@ -2124,6 +2139,8 @@ msgid ""
 "Conversion Error: The following unit of measure conversions result in a zero "
 "quantity due to rounding:"
 msgstr ""
+"خطای تبدیل: تبدیل واحدهای اندازه‌گیری زیر، به دلیل گرد کردن، به مقدار صفر "
+"منجر می‌شوند:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__currency_rate
@@ -2190,7 +2207,7 @@ msgstr "ایجاد"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/navbar/navbar.xml:0
 msgid "Create Product"
-msgstr ""
+msgstr "ایجاد محصول"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_sale_graph
@@ -2219,7 +2236,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_template_action_pos_product
 msgid "Create new product"
-msgstr ""
+msgstr "محصول جدیدی ایجاد کنید"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__create_uid
@@ -2484,7 +2501,7 @@ msgstr "لیست قیمت پیش فرض"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__default_qr
 msgid "Default Qr"
-msgstr ""
+msgstr "QR پیش‌فرض"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__sale_tax_id
@@ -2524,7 +2541,7 @@ msgstr "تعریف یک دسته بندی جدید"
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_template_action_pos_product
 msgid "Define products and categories for POS retail and restaurant"
-msgstr ""
+msgstr "محصولات و دسته‌بندی‌های خرده‌فروشی و رستوران پایانه فروش را تعریف کنید"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -2649,7 +2666,7 @@ msgstr "خلاصه"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/order_change_receipt_template.xml:0
 msgid "Dine In"
-msgstr ""
+msgstr "در محل"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2661,7 +2678,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
 msgid "Dine in"
-msgstr ""
+msgstr "در محل"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -2744,7 +2761,7 @@ msgstr "نام نمایش داده شده"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
 "Display and update your products information through electronic price tags"
-msgstr ""
+msgstr "نمایش و به‌روزرسانی اطلاعات محصولات از طریق برچسب‌های پرایسر"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -2759,11 +2776,13 @@ msgid ""
 "Display the breakdown of sales lines by product in the automatically "
 "generated closing entry."
 msgstr ""
+"تفکیک سطرهای فروش بر اساس محصول در ثبت بستنِ ایجاد شده به‌صورت خودکار نمایش "
+"داده می‌شود."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_pricer
 msgid "Display the price of your products through electronic price tags"
-msgstr ""
+msgstr "نمایش قیمت محصولات از طریق برچسب‌های پرایسر"
 
 #. module: point_of_sale
 #. odoo-python
@@ -2817,18 +2836,18 @@ msgstr "ویرایش"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_line/partner_line.xml:0
 msgid "Edit Details"
-msgstr ""
+msgstr "ویرایش جزئیات"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.res_partner_action_edit_pos
 msgid "Edit Partner"
-msgstr ""
+msgstr "ویرایش طرف همکار"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
 msgid "Edit Payment"
-msgstr ""
+msgstr "ویرایش پرداخت"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_product_action_edit_pos
@@ -2845,7 +2864,7 @@ msgstr "ویرایش شده"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Edited order(s) during the session:%s"
-msgstr ""
+msgstr "سفارش(های) ویرایش شده در نشست: %s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_electronic_scale
@@ -2880,7 +2899,7 @@ msgstr "کارمند"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__user_id
 msgid "Employee who uses the cash register."
-msgstr ""
+msgstr "کارمندی که از صندوق پول استفاده می‌کند."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2931,6 +2950,8 @@ msgid ""
 "Ensure that there is an existing bank journal. Check if chart of accounts is "
 "installed in your company."
 msgstr ""
+"اطمینان حاصل کنید که یک دفتر روزنامه بانکی موجود است. بررسی کنید که جدول "
+"حساب‌ها در شرکت نصب شده باشد."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3003,7 +3024,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/pos_store.js:0
 msgid "Failure to generate Payment QR Code"
-msgstr ""
+msgstr "تولید کد QR پرداخت با خطا مواجه شد"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_ir_binary
@@ -3059,7 +3080,7 @@ msgstr "مالیات انعطاف‌پذیر"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.js:0
 msgid "Floor plan, tips, self order, etc."
-msgstr ""
+msgstr "نقشه سالن‌ها، نکات، سفارش‌گیری خودکار و غیره."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__message_follower_ids
@@ -3082,7 +3103,7 @@ msgstr "آیکون فونت عالی به عبارتی fa-tasks"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.js:0
 msgid "Food, but over the counter"
-msgstr ""
+msgstr "غذا، اما روی پیشخوان"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -3104,7 +3125,7 @@ msgstr "برای صفحه نمایش های لمسی صنعتی غیر دقیق.
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "Force Cancel"
-msgstr ""
+msgstr "لغو اجباری"
 
 #. module: point_of_sale
 #. odoo-python
@@ -3123,7 +3144,7 @@ msgstr "اجبار به اتمام"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "Force cancel"
-msgstr ""
+msgstr "لغو اجباری"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3174,7 +3195,7 @@ msgstr "مبلمان"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "Furniture Shop"
-msgstr ""
+msgstr "فروشگاه مبلمان"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3189,7 +3210,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/customer_note_button/customer_note_button.js:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__general_note
 msgid "General Note"
-msgstr ""
+msgstr "یادداشت عمومی"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -3211,7 +3232,7 @@ msgstr "ایجاد مرجع سفارشات شما"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_screen.xml:0
 msgid "Get Weight"
-msgstr ""
+msgstr "دریافت وزن"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -3262,7 +3283,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_screen.xml:0
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 msgid "Gross Weight:"
-msgstr ""
+msgstr "وزن ناخالص:"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_search
@@ -3321,7 +3342,7 @@ msgstr "دارای کنترل نقدی"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__has_deleted_line
 msgid "Has Deleted Line"
-msgstr ""
+msgstr "دارای سطر حذف شده است"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__has_image
@@ -3352,7 +3373,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__hide_qr_code_method
 msgid "Hide Qr Code Method"
-msgstr ""
+msgstr "مخفی کردن روش کد QR"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__hide_use_payment_terminal
@@ -3362,7 +3383,7 @@ msgstr "مخفی کردن استفاده از پایانه پرداخت"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Hide pictures in POS"
-msgstr ""
+msgstr "مخفی کردن تصاویر در پایانه فروش"
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_wholemeal_loaf_product_template
@@ -3373,7 +3394,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "How to manage tax-included prices"
-msgstr ""
+msgstr "نحوه مدیریت قیمت‌های شامل مالیات"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__id
@@ -3488,7 +3509,7 @@ msgstr "برای حذف فروش، باید در مرحله جدید یا لغو
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__res_company__point_of_sale_update_stock_quantities__real
 msgid "In real time"
-msgstr ""
+msgstr "در زمان واقعی (زنده)"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3499,7 +3520,7 @@ msgstr "آدرس نادرست برای حمل"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_form_view
 msgid "Information about your product."
-msgstr ""
+msgstr "اطلاعات مربوط به محصول شما."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__message
@@ -3526,12 +3547,12 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
 msgid "Integrate with"
-msgstr ""
+msgstr "ادغام با"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__payment_method_type
 msgid "Integration"
-msgstr ""
+msgstr "یکپارچه‌سازی"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__receivable_account_id
@@ -3651,7 +3672,7 @@ msgstr "آدرس IP جعبه IoT"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/customer_display/customer_display_data_service.js:0
 msgid "IoT Customer Display Error"
-msgstr ""
+msgstr "خطای نمایشگر مشتری IoT"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__message_is_follower
@@ -3730,6 +3751,8 @@ msgid ""
 "It seems like you don't have enough rights to create point of sale "
 "configurations."
 msgstr ""
+"به نظر می‌رسد که شما سطوح دسترسی کافی برای ایجاد پیکربندی‌های پایانه فروش را "
+"ندارید."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.jean_jacket_product_template
@@ -3871,7 +3894,7 @@ msgstr "آخرین وضعیت چاپ شده سفارش"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/tour_selector_popup/tour_selector_popup.xml:0
 msgid "Launch fake tours"
-msgstr ""
+msgstr "راه‌اندازی تورهای ساختگی"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.leather_jacket_product_template
@@ -3980,6 +4003,8 @@ msgid ""
 "Local Network Access is enabled for this POS, but your browser version does "
 "not support it. Please update your browser to the latest version."
 msgstr ""
+"برای این POS دسترسی شبکه محلی فعال است، ولی نسخه مرورگر شما از این قابلیت "
+"پشتیبانی نمی‌کند. لطفاً مرورگر خود را به آخرین نسخه به‌روزرسانی نمایید."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3988,12 +4013,14 @@ msgid ""
 "Local Network Access permission is denied. Some hardware devices might not "
 "work properly. Please allow Local Network Access in your browser settings."
 msgstr ""
+"مجوز دسترسی شبکه محلی رد شد. برخی دستگاه‌های سخت‌افزاری ممکن است به درستی کار "
+"نکنند. در تنظیمات مرورگر خود دسترسی شبکه محلی را مجاز کنید."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Log in with Employees"
-msgstr ""
+msgstr "ورود با برنامه کارمندان"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__login_number
@@ -4066,6 +4093,8 @@ msgid ""
 "Make sure there is an IoT Box subscription associated with your Odoo "
 "database, then restart the IoT Box."
 msgstr ""
+"اطمینان حاصل کنید در اشتراک پایگاه داده شما اشتراک باکس IoT وجود داشته باشد؛ "
+"سپس باکس IoT را ریستارت کنید."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4137,7 +4166,7 @@ msgstr "مرکادو پگو"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_mercado_pago
 msgid "Mercado Pago Payment Terminal"
-msgstr ""
+msgstr "درگاه پرداخت Mercado Pago"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__message_has_error
@@ -4202,12 +4231,12 @@ msgstr "بیشتر تنظیمات:"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.js:0
 msgid "Multi colors and sizes"
-msgstr ""
+msgstr "چند رنگ و اندازه"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_multigrain_bread_product_template
 msgid "Multigrain Bread"
-msgstr ""
+msgstr "نان چند غله"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__my_activity_date_deadline
@@ -4223,7 +4252,7 @@ msgstr "جلسات من"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/product_info_banner/product_info_banner.xml:0
 msgid "N/A"
-msgstr ""
+msgstr "نامشخص"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4273,7 +4302,7 @@ msgstr "برای پست مبلغ به دست آمده به حساب سود رو�
 #: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_screen.xml:0
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 msgid "Net Weight:"
-msgstr ""
+msgstr "وزن خالص:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4347,7 +4376,7 @@ msgstr "خیر"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "No PoS configuration found"
-msgstr ""
+msgstr "برای پایانه فروش پیکربندی یافت نشد"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4400,7 +4429,7 @@ msgstr "هنوز هیچ داده ای وجود ندارد!"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/pos_store.js:0
 msgid "No existing serial/lot number"
-msgstr ""
+msgstr "شماره سریال/سری ساختی موجود نیست"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4425,7 +4454,7 @@ msgstr "هیچ مشتری دیگری برای \"%s\" یافت نشد."
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
 "No open session available. Please open a new session to capture the order."
-msgstr ""
+msgstr "نشست بازی وجود ندارد. براغی ثبت سفارش نشست جدیدی باز کنید."
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_payment_form
@@ -4437,7 +4466,7 @@ msgstr "هیچ سفارشی یافت نشد"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 msgid "No other products found for \"%s\"."
-msgstr ""
+msgstr "محصول دیگری برای «%s» یافت نشد."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4466,7 +4495,7 @@ msgstr "نامگذاری"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_payment_method.py:0
 msgid "None required"
-msgstr ""
+msgstr "مورد نیاز نیست"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
@@ -4498,7 +4527,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_note_tree
 msgid "Note Models"
-msgstr ""
+msgstr "مدل‌های یادداشت"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4552,7 +4581,7 @@ msgstr "تعداد پیامهای با خطای تحویل"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__refund_orders_count
 msgid "Number of orders where items from this order were refunded"
-msgstr ""
+msgstr "تعداد سفارش‌هایی که آیتم‌های این سفارش بازپرداخت شده‌اند"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -4660,7 +4689,7 @@ msgstr "جلسات PoS را که از این روش پرداخت استفاده 
 #: code:addons/point_of_sale/static/src/app/store/opening_control_popup/opening_control_popup.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Open Register"
-msgstr ""
+msgstr "ورود به صندوق"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4689,7 +4718,7 @@ msgstr "ابتدای دوره"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/opening_control_popup/opening_control_popup.xml:0
 msgid "Opening Balance Eg: 123"
-msgstr ""
+msgstr "موجودی اولیه، مثل 123"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4725,25 +4754,25 @@ msgstr "پول نقد ابتدای دوره"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Opening cash counted: %s \n"
-msgstr ""
+msgstr "وجه نقد افتتاحیه (شمارش‌شده): %s \n"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Opening cash difference: %s \n"
-msgstr ""
+msgstr "اختلاف وجه نقد افتتاحیه: %s \n"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Opening cash expected: %s \n"
-msgstr ""
+msgstr "وجه نقد افتتاحیه (مورد انتظار): %s \n"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Opening control message: "
-msgstr ""
+msgstr "پیام کنترل باز شدن: "
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4817,7 +4846,7 @@ msgstr "سطرهای سفارش"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__floating_order_name
 msgid "Order Name"
-msgstr ""
+msgstr "نام سفارش"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4830,7 +4859,7 @@ msgstr "شماره سفارش"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/pos_store.js:0
 msgid "Order Outdated"
-msgstr ""
+msgstr "سفارش منقضی شده"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__is_order_printer
@@ -4881,7 +4910,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__refunded_order_id
 msgid "Order from which items were refunded in this order"
-msgstr ""
+msgstr "سفارشی که آیتم‌های آن در این سفارش بازپرداخت شده‌اند"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -4934,13 +4963,13 @@ msgstr "تجزیه و تحلیل سفارشات"
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_order_line__price_type__original
 msgid "Original"
-msgstr ""
+msgstr "اصلی"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
 msgid "Original Tax"
-msgstr ""
+msgstr "مالیات اصلی"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__other_devices
@@ -4968,7 +4997,7 @@ msgstr "حساب معوق"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_product_view_form_normalized_pos
 msgid "POS Category"
-msgstr ""
+msgstr "دسته‌بندی پایانه فروش"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_procurement_group__pos_order_id
@@ -5032,7 +5061,7 @@ msgstr "نشست POS"
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__pos_session_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_account_move__pos_session_ids
 msgid "POS Sessions"
-msgstr ""
+msgstr "نشست‌های پایانه فروش"
 
 #. module: point_of_sale
 #. odoo-python
@@ -5062,7 +5091,7 @@ msgstr "دسته‌بندی مادر"
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pos_category_pastries
 msgid "Pastries"
-msgstr ""
+msgstr "شیرینی‌ها"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5100,7 +5129,7 @@ msgstr "پرداخت"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__payment_method_authcode
 msgid "Payment APPR Code"
-msgstr ""
+msgstr "کد APPR پرداخت"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment__payment_date
@@ -5110,7 +5139,7 @@ msgstr "تاریخ پرداخت"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__payment_method_issuer_bank
 msgid "Payment Issuer Bank"
-msgstr ""
+msgstr "بانک صادرکننده پرداخت"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment__payment_method_id
@@ -5137,7 +5166,7 @@ msgstr "روشهای پرداخت"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__payment_method_payment_mode
 msgid "Payment Mode"
-msgstr ""
+msgstr "حالت پرداخت"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -5180,7 +5209,7 @@ msgstr "شناسه تراکنش پرداخت"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "Payment changes:"
-msgstr ""
+msgstr "تغییرات پرداخت:"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -5190,12 +5219,12 @@ msgstr "روش های پرداخت موجود"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__payment_ref_no
 msgid "Payment reference number"
-msgstr ""
+msgstr "شماره ارجاع پرداخت"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__payment_ref_no
 msgid "Payment reference number from payment provider terminal"
-msgstr ""
+msgstr "شماره ارجاع پرداخت از درگاه پرداخت"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5256,7 +5285,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Pick which product PoS categories are available"
-msgstr ""
+msgstr "دسته‌بندی‌های پایانه فروشی که در دسترس خواهند بود را انتخاب کنید"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__picking_ids
@@ -5412,13 +5441,13 @@ msgstr "لطفا یک شریک برای فروش ارائه دهید."
 #: code:addons/point_of_sale/static/src/app/utils/qr_code_popup/qr_code_popup.js:0
 #: code:addons/point_of_sale/static/src/customer_display/customer_facing_qr.js:0
 msgid "Please scan the QR code with %s"
-msgstr ""
+msgstr "کد QR را با %s اسکن کنید"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_status/payment_status.xml:0
 msgid "Please select a payment method"
-msgstr ""
+msgstr "لطفاً یک روش پرداخت انتخاب کنید"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5430,7 +5459,7 @@ msgstr "لطفا مشتری را انتخاب کنید"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/navbar/navbar.js:0
 msgid "PoS Customer Display opened in a new window"
-msgstr ""
+msgstr "نمایشگر مشتری در پنجره جدیدی باز شد"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -5445,7 +5474,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_note
 msgid "PoS Note"
-msgstr ""
+msgstr "یادداشت پایانه فروش"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_attribute_custom_value__pos_order_line_id
@@ -5475,7 +5504,7 @@ msgstr "دسته بندی محصول PoS"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_load_mixin
 msgid "PoS data loading mixin"
-msgstr ""
+msgstr "mixin بارگذاری داده"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_property_form
@@ -5771,7 +5800,7 @@ msgstr "با قدرت اودو"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Preparation"
-msgstr ""
+msgstr "آماده‌سازی"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_preparation_display
@@ -5814,7 +5843,7 @@ msgstr "نوع قیمت"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "Price discount from %(original_price)s to %(discounted_price)s"
-msgstr ""
+msgstr "تخفیف قیمت از %(original_price)s به %(discounted_price)s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5861,17 +5890,17 @@ msgstr "لیست های قیمت"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Pricer"
-msgstr ""
+msgstr "پرایسر"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_pricer
 msgid "Pricer electronic price tags"
-msgstr ""
+msgstr "برچسب‌های قیمت الکترونیکی پرایسر"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Pricer tags"
-msgstr ""
+msgstr "برچسب‌های پرایسر"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -5893,13 +5922,13 @@ msgstr "چاپ"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
 msgid "Print Basic Receipt"
-msgstr ""
+msgstr "چاپ رسید پایه"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
 msgid "Print Full Receipt"
-msgstr ""
+msgstr "چاپ رسید کامل"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5912,7 +5941,7 @@ msgstr "چاپ رسید"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/navbar/navbar.xml:0
 msgid "Print Report"
-msgstr ""
+msgstr "چاپ گزارش"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5926,6 +5955,7 @@ msgstr "یک گزارش با تمام فروش ها نشست PoS فعلی چاپ
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Print basic ticket without prices. Can be used for gifts."
 msgstr ""
+"رسید به صورت ساده و بدون قیمت چاپ می‌شود. می‌تواند برای هدایا استفاده شود."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_company__point_of_sale_use_ticket_qr_code
@@ -5935,6 +5965,8 @@ msgid ""
 "Print information on the receipt to allow the customer to easily access the "
 "invoice anytime, from Odoo's portal."
 msgstr ""
+"اطلاعات را روی رسید چاپ کنید و به مشتری اجازه دهید همیشه از پورتال به فاکتور "
+"دسترسی داشته باشد."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6000,7 +6032,7 @@ msgstr "چاپ در برخی از مرورگرها پشتیبانی نمی شو�
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/navbar/closing_popup/closing_popup.js:0
 msgid "Proceed Anyway"
-msgstr ""
+msgstr "ادامه"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_procurement_group
@@ -6021,7 +6053,7 @@ msgstr "محصول"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Product & PoS categories"
-msgstr ""
+msgstr "محصول و دسته‌بندی‌های پایانه فروش"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_attribute
@@ -6065,7 +6097,7 @@ msgstr "اطلاعات محصول"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__note
 msgid "Product Note"
-msgstr ""
+msgstr "یادداشت محصول"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_packaging
@@ -6100,7 +6132,7 @@ msgstr "قالب محصول"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_template_attribute_exclusion
 msgid "Product Template Attribute Exclusion"
-msgstr ""
+msgstr "حذف مشخصه قالب محصول"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_template_attribute_line
@@ -6219,23 +6251,23 @@ msgstr "کد QR"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__qr_code_method
 msgid "QR Code Format"
-msgstr ""
+msgstr "فرمت کد QR"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/qr_code_popup/qr_code_popup.js:0
 msgid "QR Code Payment"
-msgstr ""
+msgstr "پرداخت با کد QR"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__res_company__point_of_sale_ticket_portal_url_display_mode__qr_code
 msgid "QR code"
-msgstr ""
+msgstr "کد QR"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__res_company__point_of_sale_ticket_portal_url_display_mode__qr_code_and_url
 msgid "QR code + URL"
-msgstr ""
+msgstr "کد QR + URL"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6280,7 +6312,7 @@ msgstr "Razorpay"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_razorpay
 msgid "Razorpay Payment Terminal"
-msgstr ""
+msgstr "درگاه پرداخت Razorpay"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6435,7 +6467,7 @@ msgstr "برگشت از فروش ها"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Related Session: %(link)s"
-msgstr ""
+msgstr "نشست مرتبط: %(link)s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6464,7 +6496,7 @@ msgstr "حذف"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "Removed %(payment_method)s with %(amount)s"
-msgstr ""
+msgstr "%(payment_method)s با مبلغ %(amount)s حذف شد"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6486,7 +6518,7 @@ msgstr "چاپ مجدد فاکتور"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_request_with_code
 msgid "Request Invoice"
-msgstr ""
+msgstr "درخواست فاکتور"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6498,7 +6530,7 @@ msgstr "درخواست فرستاده شد"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "Rescue Sessions"
-msgstr ""
+msgstr "نشست‌های نجات"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_user_id
@@ -6589,7 +6621,7 @@ msgstr "پرداخت معکوس"
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__reversed_pos_order_id
 #: model:ir.model.fields,field_description:point_of_sale.field_account_move__reversed_pos_order_id
 msgid "Reversed POS Order"
-msgstr ""
+msgstr "سفارش پایانه فروش معکوس شده"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6601,7 +6633,7 @@ msgstr "بازبینی"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/navbar/closing_popup/closing_popup.js:0
 msgid "Review Orders"
-msgstr ""
+msgstr "بررسی سفارش‌ها"
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_pain_au_chocolat_product_template
@@ -6630,6 +6662,8 @@ msgstr "خطای گرد کردن در سطرهای پرداخت"
 #: code:addons/point_of_sale/static/src/app/components/tour_selector_popup/tour_selector_popup.xml:0
 msgid "Running a fake tour will create random orders. Use at your own risk."
 msgstr ""
+"اجرای تور آشنایی تصادفی باعث ایجاد سفارش‌های تصادفی خواهد شد. با پذیرش ریسک "
+"این کار ادامه دهید."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_rye_bread_product_template
@@ -6651,7 +6685,7 @@ msgstr "خطای تحویل پیامک"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_sms
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_module_pos_sms
 msgid "SMS Enabled"
-msgstr ""
+msgstr "فعال‌سازی پیامک"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6729,7 +6763,7 @@ msgstr "ترازو"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_screen.js:0
 msgid "Scale error"
-msgstr ""
+msgstr "خطای ترازو"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6784,7 +6818,7 @@ msgstr "جستجوی بیشتر"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/navbar/navbar.xml:0
 msgid "Search products..."
-msgstr ""
+msgstr "جستجوی محصولات..."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bus_mixin__access_token
@@ -6836,13 +6870,13 @@ msgstr "خصوصیات انتخاب شده"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Self-ordering interfaces are not impacted."
-msgstr ""
+msgstr "رابط‌های سفارش‌گیری خودکار تحت تأثیر قرار نمی‌گیرند."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_company__point_of_sale_use_ticket_qr_code
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__point_of_sale_use_ticket_qr_code
 msgid "Self-service invoicing"
-msgstr ""
+msgstr "فاکتور سلف سرویس"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6876,13 +6910,13 @@ msgstr "ارسال درخواست پرداخت"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Send Text receipt Using sms"
-msgstr ""
+msgstr "رسید متنی با استفاده از پیامک ارسال می‌شود"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
 msgid "Sending"
-msgstr ""
+msgstr "در حال ارسال"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__sequence
@@ -6906,13 +6940,13 @@ msgstr "شماره سریال/ سری ساخت"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/pos_store.js:0
 msgid "Served by %s"
-msgstr ""
+msgstr "خدمات توسط %s ارائه شده است"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/pos_store.js:0
 msgid "Server communication problem"
-msgstr ""
+msgstr "مشکل ارتباط با سرور"
 
 #. module: point_of_sale
 #. odoo-python
@@ -7012,13 +7046,13 @@ msgstr "تعیین قیمت های متعدد برای هر محصول، تخف�
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/order_summary/order_summary.js:0
 msgid "Set the new discount"
-msgstr ""
+msgstr "تنظیم تخفیف جدید"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/order_summary/order_summary.js:0
 msgid "Set the new price"
-msgstr ""
+msgstr "تنظیم قیمت جدید"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7091,13 +7125,13 @@ msgstr "نمایش تصاویر محصولات"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Show category images"
-msgstr ""
+msgstr "نمایش تصویر دسته‌بندی‌ها"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__show_category_images
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_show_category_images
 msgid "Show category images in the Point of Sale interface."
-msgstr ""
+msgstr "نمایش تصویر دسته‌بندی‌ها در رابط پایانه فروش."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -7119,7 +7153,7 @@ msgstr "نمایش صفحه ورود کارکنان"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Show margins & costs"
-msgstr ""
+msgstr "نمایش حاشیه سود و هزینه‌ها"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -7134,13 +7168,13 @@ msgstr "سفارشات را بر روی صفحه نمایش آماده‌ساز�
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Show product images"
-msgstr ""
+msgstr "نمایش تصویر محصولات"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__show_product_images
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_show_product_images
 msgid "Show product images in the Point of Sale interface."
-msgstr ""
+msgstr "نمایش تصویر محصولات در رابط پایانه فروش."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -7320,7 +7354,7 @@ msgstr "موجودی باید در زمان بستن به روز شود"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.js:0
 msgid "Stock, product configurator, replenishment, discounts"
-msgstr ""
+msgstr "موجودی، پیکربندی محصول، تجدید موجودی، تخفیف‌ها"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7334,7 +7368,7 @@ msgstr "توقف"
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_order_edit_tracking
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Store edited orders in the backend"
-msgstr ""
+msgstr "ذخیره سفارش‌های ویرایش شده در بک‌اند"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -7426,7 +7460,7 @@ msgstr "میز"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.js:0
 msgid "Tables, menus, kitchen display, etc."
-msgstr ""
+msgstr "میزها، منوها، نمایشگر آشپزخانه و غیره."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7444,13 +7478,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_screen.xml:0
 msgid "Tare"
-msgstr ""
+msgstr "وزن خالص"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 msgid "Tare Weight:"
-msgstr ""
+msgstr "وزن خالص:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7479,7 +7513,7 @@ msgstr "گروه مالیات"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.js:0
 msgid "Tax ID: %(vatId)s"
-msgstr ""
+msgstr "شناسه مالیاتی: %(vatId)s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__price_subtotal_incl
@@ -7564,13 +7598,13 @@ msgstr "تلفن تماس:"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_payment_method.py:0
 msgid "Terminal"
-msgstr ""
+msgstr "ترمینال"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 msgid "Thank you."
-msgstr ""
+msgstr "با تشکر."
 
 #. module: point_of_sale
 #. odoo-python
@@ -7638,7 +7672,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__card_brand
 msgid "The brand of the payment card (e.g. Visa, AMEX, ...)"
-msgstr ""
+msgstr "صادرکننده کارت پرداخت (مثلاً Visa, AMEX, ...)"
 
 #. module: point_of_sale
 #. odoo-python
@@ -7687,6 +7721,8 @@ msgid ""
 "The existing serial/lot numbers could not be retrieved. \n"
 "Continue without checking the validity of serial/lot numbers ?"
 msgstr ""
+"شماره‌های سریال/سری ساخت موجود قابل بازیابی نبودند. \n"
+"بدون بررسی اعتبار شماره سریال‌ها/سری‌های ساخت ادامه می‌دهید؟"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7735,6 +7771,8 @@ msgid ""
 "The money counted doesn't match what we expected. Want to log the difference "
 "for the books?"
 msgstr ""
+"پول شمارش شده با آنچه انتظار داشتیم مطابقت ندارد. می‌خواهید تفاوت را در دفاتر "
+"ثبت کنید؟"
 
 #. module: point_of_sale
 #. odoo-python
@@ -7769,6 +7807,10 @@ msgid ""
 "The order will be sent to the server with the last changes made on this "
 "device."
 msgstr ""
+"سفارش در دستگاه دیگری ویرایش شده است. اگر ردیف‌های سفارش موجود را ویرایش "
+"کرده‌اید، مطمئن شوید که تغییرات شما بازنویسی نشده باشند.\n"
+"\n"
+"سفارش با آخرین تغییرات انجام شده در این دستگاه به سرور ارسال خواهد شد."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7783,7 +7825,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "The paid amount is different from the total amount of the order."
-msgstr ""
+msgstr "مبلغ پرداخت شده با مبلغ کل سفارش متفاوت است."
 
 #. module: point_of_sale
 #. odoo-python
@@ -7816,12 +7858,14 @@ msgid ""
 "The pos order that was reverted after closing the session to create an "
 "invoice for it."
 msgstr ""
+"سفارش پایانه فروشی که پس از بسته شدن نشست بازیابی شده است تا فاکتور ایجاد "
+"شود."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__note_ids
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_note_ids
 msgid "The predefined notes of this point of sale."
-msgstr ""
+msgstr "یادداشت‌های از پیش تعریف شده برای این پایانه فروش."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__pricelist_id
@@ -7868,7 +7912,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/models/pos_order_line.js:0
 msgid ""
 "The requested quantity to be refunded is higher than the refundable quantity."
-msgstr ""
+msgstr "مقدار درخواستی برای بازپرداخت بیشتر از مقدار قابل بازپرداخت است."
 
 #. module: point_of_sale
 #. odoo-python
@@ -7921,7 +7965,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/pos_store.js:0
 msgid "The session is being closed by another user. The page will be reloaded."
-msgstr ""
+msgstr "این نشست توسط کاربر دیگری در حال بسته شدن است و صفحه بارگذاری خواهد شد."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_adyen
@@ -7936,7 +7980,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "The transactions are processed by Mercado Pago on terminal"
-msgstr ""
+msgstr "تراکنش‌ها توسط Mercado Pago در ترمینال پردازش می‌شوند"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_mercado_pago
@@ -7944,6 +7988,8 @@ msgid ""
 "The transactions are processed by Mercado Pago. Set your Mercado Pago "
 "credentials on the related payment method."
 msgstr ""
+"تراکنش‌ها توسط Mercado Pago پردازش می‌شوند. اعتبار Mercado Pago را در روش "
+"پرداخت مرتبط تنظیم کنید."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_paytm
@@ -7962,6 +8008,8 @@ msgid ""
 "The transactions are processed by Razorpay. Set your Razorpay credentials on "
 "the related payment method."
 msgstr ""
+"تراکنش‌ها توسط Razorpay پردازش می‌شوند. اعتبار Razorpay را در روش پرداخت مرتبط "
+"تنظیم کنید."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_six
@@ -7993,7 +8041,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__card_type
 msgid "The type of the payment card (e.g. CREDIT CARD OR DEBIT CARD)"
-msgstr ""
+msgstr "نوع کارت پرداخت (مثلاً کارت اعتباری یا کارت نقدی)"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_end
@@ -8078,6 +8126,8 @@ msgid ""
 "There is no serial/lot number for the selected product, and their creation "
 "is not allowed from the Point of Sale app."
 msgstr ""
+"شماره سریال/سری ساختی برای محصول انتخاب شده وجود ندارد و ایجاد آنها از "
+"برنامه پایانه فروش مجاز نیست."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8201,6 +8251,8 @@ msgstr ""
 msgid ""
 "This order has already been paid. You cannot set it back to draft or edit it."
 msgstr ""
+"این سفارش قبلاً پرداخت شده است و نمی‌توانید آن را به حالت پیش‌نویس برگردانده یا "
+"ویرایش کنید."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8216,7 +8268,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_payment_method.py:0
 msgid "This payment method is not configured to generate QR codes."
-msgstr ""
+msgstr "این روش پرداخت برای تولید کدهای QR پیکربندی نشده است."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__tip_product_id
@@ -8343,6 +8395,11 @@ msgid ""
 "a hamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and "
 "mayo go flying everywhere!"
 msgstr ""
+"برای حذف محصول، اطمینان حاصل کنید که همه نشست‌های پایانه فروش بسته شده‌اند.\n"
+"\n"
+"حذف یک محصول موجود در یک جلسه مانند تلاش برای گرفتن همبرگر از دست مشتری در "
+"حال گاز زدن است؛ هرج و مرج به وجود می‌آید و سس کچاپ و مایونز به همه جا پخش "
+"می‌شود!"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8452,7 +8509,7 @@ msgstr "جمع کل: %s"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__order_edit_tracking
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_order_edit_tracking
 msgid "Track orders edits"
-msgstr ""
+msgstr "ردیابی ویرایش سفارش‌ها"
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_odoo_sneakers_product_template
@@ -8497,7 +8554,7 @@ msgstr "نوع"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__qr_code_method
 msgid "Type of QR-code to be generated for this payment method."
-msgstr ""
+msgstr "نوع کد QR که برای این روش پرداخت تولید می‌شود."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__card_type
@@ -8618,7 +8675,7 @@ msgstr "خطای نامشخص"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_service.js:0
 msgid "Unnamed Product"
-msgstr ""
+msgstr "محصول بدون نام"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_product_view_form_normalized_pos
@@ -8643,7 +8700,7 @@ msgstr "سفارش همگام‌نشده"
 msgid ""
 "Until the connection is reestablished, Odoo Point of Sale will operate with "
 "limited functionality."
-msgstr ""
+msgstr "تا زمان برقراری مجدد اتصال، پایانه فروش با عملکرد محدود کار خواهد کرد."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -8676,13 +8733,13 @@ msgstr "از لیست قیمت استفاده کنید."
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Use automatic taxes mapping with Avatax"
-msgstr ""
+msgstr "استفاده از نگاشت خودکار مالیات با Avatax"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__module_pos_avatax
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_module_pos_avatax
 msgid "Use automatic taxes mapping with Avatax in PoS"
-msgstr ""
+msgstr "استفاده از نگاشت خودکار مالیات با Avatax در پایانه فروش"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -8805,7 +8862,7 @@ msgstr "هشدار"
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
 "Warning, the paid amount is higher than the total amount. (Difference: %s)"
-msgstr ""
+msgstr "هشدار، مبلغ پرداخت شده بیشتر از مبلغ کل است. (تفاوت: %s)"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8837,7 +8894,7 @@ msgstr "تاریخچه ارتباط با وبسایت"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 msgid "Weighing Product:"
-msgstr ""
+msgstr "محصول وزن‌کشی:"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__barcode_rule__type__weight
@@ -8848,7 +8905,7 @@ msgstr "محصول وزن شده"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 msgid "Welcome."
-msgstr ""
+msgstr "خوش آمدید."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__orderlines_sequence_in_cart_by_category
@@ -8933,6 +8990,8 @@ msgid ""
 "You are currently offline. Reloading the page may cause you to lose unsaved "
 "data."
 msgstr ""
+"شما در حال حاضر آفلاین هستید. بارگذاری مجدد صفحه ممکن است باعث از دست رفتن "
+"داده‌های ذخیره نشده شود."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8969,12 +9028,14 @@ msgid ""
 "You can only cancel a session that is in opening control state and has no "
 "orders."
 msgstr ""
+"فقط می‌توانید نشستی که در مرحله کنترل آغازین است و هیچ سفارشی ندارد را لغو "
+"کنید."
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "You can only refund products from the same order."
-msgstr ""
+msgstr "فقط می‌توانید محصولات سفارش یکسان را بازپرداخت کنید."
 
 #. module: point_of_sale
 #. odoo-python
@@ -9005,12 +9066,14 @@ msgid ""
 "You cannot archive '%(picking_type)s' as it is used by POS configuration '%"
 "(config)s'."
 msgstr ""
+"نمی‌توانید '%(picking_type)s' را بایگانی کنید زیرا در پیکربندی پایانه فروش '%"
+"(config)s' استفاده می‌شود."
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "You cannot change the payment of a printed order."
-msgstr ""
+msgstr "نمی‌توانید پرداخت سفارش چاپ شده را تغییر دهید."
 
 #. module: point_of_sale
 #. odoo-python
@@ -9033,7 +9096,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "You cannot create a session starting before: %(lock_date_info)s"
-msgstr ""
+msgstr "نمی‌توانید قبل از %(lock_date_info)s نشست ایجاد کنید."
 
 #. module: point_of_sale
 #. odoo-python
@@ -9042,6 +9105,8 @@ msgid ""
 "You cannot delete a customer that has point of sales orders. You can archive "
 "it instead."
 msgstr ""
+"نمی‌توانید مشتری را که دارای سفارش‌های پایانه فروش است حذف کنید. به جای آن "
+"می‌توانید آن را بایگانی کنید."
 
 #. module: point_of_sale
 #. odoo-python
@@ -9057,12 +9122,13 @@ msgid ""
 "You cannot delete a rounding method that is used in a Point of Sale "
 "configuration."
 msgstr ""
+"نمی‌توانید روش گرد کردنی که در پیکربندی پایانه فروش استفاده می‌شود را حذف کنید."
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_payment.py:0
 msgid "You cannot edit a payment for a posted order."
-msgstr ""
+msgstr "نمی‌توانید پرداخت سفارش ارسال شده را ویرایش کنید."
 
 #. module: point_of_sale
 #. odoo-python
@@ -9094,6 +9160,8 @@ msgid ""
 "You do not have permission to open a POS session. Please try opening a "
 "session with a different user"
 msgstr ""
+"شما مجوز باز کردن نشست پایانه فروش را ندارید. با کاربر دیگری نشست جدید باز "
+"کنید."
 
 #. module: point_of_sale
 #. odoo-python
@@ -9154,7 +9222,7 @@ msgstr "برای راه اندازی جلسه باید حداقل یک روش پ
 msgid ""
 "You must select a QR-code method to generate QR-codes for this payment "
 "method."
-msgstr ""
+msgstr "باید یک روش کد QR برای تولید کدهای QR این روش پرداخت انتخاب کنید."
 
 #. module: point_of_sale
 #. odoo-python
@@ -9273,7 +9341,7 @@ msgstr "ایمیل"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
 msgid "failed. Please try again"
-msgstr ""
+msgstr "با خطا مواجه شد. لطفاً دوباره امتحان کنید"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -9308,7 +9376,7 @@ msgstr "در"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
 msgid "in progress"
-msgstr ""
+msgstr "در حال انجام"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9320,7 +9388,7 @@ msgstr "در این دسته‌بندی."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.xml:0
 msgid "install a chart of accounts"
-msgstr ""
+msgstr "یک جدول حسابداری نصب کنید"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9392,7 +9460,7 @@ msgstr "رسید"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.xml:0
 msgid "to activate the buttons."
-msgstr ""
+msgstr "تا دکمه‌ها فعال شوند."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
