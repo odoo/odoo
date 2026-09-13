@@ -1040,18 +1040,21 @@ class TestCursorConstructionNeverLeaksAPermit(BaseCase):
     def test_a_baseexception_during_construction_returns_the_connection(self):
         registry_ = registry()
         pool = registry_._replica.primary._Connection__pool
+        with registry_.cursor() as probe:
+            connection_class = type(probe._cnx)
         before = pool.stats.get_snapshot(budget=pool._budget, checkouts=pool._checkouts)
 
-        real = psycopg.Connection.cursor
+        real = connection_class.cursor
         seen = []
 
         def interrupted(conn, *args, **kwargs):
-            if not seen:
+            caller = inspect.currentframe().f_back.f_code
+            if not seen and caller is Cursor.__init__.__code__:
                 seen.append(True)
                 raise KeyboardInterrupt("watchdog")
             return real(conn, *args, **kwargs)
 
-        with patch.object(psycopg.Connection, "cursor", interrupted):
+        with patch.object(connection_class, "cursor", interrupted):
             with self.assertRaises(KeyboardInterrupt):
                 registry_.cursor()
 
