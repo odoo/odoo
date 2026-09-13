@@ -7,7 +7,7 @@ from collections import defaultdict
 from odoo.libs.debug_log import DebugLog
 
 if typing.TYPE_CHECKING:
-    from .._typing import BaseModel
+    from .._typing import BaseModel, IdType
     from .environment import Environment
 
 _debug = DebugLog(__name__)
@@ -58,8 +58,8 @@ class Xmlids:
     def remove(self, env: Environment, ids: typing.Iterable[int]) -> None:
         env["ir.model.data"].sudo().browse(ids).unlink()
 
-    def ensure(self, records: BaseModel, module: str) -> dict[int, str]:
-        xids = {
+    def ensure(self, records: BaseModel, module: str) -> dict[IdType, str]:
+        xids: dict[IdType, str] = {
             res_id: names[0][0] for res_id, names in self.of_records(records).items()
         }
         missing = records.filtered(lambda r: r.id not in xids)

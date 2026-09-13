@@ -8,6 +8,7 @@ from odoo.tools import human_size
 if typing.TYPE_CHECKING:
     from odoo.tools import Query
 
+    from .._protocols import IrAttachmentProtocol
     from .._typing import BaseModel
     from .environment import Environment
 
@@ -25,7 +26,7 @@ def _field_domain(model_name: str, field_name: str, res_ids: list[int]) -> list:
 class FileStore:
     __slots__ = ()
 
-    def _attachments(self, env: Environment) -> BaseModel:
+    def _attachments(self, env: Environment) -> IrAttachmentProtocol:
         return env["ir.attachment"].sudo()
 
     def read_field(
@@ -75,7 +76,8 @@ class FileStore:
         )
 
     def field_set_query(self, model: BaseModel, field_name: str) -> Query:
-        return self._attachments(model.env)._search(
+        attachments = typing.cast("BaseModel", self._attachments(model.env))
+        return attachments._search(
             [
                 ("res_model", "=", model._name),
                 ("res_field", "=", field_name),

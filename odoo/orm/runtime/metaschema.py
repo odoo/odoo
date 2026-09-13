@@ -90,7 +90,7 @@ class MetaSchema:
     def field_strings(self, env: Environment, model_name: str) -> dict[str, str]:
         return env["ir.model.fields"].get_field_string(model_name)
 
-    def field_helps(self, env: Environment, model_name: str) -> dict[str, str]:
+    def field_helps(self, env: Environment, model_name: str) -> dict[str, str | None]:
         return env["ir.model.fields"].get_field_help(model_name)
 
     def field_selection(

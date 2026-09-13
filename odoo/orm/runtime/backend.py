@@ -1642,7 +1642,7 @@ class InMemoryBackend:
                 for parent in parents
             }
             frontier = [
-                child.id
+                typing.cast("int", child.id)
                 for child in children
                 if child.id not in found
                 and tuple(child[column] or "" for column in same_columns)
