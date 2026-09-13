@@ -43,6 +43,14 @@ const RE_PADDING = /([\d.]+)/;
 const RE_WHITESPACE = /[\s\u200b]*/;
 const SELECTORS_IGNORE = /(^\*$|:hover|:before|:after|:active|:link|::|')|@page/; // :not(:has) should be legal
 const RE_THEME_COLOR_CLASS = /^bg-o-color-\d+$/;
+const FLEX_ALIGNMENT_TO_VERTICAL_ALIGN = {
+    start: "top",
+    "flex-start": "top",
+    center: "middle",
+    end: "bottom",
+    "flex-end": "bottom",
+    baseline: "bottom",
+};
 const CONVERT_INLINE_BLACKLIST_CLASSES = ["o_mail_redirect"];
 // CSS properties relating to font, which Outlook seem to have trouble inheriting.
 const FONT_PROPERTIES_TO_INHERIT = [
@@ -740,9 +748,10 @@ function enforceTablesResponsivity(element) {
         let index = 0;
         for (const td of tds) {
             const width = td.style.maxWidth;
+            const verticalAlign = _getVerticalAlign(td);
             const div = document.createElement("div");
             div.style.display = "inline-block";
-            div.style.verticalAlign = "top";
+            div.style.verticalAlign = verticalAlign;
             div.classList.add("o_stacking_wrapper");
             commonTd.appendChild(div);
             const newTable = _createTable();
@@ -759,10 +768,12 @@ function enforceTablesResponsivity(element) {
                     createMso(`
                     <table cellpadding="0" cellspacing="0" border="0" role="presentation" style="width: 100%;">
                         <tr>
-                            <td valign="top" style="width: ${width};">`)
+                            <td valign="${verticalAlign}" style="width: ${width};">`)
                 );
             } else {
-                div.before(createMso(`</td><td valign="top" style="width: ${width};">`));
+                div.before(
+                    createMso(`</td><td valign="${verticalAlign}" style="width: ${width};">`)
+                );
             }
             if (index === tds.length - 1) {
                 div.after(createMso(`</td></tr></table>`));
@@ -1811,6 +1822,18 @@ function _getColumnOffsetSize(column) {
         (offsetOptions && (offsetOptions.length === 2 ? +offsetOptions[1] : +offsetOptions[0])) ||
         0;
     return offsetSize;
+}
+/**
+ * Take a table cell converted from a Bootstrap grid column and return the
+ * `vertical-align` value matching the flex alignment of the column, or of the
+ * row it belongs to.
+ *
+ * @param {Element} td
+ * @returns {string} `vertical-align` value, "top" if there is no alignment.
+ */
+function _getVerticalAlign(td) {
+    const alignment = td.style.alignSelf || td.parentElement.style.alignItems;
+    return FLEX_ALIGNMENT_TO_VERTICAL_ALIGN[alignment] || "top";
 }
 /**
  * Return the CSS rules which applies on an element, tweaked so that they are
