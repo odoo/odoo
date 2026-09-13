@@ -117,18 +117,46 @@ def test_vacuum_reaps_orphaned_tmp_files(store, tmp_path):
     assert fresh.exists()
 
 
-def test_get_refreshes_stale_mtime(store):
-    import os
+def test_vacuum_takes_one_lock_per_stripe_and_ignores_foreign_directories(
+    store, tmp_path, monkeypatch
+):
+    sessions = [_anon(store) for _ in range(6)]
+    old = time.time() - 10 * 24 * 3600
+    for s in sessions:
+        os.utime(store.get_session_filename(s.sid), (old, old))
+    stripes = {s.sid[:2] for s in sessions}
+    (tmp_path / "not a stripe").mkdir()
+    (tmp_path / "not a stripe" / "junk").write_bytes(b"{}")
 
+    opened: list[str] = []
+    real_open = store._open_lock_file
+
+    def counting_open(stripe):
+        opened.append(stripe)
+        return real_open(stripe)
+
+    monkeypatch.setattr(store, "_open_lock_file", counting_open)
+    store.vacuum(max_lifetime=7 * 24 * 3600)
+
+    assert sorted(opened) == sorted(stripes), "one lock per stripe, not per file"
+    assert not any(
+        pathlib.Path(store.get_session_filename(s.sid)).exists() for s in sessions
+    )
+    assert (tmp_path / "not a stripe" / "junk").exists()
+
+
+def test_get_records_the_file_age_and_touches_nothing(store):
     s = _anon(store)
     fn = pathlib.Path(store.get_session_filename(s.sid))
     old = time.time() - 2 * 24 * 3600
     os.utime(fn, (old, old))
-    store.get(s.sid)
-    assert fn.stat().st_mtime > time.time() - 60
-    before = fn.stat().st_mtime
-    store.get(s.sid)
-    assert fn.stat().st_mtime == before
+    loaded = store.get(s.sid)
+    assert loaded.mtime == pytest.approx(old)
+    assert fn.stat().st_mtime == pytest.approx(old), "liveness is the request's call"
+
+    store.keep_alive(loaded)
+    assert loaded.mtime == pytest.approx(time.time(), abs=5)
+    assert fn.stat().st_mtime == pytest.approx(time.time(), abs=5)
 
 
 def test_corrupt_session_file_is_discarded_and_renewed(store):

@@ -204,7 +204,11 @@ class Request(_RequestServeMixin, _RequestResponseMixin, _RequestCsrfMixin):
     def update_context(self, **overrides: Any) -> None:
         env = self.env
         assert env is not None, "update_context() needs a database-bound request"
-        self.update_env(context=env.context | overrides)
+        context = env.context | overrides
+        if context == env.context and env.transaction.default_env is env:
+            _debug.lifecycle("http.request.context_unchanged", keys=len(overrides))
+            return
+        self.update_env(context=context)
 
     @functools.cached_property
     def best_lang(self):
@@ -458,8 +462,10 @@ class Request(_RequestServeMixin, _RequestResponseMixin, _RequestCsrfMixin):
             _debug.pipeline("http.session.save_deferred", uid=sess.uid)
             return
 
+        max_age = get_session_max_inactivity(env) if sess.uid else SESSION_LIFETIME
+        stale = sess.mtime is not None and time.time() - sess.mtime > max_age / 2
         content_changed = sess.has_content_changed()
-        modified = sess.is_dirty or content_changed
+        modified = sess.is_dirty or content_changed or stale
 
         can_rotate = not sess.uid or (env is not None and not env.cr.closed)
 
@@ -482,7 +488,7 @@ class Request(_RequestServeMixin, _RequestResponseMixin, _RequestCsrfMixin):
                 root.session_store.save(sess)
                 written = True
                 strategy = "save"  # debuglog
-            elif sess.is_dirty:
+            elif sess.is_dirty or stale:
                 root.session_store.keep_alive(sess)
                 written = True
                 strategy = "keep_alive"  # debuglog
@@ -510,6 +516,7 @@ class Request(_RequestServeMixin, _RequestResponseMixin, _RequestCsrfMixin):
             written=written,
             modified=modified,
             content_changed=content_changed,
+            stale=stale,
             rotate=sess.should_rotate,
             can_rotate=can_rotate,
             on_disk=on_disk,
@@ -517,7 +524,6 @@ class Request(_RequestServeMixin, _RequestResponseMixin, _RequestCsrfMixin):
         )
 
         if on_disk and (modified or cookie_sid != sess.sid):
-            max_age = get_session_max_inactivity(env) if sess.uid else SESSION_LIFETIME
             self.future_response.set_cookie(
                 "session_id",
                 sess.sid,

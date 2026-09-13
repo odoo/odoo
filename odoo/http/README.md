@@ -129,6 +129,14 @@ its cookie after a successful commit. Rollback restores the attempt's original
 session. Error rendering starts after rollback, so an error handler can still
 log out an expired session without preserving failed controller mutations.
 
+Liveness is the request's call, not the page's: the store records the file's
+mtime on load, and `_save_session` keeps a session alive — `utime` on the file
+and a fresh cookie — once that age passes half the inactivity budget
+(`sessions.max_inactivity_seconds` for an authenticated session,
+`SESSION_LIFETIME` otherwise), whichever request notices first. An active
+session therefore costs at most two liveness writes per budget window, and an
+RPC-only client stays alive without ever loading a page.
+
 `_bind_session_transaction` registers cursor callbacks and captures the session
 snapshot. `_flush_session` is idempotent: the postcommit callback invokes it,
 and the successful return from `retrying` also invokes it for cursor adapters

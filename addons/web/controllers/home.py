@@ -94,8 +94,6 @@ class Home(http.Controller):
         if not is_user_internal(request.session.uid):
             return request.redirect("/web/login_successful", 303)
 
-        request.session.mark_dirty()
-
         request.update_env(user=request.session.uid)
         try:
             if request.env.user:

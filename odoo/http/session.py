@@ -42,10 +42,9 @@ assert STORED_SESSION_BYTES < _SESSION_KEY_LENGTH, (
 )
 _base64_urlsafe_re = re.compile(rf"^[A-Za-z0-9_-]{{{_SESSION_KEY_LENGTH}}}$")
 _session_identifier_re = re.compile(rf"^[A-Za-z0-9_-]{{{STORED_SESSION_BYTES}}}$")
+_session_stripe_re = re.compile(r"^[A-Za-z0-9_-]{2}$")
 
 _TRACE_MAX_ENTRIES = 50
-
-_MTIME_REFRESH_INTERVAL = 24 * 60 * 60
 
 
 def _fsync_directory(path: Path) -> None:
@@ -169,20 +168,8 @@ class FilesystemSessionStore(sessions.FilesystemSessionStore):
                     _debug.logic("http.session.save_refused", reason="revoked")
                     raise SessionExpiredException("Session was revoked")
                 if "next_sid" in current:
-                    peer = self._get_live_session(current)
-                    if (session.db, session.uid) != (peer.db, peer.uid):
-                        _debug.logic(
-                            "http.session.save_refused", reason="identity_changed"
-                        )
-                        raise SessionExpiredException("Session identity changed")
-                    original = session.snapshot()
                     _debug.logic("http.session.save", strategy="adopt_rotation")
-                    try:
-                        self._adopt_rotation(session, peer)
-                        self._save_unlocked(session)
-                    except Exception:
-                        session.restore(original)
-                        raise
+                    self._adopt_live_successor(session, current)
                     return
                 session.merge_changes(current)
             _debug.logic(
@@ -226,6 +213,7 @@ class FilesystemSessionStore(sessions.FilesystemSessionStore):
         ):
             self._write(session)
         session.is_new = False
+        session.mtime = time.time()
         session.mark_clean()
 
     def new(self) -> Session:
@@ -246,10 +234,9 @@ class FilesystemSessionStore(sessions.FilesystemSessionStore):
         session.mark_clean()
         if not session.is_new:
             with contextlib.suppress(OSError):
-                path = Path(self.get_session_filename(session.sid))
-                if path.stat().st_mtime < time.time() - _MTIME_REFRESH_INTERVAL:
-                    os.utime(path)
-                    _debug.lifecycle("http.session.mtime_refreshed", sid=sid[:8])
+                session.mtime = (
+                    Path(self.get_session_filename(session.sid)).stat().st_mtime
+                )
         _debug.logic(
             "http.session.get", sid=sid[:8], found=not session.is_new, uid=session.uid
         )
@@ -270,6 +257,7 @@ class FilesystemSessionStore(sessions.FilesystemSessionStore):
         with self._locked_sid(session.sid):
             try:
                 os.utime(self.get_session_filename(session.sid))
+                session.mtime = time.time()
                 _debug.lifecycle("http.session.kept_alive", sid=session.sid[:8])
             except FileNotFoundError:
                 if not session.is_new:
@@ -336,15 +324,8 @@ class FilesystemSessionStore(sessions.FilesystemSessionStore):
             with self._locked_sid(session.sid):
                 recent = self.get(session.sid)
                 if "next_sid" in recent:
-                    peer = self._get_live_session(recent)
-                    original = session.snapshot()
                     _debug.logic("http.session.rotate", strategy="adopt_before_stage")
-                    try:
-                        self._adopt_rotation(session, peer)
-                        self.save(session)
-                    except Exception:
-                        session.restore(original)
-                        raise
+                    self._adopt_live_successor(session, recent)
                     return
         self.stage_rotation(session, env, soft)
         assert session.rotation is not None
@@ -356,10 +337,8 @@ class FilesystemSessionStore(sessions.FilesystemSessionStore):
                     _debug.logic("http.session.rotation_refused", reason="revoked")
                     raise SessionExpiredException("Session was revoked")
                 if soft and "next_sid" in current:
-                    peer = self._get_live_session(current)
                     _debug.logic("http.session.rotate", strategy="adopt_in_lock")
-                    self._adopt_rotation(session, peer)
-                    self.save(session)
+                    self._adopt_live_successor(session, current)
                     return
                 _debug.logic(
                     "http.session.rotate",
@@ -415,12 +394,24 @@ class FilesystemSessionStore(sessions.FilesystemSessionStore):
             session.restore(original)
             raise
 
+    def _adopt_live_successor(self, session: Session, current: Session) -> None:
+        peer = self._get_live_session(current)
+        original = session.snapshot()
+        try:
+            self._adopt_rotation(session, peer)
+            self._save_unlocked(session)
+        except Exception:
+            session.restore(original)
+            raise
+
     def _adopt_rotation(self, session: Session, peer: Session) -> None:
         if (session.db, session.uid) != (peer.db, peer.uid):
+            _debug.logic("http.session.save_refused", reason="identity_changed")
             raise SessionExpiredException("Session identity changed")
         session.merge_changes(peer)
         session.sid = peer.sid
         session.is_new = False
+        session.mtime = peer.mtime
         for key in ("session_token", "create_time", "gc_previous_sessions"):
             if key in peer:
                 session[key] = peer[key]
@@ -435,12 +426,15 @@ class FilesystemSessionStore(sessions.FilesystemSessionStore):
         base_path = Path(self.path)
         removed = 0  # debuglog
         with _debug.perf("http.session.vacuum", max_lifetime=max_lifetime) as span:
-            for path in base_path.glob("*/*"):
-                if path.parent.name == ".locks":
+            for stripe_dir in base_path.iterdir():
+                stripe = stripe_dir.name
+                if not _session_stripe_re.fullmatch(stripe) or not stripe_dir.is_dir():
                     continue
-                with contextlib.suppress(OSError):
-                    if self.is_valid_key(path.name):
-                        with self._locked_sid(path.name):
+                with self._locked_sid(stripe.ljust(_SESSION_KEY_LENGTH, "_")):
+                    for path in stripe_dir.iterdir():
+                        if not self.is_valid_key(path.name):
+                            continue
+                        with contextlib.suppress(OSError):
                             st = path.stat()
                             if S_ISREG(st.st_mode) and st.st_mtime < threshold:
                                 path.unlink()
@@ -552,6 +546,7 @@ class Session(collections.abc.MutableMapping):
         "can_save",
         "is_dirty",
         "is_new",
+        "mtime",
         "rotation",
         "should_rotate",
         "sid",
@@ -564,6 +559,7 @@ class Session(collections.abc.MutableMapping):
         self.is_dirty: bool = False
         self.__baseline: bytes | None = None
         self.is_new: bool = new
+        self.mtime: float | None = None
         self.should_rotate: bool = False
         self.rotation: tuple[Session, bool] | None = None
         self.sid: str = sid
@@ -574,6 +570,7 @@ class Session(collections.abc.MutableMapping):
         snapshot.__baseline = self.__baseline
         snapshot.can_save = self.can_save
         snapshot.is_dirty = self.is_dirty
+        snapshot.mtime = self.mtime
         snapshot.should_rotate = self.should_rotate
         snapshot.store = self.store
         return snapshot
@@ -584,6 +581,7 @@ class Session(collections.abc.MutableMapping):
         self.sid = snapshot.sid
         self.is_new = snapshot.is_new
         self.is_dirty = snapshot.is_dirty
+        self.mtime = snapshot.mtime
         self.can_save = snapshot.can_save
         self.should_rotate = snapshot.should_rotate
         self.rotation = None

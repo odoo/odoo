@@ -97,26 +97,27 @@ for more details.
   passing the `csrf=False` parameter to the `route` decorator.
 """
 
-NOT_FOUND_NODB = """\
+_NODB_NOT_FOUND = (
+    "No database is selected and the requested URL was not found in the "
+    "server-wide controllers."
+)
+
+NOT_FOUND_NODB_TEXT = (
+    f"{_NODB_NOT_FOUND} Verify the hostname, or name a database with the "
+    "X-Odoo-Database header."
+)
+
+NOT_FOUND_NODB = f"""\
 <!DOCTYPE html>
 <title>404 Not Found</title>
 <h1>Not Found</h1>
-<p>No database is selected and the requested URL was not found in the server-wide controllers.</p>
+<p>{_NODB_NOT_FOUND}</p>
 <p>Please verify the hostname, <a href=/web/login>login</a> and try again.</p>
 
 <!-- Alternatively, use the X-Odoo-Database header. -->
 """
-
-NOT_FOUND_NODB_TEXT = (
-    "No database is selected and the requested URL was not found in the "
-    "server-wide controllers. Verify the hostname, or name a database with "
-    "the X-Odoo-Database header."
-)
-"""What ``NOT_FOUND_NODB`` says, for a client that cannot render HTML.
-
-The two must stay in step: `_serve_nodb` picks between them by the inferred
-dispatcher, so a JSON client gets this and a browser gets the page.
-"""
+"""The same answer for a browser: `_serve_nodb` picks between the two by the
+inferred dispatcher."""
 
 
 SELECT_DB_PATHS: set[str] = set()

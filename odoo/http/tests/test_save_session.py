@@ -36,6 +36,7 @@ class _Session(dict):
         self.is_dirty = False
         self.is_new = False
         self.should_rotate = False
+        self.mtime = None
         self._content_changed = False
 
     @property
@@ -152,6 +153,27 @@ def test_a_new_dirty_session_is_written_not_touched():
     store, future = _save(s)
     assert store.calls == ["save"], "a file that does not exist yet cannot be touched"
     assert "session_id" in future.set
+
+
+@pytest.mark.parametrize(
+    ("uid", "budget"), [(2, MAX_INACTIVITY), (None, SESSION_LIFETIME)]
+)
+def test_a_session_past_half_its_budget_is_kept_alive_with_a_fresh_cookie(uid, budget):
+    s = _Session(uid=uid)
+    s.mtime = time.time() - budget / 2 - 1
+    store, future = _save(s)
+    assert store.calls == ["keep_alive"], "nothing changed, only the file age"
+    assert future.set["session_id"][1]["max_age"] == budget, (
+        "the browser's cookie lifetime is extended along with the file's"
+    )
+
+
+def test_a_session_inside_half_its_budget_is_left_alone():
+    s = _Session(uid=2)
+    s.mtime = time.time() - MAX_INACTIVITY / 2 + 60
+    store, future = _save(s, cookie_sid=s.sid)
+    assert store.calls == []
+    assert future.set == {}
 
 
 def test_an_untouched_session_costs_nothing_and_sets_no_cookie():

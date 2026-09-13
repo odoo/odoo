@@ -291,3 +291,32 @@ def test_an_unmatched_path_refuses_an_oversized_body_by_its_declared_length(
             _serve._RequestServeMixin._check_body_size(this)
     else:
         _serve._RequestServeMixin._check_body_size(this)
+
+
+def test_update_context_with_nothing_new_rebuilds_no_environment():
+    calls = []
+
+    class _Transaction:
+        default_env = None
+
+    class _Env:
+        context = {"lang": "en_US"}
+        uid = 2
+        su = False
+        transaction = _Transaction()
+
+        def __call__(self, *args):
+            calls.append(args)
+            return self
+
+    request = Request(_httprequest(), app=None)
+    env = _Env()
+    env.transaction.default_env = env
+    request.env = env
+
+    request.update_context()
+    request.update_context(lang="en_US")
+    assert calls == [], "identical context and a bound default env: nothing to do"
+
+    request.update_context(lang="fr_FR")
+    assert calls == [(None, None, {"lang": "fr_FR"}, None)]
