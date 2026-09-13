@@ -828,6 +828,12 @@ export class SelfOrder extends Reactive {
             this.currentOrder.setOrderPrices();
             const tableIdentifier = this.router.getTableIdentifier();
             let uuid = this.selectedOrderUuid;
+            // The server sends the order to preparation itself (`_send_order`): it creates
+            // the preparation lines and returns them with the order, so no quantity
+            // difference is left for the ticket the kiosk prints on its confirmation page.
+            // The changes are therefore kept here, while they can still be computed.
+            const preparationChanges =
+                this.config.self_ordering_mode === "kiosk" && this.currentOrder.getChanges();
             if (this.shouldUpdateLastOrderChange()) {
                 this.currentOrder.updateLastOrderChange();
             }
@@ -854,7 +860,11 @@ export class SelfOrder extends Reactive {
             }
 
             this.currentOrder.recomputeChanges();
-            return this.models["pos.order"].getBy("uuid", uuid);
+            const syncedOrder = this.models["pos.order"].getBy("uuid", uuid);
+            if (syncedOrder && preparationChanges) {
+                syncedOrder.uiState.preparationChanges = preparationChanges;
+            }
+            return syncedOrder;
         } catch (error) {
             const order = this.models["pos.order"].getBy("uuid", this.selectedOrderUuid);
             this.handleErrorNotification(error, [order.access_token]);

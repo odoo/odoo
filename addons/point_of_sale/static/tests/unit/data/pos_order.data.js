@@ -113,6 +113,18 @@ export class PosOrder extends models.ServerModel {
         }
     }
 
+    _send_order(orderId) {
+        if (!this._should_send_to_preparation(orderId)) {
+            return;
+        }
+        this.env["pos.prep.order"].update_last_order_change(orderId);
+    }
+
+    _should_send_to_preparation(orderId) {
+        const [order] = this.read([orderId], ["state"], false);
+        return order.state === "paid";
+    }
+
     read_pos_data(orderIds, data, config_id) {
         const posOrder = [];
         const posSession = [];
