@@ -432,6 +432,21 @@ class ApprovalCategory(models.Model):
                 ),
             )
 
+    @api.constrains("approve_sequentially", "group_approval")
+    def _constrains_group_not_sequential(self) -> None:
+        for category in self:
+            if category.approve_sequentially and category.group_approval == "exclusive":
+                trace.REFUSAL.event(
+                    "sequence_turned_on_with_a_group", category=category.id
+                )
+                raise ValidationError(
+                    self.env._(
+                        "'%(category)s' takes its approvers from a security group, "
+                        "whose members have no order: turn off Approvers Sequence.",
+                        category=category.name,
+                    ),
+                )
+
     @api.constrains("approve_sequentially", "step_ids")
     def _constrains_steps_not_sequential(self) -> None:
         for category in self:

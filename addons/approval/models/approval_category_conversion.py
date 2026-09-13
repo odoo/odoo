@@ -89,15 +89,6 @@ class ApprovalCategoryConversion(models.Model):
         added, bands = self._get_routing_rules_by_action()
         if self.step_ids:
             blockers.append(self.env._("The category already routes by steps."))
-        if self.approve_sequentially and bands:
-            blockers.append(
-                self.env._(
-                    "Sequential approvers with a replacement band, whose approvers "
-                    "share one place in the sequence."
-                )
-            )
-        if self.group_approval == "exclusive" and self.approve_sequentially:
-            blockers.append(self.env._("A security group has no order."))
         combinations = (len(bands) + 1) * 2 ** len(added)
         if (
             not self._routes_by_figures(added, bands)
@@ -211,7 +202,7 @@ class ApprovalCategoryConversion(models.Model):
         cases = [(rules, listed, self.approval_minimum, ordered_bands)] + [
             (
                 band,
-                self._get_rule_approvers(band),
+                self._get_band_approvers(band),
                 band.approval_minimum,
                 ordered_bands[:index],
             )
@@ -299,7 +290,7 @@ class ApprovalCategoryConversion(models.Model):
                     {**base, **self._interval_condition(cursor, low)},
                 )
             steps += self._prepare_pooled_steps(
-                self._get_rule_approvers(band),
+                self._get_band_approvers(band),
                 band.approval_minimum,
                 {**base, **self._interval_condition(low, high)},
             )
@@ -364,6 +355,10 @@ class ApprovalCategoryConversion(models.Model):
         """(name, step values) for each required approver a request adds beyond the
         listed ones, named by a path rather than a user."""
         return []
+
+    def _get_band_approvers(self, band) -> list[tuple]:
+        sequence = self.env["approval.request"]._get_sequence_replacement()
+        return [(user, band.approver_required, sequence) for user in band.approver_ids]
 
     @staticmethod
     def _get_rule_approvers(rule) -> list[tuple]:
@@ -533,8 +528,31 @@ class ApprovalCategoryConversion(models.Model):
         return {"converted": converted, "blocked": blocked}
 
     @api.model
+    def _unorder_group_categories(self):
+        categories = (
+            self.sudo()
+            .with_context(active_test=False)
+            .search(
+                [
+                    ("group_approval", "=", "exclusive"),
+                    ("approve_sequentially", "=", True),
+                ]
+            )
+        )
+        trace.STEPS.note("group_categories_unordered", categories=categories.ids)
+        categories.write({"approve_sequentially": False})
+        return categories
+
+    def _has_steps_from_its_module(self) -> bool:
+        return False
+
+    @api.model
     def _get_list_routing_census(self) -> dict:
-        categories = self.sudo().search([("step_ids", "=", False)])
+        categories = (
+            self.sudo()
+            .search([("step_ids", "=", False)])
+            .filtered(lambda category: not category._has_steps_from_its_module())
+        )
         undecided = (
             self.env["approval.request"]
             .sudo()

@@ -7,7 +7,23 @@ _logger = logging.getLogger(__name__)
 
 def migrate(cr, version):
     env = api.Environment(cr, SUPERUSER_ID, {})
-    result = env["approval.category"]._route_rules_of_step_categories_by_steps()
+    categories = env["approval.category"]
+    for category in categories._unorder_group_categories():
+        _logger.warning(
+            "approval category %s (#%s) takes its approvers from a security group "
+            "and no longer asks them one at a time in record order",
+            category.name,
+            category.id,
+        )
+    converted = categories._convert_every_category_to_steps()
+    for category in converted["converted"]:
+        _logger.info(
+            "approval category %s (#%s) now routes by %s step(s)",
+            category.name,
+            category.id,
+            len(category.step_ids),
+        )
+    result = categories._route_rules_of_step_categories_by_steps()
     for rule in result["added"]:
         _logger.info(
             "approval rule %s (#%s) of %s now applies a step of its approvers",

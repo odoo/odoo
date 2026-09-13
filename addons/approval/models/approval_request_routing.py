@@ -819,7 +819,19 @@ class ApprovalRequestRouting(models.Model):
         if steps:
             document = self.get_source_document()
             for step in steps:
-                for user_id in step._get_pool_user_ids(document, self.company_id, self):
+                member_order = {
+                    member.user_id.id: (member.sequence, member.id)
+                    for member in step.member_ids
+                }
+                pool = step._get_pool_user_ids(document, self.company_id, self)
+                for user_id in sorted(
+                    pool,
+                    key=lambda user_id, order=member_order: (
+                        user_id not in order,
+                        order.get(user_id, (0, 0)),
+                        user_id,
+                    ),
+                ):
                     self._merge_approver_to_staging(
                         approver_staging, user_id, False, step.sequence
                     )

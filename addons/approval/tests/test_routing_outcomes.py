@@ -35,6 +35,17 @@ SCRIPTS = {
         (("approve", "c"), "pending", {"b"}, {"b"}),
         (("approve", "b"), "approved", set(), set()),
     ],
+    "sequential_band": [
+        (None, "pending", {"c"}, {"c"}),
+        (("approve", "c"), "pending", {"d"}, {"d"}),
+        (("approve", "d"), "approved", set(), set()),
+    ],
+    "sequential_band_with_a_rule_approver": [
+        (None, "pending", {"b"}, {"b"}),
+        (("approve", "b"), "pending", {"c"}, {"c"}),
+        (("approve", "c"), "pending", {"d"}, {"d"}),
+        (("approve", "d"), "approved", set(), set()),
+    ],
     "sequential_withdrawal": [
         (None, "pending", {"a"}, {"a"}),
         (("approve", "a"), "pending", {"b"}, {"b"}),
@@ -538,6 +549,65 @@ class TestFlatRoutingOutcomes(RoutingOutcomesCase):
             self._sequential_rule_category(),
             "sequential",
             request_vals={"amount": 10},
+        )
+
+    def _sequential_band_category(self, **vals):
+        category = self._flat(
+            [("a", True, 10), ("b", True, 20)],
+            approval_minimum=2,
+            approve_sequentially=True,
+            has_amount="required",
+            has_quantity="required",
+            **vals,
+        )
+        self.env["approval.rule"].create(
+            {
+                "name": "Band inside a sequence",
+                "category_id": category.id,
+                "condition_type": "threshold",
+                "condition_field": "amount",
+                "operator": "gte",
+                "threshold": 1000,
+                "action_type": "set_approvers",
+                "approval_minimum": 2,
+                "approver_ids": [(6, 0, [self.people["c"].id, self.people["d"].id])],
+            }
+        )
+        return category
+
+    def test_a_band_takes_over_a_sequence(self):
+        self._run(
+            self._sequential_band_category(),
+            "sequential_band",
+            request_vals={"amount": 5000, "quantity": 1},
+        )
+
+    def test_a_sequence_below_its_band(self):
+        self._run(
+            self._sequential_band_category(),
+            "sequential",
+            request_vals={"amount": 10, "quantity": 1},
+        )
+
+    def test_a_rule_approver_goes_before_a_band_in_a_sequence(self):
+        category = self._sequential_band_category()
+        self.env["approval.rule"].create(
+            {
+                "name": "Rule before the band",
+                "category_id": category.id,
+                "condition_type": "threshold",
+                "condition_field": "quantity",
+                "operator": "gte",
+                "threshold": 5,
+                "action_type": "add_approver",
+                "approver_sequence": 5,
+                "approver_ids": [(6, 0, [self.people["b"].id])],
+            }
+        )
+        self._run(
+            category,
+            "sequential_band_with_a_rule_approver",
+            request_vals={"amount": 5000, "quantity": 10},
         )
 
     def _tiers_category(self):
@@ -1062,11 +1132,20 @@ class TestConvertingEveryCategory(RoutingOutcomesCase):
 
     def test_every_category_without_a_blocker_converts_and_the_rest_are_named(self):
         convertible = self._flat_category()
-        blocked = self._flat_category(
-            group_approval="exclusive",
-            approver_group_id=self.pool.id,
-            approve_sequentially=True,
-        )
+        blocked = self._flat_category(has_amount="required")
+        for index in range(6):
+            self.env["approval.rule"].create(
+                {
+                    "name": f"Case {index}",
+                    "category_id": blocked.id,
+                    "condition_type": "threshold",
+                    "condition_field": "amount",
+                    "operator": "gte" if index % 2 else "lte",
+                    "threshold": 1000 * (index + 1),
+                    "action_type": "add_approver",
+                    "approver_ids": [(6, 0, [self.people["c"].id])],
+                }
+            )
         result = self.env["approval.category"]._convert_every_category_to_steps()
         self.assertIn(convertible, result["converted"])
         self.assertTrue(convertible.step_ids)
@@ -1249,6 +1328,22 @@ class TestConvertingEveryCategory(RoutingOutcomesCase):
         self.assertIn(confirmed_flat, census["requests"])
         self.assertIn(draft_on_list, census["requests"])
         self.assertNotIn(on_steps, census["requests"])
+
+    def test_a_security_group_category_has_no_order(self):
+        category = self._flat_category(
+            group_approval="exclusive", approver_group_id=self.pool.id
+        )
+        with self.assertRaisesRegex(ValidationError, "have no order"):
+            category.approve_sequentially = True
+        self.env.cr.execute(
+            "UPDATE approval_category SET approve_sequentially = TRUE WHERE id = %s",
+            [category.id],
+        )
+        category.invalidate_recordset()
+        unordered = self.env["approval.category"]._unorder_group_categories()
+        self.assertIn(category, unordered)
+        self.assertFalse(category.approve_sequentially)
+        self.assertFalse(category.steps_conversion_blockers)
 
     def test_a_draft_raised_before_the_conversion_routes_by_the_steps(self):
         category = self._flat_category()
