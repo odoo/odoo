@@ -62,7 +62,7 @@ class TestSaleMrpAccount(TestMultistepManufacturing):
         mo.action_confirm()
         mo.button_mark_done()
         self.assertEqual(mo.move_raw_ids.analytic_account_line_ids.category_report, 'costs')
-        self.assertEqual(mo.move_raw_ids.analytic_account_line_ids.billable_type, '14_manufacturing_order')
+        self.assertEqual(mo.move_raw_ids.analytic_account_line_ids.billable_type, '23_manufacturing_order')
 
     def test_mo_get_project_from_so(self):
         """ ensure the project of MO is inherited from the SO if no project is set """
