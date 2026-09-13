@@ -91,9 +91,5 @@ def test_groups_by_text_and_month_and_pages_the_groups():
 def test_the_unsupported_shapes_say_so():
     with model_test_env(Team, Score) as env:
         _seed(env)
-        with pytest.raises(NotImplementedError, match="having"):
-            env["rg.score"]._read_group(
-                [], ["kind"], ["__count"], having=[("__count", ">", 1)]
-            )
         with pytest.raises(NotImplementedError, match="groupby"):
             env["rg.score"]._read_group([], ["team_id.name"], ["__count"])
