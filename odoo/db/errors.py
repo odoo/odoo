@@ -88,7 +88,8 @@ def _classify_sql_error(exc: Exception) -> str:
 
 def _log_sql_error(exc: Exception, query: Any, *, label: str = "query") -> None:
     klass = _classify_sql_error(exc)
-    constraint = getattr(getattr(exc, "diag", None), "constraint_name", None)
+    diag = getattr(exc, "diag", None)
+    constraint = getattr(diag, "constraint_name", None)
     if _debug.logic.enabled:
         _debug.logic(
             "errors.sql_error_classified",
@@ -98,6 +99,8 @@ def _log_sql_error(exc: Exception, query: Any, *, label: str = "query") -> None:
             klass=klass,
             retryable=isinstance(exc, PG_RETRY_EXCEPTIONS),
             constraint=constraint,
+            detail=getattr(diag, "message_detail", None),
+            context=getattr(diag, "context", None),
         )
     if klass == "stale_plan":
         _logger.warning(

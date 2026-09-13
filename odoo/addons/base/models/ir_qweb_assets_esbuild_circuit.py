@@ -147,4 +147,24 @@ class IrQweb(models.AbstractModel):
             bundle=bundle,
             attempts=retries + 1,
         )
+        if _debug.logic.enabled:
+            cr.execute(
+                """
+                SELECT a.pid, a.application_name, a.state, a.backend_start,
+                       a.xact_start, left(a.query, 300)
+                  FROM pg_locks l
+                  JOIN pg_stat_activity a ON a.pid = l.pid
+                 WHERE l.locktype = 'advisory'
+                   AND l.granted
+                   AND l.database = (SELECT oid FROM pg_database WHERE datname = current_database())
+                   AND l.objid::bigint = hashtext(%s)::bigint & 4294967295
+                """,
+                (key,),
+            )
+            _debug.logic(
+                "esbuild.lock_holders",
+                bundle=bundle,
+                own_pid=getattr(cr, "_backend_pid", None),
+                holders=cr.fetchall(),
+            )
         return False
