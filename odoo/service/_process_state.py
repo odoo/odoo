@@ -14,6 +14,10 @@ server: CommonServer | None = None
 server_phoenix = False
 
 
+def get_server() -> CommonServer | None:
+    return server
+
+
 def set_server(value: CommonServer | None) -> None:
     global server  # noqa: PLW0603  the running server IS a process singleton
 

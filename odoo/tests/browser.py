@@ -42,7 +42,7 @@ if TYPE_CHECKING:
 try:
     import websocket
 except ImportError:
-    websocket = None
+    websocket = None  # type: ignore[assignment]
 
 _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)

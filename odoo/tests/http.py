@@ -20,6 +20,7 @@ from odoo import api
 from odoo.libs.debug_log import DebugLog
 from odoo.logutils import RUNBOT
 from odoo.service import security
+from odoo.service.server import get_server
 from odoo.tools import profiler
 
 from . import common
@@ -131,7 +132,7 @@ class HttpCase(TransactionCase):
 
     @classmethod
     def http_port(cls) -> int | None:
-        httpd = getattr(odoo.service._process_state.server, "httpd", None)
+        httpd = getattr(get_server(), "httpd", None)
         return httpd.server_port if httpd is not None else None
 
     def setUp(self) -> None:

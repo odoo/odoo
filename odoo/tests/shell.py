@@ -43,10 +43,9 @@ def run_tests(
         _logger.error("run_tests should be used only in threaded mode")
         return None
 
-    from odoo.service import _process_state
-    from odoo.service._threaded import ThreadedServer
+    from odoo.service.server import ThreadedServer, get_server
 
-    server = _process_state.server
+    server = get_server()
     if not isinstance(server, ThreadedServer):
         _debug.logic(
             "test.shell.refused",

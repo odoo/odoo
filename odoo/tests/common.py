@@ -407,7 +407,7 @@ class freeze_time:
     stop = __exit__
 
 
-freezegun.freeze_time = freeze_time
+freezegun.freeze_time = freeze_time  # type: ignore[assignment]
 
 _HTTP_EXPORTS = ("HttpCase", "JsonRpcException", "Opener", "Transport")
 """Names this module publishes on behalf of :mod:`odoo.tests.http`."""
