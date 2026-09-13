@@ -235,7 +235,12 @@ class AutomationRuntime(models.Model):
             if not ready_lines:
                 if self._finish_if_settled():
                     break
-                if self.line_ids.filtered(lambda l: l.state == "paused"):
+                if self.line_ids.filtered(
+                    lambda l: (
+                        l.state in ("paused", "scheduled")
+                        or (l.state == "waiting" and l._awaits_event())
+                    ),
+                ):
                     self.action_wait()
                     break
                 blocked = self.line_ids.filtered(
@@ -260,6 +265,13 @@ class AutomationRuntime(models.Model):
 
         self._notify_workflow_change()
         return self.state
+
+    def _advance(self):
+        for runtime in self.filtered(
+            lambda run: run.state in ("in_progress", "waiting_resume"),
+        ):
+            runtime.state = "in_progress"
+            runtime.action_run_all()
 
     def _finish_if_settled(self):
         self.check_singleton()
@@ -314,7 +326,7 @@ class AutomationRuntime(models.Model):
         for runtime in self.filtered(lambda run: run.state == "waiting_resume"):
             due = runtime.line_ids.filtered(
                 lambda step: (
-                    step.state == "paused"
+                    step.state in ("paused", "scheduled")
                     and step.date_resume
                     and step.date_resume <= now
                 ),
@@ -322,7 +334,9 @@ class AutomationRuntime(models.Model):
             if not due:
                 continue
             runtime.state = "in_progress"
-            due.action_resume()
+            due.filtered(lambda step: step.state == "paused").action_resume()
+            for step in due.filtered(lambda step: step.state == "scheduled"):
+                step._settle_readiness()
             runtime.action_run_all()
 
     @api.model
@@ -330,8 +344,14 @@ class AutomationRuntime(models.Model):
         waiting = self.search(
             [
                 ("state", "=", "waiting_resume"),
-                ("line_ids.state", "=", "paused"),
-                ("line_ids.date_resume", "<=", self.env.cr.now()),
+                (
+                    "line_ids",
+                    "any",
+                    [
+                        ("state", "in", ("paused", "scheduled")),
+                        ("date_resume", "<=", self.env.cr.now()),
+                    ],
+                ),
             ],
         )
         if waiting:
@@ -364,6 +384,7 @@ class AutomationRuntime(models.Model):
             {
                 "state": "error",
                 "date_resume": False,
+                "date_settled": self.env.cr.now(),
                 "error_message": _("Step never ran: the workflow already failed."),
             }
         )
@@ -449,6 +470,9 @@ class AutomationRuntime(models.Model):
                     "target_line_id": line_by_action[edge.target_node_id.id].id,
                     "condition": edge.condition,
                     "condition_expr": edge.condition_expr,
+                    "event_code": edge.event_code,
+                    "delay": edge.delay,
+                    "delay_unit": edge.delay_unit,
                 }
                 for edge in self.automation_id.edge_ids
                 if edge.source_node_id.id in line_by_action

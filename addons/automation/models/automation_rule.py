@@ -676,6 +676,9 @@ class AutomationRule(models.Model):
                     "target": edge.target_node_id.id,
                     "condition": edge.condition,
                     "condition_expr": edge.condition_expr,
+                    "event_code": edge.event_code,
+                    "delay": edge.delay,
+                    "delay_unit": edge.delay_unit,
                     "label": edge.label,
                 }
                 for edge in self.edge_ids
@@ -708,6 +711,9 @@ class AutomationRule(models.Model):
                     "target_node_id": new_by_old[edge.target_node_id.id].id,
                     "condition": edge.condition,
                     "condition_expr": edge.condition_expr,
+                    "event_code": edge.event_code,
+                    "delay": edge.delay,
+                    "delay_unit": edge.delay_unit,
                     "label": edge.label,
                 }
                 for edge in self.edge_ids

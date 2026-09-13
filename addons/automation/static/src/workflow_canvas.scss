@@ -62,6 +62,15 @@
         stroke-dasharray: 2 2;
     }
 
+    .o_workflow_canvas_event .o_flow_editor_connection_path {
+        stroke: var(--warning);
+    }
+
+    .o_workflow_canvas_no_event .o_flow_editor_connection_path {
+        stroke: var(--warning);
+        stroke-dasharray: 6 3;
+    }
+
     .o_flow_editor_connection_selected .o_flow_editor_connection_path {
         stroke: var(--primary);
         stroke-width: 3;
@@ -70,6 +79,11 @@
     .o_workflow_canvas_run_waiting {
         background-color: var(--body-bg);
         box-shadow: inset 0 0 0 2px var(--border-color);
+    }
+
+    .o_workflow_canvas_run_scheduled {
+        background-color: var(--info-bg-subtle);
+        box-shadow: inset 0 0 0 2px var(--info);
     }
 
     .o_workflow_canvas_run_ready {

@@ -3,7 +3,7 @@ import logging
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
-from .workflow_edge import SETTLED_STATES
+from .workflow_edge import EVENT_CONDITIONS, SETTLED_STATES
 
 _logger = logging.getLogger(__name__)
 
@@ -39,6 +39,7 @@ class AutomationRuntimeLine(models.Model):
     state = fields.Selection(
         selection=[
             ("waiting", "Waiting"),
+            ("scheduled", "Scheduled"),
             ("ready", "Ready"),
             ("paused", "Paused"),
             ("in_progress", "In Progress"),
@@ -63,7 +64,14 @@ class AutomationRuntimeLine(models.Model):
         string="Resumes At",
         readonly=True,
         copy=False,
-        help="When a paused Wait step becomes ready again",
+        help="When a scheduled step becomes ready, or a paused Wait step completes",
+    )
+    date_settled = fields.Datetime(
+        string="Settled At",
+        readonly=True,
+        copy=False,
+        help="When the step finished, failed, was skipped or was cancelled; "
+        "a delayed edge out of it counts from here",
     )
     error_message = fields.Text(
         string="Error Details",
@@ -110,14 +118,14 @@ class AutomationRuntimeLine(models.Model):
         return self.edge_out_ids.target_line_id
 
     def action_mark_ready(self):
-        self.write({"state": "ready", "error_message": False})
+        self.write({"state": "ready", "date_resume": False, "error_message": False})
 
     def action_cancel(self):
         for line in self:
             if line.state in ("done", "skipped", "cancel"):
                 continue
 
-            line.state = "cancel"
+            line.write({"state": "cancel", "date_settled": self.env.cr.now()})
 
             if (
                 line.created_record_ref
@@ -128,7 +136,7 @@ class AutomationRuntimeLine(models.Model):
     def _activate_successors(self):
         self.check_singleton()
         for successor in self._get_successors():
-            if successor.state == "waiting":
+            if successor.state in ("waiting", "scheduled"):
                 successor._settle_readiness()
 
     def _settle_readiness(self):
@@ -137,12 +145,69 @@ class AutomationRuntimeLine(models.Model):
         if any(edge.source_line_id.state not in SETTLED_STATES for edge in edges):
             return
         live = edges.filtered(lambda edge: edge.source_line_id.state != "skipped")
-        if live and all(edge._is_satisfied() for edge in live):
-            self.action_mark_ready()
-            _logger.info("Action '%s' (#%d) is now ready", self.name, self.id)
+        now = self.env.cr.now()
+        verdicts = [edge._verdict(now) for edge in live]
+        if not live or any(satisfied is False for satisfied, _due in verdicts):
+            self._skip()
             return
-        self.write({"state": "skipped", "error_message": False})
-        self._activate_successors()
+        if any(satisfied is None for satisfied, _due in verdicts):
+            if self.state == "scheduled":
+                self.write({"state": "waiting", "date_resume": False})
+            return
+        due = max((due for _satisfied, due in verdicts if due), default=None)
+        if due:
+            self._schedule(due)
+            return
+        self.action_mark_ready()
+        _logger.info("Action '%s' (#%d) is now ready", self.name, self.id)
+
+    def _skip(self):
+        self.write(
+            {
+                "state": "skipped",
+                "date_resume": False,
+                "date_settled": self.env.cr.now(),
+                "error_message": False,
+            }
+        )
+        for line in self:
+            line._activate_successors()
+
+    def _schedule(self, due):
+        self.write({"state": "scheduled", "date_resume": due})
+        self.env.ref("automation.ir_cron_data_automation_resume")._trigger(at=due)
+
+    def _awaits_event(self):
+        self.check_singleton()
+        return any(
+            edge.condition == "event"
+            and not edge.date_event
+            and not edge.revoked
+            and edge.source_line_id.state in ("done", "error")
+            for edge in self.edge_in_ids
+        )
+
+    def _receive_event(self, code, exclusive=False):
+        now = self.env.cr.now()
+        for line in self:
+            edges = line.edge_out_ids
+            received = edges.filtered(
+                lambda edge: (
+                    edge.condition in EVENT_CONDITIONS
+                    and edge.event_code == code
+                    and not edge.date_event
+                ),
+            )
+            if not received and not exclusive:
+                continue
+            received.date_event = now
+            if exclusive:
+                (edges - received).revoked = True
+            runtime = line.runtime_id
+            if runtime.state not in ("in_progress", "waiting_resume"):
+                continue
+            line._activate_successors()
+            runtime._advance()
 
     def _has_error_handler(self):
         self.check_singleton()
@@ -266,16 +331,30 @@ class AutomationRuntimeLine(models.Model):
 
     def action_resume(self):
         for line in self.filtered(lambda step: step.state == "paused"):
-            line.write({"state": "done", "date_resume": False})
+            line.write(
+                {
+                    "state": "done",
+                    "date_resume": False,
+                    "date_settled": self.env.cr.now(),
+                }
+            )
             line._activate_successors()
 
     def action_mark_done(self):
-        self.write({"state": "done", "error_message": False})
+        self.write(
+            {"state": "done", "date_settled": self.env.cr.now(), "error_message": False}
+        )
         self._activate_successors()
         self.runtime_id._finish_if_settled()
 
     def action_mark_error(self, error_msg):
-        self.write({"state": "error", "error_message": error_msg})
+        self.write(
+            {
+                "state": "error",
+                "date_settled": self.env.cr.now(),
+                "error_message": error_msg,
+            }
+        )
         for line in self.filtered(lambda line: line._has_error_handler()):
             line._activate_successors()
 

@@ -61,6 +61,7 @@ describe("workflow canvas styling hooks", () => {
     test("a node in a run carries its state", () => {
         for (const state of [
             "waiting",
+            "scheduled",
             "ready",
             "paused",
             "in_progress",
@@ -85,7 +86,14 @@ describe("workflow canvas styling hooks", () => {
     });
 
     test("every condition has its own label", () => {
-        const conditions = ["on_success", "on_error", "always", "expression"];
+        const conditions = [
+            "on_success",
+            "on_error",
+            "always",
+            "expression",
+            "event",
+            "no_event",
+        ];
         const labels = conditions.map((condition) => String(conditionLabel(condition)));
 
         for (const label of labels) {
@@ -224,6 +232,35 @@ describe("workflow canvas edge label", () => {
 
     test("an expression edge missing its expression draws nothing", () => {
         expect(edgeLabel({ condition: "expression" })).toBe("");
+    });
+
+    test("an event edge names its event, and the delay after it", () => {
+        expect(edgeLabel({ condition: "event", event_code: "open" })).toBe("open");
+        expect(
+            edgeLabel({
+                condition: "event",
+                event_code: "open",
+                delay: 2,
+                delay_unit: "day",
+            }),
+        ).toBe("open, then 2 days");
+    });
+
+    test("a no-event edge names the event it waits out, and for how long", () => {
+        expect(
+            edgeLabel({
+                condition: "no_event",
+                event_code: "open",
+                delay: 3,
+                delay_unit: "week",
+            }),
+        ).toBe("no open within 3 weeks");
+    });
+
+    test("a delayed plain edge says how long it waits", () => {
+        expect(
+            edgeLabel({ condition: "on_success", delay: 1, delay_unit: "month" }),
+        ).toBe("after 1 months");
     });
 });
 
@@ -379,6 +416,7 @@ describe("workflow canvas run states", () => {
     test("every run state has its own label", () => {
         const states = [
             "waiting",
+            "scheduled",
             "ready",
             "in_progress",
             "paused",

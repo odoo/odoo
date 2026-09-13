@@ -100,6 +100,12 @@
                                         column_invisible="parent.usage != 'automation'"
                                         readonly="condition != 'expression'"
                                         required="condition == 'expression'" />
+                                    <field
+                                        name="event_code"
+                                        readonly="condition not in ('event', 'no_event')"
+                                        required="condition in ('event', 'no_event')" />
+                                    <field name="delay" />
+                                    <field name="delay_unit" />
                                     <field name="label" optional="hide" />
                                 </list>
                             </field>
@@ -116,6 +122,9 @@
                                 <list string="Enables">
                                     <field name="target_node_id" />
                                     <field name="condition" />
+                                    <field name="event_code" optional="show" />
+                                    <field name="delay" optional="show" />
+                                    <field name="delay_unit" optional="show" />
                                 </list>
                             </field>
                         </group>
@@ -128,6 +137,9 @@
                             <li><strong>One edge:</strong> Waits for that edge's condition to hold</li>
                             <li><strong>Several edges:</strong> Waits for ALL of them (AND join)</li>
                             <li><strong>On Error:</strong> lets a step handle the failure of another, instead of the run aborting</li>
+                            <li><strong>On Event / Without Event:</strong> waits for an event on the source, such as an email being opened, or for its absence during the delay</li>
+                            <li><strong>Delay:</strong> the step becomes ready that long after the edge's condition holds</li>
+                            <li><strong>A branch not taken</strong> is skipped, and so is everything only it leads to</li>
                             <li><strong>Execution state</strong> is tracked per-run in <code>automation.runtime.line</code></li>
                         </ul>
                     </div>

@@ -209,6 +209,8 @@ while a run is in flight must not change how that run routes.
 | `on_error` | `error` |
 | `always` | settled, however it settled |
 | `expression` | settled **and** `condition_expr` is truthy |
+| `event` | settled **and** has received `event_code` |
+| `no_event` | settled **and** has not received `event_code` within `delay` |
 
 An **unsettled** source satisfies nothing, whatever the condition: the answer is
 not yet knowable, and treating "not yet" as "no" would race the target into
@@ -216,13 +218,39 @@ not yet knowable, and treating "not yet" as "no" would race the target into
 logged rather than propagated — letting it out would abort the run from inside
 the readiness check, where no line owns the failure and nothing records it.
 
+### Timing and events
+
+Every edge also carries `delay` + `delay_unit` (the shared time units), copied onto
+the runtime edge with `event_code`. `automation.runtime.edge._verdict(now)` answers
+for one edge: *false*, *pending* (an `event` edge whose event has not arrived),
+*true*, or *true from a due time*. The due time is `delay` after the anchor: the
+source's `date_settled`, or the edge's `date_event` for an `event` edge. A
+`no_event` edge is the race partner. It is due `delay` after the source settled,
+and turns false the moment the event arrives, so its target is skipped by the
+dead-path rule below.
+
+`automation.runtime.line._receive_event(code, exclusive=False)` stamps
+`date_event` on the line's matching outgoing edges and re-settles their targets.
+`exclusive` revokes every other outgoing edge of the line, which is how a bounce
+closes a campaign's follow-ups. Events are generic: nothing in `automation` emits
+one. An application such as `marketing_automation` calls it from its own event
+sources.
+
+A waiting line with a target in the future becomes **`scheduled`**, carrying
+`date_resume` and a trigger on the resume cron, which re-settles it once due. A
+run whose only outstanding lines wait for events stays `waiting_resume`: it is
+waiting, not blocked, the way a marketing participant stays running.
+
 Readiness is **AND across the live incoming edges**: a step with two
 predecessors waits for both. `automation.runtime.line._settle_readiness()` decides
 a waiting line once every source has settled:
 
 - an edge whose source is **`skipped`** is *dead* and ignored;
-- at least one live edge, all satisfied → `ready`;
-- otherwise → **`skipped`**, and the skip propagates to the line's successors.
+- no live edge, or any live edge *false* → **`skipped`**, and the skip propagates
+  to the line's successors;
+- any live edge *pending* → stays `waiting`;
+- any live edge due in the future → `scheduled` until the latest due time;
+- otherwise → `ready`.
 
 This is the WS-BPEL dead-path rule. It is what lets an if/else rejoin (the
 untaken branch's edge is dead, so the join runs), and what stops a branch that
@@ -315,9 +343,10 @@ Fully isolated per-execution — no shared state with the definition.
 | `action_id` | Many2one `ir.actions.server` | Node being executed |
 | `name` | Char | Copied from action at creation |
 | `sequence` | Integer | Execution order |
-| `state` | Selection | waiting/ready/paused/in_progress/done/skipped/cancel/error |
+| `state` | Selection | waiting/scheduled/ready/paused/in_progress/done/skipped/cancel/error |
 | `error_message` | Text | Error details |
-| `date_resume` | Datetime | When a paused Wait step is due |
+| `date_resume` | Datetime | When a scheduled step or a paused Wait step is due |
+| `date_settled` | Datetime | When the step settled; delays on its outgoing edges count from here |
 | `edge_in_ids` / `edge_out_ids` | One2many `automation.runtime.edge` | DAG dependency at execution level |
 
 | `created_record_ref` | Reference | Record created by this step |

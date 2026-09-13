@@ -7,11 +7,18 @@ const COLUMN_GAP = 90;
 const ROW_GAP = 40;
 
 // Ordered as they are offered on a step's right edge, most common first.
-export const CONDITIONS = ["on_success", "on_error", "always", "expression"];
+export const CONDITIONS = [
+    "on_success",
+    "on_error",
+    "always",
+    "expression",
+    "event",
+    "no_event",
+];
 
-// An `expression` edge carries a Python expression the canvas cannot ask for,
-// and `workflow.edge._check_condition_expr` refuses one without it, so that
-// port is only ever shown for an edge that already exists.
+// An `expression` edge carries a Python expression, and an event edge an event
+// code, that the canvas cannot ask for; `workflow.edge` refuses either without
+// it, so those ports are only ever shown for an edge that already exists.
 const DRAGGABLE_CONDITIONS = ["on_success", "on_error", "always"];
 
 export const INPUT_PORT_ID = "in";
@@ -43,7 +50,34 @@ export function edgeLabel(edge) {
     if (edge.label) {
         return edge.label;
     }
-    return edge.condition === "expression" ? edge.condition_expr || "" : "";
+    const delay =
+        edge.delay > 0
+            ? `${edge.delay} ${timeUnitLabel(edge.delay_unit) || ""}`.trim()
+            : "";
+    if (edge.condition === "event" && edge.event_code) {
+        return delay
+            ? String(_t("%(event)s, then %(delay)s", { event: edge.event_code, delay }))
+            : edge.event_code;
+    }
+    if (edge.condition === "no_event" && edge.event_code) {
+        return String(
+            _t("no %(event)s within %(delay)s", { event: edge.event_code, delay }),
+        );
+    }
+    if (edge.condition === "expression" && edge.condition_expr) {
+        return delay
+            ? String(
+                  _t("%(expression)s, then %(delay)s", {
+                      expression: edge.condition_expr,
+                      delay,
+                  }),
+              )
+            : edge.condition_expr;
+    }
+    if (["on_success", "on_error", "always"].includes(edge.condition) && delay) {
+        return String(_t("after %(delay)s", { delay }));
+    }
+    return "";
 }
 
 export function conditionLabel(condition) {
@@ -52,20 +86,24 @@ export function conditionLabel(condition) {
         on_error: _t("on error"),
         always: _t("always"),
         expression: _t("if"),
+        event: _t("on event"),
+        no_event: _t("without event"),
     }[condition];
 }
 
-export function waitUnitLabel(unit) {
+export function timeUnitLabel(unit) {
     return {
         minute: _t("minutes"),
         hour: _t("hours"),
         day: _t("days"),
+        week: _t("weeks"),
+        month: _t("months"),
     }[unit];
 }
 
 export function stepDetail(step) {
     if (step.node_type === "wait") {
-        return `${step.wait_delay} ${waitUnitLabel(step.wait_unit) || ""}`.trim();
+        return `${step.wait_delay} ${timeUnitLabel(step.wait_unit) || ""}`.trim();
     }
     if (step.node_type === "approval") {
         return step.approver_names || "";
@@ -79,6 +117,7 @@ export function stepDetail(step) {
 export function runtimeStateLabel(state) {
     return {
         waiting: _t("Waiting"),
+        scheduled: _t("Scheduled"),
         ready: _t("Ready"),
         in_progress: _t("In progress"),
         paused: _t("Paused"),

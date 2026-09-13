@@ -14,7 +14,7 @@
                     name="state"
                     widget="badge"
                     decoration-danger="state == 'error'"
-                    decoration-info="state == 'waiting'"
+                    decoration-info="state in ('waiting', 'scheduled')"
                     decoration-muted="state == 'done'"
                     decoration-primary="state == 'in_progress'"
                     decoration-success="state == 'ready'" />
@@ -55,7 +55,7 @@
                     <field
                         name="state"
                         widget="statusbar"
-                        statusbar_visible="waiting,ready,in_progress,done" />
+                        statusbar_visible="waiting,scheduled,ready,in_progress,done" />
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
@@ -79,6 +79,8 @@
                         </group>
                         <group>
                             <field name="created_record_ref" />
+                            <field name="date_resume" invisible="not date_resume" />
+                            <field name="date_settled" invisible="not date_settled" />
                         </group>
                     </group>
                     <group
@@ -89,12 +91,19 @@
                                 <field name="source_line_id" />
                                 <field name="condition" />
                                 <field name="condition_expr" optional="hide" />
+                                <field name="event_code" optional="show" />
+                                <field name="delay" optional="show" />
+                                <field name="delay_unit" optional="show" />
+                                <field name="date_event" optional="show" />
+                                <field name="revoked" optional="hide" />
                             </list>
                         </field>
                         <field name="edge_out_ids" colspan="2" nolabel="1" readonly="1">
                             <list string="Enables">
                                 <field name="target_line_id" />
                                 <field name="condition" />
+                                <field name="event_code" optional="show" />
+                                <field name="date_event" optional="show" />
                             </list>
                         </field>
                     </group>
