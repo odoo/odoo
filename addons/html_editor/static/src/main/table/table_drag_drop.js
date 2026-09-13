@@ -5,24 +5,24 @@ import {
 } from "@html_editor/utils/dom_info";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { getColumnIndex, getRowIndex } from "@html_editor/utils/table";
-import { Component, onMounted, onWillUnmount, signal, useScope } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, signal, t, useProps, useScope } from "@odoo/owl";
 
 const OVERLAY_CLAMP_OFFSET = 5;
 
 export class TableDragDrop extends Component {
     static template = "html_editor.TableDragDrop";
-    static props = {
-        type: String,
-        pointerPos: Object,
-        target: { validate: (el) => el.nodeType === Node.ELEMENT_NODE },
-        document: { validate: (p) => p.nodeType === Node.DOCUMENT_NODE },
-        editable: { validate: (p) => p.nodeType === Node.ELEMENT_NODE },
-        close: Function,
-        moveRow: Function,
-        moveColumn: Function,
-        commit: Function,
-        tableGrid: Object,
-    };
+    props = useProps({
+        type: t.string(),
+        pointerPos: t.object(),
+        target: t.customValidator(t.object(), (el) => el.nodeType === Node.ELEMENT_NODE),
+        document: t.customValidator(t.object(), (p) => p.nodeType === Node.DOCUMENT_NODE),
+        editable: t.customValidator(t.object(), (p) => p.nodeType === Node.ELEMENT_NODE),
+        close: t.function(),
+        moveRow: t.function(),
+        moveColumn: t.function(),
+        commit: t.function(),
+        tableGrid: t.array(t.array(t.object())),
+    });
 
     overlayRef = signal.ref();
 

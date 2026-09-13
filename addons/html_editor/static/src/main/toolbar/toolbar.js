@@ -1,61 +1,45 @@
-import { validate } from "@web/owl2/utils";
-import { Component, proxy, signal } from "@odoo/owl";
+import { Component, proxy, signal, t, useProps } from "@odoo/owl";
 import { omit, pick } from "@web/core/utils/objects";
 import { trapFocus } from "@html_editor/utils/dom_traversal";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 
+const componentButtonSchema = {
+    Component: t.component(),
+    description: t.string(),
+    id: t.string(),
+    isDisabled: t.boolean(),
+    props: t.object().optional(),
+};
+
+const genericButtonSchema = {
+    description: t.string(),
+    icon: t.string().optional(),
+    iconClass: t.string().optional(),
+    id: t.string(),
+    isActive: t.boolean(),
+    isDisabled: t.boolean(),
+    run: t.function(),
+    text: t.string().optional(),
+};
+
 export class Toolbar extends Component {
     static template = "html_editor.Toolbar";
-    static props = {
-        class: { type: String, optional: true },
-        getSelection: Function,
-        focusEditable: Function,
-        state: {
-            type: Object,
-            shape: {
-                namespace: { type: String, optional: true },
-                buttonGroups: {
-                    type: Array,
-                    element: {
-                        type: Object,
-                        shape: {
-                            id: String,
-                            buttons: {
-                                type: Array,
-                                element: {
-                                    type: Object,
-                                    validate: (button) => {
-                                        const base = {
-                                            id: String,
-                                            description: String,
-                                            isDisabled: Boolean,
-                                        };
-                                        if (button.Component) {
-                                            validate(button, {
-                                                ...base,
-                                                Component: Function,
-                                                props: { type: Object, optional: true },
-                                            });
-                                        } else {
-                                            validate(button, {
-                                                ...base,
-                                                run: Function,
-                                                icon: { type: String, optional: true },
-                                                iconClass: { type: String, optional: true },
-                                                text: { type: String, optional: true },
-                                                isActive: Boolean,
-                                            });
-                                        }
-                                        return true;
-                                    },
-                                },
-                            },
-                        },
-                    },
-                },
-            },
-        },
-    };
+    props = useProps({
+        class: t.string().optional(),
+        getSelection: t.function(),
+        focusEditable: t.function(),
+        state: t.object({
+            namespace: t.string().optional(),
+            buttonGroups: t.array(
+                t.object({
+                    id: t.string(),
+                    buttons: t.array(
+                        t.or([t.object(componentButtonSchema), t.object(genericButtonSchema)])
+                    ),
+                })
+            ),
+        }),
+    });
 
     toolbarEl = signal.ref();
 
@@ -110,9 +94,9 @@ export class Toolbar extends Component {
 }
 
 export const toolbarButtonProps = {
-    title: [String, Function],
-    getSelection: Function,
-    isDisabled: Boolean,
+    title: t.or([t.string(), t.function()]),
+    getSelection: t.function(),
+    isDisabled: t.boolean(),
 };
 
 /** @typedef {import("@html_editor/core/user_command_plugin").UserCommand} UserCommand */

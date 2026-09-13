@@ -57,19 +57,20 @@ const POSTPROCESS_GENERATED_CONTENT = (content, baseContainer, document) => {
 };
 
 export class TranslateDialog extends Component {
-    static template = "html_editor.TranslateDialog";
     static components = { Dialog, Dropdown, DropdownItem };
+    static template = "html_editor.TranslateDialog";
+
     props = useProps({
-        insert: t.function(),
-        close: t.function(),
-        sanitize: t.function(),
         baseContainer: t.string().optional("DIV"),
+        close: t.function(),
+        document: t.customValidator(t.object(), (p) => p.nodeType === Node.DOCUMENT_NODE),
+        insert: t.function(),
         originalText: t.string(),
+        sanitize: t.function(),
         targetLang: t.object({
             languageCode: t.string(),
             languageName: t.string(),
         }),
-        document: t.customValidator(t.any(), (p) => p.nodeType === Node.DOCUMENT_NODE),
     });
 
     debugMode = usePlugin(DebugModePlugin);

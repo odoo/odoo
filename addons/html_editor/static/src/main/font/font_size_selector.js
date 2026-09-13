@@ -15,17 +15,18 @@ export const MAX_FONT_SIZE = 144;
 export class FontSizeSelector extends Component {
     static template = "html_editor.FontSizeSelector";
     props = useProps({
-        getItems: t.function(),
+        document: t.customValidator(t.object(), (p) => p.nodeType === Node.DOCUMENT_NODE),
         getDisplay: t.function(),
+        getItems: t.function(),
+        maxFontSize: t.number().optional(MAX_FONT_SIZE),
+        onBlur: t.function().optional(),
         onFontSizeInput: t.function(),
         onSelected: t.function(),
-        onBlur: t.function().optional(),
-        document: t.customValidator(t.any(), (p) => p.nodeType === Node.DOCUMENT_NODE),
-        maxFontSize: t.number().optional(MAX_FONT_SIZE),
+
         // from toolbarButtonProps
-        title: t.or([t.string(), t.function()]),
         getSelection: t.function(),
         isDisabled: t.boolean(),
+        title: t.or([t.string(), t.function()]),
     });
     static components = { Dropdown, DropdownItem, IframeInput };
 
@@ -39,7 +40,10 @@ export class FontSizeSelector extends Component {
         useDropdownAutoVisibility(this.env.overlayState, this.menuRef);
         this.iframeContentRef = signal.ref();
         this.fontSizeInputRef = signal.ref();
-        this.debouncedCustomFontSizeInput = useDebounced(this.onCustomFontSizeInput.bind(this), 200);
+        this.debouncedCustomFontSizeInput = useDebounced(
+            this.onCustomFontSizeInput.bind(this),
+            200
+        );
         useToolbarDropdownFocus(this.dropdown, this.fontSizeSelector);
         const htmlStyle = getHtmlStyle(document);
         this.fontFamily = getCSSVariableValue("o-system-fonts", htmlStyle);

@@ -1,8 +1,8 @@
 import {
     Counter,
-    embedding,
     EmbeddedWrapper,
     EmbeddedWrapperMixin,
+    embedding,
     namedCounter,
     NamedCounter,
     OffsetCounter,
@@ -10,14 +10,25 @@ import {
     SavedCounter,
     savedCounter,
 } from "@html_editor/../tests/_helpers/embedded_component";
+import { nodeToTree } from "@html_editor/core/dom_reference_map_plugin";
 import {
     getEditableDescendants,
     StateChangeManager,
 } from "@html_editor/others/embedded_component_utils";
+import { Plugin } from "@html_editor/plugin";
 import { parseHTML } from "@html_editor/utils/html";
-import { beforeEach, describe, expect, getFixture, test } from "@odoo/hoot";
-import { click, queryFirst, waitFor } from "@odoo/hoot-dom";
-import { animationFrame, tick } from "@odoo/hoot-mock";
+import {
+    animationFrame,
+    beforeEach,
+    click,
+    describe,
+    expect,
+    getFixture,
+    queryFirst,
+    test,
+    tick,
+    waitFor,
+} from "@odoo/hoot";
 import {
     App,
     Component,
@@ -27,20 +38,19 @@ import {
     onWillStart,
     onWillUnmount,
     signal,
+    t,
+    useProps,
     xml,
-    proxy,
 } from "@odoo/owl";
+import { assignTestEnv, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { renderToElement } from "@web/core/utils/render";
 import { EmbeddedComponentPlugin } from "../src/others/embedded_component_plugin";
+import { cleanHints, processThroughCleanForSave } from "./_helpers/dispatch";
 import { setupEditor } from "./_helpers/editor";
 import { unformat } from "./_helpers/format";
 import { getContent, setSelection } from "./_helpers/selection";
-import { commit, deleteBackward, deleteForward, redo, undo } from "./_helpers/user_actions";
-import { assignTestEnv, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { Plugin } from "@html_editor/plugin";
-import { cleanHints, processThroughCleanForSave } from "./_helpers/dispatch";
 import { expectElementCount } from "./_helpers/ui_expectations";
-import { renderToElement } from "@web/core/utils/render";
-import { nodeToTree } from "@html_editor/core/dom_reference_map_plugin";
+import { commit, deleteBackward, deleteForward, redo, undo } from "./_helpers/user_actions";
 
 function getConfig(components) {
     return {
@@ -309,19 +319,20 @@ describe("Mount and Destroy embedded components", () => {
         class RecursiveComponent extends Component {
             static template = xml`
                 <div>
-                    <div t-on-click="this.increment" t-att-class="'click count-' + this.props.index">Count:<t t-out="this.state.value"/></div>
-                    <div t-ref="this.innerEditableRef" t-att-class="'innerEditable-' + this.props.index"/>
+                    <div t-on-click="this.increment" t-att-class="'click count-' + this.props.index">Count:<t t-out="this.value()" /></div>
+                    <div t-ref="this.innerEditableRef" t-att-class="'innerEditable-' + this.props.index" />
                 </div>
             `;
-            static props = {
-                innerValue: HTMLElement,
-                index: Number,
-            };
+
+            props = useProps({
+                innerValue: t.instanceOf(HTMLElement),
+                index: t.number(),
+            });
+
             innerEditableRef = signal.ref();
+            value = signal(this.props.index);
+
             setup() {
-                this.state = proxy({
-                    value: this.props.index,
-                });
                 onMounted(() => {
                     this.props.innerValue.dataset.oeProtected = "false";
                     this.props.innerValue.setAttribute("contenteditable", "true");
@@ -332,8 +343,9 @@ describe("Mount and Destroy embedded components", () => {
                     expect.step(`destroy ${this.props.index}`);
                 });
             }
+
             increment() {
-                this.state.value++;
+                this.value.set(this.value() + 1);
             }
         }
         let index = 1;
@@ -648,10 +660,12 @@ describe("Selection after embedded component insertion", () => {
 describe("Mount processing", () => {
     test("embedded component get proper props", async () => {
         class Test extends Counter {
-            static props = ["initialCount"];
+            props = useProps({
+                initialCount: t.any(),
+            });
             setup() {
                 expect(this.props.initialCount).toBe(10);
-                this.state.value = this.props.initialCount;
+                this.value.set(this.props.initialCount);
             }
         }
         const { el } = await setupEditor(`<p><span data-embedded="counter"></span></p>`, {
@@ -665,10 +679,12 @@ describe("Mount processing", () => {
 
     test("embedded component can compute props from element", async () => {
         class Test extends Counter {
-            static props = ["initialCount"];
+            props = useProps({
+                initialCount: t.any(),
+            });
             setup() {
                 expect(this.props.initialCount).toBe(10);
-                this.state.value = this.props.initialCount;
+                this.value.set(this.props.initialCount);
             }
         }
         const { el } = await setupEditor(
@@ -689,14 +705,15 @@ describe("Mount processing", () => {
 
     test("embedded component can set attributes on host element", async () => {
         class Test extends Counter {
-            static props = ["host"];
+            props = useProps({
+                host: t.any(),
+            });
             setup() {
-                const initialCount = parseInt(this.props.host.dataset.count);
-                this.state.value = initialCount;
+                this.value.set(parseInt(this.props.host.dataset.count));
             }
             increment() {
                 super.increment();
-                this.props.host.dataset.count = this.state.value;
+                this.props.host.dataset.count = this.value();
             }
         }
         const { el } = await setupEditor(
@@ -771,12 +788,12 @@ describe("Mount processing", () => {
         class LabeledCounter extends Counter {
             static template = xml`
                 <span t-ref="this.ref" class="counter" t-on-click="this.increment">
-                    <span t-ref="this.labelRef"/>:<t t-out="this.state.value"/>
+                    <span t-ref="this.labelRef"/>:<t t-out="this.value()"/>
                 </span>
             `;
-            static props = {
-                label: HTMLElement,
-            };
+            props = useProps({
+                label: t.instanceOf(HTMLElement),
+            });
             labelRef = signal.ref();
             setup() {
                 onWillStart(async () => {
@@ -881,7 +898,7 @@ describe("Mount processing", () => {
         class EmbeddedCounter extends Counter {
             static template = xml`
                 <span class="counter" t-on-click="this.increment">
-                    <t t-out="this.state.value"/>
+                    <t t-out="this.value()"/>
                 </span>
             `;
             setup() {
@@ -1184,7 +1201,7 @@ describe("editable descendants", () => {
                 ]),
             }
         );
-        wrapper.state.switch = true;
+        wrapper.switch.set(true);
         await animationFrame();
         expect.verifySteps(["patched"]);
         expect(getContent(el)).toBe(
@@ -1445,9 +1462,7 @@ describe("Embedded state", () => {
         expect(counter.embeddedState).toEqual({
             baseValue: 2,
         });
-        expect(counter.state).toEqual({
-            value: 1,
-        });
+        expect(counter.value()).toBe(1);
     });
 
     test("Adding a new property in the embedded state should re-render and write on embedded attributes", async () => {
@@ -1572,9 +1587,7 @@ describe("Embedded state", () => {
         expect(counter.embeddedState).toEqual({
             baseValue: 4,
         });
-        expect(counter.state).toEqual({
-            value: 1,
-        });
+        expect(counter.value()).toEqual(1);
     });
 
     test("Re-write the same value on `data-embedded-state` does not update the embedded state", async () => {

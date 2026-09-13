@@ -1,4 +1,4 @@
-import { proxy, signal, usePlugin } from "@odoo/owl";
+import { proxy, signal, t, usePlugin, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { KeepLast } from "@web/core/utils/concurrency";
@@ -14,13 +14,9 @@ export class AutoResizeImage extends Attachment {
     image = signal.ref();
     container = signal.ref();
 
-    setup() {
-        super.setup();
-
-        this.state = proxy({
-            loaded: false,
-        });
-    }
+    state = proxy({
+        loaded: false,
+    });
 
     async onImageLoaded() {
         if (!this.image()) {
@@ -64,6 +60,10 @@ export class ImageSelector extends FileSelector {
     };
 
     debugMode = usePlugin(DebugModePlugin);
+    imageSelectorProps = useProps({
+        addFieldImage: t.boolean().optional(),
+        setAbortUploadsCallback: t.function().optional(),
+    });
 
     setup() {
         super.setup();
@@ -89,8 +89,10 @@ export class ImageSelector extends FileSelector {
         this.MIN_ROW_HEIGHT = 128;
 
         this.fileMimetypes = IMAGE_MIMETYPES.join(",");
-        this.isImageField =
-            !!this.props.media?.closest("[data-oe-type=image]") || !!this.props.addFieldImage;
+        this.isImageField = Boolean(
+            this.props.media?.closest("[data-oe-type=image]") ||
+            this.imageSelectorProps.addFieldImage
+        );
         this.isProcessingClick = false;
     }
 
@@ -186,7 +188,7 @@ export class ImageSelector extends FileSelector {
                 abortFn = abort;
             }
         );
-        this.props.setAbortUploadsCallback(() => abortFn?.());
+        this.imageSelectorProps.setAbortUploadsCallback(() => abortFn?.());
         await uploadPromise;
     }
 

@@ -1,14 +1,14 @@
-import { Component, onMounted, onWillStart, xml } from "@odoo/owl";
+import { Component, onMounted, onWillStart, t, useProps, xml } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
 import { cookie } from "@web/core/browser/cookie";
 import { DEFAULT_LANGUAGE_ID, getPreValue, highlightPre } from "./syntax_highlighting_utils";
 
 export class ReadonlySyntaxHighlightingComponent extends Component {
-    static props = {
-        value: { type: String },
-        languageId: { type: String },
-        host: { type: Object },
-    };
+    props = useProps({
+        value: t.string(),
+        languageId: t.string(),
+        host: t.object(),
+    });
     // The host is the `pre`. There's no need for a template but Owl requires it.
     static template = xml`<span/>`;
 

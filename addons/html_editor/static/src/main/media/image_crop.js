@@ -11,7 +11,9 @@ import {
     onWillDestroy,
     signal,
     status,
+    t,
     useListener,
+    useProps,
 } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { _t } from "@web/core/l10n/translation";
@@ -31,12 +33,13 @@ const IMAGE_SHAPES = ["rounded", "rounded-circle", "shadow", "img-thumbnail"];
 
 export class ImageCrop extends Component {
     static template = "html_editor.ImageCrop";
-    static props = {
-        document: { validate: (p) => p.nodeType === Node.DOCUMENT_NODE },
-        media: { optional: true },
-        onClose: { type: Function, optional: true },
-        onSave: { type: Function, optional: true },
-    };
+
+    props = useProps({
+        document: t.customValidator(t.object(), (p) => p.nodeType === Node.DOCUMENT_NODE),
+        media: t.any().optional(),
+        onClose: t.function().optional(),
+        onSave: t.function().optional(),
+    });
 
     elRef = signal.ref();
     imageRef = signal.ref();

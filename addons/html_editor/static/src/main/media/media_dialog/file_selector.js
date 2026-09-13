@@ -8,7 +8,7 @@ import { KeepLast } from "@web/core/utils/concurrency";
 import { user } from "@web/core/user";
 import { useDebounced } from "@web/core/utils/timing";
 import { SearchMedia } from "./search_media";
-import { Component, onWillStart, proxy, signal, useListener, xml } from "@odoo/owl";
+import { Component, onWillStart, proxy, signal, t, useListener, useProps, xml } from "@odoo/owl";
 
 export const IMAGE_MIMETYPES = [
     "image/jpg",
@@ -41,7 +41,12 @@ export const ATTACHMENT_FIELDS = [
 
 class RemoveButton extends Component {
     static template = xml`<i class="oi oi-filled o_existing_attachment_remove position-absolute top-0 end-0 p-2 bg-white-25 cursor-pointer opacity-0 opacity-100-hover z-1 transition-base" data-icon="delete" t-att-title="this.removeTitle" role="img" t-att-aria-label="this.removeTitle" t-on-click="this.remove"/>`;
-    static props = ["model?", "remove"];
+
+    props = useProps({
+        model: t.or([t.string(), t.literal(false)]).optional(),
+        remove: t.function(),
+    });
+
     setup() {
         this.removeTitle = _t("This file is attached to the current record.");
         if (this.props.model === "ir.ui.view") {
@@ -58,7 +63,12 @@ class RemoveButton extends Component {
 export class AttachmentError extends Component {
     static components = { Dialog };
     static template = "html_editor.AttachmentError";
-    static props = ["views", "close"];
+
+    props = useProps({
+        views: t.array(t.object()),
+        close: t.function(),
+    });
+
     setup() {
         this.title = _t("Alert");
     }
@@ -69,7 +79,27 @@ export class Attachment extends Component {
     static components = {
         RemoveButton,
     };
-    static props = ["*"];
+
+    props = useProps({
+        altDescription: t.string().optional(),
+        author: t.string().optional(),
+        authorLink: t.string().optional(),
+        id: t.or([t.number(), t.literal(false)]).optional(),
+        isOptimized: t.boolean().optional(),
+        isRemovable: t.boolean().optional(),
+        minRowHeight: t.number().optional(),
+        model: t.or([t.string(), t.literal(false)]).optional(),
+        name: t.string().optional(),
+        onImageClick: t.function().optional(),
+        onLoaded: t.function().optional(),
+        onRemoved: t.function().optional(),
+        resId: t.or([t.number(), t.literal(false)]).optional(),
+        selected: t.boolean().optional(),
+        src: t.string().optional(),
+        title: t.string().optional(),
+        unselectable: t.boolean().optional(),
+    });
+
     setup() {
         this.dialogs = useService("dialog");
     }
@@ -101,27 +131,28 @@ export class FileSelectorControlPanel extends Component {
     static components = {
         SearchMedia,
     };
-    static props = {
-        uploadUrl: Function,
-        validateUrl: Function,
-        uploadFiles: Function,
-        changeSearchService: Function,
-        changeShowOptimized: Function,
-        search: Function,
-        accept: { type: String, optional: true },
-        addText: { type: String, optional: true },
-        multiSelect: { type: true, optional: true },
-        needle: { type: String, optional: true },
-        searchPlaceholder: { type: String, optional: true },
-        searchService: { type: String, optional: true },
-        showOptimized: { type: Boolean, optional: true },
-        showOptimizedOption: { type: String, optional: true },
-        uploadText: { type: String, optional: true },
-        urlPlaceholder: { type: String, optional: true },
-        urlWarningTitle: { type: String, optional: true },
-        useMediaLibrary: { type: Boolean, optional: true },
-        useUnsplash: { type: Boolean, optional: true },
-    };
+
+    props = useProps({
+        accept: t.string().optional(),
+        addText: t.string().optional(),
+        changeSearchService: t.function(),
+        changeShowOptimized: t.function(),
+        multiSelect: t.any().optional(),
+        needle: t.string().optional(),
+        search: t.function(),
+        searchPlaceholder: t.string().optional(),
+        searchService: t.string().optional(),
+        showOptimized: t.boolean().optional(),
+        showOptimizedOption: t.boolean().optional(),
+        uploadFiles: t.function(),
+        uploadText: t.string().optional(),
+        uploadUrl: t.function(),
+        urlPlaceholder: t.string().optional(),
+        urlWarningTitle: t.string().optional(),
+        useMediaLibrary: t.boolean().optional(),
+        useUnsplash: t.boolean().optional(),
+        validateUrl: t.function(),
+    });
 
     fileInput = signal.ref();
     urlInputRef = signal.ref();
@@ -198,7 +229,21 @@ export class FileSelector extends Component {
     static components = {
         FileSelectorControlPanel,
     };
-    static props = ["*"];
+
+    props = useProps({
+        id: t.string(),
+        media: t.any().optional(),
+        modalRef: t.function(),
+        multiSelect: t.boolean().optional(),
+        onAttachmentChange: t.function().optional(),
+        pendingAttachments: t.array().optional(),
+        resId: t.or([t.string(), t.number(), t.literal(false)]).optional(),
+        resModel: t.string().optional(),
+        save: t.function(),
+        selectedMedia: t.object(),
+        selectMedia: t.function(),
+        useMediaLibrary: t.boolean().optional(),
+    });
 
     loadMoreButtonRef = signal.ref();
     existingAttachmentsRef = signal.ref();

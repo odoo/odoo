@@ -5,37 +5,36 @@ import {
     useEmbeddedState,
 } from "@html_editor/others/embedded_component_utils";
 import { ReadonlyEmbeddedVideoComponent } from "@html_editor/others/embedded_components/core/video/readonly_video";
-import { Component, onMounted, onWillDestroy, onWillUnmount, signal, useListener } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onWillDestroy,
+    onWillUnmount,
+    signal,
+    t,
+    useListener,
+    useProps,
+} from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
 export class EmbeddedVideoComponent extends ReadonlyEmbeddedVideoComponent {
     static template = "html_editor.EmbeddedVideo";
-    static props = {
-        // The embedded video can be initialized either with:
-        // the platform and videoId props
-        //  OR
-        // the src prop
-        platform: { type: String, optional: true },
-        videoId: { type: String, optional: true },
-        // 'src' should be 'embedUrl' to keep consistency,
-        // but we can't to ensure retro compatibility.
-        src: { type: String, optional: true },
-        baseUrl: { type: String, optional: true },
-        params: { type: Object, optional: true },
-        host: { type: HTMLElement },
-        createOverlay: { type: Function, optional: true },
-        focusEditable: { type: Function, optional: true },
-        commit: { type: Function, optional: true },
-        openVideoSelectorDialog: { type: Function, optional: true },
-    };
+
+    videoEmbedProps = useProps({
+        host: t.instanceOf(HTMLElement),
+        createOverlay: t.function().optional(),
+        focusEditable: t.function().optional(),
+        commit: t.function().optional(),
+        openVideoSelectorDialog: t.function().optional(),
+    });
 
     iframeRef = signal.ref();
 
     setup() {
         super.setup();
-        this.videoBlock = this.props.host;
+        this.videoBlock = this.videoEmbedProps.host;
         this.state = useEmbeddedState(this.videoBlock);
 
         if (!this.state.platform || !this.state.videoId) {
@@ -56,7 +55,7 @@ export class EmbeddedVideoComponent extends ReadonlyEmbeddedVideoComponent {
 
         this.dropdown = useDropdownState();
 
-        this.videoSettingsOverlay = this.props.createOverlay(VideoSettings, {
+        this.videoSettingsOverlay = this.videoEmbedProps.createOverlay(VideoSettings, {
             positionOptions: {
                 position: "right-start",
             },
@@ -71,15 +70,15 @@ export class EmbeddedVideoComponent extends ReadonlyEmbeddedVideoComponent {
                     videoBlock: this.videoBlock,
                     overlay: this.videoSettingsOverlay,
                     replaceVideo: () => {
-                        this.props.openVideoSelectorDialog((media) => {
+                        this.videoEmbedProps.openVideoSelectorDialog((media) => {
                             this.replaceVideo(media);
                         }, this.iframeRef());
                     },
                     removeVideo: () => {
                         this.videoBlock.remove();
-                        this.props.commit();
+                        this.videoEmbedProps.commit();
                     },
-                    focusEditable: this.props.focusEditable,
+                    focusEditable: this.videoEmbedProps.focusEditable,
                     dropdown: this.dropdown,
                 },
             });
@@ -119,7 +118,7 @@ export class EmbeddedVideoComponent extends ReadonlyEmbeddedVideoComponent {
             delete this.videoBlock.dataset.isVertical;
         }
         this.videoBlock.classList.toggle("media_iframe_video_size_for_vertical", isVertical);
-        this.props.focusEditable();
+        this.videoEmbedProps.focusEditable();
     }
 }
 
@@ -133,14 +132,14 @@ export const videoEmbedding = {
 export class VideoSettings extends Component {
     static template = "html_editor.VideoSettings";
     static components = { Dropdown, DropdownItem };
-    static props = {
-        videoBlock: { type: HTMLElement },
-        overlay: { type: Object },
-        replaceVideo: { type: Function },
-        removeVideo: { type: Function },
-        focusEditable: { type: Function },
-        dropdown: { type: Object },
-    };
+    props = useProps({
+        videoBlock: t.instanceOf(HTMLElement),
+        overlay: t.object(),
+        replaceVideo: t.function(),
+        removeVideo: t.function(),
+        focusEditable: t.function(),
+        dropdown: t.object(),
+    });
 
     menuRef = signal.ref();
 

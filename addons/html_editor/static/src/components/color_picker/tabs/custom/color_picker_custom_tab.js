@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { isColorGradient } from "@web/core/utils/colors";
@@ -7,27 +7,26 @@ import { CustomColorPicker } from "../../custom_color_picker/custom_color_picker
 export class ColorPickerCustomTab extends Component {
     static template = "html_editor.ColorPickerCustomTab";
     static components = { CustomColorPicker };
-    static props = {
-        applyColor: Function,
-        colorPickerNavigation: Function,
-        onColorClick: Function,
-        onColorPreview: Function,
-        onColorPointerOver: Function,
-        onColorPointerOut: Function,
-        onFocusin: Function,
-        onFocusout: Function,
-        getUsedCustomColors: { type: Function, optional: true },
-        currentColorPreview: { type: String, optional: true },
-        currentCustomColor: { type: String, optional: true },
-        defaultColorSet: { type: [String, Boolean], optional: true },
-        defaultOpacity: { type: Number, optional: true },
-        grayscales: { type: Object, optional: true },
-        cssVarColorPrefix: { type: String, optional: true },
-        noTransparency: { type: Boolean, optional: true },
-        setOnCloseCallback: { type: Function, optional: true },
-        setOperationCallbacks: { type: Function, optional: true },
-        "*": { optional: true },
-    };
+    props = useProps({
+        applyColor: t.function(),
+        colorPickerNavigation: t.function(),
+        onColorClick: t.function(),
+        onColorPreview: t.function(),
+        onColorPointerOver: t.function(),
+        onColorPointerOut: t.function(),
+        onFocusin: t.function(),
+        onFocusout: t.function(),
+        getUsedCustomColors: t.function().optional(),
+        currentColorPreview: t.string().optional(),
+        currentCustomColor: t.string().optional(),
+        defaultColorSet: t.or([t.string(), t.boolean()]).optional(),
+        defaultOpacity: t.number().optional(),
+        grayscales: t.object().optional(),
+        cssVarColorPrefix: t.string().optional(),
+        noTransparency: t.boolean().optional(),
+        setOnCloseCallback: t.function().optional(),
+        setOperationCallbacks: t.function().optional(),
+    });
 
     setup() {
         this.usedCustomColors = this.props.getUsedCustomColors();

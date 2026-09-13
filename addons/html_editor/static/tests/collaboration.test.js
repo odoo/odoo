@@ -14,9 +14,15 @@ import {
     StateChangeManager,
 } from "@html_editor/others/embedded_component_utils";
 import { parseHTML } from "@html_editor/utils/html";
-import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { click, manuallyDispatchProgrammaticEvent } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
+import {
+    animationFrame,
+    beforeEach,
+    click,
+    describe,
+    expect,
+    manuallyDispatchProgrammaticEvent,
+    test,
+} from "@odoo/hoot";
 import { onMounted, onWillDestroy, xml } from "@odoo/owl";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import {
@@ -1095,7 +1101,7 @@ describe("Collaboration with embedded components", () => {
         const deep1 = e1.editable.querySelector("[data-embedded-editable='deep'] > p");
         const deep2 = e2.editable.querySelector("[data-embedded-editable='deep'] > p");
         // change state for c1
-        wrappers[0].state.switch = true;
+        wrappers[0].switch.set(true);
         deep1.append(e1.document.createTextNode("1"));
         e1.shared.history.commit();
         // wait for patch for c1
@@ -1644,7 +1650,7 @@ describe("Collaboration with embedded components", () => {
         test("A pending change applied after collaborative changes only update modified properties of that change (other properties are left untouched)", async () => {
             class NamedCounter extends SavedCounter {
                 static template = xml`
-                    <span class="counter" t-on-click="this.increment"><t t-out="this.embeddedState.name"/>:<t t-out="this.counterValue"/></span>`;
+                    <span class="counter" t-on-click="this.increment"><t t-out="this.embeddedState.name"/>:<t t-out="this.counterValue()"/></span>`;
             }
             const namedCounter = {
                 ...savedCounter,
