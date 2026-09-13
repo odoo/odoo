@@ -35,7 +35,7 @@ class RecordCapturer:
         ) as span:
             self._before = self._model.search(self._domain, order="id")
             span.set(count=len(self._before))
-        self._after = None
+        self._after: Any = None
         return self
 
     def __exit__(

@@ -37,10 +37,10 @@ def env_int(varname: str, default: int) -> int:
 
 def get_db_name() -> str:
     dbnames = odoo.tools.config["db_name"]
-    worker = current_worker_thread()
-    if not dbnames and getattr(worker, "dbname", None):
-        _debug.logic("test.utils.db_from_worker", db=worker.dbname)
-        return worker.dbname
+    worker_dbname = getattr(current_worker_thread(), "dbname", None)
+    if not dbnames and worker_dbname:
+        _debug.logic("test.utils.db_from_worker", db=worker_dbname)
+        return worker_dbname
     if not dbnames:
         _debug.logic("test.utils.db_missing")
         sys.exit("No database name found, please provide one with -d/--database")

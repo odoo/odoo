@@ -64,6 +64,8 @@ TEST_CURSOR_COOKIE_NAME = "test_request_key"
 
 
 class RegistryRLock(threading._RLock):  # type: ignore[misc]  # only the private class is subclassable
+    _owner: int | None
+
     @property
     def count(self) -> int:
         return self._count
@@ -136,56 +138,8 @@ def gc_test_filestore() -> None:
         _logger.warning("Could not sweep the filestore after the suite", exc_info=True)
 
 
-def _release_foreign_acquisition(lock: Any) -> None:
-    if hasattr(lock, "_owner"):
-        foreign = lock._owner not in (None, threading.get_ident())  # debuglog
-        if foreign:
-            lock._owner = threading.get_ident()
-            lock._count = 1
-        lock.release()
-        _debug.logic("test.lock.stranded_released", adopted=foreign)
-        return
-    try:
-        lock.release()
-    except RuntimeError:
-        _debug.logic("test.lock.stranded_release_failed")
-        _logger.warning(
-            "Could not release the lock of a stranded test cursor: another "
-            "thread holds it and this lock exposes no owner to adopt, so every "
-            "later test cursor will stall for test_cursor_lock_timeout",
-        )
-
-
 def release_stranded_test_cursors(owner: str = "") -> int:
-    stranded = TestCursor._cursors_stack
-    if stranded:
-        _debug.lifecycle(
-            "test.cursor.stranded", owner=owner or None, count=len(stranded)
-        )
-    for cursor in reversed(stranded):
-        _logger.warning(
-            "A cursor was remaining in the TestCursor stack at the end of %s; "
-            "releasing its registry lock",
-            owner or "the test",
-        )
-        try:
-            cursor._close_savepoint(rollback=True)
-        except Exception as exc:
-            _debug.logic(
-                "test.cursor.stranded_rollback_failed",
-                owner=owner or None,
-                error=type(exc).__name__,
-            )
-            _logger.warning(
-                "Could not roll back the savepoint of the cursor stranded by %s",
-                owner or "the test",
-                exc_info=True,
-            )
-        cursor._closed = True
-        _release_foreign_acquisition(cursor._lock)
-    count = len(stranded)
-    TestCursor._cursors_stack = []
-    return count
+    return TestCursor.release_stranded(owner)
 
 
 def _patch_target_name(obj: Any) -> str:

@@ -32,7 +32,7 @@ from odoo.tests.common import (
     users,
     warmup,
 )
-from odoo.tests.cursor import TestCursor
+from odoo.tests.cursor import TestCursor, _release_foreign_acquisition
 from odoo.tests.form import O2MValue
 from odoo.tests.result import OdooTestResult, Stat
 from odoo.tests.suite import OdooSuite
@@ -41,7 +41,6 @@ from odoo.tests.transaction_case import (
     _DELEGATING_STATEMENTS,
     _STATEMENT_RECORDERS,
     RegistryRLock,
-    _release_foreign_acquisition,
 )
 from odoo.tests.utils import (
     InfrastructureUnavailable,
@@ -995,7 +994,7 @@ class TestAStrandedCursorIsRecoverableAcrossThreads(BaseCase):
         self.assertTrue(taken.wait(5))
         thread.join(5)
 
-        with self.assertLogs("odoo.tests.transaction_case", "WARNING") as logged:
+        with self.assertLogs("odoo.tests.cursor", "WARNING") as logged:
             _release_foreign_acquisition(lock)
         self.assertIn(
             "exposes no owner to adopt",

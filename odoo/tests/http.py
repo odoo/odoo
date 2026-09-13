@@ -113,7 +113,7 @@ class HttpCase(TransactionCase):
 
         ICP = cls.env["ir.config_parameter"]
         ICP.set_param("web.base.url", cls.base_url())  # type: ignore[attr-defined]  # ir.config_parameter is an addon model
-        ICP.env.flush_all()
+        cls.env.flush_all()
         cls.xmlrpc_url = f"{cls.base_url()}/xmlrpc/2/"
         cls._logger = logging.getLogger("%s.%s" % (cls.__module__, cls.__name__))
         _debug.lifecycle(
