@@ -160,3 +160,61 @@ class TestReloadDoesNotAccumulateDescriptors:
                 f"a reload generation inherited leaked inotify descriptors: {line!r}\n"
                 f"{proc.stdout}"
             )
+
+
+def _watched_paths(watcher):
+    return set(watcher.internals._inotify._Inotify__watches)
+
+
+class TestOnlyDirectoriesThatCanChangeAreWatched:
+    """A --dev=reload server asked for ~25k watches over the five addon roots,
+    ~15k of them __pycache__ (which reports its own .pyc writes), .git, i18n
+    and static; a box's watch budget is shared with every editor on it."""
+
+    @pytest.fixture
+    def tree(self, tmp_path):
+        root = tmp_path / "addons"
+        for name in (
+            "mod/models",
+            "mod/models/__pycache__",
+            "mod/static/src",
+            "mod/i18n",
+            "mod/.git/objects",
+            "mod/static/lib/node_modules/x",
+            "mod/tests",
+        ):
+            (root / name).mkdir(parents=True)
+        return root
+
+    def _arm(self, tree, monkeypatch, dev_mode):
+        from odoo.service import settings as server_settings
+
+        monkeypatch.setattr(
+            _watcher.FSWatcherBase,
+            "get_watch_paths",
+            staticmethod(lambda: [str(tree)]),
+        )
+        with server_settings.override(dev_mode=dev_mode, workers=0):
+            watcher = _watcher.FSWatcherInotify()
+            try:
+                return {
+                    Path(p).relative_to(tree).as_posix()
+                    for p in _watched_paths(watcher)
+                }
+            finally:
+                watcher._release_watcher()
+
+    def test_reload_alone_skips_static_pycache_git_and_i18n(self, tree, monkeypatch):
+        assert self._arm(tree, monkeypatch, ("reload",)) == {
+            ".",
+            "mod",
+            "mod/models",
+            "mod/tests",
+        }
+
+    def test_assets_keeps_static_but_not_its_node_modules(self, tree, monkeypatch):
+        watched = self._arm(tree, monkeypatch, ("reload", "assets"))
+        assert "mod/static/src" in watched
+        assert "mod/static/lib" in watched
+        assert "mod/static/lib/node_modules" not in watched
+        assert "mod/models/__pycache__" not in watched

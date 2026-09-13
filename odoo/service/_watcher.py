@@ -4,6 +4,7 @@ import errno
 import logging
 import os
 import threading
+from collections.abc import Iterator
 from contextlib import suppress
 from pathlib import Path
 
@@ -54,6 +55,40 @@ _WATCHER_JOIN_TIMEOUT_S = 5.0
 
 
 ASSET_SUFFIXES = (".js", ".xml", ".scss", ".css")
+
+_UNWATCHED_DIRS = frozenset({"__pycache__", ".git", "node_modules", "i18n"})
+"""Directory names no reload or asset event can come from.
+
+`__pycache__` is the loud one: every import writes a .pyc there, so a watched
+tree reports its own module loads. `static` joins the set when --dev has no
+`assets`, since only a .py edit is acted on then.
+"""
+
+
+def get_unwatched_dirs() -> frozenset[str]:
+    if "assets" in current().dev_mode:
+        return _UNWATCHED_DIRS
+    return _UNWATCHED_DIRS | {"static"}
+
+
+def iter_watch_dirs(root: str | os.PathLike[str]) -> Iterator[str]:
+    unwatched = get_unwatched_dirs()
+    stack = [os.fspath(root)]
+    while stack:
+        directory = stack.pop()
+        yield directory
+        try:
+            with os.scandir(directory) as entries:
+                children = [
+                    entry.path
+                    for entry in entries
+                    if entry.is_dir(follow_symlinks=False)
+                    and entry.name not in unwatched
+                ]
+        except OSError:
+            continue
+        stack.extend(reversed(children))
+
 
 OVERFLOW_WD = -1
 
@@ -329,6 +364,17 @@ if inotify:
                 self.close()
                 raise
 
+        def _load_tree(self, path):
+            # The library's walk stats every entry of every directory and
+            # watches __pycache__, .git and the rest; this one prunes them.
+            for directory in iter_watch_dirs(path):
+                try:
+                    self._i.add_watch(directory, self._mask)
+                except inotify.calls.InotifyError as exc:
+                    if exc.errno == errno.ENOENT:
+                        continue
+                    raise
+
         def close(self) -> None:
             self._i.close()
 
@@ -416,12 +462,10 @@ class FSWatcherInotify(FSWatcherBase):
             "re-arming watches and dropping the asset caches"
         )
         for root in self.roots:
-            root_path = Path(root)
-            if not root_path.is_dir():
+            if not Path(root).is_dir():
                 continue
-            self._watch_directory(root_path)
-            for directory, _, _ in root_path.walk():
-                self._watch_directory(directory)
+            for directory in iter_watch_dirs(root):
+                self._watch_directory(Path(directory))
         _debug.pipeline("watcher.overflow_resynced", roots=len(self.roots))
         self.on_asset_file_changed(OVERFLOW_PATH)
 
@@ -485,14 +529,16 @@ class FSWatcherInotify(FSWatcherBase):
                             if self.on_file_changed(full_path):
                                 return
                     elif dir_creation_events.intersection(type_names):
+                        if filename in get_unwatched_dirs():
+                            continue
                         created_dir = Path(path, filename)
                         _debug.pipeline(
                             "watcher.directory_created", path=str(created_dir)
                         )
-                        for root, _, files in created_dir.walk():
-                            self._watch_directory(root)
-                            for file in files:
-                                if self.on_file_changed(str(root / file)):
+                        for directory in iter_watch_dirs(created_dir):
+                            self._watch_directory(Path(directory))
+                            for entry in Path(directory).iterdir():
+                                if entry.is_file() and self.on_file_changed(str(entry)):
                                     return
             except TerminalEventException as exc:
                 if str(exc) != "IN_Q_OVERFLOW":

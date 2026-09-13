@@ -182,11 +182,16 @@ class TestResyncAfterOverflow:
         )
         assert set(watched) == {alive}, "the deleted root must not raise"
 
-    def test_the_root_itself_is_armed_outside_the_walk_as_well(self, tmp_path):
+    def test_the_root_and_its_tree_are_armed_once_each(self, tmp_path):
         root = tmp_path / "src"
-        root.mkdir()
+        (root / "models").mkdir(parents=True)
+        (root / "__pycache__").mkdir()
+        (root / "i18n").mkdir()
         watched, _ = self._sync_watches_after_overflow(tmp_path, [root])
-        assert watched.count(root) == 2, watched
+        assert watched == [root, root / "models"], (
+            "the root once, its reload-relevant subtree, nothing that can "
+            "hold no reloadable source"
+        )
 
     def test_the_asset_caches_are_dropped(self, tmp_path):
         root = tmp_path / "src"
