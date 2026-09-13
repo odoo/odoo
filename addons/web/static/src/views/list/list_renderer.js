@@ -1144,11 +1144,20 @@ export class ListRenderer extends Component {
                 this.editedRecord() &&
                 this.isCellReadonly(column, this.editedRecord())
             ) {
-                classNames.push("text-muted");
+                classNames.push("text-muted", "cursor-default");
             } else if (this.isRecordAvailable(record)) {
-                classNames.push("cursor-pointer");
+                if (record.selected) {
+                    classNames.push(
+                        `${
+                            this.isCellReadonly(column, record) ? "cursor-default" : "o_cursor_text"
+                        }`
+                    );
+                } else {
+                    classNames.push("cursor-pointer");
+                }
             }
         }
+
         return classNames.join(" ");
     }
 
@@ -1460,6 +1469,7 @@ export class ListRenderer extends Component {
 
         const multiEdit = this.props.list.model.multiEdit;
         const hasSelection = !!this.props.list.selection.length;
+        const isCurrentCellReadonly = this.isCellReadonly(column, record);
         if (hasSelection && this.canSelectRecord && (!multiEdit || !record.selected)) {
             this.toggleRecordSelection(record);
         } else if (
@@ -1478,13 +1488,20 @@ export class ListRenderer extends Component {
                     this.lastEditedCell = { column, record };
                     return;
                 }
-                this.focusCell(column, true, clickedSubFieldName);
+                if (isCurrentCellReadonly) {
+                    document.activeElement?.blur();
+                } else {
+                    this.focusCell(column, true, clickedSubFieldName);
+                }
                 this.cellToFocus = null;
             } else {
                 const recordIndex = this.props.list.records.indexOf(record);
                 await this.resequencePromise;
                 // row might have changed record after resequence
                 record = this.props.list.records[recordIndex] || record;
+                if (isCurrentCellReadonly) {
+                    return;
+                }
                 await this.props.list.enterEditMode(record);
                 this.cellToFocus = { column, record, subFieldName: clickedSubFieldName };
                 if (
@@ -1492,10 +1509,7 @@ export class ListRenderer extends Component {
                     record.fields[column.name].type === "boolean" &&
                     (!column.widget || column.widget === "boolean")
                 ) {
-                    if (
-                        !this.isCellReadonly(column, record) &&
-                        !this.evalInvisible(column.invisible, record)
-                    ) {
+                    if (!isCurrentCellReadonly && !this.evalInvisible(column.invisible, record)) {
                         await record.update({ [column.name]: !record.data[column.name] });
                     }
                 }
