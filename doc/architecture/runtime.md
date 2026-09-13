@@ -269,6 +269,21 @@ short-circuit when nothing is pending or dirty.
 The loop still issues *reads*: prefetch `SELECT`s land where the field is first
 touched ([`qualities.md`](qualities.md#scenario-1--write-throughput)).
 
+**A new record's cache mirrors what it was given, and nothing more.** `new()`
+(`models/mixins/env.py::_update_cache`) caches every value, then tells each
+relational value's inverse fields about the record — a new line given a new
+move lands in the move's one2manys whose domain it satisfies, as a write would
+place it. The reverse is deliberately absent: lines given to one one2many are
+*not* echoed into a sibling one2many over the same many2one
+(`Many2one._update_inverse` is a bare cache set), although the write path
+(`_update_inverses`) does exactly that on saved records. The onchange protocol
+(`addons/web/models/record_snapshot.py`, `odoo/tests/form.py`, the JS static
+list) depends on it: the client owns each x2many list independently and
+matches an echoed CREATE only against that list's own ids, so a line reported
+under a second list would get a fresh virtual id there and come back
+duplicated on the next round-trip. `odoo/orm/tests/test_new_record_sibling_one2many.py`
+pins both halves.
+
 Row I/O at the bottom goes through `env.backend`, the persistence port described
 under **Seams** in [`module.md`](module.md#seams-that-keep-the-layers-decoupled)
 — which is what lets the whole ORM run against `InMemoryBackend` with no
