@@ -1,5 +1,6 @@
 import contextlib
 import io
+import logging
 import os
 import pathlib
 import signal
@@ -1529,8 +1530,42 @@ class TestRpcDbExposedGate:
     def test_every_ordinary_name_is_exposed_when_no_allowlist_is_set(self, gate):
         from odoo.tools import config
 
-        with config.patch(db_name=[]):
+        with config.patch(db_name=[], dbfilter=""):
             assert gate("anything") is True
+
+    def test_a_static_dbfilter_is_the_allowlist_when_db_name_is_unset(self, gate):
+        from odoo.service import _dispatch
+        from odoo.tools import config
+
+        _dispatch._compile_static_dbfilter.cache_clear()
+        with config.patch(db_name=[], dbfilter="^tenant_a"):
+            assert gate("tenant_a_prod") is True
+            assert gate("tenant_b_prod") is False
+
+    def test_db_name_wins_over_the_dbfilter(self, gate):
+        from odoo.service import _dispatch
+        from odoo.tools import config
+
+        _dispatch._compile_static_dbfilter.cache_clear()
+        with config.patch(db_name=["served"], dbfilter="^nomatch$"):
+            assert gate("served") is True
+
+    @pytest.mark.parametrize("pattern", ["^%h$", "^%d_", "(unclosed"])
+    def test_an_unusable_dbfilter_exposes_everything_and_warns_once(
+        self, gate, pattern, caplog
+    ):
+        from odoo.service import _dispatch
+        from odoo.tools import config
+
+        _dispatch._compile_static_dbfilter.cache_clear()
+        with (
+            config.patch(db_name=[], dbfilter=pattern),
+            caplog.at_level(logging.WARNING, logger="odoo.service.server"),
+        ):
+            assert gate("anything") is True
+            assert gate("anything_else") is True
+        warnings = [r for r in caplog.records if "dbfilter" in r.getMessage()]
+        assert len(warnings) == 1
 
 
 class TestAdminGates:

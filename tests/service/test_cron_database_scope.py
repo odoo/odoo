@@ -1,12 +1,12 @@
 import pytest
 
-from odoo.service import _cron, _limits
+from odoo.service import _cron, _dispatch, _limits
 from odoo.service import settings as server_settings
 
 
 @pytest.fixture
-def scoped(monkeypatch):
-    monkeypatch.setattr(_cron, "_dbfilter_warned", False)
+def scoped():
+    _dispatch._compile_static_dbfilter.cache_clear()
 
     def _scoped(**overrides):
         return server_settings.override(**{"db_name": (), "dbfilter": "", **overrides})

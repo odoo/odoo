@@ -647,8 +647,11 @@ class configmanager:
             dest="dbfilter",
             my_default="",
             metavar="REGEXP",
-            help="Regular expressions for filtering available databases for Web UI. "
-            "The expression can use %d (domain) and %h (host) placeholders.",
+            help="Regular expression for filtering available databases for the "
+            "Web UI. The expression can use %d (domain) and %h (host) "
+            "placeholders. Without a placeholder it also names the databases "
+            "this process serves: cron and job sweeps and XML-RPC/JSON-RPC "
+            "calls are refused for any other, as with --database.",
         )
         parser.add_option_group(group)
 

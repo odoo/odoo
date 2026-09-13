@@ -3,6 +3,8 @@ from __future__ import annotations
 import annotationlib
 import functools
 import inspect
+import logging
+import re
 from collections.abc import Callable, Sequence
 from typing import Any
 
@@ -11,9 +13,51 @@ from odoo.libs.debug_log import DebugLog
 
 from .settings import current
 
+_logger = logging.getLogger("odoo.service.server")
 _debug = DebugLog(__name__)
 
-__all__ = ("dispatch_through_table", "get_positional_bounds", "is_db_rpc_exposed")
+__all__ = (
+    "dispatch_through_table",
+    "get_positional_bounds",
+    "get_static_dbfilter",
+    "is_db_rpc_exposed",
+)
+
+
+_HOST_PLACEHOLDER_RE = re.compile(r"%[hd]")
+
+
+@functools.lru_cache(maxsize=8)
+def _compile_static_dbfilter(pattern: str) -> re.Pattern[str] | None:
+    # Cached per pattern so each warning is said once, not once per RPC call
+    # or per cron sweep.
+    if _HOST_PLACEHOLDER_RE.search(pattern):
+        _debug.logic("rpc.dbfilter_unusable", reason="host_placeholder")
+        _logger.warning(
+            "dbfilter %r resolves against the request host (%%h/%%d), so it "
+            "cannot scope cron and job polling or RPC: those carry no request "
+            "host. This process will poll every database its role owns and "
+            "answer RPC for any of them. Set db_name to name the databases it "
+            "serves, or write a dbfilter with no host placeholder.",
+            pattern,
+        )
+        return None
+    try:
+        return re.compile(pattern)
+    except re.error:
+        _logger.warning(
+            "dbfilter %r is not a valid regular expression; not scoping cron, "
+            "job polling or RPC with it",
+            pattern,
+            exc_info=True,
+        )
+        _debug.logic("rpc.dbfilter_unusable", reason="invalid_regex")
+        return None
+
+
+def get_static_dbfilter() -> re.Pattern[str] | None:
+    pattern = current().dbfilter
+    return _compile_static_dbfilter(pattern) if pattern else None
 
 
 def is_db_rpc_exposed(db_name: object) -> bool:
@@ -23,9 +67,15 @@ def is_db_rpc_exposed(db_name: object) -> bool:
         _debug.logic("rpc.db_not_exposed", db=db_name, reason="maintenance")
         return False
     exposed = current().db_name
-    allowed: bool = not exposed or db_name in exposed
+    if exposed:
+        allowed = db_name in exposed
+        reason = "db_name"
+    else:
+        dbfilter = get_static_dbfilter()
+        allowed = dbfilter is None or dbfilter.match(db_name) is not None
+        reason = "dbfilter"
     if _debug.logic.enabled and not allowed:
-        _debug.logic("rpc.db_not_exposed", db=db_name, reason="db_name")
+        _debug.logic("rpc.db_not_exposed", db=db_name, reason=reason)
     return allowed
 
 

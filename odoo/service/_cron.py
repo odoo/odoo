@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import contextlib
 import logging
-import re
 import selectors
 import time
 import typing
@@ -15,6 +14,7 @@ from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, OrderedSet
 from odoo.tools.constants import CRON_TRIGGER_CHANNEL, JOB_QUEUE_CHANNEL
 
+from ._dispatch import get_static_dbfilter
 from ._limits import BACKOFF_BASE_S, BACKOFF_CEILING_S
 from .db import list_dbs
 from .settings import current
@@ -119,50 +119,13 @@ def order_notified_first(notified: Iterable[str], all_dbs: Iterable[str]) -> lis
     return result
 
 
-_HOST_PLACEHOLDER_RE = re.compile(r"%[hd]")
-
-_dbfilter_warned = False
-
-
-def _resolve_static_dbfilter() -> re.Pattern[str] | None:
-    global _dbfilter_warned  # noqa: PLW0603  warn once per process, not per sweep
-
-    pattern = current().dbfilter
-    if not pattern:
-        return None
-    if _HOST_PLACEHOLDER_RE.search(pattern):
-        _debug.logic("cron.dbfilter_unusable", reason="host_placeholder")
-        if not _dbfilter_warned:
-            _dbfilter_warned = True
-            _logger.warning(
-                "dbfilter %r resolves against the request host (%%h/%%d), so it "
-                "cannot scope cron and job polling: those run with no request. "
-                "This process will poll every database its role owns. Set "
-                "db_name to name the databases it serves, or write a dbfilter "
-                "with no host placeholder.",
-                pattern,
-            )
-        return None
-    try:
-        return re.compile(pattern)
-    except re.error:
-        _logger.warning(
-            "dbfilter %r is not a valid regular expression; not scoping cron "
-            "and job polling with it",
-            pattern,
-            exc_info=True,
-        )
-        _debug.logic("cron.dbfilter_unusable", reason="invalid_regex")
-        return None
-
-
 def get_cron_databases() -> list[str]:
     configured = current().db_name
     if configured:
         _debug.logic("cron.databases", source="db_name", databases=len(configured))
         return list(configured)
     names = [name for name in list_dbs(True) if not is_maintenance_db(name)]
-    dbfilter = _resolve_static_dbfilter()
+    dbfilter = get_static_dbfilter()
     if dbfilter is None:
         _debug.logic(
             "cron.databases", source="catalog", databases=len(names), filtered=False
