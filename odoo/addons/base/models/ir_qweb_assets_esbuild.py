@@ -145,12 +145,18 @@ class IrQweb(models.AbstractModel):
         registered_reach: dict[str, str] | None = None,
     ) -> EsbuildResult:
         config = self._get_esbuild_config()
+        excluded_specs = frozenset(
+            asset.module_path
+            for asset in asset_bundle.native_modules
+            if asset.module_path in secondary_stubs
+        )
         try:
             with _debug.perf(
                 "esbuild",
                 bundle=bundle,
                 dynamic_children=len(dynamic_child_specs or ()),
                 secondary_stubs=len(secondary_stubs),
+                excluded=len(excluded_specs),
                 exported=len(exported_specs or ()),
             ) as span:
                 result = asset_bundle.esbuild_native_bundle(
@@ -165,6 +171,7 @@ class IrQweb(models.AbstractModel):
                     secondary_parent_stubs=secondary_stubs or None,
                     exported_specs=exported_specs,
                     registered_reach=registered_reach,
+                    excluded_specs=excluded_specs,
                 )
                 span.set(chars=len(result.code) if result.code else 0)
         except Exception as exc:

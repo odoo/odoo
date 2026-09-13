@@ -4,7 +4,7 @@
 import { useEnvDebugContext } from "@web/core/debug/debug_context";
 import { _t } from "@web/core/translation";
 import { useService } from "@web/core/utils/hooks";
-import { useCommand } from "@web/ui/commands";
+import { useCommand } from "@web/ui/commands/command_hook";
 import { DebugMenuBasic } from "@web/webclient/debug/debug_menu_basic";
 
 export class DebugMenu extends DebugMenuBasic {

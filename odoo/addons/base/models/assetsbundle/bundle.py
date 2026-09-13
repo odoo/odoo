@@ -359,11 +359,19 @@ class AssetsBundle:
         self,
         exported_specs: Collection[str] | None = None,
         registered_reach: Mapping[str, str] | None = None,
+        excluded_specs: Collection[str] = (),
     ) -> EsbuildCompiler:
         registry = esm_registry()
+        native_modules = self.native_modules
+        if excluded_specs:
+            native_modules = [
+                asset
+                for asset in native_modules
+                if asset.module_path not in excluded_specs
+            ]
         return EsbuildCompiler(
             self.name,
-            self.native_modules,
+            native_modules,
             self.javascripts,
             import_map_included=self.name in registry.import_map_included_bundles,
             skip_legacy_test_imports=self.name in registry.import_map_includes,
@@ -382,6 +390,7 @@ class AssetsBundle:
         secondary_parent_stubs: dict[str, str] | None = None,
         exported_specs: Collection[str] | None = None,
         registered_reach: Mapping[str, str] | None = None,
+        excluded_specs: Collection[str] = (),
     ) -> EsbuildResult:
         with _debug.perf(
             "esbuild_native_bundle",
@@ -389,10 +398,11 @@ class AssetsBundle:
             modules=len(self.native_modules),
             dynamic_children=len(dynamic_child_specs or ()),
             stubs=len(secondary_parent_stubs or ()),
+            excluded=len(excluded_specs),
             exported=len(exported_specs or ()),
         ) as span:
             result = self._prepare_esbuild_compiler(
-                exported_specs, registered_reach
+                exported_specs, registered_reach, excluded_specs
             ).compile(
                 timeout_s=timeout_s,
                 target=target,

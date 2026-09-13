@@ -224,16 +224,25 @@ class IrQweb(models.AbstractModel):
             provided=shared,
         )
         reached = set(discovered) - own_specs
+        # an own module the page already registers is bridged, never bundled
+        # a second time: two copies of one module split its singletons
+        own_provided = {
+            spec
+            for spec in own_specs & shared
+            if "/../" not in spec and not spec.startswith("../")
+        }
+        stubbed = (reached & shared) | own_provided
         _debug.logic(
             "importmap.secondary_reach",
             bundle=bundle,
             own=len(own_specs),
             shared=len(shared),
             reached=len(reached),
-            stubbed=len(reached & shared),
+            stubbed=len(stubbed),
+            own_provided=len(own_provided),
             inlined=len(reached - shared),
         )
-        return frozenset(reached & shared), frozenset(reached - shared)
+        return frozenset(stubbed), frozenset(reached - shared)
 
     def _get_secondary_shared_specs(
         self,

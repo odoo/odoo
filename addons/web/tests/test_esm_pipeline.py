@@ -2928,14 +2928,12 @@ class TestDynamicBundleIntegrity(TransactionCase):
                 for parent, children in registry.dynamic_children.items()
                 if name in children and parent.partition(".")[0] in installed
             ]
-            parent_specs = set.intersection(
-                *(
-                    set(
-                        IrQweb._get_asset_bundle(
-                            parent, js=True, css=False, debug_assets=True
-                        ).get_native_module_data(with_bridges=False)["import_map"]
-                    )
-                    for parent in parents
+            # the set the group build itself stubs against: on a test page the
+            # secondary satellites (web.assets_tests) register what they
+            # inline for that page, so a child neither carries nor bridges it
+            parent_specs = set(
+                IrQweb._get_runtime_parent_specs(
+                    tuple(parents), None, IrQweb._has_esm_test_satellites("")
                 )
             )
             child = IrQweb._get_asset_bundle(
