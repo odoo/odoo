@@ -250,6 +250,11 @@ $o-border-radius-xl: o-to-rem(12px) !default;
 // here, the relative values will take priority over default BS ones.
 // Notice: each map's entry is passed directly to the Bootstrap mixin, meaning
 // that all states must be defined, there can't be omissions.
+// Buttons that are not defined in the maps below (the '$theme-colors' and the
+// '$o-btn-custom' ones) only get a design of their own for the toggled and the
+// pressed states when this is enabled.
+$o-btns-split-states: false !default;
+
 $o-btns-bs-override: () !default;
 $o-btns-bs-override: map-merge((
     "primary": (
