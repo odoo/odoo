@@ -139,7 +139,7 @@ export function searchCustomer(val) {
     ];
 }
 
-export function searchCustomerValue(val, pressEnter = false) {
+export function searchCustomerValue(val, pressEnter = true) {
     const steps = searchCustomer(val);
 
     if (pressEnter) {
