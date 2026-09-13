@@ -12,7 +12,6 @@ import { TimeoutPopup } from "@pos_self_order/app/components/timeout_popup/timeo
 import { NetworkConnectionLostPopup } from "@pos_self_order/app/components/network_connectionLost_popup/network_connectionLost_popup";
 import { UnavailableProductsDialog } from "@pos_self_order/app/components/unavailable_product_dialog/unavailable_product_dialog";
 import {
-    constructFullProductName,
     random5Chars,
     isValidPhone,
     isValidEmail,
@@ -390,7 +389,6 @@ export class SelfOrder extends Reactive {
         customValues = {},
         comboValues = {}
     ) {
-        const product = productTemplate.product_variant_ids[0];
         this.resetTip();
         const values = getOrderLineValues(
             this,
@@ -402,11 +400,6 @@ export class SelfOrder extends Reactive {
             comboValues
         );
         const newLine = this.models["pos.order.line"].create(values);
-        newLine.full_product_name = constructFullProductName(
-            newLine,
-            this.models["product.template.attribute.value"].getAllBy("id"),
-            product.name
-        );
         const lineToMerge = this.currentOrder.lines.find(
             (l) => l.canBeMergedWith(newLine) && l.id !== newLine.id
         );

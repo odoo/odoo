@@ -8,6 +8,7 @@ import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import * as NumberPopup from "@point_of_sale/../tests/generic_helpers/number_popup_util";
 import { negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
 import { registry } from "@web/core/registry";
+import { addDiscount } from "./test_taxes_global_discount";
 
 registry.category("web_tour.tours").add("test_pos_global_discount_sell_and_refund", {
     steps: () =>
@@ -74,6 +75,52 @@ registry.category("web_tour.tours").add("test_pos_global_discount_sell_and_refun
             ProductScreen.clickNumpad("1"),
             Dialog.is({ title: "price update not allowed" }),
             Dialog.confirm(),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            FeedbackScreen.isShown(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_pos_global_discount_line_display", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Desk Pad", "1", "3"),
+            ...addDiscount("1", "fixed"),
+            {
+                content: "Check that the discount line doesn't display a price per unit",
+                trigger:
+                    '.order-container .orderline:has(.product-name:contains("discount")):not(:has(.price-per-unit))',
+            },
+            FeedbackScreen.checkTicketData({
+                orderlines: [
+                    { name: "Desk Pad" },
+                    {
+                        name: "discount",
+                        cssRules: [{ css: "[name='standard-unit-price']", negation: true }],
+                    },
+                ],
+            }),
+            ...addDiscount("25", "percent"),
+            {
+                content: "Check that the discount line still doesn't display a price per unit",
+                trigger:
+                    '.order-container .orderline:has(.product-name:contains("discount")):not(:has(.price-per-unit))',
+            },
+            Order.hasLine({
+                productName: "discount (-25%)",
+            }),
+            FeedbackScreen.checkTicketData({
+                orderlines: [
+                    { name: "Desk Pad" },
+                    {
+                        name: "discount (-25%)",
+                        cssRules: [{ css: "[name='standard-unit-price']", negation: true }],
+                    },
+                ],
+            }),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),

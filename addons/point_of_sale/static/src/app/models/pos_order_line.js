@@ -1,5 +1,4 @@
 import { registry } from "@web/core/registry";
-import { constructFullProductName, constructAttributeString } from "@point_of_sale/utils";
 import { parseFloat } from "@web/views/fields/parsers";
 import { formatFloat } from "@web/core/utils/numbers";
 import { _t } from "@web/core/l10n/translation";
@@ -30,8 +29,50 @@ export class PosOrderline extends PosOrderlineAccounting {
         };
     }
 
+    constructAttributeString() {
+        let attributeString = "";
+
+        if (this.attribute_value_ids && this.attribute_value_ids.length > 0) {
+            for (const value of this.attribute_value_ids) {
+                if (value.is_custom) {
+                    const customValue = this.custom_attribute_value_ids.find(
+                        (cus) =>
+                            cus.custom_product_template_attribute_value_id?.id == parseInt(value.id)
+                    );
+                    if (customValue) {
+                        attributeString += `${value.attribute_id.name}: ${value.name}: ${customValue.custom_value}, `;
+                    }
+                } else {
+                    attributeString += `${value.name}, `;
+                }
+            }
+
+            attributeString = attributeString.slice(0, -2);
+        } else if (
+            attributeString === "" &&
+            this.product_id?.product_template_variant_value_ids?.length > 0
+        ) {
+            attributeString = this.product_id.product_template_variant_value_ids
+                ?.map((attr) => attr.name)
+                .join(", ");
+        }
+
+        return attributeString;
+    }
+
+    constructFullProductName(opts = {}) {
+        const { attributes = true } = opts;
+        if (!attributes) {
+            return this.product_id?.name;
+        }
+        const attributeString = this.constructAttributeString();
+        return attributeString
+            ? `${this.product_id?.name} (${attributeString})`
+            : `${this.product_id?.name}`;
+    }
+
     setFullProductName() {
-        this.full_product_name = constructFullProductName(this);
+        this.full_product_name = this.constructFullProductName();
     }
 
     setOptions(options) {
@@ -411,8 +452,8 @@ export class PosOrderline extends PosOrderlineAccounting {
     }
     get orderDisplayProductName() {
         return {
-            name: this.product_id?.name,
-            attributeString: constructAttributeString(this),
+            name: this.constructFullProductName({ attributes: false }),
+            attributeString: this.constructAttributeString(),
         };
     }
     isSelected() {

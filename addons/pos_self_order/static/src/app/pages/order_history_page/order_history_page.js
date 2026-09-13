@@ -30,17 +30,10 @@ export class OrdersHistoryPage extends Component {
     }
 
     getNameAndDescription(line) {
-        const fullName = line.full_product_name;
-        const regex = /\(([^()]+)\)[^(]*$/;
-        const matches = fullName.match(regex);
-
-        if (matches && matches.length > 1) {
-            const attributes = matches[matches.length - 1].trim();
-            const productName = fullName.replace(matches[0], "").trim();
-            return { productName, attributes };
-        }
-
-        return { productName: fullName, attributes: "" };
+        return {
+            productName: line.constructFullProductName({ attributes: false }),
+            attributes: line.constructAttributeString(),
+        };
     }
 
     editOrder(order) {
