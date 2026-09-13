@@ -483,3 +483,139 @@ test("an older failed save does not release the newer pending save", async () =>
     await Promise.all([second, repeated]);
     expect(finished).toBe(true);
 });
+
+test("a parent render does not duplicate a pending apply", async () => {
+    const saved = new Deferred();
+    const a = DateTime.fromSQL("2023-07-07");
+    const b = DateTime.fromSQL("2023-08-08");
+    const { controller, getPopover } = createController({
+        pickerProps: { type: "date", value: a },
+        onApply: () => {
+            expect.step("save");
+            return saved;
+        },
+    });
+    getPopover().open(document.body, {});
+    controller.computeBasePickerProps();
+    controller.pickerProps.value = b;
+    const first = controller.apply();
+    controller.computeBasePickerProps();
+    const repeated = controller.apply();
+    expect.verifySteps(["save"]);
+    saved.resolve();
+    await Promise.all([first, repeated]);
+});
+
+test("an older apply cannot replace a newer value received from props", async () => {
+    const saved = new Deferred();
+    const a = DateTime.fromSQL("2023-07-07");
+    const b = DateTime.fromSQL("2023-08-08");
+    const c = DateTime.fromSQL("2023-09-09");
+    const { controller, getPopover } = createController({
+        pickerProps: { type: "date", value: a },
+        onApply: () => {
+            expect.step("save B");
+            return saved;
+        },
+    });
+    getPopover().open(document.body, {});
+    controller.computeBasePickerProps();
+    controller.pickerProps.value = b;
+    const first = controller.apply();
+    controller.params.pickerProps.value = c;
+    controller.computeBasePickerProps();
+    saved.resolve();
+    await first;
+    expect.verifySteps(["save B"]);
+    controller.pickerProps.value = b;
+    await controller.apply();
+    expect.verifySteps(["save B"]);
+});
+
+test("distinct applies retain ownership when their callback shares a promise", async () => {
+    const { promise, resolve } = Promise.withResolvers();
+    const a = DateTime.fromSQL("2023-07-07");
+    const b = DateTime.fromSQL("2023-08-08");
+    const { controller, getPopover } = createController({
+        pickerProps: { type: "date", value: a },
+        onApply: (value) => {
+            expect.step(value.toISODate());
+            return promise;
+        },
+    });
+    getPopover().open(document.body, {});
+    const first = controller.apply();
+    controller.pickerProps.value = b;
+    const second = controller.apply();
+    resolve(undefined);
+    await Promise.all([first, second]);
+    expect.verifySteps(["2023-07-07", "2023-08-08"]);
+    controller.pickerProps.value = a;
+    await controller.apply();
+    expect.verifySteps(["2023-07-07"]);
+});
+
+test("disposing during close does not notify the former owner after save", async () => {
+    const saved = new Deferred();
+    const [input] = makeInputs(1);
+    const { controller } = createController({
+        pickerProps: { type: "date", value: DateTime.fromSQL("2023-07-07") },
+        getInputs: () => [input],
+        onApply: () => saved,
+        onClose: () => expect.step("closed"),
+    });
+    controller.enable();
+    const closing = controller.onPopoverClose();
+    controller.dispose();
+    saved.resolve();
+    await closing;
+    expect.verifySteps([]);
+});
+
+test("a parent render does not suppress reverting a pending apply", async () => {
+    const saved = new Deferred();
+    const a = DateTime.fromSQL("2023-07-07");
+    const b = DateTime.fromSQL("2023-08-08");
+    const { controller, getPopover } = createController({
+        pickerProps: { type: "date", value: a },
+        onApply: (value) => {
+            expect.step(value.toISODate());
+            return value === b ? saved : undefined;
+        },
+    });
+    getPopover().open(document.body, {});
+    controller.computeBasePickerProps();
+    controller.pickerProps.value = b;
+    const first = controller.apply();
+    controller.computeBasePickerProps();
+    controller.pickerProps.value = a;
+    const reverted = controller.apply();
+    await Promise.resolve();
+    expect.verifySteps(["2023-08-08", "2023-07-07"]);
+    saved.resolve();
+    await Promise.all([first, reverted]);
+});
+
+test("a synchronous apply callback can flush the same pending value", async () => {
+    const saved = new Deferred();
+    let repeated;
+    let completed = false;
+    const { controller } = createController({
+        pickerProps: { type: "date", value: DateTime.fromSQL("2023-07-07") },
+        onApply: () => {
+            expect.step("save");
+            repeated = controller.apply().then(() => {
+                completed = true;
+            });
+            return saved;
+        },
+    });
+    const first = controller.apply();
+    await Promise.resolve();
+    await Promise.resolve();
+    expect(completed).toBe(false);
+    expect.verifySteps(["save"]);
+    saved.resolve();
+    await Promise.all([first, repeated]);
+    expect(completed).toBe(true);
+});

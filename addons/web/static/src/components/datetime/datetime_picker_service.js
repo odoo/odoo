@@ -116,8 +116,8 @@ export class DateTimePickerController {
         this.destroyed = false;
         /** @type {(() => void) | null} */
         this.disableListeners = null;
-        this.lastAppliedStringValue = "";
-        /** @type {Promise<any> | null} */
+        this.propsValueRevision = 0;
+        /** @type {{ value: string, promise: Promise<any>, revision: number } | null} */
         this.pendingApply = null;
         /** @type {(() => void) | null} */
         this.restoreTargetMargin = null;
@@ -211,7 +211,9 @@ export class DateTimePickerController {
         this.updateValueFromInputs();
         this.setFocusClass(null);
         await this.apply();
-        this.params.onClose?.();
+        if (!this.destroyed) {
+            this.params.onClose?.();
+        }
     };
 
     apply = async () => {
@@ -220,38 +222,46 @@ export class DateTimePickerController {
         }
         const { value } = this.pickerProps;
         const stringValue = JSON.stringify(value);
-        if (stringValue === this.lastAppliedStringValue && this.pendingApply) {
-            return this.pendingApply;
+        if (stringValue === this.pendingApply?.value) {
+            return this.pendingApply.promise;
         }
-        if (
-            stringValue === this.lastAppliedStringValue ||
-            (!this.pendingApply && stringValue === this.stringProps.value)
-        ) {
+        if (!this.pendingApply && stringValue === this.stringProps.value) {
             log.logic("apply skipped", () => ({ value: stringValue }));
             return;
         }
         log.logic("apply", () => ({ value: stringValue }));
-
-        this.lastAppliedStringValue = stringValue;
         this.inputsChanged = ensureArray(value).map(() => false);
 
-        let pending = null;
-        this.pendingApply = null;
+        const completion = Promise.withResolvers();
+        const operation = {
+            value: stringValue,
+            promise: completion.promise,
+            revision: this.propsValueRevision,
+        };
+        this.pendingApply = operation;
+        // Install ownership before invoking a callback which may synchronously
+        // render or flush the field again. Keep that invocation synchronous.
         try {
-            pending = Promise.resolve(this.params.onApply?.(value));
-            this.pendingApply = pending;
-            await pending;
-            if (this.pendingApply === pending) {
+            completion.resolve(this.params.onApply?.(value));
+        } catch (error) {
+            completion.reject(error);
+        }
+        try {
+            await operation.promise;
+            if (
+                this.pendingApply === operation &&
+                operation.revision === this.propsValueRevision &&
+                !this.destroyed
+            ) {
                 this.stringProps.value = stringValue;
+            } else {
+                log.logic("apply completion superseded");
             }
         } catch (error) {
-            if (this.pendingApply === pending) {
-                this.lastAppliedStringValue = "";
-            }
             log.logic("apply failed");
             throw error;
         } finally {
-            if (this.pendingApply === pending) {
+            if (this.pendingApply === operation) {
                 this.pendingApply = null;
             }
         }
@@ -612,7 +622,9 @@ export class DateTimePickerController {
         const oldFormat = this.formatKey;
 
         this.stringProps = stringifyProps(nextProps);
-        this.lastAppliedStringValue = this.stringProps.value;
+        if (oldStringProps.value !== this.stringProps.value) {
+            this.propsValueRevision++;
+        }
         this.formatKey = `${this.params.format}\x00${this.params.showSeconds}`;
 
         if (shallowEqual(oldStringProps, this.stringProps)) {
