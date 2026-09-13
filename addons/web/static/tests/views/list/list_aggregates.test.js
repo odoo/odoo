@@ -331,3 +331,41 @@ describe("weightedGroupAverage — an avg over groups", () => {
         expect(weightedGroupAverage(rows, "avg")).toBe(20);
     });
 });
+
+test.tags("desktop");
+test("grouped averages use non-null counts from the server", async () => {
+    onRpc("web_read_group", ({ kwargs }) => {
+        expect(kwargs.aggregates).toInclude("qty_avg:count");
+        expect(kwargs.aggregates).toInclude("qty_sum:count");
+        return {
+            length: 2,
+            groups: [
+                {
+                    bar: false,
+                    __count: 2,
+                    __extra_domain: [["bar", "=", false]],
+                    "qty_avg:avg": 10,
+                    "qty_avg:count": 1,
+                    "qty_sum:sum": 10,
+                    "qty_sum:count": 1,
+                },
+                {
+                    bar: true,
+                    __count: 1,
+                    __extra_domain: [["bar", "=", true]],
+                    "qty_avg:avg": 20,
+                    "qty_avg:count": 1,
+                    "qty_sum:sum": 20,
+                    "qty_sum:count": 1,
+                },
+            ],
+        };
+    });
+    await mountView({
+        resModel: "batch",
+        type: "list",
+        groupBy: ["bar"],
+        arch: `<list><field name="name"/><field name="qty_sum" avg="Average"/><field name="qty_avg" avg="Average"/></list>`,
+    });
+    expect(queryAllTexts("tfoot td")).toEqual(["", "15.00", "15.00", ""]);
+});

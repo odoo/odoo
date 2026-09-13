@@ -135,7 +135,12 @@ export function getAggregateSpecifications(fields, fieldNames) {
             (field) =>
                 field.aggregator && AGGREGATABLE_FIELD_TYPES.includes(field.type),
         )
-        .map((field) => `${field.name}:${field.aggregator}`);
+        .flatMap((field) => {
+            const spec = `${field.name}:${field.aggregator}`;
+            return ["avg", "sum"].includes(field.aggregator)
+                ? [spec, `${field.name}:count`]
+                : [spec];
+        });
     const currencyFields = unique(
         scopedFields
             .filter((field) => field.aggregator && field.currency_field)
@@ -225,7 +230,12 @@ function getAggregatesFromGroupData(groupData, fields, fieldsToAggregate) {
                     continue;
                 }
             }
-            aggregates[fieldName] = groupData[keyAggregate];
+            // Keep supporting counts separate from the displayed aggregate.
+            const key =
+                aggregate === "count" && fields[fieldName].aggregator !== "count"
+                    ? keyAggregate
+                    : fieldName;
+            aggregates[key] = groupData[keyAggregate];
         }
     }
     return aggregates;

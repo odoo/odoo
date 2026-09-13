@@ -145,6 +145,7 @@ export function useRecordSelection(ctx) {
     });
     useExternalListener(window, "blur", () => {
         self.shiftKeyMode = false;
+        self.shiftKeyedRecord = undefined;
         onSelectionModifier?.(false);
     });
 
@@ -165,11 +166,10 @@ export function useRecordSelection(ctx) {
 export function useLongTouchSelection({ getLongTouchThreshold, onLongTouch }) {
     /** @type {ReturnType<typeof browser.setTimeout> | null} */
     let longTouchTimer = null;
-    let touchStartMs = 0;
 
     const self = {
         resetLongTouchTimer() {
-            if (longTouchTimer) {
+            if (longTouchTimer !== null) {
                 browser.clearTimeout(longTouchTimer);
                 longTouchTimer = null;
             }
@@ -177,20 +177,17 @@ export function useLongTouchSelection({ getLongTouchThreshold, onLongTouch }) {
 
         /** @param {any} [record] */
         onTouchStart(record) {
-            touchStartMs = Date.now();
             if (longTouchTimer === null) {
                 longTouchTimer = browser.setTimeout(() => {
-                    onLongTouch(record);
                     self.resetLongTouchTimer();
+                    onLongTouch(record);
                 }, getLongTouchThreshold());
             }
         },
 
         onTouchEnd() {
-            const elapsedTime = Date.now() - touchStartMs;
-            if (elapsedTime < getLongTouchThreshold()) {
-                self.resetLongTouchTimer();
-            }
+            // A due timer may still be queued when the release is delivered.
+            self.resetLongTouchTimer();
         },
 
         onTouchMove() {

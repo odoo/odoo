@@ -51,6 +51,18 @@ function readGroup(server, aggregates) {
 }
 
 describe("SampleServer aggregate parity across the two group paths", () => {
+    test("field counts exclude missing values but retain zero and false", () => {
+        const server = new DeterministicSampleServer("hobbit", FIELDS);
+        const result = server._aggregateFields(
+            [
+                { fieldName: "weight", func: "count", name: "weight:count" },
+                { fieldName: "__count", func: "__count", name: "__count" },
+            ],
+            [{ weight: 0 }, { weight: false }, { weight: 10 }, { weight: null }, {}],
+        );
+        expect(result).toEqual({ "weight:count": 3, __count: 5 });
+    });
+
     test("float sums are rounded on the pure-sample path", async () => {
         const server = new DeterministicSampleServer("hobbit", FIELDS);
         const result = await readGroup(server, ["weight:sum", "__count"]);

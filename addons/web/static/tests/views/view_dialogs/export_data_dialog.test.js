@@ -522,6 +522,35 @@ test("toggling import compatibility after adding an expanded field", async () =>
     expect.verifySteps(["/web/export/csv"]);
 });
 
+test("Export dialog: equally sized searches refresh nested matches", async () => {
+    onRpc("/web/export/formats", () => [{ tag: "csv", label: "CSV" }]);
+    onRpc("/web/export/get_fields", async (request) => {
+        const { params } = await request.json();
+        return params.parent_field ? fetchedFields[params.prefix] : fetchedFields.root;
+    });
+    await mountView({
+        type: "list",
+        resModel: "partner",
+        arch: `<list><field name="foo"/></list>`,
+        loadActionMenus: true,
+    });
+    await openExportDialog();
+    await contains("[data-field_id='activity_ids']").click();
+    await contains("[data-field_id='activity_ids/partner_ids']").click();
+
+    const company =
+        ".o_export_tree_item[data-field_id='activity_ids/partner_ids/company_ids']";
+    const name = ".o_export_tree_item[data-field_id='activity_ids/partner_ids/name']";
+    await contains(".o_export_search_input").edit("Company");
+    expect(company).toHaveCount(1);
+    expect(name).toHaveCount(0);
+    await contains(".o_export_search_input").edit("Partner name");
+    expect(company).toHaveCount(0);
+    expect(name).toHaveCount(1);
+    await contains(".o_export_search_input").clear();
+    expect(".o_export_tree_item").toHaveCount(8);
+});
+
 test("Export dialog: many2many fields are extendable", async () => {
     onRpc("/web/export/formats", () => [{ tag: "csv", label: "CSV" }]);
     onRpc("/web/export/get_fields", async (request) => {
@@ -617,6 +646,41 @@ test("Export dialog: sortable on desktop", async () => {
     expect(".o_export_field_sortable").toHaveCount(2, {
         message: "exported fields can be sorted by drag and drop",
     });
+});
+
+test.tags("desktop");
+test("Export dialog: reordering a saved template can be reset", async () => {
+    onRpc("/web/export/formats", () => [{ tag: "csv", label: "CSV" }]);
+    onRpc("/web/export/get_fields", () => fetchedFields.root);
+    onRpc("ir.exports", "search_read", () => [{ id: 1, name: "Ordered fields" }]);
+    onRpc("/web/export/namelist", () => [
+        { id: "foo", string: "Foo" },
+        { id: "bar", string: "Bar" },
+    ]);
+
+    await mountView({
+        type: "list",
+        resModel: "partner",
+        arch: `<list export_xlsx="1"><field name="foo"/></list>`,
+        loadActionMenus: true,
+    });
+    await openExportDialog();
+    await select("1", { target: ".o_exported_lists_select" });
+    await animationFrame();
+    expect(queryAllTexts(".o_export_field")).toEqual(["Foo", "Bar"]);
+    expect(".o_cancel_list_btn").toHaveCount(0);
+
+    await contains(".o_export_field:first-child").dragAndDrop(
+        queryFirst(".o_export_field:nth-child(2)"),
+    );
+    expect(queryAllTexts(".o_export_field")).toEqual(["Bar", "Foo"]);
+    expect(".o_cancel_list_btn").toHaveCount(1);
+    expect(".o_delete_exported_list").toHaveCount(0);
+
+    await contains(".o_cancel_list_btn").click();
+    expect(queryAllTexts(".o_export_field")).toEqual(["Foo", "Bar"]);
+    expect(".o_cancel_list_btn").toHaveCount(0);
+    expect(".o_delete_exported_list").toHaveCount(1);
 });
 
 test.tags("mobile");
@@ -1370,4 +1434,94 @@ test("Export dialog: superseded SUBfield fetch must not paint stale fields", asy
         message:
             "subfields fetched for the previous compatibility mode must be dropped",
     });
+});
+
+test("Export dialog: collapse while children load keeps the item closed", async () => {
+    const pending = new Deferred();
+    let childRequests = 0;
+    onRpc("/web/export/formats", () => [{ tag: "csv", label: "CSV" }]);
+    onRpc("/web/export/get_fields", async (request) => {
+        const { params } = await request.json();
+        if (params.parent_field) {
+            childRequests++;
+            await pending;
+            return fetchedFields.activity_ids;
+        }
+        return [...fetchedFields.root];
+    });
+    await mountView({
+        type: "list",
+        resModel: "partner",
+        arch: `<list><field name="foo"/></list>`,
+        loadActionMenus: true,
+    });
+    await openExportDialog();
+    const item = ".o_export_tree_item[data-field_id='activity_ids']";
+    await contains(item).click();
+    await contains(item).click();
+    pending.resolve();
+    await animationFrame();
+    expect(childRequests).toBe(1);
+    expect(queryAllTexts(".o_export_tree_item")).toEqual(["Activities", "Foo", "Bar"]);
+    await contains(item).click();
+    expect(queryAllTexts(".o_export_tree_item")).toInclude("Attendants");
+    expect(childRequests).toBe(1);
+});
+
+test("Export dialog: repeating a search includes fields discovered meanwhile", async () => {
+    const pending = new Deferred();
+    onRpc("/web/export/formats", () => [{ tag: "csv", label: "CSV" }]);
+    onRpc("/web/export/get_fields", async (request) => {
+        const { params } = await request.json();
+        if (params.parent_field) {
+            await pending;
+            return fetchedFields.activity_ids;
+        }
+        return fetchedFields.root;
+    });
+    await mountView({
+        type: "list",
+        resModel: "partner",
+        arch: `<list><field name="foo"/></list>`,
+        loadActionMenus: true,
+    });
+    await openExportDialog();
+    await contains(".o_export_tree_item[data-field_id='activity_ids']").click();
+    await contains(".o_export_search_input").edit("Activities");
+    pending.resolve();
+    await animationFrame();
+    await contains(".o_export_search_input").edit("Activities");
+    expect(
+        ".o_export_tree_item[data-field_id='activity_ids/mail_template_ids']",
+    ).toHaveCount(1);
+
+    await contains(".o_import_compat input").click();
+    expect(".o_export_search_input").toHaveValue("");
+    expect(queryAllTexts(".o_export_tree_item")).toEqual(["Activities", "Foo", "Bar"]);
+});
+
+test("Export dialog: starting a new template cancels a pending saved template", async () => {
+    onRpc("/web/export/formats", () => [{ tag: "csv", label: "CSV" }]);
+    onRpc("/web/export/get_fields", () => [...fetchedFields.root]);
+    const pending = new Deferred();
+    onRpc("/web/export/namelist", async () => {
+        await pending;
+        return [{ id: "bar", string: "Bar" }];
+    });
+    onRpc("search_read", () => [{ id: 1, name: "Template 1" }]);
+    await mountView({
+        type: "list",
+        resModel: "partner",
+        arch: `<list><field name="foo"/></list>`,
+        loadActionMenus: true,
+    });
+    await openExportDialog();
+    await select("1", { target: ".o_exported_lists_select" });
+    await animationFrame();
+    await select("new_template", { target: ".o_exported_lists_select" });
+    await animationFrame();
+    expect(queryAllTexts(".o_fields_list .o_export_field")).toEqual(["Foo"]);
+    pending.resolve();
+    await animationFrame();
+    expect(queryAllTexts(".o_fields_list .o_export_field")).toEqual(["Foo"]);
 });

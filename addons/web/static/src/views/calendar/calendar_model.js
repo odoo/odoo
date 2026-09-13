@@ -174,7 +174,8 @@ export class CalendarModel extends Model {
     }
     /** @param {Object} [params] */
     async load(params = {}) {
-        const previousMeta = { ...this.meta };
+        // Concurrent loads share meta; only published metadata is a rollback point.
+        this.publishedMeta ??= { ...this.meta };
         Object.assign(this.meta, params);
         if (!this.meta.date) {
             this.meta.date =
@@ -200,13 +201,19 @@ export class CalendarModel extends Model {
                 endLoad({ superseded: true });
                 return;
             }
-            Object.assign(this.meta, previousMeta);
+            for (const key of Object.keys(this.meta)) {
+                if (!(key in this.publishedMeta)) {
+                    delete this.meta[key];
+                }
+            }
+            Object.assign(this.meta, this.publishedMeta);
             endLoad({ failed: true });
             throw error;
         }
         endLoad({ records: Object.keys(data.records || {}).length });
         browser.localStorage.setItem(this.storageKey, this.meta.scale);
         this.data = data;
+        this.publishedMeta = { ...this.meta };
         this.notify();
     }
 

@@ -426,7 +426,12 @@ export class PivotModel extends Model {
      * @override
      * @param {SearchParams} searchParams
      */
-    async load(searchParams) {
+    load(searchParams) {
+        return this.loads.track(this._loadSearchParams(searchParams));
+    }
+
+    /** @param {SearchParams} searchParams */
+    async _loadSearchParams(searchParams) {
         this.searchParams = searchParams;
         const rawPivotMeasures = searchParams.context.pivot_measures;
         const pivotMeasuresKey = JSON.stringify(rawPivotMeasures ?? null);
@@ -487,13 +492,25 @@ export class PivotModel extends Model {
             resModel: metaData.resModel,
             reload: this.reload,
         }));
-        await addPropertyFieldDefs(
-            this.orm,
-            metaData.resModel,
-            searchParams.context,
-            metaData.fields,
-            new Set([...metaData.rowGroupBys, ...metaData.colGroupBys]),
+        let generation;
+        const properties = this._keepLastAdd(
+            addPropertyFieldDefs(
+                this.orm,
+                metaData.resModel,
+                searchParams.context,
+                metaData.fields,
+                new Set([...metaData.rowGroupBys, ...metaData.colGroupBys]),
+                () => generation === this.keepLast.generation,
+            ),
         );
+        generation = this.keepLast.generation;
+        if (
+            (await properties) === SUPERSEDED ||
+            generation !== this.keepLast.generation
+        ) {
+            log.logic("property load superseded");
+            return;
+        }
         const endLoad = log.perf(`loadData ${metaData.resModel}`);
         const loaded = await this._loadData(config);
         endLoad({ loaded });

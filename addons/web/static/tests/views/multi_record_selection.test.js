@@ -4,7 +4,7 @@ import { destroy, expect, test } from "@odoo/hoot";
 import { keyDown, keyUp } from "@odoo/hoot-dom";
 import { advanceTime } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
-import { mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import {
     useLongTouchSelection,
     useRecordSelection,
@@ -145,6 +145,17 @@ test("shiftKeyMode mirrors the physical shift key", async () => {
     expect(host.sel.shiftKeyMode).toBe(false);
 });
 
+test("losing focus clears the shift selection anchor", async () => {
+    const host = await mountSelectionHost();
+    await keyDown("shift");
+    host.sel.expandCheckboxes(null, "down");
+
+    window.dispatchEvent(new Event("blur"));
+
+    expect(host.sel.shiftKeyMode).toBe(false);
+    expect(host.sel.shiftKeyedRecord).toBe(undefined);
+});
+
 const LONG_TOUCH_THRESHOLD = 400;
 
 /** @param {(record: any) => void} onLongTouch */
@@ -191,6 +202,19 @@ test("an early release or a move disarms the long-touch timer", async () => {
     expect(touched).toBe(0);
 });
 
+test("release cancels an overdue long-touch callback that has not run", async () => {
+    let touched = 0;
+    const host = await mountLongTouchHost(() => touched++);
+    const start = Date.now();
+    host.longTouch.onTouchStart();
+    // A busy event loop can deliver touchend before an already due timer.
+    patchWithCleanup(Date, { now: () => start + LONG_TOUCH_THRESHOLD + 1 });
+    host.longTouch.onTouchEnd();
+    await advanceTime(LONG_TOUCH_THRESHOLD * 2);
+
+    expect(touched).toBe(0);
+});
+
 test("a pending long touch dies with its component", async () => {
     let touched = 0;
     const host = await mountLongTouchHost(() => touched++);
@@ -200,4 +224,20 @@ test("a pending long touch dies with its component", async () => {
     await advanceTime(LONG_TOUCH_THRESHOLD * 2);
 
     expect(touched).toBe(0);
+});
+
+test("a completed touch releases its timer before the callback starts another touch", async () => {
+    const touched = [];
+    const host = await mountLongTouchHost((record) => {
+        touched.push(record);
+        if (record === "first") {
+            host.longTouch.onTouchStart("second");
+        }
+    });
+
+    host.longTouch.onTouchStart("first");
+    await advanceTime(LONG_TOUCH_THRESHOLD + 1);
+    expect(touched).toEqual(["first"]);
+    await advanceTime(LONG_TOUCH_THRESHOLD + 1);
+    expect(touched).toEqual(["first", "second"]);
 });

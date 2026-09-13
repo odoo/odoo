@@ -83,8 +83,11 @@ export function stripSortedKeys(tree) {
  * @returns {number}
  */
 export function getTreeHeight(tree) {
-    const subTreeHeights = [...tree.directSubTrees.values()].map(getTreeHeight);
-    return Math.max(0, ...subTreeHeights) + 1;
+    let height = 0;
+    for (const subTree of tree.directSubTrees.values()) {
+        height = Math.max(height, getTreeHeight(subTree));
+    }
+    return height + 1;
 }
 
 /**

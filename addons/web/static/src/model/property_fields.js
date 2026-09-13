@@ -31,6 +31,7 @@ export function describePropertyDefinitionAsField(propertyFullName, definition) 
  * @param {Record<string, any>} context
  * @param {Record<string, Field>} fields
  * @param {string} propertyFullName
+ * @param {() => boolean} [isCurrent] Whether this request may still publish its definition.
  * @returns {Promise<void>}
  */
 export async function addPropertyFieldDef(
@@ -39,6 +40,7 @@ export async function addPropertyFieldDef(
     context,
     fields,
     propertyFullName,
+    isCurrent = () => true,
 ) {
     let definition;
     try {
@@ -50,6 +52,9 @@ export async function addPropertyFieldDef(
         );
     } catch {
         definition = undefined;
+    }
+    if (!isCurrent()) {
+        return;
     }
     fields[propertyFullName] = describePropertyDefinitionAsField(
         propertyFullName,
@@ -64,9 +69,17 @@ export async function addPropertyFieldDef(
  * @param {Record<string, any>} context
  * @param {Record<string, Field>} fields
  * @param {Iterable<string>} groupBy
+ * @param {() => boolean} [isCurrent]
  * @returns {Promise<void>}
  */
-export async function addPropertyFieldDefs(orm, resModel, context, fields, groupBy) {
+export async function addPropertyFieldDefs(
+    orm,
+    resModel,
+    context,
+    fields,
+    groupBy,
+    isCurrent,
+) {
     const proms = [];
     for (const groupByName of groupBy) {
         if (groupByName in fields) {
@@ -76,7 +89,9 @@ export async function addPropertyFieldDefs(orm, resModel, context, fields, group
         if (fields[parentFieldName]?.type !== "properties") {
             continue;
         }
-        proms.push(addPropertyFieldDef(orm, resModel, context, fields, groupByName));
+        proms.push(
+            addPropertyFieldDef(orm, resModel, context, fields, groupByName, isCurrent),
+        );
     }
     await Promise.all(proms);
 }

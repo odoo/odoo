@@ -1,6 +1,6 @@
 // @ts-check
 
-import { describe, expect, test } from "@odoo/hoot";
+import { after, describe, expect, test } from "@odoo/hoot";
 import {
     defineModels,
     getService,
@@ -8,8 +8,54 @@ import {
     models,
     onRpc,
 } from "@web/../tests/web_test_helpers";
+import {
+    disableLogging,
+    enableLogging,
+    getStats,
+    getStatus,
+} from "@web/core/debug/debug_logger";
+import { viewService } from "@web/views/view_service";
 
 describe.current.tags("headless");
+
+test("failed view loads finish their timing span and preserve the error", async () => {
+    const { spec } = getStatus();
+    after(() =>
+        spec
+            ? enableLogging(spec, { persist: false })
+            : disableLogging({ persist: false }),
+    );
+    enableLogging("web.view:perf", { persist: false });
+    const failure = new Error("view load failed");
+    const orm = {
+        cache() {
+            return this;
+        },
+        retry() {
+            return this;
+        },
+        async call() {
+            throw failure;
+        },
+    };
+    const service = viewService.start(await makeMockEnv(), { orm });
+    after(() => service.destroy());
+    const count = () =>
+        getStats()
+            .filter(
+                (row) => row.ns === "web.view" && row.label === "get_views timing_test",
+            )
+            .reduce((sum, row) => sum + row.count, 0);
+    const before = count();
+    let caught;
+    try {
+        await service.loadViews({ resModel: "timing_test", views: [] });
+    } catch (error) {
+        caught = error;
+    }
+    expect(caught).toBe(failure);
+    expect(count()).toBe(before + 1);
+});
 
 class TakeFive extends models.Model {
     _name = "take.five";

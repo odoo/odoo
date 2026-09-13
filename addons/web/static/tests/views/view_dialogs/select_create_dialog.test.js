@@ -1098,3 +1098,106 @@ test("SelectCreateDialog: default props, create a record", async () => {
 
     expect(".o_dialog").toHaveCount(0);
 });
+
+test("SelectCreateDialog: newly saved records wait for asynchronous selection", async () => {
+    Partner._views.list = `<list><field name="name"/></list>`;
+    Partner._views.kanban = `<kanban><templates><t t-name="card"><field name="name"/></t></templates></kanban>`;
+    Partner._views.search = `<search/>`;
+    Partner._views.form = `<form><field name="name"/></form>`;
+    await mountWebClient();
+    const pending = new Deferred();
+    getService("dialog").add(SelectCreateDialog, {
+        resModel: "partner",
+        onSelected: async (ids) => {
+            expect.step(`selected ${ids}`);
+            await pending;
+        },
+    });
+    await animationFrame();
+    await contains(".o_create_button").click();
+    await contains(".o_form_view .o_field_widget input").edit("New partner");
+    await clickSave();
+    expect.verifySteps(["selected 4"]);
+    expect(".o_dialog").toHaveCount(2);
+    pending.resolve();
+    await animationFrame();
+    expect(".o_dialog").toHaveCount(0);
+});
+
+test("SelectCreateDialog: custom creation is deduplicated while pending", async () => {
+    Partner._views.list = `<list><field name="name"/></list>`;
+    Partner._views.kanban = `<kanban><templates><t t-name="card"><field name="name"/></t></templates></kanban>`;
+    Partner._views.search = `<search/>`;
+    await mountWebClient();
+    const pending = new Deferred();
+    getService("dialog").add(SelectCreateDialog, {
+        resModel: "partner",
+        onCreateEdit: async () => {
+            expect.step("create");
+            await pending;
+        },
+    });
+    await animationFrame();
+    await contains(".o_create_button").click();
+    await contains(".o_create_button").click();
+    expect.verifySteps(["create"]);
+    expect(".o_dialog").toHaveCount(1);
+    pending.resolve();
+    await animationFrame();
+    expect(".o_dialog").toHaveCount(0);
+});
+
+test("SelectCreateDialog: failed selection of a new record remains retryable", async () => {
+    expect.errors(1);
+    Partner._views.list = `<list><field name="name"/></list>`;
+    Partner._views.kanban = `<kanban><templates><t t-name="card"><field name="name"/></t></templates></kanban>`;
+    Partner._views.search = `<search/>`;
+    Partner._views.form = `<form><field name="name"/></form>`;
+    await mountWebClient();
+    let attempts = 0;
+    getService("dialog").add(SelectCreateDialog, {
+        resModel: "partner",
+        onSelected: async (ids) => {
+            expect.step(`selected ${ids}`);
+            if (++attempts === 1) {
+                throw new Error("selection failed");
+            }
+        },
+    });
+    await animationFrame();
+    await contains(".o_create_button").click();
+    await contains(".o_form_view .o_field_widget input").edit("New partner");
+    await clickSave();
+    expect.verifyErrors(["selection failed"]);
+    await contains(".o_error_dialog .btn:contains(Close)").click();
+    expect(".o_dialog").toHaveCount(2);
+    await clickSave();
+    expect.verifySteps(["selected 4", "selected 4"]);
+    expect(".o_dialog").toHaveCount(0);
+});
+
+test("SelectCreateDialog: custom creation can be retried after rejection", async () => {
+    expect.errors(1);
+    Partner._views.list = `<list><field name="name"/></list>`;
+    Partner._views.kanban = `<kanban><templates><t t-name="card"><field name="name"/></t></templates></kanban>`;
+    Partner._views.search = `<search/>`;
+    await mountWebClient();
+    let attempts = 0;
+    getService("dialog").add(SelectCreateDialog, {
+        resModel: "partner",
+        onCreateEdit: async () => {
+            expect.step("create");
+            if (++attempts === 1) {
+                throw new Error("creation failed");
+            }
+        },
+    });
+    await animationFrame();
+    await contains(".o_create_button").click();
+    expect.verifyErrors(["creation failed"]);
+    await contains(".o_error_dialog .btn:contains(Close)").click();
+    expect(".o_dialog").toHaveCount(1);
+    await contains(".o_create_button").click();
+    expect.verifySteps(["create", "create"]);
+    expect(".o_dialog").toHaveCount(0);
+});

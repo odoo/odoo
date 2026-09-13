@@ -119,6 +119,15 @@ describe("findGroup — tree lookup", () => {
 });
 
 describe("getTreeHeight — depth computation", () => {
+    test("height is independent of the number of siblings", () => {
+        const tree = makeTree();
+        const leaf = makeTree();
+        for (let i = 0; i < 200000; i++) {
+            tree.directSubTrees.set(i, leaf);
+        }
+        expect(getTreeHeight(tree)).toBe(2);
+    });
+
     test("single root with no children has height 1", () => {
         expect(getTreeHeight(makeTree())).toBe(1);
     });

@@ -54,7 +54,10 @@ describe("patchActiveFields", () => {
             },
         });
 
-        expect(getAggregateSpecifications(nestedFields)).toEqual(["total:sum"]);
+        expect(getAggregateSpecifications(nestedFields)).toEqual([
+            "total:sum",
+            "total:count",
+        ]);
     });
 });
 

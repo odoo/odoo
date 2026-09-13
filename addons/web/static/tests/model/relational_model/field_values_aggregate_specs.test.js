@@ -28,7 +28,7 @@ describe("getAggregateSpecifications", () => {
         );
 
         expect(scoped).toEqual(picked);
-        expect(scoped).toEqual(["amount:sum", "qty:sum"]);
+        expect(scoped).toEqual(["amount:sum", "amount:count", "qty:sum", "qty:count"]);
     });
 
     test("monetary fields still pull in their currency companions", () => {
@@ -37,6 +37,7 @@ describe("getAggregateSpecifications", () => {
 
         expect(getAggregateSpecifications(fields, ["amount"])).toEqual([
             "amount:sum",
+            "amount:count",
             "currency_id:array_agg_distinct",
             "amount:sum_currency",
         ]);
@@ -51,11 +52,11 @@ describe("getAggregateSpecifications", () => {
 
         const narrower = getAggregateSpecifications(fields, ["qty"]);
         expect(narrower).not.toBe(first);
-        expect(narrower).toEqual(["qty:sum"]);
+        expect(narrower).toEqual(["qty:sum", "qty:count"]);
 
         const all = getAggregateSpecifications(fields);
         expect(all).not.toBe(first);
-        expect(all).toEqual(["amount:sum", "qty:sum"]);
+        expect(all).toEqual(["amount:sum", "amount:count", "qty:sum", "qty:count"]);
         expect(getAggregateSpecifications(fields)).toBe(all);
     });
 
@@ -64,6 +65,7 @@ describe("getAggregateSpecifications", () => {
 
         expect(getAggregateSpecifications(fields, ["qty", "qty", "nope"])).toEqual([
             "qty:sum",
+            "qty:count",
         ]);
     });
 });
@@ -73,13 +75,23 @@ describe("scope key isolation", () => {
         const fields = makeFields();
 
         expect(getAggregateSpecifications(fields, [])).toEqual([]);
-        expect(getAggregateSpecifications(fields)).toEqual(["amount:sum", "qty:sum"]);
+        expect(getAggregateSpecifications(fields)).toEqual([
+            "amount:sum",
+            "amount:count",
+            "qty:sum",
+            "qty:count",
+        ]);
     });
 
     test("the collision is absent in the reverse order too", () => {
         const fields = makeFields();
 
-        expect(getAggregateSpecifications(fields)).toEqual(["amount:sum", "qty:sum"]);
+        expect(getAggregateSpecifications(fields)).toEqual([
+            "amount:sum",
+            "amount:count",
+            "qty:sum",
+            "qty:count",
+        ]);
         expect(getAggregateSpecifications(fields, [])).toEqual([]);
     });
 });

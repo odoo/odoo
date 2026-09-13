@@ -65,7 +65,12 @@ export class GraphModel extends Model {
     }
 
     /** @param {SearchParams} searchParams */
-    async load(searchParams) {
+    load(searchParams) {
+        return this.fetches.track(this._loadSearchParams(searchParams));
+    }
+
+    /** @param {SearchParams} searchParams */
+    async _loadSearchParams(searchParams) {
         const previousSearchParams = this.searchParams;
         this.searchParams = searchParams;
         if (
@@ -92,13 +97,30 @@ export class GraphModel extends Model {
             groupBy: metaData.groupBy.map((gb) => gb.spec),
             domain: searchParams.domain,
         }));
-        await addPropertyFieldDefs(
-            this.orm,
-            metaData.resModel,
-            searchParams.context,
-            metaData.fields,
-            metaData.groupBy.map((gb) => gb.fieldName),
+        let generation;
+        const properties = this.keepLast.add(
+            addPropertyFieldDefs(
+                this.orm,
+                metaData.resModel,
+                searchParams.context,
+                metaData.fields,
+                metaData.groupBy.map((gb) => gb.fieldName),
+                () => generation === this.keepLast.generation,
+            ),
         );
+        generation = this.keepLast.generation;
+        try {
+            await properties;
+        } catch (error) {
+            if (!(error instanceof SupersededError)) {
+                throw error;
+            }
+            log.logic("property load superseded");
+            return;
+        }
+        if (generation !== this.keepLast.generation) {
+            return;
+        }
         await this._fetchDataPoints(metaData);
     }
 

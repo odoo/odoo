@@ -4264,3 +4264,111 @@ test("a row group-by hidden by a context expression is dropped from the arch", a
         message: "with it true, the group-by the arch asked to hide is gone",
     });
 });
+
+test("a delayed property definition cannot replace a newer grouping", async () => {
+    Partner._fields.properties_definition = fields.PropertiesDefinition();
+    Partner._fields.parent_id = fields.Many2one({ relation: "partner" });
+    Partner._fields.properties = fields.Properties({
+        definition_record: "parent_id",
+        definition_record_field: "properties_definition",
+    });
+    const pending = new Deferred();
+    let requests = 0;
+    onRpc("get_property_definition", async () => {
+        requests++;
+        await pending;
+        return { name: "delayed", type: "char", string: "Old property" };
+    });
+    onRpc("formatted_read_grouping_sets", ({ kwargs }) => {
+        if (
+            kwargs.grouping_sets.some((group) => group.includes("properties.delayed"))
+        ) {
+            return kwargs.grouping_sets.map((group) => [
+                {
+                    __extra_domain: [],
+                    __count: 1,
+                    ...(group.includes("properties.delayed")
+                        ? { "properties.delayed": "Old property" }
+                        : {}),
+                },
+            ]);
+        }
+    });
+    const view = await mountView({
+        type: "pivot",
+        resModel: "partner",
+        arch: `<pivot/>`,
+    });
+    const model = findComponent(view, (c) => c instanceof PivotController).model;
+    const initial = model.searchParams;
+    const older = model.load({ ...initial, groupBy: ["properties.delayed"] });
+    let settled = false;
+    older.then(() => (settled = true));
+    await animationFrame();
+    expect(model.loads.isBusy).toBe(true);
+    expect(requests).toBe(1);
+    await model.load({ ...initial, groupBy: ["bar"] });
+    await animationFrame();
+    expect(settled).toBe(true);
+    pending.resolve();
+    await animationFrame();
+    await older;
+    expect(model.metaData.rowGroupBys).toEqual(["bar"]);
+    expect(model.metaData.fields["properties.delayed"]).toBe(undefined);
+});
+
+test("a superseded property failure cannot overwrite a newer definition", async () => {
+    Partner._fields.properties_definition = fields.PropertiesDefinition();
+    Partner._fields.parent_id = fields.Many2one({ relation: "partner" });
+    Partner._fields.properties = fields.Properties({
+        definition_record: "parent_id",
+        definition_record_field: "properties_definition",
+    });
+    const pending = new Deferred();
+    let requests = 0;
+    onRpc("get_property_definition", async () => {
+        requests++;
+        if (requests === 1) {
+            await pending;
+            throw new Error("old property lookup failed");
+        }
+        return { name: "delayed", type: "integer", string: "Current property" };
+    });
+    onRpc("formatted_read_grouping_sets", ({ kwargs }) => {
+        if (
+            kwargs.grouping_sets.some((group) => group.includes("properties.delayed"))
+        ) {
+            return kwargs.grouping_sets.map((group) => [
+                {
+                    __extra_domain: [],
+                    __count: 1,
+                    ...(group.includes("properties.delayed")
+                        ? { "properties.delayed": 4 }
+                        : {}),
+                },
+            ]);
+        }
+    });
+    const view = await mountView({
+        type: "pivot",
+        resModel: "partner",
+        arch: `<pivot/>`,
+    });
+    const model = findComponent(view, (c) => c instanceof PivotController).model;
+    const initial = model.searchParams;
+    const older = model.load({ ...initial, groupBy: ["properties.delayed"] });
+    let settled = false;
+    older.then(() => (settled = true));
+    await animationFrame();
+    expect(model.loads.isBusy).toBe(true);
+    expect(requests).toBe(1);
+    await model.load({ ...initial, groupBy: ["properties.delayed"] });
+    await animationFrame();
+    expect(settled).toBe(true);
+    pending.resolve();
+    await animationFrame();
+    await older;
+    expect(model.metaData.rowGroupBys).toEqual(["properties.delayed"]);
+    expect(model.metaData.fields["properties.delayed"].type).toBe("integer");
+    expect(requests).toBe(2);
+});

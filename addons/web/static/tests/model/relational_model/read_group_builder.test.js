@@ -46,7 +46,7 @@ test("a narrowed fieldsToAggregate narrows the request", () => {
         makeConfig({ fieldsToAggregate: ["qty"] }),
         DEPS,
     );
-    expect(aggregates).toEqual(["qty:sum"]);
+    expect(aggregates).toEqual(["qty:sum", "qty:count"]);
 });
 
 test("an unlimited group list sends no limit rather than MAX_SAFE_INTEGER", () => {

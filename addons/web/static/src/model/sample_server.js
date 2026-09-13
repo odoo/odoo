@@ -229,6 +229,10 @@ export class SampleServer {
                 group[name] = records.map((r) => r[fieldName]);
             } else if (func === "__count") {
                 group[name] = records.length;
+            } else if (func === "count") {
+                group[name] = records.filter(
+                    (record) => record[fieldName] != null,
+                ).length;
             } else if (func === "count_distinct") {
                 group[name] = unique(records.map((r) => r[fieldName])).filter(
                     Boolean,

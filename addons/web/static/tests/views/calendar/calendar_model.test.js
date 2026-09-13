@@ -1,12 +1,15 @@
 // @ts-check
 
 import { describe, expect, test } from "@odoo/hoot";
+import { Deferred } from "@odoo/hoot-mock";
 import { luxon } from "@web/core/l10n/luxon";
+import { KeepLast } from "@web/core/utils/concurrency";
 import {
     computeCalendarRange,
     computeFiltersDomain,
     computeRangeDomain,
 } from "@web/views/calendar/calendar_date_range";
+import { CalendarModel } from "@web/views/calendar/calendar_model";
 import { normalizeCalendarRecord } from "@web/views/calendar/calendar_record";
 
 const { DateTime } = luxon;
@@ -435,4 +438,55 @@ describe("normalizeCalendarRecord — duration fallback", () => {
 
         expect(result.end.diff(result.start, "hours").hours).toBe(3);
     });
+});
+
+test("failed overlapping loads restore the date of the displayed records", async () => {
+    const olderFilters = new Deferred();
+    const newerFilters = new Deferred();
+    const dates = [1, 2, 3, 4].map((day) => DateTime.local(2026, 9, day));
+    const model = Object.create(CalendarModel.prototype);
+    Object.assign(model, {
+        env: { config: { viewId: "rollback_test" } },
+        meta: {
+            date: dates[0],
+            scale: "day",
+            scales: ["day"],
+            fields: {},
+            resModel: "rollback_test",
+        },
+        data: { records: { visibleDate: 1 } },
+        keepLast: new KeepLast({ rejectSuperseded: true }),
+        notify() {},
+        computeRange() {
+            return { start: this.meta.date };
+        },
+        loadFilters() {
+            return this.meta.date.day === 2 ? olderFilters : newerFilters;
+        },
+        async loadRecords() {
+            return { visibleDate: this.meta.date.day };
+        },
+        async loadDynamicFilters() {
+            return {};
+        },
+    });
+    const older = model.load({ date: dates[1] });
+    const newer = model.load({ date: dates[2], transient: true });
+    const rejected = expect(newer).rejects.toThrow("newer failed");
+    newerFilters.reject(new Error("newer failed"));
+    await rejected;
+    olderFilters.resolve({ sections: {}, dynamicFiltersInfo: {} });
+    await older;
+    expect(model.meta.date).toBe(dates[0]);
+    expect(model.data.records.visibleDate).toBe(1);
+    expect("transient" in model.meta).toBe(false);
+    model.loadFilters = async () => ({ sections: {}, dynamicFiltersInfo: {} });
+    await model.load({ date: dates[3] });
+    expect(model.data.records.visibleDate).toBe(4);
+    model.loadFilters = async () => {
+        throw new Error("retry failed");
+    };
+    await expect(model.load({ date: dates[1] })).rejects.toThrow("retry failed");
+    expect(model.meta.date).toBe(dates[3]);
+    expect(model.data.records.visibleDate).toBe(4);
 });

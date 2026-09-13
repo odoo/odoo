@@ -3489,3 +3489,133 @@ test("a saved group-by naming a removed field is dropped, not fatal", async () =
     expect(".o_graph_canvas_container canvas").toHaveCount(1);
     expect(warnings.filter((w) => w.includes("vanished_field"))).toHaveLength(1);
 });
+
+test("a delayed property definition cannot replace a newer grouping", async () => {
+    Foo._fields.properties_definition = fields.PropertiesDefinition();
+    Foo._fields.parent_id = fields.Many2one({ relation: "foo" });
+    Foo._fields.properties = fields.Properties({
+        definition_record: "parent_id",
+        definition_record_field: "properties_definition",
+    });
+    const pending = new Deferred();
+    let requests = 0;
+    onRpc("get_property_definition", async () => {
+        requests++;
+        await pending;
+        return { name: "delayed", type: "char", string: "Old property" };
+    });
+    onRpc("formatted_read_group", ({ kwargs }) => {
+        if (kwargs.groupby?.includes("properties.delayed")) {
+            return [
+                {
+                    "properties.delayed": "Old property",
+                    __extra_domain: [],
+                    __count: 1,
+                },
+            ];
+        }
+    });
+    const view = await mountView({ type: "graph", resModel: "foo", arch: `<graph/>` });
+    const model = getGraphModel(view);
+    const initial = model.searchParams;
+    const older = model.load({ ...initial, groupBy: ["properties.delayed"] });
+    let settled = false;
+    older.then(() => (settled = true));
+    await animationFrame();
+    expect(model.fetches.isBusy).toBe(true);
+    expect(requests).toBe(1);
+    await model.load({ ...initial, groupBy: ["bar"] });
+    await animationFrame();
+    expect(settled).toBe(true);
+    pending.resolve();
+    await animationFrame();
+    await older;
+    expect(model.metaData.groupBy.map((group) => group.spec)).toEqual(["bar"]);
+    expect(model.metaData.fields["properties.delayed"]).toBe(undefined);
+});
+
+test("a superseded property failure cannot overwrite a newer definition", async () => {
+    Foo._fields.properties_definition = fields.PropertiesDefinition();
+    Foo._fields.parent_id = fields.Many2one({ relation: "foo" });
+    Foo._fields.properties = fields.Properties({
+        definition_record: "parent_id",
+        definition_record_field: "properties_definition",
+    });
+    const pending = new Deferred();
+    let requests = 0;
+    onRpc("get_property_definition", async () => {
+        requests++;
+        if (requests === 1) {
+            await pending;
+            throw new Error("old property lookup failed");
+        }
+        return { name: "delayed", type: "integer", string: "Current property" };
+    });
+    onRpc("formatted_read_group", ({ kwargs }) => {
+        if (kwargs.groupby?.includes("properties.delayed")) {
+            return [
+                {
+                    "properties.delayed": 4,
+                    __extra_domain: [],
+                    __count: 1,
+                },
+            ];
+        }
+    });
+    const view = await mountView({ type: "graph", resModel: "foo", arch: `<graph/>` });
+    const model = getGraphModel(view);
+    const initial = model.searchParams;
+    const older = model.load({ ...initial, groupBy: ["properties.delayed"] });
+    let settled = false;
+    older.then(() => (settled = true));
+    await animationFrame();
+    expect(model.fetches.isBusy).toBe(true);
+    expect(requests).toBe(1);
+    await model.load({ ...initial, groupBy: ["properties.delayed"] });
+    await animationFrame();
+    expect(settled).toBe(true);
+    pending.resolve();
+    await animationFrame();
+    await older;
+    expect(model.metaData.groupBy.map((group) => group.spec)).toEqual([
+        "properties.delayed",
+    ]);
+    expect(model.metaData.fields["properties.delayed"].type).toBe("integer");
+    expect(requests).toBe(2);
+});
+
+test("changing graph mode waits for pending property preparation", async () => {
+    Foo._fields.properties_definition = fields.PropertiesDefinition();
+    Foo._fields.parent_id = fields.Many2one({ relation: "foo" });
+    Foo._fields.properties = fields.Properties({
+        definition_record: "parent_id",
+        definition_record_field: "properties_definition",
+    });
+    const pending = new Deferred();
+    onRpc("get_property_definition", async () => {
+        await pending;
+        return { name: "delayed", type: "char", string: "Property" };
+    });
+    onRpc("formatted_read_group", ({ kwargs }) => {
+        if (kwargs.groupby?.includes("properties.delayed")) {
+            return [{ "properties.delayed": "Value", __extra_domain: [], __count: 1 }];
+        }
+    });
+    const view = await mountView({ type: "graph", resModel: "foo", arch: `<graph/>` });
+    const model = getGraphModel(view);
+    const load = model.load({ ...model.searchParams, groupBy: ["properties.delayed"] });
+    let modeChanged = false;
+    const change = model
+        .updateMetaData({ mode: "pie" })
+        .then(() => (modeChanged = true));
+    await animationFrame();
+    expect(modeChanged).toBe(false);
+    expect(model.fetches.isBusy).toBe(true);
+    pending.resolve();
+    await Promise.all([load, change]);
+    expect(model.metaData.mode).toBe("pie");
+    expect(model.metaData.groupBy.map((group) => group.spec)).toEqual([
+        "properties.delayed",
+    ]);
+    expect(model.fetches.isBusy).toBe(false);
+});

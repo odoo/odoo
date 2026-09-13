@@ -295,6 +295,7 @@
  t-on-touchstart="(ev) => api.onRowTouchStart(record, ev)"
  t-on-touchend="() => api.onRowTouchEnd(record)"
  t-on-touchmove="() => api.onRowTouchMove(record)"
+ t-on-touchcancel="() => api.onRowTouchMove(record)"
  >
  <td t-on-keydown="(ev) => api.onCellKeydown(ev, group, record)" t-if="hasSelectors" class="o_list_record_selector user-select-none" t-on-click.stop="() => api.toggleRecordSelection(record)" tabindex="-1">
  <CheckBox disabled="!_canSelectRecord" value="record.selected" onChange.alike="() => api.toggleRecordSelection(record)" />

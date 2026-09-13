@@ -1,6 +1,7 @@
 // @ts-check
 
 import { describe, expect, test } from "@odoo/hoot";
+import { Deferred } from "@odoo/hoot-mock";
 import { ExportDataDialog } from "@web/views/view_dialogs/export_data_dialog";
 
 describe.current.tags("headless");
@@ -90,4 +91,58 @@ describe("loadFields", () => {
         expect(fields).toBe(undefined);
         expect(fetched).toBe(false);
     });
+});
+
+test("an old child response cannot populate replacement caches", async () => {
+    const pending = new Deferred();
+    const ctx = makeContext();
+    ctx.props.getExportedFields = () => pending;
+    const load = ExportDataDialog.prototype.loadFields.call(ctx, "partner_id");
+    ctx.state.isCompatible = true;
+    ctx.knownFields = { ...ctx.knownFields };
+    ctx.expandedFields = {};
+    ctx.state.isCompatible = false;
+    pending.resolve([{ id: "partner_id/name", string: "Stale" }]);
+    expect(await load).toBe(undefined);
+    expect(ctx.expandedFields).toEqual({});
+    expect(ctx.knownFields["partner_id/name"]).toBe(undefined);
+});
+
+test("an explicit cache target owns both lookup and registration", async () => {
+    const ctx = makeContext();
+    ctx.expandedFields.partner_id = { fields: [{ id: "stale" }] };
+    const target = { knownFields: { ...ctx.knownFields }, expandedFields: {} };
+    const result = await ExportDataDialog.prototype.loadFields.call(
+        ctx,
+        "partner_id",
+        false,
+        target,
+    );
+    expect(result.map((field) => field.id)).toEqual(["partner_id/name"]);
+    expect(target.expandedFields.partner_id.fields).toBe(result);
+    expect(ctx.knownFields["partner_id/name"]).toBe(undefined);
+});
+
+test("collapse during expansion ignores the pending response and permits reopening", async () => {
+    const pending = new Deferred();
+    let calls = 0;
+    const ctx = {
+        state: { subfields: [] },
+        props: {
+            isFieldExpandable: () => true,
+            loadFields: () => {
+                calls++;
+                return pending;
+            },
+        },
+    };
+    const toggle = ExportDataDialog.components.ExportDataItem.prototype.toggleItem;
+    const opening = toggle.call(ctx, "partner_id", true);
+    await toggle.call(ctx, "partner_id", true);
+    pending.resolve([{ id: "partner_id/name" }]);
+    await opening;
+    expect(calls).toBe(1);
+    expect(ctx.state.subfields).toEqual([]);
+    await toggle.call(ctx, "partner_id", true);
+    expect(ctx.state.subfields).toEqual([{ id: "partner_id/name" }]);
 });

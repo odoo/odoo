@@ -145,18 +145,18 @@ function aggregatableField(column, fields) {
 /**
  * @param {{ value: any, record: Record<string, any> }[]} fieldEntries
  * @param {string} aggregator
+ * @param {string} [fieldName]
  * @returns {number | undefined}
  */
-export function weightedGroupAverage(fieldEntries, aggregator) {
-    const totalCount = fieldEntries.reduce((s, e) => s + (e.record.__count || 0), 0);
+export function weightedGroupAverage(fieldEntries, aggregator, fieldName) {
+    const count = (entry) =>
+        entry.record[`${fieldName}:count`] ?? entry.record.__count ?? 0;
+    const totalCount = fieldEntries.reduce((s, e) => s + count(e), 0);
     if (!totalCount) {
         return undefined;
     }
     if (aggregator === "avg") {
-        return (
-            fieldEntries.reduce((s, e) => s + e.value * (e.record.__count || 0), 0) /
-            totalCount
-        );
+        return fieldEntries.reduce((s, e) => s + e.value * count(e), 0) / totalCount;
     }
     if (aggregator === "sum") {
         return fieldEntries.reduce((s, e) => s + e.value, 0) / totalCount;
@@ -399,6 +399,7 @@ export class ListAggregates {
                 aggregatedValue = weightedGroupAverage(
                     fieldEntries,
                     field.aggregator || "sum",
+                    column.name,
                 );
             }
             aggregatedValue ??= computeAggregatedValue(

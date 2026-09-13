@@ -11,6 +11,7 @@ import {
 } from "@odoo/owl";
 import { CheckBox } from "@web/components/checkbox/checkbox";
 import { browser } from "@web/core/browser/browser";
+import { makeLogger } from "@web/core/debug/debug_logger";
 import { rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/translation";
 import { unique } from "@web/core/utils/collections/arrays";
@@ -20,6 +21,8 @@ import { useService } from "@web/core/utils/hooks";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { useDebounced } from "@web/core/utils/timing";
 import { Dialog } from "@web/ui/dialog/dialog";
+
+const log = makeLogger("web.view.export");
 
 class DeleteExportListDialog extends Component {
     static components = { Dialog };
@@ -66,16 +69,25 @@ class ExportDataItem extends Component {
      */
     async toggleItem(id, isUserToggle) {
         if (this.props.isFieldExpandable(id)) {
-            if (this.state.subfields.length) {
+            if (this.expansion || this.state.subfields.length) {
+                this.expansion = null;
                 this.state.subfields = [];
             } else {
-                const subfields = await this.props.loadFields(id, !isUserToggle);
-                if (subfields) {
-                    this.state.subfields = isUserToggle
-                        ? subfields
-                        : this.props.filterSubfields(subfields);
-                } else {
-                    this.state.subfields = [];
+                const expansion = (this.expansion = {});
+                try {
+                    const subfields = await this.props.loadFields(id, !isUserToggle);
+                    if (this.expansion !== expansion) {
+                        return;
+                    }
+                    this.state.subfields = subfields
+                        ? isUserToggle
+                            ? subfields
+                            : this.props.filterSubfields(subfields)
+                        : [];
+                } finally {
+                    if (this.expansion === expansion) {
+                        this.expansion = null;
+                    }
                 }
             }
         }
@@ -125,6 +137,7 @@ export class ExportDataDialog extends Component {
             isCompatible: false,
             isEditingTemplate: false,
             search: [],
+            searchQuery: "",
             selectedFormat: 0,
             templateId: null,
             isSmall: this.env.isSmall,
@@ -188,13 +201,13 @@ export class ExportDataDialog extends Component {
 
     /** @returns {boolean} */
     get isSearching() {
-        return Boolean(/** @type {HTMLInputElement} */ (this.searchRef.el)?.value);
+        return Boolean(this.state.searchQuery);
     }
 
     /** @returns {Array<Object>} */
     get fieldsAvailable() {
         if (this.isSearching) {
-            return this.state.search.length ? Object.values(this.state.search) : [];
+            return this.state.search;
         }
         return Object.values(this.knownFields);
     }
@@ -226,13 +239,7 @@ export class ExportDataDialog extends Component {
      */
     filterSubfields(subfields) {
         let subfieldsFromSearchResults = [];
-        let searchResults;
-        if (this.isSearching) {
-            searchResults = this.lookup(
-                /** @type {HTMLInputElement} */ (this.searchRef.el).value,
-            );
-        }
-        const fieldsAvailable = Object.values(searchResults || this.knownFields);
+        const fieldsAvailable = this.fieldsAvailable;
         if (this.isSearching) {
             subfieldsFromSearchResults = fieldsAvailable
                 .filter((f) => f.parent && this.knownFields[f.parent.id].parent)
@@ -250,6 +257,7 @@ export class ExportDataDialog extends Component {
     }
 
     async fetchFields() {
+        this.fieldsGeneration = (this.fieldsGeneration ?? 0) + 1;
         const isCompatible = this.state.isCompatible;
         const pending = { knownFields: {}, expandedFields: {} };
         try {
@@ -267,11 +275,16 @@ export class ExportDataDialog extends Component {
         }
         this.knownFields = pending.knownFields;
         this.expandedFields = pending.expandedFields;
-        await this.setDefaultExportList();
         this.state.search = [];
+        this.state.searchQuery = "";
         if (this.searchRef.el) {
             /** @type {HTMLInputElement} */ (this.searchRef.el).value = "";
         }
+        log.logic("fields published", () => ({
+            isCompatible,
+            fields: Object.keys(this.knownFields).length,
+        }));
+        await this.setDefaultExportList();
         if (this.state.templateId) {
             this.loadExportList(this.state.templateId);
         }
@@ -288,7 +301,13 @@ export class ExportDataDialog extends Component {
      * @returns {boolean}
      */
     isFieldExpandable(id) {
-        return this.knownFields[id].children && id.split("/").length < 3;
+        const field = this.knownFields[id];
+        if (!field) {
+            // A retiring tree item can render after its field cache was replaced.
+            log.logic("field no longer available", () => ({ id }));
+            return false;
+        }
+        return field.children && id.split("/").length < 3;
     }
 
     /** @param {string | number} value */
@@ -296,6 +315,7 @@ export class ExportDataDialog extends Component {
         this.state.templateId = value === "new_template" ? value : Number(value);
         this.state.isEditingTemplate = value === "new_template";
         if (!value || value === "new_template") {
+            this.exportListKeepLast.cancel();
             return;
         }
         let fields;
@@ -323,10 +343,12 @@ export class ExportDataDialog extends Component {
      */
     async loadFields(id, preventLoad = false, target) {
         const knownFields = target?.knownFields ?? this.knownFields;
+        const expandedFields = target?.expandedFields ?? this.expandedFields;
+        const generation = this.fieldsGeneration;
         let parentField, parentParams;
         if (id) {
-            if (this.expandedFields[id]) {
-                return this.expandedFields[id].fields;
+            if (expandedFields[id]) {
+                return expandedFields[id].fields;
             }
             parentField = knownFields[id];
             parentParams = {
@@ -342,7 +364,13 @@ export class ExportDataDialog extends Component {
         }
         const isCompatible = this.state.isCompatible;
         const fields = await this.props.getExportedFields(isCompatible, parentParams);
-        if (isCompatible !== this.state.isCompatible) {
+        if (
+            isCompatible !== this.state.isCompatible ||
+            generation !== this.fieldsGeneration ||
+            (!target &&
+                (knownFields !== this.knownFields ||
+                    expandedFields !== this.expandedFields))
+        ) {
             return;
         }
         for (const field of fields) {
@@ -352,7 +380,7 @@ export class ExportDataDialog extends Component {
             }
         }
         if (id) {
-            (target?.expandedFields ?? this.expandedFields)[id] = { fields };
+            expandedFields[id] = { fields };
         }
         return fields;
     }
@@ -367,6 +395,7 @@ export class ExportDataDialog extends Component {
             0,
             this.state.exportList.splice(item, 1)[0],
         );
+        this.enterTemplateEdition();
     }
 
     /** @param {string} fieldId */
@@ -464,7 +493,12 @@ export class ExportDataDialog extends Component {
     }
 
     onSearch(ev) {
-        this.state.search = this.lookup(ev.target.value);
+        this.state.searchQuery = ev.target.value;
+        this.state.search = this.lookup(this.state.searchQuery);
+        log.logic("search updated", () => ({
+            queryLength: this.state.searchQuery.length,
+            matches: this.state.search.length,
+        }));
     }
 
     /**

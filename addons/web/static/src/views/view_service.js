@@ -121,14 +121,20 @@ class ViewService {
         );
 
         const endViews = log.perf(`get_views ${resModel}`);
-        const result = await this.orm
-            .cache({ type: "disk" })
-            .retry(1)
-            .call(resModel, "get_views", [], {
-                context: filteredContext,
-                views,
-                options: loadViewsOptions,
-            });
+        let result;
+        try {
+            result = await this.orm
+                .cache({ type: "disk" })
+                .retry(1)
+                .call(resModel, "get_views", [], {
+                    context: filteredContext,
+                    views,
+                    options: loadViewsOptions,
+                });
+        } catch (error) {
+            endViews({ views, options: loadViewsOptions, failed: true });
+            throw error;
+        }
         endViews({
             views,
             models: Object.keys(result.models).length,
