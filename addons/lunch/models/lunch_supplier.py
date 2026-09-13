@@ -57,7 +57,6 @@ class LunchSupplier(models.Model):
 
     responsible_id = fields.Many2one(
         "res.users",
-        string="Responsible",
         domain=lambda self: [
             ("all_group_ids", "in", self.env.ref("lunch.group_lunch_manager").id)
         ],

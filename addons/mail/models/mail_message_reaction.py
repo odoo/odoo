@@ -18,14 +18,13 @@ class MailMessageReaction(models.Model):
     _log_access = False
 
     message_id: MailMessage = fields.Many2one(
-        string="Message",
         comodel_name="mail.message",
         ondelete="cascade",
         required=True,
         readonly=True,
         index=True,
     )
-    content = fields.Char(string="Content", required=True, readonly=True)
+    content = fields.Char(required=True, readonly=True)
     partner_id: ResPartner = fields.Many2one(
         string="Reacting Partner",
         comodel_name="res.partner",

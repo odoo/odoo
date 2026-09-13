@@ -10,27 +10,23 @@ class HrTalentPool(models.Model):
     name = fields.Char(string="Title", required=True, translate=True)
     company_id = fields.Many2one(
         "res.company",
-        string="Company",
         default=lambda self: self.env.company,
         tracking=True,
     )
     pool_manager = fields.Many2one(
         "res.users",
-        "Pool Manager",
         default=lambda self: self.env.user,
         domain="[('share', '=', False), ('company_ids', 'in', company_id)]",
         tracking=True,
     )
-    talent_ids = fields.Many2many(
-        comodel_name="hr.applicant", string="Talent", groups="base.group_user"
-    )
+    talent_ids = fields.Many2many(comodel_name="hr.applicant", groups="base.group_user")
     no_of_talents = fields.Integer(
         compute="_compute_no_of_talents",
         string="# Talents",
         help="The number of talents in this talent pool.",
     )
     description = fields.Html(string="Talent Pool Description")
-    color = fields.Integer(string="Color", default=lambda self: self._default_color())
+    color = fields.Integer(default=lambda self: self._default_color())
     categ_ids = fields.Many2many(comodel_name="hr.applicant.category", string="Tags")
 
     def _compute_no_of_talents(self):

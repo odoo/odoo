@@ -94,7 +94,6 @@ class ResCompany(models.Model):
     peppol_endpoint = fields.Char(related="partner_id.peppol_endpoint", readonly=False)
     peppol_purchase_journal_id = fields.Many2one(
         comodel_name="account.journal",
-        string="Peppol Purchase Journal",
         domain=[("type", "=", "purchase")],
         compute="_compute_peppol_purchase_journal_id",
         store=True,
@@ -107,7 +106,7 @@ class ResCompany(models.Model):
         comodel_name="res.company", compute="_compute_peppol_parent_company_id"
     )
     # IAP-driven metadata with additive keys
-    peppol_metadata = fields.Json(string="Peppol Metadata")
+    peppol_metadata = fields.Json()
     peppol_metadata_updated_at = fields.Datetime(string="Peppol meta updated at")
 
     # Deprecated

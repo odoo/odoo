@@ -25,11 +25,11 @@ class WebsiteSnippetFilter(models.Model):
     field_names = fields.Char(
         help="A list of comma-separated field names", required=True, default=""
     )
-    filter_id = fields.Many2one("ir.filters", "Filter", ondelete="cascade")
+    filter_id = fields.Many2one("ir.filters", ondelete="cascade")
     limit = fields.Integer(
         help="The limit is the maximum number of records retrieved", required=True
     )
-    website_id = fields.Many2one("website", string="Website", ondelete="cascade")
+    website_id = fields.Many2one("website", ondelete="cascade")
     model_name = fields.Char(string="Model name", compute="_compute_model_name")
     help = fields.Text(
         string="Description",

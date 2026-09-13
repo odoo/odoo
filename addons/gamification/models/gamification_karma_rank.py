@@ -17,7 +17,6 @@ class GamificationKarmaRank(models.Model):
 
     name = fields.Text(string="Rank Name", translate=True, required=True)
     description = fields.Html(
-        string="Description",
         translate=html_translate,
         sanitize_attributes=False,
     )

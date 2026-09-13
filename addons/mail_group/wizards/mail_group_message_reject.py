@@ -5,9 +5,7 @@ class MailGroupMessageReject(models.TransientModel):
     _name = "mail.group.message.reject"
     _description = "Reject Group Message"
 
-    subject = fields.Char(
-        "Subject", store=True, readonly=False, compute="_compute_subject"
-    )
+    subject = fields.Char(store=True, readonly=False, compute="_compute_subject")
     body = fields.Html("Contents", default="", sanitize_style=True)
     email_from_normalized = fields.Char(
         "Email From", related="mail_group_message_id.email_from_normalized"
@@ -15,12 +13,9 @@ class MailGroupMessageReject(models.TransientModel):
     mail_group_message_id = fields.Many2one(
         "mail.group.message", string="Message", required=True, readonly=True
     )
-    action = fields.Selection(
-        [("reject", "Reject"), ("ban", "Ban")], string="Action", required=True
-    )
+    action = fields.Selection([("reject", "Reject"), ("ban", "Ban")], required=True)
 
     send_email = fields.Boolean(
-        "Send Email",
         help="Send an email to the author of the message",
         compute="_compute_send_email",
     )

@@ -13,7 +13,6 @@ class ProductReplenish(models.TransientModel):
 
     product_id = fields.Many2one(
         comodel_name="product.product",
-        string="Product",
         required=True,
     )
     product_tmpl_id = fields.Many2one(
@@ -34,7 +33,7 @@ class ProductReplenish(models.TransientModel):
         domain="[('id', 'in', allowed_uom_ids)]",
     )
     forecast_uom_id = fields.Many2one(related="product_id.uom_id")
-    quantity = fields.Float(string="Quantity", required=True, default=1)
+    quantity = fields.Float(required=True, default=1)
     date_planned = fields.Datetime(
         string="Scheduled Date",
         required=True,
@@ -46,13 +45,11 @@ class ProductReplenish(models.TransientModel):
     )
     warehouse_id = fields.Many2one(
         comodel_name="stock.warehouse",
-        string="Warehouse",
         required=True,
         check_company=True,
     )
     company_id = fields.Many2one(comodel_name="res.company")
     forecasted_quantity = fields.Float(
-        string="Forecasted Quantity",
         compute="_compute_forecasted_quantity",
     )
 

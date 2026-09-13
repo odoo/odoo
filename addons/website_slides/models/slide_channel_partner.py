@@ -10,7 +10,7 @@ class SlideChannelPartner(models.Model):
     _table = "slide_channel_partner"
     _rec_name = "partner_id"
 
-    active = fields.Boolean(string="Active", default=True)
+    active = fields.Boolean(default=True)
     channel_id = fields.Many2one(
         "slide.channel", string="Course", index=True, required=True, ondelete="cascade"
     )
@@ -45,8 +45,8 @@ class SlideChannelPartner(models.Model):
         "slide.slide", string="Next Lesson", compute="_compute_next_slide_id"
     )
 
-    invitation_link = fields.Char("Invitation Link", compute="_compute_invitation_link")
-    last_invitation_date = fields.Datetime("Last Invitation Date")
+    invitation_link = fields.Char(compute="_compute_invitation_link")
+    last_invitation_date = fields.Datetime()
 
     _channel_partner_uniq = models.Constraint(
         "unique(channel_id, partner_id)",

@@ -22,9 +22,7 @@ class AccountSaleClosing(models.Model):
     _description = "Sale Closing"
 
     name = fields.Char(help="Frequency and unique sequence number", required=True)
-    company_id = fields.Many2one(
-        "res.company", string="Company", readonly=True, required=True
-    )
+    company_id = fields.Many2one("res.company", readonly=True, required=True)
     date_closing_stop = fields.Datetime(
         string="Closing Date",
         help="Date to which the values are computed",

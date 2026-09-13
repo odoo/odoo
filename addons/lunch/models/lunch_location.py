@@ -6,5 +6,5 @@ class LunchLocation(models.Model):
     _description = "Lunch Locations"
 
     name = fields.Char("Location Name", required=True)
-    address = fields.Text("Address")
+    address = fields.Text()
     company_id = fields.Many2one("res.company", default=lambda self: self.env.company)

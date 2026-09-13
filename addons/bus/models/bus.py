@@ -178,8 +178,8 @@ class BusBus(models.Model):
 
     _description = "Communication Bus"
 
-    channel = fields.Char("Channel")
-    message = fields.Char("Message")
+    channel = fields.Char()
+    message = fields.Char()
 
     _channel_id_idx = models.Index("(channel, id)")
     _create_date_idx = models.Index("(create_date)")

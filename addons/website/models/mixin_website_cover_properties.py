@@ -13,7 +13,6 @@ class MixinWebsiteCover_Properties(models.AbstractModel):
     _description = "Cover Properties Website Mixin"
 
     cover_properties = fields.Text(
-        "Cover Properties",
         default=lambda s: json_safe.dumps(s._default_cover_properties()),
     )
 

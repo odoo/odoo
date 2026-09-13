@@ -24,7 +24,6 @@ class MrpRoutingWorkcenter(models.Model):
         index=True,
     )
     sequence = fields.Integer(
-        "Sequence",
         default=100,
         help="Gives the sequence order when displaying a list of routing Work Centers.",
     )
@@ -111,7 +110,7 @@ class MrpRoutingWorkcenter(models.Model):
         "- Based on Actual time: the cost will be calculated based on tracked time and real employee costs.\n"
         "- Based on Estimated time: the cost will be calculated based on estimated time and costs.",
     )
-    cost = fields.Float("Cost", compute="_compute_cost")
+    cost = fields.Float(compute="_compute_cost")
 
     @api.depends("time_mode", "time_mode_batch")
     def _compute_time_computed_on(self):

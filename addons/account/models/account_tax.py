@@ -19,13 +19,11 @@ class AccountTaxGroup(models.Model):
     tax_payable_account_id = fields.Many2one(
         comodel_name="account.account",
         check_company=True,
-        string="Tax Payable Account",
         help="Tax current account used as a counterpart to the Tax Closing Entry when in favor of the authorities.",
     )
     tax_receivable_account_id = fields.Many2one(
         comodel_name="account.account",
         check_company=True,
-        string="Tax Receivable Account",
         help="Tax current account used as a counterpart to the Tax Closing Entry when in favor of the company.",
     )
     advance_tax_payment_account_id = fields.Many2one(
@@ -86,14 +84,12 @@ class AccountTax(models.Model):
             ("on_invoice", "Based on Invoice"),
             ("on_payment", "Based on Payment"),
         ],
-        string="Tax Exigibility",
         default="on_invoice",
         help="Based on Invoice: the tax is due as soon as the invoice is validated.\n"
         "Based on Payment: the tax is due as soon as the payment of the invoice is received.",
     )
     cash_basis_transition_account_id = fields.Many2one(
         comodel_name="account.account",
-        string="Cash Basis Transition Account",
         check_company=True,
         domain="[('account_type', 'not in', ('asset_receivable', 'liability_payable'))]",
         help="Account used to transition the tax amount for cash basis taxes. It will contain the tax amount as long as the original invoice has not been reconciled ; at reconciliation, this amount cancelled on this account and put on the regular tax account.",
@@ -1309,7 +1305,6 @@ class AccountTaxRepartitionLine(models.Model):
     _inherit = "account.tax.repartition.line"
 
     account_id = fields.Many2one(
-        string="Account",
         comodel_name="account.account",
         domain="[('account_type', 'not in', ('asset_receivable', 'liability_payable', 'off_balance'))]",
         check_company=True,

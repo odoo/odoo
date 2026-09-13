@@ -5,7 +5,7 @@ class HrExpenseRefuseWizard(models.TransientModel):
     _name = "hr.expense.refuse.wizard"
     _description = "Expense Refuse Reason Wizard"
 
-    reason = fields.Char(string="Reason", required=True)
+    reason = fields.Char(required=True)
     expense_ids = fields.Many2many(comodel_name="hr.expense")
 
     @api.model

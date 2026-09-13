@@ -11,18 +11,15 @@ class WebsiteEventMenu(models.Model):
 
     menu_id = fields.Many2one(
         "website.menu",
-        string="Menu",
         ondelete="cascade",
     )
     event_id = fields.Many2one(
         "event.event",
-        string="Event",
         index="btree_not_null",
         ondelete="cascade",
     )
     view_id = fields.Many2one(
         "ir.ui.view",
-        string="View",
         ondelete="cascade",
         help="Used when not being an url based menu",
     )
@@ -33,7 +30,6 @@ class WebsiteEventMenu(models.Model):
             ("register", "Practical"),
             ("other", "Other"),
         ],
-        string="Menu Type",
         required=True,
     )
 

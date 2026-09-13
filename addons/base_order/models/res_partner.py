@@ -14,7 +14,6 @@ class ResPartner(models.Model):
         "configured on the company.",
     )
     days_since_last_order = fields.Integer(
-        string="Days Since Last Order",
         compute="_compute_days_since_last_order",
         help="Number of days since this partner's last order.",
     )

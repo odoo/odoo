@@ -11,6 +11,5 @@ class ResCompany(models.Model):
 
     nomenclature_id = fields.Many2one(
         "barcode.nomenclature",
-        string="Nomenclature",
         default=_default_nomenclature_id,
     )

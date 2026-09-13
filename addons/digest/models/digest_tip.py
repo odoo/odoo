@@ -10,11 +10,10 @@ class DigestTip(models.Model):
     _order = "sequence"
 
     sequence = fields.Integer(
-        "Sequence",
         default=1,
         help="Used to display digest tip in email template base on order",
     )
-    name = fields.Char("Name", translate=True)
+    name = fields.Char(translate=True)
     user_ids = fields.Many2many(
         "res.users", string="Recipients", help="Users having already received this tip"
     )

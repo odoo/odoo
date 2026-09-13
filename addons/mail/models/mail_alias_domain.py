@@ -37,7 +37,6 @@ class MailAliasDomain(models.Model):
     _order = "sequence ASC, id ASC"
 
     name = fields.Char(
-        "Name",
         required=True,
         help="Email domain e.g. 'example.com' in 'odoo@example.com'",
     )
@@ -49,21 +48,19 @@ class MailAliasDomain(models.Model):
     )
     sequence = fields.Integer(default=10)
     bounce_alias = fields.Char(
-        "Bounce Alias",
         default="bounce",
         required=True,
         help="Local-part of email used for Return-Path used when emails bounce e.g. "
         "'bounce' in 'bounce@example.com'",
     )
-    bounce_email = fields.Char("Bounce Email", compute="_compute_bounce_email")
+    bounce_email = fields.Char(compute="_compute_bounce_email")
     catchall_alias = fields.Char(
-        "Catchall Alias",
         default="catchall",
         required=True,
         help="Local-part of email used for Reply-To to catch answers e.g. "
         "'catchall' in 'catchall@example.com'",
     )
-    catchall_email = fields.Char("Catchall Email", compute="_compute_catchall_email")
+    catchall_email = fields.Char(compute="_compute_catchall_email")
     default_from = fields.Char(
         "Default From Alias",
         default="notifications",

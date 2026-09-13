@@ -13,7 +13,6 @@ class ResUsersSettings(models.Model):
 
     user_id = fields.Many2one(
         "res.users",
-        string="User",
         required=True,
         index=False,
         ondelete="cascade",

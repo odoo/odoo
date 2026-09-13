@@ -21,7 +21,6 @@ class SaleOrder(models.Model):
         export_string_translation=False,
     )
     timesheet_total_duration = fields.Integer(
-        "Timesheet Total Duration",
         compute="_compute_timesheet_total_duration",
         help="Total recorded duration, expressed in the encoding UoM, and rounded to the unit",
         compute_sudo=True,

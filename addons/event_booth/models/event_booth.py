@@ -9,7 +9,7 @@ class EventBooth(models.Model):
     # owner
     event_type_id = fields.Many2one(ondelete="set null", required=False)
     event_id = fields.Many2one(
-        "event.event", string="Event", ondelete="cascade", required=True, index=True
+        "event.event", ondelete="cascade", required=True, index=True
     )
     # customer
     partner_id = fields.Many2one(

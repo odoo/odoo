@@ -42,7 +42,6 @@ class ResPartner(models.Model):
         compute="_compute_is_peppol_edi_format"
     )  # TODO remove in master
     peppol_endpoint = fields.Char(
-        string="Peppol Endpoint",
         help="Unique identifier used by the BIS Billing 3.0 and its derivatives, also known as 'Endpoint ID'.",
         compute="_compute_peppol_endpoint",
         store=True,

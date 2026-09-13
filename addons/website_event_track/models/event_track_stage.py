@@ -7,15 +7,15 @@ class EventTrackStage(models.Model):
     _order = "sequence, id"
 
     name = fields.Char(string="Stage Name", required=True, translate=True)
-    sequence = fields.Integer(string="Sequence", default=1)
+    sequence = fields.Integer(default=1)
     mail_template_id = fields.Many2one(
         "mail.template",
         string="Email Template",
         domain=[("model", "=", "event.track")],
         help="If set an email will be sent to the customer when the track reaches this step.",
     )
-    color = fields.Integer(string="Color")
-    description = fields.Text(string="Description", translate=True)
+    color = fields.Integer()
+    description = fields.Text(translate=True)
     legend_blocked = fields.Char(
         "Red Kanban Label", default=lambda s: s.env._("Blocked"), translate=True
     )

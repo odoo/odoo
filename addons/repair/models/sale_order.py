@@ -9,7 +9,6 @@ class SaleOrder(models.Model):
     repair_order_ids = fields.One2many(
         comodel_name="repair.order",
         inverse_name="sale_order_id",
-        string="Repair Order",
         groups="stock.group_stock_user",
     )
     repair_count = fields.Count(

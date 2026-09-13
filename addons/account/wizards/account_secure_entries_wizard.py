@@ -33,7 +33,6 @@ class AccountSecureEntriesWizard(models.TransientModel):
         compute="_compute_data",
     )
     max_hash_date = fields.Date(
-        string="Max Hash Date",
         compute="_compute_max_hash_date",
         help="Highest Date such that all posted journal entries prior to (including) the date are secured. Only journal entries after the hard lock date are considered.",
     )

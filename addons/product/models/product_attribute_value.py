@@ -9,7 +9,6 @@ class ProductAttributeValue(models.Model):
 
     attribute_id = fields.Many2one(
         comodel_name="product.attribute",
-        string="Attribute",
         required=True,
         ondelete="cascade",
         index=True,
@@ -18,7 +17,6 @@ class ProductAttributeValue(models.Model):
     display_type = fields.Selection(related="attribute_id.display_type")
     name = fields.Char(string="Value")
     sequence = fields.Integer(
-        string="Sequence",
         index=True,
         help="Determine the display order",
     )
@@ -37,7 +35,6 @@ class ProductAttributeValue(models.Model):
 
     default_extra_price = fields.Float()
     image = fields.Image(
-        string="Image",
         max_width=70,
         max_height=70,
         help="You can upload an image that will be used as the color of the attribute value.",

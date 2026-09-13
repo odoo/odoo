@@ -10,7 +10,6 @@ class StockStorageCategory(models.Model):
 
     name = fields.Char(string="Storage Category", required=True)
     max_weight = fields.Float(
-        string="Max Weight",
         digits="Stock Weight",
         help="Maximum weight the locations of this storage category can hold. "
         "Leave 0 for no weight limit.",
@@ -43,7 +42,7 @@ class StockStorageCategory(models.Model):
         comodel_name="stock.location",
         inverse_name="storage_category_id",
     )
-    company_id = fields.Many2one(comodel_name="res.company", string="Company")
+    company_id = fields.Many2one(comodel_name="res.company")
     weight_uom_name = fields.Char(
         string="Weight unit", compute="_compute_weight_uom_name"
     )
@@ -103,7 +102,6 @@ class StockStorageCategoryCapacity(models.Model):
     )
     product_id = fields.Many2one(
         comodel_name="product.product",
-        string="Product",
         check_company=True,
         domain=(
             "[('product_tmpl_id', '=', context.get('active_id', False))] if context.get('active_model') == 'product.template' else"
@@ -115,12 +113,11 @@ class StockStorageCategoryCapacity(models.Model):
     )
     package_type_id = fields.Many2one(
         comodel_name="stock.package.type",
-        string="Package Type",
         check_company=True,
         ondelete="cascade",
         index="btree_not_null",
     )
-    quantity = fields.Float(string="Quantity", required=True)
+    quantity = fields.Float(required=True)
     product_uom_id = fields.Many2one(related="product_id.uom_id")
     company_id = fields.Many2one(
         related="storage_category_id.company_id",

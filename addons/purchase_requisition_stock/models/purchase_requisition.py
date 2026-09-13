@@ -18,7 +18,6 @@ class PurchaseRequisition(models.Model):
 
     warehouse_id = fields.Many2one(
         "stock.warehouse",
-        string="Warehouse",
         domain="[('company_id', '=', company_id)]",
     )
     picking_type_id = fields.Many2one(

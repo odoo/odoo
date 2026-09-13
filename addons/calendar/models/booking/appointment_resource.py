@@ -26,7 +26,6 @@ class AppointmentResource(models.Model):
         "Active", related="resource_id.active", default=True, store=True, readonly=False
     )
     sequence = fields.Integer(
-        "Sequence",
         default=1,
         required=True,
         help="""The sequence dictates if the resource is going to be picked in higher priority against another resource
@@ -61,7 +60,6 @@ class AppointmentResource(models.Model):
         readonly=False,
     )
     shareable = fields.Boolean(
-        "Shareable",
         help="""This allows to share the resource with multiple attendee for a same time slot (e.g. a bar counter)""",
     )
     source_resource_ids = fields.Many2many(
@@ -88,9 +86,7 @@ class AppointmentResource(models.Model):
         store=False,
         help="""List of resources that can be combined to handle a bigger demand.""",
     )
-    description = fields.Html(
-        "Description", translate=html_translate, sanitize_attributes=False
-    )
+    description = fields.Html(translate=html_translate, sanitize_attributes=False)
     appointment_type_ids = fields.Many2many(
         "appointment.type",
         string="Available in",

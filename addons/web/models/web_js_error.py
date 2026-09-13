@@ -12,7 +12,6 @@ class WebJsError(models.Model):
     _log_access = False
 
     recorded_at = fields.Datetime(
-        string="Recorded At",
         required=True,
         default=fields.Datetime.now,
         index=True,
@@ -20,7 +19,6 @@ class WebJsError(models.Model):
     )
     user_id = fields.Many2one(
         "res.users",
-        string="User",
         index="btree_not_null",
         ondelete="set null",
         readonly=True,
@@ -47,12 +45,10 @@ class WebJsError(models.Model):
             ("asset_load_error", "Bundle Asset Failed to Load"),
             ("module_rebind", "Module Rebind"),
         ],
-        string="Kind",
         readonly=True,
         index="btree",
     )
     message = fields.Char(
-        string="Message",
         required=True,
         size=4096,
         readonly=True,
@@ -67,12 +63,12 @@ class WebJsError(models.Model):
         "message says to read `cause`, and without it the report names a "
         "failure without saying why it happened.",
     )
-    stack = fields.Text(string="Stack", readonly=True)
+    stack = fields.Text(readonly=True)
     filename = fields.Char(string="File", size=500, readonly=True)
-    line = fields.Integer(string="Line", readonly=True)
+    line = fields.Integer(readonly=True)
     col = fields.Integer(string="Column", readonly=True)
     url = fields.Char(string="URL", size=500, readonly=True)
-    user_agent = fields.Char(string="User Agent", size=500, readonly=True)
+    user_agent = fields.Char(size=500, readonly=True)
     reloaded = fields.Selection(
         [("reloaded", "Reloaded"), ("suppressed", "Suppressed")],
         string="Self-heal",

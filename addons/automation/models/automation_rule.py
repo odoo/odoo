@@ -155,10 +155,9 @@ class AutomationRule(models.Model):
         default=True,
         help="When unchecked, the rule is hidden and will not be executed.",
     )
-    description = fields.Html(string="Description")
+    description = fields.Html()
     model_id = fields.Many2one(
         comodel_name="ir.model",
-        string="Model",
         domain=[("abstract", "=", False)],
         required=True,
         ondelete="cascade",
@@ -330,7 +329,6 @@ class AutomationRule(models.Model):
             ("on_webhook", "On webhook"),
             ("on_write", "On update"),
         ],
-        string="Trigger",
         required=True,
         compute="_compute_trigger",
         store=True,

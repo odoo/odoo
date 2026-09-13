@@ -22,7 +22,6 @@ class ResPartner(models.Model):
     )
     age_range_id = fields.Many2one(
         "res.partner.age.range",
-        string="Age Range",
         compute="_compute_age_range_id",
         store=True,
         index="btree_not_null",

@@ -45,7 +45,6 @@ class MrpBomLine(models.Model):
         compute="_compute_child_line_ids",
     )
     attachments_count = fields.Integer(
-        "Attachments Count",
         compute="_compute_attachments_count",
     )
     tracking = fields.Selection(related="product_id.tracking")

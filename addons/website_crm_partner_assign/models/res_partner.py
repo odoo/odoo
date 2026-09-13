@@ -34,7 +34,7 @@ class ResPartner(models.Model):
         related="grade_id.sequence", readonly=True, store=True
     )
     activation = fields.Many2one(
-        "res.partner.activation", "Activation", index="btree_not_null", tracking=True
+        "res.partner.activation", index="btree_not_null", tracking=True
     )
     date_partnership = fields.Date("Partnership Date")
     date_review = fields.Date("Latest Review")

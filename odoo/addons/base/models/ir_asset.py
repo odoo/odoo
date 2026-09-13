@@ -83,10 +83,9 @@ class IrAsset(models.Model):
     _order = "sequence, id"
     _allow_sudo_commands = False
 
-    name = fields.Char(string="Name", required=True)
+    name = fields.Char(required=True)
     active = fields.Boolean(default=True)
     sequence = fields.Integer(
-        string="Sequence",
         default=DEFAULT_SEQUENCE,
         required=True,
     )
@@ -96,7 +95,6 @@ class IrAsset(models.Model):
         index=True,
     )
     directive = fields.Selection(
-        string="Directive",
         selection=[
             (APPEND_DIRECTIVE, "Append"),
             (PREPEND_DIRECTIVE, "Prepend"),
@@ -110,7 +108,7 @@ class IrAsset(models.Model):
         required=True,
     )
     path = fields.Char(string="Path (or glob pattern)", required=True)
-    target = fields.Char(string="Target")
+    target = fields.Char()
 
     def _warn_bundle_name(self) -> None:
         for asset in self:

@@ -47,7 +47,6 @@ class AccountAccruedOrdersWizard(models.TransientModel):
         domain="[('type', '=', 'general')]",
         required=True,
         check_company=True,
-        string="Journal",
     )
     date = fields.Date(default=_default_date, required=True)
     reversal_date = fields.Date(
@@ -58,7 +57,6 @@ class AccountAccruedOrdersWizard(models.TransientModel):
         precompute=True,
     )
     amount = fields.Monetary(
-        string="Amount",
         help="Specify an arbitrary value that will be accrued on a \
         default account for the entire order, regardless of the products on the different lines.",
     )

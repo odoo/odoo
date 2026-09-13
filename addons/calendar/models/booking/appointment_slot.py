@@ -12,7 +12,7 @@ class AppointmentSlot(models.Model):
     _order = "weekday, start_hour, start_datetime, end_datetime"
 
     appointment_type_id = fields.Many2one(
-        "appointment.type", "Appointment Type", index=True, ondelete="cascade"
+        "appointment.type", index=True, ondelete="cascade"
     )
     schedule_based_on = fields.Selection(
         related="appointment_type_id.schedule_based_on"
@@ -82,7 +82,7 @@ class AppointmentSlot(models.Model):
     end_datetime = fields.Datetime(
         "To", help="End datetime for unique slot type management"
     )
-    duration = fields.Float("Duration", compute="_compute_duration")
+    duration = fields.Float(compute="_compute_duration")
 
     _check_start_and_end_hour = models.Constraint(
         """CHECK(

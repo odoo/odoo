@@ -88,9 +88,7 @@ class StockMove(models.Model):
         check_company=True,
         help="By-product line that generated the move in a manufacturing order",
     )
-    unit_factor = fields.Float(
-        "Unit Factor", compute="_compute_unit_factor", store=True
-    )
+    unit_factor = fields.Float(compute="_compute_unit_factor", store=True)
     order_finished_lot_ids = fields.Many2many(
         "stock.lot",
         string="Finished Lot/Serial Number",
@@ -117,7 +115,6 @@ class StockMove(models.Model):
         depends=["product_id"],
     )
     manual_consumption = fields.Boolean(
-        "Manual Consumption",
         compute="_compute_manual_consumption",
         store=True,
         readonly=False,

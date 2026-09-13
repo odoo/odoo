@@ -6,14 +6,14 @@ class LunchTopping(models.Model):
     _name = "lunch.topping"
     _description = "Lunch Extras"
 
-    name = fields.Char("Name", required=True)
+    name = fields.Char(required=True)
     company_id = fields.Many2one("res.company", default=lambda self: self.env.company)
     currency_id = fields.Many2one("res.currency", related="company_id.currency_id")
-    price = fields.Monetary("Price", required=True)
+    price = fields.Monetary(required=True)
     supplier_id = fields.Many2one(
         "lunch.supplier", ondelete="cascade", index="btree_not_null"
     )
-    topping_category = fields.Integer("Topping Category", required=True, default=1)
+    topping_category = fields.Integer(required=True, default=1)
 
     @api.depends("price")
     @api.depends_context("company")

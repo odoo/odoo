@@ -19,7 +19,6 @@ class PaymentProvider(models.Model):
         copy=False,
     )
     buckaroo_secret_key = fields.Char(
-        string="Buckaroo Secret Key",
         required_if_provider="buckaroo",
         copy=False,
         groups="base.group_system",

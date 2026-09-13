@@ -41,7 +41,6 @@ class StockQuant(models.Model):
 
     location_id = fields.Many2one(
         comodel_name="stock.location",
-        string="Location",
         required=True,
         bypass_search_access=True,
         domain=lambda self: self._domain_location_id(),
@@ -66,7 +65,6 @@ class StockQuant(models.Model):
     )
     product_id = fields.Many2one(
         comodel_name="product.product",
-        string="Product",
         required=True,
         check_company=True,
         domain=lambda self: self._domain_product_id(),
@@ -113,7 +111,6 @@ class StockQuant(models.Model):
     )
     package_id = fields.Many2one(
         comodel_name="stock.package",
-        string="Package",
         check_company=True,
         domain="['|', ('location_id', '=', location_id), '&', ('location_id', '=', False), ('quant_ids', '=', False)]",
         ondelete="restrict",
@@ -122,14 +119,12 @@ class StockQuant(models.Model):
     )
     owner_id = fields.Many2one(
         comodel_name="res.partner",
-        string="Owner",
         check_company=True,
         index="btree_not_null",
         help="This is the owner of the quant",
     )
     quantity = fields.Float(
         min_display_digits="Product Unit",
-        string="Quantity",
         required=True,
         default=0.0,
         readonly=True,
@@ -137,7 +132,6 @@ class StockQuant(models.Model):
     )
     reserved_quantity = fields.Float(
         min_display_digits="Product Unit",
-        string="Reserved Quantity",
         required=True,
         default=0.0,
         readonly=True,
@@ -145,7 +139,6 @@ class StockQuant(models.Model):
     )
     available_quantity = fields.Float(
         min_display_digits="Product Unit",
-        string="Available Quantity",
         compute="_compute_available_quantity",
         help="On hand quantity which hasn't been reserved on a transfer, in the default unit of measure of the product",
     )
@@ -156,7 +149,6 @@ class StockQuant(models.Model):
         readonly=True,
     )
     on_hand = fields.Boolean(
-        string="On Hand",
         store=False,
         search="_search_on_hand",
     )

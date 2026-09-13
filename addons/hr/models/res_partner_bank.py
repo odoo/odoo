@@ -17,7 +17,6 @@ class ResPartnerBank(models.Model):
     bank_phone_ids = fields.Many2many(related="bank_id.phone_ids", readonly=False)
     employee_id = fields.Many2one(
         "hr.employee",
-        string="Employee",
         compute="_compute_employee_id",
         search="_search_employee_id",
     )

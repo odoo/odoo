@@ -49,7 +49,6 @@ class AccountTaxGroup(models.Model):
         default=lambda self: self.env.company,
     )
     country_id = fields.Many2one(
-        string="Country",
         comodel_name="res.country",
         compute="_compute_country_id",
         store=True,
@@ -59,7 +58,6 @@ class AccountTaxGroup(models.Model):
     )
     country_code = fields.Char(related="country_id.code")
     preceding_subtotal = fields.Char(
-        string="Preceding Subtotal",
         help=(
             "If set, this value will be used on documents as the label of a "
             "subtotal excluding this tax group before displaying it. "
@@ -125,7 +123,6 @@ class AccountTax(models.Model):
     )
     tax_scope = fields.Selection(
         [("service", "Services"), ("consu", "Goods")],
-        string="Tax Scope",
     )
     amount_type = fields.Selection(
         default="percent",
@@ -174,7 +171,7 @@ class AccountTax(models.Model):
         help="The sequence field is used to define order in which the tax lines are applied.",
     )
     amount = fields.Float(required=True, digits=(16, 4), default=0.0, tracking=True)
-    description = fields.Html(string="Description", translate=html_translate)
+    description = fields.Html(translate=html_translate)
     invoice_label = fields.Char(string="Label on Invoices", translate=True)
     tax_label = fields.Char(compute="_compute_tax_label")
 
@@ -211,7 +208,6 @@ class AccountTax(models.Model):
 
     tax_group_id = fields.Many2one(
         comodel_name="account.tax.group",
-        string="Tax Group",
         compute="_compute_tax_group_id",
         readonly=False,
         store=True,
@@ -247,7 +243,6 @@ class AccountTax(models.Model):
     )
 
     country_id = fields.Many2one(
-        string="Country",
         comodel_name="res.country",
         compute="_compute_country_id",
         readonly=False,
@@ -4238,7 +4233,6 @@ class AccountTaxRepartitionLine(models.Model):
         help="The companies this distribution line belongs to.",
     )
     sequence = fields.Integer(
-        string="Sequence",
         default=1,
         help=(
             "The order in which distribution lines are displayed and matched. "

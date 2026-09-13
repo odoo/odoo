@@ -7,7 +7,6 @@ class StockMove(models.Model):
 
     sale_line_id = fields.Many2one(
         comodel_name="sale.order.line",
-        string="Sale Line",
         ondelete="set null",
         index="btree_not_null",
     )

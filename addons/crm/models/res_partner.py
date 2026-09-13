@@ -11,7 +11,6 @@ class ResPartner(models.Model):
         domain=[("type", "=", "opportunity")],
     )
     opportunity_count = fields.Integer(
-        string="Opportunity Count",
         groups="sales_team.group_sale_salesman",
         compute="_compute_opportunity_count",
     )

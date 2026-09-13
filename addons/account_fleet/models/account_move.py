@@ -36,9 +36,7 @@ class AccountMove(models.Model):
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
 
-    vehicle_id = fields.Many2one(
-        "fleet.vehicle", string="Vehicle", index="btree_not_null"
-    )
+    vehicle_id = fields.Many2one("fleet.vehicle", index="btree_not_null")
     # used to decide whether the vehicle_id field is editable
     need_vehicle = fields.Boolean(compute="_compute_need_vehicle")
     vehicle_log_service_ids = fields.One2many(

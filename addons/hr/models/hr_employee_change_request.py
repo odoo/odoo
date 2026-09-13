@@ -38,21 +38,20 @@ class HrEmployeeChangeRequest(models.Model):
         "res.users", default=lambda self: self.env.user, readonly=True
     )
 
-    private_street = fields.Char("Private Street")
-    private_street2 = fields.Char("Private Street2")
-    private_city = fields.Char("Private City")
-    private_state_id = fields.Many2one("res.country.state", string="Private State")
-    private_zip = fields.Char("Private Zip")
-    private_country_id = fields.Many2one("res.country", string="Private Country")
-    private_email = fields.Char("Private Email")
+    private_street = fields.Char()
+    private_street2 = fields.Char()
+    private_city = fields.Char()
+    private_state_id = fields.Many2one("res.country.state")
+    private_zip = fields.Char()
+    private_country_id = fields.Many2one("res.country")
+    private_email = fields.Char()
     private_phone_ids = fields.Many2many(
-        "phone.number", "hr_change_request_private_phone_rel", string="Private Phone"
+        "phone.number", "hr_change_request_private_phone_rel"
     )
-    emergency_contact = fields.Char("Emergency Contact")
+    emergency_contact = fields.Char()
     emergency_phone_ids = fields.Many2many(
         "phone.number",
         "hr_change_request_emergency_phone_rel",
-        string="Emergency Phone",
     )
 
     # A partial unique index would say this in SQL, but EXCLUDE needs

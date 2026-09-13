@@ -7,7 +7,7 @@ class ResPartner(models.Model):
     document_ids = fields.One2many(
         "document.document", "partner_id", string="Documents"
     )
-    document_count = fields.Integer("Document Count", compute="_compute_document_count")
+    document_count = fields.Integer(compute="_compute_document_count")
 
     def _compute_document_count(self) -> None:
         document_count_dict = dict(

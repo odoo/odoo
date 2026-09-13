@@ -4,14 +4,13 @@ from odoo import fields, models
 class EventBoothRegistration(models.Model):
     _inherit = "event.booth.registration"
 
-    sponsor_name = fields.Char(string="Sponsor Name")
-    sponsor_email = fields.Char(string="Sponsor Email")
+    sponsor_name = fields.Char()
+    sponsor_email = fields.Char()
     sponsor_phone_ids = fields.Many2many(
         "phone.number",
         "event_booth_registration_sponsor_phone_number_rel",
         "registration_id",
         "phone_number_id",
-        string="Sponsor Phone",
     )
     sponsor_subtitle = fields.Char(string="Sponsor Slogan")
     sponsor_website_description = fields.Html(

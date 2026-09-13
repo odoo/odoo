@@ -9,9 +9,8 @@ class AccountTaxUnit(models.Model):
     _name = "account.tax.unit"
     _description = "Tax Unit"
 
-    name = fields.Char(string="Name", required=True)
+    name = fields.Char(required=True)
     country_id = fields.Many2one(
-        string="Country",
         comodel_name="res.country",
         required=True,
         inverse="_inverse_vat_and_country_id",
@@ -30,7 +29,6 @@ class AccountTaxUnit(models.Model):
         help="Members of this unit",
     )
     main_company_id = fields.Many2one(
-        string="Main Company",
         comodel_name="res.company",
         required=True,
         help="Main company of this unit; the one actually reporting and paying the taxes.",

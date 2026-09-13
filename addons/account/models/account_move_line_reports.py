@@ -16,7 +16,6 @@ class AccountMoveLine(models.Model):
     )
 
     analytic_coverage = fields.Float(
-        string="Analytic Coverage",
         compute="_compute_analytic_coverage",
         groups="analytic.group_analytic_accounting",
     )

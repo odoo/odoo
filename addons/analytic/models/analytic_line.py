@@ -15,13 +15,11 @@ class AccountAnalyticLine(models.Model):
         required=True,
     )
     date = fields.Date(
-        "Date",
         required=True,
         index=True,
         default=fields.Date.context_today,
     )
     amount = fields.Monetary(
-        "Amount",
         required=True,
         default=0.0,
     )
@@ -35,18 +33,15 @@ class AccountAnalyticLine(models.Model):
     )
     partner_id = fields.Many2one(
         "res.partner",
-        string="Partner",
         check_company=True,
     )
     user_id = fields.Many2one(
         "res.users",
-        string="User",
         default=lambda self: self.env.context.get("user_id", self.env.user.id),
         index=True,
     )
     company_id = fields.Many2one(
         "res.company",
-        string="Company",
         required=True,
         readonly=True,
         default=lambda self: self.env.company,
@@ -69,7 +64,6 @@ class AccountAnalyticLine(models.Model):
         export_string_translation=False,
     )
     analytic_distribution = fields.Json(
-        "Analytic Distribution",
         compute="_compute_analytic_distribution",
         inverse="_inverse_analytic_distribution",
     )

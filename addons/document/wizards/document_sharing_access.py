@@ -13,7 +13,7 @@ class DocumentsShareAccess(models.TransientModel):
     partner_id = fields.Many2one("res.partner", ondelete="cascade")
 
     # Rights edition
-    role = fields.Selection("_get_role_options", string="Role", required=True)
+    role = fields.Selection("_get_role_options", required=True)
     expiration_date = fields.Datetime("Expiration")
     original_expiration_date = fields.Datetime("Original Expiration")
     is_deleted = fields.Boolean()

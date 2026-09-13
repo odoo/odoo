@@ -22,7 +22,7 @@ class HomeworkLocationWizard(models.TransientModel):
     )
     employee_name = fields.Char(related="employee_id.name")
     weekly = fields.Boolean(default=False)
-    date = fields.Date(string="Date")
+    date = fields.Date()
     day_week_string = fields.Char(compute="_compute_day_week_string")
 
     @api.depends("date")

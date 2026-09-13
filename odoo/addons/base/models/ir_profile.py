@@ -28,9 +28,9 @@ class IrProfile(models.Model):
 
     create_date = fields.Datetime("Creation Date")
 
-    session = fields.Char("Session", index=True)
+    session = fields.Char(index=True)
     name = fields.Char("Description")
-    duration = fields.Float("Duration", digits=(9, 3), help="Real elapsed time")
+    duration = fields.Float(digits=(9, 3), help="Real elapsed time")
     cpu_duration = fields.Float(
         "CPU Duration",
         digits=(9, 3),
@@ -39,15 +39,15 @@ class IrProfile(models.Model):
 
     init_stack_trace = fields.Text("Initial stack trace", prefetch=False)
 
-    sql = fields.Text("Sql", prefetch=False)
+    sql = fields.Text(prefetch=False)
     sql_count = fields.Integer("Queries Count")
-    traces_async = fields.Text("Traces Async", prefetch=False)
-    traces_sync = fields.Text("Traces Sync", prefetch=False)
+    traces_async = fields.Text(prefetch=False)
+    traces_sync = fields.Text(prefetch=False)
     others = fields.Text("others", prefetch=False)
-    qweb = fields.Text("Qweb", prefetch=False)
+    qweb = fields.Text(prefetch=False)
     entry_count = fields.Integer("Entry count")
 
-    speedscope = fields.Binary("Speedscope", compute="_compute_speedscope")
+    speedscope = fields.Binary(compute="_compute_speedscope")
     speedscope_url = fields.Text("Open", compute="_compute_speedscope_url")
 
     config_url = fields.Text("Open profiles config", compute="_compute_config_url")

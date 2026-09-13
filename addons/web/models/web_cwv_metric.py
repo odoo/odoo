@@ -12,7 +12,6 @@ class WebCwvMetric(models.Model):
     _log_access = False
 
     recorded_at = fields.Datetime(
-        string="Recorded At",
         required=True,
         default=fields.Datetime.now,
         index=True,
@@ -31,7 +30,6 @@ class WebCwvMetric(models.Model):
     )
     user_id = fields.Many2one(
         "res.users",
-        string="User",
         index="btree_not_null",
         ondelete="set null",
         readonly=True,
@@ -71,7 +69,6 @@ class WebCwvMetric(models.Model):
         "Lighthouse 'good' is < 0.1.",
     )
     user_agent = fields.Char(
-        string="User Agent",
         size=512,
         readonly=True,
         help="Truncated to 500 chars at the controller; the 512-char DB cap is "

@@ -25,14 +25,13 @@ class MailFollowersEdit(models.TransientModel):
             ("add", "Add"),
             ("remove", "Remove"),
         ],
-        string="Operation",
         required=True,
         default="add",
     )
     partner_ids: ResPartner = fields.Many2many(
         "res.partner", required=True, string="Followers"
     )
-    message = fields.Html("Message")
+    message = fields.Html()
     notify = fields.Boolean("Notify Recipients", default=False)
 
     def edit_followers(self) -> dict:

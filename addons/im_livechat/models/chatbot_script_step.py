@@ -15,9 +15,9 @@ class ChatbotScriptStep(models.Model):
     _description = "Chatbot Script Step"
     _order = "sequence, id"
 
-    name = fields.Char(string="Name", compute="_compute_name")
-    message = fields.Html(string="Message", translate=True)
-    sequence = fields.Integer(string="Sequence")
+    name = fields.Char(compute="_compute_name")
+    message = fields.Html(translate=True)
+    sequence = fields.Integer()
     chatbot_script_id = fields.Many2one(
         "chatbot.script",
         string="Chatbot",
@@ -57,7 +57,6 @@ class ChatbotScriptStep(models.Model):
     )
     operator_expertise_ids = fields.Many2many(
         "im_livechat.expertise",
-        string="Operator Expertise",
         help="When forwarding live chat conversations, the chatbot will prioritize users with matching expertise.",
     )
 

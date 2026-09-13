@@ -71,7 +71,7 @@ class ProductTemplateAttributeValue(models.Model):
     display_type = fields.Selection(
         related="product_attribute_value_id.display_type",
     )
-    color = fields.Integer(string="Color", default=lambda self: self._default_color())
+    color = fields.Integer(default=lambda self: self._default_color())
     image = fields.Image(related="product_attribute_value_id.image")
 
     _attribute_value_unique = models.Constraint(

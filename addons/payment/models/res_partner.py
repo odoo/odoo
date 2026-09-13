@@ -7,9 +7,7 @@ class ResPartner(models.Model):
     payment_token_ids = fields.One2many(
         string="Payment Tokens", comodel_name="payment.token", inverse_name="partner_id"
     )
-    payment_token_count = fields.Integer(
-        string="Payment Token Count", compute="_compute_payment_token_count"
-    )
+    payment_token_count = fields.Integer(compute="_compute_payment_token_count")
 
     @api.depends("payment_token_ids")
     def _compute_payment_token_count(self):

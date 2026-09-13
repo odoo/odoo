@@ -204,14 +204,12 @@ class HrEmployee(models.Model):
         compute_sudo=True,
     )
     newly_hired = fields.Boolean(
-        "Newly Hired",
         compute="_compute_newly_hired",
         search="_search_newly_hired",
         compute_sudo=True,
     )
 
     work_email = fields.Char(
-        "Work Email",
         compute="_compute_work_email",
         compute_sudo=True,
         inverse="_inverse_work_email",
@@ -321,7 +319,6 @@ class HrEmployee(models.Model):
         groups="hr.group_hr_user",
     )
     passport_expiration_date = fields.Date(
-        "Passport Expiration Date",
         compute="_compute_identifiers",
         inverse="_inverse_identifiers",
         compute_sudo=True,
@@ -340,7 +337,6 @@ class HrEmployee(models.Model):
 
     private_address_id = fields.Many2one(
         "res.partner",
-        string="Private Address",
         compute="_compute_private_address_id",
         store=True,
         groups="hr.group_hr_user",
@@ -441,7 +437,6 @@ class HrEmployee(models.Model):
         "hr_employee_emergency_phone_number_rel",
         "employee_id",
         "phone_number_id",
-        string="Emergency Phone",
         groups="hr.group_hr_user",
     )
 
@@ -470,7 +465,6 @@ class HrEmployee(models.Model):
         tracking=True,
     )
     work_location_name = fields.Char(
-        "Work Location Name",
         compute="_compute_work_location_name",
         compute_sudo=True,
     )
@@ -506,7 +500,6 @@ class HrEmployee(models.Model):
         groups="hr.group_hr_user",
     )
     salary_distribution = fields.Json(
-        string="Salary Distribution",
         compute="_compute_salary_distribution",
         store=True,
         readonly=False,
@@ -514,7 +507,6 @@ class HrEmployee(models.Model):
     )
 
     visa_no = fields.Char(
-        "Visa No",
         groups="hr.group_hr_user",
         tracking=True,
     )
@@ -529,7 +521,6 @@ class HrEmployee(models.Model):
         tracking=True,
     )
     work_permit_expiration_date = fields.Date(
-        "Work Permit Expiration Date",
         groups="hr.group_hr_user",
         tracking=True,
     )
@@ -566,7 +557,6 @@ class HrEmployee(models.Model):
     )
 
     driving_license = fields.Binary(
-        string="Driving License",
         groups="hr.group_hr_user",
     )
     private_car_plate = fields.Char(
@@ -588,7 +578,6 @@ class HrEmployee(models.Model):
     )
     coach_id = fields.Many2one(
         "hr.employee",
-        "Coach",
         compute="_compute_coach_id",
         store=True,
         readonly=False,

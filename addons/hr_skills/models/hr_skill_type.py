@@ -8,14 +8,14 @@ class HrSkillType(models.Model):
     _description = "Skill Type"
     _order = "sequence, name"
 
-    active = fields.Boolean("Active", default=True)
-    sequence = fields.Integer("Sequence")
+    active = fields.Boolean(default=True)
+    sequence = fields.Integer()
     name = fields.Char(required=True, translate=True)
     skill_ids = fields.One2many("hr.skill", "skill_type_id", string="Skills")
     skill_level_ids = fields.One2many(
         "hr.skill.level", "skill_type_id", string="Levels", copy=True
     )
-    color = fields.Integer("Color", default=lambda self: self._default_color())
+    color = fields.Integer(default=lambda self: self._default_color())
     levels_count = fields.Integer(
         compute="_compute_levels_count",
         store=True,

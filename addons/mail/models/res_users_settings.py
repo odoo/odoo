@@ -39,7 +39,6 @@ class ResUsersSettings(models.Model):
 
     channel_notifications = fields.Selection(
         [("all", "All Messages"), ("no_notif", "Nothing")],
-        "Channel Notifications",
         help="This setting will only be applied to channels. Mentions only if not specified.",
     )
 

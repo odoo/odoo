@@ -10,9 +10,9 @@ class L10n_In_EdiCancel(models.TransientModel):
 
     move_id = fields.Many2one("account.move", string="Invoice", required=True)
     cancel_reason = fields.Selection(
-        selection=list(EDI_CANCEL_REASON.items()), string="Cancel Reason", required=True
+        selection=list(EDI_CANCEL_REASON.items()), required=True
     )
-    cancel_remarks = fields.Char("Cancel Remarks", required=True)
+    cancel_remarks = fields.Char(required=True)
 
     def cancel_l10n_in_edi_move(self):
         self.move_id.write(

@@ -18,9 +18,7 @@ class AccountPaymentRegister(models.TransientModel):
     _description = "Pay"
     _check_company_auto = True
 
-    payment_date = fields.Date(
-        string="Payment Date", required=True, default=fields.Date.context_today
-    )
+    payment_date = fields.Date(required=True, default=fields.Date.context_today)
     amount = fields.Monetary(
         currency_field="currency_id",
         store=True,
@@ -43,7 +41,6 @@ class AccountPaymentRegister(models.TransientModel):
     )
     currency_id = fields.Many2one(
         comodel_name="res.currency",
-        string="Currency",
         compute="_compute_currency_id",
         store=True,
         readonly=False,
@@ -122,7 +119,6 @@ class AccountPaymentRegister(models.TransientModel):
             ("outbound", "Send Money"),
             ("inbound", "Receive Money"),
         ],
-        string="Payment Type",
         store=True,
         copy=False,
         compute="_compute_from_lines",
@@ -152,7 +148,6 @@ class AccountPaymentRegister(models.TransientModel):
     )
     source_currency_id = fields.Many2one(
         "res.currency",
-        string="Source Currency",
         store=True,
         copy=False,
         compute="_compute_from_lines",
@@ -197,7 +192,6 @@ class AccountPaymentRegister(models.TransientModel):
 
     payment_difference = fields.Monetary(compute="_compute_payment_difference")
     payment_difference_handling = fields.Selection(
-        string="Payment Difference Handling",
         selection=[("open", "Keep open"), ("reconcile", "Mark as fully paid")],
         compute="_compute_payment_difference_handling",
         store=True,

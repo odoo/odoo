@@ -20,7 +20,7 @@ class SaleOrderLine(models.Model):
         store=True,
     )
     has_displayed_warning_upsell = fields.Boolean(
-        "Has Displayed Warning Upsell", copy=False, export_string_translation=False
+        copy=False, export_string_translation=False
     )
     timesheet_ids = fields.One2many(
         "account.analytic.line",

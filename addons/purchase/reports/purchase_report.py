@@ -17,7 +17,6 @@ class PurchaseReport(models.Model):
     )
     currency_id = fields.Many2one(
         comodel_name="res.currency",
-        string="Currency",
         readonly=True,
     )
     partner_id = fields.Many2one(
@@ -37,7 +36,6 @@ class PurchaseReport(models.Model):
     )
     fiscal_position_id = fields.Many2one(
         comodel_name="account.fiscal.position",
-        string="Fiscal Position",
         readonly=True,
     )
     user_id = fields.Many2one(
@@ -56,7 +54,6 @@ class PurchaseReport(models.Model):
     )
     product_id = fields.Many2one(
         comodel_name="product.product",
-        string="Product",
         readonly=True,
     )
     product_tmpl_id = fields.Many2one(

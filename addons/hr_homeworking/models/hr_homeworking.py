@@ -29,7 +29,7 @@ class HrEmployeeLocation(models.Model):
         ondelete="cascade",
     )
     employee_name = fields.Char(related="employee_id.name")
-    date = fields.Date(string="Date")
+    date = fields.Date()
     day_week_string = fields.Char(compute="_compute_day_week_string")
 
     _uniq_exceptional_per_day = models.UniqueIndex(

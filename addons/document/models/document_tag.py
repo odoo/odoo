@@ -8,9 +8,8 @@ class DocumentsTag(models.Model):
     _inherit = ["mixin.tag"]
     _order = "sequence, name"
 
-    sequence = fields.Integer("Sequence", default=10)
+    sequence = fields.Integer(default=10)
     tooltip = fields.Char(
-        string="Tooltip",
         help="Text shown when hovering on this tag",
     )
     document_ids = fields.Many2many("document.document", "document_tag_rel")

@@ -28,7 +28,6 @@ class GamificationGoal(models.Model):
     )
     user_id = fields.Many2one(
         "res.users",
-        string="User",
         required=True,
         bypass_search_access=True,
         index=True,
@@ -46,12 +45,12 @@ class GamificationGoal(models.Model):
         help="Challenge that generated the goal, assign challenge to users "
         "to generate goals with a value in this field.",
     )
-    start_date = fields.Date("Start Date", default=fields.Date.today)
-    end_date = fields.Date("End Date")  # no start and end = always active
+    start_date = fields.Date(default=fields.Date.today)
+    end_date = fields.Date()  # no start and end = always active
     target_goal = fields.Float("To Reach", required=True)
     # no goal = global index
     current = fields.Float("Current Value", required=True, default=0)
-    completeness = fields.Float("Completeness", compute="_compute_completeness")
+    completeness = fields.Float(compute="_compute_completeness")
     state = fields.Selection(
         [
             ("draft", "Draft"),
@@ -61,7 +60,6 @@ class GamificationGoal(models.Model):
             ("canceled", "Cancelled"),
         ],
         default="draft",
-        string="State",
         required=True,
         index=True,
     )
@@ -77,7 +75,6 @@ class GamificationGoal(models.Model):
         "Never reminded if no value is specified.",
     )
     last_update = fields.Date(
-        "Last Update",
         help="In case of manual goal, reminders are sent if the goal as not "
         "been updated for a while (defined in challenge). Ignored in "
         "case of non-manual goal or goal not linked to a challenge.",

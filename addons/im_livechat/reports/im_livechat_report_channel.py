@@ -10,7 +10,7 @@ class Im_LivechatReportChannel(models.Model):
 
     uuid = fields.Char("UUID", readonly=True)
     channel_id = fields.Many2one("discuss.channel", "Conversation", readonly=True)
-    channel_name = fields.Char("Channel Name", readonly=True)
+    channel_name = fields.Char(readonly=True)
     livechat_channel_id = fields.Many2one(
         "im_livechat.channel", "Channel", readonly=True
     )
@@ -60,7 +60,7 @@ class Im_LivechatReportChannel(models.Model):
         string="Language",
         readonly=True,
     )
-    rating = fields.Integer("Rating", aggregator="avg", readonly=True)
+    rating = fields.Integer(aggregator="avg", readonly=True)
     rating_text = fields.Char("Satisfaction Rate", readonly=True)
     partner_id = fields.Many2one("res.partner", "Agent", readonly=True)
     handled_by_bot = fields.Integer("Handled by Bot", readonly=True, aggregator="sum")
@@ -87,7 +87,6 @@ class Im_LivechatReportChannel(models.Model):
             ("no_failure", "Success"),
             ("escalated", "Escalated"),
         ],
-        string="Session Outcome",
         readonly=True,
     )
     chatbot_script_id = fields.Many2one("chatbot.script", "Chatbot", readonly=True)

@@ -18,7 +18,6 @@ class StockLot(models.Model):
         currency_field="company_currency_id",
     )
     total_value = fields.Monetary(
-        string="Total Value",
         compute="_compute_value",
         compute_sudo=True,
         currency_field="company_currency_id",

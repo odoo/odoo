@@ -14,7 +14,6 @@ class MixinBomComponent(models.AbstractModel):
 
     product_id = fields.Many2one(
         "product.product",
-        "Product",
         required=True,
         check_company=True,
         index=True,
@@ -41,7 +40,6 @@ class MixinBomComponent(models.AbstractModel):
         precompute=True,
     )
     sequence = fields.Integer(
-        "Sequence",
         help="Gives the sequence order when displaying.",
     )
     allowed_operation_ids = fields.One2many(
@@ -50,7 +48,6 @@ class MixinBomComponent(models.AbstractModel):
     )
     operation_id = fields.Many2one(
         "mrp.routing.workcenter",
-        "Operation",
         check_company=True,
         domain="[('id', 'in', allowed_operation_ids)]",
     )

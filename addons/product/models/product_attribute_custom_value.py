@@ -6,14 +6,14 @@ class ProductAttributeCustomValue(models.Model):
     _description = "Product Attribute Custom Value"
     _order = "custom_product_template_attribute_value_id, id"
 
-    name = fields.Char(string="Name", compute="_compute_name")
+    name = fields.Char(compute="_compute_name")
     custom_product_template_attribute_value_id = fields.Many2one(
         comodel_name="product.template.attribute.value",
         string="Attribute Value",
         required=True,
         ondelete="restrict",
     )
-    custom_value = fields.Char(string="Custom Value")
+    custom_value = fields.Char()
 
     @api.depends("custom_product_template_attribute_value_id.name", "custom_value")
     def _compute_name(self):

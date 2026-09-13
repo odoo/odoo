@@ -88,7 +88,6 @@ class PosOrder(models.Model):
     )
     previous_order_id = fields.Many2one(
         "pos.order",
-        string="Previous Order",
         readonly=True,
         compute="_compute_previous_order_id",
         store=True,

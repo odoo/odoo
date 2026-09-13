@@ -35,7 +35,6 @@ class GamificationActivity(models.Model):
     )
     user_id = fields.Many2one(
         "res.users",
-        string="User",
         required=True,
         index=True,
         ondelete="cascade",
@@ -43,7 +42,6 @@ class GamificationActivity(models.Model):
     )
     target_user_id = fields.Many2one(
         "res.users",
-        string="Target User",
         index=True,
         ondelete="set null",
         readonly=True,
@@ -56,7 +54,7 @@ class GamificationActivity(models.Model):
         store=True,
         index=True,
     )
-    summary = fields.Char("Summary", required=True, readonly=True)
+    summary = fields.Char(required=True, readonly=True)
     icon = fields.Char("Icon CSS", readonly=True)
     activity_date = fields.Datetime(
         "Date",
@@ -73,7 +71,7 @@ class GamificationActivity(models.Model):
     challenge_id = fields.Many2one(
         "gamification.challenge", ondelete="set null", readonly=True
     )
-    karma_gained = fields.Integer("Karma Gained", readonly=True)
+    karma_gained = fields.Integer(readonly=True)
 
     # ── Factory methods (called by source models) ───────────────────
     #

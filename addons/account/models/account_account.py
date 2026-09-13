@@ -48,19 +48,16 @@ class AccountAccount(models.Model):
         search="_search_used",
     )
     opening_debit = fields.Monetary(
-        string="Opening Debit",
         compute="_compute_opening_debit_credit",
         inverse="_inverse_opening_debit",
         currency_field="company_currency_id",
     )
     opening_credit = fields.Monetary(
-        string="Opening Credit",
         compute="_compute_opening_debit_credit",
         inverse="_inverse_opening_credit",
         currency_field="company_currency_id",
     )
     opening_balance = fields.Monetary(
-        string="Opening Balance",
         compute="_compute_opening_debit_credit",
         inverse="_inverse_opening_balance",
         currency_field="company_currency_id",

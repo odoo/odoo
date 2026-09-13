@@ -14,7 +14,6 @@ class ReportPosOrder(models.Model):
 
     order_id = fields.Many2one(
         comodel_name="pos.order",
-        string="Order",
         readonly=True,
     )
     partner_id = fields.Many2one(
@@ -24,7 +23,6 @@ class ReportPosOrder(models.Model):
     )
     product_id = fields.Many2one(
         comodel_name="product.product",
-        string="Product",
         readonly=True,
     )
     product_tmpl_id = fields.Many2one(
@@ -49,12 +47,10 @@ class ReportPosOrder(models.Model):
     )
     user_id = fields.Many2one(
         comodel_name="res.users",
-        string="User",
         readonly=True,
     )
     journal_id = fields.Many2one(
         comodel_name="account.journal",
-        string="Journal",
         readonly=True,
     )
     config_id = fields.Many2one(
@@ -64,17 +60,14 @@ class ReportPosOrder(models.Model):
     )
     session_id = fields.Many2one(
         comodel_name="pos.session",
-        string="Session",
         readonly=True,
     )
     pricelist_id = fields.Many2one(
         comodel_name="product.pricelist",
-        string="Pricelist",
         readonly=True,
     )
     payment_method_id = fields.Many2one(
         comodel_name="pos.payment.method",
-        string="Payment Method",
         readonly=True,
     )
     product_uom_qty = fields.Float(
@@ -91,15 +84,12 @@ class ReportPosOrder(models.Model):
         readonly=True,
     )
     discount_amount = fields.Monetary(
-        string="Discount Amount",
         readonly=True,
     )
     margin = fields.Monetary(
-        string="Margin",
         readonly=True,
     )
     delay_validation = fields.Integer(
-        string="Delay Validation",
         readonly=True,
     )
     invoiced = fields.Boolean(readonly=True)

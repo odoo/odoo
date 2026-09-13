@@ -15,7 +15,6 @@ class ProductMargin(models.TransientModel):
             ("open_paid", "Open and Paid"),
             ("draft_open_paid", "Draft, Open and Paid"),
         ],
-        "Invoice State",
         required=True,
         default="open_paid",
     )

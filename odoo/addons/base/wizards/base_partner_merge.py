@@ -23,7 +23,7 @@ class BasePartnerMergeLine(models.TransientModel):
     _description = "Merge Partner Line"
     _order = "min_id asc"
 
-    wizard_id = fields.Many2one("base.partner.merge.automatic.wizard", "Wizard")
+    wizard_id = fields.Many2one("base.partner.merge.automatic.wizard")
     min_id = fields.Integer("MinID")
     aggr_ids = fields.Char("Ids", required=True)
 
@@ -66,12 +66,11 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
         ],
         readonly=True,
         required=True,
-        string="State",
         default="option",
     )
 
     number_group = fields.Integer("Group of Contacts", readonly=True)
-    current_line_id = fields.Many2one("base.partner.merge.line", string="Current Line")
+    current_line_id = fields.Many2one("base.partner.merge.line")
     line_ids = fields.One2many("base.partner.merge.line", "wizard_id", string="Lines")
     partner_ids = fields.Many2many(
         "res.partner", string="Contacts", context={"active_test": False}
@@ -82,7 +81,6 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
     exclude_journal_item = fields.Boolean("Journal Items associated to the contact")
     maximum_group = fields.Integer("Maximum of Group of Contacts")
     absorb_source_values = fields.Boolean(
-        "Absorb Source Values",
         default=True,
         help="Fill the destination's empty fields from the contacts merged into "
         "it. Turn it off to keep the destination's own identity, which is what a "

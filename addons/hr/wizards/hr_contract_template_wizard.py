@@ -9,7 +9,6 @@ class HrContractTemplateWizard(models.TransientModel):
 
     contract_template_id = fields.Many2one(
         "hr.version",
-        string="Contract Template",
         groups="hr.group_hr_user",
         required=True,
         domain=lambda self: [

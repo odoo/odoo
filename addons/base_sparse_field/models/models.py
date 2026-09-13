@@ -21,7 +21,6 @@ class IrModelFields(models.Model):
     # registry build and made this module impossible to install.
     serialization_field_id = fields.Many2one(
         "ir.model.fields",
-        string="Serialization Field",
         ondelete="cascade",
         domain="[('ttype','=','serialized'), ('model_id', '=', model_id)]",
         help="If set, this field will be stored in the sparse structure of the "

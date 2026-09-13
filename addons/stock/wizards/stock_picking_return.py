@@ -11,12 +11,10 @@ class StockReturnPickingLine(models.TransientModel):
 
     product_id = fields.Many2one(
         comodel_name="product.product",
-        string="Product",
         required=True,
     )
     move_quantity = fields.Float(related="move_id.quantity", string="Move Quantity")
     quantity = fields.Float(
-        string="Quantity",
         digits="Product Unit",
         required=True,
         default=1,
@@ -26,8 +24,8 @@ class StockReturnPickingLine(models.TransientModel):
         string="Unit",
         compute="_compute_uom_id",
     )
-    wizard_id = fields.Many2one(comodel_name="stock.return.picking", string="Wizard")
-    move_id = fields.Many2one(comodel_name="stock.move", string="Move")
+    wizard_id = fields.Many2one(comodel_name="stock.return.picking")
+    move_id = fields.Many2one(comodel_name="stock.move")
 
     @api.depends("move_id.product_uom_id", "product_id.uom_id")
     def _compute_uom_id(self):

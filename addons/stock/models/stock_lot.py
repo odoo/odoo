@@ -34,7 +34,6 @@ class StockLot(models.Model):
     )
     product_id = fields.Many2one(
         comodel_name="product.product",
-        string="Product",
         required=True,
         check_company=True,
         domain=(
@@ -51,7 +50,6 @@ class StockLot(models.Model):
     )
     company_id = fields.Many2one(
         comodel_name="res.company",
-        string="Company",
         compute="_compute_company_id",
         store=True,
         readonly=False,
@@ -91,7 +89,6 @@ class StockLot(models.Model):
     )
     location_id = fields.Many2one(
         comodel_name="stock.location",
-        string="Location",
         compute="_compute_location_id",
         store=True,
         readonly=False,

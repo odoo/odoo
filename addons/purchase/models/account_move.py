@@ -32,7 +32,6 @@ class AccountMove(models.Model):
         help="Auto-complete from a past purchase order.",
     )
     purchase_order_count = fields.Integer(
-        string="Purchase Order Count",
         compute="_compute_purchase_order_count",
     )
     purchase_order_name = fields.Char(

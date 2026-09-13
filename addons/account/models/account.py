@@ -75,11 +75,10 @@ class AccountAccount(models.Model):
     )
 
     account_status = fields.One2many(
-        string="Account Status",
         comodel_name="account.audit.account.status",
         inverse_name="account_id",
     )
-    last_message = fields.Char(string="Last Message", compute="_compute_last_message")
+    last_message = fields.Char(compute="_compute_last_message")
 
     def _get_domain_audit_field(
         self, field_name: str, operator: str, value, previous=False

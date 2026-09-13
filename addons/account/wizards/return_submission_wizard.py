@@ -10,7 +10,7 @@ class AccountReturnSubmissionWizard(models.TransientModel):
     _name = "account.return.submission.wizard"
     _description = "Return submission wizard"
 
-    instructions = fields.Html(string="Instructions")
+    instructions = fields.Html()
     return_id = fields.Many2one(comodel_name="account.return", required=True)
 
     @_debug.perf.timed

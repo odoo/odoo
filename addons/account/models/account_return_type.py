@@ -37,7 +37,7 @@ class AccountReturnType(models.Model):
     _inherit = ["mixin.mail.thread"]
     _description = "Accounting Return Type"
 
-    name = fields.Char(string="Name", required=True, translate=True, tracking=True)
+    name = fields.Char(required=True, translate=True, tracking=True)
     category = fields.Selection(
         string="Type",
         selection=[
@@ -49,7 +49,7 @@ class AccountReturnType(models.Model):
         tracking=True,
     )
     report_id = fields.Many2one(
-        string="Report", comodel_name="account.report", index="btree", tracking=True
+        comodel_name="account.report", index="btree", tracking=True
     )
     is_tax_return_type = fields.Boolean(
         string="Is a Tax Return Return Type", compute="_compute_report_return_type"
@@ -67,14 +67,13 @@ class AccountReturnType(models.Model):
     )
     country_id = fields.Many2one(
         comodel_name="res.country",
-        string="Country",
         tracking=True,
         store=True,
         compute="_compute_country_id",
         readonly=False,
     )
     payment_partner_bank_id = fields.Many2one(
-        comodel_name="res.partner.bank", string="Payment Partner Bank", tracking=True
+        comodel_name="res.partner.bank", tracking=True
     )
     payment_partner_id = fields.Many2one(
         comodel_name="res.partner",

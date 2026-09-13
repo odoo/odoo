@@ -38,17 +38,14 @@ class ProductTemplate(models.Model):
 
     company_id = fields.Many2one(
         comodel_name="res.company",
-        string="Company",
         index=True,
     )
     currency_id = fields.Many2one(
         comodel_name="res.currency",
-        string="Currency",
         compute="_compute_currency_id",
     )
     cost_currency_id = fields.Many2one(
         comodel_name="res.currency",
-        string="Cost Currency",
         compute="_compute_cost_currency_id",
     )
     categ_id = fields.Many2one(
@@ -61,18 +58,15 @@ class ProductTemplate(models.Model):
     )
 
     name = fields.Char(
-        string="Name",
         required=True,
         translate=True,
         index="trigram",
     )
     active = fields.Boolean(
-        string="Active",
         default=True,
         help="If unchecked, it will allow you to hide the product without removing it.",
     )
     sequence = fields.Integer(
-        string="Sequence",
         default=1,
         help="Gives the sequence order when displaying a product list",
     )
@@ -105,7 +99,7 @@ class ProductTemplate(models.Model):
         readonly=False,
     )
 
-    description = fields.Html(string="Description", translate=True)
+    description = fields.Html(translate=True)
     description_purchase = fields.Text(string="Purchase Description", translate=True)
     description_sale = fields.Text(
         string="Sales Description",
@@ -174,7 +168,6 @@ class ProductTemplate(models.Model):
     )
 
     volume = fields.Float(
-        string="Volume",
         digits="Volume",
         compute="_compute_volume",
         store=True,
@@ -185,7 +178,6 @@ class ProductTemplate(models.Model):
         compute="_compute_volume_uom_name",
     )
     weight = fields.Float(
-        string="Weight",
         digits="Stock Weight",
         compute="_compute_weight",
         store=True,
@@ -234,7 +226,6 @@ class ProductTemplate(models.Model):
     )
 
     barcode = fields.Char(
-        string="Barcode",
         compute="_compute_barcode",
         inverse="_inverse_barcode",
         search="_search_barcode",
@@ -302,7 +293,6 @@ class ProductTemplate(models.Model):
         readonly=False,
     )
     is_dynamically_created = fields.Boolean(
-        string="Is Dynamically Created",
         compute="_compute_is_dynamically_created",
     )
 

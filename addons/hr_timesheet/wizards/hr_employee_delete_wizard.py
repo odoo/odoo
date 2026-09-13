@@ -12,12 +12,10 @@ class HrEmployeeDeleteWizard(models.TransientModel):
         export_string_translation=False,
     )
     has_active_employee = fields.Boolean(
-        string="Has Active Employee",
         compute="_compute_has_active_employee",
         export_string_translation=False,
     )
     has_timesheet = fields.Boolean(
-        string="Has Timesheet",
         compute="_compute_has_timesheet",
         compute_sudo=True,
         export_string_translation=False,

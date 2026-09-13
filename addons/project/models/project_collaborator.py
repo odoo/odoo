@@ -31,9 +31,7 @@ class ProjectCollaborator(models.Model):
     partner_email = fields.Char(
         related="partner_id.email", export_string_translation=False
     )
-    limited_access = fields.Boolean(
-        "Limited Access", default=False, export_string_translation=False
-    )
+    limited_access = fields.Boolean(default=False, export_string_translation=False)
 
     _unique_collaborator = models.Constraint(
         "UNIQUE(project_id, partner_id)",

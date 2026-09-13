@@ -86,7 +86,7 @@ class AppointmentType(models.Model):
         return "discuss"
 
     # Global Settings
-    sequence = fields.Integer("Sequence", default=10)
+    sequence = fields.Integer(default=10)
     name = fields.Char("Appointment Title", required=True, translate=True)
     active = fields.Boolean(default=True)
 
@@ -106,7 +106,6 @@ class AppointmentType(models.Model):
         help="Timezone where appointment take place",
     )
     auto_confirm = fields.Boolean(
-        "Auto Confirm",
         default=True,
         help="""Automatically confirm appointments at creation, up to the given percentage of the total capacity reserved.
             If unchecked, the appointments will be created as requests and will need manual confirmation.
@@ -116,7 +115,7 @@ class AppointmentType(models.Model):
     # e.g. 1.0 manual_confirmation_percentage and auto_confirm True
     is_always_confirm = fields.Boolean(compute="_compute_is_always_confirm")
     image_1920 = fields.Image("Background Image")  # mixin.image override
-    location_id = fields.Many2one("res.partner", string="Location")
+    location_id = fields.Many2one("res.partner")
     location = fields.Char(
         "Location formatted",
         compute="_compute_location",
@@ -149,8 +148,8 @@ class AppointmentType(models.Model):
             This field is only used if the appointment type is not set to manage capacity.""",
     )
     # 'punctual' types are time-bound
-    start_datetime = fields.Datetime("Start Datetime")
-    end_datetime = fields.Datetime("End Datetime")
+    start_datetime = fields.Datetime()
+    end_datetime = fields.Datetime()
     # mail templates
     booked_mail_template_id = fields.Many2one(
         "mail.template",
@@ -194,7 +193,6 @@ class AppointmentType(models.Model):
             ("custom", "Flexible Schedule"),
             ("anytime", "Calendar Link"),
         ],
-        string="Category",
         compute="_compute_category_id",
         inverse="_inverse_category",
         store="True",
@@ -241,7 +239,7 @@ class AppointmentType(models.Model):
     )
 
     # Display Settings
-    hide_duration = fields.Boolean("Hide Duration")
+    hide_duration = fields.Boolean()
     hide_timezone = fields.Boolean("Hide Time Zone")
     show_avatars = fields.Boolean(
         "Display pictures",
@@ -306,7 +304,6 @@ class AppointmentType(models.Model):
     )
     staff_user_count = fields.Count("staff_user_ids", "# Staff Users")
     user_capacity = fields.Integer(
-        "User Capacity",
         default=1,
         help="The maximum amount of capacity a user can handle when manage capacity is enabled.",
     )
@@ -349,7 +346,7 @@ class AppointmentType(models.Model):
     # Onboarding connectors display (see o_appointment_cal_sync_alert)
     connectors_displayed = fields.Boolean(compute="_compute_connectors_displayed")
     # Technical field for backward compatibility with previous default published appointment type
-    is_published = fields.Boolean("Is Published")
+    is_published = fields.Boolean()
 
     _check_manual_confirmation_percentage = models.Constraint(
         "check(manual_confirmation_percentage >= 0 and manual_confirmation_percentage <= 1)",

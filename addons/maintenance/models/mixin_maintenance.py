@@ -8,9 +8,7 @@ class MixinMaintenance(models.AbstractModel):
     _check_company_auto = True
     _description = "Maintenance Maintained Item"
 
-    company_id = fields.Many2one(
-        "res.company", string="Company", default=lambda self: self.env.company
-    )
+    company_id = fields.Many2one("res.company", default=lambda self: self.env.company)
     date_effective = fields.Date(
         "Effective Date",
         default=fields.Date.context_today,
@@ -19,7 +17,6 @@ class MixinMaintenance(models.AbstractModel):
     )
     maintenance_team_id = fields.Many2one(
         "maintenance.team",
-        string="Maintenance Team",
         compute="_compute_maintenance_team_id",
         store=True,
         readonly=False,
@@ -34,7 +31,6 @@ class MixinMaintenance(models.AbstractModel):
     )  # needs to be extended in order to specify inverse_name !
     maintenance_count = fields.Count(
         "maintenance_ids",
-        string="Maintenance Count",
         store=True,
     )
     maintenance_open_count = fields.Integer(
@@ -60,9 +56,7 @@ class MixinMaintenance(models.AbstractModel):
         string="Estimated time before next failure (in days)",
         help="Computed as Latest Failure Date + MTBF",
     )
-    latest_failure_date = fields.Date(
-        compute="_compute_maintenance_request", string="Latest Failure Date"
-    )
+    latest_failure_date = fields.Date(compute="_compute_maintenance_request")
 
     @api.depends("company_id")
     def _compute_maintenance_team_id(self):

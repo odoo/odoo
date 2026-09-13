@@ -14,7 +14,6 @@ class ApplicantSendMail(models.TransientModel):
     )
     author_id = fields.Many2one(
         "res.partner",
-        "Author",
         required=True,
         default=lambda self: self.env.user.partner_id.id,
     )

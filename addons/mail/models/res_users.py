@@ -73,13 +73,11 @@ class ResUsers(models.Model):
 
     outgoing_mail_server_id: IrMail_Server = fields.Many2one(
         "ir.mail_server",
-        "Outgoing Mail Server",
         compute="_compute_outgoing_mail_server",
         groups="base.group_user",
     )
     outgoing_mail_server_type = fields.Selection(
         [("default", "Default")],
-        "Outgoing Mail Server Type",
         compute="_compute_outgoing_mail_server",
         required=True,
         default="default",

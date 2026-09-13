@@ -8,7 +8,7 @@ class SurveyCategory(models.Model):
     _order = "sequence, name"
 
     name = fields.Char("Category Name")
-    sequence = fields.Integer("Sequence", default=10)
+    sequence = fields.Integer(default=10)
     survey_count = fields.Integer(
         "Surveys",
         compute="_compute_survey_count",

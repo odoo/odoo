@@ -9,15 +9,12 @@ class PaymentToken(models.Model):
     _check_company_auto = True
     _rec_names_search = ["payment_details", "partner_id", "provider_id"]
 
-    provider_id = fields.Many2one(
-        string="Provider", comodel_name="payment.provider", required=True
-    )
+    provider_id = fields.Many2one(comodel_name="payment.provider", required=True)
     provider_code = fields.Selection(string="Provider Code", related="provider_id.code")
     company_id = fields.Many2one(
         related="provider_id.company_id", store=True, index=True
     )  # Indexed to speed-up ORM searches (from ir_rule or others).
     payment_method_id = fields.Many2one(
-        string="Payment Method",
         comodel_name="payment.method",
         readonly=True,
         required=True,
@@ -26,12 +23,9 @@ class PaymentToken(models.Model):
         string="Payment Method Code", related="payment_method_id.code"
     )
     payment_details = fields.Char(
-        string="Payment Details",
         help="The clear part of the payment method's payment details.",
     )
-    partner_id = fields.Many2one(
-        string="Partner", comodel_name="res.partner", required=True, index=True
-    )
+    partner_id = fields.Many2one(comodel_name="res.partner", required=True, index=True)
     provider_ref = fields.Char(
         string="Provider Reference",
         help="The provider reference of the token of the transaction.",
@@ -42,7 +36,7 @@ class PaymentToken(models.Model):
         comodel_name="payment.transaction",
         inverse_name="token_id",
     )
-    active = fields.Boolean(string="Active", default=True)
+    active = fields.Boolean(default=True)
 
     # === COMPUTE METHODS === #
 

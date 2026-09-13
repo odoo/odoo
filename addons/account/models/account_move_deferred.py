@@ -37,7 +37,6 @@ class AccountMove(models.Model):
         copy=False,
     )
     deferred_entry_type = fields.Selection(
-        string="Deferred Entry Type",
         selection=[
             ("expense", "Deferred Expense"),
             ("revenue", "Deferred Revenue"),

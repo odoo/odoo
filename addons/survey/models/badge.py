@@ -9,7 +9,6 @@ class GamificationBadge(models.Model):
     )
     survey_id = fields.Many2one(
         "survey.survey",
-        "Survey",
         compute="_compute_survey_id",
         store=True,
     )

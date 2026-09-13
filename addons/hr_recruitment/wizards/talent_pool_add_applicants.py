@@ -14,7 +14,7 @@ class TalentPoolAddApplicants(models.TransientModel):
             ("is_applicant_in_pool", "=", False),
         ],
     )
-    talent_pool_ids = fields.Many2many("hr.talent.pool", string="Talent Pool")
+    talent_pool_ids = fields.Many2many("hr.talent.pool")
     categ_ids = fields.Many2many(
         "hr.applicant.category",
         string="Tags",

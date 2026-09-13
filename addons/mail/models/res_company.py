@@ -16,7 +16,6 @@ class ResCompany(models.Model):
         default=lambda self: self._default_alias_domain_id(),
     )
     bounce_email = fields.Char(
-        string="Bounce Email",
         compute="_compute_bounce",
     )
     bounce_formatted = fields.Char(
@@ -24,7 +23,6 @@ class ResCompany(models.Model):
         compute="_compute_bounce",
     )
     catchall_email = fields.Char(
-        string="Catchall Email",
         compute="_compute_catchall",
     )
     catchall_formatted = fields.Char(

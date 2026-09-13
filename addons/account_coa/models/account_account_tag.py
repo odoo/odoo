@@ -21,7 +21,6 @@ class AccountAccountTag(models.Model):
         default="accounts",
     )
     country_id = fields.Many2one(
-        string="Country",
         comodel_name="res.country",
         help="Country for which this tag is available, when applied on taxes.",
     )

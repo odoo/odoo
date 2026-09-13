@@ -12,9 +12,7 @@ class AccountFinancialYearOp(models.TransientModel):
     _description = "Opening Balance of Financial Year"
 
     company_id = fields.Many2one(comodel_name="res.company", required=True)
-    opening_move_posted = fields.Boolean(
-        string="Opening Move Posted", compute="_compute_opening_move_posted"
-    )
+    opening_move_posted = fields.Boolean(compute="_compute_opening_move_posted")
     opening_date = fields.Date(
         string="Opening Date",
         required=True,

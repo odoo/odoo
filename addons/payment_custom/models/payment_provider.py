@@ -16,7 +16,6 @@ class PaymentProvider(models.Model):
         selection_add=[("custom", "Custom")], ondelete={"custom": "set default"}
     )
     custom_mode = fields.Selection(
-        string="Custom Mode",
         selection=[("wire_transfer", "Wire Transfer")],
         required_if_provider="custom",
     )

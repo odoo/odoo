@@ -13,7 +13,6 @@ class PosConfig(models.Model):
     )
     down_payment_product_id = fields.Many2one(
         "product.product",
-        string="Down Payment Product",
         help="This product will be used as down payment on a sale order.",
     )
 

@@ -16,7 +16,7 @@ class MailMessageTranslation(models.Model):
     _description = "Message Translation"
 
     message_id: MailMessage = fields.Many2one(
-        "mail.message", "Message", required=True, ondelete="cascade"
+        "mail.message", required=True, ondelete="cascade"
     )
     source_lang = fields.Char(
         "Source Language",

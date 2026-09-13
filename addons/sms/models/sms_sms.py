@@ -45,7 +45,7 @@ class SmsSms(models.Model):
         default=lambda self: uuid4().hex,
         help="Alternate way to identify a SMS record, used for delivery reports",
     )
-    number = fields.Char("Number")
+    number = fields.Char()
     body = fields.Text()
     partner_id = fields.Many2one("res.partner", "Customer")
     mail_message_id = fields.Many2one("mail.message", index=True)

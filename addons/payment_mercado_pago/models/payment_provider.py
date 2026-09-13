@@ -24,7 +24,6 @@ class PaymentProvider(models.Model):
         ondelete={"mercado_pago": "set default"},
     )
     mercado_pago_account_country_id = fields.Many2one(
-        string="Mercado Pago Account Country",
         help="The country of the Mercado Pago account. The currency will be updated to match the"
         " country of the Mercado Pago account.",
         comodel_name="res.country",
@@ -40,22 +39,18 @@ class PaymentProvider(models.Model):
 
     # OAuth fields
     mercado_pago_access_token = fields.Char(
-        string="Mercado Pago Access Token",
         copy=False,
         groups="base.group_system",
     )
     mercado_pago_access_token_expiry = fields.Datetime(
-        string="Mercado Pago Access Token Expiry",
         copy=False,
         groups="base.group_system",
     )
     mercado_pago_refresh_token = fields.Char(
-        string="Mercado Pago Refresh Token",
         copy=False,
         groups="base.group_system",
     )
     mercado_pago_public_key = fields.Char(
-        string="Mercado Pago Public Key",
         copy=False,
         groups="base.group_system",
     )

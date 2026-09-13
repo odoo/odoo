@@ -139,7 +139,15 @@ read raises `AttributeError`, which is how three fork-made mixins declared
 seventeen computed fields whose computes only their hosts supply), whether an
 `@api.onchange` or `@api.constrains` parameter is a field of a concrete model
 (`lint_field_trigger_unknown`; the ORM logs one warning and never fires the
-method for that name).
+method for that name), and whether a `string=` restates the label
+`Field._setup_attrs__` derives from the name -- strip `_id`/`_ids`, `_` to a
+space, title-case -- with no lower definition in the MRO saying otherwise
+(`lint_field_string_restates_label`). That last one is MRO-aware on purpose: an
+`_inherit` class may restate the auto label to override a base class's
+different string, and four did (`res.users.create_date` in `website_forum`
+over `base`'s "Created on" among them). A syntactic reading cannot tell those
+from the 4,205 that said nothing, so the registry decides and the syntactic
+scanner is not given the rule.
 
 `unreadable-source` has no checker file of its own: the engine emits it when a
 file cannot be parsed or tokenised. Both used to be swallowed, and a file whose
@@ -209,6 +217,7 @@ model with `_inherits` also declares `<xmlid>_<parent_model>`, every manifest
 | `_sort_manifests.py` | `normalize` then a round-trip: the rendered dict must equal `normalize(data)` | value-**normalising**: see below |
 | `_modernize_output_directives.py` | `is_rename_only`: the two documents, walked in parallel, differ in nothing but the renamed attribute keys | value-**renaming**: `t-esc` becomes `t-out` in place, which is what `ir.qweb` and Owl both compile it to. `t-raw` is not renamed -- it skips escaping, so `t-out` could change output -- and an element carrying both is left for a human. Swept 2026-09-12: 115 files, `deprecated-output-directive` 500 -> 0; one inheritance locator (`sale_timesheet`, `td[t[@t-esc=...]]`) followed the rename by hand. |
 | `_relocate_menus.py` | a fresh install before and after produces the same `ir.ui.menu` rows (xmlid, name, parent, action, sequence, groups) -- checked by installing every changed module from two worktrees and diffing the dump, not by the script | structure-**moving**: every top-level `<menuitem>` of a module, with its subtree and the comments before it, goes to the module's `views/` menus file, named after the module with a `_menus` suffix, in manifest load order (an existing menu file's own menus interleaved by their original position). The file is listed after every file that defines an action a menu names and before the first staying file that needs a menu -- a `ref()` to it, an `ir.ui.menu` record redefining it by `id` -- which is the end of `data` when nothing does. Refuses a module when no such position exists, when a menuitem sits under `noupdate`, or when the module's Python names a menu (`--python-refs-verified <module>` once you have read that none runs while data loads). A source file left with no element is deleted with its manifest line. Swept 2026-09-12: 98 modules; `event`'s six `ir.ui.menu` action patches became the menuitems' own `action=`, `point_of_sale` and `website` carry their menu-bound client actions in the menus file, `hr` swapped two manifest lines; `menuitem-placement` 333 -> 0. |
+| `_drop_field_labels.py` | the registry's `field.string` for every installed field, before and after, is identical -- the fixer removes only what `get_attrs` would have derived anyway, and the check is a fresh registry over the rewritten source | value-**dropping**: `string=` (or the positional label) whose value equals the auto label and whose every lower MRO definition says nothing else, located through the built registry (`-d <db>`), so it is exact rather than syntactic; touched files are re-run through `ruff format`. Swept 2026-09-13 on a 645-module community install: `lint_field_string_restates_label` 4,205 -> 0. |
 | `_modernize_commands.py` | `is_equivalent`: both the original and the rewrite are mapped to `(code, id, values)` tuples and compared as `ast.dump` | value-**rewriting**: `(6, 0, ids)` becomes `Command.set(ids)` inside an `eval` list, and the sub-commands inside a `create`/`update` dict with it. No evaluation, so it runs without odoo-bin; a refusal is a rewrite the round-trip would not reproduce. Swept 2026-09-12: 312 files, `legacy-x2many-command` 1,408 -> 0. |
 
 `_xml_sweep.py` runs a fixer over every data file **once**; the gates read the

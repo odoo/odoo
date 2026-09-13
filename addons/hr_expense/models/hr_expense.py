@@ -49,7 +49,6 @@ class HrExpense(models.Model):
     date = fields.Date(string="Expense Date", default=fields.Date.context_today)
     employee_id = fields.Many2one(
         comodel_name="hr.employee",
-        string="Employee",
         compute="_compute_employee_id",
         precompute=True,
         store=True,
@@ -62,14 +61,12 @@ class HrExpense(models.Model):
     )
     department_id = fields.Many2one(
         comodel_name="hr.department",
-        string="Department",
         compute="_compute_from_employee_id",
         store=True,
         copy=False,
     )
     manager_id = fields.Many2one(
         comodel_name="res.users",
-        string="Manager",
         compute="_compute_from_employee_id",
         store=True,
         domain=lambda self: [
@@ -87,7 +84,6 @@ class HrExpense(models.Model):
     )
     company_id = fields.Many2one(
         comodel_name="res.company",
-        string="Company",
         required=True,
         readonly=True,
         default=lambda self: self.env.company,
@@ -153,7 +149,7 @@ class HrExpense(models.Model):
         copy=False,
         readonly=True,
     )
-    approval_date = fields.Datetime(string="Approval Date", readonly=True)
+    approval_date = fields.Datetime(readonly=True)
     duplicate_expense_ids = fields.Many2many(
         comodel_name="hr.expense", compute="_compute_duplicate_expense_ids"
     )
@@ -233,7 +229,6 @@ class HrExpense(models.Model):
     )
     currency_id = fields.Many2one(
         comodel_name="res.currency",
-        string="Currency",
         compute="_compute_currency_id",
         precompute=True,
         store=True,
@@ -292,10 +287,9 @@ class HrExpense(models.Model):
         required=True,
         tracking=True,
     )
-    vendor_id = fields.Many2one(comodel_name="res.partner", string="Vendor")
+    vendor_id = fields.Many2one(comodel_name="res.partner")
     account_id = fields.Many2one(
         comodel_name="account.account",
-        string="Account",
         compute="_compute_account_id",
         precompute=True,
         store=True,
@@ -324,12 +318,8 @@ class HrExpense(models.Model):
         compute="_compute_is_editable",
         readonly=True,
     )
-    can_reset = fields.Boolean(
-        string="Can Reset", compute="_compute_can_reset", readonly=True
-    )
-    can_approve = fields.Boolean(
-        string="Can Approve", compute="_compute_can_approve", readonly=True
-    )
+    can_reset = fields.Boolean(compute="_compute_can_reset", readonly=True)
+    can_approve = fields.Boolean(compute="_compute_can_approve", readonly=True)
 
     former_sheet_id = fields.Integer(string="Former Report")
 

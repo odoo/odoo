@@ -30,8 +30,8 @@ class L10n_ArPartnerTax(models.Model):
     company_ids = fields.Many2many(
         related="tax_id.company_ids",
     )
-    from_date = fields.Date(string="From Date")
-    to_date = fields.Date(string="To Date")
+    from_date = fields.Date()
+    to_date = fields.Date()
     ref = fields.Char(string="ref")
 
     @api.constrains("from_date", "to_date")

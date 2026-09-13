@@ -112,7 +112,6 @@ class MailActivity(models.Model):
     )
     activity_type_id: MailActivityType = fields.Many2one(
         "mail.activity.type",
-        string="Activity Type",
         domain="['|', ('res_model', '=', False), ('res_model', '=', res_model)]",
         ondelete="restrict",
         default=_default_activity_type_id,
@@ -126,8 +125,8 @@ class MailActivity(models.Model):
         readonly=True,
     )
     icon = fields.Char("Icon", related="activity_type_id.icon", readonly=True)
-    summary = fields.Char("Summary")
-    note = fields.Html("Note", sanitize_style=True)
+    summary = fields.Char()
+    note = fields.Html(sanitize_style=True)
     date_deadline = fields.Date(
         "Due Date",
         index=True,
@@ -139,7 +138,7 @@ class MailActivity(models.Model):
         compute="_compute_date_done",
         store=True,
     )
-    feedback = fields.Text("Feedback")
+    feedback = fields.Text()
     automated = fields.Boolean(
         "Automated activity",
         readonly=True,
@@ -172,17 +171,14 @@ class MailActivity(models.Model):
             ("planned", "Planned"),
             ("done", "Done"),
         ],
-        "State",
         compute="_compute_state",
         search="_search_state",
     )
     recommended_activity_type_id: MailActivityType = fields.Many2one(
         "mail.activity.type",
-        string="Recommended Activity Type",
     )
     previous_activity_type_id: MailActivityType = fields.Many2one(
         "mail.activity.type",
-        string="Previous Activity Type",
         readonly=True,
     )
     has_recommended_activities = fields.Boolean(

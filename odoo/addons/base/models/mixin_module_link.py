@@ -17,7 +17,7 @@ class MixinModuleLink(models.AbstractModel):
     _allow_sudo_commands = False
 
     name = fields.Char(index=True)
-    module_id = fields.Many2one("ir.module.module", "Module", ondelete="cascade")
+    module_id = fields.Many2one("ir.module.module", ondelete="cascade")
     linked_id = fields.Many2one(
         "ir.module.module",
         "Linked Module",

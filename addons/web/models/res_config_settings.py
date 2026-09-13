@@ -6,10 +6,9 @@ from odoo import _, api, fields, models
 class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
-    web_app_name = fields.Char("Web App Name", config_parameter="web.web_app_name")
+    web_app_name = fields.Char(config_parameter="web.web_app_name")
     company_id = fields.Many2one(
         "res.company",
-        string="Company",
         required=True,
         default=lambda self: self.env.company,
     )
@@ -77,9 +76,7 @@ class ResConfigSettings(models.TransientModel):
         help="Allows to work in a multi currency environment",
     )
 
-    show_effect = fields.Boolean(
-        string="Show Effect", config_parameter="base.show_effect"
-    )
+    show_effect = fields.Boolean(config_parameter="base.show_effect")
     profiling_enabled_until = fields.Datetime(
         "Profiling enabled until",
         config_parameter="base.profiling_enabled_until",

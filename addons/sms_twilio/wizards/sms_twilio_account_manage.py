@@ -31,7 +31,7 @@ class SmsTwilioAccountManage(models.TransientModel):
     sms_twilio_number_ids = fields.One2many(
         related="company_id.sms_twilio_number_ids", readonly=False
     )
-    test_number = fields.Char("Test Number")
+    test_number = fields.Char()
 
     def action_reload_numbers(self):
         """Fetch the available numbers from Twilio account"""

@@ -21,7 +21,6 @@ class ProductProduct(models.Model):
             ("open_paid", "Open and Paid"),
             ("draft_open_paid", "Draft, Open and Paid"),
         ],
-        string="Invoice State",
         readonly=True,
     )
     sale_avg_price = fields.Float(
@@ -46,22 +45,18 @@ class ProductProduct(models.Model):
     )
     sales_gap = fields.Float(
         compute="_compute_product_margin_fields_values",
-        string="Sales Gap",
         help="Expected Sale - Turn Over",
     )
     purchase_gap = fields.Float(
         compute="_compute_product_margin_fields_values",
-        string="Purchase Gap",
         help="Normal Cost - Total Cost",
     )
     turnover = fields.Float(
         compute="_compute_product_margin_fields_values",
-        string="Turnover",
         help="Sum of Multiplication of Invoice price and quantity of Customer Invoices",
     )
     total_cost = fields.Float(
         compute="_compute_product_margin_fields_values",
-        string="Total Cost",
         help="Sum of Multiplication of Invoice price and quantity of Vendor Bills ",
     )
     sale_expected = fields.Float(
@@ -71,17 +66,14 @@ class ProductProduct(models.Model):
     )
     normal_cost = fields.Float(
         compute="_compute_product_margin_fields_values",
-        string="Normal Cost",
         help="Sum of Multiplication of Cost price and quantity of Vendor Bills",
     )
     total_margin = fields.Float(
         compute="_compute_product_margin_fields_values",
-        string="Total Margin",
         help="Turnover - Total cost",
     )
     expected_margin = fields.Float(
         compute="_compute_product_margin_fields_values",
-        string="Expected Margin",
         help="Expected Sale - Normal Cost",
     )
     total_margin_rate = fields.Float(

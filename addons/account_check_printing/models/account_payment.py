@@ -18,7 +18,6 @@ class AccountPayment(models.Model):
         related="journal_id.check_manual_sequencing"
     )
     check_number = fields.Char(
-        string="Check Number",
         store=True,
         copy=False,
         compute="_compute_check_number",

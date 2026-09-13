@@ -47,7 +47,7 @@ class PosOrderLine(models.Model):
 class PosOrder(models.Model):
     _inherit = "pos.order"
 
-    table_stand_number = fields.Char(string="Table Stand Number")
+    table_stand_number = fields.Char()
     self_ordering_table_id = fields.Many2one(
         "restaurant.table", string="Table reference", readonly=True
     )

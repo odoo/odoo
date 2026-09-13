@@ -20,19 +20,17 @@ class TimesheetsAnalysisReport(models.Model):
         help="Invoice created from the timesheet",
     )
     timesheet_revenues = fields.Monetary(
-        "Timesheet Revenues",
         currency_field="currency_id",
         readonly=True,
         help="Number of hours spent multiplied by the unit price per hour/day.",
     )
     margin = fields.Monetary(
-        "Margin",
         currency_field="currency_id",
         readonly=True,
         help="Timesheets revenues minus the costs",
     )
     billable_time = fields.Float(
-        "Billable Time", readonly=True, help="Number of hours/days linked to a SOL."
+        readonly=True, help="Number of hours/days linked to a SOL."
     )
     non_billable_time = fields.Float(
         "Non-billable Time",

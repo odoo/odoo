@@ -115,7 +115,7 @@ class ResPartnerBank(models.Model):
     acc_number = fields.Char(
         "Account Number", required=True, search="_search_acc_number"
     )
-    clearing_number = fields.Char("Clearing Number")
+    clearing_number = fields.Char()
     sanitized_acc_number = fields.Char(
         compute="_compute_sanitized_acc_number",
         string="Sanitized Account Number",
@@ -144,11 +144,11 @@ class ResPartnerBank(models.Model):
         copy=False,
         readonly=False,
     )
-    bank_id = fields.Many2one("res.bank", string="Bank")
+    bank_id = fields.Many2one("res.bank")
     bank_name = fields.Char(related="bank_id.name", readonly=False)
     bank_bic = fields.Char(related="bank_id.bic", readonly=False)
     sequence = fields.Integer(default=10)
-    currency_id = fields.Many2one("res.currency", string="Currency")
+    currency_id = fields.Many2one("res.currency")
     company_id = fields.Many2one(
         "res.company",
         "Company",

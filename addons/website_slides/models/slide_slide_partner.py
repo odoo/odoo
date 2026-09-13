@@ -22,8 +22,8 @@ class SlideSlidePartner(models.Model):
     partner_id = fields.Many2one(
         "res.partner", index=True, required=True, ondelete="cascade"
     )
-    vote = fields.Integer("Vote", default=0)
-    completed = fields.Boolean("Completed")
+    vote = fields.Integer(default=0)
+    completed = fields.Boolean()
     quiz_attempts_count = fields.Integer("Quiz attempts count", default=0)
 
     _slide_partner_uniq = models.Constraint(

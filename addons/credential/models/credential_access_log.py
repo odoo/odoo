@@ -32,7 +32,6 @@ class CredentialAccessLog(models.Model):
         "accessed; the login is denormalized into user_login for readability.",
     )
     user_login = fields.Char(
-        string="User Login",
         help="Login of the accessing user, captured at access time. Survives "
         "deletion of the res.users record so the audit row stays readable.",
     )
@@ -47,7 +46,6 @@ class CredentialAccessLog(models.Model):
         "name is denormalized into credential_name so the row stays readable.",
     )
     credential_name = fields.Char(
-        string="Credential Name",
         index=True,
         help="Name of the accessed credential, captured at access time. "
         "Survives deletion of the credential so the audit row stays readable.",

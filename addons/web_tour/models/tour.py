@@ -18,7 +18,7 @@ class Web_TourTour(models.Model):
         translate=True,
     )
     sequence = fields.Integer(default=1000)
-    custom = fields.Boolean(string="Custom")
+    custom = fields.Boolean()
     user_consumed_ids = fields.Many2many("res.users")
 
     _uniq_name = models.Constraint(

@@ -39,7 +39,7 @@ class CalendarEvent(models.Model):
         return defaults
 
     applicant_id = fields.Many2one(
-        "hr.applicant", string="Applicant", index="btree_not_null", ondelete="set null"
+        "hr.applicant", index="btree_not_null", ondelete="set null"
     )
 
     @api.model_create_multi

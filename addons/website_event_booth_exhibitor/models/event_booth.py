@@ -6,7 +6,7 @@ class EventBooth(models.Model):
 
     use_sponsor = fields.Boolean(related="booth_category_id.use_sponsor")
     sponsor_type_id = fields.Many2one(related="booth_category_id.sponsor_type_id")
-    sponsor_id = fields.Many2one("event.sponsor", string="Sponsor", copy=False)
+    sponsor_id = fields.Many2one("event.sponsor", copy=False)
     sponsor_name = fields.Char(string="Sponsor Name", related="sponsor_id.name")
     sponsor_email = fields.Char(string="Sponsor Email", related="sponsor_id.email")
     sponsor_phone_ids = fields.Many2many(

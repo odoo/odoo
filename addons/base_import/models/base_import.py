@@ -426,12 +426,11 @@ class Base_ImportImport(models.TransientModel):
 
     res_model = fields.Char("Model")
     file = fields.Binary(
-        "File",
         help="File to check and/or import, raw binary (not base64)",
         attachment=False,
     )
-    file_name = fields.Char("File Name")
-    file_type = fields.Char("File Type")
+    file_name = fields.Char()
+    file_type = fields.Char()
 
     @api.model
     def get_fields_tree(self, model, depth=FIELDS_RECURSION_LIMIT):

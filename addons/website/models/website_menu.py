@@ -43,7 +43,6 @@ class WebsiteMenu(models.Model):
 
     name = fields.Char("Menu", required=True, translate=True)
     url = fields.Char(
-        "Url",
         compute="_compute_url",
         store=True,
         required=True,
@@ -60,15 +59,15 @@ class WebsiteMenu(models.Model):
         ondelete="cascade",
         index="btree_not_null",
     )
-    new_window = fields.Boolean("New Window")
+    new_window = fields.Boolean()
     sequence = fields.Integer(default=_default_sequence)
-    website_id = fields.Many2one("website", "Website", ondelete="cascade")
+    website_id = fields.Many2one("website", ondelete="cascade")
     parent_id = fields.Many2one(
         "website.menu", "Parent Menu", index=True, ondelete="cascade"
     )
     child_id = fields.One2many("website.menu", "parent_id", string="Child Menus")
     parent_path = fields.Char(index=True)
-    is_visible = fields.Boolean(compute="_compute_is_visible", string="Is Visible")
+    is_visible = fields.Boolean(compute="_compute_is_visible")
     group_ids = fields.Many2many(
         "res.groups",
         string="Visible Groups",

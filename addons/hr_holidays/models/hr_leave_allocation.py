@@ -95,7 +95,6 @@ class HrLeaveAllocation(models.Model):
     )
     employee_id = fields.Many2one(
         "hr.employee",
-        string="Employee",
         default=lambda self: self.env.user.employee_id,
         index=True,
         ondelete="restrict",
@@ -110,7 +109,7 @@ class HrLeaveAllocation(models.Model):
         "Active Employee", related="employee_id.active", readonly=True
     )
     manager_id = fields.Many2one(
-        "hr.employee", compute="_compute_manager_id", store=True, string="Manager"
+        "hr.employee", compute="_compute_manager_id", store=True
     )
     notes = fields.Text("Reasons", readonly=False)
     number_of_days = fields.Float(
@@ -171,7 +170,6 @@ class HrLeaveAllocation(models.Model):
         "hr.department",
         compute="_compute_department_id",
         store=True,
-        string="Department",
         readonly=False,
     )
     lastcall = fields.Date("Date of the last accrual allocation", readonly=True)
@@ -183,7 +181,6 @@ class HrLeaveAllocation(models.Model):
     yearly_accrued_amount = fields.Float(export_string_translation=False)
     allocation_type = fields.Selection(
         [("regular", "Regular Allocation"), ("accrual", "Accrual Allocation")],
-        string="Allocation Type",
         default="regular",
         required=True,
         readonly=True,

@@ -127,7 +127,6 @@ class CrmLead(models.Model):
     )
     company_id = fields.Many2one(
         "res.company",
-        string="Company",
         index=True,
         compute="_compute_company_id",
         readonly=False,
@@ -135,7 +134,7 @@ class CrmLead(models.Model):
     )
     referred = fields.Char("Referred By")
     description = fields.Html("Notes")
-    active = fields.Boolean("Active", default=True, tracking=72)
+    active = fields.Boolean(default=True, tracking=72)
     type = fields.Selection(
         [("lead", "Lead"), ("opportunity", "Opportunity")],
         required=True,
@@ -147,13 +146,11 @@ class CrmLead(models.Model):
     )
     priority = fields.Selection(
         crm_stage.AVAILABLE_PRIORITIES,
-        string="Priority",
         index=True,
         default=crm_stage.AVAILABLE_PRIORITIES[0][0],
     )
     stage_id = fields.Many2one(
         "crm.stage",
-        string="Stage",
         index=True,
         tracking=True,
         compute="_compute_stage_id",
@@ -177,13 +174,11 @@ class CrmLead(models.Model):
     )
     color = fields.Integer("Color Index", default=0)
     expected_revenue = fields.Monetary(
-        "Expected Revenue",
         currency_field="company_currency",
         tracking=True,
         default=0.0,
     )
     prorated_revenue = fields.Monetary(
-        "Prorated Revenue",
         currency_field="company_currency",
         store=True,
         compute="_compute_prorated_revenue",
@@ -194,7 +189,7 @@ class CrmLead(models.Model):
         tracking=True,
         default=0.0,
     )
-    recurring_plan = fields.Many2one("crm.recurring.plan", string="Recurring Plan")
+    recurring_plan = fields.Many2one("crm.recurring.plan")
     recurring_revenue_monthly = fields.Monetary(
         "Expected MRR",
         currency_field="company_currency",
@@ -279,7 +274,6 @@ class CrmLead(models.Model):
         readonly=True,
     )
     contact_name = fields.Char(
-        "Contact Name",
         index="trigram",
         tracking=30,
         compute="_compute_contact_name",
@@ -312,7 +306,6 @@ class CrmLead(models.Model):
     )
     email_normalized = fields.Char(index="trigram")
     email_domain_criterion = fields.Char(
-        string="Email Domain Criterion",
         compute="_compute_email_domain_criterion",
         index="btree_not_null",
         store=True,
@@ -322,7 +315,6 @@ class CrmLead(models.Model):
         "crm_lead_phone_number_rel",
         "lead_id",
         "phone_number_id",
-        string="Phone",
         tracking=50,
         compute="_compute_phone_ids",
         inverse="_inverse_phone_ids",
@@ -343,7 +335,6 @@ class CrmLead(models.Model):
         store=True,
     )
     website = fields.Char(
-        "Website",
         help="Website of the contact",
         compute="_compute_website",
         readonly=False,
@@ -359,33 +350,28 @@ class CrmLead(models.Model):
     lang_code = fields.Char(related="lang_id.code")
     lang_active_count = fields.Integer(compute="_compute_lang_active_count")
     street = fields.Char(
-        "Street",
         compute="_compute_partner_address_values",
         readonly=False,
         store=True,
     )
     street2 = fields.Char(
-        "Street2",
         compute="_compute_partner_address_values",
         readonly=False,
         store=True,
     )
     zip = fields.Char(
-        "Zip",
         change_default=True,
         compute="_compute_partner_address_values",
         readonly=False,
         store=True,
     )
     city = fields.Char(
-        "City",
         compute="_compute_partner_address_values",
         readonly=False,
         store=True,
     )
     state_id = fields.Many2one(
         "res.country.state",
-        string="State",
         compute="_compute_partner_address_values",
         readonly=False,
         store=True,
@@ -393,13 +379,11 @@ class CrmLead(models.Model):
     )
     country_id = fields.Many2one(
         "res.country",
-        string="Country",
         compute="_compute_partner_address_values",
         readonly=False,
         store=True,
     )
     probability = fields.Float(
-        "Probability",
         aggregator="avg",
         copy=False,
         compute="_compute_probabilities",
@@ -407,7 +391,6 @@ class CrmLead(models.Model):
         store=True,
     )
     automated_probability = fields.Float(
-        "Automated Probability",
         compute="_compute_probabilities",
         readonly=True,
         store=True,
@@ -429,7 +412,6 @@ class CrmLead(models.Model):
     )
     lost_reason_id = fields.Many2one(
         "crm.lost.reason",
-        string="Lost Reason",
         index=True,
         ondelete="restrict",
         tracking=71,
@@ -457,9 +439,7 @@ class CrmLead(models.Model):
     partner_phone_update = fields.Boolean(
         "Partner Phone will Update", compute="_compute_partner_phone_update"
     )
-    is_partner_visible = fields.Boolean(
-        "Is Partner Visible", compute="_compute_is_partner_visible"
-    )
+    is_partner_visible = fields.Boolean(compute="_compute_is_partner_visible")
     campaign_id = fields.Many2one(ondelete="set null")
     medium_id = fields.Many2one(ondelete="set null")
     source_id = fields.Many2one(ondelete="set null")

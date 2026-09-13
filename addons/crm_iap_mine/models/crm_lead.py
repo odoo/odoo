@@ -6,7 +6,6 @@ class CrmLead(models.Model):
 
     lead_mining_request_id = fields.Many2one(
         "crm.iap.lead.mining.request",
-        string="Lead Mining Request",
         index="btree_not_null",
     )
 

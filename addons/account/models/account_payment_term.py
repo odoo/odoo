@@ -46,7 +46,7 @@ class AccountPaymentTerm(models.Model):
         copy=True,
         default=_default_line_ids,
     )
-    company_id = fields.Many2one("res.company", string="Company")
+    company_id = fields.Many2one("res.company")
     sequence = fields.Integer(required=True, default=10)
     currency_id = fields.Many2one("res.currency", compute="_compute_currency_id")
 
@@ -76,7 +76,6 @@ class AccountPaymentTerm(models.Model):
         default=2.0,
     )
     discount_days = fields.Integer(
-        string="Discount Days",
         help="Number of days before the early payment proposition expires",
         default=10,
     )
@@ -91,7 +90,7 @@ class AccountPaymentTerm(models.Model):
         store=True,
         compute="_compute_early_pay_discount_computation",
     )
-    early_discount = fields.Boolean(string="Early Discount")
+    early_discount = fields.Boolean()
     is_immediate = fields.Boolean(
         string="Immediate Payment Term",
         compute="_compute_is_immediate",

@@ -78,7 +78,6 @@ class SaleOrder(models.Model):
         index="btree_not_null",
     )
     allow_external_delivery_address = fields.Boolean(
-        string="Allow External Delivery Address",
         default=False,
         tracking=True,
         help="Allow selecting a delivery address that does not belong to the "
@@ -95,7 +94,6 @@ class SaleOrder(models.Model):
     )
     pricelist_id = fields.Many2one(
         comodel_name="product.pricelist",
-        string="Pricelist",
         compute="_compute_pricelist_id",
         store=True,
         precompute=True,
@@ -173,14 +171,13 @@ class SaleOrder(models.Model):
         help="Request a online signature from the customer to confirm the order.",
     )
     signature = fields.Image(
-        string="Signature",
         attachment=True,
         max_width=1024,
         max_height=1024,
         copy=False,
     )
-    signed_by = fields.Char(string="Signed By", copy=False)
-    signed_on = fields.Datetime(string="Signed On", copy=False)
+    signed_by = fields.Char(copy=False)
+    signed_on = fields.Datetime(copy=False)
 
     require_payment = fields.Boolean(
         string="Online payment",
@@ -294,7 +291,6 @@ class SaleOrder(models.Model):
     )
     pending_email_template_id = fields.Many2one(
         comodel_name="mail.template",
-        string="Pending Email Template",
         readonly=True,
         ondelete="set null",
     )

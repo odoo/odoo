@@ -12,10 +12,10 @@ class LunchCashmove(models.Model):
     currency_id = fields.Many2one(
         "res.currency", default=lambda self: self.env.company.currency_id, required=True
     )
-    user_id = fields.Many2one("res.users", "User", default=lambda self: self.env.uid)
-    date = fields.Date("Date", required=True, default=fields.Date.context_today)
-    amount = fields.Float("Amount", required=True)
-    description = fields.Text("Description")
+    user_id = fields.Many2one("res.users", default=lambda self: self.env.uid)
+    date = fields.Date(required=True, default=fields.Date.context_today)
+    amount = fields.Float(required=True)
+    description = fields.Text()
 
     def _compute_display_name(self):
         for cashmove in self:

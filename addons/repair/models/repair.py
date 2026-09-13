@@ -40,7 +40,6 @@ class RepairOrder(models.Model):
     )
     company_id = fields.Many2one(
         "res.company",
-        "Company",
         readonly=True,
         required=True,
         index=True,
@@ -66,9 +65,7 @@ class RepairOrder(models.Model):
         "* The 'Repaired' status is set when repairing is completed.\n"
         "* The 'Cancelled' status is used when user cancel repair order.",
     )
-    priority = fields.Selection(
-        [("0", "Normal"), ("1", "Urgent")], default="0", string="Priority"
-    )
+    priority = fields.Selection([("0", "Normal"), ("1", "Urgent")], default="0")
     partner_id = fields.Many2one(
         "res.partner",
         "Customer",
@@ -88,10 +85,9 @@ class RepairOrder(models.Model):
     )
 
     # Specific Fields
-    internal_notes = fields.Html("Internal Notes")
+    internal_notes = fields.Html()
     tag_ids = fields.Many2many("repair.tags", string="Tags")
     under_warranty = fields.Boolean(
-        "Under Warranty",
         help="If ticked, the sales price will be set to 0 for all products transferred from the repair order.",
     )
     schedule_date = fields.Datetime(
@@ -285,7 +281,6 @@ class RepairOrder(models.Model):
     # Sale Order Binding
     sale_order_id = fields.Many2one(
         "sale.order",
-        "Sale Order",
         check_company=True,
         readonly=True,
         index="btree_not_null",

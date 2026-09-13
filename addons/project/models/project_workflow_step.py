@@ -19,8 +19,8 @@ class ProjectWorkflowStep(models.Model):
         default_project_id = self.env.context.get("default_project_id")
         return [default_project_id] if default_project_id else None
 
-    active = fields.Boolean("Active", default=True, export_string_translation=False)
-    name = fields.Char(string="Name", required=True, translate=True)
+    active = fields.Boolean(default=True, export_string_translation=False)
+    name = fields.Char(required=True, translate=True)
     sequence = fields.Integer(default=1)
     project_ids = fields.Many2many(
         "project.project",
@@ -40,7 +40,7 @@ class ProjectWorkflowStep(models.Model):
         domain=[("model", "=", "project.task")],
         help="Email sent automatically when a task enters this step.",
     )
-    color = fields.Integer(string="Color", export_string_translation=False)
+    color = fields.Integer(export_string_translation=False)
     fold = fields.Boolean(string="Folded")
     task_state = fields.Selection(
         selection="_selection_task_states",

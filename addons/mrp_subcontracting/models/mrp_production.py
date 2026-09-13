@@ -19,7 +19,6 @@ class MrpProduction(models.Model):
     subcontracting_has_been_recorded = fields.Boolean("Has been recorded?", copy=False)
     subcontractor_id = fields.Many2one(
         "res.partner",
-        string="Subcontractor",
         help="Used to restrict access to the portal user through Record Rules",
     )
     bom_product_ids = fields.Many2many(

@@ -5,7 +5,7 @@ class EventRegistration(models.Model):
     _inherit = "event.registration"
 
     visitor_id = fields.Many2one(
-        "website.visitor", string="Visitor", ondelete="set null", index="btree_not_null"
+        "website.visitor", ondelete="set null", index="btree_not_null"
     )
 
     def _get_fields_website_registration_allowed(self):

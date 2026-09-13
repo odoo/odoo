@@ -5,7 +5,6 @@ class ResUsersSettings(models.Model):
     _inherit = "res.users.settings"
 
     livechat_username = fields.Char(
-        "Livechat Username",
         help="This username will be used as your name in the livechat channels.",
     )
     livechat_lang_ids = fields.Many2many(

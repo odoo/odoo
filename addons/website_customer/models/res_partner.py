@@ -43,7 +43,7 @@ class ResPartnerWebsiteTag(models.Model):
         help="Bootstrap class to customize the color",
         required=True,
     )
-    active = fields.Boolean("Active", default=True)
+    active = fields.Boolean(default=True)
 
     def _default_is_published(self):
         return True

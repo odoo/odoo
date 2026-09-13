@@ -92,7 +92,7 @@ class CardCampaign(models.Model):
     request_title = fields.Char(
         "Request", default=lambda self: _("Help us share the news")
     )
-    request_description = fields.Text("Request Description")
+    request_description = fields.Text()
 
     # Static Content fields
     content_background = fields.Image("Background")

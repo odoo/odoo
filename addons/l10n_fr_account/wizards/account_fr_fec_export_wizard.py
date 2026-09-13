@@ -22,14 +22,13 @@ class L10n_FrFecExportWizard(models.TransientModel):
         required=True,
         default=lambda self: self.env.context.get("report_dates", {}).get("date_to"),
     )
-    filename = fields.Char(string="Filename", size=256, readonly=True)
+    filename = fields.Char(size=256, readonly=True)
     test_file = fields.Boolean()
     export_type = fields.Selection(
         [
             ("official", "Official FEC report (posted entries only)"),
             ("nonofficial", "Non-official FEC report (posted and unposted entries)"),
         ],
-        string="Export Type",
         required=True,
         default="official",
     )

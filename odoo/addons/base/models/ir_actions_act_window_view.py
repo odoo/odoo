@@ -15,7 +15,7 @@ class IrActionsAct_WindowView(models.Model):
     _allow_sudo_commands = False
 
     sequence = fields.Integer()
-    view_id = fields.Many2one("ir.ui.view", string="View")
+    view_id = fields.Many2one("ir.ui.view")
     view_mode = fields.Selection(
         selection="_selection_view_mode",
         string="View Type",

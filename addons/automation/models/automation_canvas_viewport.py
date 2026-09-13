@@ -19,7 +19,6 @@ class AutomationCanvasViewport(models.Model):
     )
     automation_rule_id = fields.Many2one(
         comodel_name="automation.rule",
-        string="Automation Rule",
         required=True,
         ondelete="cascade",
         index=True,

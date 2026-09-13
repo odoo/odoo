@@ -12,7 +12,6 @@ class FleetVehicleOdometer(models.Model):
     value = fields.Float("Odometer Value", aggregator="max")
     vehicle_id = fields.Many2one(
         "fleet.vehicle",
-        "Vehicle",
         required=True,
     )
     unit = fields.Selection(
@@ -22,7 +21,6 @@ class FleetVehicleOdometer(models.Model):
     )
     driver_id = fields.Many2one(
         "res.partner",
-        string="Driver",
         compute="_compute_driver_id",
         readonly=False,
         store=True,

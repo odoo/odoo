@@ -36,15 +36,14 @@ class MrpWorkcenter(models.Model):
         "Active", related="resource_id.active", default=True, store=True, readonly=False
     )
 
-    code = fields.Char("Code", copy=False)
+    code = fields.Char(copy=False)
     note = fields.Html("Description")
     sequence = fields.Integer(
-        "Sequence",
         default=1,
         required=True,
         help="Gives the sequence order when displaying a list of work centers.",
     )
-    color = fields.Integer("Color")
+    color = fields.Integer()
     currency_id = fields.Many2one(
         "res.currency",
         "Currency",
@@ -94,13 +93,11 @@ class MrpWorkcenter(models.Model):
         store=True,
     )
     blocked_time = fields.Float(
-        "Blocked Time",
         compute="_compute_effectiveness_times",
         help="Blocked hours over the last month",
         digits=(16, 2),
     )
     productive_time = fields.Float(
-        "Productive Time",
         compute="_compute_effectiveness_times",
         help="Productive hours over the last month",
         digits=(16, 2),
@@ -117,7 +114,6 @@ class MrpWorkcenter(models.Model):
         default=90,
     )
     performance = fields.Integer(
-        "Performance",
         compute="_compute_performance",
         help="Performance over the last month",
     )
@@ -809,7 +805,7 @@ class MrpWorkcenterProductivityLoss(models.Model):
     _order = "sequence, id"
 
     name = fields.Char("Blocking Reason", required=True, translate=True)
-    sequence = fields.Integer("Sequence", default=1)
+    sequence = fields.Integer(default=1)
     manual = fields.Boolean("Is a Blocking Reason", default=True)
     loss_id = fields.Many2one(
         "mrp.workcenter.productivity.loss.type",
@@ -927,7 +923,7 @@ class MrpWorkcenterProductivity(models.Model):
     workorder_id = fields.Many2one(
         "mrp.workorder", "Work Order", check_company=True, index=True
     )
-    user_id = fields.Many2one("res.users", "User", default=lambda self: self.env.uid)
+    user_id = fields.Many2one("res.users", default=lambda self: self.env.uid)
     loss_id = fields.Many2one(
         "mrp.workcenter.productivity.loss",
         "Loss Reason",
@@ -937,12 +933,12 @@ class MrpWorkcenterProductivity(models.Model):
     loss_type = fields.Selection(
         string="Effectiveness", related="loss_id.loss_type", readonly=False
     )
-    description = fields.Text("Description")
+    description = fields.Text()
     date_start = fields.Datetime(
         "Start Date", default=fields.Datetime.now, required=True
     )
     date_end = fields.Datetime("End Date")
-    duration = fields.Float("Duration", compute="_compute_duration", store=True)
+    duration = fields.Float(compute="_compute_duration", store=True)
 
     @api.depends(
         "date_end",
@@ -1038,7 +1034,7 @@ class MrpWorkcenterCapacity(models.Model):
     workcenter_id = fields.Many2one(
         "mrp.workcenter", string="Work Center", required=True, index=True
     )
-    product_id = fields.Many2one("product.product", string="Product")
+    product_id = fields.Many2one("product.product")
     product_uom_id = fields.Many2one(
         "uom.uom",
         string="Unit",
@@ -1049,7 +1045,6 @@ class MrpWorkcenterCapacity(models.Model):
         required=True,
     )
     capacity = fields.Float(
-        "Capacity",
         help="Number of pieces that can be produced in parallel for this product or for all, depending on the unit.",
     )
     time_start = fields.Float(

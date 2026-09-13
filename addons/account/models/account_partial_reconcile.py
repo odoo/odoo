@@ -31,7 +31,6 @@ class AccountPartialReconcile(models.Model):
     )
     full_reconcile_id = fields.Many2one(
         comodel_name="account.full.reconcile",
-        string="Full Reconcile",
         copy=False,
         index="btree_not_null",
     )
@@ -83,7 +82,6 @@ class AccountPartialReconcile(models.Model):
 
     company_id = fields.Many2one(
         comodel_name="res.company",
-        string="Company",
         store=True,
         precompute=True,
         compute="_compute_company_id",

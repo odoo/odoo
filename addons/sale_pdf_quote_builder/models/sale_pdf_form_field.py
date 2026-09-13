@@ -19,7 +19,6 @@ class SalePdfFormField(models.Model):
         required=True,
     )
     document_type = fields.Selection(
-        string="Document Type",
         selection=[
             ("quotation_document", "Header/Footer"),
             ("product_document", "Product Document"),
@@ -28,7 +27,6 @@ class SalePdfFormField(models.Model):
         required=True,
     )
     path = fields.Char(
-        string="Path",
         help="The path to follow to dynamically fill the form field. \n"
         "Leave empty to be able to customized it in the quotation form.",
     )

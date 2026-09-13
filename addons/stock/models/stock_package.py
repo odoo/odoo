@@ -51,12 +51,10 @@ class StockPackage(models.Model):
     )
     package_type_id = fields.Many2one(
         comodel_name="stock.package.type",
-        string="Package Type",
         index=True,
     )
     location_id = fields.Many2one(
         comodel_name="stock.location",
-        string="Location",
         compute="_compute_package_info",
         store=True,
         recursive=True,
@@ -71,7 +69,6 @@ class StockPackage(models.Model):
     )
     company_id = fields.Many2one(
         comodel_name="res.company",
-        string="Company",
         compute="_compute_package_info",
         store=True,
         recursive=True,
@@ -80,7 +77,6 @@ class StockPackage(models.Model):
     )
     owner_id = fields.Many2one(
         comodel_name="res.partner",
-        string="Owner",
         compute="_compute_owner_id",
         compute_sudo=True,
         readonly=True,
@@ -138,7 +134,6 @@ class StockPackage(models.Model):
         help="Transfers in which the Package is set as Destination Package",
     )
     shipping_weight = fields.Float(
-        string="Shipping Weight",
         digits="Stock Weight",
         help="Total weight of the package.",
     )
@@ -146,7 +141,7 @@ class StockPackage(models.Model):
         string="Package name is valid SSCC",
         compute="_compute_valid_sscc",
     )
-    pack_date = fields.Date(string="Pack Date", default=fields.Date.context_today)
+    pack_date = fields.Date(default=fields.Date.context_today)
     parent_path = fields.Char(index=True)
     json_popover = fields.Char(
         string="JSON data for popover widget",

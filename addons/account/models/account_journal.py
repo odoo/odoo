@@ -233,7 +233,6 @@ class AccountJournal(models.Model):
         check_company=True,
         copy=False,
         ondelete="restrict",
-        string="Default Account",
         domain=_domain_default_account_id,
     )
     suspense_account_id = fields.Many2one(
@@ -245,7 +244,6 @@ class AccountJournal(models.Model):
         compute="_compute_suspense_account_id",
         help="Bank statements transactions will be posted on the suspense account until the final reconciliation "
         "allowing finding the right account.",
-        string="Suspense Account",
         domain="[('account_type', '=', 'asset_current')]",
     )
     non_deductible_account_id = fields.Many2one(
@@ -284,11 +282,10 @@ class AccountJournal(models.Model):
     )
 
     currency_id = fields.Many2one(
-        "res.currency", help="The currency used to enter statement", string="Currency"
+        "res.currency", help="The currency used to enter statement"
     )
     company_id = fields.Many2one(
         "res.company",
-        string="Company",
         required=True,
         readonly=True,
         index=True,
@@ -370,14 +367,12 @@ class AccountJournal(models.Model):
         comodel_name="account.account",
         check_company=True,
         help="Used to register a profit when the ending balance of a cash register differs from what the system computes",
-        string="Profit Account",
         domain="[('account_type', 'in', ('income', 'income_other'))]",
     )
     loss_account_id = fields.Many2one(
         comodel_name="account.account",
         check_company=True,
         help="Used to register a loss when the ending balance of a cash register differs from what the system computes",
-        string="Loss Account",
         domain="[('account_type', '=', 'expense')]",
     )
 
@@ -390,7 +385,6 @@ class AccountJournal(models.Model):
     )
     bank_account_id = fields.Many2one(
         "res.partner.bank",
-        string="Bank Account",
         ondelete="restrict",
         copy=False,
         index="btree_not_null",

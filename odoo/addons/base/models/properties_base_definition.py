@@ -18,7 +18,7 @@ class PropertiesBaseDefinition(models.Model):
         required=True,
         ondelete="cascade",
     )
-    properties_definition = fields.PropertiesDefinition("Properties Definition")
+    properties_definition = fields.PropertiesDefinition()
 
     _unique_properties_field_id = models.Constraint(
         "UNIQUE(properties_field_id)",

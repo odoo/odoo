@@ -11,12 +11,12 @@ class HrLeaveReportCalendar(models.Model):
     _auto = False
     _order = "start_datetime DESC, employee_id"
 
-    name = fields.Char(string="Name", readonly=True, compute="_compute_name")
+    name = fields.Char(readonly=True, compute="_compute_name")
     start_datetime = fields.Datetime(string="From", readonly=True)
     stop_datetime = fields.Datetime(string="To", readonly=True)
     duration_display = fields.Char(related="leave_id.duration_display", readonly=True)
     tz = fields.Selection(_selection_timezones, string="Timezone", readonly=True)
-    duration = fields.Float(string="Duration", readonly=True)
+    duration = fields.Float(readonly=True)
     employee_id = fields.Many2one("hr.employee", readonly=True)
     user_id = fields.Many2one("res.users", readonly=True)
     department_id = fields.Many2one("hr.department", readonly=True)
@@ -33,7 +33,7 @@ class HrLeaveReportCalendar(models.Model):
         readonly=True,
     )
     description = fields.Char(
-        "Description", readonly=True, groups="hr_holidays.group_hr_holidays_user"
+        readonly=True, groups="hr_holidays.group_hr_holidays_user"
     )
     holiday_status_id = fields.Many2one(
         "hr.leave.type",

@@ -9,9 +9,7 @@ from odoo.tools import SQL
 class ResUsers(models.Model):
     _inherit = "res.users"
 
-    karma = fields.Integer(
-        "Karma", compute="_compute_karma", store=True, readonly=False
-    )
+    karma = fields.Integer(compute="_compute_karma", store=True, readonly=False)
     karma_tracking_ids = fields.One2many(
         "gamification.karma.tracking",
         "user_id",
@@ -30,8 +28,8 @@ class ResUsers(models.Model):
     bronze_badge = fields.Integer(
         "Bronze badges count", compute="_compute_badge_level_counts"
     )
-    rank_id = fields.Many2one("gamification.karma.rank", "Rank", index="btree_not_null")
-    next_rank_id = fields.Many2one("gamification.karma.rank", "Next Rank")
+    rank_id = fields.Many2one("gamification.karma.rank", index="btree_not_null")
+    next_rank_id = fields.Many2one("gamification.karma.rank")
 
     # XP progress fields for UI display
     xp_to_next_rank = fields.Integer(

@@ -47,7 +47,6 @@ class ResCompany(models.Model):
     )
     nemhandel_purchase_journal_id = fields.Many2one(
         comodel_name="account.journal",
-        string="Nemhandel Purchase Journal",
         domain=[("type", "=", "purchase")],
         compute="_compute_nemhandel_purchase_journal_id",
         store=True,

@@ -39,9 +39,9 @@ class DocumentsOperation(models.TransientModel):
         required=True,
     )
     document_ids = fields.Many2many("document.document", string="Documents")
-    attachment_id = fields.Many2one("ir.attachment", string="Attachment")
+    attachment_id = fields.Many2one("ir.attachment")
 
-    destination = fields.Char(string="Destination", required=True)
+    destination = fields.Char(required=True)
     destination_children_ids = fields.One2many(
         "document.document",
         string="Siblings",

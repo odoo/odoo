@@ -314,7 +314,6 @@ class AccountMergeWizardLine(models.TransientModel):
     )
     is_selected = fields.Boolean()
     account_id = fields.Many2one(
-        string="Account",
         comodel_name="account.account",
         ondelete="cascade",
         readonly=True,
@@ -324,7 +323,6 @@ class AccountMergeWizardLine(models.TransientModel):
         related="account_id.company_ids",
     )
     info = fields.Char(
-        string="Info",
         compute="_compute_info",
         help="Contains either the section name or error message, depending on the line type.",
     )

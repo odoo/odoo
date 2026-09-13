@@ -69,7 +69,6 @@ class StockMoveLine(models.Model):
 
     company_id = fields.Many2one(
         comodel_name="res.company",
-        string="Company",
         required=True,
         readonly=True,
         index=True,
@@ -191,7 +190,6 @@ class StockMoveLine(models.Model):
         help="When validating the transfer, the products will be taken from this owner.",
     )
     date = fields.Datetime(
-        string="Date",
         required=True,
         default=fields.Datetime.now,
         help="Creation date of this move line until updated due to: quantity being increased, 'picked' status has updated, or move line is done.",
@@ -199,7 +197,6 @@ class StockMoveLine(models.Model):
 
     product_id = fields.Many2one(
         comodel_name="product.product",
-        string="Product",
         check_company=True,
         domain="[('type', '!=', 'service')]",
         ondelete="cascade",
@@ -228,7 +225,6 @@ class StockMoveLine(models.Model):
         domain="[('id', 'in', allowed_uom_ids)]",
     )
     quantity = fields.Float(
-        string="Quantity",
         digits="Product Unit",
         compute="_compute_quantity",
         store=True,
@@ -243,7 +239,6 @@ class StockMoveLine(models.Model):
         copy=False,
     )
     picked = fields.Boolean(
-        string="Picked",
         compute="_compute_picked",
         store=True,
         readonly=False,
@@ -286,7 +281,6 @@ class StockMoveLine(models.Model):
     )
     package_history_id = fields.Many2one(
         comodel_name="stock.package.history",
-        string="Package History",
         index="btree_not_null",
     )
     is_entire_pack = fields.Boolean(

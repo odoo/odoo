@@ -23,7 +23,6 @@ class CalendarEvent(models.Model):
 
     opportunity_id = fields.Many2one(
         "crm.lead",
-        "Opportunity",
         domain="[('type', '=', 'opportunity')]",
         index=True,
         ondelete="set null",

@@ -13,4 +13,4 @@ class HrApplicantRefuseReason(models.Model):
         string="Email Template",
         domain="[('model', '=', 'hr.applicant')]",
     )
-    active = fields.Boolean("Active", default=True)
+    active = fields.Boolean(default=True)

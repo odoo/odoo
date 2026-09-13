@@ -11,7 +11,6 @@ class _MagicFieldsMixin(_ModelMetadataMixin, metaclass=MetaModel):
 
     id = Id()
     display_name = Char(
-        string="Display Name",
         compute="_compute_display_name",
         search="_search_display_name",
     )

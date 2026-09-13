@@ -9,7 +9,7 @@ class EventLeadRule(models.Model):
     _description = "Event Lead Rules"
 
     name = fields.Char("Rule Name", required=True, translate=True)
-    active = fields.Boolean("Active", default=True)
+    active = fields.Boolean(default=True)
     lead_ids = fields.One2many(
         "crm.lead",
         "event_lead_rule_id",
@@ -44,13 +44,11 @@ class EventLeadRule(models.Model):
     )
     event_id = fields.Many2one(
         "event.event",
-        string="Event",
         domain="[('company_id', 'in', [company_id or current_company_id, False])]",
         help="Filter the attendees to include those of this specific event. If not set, no event restriction will be applied.",
     )
     company_id = fields.Many2one(
         "res.company",
-        string="Company",
         help="Restrict the trigger of this rule to events belonging to a specific company.\nIf not set, no company restriction will be applied.",
     )
     event_registration_filter = fields.Text(
@@ -59,7 +57,6 @@ class EventLeadRule(models.Model):
     )
     lead_type = fields.Selection(
         [("lead", "Lead"), ("opportunity", "Opportunity")],
-        string="Lead Type",
         required=True,
         default=lambda self: (
             "lead" if self.env.user.has_group("crm.group_use_lead") else "opportunity"

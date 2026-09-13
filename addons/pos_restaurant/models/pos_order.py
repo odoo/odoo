@@ -6,7 +6,6 @@ class PosOrder(models.Model):
 
     table_id = fields.Many2one(
         "restaurant.table",
-        string="Table",
         help="The table where this order was served",
         index="btree_not_null",
         readonly=True,

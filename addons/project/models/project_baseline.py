@@ -27,7 +27,6 @@ class ProjectBaseline(models.Model):
     )
     created_by_id = fields.Many2one(
         "res.users",
-        string="Created By",
         default=lambda self: self.env.user,
         readonly=True,
     )
@@ -121,7 +120,6 @@ class ProjectBaselineLine(models.Model):
     )
     task_id = fields.Many2one(
         "project.task",
-        string="Task",
         ondelete="set null",
         index=True,
         help="Link to the original task (may be deleted since snapshot).",

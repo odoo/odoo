@@ -15,7 +15,7 @@ class MrpProductionBackorderLine(models.TransientModel):
         ondelete="cascade",
         readonly=True,
     )
-    to_backorder = fields.Boolean("To Backorder")
+    to_backorder = fields.Boolean()
 
 
 class MrpProductionBackorder(models.TransientModel):

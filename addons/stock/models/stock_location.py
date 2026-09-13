@@ -67,7 +67,6 @@ class StockLocation(models.Model):
         recursive=True,
     )
     active = fields.Boolean(
-        string="Active",
         default=True,
         help="By unchecking the active field, you may hide a location without deleting it.",
     )
@@ -114,7 +113,6 @@ class StockLocation(models.Model):
     parent_path = fields.Char(index=True)
     company_id = fields.Many2one(
         comodel_name="res.company",
-        string="Company",
         default=lambda self: self.env.company,
         index=True,
         help="Let this field empty if this location is shared between companies",
@@ -129,7 +127,6 @@ class StockLocation(models.Model):
     )
     removal_strategy_id = fields.Many2one(
         comodel_name="product.removal",
-        string="Removal Strategy",
         help="Defines the default method used for suggesting the exact location (shelf) "
         "where to take the products from, which lot etc. for this location. "
         "This method can be enforced at the product category level, "
@@ -146,7 +143,7 @@ class StockLocation(models.Model):
         inverse_name="location_in_id",
         string="Putaway Rules",
     )
-    barcode = fields.Char(string="Barcode", copy=False)
+    barcode = fields.Char(copy=False)
     quant_ids = fields.One2many(
         comodel_name="stock.quant",
         inverse_name="location_id",
@@ -180,7 +177,6 @@ class StockLocation(models.Model):
     )
     storage_category_id = fields.Many2one(
         comodel_name="stock.storage.category",
-        string="Storage Category",
         check_company=True,
         index="btree_not_null",
     )
@@ -193,7 +189,6 @@ class StockLocation(models.Model):
         inverse_name="location_dest_id",
     )
     net_weight = fields.Float(
-        string="Net Weight",
         compute="_compute_weight",
     )
     forecast_weight = fields.Float(
@@ -201,7 +196,6 @@ class StockLocation(models.Model):
         compute="_compute_weight",
     )
     is_empty = fields.Boolean(
-        string="Is Empty",
         compute="_compute_is_empty",
         search="_search_is_empty",
     )

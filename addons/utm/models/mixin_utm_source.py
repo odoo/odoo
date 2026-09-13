@@ -10,7 +10,7 @@ class MixinUtmSource(models.AbstractModel):
 
     name = fields.Char("Name", related="source_id.name", readonly=False)
     source_id = fields.Many2one(
-        "utm.source", string="Source", required=True, ondelete="restrict", copy=False
+        "utm.source", required=True, ondelete="restrict", copy=False
     )
 
     @api.model

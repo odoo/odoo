@@ -66,7 +66,6 @@ class IrModel(models.Model):
     )
     model = fields.Char(default="x_", required=True)
     order = fields.Char(
-        string="Order",
         default="id",
         required=True,
         help='SQL expression for ordering records in the model; e.g. "x_sequence asc, id desc"',
@@ -92,7 +91,7 @@ class IrModel(models.Model):
         default="manual",
         readonly=True,
     )
-    access_ids = fields.One2many("ir.model.access", "model_id", string="Access")
+    access_ids = fields.One2many("ir.model.access", "model_id")
     rule_ids = fields.One2many("ir.rule", "model_id", string="Record Rules")
     abstract = fields.Boolean(string="Abstract Model")
     transient = fields.Boolean(string="Transient Model")

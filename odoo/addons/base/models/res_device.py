@@ -47,20 +47,17 @@ class ResDeviceLog(models.Model):
     _description = "Device Log"
     _rec_names_search = ["platform", "browser"]
 
-    session_identifier = fields.Char("Session Identifier", required=True, index="btree")
-    platform = fields.Char("Platform")
-    browser = fields.Char("Browser")
+    session_identifier = fields.Char(required=True, index="btree")
+    platform = fields.Char()
+    browser = fields.Char()
     ip_address = fields.Char("IP Address")
-    country = fields.Char("Country")
-    city = fields.Char("City")
-    device_type = fields.Selection(
-        [("computer", "Computer"), ("mobile", "Mobile")], "Device Type"
-    )
+    country = fields.Char()
+    city = fields.Char()
+    device_type = fields.Selection([("computer", "Computer"), ("mobile", "Mobile")])
     user_id = fields.Many2one("res.users", index="btree", ondelete="cascade")
-    first_activity = fields.Datetime("First Activity")
-    last_activity = fields.Datetime("Last Activity", index="btree")
+    first_activity = fields.Datetime()
+    last_activity = fields.Datetime(index="btree")
     revoked = fields.Boolean(
-        "Revoked",
         help="If True, the session file corresponding to this device"
         " no longer exists on the filesystem.",
     )

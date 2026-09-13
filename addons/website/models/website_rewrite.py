@@ -63,10 +63,8 @@ class WebsiteRewrite(models.Model):
     _name = "website.rewrite"
     _description = "Website rewrite"
 
-    name = fields.Char("Name", required=True)
-    website_id = fields.Many2one(
-        "website", string="Website", ondelete="cascade", index=True
-    )
+    name = fields.Char(required=True)
+    website_id = fields.Many2one("website", ondelete="cascade", index=True)
     active = fields.Boolean(default=True)
     url_from = fields.Char("URL from", index=True)
     route_id = fields.Many2one("website.route")

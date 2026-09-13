@@ -69,7 +69,7 @@ class MailingTrace(models.Model):
         "However the ID is needed for several action and controllers.",
         index="btree_not_null",
     )
-    email = fields.Char(string="Email", help="Normalized email address")
+    email = fields.Char(help="Normalized email address")
     message_id = fields.Char(string="Message-ID")  # email Message-ID (RFC 2392)
     medium_id = fields.Many2one(related="mass_mailing_id.medium_id")
     source_id = fields.Many2one(related="mass_mailing_id.source_id")

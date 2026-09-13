@@ -8,7 +8,6 @@ class AccountMove(models.Model):
     website_id = fields.Many2one(
         "website",
         compute="_compute_website_id",
-        string="Website",
         help="Website through which this invoice was created for eCommerce orders.",
         store=True,
         readonly=True,

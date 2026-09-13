@@ -31,10 +31,10 @@ class GamificationStreakType(models.Model):
     _order = "sequence, name"
 
     name = fields.Char("Streak Name", required=True, translate=True)
-    description = fields.Text("Description", translate=True)
+    description = fields.Text(translate=True)
     sequence = fields.Integer(default=10)
     active = fields.Boolean(default=True)
-    icon = fields.Image("Icon", max_width=128, max_height=128)
+    icon = fields.Image(max_width=128, max_height=128)
 
     # What counts as "activity" for this streak
     model_id = fields.Many2one(
@@ -62,7 +62,6 @@ class GamificationStreakType(models.Model):
     )
     date_field_id = fields.Many2one(
         "ir.model.fields",
-        string="Date Field",
         required=True,
         ondelete="cascade",
         help="The date/datetime field used to check daily activity.",
@@ -206,7 +205,6 @@ class GamificationStreak(models.Model):
 
     user_id = fields.Many2one(
         "res.users",
-        string="User",
         required=True,
         index=True,
         ondelete="cascade",
@@ -214,7 +212,6 @@ class GamificationStreak(models.Model):
     )
     streak_type_id = fields.Many2one(
         "gamification.streak.type",
-        string="Streak Type",
         required=True,
         index=True,
         ondelete="cascade",
@@ -241,7 +238,7 @@ class GamificationStreak(models.Model):
         readonly=True,
         index=True,
     )
-    total_karma_earned = fields.Integer("Total Karma Earned", default=0, readonly=True)
+    total_karma_earned = fields.Integer(default=0, readonly=True)
 
     _user_streak_type_uniq = models.UniqueIndex(
         "(user_id, streak_type_id)",

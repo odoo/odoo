@@ -251,7 +251,6 @@ class IrActionsServer(models.Model):
             ("ir_actions_server", "Server Action"),
             ("ir_cron", "Scheduled Action"),
         ],
-        string="Usage",
         default="ir_actions_server",
         required=True,
     )
@@ -287,7 +286,6 @@ class IrActionsServer(models.Model):
     )
     model_id = fields.Many2one(
         "ir.model",
-        string="Model",
         required=True,
         ondelete="cascade",
         index=True,
@@ -304,7 +302,6 @@ class IrActionsServer(models.Model):
         string="Model Name",
     )
     warning = fields.Text(
-        string="Warning",
         compute="_compute_warning",
         recursive=True,
     )
@@ -351,7 +348,6 @@ class IrActionsServer(models.Model):
     )
     link_field_id = fields.Many2one(
         "ir.model.fields",
-        string="Link Field",
         help="Specify a field used to link the newly created record on the record used by the server action.",
     )
     group_ids = fields.Many2many(

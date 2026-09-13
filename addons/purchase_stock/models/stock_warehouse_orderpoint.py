@@ -35,7 +35,6 @@ class StockWarehouseOrderpoint(models.Model):
     )
     available_vendor = fields.Many2one(
         comodel_name="res.partner",
-        string="Available Vendor",
         store=False,
         search="_search_available_vendor",
         help="Any vendor on the product's pricelist",

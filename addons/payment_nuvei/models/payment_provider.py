@@ -15,20 +15,17 @@ class PaymentProvider(models.Model):
         selection_add=[("nuvei", "Nuvei")], ondelete={"nuvei": "set default"}
     )
     nuvei_merchant_identifier = fields.Char(
-        string="Nuvei Merchant Identifier",
         help="The code of the merchant account to use with this provider.",
         required_if_provider="nuvei",
         copy=False,
     )
     nuvei_site_identifier = fields.Char(
-        string="Nuvei Site Identifier",
         help="The site identifier code associated with the merchant account.",
         required_if_provider="nuvei",
         copy=False,
         groups="base.group_system",
     )
     nuvei_secret_key = fields.Char(
-        string="Nuvei Secret Key",
         required_if_provider="nuvei",
         copy=False,
         groups="base.group_system",

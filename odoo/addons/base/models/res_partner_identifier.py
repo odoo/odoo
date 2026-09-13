@@ -21,7 +21,6 @@ class ResPartnerIdentifier(models.Model):
     )
     type_id = fields.Many2one(
         comodel_name="res.partner.identifier.type",
-        string="Type",
         required=True,
         ondelete="restrict",
         index=True,

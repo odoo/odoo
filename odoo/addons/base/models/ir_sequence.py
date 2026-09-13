@@ -181,7 +181,6 @@ class IrSequence(models.Model):
     code = fields.Char(string="Sequence Code")
     implementation = fields.Selection(
         [("standard", "Standard"), ("no_gap", "No gap")],
-        string="Implementation",
         required=True,
         default="standard",
         help="While assigning a sequence number to a record, the 'no gap' sequence implementation ensures that each previous sequence number has been assigned already. "
@@ -216,9 +215,7 @@ class IrSequence(models.Model):
         default=0,
         help="Odoo will automatically adds some '0' on the left of the 'Next Number' to get the required padding size.",
     )
-    company_id = fields.Many2one(
-        "res.company", string="Company", default=lambda s: s.env.company
-    )
+    company_id = fields.Many2one("res.company", default=lambda s: s.env.company)
     use_date_range = fields.Boolean(string="Use subsequences per date_range")
     date_range_ids = fields.One2many(
         "ir.sequence.date_range", "sequence_id", string="Subsequences"

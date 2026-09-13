@@ -9,12 +9,11 @@ class HrAttendanceOvertimeLine(models.Model):
 
     attendance_id = fields.Many2one(
         "hr.attendance",
-        string="Attendance",
         ondelete="cascade",
         index=True,
     )
     employee_id = fields.Many2one(
-        "hr.employee", string="Employee", required=True, ondelete="cascade", index=True
+        "hr.employee", required=True, ondelete="cascade", index=True
     )
     company_id = fields.Many2one(related="employee_id.company_id")
 

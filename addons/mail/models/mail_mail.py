@@ -181,12 +181,10 @@ class MailMail(models.Model):
         search="_search_body_content",
     )
     references = fields.Text(
-        "References",
         help="Message references, such as identifiers of previous messages",
         readonly=True,
     )
     headers = fields.Json(
-        "Headers",
         copy=False,
         help="Extra SMTP headers to stamp on the outgoing message, as a mapping "
         "of header name to value.",
@@ -227,13 +225,11 @@ class MailMail(models.Model):
         string="Failure type",
     )
     failure_reason = fields.Text(
-        "Failure Reason",
         readonly=True,
         copy=False,
         help="Failure reason. This is usually the exception thrown by the email server, stored to ease the debugging of mailing issues.",
     )
     auto_delete = fields.Boolean(
-        "Auto Delete",
         help="This option permanently removes any track of email after it's been sent, including from the Technical menu in the Settings, in order to preserve storage space of your Odoo database.",
     )
     scheduled_date = fields.Datetime(

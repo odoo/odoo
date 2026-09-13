@@ -22,7 +22,6 @@ class ProductAttribute(models.Model):
         help="If unchecked, it will allow you to hide the attribute without removing it.",
     )
     sequence = fields.Integer(
-        string="Sequence",
         default=20,
         index=True,
         help="Determine the display order",

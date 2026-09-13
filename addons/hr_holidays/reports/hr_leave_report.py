@@ -21,7 +21,7 @@ class HrLeaveReport(models.Model):
         string="Request Type",
         readonly=True,
     )
-    department_id = fields.Many2one("hr.department", string="Department", readonly=True)
+    department_id = fields.Many2one("hr.department", readonly=True)
     holiday_status_id = fields.Many2one(
         "hr.leave.type", string="Time Off Type", readonly=True
     )
@@ -38,7 +38,7 @@ class HrLeaveReport(models.Model):
     )
     date_from = fields.Datetime("Start Date", readonly=True)
     date_to = fields.Datetime("End Date", readonly=True)
-    company_id = fields.Many2one("res.company", string="Company", readonly=True)
+    company_id = fields.Many2one("res.company", readonly=True)
 
     def init(self):
         drop_view_if_exists(self.env.cr, "hr_leave_report")

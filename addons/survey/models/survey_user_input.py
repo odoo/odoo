@@ -38,7 +38,6 @@ class SurveyUser_Input(models.Model):
 
     survey_id = fields.Many2one(
         "survey.survey",
-        string="Survey",
         readonly=True,
         index=True,
         ondelete="cascade",
@@ -50,7 +49,6 @@ class SurveyUser_Input(models.Model):
     start_datetime = fields.Datetime("Start date and time", readonly=True)
     end_datetime = fields.Datetime("End date and time", readonly=True)
     deadline = fields.Datetime(
-        "Deadline",
         help="Datetime until customer can open the survey and submit answers",
     )
     lang_id = fields.Many2one("res.lang", string="Language")
@@ -74,7 +72,6 @@ class SurveyUser_Input(models.Model):
         related="survey_id.attempts_limit",
     )
     attempts_count = fields.Integer(
-        "Attempts Count",
         compute="_compute_attempts_info",
     )
     attempts_number = fields.Integer(
@@ -82,7 +79,6 @@ class SurveyUser_Input(models.Model):
         compute="_compute_attempts_info",
     )
     survey_time_limit_reached = fields.Boolean(
-        "Survey Time Limit Reached",
         compute="_compute_survey_time_limit_reached",
     )
     access_token = fields.Char(
@@ -104,11 +100,9 @@ class SurveyUser_Input(models.Model):
         index="btree_not_null",
     )
     email = fields.Char(
-        "Email",
         readonly=True,
     )
     nickname = fields.Char(
-        "Nickname",
         help="Attendee nickname, mainly used to identify them in the survey session leaderboard.",
     )
     ip_address = fields.Char(
@@ -153,9 +147,7 @@ class SurveyUser_Input(models.Model):
         store=True,
         compute_sudo=True,
     )
-    survey_first_submitted = fields.Boolean(
-        string="Survey First Submitted",
-    )
+    survey_first_submitted = fields.Boolean()
     is_speeder = fields.Boolean(
         "Speeder",
         compute="_compute_is_speeder",
@@ -170,7 +162,6 @@ class SurveyUser_Input(models.Model):
         help="Respondent selected the same answer for every choice/matrix question.",
     )
     quality_score = fields.Integer(
-        "Quality Score",
         compute="_compute_quality_score",
         search="_search_quality_score",
         help="Response quality from 0 (worst) to 100 (best). Based on speed and answer variety.",
@@ -180,7 +171,6 @@ class SurveyUser_Input(models.Model):
         help="Is that user input part of a survey session or not.",
     )
     question_time_limit_reached = fields.Boolean(
-        "Question Time Limit Reached",
         compute="_compute_question_time_limit_reached",
     )
 

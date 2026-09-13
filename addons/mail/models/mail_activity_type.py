@@ -21,9 +21,9 @@ class MailActivityType(models.Model):
     _order = "sequence, id"
     _rec_name = "name"
 
-    name = fields.Char("Name", required=True, translate=True)
+    name = fields.Char(required=True, translate=True)
     summary = fields.Char("Default Summary", translate=True)
-    sequence = fields.Integer("Sequence", default=10)
+    sequence = fields.Integer(default=10)
     active = fields.Boolean(default=True)
     create_uid: ResUsers = fields.Many2one("res.users", index=True)
     delay_count = fields.Integer(
@@ -41,10 +41,9 @@ class MailActivityType(models.Model):
         required=True,
         default="previous_activity",
     )
-    icon = fields.Char("Icon", help="Font awesome icon e.g. fa-tasks")
+    icon = fields.Char(help="Font awesome icon e.g. fa-tasks")
     decoration_type = fields.Selection(
         [("warning", "Alert"), ("danger", "Error")],
-        string="Decoration Type",
         help="Change the background color of the related activities of this type.",
     )
     res_model = fields.Selection(
@@ -66,7 +65,6 @@ class MailActivityType(models.Model):
     )
     chaining_type = fields.Selection(
         [("suggest", "Suggest Next Activity"), ("trigger", "Trigger Next Activity")],
-        string="Chaining Type",
         required=True,
         default="suggest",
     )
@@ -104,8 +102,8 @@ class MailActivityType(models.Model):
     mail_template_ids: MailTemplate = fields.Many2many(
         "mail.template", string="Email templates"
     )
-    default_user_id: ResUsers = fields.Many2one("res.users", string="Default User")
-    default_note = fields.Html(string="Default Note", translate=True)
+    default_user_id: ResUsers = fields.Many2one("res.users")
+    default_note = fields.Html(translate=True)
 
     @api.constrains("res_model")
     def _check_activity_type_res_model(self) -> None:

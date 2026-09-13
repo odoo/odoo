@@ -69,14 +69,12 @@ class BarcodeRule(models.Model):
         help="An internal identification for this barcode nomenclature rule",
     )
     barcode_nomenclature_id = fields.Many2one(
-        "barcode.nomenclature", string="Barcode Nomenclature", index="btree_not_null"
+        "barcode.nomenclature", index="btree_not_null"
     )
     sequence = fields.Integer(
-        string="Sequence",
         help="Used to order rules such that rules with a smaller sequence match first",
     )
     encoding = fields.Selection(
-        string="Encoding",
         required=True,
         default="any",
         selection=[
@@ -88,7 +86,6 @@ class BarcodeRule(models.Model):
         help="This rule will apply only if the barcode is encoded with the specified encoding",
     )
     type = fields.Selection(
-        string="Type",
         required=True,
         selection=[
             ("alias", "Alias"),
@@ -103,7 +100,6 @@ class BarcodeRule(models.Model):
         default=".*",
     )
     alias = fields.Char(
-        string="Alias",
         help="The matched pattern will alias to this barcode",
     )
 

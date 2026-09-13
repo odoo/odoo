@@ -198,7 +198,7 @@ class ReportPaperformat(models.Model):
     _name = "report.paperformat"
     _description = "Paper Format Config"
 
-    name = fields.Char("Name", required=True)
+    name = fields.Char(required=True)
     format = fields.Selection(
         [(ps["key"], ps["description"]) for ps in PAPER_SIZES],
         "Paper size",
@@ -213,7 +213,6 @@ class ReportPaperformat(models.Model):
     page_width = fields.Integer("Page width (mm)", default=False)
     orientation = fields.Selection(
         [("Landscape", "Landscape"), ("Portrait", "Portrait")],
-        "Orientation",
         default="Landscape",
     )
     header_line = fields.Boolean("Display a header line", default=False)

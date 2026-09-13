@@ -13,9 +13,7 @@ class AccountReturnCheckTemplate(models.Model):
     _description = "Account Return Check Template"
 
     name = fields.Char(string="Title", required=True, translate=True)
-    code = fields.Char(
-        string="Code", default=lambda r: f"_template_check_{uuid.uuid4()}", copy=False
-    )
+    code = fields.Char(default=lambda r: f"_template_check_{uuid.uuid4()}", copy=False)
     return_type = fields.Many2one(
         comodel_name="account.return.type", string="Tax Return/Audit", required=True
     )
@@ -36,7 +34,6 @@ class AccountReturnCheckTemplate(models.Model):
             ("equity", "Equity"),
             ("other", "Others"),
         ],
-        string="Cycle",
         default="other",
         required=True,
     )
@@ -51,14 +48,14 @@ class AccountReturnCheckTemplate(models.Model):
         string="Action on Click",
         help="Overrides the default action based on the model and domain.",
     )
-    additional_action_domain = fields.Char(string="Additional Action Domain")
-    additional_action_context = fields.Char(string="Additional Action Context")
-    additional_action_params = fields.Char(string="Additional Action Params")
+    additional_action_domain = fields.Char()
+    additional_action_context = fields.Char()
+    additional_action_params = fields.Char()
     activity_type = fields.Many2one(
         comodel_name="mail.activity.type", string="Activities"
     )
 
-    description = fields.Text(string="Description", translate=True)
+    description = fields.Text(translate=True)
     model = fields.Selection(
         selection=[
             ("account.move.line", "Journal Item"),
@@ -66,9 +63,8 @@ class AccountReturnCheckTemplate(models.Model):
             ("account.bank.statement.line", "Bank Statement Line"),
             ("account.payment", "Payments"),
         ],
-        string="Model",
     )
-    domain = fields.Char(string="Domain")
+    domain = fields.Char()
 
     def _get_default_check_action_from_model(self):
         if self.model == "account.bank.statement.line":

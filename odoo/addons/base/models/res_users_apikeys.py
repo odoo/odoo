@@ -40,9 +40,9 @@ class ResUsersApikeys(models.Model):
         readonly=True,
         ondelete="cascade",
     )
-    scope = fields.Char("Scope", readonly=True)
+    scope = fields.Char(readonly=True)
     create_date = fields.Datetime("Creation Date", readonly=True)
-    expiration_date = fields.Datetime("Expiration Date", readonly=True)
+    expiration_date = fields.Datetime(readonly=True)
 
     def init(self) -> None:
         table = SQL.identifier(self._table)
@@ -285,12 +285,10 @@ class ResUsersApikeysDescription(models.TransientModel):
     name = fields.Char("Description", required=True)
     duration = fields.Selection(
         selection="_selection_duration",
-        string="Duration",
         required=True,
         default=lambda self: self._selection_duration()[0][0],
     )
     expiration_date = fields.Datetime(
-        "Expiration Date",
         compute="_compute_expiration_date",
         store=True,
         readonly=False,

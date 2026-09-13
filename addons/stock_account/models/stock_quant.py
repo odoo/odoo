@@ -8,7 +8,6 @@ class StockQuant(models.Model):
     _inherit = "stock.quant"
 
     value = fields.Monetary(
-        "Value",
         compute="_compute_value",
         groups="stock.group_stock_manager",
     )
@@ -18,13 +17,11 @@ class StockQuant(models.Model):
         groups="stock.group_stock_manager",
     )
     accounting_date = fields.Date(
-        "Accounting Date",
         help="Date at which the accounting entries will be created"
         " in case of automated inventory valuation."
         " If empty, the inventory date will be used.",
     )
     cost_method = fields.Selection(
-        string="Cost Method",
         selection=COST_METHOD_SELECTION,
         compute="_compute_cost_method",
     )

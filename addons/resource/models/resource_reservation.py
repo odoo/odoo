@@ -64,7 +64,6 @@ class ResourceReservation(models.Model):
 
     resource_id = fields.Many2one(
         "resource.resource",
-        "Resource",
         index=True,
         check_company=True,
         help="The resource (person, equipment) assigned to this schedule.",
@@ -79,7 +78,6 @@ class ResourceReservation(models.Model):
     )
 
     allocated_hours = fields.Float(
-        "Allocated Hours",
         compute="_compute_allocated_hours",
         store=True,
         readonly=False,

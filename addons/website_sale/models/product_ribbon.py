@@ -10,15 +10,13 @@ class ProductRibbon(models.Model):
     name = fields.Char(string="Ribbon Name", required=True, translate=True, size=20)
     sequence = fields.Integer(default=10)
     bg_color = fields.Char(string="Background Color", required=True, default="#000000")
-    text_color = fields.Char(string="Text Color", required=True, default="#FFFFFF")
+    text_color = fields.Char(required=True, default="#FFFFFF")
     position = fields.Selection(
-        string="Position",
         selection=[("left", "Left"), ("right", "Right")],
         required=True,
         default="left",
     )
     style = fields.Selection(
-        string="Style",
         selection=[("ribbon", "Ribbon"), ("tag", "Badge")],
         required=True,
         default="ribbon",
@@ -29,7 +27,6 @@ class ProductRibbon(models.Model):
         ),
     )
     assign = fields.Selection(
-        string="Assign",
         selection=[
             ("manual", "Manually"),
             ("sale", "On Sale"),

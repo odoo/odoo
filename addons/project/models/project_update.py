@@ -89,14 +89,9 @@ class ProjectUpdate(models.Model):
     name_cropped = fields.Char(
         compute="_compute_name_cropped", export_string_translation=False
     )
-    task_count = fields.Integer(
-        "Task Count", readonly=True, export_string_translation=False
-    )
-    closed_task_count = fields.Integer(
-        "Closed Task Count", readonly=True, export_string_translation=False
-    )
+    task_count = fields.Integer(readonly=True, export_string_translation=False)
+    closed_task_count = fields.Integer(readonly=True, export_string_translation=False)
     closed_task_percentage = fields.Integer(
-        "Closed Task Percentage",
         compute="_compute_closed_task_percentage",
         export_string_translation=False,
     )

@@ -9,7 +9,6 @@ class PosOrder(models.Model):
     )
     crm_team_id = fields.Many2one("crm.team", string="Sales Team", ondelete="set null")
     sale_order_count = fields.Integer(
-        string="Sale Order Count",
         compute="_compute_sale_order_count",
         readonly=True,
         groups="sales_team.group_sale_salesman",
@@ -254,7 +253,7 @@ class PosOrderLine(models.Model):
     # settles. Written here (and by pos_store.js's addDownPaymentProduct-
     # OrderlineToOrder) and read only by this module's own JS `saleDetails`
     # getter (pos_order_line.js) — no consumer outside pos_sale.
-    down_payment_details = fields.Text(string="Down Payment Details")
+    down_payment_details = fields.Text()
     qty_transferred = fields.Float(
         string="Delivery Quantity",
         compute="_compute_qty_transferred",

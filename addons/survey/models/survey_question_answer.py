@@ -16,7 +16,6 @@ class SurveyQuestionAnswer(models.Model):
 
     question_id = fields.Many2one(
         "survey.question",
-        string="Question",
         ondelete="cascade",
         index="btree_not_null",
     )
@@ -33,7 +32,6 @@ class SurveyQuestionAnswer(models.Model):
     value_image = fields.Image("Image", max_width=1024, max_height=1024)
     value_image_filename = fields.Char("Image Filename")
     value_label = fields.Char(
-        "Value Label",
         compute="_compute_value_label",
         help="Answer label as either the value itself if not empty "
         "or a letter representing the index of the answer otherwise.",
@@ -44,7 +42,6 @@ class SurveyQuestionAnswer(models.Model):
         help="A positive score indicates a correct choice; a negative or null score indicates a wrong answer",
     )
     comment = fields.Text(
-        "Comment",
         translate=True,
         help="Feedback shown to the learner when this answer is selected.",
     )
@@ -55,7 +52,6 @@ class SurveyQuestionAnswer(models.Model):
             ("end_survey", "End survey"),
             ("redirect", "Redirect to URL"),
         ],
-        string="Skip Action",
         default="next",
         help="Action to perform when this answer is selected and the page is submitted.",
     )

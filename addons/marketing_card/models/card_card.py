@@ -9,7 +9,7 @@ class CardCard(models.Model):
     _name = "card.card"
     _description = "Marketing Card"
 
-    active = fields.Boolean("Active", default=True)
+    active = fields.Boolean(default=True)
     campaign_id = fields.Many2one(
         "card.campaign", required=True, index=True, ondelete="cascade"
     )

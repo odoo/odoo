@@ -537,7 +537,6 @@ class ResCurrencyRate(models.Model):
     )
     currency_id = fields.Many2one(
         "res.currency",
-        string="Currency",
         readonly=True,
         required=True,
         index=True,
@@ -545,7 +544,6 @@ class ResCurrencyRate(models.Model):
     )
     company_id = fields.Many2one(
         "res.company",
-        string="Company",
         default=lambda self: self.env.company.root_id,
     )
 

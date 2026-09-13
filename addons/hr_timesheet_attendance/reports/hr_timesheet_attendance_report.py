@@ -13,9 +13,9 @@ class HrTimesheetAttendanceReport(models.Model):
     total_attendance = fields.Float("Attendance Time", readonly=True)
     total_difference = fields.Float("Time Difference", readonly=True)
     timesheets_cost = fields.Float("Timesheet Cost", readonly=True)
-    attendance_cost = fields.Float("Attendance Cost", readonly=True)
-    cost_difference = fields.Float("Cost Difference", readonly=True)
-    company_id = fields.Many2one("res.company", string="Company", readonly=True)
+    attendance_cost = fields.Float(readonly=True)
+    cost_difference = fields.Float(readonly=True)
+    company_id = fields.Many2one("res.company", readonly=True)
 
     def init(self):
         drop_view_if_exists(self.env.cr, self._table)

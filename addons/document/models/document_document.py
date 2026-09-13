@@ -51,7 +51,6 @@ class DocumentsDocument(models.Model):
 
     company_id = fields.Many2one(
         "res.company",
-        string="Company",
         index=True,
     )
     partner_id = fields.Many2one(
@@ -62,7 +61,6 @@ class DocumentsDocument(models.Model):
     )
     owner_id = fields.Many2one(
         "res.users",
-        string="Owner",
         default=lambda self: self.env.user.id if self.env.user.active else False,
         copy=False,
         index=True,
@@ -159,7 +157,6 @@ class DocumentsDocument(models.Model):
     )
 
     name = fields.Char(
-        "Name",
         copy=True,
         compute="_compute_name_and_preview",
         store=True,
@@ -168,12 +165,11 @@ class DocumentsDocument(models.Model):
         translate=True,
         tracking=True,
     )
-    active = fields.Boolean(default=True, string="Active")
-    sequence = fields.Integer("Sequence", default=10)
+    active = fields.Boolean(default=True)
+    sequence = fields.Integer(default=10)
     type = fields.Selection(
         [("url", "URL"), ("binary", "File"), ("folder", "Folder")],
         default="binary",
-        string="Type",
         required=True,
         readonly=True,
         index=True,
@@ -283,7 +279,6 @@ class DocumentsDocument(models.Model):
     parent_path = fields.Char(index=True)
     folder_id = fields.Many2one(
         "document.document",
-        string="Folder",
         required=False,
         ondelete="set null",
         domain="[('type', '=', 'folder'), ('shortcut_document_id', '=', False)]",
@@ -340,7 +335,6 @@ class DocumentsDocument(models.Model):
         string="Alias Tags",
     )
     mail_alias_domain_count = fields.Integer(
-        "Mail Alias Domain Count",
         compute="_compute_mail_alias_domain_count",
     )
 
@@ -355,7 +349,6 @@ class DocumentsDocument(models.Model):
         readonly=False,
     )
     file_extension = fields.Char(
-        "File Extension",
         compute="_compute_file_extension",
         inverse="_inverse_file_extension",
         store=True,

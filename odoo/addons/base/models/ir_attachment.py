@@ -111,8 +111,8 @@ class IrAttachment(models.Model):
     _description = "Attachment"
     _order = "id desc"
 
-    name = fields.Char("Name", required=True)
-    description = fields.Text("Description")
+    name = fields.Char(required=True)
+    description = fields.Text()
     res_name = fields.Char(
         "Resource Name",
         compute="_compute_res_name",
@@ -125,28 +125,24 @@ class IrAttachment(models.Model):
     )
     company_id = fields.Many2one(
         "res.company",
-        string="Company",
         change_default=True,
         default=lambda self: self.env.company,
     )
     type = fields.Selection(
         [("url", "URL"), ("binary", "File")],
-        string="Type",
         required=True,
         default="binary",
         change_default=True,
         help="You can either upload a file from your computer or copy/paste an internet link to your file.",
     )
-    url = fields.Char("Url", index="btree_not_null", size=1024)
+    url = fields.Char(index="btree_not_null", size=1024)
     public = fields.Boolean("Is public document")
-    access_token = fields.Char("Access Token", groups="base.group_user")
+    access_token = fields.Char(groups="base.group_user")
 
     db_datas = fields.Binary("Database Data", attachment=False)
     store_fname = fields.Char("Stored Filename", index=True, copy=False)
-    file_size = fields.Integer("File Size", readonly=True, copy=False)
-    checksum = fields.Char(
-        "Checksum", size=CONTENT_DIGEST_MAX_LEN, readonly=True, copy=False
-    )
+    file_size = fields.Integer(readonly=True, copy=False)
+    checksum = fields.Char(size=CONTENT_DIGEST_MAX_LEN, readonly=True, copy=False)
     mimetype = fields.Char("Mime Type", readonly=True)
     index_content = fields.Text(
         "Indexed Content", readonly=True, prefetch=False, copy=False

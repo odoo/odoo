@@ -46,13 +46,11 @@ class ResourceResource(models.Model):
         help="The person this resource is. A material resource has none.",
     )
     active = fields.Boolean(
-        "Active",
         default=True,
         help="If the active field is set to False, it will allow you to hide the resource record without removing it.",
     )
     company_id = fields.Many2one(
         "res.company",
-        string="Company",
         default=lambda self: self.env.company,
     )
     resource_type = fields.Selection(
@@ -63,7 +61,6 @@ class ResourceResource(models.Model):
     )
     user_id = fields.Many2one(
         "res.users",
-        string="User",
         index="btree_not_null",
         help="Related user name for the resource to manage its access.",
     )
@@ -125,7 +122,6 @@ class ResourceResource(models.Model):
     )
     default_role_id = fields.Many2one(
         "resource.role",
-        string="Default Role",
         compute="_compute_default_role_id",
         inverse="_inverse_default_role_id",
         store=True,

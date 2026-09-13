@@ -34,9 +34,7 @@ class ResCompanyLdap(models.Model):
     _rec_name = "ldap_server"
 
     sequence = fields.Integer(default=10)
-    company = fields.Many2one(
-        "res.company", string="Company", required=True, ondelete="cascade"
-    )
+    company = fields.Many2one("res.company", required=True, ondelete="cascade")
     ldap_server = fields.Char(
         string="LDAP Server address", required=True, default="127.0.0.1"
     )

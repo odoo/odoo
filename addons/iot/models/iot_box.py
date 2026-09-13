@@ -13,8 +13,8 @@ class IotBox(models.Model):
     _name = "iot.box"
     _description = "IoT Box"
 
-    name = fields.Char("Name", required=True)
-    identifier = fields.Char(string="Identifier", readonly=True)
+    name = fields.Char(required=True)
+    identifier = fields.Char(readonly=True)
     device_ids = fields.One2many("iot.device", "iot_id", string="Devices")
     device_count = fields.Count("device_ids")
     ip = fields.Char("Domain Address", readonly=True)
@@ -27,7 +27,7 @@ class IotBox(models.Model):
     version_commit_url = fields.Html(
         readonly=True, compute="_compute_version_commit_url"
     )
-    company_id = fields.Many2one("res.company", "Company")
+    company_id = fields.Many2one("res.company")
     ssl_certificate_end_date = fields.Datetime(
         "SSL Certificate End Date", readonly=True
     )

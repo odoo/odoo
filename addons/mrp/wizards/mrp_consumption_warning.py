@@ -108,9 +108,7 @@ class MrpConsumptionWarningLine(models.TransientModel):
     )
     consumption = fields.Selection(related="mrp_production_id.consumption")
 
-    product_id = fields.Many2one(
-        "product.product", "Product", readonly=True, required=True
-    )
+    product_id = fields.Many2one("product.product", readonly=True, required=True)
     product_uom_id = fields.Many2one(
         "uom.uom", "Unit", related="product_id.uom_id", readonly=True
     )

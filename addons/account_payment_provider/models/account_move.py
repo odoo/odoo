@@ -52,7 +52,7 @@ class AccountMove(models.Model):
         copy=False,
         compute_sudo=True,
     )
-    transaction_count = fields.Count("transaction_ids", string="Transaction Count")
+    transaction_count = fields.Count("transaction_ids")
     amount_paid = fields.Monetary(string="Amount paid", compute="_compute_amount_paid")
 
     @api.depends("transaction_ids")

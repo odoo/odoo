@@ -5,9 +5,7 @@ class ResPartnerIap(models.Model):
     _name = "res.partner.iap"
     _description = "Partner IAP"
 
-    partner_id = fields.Many2one(
-        "res.partner", string="Partner", ondelete="cascade", required=True
-    )
+    partner_id = fields.Many2one("res.partner", ondelete="cascade", required=True)
     iap_search_domain = fields.Char(
         "Search Domain / Email", help="Domain used to find the company"
     )

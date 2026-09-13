@@ -5,7 +5,6 @@ class StockPutInPack(models.TransientModel):
     _inherit = "stock.put.in.pack"
 
     shipping_weight = fields.Float(
-        "Shipping Weight",
         compute="_compute_shipping_weight",
         store=True,
         readonly=False,

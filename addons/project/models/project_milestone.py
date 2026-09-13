@@ -21,7 +21,7 @@ class ProjectMilestone(models.Model):
         )
 
     name = fields.Char(required=True)
-    sequence = fields.Integer("Sequence", default=10)
+    sequence = fields.Integer(default=10)
     project_id = fields.Many2one(
         "project.project",
         required=True,

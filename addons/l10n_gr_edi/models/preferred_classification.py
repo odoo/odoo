@@ -2120,7 +2120,7 @@ class PreferredClassification(models.Model):
     product_template_id = fields.Many2one(comodel_name="product.template")
     fiscal_position_id = fields.Many2one(comodel_name="account.fiscal.position")
 
-    priority = fields.Integer(string="Priority", default=1)
+    priority = fields.Integer(default=1)
     l10n_gr_edi_inv_type = fields.Selection(
         selection=INVOICE_TYPES_SELECTION,
         string="Invoice Type",

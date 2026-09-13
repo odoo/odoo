@@ -34,7 +34,6 @@ class IrRule(models.Model):
     )
     model_id = fields.Many2one(
         "ir.model",
-        string="Model",
         index=True,
         required=True,
         ondelete="cascade",

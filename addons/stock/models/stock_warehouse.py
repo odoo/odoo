@@ -77,7 +77,7 @@ class StockWarehouse(models.Model):
         default=lambda self: self._default_name(),
     )
 
-    active = fields.Boolean(string="Active", default=True)
+    active = fields.Boolean(default=True)
 
     sequence = fields.Integer(
         default=10,
@@ -86,7 +86,6 @@ class StockWarehouse(models.Model):
 
     company_id = fields.Many2one(
         comodel_name="res.company",
-        string="Company",
         required=True,
         default=lambda self: self.env.company,
         readonly=True,
@@ -102,7 +101,6 @@ class StockWarehouse(models.Model):
 
     view_location_id = fields.Many2one(
         comodel_name="stock.location",
-        string="View Location",
         copy=False,
         required=True,
         check_company=True,
@@ -196,28 +194,24 @@ class StockWarehouse(models.Model):
 
     pick_type_id = fields.Many2one(
         comodel_name="stock.picking.type",
-        string="Pick Type",
         check_company=True,
         copy=False,
     )
 
     pack_type_id = fields.Many2one(
         comodel_name="stock.picking.type",
-        string="Pack Type",
         check_company=True,
         copy=False,
     )
 
     out_type_id = fields.Many2one(
         comodel_name="stock.picking.type",
-        string="Out Type",
         check_company=True,
         copy=False,
     )
 
     in_type_id = fields.Many2one(
         comodel_name="stock.picking.type",
-        string="In Type",
         check_company=True,
         copy=False,
     )
@@ -259,7 +253,6 @@ class StockWarehouse(models.Model):
 
     delivery_route_id = fields.Many2one(
         comodel_name="stock.route",
-        string="Delivery Route",
         ondelete="restrict",
         copy=False,
     )

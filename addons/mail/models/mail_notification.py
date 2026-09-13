@@ -28,9 +28,7 @@ class MailNotification(models.Model):
     _log_access = False
     _description = "Message Notifications"
 
-    author_id: ResPartner = fields.Many2one(
-        "res.partner", "Author", ondelete="set null"
-    )
+    author_id: ResPartner = fields.Many2one("res.partner", ondelete="set null")
     mail_message_id: MailMessage = fields.Many2one(
         "mail.message", "Message", index=True, ondelete="cascade", required=True
     )
@@ -46,7 +44,6 @@ class MailNotification(models.Model):
     mail_email_address = fields.Char(help="Recipient email address")
     notification_type = fields.Selection(
         [("inbox", "Inbox"), ("email", "Email")],
-        string="Notification Type",
         default="inbox",
         index=True,
         required=True,
@@ -68,8 +65,8 @@ class MailNotification(models.Model):
         default="ready",
         index=True,
     )
-    is_read = fields.Boolean("Is Read", index=True)
-    read_date = fields.Datetime("Read Date", copy=False)
+    is_read = fields.Boolean(index=True)
+    read_date = fields.Datetime(copy=False)
     failure_type = fields.Selection(
         selection=DELIVERY_FAILURE_TYPES,
         string="Failure type",

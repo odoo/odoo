@@ -28,7 +28,7 @@ class MrpBom(models.Model):
     _check_company_auto = True
 
     code = fields.Char("Reference")
-    active = fields.Boolean("Active", default=True)
+    active = fields.Boolean(default=True)
     archived_with_product = fields.Boolean(
         copy=False,
         help="Technical: this BoM was archived because its product was, so "
@@ -82,7 +82,7 @@ class MrpBom(models.Model):
         required=True,
         help="Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control",
     )
-    sequence = fields.Integer("Sequence")
+    sequence = fields.Integer()
     operation_ids = fields.One2many(
         "mrp.routing.workcenter",
         "bom_id",
@@ -117,7 +117,6 @@ class MrpBom(models.Model):
     )
     company_id = fields.Many2one(
         "res.company",
-        "Company",
         index=True,
         default=lambda self: self.env.company,
     )
@@ -158,7 +157,6 @@ class MrpBom(models.Model):
         compute="_compute_show_set_bom_button",
     )
     batch_size = fields.Float(
-        "Batch Size",
         default=1.0,
         digits="Product Unit",
         help="All automatically generated manufacturing orders for this product will be of this size.",

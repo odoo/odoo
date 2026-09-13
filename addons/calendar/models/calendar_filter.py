@@ -16,7 +16,7 @@ class CalendarFilters(models.Model):
     partner_id = fields.Many2one(
         "res.partner", "Employee", required=True, index=True, ondelete="cascade"
     )
-    active = fields.Boolean("Active", default=True)
+    active = fields.Boolean(default=True)
     partner_checked = fields.Boolean(
         "Checked", default=True
     )  # used to know if the partner is checked in the filter of the calendar view for the user_id.

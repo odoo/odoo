@@ -8,11 +8,9 @@ class RestaurantOrderCourse(models.Model):
     _description = "POS Restaurant Order Course"
     _inherit = ["mixin.pos.load"]
 
-    fired = fields.Boolean(string="Fired", default=False)
-    fired_date = fields.Datetime(string="Fired Date")
-    uuid = fields.Char(
-        string="Uuid", readonly=True, default=lambda self: str(uuid4()), copy=False
-    )
+    fired = fields.Boolean(default=False)
+    fired_date = fields.Datetime()
+    uuid = fields.Char(readonly=True, default=lambda self: str(uuid4()), copy=False)
     index = fields.Integer(string="Course index", default=0)
     order_id = fields.Many2one(
         "pos.order", string="Order Ref", required=True, index=True, ondelete="cascade"

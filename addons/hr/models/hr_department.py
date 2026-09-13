@@ -20,15 +20,13 @@ class HrDepartment(models.Model):
         translate=True,
     )
     complete_name = fields.Char(
-        "Complete Name",
         compute="_compute_complete_name",
         recursive=True,
         store=True,
     )
-    active = fields.Boolean("Active", default=True)
+    active = fields.Boolean(default=True)
     company_id = fields.Many2one(
         "res.company",
-        string="Company",
         compute="_compute_company_id",
         store=True,
         recursive=True,
@@ -50,7 +48,6 @@ class HrDepartment(models.Model):
     )
     manager_id = fields.Many2one(
         "hr.employee",
-        string="Manager",
         tracking=True,
         domain="['|', ('company_id', '=', False), ('company_id', 'in', allowed_company_ids)]",
     )
@@ -66,18 +63,16 @@ class HrDepartment(models.Model):
         export_string_translation=False,
     )
     total_employee = fields.Integer(
-        string="Total Employee",
         compute="_compute_total_employee",
         export_string_translation=False,
     )
-    jobs_ids = fields.One2many("hr.job", "department_id", string="Jobs")
+    jobs_ids = fields.One2many("hr.job", "department_id")
     plan_ids = fields.One2many("mail.activity.plan", "department_id")
     plans_count = fields.Integer(compute="_compute_plans_count")
-    note = fields.Text("Note")
+    note = fields.Text()
     color = fields.Integer("Color Index")
     master_department_id = fields.Many2one(
         "hr.department",
-        "Master Department",
         compute="_compute_master_department_id",
         store=True,
     )

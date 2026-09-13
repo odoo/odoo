@@ -28,7 +28,7 @@ class DocumentsLink_To_Record_Wizard(models.TransientModel):
     document_ids = fields.Many2many(
         "document.document", string="Documents", readonly=True
     )
-    model_id = fields.Many2one("ir.model", string="Model", domain=_domain_model_id)
+    model_id = fields.Many2one("ir.model", domain=_domain_model_id)
     is_readonly_model = fields.Boolean("is_readonly_model", default=True)
     resource_ref = fields.Reference(
         string="Record", selection="_selection_target_model"

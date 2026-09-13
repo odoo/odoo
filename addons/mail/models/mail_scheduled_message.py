@@ -39,9 +39,9 @@ class MailScheduledMessage(models.Model):
     _SEARCH_ACCESS_CHUNK_MIN = 30
     _SEARCH_ACCESS_CHUNK_MAX = 8192
 
-    subject = fields.Char("Subject")
+    subject = fields.Char()
     body = fields.Html("Contents", sanitize_style=True)
-    scheduled_date = fields.Datetime("Scheduled Date", required=True)
+    scheduled_date = fields.Datetime(required=True)
     attachment_ids: IrAttachment = fields.Many2many(
         "ir.attachment",
         "scheduled_message_attachment_rel",
@@ -57,7 +57,7 @@ class MailScheduledMessage(models.Model):
     res_id = fields.Many2oneReference(
         "Related Document Id", model_field="model", required=True
     )
-    author_id: ResPartner = fields.Many2one("res.partner", "Author", required=True)
+    author_id: ResPartner = fields.Many2one("res.partner", required=True)
     partner_ids: ResPartner = fields.Many2many("res.partner", string="Recipients")
     is_note = fields.Boolean(
         "Is a note", default=False, help="If the message will be posted as a Note."

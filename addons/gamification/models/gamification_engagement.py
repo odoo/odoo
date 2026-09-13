@@ -27,7 +27,6 @@ class GamificationEngagementSnapshot(models.Model):
     )
     company_id = fields.Many2one(
         "res.company",
-        "Company",
         default=lambda self: self.env.company,
         index=True,
     )
@@ -47,8 +46,8 @@ class GamificationEngagementSnapshot(models.Model):
     )
 
     # ── Challenge & Goals ───────────────────────────────────────────
-    active_challenges = fields.Integer("Active Challenges", readonly=True)
-    goals_in_progress = fields.Integer("Goals In Progress", readonly=True)
+    active_challenges = fields.Integer(readonly=True)
+    goals_in_progress = fields.Integer(readonly=True)
     goals_reached_7d = fields.Integer(
         "Goals Reached (7 days)",
         readonly=True,
@@ -61,9 +60,9 @@ class GamificationEngagementSnapshot(models.Model):
     )
 
     # ── Badges ──────────────────────────────────────────────────────
-    total_badges_granted = fields.Integer("Total Badges Granted", readonly=True)
+    total_badges_granted = fields.Integer(readonly=True)
     badges_granted_7d = fields.Integer("Badges Granted (7 days)", readonly=True)
-    unique_badge_holders = fields.Integer("Unique Badge Holders", readonly=True)
+    unique_badge_holders = fields.Integer(readonly=True)
 
     # ── Kudos ───────────────────────────────────────────────────────
     total_kudos = fields.Integer("Total Kudos Sent", readonly=True)
@@ -76,8 +75,8 @@ class GamificationEngagementSnapshot(models.Model):
     )
 
     # ── Streaks ─────────────────────────────────────────────────────
-    active_streaks = fields.Integer("Active Streaks", readonly=True)
-    broken_streaks = fields.Integer("Broken Streaks", readonly=True)
+    active_streaks = fields.Integer(readonly=True)
+    broken_streaks = fields.Integer(readonly=True)
     avg_streak_length = fields.Float("Avg Active Streak Length (days)", readonly=True)
     streaks_past_7d = fields.Integer(
         "Streaks >= 7 days",
@@ -95,9 +94,9 @@ class GamificationEngagementSnapshot(models.Model):
     unlocks_7d = fields.Integer("Achievement Unlocks (7 days)", readonly=True)
 
     # ── Karma ───────────────────────────────────────────────────────
-    total_karma_granted = fields.Integer("Total Karma Granted", readonly=True)
+    total_karma_granted = fields.Integer(readonly=True)
     karma_granted_7d = fields.Integer("Karma Granted (7 days)", readonly=True)
-    avg_user_karma = fields.Float("Avg User Karma", readonly=True)
+    avg_user_karma = fields.Float(readonly=True)
 
     _snapshot_date_company_uniq = models.UniqueIndex(
         "(snapshot_date, company_id) WHERE company_id IS NOT NULL",

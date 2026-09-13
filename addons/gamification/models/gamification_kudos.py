@@ -14,7 +14,7 @@ class GamificationKudosCategory(models.Model):
     _order = "sequence, name"
 
     name = fields.Char("Category", required=True, translate=True)
-    description = fields.Text("Description", translate=True)
+    description = fields.Text(translate=True)
     sequence = fields.Integer(default=10)
     icon = fields.Char(
         "Icon CSS Class",
@@ -28,7 +28,7 @@ class GamificationKudosCategory(models.Model):
         help="Karma automatically granted to the recipient when kudos is sent.",
     )
     active = fields.Boolean(default=True)
-    kudos_ids = fields.One2many("gamification.kudos", "category_id", string="Kudos")
+    kudos_ids = fields.One2many("gamification.kudos", "category_id")
     # The hand-rolled compute this replaces carried no @api.depends at all, so
     # the ORM cached its result for the whole transaction and nothing ever marked
     # it dirty: the count was simply wrong from the first kudos onwards.  The
@@ -98,16 +98,12 @@ class GamificationKudos(models.Model):
     )
     category_id = fields.Many2one(
         "gamification.kudos.category",
-        string="Category",
         required=True,
         ondelete="restrict",
     )
-    message = fields.Text("Message", required=True)
-    summary = fields.Char(
-        "Summary", compute="_compute_summary", store=True, precompute=True
-    )
+    message = fields.Text(required=True)
+    summary = fields.Char(compute="_compute_summary", store=True, precompute=True)
     karma_granted = fields.Integer(
-        "Karma Granted",
         readonly=True,
         help="Karma points granted to the recipient.",
     )

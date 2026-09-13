@@ -6,11 +6,9 @@ class EventBoothConfigurator(models.TransientModel):
     _name = "event.booth.configurator"
     _description = "Event Booth Configurator"
 
-    product_id = fields.Many2one("product.product", string="Product", readonly=True)
-    sale_order_line_id = fields.Many2one(
-        "sale.order.line", string="Sale Order Line", readonly=True
-    )
-    event_id = fields.Many2one("event.event", string="Event", required=True)
+    product_id = fields.Many2one("product.product", readonly=True)
+    sale_order_line_id = fields.Many2one("sale.order.line", readonly=True)
+    event_id = fields.Many2one("event.event", required=True)
     event_booth_category_available_ids = fields.Many2many(
         related="event_id.event_booth_category_available_ids", readonly=True
     )

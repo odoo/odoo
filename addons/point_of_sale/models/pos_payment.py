@@ -18,14 +18,11 @@ class PosPayment(models.Model):
         "pos.order", string="Order", required=True, index=True, ondelete="cascade"
     )
     amount = fields.Monetary(
-        string="Amount",
         required=True,
         currency_field="currency_id",
         help="Total amount of the payment.",
     )
-    payment_method_id = fields.Many2one(
-        "pos.payment.method", string="Payment Method", required=True
-    )
+    payment_method_id = fields.Many2one("pos.payment.method", required=True)
     payment_date = fields.Datetime(
         string="Date",
         required=True,
@@ -74,13 +71,11 @@ class PosPayment(models.Model):
     payment_method_issuer_bank = fields.Char(string="Payment Issuer Bank")
     payment_method_payment_mode = fields.Char(string="Payment Mode")
     transaction_id = fields.Char(string="Payment Transaction ID")
-    payment_status = fields.Char(string="Payment Status")
+    payment_status = fields.Char()
     ticket = fields.Char(string="Payment Receipt Info")
     is_change = fields.Boolean(string="Is this payment change?", default=False)
     account_move_id = fields.Many2one("account.move", index="btree_not_null")
-    uuid = fields.Char(
-        string="Uuid", readonly=True, default=lambda self: str(uuid4()), copy=False
-    )
+    uuid = fields.Char(readonly=True, default=lambda self: str(uuid4()), copy=False)
 
     _unique_uuid = models.Constraint(
         "unique (uuid)", "A payment with this uuid already exists"

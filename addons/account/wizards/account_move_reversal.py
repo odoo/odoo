@@ -27,7 +27,6 @@ class AccountMoveReversal(models.TransientModel):
     reason = fields.Char(string="Reason displayed on Credit Note")
     journal_id = fields.Many2one(
         comodel_name="account.journal",
-        string="Journal",
         required=True,
         compute="_compute_journal_id",
         readonly=False,

@@ -20,7 +20,6 @@ class MixinOrderDelayReport(models.AbstractModel):
     )
     product_id = fields.Many2one(
         comodel_name="product.product",
-        string="Product",
         readonly=True,
     )
     category_id = fields.Many2one(
@@ -30,7 +29,6 @@ class MixinOrderDelayReport(models.AbstractModel):
     )
     company_id = fields.Many2one(
         comodel_name="res.company",
-        string="Company",
         readonly=True,
     )
     date = fields.Datetime(string="Effective Date", readonly=True)

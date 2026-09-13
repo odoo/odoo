@@ -10,12 +10,12 @@ class OdometerReport(models.Model):
     _auto = False
     _order = "recorded_date desc"
 
-    vehicle_id = fields.Many2one("fleet.vehicle", "Vehicle", readonly=True)
+    vehicle_id = fields.Many2one("fleet.vehicle", readonly=True)
     category_id = fields.Many2one(related="vehicle_id.category_id")
     model_id = fields.Many2one(related="vehicle_id.model_id")
     fuel_type = fields.Selection(related="vehicle_id.fuel_type")
-    mileage_delta = fields.Float("Mileage Delta", readonly=True)
-    odometer_value = fields.Float("Odometer Value", readonly=True)
+    mileage_delta = fields.Float(readonly=True)
+    odometer_value = fields.Float(readonly=True)
     recorded_date = fields.Date("Date", readonly=True)
 
     def init(self):

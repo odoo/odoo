@@ -21,7 +21,7 @@ class ReportProjectTaskUser(models.Model):
         string="Assignees",
         readonly=True,
     )
-    create_date = fields.Datetime("Create Date", readonly=True)
+    create_date = fields.Datetime(readonly=True)
     date_assign = fields.Datetime(string="Assignment Date", readonly=True)
     date_closed = fields.Datetime(string="Closed Date", readonly=True)
     date_end = fields.Datetime(string="Deadline", readonly=True)
@@ -29,7 +29,7 @@ class ReportProjectTaskUser(models.Model):
         string="Last Status Change", readonly=True
     )
     display_in_project = fields.Boolean(export_string_translation=False)
-    project_id = fields.Many2one("project.project", string="Project", readonly=True)
+    project_id = fields.Many2one("project.project", readonly=True)
     lead_time_days = fields.Float(
         string="Lead Time (days)",
         digits=(16, 2),
@@ -73,7 +73,6 @@ class ReportProjectTaskUser(models.Model):
             ("3", "Urgent"),
         ],
         readonly=True,
-        string="Priority",
     )
 
     state = fields.Selection(
@@ -86,16 +85,15 @@ class ReportProjectTaskUser(models.Model):
             ("canceled", "Cancelled"),
             ("blocked", "Waiting"),
         ],
-        string="State",
         readonly=True,
     )
     is_closed = fields.Boolean(string="Closed state", readonly=True)
-    company_id = fields.Many2one("res.company", string="Company", readonly=True)
+    company_id = fields.Many2one("res.company", readonly=True)
     partner_id = fields.Many2one("res.partner", string="Customer", readonly=True)
     step_id = fields.Many2one(
         "project.workflow.step", string="Workflow Step", readonly=True
     )
-    task_id = fields.Many2one("project.task", string="Task", readonly=True)
+    task_id = fields.Many2one("project.task", readonly=True)
     tag_ids = fields.Many2many(
         "project.tags",
         relation="project_tags_project_task_rel",

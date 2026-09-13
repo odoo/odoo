@@ -65,7 +65,6 @@ class ResourceCalendar(models.Model):
 
     name = fields.Char(required=True)
     active = fields.Boolean(
-        "Active",
         default=True,
         help="If the active field is set to false, it will allow you to hide the Working Time without removing it.",
     )
@@ -94,7 +93,6 @@ class ResourceCalendar(models.Model):
     )
     company_id = fields.Many2one(
         "res.company",
-        "Company",
         domain=lambda self: [("id", "in", self.env.companies.ids)],
         default=lambda self: self.env.company,
         index="btree_not_null",
@@ -110,7 +108,6 @@ class ResourceCalendar(models.Model):
             ("flexible", "Flexible"),
             ("fully_fixed", "Fully Fixed"),
         ],
-        string="Schedule Type",
         compute="_compute_schedule_type",
         inverse="_inverse_schedule_type",
         help="Choose which level of definition you want to define on your Schedule\n"
@@ -122,7 +119,6 @@ class ResourceCalendar(models.Model):
         help="The hours will be centered around 12:00 to cover the duration for the day",
     )
     flexible_hours = fields.Boolean(
-        string="Flexible Hours",
         help="When enabled, it will allow employees to work flexibly, without relying on the company's working schedule (working hours).",
     )
     full_time_required_hours = fields.Float(
@@ -181,7 +177,6 @@ class ResourceCalendar(models.Model):
         "Work Resources count", compute="_compute_work_resources_count"
     )
     work_time_rate = fields.Float(
-        string="Work Time Rate",
         compute="_compute_work_time",
         search="_search_work_time_rate",
         help="Work time rate versus full time working schedule, should be between 0 and 100 %.",

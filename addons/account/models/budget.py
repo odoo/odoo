@@ -15,15 +15,14 @@ class AccountReportBudget(models.Model):
     _description = "Accounting Report Budget"
     _order = "sequence, id"
 
-    sequence = fields.Integer(string="Sequence")
-    name = fields.Char(string="Name", required=True)
+    sequence = fields.Integer()
+    name = fields.Char(required=True)
     item_ids = fields.One2many(
         string="Items",
         comodel_name="account.report.budget.item",
         inverse_name="budget_id",
     )
     company_id = fields.Many2one(
-        string="Company",
         comodel_name="res.company",
         required=True,
         default=lambda x: x.env.company,
@@ -184,18 +183,16 @@ class AccountReportBudgetItem(models.Model):
     _description = "Accounting Report Budget Item"
 
     budget_id = fields.Many2one(
-        string="Budget",
         comodel_name="account.report.budget",
         required=True,
         index=True,
         ondelete="cascade",
     )
     account_id = fields.Many2one(
-        string="Account",
         comodel_name="account.account",
         domain="[('account_type', 'in', ('income', 'income_other', 'expense', 'expense_other', 'expense_depreciation', 'expense_direct_cost'))]",
         required=True,
         index=True,
     )
-    amount = fields.Float(string="Amount", default=0)
+    amount = fields.Float(default=0)
     date = fields.Date(required=True)

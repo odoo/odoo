@@ -11,12 +11,10 @@ class ProductUom(models.Model):
 
     company_id = fields.Many2one(
         comodel_name="res.company",
-        string="Company",
         default=lambda self: self.env.company,
     )
     product_id = fields.Many2one(
         comodel_name="product.product",
-        string="Product",
         required=True,
         check_company=True,
         ondelete="cascade",

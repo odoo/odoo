@@ -43,7 +43,6 @@ class ResConfigSettings(models.TransientModel):
     )
 
     automatic_invoice = fields.Boolean(
-        string="Automatic Invoice",
         help="The invoice is generated automatically and available in the customer portal when the "
         "transaction is confirmed by the payment provider.\nThe invoice is marked as paid and "
         "the payment is registered in the payment journal defined in the configuration of the "

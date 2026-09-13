@@ -28,7 +28,6 @@ class PaymentTransaction(models.Model):
         readonly=True,
     )
     payment_id = fields.Many2one(
-        string="Payment",
         comodel_name="account.payment",
         readonly=True,
         compute="_compute_payment_id",
@@ -51,7 +50,7 @@ class PaymentTransaction(models.Model):
             )
         ],
     )
-    invoices_count = fields.Count("invoice_ids", string="Invoices Count")
+    invoices_count = fields.Count("invoice_ids")
 
     # === COMPUTE METHODS ===#
 

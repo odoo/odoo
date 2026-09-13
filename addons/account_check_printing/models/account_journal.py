@@ -22,7 +22,6 @@ class AccountJournal(models.Model):
     )
     check_sequence_id = fields.Many2one(
         comodel_name="ir.sequence",
-        string="Check Sequence",
         readonly=True,
         copy=False,
         help="Checks numbering sequence.",

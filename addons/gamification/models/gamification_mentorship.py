@@ -18,7 +18,6 @@ class GamificationMentorship(models.Model):
 
     mentor_id = fields.Many2one(
         "res.users",
-        string="Mentor",
         required=True,
         index=True,
         ondelete="cascade",
@@ -26,7 +25,6 @@ class GamificationMentorship(models.Model):
     )
     mentee_id = fields.Many2one(
         "res.users",
-        string="Mentee",
         required=True,
         index=True,
         ondelete="cascade",
@@ -45,11 +43,10 @@ class GamificationMentorship(models.Model):
         index=True,
     )
     start_date = fields.Date(
-        "Start Date",
         default=fields.Date.today,
         readonly=True,
     )
-    end_date = fields.Date("End Date", tracking=True)
+    end_date = fields.Date(tracking=True)
     description = fields.Text(
         "Goals",
         help="What the mentor and mentee aim to achieve together.",
@@ -98,7 +95,6 @@ class GamificationMentorship(models.Model):
     # "you can not grant a badge to yourself" guard.
     completion_badge_id = fields.Many2one(
         "gamification.badge",
-        string="Completion Badge",
         groups="base.group_erp_manager",
         help="Badge granted to both mentor and mentee on completion.",
     )

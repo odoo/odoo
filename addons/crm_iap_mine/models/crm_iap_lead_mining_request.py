@@ -57,7 +57,6 @@ class CrmIapLeadMiningRequest(models.Model):
             ("credits", "Insufficient Credits"),
             ("no_result", "No Result"),
         ],
-        string="Error Type",
         copy=False,
         readonly=True,
     )
@@ -106,9 +105,9 @@ class CrmIapLeadMiningRequest(models.Model):
         string="Filter on",
         default="role",
     )
-    preferred_role_id = fields.Many2one("crm.iap.lead.role", string="Preferred Role")
+    preferred_role_id = fields.Many2one("crm.iap.lead.role")
     role_ids = fields.Many2many("crm.iap.lead.role", string="Other Roles")
-    seniority_id = fields.Many2one("crm.iap.lead.seniority", string="Seniority")
+    seniority_id = fields.Many2one("crm.iap.lead.seniority")
 
     lead_credits = fields.Char(compute="_compute_tooltip", readonly=True)
     lead_contacts_credits = fields.Char(compute="_compute_tooltip", readonly=True)

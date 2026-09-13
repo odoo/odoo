@@ -46,9 +46,7 @@ class ResCompany(models.Model):
     )
     attendance_kiosk_url = fields.Char(compute="_compute_attendance_kiosk_url")
     attendance_kiosk_use_pin = fields.Boolean(string="Employee PIN Identification")
-    attendance_from_systray = fields.Boolean(
-        string="Attendance From Systray", default=False
-    )
+    attendance_from_systray = fields.Boolean(default=False)
     attendance_overtime_validation = fields.Selection(
         [
             ("no_validation", "Automatically Approved"),
@@ -59,7 +57,7 @@ class ResCompany(models.Model):
     )
     auto_check_out = fields.Boolean(string="Automatic Check Out", default=False)
     auto_check_out_tolerance = fields.Float(default=2, export_string_translation=False)
-    absence_management = fields.Boolean(string="Absence Management", default=False)
+    absence_management = fields.Boolean(default=False)
     attendance_device_tracking = fields.Boolean(
         string="Device & Location Tracking", default=False
     )

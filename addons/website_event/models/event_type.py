@@ -6,7 +6,6 @@ class EventType(models.Model):
 
     website_menu = fields.Boolean("Display a dedicated menu on Website")
     community_menu = fields.Boolean(
-        "Community Menu",
         compute="_compute_community_menu",
         readonly=False,
         store=True,

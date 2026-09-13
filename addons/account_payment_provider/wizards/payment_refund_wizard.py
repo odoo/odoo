@@ -7,7 +7,6 @@ class PaymentRefundWizard(models.TransientModel):
     _description = "Payment Refund Wizard"
 
     payment_id = fields.Many2one(
-        string="Payment",
         comodel_name="account.payment",
         readonly=True,
         default=lambda self: self.env.context.get("active_id"),
@@ -18,9 +17,7 @@ class PaymentRefundWizard(models.TransientModel):
     payment_amount = fields.Monetary(
         string="Payment Amount", related="payment_id.amount"
     )
-    refunded_amount = fields.Monetary(
-        string="Refunded Amount", compute="_compute_refunded_amount"
-    )
+    refunded_amount = fields.Monetary(compute="_compute_refunded_amount")
     amount_available_for_refund = fields.Monetary(
         string="Maximum Refund Allowed",
         related="payment_id.amount_available_for_refund",

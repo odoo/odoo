@@ -26,9 +26,7 @@ class MailingSmsTest(models.TransientModel):
         default=_default_numbers,
         help="Carriage-return-separated list of phone numbers",
     )
-    mailing_id = fields.Many2one(
-        "mailing.mailing", string="Mailing", required=True, ondelete="cascade"
-    )
+    mailing_id = fields.Many2one("mailing.mailing", required=True, ondelete="cascade")
 
     def _prepare_test_trace_values(self, record, sms_number, sms_uuid, body):
         trace_code = self.env["mailing.trace"]._get_random_code()

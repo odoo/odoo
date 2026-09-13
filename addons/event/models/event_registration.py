@@ -69,9 +69,7 @@ class EventRegistration(models.Model):
         return str(int.from_bytes(os.urandom(8), "little"))
 
     # event
-    event_id = fields.Many2one(
-        "event.event", string="Event", required=True, tracking=True, index=True
-    )
+    event_id = fields.Many2one("event.event", required=True, tracking=True, index=True)
     is_multi_slots = fields.Boolean(
         string="Is Event Multi Slots", related="event_id.is_multi_slots"
     )
@@ -92,7 +90,6 @@ class EventRegistration(models.Model):
     )
     active = fields.Boolean(default=True)
     barcode = fields.Char(
-        string="Barcode",
         default=lambda self: self._default_barcode(),
         readonly=True,
         copy=False,
@@ -120,20 +117,18 @@ class EventRegistration(models.Model):
         tracking=2,
     )
     email = fields.Char(
-        string="Email", compute="_compute_email", readonly=False, store=True, tracking=3
+        compute="_compute_email", readonly=False, store=True, tracking=3
     )
     phone_ids = fields.Many2many(
         "phone.number",
         "event_registration_phone_number_rel",
         "registration_id",
         "phone_number_id",
-        string="Phone",
         compute="_compute_phone_ids",
         readonly=False,
         store=True,
     )
     company_name = fields.Char(
-        string="Company Name",
         compute="_compute_company_name",
         readonly=False,
         store=True,
@@ -152,7 +147,6 @@ class EventRegistration(models.Model):
         search="_search_event_begin_date",
     )
     event_end_date = fields.Datetime(
-        "Event End Date",
         compute="_compute_event_end_date",
         search="_search_event_end_date",
     )

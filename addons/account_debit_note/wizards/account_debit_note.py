@@ -23,14 +23,13 @@ class AccountDebitNote(models.TransientModel):
     date = fields.Date(
         string="Debit Note Date", default=fields.Date.context_today, required=True
     )
-    reason = fields.Char(string="Reason")
+    reason = fields.Char()
     journal_id = fields.Many2one(
         "account.journal",
         string="Use Specific Journal",
         help="If empty, uses the journal of the journal entry to be debited.",
     )
     copy_lines = fields.Boolean(
-        "Copy Lines",
         help="In case you need to do corrections for every line, it can be in handy to copy them.  "
         "We won't copy them for debit notes from credit notes. ",
     )

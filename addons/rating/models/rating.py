@@ -42,7 +42,6 @@ class RatingRating(models.Model):
         string="Document", model_field="res_model", required=True, index=True
     )
     resource_ref = fields.Reference(
-        string="Resource Ref",
         selection="_selection_target_model",
         compute="_compute_resource_ref",
         readonly=True,
@@ -66,7 +65,6 @@ class RatingRating(models.Model):
     )
     parent_res_id = fields.Integer("Parent Document", index=True)
     parent_ref = fields.Reference(
-        string="Parent Ref",
         selection="_selection_target_model",
         compute="_compute_parent_ref",
         readonly=True,
@@ -85,9 +83,7 @@ class RatingRating(models.Model):
         readonly=True,
     )
     feedback = fields.Text("Comment")
-    message_id = fields.Many2one(
-        "mail.message", string="Message", index=True, ondelete="cascade"
-    )
+    message_id = fields.Many2one("mail.message", index=True, ondelete="cascade")
     is_internal = fields.Boolean(
         "Visible Internally Only",
         readonly=False,
@@ -98,7 +94,7 @@ class RatingRating(models.Model):
         "Security Token", default=_default_access_token, index=True
     )
     consumed = fields.Boolean(string="Filled Rating")
-    rated_on = fields.Datetime(string="Rated On")
+    rated_on = fields.Datetime()
 
     _rating_range = models.Constraint(
         "check(rating >= 0 and rating <= 5)",

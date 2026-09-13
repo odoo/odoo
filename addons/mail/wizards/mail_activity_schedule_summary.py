@@ -15,12 +15,9 @@ class MailActivityScheduleSummary(models.TransientModel):
 
     activity_schedule_id: MailActivitySchedule = fields.Many2one(
         "mail.activity.schedule",
-        string="Activity Schedule",
         required=True,
         ondelete="cascade",
     )
-    line_description = fields.Char("Line Description")
+    line_description = fields.Char()
     line_date_deadline = fields.Date("Date Deadline")
-    responsible_user_id: ResUsers = fields.Many2one(
-        "res.users", string="Responsible User"
-    )
+    responsible_user_id: ResUsers = fields.Many2one("res.users")

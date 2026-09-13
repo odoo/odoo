@@ -49,7 +49,7 @@ class FleetVehicle(models.Model):
 
     name = fields.Char(compute="_compute_name", store=True)
     description = fields.Html("Vehicle Description")
-    active = fields.Boolean("Active", default=True, tracking=True)
+    active = fields.Boolean(default=True, tracking=True)
     manager_id = fields.Many2one(
         "res.users",
         "Fleet Manager",
@@ -59,7 +59,6 @@ class FleetVehicle(models.Model):
     )
     company_id = fields.Many2one(
         "res.company",
-        "Company",
         default=lambda self: self.env.company,
     )
     currency_id = fields.Many2one("res.currency", related="company_id.currency_id")
@@ -85,14 +84,12 @@ class FleetVehicle(models.Model):
     )
     driver_id = fields.Many2one(
         "res.partner",
-        "Driver",
         tracking=True,
         help="Driver address of the vehicle",
         copy=False,
     )
     future_driver_id = fields.Many2one(
         "res.partner",
-        "Future Driver",
         tracking=True,
         help="Next Driver Address of the vehicle",
         copy=False,
@@ -100,7 +97,6 @@ class FleetVehicle(models.Model):
     )
     model_id = fields.Many2one(
         "fleet.vehicle.model",
-        "Model",
         tracking=True,
         required=True,
     )
@@ -128,7 +124,6 @@ class FleetVehicle(models.Model):
     )
     contract_count = fields.Integer(
         compute="_compute_count_all",
-        string="Contract Count",
     )
     service_count = fields.Integer(
         compute="_compute_count_all",
@@ -146,7 +141,7 @@ class FleetVehicle(models.Model):
         "Assignment Date",
         help="This is the date at which the car will be available, if not set it means available instantly",
     )
-    order_date = fields.Date("Order Date")
+    order_date = fields.Date()
     acquisition_date = fields.Date(
         "Registration Date",
         required=False,
@@ -172,7 +167,6 @@ class FleetVehicle(models.Model):
     )
     state_id = fields.Many2one(
         "fleet.vehicle.state",
-        "State",
         default=_default_state_id,
         group_expand="_read_group_expand_full",
         tracking=True,
@@ -189,7 +183,6 @@ class FleetVehicle(models.Model):
     )
     model_year = fields.Selection(
         selection="_selection_years",
-        string="Model Year",
         help="Year of the model",
         compute="_compute_model_year",
         store=True,
@@ -218,27 +211,23 @@ class FleetVehicle(models.Model):
     )
     odometer_unit = fields.Selection(
         [("kilometers", "km"), ("miles", "mi")],
-        "Odometer Unit",
         default="kilometers",
         required=True,
     )
     transmission = fields.Selection(
         [("manual", "Manual"), ("automatic", "Automatic")],
-        "Transmission",
         compute="_compute_transmission",
         store=True,
         readonly=False,
     )
     fuel_type = fields.Selection(
         FUEL_TYPES,
-        "Fuel Type",
         compute="_compute_fuel_type",
         store=True,
         readonly=False,
     )
     power_unit = fields.Selection(
         [("power", "kW"), ("horsepower", "Horsepower")],
-        "Power Unit",
         default="power",
         required=True,
     )
@@ -250,7 +239,6 @@ class FleetVehicle(models.Model):
         readonly=False,
     )
     power = fields.Float(
-        "Power",
         help="Power in kW of the vehicle",
         compute="_compute_power",
         store=True,
@@ -282,7 +270,6 @@ class FleetVehicle(models.Model):
     )
     category_id = fields.Many2one(
         "fleet.vehicle.model.category",
-        "Category",
         compute="_compute_category_id",
         store=True,
         readonly=False,

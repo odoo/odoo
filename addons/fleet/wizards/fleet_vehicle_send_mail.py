@@ -9,7 +9,6 @@ class FleetVehicleSendMail(models.TransientModel):
     vehicle_ids = fields.Many2many("fleet.vehicle", string="Vehicles", required=True)
     author_id = fields.Many2one(
         "res.partner",
-        "Author",
         required=True,
         default=lambda self: self.env.user.partner_id.id,
     )

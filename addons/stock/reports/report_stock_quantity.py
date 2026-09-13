@@ -29,16 +29,15 @@ class ReportStockQuantity(models.Model):
         "uom.uom": ["factor"],
     }
 
-    date = fields.Date(string="Date", readonly=True)
+    date = fields.Date(readonly=True)
     product_tmpl_id = fields.Many2one("product.template", readonly=True)
-    product_id = fields.Many2one("product.product", string="Product", readonly=True)
+    product_id = fields.Many2one("product.product", readonly=True)
     state = fields.Selection(
         [
             ("forecast", "Forecasted Stock"),
             ("in", "Forecasted Receipts"),
             ("out", "Forecasted Deliveries"),
         ],
-        string="State",
         readonly=True,
     )
     product_qty = fields.Float(string="Quantity", readonly=True)

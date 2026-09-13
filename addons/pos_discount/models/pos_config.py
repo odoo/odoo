@@ -16,7 +16,6 @@ class PosConfig(models.Model):
     )
     discount_product_id = fields.Many2one(
         "product.product",
-        string="Discount Product",
         domain=[("sale_ok", "=", True)],
         help="The product used to apply the discount on the ticket.",
     )

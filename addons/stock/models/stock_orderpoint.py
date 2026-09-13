@@ -23,7 +23,6 @@ class StockWarehouseOrderpoint(models.Model):
     _PROCUREMENT_RETRIES = 5
 
     name = fields.Char(
-        string="Name",
         required=True,
         default=lambda self: self.env["ir.sequence"].next_by_code("stock.orderpoint"),
         readonly=True,
@@ -31,12 +30,10 @@ class StockWarehouseOrderpoint(models.Model):
     )
     trigger = fields.Selection(
         selection=[("auto", "Auto"), ("manual", "Manual")],
-        string="Trigger",
         required=True,
         default="auto",
     )
     active = fields.Boolean(
-        string="Active",
         default=True,
         help="If the active field is set to False, it will allow you to hide the orderpoint without removing it.",
     )
@@ -46,7 +43,6 @@ class StockWarehouseOrderpoint(models.Model):
     )
     warehouse_id = fields.Many2one(
         comodel_name="stock.warehouse",
-        string="Warehouse",
         required=True,
         compute="_compute_warehouse_id",
         store=True,
@@ -58,7 +54,6 @@ class StockWarehouseOrderpoint(models.Model):
     )
     location_id = fields.Many2one(
         comodel_name="stock.location",
-        string="Location",
         required=True,
         compute="_compute_location_id",
         store=True,
@@ -74,7 +69,6 @@ class StockWarehouseOrderpoint(models.Model):
     )
     product_id = fields.Many2one(
         comodel_name="product.product",
-        string="Product",
         required=True,
         check_company=True,
         domain=(
@@ -132,7 +126,6 @@ class StockWarehouseOrderpoint(models.Model):
     )
     company_id = fields.Many2one(
         comodel_name="res.company",
-        string="Company",
         required=True,
         default=lambda self: self.env.company,
         index=True,
@@ -151,7 +144,6 @@ class StockWarehouseOrderpoint(models.Model):
     lead_days = fields.Float(compute="_compute_lead_time")
     route_id = fields.Many2one(
         comodel_name="stock.route",
-        string="Route",
         inverse="_inverse_route_id",
         domain="['|', ('product_selectable', '=', True), ('rule_ids.action', 'in', ['buy', 'manufacture'])]",
     )
@@ -214,7 +206,6 @@ class StockWarehouseOrderpoint(models.Model):
     )
 
     unwanted_replenish = fields.Boolean(
-        string="Unwanted Replenish",
         compute="_compute_unwanted_replenish",
     )
     show_supply_warning = fields.Boolean(compute="_compute_show_supply_warning")

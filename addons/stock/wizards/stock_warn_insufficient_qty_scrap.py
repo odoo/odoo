@@ -9,7 +9,7 @@ class StockWarnInsufficientQtyScrap(models.TransientModel):
     _inherit = ["mixin.stock.warn.insufficient.qty"]
     _description = "Warn Insufficient Scrap Quantity"
 
-    scrap_id = fields.Many2one(comodel_name="stock.scrap", string="Scrap")
+    scrap_id = fields.Many2one(comodel_name="stock.scrap")
 
     def _get_reference_document_company_id(self):
         return self.scrap_id.company_id

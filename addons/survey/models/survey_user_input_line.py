@@ -16,7 +16,6 @@ class SurveyUser_InputLine(models.Model):
 
     user_input_id = fields.Many2one(
         "survey.user_input",
-        string="User Input",
         ondelete="cascade",
         required=True,
         index=True,
@@ -29,7 +28,6 @@ class SurveyUser_InputLine(models.Model):
     )
     question_id = fields.Many2one(
         "survey.question",
-        string="Question",
         ondelete="cascade",
         required=True,
         index=True,
@@ -48,7 +46,7 @@ class SurveyUser_InputLine(models.Model):
         "res.lang",
         related="user_input_id.lang_id",
     )
-    skipped = fields.Boolean("Skipped")
+    skipped = fields.Boolean()
     answer_type = fields.Selection(
         [
             ("text_box", "Free Text"),
@@ -59,7 +57,6 @@ class SurveyUser_InputLine(models.Model):
             ("datetime", "Datetime"),
             ("suggestion", "Suggestion"),
         ],
-        string="Answer Type",
     )
     value_char_box = fields.Char("Text answer")
     value_numerical_box = fields.Float("Numerical answer")

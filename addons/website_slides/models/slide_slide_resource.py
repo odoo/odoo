@@ -14,16 +14,14 @@ class SlideSlideResource(models.Model):
         "slide.slide", required=True, index=True, ondelete="cascade"
     )
     resource_type = fields.Selection([("file", "File"), ("url", "Link")], required=True)
-    name = fields.Char("Name", compute="_compute_name", readonly=False, store=True)
+    name = fields.Char(compute="_compute_name", readonly=False, store=True)
     data = fields.Binary(
         "Resource", compute="_compute_reset_resources", store=True, readonly=False
     )
     file_name = fields.Char(store=True)
-    link = fields.Char(
-        "Link", compute="_compute_reset_resources", store=True, readonly=False
-    )
+    link = fields.Char(compute="_compute_reset_resources", store=True, readonly=False)
     download_url = fields.Char("Download URL", compute="_compute_download_url")
-    sequence = fields.Integer(string="Sequence")
+    sequence = fields.Integer()
 
     _check_url = models.Constraint(
         "CHECK (resource_type != 'url' OR link IS NOT NULL)",

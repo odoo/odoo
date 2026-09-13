@@ -18,10 +18,10 @@ class EventSlot(models.Model):
     _order = "event_id, date, start_hour, end_hour, id"
 
     event_id = fields.Many2one(
-        "event.event", "Event", required=True, ondelete="cascade", index=True
+        "event.event", required=True, ondelete="cascade", index=True
     )
-    color = fields.Integer("Color", default=0)
-    date = fields.Date("Date", required=True)
+    color = fields.Integer(default=0)
+    date = fields.Date(required=True)
     date_tz = fields.Selection(related="event_id.date_tz")
     start_hour = fields.Float(
         "Starting Hour", required=True, help="Expressed in the event timezone."
@@ -29,12 +29,8 @@ class EventSlot(models.Model):
     end_hour = fields.Float(
         "Ending Hour", required=True, help="Expressed in the event timezone."
     )
-    start_datetime = fields.Datetime(
-        "Start Datetime", compute="_compute_datetimes", store=True
-    )
-    end_datetime = fields.Datetime(
-        "End Datetime", compute="_compute_datetimes", store=True
-    )
+    start_datetime = fields.Datetime(compute="_compute_datetimes", store=True)
+    end_datetime = fields.Datetime(compute="_compute_datetimes", store=True)
 
     # Registrations
     is_sold_out = fields.Boolean(

@@ -144,7 +144,6 @@ class PurchaseOrder(models.Model):
     )
     duplicated_order_ids = fields.Many2many(comodel_name="purchase.order")
     receipt_reminder_email = fields.Boolean(
-        string="Receipt Reminder Email",
         compute="_compute_receipt_reminder",
         store=True,
         readonly=False,

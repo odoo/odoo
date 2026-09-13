@@ -45,13 +45,12 @@ class ForumForum(models.Model):
         }
 
     name = fields.Char("Forum Name", required=True, translate=True)
-    sequence = fields.Integer("Sequence", default=1)
+    sequence = fields.Integer(default=1)
     mode = fields.Selection(
         [
             ("questions", "Questions (1 answer)"),
             ("discussions", "Discussions (multiple answers)"),
         ],
-        string="Mode",
         required=True,
         default="questions",
         help="Questions mode: only one answer allowed\n Discussions mode: multiple answers allowed",
@@ -61,14 +60,13 @@ class ForumForum(models.Model):
         help="Public: Forum is public\nSigned In: Forum is visible for signed in users\nSome users: Forum and their content are hidden for non members of selected group",
         default="public",
     )
-    authorized_group_id = fields.Many2one("res.groups", "Authorized Group")
+    authorized_group_id = fields.Many2one("res.groups")
     active = fields.Boolean(default=True)
     faq = fields.Html(
         "Guidelines", translate=html_translate, sanitize=True, sanitize_overridable=True
     )
-    description = fields.Text("Description", translate=True)
+    description = fields.Text(translate=True)
     welcome_message = fields.Html(
-        "Welcome Message",
         translate=html_translate,
         default=_default_welcome_message,
         sanitize_attributes=False,

@@ -76,7 +76,6 @@ class ResPartner(models.Model):
         groups="account.group_account_invoice,account.group_account_readonly",
     )
     credit_limit = fields.Float(
-        string="Credit Limit",
         help="Credit limit specific to this partner.",
         groups="account.group_account_invoice,account.group_account_readonly",
         company_dependent=True,
@@ -109,14 +108,12 @@ class ResPartner(models.Model):
     )
     total_invoiced = fields.Monetary(
         compute="_compute_total_invoiced",
-        string="Total Invoiced",
         groups="account.group_account_invoice,account.group_account_readonly",
     )
     currency_id = fields.Many2one(
         "res.currency",
         compute="_compute_currency_id",
         readonly=True,
-        string="Currency",
     )
     property_account_payable_id = fields.Many2one(
         "account.account",

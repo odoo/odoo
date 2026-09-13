@@ -16,7 +16,6 @@ class DocumentsAccessTracking(models.Model):
     documents = fields.Json(string="Impacted Document Ids", required=True)
     user_id = fields.Many2one(
         "res.users",
-        string="User",
         default=lambda self: self.env.user,
     )
 

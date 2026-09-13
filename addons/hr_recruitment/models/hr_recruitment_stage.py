@@ -7,13 +7,13 @@ class HrRecruitmentStage(models.Model):
     _order = "sequence"
 
     name = fields.Char("Stage Name", required=True, translate=True)
-    sequence = fields.Integer("Sequence", default=10)
+    sequence = fields.Integer(default=10)
     job_ids = fields.Many2many(
         "hr.job",
         string="Job Specific",
         help="Specific jobs that use this stage. Other jobs will not use this stage.",
     )
-    requirements = fields.Text("Requirements")
+    requirements = fields.Text()
     template_id = fields.Many2one(
         "mail.template",
         "Email Template",
@@ -24,7 +24,6 @@ class HrRecruitmentStage(models.Model):
         help="This stage is folded in the kanban view when there are no records in that stage to display.",
     )
     hired_stage = fields.Boolean(
-        "Hired Stage",
         help="If checked, this stage is used to determine the hire date of an applicant",
     )
     rotting_threshold_days = fields.Integer(

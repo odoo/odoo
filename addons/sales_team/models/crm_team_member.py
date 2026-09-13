@@ -36,7 +36,7 @@ class CrmTeamMember(models.Model):
         compute="_compute_user_company_ids",
         help="UX: Limit to team company or all if no company",
     )
-    active = fields.Boolean(string="Active", default=True)
+    active = fields.Boolean(default=True)
     member_warning = fields.Text(compute="_compute_member_warning")
     image_1920 = fields.Image(
         "Image", related="user_id.image_1920", max_width=1920, max_height=1920

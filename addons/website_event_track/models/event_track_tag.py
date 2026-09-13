@@ -14,10 +14,9 @@ class EventTrackTag(models.Model):
         default=lambda self: self._default_color(),
         help="Note that colorless tags won't be available on the website.",
     )
-    sequence = fields.Integer("Sequence", default=10)
+    sequence = fields.Integer(default=10)
     category_id = fields.Many2one(
         "event.track.tag.category",
-        string="Category",
         ondelete="set null",
         index="btree_not_null",
     )

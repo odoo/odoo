@@ -20,7 +20,7 @@ class StockPickingBatch(models.Model):
         required=True,
         readonly=True,
     )
-    description = fields.Char("Description")
+    description = fields.Char()
     user_id = fields.Many2one(
         "res.users",
         string="Responsible",
@@ -29,7 +29,6 @@ class StockPickingBatch(models.Model):
     )
     company_id = fields.Many2one(
         "res.company",
-        string="Company",
         required=True,
         readonly=True,
         index=True,
@@ -44,7 +43,6 @@ class StockPickingBatch(models.Model):
         help="List of transfers associated to this batch",
     )
     show_check_availability = fields.Boolean(
-        string="Show Check Availability",
         compute="_compute_show_check_availability",
     )
     show_allocation = fields.Boolean(
@@ -108,7 +106,6 @@ class StockPickingBatch(models.Model):
     is_wave = fields.Boolean("This batch is a wave")
     wave_product_id = fields.Many2one(
         "product.product",
-        "Wave Product",
         compute="_compute_wave_grouping",
         store=True,
         readonly=False,
@@ -136,7 +133,6 @@ class StockPickingBatch(models.Model):
     )
     wave_source_location_id = fields.Many2one(
         "stock.location",
-        "Wave Source Location",
         compute="_compute_wave_grouping",
         store=True,
         readonly=False,
@@ -150,7 +146,6 @@ class StockPickingBatch(models.Model):
     )
     wave_location_id = fields.Many2one(
         "stock.location",
-        "Wave Location",
         compute="_compute_wave_grouping",
         store=True,
         readonly=False,
@@ -161,17 +156,14 @@ class StockPickingBatch(models.Model):
     )
     show_lots_text = fields.Boolean(compute="_compute_show_lots_text")
     estimated_shipping_weight = fields.Float(
-        "Estimated Shipping Weight",
         compute="_compute_estimated_shipping_capacity",
         digits="Product Unit",
     )
     estimated_shipping_volume = fields.Float(
-        "Estimated Shipping Volume",
         compute="_compute_estimated_shipping_capacity",
         digits="Product Unit",
     )
     properties = fields.Properties(
-        "Properties",
         definition="picking_type_id.batch_properties_definition",
         copy=True,
     )

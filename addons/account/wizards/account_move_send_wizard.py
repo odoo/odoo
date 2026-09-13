@@ -92,7 +92,7 @@ class AccountMoveSendWizard(models.TransientModel):
     res_ids = fields.Text(
         "Related Document IDs", compute="_compute_res_ids", readonly=False, store=True
     )
-    template_name = fields.Char("Template Name")
+    template_name = fields.Char()
 
     @api.model
     @_debug.perf.timed

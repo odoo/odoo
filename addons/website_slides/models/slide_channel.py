@@ -55,10 +55,9 @@ class SlideChannel(models.Model):
     def _default_enroll_msg(self):
         return _("Contact Responsible")
 
-    name = fields.Char("Name", translate=True, required=True)
+    name = fields.Char(translate=True, required=True)
     active = fields.Boolean(default=True, tracking=100)
     description = fields.Html(
-        "Description",
         translate=True,
         sanitize_attributes=False,
         sanitize_form=False,
@@ -132,9 +131,7 @@ class SlideChannel(models.Model):
         help="Defines the content that will be promoted on the course home page",
         copy=False,
     )
-    promoted_slide_id = fields.Many2one(
-        "slide.slide", string="Promoted Slide", copy=False
-    )
+    promoted_slide_id = fields.Many2one("slide.slide", copy=False)
     access_token = fields.Char(
         "Security Token", copy=False, default=_default_access_token
     )
@@ -305,12 +302,8 @@ class SlideChannel(models.Model):
     completed = fields.Boolean(
         "Done", compute="_compute_user_statistics", compute_sudo=False
     )
-    completion = fields.Integer(
-        "Completion", compute="_compute_user_statistics", compute_sudo=False
-    )
-    can_upload = fields.Boolean(
-        "Can Upload", compute="_compute_can_upload", compute_sudo=False
-    )
+    completion = fields.Integer(compute="_compute_user_statistics", compute_sudo=False)
+    can_upload = fields.Boolean(compute="_compute_can_upload", compute_sudo=False)
     has_requested_access = fields.Boolean(
         string="Access Requested",
         compute="_compute_has_requested_access",
@@ -349,15 +342,9 @@ class SlideChannel(models.Model):
     karma_slide_vote = fields.Integer(
         "Vote", default=3, help="Karma needed to like/dislike a slide of this course."
     )
-    can_review = fields.Boolean(
-        "Can Review", compute="_compute_action_rights", compute_sudo=False
-    )
-    can_comment = fields.Boolean(
-        "Can Comment", compute="_compute_action_rights", compute_sudo=False
-    )
-    can_vote = fields.Boolean(
-        "Can Vote", compute="_compute_action_rights", compute_sudo=False
-    )
+    can_review = fields.Boolean(compute="_compute_action_rights", compute_sudo=False)
+    can_comment = fields.Boolean(compute="_compute_action_rights", compute_sudo=False)
+    can_vote = fields.Boolean(compute="_compute_action_rights", compute_sudo=False)
     prerequisite_channel_ids = fields.Many2many(
         "slide.channel",
         "slide_channel_prerequisite_slide_channel_rel",

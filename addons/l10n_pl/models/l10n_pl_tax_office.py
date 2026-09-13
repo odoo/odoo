@@ -7,7 +7,7 @@ class L10n_PlL10n_Pl_Tax_Office(models.Model):
     _rec_names_search = ["name", "code"]
     _order = "code"
 
-    code = fields.Char("Code", required=True)
+    code = fields.Char(required=True)
     name = fields.Char("Description", required=True)
 
     _code_company_uniq = models.Constraint(

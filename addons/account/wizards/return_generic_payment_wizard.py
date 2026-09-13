@@ -8,7 +8,7 @@ class AccountReturnGenericPaymentWizard(models.TransientModel):
     _name = "account.return.payment.wizard"
     _description = "Returns Generic Payment Wizard"
 
-    company_id = fields.Many2one(comodel_name="res.company", string="Company")
+    company_id = fields.Many2one(comodel_name="res.company")
     # compute_sudo=False on both: a related field is privileged by default
     # (coding_guidelines.rst 10.5), and partner_bank_id is a plain many2one the user
     # sets, so the default would hand back the IBAN of any bank account in the

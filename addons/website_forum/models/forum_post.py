@@ -26,11 +26,9 @@ class ForumPost(models.Model):
     _CUSTOMER_HEADERS_LIMIT_COUNT = 0
 
     name = fields.Char("Title")
-    forum_id = fields.Many2one("forum.forum", string="Forum", required=True, index=True)
-    content = fields.Html("Content", strip_style=True)
-    plain_content = fields.Text(
-        "Plain Content", compute="_compute_plain_content", store=True
-    )
+    forum_id = fields.Many2one("forum.forum", required=True, index=True)
+    content = fields.Html(strip_style=True)
+    plain_content = fields.Text(compute="_compute_plain_content", store=True)
     tag_ids = fields.Many2many(
         "forum.tag", "forum_tag_rel", "forum_post_id", "forum_tag_id", string="Tags"
     )
@@ -45,8 +43,8 @@ class ForumPost(models.Model):
         string="Status",
         default="active",
     )
-    views = fields.Integer("Views", default=0, readonly=True, copy=False)
-    active = fields.Boolean("Active", default=True)
+    views = fields.Integer(default=0, readonly=True, copy=False)
+    active = fields.Boolean(default=True)
     website_message_ids = fields.One2many(
         domain=lambda self: [
             ("model", "=", self._name),
@@ -139,32 +137,26 @@ class ForumPost(models.Model):
         compute="_compute_post_karma_rights",
         compute_sudo=False,
     )
-    can_ask = fields.Boolean(
-        "Can Ask", compute="_compute_post_karma_rights", compute_sudo=False
-    )
+    can_ask = fields.Boolean(compute="_compute_post_karma_rights", compute_sudo=False)
     can_answer = fields.Boolean(
-        "Can Answer", compute="_compute_post_karma_rights", compute_sudo=False
+        compute="_compute_post_karma_rights", compute_sudo=False
     )
     can_accept = fields.Boolean(
-        "Can Accept", compute="_compute_post_karma_rights", compute_sudo=False
+        compute="_compute_post_karma_rights", compute_sudo=False
     )
-    can_edit = fields.Boolean(
-        "Can Edit", compute="_compute_post_karma_rights", compute_sudo=False
-    )
-    can_close = fields.Boolean(
-        "Can Close", compute="_compute_post_karma_rights", compute_sudo=False
-    )
+    can_edit = fields.Boolean(compute="_compute_post_karma_rights", compute_sudo=False)
+    can_close = fields.Boolean(compute="_compute_post_karma_rights", compute_sudo=False)
     can_unlink = fields.Boolean(
-        "Can Unlink", compute="_compute_post_karma_rights", compute_sudo=False
+        compute="_compute_post_karma_rights", compute_sudo=False
     )
     can_upvote = fields.Boolean(
-        "Can Upvote", compute="_compute_post_karma_rights", compute_sudo=False
+        compute="_compute_post_karma_rights", compute_sudo=False
     )
     can_downvote = fields.Boolean(
-        "Can Downvote", compute="_compute_post_karma_rights", compute_sudo=False
+        compute="_compute_post_karma_rights", compute_sudo=False
     )
     can_comment = fields.Boolean(
-        "Can Comment", compute="_compute_post_karma_rights", compute_sudo=False
+        compute="_compute_post_karma_rights", compute_sudo=False
     )
     can_comment_convert = fields.Boolean(
         "Can Convert to Comment",
@@ -172,7 +164,6 @@ class ForumPost(models.Model):
         compute_sudo=False,
     )
     can_view = fields.Boolean(
-        "Can View",
         compute="_compute_post_karma_rights",
         compute_sudo=False,
         search="_search_can_view",
@@ -187,14 +178,12 @@ class ForumPost(models.Model):
         compute="_compute_post_karma_rights",
         compute_sudo=False,
     )
-    can_flag = fields.Boolean(
-        "Can Flag", compute="_compute_post_karma_rights", compute_sudo=False
-    )
+    can_flag = fields.Boolean(compute="_compute_post_karma_rights", compute_sudo=False)
     can_moderate = fields.Boolean(
-        "Can Moderate", compute="_compute_post_karma_rights", compute_sudo=False
+        compute="_compute_post_karma_rights", compute_sudo=False
     )
     can_use_full_editor = fields.Boolean(
-        "Can Use Full Editor", compute="_compute_post_karma_rights", compute_sudo=False
+        compute="_compute_post_karma_rights", compute_sudo=False
     )
 
     @api.constrains("parent_id")

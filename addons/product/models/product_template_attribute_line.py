@@ -22,7 +22,6 @@ class ProductTemplateAttributeLine(models.Model):
     )
     attribute_id = fields.Many2one(
         comodel_name="product.attribute",
-        string="Attribute",
         required=True,
         ondelete="restrict",
         index=True,

@@ -15,7 +15,7 @@ class DecimalPrecision(models.Model):
     _description = "Decimal Precision"
 
     name = fields.Char("Usage", required=True)
-    digits = fields.Integer("Digits", required=True, default=2)
+    digits = fields.Integer(required=True, default=2)
 
     _name_uniq = models.Constraint(
         "unique (name)",

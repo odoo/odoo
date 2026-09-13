@@ -184,7 +184,6 @@ class MailFollowers(models.Model):
     )
     subtype_ids: MailMessageSubtype = fields.Many2many(
         "mail.message.subtype",
-        string="Subtype",
         help="Message subtypes followed, meaning subtypes that will be pushed onto the user's Wall.",
     )
     is_active = fields.Boolean("Is Active", related="partner_id.active")

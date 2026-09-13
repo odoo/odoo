@@ -43,7 +43,6 @@ class CertificateCertificate(models.Model):
 
     company_id = fields.Many2one(
         comodel_name="res.company",
-        string="Company",
         required=True,
         default=lambda self: self.env.company,
         ondelete="cascade",
@@ -52,7 +51,7 @@ class CertificateCertificate(models.Model):
         related="company_id.country_code",
         depends=["company_id"],
     )
-    name = fields.Char(string="Name")
+    name = fields.Char()
     active = fields.Boolean(
         name="Active",
         help="Set active to false to archive the certificate",
@@ -88,7 +87,6 @@ class CertificateCertificate(models.Model):
         string="Certificate Password (unencrypted)",
     )
     private_key_id = fields.Many2one(
-        string="Private Key",
         comodel_name="certificate.key",
         check_company=True,
         domain=[("public", "=", False)],
@@ -97,7 +95,6 @@ class CertificateCertificate(models.Model):
         readonly=False,
     )
     public_key_id = fields.Many2one(
-        string="Public Key",
         comodel_name="certificate.key",
         check_company=True,
         domain=[("public", "=", True)],

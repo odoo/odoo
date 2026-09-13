@@ -6,7 +6,6 @@ class SaleReport(models.Model):
 
     warehouse_id = fields.Many2one(
         comodel_name="stock.warehouse",
-        string="Warehouse",
         readonly=True,
     )
 

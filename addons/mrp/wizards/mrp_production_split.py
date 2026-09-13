@@ -36,7 +36,6 @@ class MrpProductionSplit(models.TransientModel):
     )
     valid_details = fields.Boolean("Valid", compute="_compute_valid_details")
     max_batch_size = fields.Float(
-        "Max Batch Size",
         compute="_compute_max_batch_size",
         digits="Product Unit",
         readonly=False,

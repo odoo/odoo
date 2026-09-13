@@ -34,12 +34,12 @@ class MailingContact(models.Model):
         return res
 
     name = fields.Char(
-        "Name", compute="_compute_name", readonly=False, store=True, tracking=True
+        compute="_compute_name", readonly=False, store=True, tracking=True
     )
-    first_name = fields.Char("First Name")
-    last_name = fields.Char("Last Name")
-    company_name = fields.Char(string="Company Name")
-    email = fields.Char("Email")
+    first_name = fields.Char()
+    last_name = fields.Char()
+    company_name = fields.Char()
+    email = fields.Char()
     list_ids = fields.Many2many(
         "mailing.list",
         "mailing_subscription",
@@ -50,10 +50,9 @@ class MailingContact(models.Model):
     subscription_ids = fields.One2many(
         "mailing.subscription", "contact_id", string="Subscription Information"
     )
-    country_id = fields.Many2one("res.country", string="Country")
+    country_id = fields.Many2one("res.country")
     tag_ids = fields.Many2many("res.partner.tag", string="Tags")
     opt_out = fields.Boolean(
-        "Opt Out",
         compute="_compute_opt_out",
         search="_search_opt_out",
         help="Opt out flag for a specific mailing list. "

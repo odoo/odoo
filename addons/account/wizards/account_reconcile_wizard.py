@@ -117,12 +117,9 @@ class AccountReconcileWizard(models.TransientModel):
     )
     force_partials = fields.Boolean(compute="_compute_reco_wizard_data")
     display_allow_partials = fields.Boolean(compute="_compute_display_allow_partials")
-    date = fields.Date(
-        string="Date", compute="_compute_date", store=True, readonly=False
-    )
+    date = fields.Date(compute="_compute_date", store=True, readonly=False)
     journal_id = fields.Many2one(
         comodel_name="account.journal",
-        string="Journal",
         check_company=True,
         domain="[('type', '=', 'general')]",
         compute="_compute_journal_id",
@@ -133,7 +130,6 @@ class AccountReconcileWizard(models.TransientModel):
     )
     account_id = fields.Many2one(
         comodel_name="account.account",
-        string="Account",
         check_company=True,
         domain="[('account_type', '!=', 'off_balance')]",
     )
@@ -146,12 +142,11 @@ class AccountReconcileWizard(models.TransientModel):
         store=True,
         readonly=False,
     )
-    label = fields.Char(string="Label", default="Write-Off")
+    label = fields.Char(default="Write-Off")
     tax_id = fields.Many2one(
-        comodel_name="account.tax", string="Tax", default=False, check_company=True
+        comodel_name="account.tax", default=False, check_company=True
     )
     to_check = fields.Boolean(
-        string="To Check",
         default=False,
         help="Check if you are not certain of all the information of the counterpart.",
     )

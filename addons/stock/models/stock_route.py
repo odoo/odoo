@@ -16,11 +16,10 @@ class StockRoute(models.Model):
         translate=True,
     )
     active = fields.Boolean(
-        string="Active",
         default=True,
         help="If the active field is set to False, it will allow you to hide the route without removing it.",
     )
-    sequence = fields.Integer(string="Sequence", default=0)
+    sequence = fields.Integer(default=0)
     rule_ids = fields.One2many(
         comodel_name="stock.rule",
         inverse_name="route_id",
@@ -52,7 +51,6 @@ class StockRoute(models.Model):
     supplier_wh_id = fields.Many2one("stock.warehouse", "Supplying Warehouse")
     company_id = fields.Many2one(
         comodel_name="res.company",
-        string="Company",
         default=lambda self: self.env.company,
         index=True,
         help="Leave this field empty if this route is shared between all companies",

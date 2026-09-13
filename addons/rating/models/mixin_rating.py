@@ -15,7 +15,6 @@ class MixinRating(models.AbstractModel):
     _inherit = ["mixin.mail.thread"]
 
     rating_last_value = fields.Float(
-        "Rating Last Value",
         groups="base.group_user",
         compute="_compute_rating_last_value",
         compute_sudo=True,

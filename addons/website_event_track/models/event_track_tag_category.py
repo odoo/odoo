@@ -6,6 +6,6 @@ class EventTrackTagCategory(models.Model):
     _description = "Event Track Tag Category"
     _order = "sequence"
 
-    name = fields.Char("Name", required=True, translate=True)
-    sequence = fields.Integer("Sequence", default=10)
+    name = fields.Char(required=True, translate=True)
+    sequence = fields.Integer(default=10)
     tag_ids = fields.One2many("event.track.tag", "category_id", string="Tags")

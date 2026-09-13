@@ -17,7 +17,7 @@ class GamificationTeam(models.Model):
     _order = "name"
 
     name = fields.Char("Team Name", required=True, translate=True, tracking=True)
-    description = fields.Text("Description", translate=True)
+    description = fields.Text(translate=True)
     active = fields.Boolean(default=True)
     image_128 = fields.Image("Avatar", max_width=128, max_height=128)
 
@@ -28,7 +28,6 @@ class GamificationTeam(models.Model):
     )
     captain_id = fields.Many2one(
         "res.users",
-        string="Captain",
         help="Team leader who receives challenge reports.",
     )
     member_count = fields.Count("member_ids", "# Members")
@@ -43,12 +42,10 @@ class GamificationTeam(models.Model):
     # team list, the kanban card and the form, where computing them costs the two
     # aggregate queries below for the whole recordset at once.
     team_karma = fields.Integer(
-        "Team Karma",
         compute="_compute_team_stats",
         help="Sum of all members' karma.",
     )
     team_badges = fields.Integer(
-        "Team Badges",
         compute="_compute_team_stats",
         help="Total badges earned by all team members.",
     )

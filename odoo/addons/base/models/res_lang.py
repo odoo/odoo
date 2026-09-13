@@ -88,7 +88,6 @@ class ResLang(models.Model):
     )
     date_format = fields.Selection(
         selection=_selection_date_formats,
-        string="Date Format",
         required=True,
         default="%m/%d/%Y",
     )
@@ -97,7 +96,6 @@ class ResLang(models.Model):
             ("%H:%M:%S", "13:00:00"),
             ("%I:%M:%S %p", " 1:00:00 PM"),
         ],
-        string="Time Format",
         required=True,
         default="%H:%M:%S",
     )

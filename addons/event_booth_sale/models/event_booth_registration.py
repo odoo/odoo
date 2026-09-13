@@ -12,7 +12,6 @@ class EventBoothRegistration(models.Model):
 
     sale_order_line_id = fields.Many2one(
         "sale.order.line",
-        string="Sale Order Line",
         required=True,
         index=True,
         ondelete="cascade",
@@ -24,13 +23,11 @@ class EventBoothRegistration(models.Model):
         "res.partner", related="sale_order_line_id.partner_id", store=True
     )
     contact_name = fields.Char(
-        string="Contact Name",
         compute="_compute_contact_name",
         readonly=False,
         store=True,
     )
     contact_email = fields.Char(
-        string="Contact Email",
         compute="_compute_contact_email",
         readonly=False,
         store=True,

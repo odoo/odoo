@@ -9,7 +9,7 @@ class CrmTeamMember(models.Model):
     _inherit = "crm.team.member"
 
     assignment_enabled = fields.Boolean(related="crm_team_id.assignment_enabled")
-    assignment_domain = fields.Char("Assignment Domain", tracking=True)
+    assignment_domain = fields.Char(tracking=True)
     assignment_domain_preferred = fields.Char(
         "Preference assignment Domain", tracking=True
     )

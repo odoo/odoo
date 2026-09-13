@@ -38,8 +38,8 @@ class SaleOrder(models.Model):
         compute="_compute_amount_delivery",
         help="Tax included or excluded depending on the website configuration.",
     )
-    cart_quantity = fields.Integer(string="Cart Quantity", compute="_compute_cart_info")
-    only_services = fields.Boolean(string="Only Services", compute="_compute_cart_info")
+    cart_quantity = fields.Integer(compute="_compute_cart_info")
+    only_services = fields.Boolean(compute="_compute_cart_info")
     is_abandoned_cart = fields.Boolean(
         string="Abandoned Cart",
         compute="_compute_is_abandoned_cart",

@@ -27,14 +27,12 @@ class AccountAnalyticAccount(models.Model):
         tracking=True,
     )
     active = fields.Boolean(
-        "Active",
         help="Deactivate the account.",
         default=True,
         tracking=True,
     )
     plan_id = fields.Many2one(
         "account.analytic.plan",
-        string="Plan",
         required=True,
         index=True,
     )
@@ -57,7 +55,6 @@ class AccountAnalyticAccount(models.Model):
 
     company_id = fields.Many2one(
         "res.company",
-        string="Company",
         default=lambda self: self.env.company,
     )
 
@@ -73,15 +70,12 @@ class AccountAnalyticAccount(models.Model):
 
     balance = fields.Monetary(
         compute="_compute_debit_credit_balance",
-        string="Balance",
     )
     debit = fields.Monetary(
         compute="_compute_debit_credit_balance",
-        string="Debit",
     )
     credit = fields.Monetary(
         compute="_compute_debit_credit_balance",
-        string="Credit",
     )
 
     currency_id = fields.Many2one(

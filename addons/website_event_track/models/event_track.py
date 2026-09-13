@@ -44,7 +44,7 @@ class EventTrack(models.Model):
         return self.env["event.track.stage"].search([], limit=1).id
 
     name = fields.Char("Title", required=True, translate=True)
-    event_id = fields.Many2one("event.event", "Event", required=True, index=True)
+    event_id = fields.Many2one("event.event", required=True, index=True)
     active = fields.Boolean(default=True)
     user_id = fields.Many2one(
         "res.users", "Responsible", tracking=True, default=lambda self: self.env.user
@@ -57,13 +57,11 @@ class EventTrack(models.Model):
     color = fields.Integer("Agenda Color")
     priority = fields.Selection(
         [("0", "Low"), ("1", "Medium"), ("2", "High"), ("3", "Highest")],
-        "Priority",
         required=True,
         default="1",
     )
     stage_id = fields.Many2one(
         "event.track.stage",
-        string="Stage",
         ondelete="restrict",
         index=True,
         copy=False,
@@ -87,7 +85,6 @@ class EventTrack(models.Model):
     )
     kanban_state = fields.Selection(
         [("normal", "Grey"), ("done", "Green"), ("blocked", "Red")],
-        string="Kanban State",
         copy=False,
         default="normal",
         required=True,
@@ -97,7 +94,6 @@ class EventTrack(models.Model):
         " * Green indicates the track is ready to be pulled to the next stage",
     )
     kanban_state_label = fields.Char(
-        string="Kanban State Label",
         compute="_compute_kanban_state_label",
         store=True,
         tracking=True,
@@ -122,7 +118,6 @@ class EventTrack(models.Model):
         "event_track_phone_number_rel",
         "track_id",
         "phone_number_id",
-        string="Phone",
         compute="_compute_phone_ids",
         readonly=False,
         store=True,
@@ -157,7 +152,6 @@ class EventTrack(models.Model):
         max_height=256,
     )
     contact_email = fields.Char(
-        string="Contact Email",
         compute="_compute_contact_email",
         readonly=False,
         store=True,
@@ -168,12 +162,11 @@ class EventTrack(models.Model):
         "event_track_contact_phone_number_rel",
         "track_id",
         "phone_number_id",
-        string="Contact Phone",
         compute="_compute_contact_phone_ids",
         readonly=False,
         store=True,
     )
-    location_id = fields.Many2one("event.track.location", "Location")
+    location_id = fields.Many2one("event.track.location")
     date = fields.Datetime(
         "Track Date", compute="_compute_date", inverse="_inverse_date", store=True
     )
@@ -183,16 +176,12 @@ class EventTrack(models.Model):
         inverse="_inverse_date_end",
         store=True,
     )
-    duration = fields.Float("Duration", default=0.5)
-    is_track_live = fields.Boolean("Is Track Live", compute="_compute_track_time_data")
-    is_track_soon = fields.Boolean("Is Track Soon", compute="_compute_track_time_data")
-    is_track_today = fields.Boolean(
-        "Is Track Today", compute="_compute_track_time_data"
-    )
-    is_track_upcoming = fields.Boolean(
-        "Is Track Upcoming", compute="_compute_track_time_data"
-    )
-    is_track_done = fields.Boolean("Is Track Done", compute="_compute_track_time_data")
+    duration = fields.Float(default=0.5)
+    is_track_live = fields.Boolean(compute="_compute_track_time_data")
+    is_track_soon = fields.Boolean(compute="_compute_track_time_data")
+    is_track_today = fields.Boolean(compute="_compute_track_time_data")
+    is_track_upcoming = fields.Boolean(compute="_compute_track_time_data")
+    is_track_done = fields.Boolean(compute="_compute_track_time_data")
     is_one_day = fields.Boolean(compute="_compute_is_one_day")
     track_start_remaining = fields.Integer(
         "Minutes before track starts",
@@ -204,9 +193,7 @@ class EventTrack(models.Model):
         compute="_compute_track_time_data",
         help="Relative time compared to track start (seconds)",
     )
-    website_image = fields.Image(
-        string="Website Image", max_width=1024, max_height=1024
-    )
+    website_image = fields.Image(max_width=1024, max_height=1024)
     website_image_url = fields.Char(
         string="Image URL",
         compute="_compute_website_image_url",
@@ -221,7 +208,7 @@ class EventTrack(models.Model):
         string="Track Visitors",
         groups="event.group_event_user",
     )
-    is_reminder_on = fields.Boolean("Is Reminder On", compute="_compute_is_reminder_on")
+    is_reminder_on = fields.Boolean(compute="_compute_is_reminder_on")
     wishlist_visitor_ids = fields.Many2many(
         "website.visitor",
         string="Visitor Wishlist",

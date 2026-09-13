@@ -10,7 +10,6 @@ class StockPackageType(models.Model):
 
     name = fields.Char(string="Package Type", required=True)
     sequence = fields.Integer(
-        string="Sequence",
         default=1,
         help="The first in the sequence is the default one.",
     )
@@ -26,11 +25,9 @@ class StockPackageType(models.Model):
         readonly=False,
     )
     height = fields.Float(
-        string="Height",
         help="Packaging Height",
     )
     width = fields.Float(
-        string="Width",
         help="Packaging Width",
     )
     packaging_length = fields.Float(
@@ -42,10 +39,9 @@ class StockPackageType(models.Model):
         help="Weight of the package type",
     )
     max_weight = fields.Float(
-        string="Max Weight",
         help="Maximum weight shippable in this packaging",
     )
-    barcode = fields.Char(string="Barcode", copy=False)
+    barcode = fields.Char(copy=False)
     weight_uom_name = fields.Char(
         string="Weight unit of measure label",
         default=lambda self: self._default_weight_uom_name(),
@@ -58,7 +54,6 @@ class StockPackageType(models.Model):
     )
     company_id = fields.Many2one(
         comodel_name="res.company",
-        string="Company",
         index=True,
     )
     package_use = fields.Selection(
@@ -66,7 +61,6 @@ class StockPackageType(models.Model):
             ("disposable", "Disposable Box"),
             ("reusable", "Reusable Box (totes)"),
         ],
-        string="Package Use",
         required=True,
         default="disposable",
         help="""Reusable boxes are used for batch picking and emptied afterwards to be reused. In the barcode application, scanning a reusable box will add the products in this box.
@@ -79,7 +73,6 @@ class StockPackageType(models.Model):
     storage_category_capacity_ids = fields.One2many(
         comodel_name="stock.storage.category.capacity",
         inverse_name="package_type_id",
-        string="Storage Category Capacity",
         copy=True,
     )
     route_ids = fields.Many2many(

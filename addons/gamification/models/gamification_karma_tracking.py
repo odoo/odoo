@@ -35,12 +35,12 @@ class GamificationKarmaTracking(models.Model):
         ]
 
     user_id = fields.Many2one(
-        "res.users", "User", index=True, required=True, ondelete="cascade"
+        "res.users", index=True, required=True, ondelete="cascade"
     )
     old_value = fields.Integer("Old Karma Value", readonly=True)
     new_value = fields.Integer("New Karma Value", required=True)
-    gain = fields.Integer("Gain", compute="_compute_gain", readonly=False)
-    consolidated = fields.Boolean("Consolidated")
+    gain = fields.Integer(compute="_compute_gain", readonly=False)
+    consolidated = fields.Boolean()
 
     tracking_date = fields.Datetime(
         default=fields.Datetime.now, readonly=True, index=True

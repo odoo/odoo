@@ -29,12 +29,10 @@ class HrExpensePostWizard(models.TransientModel):
     company_id = fields.Many2one(
         comodel_name="res.company",
         default=lambda self: self.env.company,
-        string="Company",
         readonly=True,
     )
 
     accounting_date = fields.Date(
-        string="Accounting Date",
         default=fields.Date.context_today,
         help="Specify the bill date of the related vendor bill.",
     )

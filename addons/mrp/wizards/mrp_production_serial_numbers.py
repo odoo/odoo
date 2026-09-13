@@ -7,9 +7,9 @@ class MrpProductionSerials(models.TransientModel):
     _name = "mrp.production.serials"
     _description = "Assign serial numbers to production order"
 
-    production_id = fields.Many2one("mrp.production", "Production")
+    production_id = fields.Many2one("mrp.production")
 
-    workorder_id = fields.Many2one("mrp.workorder", "Workorder")
+    workorder_id = fields.Many2one("mrp.workorder")
 
     lot_name = fields.Char(
         "First SN", compute="_compute_serial_defaults", store=True, readonly=False

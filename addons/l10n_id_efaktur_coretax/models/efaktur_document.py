@@ -18,7 +18,6 @@ class EfakturDocument(models.Model):
         default=lambda self: self.env.company,
     )
     active = fields.Boolean(
-        string="Active",
         default=True,
     )
     invoice_ids = fields.One2many(

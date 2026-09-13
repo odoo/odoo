@@ -5,7 +5,7 @@ class MaintenanceEquipment(models.Model):
     _inherit = "maintenance.equipment"
 
     location_id = fields.Many2one(
-        "stock.location", "Location", domain="[('usage', '=', 'internal')]"
+        "stock.location", domain="[('usage', '=', 'internal')]"
     )
     match_serial = fields.Boolean(compute="_compute_match_serial")
 

@@ -47,7 +47,6 @@ class Data_RecycleModel(models.Model):
             ("manual", "Manual"),
             ("automatic", "Automatic"),
         ],
-        string="Recycle Mode",
         default="manual",
         required=True,
     )
@@ -56,7 +55,6 @@ class Data_RecycleModel(models.Model):
             ("archive", "Archive"),
             ("unlink", "Delete"),
         ],
-        string="Recycle Action",
         default="unlink",
         required=True,
     )

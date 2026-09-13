@@ -30,31 +30,27 @@ class StockRule(models.Model):
 
     Procurement = Procurement
     name = fields.Char(
-        string="Name",
         required=True,
         translate=True,
         help="This field will fill the packing origin and the name of its moves",
     )
     active = fields.Boolean(
-        string="Active",
         default=True,
         help="If unchecked, it will allow you to hide the rule without removing it.",
     )
-    sequence = fields.Integer(string="Sequence", default=20)
+    sequence = fields.Integer(default=20)
     action = fields.Selection(
         selection=[
             ("pull", "Pull From"),
             ("push", "Push To"),
             ("pull_push", "Pull & Push"),
         ],
-        string="Action",
         required=True,
         default="pull",
         index=True,
     )
     company_id = fields.Many2one(
         comodel_name="res.company",
-        string="Company",
         default=lambda self: self.env.company,
         domain="[('id', '=?', route_company_id)]",
         index=True,
@@ -80,7 +76,6 @@ class StockRule(models.Model):
     )
     route_id = fields.Many2one(
         comodel_name="stock.route",
-        string="Route",
         required=True,
         ondelete="cascade",
         index=True,
@@ -126,7 +121,6 @@ class StockRule(models.Model):
     )
     partner_address_id = fields.Many2one(
         comodel_name="res.partner",
-        string="Partner Address",
         check_company=True,
         help="Address where goods should be delivered. Optional.",
     )
@@ -142,7 +136,6 @@ class StockRule(models.Model):
     )
     warehouse_id = fields.Many2one(
         comodel_name="stock.warehouse",
-        string="Warehouse",
         check_company=True,
         index=True,
     )

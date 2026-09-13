@@ -15,7 +15,6 @@ class AccountAnalyticAccount(models.Model):
         export_string_translation=False,
     )
     project_count = fields.Integer(
-        "Project Count",
         compute="_compute_project_count",
         export_string_translation=False,
     )

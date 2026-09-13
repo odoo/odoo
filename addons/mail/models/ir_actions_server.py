@@ -69,7 +69,6 @@ class IrActionsServer(models.Model):
             - Specific Followers: select specific contacts to add/remove from record's followers.
             - Dynamic Followers: all contacts of the chosen record's field will be added/removed from followers.
         """,
-        string="Followers Type",
         compute="_compute_followers_type",
         readonly=False,
         store=True,

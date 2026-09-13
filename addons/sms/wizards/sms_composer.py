@@ -39,7 +39,6 @@ class SmsComposer(models.TransientModel):
             ("comment", "Post on a document"),
             ("mass", "Send SMS in batch"),
         ],
-        string="Composition Mode",
         compute="_compute_composition_mode",
         precompute=True,
         readonly=False,
@@ -68,7 +67,6 @@ class SmsComposer(models.TransientModel):
     mass_keep_log = fields.Boolean("Keep a note on document", default=True)
     mass_force_send = fields.Boolean("Send directly", default=False)
     use_exclusion_list = fields.Boolean(
-        "Use Exclusion List",
         default=True,
         copy=False,
         help="Prevent sending messages to blacklisted contacts. Disable only when absolutely necessary.",

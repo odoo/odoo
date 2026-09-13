@@ -6,7 +6,6 @@ class StockPickingBatch(models.Model):
 
     wave_carrier_id = fields.Many2one(
         "delivery.carrier",
-        "Wave Carrier",
         compute="_compute_wave_grouping",
         store=True,
         readonly=False,

@@ -215,7 +215,7 @@ class IrMail_Server(models.Model):
     NO_FOUND_SMTP_FROM = "no_found_smtp_from"
     NO_VALID_FROM = "no_valid_from"
 
-    name = fields.Char(string="Name", required=True, index=True)
+    name = fields.Char(required=True, index=True)
     from_filter = fields.Char(
         "FROM Filtering",
         help="Comma-separated list of addresses or domains for which this server can be used.\n"
@@ -294,7 +294,7 @@ class IrMail_Server(models.Model):
         "DEBUG logging must also be enabled for it to appear, e.g. "
         "--log-handler=odoo.addons.base.models.ir_mail_server:DEBUG",
     )
-    max_email_size = fields.Float(string="Max Email Size")
+    max_email_size = fields.Float()
     sequence = fields.Integer(
         string="Priority",
         default=10,

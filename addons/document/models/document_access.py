@@ -23,7 +23,6 @@ class DocumentsAccess(models.Model):
     )
     role = fields.Selection(
         [("view", "Viewer"), ("edit", "Editor")],
-        string="Role",
         required=False,
         index=True,
     )

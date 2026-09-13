@@ -28,13 +28,10 @@ class MailCannedResponse(models.Model):
         " Type '::' followed by the name of your shortcut (e.g. ::hello) to use in your messages.",
     )
     substitution = fields.Text(
-        "Substitution",
         required=True,
         help="Content that will automatically replace the shortcut of your choosing. This content can still be adapted before sending your message.",
     )
-    last_used = fields.Datetime(
-        "Last Used", help="Last time this canned_response was used"
-    )
+    last_used = fields.Datetime(help="Last time this canned_response was used")
     group_ids: ResGroups = fields.Many2many(
         "res.groups",
         string="Authorized Groups",

@@ -111,7 +111,7 @@ class MixinOrderLineFields(models.AbstractModel):
         compute="_compute_parent_id",
     )
 
-    sequence = fields.Integer(string="Sequence", default=10)
+    sequence = fields.Integer(default=10)
 
     display_type = fields.Selection(
         selection=[
@@ -124,7 +124,6 @@ class MixinOrderLineFields(models.AbstractModel):
 
     product_id = fields.Many2one(
         comodel_name="product.product",
-        string="Product",
         change_default=True,
         check_company=True,
         domain=lambda self: self._domain_product_id(),

@@ -27,7 +27,6 @@ class AccountFiscalPosition(models.Model):
     sequence = fields.Integer()
     company_id = fields.Many2one(
         comodel_name="res.company",
-        string="Company",
         required=True,
         readonly=True,
         index=True,
@@ -75,7 +74,6 @@ class AccountFiscalPosition(models.Model):
     )
     country_id = fields.Many2one(
         "res.country",
-        string="Country",
         inverse="_inverse_vat_territory",
         help="Apply only if delivery country matches.",
     )
@@ -85,7 +83,6 @@ class AccountFiscalPosition(models.Model):
     )
     country_group_id = fields.Many2one(
         "res.country.group",
-        string="Country Group",
         inverse="_inverse_vat_territory",
         help="Apply only if delivery country matches the group.",
     )

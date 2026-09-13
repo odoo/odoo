@@ -24,10 +24,9 @@ class GamificationGoalDefinition(models.Model):
         help="The target and current value are defined in the company currency.",
     )
     suffix = fields.Char(
-        "Suffix", help="The unit of the target and current values", translate=True
+        help="The unit of the target and current values", translate=True
     )
     full_suffix = fields.Char(
-        "Full Suffix",
         compute="_compute_full_suffix",
         help="The currency and suffix field",
     )
@@ -39,7 +38,6 @@ class GamificationGoalDefinition(models.Model):
             ("python", "Automatic: execute a specific Python code"),
         ],
         default="manually",
-        string="Computation Mode",
         required=True,
         help="Define how the goals will be computed. The result of the operation will be stored in the field 'Current'.",
     )
@@ -52,7 +50,7 @@ class GamificationGoalDefinition(models.Model):
         string="Displayed as",
         required=True,
     )
-    model_id = fields.Many2one("ir.model", string="Model", ondelete="cascade")
+    model_id = fields.Many2one("ir.model", ondelete="cascade")
     model_inherited_ids = fields.Many2many(
         "ir.model", related="model_id.inherited_model_ids"
     )
@@ -76,7 +74,6 @@ class GamificationGoalDefinition(models.Model):
     )
 
     batch_mode = fields.Boolean(
-        "Batch Mode",
         help="Evaluate the expression in batch instead of once for each user",
     )
     batch_distinctive_field = fields.Many2one(
@@ -101,7 +98,6 @@ class GamificationGoalDefinition(models.Model):
     )
     action_id = fields.Many2one(
         "ir.actions.act_window",
-        string="Action",
         help="The action that will be called to update the goal value.",
     )
     res_id_field = fields.Char(

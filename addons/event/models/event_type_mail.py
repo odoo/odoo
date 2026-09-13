@@ -8,6 +8,4 @@ class EventTypeMail(models.Model):
     _inherit = ["mixin.event.mail.schedule"]
     _description = "Mail Scheduling on Event Category"
 
-    event_type_id = fields.Many2one(
-        "event.type", string="Event Type", ondelete="cascade", required=True
-    )
+    event_type_id = fields.Many2one("event.type", ondelete="cascade", required=True)

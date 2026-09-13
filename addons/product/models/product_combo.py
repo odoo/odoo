@@ -9,14 +9,13 @@ class ProductCombo(models.Model):
 
     company_id = fields.Many2one(
         comodel_name="res.company",
-        string="Company",
         index=True,
     )
     currency_id = fields.Many2one(
         comodel_name="res.currency",
         compute="_compute_currency_id",
     )
-    name = fields.Char(string="Name", required=True)
+    name = fields.Char(required=True)
     sequence = fields.Integer(default=10, copy=False)
     combo_item_ids = fields.One2many(
         comodel_name="product.combo.item",

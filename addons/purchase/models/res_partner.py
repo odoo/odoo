@@ -24,10 +24,8 @@ class ResPartner(models.Model):
     purchase_order_ids = fields.One2many(
         comodel_name="purchase.order",
         inverse_name="partner_id",
-        string="Purchase Order",
     )
     purchase_order_count = fields.Integer(
-        string="Purchase Order Count",
         compute="_compute_purchase_order_count",
         groups="purchase.group_purchase_user",
     )

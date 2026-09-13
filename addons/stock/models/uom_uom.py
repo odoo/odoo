@@ -9,7 +9,6 @@ class UomUom(models.Model):
 
     package_type_id = fields.Many2one(
         comodel_name="stock.package.type",
-        string="Package Type",
     )
     route_ids = fields.Many2many(
         related="package_type_id.route_ids",

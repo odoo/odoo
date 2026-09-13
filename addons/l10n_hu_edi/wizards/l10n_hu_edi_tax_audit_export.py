@@ -19,10 +19,10 @@ class L10n_Hu_EdiTax_Audit_Export(models.TransientModel):
         ],
         default="date",
     )
-    date_from = fields.Date(string="Date From")
-    date_to = fields.Date(string="Date To")
-    name_from = fields.Char(string="Name From")
-    name_to = fields.Char(string="Name To")
+    date_from = fields.Date()
+    date_to = fields.Date()
+    name_from = fields.Char()
+    name_to = fields.Char()
     filename = fields.Char(string="File name", compute="_compute_filename")
     export_file = fields.Binary(string="Generated File", readonly=True)
 

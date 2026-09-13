@@ -12,8 +12,8 @@ class OnboardingOnboardingStep(models.Model):
 
     onboarding_ids = fields.Many2many("onboarding.onboarding", string="Onboardings")
 
-    title = fields.Char("Title", translate=True)
-    description = fields.Char("Description", translate=True)
+    title = fields.Char(translate=True)
+    description = fields.Char(translate=True)
     button_text = fields.Char(
         "Button text",
         required=True,
@@ -29,8 +29,8 @@ class OnboardingOnboardingStep(models.Model):
         default=lambda s: s.env._("Step Completed!"),
         translate=True,
     )
-    step_image = fields.Binary("Step Image")
-    step_image_filename = fields.Char("Step Image Filename")
+    step_image = fields.Binary()
+    step_image_filename = fields.Char()
     step_image_alt = fields.Char(
         "Alt Text for the Step Image",
         default="Onboarding Step Image",

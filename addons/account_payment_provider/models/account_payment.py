@@ -39,7 +39,6 @@ class AccountPayment(models.Model):
 
     # == Fields used for traceability ==
     source_payment_id = fields.Many2one(
-        string="Source Payment",
         comodel_name="account.payment",
         help="The source payment of related refund payments",
         compute="_compute_source_payment_id",
@@ -47,9 +46,7 @@ class AccountPayment(models.Model):
         store=True,  # Stored for the group by in `_compute_refunds_count`
         index="btree_not_null",
     )
-    refunds_count = fields.Integer(
-        string="Refunds Count", compute="_compute_refunds_count"
-    )
+    refunds_count = fields.Integer(compute="_compute_refunds_count")
 
     # `_create_payment` makes one payment per transaction and
     # `_create_payment_transaction` one transaction per payment, so the edge has

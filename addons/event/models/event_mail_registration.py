@@ -20,7 +20,7 @@ class EventMailRegistration(models.Model):
     scheduled_date = fields.Datetime(
         "Scheduled Time", compute="_compute_scheduled_date", store=True
     )
-    mail_sent = fields.Boolean("Mail Sent")
+    mail_sent = fields.Boolean()
 
     _scheduler_registration_uniq = models.Constraint(
         "unique(scheduler_id, registration_id)",

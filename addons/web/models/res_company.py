@@ -25,7 +25,6 @@ class ResCompany(models.Model):
     )
     report_theme_id = fields.Many2one(
         "report.theme",
-        string="Report Theme",
         default=lambda self: self.env.ref(
             "web.report_theme_modern", raise_if_not_found=False
         ),

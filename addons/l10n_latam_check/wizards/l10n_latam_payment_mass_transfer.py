@@ -8,13 +8,11 @@ class L10n_LatamPaymentMassTransfer(models.TransientModel):
     _check_company_auto = True
 
     payment_date = fields.Date(
-        string="Payment Date",
         required=True,
         default=fields.Date.context_today,
     )
     destination_journal_id = fields.Many2one(
         comodel_name="account.journal",
-        string="Destination Journal",
         check_company=True,
         domain="[('type', 'in', ('bank', 'cash')), ('id', '!=', journal_id)]",
     )

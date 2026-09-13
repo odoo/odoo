@@ -6,9 +6,7 @@ class MailingContactToList(models.TransientModel):
     _description = "Add Contacts to Mailing List"
 
     contact_ids = fields.Many2many("mailing.contact", string="Contacts")
-    mailing_list_id = fields.Many2one(
-        "mailing.list", string="Mailing List", required=True
-    )
+    mailing_list_id = fields.Many2one("mailing.list", required=True)
 
     def action_add_contacts(self):
         """Simply add contacts to the mailing list and close wizard."""

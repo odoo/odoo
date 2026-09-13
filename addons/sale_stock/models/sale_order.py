@@ -16,7 +16,6 @@ class SaleOrder(models.Model):
 
     warehouse_id = fields.Many2one(
         comodel_name="stock.warehouse",
-        string="Warehouse",
         compute="_compute_warehouse_id",
         store=True,
         precompute=True,
@@ -58,7 +57,6 @@ class SaleOrder(models.Model):
             Green: Fully transferred",
     )
     late_availability = fields.Boolean(
-        string="Late Availability",
         compute="_compute_late_availability",
         search="_search_late_availability",
         help="True if any related picking has late availability",

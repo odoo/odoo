@@ -87,7 +87,6 @@ class HrVersion(models.Model):
     )
     employee_id = fields.Many2one(
         "hr.employee",
-        string="Employee",
         tracking=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         index=True,
@@ -129,7 +128,6 @@ class HrVersion(models.Model):
             ("contractor", "Contractor"),
             ("freelance", "Freelancer"),
         ],
-        string="Employee Type",
         required=True,
         default="employee",
         tracking=True,
@@ -149,7 +147,6 @@ class HrVersion(models.Model):
     )
     job_id = fields.Many2one("hr.job", check_company=True, tracking=True, index=True)
     job_title = fields.Char(
-        string="Job Title",
         compute="_compute_job_title",
         store=True,
         inverse="_inverse_job_title",
@@ -173,14 +170,12 @@ class HrVersion(models.Model):
     )
     work_location_id = fields.Many2one(
         "hr.work.location",
-        "Work Location",
         domain="[('address_id', '=', address_id)]",
         tracking=True,
     )
 
     departure_reason_id = fields.Many2one(
         "hr.departure.reason",
-        string="Departure Reason",
         groups="hr.group_hr_user",
         copy=False,
         ondelete="restrict",
@@ -192,7 +187,6 @@ class HrVersion(models.Model):
         groups="hr.group_hr_user",
     )
     departure_date = fields.Date(
-        string="Departure Date",
         copy=False,
         tracking=True,
         groups="hr.group_hr_user",
@@ -266,7 +260,6 @@ class HrVersion(models.Model):
 
     contract_template_id = fields.Many2one(
         "hr.version",
-        string="Contract Template",
         groups="hr.group_hr_user",
         domain="[('company_id', '=', company_id), ('employee_id', '=', False)]",
         tracking=True,
@@ -292,14 +285,12 @@ class HrVersion(models.Model):
         readonly=True,
     )
     wage = fields.Monetary(
-        "Wage",
         tracking=True,
         help="Employee's monthly gross wage.",
         aggregator="avg",
         groups="hr.group_hr_manager",
     )
     contract_wage = fields.Monetary(
-        "Contract Wage",
         compute="_compute_contract_wage",
         groups="hr.group_hr_manager",
     )
@@ -316,12 +307,10 @@ class HrVersion(models.Model):
     )
     contract_type_id = fields.Many2one(
         "hr.contract.type",
-        "Contract Type",
         tracking=True,
         groups="hr.group_hr_manager",
     )
     additional_note = fields.Text(
-        string="Additional Note",
         groups="hr.group_hr_user",
         tracking=True,
     )

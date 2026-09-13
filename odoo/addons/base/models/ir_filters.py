@@ -27,7 +27,6 @@ class IrFilters(models.Model):
     active = fields.Boolean(default=True)
     model_id = fields.Selection(
         selection="_selection_models",
-        string="Model",
         required=True,
     )
     user_ids = fields.Many2many(
@@ -42,7 +41,6 @@ class IrFilters(models.Model):
     is_default = fields.Boolean(string="Default Filter")
     action_id = fields.Many2one(
         "ir.actions.actions",
-        string="Action",
         ondelete="cascade",
         help="The menu action this filter applies to. When left empty the filter applies to all menus for this model.",
     )

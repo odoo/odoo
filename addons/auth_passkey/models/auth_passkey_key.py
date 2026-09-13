@@ -195,7 +195,7 @@ class AuthPasskeyKeyCreate(models.TransientModel):
     _name = "auth.passkey.key.create"
     _description = "Create a Passkey"
 
-    name = fields.Char("Name", required=True)
+    name = fields.Char(required=True)
 
     @check_identity
     def action_generate_key(self, registration=None):

@@ -9,7 +9,6 @@ class AccountAnalyticLine(models.Model):
     _inherit = "account.analytic.line"
 
     analytic_coverage = fields.Float(
-        string="Analytic Coverage",
         compute="_compute_analytic_coverage",
     )
 

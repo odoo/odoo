@@ -13,8 +13,8 @@ class MaintenanceStage(models.Model):
     _description = "Maintenance Stage"
     _order = "sequence, id"
 
-    name = fields.Char("Name", required=True, translate=True)
-    sequence = fields.Integer("Sequence", default=20)
+    name = fields.Char(required=True, translate=True)
+    sequence = fields.Integer(default=20)
     fold = fields.Boolean("Folded in Maintenance Pipe")
     done = fields.Boolean("Request Done")
 
@@ -32,24 +32,16 @@ class MaintenanceEquipmentCategory(models.Model):
             category.fold = not category.equipment_count
 
     name = fields.Char("Category Name", required=True, translate=True)
-    company_id = fields.Many2one(
-        "res.company", string="Company", default=lambda self: self.env.company
-    )
+    company_id = fields.Many2one("res.company", default=lambda self: self.env.company)
     technician_user_id = fields.Many2one(
         "res.users", "Responsible", default=lambda self: self.env.uid
     )
     color = fields.Integer("Color Index")
     note = fields.Html("Comments", translate=True)
-    equipment_ids = fields.One2many(
-        "maintenance.equipment", "category_id", string="Equipment", copy=False
-    )
-    equipment_count = fields.Integer(
-        string="Equipment Count", compute="_compute_equipment_count"
-    )
+    equipment_ids = fields.One2many("maintenance.equipment", "category_id", copy=False)
+    equipment_count = fields.Integer(compute="_compute_equipment_count")
     maintenance_ids = fields.One2many("maintenance.request", "category_id", copy=False)
-    maintenance_count = fields.Integer(
-        string="Maintenance Count", compute="_compute_maintenance_counts"
-    )
+    maintenance_count = fields.Integer(compute="_compute_maintenance_counts")
     maintenance_open_count = fields.Integer(
         string="Current Maintenance", compute="_compute_maintenance_counts"
     )
@@ -128,14 +120,14 @@ class MaintenanceEquipment(models.Model):
     )
     partner_id = fields.Many2one("res.partner", string="Vendor", check_company=True)
     partner_ref = fields.Char("Vendor Reference")
-    model = fields.Char("Model")
+    model = fields.Char()
     serial_no = fields.Char("Serial Number", copy=False)
     assign_date = fields.Date("Assigned Date", tracking=True)
-    cost = fields.Float("Cost")
-    note = fields.Html("Note")
+    cost = fields.Float()
+    note = fields.Html()
     warranty_date = fields.Date("Warranty Expiration Date")
     color = fields.Integer("Color Index")
-    scrap_date = fields.Date("Scrap Date")
+    scrap_date = fields.Date()
     maintenance_ids = fields.One2many("maintenance.request", "equipment_id")
     equipment_properties = fields.Properties(
         "Properties",
@@ -213,13 +205,11 @@ class MaintenanceRequest(models.Model):
     name = fields.Char("Subjects", required=True)
     company_id = fields.Many2one(
         "res.company",
-        string="Company",
         required=True,
         default=lambda self: self.env.company,
     )
-    description = fields.Html("Description")
+    description = fields.Html()
     request_date = fields.Date(
-        "Request Date",
         tracking=True,
         default=fields.Date.context_today,
         help="Date requested for the maintenance to happen",
@@ -237,7 +227,6 @@ class MaintenanceRequest(models.Model):
     )
     equipment_id = fields.Many2one(
         "maintenance.equipment",
-        string="Equipment",
         ondelete="restrict",
         index=True,
         check_company=True,
@@ -252,7 +241,6 @@ class MaintenanceRequest(models.Model):
     )
     stage_id = fields.Many2one(
         "maintenance.stage",
-        string="Stage",
         ondelete="restrict",
         tracking=True,
         group_expand="_read_group_stage_ids",
@@ -261,17 +249,15 @@ class MaintenanceRequest(models.Model):
     )
     priority = fields.Selection(
         [("0", "Very Low"), ("1", "Low"), ("2", "Normal"), ("3", "High")],
-        string="Priority",
     )
     color = fields.Integer("Color Index")
-    close_date = fields.Date("Close Date", help="Date the maintenance was finished. ")
+    close_date = fields.Date(help="Date the maintenance was finished. ")
     kanban_state = fields.Selection(
         [
             ("normal", "In Progress"),
             ("blocked", "Blocked"),
             ("done", "Ready for next stage"),
         ],
-        string="Kanban State",
         required=True,
         default="normal",
         tracking=True,
@@ -283,7 +269,6 @@ class MaintenanceRequest(models.Model):
     )
     maintenance_type = fields.Selection(
         [("corrective", "Corrective"), ("preventive", "Preventive")],
-        string="Maintenance Type",
         default="corrective",
     )
     schedule_date = fields.Datetime(
@@ -534,9 +519,7 @@ class MaintenanceTeam(models.Model):
 
     name = fields.Char("Team Name", required=True, translate=True)
     active = fields.Boolean(default=True)
-    company_id = fields.Many2one(
-        "res.company", string="Company", default=lambda self: self.env.company
-    )
+    company_id = fields.Many2one("res.company", default=lambda self: self.env.company)
     member_ids = fields.Many2many(
         "res.users",
         "maintenance_team_users_rel",

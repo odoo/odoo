@@ -58,7 +58,6 @@ class Website(models.Model):
         )
 
     salesperson_id = fields.Many2one(
-        string="Salesperson",
         comodel_name="res.users",
         domain=[("share", "=", False)],
     )

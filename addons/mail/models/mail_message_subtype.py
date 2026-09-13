@@ -20,7 +20,6 @@ class MailMessageSubtype(models.Model):
         "Stage change). Lets users fine-tune which notifications they receive.",
     )
     description = fields.Text(
-        "Description",
         translate=True,
         prefetch=True,
         help="Description that will be added in the message posted for this "
@@ -32,7 +31,6 @@ class MailMessageSubtype(models.Model):
     )
     parent_id: MailMessageSubtype = fields.Many2one(
         "mail.message.subtype",
-        string="Parent",
         ondelete="set null",
         help="Parent subtype, used for automatic subscription (e.g. a project "
         "subtype's parent_id points to the related task subtype).",
@@ -48,12 +46,11 @@ class MailMessageSubtype(models.Model):
         help="Model the subtype applies to. If False, this subtype applies to all models.",
     )
     default = fields.Boolean(
-        "Default", default=True, help="Activated by default when subscribing."
+        default=True, help="Activated by default when subscribing."
     )
-    sequence = fields.Integer("Sequence", default=1, help="Used to order subtypes.")
-    hidden = fields.Boolean("Hidden", help="Hide the subtype in the follower options")
+    sequence = fields.Integer(default=1, help="Used to order subtypes.")
+    hidden = fields.Boolean(help="Hide the subtype in the follower options")
     track_recipients = fields.Boolean(
-        "Track Recipients",
         help="Whether to display all the recipients or only the important ones.",
     )
 

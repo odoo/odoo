@@ -37,7 +37,6 @@ class SurveyQuestion(models.Model):
 
     survey_id = fields.Many2one(
         "survey.survey",
-        string="Survey",
         ondelete="cascade",
         index="btree_not_null",
     )
@@ -58,10 +57,9 @@ class SurveyQuestion(models.Model):
         related="survey_id.session_speed_rating_time_limit",
         string="General Time limit (seconds)",
     )
-    title = fields.Char("Title", required=True, translate=True)
-    sequence = fields.Integer("Sequence", default=10)
+    title = fields.Char(required=True, translate=True)
+    sequence = fields.Integer(default=10)
     description = fields.Html(
-        "Description",
         translate=True,
         sanitize=True,
         sanitize_overridable=True,
@@ -78,7 +76,6 @@ class SurveyQuestion(models.Model):
         readonly=False,
     )
     background_image = fields.Image(
-        "Background Image",
         compute="_compute_background_image",
         store=True,
         readonly=False,
@@ -107,7 +104,6 @@ class SurveyQuestion(models.Model):
 
     page_id = fields.Many2one(
         "survey.question",
-        string="Page",
         compute="_compute_page_id",
         store=True,
     )
@@ -133,7 +129,6 @@ class SurveyQuestion(models.Model):
             ("calculated", "Calculated / Hidden Field"),
             ("statement", "Statement / Info Screen"),
         ],
-        string="Question Type",
         compute="_compute_question_type",
         readonly=False,
         store=True,
@@ -208,7 +203,6 @@ class SurveyQuestion(models.Model):
             ("satisfaction_5", "Satisfaction (5-point)"),
             ("importance_5", "Importance (5-point)"),
         ],
-        string="Likert Preset",
         help="Predefined scale labels. Select a preset then add your statements as matrix rows.",
     )
     scale_min = fields.Integer("Scale Minimum Value", default=0)
@@ -218,9 +212,8 @@ class SurveyQuestion(models.Model):
     scale_max_label = fields.Char("Scale Maximum Label", translate=True)
     slider_min = fields.Float("Slider Minimum", default=0)
     slider_max = fields.Float("Slider Maximum", default=100)
-    slider_step = fields.Float("Slider Step", default=1)
+    slider_step = fields.Float(default=1)
     slider_unit = fields.Char(
-        "Slider Unit",
         help="Unit label displayed next to the value (e.g., '%', 'kg', '$').",
     )
     rating_max = fields.Integer(
@@ -228,7 +221,6 @@ class SurveyQuestion(models.Model):
     )
     rating_icon = fields.Selection(
         [("star", "Stars"), ("heart", "Hearts"), ("thumb", "Thumbs Up")],
-        string="Rating Icon",
         default="star",
     )
     constant_sum_total = fields.Integer(
@@ -260,7 +252,6 @@ class SurveyQuestion(models.Model):
     is_time_customized = fields.Boolean("Customized speed rewards")
     time_limit = fields.Integer("Time limit (seconds)")
     shuffle_answers = fields.Boolean(
-        "Shuffle Answers",
         help="Randomize the display order of suggested answers for each respondent. "
         "The order is deterministic per respondent (seeded by their access token).",
     )

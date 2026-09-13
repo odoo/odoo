@@ -8,7 +8,7 @@ class EventStage(models.Model):
 
     name = fields.Char(string="Stage Name", required=True, translate=True)
     description = fields.Text(string="Stage description", translate=True)
-    sequence = fields.Integer("Sequence", default=1)
+    sequence = fields.Integer(default=1)
     fold = fields.Boolean(string="Folded in Kanban", default=False)
     pipe_end = fields.Boolean(
         string="End Stage",

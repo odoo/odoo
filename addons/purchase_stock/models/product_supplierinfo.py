@@ -11,7 +11,6 @@ class ProductSupplierinfo(models.Model):
         compute="_compute_date_last_purchase",
     )
     show_set_supplier_button = fields.Boolean(
-        string="Show Set Supplier Button",
         compute="_compute_show_set_supplier_button",
     )
 

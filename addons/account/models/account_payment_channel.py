@@ -13,7 +13,6 @@ class AccountPaymentChannel(models.Model):
     name = fields.Char(compute="_compute_name", readonly=False, store=True)
     sequence = fields.Integer(default=10)
     payment_method_id = fields.Many2one(
-        string="Payment Method",
         comodel_name="account.payment.method",
         domain="[('payment_type', '=?', payment_type), ('id', 'in', available_payment_method_ids)]",
         required=True,

@@ -89,7 +89,6 @@ class ProductTemplate(models.Model):
     website_size_y = fields.Integer(string="Size Y", default=1)
     website_ribbon_id = fields.Many2one(string="Ribbon", comodel_name="product.ribbon")
     website_sequence = fields.Integer(
-        string="Website Sequence",
         help="Determine the display order in the Website E-commerce",
         default=_default_website_sequence,
         copy=False,
@@ -104,7 +103,6 @@ class ProductTemplate(models.Model):
     )
 
     publish_date = fields.Datetime(
-        string="Publish Date",
         compute="_compute_publish_date",
         store=True,
         precompute=True,
@@ -118,7 +116,6 @@ class ProductTemplate(models.Model):
     )
 
     base_unit_count = fields.Float(
-        string="Base Unit Count",
         help="Display base unit price on your eCommerce pages. Set to 0 to hide it for this product.",
         compute="_compute_base_unit_count",
         inverse="_inverse_base_unit_count",

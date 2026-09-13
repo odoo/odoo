@@ -51,13 +51,11 @@ class DiscussChannelMember(models.Model):
 
     partner_id: ResPartner = fields.Many2one(
         "res.partner",
-        "Partner",
         ondelete="cascade",
         index=True,
     )
     guest_id: MailGuest = fields.Many2one(
         "mail.guest",
-        "Guest",
         ondelete="cascade",
         index=True,
     )
@@ -67,7 +65,6 @@ class DiscussChannelMember(models.Model):
     )
     channel_id: DiscussChannel = fields.Many2one(
         "discuss.channel",
-        "Channel",
         ondelete="cascade",
         required=True,
         bypass_search_access=True,

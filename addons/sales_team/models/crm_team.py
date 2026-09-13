@@ -14,12 +14,12 @@ class CrmTeam(models.Model):
         return [(6, 0, [self.env.uid])]
 
     name = fields.Char("Sales Team", required=True, translate=True)
-    sequence = fields.Integer("Sequence", default=10)
+    sequence = fields.Integer(default=10)
     active = fields.Boolean(
         default=True,
         help="If the active field is set to false, it will allow you to hide the Sales Team without removing it.",
     )
-    company_id = fields.Many2one("res.company", string="Company", index=True)
+    company_id = fields.Many2one("res.company", index=True)
     currency_id = fields.Many2one(
         "res.currency",
         string="Currency",

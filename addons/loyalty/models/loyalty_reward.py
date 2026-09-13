@@ -80,7 +80,7 @@ class LoyaltyReward(models.Model):
     user_has_debug = fields.Boolean(compute="_compute_user_has_debug")
 
     # Discount rewards
-    discount = fields.Float(string="Discount", default=10)
+    discount = fields.Float(default=10)
     discount_mode = fields.Selection(
         selection=_selection_discount_modes, required=True, default="percent"
     )

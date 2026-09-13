@@ -14,8 +14,8 @@ class ProjectTaskBurndownChartReport(models.AbstractModel):
     _auto = False
     _order = "date"
 
-    planned_hours = fields.Float(string="Planned Hours", readonly=True)
-    date = fields.Datetime("Date", readonly=True)
+    planned_hours = fields.Float(readonly=True)
+    date = fields.Datetime(readonly=True)
     date_assign = fields.Datetime(string="Assignment Date", readonly=True)
     date_end = fields.Date(string="Deadline", readonly=True)
     date_last_status_change = fields.Date(string="Last Status Change", readonly=True)
@@ -29,7 +29,6 @@ class ProjectTaskBurndownChartReport(models.AbstractModel):
             ("canceled", "Cancelled"),
             ("blocked", "Waiting"),
         ],
-        string="State",
         readonly=True,
     )
     is_closed = fields.Selection(

@@ -17,7 +17,6 @@ class ResCompany(models.Model):
     )
     order_cycle_unit = fields.Selection(
         selection=time_unit_selection("day", "week", "month", "year"),
-        string="Order Cycle Unit",
         default="month",
         required=True,
     )

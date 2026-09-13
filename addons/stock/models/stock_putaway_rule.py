@@ -15,14 +15,12 @@ class StockPutawayRule(models.Model):
 
     company_id = fields.Many2one(
         comodel_name="res.company",
-        string="Company",
         required=True,
         default=lambda s: s.env.company.id,
         index=True,
     )
     product_id = fields.Many2one(
         comodel_name="product.product",
-        string="Product",
         default=lambda self: self._default_product_id(),
         check_company=True,
         domain="[('product_tmpl_id', '=', context.get('active_id', False))] if context.get('active_model') == 'product.template' else [('type', '!=', 'service')]",
@@ -56,7 +54,6 @@ class StockPutawayRule(models.Model):
         ondelete="cascade",
     )
     active = fields.Boolean(
-        string="Active",
         default=True,
     )
     sequence = fields.Integer(
@@ -65,12 +62,10 @@ class StockPutawayRule(models.Model):
     )
     package_type_ids = fields.Many2many(
         comodel_name="stock.package.type",
-        string="Package Type",
         check_company=True,
     )
     storage_category_id = fields.Many2one(
         comodel_name="stock.storage.category",
-        string="Storage Category",
         compute="_compute_storage_category_id",
         store=True,
         readonly=False,

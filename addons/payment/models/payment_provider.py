@@ -29,17 +29,15 @@ class PaymentProvider(models.Model):
         )
 
     # Configuration fields
-    name = fields.Char(string="Name", required=True, translate=True)
-    sequence = fields.Integer(string="Sequence", help="Define the display order")
+    name = fields.Char(required=True, translate=True)
+    sequence = fields.Integer(help="Define the display order")
     code = fields.Selection(
-        string="Code",
         help="The technical code of this payment provider.",
         selection=[("none", "No Provider Set")],
         default="none",
         required=True,
     )
     state = fields.Selection(
-        string="State",
         help="In test mode, a fake payment is processed through a test payment interface.\n"
         "This mode is advised when setting up the provider.",
         selection=[
@@ -59,7 +57,6 @@ class PaymentProvider(models.Model):
     )
     company_id = (
         fields.Many2one(  # Indexed to speed-up ORM searches (from ir_rule or others)
-            string="Company",
             comodel_name="res.company",
             default=lambda self: self.env.company.id,
             required=True,
@@ -86,7 +83,6 @@ class PaymentProvider(models.Model):
         "you are sure you can ship the goods to them.",
     )
     allow_express_checkout = fields.Boolean(
-        string="Allow Express Checkout",
         help="This controls whether customers can use express payment methods. Express checkout "
         "enables customers to pay with Google Pay and Apple Pay from which address "
         "information is collected at payment.",
@@ -144,7 +140,6 @@ class PaymentProvider(models.Model):
         context={"active_test": False},
     )
     maximum_amount = fields.Monetary(
-        string="Maximum Amount",
         help="The maximum payment amount that this payment provider is available for. Leave blank "
         "to make it available for any payment amount.",
         currency_field="main_currency_id",
@@ -209,7 +204,6 @@ class PaymentProvider(models.Model):
     # Kanban view fields
     image_128 = fields.Image(string="Image", max_width=128, max_height=128)
     color = fields.Integer(
-        string="Color",
         help="The color of the card in kanban view",
         compute="_compute_color",
         store=True,

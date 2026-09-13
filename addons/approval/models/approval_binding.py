@@ -47,7 +47,6 @@ class ApprovalBinding(models.Model):
 
     model_id = fields.Many2one(
         comodel_name="ir.model",
-        string="Model",
         required=True,
         ondelete="cascade",
         index=True,
@@ -65,7 +64,6 @@ class ApprovalBinding(models.Model):
     )
     action_id = fields.Many2one(
         comodel_name="ir.actions.actions",
-        string="Action",
         ondelete="cascade",
         index="btree_not_null",
         help="Action to gate, instead of a method. A server action or a report is "

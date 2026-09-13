@@ -21,7 +21,6 @@ class SaleOrder(models.Model):
         "Service Product", compute="_compute_is_all_service"
     )
     shipping_weight = fields.Float(
-        "Shipping Weight",
         compute="_compute_shipping_weight",
         store=True,
         readonly=False,

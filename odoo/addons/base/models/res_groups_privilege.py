@@ -19,7 +19,7 @@ class ResGroupsPrivilege(models.Model):
         help="Label shown for the empty option in the privilege selection field of the user form (e.g. 'No' access).",
     )
     sequence = fields.Integer(default=100)
-    category_id = fields.Many2one("ir.module.category", string="Category", index=True)
+    category_id = fields.Many2one("ir.module.category", index=True)
     group_ids = fields.One2many("res.groups", "privilege_id", string="Groups")
 
     @api.model_create_multi

@@ -18,7 +18,6 @@ class ProductPricelist(models.Model):
         translate=True,
     )
     active = fields.Boolean(
-        string="Active",
         default=True,
         help="If unchecked, it will allow you to hide the pricelist without removing it.",
     )

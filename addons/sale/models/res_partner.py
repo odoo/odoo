@@ -11,7 +11,6 @@ class ResPartner(models.Model):
         string="Sales Order",
     )
     sale_order_count = fields.Integer(
-        string="Sale Order Count",
         compute="_compute_sale_order_count",
         groups="sales_team.group_sale_salesman",
     )

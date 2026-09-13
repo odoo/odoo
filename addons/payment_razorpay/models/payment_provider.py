@@ -27,12 +27,10 @@ class PaymentProvider(models.Model):
         copy=False,
     )
     razorpay_key_secret = fields.Char(
-        string="Razorpay Key Secret",
         copy=False,
         groups="base.group_system",
     )
     razorpay_webhook_secret = fields.Char(
-        string="Razorpay Webhook Secret",
         copy=False,
         groups="base.group_system",
     )
@@ -44,22 +42,18 @@ class PaymentProvider(models.Model):
         groups="base.group_system",
     )
     razorpay_refresh_token = fields.Char(
-        string="Razorpay Refresh Token",
         copy=False,
         groups="base.group_system",
     )
     razorpay_public_token = fields.Char(
-        string="Razorpay Public Token",
         copy=False,
         groups="base.group_system",
     )
     razorpay_access_token = fields.Char(
-        string="Razorpay Access Token",
         copy=False,
         groups="base.group_system",
     )
     razorpay_access_token_expiry = fields.Datetime(
-        string="Razorpay Access Token Expiry",
         copy=False,
         groups="base.group_system",
     )

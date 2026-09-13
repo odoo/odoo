@@ -87,19 +87,14 @@ class AppointmentInvite(models.Model):
         copy=False,
         readonly=True,
     )
-    short_code = fields.Char("Short Code", required=True)
-    short_code_format_warning = fields.Boolean(
-        "Short Code Format Warning", compute="_compute_short_code_warning"
-    )
-    short_code_unique_warning = fields.Boolean(
-        "Short Code Unique Warning", compute="_compute_short_code_warning"
-    )
+    short_code = fields.Char(required=True)
+    short_code_format_warning = fields.Boolean(compute="_compute_short_code_warning")
+    short_code_unique_warning = fields.Boolean(compute="_compute_short_code_warning")
     disable_save_button = fields.Boolean(
         "Computes if alert is present", compute="_compute_disable_save_button"
     )
     identical_config_id = fields.Many2one(
         "appointment.invite",
-        string="Identical Config",
         help="Interface field to try to prevent creating identical links",
     )
 
@@ -122,9 +117,7 @@ class AppointmentInvite(models.Model):
         compute="_compute_appointment_type_count",
         store=True,
     )
-    schedule_based_on = fields.Char(
-        "Schedule Based On", compute="_compute_schedule_based_on"
-    )
+    schedule_based_on = fields.Char(compute="_compute_schedule_based_on")
     suggested_resource_ids = fields.Many2many(
         "appointment.resource",
         related="appointment_type_ids.resource_ids",

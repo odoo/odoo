@@ -19,7 +19,6 @@ class ReportProjectTaskUser(models.Model):
         groups="hr_timesheet.group_hr_timesheet_user",
     )
     progress = fields.Float(
-        "Progress",
         aggregator="avg",
         readonly=True,
         groups="hr_timesheet.group_hr_timesheet_user",

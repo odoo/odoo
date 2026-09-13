@@ -27,17 +27,14 @@ class AccountCodeMapping(models.Model):
 
     account_id = fields.Many2one(
         comodel_name="account.account",
-        string="Account",
         compute="_compute_account_id",
         search=True,
     )
     company_id = fields.Many2one(
         comodel_name="res.company",
-        string="Company",
         compute="_compute_company_id",
     )
     code = fields.Char(
-        string="Code",
         compute="_compute_code",
         inverse="_inverse_code",
     )

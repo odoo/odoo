@@ -4,7 +4,7 @@ from odoo import fields, models
 class SaleReport(models.Model):
     _inherit = "sale.report"
 
-    margin = fields.Float("Margin")
+    margin = fields.Float()
 
     def _select_additional_fields(self):
         res = super()._select_additional_fields()

@@ -66,7 +66,7 @@ class MrpWorkorder(models.Model):
         help="Should have started already.",
     )
     name = fields.Char("Work Order", required=True)
-    sequence = fields.Integer("Sequence", default=_default_sequence)
+    sequence = fields.Integer(default=_default_sequence)
     barcode = fields.Char(compute="_compute_barcode", store=True)
     workcenter_id = fields.Many2one(
         "mrp.workcenter",
@@ -152,7 +152,6 @@ class MrpWorkorder(models.Model):
     )
     reservation_id = fields.Many2one(
         "resource.reservation",
-        string="Reservation",
         compute="_compute_reservation_id",
         help="Resource reservation booking this workcenter time slot.",
     )
@@ -199,7 +198,6 @@ class MrpWorkorder(models.Model):
 
     operation_id = fields.Many2one(
         "mrp.routing.workcenter",
-        "Operation",
         check_company=True,
         index="btree_not_null",
     )
@@ -258,9 +256,7 @@ class MrpWorkorder(models.Model):
 
     scrap_ids = fields.One2many("stock.scrap", "workorder_id")
     scrap_count = fields.Integer(compute="_compute_scrap_count", string="Scrap Move")
-    production_date = fields.Datetime(
-        "Production Date", compute="_compute_production_date", store=True
-    )
+    production_date = fields.Datetime(compute="_compute_production_date", store=True)
     json_popover = fields.Char("Popover Data JSON", compute="_compute_popover")
     show_json_popover = fields.Boolean("Show Popover?", compute="_compute_popover")
     consumption = fields.Selection(related="production_id.consumption")

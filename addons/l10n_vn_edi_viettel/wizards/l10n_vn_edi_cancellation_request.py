@@ -10,7 +10,6 @@ class L10n_Vn_Edi_ViettelCancellation(models.TransientModel):
         string="Invoice to cancel",
     )
     reason = fields.Char(
-        string="Reason",
         required=True,
     )
     agreement_document_name = fields.Char(

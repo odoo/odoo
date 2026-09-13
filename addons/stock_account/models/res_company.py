@@ -34,7 +34,6 @@ class ResCompany(models.Model):
     )
 
     inventory_period = fields.Selection(
-        string="Inventory Period",
         selection=[
             ("manual", "Manual"),
             ("daily", "Daily"),
@@ -51,7 +50,6 @@ class ResCompany(models.Model):
     )
 
     cost_method = fields.Selection(
-        string="Cost Method",
         selection=COST_METHOD_SELECTION,
         default="standard",
         required=True,

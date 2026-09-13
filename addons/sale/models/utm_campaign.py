@@ -12,7 +12,6 @@ class UtmCampaign(models.Model):
         string="Quotations",
     )
     quotation_count = fields.Integer(
-        string="Quotation Count",
         compute="_compute_quotation_count",
         compute_sudo=True,
         groups="sales_team.group_sale_salesman",
@@ -26,7 +25,6 @@ class UtmCampaign(models.Model):
     )
     company_id = fields.Many2one(
         comodel_name="res.company",
-        string="Company",
         default=lambda self: self.env.company,
     )
     currency_id = fields.Many2one(

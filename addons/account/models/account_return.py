@@ -34,20 +34,18 @@ class AccountReturn(models.Model):
     _order = "is_completed, date_deadline, name, id"
     _check_company_domain = check_company_domain_account_return
 
-    active = fields.Boolean(string="Active", default=True, tracking=True)
-    name = fields.Char(string="Name", required=True, translate=True)
-    date_from = fields.Date(string="Date From", required=True)
-    date_to = fields.Date(string="Date To", required=True)
+    active = fields.Boolean(default=True, tracking=True)
+    name = fields.Char(required=True, translate=True)
+    date_from = fields.Date(required=True)
+    date_to = fields.Date(required=True)
     type_id = fields.Many2one(
         comodel_name="account.return.type", string="Return Type", required=True
     )
 
     # IMPORTANT: To change the state of a return you should always write on the 'state' field; its
     # inverse dispatches the value to the selection field named by type_id.states_workflow.
-    state = fields.Char(
-        string="State", compute="_compute_state", inverse="_inverse_state", store=True
-    )
-    next_state = fields.Char(string="Next State", compute="_compute_next_state")
+    state = fields.Char(compute="_compute_state", inverse="_inverse_state", store=True)
+    next_state = fields.Char(compute="_compute_next_state")
     generic_state_tax_report = fields.Selection(
         string="Generic State",
         selection=[
@@ -61,7 +59,6 @@ class AccountReturn(models.Model):
         tracking=True,
     )
     generic_state_only_pay = fields.Selection(
-        string="Generic State Only Pay",
         selection=[
             ("new", "New"),
             ("paid", "Pay"),
@@ -71,7 +68,6 @@ class AccountReturn(models.Model):
         tracking=True,
     )
     generic_state_review_submit = fields.Selection(
-        string="Generic State Review Submit",
         selection=[
             ("new", "New"),
             ("reviewed", "Review"),
@@ -82,7 +78,6 @@ class AccountReturn(models.Model):
         tracking=True,
     )
     generic_state_review = fields.Selection(
-        string="Generic State Review",
         selection=[
             ("new", "New"),
             ("reviewed", "Review"),
@@ -92,12 +87,10 @@ class AccountReturn(models.Model):
         tracking=True,
     )
     is_completed = fields.Boolean(
-        string="Is Completed", default=False, tracking=True
+        default=False, tracking=True
     )  # Set to true when all steps are done
-    company_id = fields.Many2one(
-        comodel_name="res.company", string="Company", required=True
-    )
-    tax_unit_id = fields.Many2one(comodel_name="account.tax.unit", string="Tax Unit")
+    company_id = fields.Many2one(comodel_name="res.company", required=True)
+    tax_unit_id = fields.Many2one(comodel_name="account.tax.unit")
     company_ids = fields.Many2many(
         comodel_name="res.company",
         string="Companies",
@@ -128,7 +121,7 @@ class AccountReturn(models.Model):
     resolved_check_count = fields.Integer(
         string="Passed", compute="_compute_resolved_check_count"
     )
-    manually_created = fields.Boolean(string="Manually Created")
+    manually_created = fields.Boolean()
 
     # Tax return fields
     total_amount_to_pay = fields.Monetary(currency_field="amount_to_pay_currency_id")
@@ -154,9 +147,7 @@ class AccountReturn(models.Model):
     )
     is_main_company_active = fields.Boolean(compute="_compute_is_main_company_active")
     return_type_category = fields.Selection(related="type_id.category")
-    visible_states = fields.Json(
-        string="Visible States", compute="_compute_visible_states"
-    )
+    visible_states = fields.Json(compute="_compute_visible_states")
     show_submit_button = fields.Boolean(compute="_compute_show_submit_button")
     is_tax_return = fields.Boolean(related="type_id.is_tax_return_type")
     is_ec_sales_list_return = fields.Boolean(
@@ -187,7 +178,7 @@ class AccountReturn(models.Model):
         string="Completed Balances Count",
         compute="_compute_audit_balances_completed_count",
     )
-    skipped_check_cycles = fields.Char(string="Skipped Check Cycles")
+    skipped_check_cycles = fields.Char()
 
     def _update_translated_name(self):
         specified_lang = self.env.context.get("update_returns_translation_lang")

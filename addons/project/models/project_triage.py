@@ -12,8 +12,8 @@ class ProjectTriage(models.Model):
     _inherit = ["mixin.project.pm"]
     _order = "sequence, id"
 
-    active = fields.Boolean("Active", default=True, export_string_translation=False)
-    name = fields.Char(string="Name", required=True, translate=True)
+    active = fields.Boolean(default=True, export_string_translation=False)
+    name = fields.Char(required=True, translate=True)
     sequence = fields.Integer(default=1)
     color = fields.Integer(string="Color Index", default=0)
     fold = fields.Boolean(string="Folded")

@@ -24,11 +24,11 @@ class BlogBlog(models.Model):
     def _default_sequence(self):
         return (self.search([], order="sequence desc", limit=1).sequence or 0) + 1
 
-    sequence = fields.Integer("Sequence", default=_default_sequence)
+    sequence = fields.Integer(default=_default_sequence)
     name = fields.Char("Blog Name", required=True, translate=True)
     subtitle = fields.Char("Blog Subtitle", translate=True)
-    active = fields.Boolean("Active", default=True)
-    content = fields.Html("Content", translate=html_translate, sanitize=False)
+    active = fields.Boolean(default=True)
+    content = fields.Html(translate=html_translate, sanitize=False)
     blog_post_ids = fields.One2many("blog.post", "blog_id", "Blog Posts")
     blog_post_count = fields.Count("blog_post_ids", "Posts")
 
@@ -129,7 +129,7 @@ class BlogTagCategory(models.Model):
     _description = "Blog Tag Category"
     _order = "name"
 
-    name = fields.Char("Name", required=True, translate=True)
+    name = fields.Char(required=True, translate=True)
     tag_ids = fields.One2many("blog.tag", "category_id", string="Tags")
 
     _name_src_uniq = name_uniq_index(
@@ -143,9 +143,9 @@ class BlogTag(models.Model):
     _inherit = ["mixin.website.seo.metadata"]
     _order = "name"
 
-    name = fields.Char("Name", required=True, translate=True)
-    category_id = fields.Many2one("blog.tag.category", "Category", index=True)
-    color = fields.Integer("Color")
+    name = fields.Char(required=True, translate=True)
+    category_id = fields.Many2one("blog.tag.category", index=True)
+    color = fields.Integer()
     post_ids = fields.Many2many("blog.post", string="Posts")
 
     _name_src_uniq = name_uniq_index(
@@ -186,7 +186,6 @@ class BlogPost(models.Model):
     subtitle = fields.Char("Sub Title", translate=True)
     author_id = fields.Many2one(
         "res.partner",
-        "Author",
         default=lambda self: self.env.user.partner_id,
         index="btree_not_null",
     )
@@ -199,10 +198,9 @@ class BlogPost(models.Model):
         readonly=False,
         store=True,
     )
-    active = fields.Boolean("Active", default=True)
+    active = fields.Boolean(default=True)
     blog_id = fields.Many2one(
         "blog.blog",
-        "Blog",
         required=True,
         index=True,
         ondelete="cascade",
@@ -210,10 +208,10 @@ class BlogPost(models.Model):
     )
     tag_ids = fields.Many2many("blog.tag", string="Tags")
     content = fields.Html(
-        "Content", default=_default_content, translate=html_translate, sanitize=False
+        default=_default_content, translate=html_translate, sanitize=False
     )
     teaser = fields.Text(
-        "Teaser", compute="_compute_teaser", inverse="_inverse_teaser", translate=True
+        compute="_compute_teaser", inverse="_inverse_teaser", translate=True
     )
     teaser_manual = fields.Text(string="Teaser Content", translate=True)
 
@@ -225,7 +223,7 @@ class BlogPost(models.Model):
     )
 
     create_date = fields.Datetime("Created on", readonly=True)
-    published_date = fields.Datetime("Published Date")
+    published_date = fields.Datetime()
     post_date = fields.Datetime(
         "Publishing date",
         compute="_compute_post_date",

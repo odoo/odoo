@@ -4,9 +4,7 @@ from odoo import fields, models
 class StockLocation(models.Model):
     _inherit = "stock.location"
 
-    equipment_count = fields.Integer(
-        "Equipment Count", compute="_compute_equipment_count"
-    )
+    equipment_count = fields.Integer(compute="_compute_equipment_count")
 
     def _compute_equipment_count(self):
         equipment_data = self.env["maintenance.equipment"]._read_group(

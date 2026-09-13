@@ -21,11 +21,11 @@ class ProjectTemplateCreateWizard(models.TransientModel):
             ]
         return res
 
-    name = fields.Char(string="Name", required=True)
+    name = fields.Char(required=True)
     date_start = fields.Date(string="Start Date")
     date = fields.Date(string="Expiration Date")
-    alias_name = fields.Char(string="Alias Name")
-    alias_domain_id = fields.Many2one("mail.alias.domain", string="Alias Domain")
+    alias_name = fields.Char()
+    alias_domain_id = fields.Many2one("mail.alias.domain")
     template_id = fields.Many2one(
         "project.project",
         default=lambda self: self.env.context.get("template_id"),

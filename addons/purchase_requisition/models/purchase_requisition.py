@@ -17,10 +17,10 @@ class PurchaseRequisition(models.Model):
         required=True,
         default=lambda self: _("New"),
     )
-    active = fields.Boolean("Active", default=True)
-    reference = fields.Char(string="Reference")
+    active = fields.Boolean(default=True)
+    reference = fields.Char()
     order_count = fields.Count("purchase_ids", string="Number of Orders")
-    vendor_id = fields.Many2one("res.partner", string="Vendor", check_company=True)
+    vendor_id = fields.Many2one("res.partner", check_company=True)
     requisition_type = fields.Selection(
         [
             ("blanket_order", "Blanket Order"),
@@ -41,7 +41,6 @@ class PurchaseRequisition(models.Model):
     description = fields.Html()
     company_id = fields.Many2one(
         "res.company",
-        string="Company",
         required=True,
         default=lambda self: self.env.company,
     )
@@ -76,7 +75,6 @@ class PurchaseRequisition(models.Model):
     )
     currency_id = fields.Many2one(
         "res.currency",
-        "Currency",
         required=True,
         precompute=True,
         compute="_compute_currency_id",
@@ -257,7 +255,6 @@ class PurchaseRequisitionLine(models.Model):
 
     product_id = fields.Many2one(
         "product.product",
-        string="Product",
         domain=[("purchase_ok", "=", True)],
         required=True,
     )

@@ -24,9 +24,7 @@ class HrApplicant(models.Model):
         string="Missing Skills",
         compute="_compute_matching_skill_ids",
     )
-    matching_score = fields.Integer(
-        string="Matching Score", compute="_compute_matching_skill_ids"
-    )
+    matching_score = fields.Integer(compute="_compute_matching_skill_ids")
 
     def _individual_skill_field_name(self):
         return "applicant_skill_ids"

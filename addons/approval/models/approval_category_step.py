@@ -126,7 +126,6 @@ class ApprovalCategoryStep(models.Model):
 
     activity_type_id = fields.Many2one(
         comodel_name="mail.activity.type",
-        string="Activity Type",
         help="The activity this step's approvers are asked with. Empty uses the "
         "approval activity.",
     )
@@ -604,6 +603,5 @@ class ApprovalCategoryStepMember(models.Model):
     )
     delegated_by_id = fields.Many2one(
         comodel_name="res.users",
-        string="Delegated By",
         help="Who handed over the right, when this membership is a delegation.",
     )

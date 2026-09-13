@@ -58,7 +58,9 @@ AUDITABLE_ENGINES = frozenset(
 REPORT_OPTION_FILTER_DEPENDS = ("root_report_id", "section_main_report_ids")
 
 
-def report_option_filter_field(field_type, field_name, string, default=False, **kwargs):
+def report_option_filter_field(
+    field_type, field_name, string=None, default=False, **kwargs
+):
     return field_type(
         string=string,
         compute=lambda records: records._compute_report_option_filter(
@@ -77,9 +79,9 @@ class AccountReport(models.Model):
     _description = "Accounting Report"
     _order = "sequence, id"
 
-    name = fields.Char(string="Name", required=True, translate=True)
-    sequence = fields.Integer(string="Sequence")
-    active = fields.Boolean(string="Active", default=True)
+    name = fields.Char(required=True, translate=True)
+    sequence = fields.Integer()
+    active = fields.Boolean(default=True)
     line_ids = fields.One2many(
         string="Lines",
         comodel_name="account.report.line",
@@ -91,7 +93,6 @@ class AccountReport(models.Model):
         inverse_name="report_id",
     )
     root_report_id = fields.Many2one(
-        string="Root Report",
         comodel_name="account.report",
         index="btree_not_null",
         help="The report this report is a variant of.",
@@ -128,7 +129,7 @@ class AccountReport(models.Model):
             "account.chart.template"
         ]._select_chart_template(),
     )
-    country_id = fields.Many2one(string="Country", comodel_name="res.country")
+    country_id = fields.Many2one(comodel_name="res.country")
     only_tax_exigible = report_option_filter_field(
         fields.Boolean, "only_tax_exigible", "Only Tax Exigible Lines"
     )
@@ -143,13 +144,10 @@ class AccountReport(models.Model):
         readonly=False,
         store=True,
     )
-    load_more_limit = fields.Integer(string="Load More Limit")
-    search_bar = fields.Boolean(string="Search Bar")
-    prefix_groups_threshold = fields.Integer(
-        string="Prefix Groups Threshold", default=4000
-    )
+    load_more_limit = fields.Integer()
+    search_bar = fields.Boolean()
+    prefix_groups_threshold = fields.Integer(default=4000)
     integer_rounding = fields.Selection(
-        string="Integer Rounding",
         selection=[("HALF-UP", "Nearest"), ("UP", "Up"), ("DOWN", "Down")],
     )
     allow_foreign_vat = report_option_filter_field(
@@ -177,7 +175,6 @@ class AccountReport(models.Model):
     currency_translation = report_option_filter_field(
         fields.Selection,
         "currency_translation",
-        "Currency Translation",
         default="cta",
         selection=[
             ("current", "Use the most recent rate at the date of the report"),

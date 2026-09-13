@@ -21,8 +21,8 @@ class GamificationBadge(models.Model):
     _inherit = ["mixin.mail.thread", "mixin.image"]
 
     name = fields.Char("Badge", required=True, translate=True)
-    active = fields.Boolean("Active", default=True)
-    description = fields.Html("Description", translate=True, sanitize_attributes=False)
+    active = fields.Boolean(default=True)
+    description = fields.Html(translate=True, sanitize_attributes=False)
     level = fields.Selection(
         [("bronze", "Bronze"), ("silver", "Silver"), ("gold", "Gold")],
         string="Forum Badge Level",

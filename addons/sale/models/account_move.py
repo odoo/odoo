@@ -23,7 +23,6 @@ class AccountMove(models.Model):
         tracking=True,
     )
     sale_order_count = fields.Integer(
-        string="Sale Order Count",
         compute="_compute_sale_order_count",
         compute_sudo=True,
     )

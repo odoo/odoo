@@ -17,7 +17,7 @@ class L10nInEwaybillType(models.Model):
         ],
         string="Allowed for supply type",
     )
-    active = fields.Boolean("Active", default=True)
+    active = fields.Boolean(default=True)
 
     @api.depends("sub_type")
     def _compute_display_name(self):

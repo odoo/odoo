@@ -13,7 +13,6 @@ class MixinResourceAllocation(models.AbstractModel):
         help="Percentage of the resource's work capacity allocated to this record.",
     )
     allocated_hours = fields.Float(
-        "Allocated Hours",
         compute="_compute_allocated_hours",
         store=True,
         readonly=False,

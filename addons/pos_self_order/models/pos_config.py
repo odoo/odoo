@@ -33,7 +33,6 @@ class PosConfig(models.Model):
 
     status = fields.Selection(
         [("inactive", "Inactive"), ("active", "Active")],
-        string="Status",
         compute="_compute_status",
         store=False,
     )
@@ -45,14 +44,12 @@ class PosConfig(models.Model):
             ("mobile", "QR menu + Ordering"),
             ("kiosk", "Kiosk"),
         ],
-        string="Self Ordering Mode",
         default="nothing",
         help="Choose the self ordering mode",
         required=True,
     )
     self_ordering_service_mode = fields.Selection(
         [("counter", "Pickup zone"), ("table", "Table")],
-        string="Self Ordering Service Mode",
         default="counter",
         help="Choose the kiosk mode",
         required=True,

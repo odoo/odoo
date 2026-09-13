@@ -5,7 +5,6 @@ class ResPartner(models.Model):
     _inherit = "res.partner"
 
     street_name = fields.Char(
-        "Street Name",
         compute="_compute_street_data",
         inverse="_inverse_street_data",
         store=True,

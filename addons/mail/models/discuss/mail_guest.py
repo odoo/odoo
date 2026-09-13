@@ -33,21 +33,18 @@ class MailGuest(models.Model):
     def _selection_langs(self) -> list[tuple[str, str]]:
         return self.env["res.lang"].get_installed()
 
-    name = fields.Char(string="Name", required=True)
+    name = fields.Char(required=True)
     access_token = fields.Char(
-        string="Access Token",
         default=lambda self: str(uuid.uuid4()),
         groups="base.group_system",
         required=True,
         readonly=True,
         copy=False,
     )
-    country_id: ResCountry = fields.Many2one(
-        string="Country", comodel_name="res.country"
-    )
+    country_id: ResCountry = fields.Many2one(comodel_name="res.country")
     email = fields.Char()
     lang = fields.Selection(string="Language", selection=_selection_langs)
-    timezone = fields.Selection(string="Timezone", selection=_selection_timezones)
+    timezone = fields.Selection(selection=_selection_timezones)
     channel_ids: DiscussChannel = fields.Many2many(
         string="Channels",
         comodel_name="discuss.channel",

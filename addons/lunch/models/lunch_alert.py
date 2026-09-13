@@ -31,7 +31,7 @@ class LunchAlert(models.Model):
     _order = "write_date desc, id"
 
     name = fields.Char("Alert Name", required=True, translate=True)
-    message = fields.Html("Message", required=True, translate=True)
+    message = fields.Html(required=True, translate=True)
 
     mode = fields.Selection(
         [("alert", "Alert in app"), ("chat", "Chat notification")],
@@ -45,10 +45,9 @@ class LunchAlert(models.Model):
             ("last_month", "Employee who ordered last month"),
             ("last_year", "Employee who ordered last year"),
         ],
-        string="Recipients",
         default="everyone",
     )
-    notification_time = fields.Float(default=10.0, string="Notification Time")
+    notification_time = fields.Float(default=10.0)
     notification_moment = fields.Selection(
         [("am", "AM"), ("pm", "PM")], default="am", required=True
     )
@@ -77,9 +76,9 @@ class LunchAlert(models.Model):
         search="_search_available_today",
     )
 
-    active = fields.Boolean("Active", default=True)
+    active = fields.Boolean(default=True)
 
-    location_ids = fields.Many2many("lunch.location", string="Location")
+    location_ids = fields.Many2many("lunch.location")
 
     _notification_time_range = models.Constraint(
         "CHECK(notification_time >= 0 and notification_time <= 12)",

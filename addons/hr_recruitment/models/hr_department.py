@@ -9,12 +9,8 @@ class HrDepartment(models.Model):
         string="New Applicant",
         compute_sudo=True,
     )
-    new_hired_employee = fields.Integer(
-        compute="_compute_recruitment_stats", string="New Hired Employee"
-    )
-    expected_employee = fields.Integer(
-        compute="_compute_recruitment_stats", string="Expected Employee"
-    )
+    new_hired_employee = fields.Integer(compute="_compute_recruitment_stats")
+    expected_employee = fields.Integer(compute="_compute_recruitment_stats")
 
     def _compute_new_applicant_count(self):
         self.new_applicant_count = 0

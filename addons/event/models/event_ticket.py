@@ -27,7 +27,7 @@ class EventEventTicket(models.Model):
     # description
     event_type_id = fields.Many2one(ondelete="set null", required=False)
     event_id = fields.Many2one(
-        "event.event", string="Event", ondelete="cascade", required=True, index=True
+        "event.event", ondelete="cascade", required=True, index=True
     )
     company_id = fields.Many2one("res.company", related="event_id.company_id")
     # sale
@@ -36,7 +36,7 @@ class EventEventTicket(models.Model):
     is_launched = fields.Boolean(
         string="Are sales launched", compute="_compute_is_launched"
     )
-    is_expired = fields.Boolean(string="Is Expired", compute="_compute_is_expired")
+    is_expired = fields.Boolean(compute="_compute_is_expired")
     sale_available = fields.Boolean(
         string="Is Available",
         compute="_compute_sale_available",
@@ -70,7 +70,7 @@ class EventEventTicket(models.Model):
         help="Whether seats are not available for this ticket.",
     )
     # reports
-    color = fields.Char("Color", default="#875A7B")
+    color = fields.Char(default="#875A7B")
 
     @api.depends("end_sale_datetime", "event_id.date_tz")
     def _compute_is_expired(self):

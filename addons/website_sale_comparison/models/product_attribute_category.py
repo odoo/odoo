@@ -7,7 +7,7 @@ class ProductAttributeCategory(models.Model):
     _order = "sequence, id"
 
     name = fields.Char("Category Name", required=True, translate=True)
-    sequence = fields.Integer("Sequence", default=10, index=True)
+    sequence = fields.Integer(default=10, index=True)
 
     attribute_ids = fields.One2many(
         "product.attribute",

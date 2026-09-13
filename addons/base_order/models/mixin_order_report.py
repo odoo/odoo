@@ -25,7 +25,6 @@ class MixinOrderReport(models.AbstractModel):
     )
     product_category_id = fields.Many2one(
         comodel_name="product.category",
-        string="Product Category",
         readonly=True,
     )
     product_uom_qty = fields.Float(string="Qty Ordered", readonly=True)
@@ -33,7 +32,7 @@ class MixinOrderReport(models.AbstractModel):
     price_subtotal = fields.Monetary(string="Untaxed Total", readonly=True)
     price_total = fields.Monetary(string="Total", readonly=True)
     weight = fields.Float(string="Gross Weight", readonly=True)
-    volume = fields.Float(string="Volume", readonly=True)
+    volume = fields.Float(readonly=True)
 
     @api.readonly
     def action_view_order(self):

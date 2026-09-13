@@ -9,11 +9,10 @@ class HrDepartureReason(models.Model):
     _description = "Departure Reason"
     _order = "sequence"
 
-    sequence = fields.Integer("Sequence", default=10)
+    sequence = fields.Integer(default=10)
     name = fields.Char(string="Reason", required=True, translate=True)
     country_id = fields.Many2one(
         "res.country",
-        string="Country",
         default=lambda self: self.env.company.country_id,
     )
     country_code = fields.Char(related="country_id.code")

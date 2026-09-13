@@ -19,7 +19,6 @@ class L10nInEwaybill(models.Model):
     move_ids = fields.One2many(related="picking_id.move_ids")
     fiscal_position_id = fields.Many2one(
         comodel_name="account.fiscal.position",
-        string="Fiscal Position",
         compute="_compute_fiscal_position_id",
         check_company=True,
         store=True,

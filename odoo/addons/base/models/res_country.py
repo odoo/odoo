@@ -68,7 +68,7 @@ class ResCountry(models.Model):
         "(in reports for example), while this field is used to modify the input form for "
         "addresses.",
     )
-    currency_id = fields.Many2one("res.currency", string="Currency")
+    currency_id = fields.Many2one("res.currency")
     image_url = fields.Char(
         compute="_compute_image_url",
         string="Flag",
@@ -94,7 +94,6 @@ class ResCountry(models.Model):
         help="Determines where the customer/company name should be placed, i.e. after or before the address.",
     )
     vat_label = fields.Char(
-        string="Vat Label",
         translate=True,
         prefetch=True,
         help="Use this field if you want to change vat label.",
@@ -222,7 +221,7 @@ class ResCountryGroup(models.Model):
     _description = "Country Group"
 
     name = fields.Char(required=True, translate=True)
-    code = fields.Char(string="Code")
+    code = fields.Char()
     country_ids = fields.Many2many(
         "res.country",
         "res_country_res_country_group_rel",
@@ -259,9 +258,7 @@ class ResCountryState(models.Model):
     _order = "code, id"
     _rec_names_search = ["name", "code"]
 
-    country_id = fields.Many2one(
-        "res.country", string="Country", required=True, index=True
-    )
+    country_id = fields.Many2one("res.country", required=True, index=True)
     name = fields.Char(
         string="State Name",
         required=True,

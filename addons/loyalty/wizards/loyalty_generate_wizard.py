@@ -35,7 +35,7 @@ class LoyaltyGenerateWizard(models.TransientModel):
     valid_until = fields.Date()
     will_send_mail = fields.Boolean(compute="_compute_will_send_mail")
     confirmation_message = fields.Char(compute="_compute_confirmation_message")
-    description = fields.Text(string="Description")
+    description = fields.Text()
 
     def _get_partners(self):
         """Return the customers this wizard issues a coupon to, one each."""

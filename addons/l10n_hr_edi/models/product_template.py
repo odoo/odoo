@@ -17,7 +17,7 @@ class L10nHrKpdCategory(models.Model):
 
     name = fields.Char("Code", required=True)
     sector = fields.Char("Industry")
-    description = fields.Char("Description")
+    description = fields.Char()
 
     @api.depends("name", "description")
     def _compute_display_name(self):

@@ -25,10 +25,9 @@ class StockLandedCost(models.Model):
         ].get_company_dependent_fallback(ProductCategory)
 
     name = fields.Char(
-        "Name", default=lambda self: _("New"), copy=False, readonly=True, tracking=True
+        default=lambda self: _("New"), copy=False, readonly=True, tracking=True
     )
     date = fields.Date(
-        "Date",
         default=fields.Date.context_today,
         copy=False,
         required=True,
@@ -42,9 +41,7 @@ class StockLandedCost(models.Model):
         copy=False,
     )
     picking_ids = fields.Many2many("stock.picking", string="Transfers", copy=False)
-    cost_lines = fields.One2many(
-        "stock.landed.cost.lines", "cost_id", "Cost Lines", copy=True
-    )
+    cost_lines = fields.One2many("stock.landed.cost.lines", "cost_id", copy=True)
     valuation_adjustment_lines = fields.One2many(
         "stock.valuation.adjustment.lines",
         "cost_id",
@@ -56,7 +53,6 @@ class StockLandedCost(models.Model):
     )
     state = fields.Selection(
         [("draft", "Draft"), ("done", "Posted"), ("cancel", "Cancelled")],
-        "State",
         default="draft",
         copy=False,
         readonly=True,
@@ -71,19 +67,16 @@ class StockLandedCost(models.Model):
     )
     account_journal_id = fields.Many2one(
         "account.journal",
-        "Account Journal",
         required=True,
         default=lambda self: self._default_account_journal_id(),
     )
     company_id = fields.Many2one(
         "res.company",
-        string="Company",
         required=True,
         default=lambda self: self.env.company,
     )
     vendor_bill_id = fields.Many2one(
         "account.move",
-        "Vendor Bill",
         copy=False,
         domain=[("move_type", "=", "in_invoice")],
         index="btree_not_null",
@@ -331,11 +324,10 @@ class StockLandedCostLines(models.Model):
         index=True,
         ondelete="cascade",
     )
-    product_id = fields.Many2one("product.product", "Product", required=True)
+    product_id = fields.Many2one("product.product", required=True)
     price_unit = fields.Monetary("Cost", required=True)
     split_method = fields.Selection(
         SPLIT_METHOD,
-        string="Split Method",
         required=True,
         help="Equal: Cost will be equally divided.\n"
         "By Quantity: Cost will be divided according to product's quantity.\n"
@@ -343,7 +335,7 @@ class StockLandedCostLines(models.Model):
         "By Weight: Cost will be divided depending on its weight.\n"
         "By Volume: Cost will be divided depending on its volume.",
     )
-    account_id = fields.Many2one("account.account", "Account")
+    account_id = fields.Many2one("account.account")
     currency_id = fields.Many2one("res.currency", related="cost_id.currency_id")
 
     @api.onchange("product_id")
@@ -371,16 +363,14 @@ class StockValuationAdjustmentLines(models.Model):
         required=True,
         index=True,
     )
-    cost_line_id = fields.Many2one(
-        "stock.landed.cost.lines", "Cost Line", readonly=True
-    )
+    cost_line_id = fields.Many2one("stock.landed.cost.lines", readonly=True)
     move_id = fields.Many2one("stock.move", "Stock Move", readonly=True)
-    product_id = fields.Many2one("product.product", "Product", required=True)
-    quantity = fields.Float("Quantity", default=1.0, digits=0, required=True)
-    weight = fields.Float("Weight", default=1.0, digits="Stock Weight")
-    volume = fields.Float("Volume", default=1.0, digits="Volume")
+    product_id = fields.Many2one("product.product", required=True)
+    quantity = fields.Float(default=1.0, digits=0, required=True)
+    weight = fields.Float(default=1.0, digits="Stock Weight")
+    volume = fields.Float(default=1.0, digits="Volume")
     former_cost = fields.Monetary("Original Value")
-    additional_landed_cost = fields.Monetary("Additional Landed Cost")
+    additional_landed_cost = fields.Monetary()
     final_cost = fields.Monetary("New Value", compute="_compute_final_cost", store=True)
     currency_id = fields.Many2one(
         "res.currency", related="cost_id.company_id.currency_id"

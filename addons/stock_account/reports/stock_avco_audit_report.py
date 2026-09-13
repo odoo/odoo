@@ -12,13 +12,12 @@ class StockAverageCostReport(models.AbstractModel):
     _order = "date desc, replay_rank desc, res_id desc"
     _REPLAY_ORDER = "date, replay_rank, res_id"
 
-    date = fields.Datetime(string="Date", required=True)
-    replay_rank = fields.Integer(string="Replay Rank", required=True)
+    date = fields.Datetime(required=True)
+    replay_rank = fields.Integer(required=True)
     res_id = fields.Integer(string="Resource ID", required=True)
-    user_id = fields.Many2one("res.users", string="User", required=True)
+    user_id = fields.Many2one("res.users", required=True)
     company_id = fields.Many2one(
         "res.company",
-        string="Company",
         required=True,
     )
     currency_id = fields.Many2one(
@@ -29,12 +28,11 @@ class StockAverageCostReport(models.AbstractModel):
 
     product_id = fields.Many2one(
         "product.product",
-        string="Product",
         required=True,
     )
 
-    reference = fields.Char(string="Reference", required=True)
-    description = fields.Text(string="Description", required=True)
+    reference = fields.Char(required=True)
+    description = fields.Text(required=True)
 
     res_model_name = fields.Selection(
         [
@@ -46,18 +44,15 @@ class StockAverageCostReport(models.AbstractModel):
     )
 
     quantity = fields.Float(string="Added Quantity", required=True)
-    value = fields.Float(string="Value", required=True)
+    value = fields.Float(required=True)
 
     added_value = fields.Float(
-        string="Added Value",
         compute="_compute_cumulative_fields",
     )
     total_quantity = fields.Float(
-        string="Total Quantity",
         compute="_compute_cumulative_fields",
     )
     total_value = fields.Float(
-        string="Total Value",
         compute="_compute_cumulative_fields",
     )
     avco_value = fields.Float(
@@ -66,7 +61,6 @@ class StockAverageCostReport(models.AbstractModel):
     )
 
     justification = fields.Text(
-        string="Justification",
         compute="_compute_justification",
     )
 

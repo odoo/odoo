@@ -14,16 +14,16 @@ class HrLeaveAttendanceReport(models.Model):
         for rec in self:
             rec.display_name = f"{rec.employee_id.display_name}, {rec.date}"
 
-    date = fields.Date("Date")
-    employee_id = fields.Many2one("hr.employee", string="Employee")
+    date = fields.Date()
+    employee_id = fields.Many2one("hr.employee")
     active = fields.Boolean(related="employee_id.active")
     department_id = fields.Many2one(
         related="employee_id.department_id", string="Department"
     )
     job_id = fields.Many2one(related="employee_id.job_id", string="Job Position")
     schedule_id = fields.Many2one("resource.calendar", string="Working Schedule")
-    expected_hours = fields.Float("Expected Hours")
-    worked_hours = fields.Float("Worked Hours")
+    expected_hours = fields.Float()
+    worked_hours = fields.Float()
     leave_hours = fields.Float("Approved Time Off")
     difference_hours = fields.Float(
         "Difference", help="Worked Hours - Expected Hours + Approved Time Off"

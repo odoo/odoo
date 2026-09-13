@@ -104,7 +104,6 @@ class L10nEsEdiVerifactuDocument(models.Model):
     _order = "create_date DESC, id DESC"
 
     company_id = fields.Many2one(
-        string="Company",
         comodel_name="res.company",
         required=True,
         readonly=True,
@@ -115,13 +114,11 @@ class L10nEsEdiVerifactuDocument(models.Model):
         readonly=True,
     )
     chain_index = fields.Integer(
-        string="Chain Index",
         copy=False,
         readonly=True,
         help="Index in the chain of Veri*Factu Documents. It is only set if the generation was succesful.",
     )
     document_type = fields.Selection(
-        string="Document Type",
         selection=[
             ("submission", "Submission"),
             ("cancellation", "Cancellation"),
@@ -146,7 +143,6 @@ class L10nEsEdiVerifactuDocument(models.Model):
         compute="_compute_json_attachment_filename",
     )
     errors = fields.Html(
-        string="Errors",
         copy=False,
         readonly=True,
     )

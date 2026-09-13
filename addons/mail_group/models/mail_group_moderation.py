@@ -7,10 +7,9 @@ class MailGroupModeration(models.Model):
     _name = "mail.group.moderation"
     _description = "Mailing List black/white list"
 
-    email = fields.Char(string="Email", required=True)
+    email = fields.Char(required=True)
     status = fields.Selection(
         [("allow", "Always Allow"), ("ban", "Permanent Ban")],
-        string="Status",
         required=True,
         default="ban",
     )

@@ -361,7 +361,6 @@ class IrJob(models.Model):
         relation="ir_job_dependency",
         column1="job_id",
         column2="depends_on_id",
-        string="Depends On",
         readonly=True,
         help="This job stays in 'Waiting Dependencies' until every listed "
         "job is done; it is cancelled if any of them fails.",

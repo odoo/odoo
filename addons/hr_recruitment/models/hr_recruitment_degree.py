@@ -8,8 +8,8 @@ class HrRecruitmentDegree(models.Model):
     _description = "Applicant Degree"
 
     name = fields.Char("Degree Name", required=True, translate=True)
-    score = fields.Float("Score", required=True, default=0)
-    sequence = fields.Integer("Sequence", default=1)
+    score = fields.Float(required=True, default=0)
+    sequence = fields.Integer(default=1)
 
     _name_src_uniq = name_uniq_index(
         message="The name of the Degree of Recruitment must be unique!",

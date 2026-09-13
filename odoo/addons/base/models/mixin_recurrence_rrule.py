@@ -114,9 +114,9 @@ class MixinRecurrenceRrule(models.AbstractModel):
     sun = fields.Boolean()
     month_by = fields.Selection(MONTH_BY_SELECTION, default="date")
     day = fields.Integer(default=1)
-    weekday = fields.Selection(WEEKDAY_SELECTION, string="Weekday")
+    weekday = fields.Selection(WEEKDAY_SELECTION)
     byday = fields.Selection(BYDAY_SELECTION, string="By day")
-    repeat_until = fields.Date("Repeat Until")
+    repeat_until = fields.Date()
 
     _month_day = models.Constraint(
         """CHECK (

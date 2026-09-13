@@ -21,7 +21,7 @@ class SmsTemplate(models.Model):
             res["model_id"] = self.env["ir.model"]._get(res["model"]).id
         return res
 
-    name = fields.Char("Name", translate=True)
+    name = fields.Char(translate=True)
     model_id = fields.Many2one(
         "ir.model",
         string="Applies to",
@@ -37,7 +37,7 @@ class SmsTemplate(models.Model):
         store=True,
         readonly=True,
     )
-    body = fields.Char("Body", translate=True, required=True)
+    body = fields.Char(translate=True, required=True)
     # Use to create contextual action (same as for email template)
     sidebar_action_id = fields.Many2one(
         "ir.actions.act_window",

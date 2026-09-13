@@ -16,9 +16,7 @@ _debug = DebugLog(__name__)
 class AccountMove(models.Model):
     _inherit = "account.move"
 
-    payment_state_before_switch = fields.Char(
-        string="Payment State Before Switch", copy=False
-    )
+    payment_state_before_switch = fields.Char(copy=False)
 
     @_debug.perf.timed
     def action_view_bank_reconciliation_widget(self):

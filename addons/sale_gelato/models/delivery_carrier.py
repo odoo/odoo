@@ -11,7 +11,6 @@ class ProviderGelato(models.Model):
         selection_add=[("gelato", "Gelato")], ondelete={"gelato": "cascade"}
     )
     gelato_shipping_service_type = fields.Selection(
-        string="Gelato Shipping Service Type",
         selection=[("normal", "Standard Delivery"), ("express", "Express Delivery")],
         required=True,
         default="normal",

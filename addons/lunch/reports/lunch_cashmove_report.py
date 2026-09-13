@@ -9,11 +9,11 @@ class LunchCashmoveReport(models.Model):
     _order = "date desc"
 
     id = fields.Id(string="ID")
-    amount = fields.Float("Amount")
-    date = fields.Date("Date")
-    currency_id = fields.Many2one("res.currency", string="Currency")
-    user_id = fields.Many2one("res.users", string="User")
-    description = fields.Text("Description")
+    amount = fields.Float()
+    date = fields.Date()
+    currency_id = fields.Many2one("res.currency")
+    user_id = fields.Many2one("res.users")
+    description = fields.Text()
 
     def _compute_display_name(self):
         for cashmove in self:

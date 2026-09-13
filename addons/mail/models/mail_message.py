@@ -96,11 +96,10 @@ class MailMessage(models.Model):
         if wants_author:
             values["author_id"] = author_id
 
-    subject = fields.Char("Subject")
-    date = fields.Datetime("Date", default=fields.Datetime.now)
+    subject = fields.Char()
+    date = fields.Datetime(default=fields.Datetime.now)
     body = fields.Html("Contents", default="", sanitize_style=True)
     preview = fields.Char(
-        "Preview",
         compute="_compute_preview",
         help="The text-only beginning of the body used as email preview.",
     )
@@ -160,11 +159,10 @@ class MailMessage(models.Model):
         "\n'user_notification': generated for a specific recipient",
     )
     subtype_id: MailMessageSubtype = fields.Many2one(
-        "mail.message.subtype", "Subtype", ondelete="set null", index=True
+        "mail.message.subtype", ondelete="set null", index=True
     )
     mail_activity_type_id: MailActivityType = fields.Many2one(
         "mail.activity.type",
-        "Mail Activity Type",
         index="btree_not_null",
         ondelete="set null",
     )
@@ -178,7 +176,6 @@ class MailMessage(models.Model):
     )
     author_id: ResPartner = fields.Many2one(
         "res.partner",
-        "Author",
         index=True,
         ondelete="set null",
         help="Author of the message. If not set, email_from may hold an email address that did not match any partner.",
@@ -230,7 +227,6 @@ class MailMessage(models.Model):
         "Pinned", help="Datetime at which the message has been pinned"
     )
     starred = fields.Boolean(
-        "Starred",
         compute="_compute_starred",
         search="_search_starred",
         compute_sudo=False,

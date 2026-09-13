@@ -72,9 +72,7 @@ class PortalWizardUser(models.TransientModel):
     _name = "portal.wizard.user"
     _description = "Portal User Config"
 
-    wizard_id = fields.Many2one(
-        "portal.wizard", string="Wizard", required=True, ondelete="cascade"
-    )
+    wizard_id = fields.Many2one("portal.wizard", required=True, ondelete="cascade")
     partner_id = fields.Many2one(
         "res.partner",
         string="Contact",
@@ -82,16 +80,16 @@ class PortalWizardUser(models.TransientModel):
         readonly=True,
         ondelete="cascade",
     )
-    email = fields.Char("Email")
+    email = fields.Char()
 
     user_id = fields.Many2one(
-        "res.users", string="User", compute="_compute_user_id", compute_sudo=True
+        "res.users", compute="_compute_user_id", compute_sudo=True
     )
     login_date = fields.Datetime(
         related="user_id.login_date", string="Latest Authentication"
     )
-    is_portal = fields.Boolean("Is Portal", compute="_compute_group_details")
-    is_internal = fields.Boolean("Is Internal", compute="_compute_group_details")
+    is_portal = fields.Boolean(compute="_compute_group_details")
+    is_internal = fields.Boolean(compute="_compute_group_details")
     email_state = fields.Selection(
         [("ok", "Valid"), ("ko", "Invalid"), ("exist", "Already Registered")],
         string="Status",

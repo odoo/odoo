@@ -207,7 +207,6 @@ class ProjectTask(models.Model):
 
     project_id = fields.Many2one(
         "project.project",
-        string="Project",
         domain="['|', ('company_id', '=', False), ('company_id', '=?',  company_id)]",
         compute="_compute_project_id",
         store=True,
@@ -236,7 +235,6 @@ class ProjectTask(models.Model):
     )
     company_id = fields.Many2one(
         "res.company",
-        string="Company",
         compute="_compute_company_id",
         store=True,
         readonly=False,
@@ -274,10 +272,8 @@ class ProjectTask(models.Model):
         index="trigram",
     )
     active = fields.Boolean(default=True, export_string_translation=False)
-    sequence = fields.Integer(
-        string="Sequence", default=10, export_string_translation=False
-    )
-    description = fields.Html(string="Description", sanitize_attributes=False)
+    sequence = fields.Integer(default=10, export_string_translation=False)
+    description = fields.Html(sanitize_attributes=False)
     color = fields.Integer(
         string="Color Index",
         export_string_translation=False,
@@ -340,7 +336,6 @@ class ProjectTask(models.Model):
         ],
         default="0",
         index=True,
-        string="Priority",
         tracking=True,
     )
     state = fields.Selection(
@@ -352,7 +347,6 @@ class ProjectTask(models.Model):
             *CLOSED_STATES.items(),
             ("blocked", "Waiting"),
         ],
-        string="State",
         copy=False,
         required=True,
         compute="_compute_state",
@@ -436,7 +430,6 @@ class ProjectTask(models.Model):
         "units.  One person at 100%% allocation could cover this many hours.",
     )
     planned_resources = fields.Integer(
-        "Planned Resources",
         default=1,
         tracking=True,
         help="Number of parallel resources the PM expects to need to deliver "
@@ -450,7 +443,6 @@ class ProjectTask(models.Model):
         "Planned Resources must be greater than zero.",
     )
     planned_hours = fields.Float(
-        "Planned Hours",
         compute="_compute_planned_hours",
         inverse="_inverse_planned_hours",
         store=True,
@@ -468,7 +460,6 @@ class ProjectTask(models.Model):
         "writing back the value the formula would produce.",
     )
     allocated_hours = fields.Float(
-        "Allocated Hours",
         tracking=True,
         help="Working hours committed across all assigned employees "
         "(sum of reservation_ids.allocated_hours).  PMBOK: Resource "
@@ -534,7 +525,7 @@ class ProjectTask(models.Model):
         domain="[('user_id', '=', uid)]",
         group_expand="_read_group_triage_ids",
     )
-    email_from = fields.Char("Email From")
+    email_from = fields.Char()
     email_cc = fields.Char(
         help="Email addresses that were in the CC of the incoming emails from this task and that are not currently linked to an existing customer."
     )
@@ -765,7 +756,6 @@ class ProjectTask(models.Model):
 
     sprint_id = fields.Many2one(
         "project.sprint",
-        string="Sprint",
         index="btree_not_null",
         domain="[('project_id', '=', project_id)]",
         tracking=True,
@@ -776,7 +766,6 @@ class ProjectTask(models.Model):
         export_string_translation=False,
     )
     story_points = fields.Float(
-        "Story Points",
         help="Relative effort estimate. Used for sprint velocity tracking.",
     )
 
@@ -837,7 +826,6 @@ class ProjectTask(models.Model):
     )
     milestone_id = fields.Many2one(
         "project.milestone",
-        "Milestone",
         domain="[('project_id', '=', project_id)]",
         compute="_compute_milestone_id",
         readonly=False,

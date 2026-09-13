@@ -22,14 +22,12 @@ class StockScrap(models.Model):
     )
     company_id = fields.Many2one(
         comodel_name="res.company",
-        string="Company",
         required=True,
         default=lambda self: self.env.company,
     )
     origin = fields.Char(string="Source Document")
     product_id = fields.Many2one(
         comodel_name="product.product",
-        string="Product",
         required=True,
         check_company=True,
         domain="[('type', '=', 'consu')]",
@@ -61,18 +59,15 @@ class StockScrap(models.Model):
     )
     package_id = fields.Many2one(
         comodel_name="stock.package",
-        string="Package",
         check_company=True,
     )
     owner_id = fields.Many2one(
         comodel_name="res.partner",
-        string="Owner",
         check_company=True,
     )
     move_ids = fields.One2many(comodel_name="stock.move", inverse_name="scrap_id")
     picking_id = fields.Many2one(
         comodel_name="stock.picking",
-        string="Picking",
         check_company=True,
     )
     location_id = fields.Many2one(
@@ -88,7 +83,6 @@ class StockScrap(models.Model):
     )
     scrap_location_id = fields.Many2one(
         comodel_name="stock.location",
-        string="Scrap Location",
         required=True,
         compute="_compute_scrap_location_id",
         store=True,
@@ -435,9 +429,9 @@ class StockScrapReasonTag(models.Model):
     _description = "Scrap Reason Tag"
     _order = "sequence, id"
 
-    name = fields.Char(string="Name", required=True, translate=True)
+    name = fields.Char(required=True, translate=True)
     sequence = fields.Integer(default=10)
-    color = fields.Char(string="Color", default="#3C3C3C")
+    color = fields.Char(default="#3C3C3C")
 
     _name_src_uniq = name_uniq_index(
         message="Tag name already exists!",

@@ -8,7 +8,7 @@ class MixinHrManagerDepartmentReport(models.AbstractModel):
     _description = "Hr Manager Department Report"
     _auto = False
 
-    employee_id = fields.Many2one("hr.employee", string="Employee", readonly=True)
+    employee_id = fields.Many2one("hr.employee", readonly=True)
     has_department_manager_access = fields.Boolean(
         search="_search_has_department_manager_access",
         compute="_compute_has_department_manager_access",

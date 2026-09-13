@@ -11,7 +11,6 @@ class ResUsersSettings(models.Model):
             ("private", "Private"),
             ("confidential", "Only internal users"),
         ],
-        "Calendar Default Privacy",
         default="public",
         required=True,
         store=True,

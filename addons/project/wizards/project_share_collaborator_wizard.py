@@ -29,7 +29,6 @@ class ProjectShareCollaboratorWizard(models.TransientModel):
         "Edit: collaborators can view and edit all tasks in the Kanban view. Additionally, they can choose which tasks they want to follow.",
     )
     send_invitation = fields.Boolean(
-        string="Send Invitation",
         compute="_compute_send_invitation",
         store=True,
         readonly=False,

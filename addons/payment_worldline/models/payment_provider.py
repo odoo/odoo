@@ -35,12 +35,10 @@ class PaymentProvider(models.Model):
         copy=False,
     )
     worldline_webhook_key = fields.Char(
-        string="Worldline Webhook Key",
         required_if_provider="worldline",
         copy=False,
     )
     worldline_webhook_secret = fields.Char(
-        string="Worldline Webhook Secret",
         required_if_provider="worldline",
         copy=False,
     )

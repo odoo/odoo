@@ -13,19 +13,16 @@ class PaymentProvider(models.Model):
         selection_add=[("xendit", "Xendit")], ondelete={"xendit": "set default"}
     )
     xendit_public_key = fields.Char(
-        string="Xendit Public Key",
         required_if_provider="xendit",
         copy=False,
         groups="base.group_system",
     )
     xendit_secret_key = fields.Char(
-        string="Xendit Secret Key",
         required_if_provider="xendit",
         copy=False,
         groups="base.group_system",
     )
     xendit_webhook_token = fields.Char(
-        string="Xendit Webhook Token",
         required_if_provider="xendit",
         copy=False,
         groups="base.group_system",

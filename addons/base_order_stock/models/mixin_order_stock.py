@@ -35,11 +35,10 @@ class MixinOrderStock(models.AbstractModel):
 
     incoterm_id = fields.Many2one(
         comodel_name="account.incoterms",
-        string="Incoterm",
         help="International Commercial Terms are a series of predefined commercial "
         "terms used in international transactions.",
     )
-    incoterm_location = fields.Char(string="Incoterm Location")
+    incoterm_location = fields.Char()
 
     @api.depends(
         "state",

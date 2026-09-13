@@ -18,7 +18,7 @@ class SlideChannelInvite(models.TransientModel):
         "ir.attachment", string="Attachments", bypass_search_access=True
     )
     send_email = fields.Boolean(
-        "Send Email", compute="_compute_send_email", readonly=False, store=True
+        compute="_compute_send_email", readonly=False, store=True
     )
     partner_ids = fields.Many2many("res.partner", string="Recipients")
     channel_id = fields.Many2one("slide.channel", string="Course", required=True)

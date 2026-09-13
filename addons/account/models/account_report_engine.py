@@ -40,7 +40,7 @@ class AccountReportAnnotation(models.Model):
     _description = "Account Report Annotation"
 
     # This field is a OneToOne to a mail.message.
-    message_id = fields.Many2one("mail.message", string="Message", required=True)
+    message_id = fields.Many2one("mail.message", required=True)
     date = fields.Date(
         help="Date considered as annotated by the annotation.", required=True
     )
@@ -59,9 +59,7 @@ class AccountReport(models.Model):
     )
 
     # Those fields allow case-by-case fine-tuning of the engine, for custom reports.
-    custom_handler_model_id = fields.Many2one(
-        string="Custom Handler Model", comodel_name="ir.model"
-    )
+    custom_handler_model_id = fields.Many2one(comodel_name="ir.model")
     custom_handler_model_name = fields.Char(
         string="Custom Handler Model Name", related="custom_handler_model_id.model"
     )
@@ -76,7 +74,6 @@ class AccountReport(models.Model):
 
     # Account Audit Status
     allow_account_audit_status_on_lines = fields.Boolean(
-        string="Allow Account Audit Status On Lines",
         compute=lambda x: x._compute_report_option_filter(
             "allow_account_audit_status_on_lines"
         ),
@@ -2287,7 +2284,7 @@ class AccountReportHorizontalGroup(models.Model):
     _name = "account.report.horizontal.group"
     _description = "Horizontal group for reports"
 
-    name = fields.Char(string="Name", required=True, translate=True)
+    name = fields.Char(required=True, translate=True)
     rule_ids = fields.One2many(
         string="Rules",
         comodel_name="account.report.horizontal.group.rule",
@@ -2318,12 +2315,11 @@ class AccountReportHorizontalGroupRule(models.Model):
         ]
 
     horizontal_group_id = fields.Many2one(
-        string="Horizontal Group",
         comodel_name="account.report.horizontal.group",
         required=True,
         index=True,
     )
-    domain = fields.Char(string="Domain", required=True, default="[]")
+    domain = fields.Char(required=True, default="[]")
     field_name = fields.Selection(
         string="Field",
         selection="_selection_move_line_relational_fields",

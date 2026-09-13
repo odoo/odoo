@@ -149,14 +149,11 @@ class FetchmailServer(models.Model):
             ("pop", "POP Server"),
             ("local", "Local Server"),
         ],
-        string="Server Type",
         index=True,
         required=True,
         default="imap",
     )
-    server_type_info = fields.Text(
-        "Server Type Info", compute="_compute_server_type_info"
-    )
+    server_type_info = fields.Text(compute="_compute_server_type_info")
     encryption = fields.Selection(
         ENCRYPTION_SELECTION,
         string="Connection Encryption",
@@ -229,9 +226,7 @@ class FetchmailServer(models.Model):
         readonly=True,
         help="Mails sent while processing what this server delivered.",
     )
-    configuration = fields.Text(
-        "Configuration", compute="_compute_configuration", readonly=True
-    )
+    configuration = fields.Text(compute="_compute_configuration", readonly=True)
     script = fields.Char(readonly=True, default="/mail/static/scripts/odoo-mailgate.py")
 
     @api.depends("server_type")

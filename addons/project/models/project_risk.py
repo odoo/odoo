@@ -11,7 +11,7 @@ class ProjectRisk(models.Model):
     _inherit = ["mixin.mail.thread"]
 
     name = fields.Char("Risk", required=True, tracking=True)
-    description = fields.Html("Description")
+    description = fields.Html()
     project_id = fields.Many2one(
         "project.project",
         required=True,
@@ -32,7 +32,6 @@ class ProjectRisk(models.Model):
             ("financial", "Financial"),
             ("schedule", "Schedule"),
         ],
-        string="Category",
         default="technical",
         required=True,
         tracking=True,
@@ -45,7 +44,6 @@ class ProjectRisk(models.Model):
             ("4", "Likely"),
             ("5", "Almost Certain"),
         ],
-        string="Probability",
         default="3",
         required=True,
         tracking=True,
@@ -58,13 +56,11 @@ class ProjectRisk(models.Model):
             ("4", "Major"),
             ("5", "Catastrophic"),
         ],
-        string="Impact",
         default="3",
         required=True,
         tracking=True,
     )
     risk_score = fields.Integer(
-        "Risk Score",
         compute="_compute_risk_score_and_level",
         store=True,
         help="Probability × Impact (1–25).",
@@ -76,7 +72,6 @@ class ProjectRisk(models.Model):
             ("high", "High"),
             ("critical", "Critical"),
         ],
-        string="Risk Level",
         compute="_compute_risk_score_and_level",
         store=True,
     )
@@ -88,10 +83,9 @@ class ProjectRisk(models.Model):
             ("avoid", "Avoid"),
             ("exploit", "Exploit"),
         ],
-        string="Response Strategy",
         tracking=True,
     )
-    response_plan = fields.Html("Response Plan")
+    response_plan = fields.Html()
     owner_id = fields.Many2one(
         "res.users",
         string="Risk Owner",
@@ -106,13 +100,12 @@ class ProjectRisk(models.Model):
             ("resolved", "Resolved"),
             ("accepted", "Accepted"),
         ],
-        string="State",
         default="identified",
         required=True,
         tracking=True,
     )
-    date_identified = fields.Date("Date Identified", default=fields.Date.today)
-    date_resolved = fields.Date("Date Resolved")
+    date_identified = fields.Date(default=fields.Date.today)
+    date_resolved = fields.Date()
     active = fields.Boolean(default=True)
 
     @api.constrains("state", "date_resolved")

@@ -50,7 +50,6 @@ class HrLeaveType(models.Model):
         string="Display Time Off in Calendar", default=True
     )
     color = fields.Integer(
-        string="Color",
         help="The color selected here will be used in every screen with the time off type.",
     )
     icon_id = fields.Many2one(
@@ -59,13 +58,11 @@ class HrLeaveType(models.Model):
         domain="[('res_model', '=', 'hr.leave.type'), ('res_field', '=', 'icon_id')]",
     )
     active = fields.Boolean(
-        "Active",
         default=True,
         help="If the active field is set to false, it will allow you to hide the time off type without removing it.",
     )
     hide_on_dashboard = fields.Boolean(
         default=False,
-        string="Hide On Dashboard",
         help="Non-visible allocations can still be selected when taking a leave, but will simply not be displayed on the leave dashboard.",
     )
 
@@ -96,12 +93,10 @@ class HrLeaveType(models.Model):
     is_used = fields.Boolean(compute="_compute_is_used")
     company_id = fields.Many2one(
         "res.company",
-        string="Company",
         domain=lambda self: [("id", "in", self.env.companies.ids)],
     )
     country_id = fields.Many2one(
         "res.country",
-        string="Country",
         default=lambda self: self.env.company.country_id,
         compute="_compute_country_id",
         store=True,

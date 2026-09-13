@@ -163,7 +163,6 @@ class ResCompany(models.Model):
         help="Any purchase entry prior to and including this date will be postponed to a later date, in accordance with its journal's sequence.",
     )
     hard_lock_date = fields.Date(
-        string="Hard Lock Date",
         tracking=True,
         help="Any entry up to and including that date will be postponed to a later time, in accordance with its journal sequence. "
         "This lock date is irreversible and does not allow any exception.",
@@ -236,7 +235,6 @@ class ResCompany(models.Model):
             ("round_per_line", "Round per Line"),
         ],
         default="round_globally",
-        string="Tax Calculation Rounding Method",
     )
     currency_exchange_journal_id = fields.Many2one(
         "account.journal",
@@ -423,7 +421,6 @@ class ResCompany(models.Model):
     )
 
     restrictive_audit_trail = fields.Boolean(
-        string="Restrictive Audit Trail",
         tracking=True,
         help="Enable this option to prevent deletion of journal item related logs",
     )
@@ -445,13 +442,11 @@ class ResCompany(models.Model):
 
     income_account_id = fields.Many2one(
         comodel_name="account.account",
-        string="Income Account",
         domain=ACCOUNT_DOMAIN,
         help="This account will be used when validating a customer invoice.",
     )
     expense_account_id = fields.Many2one(
         comodel_name="account.account",
-        string="Expense Account",
         domain=ACCOUNT_DOMAIN,
         help="The expense is accounted for when a vendor bill is validated, except in anglo-saxon"
         " accounting with perpetual inventory valuation in which case the expense (Cost of"
@@ -459,7 +454,6 @@ class ResCompany(models.Model):
     )
     price_difference_account_id = fields.Many2one(
         comodel_name="account.account",
-        string="Price Difference Account",
         domain=ACCOUNT_DOMAIN,
         help="During perpetual valuation, this account will hold the price difference between the standard price and the bill price.",
     )

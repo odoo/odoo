@@ -31,7 +31,7 @@ class AccountReportLine(models.Model):
     _description = "Accounting Report Line"
     _order = "sequence, id"
 
-    name = fields.Char(string="Name", translate=True, required=True)
+    name = fields.Char(translate=True, required=True)
     expression_ids = fields.One2many(
         string="Expressions",
         comodel_name="account.report.expression",
@@ -81,18 +81,15 @@ class AccountReportLine(models.Model):
         precompute=True,
         help="Comma-separated list of fields from account.move.line (Journal Item). When set, this line will generate sublines grouped by those keys.",
     )
-    sequence = fields.Integer(string="Sequence")
-    code = fields.Char(string="Code", help="Unique identifier for this line.")
+    sequence = fields.Integer()
+    code = fields.Char(help="Unique identifier for this line.")
     foldable = fields.Boolean(
-        string="Foldable",
         help="By default, we always unfold the lines that can be. If this is checked, the line won't be unfolded by default, and a folding button will be displayed.",
     )
     print_on_new_page = fields.Boolean(
-        "Print On New Page",
         help="When checked this line and everything after it will be printed on a new page.",
     )
     action_id = fields.Many2one(
-        string="Action",
         comodel_name="ir.actions.actions",
         help="Setting this field will turn the line into a link, executing the action when clicked.",
     )
@@ -129,7 +126,6 @@ class AccountReportLine(models.Model):
         copy=False,
     )
     horizontal_split_side = fields.Selection(
-        string="Horizontal Split Side",
         selection=[("left", "Left"), ("right", "Right")],
         compute="_compute_horizontal_split_side",
         readonly=False,

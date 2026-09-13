@@ -13,7 +13,6 @@ class MixinWebsiteMulti(models.AbstractModel):
 
     website_id = fields.Many2one(
         "website",
-        string="Website",
         ondelete="restrict",
         help="Restrict to a specific website.",
         index=True,

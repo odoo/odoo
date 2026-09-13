@@ -108,9 +108,7 @@ class MailComposeMessage(models.TransientModel):
 
         return {fname: result[fname] for fname in result if fname in fields}
 
-    subject = fields.Char(
-        "Subject", compute="_compute_subject", readonly=False, store=True
-    )
+    subject = fields.Char(compute="_compute_subject", readonly=False, store=True)
     body = fields.Html(
         "Contents",
         render_engine="qweb",
@@ -165,7 +163,6 @@ class MailComposeMessage(models.TransientModel):
     )
     author_id: ResPartner = fields.Many2one(
         "res.partner",
-        string="Author",
         compute="_compute_authorship",
         readonly=False,
         store=True,
@@ -229,7 +226,6 @@ class MailComposeMessage(models.TransientModel):
     )
     subtype_id: MailMessageSubtype = fields.Many2one(
         "mail.message.subtype",
-        "Subtype",
         ondelete="set null",
         compute="_compute_subtype_id",
         readonly=False,
@@ -237,10 +233,9 @@ class MailComposeMessage(models.TransientModel):
     )
     subtype_is_log = fields.Boolean("Is a log", compute="_compute_subtype_is_log")
     mail_activity_type_id: MailActivityType = fields.Many2one(
-        "mail.activity.type", "Mail Activity Type", ondelete="set null"
+        "mail.activity.type", ondelete="set null"
     )
     reply_to = fields.Char(
-        "Reply To",
         compute="_compute_reply_to",
         readonly=False,
         store=True,
@@ -320,7 +315,6 @@ class MailComposeMessage(models.TransientModel):
         compute="_compute_notify_skip_followers", readonly=False, store=True
     )
     scheduled_date = fields.Char(
-        "Scheduled Date",
         compute="_compute_scheduled_date",
         readonly=False,
         store=True,
@@ -330,12 +324,11 @@ class MailComposeMessage(models.TransientModel):
         "This date is considered as being in UTC timezone.",
     )
     use_exclusion_list = fields.Boolean(
-        "Use Exclusion List",
         default=True,
         copy=False,
         help="Prevent sending messages to blacklisted contacts. Disable only when absolutely necessary.",
     )
-    template_name = fields.Char("Template Name")
+    template_name = fields.Char()
 
     @api.constrains("res_ids")
     def _check_res_ids(self) -> None:

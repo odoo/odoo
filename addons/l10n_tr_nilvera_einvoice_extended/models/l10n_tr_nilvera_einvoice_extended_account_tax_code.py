@@ -16,7 +16,6 @@ class L10nTrNilveraEinvoiceExtendedAccountTaxCode(models.Model):
             ("export_registration", "Export Registration"),
         ],
         required=True,
-        string="Code Type",
     )
 
     @api.depends("name", "percentage")

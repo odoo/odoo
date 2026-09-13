@@ -198,7 +198,6 @@ class CalendarEvent(models.Model):
     # description
     name = fields.Char("Meeting Subject", required=True)
     description = fields.Html(
-        "Description",
         help="""When synchronization with an external calendar is active, this description is synchronized \
         with the one of the associated meeting in that external calendar. Any update will be propagated there \
         and vice versa.""",
@@ -215,8 +214,8 @@ class CalendarEvent(models.Model):
         related="user_id.partner_id",
         readonly=True,
     )
-    location = fields.Char("Location", tracking=True)
-    notes = fields.Html("Notes")  # Unlike description, internal use only
+    location = fields.Char(tracking=True)
+    notes = fields.Html()  # Unlike description, internal use only
     videocall_location = fields.Char(
         "Meeting URL", compute="_compute_videocall_location", store=True, copy=True
     )
@@ -235,7 +234,6 @@ class CalendarEvent(models.Model):
             ("private", "Private"),
             ("confidential", "Only internal users"),
         ],
-        "Privacy",
         help="People to whom this event will be visible.",
     )
     effective_privacy = fields.Selection(
@@ -244,7 +242,6 @@ class CalendarEvent(models.Model):
             ("private", "Private"),
             ("confidential", "Only internal users"),
         ],
-        "Effective Privacy",
         help="Whether the event is private, considering the user privacy",
         compute="_compute_effective_privacy",
     )
@@ -269,7 +266,6 @@ class CalendarEvent(models.Model):
     )
     # filtering
     active = fields.Boolean(
-        "Active",
         default=True,
         tracking=True,
         help="If the active field is set to false, it will allow you to hide the event alarm information without removing it.",
@@ -279,7 +275,6 @@ class CalendarEvent(models.Model):
     )
     # timing
     start = fields.Datetime(
-        "Start",
         required=True,
         tracking=True,
         default=_default_start,
@@ -287,7 +282,6 @@ class CalendarEvent(models.Model):
         help="Start date of an event, without time for full days events",
     )
     stop = fields.Datetime(
-        "Stop",
         required=True,
         tracking=True,
         default=_default_stop,
@@ -299,7 +293,6 @@ class CalendarEvent(models.Model):
     display_time = fields.Char("Event Time", compute="_compute_display_time")
     allday = fields.Boolean("All Day", default=False)
     start_date = fields.Date(
-        "Start Date",
         store=True,
         tracking=True,
         compute="_compute_dates",
@@ -312,9 +305,7 @@ class CalendarEvent(models.Model):
         compute="_compute_dates",
         inverse="_inverse_dates",
     )
-    duration = fields.Float(
-        "Duration", compute="_compute_duration", store=True, readonly=False
-    )
+    duration = fields.Float(compute="_compute_duration", store=True, readonly=False)
     # linked document
     res_id = fields.Many2oneReference("Document ID", model_field="res_model")
     res_model_id = fields.Many2one("ir.model", "Document Model", ondelete="cascade")

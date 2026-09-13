@@ -8,7 +8,7 @@ class MailingContactImport(models.TransientModel):
 
     mailing_list_ids = fields.Many2many("mailing.list", string="Lists")
     contact_list = fields.Text(
-        "Contact List", help="Contact list that will be imported, one contact per line"
+        help="Contact list that will be imported, one contact per line"
     )
 
     def action_import(self):

@@ -15,19 +15,16 @@ class AccountAnalyticDistributionModel(models.Model):
     sequence = fields.Integer(default=10)
     partner_id = fields.Many2one(
         "res.partner",
-        string="Partner",
         ondelete="cascade",
         help="Select a partner for which the analytic distribution will be used (e.g. create new customer invoice or Sales order if we select this partner, it will automatically take this as an analytic account)",
     )
     partner_tag_id = fields.Many2one(
         "res.partner.tag",
-        string="Partner Tag",
         ondelete="cascade",
         help="Select a partner tag for which the analytic distribution will be used (e.g. create new customer invoice or Sales order if we select this partner, it will automatically take this as an analytic account)",
     )
     company_id = fields.Many2one(
         "res.company",
-        string="Company",
         default=lambda self: self.env.company,
         ondelete="cascade",
         help="Select a company for which the analytic distribution will be used (e.g. create new customer invoice or Sales order if we select this company, it will automatically take this as an analytic account)",

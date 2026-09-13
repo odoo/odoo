@@ -12,9 +12,8 @@ class IrActionsServer(models.Model):
         compute="_compute_xml_id",
         help="ID of the action if defined in a XML file",
     )
-    website_path = fields.Char("Website Path")
+    website_path = fields.Char()
     website_url = fields.Char(
-        "Website Url",
         compute="_compute_website_url",
         help="The full URL to access the server action through the website.",
     )

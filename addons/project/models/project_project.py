@@ -70,7 +70,6 @@ class ProjectProject(models.Model):
 
     company_id = fields.Many2one(
         "res.company",
-        string="Company",
         compute="_compute_company_id",
         inverse="_inverse_company_id",
         store=True,
@@ -79,7 +78,6 @@ class ProjectProject(models.Model):
     currency_id = fields.Many2one(
         "res.currency",
         compute="_compute_currency_id",
-        string="Currency",
         readonly=True,
         export_string_translation=False,
     )
@@ -120,7 +118,6 @@ class ProjectProject(models.Model):
 
     phase_id = fields.Many2one(
         "project.phase",
-        string="Phase",
         ondelete="restrict",
         groups="project.group_project_stages",
         tracking=True,
@@ -136,7 +133,6 @@ class ProjectProject(models.Model):
     )
 
     name = fields.Char(
-        "Name",
         index="trigram",
         required=True,
         tracking=True,
@@ -203,12 +199,10 @@ class ProjectProject(models.Model):
         "- Project admins have access to private projects, even if not followers.\n",
     )
     privacy_visibility_warning = fields.Char(
-        "Privacy Visibility Warning",
         compute="_compute_privacy_visibility_warning",
         export_string_translation=False,
     )
     access_instruction_message = fields.Char(
-        "Access Instruction Message",
         compute="_compute_access_instruction_message",
         export_string_translation=False,
     )
@@ -225,7 +219,6 @@ class ProjectProject(models.Model):
         inverse="_inverse_allow_recurring_tasks",
     )
     use_sprints = fields.Boolean(
-        "Use Sprints",
         help="Enable time-boxed iterations for this project.",
     )
 
@@ -237,13 +230,11 @@ class ProjectProject(models.Model):
     )
     active_sprint_id = fields.Many2one(
         "project.sprint",
-        string="Active Sprint",
         compute="_compute_active_sprint_id",
         export_string_translation=False,
     )
     sprint_count = fields.Count(
         "sprint_ids",
-        "Sprint Count",
         export_string_translation=False,
     )
 
@@ -270,12 +261,10 @@ class ProjectProject(models.Model):
     task_properties_definition = fields.PropertiesDefinition("Task Properties")
     task_count = fields.Integer(
         compute="_compute_task_counts",
-        string="Task Count",
         export_string_translation=False,
     )
     open_task_count = fields.Integer(
         compute="_compute_task_counts",
-        string="Open Task Count",
         export_string_translation=False,
     )
     closed_task_count = fields.Integer(
@@ -312,7 +301,6 @@ class ProjectProject(models.Model):
     )
     last_update_id = fields.Many2one(
         "project.update",
-        string="Last Update",
         copy=False,
         export_string_translation=False,
     )
@@ -389,7 +377,6 @@ class ProjectProject(models.Model):
     )
     benefit_count = fields.Count(
         "benefit_ids",
-        "Benefit Count",
         export_string_translation=False,
     )
 
@@ -401,7 +388,6 @@ class ProjectProject(models.Model):
     )
     current_baseline_id = fields.Many2one(
         "project.baseline",
-        string="Current Baseline",
         compute="_compute_current_baseline_id",
         export_string_translation=False,
     )
@@ -445,13 +431,11 @@ class ProjectProject(models.Model):
         export_string_translation=False,
     )
     retrospective_count = fields.Integer(
-        "Retrospective Count",
         compute="_compute_retrospective_count",
         export_string_translation=False,
     )
 
     health_score = fields.Integer(
-        "Health Score",
         compute="_compute_health_indicators",
         store=True,
         help="Composite 0-100 score based on deadlines, milestones, risk, and staleness.",
@@ -478,7 +462,6 @@ class ProjectProject(models.Model):
         export_string_translation=False,
     )
     risk_count = fields.Integer(
-        "Risk Count",
         compute="_compute_risk_counts",
         export_string_translation=False,
     )

@@ -6,7 +6,7 @@ class CalendarPopoverDeleteWizard(models.TransientModel):
     _inherit = ["mixin.mail.composer"]
     _description = "Calendar Popover Delete Wizard"
 
-    calendar_event_id = fields.Many2one("calendar.event", "Calendar Event")
+    calendar_event_id = fields.Many2one("calendar.event")
     delete = fields.Selection(
         [
             ("one", "Delete this event"),

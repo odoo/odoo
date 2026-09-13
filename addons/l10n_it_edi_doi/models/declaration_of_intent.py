@@ -16,7 +16,6 @@ class L10n_It_Edi_DoiDeclaration_Of_Intent(models.Model):
             ("revoked", "Revoked"),
             ("terminated", "Terminated"),
         ],
-        string="State",
         tracking=True,
         default="draft",
         required=True,
@@ -30,7 +29,6 @@ class L10n_It_Edi_DoiDeclaration_Of_Intent(models.Model):
 
     company_id = fields.Many2one(
         comodel_name="res.company",
-        string="Company",
         index=True,
         required=True,
         default=lambda self: self.env.company._get_accessible_branches()[:1],
@@ -38,7 +36,6 @@ class L10n_It_Edi_DoiDeclaration_Of_Intent(models.Model):
 
     partner_id = fields.Many2one(
         comodel_name="res.partner",
-        string="Partner",
         index=True,
         required=True,
         domain="['|', ('is_company', '=', True), ('parent_id', '=', False)]",
@@ -46,7 +43,6 @@ class L10n_It_Edi_DoiDeclaration_Of_Intent(models.Model):
 
     currency_id = fields.Many2one(
         comodel_name="res.currency",
-        string="Currency",
         default=lambda self: self.env.ref("base.EUR", raise_if_not_found=False).id,
         required=True,
         readonly=True,
@@ -61,27 +57,23 @@ class L10n_It_Edi_DoiDeclaration_Of_Intent(models.Model):
     )
 
     start_date = fields.Date(
-        string="Start Date",
         required=True,
         copy=False,
         help="First date on which the Declaration of Intent is valid",
     )
 
     end_date = fields.Date(
-        string="End Date",
         required=True,
         copy=False,
         help="Last date on which the Declaration of Intent is valid",
     )
 
     threshold = fields.Monetary(
-        string="Threshold",
         required=True,
         help="Total amount of allowed sales without VAT under this Declaration of Intent",
     )
 
     invoiced = fields.Monetary(
-        string="Invoiced",
         compute="_compute_invoiced",
         store=True,
         readonly=True,
@@ -89,7 +81,6 @@ class L10n_It_Edi_DoiDeclaration_Of_Intent(models.Model):
     )
 
     not_yet_invoiced = fields.Monetary(
-        string="Not Yet Invoiced",
         compute="_compute_not_yet_invoiced",
         store=True,
         readonly=True,
@@ -97,7 +88,6 @@ class L10n_It_Edi_DoiDeclaration_Of_Intent(models.Model):
     )
 
     remaining = fields.Monetary(
-        string="Remaining",
         compute="_compute_remaining",
         store=True,
         readonly=True,

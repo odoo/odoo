@@ -7,17 +7,15 @@ class CrmPartnerReportAssign(models.Model):
     _auto = False
     _description = "CRM Partnership Analysis"
 
-    partner_id = fields.Many2one(
-        "res.partner", "Partner", required=False, readonly=True
-    )
-    grade_id = fields.Many2one("res.partner.grade", "Grade", readonly=True)
-    activation = fields.Many2one("res.partner.activation", "Activation", index=True)
-    user_id = fields.Many2one("res.users", "User", readonly=True)
+    partner_id = fields.Many2one("res.partner", required=False, readonly=True)
+    grade_id = fields.Many2one("res.partner.grade", readonly=True)
+    activation = fields.Many2one("res.partner.activation", index=True)
+    user_id = fields.Many2one("res.users", readonly=True)
     date_review = fields.Date("Latest Partner Review")
     date_partnership = fields.Date("Partnership Date")
-    country_id = fields.Many2one("res.country", "Country", readonly=True)
+    country_id = fields.Many2one("res.country", readonly=True)
     nbr_opportunities = fields.Integer("# of Opportunity", readonly=True)
-    turnover = fields.Float("Turnover", readonly=True)
+    turnover = fields.Float(readonly=True)
     date = fields.Date("Invoice Account Date", readonly=True)
 
     _depends = {

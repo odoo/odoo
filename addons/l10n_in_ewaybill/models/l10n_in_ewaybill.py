@@ -46,9 +46,7 @@ class L10nInEwaybill(models.Model):
     account_move_id = fields.Many2one("account.move", copy=False, readonly=True)
 
     # Document details
-    document_date = fields.Datetime(
-        "Document Date", compute="_compute_ewaybill_document_details"
-    )
+    document_date = fields.Datetime(compute="_compute_ewaybill_document_details")
     document_number = fields.Char(
         "Document", compute="_compute_ewaybill_document_details"
     )
@@ -57,7 +55,6 @@ class L10nInEwaybill(models.Model):
     )
     company_currency_id = fields.Many2one(related="company_id.currency_id")
     supply_type = fields.Selection(
-        string="Supply Type",
         selection=[("O", "Outward"), ("I", "Inward")],
         compute="_compute_supply_type",
     )
@@ -105,7 +102,7 @@ class L10nInEwaybill(models.Model):
     sub_type_code = fields.Char(related="type_id.sub_type_code")
 
     # Transportation details
-    distance = fields.Integer("Distance", tracking=True)
+    distance = fields.Integer(tracking=True)
     mode = fields.Selection(
         [
             ("1", "By Road"),
@@ -123,7 +120,6 @@ class L10nInEwaybill(models.Model):
     vehicle_no = fields.Char("Vehicle Number", copy=False, tracking=True)
     vehicle_type = fields.Selection(
         [("R", "Regular"), ("O", "Over Dimensional Cargo")],
-        string="Vehicle Type",
         compute="_compute_vehicle_type",
         store=True,
         copy=False,
@@ -139,14 +135,11 @@ class L10nInEwaybill(models.Model):
         string="Transporter Doc Date", copy=False, tracking=True
     )
 
-    transporter_id = fields.Many2one(
-        "res.partner", "Transporter", copy=False, tracking=True
-    )
+    transporter_id = fields.Many2one("res.partner", copy=False, tracking=True)
 
     error_message = fields.Html(readonly=True)
     blocking_level = fields.Selection(
         [("warning", "Warning"), ("error", "Error")],
-        string="Blocking Level",
         readonly=True,
     )
 

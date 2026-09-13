@@ -123,7 +123,6 @@ class AccountMoveLine(models.Model):
 
     account_id = fields.Many2one(
         comodel_name="account.account",
-        string="Account",
         compute="_compute_account_id",
         store=True,
         readonly=False,
@@ -151,7 +150,6 @@ class AccountMoveLine(models.Model):
     )
     translated_product_name = fields.Text(compute="_compute_translated_product_name")
     debit = fields.Monetary(
-        string="Debit",
         compute="_compute_debit_credit",
         inverse="_inverse_debit",
         store=True,
@@ -159,7 +157,6 @@ class AccountMoveLine(models.Model):
         currency_field="company_currency_id",
     )
     credit = fields.Monetary(
-        string="Credit",
         compute="_compute_debit_credit",
         inverse="_inverse_credit",
         store=True,
@@ -167,7 +164,6 @@ class AccountMoveLine(models.Model):
         currency_field="company_currency_id",
     )
     balance = fields.Monetary(
-        string="Balance",
         compute="_compute_balance",
         store=True,
         readonly=False,
@@ -176,7 +172,6 @@ class AccountMoveLine(models.Model):
         tracking=True,
     )
     cumulated_balance = fields.Monetary(
-        string="Cumulated Balance",
         compute="_compute_cumulated_balance",
         currency_field="company_currency_id",
         exportable=False,
@@ -197,7 +192,6 @@ class AccountMoveLine(models.Model):
     )
     currency_id = fields.Many2one(
         comodel_name="res.currency",
-        string="Currency",
         compute="_compute_currency_id",
         store=True,
         readonly=False,
@@ -207,7 +201,6 @@ class AccountMoveLine(models.Model):
     is_same_currency = fields.Boolean(compute="_compute_is_same_currency")
     partner_id = fields.Many2one(
         comodel_name="res.partner",
-        string="Partner",
         compute="_compute_partner_id",
         inverse="_inverse_partner_id",
         store=True,
@@ -420,7 +413,6 @@ class AccountMoveLine(models.Model):
     )
     product_id = fields.Many2one(
         comodel_name="product.product",
-        string="Product",
         inverse="_inverse_product_id",
         ondelete="restrict",
         check_company=True,
@@ -438,7 +430,6 @@ class AccountMoveLine(models.Model):
         ondelete="restrict",
     )
     quantity = fields.Float(
-        string="Quantity",
         compute="_compute_quantity",
         store=True,
         readonly=False,
@@ -512,7 +503,6 @@ class AccountMoveLine(models.Model):
     has_invalid_analytics = fields.Boolean(compute="_compute_has_invalid_analytics")
 
     discount_date = fields.Date(
-        string="Discount Date",
         store=True,
         help="Last date at which the discounted amount must be paid in order for the Early Payment Discount to be granted",
         readonly=True,
@@ -523,7 +513,6 @@ class AccountMoveLine(models.Model):
         currency_field="currency_id",
     )
     discount_balance = fields.Monetary(
-        string="Discount Balance",
         store=True,
         currency_field="company_currency_id",
     )

@@ -29,10 +29,10 @@ class MixinAvatar(models.AbstractModel):
     _avatar_name_field = "name"
 
     avatar_1920 = fields.Image("Avatar", compute="_compute_avatar_1920")
-    avatar_1024 = fields.Image("Avatar 1024", compute="_compute_avatar_1024")
-    avatar_512 = fields.Image("Avatar 512", compute="_compute_avatar_512")
-    avatar_256 = fields.Image("Avatar 256", compute="_compute_avatar_256")
-    avatar_128 = fields.Image("Avatar 128", compute="_compute_avatar_128")
+    avatar_1024 = fields.Image(compute="_compute_avatar_1024")
+    avatar_512 = fields.Image(compute="_compute_avatar_512")
+    avatar_256 = fields.Image(compute="_compute_avatar_256")
+    avatar_128 = fields.Image(compute="_compute_avatar_128")
 
     @api.depends(lambda self: [self._avatar_name_field, "image_1920"])
     def _compute_avatar_1920(self) -> None:

@@ -24,7 +24,6 @@ class ProductTemplate(models.Model):
     )
     responsible_id = fields.Many2one(
         comodel_name="res.users",
-        string="Responsible",
         default=lambda self: self._default_responsible_id(),
         company_dependent=True,
         check_company=True,
@@ -57,7 +56,6 @@ class ProductTemplate(models.Model):
             ("lot", "By Lots"),
             ("none", "By Quantity"),
         ],
-        string="Tracking",
         required=True,
         default="none",
         compute="_compute_tracking",
@@ -149,12 +147,10 @@ class ProductTemplate(models.Model):
     )
     location_id = fields.Many2one(
         comodel_name="stock.location",
-        string="Location",
         store=False,
     )
     warehouse_id = fields.Many2one(
         comodel_name="stock.warehouse",
-        string="Warehouse",
         store=False,
     )
     has_available_route_ids = fields.Boolean(

@@ -8,8 +8,8 @@ class PosNote(models.Model):
     _order = "sequence"
 
     name = fields.Char(required=True)
-    sequence = fields.Integer("Sequence", default=1)
-    color = fields.Integer(string="Color")
+    sequence = fields.Integer(default=1)
+    color = fields.Integer()
 
     _name_unique = models.Constraint(
         "unique (name)",

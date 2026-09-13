@@ -21,7 +21,6 @@ class QuotationDocument(models.Model):
         required=True,
     )
     document_type = fields.Selection(
-        string="Document Type",
         selection=[("header", "Header"), ("footer", "Footer")],
         required=True,
         default="header",
@@ -46,7 +45,6 @@ class QuotationDocument(models.Model):
         store=True,
     )
     add_by_default = fields.Boolean(
-        string="Add By Default",
         help="If checked, this header or footer will be added by default on new quotes.",
         default=False,
     )

@@ -47,7 +47,6 @@ class MailAlias(models.Model):
     _rec_names_search = ["alias_full_name"]
 
     alias_name = fields.Char(
-        "Alias Name",
         copy=False,
         help="The name of the email alias, e.g. 'jobs' if you want to catch emails for <jobs@example.odoo.com>",
     )
@@ -59,7 +58,6 @@ class MailAlias(models.Model):
     )
     alias_domain_id: MailAliasDomain = fields.Many2one(
         "mail.alias.domain",
-        string="Alias Domain",
         ondelete="restrict",
         default=lambda self: self.env.company.alias_domain_id,
     )

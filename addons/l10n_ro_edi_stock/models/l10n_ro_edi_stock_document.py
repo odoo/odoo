@@ -17,7 +17,7 @@ class L10nRoEdiStockDocument(models.Model):
         selection_add=DOCUMENT_STATES,
         ondelete={k: "cascade" for k, v in DOCUMENT_STATES},
     )
-    message = fields.Char(string="Message", copy=False)
+    message = fields.Char(copy=False)
     l10n_ro_edi_stock_uit = fields.Char(
         help="UIT of this eTransport document.", copy=False
     )

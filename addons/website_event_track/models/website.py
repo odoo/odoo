@@ -17,7 +17,6 @@ class Website(models.Model):
         help="This field holds the image used as mobile app icon on the website (PNG format).",
     )
     events_app_name = fields.Char(
-        string="Events App Name",
         compute="_compute_events_app_name",
         store=True,
         readonly=False,

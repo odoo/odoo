@@ -24,7 +24,7 @@ class EventSponsor(models.Model):
             self.env["event.sponsor.type"].search([], order="sequence desc", limit=1).id
         )
 
-    event_id = fields.Many2one("event.event", "Event", required=True, index=True)
+    event_id = fields.Many2one("event.event", required=True, index=True)
     sponsor_type_id = fields.Many2one(
         "event.sponsor.type",
         "Sponsorship Level",
@@ -35,7 +35,7 @@ class EventSponsor(models.Model):
     url = fields.Char(
         "Sponsor Website", compute="_compute_url", readonly=False, store=True
     )
-    sequence = fields.Integer("Sequence")
+    sequence = fields.Integer()
     active = fields.Boolean(default=True)
     subtitle = fields.Char("Slogan")
     exhibitor_type = fields.Selection(
@@ -59,7 +59,7 @@ class EventSponsor(models.Model):
     )
     show_on_ticket = fields.Boolean("Show on ticket", default=True)
     partner_id = fields.Many2one(
-        "res.partner", "Partner", required=True, bypass_search_access=True
+        "res.partner", required=True, bypass_search_access=True
     )
     partner_name = fields.Char("Name", related="partner_id.name")
     partner_email = fields.Char("Email", related="partner_id.email")

@@ -6,8 +6,8 @@ class EventEventConfigurator(models.TransientModel):
     _name = "event.event.configurator"
     _description = "Event Configurator"
 
-    product_id = fields.Many2one("product.product", string="Product", readonly=True)
-    event_id = fields.Many2one("event.event", string="Event")
+    product_id = fields.Many2one("product.product", readonly=True)
+    event_id = fields.Many2one("event.event")
     event_slot_id = fields.Many2one(
         "event.slot",
         string="Slot",
@@ -25,9 +25,7 @@ class EventEventConfigurator(models.TransientModel):
         store=True,
     )
     is_multi_slots = fields.Boolean(related="event_id.is_multi_slots")
-    has_available_tickets = fields.Boolean(
-        "Has Available Tickets", compute="_compute_has_available_tickets"
-    )
+    has_available_tickets = fields.Boolean(compute="_compute_has_available_tickets")
 
     @api.constrains("event_id", "event_slot_id", "event_ticket_id")
     def check_event_id(self):

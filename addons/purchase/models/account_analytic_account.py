@@ -6,7 +6,6 @@ class AccountAnalyticAccount(models.Model):
     _inherit = "account.analytic.account"
 
     purchase_order_count = fields.Integer(
-        string="Purchase Order Count",
         compute="_compute_purchase_order_count",
     )
 

@@ -31,7 +31,7 @@ class WebsiteTrack(models.Model):
         ondelete="cascade",
         readonly=True,
     )
-    url = fields.Text("Url", index=True)
+    url = fields.Text(index=True)
     visit_datetime = fields.Datetime(
         "Visit Date",
         default=fields.Datetime.now,
@@ -68,7 +68,7 @@ class WebsiteVisitor(models.Model):
 
     name = fields.Char("Name", related="partner_id.name")
     access_token = fields.Char(required=True, default=_default_access_token, copy=False)
-    website_id = fields.Many2one("website", "Website", readonly=True)
+    website_id = fields.Many2one("website", readonly=True)
     partner_id = fields.Many2one(
         "res.partner",
         string="Contact",
@@ -79,20 +79,16 @@ class WebsiteVisitor(models.Model):
     )
     partner_image = fields.Binary(related="partner_id.image_1920")
 
-    country_id = fields.Many2one("res.country", "Country", readonly=True)
+    country_id = fields.Many2one("res.country", readonly=True)
     country_flag = fields.Char(related="country_id.image_url", string="Country Flag")
     lang_id = fields.Many2one(
         "res.lang",
         string="Language",
         help="Language from the website when visitor has been created",
     )
-    timezone = fields.Selection(_selection_timezones, string="Timezone")
-    email = fields.Char(
-        string="Email", compute="_compute_email_phone", compute_sudo=True
-    )
-    mobile = fields.Char(
-        string="Mobile", compute="_compute_email_phone", compute_sudo=True
-    )
+    timezone = fields.Selection(_selection_timezones)
+    email = fields.Char(compute="_compute_email_phone", compute_sudo=True)
+    mobile = fields.Char(compute="_compute_email_phone", compute_sudo=True)
 
     visit_count = fields.Integer(
         "# Visits",
@@ -122,7 +118,6 @@ class WebsiteVisitor(models.Model):
     )
     last_visited_page_id = fields.Many2one(
         "website.page",
-        string="Last Visited Page",
         compute="_compute_last_visited_page_id",
     )
 

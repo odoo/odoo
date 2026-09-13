@@ -108,7 +108,7 @@ class IrModuleCategory(models.Model):
     _order = "sequence, name, id"
     _allow_sudo_commands = False
 
-    name = fields.Char(string="Name", required=True, translate=True)
+    name = fields.Char(required=True, translate=True)
     parent_id = fields.Many2one(
         "ir.module.category", string="Parent Application", index=True
     )
@@ -119,10 +119,10 @@ class IrModuleCategory(models.Model):
     privilege_ids = fields.One2many(
         "res.groups.privilege", "category_id", string="Privileges"
     )
-    description = fields.Text(string="Description", translate=True)
-    sequence = fields.Integer(string="Sequence")
-    visible = fields.Boolean(string="Visible", default=True)
-    exclusive = fields.Boolean(string="Exclusive")
+    description = fields.Text(translate=True)
+    sequence = fields.Integer()
+    visible = fields.Boolean(default=True)
+    exclusive = fields.Boolean()
     xml_id = fields.Char(string="External ID", compute="_compute_xml_id")
 
     def _compute_xml_id(self) -> None:
@@ -224,32 +224,27 @@ class IrModuleModule(models.Model):
     _allow_sudo_commands = False
 
     name = fields.Char("Technical Name", readonly=True, required=True)
-    category_id = fields.Many2one(
-        "ir.module.category", string="Category", readonly=True, index=True
-    )
+    category_id = fields.Many2one("ir.module.category", readonly=True, index=True)
     shortdesc = fields.Char("Module Name", readonly=True, translate=True)
-    summary = fields.Char("Summary", readonly=True, translate=True)
-    description = fields.Text("Description", readonly=True, translate=True)
+    summary = fields.Char(readonly=True, translate=True)
+    description = fields.Text(readonly=True, translate=True)
     description_html = fields.Html(
         "Description HTML", compute="_compute_description_html"
     )
-    author = fields.Char("Author", readonly=True)
-    maintainer = fields.Char("Maintainer", readonly=True)
-    contributors = fields.Text("Contributors", readonly=True)
-    website = fields.Char("Website", readonly=True)
+    author = fields.Char(readonly=True)
+    maintainer = fields.Char(readonly=True)
+    contributors = fields.Text(readonly=True)
+    website = fields.Char(readonly=True)
 
-    manifest_version = fields.Char(
-        "Manifest Version", compute="_compute_manifest_version"
-    )
+    manifest_version = fields.Char(compute="_compute_manifest_version")
     db_version = fields.Char("Installed Version", readonly=True)
-    published_version = fields.Char("Published Version", readonly=True)
+    published_version = fields.Char(readonly=True)
 
     url = fields.Char("URL", readonly=True)
-    sequence = fields.Integer("Sequence", default=100)
+    sequence = fields.Integer(default=100)
     dependencies_id = fields.One2many(
         "ir.module.module.dependency",
         "module_id",
-        string="Dependencies",
         readonly=True,
     )
     country_ids = fields.Many2many(
@@ -288,7 +283,6 @@ class IrModuleModule(models.Model):
             ("OPL-1", "Odoo Proprietary License v1.0"),
             ("Other proprietary", "Other Proprietary"),
         ],
-        string="License",
         default="LGPL-3",
         readonly=True,
     )
@@ -297,7 +291,7 @@ class IrModuleModule(models.Model):
         string="Reports", compute="_compute_records_by_module"
     )
     views_by_module = fields.Text(string="Views", compute="_compute_records_by_module")
-    application = fields.Boolean("Application", readonly=True)
+    application = fields.Boolean(readonly=True)
     icon = fields.Char("Icon URL")
     icon_image = fields.Binary(string="Icon", compute="_compute_icon_display")
     icon_flag = fields.Char(string="Flag", compute="_compute_icon_display")

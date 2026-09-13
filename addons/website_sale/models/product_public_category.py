@@ -23,13 +23,11 @@ class ProductPublicCategory(models.Model):
 
     name = fields.Char(required=True, translate=True)
     cover_image = fields.Image(
-        string="Cover Image",
         help="Displayed only in the Category List Snippet.",
     )
     sequence = fields.Integer(default=_default_sequence, index=True)
 
     parent_id = fields.Many2one(
-        string="Parent",
         comodel_name="product.public.category",
         ondelete="cascade",
         index=True,
@@ -71,19 +69,16 @@ class ProductPublicCategory(models.Model):
     )
 
     show_category_title = fields.Boolean(
-        string="Show Category Title",
         default=False,
         help="Display the category title on the shop page. Corresponds to the 'Show Title' editor option.",
     )
 
     show_category_description = fields.Boolean(
-        string="Show Category Description",
         default=True,
         help="Display the category description on the shop page. Corresponds to the 'Show Description' editor option.",
     )
 
     align_category_content = fields.Boolean(
-        string="Align Category Content",
         default=False,
         help="Align the category content on the shop page. Corresponds to the 'Center Content' editor option.",
     )

@@ -15,9 +15,7 @@ class CrmStage(models.Model):
     _order = "sequence, name, id"
 
     name = fields.Char("Stage Name", required=True, translate=True)
-    sequence = fields.Integer(
-        "Sequence", default=1, help="Used to order stages. Lower is better."
-    )
+    sequence = fields.Integer(default=1, help="Used to order stages. Lower is better.")
     is_won = fields.Boolean("Is Won Stage?")
     rotting_threshold_days = fields.Integer(
         "Days to rot",
@@ -26,7 +24,6 @@ class CrmStage(models.Model):
         Set to 0 to disable. Changing this parameter will not affect the rotting status/date of resources last updated before this change.",
     )
     requirements = fields.Text(
-        "Requirements",
         help="Enter here the internal requirements for this stage (ex: Offer sent to customer). It will appear as a tooltip over the stage's name.",
     )
     team_ids = fields.Many2many("crm.team", string="Sales Teams", ondelete="restrict")
@@ -37,7 +34,7 @@ class CrmStage(models.Model):
     crm_team_count = fields.Integer(
         "Sales Teams in Database", compute="_compute_crm_team_count"
     )
-    color = fields.Integer(string="Color", export_string_translation=False)
+    color = fields.Integer(export_string_translation=False)
 
     def _compute_crm_team_count(self):
         self.crm_team_count = self.env["crm.team"].search_count([])

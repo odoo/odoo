@@ -111,9 +111,8 @@ class MailingMailing(models.Model):
             return False
 
     active = fields.Boolean(default=True, tracking=True)
-    subject = fields.Char("Subject", required=True, translate=False)
+    subject = fields.Char(required=True, translate=False)
     preview = fields.Char(
-        "Preview",
         translate=False,
         render_engine="inline_template",
         render_options={"post_process": True},
@@ -136,7 +135,7 @@ class MailingMailing(models.Model):
         copy=False,
         help="When this mailing was added in the favorites",
     )
-    sent_date = fields.Datetime(string="Sent Date", copy=False)
+    sent_date = fields.Datetime(copy=False)
     schedule_type = fields.Selection(
         [("now", "Send now"), ("scheduled", "Send on")],
         string="Schedule",
@@ -153,7 +152,6 @@ class MailingMailing(models.Model):
         tracking=True,
     )
     calendar_date = fields.Datetime(
-        "Calendar Date",
         compute="_compute_calendar_date",
         store=True,
         copy=False,
@@ -181,13 +179,12 @@ class MailingMailing(models.Model):
         string="Attachments",
         bypass_search_access=True,
     )
-    keep_archives = fields.Boolean(string="Keep Archives")
+    keep_archives = fields.Boolean()
     campaign_id = fields.Many2one(
         "utm.campaign", string="UTM Campaign", index=True, ondelete="set null"
     )
     medium_id = fields.Many2one(
         "utm.medium",
-        string="Medium",
         compute="_compute_medium_id",
         readonly=False,
         store=True,
@@ -216,12 +213,8 @@ class MailingMailing(models.Model):
         default=lambda self: self.env.user,
     )
     # mailing options
-    mailing_type = fields.Selection(
-        [("mail", "Email")], string="Mailing Type", default="mail", required=True
-    )
-    mailing_type_description = fields.Char(
-        "Mailing Type Description", compute="_compute_mailing_type_description"
-    )
+    mailing_type = fields.Selection([("mail", "Email")], default="mail", required=True)
+    mailing_type_description = fields.Char(compute="_compute_mailing_type_description")
     reply_to_mode = fields.Selection(
         [("update", "Recipient Followers"), ("new", "Specified Email Address")],
         string="Reply-To Mode",
@@ -231,7 +224,6 @@ class MailingMailing(models.Model):
         help="Thread: replies go to target document. Email: replies are routed to a given email.",
     )
     reply_to = fields.Char(
-        string="Reply To",
         compute="_compute_reply_to",
         readonly=False,
         store=True,
@@ -271,7 +263,6 @@ class MailingMailing(models.Model):
     )
     mail_server_id = fields.Many2one(
         "ir.mail_server",
-        string="Mail Server",
         index="btree_not_null",
         default=_default_mail_server_id,
         help="Use a specific mail server in priority. Otherwise Odoo relies on the first outgoing mail server available (based on their sequencing) as it does for normal mails.",
@@ -280,7 +271,6 @@ class MailingMailing(models.Model):
         "mailing.list", "mail_mass_mailing_list_rel", string="Mailing Lists"
     )
     use_exclusion_list = fields.Boolean(
-        "Use Exclusion List",
         default=True,
         copy=False,
         help="Prevent sending messages to blacklisted contacts. Disable only when absolutely necessary.",
@@ -355,25 +345,20 @@ class MailingMailing(models.Model):
     replied = fields.Integer(compute="_compute_statistics")
     bounced = fields.Integer(compute="_compute_statistics")
     failed = fields.Integer(compute="_compute_statistics")
-    received_ratio = fields.Float(
-        compute="_compute_statistics", string="Received Ratio"
-    )
-    opened_ratio = fields.Float(compute="_compute_statistics", string="Opened Ratio")
-    replied_ratio = fields.Float(compute="_compute_statistics", string="Replied Ratio")
-    bounced_ratio = fields.Float(compute="_compute_statistics", string="Bounced Ratio")
+    received_ratio = fields.Float(compute="_compute_statistics")
+    opened_ratio = fields.Float(compute="_compute_statistics")
+    replied_ratio = fields.Float(compute="_compute_statistics")
+    bounced_ratio = fields.Float(compute="_compute_statistics")
     clicks_ratio = fields.Float(
         compute="_compute_clicks_ratio", string="Number of Clicks"
     )
-    link_trackers_count = fields.Integer(
-        compute="_compute_link_trackers_count", string="Link Trackers Count"
-    )
+    link_trackers_count = fields.Integer(compute="_compute_link_trackers_count")
     next_departure = fields.Datetime(
         compute="_compute_next_departure", string="Scheduled date"
     )
     # UX
     next_departure_is_past = fields.Boolean(compute="_compute_next_departure")
     warning_message = fields.Char(
-        "Warning Message",
         compute="_compute_warning_message",
         help="Warning message displayed in the mailing form view",
     )

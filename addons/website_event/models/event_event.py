@@ -39,7 +39,6 @@ class EventEvent(models.Model):
 
     subtitle = fields.Char("Event Subtitle", translate=True)
     is_participating = fields.Boolean(
-        "Is Participating",
         compute="_compute_is_participating",
         search="_search_is_participating",
     )
@@ -58,7 +57,6 @@ class EventEvent(models.Model):
             ("link", "Via a Link"),
             ("logged_users", "Logged Users"),
         ],
-        string="Website Visibility",
         required=True,
         default="public",
         tracking=True,
@@ -67,7 +65,6 @@ class EventEvent(models.Model):
     )
     website_published = fields.Boolean(tracking=True)
     website_menu = fields.Boolean(
-        string="Website Menu",
         compute="_compute_website_menu",
         precompute=True,
         readonly=False,
@@ -80,7 +77,6 @@ class EventEvent(models.Model):
         copy=False,
     )
     introduction_menu = fields.Boolean(
-        "Introduction Menu",
         compute="_compute_website_menu_data",
         readonly=False,
         store=True,
@@ -95,7 +91,6 @@ class EventEvent(models.Model):
         related="address_id.name",
     )
     register_menu = fields.Boolean(
-        "Register Menu",
         compute="_compute_website_menu_data",
         readonly=False,
         store=True,
@@ -107,7 +102,6 @@ class EventEvent(models.Model):
         domain=[("menu_type", "=", "register")],
     )
     community_menu = fields.Boolean(
-        "Community Menu",
         compute="_compute_community_menu",
         readonly=False,
         store=True,
@@ -126,17 +120,14 @@ class EventEvent(models.Model):
         domain=[("menu_type", "=", "other")],
     )
     is_ongoing = fields.Boolean(
-        "Is Ongoing",
         compute="_compute_time_data",
         search="_search_is_ongoing",
         help="Whether event has begun",
     )
     is_done = fields.Boolean(
-        "Is Done",
         compute="_compute_time_data",
     )
     start_today = fields.Boolean(
-        "Start Today",
         compute="_compute_time_data",
         help="Whether event is going to start today if still not ongoing",
     )

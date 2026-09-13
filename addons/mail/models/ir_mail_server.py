@@ -26,8 +26,8 @@ class IrMail_Server(models.Model):
 
     owner_user_id: ResUsers = fields.Many2one("res.users", "Owner", copy=False)
 
-    owner_limit_time = fields.Datetime("Owner Limit Time", copy=False)
-    owner_limit_count = fields.Integer("Owner Limit Count", copy=False)
+    owner_limit_time = fields.Datetime(copy=False)
+    owner_limit_count = fields.Integer(copy=False)
 
     _unique_owner_user_id = models.Constraint(
         "UNIQUE(owner_user_id)",

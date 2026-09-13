@@ -19,7 +19,6 @@ class FleetVehicleLogServices(models.Model):
     )
     vehicle_id = fields.Many2one(
         comodel_name="fleet.vehicle",
-        string="Vehicle",
         compute="_compute_vehicle_id",
         store=True,
         readonly=False,

@@ -31,7 +31,6 @@ class AccountAutomaticEntryWizard(models.TransientModel):
         "res.currency", related="company_id.currency_id"
     )
     percentage = fields.Float(
-        "Percentage",
         compute="_compute_percentage",
         readonly=False,
         store=True,
@@ -48,7 +47,6 @@ class AccountAutomaticEntryWizard(models.TransientModel):
         "account.journal",
         required=True,
         readonly=False,
-        string="Journal",
         check_company=True,
         domain="[('type', '=', 'general')]",
         compute="_compute_journal_id",
@@ -77,9 +75,7 @@ class AccountAutomaticEntryWizard(models.TransientModel):
         compute="_compute_revenue_accrual_account",
         inverse="_inverse_revenue_accrual_account",
     )
-    lock_date_message = fields.Char(
-        string="Lock Date Message", compute="_compute_lock_date_message"
-    )
+    lock_date_message = fields.Char(compute="_compute_lock_date_message")
 
     destination_account_id = fields.Many2one(
         string="To",

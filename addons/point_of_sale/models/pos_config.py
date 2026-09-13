@@ -126,7 +126,6 @@ class PosConfig(models.Model):
     )
     invoice_journal_id = fields.Many2one(
         "account.journal",
-        string="Invoice Journal",
         check_company=True,
         domain=[("type", "=", "sale")],
         help="Accounting journal used to create invoices.",
@@ -137,7 +136,6 @@ class PosConfig(models.Model):
         compute="_compute_currency_id",
         store=True,
         compute_sudo=True,
-        string="Currency",
     )
     order_seq_id = fields.Many2one(
         "ir.sequence", string="Order Sequence", readonly=True, copy=False
@@ -211,19 +209,15 @@ class PosConfig(models.Model):
         help="Check the amount of the cashbox at opening and closing.",
     )
     set_maximum_difference = fields.Boolean(
-        "Set Maximum Difference",
         help="Set a maximum difference allowed between the expected and counted money during the closing of the session.",
     )
     receipt_header = fields.Text(
-        string="Receipt Header",
         help="A short text that will be inserted as a header in the printed receipt.",
     )
     receipt_footer = fields.Text(
-        string="Receipt Footer",
         help="A short text that will be inserted as a footer in the printed receipt.",
     )
     basic_receipt = fields.Boolean(
-        string="Basic Receipt",
         help="Print basic ticket without prices. Can be used for gifts.",
     )
     proxy_ip = fields.Char(
@@ -240,7 +234,7 @@ class PosConfig(models.Model):
     )
     session_ids = fields.One2many("pos.session", "config_id", string="Sessions")
     current_session_id = fields.Many2one(
-        "pos.session", compute="_compute_current_session", string="Current Session"
+        "pos.session", compute="_compute_current_session"
     )
     current_session_state = fields.Char(compute="_compute_current_session")
     number_of_rescue_session = fields.Integer(
@@ -263,7 +257,6 @@ class PosConfig(models.Model):
     )
     company_id = fields.Many2one(
         "res.company",
-        string="Company",
         required=True,
         default=lambda self: self.env.company,
     )
@@ -282,7 +275,6 @@ class PosConfig(models.Model):
     iface_tipproduct = fields.Boolean(string="Product tips")
     tip_product_id = fields.Many2one(
         "product.product",
-        string="Tip Product",
         default=_default_tip_product_id,
         help="This product is used as reference on customer receipts.",
     )
@@ -291,13 +283,11 @@ class PosConfig(models.Model):
         string="Fiscal Positions",
         help="This is useful for restaurants with onsite and take-away services that imply specific tax rates.",
     )
-    default_fiscal_position_id = fields.Many2one(
-        "account.fiscal.position", string="Default Fiscal Position"
-    )
+    default_fiscal_position_id = fields.Many2one("account.fiscal.position")
     default_bill_ids = fields.Many2many("pos.bill", string="Coins/Bills")
     use_pricelist = fields.Boolean("Use a pricelist.")
-    use_presets = fields.Boolean("Use Presets")
-    default_preset_id = fields.Many2one("pos.preset", string="Default Preset")
+    use_presets = fields.Boolean()
+    default_preset_id = fields.Many2one("pos.preset")
     available_preset_ids = fields.Many2many("pos.preset", string="Available Presets")
     tax_regime_selection = fields.Boolean("Tax Regime Selection value")
     limit_categories = fields.Boolean("Restrict Categories")
@@ -331,14 +321,14 @@ class PosConfig(models.Model):
         compute="_compute_current_session_user",
     )
     other_devices = fields.Boolean(
-        string="Other Devices", help="Connect devices to your PoS without an IoT Box."
+        help="Connect devices to your PoS without an IoT Box."
     )
     rounding_method = fields.Many2one("account.cash.rounding", string="Cash rounding")
-    cash_rounding = fields.Boolean(string="Cash Rounding")
+    cash_rounding = fields.Boolean()
     only_round_cash_method = fields.Boolean(string="Only apply rounding on cash")
     has_active_session = fields.Boolean(compute="_compute_current_session")
     manual_discount = fields.Boolean(string="Line Discounts", default=True)
-    ship_later = fields.Boolean(string="Ship Later")
+    ship_later = fields.Boolean()
     warehouse_id = fields.Many2one(
         "stock.warehouse", default=_default_warehouse_id, ondelete="restrict"
     )
@@ -366,12 +356,10 @@ class PosConfig(models.Model):
         domain="[('company_id', '=', company_id)]",
     )
     show_product_images = fields.Boolean(
-        string="Show Product Images",
         help="Show product images in the Point of Sale interface.",
         default=True,
     )
     show_category_images = fields.Boolean(
-        string="Show Category Images",
         help="Show category images in the Point of Sale interface.",
         default=True,
     )
@@ -398,9 +386,7 @@ class PosConfig(models.Model):
         compute="_compute_last_data_change",
         store=True,
     )
-    fallback_nomenclature_id = fields.Many2one(
-        "barcode.nomenclature", string="Fallback Nomenclature"
-    )
+    fallback_nomenclature_id = fields.Many2one("barcode.nomenclature")
     epson_printer_ip = fields.Char(
         string="Epson Printer IP",
         help=(

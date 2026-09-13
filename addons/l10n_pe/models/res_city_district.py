@@ -7,7 +7,7 @@ class L10n_PeResCityDistrict(models.Model):
     _order = "name"
 
     name = fields.Char(translate=True)
-    city_id = fields.Many2one("res.city", "City")
+    city_id = fields.Many2one("res.city")
     code = fields.Char(
         help="This code will help with the identification of each district in Peru."
     )

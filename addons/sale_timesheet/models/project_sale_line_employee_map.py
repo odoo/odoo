@@ -20,14 +20,12 @@ class ProjectSaleLineEmployeeMap(models.Model):
 
     project_id = fields.Many2one(
         "project.project",
-        "Project",
         domain=[("is_template", "=", False)],
         required=True,
         index=True,
     )
     employee_id = fields.Many2one(
         "hr.employee",
-        "Employee",
         required=True,
         domain="[('id', 'not in', existing_employee_ids)]",
     )
@@ -62,7 +60,6 @@ class ProjectSaleLineEmployeeMap(models.Model):
     )
     currency_id = fields.Many2one(
         "res.currency",
-        string="Currency",
         compute="_compute_currency_id",
         store=True,
         readonly=False,

@@ -36,7 +36,6 @@ class ProductComboItem(models.Model):
         precompute=True,
     )
     extra_price = fields.Float(
-        string="Extra Price",
         min_display_digits="Product Price",
         default=0.0,
     )

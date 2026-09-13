@@ -32,7 +32,6 @@ class MailGroupMessage(models.Model):
     )
     mail_message_id = fields.Many2one(
         "mail.message",
-        "Mail Message",
         required=True,
         ondelete="cascade",
         index=True,

@@ -165,7 +165,6 @@ class ProductProduct(models.Model):
     storage_category_capacity_ids = fields.One2many(
         comodel_name="stock.storage.category.capacity",
         inverse_name="product_id",
-        string="Storage Category Capacity",
     )
     show_on_hand_qty_status_button = fields.Boolean(
         related="product_tmpl_id.show_on_hand_qty_status_button",

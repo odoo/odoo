@@ -35,12 +35,11 @@ class SnailmailLetter(models.Model):
     _description = "Snailmail Letter"
 
     user_id = fields.Many2one("res.users", "Sent by")
-    model = fields.Char("Model", required=True)
+    model = fields.Char(required=True)
     res_id = fields.Integer("Document ID", required=True)
     partner_id = fields.Many2one("res.partner", string="Recipient", required=True)
     company_id = fields.Many2one(
         "res.company",
-        string="Company",
         required=True,
         readonly=True,
         default=lambda self: self.env.company.id,
@@ -50,13 +49,11 @@ class SnailmailLetter(models.Model):
     )
 
     attachment_id = fields.Many2one(
-        "ir.attachment", string="Attachment", ondelete="cascade", index="btree_not_null"
+        "ir.attachment", ondelete="cascade", index="btree_not_null"
     )
     attachment_datas = fields.Binary("Document", related="attachment_id.datas")
     attachment_fname = fields.Char("Attachment Filename", related="attachment_id.name")
-    color = fields.Boolean(
-        string="Color", default=lambda self: self.env.company.snailmail_color
-    )
+    color = fields.Boolean(default=lambda self: self.env.company.snailmail_color)
     cover = fields.Boolean(
         string="Cover Page", default=lambda self: self.env.company.snailmail_cover
     )
@@ -98,12 +95,12 @@ class SnailmailLetter(models.Model):
         "mail.notification", "letter_id", "Notifications"
     )
 
-    street = fields.Char("Street")
-    street2 = fields.Char("Street2")
-    zip = fields.Char("Zip")
-    city = fields.Char("City")
-    state_id = fields.Many2one("res.country.state", string="State")
-    country_id = fields.Many2one("res.country", string="Country")
+    street = fields.Char()
+    street2 = fields.Char()
+    zip = fields.Char()
+    city = fields.Char()
+    state_id = fields.Many2one("res.country.state")
+    country_id = fields.Many2one("res.country")
 
     @api.depends("attachment_id", "partner_id")
     def _compute_display_name(self):

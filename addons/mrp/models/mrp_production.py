@@ -87,12 +87,10 @@ class MrpProduction(models.Model):
     )
     priority = fields.Selection(
         PROCUREMENT_PRIORITIES,
-        string="Priority",
         default="0",
         help="Components will be reserved first for the MO with the highest priorities.",
     )
     backorder_sequence = fields.Integer(
-        "Backorder Sequence",
         default=0,
         copy=False,
         help="Backorder sequence, if equals to 0 means there is not related backorder",
@@ -105,7 +103,6 @@ class MrpProduction(models.Model):
 
     product_id = fields.Many2one(
         "product.product",
-        "Product",
         domain="[('type', '=', 'consu')]",
         compute="_compute_product_id",
         store=True,
@@ -117,7 +114,6 @@ class MrpProduction(models.Model):
     )
     production_group_id = fields.Many2one(
         "mrp.production.group",
-        "Production Group",
         index=True,
         copy=False,
     )
@@ -308,7 +304,6 @@ class MrpProduction(models.Model):
             ("done", "Done"),
             ("cancel", "Cancelled"),
         ],
-        string="State",
         compute="_compute_state",
         copy=False,
         index=True,
@@ -408,7 +403,6 @@ class MrpProduction(models.Model):
     )
     company_id = fields.Many2one(
         "res.company",
-        "Company",
         default=lambda self: self.env.company,
         index=True,
         required=True,
@@ -429,7 +423,6 @@ class MrpProduction(models.Model):
     product_description_variants = fields.Char("Custom Description")
     orderpoint_id = fields.Many2one(
         "stock.warehouse.orderpoint",
-        "Orderpoint",
         copy=False,
         index="btree_not_null",
     )
@@ -453,7 +446,7 @@ class MrpProduction(models.Model):
     )
     unbuild_ids = fields.One2many("mrp.unbuild", "mo_id", "Unbuilds")
     unbuild_count = fields.Count("unbuild_ids", string="Number of Unbuilds")
-    is_locked = fields.Boolean("Is Locked", default=_default_is_locked, copy=False)
+    is_locked = fields.Boolean(default=_default_is_locked, copy=False)
     is_planned = fields.Boolean(
         "Its Operations are Planned",
         compute="_compute_is_planned",
@@ -461,12 +454,10 @@ class MrpProduction(models.Model):
     )
 
     show_final_lots = fields.Boolean(
-        "Show Final Lots",
         compute="_compute_show_final_lots",
     )
     production_location_id = fields.Many2one(
         "stock.location",
-        "Production Location",
         compute="_compute_production_location_id",
         store=True,
     )

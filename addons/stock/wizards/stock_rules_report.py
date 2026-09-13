@@ -9,7 +9,6 @@ class StockRulesReport(models.TransientModel):
 
     product_id = fields.Many2one(
         comodel_name="product.product",
-        string="Product",
         required=True,
     )
     product_tmpl_id = fields.Many2one(

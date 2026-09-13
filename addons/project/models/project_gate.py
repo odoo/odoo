@@ -45,9 +45,8 @@ class ProjectGate(models.Model):
         "res.users",
         string="Reviewers",
     )
-    decision_notes = fields.Html("Decision Notes")
+    decision_notes = fields.Html()
     kill_criteria = fields.Html(
-        "Kill Criteria",
         help="Pre-defined conditions under which the project should be cancelled.",
     )
     criteria_met_count = fields.Integer(
@@ -101,4 +100,4 @@ class ProjectGateCriterion(models.Model):
     name = fields.Char("Criterion", required=True)
     sequence = fields.Integer(default=10)
     is_met = fields.Boolean("Met", default=False)
-    evidence = fields.Text("Evidence")
+    evidence = fields.Text()

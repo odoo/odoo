@@ -16,7 +16,6 @@ class MixinResource(models.AbstractModel):
 
     resource_id = fields.Many2one(
         "resource.resource",
-        "Resource",
         bypass_search_access=True,
         index=True,
         ondelete="restrict",

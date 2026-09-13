@@ -9,7 +9,7 @@ class AccountFiscalYear(models.Model):
     _name = "account.fiscal.year"
     _description = "Fiscal Year"
 
-    name = fields.Char(string="Name", required=True)
+    name = fields.Char(required=True)
     date_from = fields.Date(
         string="Start Date",
         required=True,
@@ -22,7 +22,6 @@ class AccountFiscalYear(models.Model):
     )
     company_id = fields.Many2one(
         "res.company",
-        string="Company",
         required=True,
         default=lambda self: self.env.company,
     )

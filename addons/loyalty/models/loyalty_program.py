@@ -35,12 +35,10 @@ class LoyaltyProgram(models.Model):
     active = fields.Boolean(default=True)
     sequence = fields.Integer(copy=False)
     company_id = fields.Many2one(
-        string="Company",
         comodel_name="res.company",
         default=lambda self: self.env.company,
     )
     currency_id = fields.Many2one(
-        string="Currency",
         comodel_name="res.currency",
         compute="_compute_currency_id",
         precompute=True,
@@ -50,15 +48,12 @@ class LoyaltyProgram(models.Model):
     )
     currency_symbol = fields.Char(related="currency_id.symbol")
     pricelist_ids = fields.Many2many(
-        string="Pricelist",
         help="This program is specific to this pricelist set.",
         comodel_name="product.pricelist",
         domain="[('currency_id', '=', currency_id)]",
     )
 
-    total_order_count = fields.Integer(
-        string="Total Order Count", compute="_compute_total_order_count"
-    )
+    total_order_count = fields.Integer(compute="_compute_total_order_count")
 
     rule_ids = fields.One2many(
         string="Conditional rules",
@@ -132,7 +127,7 @@ class LoyaltyProgram(models.Model):
         string="End date",
         help="The end date is included in the validity period of this program",
     )
-    limit_usage = fields.Boolean(string="Limit Usage")
+    limit_usage = fields.Boolean()
     max_usage = fields.Integer()
     # Dictates when the points can be used:
     # current: if the order gives enough points on that order, the reward may directly be claimed, points lost otherwise
@@ -191,7 +186,6 @@ class LoyaltyProgram(models.Model):
 
     # Technical field used for a label
     available_on = fields.Boolean(
-        string="Available On",
         help="Manage where your program should be available for use.",
         store=False,
     )

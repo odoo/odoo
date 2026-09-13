@@ -12,7 +12,6 @@ class ResCompany(models.Model):
 
     internal_transit_location_id = fields.Many2one(
         comodel_name="stock.location",
-        string="Internal Transit Location",
         check_company=True,
         ondelete="restrict",
         help="Used for resupply routes between warehouses that belong to this company",
@@ -42,7 +41,6 @@ class ResCompany(models.Model):
             ("11", "November"),
             ("12", "December"),
         ],
-        string="Annual Inventory Month",
         default="12",
         help="Annual inventory month for products not in a location with a cyclic inventory date. Set to no month if no automatic annual inventory.",
     )
@@ -61,7 +59,7 @@ class ResCompany(models.Model):
          ('0 days') to avoid overstocking.""",
     )
 
-    stock_text_confirmation = fields.Boolean(string="Stock Text Confirmation")
+    stock_text_confirmation = fields.Boolean()
     stock_confirmation_type = fields.Selection(
         selection=[("sms", "SMS")],
         string="Confirmation Channel",

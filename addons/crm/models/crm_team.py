@@ -43,7 +43,6 @@ class CrmTeam(models.Model):
         help="Monthly average leads capacity for all salesmen belonging to the team",
     )
     assignment_domain = fields.Char(
-        "Assignment Domain",
         tracking=True,
         help="Additional filter domain when fetching unassigned leads to allocate to the team.",
     )

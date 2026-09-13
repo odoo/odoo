@@ -23,7 +23,7 @@ class LunchProductCategory(models.Model):
         compute="_compute_product_count",
         help="The number of products related to this category",
     )
-    active = fields.Boolean(string="Active", default=True)
+    active = fields.Boolean(default=True)
     image_1920 = fields.Image(default=_default_image_1920)
 
     def _compute_product_count(self):

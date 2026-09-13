@@ -84,7 +84,6 @@ class IrModelFields(models.Model):
     )
     model_id = fields.Many2one(
         "ir.model",
-        string="Model",
         required=True,
         index=True,
         ondelete="cascade",
@@ -109,7 +108,6 @@ class IrModelFields(models.Model):
         copy=True,
     )
     copied = fields.Boolean(
-        string="Copied",
         compute="_compute_copied",
         store=True,
         readonly=False,
@@ -123,7 +121,6 @@ class IrModelFields(models.Model):
         "ir.model.fields",
         compute="_compute_related_field_id",
         store=True,
-        string="Related Field",
         ondelete="cascade",
     )
     required = fields.Boolean()
@@ -139,7 +136,6 @@ class IrModelFields(models.Model):
         help="Whether values for this field can be translated (enables the translation mechanism for that field)",
     )
     company_dependent = fields.Boolean(
-        string="Company Dependent",
         help="Whether values for this field is company dependent",
         readonly=True,
     )
@@ -158,7 +154,6 @@ class IrModelFields(models.Model):
             ("set null", "Set NULL"),
             ("restrict", "Restrict"),
         ],
-        string="On Delete",
         default="set null",
         help="On delete property for many2one fields",
     )

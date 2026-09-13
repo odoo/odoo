@@ -34,7 +34,7 @@ class PhoneNumber(models.Model):
         readonly=True,
     )
     type = fields.Selection(PHONE_TYPES, required=True, default="mobile")
-    country_id = fields.Many2one("res.country", string="Country")
+    country_id = fields.Many2one("res.country")
     primary = fields.Boolean(default=False)
     sequence = fields.Integer(default=10)
     label = fields.Char()

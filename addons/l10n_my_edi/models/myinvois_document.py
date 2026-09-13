@@ -46,7 +46,6 @@ class MyInvoisDocument(models.Model):
         index="trigram",
     )
     active = fields.Boolean(
-        string="Active",
         default=True,
     )
     company_id = fields.Many2one(

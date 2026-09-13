@@ -10,20 +10,17 @@ class EventTrackVisitor(models.Model):
 
     partner_id = fields.Many2one(
         "res.partner",
-        string="Partner",
         compute="_compute_partner_id",
         index=True,
         ondelete="set null",
         readonly=False,
         store=True,
     )
-    visitor_id = fields.Many2one(
-        "website.visitor", string="Visitor", index=True, ondelete="cascade"
-    )
+    visitor_id = fields.Many2one("website.visitor", index=True, ondelete="cascade")
     track_id = fields.Many2one(
-        "event.track", string="Track", index=True, required=True, ondelete="cascade"
+        "event.track", index=True, required=True, ondelete="cascade"
     )
-    is_wishlisted = fields.Boolean(string="Is Wishlisted")
+    is_wishlisted = fields.Boolean()
     is_blacklisted = fields.Boolean(
         string="Is reminder off",
         help="As key track cannot be un-favorited, this field store the partner choice to remove the reminder for key tracks.",

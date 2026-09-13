@@ -17,12 +17,10 @@ class ProjectForecastWizard(models.TransientModel):
 
     project_id = fields.Many2one(
         "project.project",
-        string="Project",
         required=True,
         default=lambda self: self.env.context.get("active_id"),
     )
     remaining_items = fields.Integer(
-        "Remaining Items",
         compute="_compute_remaining_items",
         readonly=False,
         store=True,

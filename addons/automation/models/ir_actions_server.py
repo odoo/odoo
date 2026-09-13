@@ -20,7 +20,6 @@ class IrActionsServer(models.Model):
     )
     automation_rule_id = fields.Many2one(
         comodel_name="automation.rule",
-        string="Automation Rule",
         index="btree_not_null",
         ondelete="cascade",
     )

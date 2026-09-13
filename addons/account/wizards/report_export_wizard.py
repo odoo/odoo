@@ -104,7 +104,7 @@ class Account_ReportsExportWizardFormat(models.TransientModel):
     _name = "account_reports.export.wizard.format"
     _description = "Export format for accounting's reports"
 
-    name = fields.Char(string="Name", required=True)
+    name = fields.Char(required=True)
     fun_to_call = fields.Char(string="Function to Call", required=True)
     fun_param = fields.Char(string="Function Parameter")
     export_wizard_id = fields.Many2one(

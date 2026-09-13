@@ -18,7 +18,6 @@ class IrActionsTodo(models.Model):
     sequence = fields.Integer(default=10)
     action_id = fields.Many2one(
         "ir.actions.actions",
-        string="Action",
         required=True,
         index=True,
         ondelete="cascade",

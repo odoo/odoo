@@ -8,7 +8,7 @@ class PrintPrenumberedChecks(models.TransientModel):
     _name = "print.prenumbered.checks"
     _description = "Print Pre-numbered Checks"
 
-    next_check_number = fields.Char("Next Check Number", required=True)
+    next_check_number = fields.Char(required=True)
 
     @api.constrains("next_check_number")
     def _check_next_check_number(self):

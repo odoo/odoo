@@ -6,7 +6,7 @@ class EventQuiz(models.Model):
     _name = "event.quiz"
     _description = "Quiz"
 
-    name = fields.Char("Name", required=True, translate=True)
+    name = fields.Char(required=True, translate=True)
     question_ids = fields.One2many("event.quiz.question", "quiz_id", string="Questions")
     event_track_id = fields.Many2one(
         "event.track", readonly=True, index="btree_not_null"
@@ -25,9 +25,9 @@ class EventQuizQuestion(models.Model):
     _order = "quiz_id, sequence, id"
 
     name = fields.Char("Question", required=True, translate=True)
-    sequence = fields.Integer("Sequence")
+    sequence = fields.Integer()
     quiz_id = fields.Many2one(
-        "event.quiz", "Quiz", required=True, index=True, ondelete="cascade"
+        "event.quiz", required=True, index=True, ondelete="cascade"
     )
     correct_answer_id = fields.One2many(
         "event.quiz.answer", compute="_compute_correct_answer_id"
@@ -35,7 +35,7 @@ class EventQuizQuestion(models.Model):
     awarded_points = fields.Integer(
         "Number of Points", compute="_compute_awarded_points"
     )
-    answer_ids = fields.One2many("event.quiz.answer", "question_id", string="Answer")
+    answer_ids = fields.One2many("event.quiz.answer", "question_id")
 
     @api.depends("answer_ids.awarded_points")
     def _compute_awarded_points(self):
@@ -74,10 +74,9 @@ class EventQuizAnswer(models.Model):
     _description = "Question's Answer"
     _order = "question_id, sequence, id"
 
-    sequence = fields.Integer("Sequence")
+    sequence = fields.Integer()
     question_id = fields.Many2one(
         "event.quiz.question",
-        string="Question",
         required=True,
         index=True,
         ondelete="cascade",

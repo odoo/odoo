@@ -12,9 +12,7 @@ class MailingSubscription(models.Model):
     _rec_name = "contact_id"
     _order = "list_id DESC, contact_id DESC"
 
-    contact_id = fields.Many2one(
-        "mailing.contact", string="Contact", ondelete="cascade", required=True
-    )
+    contact_id = fields.Many2one("mailing.contact", ondelete="cascade", required=True)
     list_id = fields.Many2one(
         "mailing.list",
         string="Mailing List",
@@ -23,7 +21,6 @@ class MailingSubscription(models.Model):
         index=True,
     )
     opt_out = fields.Boolean(
-        string="Opt Out",
         default=False,
         help="The contact has chosen not to receive mails anymore from this list",
     )

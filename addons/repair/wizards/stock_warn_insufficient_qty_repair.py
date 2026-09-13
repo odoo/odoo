@@ -7,7 +7,7 @@ class StockWarnInsufficientQtyRepair(models.TransientModel):
     _inherit = ["mixin.stock.warn.insufficient.qty"]
     _description = "Warn Insufficient Repair Quantity"
 
-    repair_id = fields.Many2one("repair.order", string="Repair")
+    repair_id = fields.Many2one("repair.order")
 
     def _get_reference_document_company_id(self):
         return self.repair_id.company_id

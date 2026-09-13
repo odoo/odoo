@@ -11,16 +11,12 @@ class MrpAccountWipAccountingLine(models.TransientModel):
     _name = "mrp.account.wip.accounting.line"
     _description = "Account move line to be created when posting WIP account move"
 
-    account_id = fields.Many2one("account.account", "Account")
-    label = fields.Char("Label")
-    debit = fields.Monetary(
-        "Debit", compute="_compute_debit", store=True, readonly=False
-    )
-    credit = fields.Monetary(
-        "Credit", compute="_compute_credit", store=True, readonly=False
-    )
+    account_id = fields.Many2one("account.account")
+    label = fields.Char()
+    debit = fields.Monetary(compute="_compute_debit", store=True, readonly=False)
+    credit = fields.Monetary(compute="_compute_credit", store=True, readonly=False)
     currency_id = fields.Many2one(
-        "res.currency", "Currency", default=lambda self: self.env.company.currency_id
+        "res.currency", default=lambda self: self.env.company.currency_id
     )
     wip_accounting_id = fields.Many2one(
         "mrp.account.wip.accounting", "WIP accounting wizard"
@@ -74,17 +70,16 @@ class MrpAccountWipAccounting(models.TransientModel):
             res["mo_ids"] = [Command.set(productions.ids)]
         return res
 
-    date = fields.Date("Date", default=fields.Date.context_today)
+    date = fields.Date(default=fields.Date.context_today)
     reversal_date = fields.Date(
-        "Reversal Date",
         compute="_compute_reversal_date",
         required=True,
         store=True,
         readonly=False,
         precompute=True,
     )
-    journal_id = fields.Many2one("account.journal", "Journal", required=True)
-    reference = fields.Char("Reference")
+    journal_id = fields.Many2one("account.journal", required=True)
+    reference = fields.Char()
     line_ids = fields.One2many(
         "mrp.account.wip.accounting.line",
         "wip_accounting_id",

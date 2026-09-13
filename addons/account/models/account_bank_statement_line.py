@@ -75,7 +75,6 @@ class AccountBankStatementLine(models.Model):
     )
     statement_id = fields.Many2one(
         comodel_name="account.bank.statement",
-        string="Statement",
         index=True,
     )
 
@@ -88,7 +87,6 @@ class AccountBankStatementLine(models.Model):
     sequence = fields.Integer(default=1)
     partner_id = fields.Many2one(
         comodel_name="res.partner",
-        string="Partner",
         ondelete="restrict",
         domain="['|', ('parent_id','=', False), ('is_company','=',True)]",
         check_company=True,
@@ -111,7 +109,6 @@ class AccountBankStatementLine(models.Model):
     running_balance = fields.Monetary(compute="_compute_running_balance")
     foreign_currency_id = fields.Many2one(
         comodel_name="res.currency",
-        string="Foreign Currency",
         help="The optional other currency if it is a multi-currency entry.",
     )
     amount_currency = fields.Monetary(
@@ -137,7 +134,6 @@ class AccountBankStatementLine(models.Model):
     )
 
     is_reconciled = fields.Boolean(
-        string="Is Reconciled",
         compute="_compute_reconciliation",
         store=True,
     )

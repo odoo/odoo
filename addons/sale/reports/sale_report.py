@@ -64,17 +64,14 @@ class SaleReport(models.Model):
     )
     campaign_id = fields.Many2one(
         comodel_name="utm.campaign",
-        string="Campaign",
         readonly=True,
     )
     medium_id = fields.Many2one(
         comodel_name="utm.medium",
-        string="Medium",
         readonly=True,
     )
     source_id = fields.Many2one(
         comodel_name="utm.source",
-        string="Source",
         readonly=True,
     )
     name = fields.Char(
@@ -116,8 +113,8 @@ class SaleReport(models.Model):
     )
     qty_transferred = fields.Float(string="Qty Delivered", readonly=True)
     qty_to_transfer = fields.Float(string="Qty To Deliver", readonly=True)
-    qty_invoiced = fields.Float(string="Qty Invoiced", readonly=True)
-    qty_to_invoice = fields.Float(string="Qty To Invoice", readonly=True)
+    qty_invoiced = fields.Float(readonly=True)
+    qty_to_invoice = fields.Float(readonly=True)
     price_average = fields.Monetary(
         string="Average Price",
         readonly=True,
@@ -125,7 +122,7 @@ class SaleReport(models.Model):
         help="Quantity-weighted average sale price (not a cost).",
     )
     discount = fields.Float(string="Discount %", readonly=True, aggregator="avg")
-    discount_amount = fields.Monetary(string="Discount Amount", readonly=True)
+    discount_amount = fields.Monetary(readonly=True)
     amount_taxexc_invoiced = fields.Monetary(
         string="Untaxed Amount Invoiced",
         readonly=True,

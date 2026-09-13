@@ -8,7 +8,6 @@ class ResCompany(models.Model):
     documents_product_settings = fields.Boolean()
     product_folder_id = fields.Many2one(
         "document.document",
-        string="Product Folder",
         check_company=True,
         compute="_compute_product_folder_id",
         store=True,

@@ -82,11 +82,8 @@ class EventEvent(models.Model):
         return self.env["event.type"]._default_question_ids()
 
     name = fields.Char(string="Event", translate=True, required=True)
-    note = fields.Html(
-        string="Note", store=True, compute="_compute_note", readonly=False
-    )
+    note = fields.Html(store=True, compute="_compute_note", readonly=False)
     description = fields.Html(
-        string="Description",
         translate=html_translate,
         sanitize_attributes=False,
         sanitize_form=False,
@@ -102,14 +99,12 @@ class EventEvent(models.Model):
     use_barcode = fields.Boolean(compute="_compute_use_barcode")
     company_id = fields.Many2one(
         "res.company",
-        string="Company",
         change_default=True,
         default=lambda self: self.env.company,
         required=False,
     )
     organizer_id = fields.Many2one(
         "res.partner",
-        string="Organizer",
         tracking=True,
         default=lambda self: self.env.company.partner_id,
         check_company=True,
@@ -206,7 +201,6 @@ class EventEvent(models.Model):
         "event.registration", "event_id", string="Attendees"
     )
     is_multi_slots = fields.Boolean(
-        "Is Multi Slots",
         copy=True,
         help="Allow multiple time slots. "
         "The communications, the maximum number of attendees and the maximum number of tickets registrations "
@@ -219,7 +213,6 @@ class EventEvent(models.Model):
     event_ticket_ids = fields.One2many(
         "event.event.ticket",
         "event_id",
-        string="Event Ticket",
         copy=True,
         compute="_compute_event_ticket_ids",
         readonly=False,
@@ -270,7 +263,7 @@ class EventEvent(models.Model):
     )
     date_end = fields.Datetime(string="End Date", required=True, tracking=True)
     is_ongoing = fields.Boolean(
-        "Is Ongoing", compute="_compute_is_ongoing", search="_search_is_ongoing"
+        compute="_compute_is_ongoing", search="_search_is_ongoing"
     )
     is_one_day = fields.Boolean(compute="_compute_is_one_day")
     is_finished = fields.Boolean(
@@ -330,7 +323,6 @@ class EventEvent(models.Model):
     )
     badge_image = fields.Image("Badge Background", max_width=1024, max_height=1024)
     ticket_instructions = fields.Html(
-        "Ticket Instructions",
         translate=True,
         compute="_compute_ticket_instructions",
         store=True,

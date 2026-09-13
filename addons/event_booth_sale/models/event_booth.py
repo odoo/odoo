@@ -35,7 +35,7 @@ class EventBooth(models.Model):
         index="btree_not_null",
         groups="sales_team.group_sale_salesman",
     )
-    is_paid = fields.Boolean("Is Paid", copy=False)
+    is_paid = fields.Boolean(copy=False)
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_linked_sale_order(self):

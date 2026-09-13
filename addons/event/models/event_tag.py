@@ -14,8 +14,8 @@ class EventTagCategory(models.Model):
         """
         return (self.search([], order="sequence desc", limit=1).sequence or 0) + 1
 
-    name = fields.Char("Name", required=True, translate=True)
-    sequence = fields.Integer("Sequence", default=_default_sequence)
+    name = fields.Char(required=True, translate=True)
+    sequence = fields.Integer(default=_default_sequence)
     tag_ids = fields.One2many("event.tag", "category_id", string="Tags")
 
 
@@ -25,11 +25,10 @@ class EventTag(models.Model):
     _description = "Event Tag"
     _order = "category_sequence, sequence, id"
 
-    name = fields.Char("Name", required=True, translate=True)
-    sequence = fields.Integer("Sequence", default=0)
+    name = fields.Char(required=True, translate=True)
+    sequence = fields.Integer(default=0)
     category_id = fields.Many2one(
         "event.tag.category",
-        string="Category",
         required=True,
         index=True,
         ondelete="cascade",

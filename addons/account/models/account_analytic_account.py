@@ -8,11 +8,9 @@ class AccountAnalyticAccount(models.Model):
     _inherit = "account.analytic.account"
 
     invoice_count = fields.Integer(
-        "Invoice Count",
         compute="_compute_invoice_count",
     )
     vendor_bill_count = fields.Integer(
-        "Vendor Bill Count",
         compute="_compute_vendor_bill_count",
     )
 

@@ -16,7 +16,6 @@ class ApplicantGetRefuseReason(models.TransientModel):
 
     refuse_reason_id = fields.Many2one(
         "hr.applicant.refuse.reason",
-        "Refuse Reason",
         required=True,
         default=_default_refuse_reason_id,
     )
@@ -42,9 +41,7 @@ class ApplicantGetRefuseReason(models.TransientModel):
         string="Applicant(s) not having email",
     )
     duplicates = fields.Boolean(string="Refuse Duplicate Applications")
-    duplicates_count = fields.Integer(
-        "Duplicates Count", compute="_compute_duplicate_applicant_ids_domain"
-    )
+    duplicates_count = fields.Integer(compute="_compute_duplicate_applicant_ids_domain")
     duplicate_applicant_ids = fields.Many2many(
         "hr.applicant",
         relation="applicant_get_refuse_reason_duplicate_applicants_rel",
@@ -65,7 +62,6 @@ class ApplicantGetRefuseReason(models.TransientModel):
         bypass_search_access=True,
     )
     scheduled_date = fields.Char(
-        "Scheduled Date",
         compute="_compute_from_template_id",
         readonly=False,
         store=True,

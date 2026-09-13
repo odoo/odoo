@@ -26,15 +26,14 @@ class ProjectBenefit(models.Model):
         help="Describe the mechanism by which this benefit is expected to materialize.",
     )
     measurement_method = fields.Text(
-        "Measurement Method",
         help="Specific, quantified method for measuring this benefit.",
     )
-    target_value = fields.Float("Target Value")
+    target_value = fields.Float()
     target_unit = fields.Char(
         "Unit",
         help="Unit of measurement (e.g. %, $, hours, NPS score).",
     )
-    actual_value = fields.Float("Actual Value")
+    actual_value = fields.Float()
     achievement_pct = fields.Float(
         "Achievement %",
         compute="_compute_achievement_pct",

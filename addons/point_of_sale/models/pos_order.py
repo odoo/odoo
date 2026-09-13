@@ -47,7 +47,7 @@ class PosOrder(models.Model):
     amount_total = fields.Monetary(string="Total", readonly=True, required=True)
     amount_paid = fields.Monetary(string="Paid", required=True)
     amount_return = fields.Monetary(string="Returned", required=True, readonly=True)
-    margin = fields.Monetary(string="Margin", compute="_compute_margins", store=True)
+    margin = fields.Monetary(compute="_compute_margins", store=True)
     margin_percent = fields.Float(
         string="Margin (%)", compute="_compute_margins", digits=(12, 4), store=True
     )
@@ -60,20 +60,19 @@ class PosOrder(models.Model):
         "pos.order.line", "order_id", string="Order Lines", copy=True
     )
     company_id = fields.Many2one(
-        "res.company", string="Company", required=True, readonly=True, index=True
+        "res.company", required=True, readonly=True, index=True
     )
     country_code = fields.Char(related="company_id.account_fiscal_country_id.code")
-    pricelist_id = fields.Many2one("product.pricelist", string="Pricelist")
+    pricelist_id = fields.Many2one("product.pricelist")
     partner_id = fields.Many2one(
         "res.partner", string="Customer", change_default=True, index="btree_not_null"
     )
     sequence_number = fields.Integer(
-        string="Sequence Number",
         copy=False,
         help="A session-unique sequence number for the order. Negative if generated from the client",
     )
     session_id = fields.Many2one(
-        "pos.session", string="Session", index=True, domain="[('state', '=', 'opened')]"
+        "pos.session", index=True, domain="[('state', '=', 'opened')]"
     )
     config_id = fields.Many2one(
         "pos.config",
@@ -86,7 +85,6 @@ class PosOrder(models.Model):
         "res.currency", related="config_id.currency_id", string="Currency"
     )
     currency_rate = fields.Float(
-        "Currency Rate",
         compute="_compute_currency_rate",
         compute_sudo=True,
         store=True,
@@ -96,7 +94,6 @@ class PosOrder(models.Model):
     )
 
     is_refund = fields.Boolean(
-        string="Is Refund",
         readonly=True,
         default=False,
         help="Provenance: this order was created by refunding another. It "
@@ -138,12 +135,11 @@ class PosOrder(models.Model):
         "stock_reference_pos_order_rel",
         "pos_order_id",
         "reference_id",
-        string="Reference",
     )
-    preset_id = fields.Many2one("pos.preset", string="Preset")
+    preset_id = fields.Many2one("pos.preset")
     floating_order_name = fields.Char(string="Order Name")
-    general_customer_note = fields.Text(string="General Customer Note")
-    internal_note = fields.Text(string="Internal Note")
+    general_customer_note = fields.Text()
+    internal_note = fields.Text()
     nb_print = fields.Integer(
         string="Number of Print", readonly=True, copy=False, default=0
     )
@@ -160,7 +156,6 @@ class PosOrder(models.Model):
     )
     fiscal_position_id = fields.Many2one(
         comodel_name="account.fiscal.position",
-        string="Fiscal Position",
         readonly=False,
     )
     payment_ids = fields.One2many("pos.payment", "pos_order_id", string="Payments")
@@ -172,11 +167,11 @@ class PosOrder(models.Model):
         copy=False,
     )
     to_invoice = fields.Boolean("To invoice", copy=False)
-    shipping_date = fields.Date("Shipping Date")
+    shipping_date = fields.Date()
     preset_time = fields.Datetime(string="Hour", help="Hour of the day for the order")
-    is_invoiced = fields.Boolean("Is Invoiced", compute="_compute_is_invoiced")
+    is_invoiced = fields.Boolean(compute="_compute_is_invoiced")
     is_tipped = fields.Boolean("Is this already tipped?", readonly=True)
-    tip_amount = fields.Monetary(string="Tip Amount", readonly=True)
+    tip_amount = fields.Monetary(readonly=True)
     refund_orders_count = fields.Integer(
         "Number of Refund Orders",
         compute="_compute_refund_related_fields",
@@ -187,19 +182,13 @@ class PosOrder(models.Model):
         compute="_compute_refund_related_fields",
         help="Order from which items were refunded in this order",
     )
-    has_refundable_lines = fields.Boolean(
-        "Has Refundable Lines", compute="_compute_has_refundable_lines"
-    )
+    has_refundable_lines = fields.Boolean(compute="_compute_has_refundable_lines")
     ticket_code = fields.Char(
         help="5 digits alphanumeric code to be used by portal user to request an invoice"
     )
     tracking_number = fields.Char(string="Order Number", readonly=True, copy=False)
-    uuid = fields.Char(
-        string="Uuid", readonly=True, default=lambda self: str(uuid4()), copy=False
-    )
-    email = fields.Char(
-        string="Email", compute="_compute_contact_details", readonly=False, store=True
-    )
+    uuid = fields.Char(readonly=True, default=lambda self: str(uuid4()), copy=False)
+    email = fields.Char(compute="_compute_contact_details", readonly=False, store=True)
     phone_ids = fields.Many2many(
         "phone.number",
         "pos_order_phone_number_rel",
@@ -212,7 +201,7 @@ class PosOrder(models.Model):
         store=True,
     )
     is_edited = fields.Boolean(string="Edited", compute="_compute_is_edited")
-    has_deleted_line = fields.Boolean(string="Has Deleted Line")
+    has_deleted_line = fields.Boolean()
     order_edit_tracking = fields.Boolean(
         related="config_id.order_edit_tracking", readonly=True
     )
@@ -2596,7 +2585,6 @@ class PosOrderLine(models.Model):
     notice = fields.Char(string="Discount Notice")
     product_id = fields.Many2one(
         "product.product",
-        string="Product",
         domain=[("sale_ok", "=", True)],
         required=True,
         change_default=True,
@@ -2632,10 +2620,9 @@ class PosOrderLine(models.Model):
             ("manual", "Manual"),
             ("automatic", "Automatic"),
         ],
-        string="Price Type",
         default="original",
     )
-    margin = fields.Monetary(string="Margin", compute="_compute_margins", store=True)
+    margin = fields.Monetary(compute="_compute_margins", store=True)
     margin_percent = fields.Float(
         string="Margin (%)", compute="_compute_margins", digits=(12, 4), store=True
     )
@@ -2668,8 +2655,8 @@ class PosOrderLine(models.Model):
         "uom.uom", string="Product Unit", related="product_id.uom_id"
     )
     currency_id = fields.Many2one("res.currency", related="order_id.currency_id")
-    full_product_name = fields.Char("Full Product Name")
-    customer_note = fields.Char("Customer Note")
+    full_product_name = fields.Char()
+    customer_note = fields.Char()
     refund_orderline_ids = fields.One2many(
         "pos.order.line",
         "refunded_orderline_id",
@@ -2687,19 +2674,15 @@ class PosOrderLine(models.Model):
         compute="_compute_refunded_qty",
         help="Number of items refunded in this orderline.",
     )
-    uuid = fields.Char(
-        string="Uuid", readonly=True, default=lambda self: str(uuid4()), copy=False
-    )
+    uuid = fields.Char(readonly=True, default=lambda self: str(uuid4()), copy=False)
     note = fields.Char("Product Note")
 
-    combo_parent_id = fields.Many2one(
-        "pos.order.line", string="Combo Parent", index="btree_not_null"
-    )
+    combo_parent_id = fields.Many2one("pos.order.line", index="btree_not_null")
     combo_line_ids = fields.One2many(
         "pos.order.line", "combo_parent_id", string="Combo Lines"
     )
 
-    combo_item_id = fields.Many2one("product.combo.item", string="Combo Item")
+    combo_item_id = fields.Many2one("product.combo.item")
     is_edited = fields.Boolean("Edited", default=False)
     extra_tax_data = fields.Json()
 
@@ -3222,7 +3205,7 @@ class PosPackOperationLot(models.Model):
     order_id = fields.Many2one(
         "pos.order", related="pos_order_line_id.order_id", readonly=False
     )
-    lot_name = fields.Char("Lot Name")
+    lot_name = fields.Char()
     product_id = fields.Many2one(
         "product.product", related="pos_order_line_id.product_id", readonly=False
     )

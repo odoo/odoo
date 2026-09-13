@@ -154,7 +154,6 @@ class AccountChangeLockDate(models.TransientModel):
         required=True,
     )
     exception_duration = fields.Selection(
-        string="Exception Duration",
         selection=[
             ("5min", "for 5 minutes"),
             ("15min", "for 15 minutes"),
@@ -165,12 +164,9 @@ class AccountChangeLockDate(models.TransientModel):
         default="5min",
         required=True,
     )
-    exception_reason = fields.Char(
-        string="Exception Reason",
-    )
+    exception_reason = fields.Char()
 
     show_draft_entries_warning = fields.Boolean(
-        string="Show Draft Entries Warning",
         compute="_compute_show_draft_entries_warning",
     )
 

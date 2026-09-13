@@ -24,7 +24,6 @@ class ResourceAssetIdentifier(models.Model):
     )
     type_id = fields.Many2one(
         "resource.asset.identifier.type",
-        string="Type",
         required=True,
         ondelete="restrict",
         index=True,

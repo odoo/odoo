@@ -20,7 +20,6 @@ class AutomationRuntime(models.Model):
 
     company_id = fields.Many2one(
         comodel_name="res.company",
-        string="Company",
         required=True,
         default=lambda self: self.env.company,
         readonly=True,
@@ -28,7 +27,6 @@ class AutomationRuntime(models.Model):
     )
     currency_id = fields.Many2one(
         comodel_name="res.currency",
-        string="Currency",
         required=True,
         default=lambda self: self.env.company.currency_id,
     )
@@ -39,7 +37,6 @@ class AutomationRuntime(models.Model):
     )
     automation_id = fields.Many2one(
         comodel_name="automation.rule",
-        string="Automation",
         required=True,
         index=True,
         tracking=True,
@@ -48,7 +45,6 @@ class AutomationRuntime(models.Model):
     )
     partner_id = fields.Many2one(
         comodel_name="res.partner",
-        string="Partner",
         domain=["|", ("parent_id", "=", False), ("is_company", "=", True)],
         index=True,
         tracking=True,
@@ -106,7 +102,6 @@ class AutomationRuntime(models.Model):
         help="Workflow execution state",
     )
     date = fields.Date(
-        string="Date",
         required=True,
         default=fields.Date.context_today,
         tracking=True,

@@ -20,7 +20,7 @@ class EventMail(models.Model):
     _description = "Event Automated Mailing"
 
     event_id = fields.Many2one(
-        "event.event", string="Event", required=True, index=True, ondelete="cascade"
+        "event.event", required=True, index=True, ondelete="cascade"
     )
     sequence = fields.Integer("Display order")
     scheduled_date = fields.Datetime(

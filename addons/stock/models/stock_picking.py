@@ -117,7 +117,6 @@ class StockPicking(models.Model):
     )
     priority = fields.Selection(
         selection=PROCUREMENT_PRIORITIES,
-        string="Priority",
         default="0",
         help="Products will be reserved first for the transfers with the highest priorities.",
     )
@@ -275,14 +274,12 @@ class StockPicking(models.Model):
         index="btree_not_null",
         help="When validating the transfer, the products will be assigned to this owner.",
     )
-    printed = fields.Boolean(string="Printed", copy=False)
+    printed = fields.Boolean(copy=False)
     signature = fields.Image(
-        string="Signature",
         attachment=True,
         copy=False,
     )
     is_signed = fields.Boolean(
-        string="Is Signed",
         compute="_compute_is_signed",
     )
     is_cancelled = fields.Boolean(

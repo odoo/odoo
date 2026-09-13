@@ -8,11 +8,9 @@ class EventBoothCategory(models.Model):
     _order = "sequence ASC"
 
     active = fields.Boolean(default=True)
-    name = fields.Char(string="Name", required=True, translate=True)
-    sequence = fields.Integer(string="Sequence", default=10)
-    description = fields.Html(
-        string="Description", translate=True, sanitize_attributes=False
-    )
+    name = fields.Char(required=True, translate=True)
+    sequence = fields.Integer(default=10)
+    description = fields.Html(translate=True, sanitize_attributes=False)
     booth_ids = fields.One2many(
         "event.booth",
         "booth_category_id",

@@ -8,8 +8,8 @@ class IotDevice(models.Model):
     iot_id = fields.Many2one(
         "iot.box", string="IoT Box", required=True, index=True, ondelete="cascade"
     )
-    name = fields.Char("Name")
-    identifier = fields.Char(string="Identifier", readonly=True)
+    name = fields.Char()
+    identifier = fields.Char(readonly=True)
     type = fields.Selection(
         [
             ("printer", "Printer"),
@@ -25,10 +25,9 @@ class IotDevice(models.Model):
         ],
         readonly=True,
         default="device",
-        string="Type",
         help="Type of device.",
     )
-    manufacturer = fields.Char(string="Manufacturer", readonly=True)
+    manufacturer = fields.Char(readonly=True)
     connection = fields.Selection(
         [
             ("network", "Network"),
@@ -38,7 +37,6 @@ class IotDevice(models.Model):
             ("hdmi", "HDMI"),
         ],
         readonly=True,
-        string="Connection",
         help="Type of connection.",
     )
     report_ids = fields.Many2many("ir.actions.report", string="Reports")
@@ -52,7 +50,7 @@ class IotDevice(models.Model):
         default="disconnected",
         readonly=True,
     )
-    keyboard_layout = fields.Many2one("iot.keyboard.layout", string="Keyboard Layout")
+    keyboard_layout = fields.Many2one("iot.keyboard.layout")
     display_url = fields.Char(
         "Display URL",
         help=(
@@ -61,12 +59,10 @@ class IotDevice(models.Model):
         ),
     )
     manual_measurement = fields.Boolean(
-        "Manual Measurement",
         compute="_compute_manual_measurement",
         help="Manually read the measurement from the device",
     )
     is_scanner = fields.Boolean(
-        string="Is Scanner",
         compute="_compute_is_scanner",
         inverse="_inverse_is_scanner",
         help="Manually switch the device type between keyboard and scanner",
@@ -128,6 +124,6 @@ class IotKeyboardLayout(models.Model):
     _name = "iot.keyboard.layout"
     _description = "Keyboard Layout"
 
-    name = fields.Char("Name")
-    layout = fields.Char("Layout")
-    variant = fields.Char("Variant")
+    name = fields.Char()
+    layout = fields.Char()
+    variant = fields.Char()

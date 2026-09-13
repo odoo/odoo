@@ -27,12 +27,10 @@ class AccountReturnCreationWizard(models.TransientModel):
         default="account_return",
     )
     available_return_type_ids = fields.Many2many(
-        string="Available Return Type",
         comodel_name="account.return.type",
         compute="_compute_available_return_type_ids",
     )
     return_type_id = fields.Many2one(
-        string="Return Type",
         comodel_name="account.return.type",
         required=True,
         compute="_compute_return_type_id",
@@ -40,22 +38,22 @@ class AccountReturnCreationWizard(models.TransientModel):
         store=True,
         domain="[('id', 'in', available_return_type_ids)]",
     )
-    date_from = fields.Date(string="Date From", required=True)
-    date_to = fields.Date(string="Date To", required=True)
+    date_from = fields.Date(required=True)
+    date_to = fields.Date(required=True)
     show_warning_wrong_dates = fields.Boolean(compute="_compute_warnings")
     show_warning_existing_return = fields.Boolean(compute="_compute_warnings")
     show_warning_overlap = fields.Boolean(compute="_compute_warnings")
 
     regulatory_compliance = fields.Boolean(string="Regulatory compliance", default=True)
     treasury_financing = fields.Boolean(string="Treasury and financing", default=True)
-    purchases = fields.Boolean(string="Purchases", default=True)
+    purchases = fields.Boolean(default=True)
     operating_expenses = fields.Boolean(string="Operating expenses", default=True)
-    sales = fields.Boolean(string="Sales", default=True)
-    inventory = fields.Boolean(string="Inventory", default=True)
+    sales = fields.Boolean(default=True)
+    inventory = fields.Boolean(default=True)
     fixed_assets = fields.Boolean(string="Fixed assets", default=True)
-    payroll = fields.Boolean(string="Payroll", default=True)
-    government = fields.Boolean(string="Government", default=True)
-    equity = fields.Boolean(string="Equity", default=True)
+    payroll = fields.Boolean(default=True)
+    government = fields.Boolean(default=True)
+    equity = fields.Boolean(default=True)
     other = fields.Boolean(string="Others", default=True)
 
     is_create_disabled = fields.Boolean(compute="_compute_is_create_disabled")

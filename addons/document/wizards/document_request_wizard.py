@@ -28,7 +28,6 @@ class DocumentsRequest_Wizard(models.TransientModel):
     folder_id = fields.Many2one(
         "document.document",
         domain="[('type', '=', 'folder'), ('shortcut_document_id', '=', False)]",
-        string="Folder",
     )
 
     res_model = fields.Char("Resource Model")

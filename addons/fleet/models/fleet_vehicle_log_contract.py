@@ -20,7 +20,6 @@ class FleetVehicleLogContract(models.Model):
 
     vehicle_id = fields.Many2one(
         "fleet.vehicle",
-        "Vehicle",
         required=True,
         check_company=True,
         tracking=True,
@@ -34,13 +33,9 @@ class FleetVehicleLogContract(models.Model):
     )
     amount = fields.Monetary("Cost", tracking=True)
     date = fields.Date(help="Date when the cost has been executed")
-    company_id = fields.Many2one(
-        "res.company", "Company", default=lambda self: self.env.company
-    )
+    company_id = fields.Many2one("res.company", default=lambda self: self.env.company)
     currency_id = fields.Many2one("res.currency", related="company_id.currency_id")
-    name = fields.Char(
-        string="Name", compute="_compute_name", store=True, readonly=False
-    )
+    name = fields.Char(compute="_compute_name", store=True, readonly=False)
     active = fields.Boolean(default=True)
     user_id = fields.Many2one(
         comodel_name="res.users",

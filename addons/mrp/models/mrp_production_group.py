@@ -6,7 +6,7 @@ class MrpProductionGroup(models.Model):
     _name = "mrp.production.group"
     _description = "Production Group"
 
-    name = fields.Char("Name", required=True, index="btree")
+    name = fields.Char(required=True, index="btree")
     production_ids = fields.One2many(
         "mrp.production", "production_group_id", string="Productions"
     )

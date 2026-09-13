@@ -20,7 +20,6 @@ class AccountTax(models.Model):
         },
     )
     formula = fields.Text(
-        string="Formula",
         default="price_unit * 0.10",
         help="Compute the amount of the tax.\n\n"
         ":param base: float, actual amount on which the tax is applied\n"

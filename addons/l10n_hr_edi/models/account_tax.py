@@ -18,4 +18,4 @@ class l10nHrTaxCategory(models.Model):
     code_hr = fields.Char("HR tax category code")
     code_tax_scheme = fields.Char("UNTDID tax scheme code")
     category_name = fields.Char("Categody code name")
-    description = fields.Char("Description")
+    description = fields.Char()

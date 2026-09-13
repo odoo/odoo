@@ -12,14 +12,13 @@ class SurveyFollowupRule(models.Model):
 
     survey_id = fields.Many2one(
         "survey.survey",
-        string="Survey",
         required=True,
         ondelete="cascade",
         index="btree_not_null",
     )
     name = fields.Char("Rule Name", required=True)
-    active = fields.Boolean("Active", default=True)
-    sequence = fields.Integer("Sequence", default=10)
+    active = fields.Boolean(default=True)
+    sequence = fields.Integer(default=10)
     condition_type = fields.Selection(
         [
             ("always", "Always (on every completion)"),

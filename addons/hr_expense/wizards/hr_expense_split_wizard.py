@@ -5,9 +5,7 @@ class HrExpenseSplitWizard(models.TransientModel):
     _name = "hr.expense.split.wizard"
     _description = "Expense Split Wizard"
 
-    expense_id = fields.Many2one(
-        comodel_name="hr.expense", string="Expense", required=True
-    )
+    expense_id = fields.Many2one(comodel_name="hr.expense", required=True)
     expense_split_line_ids = fields.One2many(
         comodel_name="hr.expense.split", inverse_name="wizard_id"
     )

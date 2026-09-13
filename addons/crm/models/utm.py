@@ -4,7 +4,7 @@ from odoo import fields, models
 class UtmCampaign(models.Model):
     _inherit = "utm.campaign"
 
-    use_leads = fields.Boolean("Use Leads", compute="_compute_use_leads")
+    use_leads = fields.Boolean(compute="_compute_use_leads")
     crm_lead_count = fields.Integer(
         "Leads/Opportunities count",
         groups="sales_team.group_sale_salesman",

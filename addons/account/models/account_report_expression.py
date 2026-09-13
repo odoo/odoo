@@ -31,7 +31,6 @@ class AccountReportExpression(models.Model):
     _rec_name = "report_line_name"
 
     report_line_id = fields.Many2one(
-        string="Report Line",
         comodel_name="account.report.line",
         required=True,
         index=True,
@@ -40,7 +39,7 @@ class AccountReportExpression(models.Model):
     report_line_name = fields.Char(
         string="Report Line Name", related="report_line_id.name"
     )
-    label = fields.Char(string="Label", required=True, copy=True)
+    label = fields.Char(required=True, copy=True)
     engine = fields.Selection(
         string="Computation Engine",
         selection=[
@@ -53,10 +52,9 @@ class AccountReportExpression(models.Model):
         ],
         required=True,
     )
-    formula = fields.Char(string="Formula", required=True)
-    subformula = fields.Char(string="Subformula")
+    formula = fields.Char(required=True)
+    subformula = fields.Char()
     date_scope = fields.Selection(
-        string="Date Scope",
         selection=[
             ("from_beginning", "From the very start"),
             ("from_fiscalyear", "From the start of the fiscal year"),
@@ -68,9 +66,7 @@ class AccountReportExpression(models.Model):
         required=True,
         default="strict_range",
     )
-    figure_type = fields.Selection(
-        string="Figure Type", selection=FIGURE_TYPE_SELECTION_VALUES
-    )
+    figure_type = fields.Selection(selection=FIGURE_TYPE_SELECTION_VALUES)
     green_on_positive = fields.Boolean(
         string="Is Growth Good when Positive", default=True
     )
@@ -78,9 +74,7 @@ class AccountReportExpression(models.Model):
         string="Blank if Zero",
         help="When checked, 0 values will not show when displaying this expression's value.",
     )
-    auditable = fields.Boolean(
-        string="Auditable", store=True, readonly=False, compute="_compute_auditable"
-    )
+    auditable = fields.Boolean(store=True, readonly=False, compute="_compute_auditable")
 
     carryover_target = fields.Char(
         string="Carry Over To",

@@ -8,7 +8,6 @@ class StockPackageHistory(models.Model):
 
     company_id = fields.Many2one(
         comodel_name="res.company",
-        string="Company",
         required=True,
         default=lambda self: self.env.company,
     )
@@ -28,11 +27,10 @@ class StockPackageHistory(models.Model):
     )
     package_id = fields.Many2one(
         comodel_name="stock.package",
-        string="Package",
         required=True,
         ondelete="cascade",
     )
-    package_name = fields.Char(string="Package Name", required=True)
+    package_name = fields.Char(required=True)
     package_type_id = fields.Many2one(
         related="package_id.package_type_id",
         comodel_name="stock.package.type",

@@ -67,18 +67,15 @@ class HrJob(models.Model):
     )
     application_count = fields.Integer(
         compute="_compute_application_count",
-        string="Application Count",
         groups="hr_recruitment.group_hr_recruitment_interviewer",
     )
     open_application_count = fields.Integer(
         compute="_compute_open_application_count",
-        string="Open Application Count",
         groups="hr_recruitment.group_hr_recruitment_interviewer",
         help="Number of applications that are still ongoing (not hired or refused)",
     )
     all_application_count = fields.Integer(
         compute="_compute_all_application_count",
-        string="All Application Count",
         groups="hr_recruitment.group_hr_recruitment_interviewer",
     )
     new_application_count = fields.Integer(
@@ -145,7 +142,6 @@ class HrJob(models.Model):
     )
     industry_id = fields.Many2one(
         "res.partner.industry",
-        "Industry",
         tracking=True,
         groups="hr_recruitment.group_hr_recruitment_interviewer",
     )

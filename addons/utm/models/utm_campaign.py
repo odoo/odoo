@@ -6,7 +6,7 @@ class UtmCampaign(models.Model):
     _description = "UTM Campaign"
     _rec_name = "title"
 
-    active = fields.Boolean("Active", default=True)
+    active = fields.Boolean(default=True)
     name = fields.Char(
         string="Campaign Identifier",
         required=True,
@@ -26,7 +26,6 @@ class UtmCampaign(models.Model):
     )
     stage_id = fields.Many2one(
         "utm.stage",
-        string="Stage",
         ondelete="restrict",
         required=True,
         default=lambda self: self.env["utm.stage"].search([], limit=1),

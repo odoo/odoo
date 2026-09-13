@@ -18,8 +18,8 @@ class LunchProduct(models.Model):
     category_id = fields.Many2one(
         "lunch.product.category", "Product Category", check_company=True, required=True
     )
-    description = fields.Html("Description", translate=True)
-    price = fields.Float("Price", digits="Account", required=True)
+    description = fields.Html(translate=True)
+    price = fields.Float(digits="Account", required=True)
     supplier_id = fields.Many2one(
         "lunch.supplier", "Vendor", check_company=True, required=True
     )
@@ -30,7 +30,7 @@ class LunchProduct(models.Model):
     )
     currency_id = fields.Many2one("res.currency", related="company_id.currency_id")
 
-    new_until = fields.Date("New Until")
+    new_until = fields.Date()
     is_new = fields.Boolean(compute="_compute_is_new")
 
     favorite_user_ids = fields.Many2many(check_company=True)

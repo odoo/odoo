@@ -9,11 +9,10 @@ class PosMakeInvoice(models.TransientModel):
     _description = "Multiple order invoice creation"
 
     consolidated_billing = fields.Boolean(
-        string="Consolidated Billing",
         default=True,
         help="Create one invoice for all orders related to same customer and same invoicing address",
     )
-    order_count = fields.Integer(string="Order Count", compute="_compute_order_count")
+    order_count = fields.Integer(compute="_compute_order_count")
 
     def _compute_order_count(self):
         for wizard in self:

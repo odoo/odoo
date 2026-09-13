@@ -25,7 +25,7 @@ class MessageMailLinkPreview(models.Model):
     link_preview_id: MailLinkPreview = fields.Many2one(
         "mail.link.preview", index=True, required=True, ondelete="cascade"
     )
-    sequence = fields.Integer("Sequence")
+    sequence = fields.Integer()
     is_hidden = fields.Boolean()
     author_id: ResPartner = fields.Many2one(related="message_id.author_id")
 

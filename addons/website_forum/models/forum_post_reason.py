@@ -9,6 +9,5 @@ class ForumPostReason(models.Model):
     name = fields.Char(string="Closing Reason", required=True, translate=True)
     reason_type = fields.Selection(
         [("basic", "Basic"), ("offensive", "Offensive")],
-        string="Reason Type",
         default="basic",
     )

@@ -417,7 +417,6 @@ class ResUsers(models.Model):
 
     company_id = fields.Many2one(
         "res.company",
-        string="Company",
         required=True,
         default=lambda self: self.env.company.id,
         help="The default company for this user.",
@@ -491,7 +490,6 @@ class ResUsers(models.Model):
         compute="_compute_role",
         inverse="_inverse_role",
         readonly=False,
-        string="Role",
     )
 
     def init(self) -> None:

@@ -18,7 +18,6 @@ class IrEmbeddedActions(models.Model):
     sequence = fields.Integer()
     parent_action_id = fields.Many2one(
         "ir.actions.act_window",
-        string="Parent Action",
         required=True,
         index=True,
         ondelete="cascade",
@@ -30,7 +29,6 @@ class IrEmbeddedActions(models.Model):
     )
     action_id = fields.Many2one(
         "ir.actions.actions",
-        string="Action",
         ondelete="cascade",
     )
     python_method = fields.Char(
@@ -38,7 +36,6 @@ class IrEmbeddedActions(models.Model):
     )
     user_id = fields.Many2one(
         "res.users",
-        string="User",
         ondelete="cascade",
         help="User specific embedded action. If empty, shared embedded action",
     )

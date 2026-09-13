@@ -5,10 +5,10 @@ class CrmLeadScoringFrequency(models.Model):
     _name = "crm.lead.scoring.frequency"
     _description = "Lead Scoring Frequency"
 
-    variable = fields.Char("Variable", index=True)
-    value = fields.Char("Value")
-    won_count = fields.Float("Won Count", digits=(16, 1))
-    lost_count = fields.Float("Lost Count", digits=(16, 1))
+    variable = fields.Char(index=True)
+    value = fields.Char()
+    won_count = fields.Float(digits=(16, 1))
+    lost_count = fields.Float(digits=(16, 1))
     team_id = fields.Many2one("crm.team", "Sales Team", ondelete="cascade")
 
 
@@ -24,4 +24,4 @@ class CrmLeadScoringFrequencyField(models.Model):
         required=True,
         ondelete="cascade",
     )
-    color = fields.Integer("Color", default=lambda self: self._default_color())
+    color = fields.Integer(default=lambda self: self._default_color())

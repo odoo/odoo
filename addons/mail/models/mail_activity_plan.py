@@ -14,7 +14,7 @@ class MailActivityPlan(models.Model):
     _description = "Activity Plan"
     _order = "id DESC"
 
-    name = fields.Char("Name", required=True)
+    name = fields.Char(required=True)
     company_id: ResCompany = fields.Many2one(
         "res.company",
         default=lambda self: self.env.company,

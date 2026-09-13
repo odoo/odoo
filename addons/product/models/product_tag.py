@@ -18,9 +18,9 @@ class ProductTag(models.Model):
             self.env.context.get("product_variant_id")
         )
 
-    name = fields.Char(string="Name", required=True, translate=True)
+    name = fields.Char(required=True, translate=True)
     sequence = fields.Integer(default=10)
-    color = fields.Char(string="Color", default="#3C3C3C")
+    color = fields.Char(default="#3C3C3C")
     product_template_ids = fields.Many2many(
         comodel_name="product.template",
         relation="product_tag_product_template_rel",
@@ -45,7 +45,7 @@ class ProductTag(models.Model):
         default=True,
         help="Whether the tag is displayed to customers.",
     )
-    image = fields.Image(string="Image", max_width=200, max_height=200)
+    image = fields.Image(max_width=200, max_height=200)
 
     @api.constrains("name")
     def _check_name_uniq(self):

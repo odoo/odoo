@@ -29,9 +29,7 @@ class PosCategory(models.Model):
     image_128 = fields.Image(
         "Image 128", related="image_512", max_width=128, max_height=128, store=True
     )
-    color = fields.Integer(
-        "Color", required=False, default=lambda self: self._default_color()
-    )
+    color = fields.Integer(required=False, default=lambda self: self._default_color())
     hour_until = fields.Float(
         string="Availability Until",
         default=24.0,

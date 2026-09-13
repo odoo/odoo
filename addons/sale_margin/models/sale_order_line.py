@@ -5,7 +5,6 @@ class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
     margin = fields.Float(
-        "Margin",
         compute="_compute_margins",
         min_display_digits="Product Price",
         store=True,

@@ -22,7 +22,7 @@ class ProductMergeLine(models.TransientModel):
     _description = "Merge Product Line"
     _order = "min_id asc"
 
-    wizard_id = fields.Many2one(comodel_name="product.merge.wizard", string="Wizard")
+    wizard_id = fields.Many2one(comodel_name="product.merge.wizard")
     min_id = fields.Integer(string="MinID")
     aggr_ids = fields.Char(string="Ids", required=True)
 
@@ -87,7 +87,6 @@ class ProductMergeWizard(models.TransientModel):
             ("selection", "Selection"),
             ("finished", "Finished"),
         ],
-        string="State",
         readonly=True,
         required=True,
         default="option",
@@ -95,9 +94,7 @@ class ProductMergeWizard(models.TransientModel):
 
     number_group = fields.Integer(string="Group of Products", readonly=True)
     maximum_group = fields.Integer(string="Maximum of Group of Products", default=100)
-    current_line_id = fields.Many2one(
-        comodel_name="product.merge.line", string="Current Line"
-    )
+    current_line_id = fields.Many2one(comodel_name="product.merge.line")
     line_ids = fields.One2many(
         comodel_name="product.merge.line", inverse_name="wizard_id", string="Lines"
     )

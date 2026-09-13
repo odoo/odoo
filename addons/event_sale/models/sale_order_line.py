@@ -7,7 +7,6 @@ class SaleOrderLine(models.Model):
 
     event_id = fields.Many2one(
         "event.event",
-        string="Event",
         compute="_compute_event_id",
         store=True,
         readonly=False,

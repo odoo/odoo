@@ -5,8 +5,8 @@ class L10nRoCPVCode(models.Model):
     _name = "l10n_ro.cpv.code"
     _description = "CPV Code"
 
-    code = fields.Char(string="Code", required=True)
-    name = fields.Char(string="Name", required=True)
+    code = fields.Char(required=True)
+    name = fields.Char(required=True)
 
     _code_uniq = models.Constraint(
         "unique (code)",

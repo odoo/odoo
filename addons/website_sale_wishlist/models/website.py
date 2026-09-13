@@ -18,13 +18,11 @@ class Website(models.Model):
     )
 
     wishlist_grid_columns = fields.Integer(
-        string="Wishlist Grid Columns",
         default=5,
         help="Number of columns to display on the wishlist page",
     )
 
     wishlist_mobile_columns = fields.Integer(
-        string="Wishlist Mobile Columns",
         default=2,
         help="Number of columns to display on mobile for the wishlist page (1 or 2)",
     )

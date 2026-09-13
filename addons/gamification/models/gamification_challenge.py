@@ -42,7 +42,7 @@ class GamificationChallenge(models.Model):
 
     # description
     name = fields.Char("Challenge Name", required=True, translate=True)
-    description = fields.Text("Description", translate=True)
+    description = fields.Text(translate=True)
     state = fields.Selection(
         [
             ("draft", "Draft"),
@@ -51,7 +51,6 @@ class GamificationChallenge(models.Model):
         ],
         default="draft",
         copy=False,
-        string="State",
         required=True,
         tracking=True,
     )
@@ -98,11 +97,9 @@ class GamificationChallenge(models.Model):
         required=True,
     )
     start_date = fields.Date(
-        "Start Date",
         help="The day a new challenge will be automatically started. If no periodicity is set, will use this date as the goal start date.",
     )
     end_date = fields.Date(
-        "End Date",
         help="The day a new challenge will be automatically closed. If no periodicity is set, will use this date as the goal end date.",
     )
 
@@ -181,21 +178,17 @@ class GamificationChallenge(models.Model):
     report_template_id = fields.Many2one(
         "mail.template",
         default=lambda self: self._default_report_template_id(),
-        string="Report Template",
         required=True,
     )
     remind_update_delay = fields.Integer(
         "Non-updated manual goals will be reminded after",
         help="Never reminded if no value or zero is specified.",
     )
-    last_report_date = fields.Date("Last Report Date", default=fields.Date.today)
-    next_report_date = fields.Date(
-        "Next Report Date", compute="_compute_next_report_date", store=True
-    )
+    last_report_date = fields.Date(default=fields.Date.today)
+    next_report_date = fields.Date(compute="_compute_next_report_date", store=True)
 
     season_id = fields.Many2one(
         "gamification.season",
-        string="Season",
         index="btree_not_null",
         ondelete="set null",
         help="Season this challenge belongs to. Leave empty for permanent challenges.",

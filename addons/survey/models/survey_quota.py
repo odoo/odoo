@@ -12,21 +12,18 @@ class SurveyQuota(models.Model):
 
     survey_id = fields.Many2one(
         "survey.survey",
-        string="Survey",
         required=True,
         ondelete="cascade",
         index="btree_not_null",
     )
     question_id = fields.Many2one(
         "survey.question",
-        string="Question",
         required=True,
         ondelete="cascade",
         domain="[('survey_id', '=', survey_id), ('question_type', 'in', ['simple_choice', 'multiple_choice'])]",
     )
     answer_id = fields.Many2one(
         "survey.question.answer",
-        string="Answer",
         required=True,
         ondelete="cascade",
         domain="[('question_id', '=', question_id)]",
@@ -40,7 +37,6 @@ class SurveyQuota(models.Model):
         "again if it is abandoned.",
     )
     current_count = fields.Integer(
-        "Current Count",
         compute="_compute_quota_usage",
     )
     is_full = fields.Boolean(

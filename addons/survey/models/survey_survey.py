@@ -113,7 +113,6 @@ class SurveySurvey(models.Model):
             ("assessment", "Assessment"),
             ("custom", "Custom"),
         ],
-        string="Survey Type",
         required=True,
         default="custom",
     )
@@ -145,11 +144,9 @@ class SurveySurvey(models.Model):
     tag_ids = fields.Many2many("survey.tag", string="Tags")
     category_id = fields.Many2one(
         "survey.category",
-        string="Category",
         index="btree_not_null",
     )
     description = fields.Html(
-        "Description",
         translate=True,
         sanitize=True,
         sanitize_overridable=True,
@@ -160,11 +157,11 @@ class SurveySurvey(models.Model):
         translate=True,
         help="This message will be displayed when survey is completed",
     )
-    background_image = fields.Image("Background Image")
+    background_image = fields.Image()
     background_image_url = fields.Char(
         "Background Url", compute="_compute_background_image_url"
     )
-    active = fields.Boolean("Active", default=True)
+    active = fields.Boolean(default=True)
     user_id = fields.Many2one(
         "res.users",
         string="Responsible",
@@ -220,12 +217,10 @@ class SurveySurvey(models.Model):
     )
     access_mode = fields.Selection(
         [("public", "Anyone with the link"), ("token", "Invited people only")],
-        string="Access Mode",
         default="public",
         required=True,
     )
     access_token = fields.Char(
-        "Access Token",
         default=lambda self: self._default_access_token(),
         copy=False,
     )
@@ -259,7 +254,6 @@ class SurveySurvey(models.Model):
             ("completed", "On completion only"),
             ("all", "On start, page submit, and completion"),
         ],
-        string="Webhook Events",
         default="completed",
         help="Which events trigger the webhook. 'All' fires on survey_started, "
         "page_submitted, and survey_completed.",
@@ -392,7 +386,7 @@ class SurveySurvey(models.Model):
         copy=False,
     )
     certification_badge_id = fields.Many2one(
-        "gamification.badge", "Certification Badge", copy=False, index="btree_not_null"
+        "gamification.badge", copy=False, index="btree_not_null"
     )
     certification_badge_id_dummy = fields.Many2one(
         related="certification_badge_id", string="Certification Badge "
@@ -405,11 +399,9 @@ class SurveySurvey(models.Model):
             ("ready", "Ready"),
             ("in_progress", "In Progress"),
         ],
-        string="Session State",
         copy=False,
     )
     session_code = fields.Char(
-        "Session Code",
         copy=False,
         compute="_compute_session_code",
         precompute=True,
@@ -417,7 +409,7 @@ class SurveySurvey(models.Model):
         readonly=False,
         help="This code will be used by your attendees to reach your session. Feel free to customize it however you like!",
     )
-    session_link = fields.Char("Session Link", compute="_compute_session_link")
+    session_link = fields.Char(compute="_compute_session_link")
     session_question_id = fields.Many2one(
         "survey.question",
         string="Current Question",

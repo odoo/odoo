@@ -11,7 +11,6 @@ class BaseModuleInstallRequest(models.Model):
 
     module_id = fields.Many2one(
         "ir.module.module",
-        string="Module",
         required=True,
         domain=[("state", "=", "uninstalled")],
         ondelete="cascade",
@@ -73,7 +72,6 @@ class BaseModuleInstallReview(models.TransientModel):
 
     module_id = fields.Many2one(
         "ir.module.module",
-        string="Module",
         required=True,
         domain=[("state", "=", "uninstalled")],
         ondelete="cascade",

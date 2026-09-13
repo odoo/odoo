@@ -6,7 +6,7 @@ from odoo.fields import Domain
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    attendee_count = fields.Integer("Attendee Count", compute="_compute_attendee_count")
+    attendee_count = fields.Integer(compute="_compute_attendee_count")
 
     def write(self, vals):
         """Synchronize partner from SO to registrations. This is done notably

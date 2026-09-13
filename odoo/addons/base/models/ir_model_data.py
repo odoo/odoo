@@ -44,7 +44,6 @@ class IrModelData(models.Model):
     )
     noupdate = fields.Boolean(string="Non Updatable", default=False)
     reference = fields.Char(
-        string="Reference",
         compute="_compute_reference",
         readonly=True,
         store=False,

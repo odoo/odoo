@@ -9,7 +9,7 @@ class AccountReportExternalValue(models.Model):
 
     name = fields.Char(required=True)
     value = fields.Float(string="Numeric Value")
-    text_value = fields.Char(string="Text Value")
+    text_value = fields.Char()
     date = fields.Date(required=True)
 
     target_report_expression_id = fields.Many2one(
@@ -30,7 +30,6 @@ class AccountReportExternalValue(models.Model):
     )
 
     company_id = fields.Many2one(
-        string="Company",
         comodel_name="res.company",
         required=True,
         default=lambda self: self.env.company,

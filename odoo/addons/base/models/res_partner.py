@@ -152,7 +152,6 @@ class ResPartner(models.Model):
 
     company_id = fields.Many2one(
         "res.company",
-        "Company",
         index=True,
     )
     name = fields.Char(
@@ -305,13 +304,11 @@ class ResPartner(models.Model):
     city = fields.Char()
     state_id = fields.Many2one(
         "res.country.state",
-        string="State",
         ondelete="restrict",
         domain="[('country_id', '=?', country_id)]",
     )
     country_id = fields.Many2one(
         "res.country",
-        string="Country",
         ondelete="restrict",
     )
     country_code = fields.Char(
@@ -320,7 +317,6 @@ class ResPartner(models.Model):
     )
     nationality_id = fields.Many2one(
         "res.country",
-        string="Nationality",
         help="The country this person is a national of. Distinct from the "
         "address country, which says where they are: a person may be resident "
         "in one country and a national of another.",
@@ -354,7 +350,6 @@ class ResPartner(models.Model):
     )
     main_phone_id = fields.Many2one(
         "phone.number",
-        string="Main Phone",
         compute="_compute_main_phone_ids",
         store=True,
         help="The landline this contact is reached on when a single number is "
@@ -363,7 +358,6 @@ class ResPartner(models.Model):
     )
     main_mobile_id = fields.Many2one(
         "phone.number",
-        string="Main Mobile",
         compute="_compute_main_phone_ids",
         store=True,
         help="The mobile this contact is reached on when a single number is "
@@ -390,7 +384,6 @@ class ResPartner(models.Model):
     )
     primary_industry_id = fields.Many2one(
         "res.partner.industry",
-        string="Primary Industry",
         compute="_compute_primary_industry_id",
         store=True,
         readonly=False,
@@ -407,7 +400,6 @@ class ResPartner(models.Model):
     )
     main_user_id = fields.Many2one(
         "res.users",
-        string="Main User",
         compute="_compute_main_user_id",
         help="There can be several users related to the same partner. "
         "When a single user is needed, this field attempts to find the most appropriate one.",

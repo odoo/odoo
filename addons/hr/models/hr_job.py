@@ -38,7 +38,7 @@ class HrJob(models.Model):
         "hr.employee", "job_id", string="Employees", groups="base.group_user"
     )
     description = fields.Html(string="Job Description", sanitize_attributes=False)
-    requirements = fields.Text("Requirements", groups="hr.group_hr_user")
+    requirements = fields.Text(groups="hr.group_hr_user")
     user_id = fields.Many2one(
         "res.users",
         "Recruiter",
@@ -51,14 +51,12 @@ class HrJob(models.Model):
     )
     department_id = fields.Many2one(
         "hr.department",
-        string="Department",
         check_company=True,
         tracking=True,
         index="btree_not_null",
     )
     company_id = fields.Many2one(
         "res.company",
-        string="Company",
         default=lambda self: self.env.company,
         tracking=True,
     )

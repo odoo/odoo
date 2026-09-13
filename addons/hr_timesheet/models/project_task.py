@@ -66,7 +66,7 @@ class ProjectTask(models.Model):
         help="Time spent on this task and its sub-tasks (and their own sub-tasks).",
     )
     progress = fields.Float(
-        "Progress", compute="_compute_progress_hours", store=True, aggregator="avg"
+        compute="_compute_progress_hours", store=True, aggregator="avg"
     )
     overtime = fields.Float(compute="_compute_progress_hours", store=True)
     subtask_effective_hours = fields.Float(

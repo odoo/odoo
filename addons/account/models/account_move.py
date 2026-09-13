@@ -340,7 +340,6 @@ class AccountMove(models.Model):
         index="trigram",
     )
     date = fields.Date(
-        string="Date",
         index=True,
         compute="_compute_date",
         store=True,
@@ -384,7 +383,6 @@ class AccountMove(models.Model):
     is_storno = fields.Boolean(compute="_compute_is_storno")
     journal_id = fields.Many2one(
         "account.journal",
-        string="Journal",
         compute="_compute_journal_id",
         inverse="_inverse_journal_id",
         store=True,
@@ -402,7 +400,6 @@ class AccountMove(models.Model):
     )
     company_id = fields.Many2one(
         comodel_name="res.company",
-        string="Company",
         compute="_compute_company_id",
         inverse="_inverse_company_id",
         store=True,
@@ -452,7 +449,6 @@ class AccountMove(models.Model):
 
     statement_line_id = fields.Many2one(
         comodel_name="account.bank.statement.line",
-        string="Statement Line",
         copy=False,
         check_company=True,
         index="btree_not_null",
@@ -471,7 +467,6 @@ class AccountMove(models.Model):
     )
     adjusting_entry_origin_moves_count = fields.Count(
         "adjusting_entry_origin_move_ids",
-        string="Adjusting Entry Origin Moves Count",
     )
     adjusting_entries_move_ids = fields.Many2many(
         comodel_name="account.move",
@@ -482,7 +477,6 @@ class AccountMove(models.Model):
     )
     adjusting_entries_count = fields.Count(
         "adjusting_entries_move_ids",
-        string="Adjusting Entries Count",
     )
 
     tax_cash_basis_rec_id = fields.Many2one(
@@ -572,7 +566,7 @@ class AccountMove(models.Model):
     highest_name = fields.Char(compute="_compute_highest_name")
     made_sequence_gap = fields.Boolean()
     show_name_warning = fields.Boolean(store=False)
-    type_name = fields.Char("Type Name", compute="_compute_type_name")
+    type_name = fields.Char(compute="_compute_type_name")
     country_code = fields.Char(
         related="company_id.account_fiscal_country_id.code",
         readonly=True,
@@ -657,7 +651,6 @@ class AccountMove(models.Model):
         copy=False,
     )
     delivery_date = fields.Date(
-        string="Delivery Date",
         copy=False,
         store=True,
         compute="_compute_delivery_date",
@@ -669,7 +662,6 @@ class AccountMove(models.Model):
         compute="_compute_show_delivery_date",
     )
     taxable_supply_date = fields.Date(
-        string="Taxable Supply Date",
         copy=False,
         store=True,
         compute="_compute_taxable_supply_date",
@@ -707,7 +699,6 @@ class AccountMove(models.Model):
     show_journal = fields.Boolean(compute="_compute_show_journal")
     partner_id = fields.Many2one(
         "res.partner",
-        string="Partner",
         readonly=False,
         tracking=True,
         inverse="_inverse_partner_id",
@@ -736,7 +727,6 @@ class AccountMove(models.Model):
         help="The delivery address will be used in the computation of the fiscal position.",
     )
     allow_external_delivery_address = fields.Boolean(
-        string="Allow External Delivery Address",
         default=False,
         tracking=True,
         help="Allow selecting a delivery address that does not belong to the "
@@ -763,7 +753,6 @@ class AccountMove(models.Model):
     )
     fiscal_position_id = fields.Many2one(
         "account.fiscal.position",
-        string="Fiscal Position",
         check_company=True,
         compute="_compute_fiscal_position_id",
         store=True,
@@ -775,7 +764,6 @@ class AccountMove(models.Model):
     )
 
     payment_reference = fields.Char(
-        string="Payment Reference",
         index="trigram",
         copy=False,
         tracking=True,
@@ -834,7 +822,6 @@ class AccountMove(models.Model):
     )
     currency_id = fields.Many2one(
         "res.currency",
-        string="Currency",
         tracking=True,
         required=True,
         compute="_compute_currency_id",
@@ -1049,7 +1036,6 @@ class AccountMove(models.Model):
         "terms used in international transactions.",
     )
     incoterm_location = fields.Char(
-        string="Incoterm Location",
         compute="_compute_incoterm_location",
         readonly=False,
         store=True,
@@ -1133,12 +1119,10 @@ class AccountMove(models.Model):
     alerts = fields.Json(compute="_compute_alerts")
 
     taxes_legal_notes = fields.Html(
-        string="Taxes Legal Notes",
         compute="_compute_taxes_legal_notes",
     )
 
     next_payment_date = fields.Date(
-        string="Next Payment Date",
         compute="_compute_next_payment_date",
         search="_search_next_payment_date",
     )

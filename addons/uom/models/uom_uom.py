@@ -35,7 +35,6 @@ class UomUom(models.Model):
     )
     rounding = fields.Float("Rounding Precision", compute="_compute_rounding")
     active = fields.Boolean(
-        "Active",
         default=True,
         help="Uncheck the active field to disable a unit of measure without deleting it.",
     )

@@ -28,7 +28,6 @@ class StockMove(models.Model):
         readonly=True,
     )
     value = fields.Monetary(
-        "Value",
         currency_field="company_currency_id",
         copy=False,
         help="The current value of the move. It's zero if the move is not valued.",
@@ -49,7 +48,6 @@ class StockMove(models.Model):
     )
     standard_price = fields.Float(
         compute="_compute_standard_price",
-        string="Standard Price",
     )
 
     price_unit = fields.Float("Price Unit")
@@ -64,12 +62,10 @@ class StockMove(models.Model):
         store=True,
     )
     is_dropship = fields.Boolean(
-        string="Is Dropship",
         compute="_compute_is_dropship",
         store=True,
     )
     is_valued = fields.Boolean(
-        string="Is Valued",
         compute="_compute_is_valued",
     )
     valued_qty = fields.Float(
@@ -88,7 +84,6 @@ class StockMove(models.Model):
     )
     remaining_value = fields.Monetary(
         currency_field="company_currency_id",
-        string="Remaining Value",
         compute="_compute_remaining_value",
     )
 

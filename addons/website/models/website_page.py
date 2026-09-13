@@ -36,7 +36,7 @@ class WebsitePage(models.Model):
 
     url = fields.Char("Page URL", required=True)
     view_id = fields.Many2one(
-        "ir.ui.view", string="View", required=True, index=True, ondelete="cascade"
+        "ir.ui.view", required=True, index=True, ondelete="cascade"
     )
 
     view_write_uid = fields.Many2one(
@@ -51,7 +51,7 @@ class WebsitePage(models.Model):
     menu_ids = fields.One2many("website.menu", "page_id", "Related Menus")
     is_in_menu = fields.Boolean(compute="_compute_is_in_menu")
     is_homepage = fields.Boolean(compute="_compute_is_homepage", string="Homepage")
-    is_visible = fields.Boolean(compute="_compute_is_visible", string="Is Visible")
+    is_visible = fields.Boolean(compute="_compute_is_visible")
     is_new_page_template = fields.Boolean(
         string="New Page Template",
         help='Add this page to the "+New" page templates. It will be added to the "Custom" category.',

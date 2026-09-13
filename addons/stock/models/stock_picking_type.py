@@ -44,15 +44,13 @@ class StockPickingType(models.Model):
         default="incoming",
     )
     active = fields.Boolean(
-        string="Active",
         default=True,
     )
     sequence = fields.Integer(
-        string="Sequence",
         help="Used to order the 'All Operations' kanban view",
     )
-    color = fields.Integer(string="Color")
-    barcode = fields.Char(string="Barcode", copy=False)
+    color = fields.Integer()
+    barcode = fields.Char(copy=False)
 
     sequence_id = fields.Many2one(
         comodel_name="ir.sequence",
@@ -67,14 +65,12 @@ class StockPickingType(models.Model):
 
     company_id = fields.Many2one(
         comodel_name="res.company",
-        string="Company",
         required=True,
         default=lambda s: s.env.company.id,
         index=True,
     )
     warehouse_id = fields.Many2one(
         comodel_name="stock.warehouse",
-        string="Warehouse",
         compute="_compute_warehouse_id",
         store=True,
         readonly=False,
@@ -123,7 +119,6 @@ class StockPickingType(models.Model):
     )
     create_backorder = fields.Selection(
         selection=[("ask", "Ask"), ("always", "Always"), ("never", "Never")],
-        string="Create Backorder",
         required=True,
         default="ask",
         help="When validating a transfer:\n"
@@ -138,7 +133,6 @@ class StockPickingType(models.Model):
             ("manual", "Manually"),
             ("by_date", "Before scheduled date"),
         ],
-        string="Reservation Method",
         required=True,
         default="at_confirm",
         help="How products in transfers of this operation type should be reserved.",
@@ -174,7 +168,6 @@ class StockPickingType(models.Model):
         help="If ticked, packages to move will be directly displayed in Barcode instead of the products they contain",
     )
     set_package_type = fields.Boolean(
-        string="Set Package Type",
         default=False,
         help="If ticked, you will be able to select which package or package type to use in a put in pack",
     )
@@ -187,15 +180,12 @@ class StockPickingType(models.Model):
         help="Check this box if you want to generate shipping label in this operation.",
     )
     auto_print_delivery_slip = fields.Boolean(
-        string="Auto Print Delivery Slip",
         help="If this checkbox is ticked, Odoo will automatically print the delivery slip of a picking when it is validated.",
     )
     auto_print_return_slip = fields.Boolean(
-        string="Auto Print Return Slip",
         help="If this checkbox is ticked, Odoo will automatically print the return slip of a picking when it is validated.",
     )
     auto_print_product_labels = fields.Boolean(
-        string="Auto Print Product Labels",
         help="If this checkbox is ticked, Odoo will automatically print the product labels of a picking when it is validated.",
     )
     product_label_format = fields.Selection(
@@ -226,11 +216,9 @@ class StockPickingType(models.Model):
         default="4x12_lots",
     )
     auto_print_packages = fields.Boolean(
-        string="Auto Print Packages",
         help="If this checkbox is ticked, Odoo will automatically print the packages and their contents of a picking when it is validated.",
     )
     auto_print_package_label = fields.Boolean(
-        string="Auto Print Package Label",
         help='If this checkbox is ticked, Odoo will automatically print the package label when "Put in Pack" button is used.',
     )
     package_label_to_print = fields.Selection(
@@ -244,11 +232,9 @@ class StockPickingType(models.Model):
         help="If this checkbox is ticked, Odoo will automatically show the reception report (if there are moves to allocate to) when validating.",
     )
     auto_print_reception_report = fields.Boolean(
-        string="Auto Print Reception Report",
         help="If this checkbox is ticked, Odoo will automatically print the reception report of a picking when it is validated and has assigned moves.",
     )
     auto_print_reception_report_labels = fields.Boolean(
-        string="Auto Print Reception Report Labels",
         help="If this checkbox is ticked, Odoo will automatically print the reception report labels of a picking when it is validated.",
     )
 

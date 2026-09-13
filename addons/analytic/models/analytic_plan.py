@@ -27,10 +27,9 @@ class AccountAnalyticPlan(models.Model):
         translate=True,
         inverse="_inverse_name",
     )
-    description = fields.Text(string="Description")
+    description = fields.Text()
     parent_id = fields.Many2one(
         "account.analytic.plan",
-        string="Parent",
         inverse="_inverse_parent_id",
         index="btree_not_null",
         ondelete="cascade",
@@ -52,7 +51,6 @@ class AccountAnalyticPlan(models.Model):
         "Children Plans Count",
     )
     complete_name = fields.Char(
-        "Complete Name",
         compute="_compute_complete_name",
         recursive=True,
         store=True,
@@ -71,7 +69,6 @@ class AccountAnalyticPlan(models.Model):
         compute="_compute_all_account_count",
     )
     color = fields.Integer(
-        "Color",
         default=lambda self: self._default_color(),
     )
     sequence = fields.Integer(default=10)
@@ -82,14 +79,12 @@ class AccountAnalyticPlan(models.Model):
             ("mandatory", "Mandatory"),
             ("unavailable", "Unavailable"),
         ],
-        string="Default Applicability",
         readonly=False,
         company_dependent=True,
     )
     applicability_ids = fields.One2many(
         "account.analytic.applicability",
         "analytic_plan_id",
-        string="Applicability",
         domain="[('company_id', '=', current_company_id)]",
     )
 
@@ -545,11 +540,9 @@ class AccountAnalyticApplicability(models.Model):
             ("unavailable", "Unavailable"),
         ],
         required=True,
-        string="Applicability",
     )
     company_id = fields.Many2one(
         "res.company",
-        string="Company",
         default=lambda self: self.env.company,
     )
 

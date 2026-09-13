@@ -46,7 +46,6 @@ class ProductProduct(models.Model):
         readonly=False,
     )
     active = fields.Boolean(
-        string="Active",
         default=True,
         help="If unchecked, it will allow you to hide the product without removing it.",
     )
@@ -62,7 +61,6 @@ class ProductProduct(models.Model):
         compute="_compute_code",
     )
     barcode = fields.Char(
-        string="Barcode",
         copy=False,
         index="btree_not_null",
         help="International Article Number used for product identification.",
@@ -111,11 +109,9 @@ class ProductProduct(models.Model):
         Used to compute margins on sale orders.""",
     )
     volume = fields.Float(
-        string="Volume",
         digits="Volume",
     )
     weight = fields.Float(
-        string="Weight",
         digits="Stock Weight",
     )
 
@@ -220,10 +216,10 @@ class ProductProduct(models.Model):
         compute="_compute_image_1920",
         inverse="_inverse_image_1920",
     )
-    image_1024 = fields.Image(string="Image 1024", compute="_compute_image_1024")
-    image_512 = fields.Image(string="Image 512", compute="_compute_image_512")
-    image_256 = fields.Image(string="Image 256", compute="_compute_image_256")
-    image_128 = fields.Image(string="Image 128", compute="_compute_image_128")
+    image_1024 = fields.Image(compute="_compute_image_1024")
+    image_512 = fields.Image(compute="_compute_image_512")
+    image_256 = fields.Image(compute="_compute_image_256")
+    image_128 = fields.Image(compute="_compute_image_128")
     can_image_1024_be_zoomed = fields.Boolean(
         string="Can Image 1024 be zoomed",
         compute="_compute_can_image_1024_be_zoomed",

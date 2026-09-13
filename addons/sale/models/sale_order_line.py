@@ -49,13 +49,11 @@ class SaleOrderLine(models.Model):
         help="The section or subsection this line belongs to.",
     )
     collapse_prices = fields.Boolean(
-        string="Collapse Prices",
         default=False,
         copy=True,
         help="Whether this section's lines' prices will be hidden in reports and in the portal.",
     )
     collapse_composition = fields.Boolean(
-        string="Collapse Composition",
         default=False,
         copy=True,
         help="Whether this section's lines will be hidden in reports and in the portal.",
@@ -84,7 +82,6 @@ class SaleOrderLine(models.Model):
     )
     product_template_id = fields.Many2one(
         comodel_name="product.template",
-        string="Product Template",
         compute="_compute_product_template_id",
         readonly=False,
         search="_search_product_template_id",

@@ -13,7 +13,7 @@ class L10n_IdQrisTransaction(models.Model):
     _name = "l10n_id.qris.transaction"
     _description = "Record of QRIS transactions"
 
-    model = fields.Char(string="Model")  # payment in respond to which model
+    model = fields.Char()  # payment in respond to which model
     model_id = fields.Char(string="Model ID")  # id/uuid
 
     # Fields that store the QRIS details coming from API request

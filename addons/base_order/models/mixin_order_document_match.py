@@ -12,12 +12,10 @@ class MixinOrderDocumentMatch(models.AbstractModel):
 
     company_id = fields.Many2one(
         comodel_name="res.company",
-        string="Company",
         readonly=True,
     )
     currency_id = fields.Many2one(
         comodel_name="res.currency",
-        string="Currency",
         readonly=True,
     )
     move_id = fields.Many2one(
@@ -27,20 +25,16 @@ class MixinOrderDocumentMatch(models.AbstractModel):
     )
     order_id = fields.Many2one(
         comodel_name="mixin.order",
-        string="Order",
         readonly=True,
     )
     partner_id = fields.Many2one(
         comodel_name="res.partner",
-        string="Partner",
         readonly=True,
     )
     date = fields.Date(
-        string="Date",
         readonly=True,
     )
     amount = fields.Float(
-        string="Amount",
         readonly=True,
     )
     name = fields.Char(

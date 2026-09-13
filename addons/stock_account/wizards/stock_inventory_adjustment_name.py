@@ -5,7 +5,6 @@ class StockInventoryAdjustmentName(models.TransientModel):
     _inherit = "stock.inventory.adjustment.name"
 
     accounting_date = fields.Date(
-        "Accounting Date",
         help="Date at which the accounting entries will be created"
         " in case of automated inventory valuation."
         " If empty, the inventory date will be used.",

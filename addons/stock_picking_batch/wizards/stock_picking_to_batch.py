@@ -19,7 +19,7 @@ class StockPickingToBatch(models.TransientModel):
     is_create_draft = fields.Boolean(
         string="Draft", help="When checked, create the batch in draft status"
     )
-    description = fields.Char("Description")
+    description = fields.Char()
 
     def attach_pickings(self):
         self.check_singleton()

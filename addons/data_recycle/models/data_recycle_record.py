@@ -28,7 +28,6 @@ class Data_RecycleRecord(models.Model):
     name = fields.Char("Record Name", compute="_compute_name", compute_sudo=True)
     recycle_model_id = fields.Many2one(
         "data_recycle.model",
-        string="Recycle Model",
         index="btree_not_null",
         ondelete="cascade",
     )

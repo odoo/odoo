@@ -53,7 +53,7 @@ class EventType(models.Model):
         )
 
     name = fields.Char("Event Template", required=True, translate=True)
-    note = fields.Html(string="Note")
+    note = fields.Html()
     sequence = fields.Integer(default=10)
     # tickets
     event_type_ticket_ids = fields.One2many(
@@ -83,7 +83,6 @@ class EventType(models.Model):
     )
     # ticket reports
     ticket_instructions = fields.Html(
-        "Ticket Instructions",
         translate=True,
         help="This information will be printed on your tickets.",
     )

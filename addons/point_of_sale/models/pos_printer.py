@@ -32,7 +32,6 @@ class PosPrinter(models.Model):
         help="An internal identification of the printer",
     )
     printer_type = fields.Selection(
-        string="Printer Type",
         default="iot",
         selection=[
             ("iot", "Use a printer connected to the IoT Box"),
@@ -52,7 +51,6 @@ class PosPrinter(models.Model):
     )
     company_id = fields.Many2one(
         "res.company",
-        string="Company",
         required=True,
         default=lambda self: self.env.company,
     )

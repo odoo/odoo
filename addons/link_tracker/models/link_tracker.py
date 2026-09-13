@@ -657,7 +657,7 @@ class LinkTrackerCode(models.Model):
 
     code = fields.Char(string="Short URL Code", required=True)
     link_id = fields.Many2one(
-        "link.tracker", "Link", required=True, index=True, ondelete="cascade"
+        "link.tracker", required=True, index=True, ondelete="cascade"
     )
 
     _code = models.Constraint(
@@ -705,10 +705,10 @@ class LinkTrackerClick(models.Model):
         ondelete="set null",
     )
     link_id = fields.Many2one(
-        "link.tracker", "Link", index=True, required=True, ondelete="cascade"
+        "link.tracker", index=True, required=True, ondelete="cascade"
     )
     ip = fields.Char(string="Internet Protocol")
-    country_id = fields.Many2one("res.country", "Country")
+    country_id = fields.Many2one("res.country")
 
     def _prepare_click_values_from_route(self, **route_values):
         click_values = {

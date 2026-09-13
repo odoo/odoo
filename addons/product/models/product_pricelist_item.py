@@ -13,7 +13,6 @@ class ProductPricelistItem(models.Model):
 
     pricelist_id = fields.Many2one(
         comodel_name="product.pricelist",
-        string="Pricelist",
         required=False,
         default=lambda self: self._default_pricelist_id(),
         ondelete="cascade",
@@ -136,7 +135,6 @@ class ProductPricelistItem(models.Model):
     )
 
     fixed_price = fields.Float(
-        string="Fixed Price",
         min_display_digits="Product Price",
     )
     percent_price = fields.Float(
@@ -145,7 +143,6 @@ class ProductPricelistItem(models.Model):
     )
 
     price_discount = fields.Float(
-        string="Price Discount",
         digits=(16, 2),
         default=0,
         help="You can apply a mark-up by setting a negative discount.",
@@ -183,12 +180,10 @@ class ProductPricelistItem(models.Model):
     )
 
     name = fields.Char(
-        string="Name",
         compute="_compute_name",
         help="Explicit rule name for this pricelist line.",
     )
     price = fields.Char(
-        string="Price",
         compute="_compute_price",
         help="Human-readable summary of the price this rule computes.",
     )

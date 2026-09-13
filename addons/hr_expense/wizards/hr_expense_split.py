@@ -34,10 +34,9 @@ class HrExpenseSplit(models.TransientModel):
 
     name = fields.Char(string="Description", required=True)
     wizard_id = fields.Many2one(comodel_name="hr.expense.split.wizard")
-    expense_id = fields.Many2one(comodel_name="hr.expense", string="Expense")
+    expense_id = fields.Many2one(comodel_name="hr.expense")
     product_id = fields.Many2one(
         comodel_name="product.product",
-        string="Product",
         required=True,
         check_company=True,
         domain=[("can_be_expensed", "=", True)],
@@ -57,9 +56,7 @@ class HrExpenseSplit(models.TransientModel):
     tax_amount_currency = fields.Monetary(
         string="Tax amount in Currency", compute="_compute_tax_amount_currency"
     )
-    employee_id = fields.Many2one(
-        comodel_name="hr.employee", string="Employee", required=True
-    )
+    employee_id = fields.Many2one(comodel_name="hr.employee", required=True)
     company_id = fields.Many2one(comodel_name="res.company")
     currency_id = fields.Many2one(comodel_name="res.currency")
     product_has_tax = fields.Boolean(
@@ -77,10 +74,9 @@ class HrExpenseSplit(models.TransientModel):
         copy=False,
         readonly=True,
     )
-    approval_date = fields.Datetime(string="Approval Date", readonly=True)
+    approval_date = fields.Datetime(readonly=True)
     manager_id = fields.Many2one(
         comodel_name="res.users",
-        string="Manager",
         readonly=True,
         domain=lambda self: [
             (

@@ -6,7 +6,6 @@ class ProductTemplate(models.Model):
 
     asset_kind_id = fields.Many2one(
         "resource.asset.kind",
-        string="Asset Kind",
         help="Set when each unit of this product is an asset in its own right: a vehicle, a machine, a phone. Empty for consumables and parts.",
     )
     asset_count = fields.Integer(compute="_compute_asset_count")

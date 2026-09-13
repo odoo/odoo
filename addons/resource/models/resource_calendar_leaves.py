@@ -18,7 +18,6 @@ class ResourceCalendarLeaves(models.Model):
     name = fields.Char("Reason")
     company_id = fields.Many2one(
         "res.company",
-        string="Company",
         readonly=True,
         default=lambda self: self.env.company,
         compute="_compute_company_id",
@@ -37,7 +36,6 @@ class ResourceCalendarLeaves(models.Model):
     )
     resource_id = fields.Many2one(
         "resource.resource",
-        "Resource",
         index=True,
         check_company=True,
         ondelete="cascade",

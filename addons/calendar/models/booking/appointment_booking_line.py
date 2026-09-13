@@ -10,7 +10,7 @@ class AppointmentBookingLine(models.Model):
 
     active = fields.Boolean(related="calendar_event_id.active")
     appointment_resource_id = fields.Many2one(
-        "appointment.resource", string="Appointment Resource", ondelete="cascade"
+        "appointment.resource", ondelete="cascade"
     )
     appointment_user_id = fields.Many2one(
         "res.users",
@@ -28,13 +28,11 @@ class AppointmentBookingLine(models.Model):
         index=True,
     )
     capacity_reserved = fields.Integer(
-        "Capacity Reserved",
         default=1,
         required=True,
         help="Capacity reserved by the user",
     )
     capacity_used = fields.Integer(
-        "Capacity Used",
         compute="_compute_capacity_used",
         readonly=True,
         precompute=True,

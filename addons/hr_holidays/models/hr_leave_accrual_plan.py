@@ -14,10 +14,9 @@ class HrLeaveAccrualPlan(models.Model):
     _description = "Accrual Plan"
 
     active = fields.Boolean(default=True)
-    name = fields.Char("Name", required=True)
+    name = fields.Char(required=True)
     time_off_type_id = fields.Many2one(
         "hr.leave.type",
-        string="Time Off Type",
         check_company=True,
         index="btree_not_null",
         help="""Specify if this accrual plan can only be used with this Time Off Type.
@@ -32,7 +31,6 @@ class HrLeaveAccrualPlan(models.Model):
     )
     company_id = fields.Many2one(
         "res.company",
-        string="Company",
         domain=lambda self: [("id", "in", self.env.companies.ids)],
         compute="_compute_company_id",
         store="True",

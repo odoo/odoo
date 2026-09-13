@@ -20,7 +20,6 @@ class MixinMailComposer(models.AbstractModel):
     _template_field_counterparts = {"body": "body_html"}
 
     subject = fields.Char(
-        "Subject",
         compute="_compute_subject",
         readonly=False,
         store=True,
@@ -53,7 +52,7 @@ class MixinMailComposer(models.AbstractModel):
     is_mail_template_editor = fields.Boolean(
         "Is Editor", compute="_compute_is_mail_template_editor"
     )
-    can_edit_body = fields.Boolean("Can Edit Body", compute="_compute_can_edit_body")
+    can_edit_body = fields.Boolean(compute="_compute_can_edit_body")
 
     def _copy_from_template(
         self, field: str, is_empty: Callable[[typing.Any], bool] | None = None

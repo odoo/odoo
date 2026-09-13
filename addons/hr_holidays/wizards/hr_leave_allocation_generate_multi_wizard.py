@@ -49,7 +49,6 @@ class HrLeaveAllocationGenerateMultiWizard(models.TransientModel):
             ("department", "By Department"),
             ("category", "By Employee Tag"),
         ],
-        string="Allocation Mode",
         readonly=False,
         required=True,
         default="employee",
@@ -70,7 +69,6 @@ class HrLeaveAllocationGenerateMultiWizard(models.TransientModel):
     tag_id = fields.Many2one("res.partner.tag", string="Employee Tag")
     allocation_type = fields.Selection(
         [("regular", "Regular Allocation"), ("accrual", "Based on Accrual Plan")],
-        string="Allocation Type",
         default="regular",
         required=True,
     )

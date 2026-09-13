@@ -11,7 +11,7 @@ class AccountCashRounding(models.Model):
     _description = "Account Cash Rounding"
     _check_company_auto = True
 
-    name = fields.Char(string="Name", translate=True, required=True)
+    name = fields.Char(translate=True, required=True)
     rounding = fields.Float(
         string="Rounding Precision",
         required=True,
@@ -30,7 +30,6 @@ class AccountCashRounding(models.Model):
     )
     profit_account_id = fields.Many2one(
         "account.account",
-        string="Profit Account",
         company_dependent=True,
         check_company=True,
         domain="[('account_type', 'not in', ('asset_receivable', 'liability_payable'))]",
@@ -38,14 +37,12 @@ class AccountCashRounding(models.Model):
     )
     loss_account_id = fields.Many2one(
         "account.account",
-        string="Loss Account",
         company_dependent=True,
         check_company=True,
         domain="[('account_type', 'not in', ('asset_receivable', 'liability_payable'))]",
         ondelete="restrict",
     )
     rounding_method = fields.Selection(
-        string="Rounding Method",
         required=True,
         selection=[("UP", "Up"), ("DOWN", "Down"), ("HALF-UP", "Nearest")],
         default="HALF-UP",

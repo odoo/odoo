@@ -42,7 +42,6 @@ class BaseLanguageExport(models.TransientModel):
     )
     export_type = fields.Selection(
         [("module", "Module"), ("model", "Model")],
-        string="Export Type",
         required=True,
         default="module",
     )

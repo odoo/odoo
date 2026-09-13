@@ -75,7 +75,7 @@ class ResConfigSettings(models.TransientModel):
     barcode_nomenclature_id = fields.Many2one(
         "barcode.nomenclature", related="company_id.nomenclature_id", readonly=False
     )
-    is_kiosk_mode = fields.Boolean(string="Is Kiosk Mode", default=False)
+    is_kiosk_mode = fields.Boolean(default=False)
     pos_customer_display_bg_img = fields.Image(
         related="pos_config_id.customer_display_bg_img", readonly=False
     )

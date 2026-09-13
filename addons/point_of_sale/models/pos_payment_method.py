@@ -34,7 +34,6 @@ class PosPaymentMethod(models.Model):
     sequence = fields.Integer(copy=False)
     outstanding_account_id = fields.Many2one(
         "account.account",
-        string="Outstanding Account",
         ondelete="restrict",
         help="Account used as outstanding account when creating accounting payment records for bank payments.",
     )
@@ -51,7 +50,6 @@ class PosPaymentMethod(models.Model):
     )
     journal_id = fields.Many2one(
         "account.journal",
-        string="Journal",
         domain=[
             "|",
             "&",
@@ -80,9 +78,7 @@ class PosPaymentMethod(models.Model):
         help="Open PoS sessions that are using this payment method.",
     )
     config_ids = fields.Many2many("pos.config", string="Point of Sale")
-    company_id = fields.Many2one(
-        "res.company", string="Company", default=lambda self: self.env.company
-    )
+    company_id = fields.Many2one("res.company", default=lambda self: self.env.company)
     default_pos_receivable_account_name = fields.Char(
         related="company_id.account_default_pos_receivable_account_id.display_name",
         string="Default Receivable Account Name",
@@ -104,7 +100,7 @@ class PosPaymentMethod(models.Model):
         ],
         compute="_compute_type",
     )
-    image = fields.Image("Image", max_width=50, max_height=50)
+    image = fields.Image(max_width=50, max_height=50)
     payment_method_type = fields.Selection(
         selection=lambda self: self._selection_payment_method_types(),
         string="Integration",

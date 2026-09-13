@@ -16,7 +16,6 @@ class AccountLock_Exception(models.Model):
     _description = "Account Lock Exception"
 
     active = fields.Boolean(
-        string="Active",
         default=True,
     )
     state = fields.Selection(
@@ -25,25 +24,20 @@ class AccountLock_Exception(models.Model):
             ("revoked", "Revoked"),
             ("expired", "Expired"),
         ],
-        string="State",
         compute="_compute_state",
         search="_search_state",
     )
     company_id = fields.Many2one(
         "res.company",
-        string="Company",
         required=True,
         readonly=True,
         default=lambda self: self.env.company,
     )
     user_id = fields.Many2one(
         "res.users",
-        string="User",
         default=lambda self: self.env.user,
     )
-    reason = fields.Char(
-        string="Reason",
-    )
+    reason = fields.Char()
     end_datetime = fields.Datetime(
         string="End Date",
     )
@@ -55,7 +49,6 @@ class AccountLock_Exception(models.Model):
             ("sale_lock_date", "Sales Lock Date"),
             ("purchase_lock_date", "Purchase Lock Date"),
         ],
-        string="Lock Date Field",
         required=True,
         help="Technical field identifying the changed lock date",
     )
@@ -88,7 +81,6 @@ class AccountLock_Exception(models.Model):
         help="The date the Sale Lock Date is set to by this exception. If the lock date is not changed it is set to the maximal date.",
     )
     purchase_lock_date = fields.Date(
-        string="Purchase Lock Date",
         compute="_compute_lock_dates",
         search="_search_purchase_lock_date",
         help="The date the Purchase Lock Date is set to by this exception. If the lock date is not changed it is set to the maximal date.",

@@ -29,7 +29,6 @@ class ResUsersSettings(models.Model):
         ],
         default="system",
         required=True,
-        string="Color Scheme",
     )
     homemenu_config = fields.Json(string="Home Menu Configuration", readonly=True)
     homemenu_usage = fields.Json(

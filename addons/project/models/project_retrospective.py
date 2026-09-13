@@ -17,10 +17,9 @@ class ProjectRetrospective(models.Model):
         ondelete="cascade",
         index=True,
     )
-    date = fields.Date("Date", required=True, default=fields.Date.today)
+    date = fields.Date(required=True, default=fields.Date.today)
     facilitator_id = fields.Many2one(
         "res.users",
-        string="Facilitator",
         default=lambda self: self.env.user,
     )
     went_well = fields.Html(
@@ -128,7 +127,6 @@ class ProjectRetrospectiveAction(models.Model):
     )
     owner_id = fields.Many2one(
         "res.users",
-        string="Owner",
         required=True,
     )
     date_due = fields.Date("Due Date")
@@ -151,12 +149,10 @@ class ProjectRetrospectiveAction(models.Model):
         "above the open items this list exists to surface.",
     )
     resolution_note = fields.Text(
-        "Resolution Note",
         help="How was this action resolved?",
     )
     carried_from_id = fields.Many2one(
         "project.retrospective.action",
-        string="Carried From",
         help="If this action was carried forward from a previous retrospective.",
     )
     category = fields.Selection(
@@ -169,7 +165,6 @@ class ProjectRetrospectiveAction(models.Model):
             ("team", "Team"),
             ("tooling", "Tooling"),
         ],
-        string="Category",
     )
 
     _STATE_ORDER = {"open": 0, "in_progress": 1, "done": 2, "dropped": 3}

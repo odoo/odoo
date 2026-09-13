@@ -17,17 +17,14 @@ class PaymentProvider(models.Model):
         selection_add=[("redsys", "Redsys")], ondelete={"redsys": "set default"}
     )
     redsys_merchant_code = fields.Char(
-        string="Redsys Merchant Code",
         required_if_provider="redsys",
         copy=False,
     )
     redsys_merchant_terminal = fields.Char(
-        string="Redsys Merchant Terminal",
         required_if_provider="redsys",
         copy=False,
     )
     redsys_secret_key = fields.Char(
-        string="Redsys Secret Key",
         required_if_provider="redsys",
         copy=False,
         groups="base.group_system",

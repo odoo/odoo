@@ -40,7 +40,6 @@ class HrVersion(models.Model):
         tracking=True,
     )
     last_generation_date = fields.Date(
-        string="Last Generation Date",
         readonly=True,
         copy=False,
         groups="hr.group_hr_user",

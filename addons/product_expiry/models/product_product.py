@@ -69,7 +69,6 @@ class ProductTemplate(models.Model):
         return super()._compute_quantities()
 
     use_expiration_date = fields.Boolean(
-        string="Use Expiration Date",
         compute="_compute_use_expiration_date",
         store=True,
         readonly=False,

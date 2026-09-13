@@ -322,7 +322,6 @@ class IrUiView(models.Model):
     )
     model_data_id = fields.Many2one(
         "ir.model.data",
-        string="Model Data",
         compute="_compute_model_data",
         search="_search_model_data_id",
     )

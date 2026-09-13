@@ -13,12 +13,10 @@ class ProductCategory(models.Model):
     _check_company_domain = models.check_company_domain_parent_of
 
     name = fields.Char(
-        string="Name",
         required=True,
         index="trigram",
     )
     active = fields.Boolean(
-        string="Active",
         default=True,
         help="If unchecked, it will allow you to hide the category without removing it.",
     )
@@ -29,7 +27,6 @@ class ProductCategory(models.Model):
         index=True,
     )
     complete_name = fields.Char(
-        string="Complete Name",
         compute="_compute_complete_name",
         store=True,
         recursive=True,
@@ -53,7 +50,6 @@ class ProductCategory(models.Model):
     product_properties_definition = fields.PropertiesDefinition("Product Properties")
     company_id = fields.Many2one(
         comodel_name="res.company",
-        string="Company",
         tracking=True,
         help="Keep empty to share this category with every company.",
     )

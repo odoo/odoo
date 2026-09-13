@@ -8,7 +8,6 @@ class StockMoveLine(models.Model):
     _inherit = "stock.move.line"
 
     expiration_date = fields.Datetime(
-        string="Expiration Date",
         compute="_compute_expiration_date",
         store=True,
         readonly=False,
@@ -16,7 +15,6 @@ class StockMoveLine(models.Model):
         " become dangerous and must not be consumed.",
     )
     removal_date = fields.Datetime(
-        string="Removal Date",
         compute="_compute_removal_date",
         readonly=False,
         store=True,

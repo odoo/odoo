@@ -33,7 +33,6 @@ class StockPicking(models.Model):
     )
     carrier_id = fields.Many2one(
         "delivery.carrier",
-        string="Carrier",
         domain="[('id', 'in', allowed_carrier_ids)]",
         check_company=True,
     )

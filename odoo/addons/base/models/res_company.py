@@ -37,7 +37,6 @@ class ResCompany(models.Model):
 
     partner_id = fields.Many2one(
         "res.partner",
-        string="Partner",
         required=True,
         index=True,
     )
@@ -127,7 +126,6 @@ class ResCompany(models.Model):
         ),
     )
     complete_name = fields.Char(
-        string="Complete Name",
         compute="_compute_complete_name",
         store=True,
     )
@@ -166,7 +164,6 @@ class ResCompany(models.Model):
 
     currency_id = fields.Many2one(
         "res.currency",
-        string="Currency",
         required=True,
         default=lambda self: self._default_currency_id(),
     )
@@ -192,12 +189,10 @@ class ResCompany(models.Model):
         help="Company tagline, which is included in a printed document's header or footer (depending on the selected layout).",
     )
     report_footer = fields.Html(
-        string="Report Footer",
         translate=True,
         help="Footer text displayed at the bottom of all reports.",
     )
     company_details = fields.Html(
-        string="Company Details",
         translate=True,
         help="Header text displayed at the top of all reports.",
     )

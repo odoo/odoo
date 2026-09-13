@@ -113,7 +113,7 @@ class DiscussChannel(models.Model):
         }
     )
 
-    name = fields.Char("Name", required=True)
+    name = fields.Char(required=True)
 
     active = fields.Boolean(
         default=True,
@@ -122,22 +122,20 @@ class DiscussChannel(models.Model):
 
     channel_type = fields.Selection(
         [("chat", "Chat"), ("channel", "Channel"), ("group", "Group")],
-        string="Channel Type",
         required=True,
         default="channel",
         readonly=True,
         help="Chat is private and unique between 2 persons. Group is private among invited persons. Channel can be freely joined (depending on its configuration).",
     )
 
-    is_editable = fields.Boolean("Is Editable", compute="_compute_is_editable")
+    is_editable = fields.Boolean(compute="_compute_is_editable")
 
     default_display_mode = fields.Selection(
-        string="Default Display Mode",
         selection=[("video_full_screen", "Full screen video")],
         help="Determines how the channel will be displayed by default when opening it from its invitation link. No value means display text (no voice/video).",
     )
 
-    description = fields.Text("Description")
+    description = fields.Text()
 
     image_128 = fields.Image("Image", max_width=128, max_height=128)
 
@@ -208,7 +206,6 @@ class DiscussChannel(models.Model):
     )
 
     is_member = fields.Boolean(
-        "Is Member",
         compute="_compute_is_member",
         search="_search_is_member",
         compute_sudo=True,
@@ -227,7 +224,6 @@ class DiscussChannel(models.Model):
     )
 
     member_count = fields.Integer(
-        string="Member Count",
         compute="_compute_member_count",
         compute_sudo=True,
     )

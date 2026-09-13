@@ -9,7 +9,7 @@ class CalendarAlarm(models.Model):
 
     _interval_selection = {"minutes": "Minutes", "hours": "Hours", "days": "Days"}
 
-    name = fields.Char("Name", translate=True, required=True)
+    name = fields.Char(translate=True, required=True)
     alarm_type = fields.Selection(
         [("notification", "Notification"), ("email", "Email")],
         string="Type",
@@ -39,7 +39,7 @@ class CalendarAlarm(models.Model):
         "Additional Message",
         help="Additional message that would be sent with the notification for the reminder",
     )
-    notify_responsible = fields.Boolean("Notify Responsible", default=False)
+    notify_responsible = fields.Boolean(default=False)
     notify_responsible_available = fields.Boolean(
         compute="_compute_notify_responsible_available",
         help="Technical: whether this alarm's channel can single out the organizer.",

@@ -12,14 +12,12 @@ class EventSaleReport(models.Model):
     _auto = False
     _rec_name = "sale_order_line_id"
 
-    event_type_id = fields.Many2one("event.type", string="Event Type", readonly=True)
-    event_id = fields.Many2one("event.event", string="Event", readonly=True)
+    event_type_id = fields.Many2one("event.type", readonly=True)
+    event_id = fields.Many2one("event.event", readonly=True)
     event_date_begin = fields.Date(string="Event Start Date", readonly=True)
     event_date_end = fields.Date(string="Event End Date", readonly=True)
-    event_slot_id = fields.Many2one("event.slot", string="Event Slot", readonly=True)
-    event_ticket_id = fields.Many2one(
-        "event.event.ticket", string="Event Ticket", readonly=True
-    )
+    event_slot_id = fields.Many2one("event.slot", readonly=True)
+    event_ticket_id = fields.Many2one("event.event.ticket", readonly=True)
     event_ticket_price = fields.Float(string="Ticket price", readonly=True)
     event_registration_create_date = fields.Date(
         string="Registration Date", readonly=True
@@ -38,7 +36,7 @@ class EventSaleReport(models.Model):
     event_registration_id = fields.Many2one("event.registration", readonly=True)
     event_registration_name = fields.Char("Attendee Name", readonly=True)
 
-    product_id = fields.Many2one("product.product", string="Product", readonly=True)
+    product_id = fields.Many2one("product.product", readonly=True)
     sale_order_id = fields.Many2one("sale.order", readonly=True)
     sale_order_date = fields.Datetime("Order Date", readonly=True)
     sale_order_partner_id = fields.Many2one(
@@ -64,7 +62,7 @@ class EventSaleReport(models.Model):
             ("free", "Free"),
         ],
     )
-    company_id = fields.Many2one("res.company", string="Company", readonly=True)
+    company_id = fields.Many2one("res.company", readonly=True)
 
     def init(self):
         drop_view_if_exists(self.env.cr, self._table)

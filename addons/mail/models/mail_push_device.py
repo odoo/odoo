@@ -26,7 +26,6 @@ class MailPushDevice(models.Model):
 
     partner_id: ResPartner = fields.Many2one(
         "res.partner",
-        string="Partner",
         index=True,
         required=True,
         default=lambda self: self.env.user.partner_id,

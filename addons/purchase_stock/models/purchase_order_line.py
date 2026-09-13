@@ -28,7 +28,6 @@ class PurchaseOrderLine(models.Model):
     )
     orderpoint_id = fields.Many2one(
         comodel_name="stock.warehouse.orderpoint",
-        string="Orderpoint",
         ondelete="set null",
         copy=False,
         index="btree_not_null",

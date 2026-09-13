@@ -26,14 +26,13 @@ class Pos_Self_OrderCustom_Link(models.Model):
             ("light", "Light"),
             ("dark", "Dark"),
         ],
-        string="Style",
         default="primary",
         required=True,
     )
     link_html = fields.Html(
         "Preview", compute="_compute_link_html", store=True, readonly=True
     )
-    sequence = fields.Integer("Sequence", default=1)
+    sequence = fields.Integer(default=1)
 
     @api.model
     def _load_pos_self_data_domain(self, data, config):

@@ -151,7 +151,6 @@ class CalendarEvent(models.Model):
             ("no_show", "No Show"),
             ("cancelled", "Cancelled"),
         ],
-        string="Appointment Status",
         compute="_compute_appointment_status",
         store=True,
         readonly=False,
@@ -206,13 +205,10 @@ class CalendarEvent(models.Model):
         "res.partner", group_expand="_read_group_partner_ids"
     )
     total_capacity_reserved = fields.Integer(
-        "Total Capacity Reserved",
         compute="_compute_total_capacity",
         inverse="_inverse_resource_ids_or_capacity",
     )
-    total_capacity_used = fields.Integer(
-        "Total Capacity Used", compute="_compute_total_capacity"
-    )
+    total_capacity_used = fields.Integer(compute="_compute_total_capacity")
     user_id = fields.Many2one("res.users", group_expand="_read_group_user_id")
     videocall_redirection = fields.Char(
         "Meeting redirection URL", compute="_compute_videocall_redirection"

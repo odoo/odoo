@@ -84,19 +84,19 @@ class DigestDigest(models.Model):
     _order = "name, id"
 
     # Digest description
-    name = fields.Char(string="Name", required=True, translate=True)
+    name = fields.Char(required=True, translate=True)
     user_ids = fields.Many2many(
         "res.users", string="Recipients", domain="[('share', '=', False)]"
     )
     periodicity = fields.Selection(
-        PERIODICITY_SELECTION, string="Periodicity", default="daily", required=True
+        PERIODICITY_SELECTION, default="daily", required=True
     )
     next_run_date = fields.Date(string="Next Mailing Date")
     currency_id = fields.Many2one(
         related="company_id.currency_id", string="Currency", readonly=False
     )
     company_id = fields.Many2one(
-        "res.company", string="Company", default=lambda self: self.env.company.id
+        "res.company", default=lambda self: self.env.company.id
     )
     is_subscribed = fields.Boolean(
         "Is user subscribed", compute="_compute_is_subscribed"

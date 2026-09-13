@@ -16,10 +16,10 @@ class GamificationSkillTree(models.Model):
     _order = "sequence, name"
 
     name = fields.Char("Tree Name", required=True, translate=True)
-    description = fields.Text("Description", translate=True)
+    description = fields.Text(translate=True)
     sequence = fields.Integer(default=10)
     active = fields.Boolean(default=True)
-    icon = fields.Image("Icon", max_width=128, max_height=128)
+    icon = fields.Image(max_width=128, max_height=128)
     color = fields.Integer("Color Index", default=0)
 
     node_ids = fields.One2many("gamification.skill.node", "tree_id", string="Nodes")
@@ -37,7 +37,7 @@ class GamificationSkillNode(models.Model):
     _order = "tree_id, level, sequence"
 
     name = fields.Char("Skill Name", required=True, translate=True)
-    description = fields.Text("Description", translate=True)
+    description = fields.Text(translate=True)
     tree_id = fields.Many2one(
         "gamification.skill.tree",
         string="Skill Tree",
@@ -72,7 +72,6 @@ class GamificationSkillNode(models.Model):
 
     # Unlock conditions
     karma_threshold = fields.Integer(
-        "Karma Threshold",
         default=0,
         help="Minimum karma required to unlock (0 = no karma requirement).",
     )

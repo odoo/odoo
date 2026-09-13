@@ -24,7 +24,6 @@ class SaleOrderTemplateLine(models.Model):
         ondelete="cascade",
     )
     sequence = fields.Integer(
-        string="Sequence",
         help="Gives the sequence order when displaying a list of sale quote lines.",
         default=10,
     )

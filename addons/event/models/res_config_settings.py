@@ -38,7 +38,6 @@ class ResConfigSettings(models.TransientModel):
     module_website_event_track_quiz = fields.Boolean("Quiz on Tracks")
     module_website_event_exhibitor = fields.Boolean("Advanced Sponsors")
     use_event_barcode = fields.Boolean(
-        string="Use Event Barcode",
         help="Enable or Disable Event Barcode functionality.",
         config_parameter="event.use_event_barcode",
     )

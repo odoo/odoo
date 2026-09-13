@@ -18,19 +18,18 @@ class GamificationBadgeUser(models.Model):
     _mail_partner_fields = ("user_partner_id",)
 
     user_id = fields.Many2one(
-        "res.users", string="User", required=True, ondelete="cascade", index=True
+        "res.users", required=True, ondelete="cascade", index=True
     )
     user_partner_id = fields.Many2one("res.partner", related="user_id.partner_id")
-    sender_id = fields.Many2one("res.users", string="Sender")
+    sender_id = fields.Many2one("res.users")
     badge_id = fields.Many2one(
         "gamification.badge",
-        string="Badge",
         required=True,
         ondelete="cascade",
         index=True,
     )
-    challenge_id = fields.Many2one("gamification.challenge", string="Challenge")
-    comment = fields.Text("Comment")
+    challenge_id = fields.Many2one("gamification.challenge")
+    comment = fields.Text()
     badge_name = fields.Char(related="badge_id.name", string="Badge Name")
     level = fields.Selection(
         string="Badge Level", related="badge_id.level", store=True, readonly=True

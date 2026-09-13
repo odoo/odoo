@@ -9,7 +9,6 @@ class FleetServiceType(models.Model):
     name = fields.Char(required=True, translate=True)
     category = fields.Selection(
         [("contract", "Contract"), ("service", "Service")],
-        "Category",
         required=True,
         help="Choose whether the service refer to contracts, vehicle services or both",
     )

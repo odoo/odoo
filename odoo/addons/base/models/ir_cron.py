@@ -247,7 +247,6 @@ class IrCron(models.Model):
         help="The number of consecutive failures of this job. It is automatically reset on success.",
     )
     first_failure_date = fields.Datetime(
-        string="First Failure Date",
         help="The first time the cron failed. It is automatically reset on success.",
     )
 

@@ -36,14 +36,11 @@ class IrModelAccess(models.Model):
     )
     model_id = fields.Many2one(
         "ir.model",
-        string="Model",
         required=True,
         index=True,
         ondelete="cascade",
     )
-    group_id = fields.Many2one(
-        "res.groups", string="Group", ondelete="restrict", index=True
-    )
+    group_id = fields.Many2one("res.groups", ondelete="restrict", index=True)
     perm_read = fields.Boolean(string="Read Access")
     perm_write = fields.Boolean(string="Write Access")
     perm_create = fields.Boolean(string="Create Access")

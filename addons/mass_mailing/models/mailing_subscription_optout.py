@@ -9,5 +9,5 @@ class MailingSubscriptionOptout(models.Model):
     _order = "sequence ASC, create_date DESC, id DESC"
 
     name = fields.Char(string="Reason", translate=True)
-    sequence = fields.Integer(string="Sequence", default=10)
+    sequence = fields.Integer(default=10)
     is_feedback = fields.Boolean(string="Ask For Feedback")

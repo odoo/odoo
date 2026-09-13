@@ -20,7 +20,7 @@ class ProjectHistory(models.Model):
         required=True,
         help="Frozen project name at time of archival.",
     )
-    date_completed = fields.Date("Date Completed", required=True)
+    date_completed = fields.Date(required=True)
     date_start = fields.Date("Date Started")
     planned_duration_days = fields.Integer(
         "Planned Duration (days)",
@@ -39,7 +39,6 @@ class ProjectHistory(models.Model):
     )
     planned_hours = fields.Float("Planned Hours (sum of task.planned_hours)")
     actual_hours = fields.Float(
-        "Actual Hours",
         help="Sum of effective_hours (requires timesheet module).",
     )
     hours_variance_pct = fields.Float(

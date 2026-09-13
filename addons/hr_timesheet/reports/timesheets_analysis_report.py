@@ -10,20 +10,18 @@ class TimesheetsAnalysisReport(models.Model):
     _auto = False
 
     name = fields.Char("Description", readonly=True)
-    user_id = fields.Many2one("res.users", string="User", readonly=True)
-    project_id = fields.Many2one("project.project", string="Project", readonly=True)
-    task_id = fields.Many2one("project.task", string="Task", readonly=True)
-    parent_task_id = fields.Many2one(
-        "project.task", string="Parent Task", readonly=True
-    )
-    manager_id = fields.Many2one("hr.employee", "Manager", readonly=True)
-    company_id = fields.Many2one("res.company", string="Company", readonly=True)
-    department_id = fields.Many2one("hr.department", string="Department", readonly=True)
-    currency_id = fields.Many2one("res.currency", string="Currency", readonly=True)
-    date = fields.Date("Date", readonly=True)
-    amount = fields.Monetary("Amount", currency_field="currency_id", readonly=True)
+    user_id = fields.Many2one("res.users", readonly=True)
+    project_id = fields.Many2one("project.project", readonly=True)
+    task_id = fields.Many2one("project.task", readonly=True)
+    parent_task_id = fields.Many2one("project.task", readonly=True)
+    manager_id = fields.Many2one("hr.employee", readonly=True)
+    company_id = fields.Many2one("res.company", readonly=True)
+    department_id = fields.Many2one("hr.department", readonly=True)
+    currency_id = fields.Many2one("res.currency", readonly=True)
+    date = fields.Date(readonly=True)
+    amount = fields.Monetary(currency_field="currency_id", readonly=True)
     unit_amount = fields.Float("Time Spent", readonly=True)
-    partner_id = fields.Many2one("res.partner", string="Partner", readonly=True)
+    partner_id = fields.Many2one("res.partner", readonly=True)
     milestone_id = fields.Many2one("project.milestone", related="task_id.milestone_id")
     message_partner_ids = fields.Many2many(
         "res.partner",

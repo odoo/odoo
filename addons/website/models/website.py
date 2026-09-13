@@ -98,7 +98,6 @@ class Website(models.Model):
     )
     company_id = fields.Many2one(
         "res.company",
-        string="Company",
         default=lambda self: self.env.company,
         required=True,
     )
@@ -124,7 +123,7 @@ class Website(models.Model):
         help="Should users be redirected to their browser's language",
     )
     cookies_bar = fields.Boolean(
-        "Cookies Bar", help="Display a customizable cookies bar on your website."
+        help="Display a customizable cookies bar on your website."
     )
     configurator_done = fields.Boolean(
         help="True if configurator has been completed or ignored"
@@ -186,7 +185,7 @@ class Website(models.Model):
         compute="_compute_has_social_default_image", store=True
     )
 
-    google_analytics_key = fields.Char("Google Analytics Key")
+    google_analytics_key = fields.Char()
     google_search_console = fields.Char(
         help="Google key, or Enable to access first reply"
     )
@@ -233,7 +232,6 @@ class Website(models.Model):
     theme_id = fields.Many2one("ir.module.module", help="Installed theme")
 
     specific_user_account = fields.Boolean(
-        "Specific User Account",
         help="If True, new accounts will be associated to the current website",
     )
     auth_signup_uninvited = fields.Selection(

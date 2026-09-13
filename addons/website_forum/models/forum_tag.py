@@ -11,9 +11,9 @@ class ForumTag(models.Model):
         "mixin.website.seo.metadata",
     ]
 
-    name = fields.Char("Name", required=True)
-    color = fields.Integer("Color")
-    forum_id = fields.Many2one("forum.forum", string="Forum", required=True, index=True)
+    name = fields.Char(required=True)
+    color = fields.Integer()
+    forum_id = fields.Many2one("forum.forum", required=True, index=True)
     post_ids = fields.Many2many(
         "forum.post",
         "forum_tag_rel",

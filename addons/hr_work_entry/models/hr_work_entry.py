@@ -34,7 +34,7 @@ class HrWorkEntry(models.Model):
     )
     work_entry_source = fields.Selection(related="version_id.work_entry_source")
     date = fields.Date(required=True)
-    duration = fields.Float(string="Duration", default=8)
+    duration = fields.Float(default=8)
     work_entry_type_id = fields.Many2one(
         "hr.work.entry.type",
         index=True,
@@ -58,7 +58,6 @@ class HrWorkEntry(models.Model):
     )
     company_id = fields.Many2one(
         "res.company",
-        string="Company",
         readonly=True,
         required=True,
         default=lambda self: self.env.company,

@@ -6,9 +6,7 @@ from odoo import api, fields, models
 class PosConfig(models.Model):
     _inherit = "pos.config"
 
-    is_ecpay_enabled = fields.Boolean(
-        string="Is Ecpay Enabled", compute="_compute_is_ecpay_enabled"
-    )
+    is_ecpay_enabled = fields.Boolean(compute="_compute_is_ecpay_enabled")
 
     @api.depends("company_id")
     def _compute_is_ecpay_enabled(self):

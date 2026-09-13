@@ -54,7 +54,6 @@ class ResCompany(models.Model):
     )
     downpayment_account_id = fields.Many2one(
         comodel_name="account.account",
-        string="Downpayment Account",
         domain=[
             ("account_type", "in", ("income", "income_other", "liability_current")),
         ],

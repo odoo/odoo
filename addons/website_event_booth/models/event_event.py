@@ -4,9 +4,7 @@ from odoo import _, api, fields, models
 class EventEvent(models.Model):
     _inherit = "event.event"
 
-    exhibition_map = fields.Image(
-        string="Exhibition Map", max_width=1024, max_height=1024
-    )
+    exhibition_map = fields.Image(max_width=1024, max_height=1024)
     booth_menu = fields.Boolean(
         string="Booth Register",
         compute="_compute_booth_menu",

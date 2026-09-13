@@ -86,7 +86,6 @@ class AccountAnalyticLine(models.Model):
 
     task_id = fields.Many2one(
         "project.task",
-        "Task",
         index="btree_not_null",
         compute="_compute_task_id",
         store=True,
@@ -98,7 +97,6 @@ class AccountAnalyticLine(models.Model):
     )
     project_id = fields.Many2one(
         "project.project",
-        "Project",
         domain=_domain_project_id,
         index=True,
         compute="_compute_project_id",
@@ -108,7 +106,6 @@ class AccountAnalyticLine(models.Model):
     user_id = fields.Many2one(compute="_compute_user_id", store=True, readonly=False)
     employee_id = fields.Many2one(
         "hr.employee",
-        "Employee",
         domain=_domain_employee_id,
         context={"active_test": False},
         index=True,
@@ -119,7 +116,6 @@ class AccountAnalyticLine(models.Model):
     )
     department_id = fields.Many2one(
         "hr.department",
-        "Department",
         compute="_compute_department_id",
         store=True,
         compute_sudo=True,

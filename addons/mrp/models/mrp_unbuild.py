@@ -17,7 +17,6 @@ class MrpUnbuild(models.Model):
     )
     product_id = fields.Many2one(
         "product.product",
-        "Product",
         check_company=True,
         domain="[('type', '=', 'consu')]",
         compute="_compute_product_id",
@@ -28,7 +27,6 @@ class MrpUnbuild(models.Model):
     )
     company_id = fields.Many2one(
         "res.company",
-        "Company",
         default=lambda s: s.env.company,
         required=True,
         index=True,

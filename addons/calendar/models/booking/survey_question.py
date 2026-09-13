@@ -32,7 +32,6 @@ class SurveyQuestion(models.Model):
         help="Include by default in new appointment types.",
     )
     is_reusable = fields.Boolean(
-        "Is Reusable",
         compute="_compute_is_reusable",
         default=True,
         store=True,

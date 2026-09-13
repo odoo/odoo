@@ -23,7 +23,7 @@ class GamificationQuest(models.Model):
     )
     sequence = fields.Integer(default=10)
     active = fields.Boolean(default=True)
-    icon = fields.Image("Icon", max_width=128, max_height=128)
+    icon = fields.Image(max_width=128, max_height=128)
 
     # Steps
     step_ids = fields.One2many(
@@ -107,7 +107,6 @@ class GamificationQuestStep(models.Model):
     )
     name = fields.Char("Step Name", required=True, translate=True)
     description = fields.Text(
-        "Description",
         translate=True,
         help="What the user needs to do for this step.",
     )
@@ -148,7 +147,6 @@ class GamificationQuestStep(models.Model):
     # Skill tree link
     skill_node_id = fields.Many2one(
         "gamification.skill.node",
-        string="Skill Node",
         ondelete="set null",
         help="Skill tree node this step contributes to.",
     )

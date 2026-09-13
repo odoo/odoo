@@ -1095,7 +1095,6 @@ class IrActionsReport(models.Model):
     model = fields.Char(required=True, string="Model Name")
     model_id = fields.Many2one(
         "ir.model",
-        string="Model",
         compute="_compute_model_id",
         search="_search_model_id",
     )
@@ -1119,7 +1118,6 @@ class IrActionsReport(models.Model):
         index=True,
     )
     report_file = fields.Char(
-        string="Report File",
         required=False,
         readonly=False,
         store=True,

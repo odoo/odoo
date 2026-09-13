@@ -10,12 +10,9 @@ class EventLeadRequest(models.Model):
 
     _REGISTRATIONS_BATCH_SIZE = 200
 
-    event_id = fields.Many2one(
-        "event.event", required=True, string="Event", ondelete="cascade"
-    )
+    event_id = fields.Many2one("event.event", required=True, ondelete="cascade")
     event_lead_rule_ids = fields.Many2many("event.lead.rule", string="Lead Rules")
     processed_registration_id = fields.Integer(
-        "Processed Registration",
         help="The ID of the last processed event.registration, used to know where to resume.",
     )
 

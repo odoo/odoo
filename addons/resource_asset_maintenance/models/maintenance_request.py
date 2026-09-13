@@ -11,13 +11,11 @@ class MaintenanceRequest(models.Model):
 
     asset_id = fields.Many2one(
         "resource.asset",
-        string="Asset",
         index="btree_not_null",
         check_company=True,
         ondelete="restrict",
     )
     block_asset = fields.Boolean(
-        "Block Asset",
         default=True,
         help="While scheduled, the asset is unavailable time for planning, work orders and every other reader of its calendar.",
     )

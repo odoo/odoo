@@ -27,7 +27,7 @@ class MixinMailAliasMixinOptional(models.AbstractModel):
     ]
 
     alias_id: MailAlias = fields.Many2one(
-        "mail.alias", string="Alias", ondelete="restrict", required=False, copy=False
+        "mail.alias", ondelete="restrict", required=False, copy=False
     )
     alias_name = fields.Char(related="alias_id.alias_name", readonly=False)
     alias_domain_id: MailAliasDomain = fields.Many2one(

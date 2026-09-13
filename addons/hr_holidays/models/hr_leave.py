@@ -163,7 +163,6 @@ class HrLeave(models.Model):
 
     employee_id = fields.Many2one(
         "hr.employee",
-        string="Employee",
         index=True,
         ondelete="restrict",
         required=True,
@@ -186,7 +185,6 @@ class HrLeave(models.Model):
         "hr.department",
         compute="_compute_department_id",
         store=True,
-        string="Department",
         readonly=False,
     )
     notes = fields.Text("Reasons", readonly=False)
@@ -229,7 +227,7 @@ class HrLeave(models.Model):
     duration_display = fields.Char(
         "Requested", compute="_compute_duration_display", store=True
     )
-    meeting_id = fields.Many2one("calendar.event", string="Meeting", copy=False)
+    meeting_id = fields.Many2one("calendar.event", copy=False)
     first_approver_id = fields.Many2one(
         "hr.employee",
         string="First Approval",

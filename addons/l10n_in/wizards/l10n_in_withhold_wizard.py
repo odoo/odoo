@@ -51,7 +51,7 @@ class L10n_InWithholdWizard(models.TransientModel):
             result["related_payment_id"] = active_record.id
         return result
 
-    reference = fields.Char(string="Reference")
+    reference = fields.Char()
     type_name = fields.Char(string="Type", compute="_compute_type_name")
     related_move_id = fields.Many2one(
         comodel_name="account.move",
@@ -74,7 +74,7 @@ class L10n_InWithholdWizard(models.TransientModel):
         compute="_compute_tds_deduction",
     )
     company_id = fields.Many2one(
-        comodel_name="res.company", string="Company", compute="_compute_company_id"
+        comodel_name="res.company", compute="_compute_company_id"
     )
     currency_id = fields.Many2one(
         related="company_id.currency_id",
@@ -82,7 +82,6 @@ class L10n_InWithholdWizard(models.TransientModel):
     )
     journal_id = fields.Many2one(
         comodel_name="account.journal",
-        string="Journal",
         compute="_compute_journal_id",
         precompute=True,
         readonly=False,
@@ -91,7 +90,6 @@ class L10n_InWithholdWizard(models.TransientModel):
         check_company=True,
     )
     date = fields.Date(
-        string="Date",
         default=fields.Date.context_today,
     )
     l10n_in_tds_tax_type = fields.Char(

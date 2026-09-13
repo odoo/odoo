@@ -28,8 +28,8 @@ class ProjectPhase(models.Model):
             "Projects in a folded phase are considered closed."
         ),
     )
-    company_id = fields.Many2one("res.company", string="Company")
-    color = fields.Integer(string="Color", export_string_translation=False)
+    company_id = fields.Many2one("res.company")
+    color = fields.Integer(export_string_translation=False)
 
     @api.constrains("mail_template_id")
     def _check_mail_template_model(self) -> None:

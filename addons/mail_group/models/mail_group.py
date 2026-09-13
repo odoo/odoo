@@ -41,12 +41,11 @@ class MailGroup(models.Model):
             )
         return res
 
-    active = fields.Boolean("Active", default=True)
-    name = fields.Char("Name", required=True, translate=True)
-    description = fields.Text("Description")
+    active = fields.Boolean(default=True)
+    name = fields.Char(required=True, translate=True)
+    description = fields.Text()
     image_128 = fields.Image("Image", max_width=128, max_height=128)
     is_closed = fields.Boolean(
-        "Is Closed",
         help="Closed groups might still be accessed, but emails sent to it will bounce",
         copy=False,
     )
@@ -66,7 +65,7 @@ class MailGroup(models.Model):
         help="Messages that need an action",
         compute="_compute_mail_group_message_moderation_count",
     )
-    is_member = fields.Boolean("Is Member", compute="_compute_is_member")
+    is_member = fields.Boolean(compute="_compute_is_member")
     member_ids = fields.One2many("mail.group.member", "mail_group_id", string="Members")
     member_partner_ids = fields.Many2many(
         "res.partner",

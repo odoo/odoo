@@ -18,12 +18,10 @@ class PosConfig(models.Model):
         copy=False,
     )
     set_tip_after_payment = fields.Boolean(
-        "Set Tip After Payment",
         help="Adjust the amount authorized by payment terminals to add a tip after the customers left or at the end of the day.",
     )
     default_screen = fields.Selection(
         [("tables", "Tables"), ("register", "Register")],
-        string="Default Screen",
         default="tables",
     )
 

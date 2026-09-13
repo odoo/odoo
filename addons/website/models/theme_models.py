@@ -180,7 +180,7 @@ class ThemeWebsiteMenu(models.Model):
     page_id = fields.Many2one(
         "theme.website.page", ondelete="cascade", index="btree_not_null"
     )
-    new_window = fields.Boolean("New Window")
+    new_window = fields.Boolean()
     sequence = fields.Integer()
     parent_id = fields.Many2one("theme.website.menu", index=True, ondelete="cascade")
     mega_menu_content = fields.Html()

@@ -37,7 +37,6 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
             ("department", "By Department"),
             ("category", "By Employee Tag"),
         ],
-        string="Allocation Mode",
         readonly=False,
         required=True,
         default="employee",

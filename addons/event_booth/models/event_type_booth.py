@@ -11,7 +11,7 @@ class EventTypeBooth(models.Model):
         if category_id and len(category_id) == 1:
             return category_id
 
-    name = fields.Char(string="Name", required=True, translate=True)
+    name = fields.Char(required=True, translate=True)
     event_type_id = fields.Many2one(
         "event.type",
         string="Event Category",
@@ -21,7 +21,6 @@ class EventTypeBooth(models.Model):
     )
     booth_category_id = fields.Many2one(
         "event.booth.category",
-        string="Booth Category",
         index=True,
         default=_default_booth_category_id,
         ondelete="restrict",

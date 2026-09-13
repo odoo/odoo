@@ -29,7 +29,6 @@ class HrLeaveAccrualLevel(models.Model):
     )
     accrual_plan_id = fields.Many2one(
         "hr.leave.accrual.plan",
-        "Accrual Plan",
         required=True,
         index=True,
         ondelete="cascade",
@@ -92,7 +91,6 @@ class HrLeaveAccrualLevel(models.Model):
         ],
         compute="_compute_frequency",
         inverse="_inverse_frequency",
-        string="Frequency",
     )
     cap_accrued_time = fields.Boolean(
         export_string_translation=False,

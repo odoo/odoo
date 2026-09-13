@@ -32,7 +32,6 @@ class StockMove(models.Model):
 
     company_id = fields.Many2one(
         comodel_name="res.company",
-        string="Company",
         required=True,
         default=lambda self: self.env.company,
         index=True,
@@ -57,7 +56,6 @@ class StockMove(models.Model):
     )
     warehouse_id = fields.Many2one(
         comodel_name="stock.warehouse",
-        string="Warehouse",
         help="the warehouse to consider for the route selection on the next procurement (if any).",
     )
     partner_id = fields.Many2one(
@@ -83,10 +81,9 @@ class StockMove(models.Model):
         string="All returned moves",
         help="Optional: all returned moves created from this move",
     )
-    sequence = fields.Integer("Sequence", default=10)
+    sequence = fields.Integer(default=10)
     priority = fields.Selection(
         selection=PROCUREMENT_PRIORITIES,
-        string="Priority",
         default="0",
         compute="_compute_priority",
         store=True,
@@ -188,7 +185,6 @@ class StockMove(models.Model):
 
     product_id = fields.Many2one(
         comodel_name="product.product",
-        string="Product",
         required=True,
         check_company=True,
         domain="[('type', '=', 'consu')]",
@@ -335,14 +331,12 @@ class StockMove(models.Model):
         help="Preferred route",
     )
     quantity = fields.Float(
-        string="Quantity",
         digits="Product Unit",
         compute="_compute_quantity",
         store=True,
         inverse="_inverse_quantity",
     )
     reference = fields.Char(
-        string="Reference",
         compute="_compute_reference",
         store=True,
     )
@@ -358,7 +352,6 @@ class StockMove(models.Model):
         default=False,
     )
     picked = fields.Boolean(
-        string="Picked",
         compute="_compute_picked",
         inverse="_inverse_picked",
         store=True,
@@ -392,7 +385,6 @@ class StockMove(models.Model):
         index=True,
     )
     forecast_availability = fields.Float(
-        string="Forecast Availability",
         compute="_compute_forecast_information",
         digits="Product Unit",
         compute_sudo=True,
@@ -430,7 +422,6 @@ class StockMove(models.Model):
         help="Quantity in the packaging unit",
     )
     show_quant = fields.Boolean(
-        string="Show Quant",
         compute="_compute_show_info",
     )
     show_lots_m2o = fields.Boolean(

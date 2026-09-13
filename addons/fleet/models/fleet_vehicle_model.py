@@ -34,15 +34,12 @@ class FleetVehicleModel(models.Model):
         tracking=True,
         index="btree_not_null",
     )
-    category_id = fields.Many2one(
-        "fleet.vehicle.model.category", "Category", tracking=True
-    )
+    category_id = fields.Many2one("fleet.vehicle.model.category", tracking=True)
     vendors = fields.Many2many(
         "res.partner",
         "fleet_vehicle_model_vendors",
         "model_id",
         "partner_id",
-        string="Vendors",
     )
     image_128 = fields.Image(related="brand_id.image_128", readonly=True)
     active = fields.Boolean(default=True)
@@ -51,7 +48,6 @@ class FleetVehicleModel(models.Model):
     )
     transmission = fields.Selection(
         [("manual", "Manual"), ("automatic", "Automatic")],
-        "Transmission",
         tracking=True,
     )
     vehicle_count = fields.Integer(
@@ -87,13 +83,12 @@ class FleetVehicleModel(models.Model):
     default_fuel_type = fields.Selection(
         FUEL_TYPES, "Fuel Type", default="electric", tracking=True
     )
-    power = fields.Float("Power", tracking=True)
+    power = fields.Float(tracking=True)
     horsepower = fields.Float(tracking=True)
     horsepower_tax = fields.Float("Horsepower Taxation", tracking=True)
     electric_assistance = fields.Boolean(default=False, tracking=True)
     power_unit = fields.Selection(
         [("power", "kW"), ("horsepower", "Horsepower (hp)")],
-        "Power Unit",
         default="power",
         required=True,
     )

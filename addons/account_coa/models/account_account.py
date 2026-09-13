@@ -42,7 +42,6 @@ class AccountAccount(models.Model):
         compute="_compute_company_currency_id",
     )
     code = fields.Char(
-        string="Code",
         size=64,
         compute="_compute_code",
         search="_search_code",
@@ -107,7 +106,6 @@ class AccountAccount(models.Model):
             ("expense", "Expense"),
             ("off", "Off Balance"),
         ],
-        string="Internal Group",
         compute="_compute_internal_group",
         search="_search_internal_group",
     )

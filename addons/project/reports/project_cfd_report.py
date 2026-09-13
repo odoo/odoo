@@ -14,7 +14,7 @@ class ProjectCFDReport(models.AbstractModel):
     _auto = False
     _order = "date"
 
-    date = fields.Datetime("Date", readonly=True)
+    date = fields.Datetime(readonly=True)
     date_assign = fields.Datetime(string="Assignment Date", readonly=True)
     date_end = fields.Date(string="Deadline", readonly=True)
     date_last_status_change = fields.Date(string="Last Status Change", readonly=True)
@@ -28,14 +28,13 @@ class ProjectCFDReport(models.AbstractModel):
             ("canceled", "Cancelled"),
             ("blocked", "Waiting"),
         ],
-        string="State",
         readonly=True,
     )
     milestone_id = fields.Many2one("project.milestone", readonly=True)
     partner_id = fields.Many2one("res.partner", string="Customer", readonly=True)
     project_id = fields.Many2one("project.project", readonly=True)
     step_id = fields.Many2one("project.workflow.step", readonly=True)
-    task_count = fields.Integer("Task Count", readonly=True)
+    task_count = fields.Integer(readonly=True)
     tag_ids = fields.Many2many(
         "project.tags",
         relation="project_tags_project_task_rel",

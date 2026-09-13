@@ -5,7 +5,7 @@ class EventEvent(models.Model):
     _inherit = "event.event"
 
     track_ids = fields.One2many("event.track", "event_id", "Tracks")
-    track_count = fields.Integer("Track Count", compute="_compute_track_count")
+    track_count = fields.Integer(compute="_compute_track_count")
     website_track = fields.Boolean(
         "Tracks on Website",
         compute="_compute_website_track",

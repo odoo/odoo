@@ -7,7 +7,6 @@ class ResPartner(models.Model):
     _inherit = "res.partner"
 
     certifications_count = fields.Integer(
-        "Certifications Count",
         compute="_compute_certifications_count",
     )
     certifications_company_count = fields.Integer(

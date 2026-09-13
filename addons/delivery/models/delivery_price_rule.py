@@ -57,7 +57,7 @@ class DeliveryPriceRule(models.Model):
     name = fields.Char(compute="_compute_name")
     sequence = fields.Integer(required=True, default=10)
     carrier_id = fields.Many2one(
-        "delivery.carrier", "Carrier", required=True, index=True, ondelete="cascade"
+        "delivery.carrier", required=True, index=True, ondelete="cascade"
     )
     currency_id = fields.Many2one(related="carrier_id.currency_id")
 
@@ -81,7 +81,6 @@ class DeliveryPriceRule(models.Model):
     )
     variable_factor = fields.Selection(
         selection=VARIABLE_SELECTION,
-        string="Variable Factor",
         required=True,
         default="weight",
     )

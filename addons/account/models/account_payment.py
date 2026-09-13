@@ -141,7 +141,6 @@ class AccountPayment(models.Model):
         compute="_compute_reconciliation_status",
     )
     is_sent = fields.Boolean(
-        string="Is Sent",
         readonly=True,
         copy=False,
     )
@@ -209,7 +208,6 @@ class AccountPayment(models.Model):
             ("outbound", "Send"),
             ("inbound", "Receive"),
         ],
-        string="Payment Type",
         default="inbound",
         required=True,
         tracking=True,
@@ -224,19 +222,16 @@ class AccountPayment(models.Model):
         required=True,
     )
     memo = fields.Char(
-        string="Memo",
         tracking=True,
         inverse="_inverse_memo",
     )
     payment_reference = fields.Char(
-        string="Payment Reference",
         copy=False,
         tracking=True,
         help="Reference of the document used to issue this payment. Eg. check number, file name, etc.",
     )
     currency_id = fields.Many2one(
         comodel_name="res.currency",
-        string="Currency",
         compute="_compute_currency_id",
         store=True,
         readonly=False,
@@ -257,7 +252,6 @@ class AccountPayment(models.Model):
     )
     outstanding_account_id = fields.Many2one(
         comodel_name="account.account",
-        string="Outstanding Account",
         store=True,
         index="btree_not_null",
         compute="_compute_outstanding_account_id",
@@ -265,7 +259,6 @@ class AccountPayment(models.Model):
     )
     destination_account_id = fields.Many2one(
         comodel_name="account.account",
-        string="Destination Account",
         store=True,
         readonly=False,
         compute="_compute_destination_account_id",

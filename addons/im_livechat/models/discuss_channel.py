@@ -24,7 +24,7 @@ class DiscussChannel(models.Model):
         ondelete={"livechat": "cascade"},
     )
     duration = fields.Float(
-        "Duration", compute="_compute_duration", help="Duration of the session in hours"
+        compute="_compute_duration", help="Duration of the session in hours"
     )
     livechat_lang_id = fields.Many2one(
         "res.lang", string="Language", help="Lang of the visitor of the channel."
@@ -166,14 +166,12 @@ class DiscussChannel(models.Model):
         search="_search_livechat_matches_self_expertise",
     )
 
-    chatbot_current_step_id = fields.Many2one(
-        "chatbot.script.step", string="Chatbot Current Step"
-    )
+    chatbot_current_step_id = fields.Many2one("chatbot.script.step")
     chatbot_message_ids = fields.One2many(
         "chatbot.message", "discuss_channel_id", string="Chatbot Messages"
     )
     country_id = fields.Many2one(
-        "res.country", string="Country", help="Country of the visitor of the channel"
+        "res.country", help="Country of the visitor of the channel"
     )
     livechat_failure = fields.Selection(
         selection=[

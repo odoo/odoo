@@ -28,7 +28,7 @@ class AppointmentManageLeaves(models.TransientModel):
     leave_end_dt = fields.Datetime(
         "End Date", required=True, default=lambda self: self._default_time(23, 59)
     )
-    reason = fields.Char("Reason")
+    reason = fields.Char()
 
     def action_create_leave(self):
         self.env["resource.calendar.leaves"].create(

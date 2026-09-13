@@ -157,10 +157,10 @@ class CrmLeadAssignation(models.TransientModel):
     _description = "Lead Assignation"
 
     forward_id = fields.Many2one("crm.lead.forward.to.partner", "Partner Assignment")
-    lead_id = fields.Many2one("crm.lead", "Lead")
-    lead_location = fields.Char("Lead Location")
+    lead_id = fields.Many2one("crm.lead")
+    lead_location = fields.Char()
     partner_assigned_id = fields.Many2one("res.partner", "Assigned Partner")
-    partner_location = fields.Char("Partner Location")
+    partner_location = fields.Char()
     lead_link = fields.Char("Link to Lead")
 
     @api.onchange("lead_id")

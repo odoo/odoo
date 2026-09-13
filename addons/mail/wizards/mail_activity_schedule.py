@@ -72,7 +72,7 @@ class MailActivitySchedule(models.TransientModel):
     )
     is_batch_mode = fields.Boolean("Use in batch", compute="_compute_is_batch_mode")
     company_id: ResCompany = fields.Many2one(
-        "res.company", "Company", compute="_compute_company_id", required=False
+        "res.company", compute="_compute_company_id", required=False
     )
     error = fields.Html(compute="_compute_error_and_warning")
     has_error = fields.Boolean(compute="_compute_error_and_warning")
@@ -104,12 +104,9 @@ class MailActivitySchedule(models.TransientModel):
         help="Choose assignation for activities with on demand assignation.",
         default=lambda self: self.env.user,
     )
-    plan_date = fields.Date(
-        "Plan Date", compute="_compute_plan_date", store=True, readonly=False
-    )
+    plan_date = fields.Date(compute="_compute_plan_date", store=True, readonly=False)
     activity_type_id: MailActivityType = fields.Many2one(
         "mail.activity.type",
-        string="Activity Type",
         compute="_compute_activity_type_id",
         store=True,
         readonly=False,
@@ -122,11 +119,9 @@ class MailActivitySchedule(models.TransientModel):
     date_deadline = fields.Date(
         "Due Date", compute="_compute_date_deadline", readonly=False, store=True
     )
-    summary = fields.Char(
-        "Summary", compute="_compute_summary", readonly=False, store=True
-    )
+    summary = fields.Char(compute="_compute_summary", readonly=False, store=True)
     note = fields.Html(
-        "Note", compute="_compute_note", readonly=False, store=True, sanitize_style=True
+        compute="_compute_note", readonly=False, store=True, sanitize_style=True
     )
     activity_user_id: ResUsers = fields.Many2one(
         "res.users",

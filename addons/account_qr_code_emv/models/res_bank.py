@@ -11,14 +11,10 @@ class ResPartnerBank(models.Model):
     _inherit = "res.partner.bank"
 
     display_qr_setting = fields.Boolean(compute="_compute_display_qr_setting")
-    include_reference = fields.Boolean(
-        string="Include Reference", help="Include the reference in the QR code."
-    )
-    proxy_type = fields.Selection(
-        [("none", "None")], string="Proxy Type", default="none"
-    )
+    include_reference = fields.Boolean(help="Include the reference in the QR code.")
+    proxy_type = fields.Selection([("none", "None")], default="none")
     country_proxy_keys = fields.Char(compute="_compute_country_proxy_keys")
-    proxy_value = fields.Char(string="Proxy Value")
+    proxy_value = fields.Char()
 
     @api.model
     def _serialize(self, header, value):

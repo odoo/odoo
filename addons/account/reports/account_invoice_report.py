@@ -16,14 +16,12 @@ class AccountInvoiceReport(models.Model):
     _order = "invoice_date desc"
 
     move_id = fields.Many2one("account.move", readonly=True)
-    journal_id = fields.Many2one("account.journal", string="Journal", readonly=True)
-    company_id = fields.Many2one("res.company", string="Company", readonly=True)
-    company_currency_id = fields.Many2one(
-        "res.currency", string="Company Currency", readonly=True
-    )
-    partner_id = fields.Many2one("res.partner", string="Partner", readonly=True)
+    journal_id = fields.Many2one("account.journal", readonly=True)
+    company_id = fields.Many2one("res.company", readonly=True)
+    company_currency_id = fields.Many2one("res.currency", readonly=True)
+    partner_id = fields.Many2one("res.partner", readonly=True)
     commercial_partner_id = fields.Many2one("res.partner", string="Main Partner")
-    country_id = fields.Many2one("res.country", string="Country")
+    country_id = fields.Many2one("res.country")
     invoice_user_id = fields.Many2one("res.users", string="Salesperson", readonly=True)
     move_type = fields.Selection(
         [
@@ -42,13 +40,11 @@ class AccountInvoiceReport(models.Model):
     payment_state = fields.Selection(
         selection=PAYMENT_STATE_SELECTION, string="Payment Status", readonly=True
     )
-    fiscal_position_id = fields.Many2one(
-        "account.fiscal.position", string="Fiscal Position", readonly=True
-    )
-    invoice_date = fields.Date(readonly=True, string="Invoice Date")
+    fiscal_position_id = fields.Many2one("account.fiscal.position", readonly=True)
+    invoice_date = fields.Date(readonly=True)
 
     quantity = fields.Float(string="Product Quantity", readonly=True)
-    product_id = fields.Many2one("product.product", string="Product", readonly=True)
+    product_id = fields.Many2one("product.product", readonly=True)
     product_uom_id = fields.Many2one("uom.uom", string="Unit", readonly=True)
     product_categ_id = fields.Many2one(
         "product.category", string="Product Category", readonly=True
@@ -67,8 +63,8 @@ class AccountInvoiceReport(models.Model):
         string="Average Price", readonly=True, aggregator="avg"
     )
     price_margin = fields.Float(string="Margin", readonly=True)
-    inventory_value = fields.Float(string="Inventory Value", readonly=True)
-    currency_id = fields.Many2one("res.currency", string="Currency", readonly=True)
+    inventory_value = fields.Float(readonly=True)
+    currency_id = fields.Many2one("res.currency", readonly=True)
 
     _depends = {
         "account.move": [

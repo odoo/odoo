@@ -25,7 +25,6 @@ class MixinOrderInvoice(models.AbstractModel):
         search="_search_invoice_ids",
     )
     invoice_count = fields.Integer(
-        string="Invoice Count",
         compute="_compute_invoices",
     )
     invoice_state = fields.Selection(

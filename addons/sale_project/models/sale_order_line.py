@@ -25,7 +25,6 @@ class SaleOrderLine(models.Model):
     reached_milestones_ids = fields.One2many(
         "project.milestone",
         "sale_line_id",
-        string="Reached Milestones",
         domain=[("is_reached", "=", True)],
         export_string_translation=False,
     )

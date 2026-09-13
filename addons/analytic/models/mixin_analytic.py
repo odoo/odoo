@@ -13,7 +13,6 @@ class MixinAnalytic(models.AbstractModel):
     _description = "Analytic Mixin"
 
     analytic_distribution = fields.Json(
-        "Analytic Distribution",
         compute="_compute_analytic_distribution",
         search="_search_analytic_distribution",
         store=True,

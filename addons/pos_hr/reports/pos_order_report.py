@@ -6,7 +6,6 @@ class ReportPosOrder(models.Model):
 
     employee_id = fields.Many2one(
         comodel_name="hr.employee",
-        string="Employee",
         readonly=True,
     )
 

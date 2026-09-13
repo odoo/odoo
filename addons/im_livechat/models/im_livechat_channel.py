@@ -68,12 +68,10 @@ class Im_LivechatChannel(models.Model):
         help="While on a call, agents will not receive new conversations.",
     )
     review_link = fields.Char(
-        "Review Link",
         help="Visitors who leave a positive review will be redirected to this optional link.",
     )
 
     web_page = fields.Char(
-        "Web Page",
         compute="_compute_web_page_link",
         store=False,
         readonly=True,
@@ -119,7 +117,7 @@ class Im_LivechatChannel(models.Model):
         "Number of Ongoing Sessions", compute="_compute_ongoing_sessions_count"
     )
     remaining_session_capacity = fields.Integer(
-        "Remaining Session Capacity", compute="_compute_remaining_session_capacity"
+        compute="_compute_remaining_session_capacity"
     )
 
     _max_sessions_mode_greater_than_zero = models.Constraint(
@@ -717,7 +715,6 @@ class Im_LivechatChannelRule(models.Model):
     )
     channel_id = fields.Many2one(
         "im_livechat.channel",
-        "Channel",
         index="btree_not_null",
         help="The channel of the rule",
     )

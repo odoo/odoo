@@ -9,7 +9,6 @@ class HrWorkEntryType(models.Model):
 
     name = fields.Char(required=True, translate=True)
     display_code = fields.Char(
-        string="Display Code",
         size=3,
         translate=True,
         help="This code can be changed, it is only for a display purpose (3 letters max)",
@@ -25,13 +24,11 @@ class HrWorkEntryType(models.Model):
     color = fields.Integer(default=0)
     sequence = fields.Integer(default=25)
     active = fields.Boolean(
-        "Active",
         default=True,
         help="If the active field is set to false, it will allow you to hide the work entry type without removing it.",
     )
     country_id = fields.Many2one(
         "res.country",
-        string="Country",
         domain=lambda self: [("id", "in", self.env.companies.country_id.ids)],
     )
     country_code = fields.Char(related="country_id.code")

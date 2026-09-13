@@ -13,7 +13,7 @@ class ProductImage(models.Model):
     _inherit = ["mixin.image"]
     _order = "sequence, id"
 
-    name = fields.Char(string="Name", required=True)
+    name = fields.Char(required=True)
     sequence = fields.Integer(default=10)
 
     image_1920 = fields.Image()
@@ -25,7 +25,6 @@ class ProductImage(models.Model):
         index=True,
     )
     product_variant_id = fields.Many2one(
-        string="Product Variant",
         comodel_name="product.product",
         ondelete="cascade",
         index=True,

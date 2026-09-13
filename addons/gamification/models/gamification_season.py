@@ -20,16 +20,14 @@ class GamificationSeason(models.Model):
 
     name = fields.Char("Season Name", required=True, translate=True, tracking=True)
     description = fields.Html(
-        "Description",
         translate=True,
         sanitize_attributes=False,
     )
     theme = fields.Char(
-        "Theme",
         translate=True,
         help="Visual theme or motto (e.g., 'The Quality Quarter', 'Innovation Sprint').",
     )
-    icon = fields.Image("Icon", max_width=128, max_height=128)
+    icon = fields.Image(max_width=128, max_height=128)
     state = fields.Selection(
         [
             ("draft", "Draft"),
@@ -42,8 +40,8 @@ class GamificationSeason(models.Model):
         tracking=True,
         index=True,
     )
-    start_date = fields.Date("Start Date", required=True, tracking=True)
-    end_date = fields.Date("End Date", required=True, tracking=True)
+    start_date = fields.Date(required=True, tracking=True)
+    end_date = fields.Date(required=True, tracking=True)
 
     # Exclusive content
     challenge_ids = fields.One2many(

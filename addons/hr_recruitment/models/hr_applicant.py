@@ -36,9 +36,8 @@ class HrApplicant(models.Model):
     _primary_email = "email_from"
     _track_duration_field = "stage_id"
 
-    sequence = fields.Integer(string="Sequence", index=True, default=10)
+    sequence = fields.Integer(index=True, default=10)
     active = fields.Boolean(
-        "Active",
         default=True,
         help="If the active field is set to false, it will allow you to hide the case without removing it.",
         index=True,
@@ -64,23 +63,20 @@ class HrApplicant(models.Model):
         "hr_applicant_phone_number_rel",
         "applicant_id",
         "phone_number_id",
-        string="Phone",
         compute="_compute_partner_phone_email",
         inverse="_inverse_partner_email",
         copy=True,
         store=True,
     )
     linkedin_profile = fields.Char("LinkedIn Profile", index="btree_not_null")
-    degree_id = fields.Many2one("hr.recruitment.degree", "Degree")
+    degree_id = fields.Many2one("hr.recruitment.degree")
     availability = fields.Date(
-        "Availability",
         help="The date at which the applicant will be available to start working",
         tracking=True,
     )
     color = fields.Integer("Color Index", default=0)
     employee_id = fields.Many2one(
         "hr.employee",
-        string="Employee",
         help="Employee linked to the applicant.",
         copy=False,
         index="btree_not_null",
@@ -93,7 +89,6 @@ class HrApplicant(models.Model):
     create_date = fields.Datetime("Applied on", readonly=True)
     stage_id = fields.Many2one(
         "hr.recruitment.stage",
-        "Stage",
         ondelete="restrict",
         tracking=True,
         compute="_compute_stage_id",
@@ -106,13 +101,11 @@ class HrApplicant(models.Model):
     )
     last_stage_id = fields.Many2one(
         "hr.recruitment.stage",
-        "Last Stage",
         help="Stage of the applicant before being in the current stage. Used for lost cases analysis.",
     )
     categ_ids = fields.Many2many("hr.applicant.category", string="Tags")
     company_id = fields.Many2one(
         "res.company",
-        "Company",
         compute="_compute_company_id",
         store=True,
         readonly=False,
@@ -176,7 +169,6 @@ class HrApplicant(models.Model):
     )
     department_id = fields.Many2one(
         "hr.department",
-        "Department",
         compute="_compute_department_id",
         store=True,
         readonly=False,
@@ -210,7 +202,6 @@ class HrApplicant(models.Model):
             ("waiting", "Waiting"),
             ("blocked", "Blocked"),
         ],
-        string="Kanban State",
         copy=False,
         default="normal",
         required=True,
@@ -225,9 +216,7 @@ class HrApplicant(models.Model):
     legend_normal = fields.Char(
         related="stage_id.legend_normal", string="Kanban Ongoing"
     )
-    refuse_reason_id = fields.Many2one(
-        "hr.applicant.refuse.reason", string="Refuse Reason", tracking=True
-    )
+    refuse_reason_id = fields.Many2one("hr.applicant.refuse.reason", tracking=True)
     meeting_ids = fields.One2many("calendar.event", "applicant_id", "Meetings")
     meeting_display_text = fields.Char(compute="_compute_meeting_display")
     meeting_display_date = fields.Date(compute="_compute_meeting_display")
@@ -264,7 +253,7 @@ class HrApplicant(models.Model):
         "Properties", definition="job_id.applicant_properties_definition", copy=True
     )
     applicant_notes = fields.Html()
-    refuse_date = fields.Datetime("Refuse Date")
+    refuse_date = fields.Datetime()
     talent_pool_ids = fields.Many2many(
         comodel_name="hr.talent.pool", string="Talent Pools"
     )

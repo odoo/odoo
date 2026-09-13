@@ -6,15 +6,11 @@ class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
     active_provider_id = fields.Many2one(
-        string="Active Provider",
         comodel_name="payment.provider",
         compute="_compute_active_provider_id",
     )
-    has_enabled_provider = fields.Boolean(
-        string="Has Enabled Provider", compute="_compute_has_enabled_provider"
-    )
+    has_enabled_provider = fields.Boolean(compute="_compute_has_enabled_provider")
     onboarding_payment_module = fields.Selection(
-        string="Onboarding Payment Module",
         selection=[
             ("mercado_pago", "Mercado Pago"),
             ("razorpay", "Razorpay"),

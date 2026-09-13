@@ -19,10 +19,9 @@ class EventQuestion(models.Model):
             ("company_name", "Company"),
         ],
         default="simple_choice",
-        string="Question Type",
         required=True,
     )
-    active = fields.Boolean("Active", default=True)
+    active = fields.Boolean(default=True)
     event_type_ids = fields.Many2many("event.type", string="Event Types", copy=False)
     event_ids = fields.Many2many("event.event", string="Events", copy=False)
     event_count = fields.Integer("# Events", compute="_compute_event_count")
@@ -30,7 +29,6 @@ class EventQuestion(models.Model):
         "Default question", help="Include by default in new events."
     )
     is_reusable = fields.Boolean(
-        "Is Reusable",
         compute="_compute_is_reusable",
         default=True,
         store=True,

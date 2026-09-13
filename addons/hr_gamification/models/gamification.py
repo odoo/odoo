@@ -5,7 +5,7 @@ from odoo.exceptions import ValidationError
 class GamificationBadgeUser(models.Model):
     _inherit = "gamification.badge.user"
 
-    employee_id = fields.Many2one("hr.employee", string="Employee", index=True)
+    employee_id = fields.Many2one("hr.employee", index=True)
     has_edit_delete_access = fields.Boolean(compute="_compute_has_edit_delete_access")
 
     @api.constrains("employee_id")

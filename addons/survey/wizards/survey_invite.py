@@ -36,7 +36,6 @@ class SurveyInvite(models.TransientModel):
     )
     author_id = fields.Many2one(
         "res.partner",
-        "Author",
         index=True,
         ondelete="set null",
         default=_default_author_id,
@@ -74,7 +73,7 @@ class SurveyInvite(models.TransientModel):
     )
     existing_text = fields.Text("Resend Comment", compute="_compute_existing_text")
     mail_server_id = fields.Many2one("ir.mail_server", "Outgoing mail server")
-    survey_id = fields.Many2one("survey.survey", string="Survey", required=True)
+    survey_id = fields.Many2one("survey.survey", required=True)
     survey_start_url = fields.Char("Survey URL", compute="_compute_survey_start_url")
     survey_access_mode = fields.Selection(
         related="survey_id.access_mode", readonly=True

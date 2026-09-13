@@ -19,18 +19,16 @@ class GamificationAchievement(models.Model):
 
     name = fields.Char("Achievement", required=True, translate=True)
     description = fields.Text(
-        "Description",
         translate=True,
         help="Shown after the achievement is unlocked.",
     )
     hint = fields.Text(
-        "Hint",
         translate=True,
         help="Optional hint shown before unlock. Leave empty for full mystery.",
     )
     sequence = fields.Integer(default=10)
     active = fields.Boolean(default=True)
-    icon = fields.Image("Icon", max_width=128, max_height=128)
+    icon = fields.Image(max_width=128, max_height=128)
 
     # Trigger configuration
     model_id = fields.Many2one(
@@ -42,7 +40,6 @@ class GamificationAchievement(models.Model):
     )
     model_name = fields.Char(related="model_id.model")
     trigger_domain = fields.Char(
-        "Trigger Domain",
         required=True,
         default="[]",
         help="Domain evaluated per user. May reference 'user'. "
@@ -70,7 +67,6 @@ class GamificationAchievement(models.Model):
         help="Badge automatically granted when the achievement is unlocked.",
     )
     karma_reward = fields.Integer(
-        "Karma Reward",
         default=0,
         help="Karma points granted on unlock.",
     )
@@ -83,7 +79,6 @@ class GamificationAchievement(models.Model):
         ],
         default="common",
         required=True,
-        string="Rarity",
     )
     hidden = fields.Boolean(
         "Mystery Achievement",
@@ -212,14 +207,12 @@ class GamificationAchievementUnlock(models.Model):
 
     achievement_id = fields.Many2one(
         "gamification.achievement",
-        string="Achievement",
         required=True,
         index=True,
         ondelete="cascade",
     )
     user_id = fields.Many2one(
         "res.users",
-        string="User",
         required=True,
         index=True,
         ondelete="cascade",

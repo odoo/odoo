@@ -69,7 +69,6 @@ class MixinOrder(models.AbstractModel):
     )
 
     show_comparison = fields.Boolean(
-        string="Show Comparison",
         compute="_compute_show_comparison",
         help="Whether any product on this order was also bought or sold on "
         "another confirmed order, so a price comparison has something to show.",
@@ -106,7 +105,6 @@ class MixinOrder(models.AbstractModel):
             ("0", "Normal"),
             ("1", "Urgent"),
         ],
-        string="Priority",
         default="0",
         index=True,
     )
@@ -145,7 +143,6 @@ class MixinOrder(models.AbstractModel):
 
     company_id = fields.Many2one(
         comodel_name="res.company",
-        string="Company",
         required=True,
         default=lambda self: self.env.company,
         index=True,
@@ -155,7 +152,6 @@ class MixinOrder(models.AbstractModel):
     )
     currency_id = fields.Many2one(
         comodel_name="res.currency",
-        string="Currency",
         required=True,
         compute="_compute_currency_id",
         store=True,
@@ -164,7 +160,6 @@ class MixinOrder(models.AbstractModel):
         ondelete="restrict",
     )
     currency_rate = fields.Float(
-        string="Currency Rate",
         digits=0,
         compute="_compute_currency_rate",
         store=True,
@@ -173,7 +168,6 @@ class MixinOrder(models.AbstractModel):
 
     partner_id = fields.Many2one(
         comodel_name="res.partner",
-        string="Partner",
         required=True,
         change_default=True,
         check_company=True,
@@ -211,7 +205,6 @@ class MixinOrder(models.AbstractModel):
     )
     fiscal_position_id = fields.Many2one(
         comodel_name="account.fiscal.position",
-        string="Fiscal Position",
         compute="_compute_fiscal_position_id",
         store=True,
         precompute=True,
@@ -229,7 +222,6 @@ class MixinOrder(models.AbstractModel):
     )
     journal_id = fields.Many2one(
         comodel_name="account.journal",
-        string="Journal",
         compute="_compute_journal_id",
         store=True,
         precompute=True,
@@ -246,7 +238,6 @@ class MixinOrder(models.AbstractModel):
         help="Locked orders cannot be modified.",
     )
     acknowledged = fields.Boolean(
-        string="Acknowledged",
         copy=False,
         tracking=True,
         help="It indicates that the partner has acknowledged the receipt of the order.",
@@ -293,17 +284,14 @@ class MixinOrder(models.AbstractModel):
     )
 
     is_expired = fields.Boolean(
-        string="Is Expired",
         compute="_compute_is_expired",
     )
     is_late = fields.Boolean(
-        string="Is Late",
         compute="_compute_is_late",
         search="_search_is_late",
         help="True when the order is confirmed and its planned date has passed.",
     )
     type_name = fields.Char(
-        string="Type Name",
         compute="_compute_type_name",
     )
     has_archived_products = fields.Boolean(

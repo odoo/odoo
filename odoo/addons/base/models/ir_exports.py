@@ -19,6 +19,4 @@ class IrExportsLine(models.Model):
     _order = "id"
 
     name = fields.Char(string="Field Name")
-    export_id = fields.Many2one(
-        "ir.exports", string="Export", index=True, ondelete="cascade"
-    )
+    export_id = fields.Many2one("ir.exports", index=True, ondelete="cascade")

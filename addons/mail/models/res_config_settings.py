@@ -29,7 +29,6 @@ class ResConfigSettings(models.TransientModel):
     module_google_gmail = fields.Boolean("Support Gmail Authentication")
     module_microsoft_outlook = fields.Boolean("Support Outlook Authentication")
     restrict_template_rendering = fields.Boolean(
-        "Restrict Template Rendering",
         config_parameter="mail.restrict.template.rendering",
         help="Users will still be able to render templates.\n"
         "However only Mail Template Editors will be able to create new dynamic templates or modify existing ones.",

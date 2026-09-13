@@ -8,7 +8,7 @@ class SlideChannelTagGroup(models.Model):
     _order = "sequence asc"
 
     name = fields.Char("Group Name", required=True, translate=True)
-    sequence = fields.Integer("Sequence", default=10, index=True, required=True)
+    sequence = fields.Integer(default=10, index=True, required=True)
     tag_ids = fields.One2many("slide.channel.tag", "group_id", string="Tags")
 
     def _default_is_published(self):
@@ -21,11 +21,10 @@ class SlideChannelTag(models.Model):
     _description = "Channel/Course Tag"
     _order = "group_sequence asc, sequence asc"
 
-    name = fields.Char("Name", required=True, translate=True)
-    sequence = fields.Integer("Sequence", default=10, index=True, required=True)
+    name = fields.Char(required=True, translate=True)
+    sequence = fields.Integer(default=10, index=True, required=True)
     group_id = fields.Many2one(
         "slide.channel.tag.group",
-        string="Group",
         index=True,
         required=True,
         ondelete="cascade",

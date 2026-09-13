@@ -45,14 +45,11 @@ class ChangePasswordUser(models.TransientModel):
     _description = "User, Change Password Wizard"
     wizard_id = fields.Many2one(
         "change.password.wizard",
-        string="Wizard",
         required=True,
         ondelete="cascade",
     )
-    user_id = fields.Many2one(
-        "res.users", string="User", required=True, ondelete="cascade"
-    )
-    user_login = fields.Char(string="User Login", readonly=True)
+    user_id = fields.Many2one("res.users", required=True, ondelete="cascade")
+    user_login = fields.Char(readonly=True)
     new_passwd = fields.Char(string="New Password", default="")
 
     def change_password_button(self) -> None:
@@ -72,7 +69,7 @@ class ChangePasswordOwn(models.TransientModel):
     _description = "User, change own password wizard"
     _transient_max_hours = 0.1
 
-    new_password = fields.Char(string="New Password")
+    new_password = fields.Char()
     confirm_password = fields.Char(string="New Password (Confirmation)")
 
     @api.constrains("new_password", "confirm_password")

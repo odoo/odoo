@@ -5,7 +5,7 @@ class EventEvent(models.Model):
     _inherit = "event.event"
 
     sponsor_ids = fields.One2many("event.sponsor", "event_id", "Sponsors")
-    sponsor_count = fields.Integer("Sponsor Count", compute="_compute_sponsor_count")
+    sponsor_count = fields.Integer(compute="_compute_sponsor_count")
     exhibitor_menu = fields.Boolean(
         string="Showcase Exhibitors",
         compute="_compute_exhibitor_menu",

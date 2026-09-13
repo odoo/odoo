@@ -91,15 +91,14 @@ class PosSession(models.Model):
         default="opening_control",
     )
 
-    opening_notes = fields.Text(string="Opening Notes")
-    closing_notes = fields.Text(string="Closing Notes")
+    opening_notes = fields.Text()
+    closing_notes = fields.Text()
     cash_control = fields.Boolean(
         compute="_compute_cash_control", string="Has Cash Control"
     )
     cash_journal_id = fields.Many2one(
         "account.journal",
         compute="_compute_cash_journal_id",
-        string="Cash Journal",
         store=True,
     )
 
@@ -147,9 +146,7 @@ class PosSession(models.Model):
         related="config_id.payment_method_ids",
         string="Payment Methods",
     )
-    total_payments_amount = fields.Float(
-        compute="_compute_total_payments_amount", string="Total Payments Amount"
-    )
+    total_payments_amount = fields.Float(compute="_compute_total_payments_amount")
     is_in_company_currency = fields.Boolean(
         "Is Using Company Currency", compute="_compute_is_in_company_currency"
     )

@@ -27,7 +27,6 @@ class MixinDateCategory(models.AbstractModel):
 
     date_category = fields.Selection(
         selection="_selection_date_category",
-        string="Date Category",
         store=False,
         readonly=True,
         search="_search_date_category",

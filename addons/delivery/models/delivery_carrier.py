@@ -52,7 +52,6 @@ class DeliveryCarrier(models.Model):
     )
     integration_level = fields.Selection(
         [("rate", "Get Rate"), ("rate_and_ship", "Get Rate and Create Shipment")],
-        string="Integration Level",
         default="rate_and_ship",
         help="Action while validating Delivery Orders",
     )
@@ -111,7 +110,6 @@ class DeliveryCarrier(models.Model):
     )
 
     max_weight = fields.Float(
-        "Max Weight",
         help="If the total weight of the order is over this weight, the method won't be available.",
     )
     # Every carrier's secrets rest in credential.credential, and the
@@ -137,7 +135,6 @@ class DeliveryCarrier(models.Model):
         string="Weight unit of measure label", compute="_compute_weight_uom_name"
     )
     max_volume = fields.Float(
-        "Max Volume",
         help="If the total volume of the order is over this volume, the method won't be available.",
     )
     volume_uom_name = fields.Char(
@@ -157,7 +154,6 @@ class DeliveryCarrier(models.Model):
     )
 
     carrier_description = fields.Text(
-        "Carrier Description",
         translate=True,
         help="A description of the delivery method that you want to communicate to your customers on the Sales Order and sales confirmation email."
         "E.g. instructions for customers to follow.",
@@ -173,7 +169,6 @@ class DeliveryCarrier(models.Model):
         default=False,
     )
     amount = fields.Float(
-        string="Amount",
         default=1000,
         help="Amount of the order to benefit from a free shipping, expressed in the company currency",
     )
@@ -553,7 +548,6 @@ class DeliveryCarrier(models.Model):
         compute="_compute_fixed_price",
         inverse="_inverse_fixed_price",
         store=True,
-        string="Fixed Price",
     )
 
     @api.depends("product_id.list_price", "product_id.product_tmpl_id.list_price")

@@ -17,7 +17,6 @@ class ProductPricelist(models.Model):
         return self.env["website"].search(domain, limit=1)
 
     website_id = fields.Many2one(
-        string="Website",
         comodel_name="website",
         ondelete="restrict",
         default=_default_website_id,

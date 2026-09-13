@@ -36,7 +36,7 @@ class LunchOrder(models.Model):
         string="Extras 3",
         domain=[("topping_category", "=", 3)],
     )
-    product_id = fields.Many2one("lunch.product", string="Product", required=True)
+    product_id = fields.Many2one("lunch.product", required=True)
     category_id = fields.Many2one(
         string="Product Category", related="product_id.category_id", store=True
     )
@@ -50,7 +50,7 @@ class LunchOrder(models.Model):
 
     available_on_date = fields.Boolean(compute="_compute_available_on_date")
     order_deadline_passed = fields.Boolean(compute="_compute_order_deadline_passed")
-    user_id = fields.Many2one("res.users", "User", default=lambda self: self.env.uid)
+    user_id = fields.Many2one("res.users", default=lambda self: self.env.uid)
     lunch_location_id = fields.Many2one(
         "lunch.location", default=lambda self: self.env.user.last_lunch_location_id
     )
@@ -58,7 +58,7 @@ class LunchOrder(models.Model):
     price = fields.Monetary(
         "Total Price", compute="_compute_price", readonly=True, store=True
     )
-    active = fields.Boolean("Active", default=True)
+    active = fields.Boolean(default=True)
     state = fields.Selection(
         [
             ("new", "To Order"),
@@ -77,7 +77,7 @@ class LunchOrder(models.Model):
         "res.company", default=lambda self: self.env.company.id
     )
     currency_id = fields.Many2one(related="company_id.currency_id", store=True)
-    quantity = fields.Float("Quantity", required=True, default=1)
+    quantity = fields.Float(required=True, default=1)
 
     display_toppings = fields.Text(
         "Extras", compute="_compute_display_toppings", store=True

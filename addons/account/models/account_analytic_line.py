@@ -11,7 +11,6 @@ class AccountAnalyticLine(models.Model):
 
     product_id = fields.Many2one(
         "product.product",
-        string="Product",
         check_company=True,
         index="btree_not_null",
     )

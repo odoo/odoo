@@ -12,7 +12,6 @@ class MailMessage(models.Model):
     )
     rating_id = fields.Many2one("rating.rating", compute="_compute_rating_id")
     rating_value = fields.Float(
-        "Rating Value",
         compute="_compute_rating_value",
         compute_sudo=True,
         store=False,

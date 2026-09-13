@@ -38,7 +38,6 @@ class MixinMailActivity(models.AbstractModel):
     )
     activity_state = fields.Selection(
         [("overdue", "Overdue"), ("today", "Today"), ("planned", "Planned")],
-        string="Activity State",
         compute="_compute_activity_state",
         search="_search_activity_state",
         groups="base.group_user",
@@ -63,7 +62,6 @@ class MixinMailActivity(models.AbstractModel):
         groups="base.group_user",
     )
     activity_type_icon = fields.Char(
-        "Activity Type Icon",
         compute="_compute_activity_next",
         groups="base.group_user",
     )

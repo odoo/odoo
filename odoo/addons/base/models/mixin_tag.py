@@ -20,12 +20,10 @@ class MixinTag(models.AbstractModel):
         help="Archive a tag to hide it without deleting it.",
     )
     color = fields.Integer(
-        string="Color",
         default=lambda self: self._default_color(),
         aggregator=False,
     )
     code = fields.Char(
-        string="Code",
         compute="_compute_code",
         store=True,
         readonly=False,

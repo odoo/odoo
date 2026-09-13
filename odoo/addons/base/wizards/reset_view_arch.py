@@ -14,7 +14,7 @@ class ResetViewArchWizard(models.TransientModel):
     _name = "reset.view.arch.wizard"
     _description = "Reset View Architecture Wizard"
 
-    view_id = fields.Many2one("ir.ui.view", string="View")
+    view_id = fields.Many2one("ir.ui.view")
     view_name = fields.Char(related="view_id.name", string="View Name")
     has_diff = fields.Boolean(compute="_compute_arch_comparison")
     arch_diff = fields.Html(
@@ -29,7 +29,6 @@ class ResetViewArchWizard(models.TransientModel):
             ("hard", "Reset to file version (hard reset)."),
             ("other_view", "Reset to another view."),
         ],
-        string="Reset Mode",
         default="soft",
         required=True,
     )

@@ -36,8 +36,8 @@ class ResPartner(models.Model):
         default="single",
     )
     spouse_complete_name = fields.Char(string="Spouse Legal Name")
-    spouse_birthdate = fields.Date(string="Spouse Birthdate")
-    dependent_children = fields.Integer(string="Dependent Children")
+    spouse_birthdate = fields.Date()
+    dependent_children = fields.Integer()
     education_certificate = fields.Selection(
         selection="_selection_certificate",
         string="Certificate Level",

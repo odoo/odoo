@@ -40,7 +40,6 @@ class StockPickingType(models.Model):
     )
 
     auto_print_done_production_order = fields.Boolean(
-        "Auto Print Done Production Order",
         help="If this checkbox is ticked, Odoo will automatically print the production order of a MO when it is done.",
     )
     auto_print_done_mrp_product_labels = fields.Boolean(

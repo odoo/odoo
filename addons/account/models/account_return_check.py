@@ -21,18 +21,16 @@ class AccountReturnCheck(models.Model):
     code = fields.Char(string="Check ID", required=True)
     type = fields.Selection(
         selection=CHECK_TYPES,
-        string="Type",
         default="check",
         required=True,
     )
     template_id = fields.Many2one(
         comodel_name="account.return.check.template",
-        string="Template",
         ondelete="set null",
     )
 
     # Refreshed fields
-    name = fields.Char(string="Name", required=True, translate=True)
+    name = fields.Char(required=True, translate=True)
     message = fields.Text(string="Description", translate=True)
     state = fields.Char(
         string="Return State To Check For", default="new", required=True
@@ -50,7 +48,6 @@ class AccountReturnCheck(models.Model):
     )
     attachment_ids = fields.Many2many(
         comodel_name="ir.attachment",
-        string="Attachment",
         bypass_search_access=True,
     )
 

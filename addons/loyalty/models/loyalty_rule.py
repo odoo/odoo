@@ -51,7 +51,7 @@ class LoyaltyRule(models.Model):
     product_category_id = fields.Many2one(
         string="Categories", comodel_name="product.category"
     )
-    product_tag_id = fields.Many2one(string="Product Tag", comodel_name="product.tag")
+    product_tag_id = fields.Many2one(comodel_name="product.tag")
 
     reward_point_amount = fields.Float(string="Reward", default=1)
     # Only used for program_id.applies_on == 'future'

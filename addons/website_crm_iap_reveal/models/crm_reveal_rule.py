@@ -67,9 +67,9 @@ class CrmRevealRule(models.Model):
         required=True,
         default="role",
     )
-    preferred_role_id = fields.Many2one("crm.iap.lead.role", string="Preferred Role")
+    preferred_role_id = fields.Many2one("crm.iap.lead.role")
     other_role_ids = fields.Many2many("crm.iap.lead.role", string="Other Roles")
-    seniority_id = fields.Many2one("crm.iap.lead.seniority", string="Seniority")
+    seniority_id = fields.Many2one("crm.iap.lead.seniority")
     extra_contacts = fields.Integer(
         string="Number of Contacts",
         help="This is the number of contacts to track if their role/seniority match your criteria. Their details will show up in the history thread of generated leads/opportunities. One credit is consumed per tracked contact.",
@@ -90,13 +90,12 @@ class CrmRevealRule(models.Model):
         default="opportunity",
     )
     suffix = fields.Char(
-        string="Suffix",
         help="This will be appended in name of generated lead so you can identify lead/opportunity is generated with this rule",
     )
     team_id = fields.Many2one("crm.team", string="Sales Team", ondelete="set null")
     tag_ids = fields.Many2many("crm.tag", string="Tags")
     user_id = fields.Many2one("res.users", string="Salesperson")
-    priority = fields.Selection(crm_stage.AVAILABLE_PRIORITIES, string="Priority")
+    priority = fields.Selection(crm_stage.AVAILABLE_PRIORITIES)
     lead_ids = fields.One2many(
         "crm.lead", "reveal_rule_id", string="Generated Lead / Opportunity"
     )

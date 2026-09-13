@@ -15,7 +15,6 @@ class ResUsers(models.Model):
         copy=False,
     )
     livechat_username = fields.Char(
-        string="Livechat Username",
         groups="im_livechat.im_livechat_group_user,base.group_erp_manager",
         compute="_compute_livechat_username",
         inverse="_inverse_livechat_username",

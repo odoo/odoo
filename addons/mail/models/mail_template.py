@@ -207,7 +207,7 @@ class MailTemplate(models.Model):
             res["model_id"] = self.env["ir.model"]._get(res.pop("model")).id
         return res
 
-    name = fields.Char("Name", translate=True)
+    name = fields.Char(translate=True)
     description = fields.Text(
         "Template Description",
         translate=True,
@@ -237,7 +237,6 @@ class MailTemplate(models.Model):
         readonly=True,
     )
     subject = fields.Char(
-        "Subject",
         translate=True,
         prefetch=True,
         help="Subject (placeholders may be used here)",
@@ -269,7 +268,6 @@ class MailTemplate(models.Model):
         "Cc", help="Carbon copy recipients (placeholders may be used here)"
     )
     reply_to = fields.Char(
-        "Reply To",
         help="Email address to which replies will be redirected when sending emails in mass; only used when the reply is not logged in the original discussion thread.",
     )
     body_html = fields.Html(
@@ -306,11 +304,9 @@ class MailTemplate(models.Model):
         "priority one will be used.",
     )
     scheduled_date = fields.Char(
-        "Scheduled Date",
         help="If set, the queue manager will send the email after the date. If not set, the email will be send as soon as possible. You can use dynamic expression.",
     )
     auto_delete = fields.Boolean(
-        "Auto Delete",
         default=True,
         help="This option permanently removes any track of email after it's been sent, including from the Technical menu in the Settings, in order to preserve storage space of your Odoo database.",
     )

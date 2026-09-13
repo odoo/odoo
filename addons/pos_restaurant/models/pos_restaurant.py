@@ -15,15 +15,14 @@ class RestaurantFloor(models.Model):
         string="Point of Sales",
         domain="[('module_pos_restaurant', '=', True)]",
     )
-    background_image = fields.Binary("Background Image")
+    background_image = fields.Binary()
     background_color = fields.Char(
-        "Background Color",
         help="The background color of the floor in a html-compatible format",
     )
     table_ids = fields.One2many("restaurant.table", "floor_id", string="Tables")
-    sequence = fields.Integer("Sequence", default=1)
+    sequence = fields.Integer(default=1)
     active = fields.Boolean(default=True)
-    floor_background_image = fields.Image(string="Floor Background Image")
+    floor_background_image = fields.Image()
 
     @api.model
     def _load_pos_data_domain(self, data, config):
@@ -127,18 +126,14 @@ class RestaurantTable(models.Model):
     _description = "Restaurant Table"
     _inherit = ["mixin.pos.load"]
 
-    floor_id = fields.Many2one(
-        "restaurant.floor", string="Floor", index="btree_not_null"
-    )
+    floor_id = fields.Many2one("restaurant.floor", index="btree_not_null")
     table_number = fields.Integer(
-        "Table Number",
         required=True,
         help="The number of the table as displayed on the floor plan",
         default=0,
     )
     shape = fields.Selection(
         [("square", "Square"), ("round", "Round")],
-        string="Shape",
         required=True,
         default="square",
     )
@@ -152,13 +147,12 @@ class RestaurantTable(models.Model):
         default=10,
         help="The table's vertical position from the top to the table's center, in pixels",
     )
-    width = fields.Float("Width", default=50, help="The table's width in pixels")
-    height = fields.Float("Height", default=50, help="The table's height in pixels")
+    width = fields.Float(default=50, help="The table's width in pixels")
+    height = fields.Float(default=50, help="The table's height in pixels")
     seats = fields.Integer(
-        "Seats", default=1, help="The default number of customer served at this table."
+        default=1, help="The default number of customer served at this table."
     )
     color = fields.Char(
-        "Color",
         help="The table's color, expressed as a valid 'background' CSS property value",
     )
     parent_id = fields.Many2one(
@@ -167,7 +161,6 @@ class RestaurantTable(models.Model):
         help="The parent table if this table is part of a group of tables",
     )
     active = fields.Boolean(
-        "Active",
         default=True,
         help="If false, the table is deactivated and will not be available in the point of sale",
     )

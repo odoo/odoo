@@ -18,12 +18,10 @@ class ProductTemplate(models.Model):
     _inherit = "product.template"
 
     cost_method = fields.Selection(
-        string="Cost Method",
         selection=COST_METHOD_SELECTION,
         compute="_compute_cost_method",
     )
     valuation = fields.Selection(
-        string="Valuation",
         selection=VALUATION_SELECTION,
         compute="_compute_valuation",
         search="_search_valuation",
@@ -222,7 +220,6 @@ class ProductProduct(models.Model):
         currency_field="company_currency_id",
     )
     total_value = fields.Monetary(
-        string="Total Value",
         compute="_compute_value",
         compute_sudo=True,
         currency_field="company_currency_id",

@@ -65,12 +65,11 @@ class SlideSlide(models.Model):
     name = fields.Char("Title", required=True, translate=True)
     image_1920 = fields.Image(compute="_compute_image_1920", store=True, readonly=False)
     active = fields.Boolean(default=True, tracking=100)
-    sequence = fields.Integer("Sequence", default=0)
+    sequence = fields.Integer(default=0)
     user_id = fields.Many2one(
         "res.users", string="Uploaded by", default=lambda self: self.env.uid
     )
     description = fields.Html(
-        "Description",
         translate=True,
         sanitize_attributes=False,
         sanitize_overridable=True,
@@ -86,7 +85,7 @@ class SlideSlide(models.Model):
         default=False,
         help="The course is accessible by anyone : the users don't need to join the channel to access the content of the course.",
     )
-    is_new_slide = fields.Boolean("Is New Slide", compute="_compute_is_new_slide")
+    is_new_slide = fields.Boolean(compute="_compute_is_new_slide")
     completion_time = fields.Float(
         "Duration",
         digits=(10, 4),
@@ -140,7 +139,6 @@ class SlideSlide(models.Model):
         "survey.survey", "Linked Survey", index="btree_not_null"
     )
     has_questions = fields.Boolean(
-        "Has Questions",
         compute="_compute_has_questions",
         store=True,
         help="Whether this slide has quiz/certification questions (via its linked survey).",
@@ -240,7 +238,6 @@ class SlideSlide(models.Model):
             ("vimeo_video", "Vimeo Video"),
             ("certification", "Certification"),
         ],
-        string="Slide Type",
         compute="_compute_slide_type",
         store=True,
         readonly=False,
@@ -272,14 +269,12 @@ class SlideSlide(models.Model):
     date_published = fields.Datetime(
         "Publish Date", readonly=True, tracking=False, copy=False
     )
-    likes = fields.Integer(
-        "Likes", compute="_compute_like_info", store=True, compute_sudo=False
-    )
+    likes = fields.Integer(compute="_compute_like_info", store=True, compute_sudo=False)
     dislikes = fields.Integer(
-        "Dislikes", compute="_compute_like_info", store=True, compute_sudo=False
+        compute="_compute_like_info", store=True, compute_sudo=False
     )
     embed_code = fields.Html(
-        "Embed Code", readonly=True, compute="_compute_embed_code", sanitize=False
+        readonly=True, compute="_compute_embed_code", sanitize=False
     )
     embed_code_external = fields.Html(
         "External Embed Code",

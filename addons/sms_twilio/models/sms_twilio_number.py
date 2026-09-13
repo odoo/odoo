@@ -8,7 +8,6 @@ class SmsTwilioNumber(models.Model):
 
     company_id = fields.Many2one(
         "res.company",
-        string="Company",
         required=True,
         ondelete="cascade",
         index="btree",
@@ -16,7 +15,7 @@ class SmsTwilioNumber(models.Model):
     )
     sequence = fields.Integer(default=1)
     number = fields.Char(string="Twilio Number", required=True)
-    country_id = fields.Many2one("res.country", string="Country", required=True)
+    country_id = fields.Many2one("res.country", required=True)
     country_code = fields.Char(related="country_id.code", string="Country Code")
 
     def _compute_display_name(self):

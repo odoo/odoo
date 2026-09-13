@@ -32,7 +32,6 @@ class Account_Edi_Proxy_ClientUser(models.Model):
     id_client = fields.Char(required=True)
     company_id = fields.Many2one(
         "res.company",
-        string="Company",
         required=True,
         index=True,
         default=lambda self: self.env.company,
@@ -41,7 +40,6 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         required=True, help="The unique id that identifies this user, typically the vat"
     )
     private_key_id = fields.Many2one(
-        string="Private Key",
         comodel_name="certificate.key",
         required=True,
         domain=[("public", "=", False)],
@@ -53,9 +51,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         help="This field is used to indicate that the edi user token is out of sync with the proxy server. "
         "It is set to True when the token needs to be refreshed or updated.",
     )
-    token_sync_version = fields.Integer(
-        string="Token Sync Version",
-    )
+    token_sync_version = fields.Integer()
     proxy_type = fields.Selection(selection=[], required=True)
     edi_mode = fields.Selection(
         selection=[
