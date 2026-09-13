@@ -18,6 +18,7 @@ from odoo.tools.assets.esm_graph import (
     _bridge_shim_source,
     _BridgeExportResolver,
     _extract_esm_exports,
+    _resolve_export_specifier,
     _strict_stub_source,
 )
 from odoo.tools.assets.esm_lexer import lex_module
@@ -302,7 +303,9 @@ class BridgeShimManager:
             src = resolver.read_source(spec)
             if src is None:
                 continue
-            for specifier, kind in _lexed_imports(src, base_spec=spec):
+            for specifier, kind in _lexed_imports(
+                src, base_spec=spec, base_url=resolver.effective_url(spec)
+            ):
                 if specifier in ext_lib_names:
                     ext_seen.add(specifier)
                     continue
@@ -432,11 +435,13 @@ def _static_edges(src: str) -> list[tuple[str, str | None]]:
     return edges
 
 
-def _lexed_imports(src: str, *, base_spec: str) -> list[tuple[str, str | None]]:
+def _lexed_imports(
+    src: str, *, base_spec: str, base_url: str | None = None
+) -> list[tuple[str, str | None]]:
     out = []
     for specifier, kind in _static_edges(src):
         if specifier.startswith("."):
-            specifier = _relative_to_specifier(base_spec, specifier)
+            specifier = _relative_to_specifier(base_spec, specifier, base_url)
             if specifier is None:
                 continue
         elif not specifier.startswith("@"):
@@ -445,7 +450,16 @@ def _lexed_imports(src: str, *, base_spec: str) -> list[tuple[str, str | None]]:
     return out
 
 
-def _relative_to_specifier(base_spec: str, relative: str) -> str | None:
+def _relative_to_specifier(
+    base_spec: str, relative: str, base_url: str | None = None
+) -> str | None:
+    # a specifier is not a directory: "@x/models/related_models" names
+    # related_models/index.js, whose siblings live under related_models/,
+    # so a relative import resolves against the file's url when it is known
+    if base_url:
+        resolved = _resolve_export_specifier(base_spec, relative, base_url)
+        if resolved is not None:
+            return resolved
     if not base_spec.startswith("@"):
         return None
     base_dir = posixpath.dirname(base_spec)
