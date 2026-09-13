@@ -28,7 +28,6 @@ class TestAttachmentAddUrlHardening(HttpCase):
     def _resolving_publicly(self):
         real_getaddrinfo = socket.getaddrinfo
 
-        # The test's own HTTP client resolves through the same function.
         def getaddrinfo(host, port, *args, **kwargs):
             if host != "example.com":
                 return real_getaddrinfo(host, port, *args, **kwargs)

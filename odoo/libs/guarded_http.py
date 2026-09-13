@@ -129,8 +129,6 @@ class GuardedAdapter(HTTPAdapter):
         addresses: tuple[IPAddress, ...],
         options: dict[str, typing.Any],
     ) -> Response:
-        # http.client writes the connection host into Host, which is the pinned
-        # address; the header is restored afterwards because a redirect copies it.
         added_host = "Host" not in request.headers
         if added_host:
             request.headers["Host"] = parse_url(request.url or "").netloc or ""
@@ -227,8 +225,6 @@ def _socket_of(response: Response) -> socket.socket | None:
     sock = getattr(getattr(response.raw, "connection", None), "sock", None)
     if sock is not None:
         return sock
-    # http.client drops the connection's socket once the response will close it,
-    # leaving it reachable only through the response's file object.
     reader = getattr(getattr(response.raw, "_fp", None), "fp", None)
     return getattr(getattr(reader, "raw", None), "_sock", None)
 
@@ -237,9 +233,6 @@ class _Watchdog(threading.Timer):
     fired: threading.Event
 
 
-# A read deadline between chunks cannot stop a body that trickles one byte at a
-# time: every recv succeeds and the buffered reader keeps filling one chunk. Only
-# shutting the socket from outside unblocks it.
 def _start_watchdog(response: Response, deadline: float | None) -> _Watchdog | None:
     if deadline is None:
         return None
@@ -260,9 +253,6 @@ def _start_watchdog(response: Response, deadline: float | None) -> _Watchdog | N
 
 
 class GuardedSession(requests.Session):
-    # Checking here as well as in the adapter puts the refusal ahead of anything
-    # wrapping Session.send; the adapter reuses the addresses instead of resolving
-    # the name a second time.
     def send(self, request: PreparedRequest, **kwargs: typing.Any) -> Response:  # type: ignore[override]
         adapter = self.get_adapter(url=request.url or "")
         if isinstance(adapter, GuardedAdapter):

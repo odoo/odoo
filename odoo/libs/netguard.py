@@ -60,11 +60,8 @@ _PRIVATE_NETWORKS = tuple(
     )
 )
 _SHARED_NETWORK = ipaddress.ip_network("100.64.0.0/10")
-# IANA marks the SRv6 SID block not globally reachable; ipaddress reports it global.
 _SRV6_SIDS = ipaddress.ip_network("5f00::/16")
 _NAT64_WELL_KNOWN = ipaddress.ip_network("64:ff9b::/96")
-# ::a.b.c.d is deprecated (RFC 4291) and stacks disagree on whether it reaches IPv4,
-# while ipaddress reports most of it as global.
 _IPV4_COMPATIBLE = ipaddress.ip_network("::/96")
 
 

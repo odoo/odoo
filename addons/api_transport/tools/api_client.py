@@ -343,8 +343,6 @@ class OutboundAPIClient:
         return session
 
     def _create_session(self):
-        # No byte cap and requests' own redirect budget: an endpoint's payloads and
-        # redirects are the vendor's contract, not input to be distrusted.
         session = self.env["ir.egress"].session(
             purpose=f"api_transport:{self.endpoint_code}",
             policy=self.egress_policy,

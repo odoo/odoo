@@ -67,8 +67,6 @@ _DEFAULT_PORTS = {"http": 80, "https": 443}
 _EXTERNAL_RESOURCE_TIMEOUT = (5.0, 10.0)
 _EXTERNAL_RESOURCE_MAX_SECONDS = 30.0
 _EXTERNAL_RESOURCE_MAX_BYTES = 16 * 1024 * 1024
-# requests has already decoded the body, so the encoding and length it arrived
-# with no longer describe what WeasyPrint reads.
 _DECODED_RESPONSE_HEADERS = frozenset(
     {"content-encoding", "content-length", "transfer-encoding"}
 )
@@ -82,9 +80,6 @@ def _is_tls_verification_required(url: str) -> bool:
     return urlparse(url).hostname not in _LOOPBACK_HOSTS
 
 
-# The report URL is this server's own, configured by an administrator and often on
-# a private address, so it is fetched under the private-allowed policy without the
-# ir.egress environment a static fetcher does not have.
 def _get_own_origin(
     url: str, cookies: dict[str, str], verify: bool
 ) -> requests.Response:

@@ -21,8 +21,6 @@ HEAD_SCAN_CHUNK_SIZE = 8192
 
 
 def get_link_preview_session(env: Any) -> requests.Session:
-    # No byte cap: the head scan stops on its own, and a cap would refuse a large
-    # page on its announced length before its head could be read.
     return env["ir.egress"].session(
         purpose="link_preview",
         max_bytes=None,

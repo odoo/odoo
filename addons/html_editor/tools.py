@@ -198,8 +198,6 @@ def get_video_thumbnail(video_url):
 
     response = None
     platform, video_id = source[:2]
-    # The thumbnail URL Vimeo returns is the vendor's answer, not a constant, so the
-    # fetches share the public-only session; no environment is at hand for ir.egress.
     session = guarded_http.guarded_session(
         netguard.PUBLIC_ONLY, max_bytes=VIDEO_THUMBNAIL_MAX_BYTES
     )
