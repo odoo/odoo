@@ -53,6 +53,7 @@
             <field name="arch" type="xml">
                 <search string="Search Bank">
                     <field name="name"/>
+                    <field name="bic"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                 </search>
