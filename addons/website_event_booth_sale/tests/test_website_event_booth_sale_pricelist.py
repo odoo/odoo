@@ -66,5 +66,5 @@ class TestWebsiteBoothPriceList(TestEventBoothSaleCommon, TestWebsiteEventSaleCo
         })
         with MockRequest(self.env, website=self.website, sale_order_id=order.id) as req:
             self.assertEqual(req.pricelist, self.pricelist)
-            self.WebsiteSaleController.pricelist_change(pl2)
+            self.WebsiteSaleController.pricelist_change(pl2.id)
             self.assertEqual(so_line.price_reduce_taxexcl, 360, 'Incorrect amount based on the pricelist "Without Discount" and its currency.')

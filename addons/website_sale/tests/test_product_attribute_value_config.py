@@ -54,18 +54,10 @@ class TestWebsiteSaleProductAttributeValueConfig(
         discount_rate = 0.9
         currency_ratio = 2
 
-        # CASE: B2B setting (default)
+        # CASE: B2C setting (default)
         with MockRequest(
             product_template.env, website=website, website_sale_current_pl=pricelist.id
         ):
-            combination_info = product_template._get_combination_info()
-            self.assertEqual(combination_info["price"], 2222 * discount_rate * currency_ratio)
-            self.assertEqual(combination_info["list_price"], 2222 * currency_ratio)
-            self.assertEqual(combination_info["has_discounted_price"], True)
-
-            # CASE: B2C setting
-            website.show_line_subtotals_tax_selection = "tax_included"
-
             combination_info = product_template._get_combination_info()
             self.assertEqual(
                 combination_info["price"], 2222 * discount_rate * currency_ratio * tax_ratio
@@ -73,6 +65,14 @@ class TestWebsiteSaleProductAttributeValueConfig(
             self.assertAlmostEqual(
                 combination_info["list_price"], 2222 * currency_ratio * tax_ratio
             )
+            self.assertEqual(combination_info["has_discounted_price"], True)
+
+            # CASE: B2B setting
+            website.show_line_subtotals_tax_selection = "tax_excluded"
+
+            combination_info = product_template._get_combination_info()
+            self.assertEqual(combination_info["price"], 2222 * discount_rate * currency_ratio)
+            self.assertEqual(combination_info["list_price"], 2222 * currency_ratio)
             self.assertEqual(combination_info["has_discounted_price"], True)
 
     def test_get_combination_info_with_fpos(self):
@@ -117,9 +117,6 @@ class TestWebsiteSaleProductAttributeValueConfig(
             "value_ids": [(6, 0, [self.ssd_256.id])],
         })
         computer_ssd_attribute_lines.product_template_value_ids[0].price_extra = 200
-
-        # Enable tax included
-        website.show_line_subtotals_tax_selection = "tax_included"
 
         with MockRequest(product.env, website=website):
             combination_info = product._get_combination_info()

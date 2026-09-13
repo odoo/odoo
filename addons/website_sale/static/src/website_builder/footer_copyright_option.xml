@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="website_sale.FooterCopyrightOption" t-inherit="website.FooterCopyrightOption" t-inherit-mode="extension">
+        <xpath expr="//*[@id=&quot;'footer_language_selector_opt'&quot;]/BuilderSelectItem[2]" position="attributes">
+            <attribute name="actionParam">{
+                views: [
+                    'portal.footer_language_selector',
+                    'website_sale.footer_pricelist_selector_with_language_selector',
+                ],
+            }</attribute>
+        </xpath>
+        <t name="footer_language_selector_opts" position="before">
+            <BuilderRow label.translate="Pricelist Selector">
+                <BuilderCheckbox
+                    preview="false"
+                    action="'websiteConfig'"
+                    actionParam="{
+                        views: ['website_sale.footer_pricelist_selector'],
+                        resetViewArch: true,
+                    }"
+                />
+            </BuilderRow>
+        </t>
+    </t>
+
+</templates>

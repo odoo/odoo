@@ -6,6 +6,8 @@ import {
     registerWebsitePreviewTour,
 } from "@website/js/tours/tour_utils";
 
+const PRICELIST_SELECTOR_DROPDOWN_TOGGLE = ":iframe header div[name=pricelist_selector] .dropdown-toggle";
+
 registerWebsitePreviewTour(
     "website_sale.shop_editor",
     {
@@ -14,31 +16,28 @@ registerWebsitePreviewTour(
     () => [
         {
             content: "Click on pricelist dropdown",
-            trigger: ":iframe div.o_pricelist_dropdown a[data-bs-toggle=dropdown]",
+            trigger: PRICELIST_SELECTOR_DROPDOWN_TOGGLE,
             run: "click",
         },
         {
-            trigger:
-                ":iframe div.o_pricelist_dropdown a[data-bs-toggle=dropdown][aria-expanded=true]",
+            trigger: `${PRICELIST_SELECTOR_DROPDOWN_TOGGLE}[aria-expanded=true]`,
         },
         {
-            trigger: ":iframe input[name=search]",
             content: "Click somewhere else in the shop.",
+            trigger: ":iframe input[name=search]",
             run: "click",
         },
         {
-            trigger:
-                ":iframe div.o_pricelist_dropdown a[data-bs-toggle=dropdown][aria-expanded=false]",
+            trigger: `${PRICELIST_SELECTOR_DROPDOWN_TOGGLE}[aria-expanded=false]`,
         },
         {
-            trigger: ":iframe div.o_pricelist_dropdown a[data-bs-toggle=dropdown]",
             content: "Click on the pricelist again.",
+            trigger: PRICELIST_SELECTOR_DROPDOWN_TOGGLE,
             run: "click",
         },
         {
-            trigger:
-                ":iframe div.o_pricelist_dropdown a[data-bs-toggle=dropdown][aria-expanded=true]",
             content: "Check pricelist dropdown opened",
+            trigger: `${PRICELIST_SELECTOR_DROPDOWN_TOGGLE}[aria-expanded=true]`,
         },
     ]
 );
