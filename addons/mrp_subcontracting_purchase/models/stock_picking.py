@@ -36,6 +36,8 @@ class StockPicking(models.Model):
         return action
 
     def _get_subcontracting_source_purchase(self):
+        if self.show_subcontracting_details_visible:
+            return self.env['purchase.order']
         moves_subcontracted = self.reference_ids.move_ids.filtered(lambda m: m.is_subcontract)
         return moves_subcontracted.purchase_line_id.order_id
 

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mrp_subcontracting.MoOverview" t-inherit="mrp.MoOverview" t-inherit-mode="extension">
+        <xpath expr="//th[@name='th_mrp_mo_free_to_use']" position="after">
+            <th t-if="this.is_subcontract and this.showAvailabilities" class="text-end">
+                Subcontractor Stock
+            </th>
+        </xpath>
+    </t>
+
+</templates>
