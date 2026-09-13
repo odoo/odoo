@@ -3,6 +3,7 @@ from unittest.mock import Mock, patch
 from urllib.parse import urlencode
 
 from odoo import tests
+from odoo.libs.guarded_http import GuardedSession
 from odoo.tools.misc import mute_logger, submap
 
 from odoo.addons.http_routing.tests.common import MockRequest
@@ -147,7 +148,7 @@ class TestControllers(tests.HttpCase):
                 "Public user shouldn't access record fields with a `groups` even if published",
             )
 
-    @patch("requests.get")
+    @patch.object(GuardedSession, "request")
     def test_05_seo_suggest_language_regex(self, mock_get):
         mock_response = Mock()
         mock_response.content = """<?xml version="1.0"?>
@@ -170,7 +171,8 @@ class TestControllers(tests.HttpCase):
 
         for lang_input, expected_output in test_cases:
             with self.subTest(lang=lang_input):
-                result = Website.seo_suggest(self, keywords="test", lang=lang_input)
+                with MockRequest(self.env):
+                    result = Website.seo_suggest(self, keywords="test", lang=lang_input)
 
                 called_params = mock_get.call_args[1]["params"]
 

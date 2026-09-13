@@ -4,6 +4,7 @@ from unittest.mock import patch
 
 import requests
 
+from odoo.libs.guarded_http import GuardedSession
 from odoo.tests.common import JsonRpcException, new_test_user, tagged
 from odoo.tools import mute_logger
 
@@ -73,7 +74,10 @@ class TestTranslationController(HttpCaseWithUserDemo):
         return None
 
     def _mock_translation_request(self, data):
-        with patch.object(requests, "post", self._patched_post):
+        def request(session, method, url, data=False, timeout=5, **kwargs):
+            return self._patched_post(url, data=data, timeout=timeout)
+
+        with patch.object(GuardedSession, "request", request):
             return self.call_jsonrpc("/mail/message/translate", data)
 
     def test_update_message(self):

@@ -1470,8 +1470,12 @@ class SlideSlide(models.Model):
     @api.model
     def _get_external_json(self, url, params=None, not_found_message=None):
         try:
-            response = requests.get(
-                url, timeout=self.EXTERNAL_FETCH_TIMEOUT, params=params or {}
+            response = self.env["ir.egress"].request(
+                "GET",
+                url,
+                purpose="slide_metadata",
+                timeout=self.EXTERNAL_FETCH_TIMEOUT,
+                params=params or {},
             )
             response.raise_for_status()
         except requests.exceptions.HTTPError as error:
@@ -1508,7 +1512,13 @@ class SlideSlide(models.Model):
     @api.model
     def _get_thumbnail(self, url):
         try:
-            response = requests.get(url, timeout=self.EXTERNAL_FETCH_TIMEOUT)
+            response = self.env["ir.egress"].request(
+                "GET",
+                url,
+                purpose="slide_thumbnail",
+                timeout=self.EXTERNAL_FETCH_TIMEOUT,
+                max_bytes=self.THUMBNAIL_MAX_BYTES,
+            )
             response.raise_for_status()
         except requests.exceptions.RequestException:
             _logger.debug("Could not download slide thumbnail %s", url, exc_info=True)
@@ -1667,8 +1677,11 @@ class SlideSlide(models.Model):
 
     def _get_completion_time_google_drive_pdf(self, download_url):
         try:
-            pdf_response = requests.get(
-                download_url, timeout=self.EXTERNAL_FETCH_TIMEOUT
+            pdf_response = self.env["ir.egress"].request(
+                "GET",
+                download_url,
+                purpose="slide_metadata",
+                timeout=self.EXTERNAL_FETCH_TIMEOUT,
             )
             pdf_response.raise_for_status()
         except requests.exceptions.RequestException:

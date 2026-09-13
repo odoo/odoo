@@ -7,6 +7,7 @@ from unittest.mock import patch
 from werkzeug.exceptions import NotFound
 
 from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.libs.guarded_http import GuardedSession
 from odoo.tests.common import new_test_user, tagged
 from odoo.tools import file_open
 
@@ -544,8 +545,9 @@ class TestDiscussChannelInvariants(MailCommon):
 
         with (
             patch.dict(os.environ, {"ODOO_SFU_KEY": ""}),
-            patch(
-                f"{member_module}.requests.get",
+            patch.object(
+                GuardedSession,
+                "request",
                 side_effect=AssertionError("no SFU request without a key"),
             ),
             self.assertLogs(member_module, level="WARNING"),

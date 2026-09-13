@@ -278,8 +278,10 @@ class WebsiteAssets(models.AbstractModel):
 
     def _http_get_google_font(self, url, *, expect_binary):
         try:
-            with requests.get(
+            with self.env["ir.egress"].request(
+                "GET",
                 url,
+                purpose="google_fonts",
                 timeout=_GOOGLE_FONT_TIMEOUT,
                 headers=_GOOGLE_FONT_HEADERS,
                 stream=True,

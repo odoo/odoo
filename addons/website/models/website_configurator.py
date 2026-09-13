@@ -2,7 +2,6 @@ import json
 import logging
 import re
 
-import requests
 from lxml import etree, html
 from markupsafe import escape
 
@@ -19,6 +18,7 @@ logger = logging.getLogger(__name__)
 
 DEFAULT_WEBSITE_ENDPOINT = "https://website.api.odoo.com"
 DEFAULT_OLG_ENDPOINT = "https://olg.api.odoo.com"
+CONFIGURATOR_IMAGE_MAX_BYTES = 10 * 1024 * 1024
 
 
 class Website(models.Model):
@@ -617,7 +617,13 @@ class Website(models.Model):
             if extn_identifier in names:
                 continue
             try:
-                response = requests.get(image_src, timeout=3)
+                response = self.env["ir.egress"].request(
+                    "GET",
+                    image_src,
+                    purpose="website_configurator",
+                    timeout=3,
+                    max_bytes=CONFIGURATOR_IMAGE_MAX_BYTES,
+                )
                 response.raise_for_status()
             except Exception as e:
                 logger.warning("Failed to download image: %s.\n%s", image_src, e)

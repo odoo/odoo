@@ -74,7 +74,7 @@ class ResPartner(models.Model):
         This should only remain valid for a relatively short time.
         Here, for the duration it is in cache.
         """
-        session = requests.Session()
+        session = self.env["ir.egress"].session(purpose="static_map")
         for partner in self:
             url = partner.static_map_url
             if not url:

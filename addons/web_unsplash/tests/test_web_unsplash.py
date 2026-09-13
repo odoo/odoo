@@ -4,6 +4,7 @@ from unittest.mock import Mock, patch
 from lxml import etree
 
 from odoo.exceptions import UserError
+from odoo.libs.guarded_http import GuardedSession
 from odoo.tests import HttpCase, TransactionCase, new_test_user, tagged
 from odoo.tools.json import scriptsafe as json_safe
 
@@ -98,8 +99,9 @@ class TestWebUnsplashController(HttpCase):
         return result["result"]
 
     def test_single_image_gets_one_extension(self):
-        with patch(
-            "odoo.addons.web_unsplash.controllers.main.requests.get",
+        with patch.object(
+            GuardedSession,
+            "request",
             return_value=Mock(status_code=200, content=GIF_PIXEL),
         ):
             uploads = self._post_unsplash_urls(
@@ -115,8 +117,9 @@ class TestWebUnsplashController(HttpCase):
         self.assertTrue(uploads[0]["name"].endswith(".gif"))
 
     def test_multi_image_batch_does_not_accumulate_extensions(self):
-        with patch(
-            "odoo.addons.web_unsplash.controllers.main.requests.get",
+        with patch.object(
+            GuardedSession,
+            "request",
             return_value=Mock(status_code=200, content=GIF_PIXEL),
         ):
             uploads = self._post_unsplash_urls(
@@ -153,8 +156,9 @@ class TestWebUnsplashController(HttpCase):
             return image
 
         with (
-            patch(
-                "odoo.addons.web_unsplash.controllers.main.requests.get",
+            patch.object(
+                GuardedSession,
+                "request",
                 return_value=Mock(status_code=200, content=GIF_PIXEL),
             ),
             patch(

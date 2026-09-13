@@ -8,6 +8,7 @@ from lxml import html
 
 from odoo.exceptions import UserError, ValidationError
 from odoo.http import request
+from odoo.libs.guarded_http import GuardedSession
 from odoo.tests import tagged
 from odoo.tests.common import HttpCase, TransactionCase, new_test_user
 from odoo.tools import mute_logger
@@ -394,12 +395,10 @@ class TestGoogleFontFetchHardening(TransactionCase):
     )
 
     def _localize(self, css_response, bin_response):
-        def fake_get(url, **kw):
+        def fake_request(session, method, url, **kw):
             return css_response() if "fonts.googleapis.com" in url else bin_response()
 
-        with patch(
-            "odoo.addons.website.models.assets.requests.get", side_effect=fake_get
-        ):
+        with patch.object(GuardedSession, "request", fake_request):
             return self.env["website.assets"]._localize_google_fonts({"Test": ""})
 
     def _binary_count(self):

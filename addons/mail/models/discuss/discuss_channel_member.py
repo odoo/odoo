@@ -638,8 +638,11 @@ class DiscussChannelMember(models.Model):
         )
         try:
             with _debug.perf("sfu_channel_requested", channel=self.channel_id.id):
-                response = requests.get(
+                response = self.env["ir.egress"].request(
+                    "GET",
                     sfu_server_url + "/v1/channel",
+                    purpose="discuss_sfu",
+                    policy="private",
                     headers={"Authorization": "jwt " + json_web_token},
                     timeout=3,
                 )

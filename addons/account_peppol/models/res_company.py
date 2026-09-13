@@ -490,7 +490,9 @@ class ResCompany(models.Model):
             with contextlib.suppress(
                 requests.exceptions.RequestException, etree.XMLSyntaxError
             ):
-                response = requests.get(service_href, timeout=TIMEOUT)
+                response = self.env["ir.egress"].request(
+                    "GET", service_href, purpose="peppol_smp", timeout=TIMEOUT
+                )
                 if response.status_code == 200:
                     access_point_info = etree.fromstring(response.content)
                     provider_name = access_point_info.findtext(

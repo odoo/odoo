@@ -3,6 +3,7 @@
 from unittest.mock import MagicMock, patch
 
 from odoo.exceptions import UserError
+from odoo.libs.guarded_http import GuardedSession
 from odoo.tests import TransactionCase, tagged
 
 
@@ -44,7 +45,7 @@ class TestGeocoder(TransactionCase):
         response = MagicMock()
         response.status_code = 200
         response.json.return_value = [{"lat": "19.4326", "lon": "-99.1332"}]
-        with patch("requests.get", return_value=response):
+        with patch.object(GuardedSession, "request", return_value=response):
             coordinates = self.Geocoder.geo_find("CDMX, Mexico")
         self.assertEqual(coordinates, (19.4326, -99.1332))
 
@@ -57,7 +58,7 @@ class TestGeocoder(TransactionCase):
         response = MagicMock()
         response.status_code = 200
         response.json.return_value = []
-        with patch("requests.get", return_value=response):
+        with patch.object(GuardedSession, "request", return_value=response):
             self.assertIsNone(self.Geocoder.geo_find("nowhere at all"))
 
     def test_reverse_guard_blocks_in_tests(self):
@@ -112,11 +113,13 @@ class TestGeocoderEdges(TransactionCase):
             "status": "OK",
             "results": [{"geometry": {"location": {"lat": 10.0, "lng": 20.0}}}],
         }
-        with patch("requests.get", return_value=response) as mock_get:
+        with patch.object(GuardedSession, "request", return_value=response) as mock_get:
             self.Geocoder._call_googlemap(
                 "Some address", force_country=self.env.ref("base.mx").name
             )
-        self.assertEqual(mock_get.call_args.args[1]["components"], "country:MX")
+        self.assertEqual(
+            mock_get.call_args.kwargs["params"]["components"], "country:MX"
+        )
 
     def test_googlemap_force_country_unknown_name_falls_back(self):
         """An unmatched `force_country` name is passed through as-is (no worse than before)."""
@@ -129,16 +132,18 @@ class TestGeocoderEdges(TransactionCase):
             "status": "OK",
             "results": [{"geometry": {"location": {"lat": 10.0, "lng": 20.0}}}],
         }
-        with patch("requests.get", return_value=response) as mock_get:
+        with patch.object(GuardedSession, "request", return_value=response) as mock_get:
             self.Geocoder._call_googlemap("Some address", force_country="Nowhereland")
         self.assertEqual(
-            mock_get.call_args.args[1]["components"], "country:Nowhereland"
+            mock_get.call_args.kwargs["params"]["components"], "country:Nowhereland"
         )
 
     def test_network_error_raises_query_error(self):
         """A requests failure surfaces as a UserError, never a raw exception."""
         with (
-            patch("requests.get", side_effect=OSError("network down")),
+            patch.object(
+                GuardedSession, "request", side_effect=OSError("network down")
+            ),
             self.assertRaises(UserError),
         ):
             self.Geocoder._call_openstreetmap("Some address 123")
@@ -152,7 +157,7 @@ class TestGeocoderEdges(TransactionCase):
         response.status_code = 403
         response.json.return_value = {"error": {"message": "blocked"}}
         with (
-            patch("requests.get", return_value=response),
+            patch.object(GuardedSession, "request", return_value=response),
             self.assertRaises(UserError),
         ):
             self.Geocoder._call_googlemap("Some address")
@@ -165,7 +170,7 @@ class TestGeocoderEdges(TransactionCase):
         response = MagicMock()
         response.status_code = 200
         response.json.return_value = {"status": "OK", "results": []}
-        with patch("requests.get", return_value=response):
+        with patch.object(GuardedSession, "request", return_value=response):
             self.assertIsNone(self.Geocoder._call_googlemap("Some address"))
 
     def test_reverse_without_coordinates_returns_none(self):

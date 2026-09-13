@@ -1019,8 +1019,10 @@ class Website(Home):
         language = [match.group(1), match.group(2) or ""] if match else ["en", "US"]
         url = "https://www.google.com/complete/search"
         try:
-            req = requests.get(
+            req = request.env["ir.egress"].request(
+                "GET",
                 url,
+                purpose="seo_suggest",
                 params={
                     "ie": "utf8",
                     "oe": "utf8",
@@ -1256,7 +1258,12 @@ class Website(Home):
         )
         yesterday = fields.Datetime.add(fields.Datetime.now(), days=-1)
         if not metadata or metadata.write_date < yesterday:
-            req = requests.get("https://fonts.google.com/metadata/fonts", timeout=5)
+            req = request.env["ir.egress"].request(
+                "GET",
+                "https://fonts.google.com/metadata/fonts",
+                purpose="google_fonts",
+                timeout=5,
+            )
             if req.status_code != requests.codes.ok:
                 return {
                     "familyMetadataList": [],

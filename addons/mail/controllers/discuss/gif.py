@@ -48,8 +48,11 @@ class DiscussGifController(Controller):
             with _debug.perf(
                 "gif_api_requested", endpoint=endpoint.partition("?")[0]
             ) as span:
-                response = requests.get(
-                    f"https://api.klipy.com/v2/{endpoint}", timeout=3
+                response = request.env["ir.egress"].request(
+                    "GET",
+                    f"https://api.klipy.com/v2/{endpoint}",
+                    purpose="discuss_gif",
+                    timeout=3,
                 )
                 span.set(status=getattr(response, "status_code", None))
             response.raise_for_status()

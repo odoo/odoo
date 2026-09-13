@@ -2,6 +2,7 @@ from unittest.mock import patch
 
 import odoo.tests
 from odoo.exceptions import UserError
+from odoo.libs.guarded_http import GuardedSession
 from odoo.tests import TransactionCase
 
 
@@ -89,14 +90,14 @@ class TestGeocoderRequestsTimeout(TransactionCase):
     def test_call_openstreetmap_sets_timeout(self):
         """A stalled nominatim.openstreetmap.org must not hang the worker forever."""
         geocoder = self.env["geocoder"]
-        with patch("requests.get") as mock_get:
+        with patch.object(GuardedSession, "request") as mock_get:
             mock_get.return_value.status_code = 200
             mock_get.return_value.json.return_value = [{"lat": "10.0", "lon": "20.0"}]
             geocoder._call_openstreetmap("1600 Amphitheatre Parkway")
         self.assertIn(
             "timeout",
             mock_get.call_args.kwargs,
-            "requests.get() with no timeout can hang a worker forever on a stalled endpoint",
+            "a request with no timeout can hang a worker forever on a stalled endpoint",
         )
 
     def test_call_googlemap_sets_timeout(self):
@@ -105,7 +106,7 @@ class TestGeocoderRequestsTimeout(TransactionCase):
             "geocoding.google_map_api_key", "fake-key"
         )
         geocoder = self.env["geocoder"]
-        with patch("requests.get") as mock_get:
+        with patch.object(GuardedSession, "request") as mock_get:
             mock_get.return_value.status_code = 200
             mock_get.return_value.json.return_value = {
                 "status": "OK",
@@ -115,5 +116,5 @@ class TestGeocoderRequestsTimeout(TransactionCase):
         self.assertIn(
             "timeout",
             mock_get.call_args.kwargs,
-            "requests.get() with no timeout can hang a worker forever on a stalled endpoint",
+            "a request with no timeout can hang a worker forever on a stalled endpoint",
         )

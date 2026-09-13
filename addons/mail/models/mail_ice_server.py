@@ -90,7 +90,13 @@ class MailIceServer(models.Model):
         url = f"https://api.twilio.com/2010-04-01/Accounts/{account_sid}/Tokens.json"
         try:
             with _debug.perf("twilio_tokens_requested") as span:
-                response = requests.post(url, auth=(account_sid, auth_token), timeout=5)
+                response = self.env["ir.egress"].request(
+                    "POST",
+                    url,
+                    purpose="twilio_ice_servers",
+                    auth=(account_sid, auth_token),
+                    timeout=5,
+                )
                 span.set(status=getattr(response, "status_code", None))
         except requests.RequestException:
             _logger.warning("Could not reach Twilio for TURN servers", exc_info=True)

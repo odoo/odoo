@@ -4,6 +4,8 @@ from urllib.parse import parse_qs, quote_plus
 
 import requests
 
+from odoo.libs.guarded_http import GuardedSession
+
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 ID_CLIENT = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
@@ -202,10 +204,14 @@ class PeppolConnectorCommon(AccountTestInvoicingCommon):
         def mock_request_2(method, url, **kwargs):
             return mock_request(url, **kwargs)
 
+        def mock_session_request(session, method, url, **kwargs):
+            return mock_request(url, **kwargs)
+
         with (
             patch("requests.get", mock_request),
             patch("requests.post", mock_request),
             patch("requests.request", mock_request_2),
+            patch.object(GuardedSession, "request", mock_session_request),
         ):
             yield mock_results
 

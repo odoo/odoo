@@ -2,7 +2,6 @@ import base64
 import json
 import logging
 
-import requests
 from markupsafe import Markup
 from werkzeug.exceptions import Forbidden
 
@@ -13,6 +12,8 @@ from odoo.http import request
 from odoo.addons.iap.tools import iap_tools
 
 _logger = logging.getLogger(__name__)
+
+LOGO_MAX_BYTES = 5 * 1024 * 1024
 
 
 class MailPluginController(http.Controller):
@@ -110,7 +111,13 @@ class MailPluginController(http.Controller):
             logo_url = iap_data.get("logo")
             if logo_url:
                 try:
-                    response = requests.get(logo_url, timeout=2)
+                    response = request.env["ir.egress"].request(
+                        "GET",
+                        logo_url,
+                        purpose="mail_plugin_logo",
+                        timeout=2,
+                        max_bytes=LOGO_MAX_BYTES,
+                    )
                     if response.ok:
                         partner_values.update(
                             {"image_1920": base64.b64encode(response.content)}
@@ -386,7 +393,13 @@ class MailPluginController(http.Controller):
         logo_url = iap_data.get("logo")
         if logo_url:
             try:
-                response = requests.get(logo_url, timeout=2)
+                response = request.env["ir.egress"].request(
+                    "GET",
+                    logo_url,
+                    purpose="mail_plugin_logo",
+                    timeout=2,
+                    max_bytes=LOGO_MAX_BYTES,
+                )
                 if response.ok:
                     new_company_info["image_1920"] = base64.b64encode(response.content)
             except Exception as e:

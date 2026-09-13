@@ -201,7 +201,9 @@ class DiscussChannelRtcSession(models.Model):
             has_key=bool(key),
         )
         if key:
-            with requests.Session() as requests_session:
+            with self.env["ir.egress"].session(
+                purpose="discuss_sfu", policy="private"
+            ) as requests_session:
                 for (
                     url,
                     session_ids_by_channel,

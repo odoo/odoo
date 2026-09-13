@@ -146,7 +146,9 @@ class GoogleTranslateController(Controller):
         with _debug.perf(
             "translation_api_posted", endpoint=endpoint or "translate"
         ) as span:
-            response = requests.post(url, data=data, timeout=3)
+            response = request.env["ir.egress"].request(
+                "POST", url, purpose="google_translate", data=data, timeout=3
+            )
             span.set(status=getattr(response, "status_code", None))
         response.raise_for_status()
         return response

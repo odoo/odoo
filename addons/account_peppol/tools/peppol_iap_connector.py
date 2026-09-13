@@ -31,8 +31,14 @@ class PeppolIAPConnector:
         url = urljoin(self.base_url, endpoint)
         response_vals = {}
         try:
-            response = requests.request(
-                method, url, json=data, params=params, timeout=TIMEOUT, headers=headers
+            response = self.env["ir.egress"].request(
+                method,
+                url,
+                purpose="peppol_proxy",
+                json=data,
+                params=params,
+                timeout=TIMEOUT,
+                headers=headers,
             )
             response_vals = response.json()
             response.raise_for_status()

@@ -18,7 +18,6 @@ from collections.abc import Sequence
 from pathlib import Path
 
 import psycopg
-import requests
 from PIL import Image
 
 from odoo import api, fields, models
@@ -1680,7 +1679,9 @@ class Base_ImportImport(models.TransientModel):
         return path_models
 
     def _parse_binary_from_data(self, data, index, name, options):
-        with requests.Session() as session:
+        with self.env["ir.egress"].session(
+            purpose="import_url", max_bytes=None
+        ) as session:
             session.stream = True
 
             for num, line in enumerate(data):

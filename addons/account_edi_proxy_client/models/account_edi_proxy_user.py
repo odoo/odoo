@@ -117,8 +117,10 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             )
 
         try:
-            res = requests.post(
+            res = self.env["ir.egress"].request(
+                "POST",
                 url,
+                purpose="edi_proxy",
                 json=payload,
                 timeout=DEFAULT_TIMEOUT,
                 headers={"content-type": "application/json"},
@@ -128,10 +130,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             response = res.json()
         except (
             ValueError,
-            requests.exceptions.ConnectionError,
-            requests.exceptions.MissingSchema,
-            requests.exceptions.Timeout,
-            requests.exceptions.HTTPError,
+            requests.exceptions.RequestException,
         ) as e:
             _logger.warning(
                 "Connection error <%(url)s>: %(error)s", {"url": url, "error": e}

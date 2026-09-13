@@ -32,8 +32,10 @@ class Web_Unsplash(HTML_Editor):
             ):
                 raise ValueError("ERROR: Unknown Unsplash notify URL!")
             access_key = self._get_access_key()
-            requests.get(
+            request.env["ir.egress"].request(
+                "GET",
                 url,
+                purpose="unsplash",
                 params=urlencode({"client_id": access_key}),
                 timeout=REQUEST_TIMEOUT,
             )
@@ -76,7 +78,9 @@ class Web_Unsplash(HTML_Editor):
                     logger.error("ERROR: Unknown Unsplash URL!: %s", url)
                     raise ValueError("ERROR: Unknown Unsplash URL!")
 
-                req = requests.get(url, timeout=REQUEST_TIMEOUT)
+                req = request.env["ir.egress"].request(
+                    "GET", url, purpose="unsplash", timeout=REQUEST_TIMEOUT
+                )
                 if req.status_code != requests.codes.ok:
                     continue
 
@@ -118,8 +122,10 @@ class Web_Unsplash(HTML_Editor):
                 return {"error": "no_access"}
             return {"error": "key_not_found"}
         post["client_id"] = access_key
-        response = requests.get(
+        response = request.env["ir.egress"].request(
+            "GET",
             "https://api.unsplash.com/search/photos/",
+            purpose="unsplash",
             params=urlencode(post),
             timeout=REQUEST_TIMEOUT,
         )

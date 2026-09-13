@@ -128,7 +128,9 @@ class ResPartner(models.Model):
         smp_url = f"http://B-{hash_participant}.iso6523-actorid-upis.{sml_zone}.tech.ec.europa.eu/{endpoint_participant}"
 
         try:
-            response = requests.get(smp_url, timeout=TIMEOUT)
+            response = self.env["ir.egress"].request(
+                "GET", smp_url, purpose="peppol_smp", timeout=TIMEOUT
+            )
             response.raise_for_status()
         except requests.exceptions.RequestException as e:
             _logger.debug(e)
@@ -174,7 +176,9 @@ class ResPartner(models.Model):
         endpoint = f"{origin}/api/peppol/1/lookup?{query}"
 
         try:
-            response = requests.get(endpoint, timeout=TIMEOUT)
+            response = self.env["ir.egress"].request(
+                "GET", endpoint, purpose="peppol_proxy", timeout=TIMEOUT
+            )
         except requests.exceptions.RequestException as e:
             _logger.debug(
                 "failed to query peppol participant %s: %s", edi_identification, e

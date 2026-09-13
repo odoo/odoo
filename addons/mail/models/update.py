@@ -3,8 +3,6 @@ import datetime
 import logging
 from ast import literal_eval
 
-import requests
-
 from odoo import SUPERUSER_ID, api, fields, release
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
@@ -114,7 +112,14 @@ class Publisher_WarrantyContract(AbstractModel):
 
         url = config.get("publisher_warranty_url")
 
-        r = requests.post(url, data=arguments, timeout=30)
+        r = self.env["ir.egress"].request(
+            "POST",
+            url,
+            purpose="publisher_warranty",
+            policy="private",
+            data=arguments,
+            timeout=30,
+        )
         r.raise_for_status()
         return literal_eval(r.text)
 

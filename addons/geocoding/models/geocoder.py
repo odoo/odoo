@@ -97,13 +97,16 @@ class Geocoder(models.AbstractModel):
         if not addr:
             _logger.info("invalid address given")
             return None
-        import requests
-
         url = "https://nominatim.openstreetmap.org/search"
         try:
             headers = {"User-Agent": "Odoo (http://www.odoo.com/contactus)"}
-            response = requests.get(
-                url, headers=headers, params={"format": "json", "q": addr}, timeout=10
+            response = self.env["ir.egress"].request(
+                "GET",
+                url,
+                purpose="geocoding",
+                headers=headers,
+                params={"format": "json", "q": addr},
+                timeout=10,
             )
             _logger.info("openstreetmap nominatim service called")
             if response.status_code != 200:
@@ -135,12 +138,12 @@ class Geocoder(models.AbstractModel):
             return None
         if tools.config["test_enable"] or modules.module.current_test:
             raise UserError(_("OpenStreetMap calls disabled in testing environment."))
-        import requests
-
         try:
             headers = {"User-Agent": "Odoo (http://www.odoo.com/contactus)"}
-            response = requests.get(
+            response = self.env["ir.egress"].request(
+                "GET",
                 "https://nominatim.openstreetmap.org/reverse",
+                purpose="geocoding",
                 headers=headers,
                 params={"format": "json", "lat": lat, "lon": lon},
                 timeout=10,
@@ -184,10 +187,10 @@ class Geocoder(models.AbstractModel):
             params["components"] = "country:%s" % (
                 country.code if country else kw["force_country"]
             )
-        import requests
-
         try:
-            response = requests.get(url, params, timeout=10)
+            response = self.env["ir.egress"].request(
+                "GET", url, purpose="geocoding", params=params, timeout=10
+            )
             if response.status_code != 200:
                 _logger.warning(
                     "Request to Google Maps failed.\nCode: %s\nContent: %s",
