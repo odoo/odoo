@@ -301,16 +301,22 @@ test("Assign & Delete on _inherits fields", async () => {
     expect(channel.exists()).toBe(false);
 });
 
-test("onAdd/onDelete hooks on relational with inverse", async () => {
+test("onChange diff on relational with inverse", async () => {
     let logs = [];
     (class Thread extends Record {
         static id = "name";
         name;
-        members = fields.Many("Member", {
-            inverse: "thread",
-            onAdd: (member) => logs.push(`Thread.onAdd(${member.name})`),
-            onDelete: (member) => logs.push(`Thread.onDelete(${member.name})`),
-        });
+        members = fields.Many("Member", { inverse: "thread" });
+        setup() {
+            this.onChange(
+                () => [...this.members],
+                (member) => {
+                    logs.push(`Thread.onAdd(${member.name})`);
+                    return () => logs.push(`Thread.onDelete(${member.name})`);
+                },
+                { diff: true, immediate: true }
+            );
+        }
     }).register(localRegistry);
     (class Member extends Record {
         static id = "name";
@@ -481,15 +487,19 @@ test("Unshift preserves order", async () => {
     expect(thread.messages.map((msg) => msg.id)).toEqual([7, 6, 5, 4, 3, 2, 1]);
 });
 
-test("onAdd hook should see fully inserted data", async () => {
+test("onChange diff should see fully inserted data", async () => {
     (class Thread extends Record {
         static id = "name";
         name;
-        members = fields.Many("Member", {
-            inverse: "thread",
-            onAdd: (member) =>
-                expect.step(`Thread.onAdd::${member.name}.${member.type}.${member.isAdmin}`),
-        });
+        members = fields.Many("Member", { inverse: "thread" });
+        setup() {
+            this.onChange(
+                () => [...this.members],
+                (member) =>
+                    expect.step(`Thread.onAdd::${member.name}.${member.type}.${member.isAdmin}`),
+                { diff: true, immediate: true }
+            );
+        }
     }).register(localRegistry);
     (class Member extends Record {
         static id = "name";
@@ -703,17 +713,24 @@ test("store updates can be observed", async () => {
     expect.verifySteps(["abc:3"]);
 });
 
-test("onAdd/onDelete hooks on one without inverse", async () => {
+test("onChange diff on one without inverse", async () => {
     (class Thread extends Record {
         static id = "name";
     }).register(localRegistry);
     (class Member extends Record {
         static id = "name";
         name;
-        thread = fields.One("Thread", {
-            onAdd: (thread) => expect.step(`thread.onAdd(${thread.name})`),
-            onDelete: (thread) => expect.step(`thread.onDelete(${thread.name})`),
-        });
+        thread = fields.One("Thread");
+        setup() {
+            this.onChange(
+                () => [this.thread],
+                (thread) => {
+                    expect.step(`thread.onAdd(${thread.name})`);
+                    return () => expect.step(`thread.onDelete(${thread.name})`);
+                },
+                { diff: true, immediate: true }
+            );
+        }
     }).register(localRegistry);
     const store = await start();
     const general = store.Thread.insert("General");
@@ -727,14 +744,21 @@ test("onAdd/onDelete hooks on one without inverse", async () => {
     await expect.waitForSteps(["thread.onDelete(General)"]);
 });
 
-test("onAdd/onDelete hooks on many without inverse", async () => {
+test("onChange diff on many without inverse", async () => {
     (class Thread extends Record {
         static id = "name";
         name;
-        members = fields.Many("Member", {
-            onAdd: (member) => expect.step(`members.onAdd(${member.name})`),
-            onDelete: (member) => expect.step(`members.onDelete(${member.name})`),
-        });
+        members = fields.Many("Member");
+        setup() {
+            this.onChange(
+                () => [...this.members],
+                (member) => {
+                    expect.step(`members.onAdd(${member.name})`);
+                    return () => expect.step(`members.onDelete(${member.name})`);
+                },
+                { diff: true, immediate: true }
+            );
+        }
     }).register(localRegistry);
     (class Member extends Record {
         static id = "name";
@@ -752,6 +776,40 @@ test("onAdd/onDelete hooks on many without inverse", async () => {
     await expect.waitForSteps(["members.onAdd(John)"]);
     general.members = undefined;
     await expect.waitForSteps(["members.onDelete(Jane)", "members.onDelete(John)"]);
+});
+
+test("onChange diff sees the changes made by its own callback", async () => {
+    (class Thread extends Record {
+        static id = "name";
+        name;
+        members = fields.Many("Member");
+        setup() {
+            this.onChange(
+                () => [...this.members],
+                (member) => {
+                    expect.step(`added(${member.name})`);
+                    while (this.members.length > 1) {
+                        const popped = this.members.pop();
+                        expect.step(`popped(${popped.name})`);
+                    }
+                },
+                { diff: true, immediate: true }
+            );
+        }
+    }).register(localRegistry);
+    (class Member extends Record {
+        static id = "name";
+        name;
+    }).register(localRegistry);
+    const store = await start();
+    const thread = store.Thread.insert("General");
+    const [john, marc] = store.Member.insert(["John", "Marc"]);
+    thread.members.add(john);
+    expect.verifySteps(["added(John)"]);
+    thread.members.unshift(marc);
+    expect.verifySteps(["added(Marc)", "popped(John)"]);
+    thread.members.add(john);
+    expect.verifySteps(["added(John)", "popped(John)"]);
 });
 
 test("record list assign should update inverse fields", async () => {
@@ -1272,15 +1330,19 @@ test("record.delete() should clear relation (inverse + computed)", async () => {
     (class Thread extends Record {
         static id = "name";
         name;
-        members = fields.Many("Member", {
-            inverse: "thread",
-            onDelete: (member) => member?.delete(),
-        });
+        members = fields.Many("Member", { inverse: "thread" });
         onlineMembers = fields.Many("Member", {
             compute() {
                 return this.members.filter((member) => member.online);
             },
         });
+        setup() {
+            this.onChange(
+                () => [...this.members],
+                (member) => () => member.delete(),
+                { diff: true, immediate: true }
+            );
+        }
     }).register(localRegistry);
     (class Member extends Record {
         static id = "name";
@@ -1331,12 +1393,16 @@ test("Delete record with side-effect compute to insert it should have resulting 
      */
     (class DiscussApp extends Record {
         static id;
-        state = fields.One("DiscussAppState", {
-            compute: () => ({}),
-            onDelete() {
-                this.state = {};
-            },
-        });
+        state = fields.One("DiscussAppState", { compute: () => ({}) });
+        setup() {
+            this.onChange(
+                () => [this.state],
+                () => () => {
+                    this.state = {};
+                },
+                { diff: true, immediate: true }
+            );
+        }
     }).register(localRegistry);
     (class DiscussAppState extends Record {
         static id;
@@ -1357,11 +1423,18 @@ test("Delete record with side-effect compute to insert it should have resulting 
     expect(discussApp.state.thread).toBe(undefined);
 });
 
-test("Can delete record with chained onDelete: () => record.delete()", async () => {
+test("Can delete record with chained onChange diff: () => record.delete()", async () => {
     (class Channel extends Record {
         static id = "name";
         name;
-        thread = fields.One("Thread", { onDelete: (thread) => thread?.delete() }); // intentional onDelete to thread.delete() potentially twice during update cycle
+        thread = fields.One("Thread", { inverse: "channel" });
+        setup() {
+            this.onChange(
+                () => [this.thread],
+                (thread) => () => thread.delete(),
+                { diff: true, immediate: true }
+            );
+        }
     }).register(localRegistry);
     (class Thread extends Record {
         static id;
@@ -1371,7 +1444,14 @@ test("Can delete record with chained onDelete: () => record.delete()", async () 
                 return this.members[0];
             },
         });
-        members = fields.Many("User", { onDelete: (user) => user?.delete(), inverse: "threads" }); // intentional onDelete so that re-computed correspondent on delete
+        members = fields.Many("User", { inverse: "threads" });
+        setup() {
+            this.onChange(
+                () => [...this.members],
+                (user) => () => user.delete(),
+                { diff: true, immediate: true }
+            );
+        }
     }).register(localRegistry);
     (class User extends Record {
         static id = "name";
