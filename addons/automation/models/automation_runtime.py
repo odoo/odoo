@@ -8,6 +8,8 @@ from .workflow_edge import SETTLED_STATES
 
 _logger = logging.getLogger(__name__)
 
+DISPATCH_BATCH_SIZE = 500
+
 
 class AutomationRuntime(models.Model):
     _name = "automation.runtime"
@@ -233,30 +235,7 @@ class AutomationRuntime(models.Model):
         while self.state == "in_progress":
             ready_lines = self.line_ids.filtered(lambda l: l.state == "ready")
             if not ready_lines:
-                if self._finish_if_settled():
-                    break
-                if self.line_ids.filtered(
-                    lambda l: (
-                        l.state in ("paused", "scheduled")
-                        or (l.state == "waiting" and l._awaits_event())
-                    ),
-                ):
-                    self.action_wait()
-                    break
-                blocked = self.line_ids.filtered(
-                    lambda l: l.state not in SETTLED_STATES,
-                )
-                if blocked:
-                    _logger.warning(
-                        "Runtime %s cannot advance: %s step(s) never became ready (%s).",
-                        self.name,
-                        len(blocked),
-                        ", ".join(blocked.mapped("name")),
-                    )
-                    blocked.action_mark_error(
-                        _("Step never became ready: its dependencies cannot complete."),
-                    )
-                    self.action_error()
+                self._settle_idle()
                 break
             for line in ready_lines:
                 line.action_execute()
@@ -266,12 +245,59 @@ class AutomationRuntime(models.Model):
         self._notify_workflow_change()
         return self.state
 
+    def _settle_idle(self):
+        self.check_singleton()
+        if self._finish_if_settled():
+            return
+        if self.line_ids.filtered(
+            lambda l: (
+                l.state in ("paused", "scheduled")
+                or (l.state == "waiting" and l._awaits_event())
+            ),
+        ):
+            if self.state == "in_progress":
+                self.action_wait()
+            return
+        blocked = self.line_ids.filtered(lambda l: l.state not in SETTLED_STATES)
+        if blocked:
+            _logger.warning(
+                "Runtime %s cannot advance: %s step(s) never became ready (%s).",
+                self.name,
+                len(blocked),
+                ", ".join(blocked.mapped("name")),
+            )
+            blocked.action_mark_error(
+                _("Step never became ready: its dependencies cannot complete."),
+            )
+            self.action_error()
+
+    def _is_queued(self):
+        self.check_singleton()
+        return self.automation_id.run_mode == "queued"
+
+    def _launch(self):
+        for runtime in self:
+            runtime.action_start()
+            if runtime._is_queued():
+                runtime._request_dispatch()
+            else:
+                runtime.action_run_all()
+
+    def _request_dispatch(self):
+        self.env.ref("automation.ir_cron_data_automation_resume")._trigger()
+
     def _advance(self):
         for runtime in self.filtered(
             lambda run: run.state in ("in_progress", "waiting_resume"),
         ):
-            runtime.state = "in_progress"
-            runtime.action_run_all()
+            if not runtime._is_queued():
+                runtime.state = "in_progress"
+                runtime.action_run_all()
+            elif runtime.line_ids.filtered(lambda l: l.state == "ready"):
+                runtime.state = "in_progress"
+                runtime._request_dispatch()
+            else:
+                runtime._settle_idle()
 
     def _finish_if_settled(self):
         self.check_singleton()
@@ -311,7 +337,7 @@ class AutomationRuntime(models.Model):
                 if not line._has_error_handler():
                     parent.action_error()
                     continue
-            parent.action_run_all()
+            parent._advance()
 
     def action_wait(self):
         self.check_singleton()
@@ -337,7 +363,7 @@ class AutomationRuntime(models.Model):
             due.filtered(lambda step: step.state == "paused").action_resume()
             for step in due.filtered(lambda step: step.state == "scheduled"):
                 step._settle_readiness()
-            runtime.action_run_all()
+            runtime._advance()
 
     @api.model
     def _resume_waiting_executions(self):
@@ -358,6 +384,42 @@ class AutomationRuntime(models.Model):
             _logger.info("Resuming %s paused workflow run(s)", len(waiting))
         waiting.action_resume()
         return len(waiting)
+
+    @api.model
+    def _dispatch_due_steps(self):
+        self._resume_waiting_executions()
+        Line = self.env["automation.runtime.line"]
+        handled = set()
+        while lines := Line.search(
+            [
+                ("state", "=", "ready"),
+                ("id", "not in", list(handled)),
+                ("runtime_id.state", "in", ("in_progress", "waiting_resume")),
+                ("runtime_id.automation_id.run_mode", "=", "queued"),
+            ],
+            order="id",
+            limit=DISPATCH_BATCH_SIZE,
+        ):
+            handled.update(lines.ids)
+            for action, batch in lines.grouped("action_id").items():
+                runtimes = batch.runtime_id
+                runtimes.filtered(
+                    lambda run: run.state == "waiting_resume"
+                ).state = "in_progress"
+                action._execute_runtime_lines(batch)
+                for runtime in runtimes.filtered(
+                    lambda run: (
+                        run.state == "in_progress"
+                        and not run.line_ids.filtered(lambda l: l.state == "ready")
+                    ),
+                ):
+                    runtime._settle_idle()
+                if self.env.context.get("cron_id") and not self.env[
+                    "ir.cron"
+                ]._commit_progress(len(batch)):
+                    self._request_dispatch()
+                    return len(handled)
+        return len(handled)
 
     def action_done(self):
         self.check_singleton()

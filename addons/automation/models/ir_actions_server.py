@@ -175,6 +175,11 @@ class IrActionsServer(models.Model):
                     )
                 )
 
+    def _execute_runtime_lines(self, lines):
+        self.check_singleton()
+        for line in lines:
+            line.action_execute()
+
     def _get_wait_delta(self):
         self.check_singleton()
         return get_timedelta(self.wait_delay, self.wait_unit)

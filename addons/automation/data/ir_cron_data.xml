@@ -12,10 +12,10 @@
     </record>
 
     <record id="ir_cron_data_automation_resume" model="ir.cron">
-        <field name="name">Automation Rules: resume paused workflows</field>
+        <field name="name">Automation Rules: run due workflow steps</field>
         <field name="model_id" ref="model_automation_runtime" />
         <field name="state">code</field>
-        <field name="code">model._resume_waiting_executions()</field>
+        <field name="code">model._dispatch_due_steps()</field>
         <field name="repeat_interval">1</field>
         <field name="repeat_unit">hour</field>
     </record>

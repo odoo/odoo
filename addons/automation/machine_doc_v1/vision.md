@@ -289,7 +289,8 @@ person, a child run. All three route failure through an `on_error` edge rather
 than owning a failure path, which is Phase 2 paying for itself a third time.
 
 **The pause is isolated, as Decision 2 requires.** One line state, one datetime,
-one method (`_resume_waiting_executions`) and one cron record. Nothing else
+one method (`_resume_waiting_executions`, now the first step of
+`_dispatch_due_steps`) and one cron record. Nothing else
 depends on the polling, so replacing it when real async infrastructure ships is
 a deletion rather than an unpicking.
 

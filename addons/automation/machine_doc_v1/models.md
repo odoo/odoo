@@ -428,6 +428,29 @@ databases and triggers it once.
 **Decision 2 requires this to be easy to delete.** It is one line state, one
 datetime, one method and one cron record; nothing else consults the polling.
 
+## Queued runs and the dispatcher
+
+`automation.rule.run_mode` is `immediate` (the default: a run executes as soon as
+it starts, and whenever a step becomes ready) or `queued`. A queued run does
+nothing inline. `automation.runtime._launch()` starts it and triggers the cron,
+and `_advance()`, which every resume, approval, subflow and event path now goes
+through, only re-triggers the cron. The cron record the resume cron used to be
+now runs `_dispatch_due_steps()` (migration `1.10` rewrites its code and name):
+
+1. `_resume_waiting_executions()` promotes due `scheduled` and `paused` lines, as
+   before;
+2. it takes up to `DISPATCH_BATCH_SIZE` ready lines of queued runs and groups
+   them by node;
+3. it hands each group to `ir.actions.server._execute_runtime_lines(lines)`. The
+   default executes each line through `action_execute` and its savepoint; a node
+   type may override it to act on the whole batch at once, as a mailing does;
+4. it settles the runs left idle, commits progress through
+   `ir.cron._commit_progress` when it runs under a cron (never in a test), and
+   loops until no ready line is left that it has not already handed out.
+
+Immediate runs are never dispatched. A run that a person steps through with
+`action_next_step` keeps its ready lines until they click.
+
 **One trap it exposed.** A sweep settles every unfinished line `error` to clean
 up whatever a *failure* stranded. A paused line is unfinished but not stranded,
 so the sweep must never run on a live run. It first sat at the end of

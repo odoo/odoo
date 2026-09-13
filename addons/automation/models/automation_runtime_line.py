@@ -278,8 +278,7 @@ class AutomationRuntimeLine(models.Model):
                 "created_record_ref": f"automation.runtime,{child.id}",
             }
         )
-        child.action_start()
-        child.action_run_all()
+        child._launch()
         return True
 
     def action_refuse_approval(self, reason=False):
@@ -291,7 +290,7 @@ class AutomationRuntimeLine(models.Model):
             line.action_mark_error(reason or _("Approval was refused."))
             activities.unlink()
             if line._has_error_handler():
-                runtime.action_run_all()
+                runtime._advance()
             else:
                 runtime.action_error()
 
@@ -310,7 +309,7 @@ class AutomationRuntimeLine(models.Model):
                 _("The approval activity was removed before anyone acted on it."),
             )
             if line._has_error_handler():
-                runtime.action_run_all()
+                runtime._advance()
             else:
                 runtime.action_error()
 
@@ -327,7 +326,7 @@ class AutomationRuntimeLine(models.Model):
             if runtime.state == "waiting_resume":
                 runtime.state = "in_progress"
             line.action_resume()
-            runtime.action_run_all()
+            runtime._advance()
 
     def action_resume(self):
         for line in self.filtered(lambda step: step.state == "paused"):

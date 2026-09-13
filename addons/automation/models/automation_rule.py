@@ -233,6 +233,18 @@ class AutomationRule(models.Model):
         store=True,
         help="How many typed dependencies order this automation's steps",
     )
+    run_mode = fields.Selection(
+        selection=[
+            ("immediate", "Immediately"),
+            ("queued", "In Batches"),
+        ],
+        default="immediate",
+        required=True,
+        help="Immediately: a run executes its steps as soon as it starts, or as soon "
+        "as a step becomes ready.\n"
+        "In Batches: steps wait for the background dispatcher, which executes the "
+        "ready steps of all runs together, one batch per step.",
+    )
     create_runtime_instance = fields.Boolean(
         string="Record Every Run",
         default=False,
@@ -1431,8 +1443,7 @@ class AutomationRule(models.Model):
                     "res_id": record.id,
                 }
             )
-            runtime.action_start()
-            runtime.action_run_all()
+            runtime._launch()
             runtimes |= runtime
         return runtimes
 
