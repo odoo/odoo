@@ -699,7 +699,7 @@ class TestApproverSyncBatchesRowWrites(ApprovalCommon):
 
         def counting(cr_self, query, params=None, log_exceptions=True):
             text = getattr(query, "code", None) or str(query)
-            if "INSERT INTO" in text and "approval_approver" in text:
+            if re.match(r'\s*INSERT INTO "?approval_approver"?\s*\(', text):
                 inserts.append(text)
             if params is not None:
                 return original(cr_self, query, params, log_exceptions)
