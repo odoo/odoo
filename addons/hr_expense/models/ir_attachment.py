@@ -1,6 +1,7 @@
 from odoo import api, models
 from odoo.exceptions import AccessError
 from odoo.tools.misc import clean_context
+from ..wizard.hr_expense_split_wizard import _COPY_ATTACHMENT_FROM_SPLIT_WIZARD
 
 
 class IrAttachment(models.Model):
@@ -20,10 +21,10 @@ class IrAttachment(models.Model):
     def create(self, vals_list):
         expense_attachments = [vals for vals in vals_list if vals.get('res_model') == 'hr.expense' and vals.get('res_id')]
         expenses = self.env['hr.expense'].browse([vals['res_id'] for vals in expense_attachments])
-        if not all(
+        if not (self.env.context.get('from_split_wizard') is _COPY_ATTACHMENT_FROM_SPLIT_WIZARD or all(
             (expense.state in {'draft', 'submitted'} and (expense.has_access('write') or expense.employee_id.user_id == self.env.user)) or self.env.su
             for expense in expenses
-        ):
+        )):
             raise AccessError(self.env._("You can't add attachments to an expense once it has been approved."))
 
         user_expenses = expenses.filtered(lambda expense: expense.employee_id.user_id == self.env.user)
