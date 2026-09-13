@@ -358,24 +358,35 @@ class TestHrAttendanceUndertime(HttpCase):
         # Check that the employee's timezones take priority and that overtimes and attendances dates are consistent
         self.europe_employee.tz = 'America/New_York'
 
-        early_attendance2 = self.env['hr.attendance'].create({
+        # Check-in: 2024-05-30 03:00 UTC (May 29 23:00 NY)
+        # Check-out: 2024-05-30 10:00 UTC (May 30 06:00 NY)
+        # Record 1 (May 29 Local): 03:00 -> 04:00 UTC (1 worked hour -> -7.0 undertime)
+        # Record 2 (May 30 Local): 04:00 -> 10:00 UTC (6 worked hours -> -2.0 undertime)
+        self.env['hr.attendance'].create({
             'employee_id': self.europe_employee.id,
             'check_in': datetime(2024, 5, 30, 3, 0),  # 23:00 NY prev day
             'check_out': datetime(2024, 5, 30, 10, 0),  # 6:00 NY
         })
-        # First day you only work 1 hour and second day you work 6 hours, that's a total of -9 hours of overtime
-        self.assertAlmostEqual(early_attendance2.overtime_hours, -9, 2)
 
-        overtime_record2 = early_attendance2.linked_overtime_ids
-        self.assertEqual(len(overtime_record2), 1, "One undertime records should be created for that attendance.")
-        self.assertAlmostEqual(overtime_record2.duration, -9, 2)
+        split_records = self.env['hr.attendance'].search([
+            ('employee_id', '=', self.europe_employee.id),
+            ('check_in', '>=', datetime(2024, 5, 30, 3, 0)),
+            ('check_out', '<=', datetime(2024, 5, 30, 10, 0)),
+        ], order='check_in asc')
 
-        early_attendance3 = self.env['hr.attendance'].create({
-            'employee_id': self.europe_employee.id,
-            'check_in': datetime(2024, 5, 31, 4, 0),  # 00:00 NY
-            'check_out': datetime(2024, 5, 31, 10, 0),  # 6:00 NY
-        })
-        self.assertAlmostEqual(early_attendance3.overtime_hours, -2, 2)
+        self.assertEqual(len(split_records), 2, "Overnight shift in NY should split across local midnight.")
+
+        # Record 1 (May 29 Local): 1 worked hour vs 8 expected = -7.0 undertime hours
+        self.assertAlmostEqual(split_records[0].overtime_hours, -7.0, 2)
+        overtime_record2_day1 = split_records[0].linked_overtime_ids
+        self.assertEqual(len(overtime_record2_day1), 1)
+        self.assertAlmostEqual(overtime_record2_day1.duration, -7.0, 2)
+
+        # Record 2 (May 30 Local): 6 worked hours vs 8 expected = -2.0 undertime hours
+        self.assertAlmostEqual(split_records[1].overtime_hours, -2.0, 2)
+        overtime_record2_day2 = split_records[1].linked_overtime_ids
+        self.assertEqual(len(overtime_record2_day2), 1)
+        self.assertAlmostEqual(overtime_record2_day2.duration, -2.0, 2)
 
     def test_undertime_hours_flexible_resource(self):
         """ Test the computation of overtime hours for a single flexible resource with 8 hours_per_day.
@@ -529,23 +540,38 @@ class TestHrAttendanceUndertime(HttpCase):
         self.assertAlmostEqual(overtime.duration, -(10 / 60), places=2, msg='Overtime should be equal to -10 minutes.')
 
     def test_overtime_on_multiple_days(self):
-        attendance = self.env['hr.attendance'].create({
+        self.env['hr.attendance'].create({
             'employee_id': self.employee.id,
             'check_in': datetime(2021, 1, 8, 8, 0),  # Friday 8 AM - 16 PM work, 16 - 24 overtime (8 hours)
             'check_out': datetime(2021, 1, 9, 3, 0),  # Saturday 0-3 AM overtime (3 hours)
         })
 
-        overtime = attendance.linked_overtime_ids
+        # Record 1: Jan 8, 08:00 UTC -> Jan 8, 23:00 UTC (Jan 8, 09:00 -> Jan 8, 24:00 Local)
+        # Record 2: Jan 8, 23:00 UTC -> Jan 9, 03:00 UTC (Jan 9, 00:00 -> Jan 9, 04:00 Local)
+        split_attendances = self.env['hr.attendance'].search([
+            ('employee_id', '=', self.employee.id),
+            ('check_in', '>=', datetime(2021, 1, 8, 8, 0)),
+            ('check_out', '<=', datetime(2021, 1, 9, 3, 0)),
+        ], order='check_in asc')
+
+        self.assertEqual(len(split_attendances), 2, "Overnight shift should split into 2 attendance records.")
+
+        overtime = split_attendances.linked_overtime_ids
         self.assertEqual(len(overtime), 2, 'There should be 2 overtime records for that attendance.')
         self.assertEqual(sum(overtime.mapped('duration')), 11, 'There should be a total of 11 hours of overtime for that attendance.')
 
-        attendance.write({
+        # Update checkout on Day 1 record (Record 1) to Friday 20:00
+        # Record 2 (Saturday 00:00 -> 04:00 Local) remains in DB untouched.
+        split_attendances[0].write({
             'check_out': datetime(2021, 1, 8, 20, 0),
         })
 
-        overtime = attendance.linked_overtime_ids
-        self.assertEqual(len(overtime), 1, 'There should have only 1 overtime for that attendance after modification.')
-        self.assertEqual(sum(overtime.mapped('duration')), 4, 'There should be a total of 4 hours of overtime for that attendance after modification.')
+        # Overtime associated strictly with the modified Friday attendance
+        day_1_overtime = split_attendances[0].linked_overtime_ids
+        self.assertEqual(len(day_1_overtime), 1, 'There should be 1 overtime record for Friday after modification.')
+        self.assertEqual(sum(day_1_overtime.mapped('duration')), 4, 'There should be 4 hours of overtime on Friday after modification.')
 
+        # Total overtime records across the employee (Friday 4h + Saturday 3h = 2 records)
         all_overtimes = self.env['hr.attendance.overtime.line'].search([('employee_id', '=', self.employee.id)])
-        self.assertEqual(len(all_overtimes), 1, 'There should be only 1 overtime record in total for that employee.')
+        self.assertEqual(len(all_overtimes), 2, 'There should be 2 overtime records in total for that employee.')
+        self.assertEqual(sum(all_overtimes.mapped('duration')), 7, 'Total overtime should be 7 hours (4h Friday + 3h Saturday).')
