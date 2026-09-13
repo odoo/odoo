@@ -768,54 +768,44 @@ class AccountMoveLine(models.Model):
     @_debug.perf.timed
     def _get_term_default_accounts(self):
         moves = self.move_id
-        self.env.cr.execute(
-            """
-                WITH previous AS (
-                    SELECT DISTINCT ON (line.move_id)
-                           'account.move' AS model,
-                           line.move_id AS id,
-                           NULL AS account_type,
-                           line.account_id AS account_id
-                      FROM account_move_line line
-                     WHERE line.move_id = ANY(%(move_ids)s)
-                       AND line.display_type = 'payment_term'
-                       AND line.id != ANY(%(current_ids)s)
-                     -- deterministic pick: reuse the most recent term line's account
-                     ORDER BY line.move_id, line.id DESC
-                ),
-                fallback AS (
-                    SELECT DISTINCT ON (account_companies.res_company_id, account.account_type)
-                           'res.company' AS model,
-                           account_companies.res_company_id AS id,
-                           account.account_type AS account_type,
-                           account.id AS account_id
-                      FROM account_account account
-                      JOIN account_account_res_company_rel account_companies
-                           ON account_companies.account_account_id = account.id
-                     WHERE account_companies.res_company_id = ANY(%(company_ids)s)
-                       AND account.account_type IN ('asset_receivable', 'liability_payable')
-                       AND account.active = 't'
-                     -- deterministic pick: lowest account id per (company, type)
-                     ORDER BY account_companies.res_company_id, account.account_type, account.id
-                )
-                SELECT * FROM previous
-                UNION ALL
-                SELECT * FROM fallback
-            """,
-            {
-                "company_ids": moves.company_id.ids,
-                "move_ids": moves.ids,
-                "current_ids": self.ids,
-            },
+        result = {}
+        # the most recent payment-term line of each move, current lines excluded
+        previous_lines = self.env["account.move.line"].search(
+            [
+                ("move_id", "in", moves.ids),
+                ("display_type", "=", "payment_term"),
+                ("id", "not in", self.ids),
+            ],
+            order="move_id, id desc",
         )
-        if _debug.perf.enabled:
-            _debug.perf.count(
-                "term_default_accounts_fetched", moves=moves, rows=self.env.cr.rowcount
+        for line in previous_lines:
+            result.setdefault(
+                ("account.move", line.move_id.id, None), line.account_id.id
             )
-        return {
-            (model, id_, account_type): account_id
-            for model, id_, account_type, account_id in self.env.cr.fetchall()
-        }
+        # the lowest active receivable / payable account of each company
+        accounts = (
+            self.env["account.account"]
+            .sudo()
+            .search(
+                [
+                    ("company_ids", "in", moves.company_id.ids),
+                    ("account_type", "in", ("asset_receivable", "liability_payable")),
+                    ("active", "=", True),
+                ],
+                order="id",
+            )
+        )
+        wanted = set(moves.company_id.ids)
+        for account in accounts:
+            for company in account.company_ids:
+                if company.id in wanted:
+                    result.setdefault(
+                        ("res.company", company.id, account.account_type), account.id
+                    )
+        _debug.perf.count(
+            "term_default_accounts_fetched", moves=moves, rows=len(result)
+        )
+        return result
 
     @_debug.perf.timed
     def _compute_account_id_on_product_lines(self):
@@ -1056,45 +1046,37 @@ class AccountMoveLine(models.Model):
         )
 
         if stored_lines:
-            self.env["account.partial.reconcile"].flush_model()
-            self.env["res.currency"].flush_model(["decimal_places"])
-
-            aml_ids = list(stored_lines.ids)
-            self.env.cr.execute(
-                """
-                -- One row per (line, side). `decimal_places` is grouped by
-                -- MIN(), not by value: it is functionally dependent on the line
-                -- (`debit_currency_id` is a stored related on the line's own
-                -- currency), so every row of a group carries the same one --
-                -- but grouping BY it would split a line into several rows the
-                -- moment that stopped holding, and the dict built below keys on
-                -- (line_id, flag) and would silently keep the last.
-                SELECT
-                    part.debit_move_id AS line_id,
-                    'debit' AS flag,
-                    COALESCE(SUM(part.amount), 0.0) AS amount,
-                    ROUND(SUM(part.debit_amount_currency), MIN(curr.decimal_places)) AS amount_currency
-                FROM account_partial_reconcile part
-                JOIN res_currency curr ON curr.id = part.debit_currency_id
-                WHERE part.debit_move_id = ANY(%s)
-                GROUP BY part.debit_move_id
-                UNION ALL
-                SELECT
-                    part.credit_move_id AS line_id,
-                    'credit' AS flag,
-                    COALESCE(SUM(part.amount), 0.0) AS amount,
-                    ROUND(SUM(part.credit_amount_currency), MIN(curr.decimal_places)) AS amount_currency
-                FROM account_partial_reconcile part
-                JOIN res_currency curr ON curr.id = part.credit_currency_id
-                WHERE part.credit_move_id = ANY(%s)
-                GROUP BY part.credit_move_id
-            """,
-                [aml_ids, aml_ids],
-            )
-            amounts_map = {
-                (line_id, flag): (amount, amount_currency)
-                for line_id, flag, amount, amount_currency in self.env.cr.fetchall()
-            }
+            Partial = self.env["account.partial.reconcile"]
+            amounts_map = {}
+            # one row per (line, side); the currency amount is rounded to the side's
+            # currency, which every partial of a line shares with the line itself
+            for side, move_field, amount_field, currency_field in (
+                (
+                    "debit",
+                    "debit_move_id",
+                    "debit_amount_currency",
+                    "debit_currency_id",
+                ),
+                (
+                    "credit",
+                    "credit_move_id",
+                    "credit_amount_currency",
+                    "credit_currency_id",
+                ),
+            ):
+                groups = Partial._read_group(
+                    [(move_field, "in", stored_lines.ids)],
+                    [move_field, currency_field],
+                    ["amount:sum", f"{amount_field}:sum"],
+                )
+                for line, currency, amount, amount_currency in groups:
+                    amount_currency = amount_currency or 0.0
+                    amounts_map[line.id, side] = (
+                        amount or 0.0,
+                        currency.round(amount_currency)
+                        if currency
+                        else amount_currency,
+                    )
             _debug.perf.count("partial_sums_fetched", rows=len(amounts_map))
         else:
             amounts_map = {}
