@@ -370,7 +370,7 @@ class Application:
     def _finalize_error_response(
         self, exc: Exception, request: Request | None, response: Any
     ) -> Any:
-        if request is None or not request._post_init_done or response is None:
+        if request is None or response is None:
             _debug.logic(
                 "http.error_response.unfinalized",
                 error=type(exc).__name__,
@@ -380,12 +380,16 @@ class Application:
         try:
             if isinstance(response, HTTPException):
                 response = response.get_response(request.httprequest.environ)
-            request.dispatcher.post_dispatch(response)
+            if request._post_init_done:
+                request.dispatcher.post_dispatch(response)
+            else:
+                self.update_security_headers(response)
             set_error_response(exc, response)
             _debug.pipeline(
                 "http.error_response.finalized",
                 error=type(exc).__name__,
                 status=getattr(response, "status_code", None),
+                post_dispatched=request._post_init_done,
             )
         except Exception:
             _logger.warning(

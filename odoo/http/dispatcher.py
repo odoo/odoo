@@ -463,7 +463,7 @@ class JsonRPCDispatcher(Dispatcher):
     def _prepare_bad_request_error(self, message: str) -> HTTPException:
         body = {
             "jsonrpc": "2.0",
-            "id": None,
+            "id": self.request_id,
             "error": {"code": 400, "message": message, "data": {}},
         }
         return HTTPException(

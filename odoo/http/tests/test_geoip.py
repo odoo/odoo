@@ -104,3 +104,28 @@ def test_the_indexing_api_three_callers_still_use_keeps_working():
     assert geoip.get("not_a_geoip_key", "fallback") == "fallback"
     assert "country_code" in geoip
     assert "not_a_geoip_key" not in geoip
+
+
+def test_the_application_opens_no_reader_for_a_missing_database(tmp_path):
+    from odoo.http import settings
+    from odoo.http.application import Application
+
+    app = Application()
+    with settings.override(
+        geoip_city_db=str(tmp_path / "absent.mmdb"),
+        geoip_country_db=str(tmp_path / "absent.mmdb"),
+    ):
+        assert app.geoip_city_db is None
+        assert app.geoip_country_db is None
+
+
+def test_the_application_opens_no_reader_for_a_corrupt_database(tmp_path):
+    from odoo.http import settings
+    from odoo.http.application import Application
+
+    corrupt = tmp_path / "corrupt.mmdb"
+    corrupt.write_bytes(b"not a maxmind database")
+    app = Application()
+    with settings.override(geoip_city_db=str(corrupt), geoip_country_db=str(corrupt)):
+        assert app.geoip_city_db is None
+        assert app.geoip_country_db is None

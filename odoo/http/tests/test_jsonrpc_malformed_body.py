@@ -5,38 +5,32 @@ from typing import Any
 import pytest
 from werkzeug.exceptions import HTTPException
 
-from odoo.http._response import _RequestResponseMixin
 from odoo.http.dispatcher import JsonRPCDispatcher
+from odoo.http.request_class import Request
 
 
 def _dispatcher(body: bytes) -> JsonRPCDispatcher:
-    request: Any = types.SimpleNamespace(
-        httprequest=types.SimpleNamespace(
-            get_data=lambda: body, content_length=len(body)
-        ),
-        params={},
-        db=None,
-        registry=None,
-        prepare_json_response=None,
-        prepare_response=None,
+    httprequest: Any = types.SimpleNamespace(
+        remote_addr=None, get_data=lambda: body, content_length=len(body)
     )
-    request.get_json_data = lambda: json.loads(body)
-    request.prepare_response = _RequestResponseMixin.prepare_response.__get__(request)
-    request.prepare_json_response = _RequestResponseMixin.prepare_json_response.__get__(
-        request
-    )
+    request = Request(httprequest, app=None)
+    request.db = None
     return JsonRPCDispatcher(request)
 
 
 @pytest.mark.parametrize(
-    ("body", "message"),
+    ("body", "message", "request_id"),
     [
-        (b"{not json", "Invalid JSON data"),
-        (b'"a string"', "Invalid JSON-RPC data"),
-        (b'{"jsonrpc": "2.0", "id": 7, "params": [1, 2]}', "params must be an object"),
+        (b"{not json", "Invalid JSON data", None),
+        (b'"a string"', "Invalid JSON-RPC data", None),
+        (
+            b'{"jsonrpc": "2.0", "id": 7, "params": [1, 2]}',
+            "params must be an object",
+            7,
+        ),
     ],
 )
-def test_every_malformed_body_answers_a_400_jsonrpc_envelope(body, message):
+def test_every_malformed_body_answers_a_400_jsonrpc_envelope(body, message, request_id):
     dispatcher = _dispatcher(body)
     with pytest.raises(HTTPException) as caught:
         dispatcher.dispatch(types.SimpleNamespace(routing={}), {})
@@ -45,6 +39,7 @@ def test_every_malformed_body_answers_a_400_jsonrpc_envelope(body, message):
     assert response is not None, "the error carries its own JSON body"
     assert response.status_code == 400
     assert response.headers["Content-Type"].startswith("application/json")
-    error = json.loads(response.get_data())["error"]
-    assert error["code"] == 400
-    assert message in error["message"]
+    envelope = json.loads(response.get_data())
+    assert envelope["id"] == request_id, "the id is echoed once it is known"
+    assert envelope["error"]["code"] == 400
+    assert message in envelope["error"]["message"]

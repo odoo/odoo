@@ -70,13 +70,19 @@ def _run(app, environ, request):
 
     def start_response(status, headers, exc_info=None):
         captured["status"] = status
+        captured["headers"] = dict(headers)
 
     def _response(env, sr):
         sr("200 OK", [])
         return [b"body"]
 
     request._serve = lambda name: (captured.setdefault("served", name), _response)[1]
-    with mock.patch.object(application, "Request", lambda hr, app: request):
+
+    def _adopt(httprequest, app):
+        request.httprequest = httprequest
+        return request
+
+    with mock.patch.object(application, "Request", _adopt):
         body = app(environ, start_response)
     captured["body"] = b"".join(body)
     return captured
@@ -127,6 +133,9 @@ def test_trace_is_refused_before_anything_else_runs():
     assert req.calls == []
     static.assert_not_called()
     assert not req._post_init_done, "a refused method loads no session"
+    assert out["headers"]["X-Content-Type-Options"] == "nosniff", (
+        "a refusal that skips post_dispatch still carries the security headers"
+    )
 
 
 def test_a_nul_in_the_path_is_a_404_and_never_reaches_the_resolver():
@@ -137,6 +146,7 @@ def test_a_nul_in_the_path_is_a_404_and_never_reaches_the_resolver():
     assert out["status"].startswith("404")
     static.assert_not_called(), "get_static_file_path must not be handed a NUL path"
     assert not req._post_init_done, "a refused path loads no session"
+    assert out["headers"]["X-Content-Type-Options"] == "nosniff"
 
 
 def test_a_registry_error_falls_back_to_serving_without_a_database():
