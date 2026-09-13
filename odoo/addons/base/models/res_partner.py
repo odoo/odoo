@@ -1848,6 +1848,11 @@ class ResPartner(models.Model):
         _vat, country_code = self._run_vat_checks(self.country_id, self.vat, validation=False)
         return country_code or self.country_code
 
+    @api.model
+    def _get_identifier_fields(self):
+        # To be extended by localization, used by partner_autocomplete
+        return ['vat']
+
     # ============
     # VAT HELPERS
     # ============
