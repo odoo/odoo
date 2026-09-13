@@ -374,6 +374,7 @@ class TestAccountTax(AccountTestInvoicingCommon):
                     }),
                 ],
             })
+<<<<<<< 99edb6dd82b7b560930c00b03b694ba700785370
 
     def test_name_search_self_replacing_taxes(self):
         tax_1 = self.percent_tax(15.0, name='Name search tax 1')
@@ -400,3 +401,67 @@ class TestAccountTax(AccountTestInvoicingCommon):
             target_factors=[],
         )
         self.assertEqual(result, [])
+||||||| c867e933690a1d4e511a0bc31524f18027f72524
+=======
+
+    def test_import_retrieve_tax_from_fixed_allowance_charge(self):
+        """ Test fuzzy matching of fixed taxes like Recupel and Bebat """
+        company = self.company_data['company']
+
+        tax_recupel = self.env['account.tax'].create({
+            'name': 'REC 0.12',
+            'amount_type': 'fixed',
+            'amount': 0.12,
+            'type_tax_use': 'purchase',
+            'company_id': company.id,
+        })
+        tax_bebat = self.env['account.tax'].create({
+            'name': 'Bebat 0.13',
+            'amount_type': 'fixed',
+            'amount': 0.13,
+            'type_tax_use': 'purchase',
+            'company_id': company.id,
+        })
+        random = self.env['account.tax'].create({
+            'name': 'random 0.50',
+            'amount_type': 'fixed',
+            'amount': 0.50,
+            'type_tax_use': 'purchase',
+            'company_id': company.id,
+        })
+
+        dummy_invoice = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'company_id': company.id,
+        })
+
+        def get_search_method(amount, name, amount_type='fixed'):
+            tax_values = {
+                'amount_type': amount_type,
+                'type_tax_use': 'purchase',
+                'amount': amount,
+                'name': name,
+                'invoice_predictive': {'invoice': dummy_invoice},
+            }
+            plan = self.env['account.tax']._import_retrieve_tax_from_fixed_allowance_charge(tax_values)
+            return plan['criteria'][0]['search_method'] if plan else None
+
+        # multiple candidate taxes matching
+        search_method_recupel = get_search_method(0.125, 'REC 0.12 (Kopie)')
+        search_method_bebat = get_search_method(0.125, 'BEBAT')
+
+        self.assertEqual(search_method_recupel({}), tax_recupel)
+        self.assertEqual(search_method_bebat({}), tax_bebat)
+
+        # single candidate tax match, even if the name doesnt match
+        search_method_fallback = get_search_method(0.505, 'Unknown Eco Tax')
+        self.assertEqual(search_method_fallback({}), random)
+
+        # multiple candidate taxes matching, but name doesnt match
+        search_method_not_found = get_search_method(0.125, 'Unknown Eco Tax')
+        self.assertFalse(search_method_not_found({}))
+
+        # percentage tax, early exit
+        search_method_ignored = get_search_method(0.125, 'REC 0.12 (Kopie)', amount_type='percent')
+        self.assertIsNone(search_method_ignored)
+>>>>>>> d08a38d5a6fc634f27b40f3dc169e234bf87da45
