@@ -41,7 +41,11 @@ export class GloryAdminButtons extends Component {
                     );
                 }
             },
-            () => [this.props.record.data],
+            () => {
+                const { glory_websocket_address, glory_username, glory_password } =
+                    this.props.record.data;
+                return [glory_websocket_address, glory_username, glory_password];
+            },
         );
     }
 

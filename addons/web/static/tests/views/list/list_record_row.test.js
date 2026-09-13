@@ -253,6 +253,7 @@ test("a record data change re-renders that row standalone (C8)", async () => {
     ).toEqual(["alpha", "beta-prime", "gamma"]);
 });
 
+test.tags("desktop");
 test("getRowRecords decides the rows of the template, the grid state and keyboard navigation alike", async () => {
     /** @type {any} */
     let renderer = null;

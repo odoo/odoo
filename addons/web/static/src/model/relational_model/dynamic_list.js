@@ -50,6 +50,7 @@ export class DynamicList extends EditableListDataPoint {
             this.handleField = DEFAULT_HANDLE_FIELD;
         }
         this.isDomainSelected = false;
+        this._loadedFromSample = false;
     }
 
     /** @returns {Record<string, any>} */

@@ -120,7 +120,7 @@ class NavigationItem {
 
     setActive(focus = true) {
         if (focus) {
-            scrollTo(this.target);
+            (this._options.scrollTo ?? scrollTo)(this.target);
         }
         this._navigator._setActiveItem(this.index);
         this.target.classList.add(this._options.activeClass ?? ACTIVE_ELEMENT_CLASS);
@@ -629,6 +629,7 @@ export class Navigator {
  * @property {string} [activeClass]
  * @property {"movement" | "armed"} [mouseActivation]
  * @property {(el: HTMLElement) => HTMLElement} [getHoverTarget]
+ * @property {(el: HTMLElement) => void} [scrollTo]
  * @property {boolean} [virtualFocus]
  * @property {boolean} [shouldFocusChildInput]
  * @property {boolean} [shouldFocusFirstItem]

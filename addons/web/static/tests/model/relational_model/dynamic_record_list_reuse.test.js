@@ -6,12 +6,14 @@ import { animationFrame } from "@odoo/hoot-mock";
 import {
     defineModels,
     defineWebModels,
+    editSearch,
     fields,
     MockServer,
     models,
     mountView,
     onRpc,
     patchWithCleanup,
+    validateSearch,
 } from "@web/../tests/web_test_helpers";
 import { RelationalModel } from "@web/model/relational_model/relational_model";
 
@@ -87,13 +89,13 @@ test("a reload drops the selection but keeps the datapoints", async () => {
     model.root.records[1].toggleSelection(true);
     await animationFrame();
     expect(model.root.selection).toHaveLength(1);
-    expect(".o_data_row .o_list_record_selector input:checked").toHaveCount(1);
+    expect(model.root.records[1].selected).toBe(true);
 
     await model.root.load();
     await animationFrame();
     expect(datapointIds(model)).toEqual(before);
     expect(model.root.selection).toHaveLength(0);
-    expect(".o_data_row .o_list_record_selector input:checked").toHaveCount(0);
+    expect(model.root.records.every((record) => !record.selected)).toBe(true);
 });
 
 test("a record the user touched is rebuilt rather than reused", async () => {
@@ -187,4 +189,38 @@ test("a reloaded grouped list hands each group's records to the group that repla
     await model.root.load();
     await animationFrame();
     expect(idsByGroup()).toEqual(before);
+});
+
+test("a real load after a sample load adopts nothing from the sample root", async () => {
+    Foo._records = [];
+    /** @type {RelationalModel[]} */
+    const instances = [];
+    patchWithCleanup(RelationalModel.prototype, {
+        setup(/** @type {any[]} */ ...args) {
+            super.setup(...args);
+            instances.push(/** @type {any} */ (this));
+        },
+    });
+    await mountView({
+        resModel: "foo",
+        type: "kanban",
+        arch: `<kanban sample="1"><templates><t t-name="card"><field name="name"/></t></templates></kanban>`,
+        searchViewArch: `<search><field name="name"/></search>`,
+    });
+    const model = /** @type {RelationalModel} */ (instances.at(-1));
+    expect(model.useSampleModel).toBe(true);
+    expect(".o_view_sample_data").toHaveCount(1);
+    const sampleIds = model.root.records.map((r) => r.id);
+    expect(sampleIds.length).toBeGreaterThan(0);
+
+    const realId = MockServer.env["foo"].create({ name: "real", bar: true });
+    expect(model.root.records.map((record) => record.resId)).toInclude(realId);
+    await editSearch("real");
+    await validateSearch();
+    await animationFrame();
+    expect(model.useSampleModel).toBe(false);
+    expect(".o_view_sample_data").toHaveCount(0);
+    expect(model.root.records).toHaveLength(1);
+    expect(sampleIds).not.toInclude(model.root.records[0].id);
+    expect(queryAllTexts(".o_kanban_record:not(.o_kanban_ghost)")).toEqual(["real"]);
 });

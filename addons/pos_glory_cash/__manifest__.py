@@ -28,6 +28,8 @@
         ],
         "web.assets_unit_tests": [
             "pos_glory_cash/static/tests/**/*",
+            "pos_glory_cash/static/src/glory_service.js",
+            "pos_glory_cash/static/src/backend/**/*",
             "pos_glory_cash/static/src/utils/*.js",
         ],
     },

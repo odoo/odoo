@@ -504,15 +504,20 @@ export class RelationalModel extends Model {
         if (config.isMonoRecord) {
             return new this.Class.Record(this, config, data);
         }
-        const donor = this.orm.isSample ? undefined : previousRoot;
-        if (config.groupBy.length) {
-            return new this.Class.DynamicGroupList(this, config, data, {
-                previousRoot: donor,
-            });
-        }
-        return new this.Class.DynamicRecordList(this, config, data, {
-            previousRoot: donor,
-        });
+        // sample rows carry made-up ids that a real load's ids collide with,
+        // so a root built on either side of the sample ORM donates nothing
+        const isSample = Boolean(this.orm.isSample);
+        const donor =
+            isSample || previousRoot?._loadedFromSample ? undefined : previousRoot;
+        const root = config.groupBy.length
+            ? new this.Class.DynamicGroupList(this, config, data, {
+                  previousRoot: donor,
+              })
+            : new this.Class.DynamicRecordList(this, config, data, {
+                  previousRoot: donor,
+              });
+        root._loadedFromSample = isSample;
+        return root;
     }
 
     _retireRootLoadDef() {

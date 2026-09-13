@@ -5,6 +5,7 @@ export class AccountAnalyticPlan extends models.ServerModel {
 
     name = fields.Char();
     parent_id = fields.Many2one({ relation: "account.analytic.plan" });
+    root_id = fields.Many2one({ relation: "account.analytic.plan" });
 
     get_relevant_plans() {
         return this.filter((plan) => !plan.parent_id).map((plan) => ({

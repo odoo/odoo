@@ -19,6 +19,7 @@ import { usePosition } from "@web/core/position/position_hook";
 import { Deferred, KeepLast, SupersededError } from "@web/core/utils/concurrency";
 import { mergeClasses } from "@web/core/utils/dom/classname";
 import { useClickAway } from "@web/core/utils/dom/click_away";
+import { isScrollableY, scrollTo } from "@web/core/utils/dom/scrolling";
 import { uniqueId } from "@web/core/utils/functions";
 import { useAutofocus, useForwardRefToParent } from "@web/core/utils/hooks";
 import { INPUT_DEBOUNCE_DELAY, useDebounced } from "@web/core/utils/timing";
@@ -146,6 +147,16 @@ export class AutoComplete extends Component {
                     el.closest(".o-autocomplete--dropdown-item") ?? el
                 ),
             onUpdated: () => this.onNavigationUpdated(),
+            scrollTo: (el) => {
+                if (!this.props.dropdown) {
+                    scrollTo(el);
+                    return;
+                }
+                const menu = this.listRef.el;
+                if (menu && isScrollableY(menu)) {
+                    scrollTo(el, { scrollable: menu });
+                }
+            },
         });
 
         this.setupInputDebounce();

@@ -40,7 +40,7 @@ afterEach(() => {
 
 describe("when open message is received", () => {
     test("sets socket ID from the message", async () => {
-        const socketIo = new SocketIoService({});
+        const socketIo = new SocketIoService({ onClose: () => {} });
         socketIo.connect("mockUrl");
         await waitUntil(() => websocketState.instance.readyState);
 
@@ -77,7 +77,7 @@ describe("when open message is received", () => {
     });
 
     test("keep connection open if pong response is received", async () => {
-        const socketIo = new SocketIoService({});
+        const socketIo = new SocketIoService({ onClose: () => {} });
         socketIo.connect("mockUrl");
         await waitUntil(() => websocketState.instance.readyState);
 
@@ -94,7 +94,7 @@ describe("when open message is received", () => {
 
 describe("when connect is called a second time", () => {
     test("closes current connection and opens new connection", async () => {
-        const socketIo = new SocketIoService({});
+        const socketIo = new SocketIoService({ onClose: () => {} });
         socketIo.connect("mockUrl");
         const firstWebsocket = websocketState.instance;
         await waitUntil(() => firstWebsocket.readyState);
@@ -112,6 +112,7 @@ describe("when connect message is received", () => {
     test("calls onConnect callback", async () => {
         let onConnectCalled = false;
         const socketIo = new SocketIoService({
+            onClose: () => {},
             onConnect: () => {
                 onConnectCalled = true;
             },
@@ -163,6 +164,7 @@ describe("when event message is received", () => {
     test("calls onEvent callback if message is valid", async () => {
         let eventReceived = null;
         const socketIo = new SocketIoService({
+            onClose: () => {},
             onEvent: (event) => {
                 eventReceived = event;
             },
@@ -181,6 +183,7 @@ describe("when binary event message is received", () => {
     test("calls onBinaryEvent callback", async () => {
         let eventReceived = null;
         const socketIo = new SocketIoService({
+            onClose: () => {},
             onBinaryEvent: (data) => {
                 eventReceived = data;
             },
@@ -197,7 +200,7 @@ describe("when binary event message is received", () => {
 
 describe("when sending a message", () => {
     test("the message is sent in the correct format", async () => {
-        const socketIo = new SocketIoService({});
+        const socketIo = new SocketIoService({ onClose: () => {} });
         socketIo.connect("mockUrl");
         await waitUntil(() => websocketState.instance.readyState);
 
