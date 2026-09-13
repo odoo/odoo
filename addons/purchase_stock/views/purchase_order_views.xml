@@ -8,14 +8,6 @@
         <field name="arch" type="xml">
             <xpath expr="//header/button[@name='action_send_rfq']" position="after">
                 <button
-                    name="action_view_picking"
-                    type="object"
-                    string="Receive"
-                    groups="stock.group_stock_user"
-                    invisible="is_shipped or state != 'done' or count_transfer_incoming == 0"
-                    class="oe_highlight"
-                    data-hotkey="y" />
-                <button
                     name="action_receipt_matching"
                     type="object"
                     string="Match Receipts"
@@ -39,29 +31,6 @@
             </button>
             <xpath expr="//field[@name='currency_id']" position="after">
                 <field name="is_shipped" invisible="1" />
-            </xpath>
-            <xpath
-                expr="//field[@name='line_ids']/list//field[@name='date_commitment']"
-                position="after">
-                <field name="move_dest_ids" column_invisible="True" />
-            </xpath>
-            <xpath
-                expr="//page/field[@name='line_ids']/list/field[@name='product_qty']"
-                position="after">
-                <field name="forecasted_issue" column_invisible="True" />
-                <button
-                    name="action_product_forecast_report"
-                    type="object"
-                    title="Forecast Report"
-                    icon="fa-area-chart"
-                    invisible="not id or not forecasted_issue or not is_storable"
-                    class="text-danger" />
-                <button
-                    name="action_product_forecast_report"
-                    type="object"
-                    title="Forecast Report"
-                    icon="fa-area-chart"
-                    invisible="not id or forecasted_issue or not is_storable" />
             </xpath>
             <xpath expr="//div[@name='date_commitment_div']" position="inside">
                 <div>
@@ -97,6 +66,29 @@
                 expr="//field[@name='line_ids']/form//field[@name='analytic_distribution']"
                 position="before">
                 <field name="propagate_cancel" groups="base.group_no_one" />
+            </xpath>
+            <xpath
+                expr="//field[@name='line_ids']/list//field[@name='date_commitment']"
+                position="after">
+                <field name="move_dest_ids" column_invisible="True" />
+            </xpath>
+            <xpath
+                expr="//page/field[@name='line_ids']/list/field[@name='product_qty']"
+                position="after">
+                <field name="forecasted_issue" column_invisible="True" />
+                <button
+                    name="action_product_forecast_report"
+                    type="object"
+                    title="Forecast Report"
+                    icon="fa-area-chart"
+                    invisible="not id or not forecasted_issue or not is_storable"
+                    class="text-danger" />
+                <button
+                    name="action_product_forecast_report"
+                    type="object"
+                    title="Forecast Report"
+                    icon="fa-area-chart"
+                    invisible="not id or forecasted_issue or not is_storable" />
             </xpath>
             <xpath
                 expr="//field[@name='line_ids']/list//field[@name='analytic_distribution']"

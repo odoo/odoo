@@ -16,7 +16,7 @@
             </xpath>
             <button name="action_view_invoice" position="before">
                 <button
-                    name="action_view_delivery"
+                    name="action_view_picking"
                     type="object"
                     icon="fa-truck"
                     groups="stock.group_stock_user"
@@ -29,7 +29,8 @@
                 </button>
             </button>
             <group name="sale_shipping" position="attributes">
-                <attribute name="groups" />                <attribute name="string">Delivery</attribute>
+                <attribute name="groups" />
+                <attribute name="string">Delivery</attribute>
             </group>
             <label for="date_commitment" position="before">
                 <field

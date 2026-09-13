@@ -6,7 +6,7 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale_stock.view_order_form_inherit_sale_stock" />
         <field name="arch" type="xml">
-            <button name="action_view_delivery" position="before">
+            <button name="action_view_picking" position="before">
                 <t groups="purchase.group_purchase_user">
                     <button
                         name="action_view_dropship"

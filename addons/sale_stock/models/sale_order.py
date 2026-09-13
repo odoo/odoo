@@ -380,7 +380,7 @@ class SaleOrder(models.Model):
         self.line_ids._action_launch_stock_rule()
         return super()._action_confirm()
 
-    def action_view_delivery(self):
+    def action_view_picking(self):
         return self._get_action_view_picking(self.picking_ids)
 
     def _add_reference(self, reference):
