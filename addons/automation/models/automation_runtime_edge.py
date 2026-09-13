@@ -74,10 +74,7 @@ class AutomationRuntimeEdge(models.Model):
             return False, None
         if not self.delay:
             return True, None
-        due = (anchor or now) + get_timedelta(self.delay, self.delay_unit)
-        if due <= now:
-            return True, None
-        return True, due
+        return True, (anchor or now) + get_timedelta(self.delay, self.delay_unit)
 
     def _is_satisfied(self):
         self.check_singleton()

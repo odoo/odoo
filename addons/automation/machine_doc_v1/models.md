@@ -468,7 +468,9 @@ unarchiving resumes them.
 
 `_dispatch_due_steps(rules=None)` and `_resume_waiting_executions(rules=None)`
 take an optional recordset of rules, so an application can dispatch its own rules
-now (a campaign's "execute" button) without touching anyone else's queue.
+now (a campaign's "execute" button) without touching anyone else's queue. Rules
+named that way are dispatched even when archived: asking for a rule by name is
+the explicit request the archive otherwise withholds.
 
 ### What a failed step does
 
@@ -501,3 +503,32 @@ waiting up to date with an edited definition, without rewriting history:
 - every waiting or scheduled line is re-settled, so a longer delay reschedules it
   and a new branch whose source already settled runs;
 - a finished run is left alone.
+
+`_add_steps(actions)` is the narrower form: it gives running runs lines for those
+nodes only, and settles them. A campaign uses it when a child activity is added,
+so participants already underway reach it, while a new *root* waits for the
+explicit sync, as marketing's "Update" always required.
+
+### Queued runs are built and settled in batches
+
+A queued rule is the high-volume path, so its runs do not behave like a person's
+run in the chatter or in the query log:
+
+- `_launch()` builds every draft run of a rule at once. `_materialize` takes a
+  recordset of runs and creates all their lines and edges in one create each.
+- queued runs draw no `ir.sequence` number (their name is the rule's), post no
+  chatter messages (`_log_run_message`), and are launched and dispatched with
+  `tracking_disable`.
+- readiness is decided for a recordset: `_settle_readiness` fetches the edges and
+  their sources once, asks `_readiness_decision` per line, and writes each outcome
+  (skip, wait, schedule at a due time, ready) as one write per group. Successor
+  activation, `_finish_if_settled`, `action_mark_done`, `action_resume` and
+  `_sync_to_definition` all take recordsets too. This fork's ORM neither batches
+  x2many reads across a loop nor defers the flush of dependent stored fields
+  past a write, so looping one line at a time turned every step into several
+  statements.
+- cron triggers are deduplicated per transaction: `_request_dispatch` once, and
+  `_trigger_resume_at` once per due time.
+
+A line that becomes ready from a due time already past keeps that due time in
+`date_resume`, so "when was this step due" survives until it runs.

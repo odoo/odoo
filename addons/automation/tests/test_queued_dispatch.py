@@ -47,6 +47,14 @@ class TestQueuedRuns(QueuedCase):
         self.assertGreater(self._cron_trigger_count(), before)
         self.assertFalse(any(self.partners.mapped("ref")))
 
+    def test_launching_many_runs_asks_the_cron_once(self):
+        self._action("first")
+        before = self._cron_trigger_count()
+
+        self._launch()
+
+        self.assertEqual(self._cron_trigger_count(), before + 1)
+
     def test_the_dispatcher_runs_queued_steps_to_the_end(self):
         first = self._action("first", "record.write({'ref': 'first'})")
         second = self._action("second", "record.write({'function': 'second'})")

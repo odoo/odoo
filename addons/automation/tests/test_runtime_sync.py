@@ -120,6 +120,34 @@ class TestSyncToDefinition(QueuedCase):
             self._line(runtime, later).date_resume, settled + timedelta(days=3)
         )
 
+    def test_a_ready_step_not_yet_run_takes_a_changed_delay(self):
+        first = self._action("first")
+        later = self._action("later")
+        edge = link(self.env, first, later)
+        (runtime,) = self._launch(self.partner)
+        self.automation.active = False
+        self._line(runtime, first).action_execute()
+        self.assertEqual(self._line(runtime, later).state, "ready")
+        settled = self._line(runtime, first).date_settled
+
+        edge.write({"delay": 2, "delay_unit": "day"})
+        runtime._sync_to_definition()
+
+        self.assertEqual(self._line(runtime, later).state, "scheduled")
+        self.assertEqual(
+            self._line(runtime, later).date_resume, settled + timedelta(days=2)
+        )
+
+    def test_a_changed_start_delay_reschedules_a_root_not_yet_started(self):
+        first = self._action("first", start_delay=1, start_delay_unit="day")
+        (runtime,) = self._launch(self.partner)
+        line = self._line(runtime, first)
+
+        first.start_delay = 3
+        runtime._sync_to_definition()
+
+        self.assertEqual(line.date_resume, line.create_date + timedelta(days=3))
+
     def test_a_step_already_run_keeps_the_conditions_it_ran_under(self):
         first = self._action("first")
         second = self._action("second")
@@ -146,6 +174,43 @@ class TestSyncToDefinition(QueuedCase):
         self.assertEqual(len(runtime.line_ids), 1)
 
 
+class TestAddSteps(QueuedCase):
+    def test_a_step_can_be_added_to_running_runs_alone(self):
+        first = self._action("first")
+        pause = self._action("pause", node_type="wait", wait_delay=1)
+        link(self.env, first, pause)
+        runtimes = self._launch()
+        self._dispatch()
+        new_root = self._action("new root")
+        child = self._action("child", "record.write({'ref': 'child'})")
+        link(self.env, first, child)
+
+        runtimes._add_steps(child)
+        self._dispatch()
+
+        for runtime in runtimes:
+            self.assertEqual(self._line(runtime, child).state, "done")
+            self.assertFalse(self._line(runtime, new_root))
+
+    def test_a_ready_step_keeps_the_date_it_became_due(self):
+        first = self._action("first")
+        later = self._action("later")
+        link(self.env, first, later, delay=1, delay_unit="hour")
+        (runtime,) = self._launch(self.partner)
+        self.automation.active = False
+        first_line = self._line(runtime, first)
+        first_line.action_execute()
+        first_line.date_settled -= timedelta(hours=3)
+
+        self._line(runtime, later)._settle_readiness()
+
+        later_line = self._line(runtime, later)
+        self.assertEqual(later_line.state, "ready")
+        self.assertEqual(
+            later_line.date_resume, first_line.date_settled + timedelta(hours=1)
+        )
+
+
 class TestArchivedRule(QueuedCase):
     def test_an_archived_rule_is_not_dispatched(self):
         first = self._action("first", "record.write({'ref': 'ran'})")
@@ -158,6 +223,15 @@ class TestArchivedRule(QueuedCase):
 
         self.automation.active = True
         self._dispatch()
+
+        self.assertEqual(self._line(runtime, first).state, "done")
+
+    def test_an_archived_rule_named_explicitly_is_dispatched(self):
+        first = self._action("first")
+        (runtime,) = self._launch(self.partner)
+        self.automation.active = False
+
+        self.env["automation.runtime"]._dispatch_due_steps(rules=self.automation)
 
         self.assertEqual(self._line(runtime, first).state, "done")
 

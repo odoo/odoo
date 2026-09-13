@@ -1,4 +1,5 @@
 import logging
+from collections import defaultdict
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
@@ -134,12 +135,12 @@ class AutomationRuntimeLine(models.Model):
     def _get_successors(self):
         return self.edge_out_ids.target_line_id
 
-    def action_mark_ready(self):
+    def action_mark_ready(self, due=None):
         self.write(
             {
                 "state": "ready",
                 "date_ready": self.env.cr.now(),
-                "date_resume": False,
+                "date_resume": due or False,
                 "error_message": False,
             }
         )
@@ -154,52 +155,68 @@ class AutomationRuntimeLine(models.Model):
         )
 
     def action_cancel(self):
-        for line in self:
-            if line.state in ("done", "skipped", "cancel"):
-                continue
-
-            line.write({"state": "cancel", "date_settled": self.env.cr.now()})
-
-            if (
-                line.created_record_ref
-                and line.created_record_ref._name == "automation.runtime"
-            ):
+        lines = self.filtered(
+            lambda line: line.state not in ("done", "skipped", "cancel"),
+        )
+        lines.write({"state": "cancel", "date_settled": self.env.cr.now()})
+        for line in lines.filtered("created_record_ref"):
+            if line.created_record_ref._name == "automation.runtime":
                 line.created_record_ref.action_cancel()
 
     def _activate_successors(self):
-        self.check_singleton()
-        for successor in self._get_successors():
-            if successor.state in ("waiting", "scheduled"):
-                successor._settle_readiness()
+        self.edge_out_ids.target_line_id.filtered(
+            lambda successor: successor.state in ("waiting", "scheduled"),
+        )._settle_readiness()
 
     def _settle_readiness(self):
+        if not self:
+            return
+        now = self.env.cr.now()
+        edges = self.edge_in_ids
+        edges.fetch(
+            [
+                "source_line_id",
+                "condition",
+                "condition_expr",
+                "event_code",
+                "delay",
+                "delay_unit",
+                "date_event",
+                "revoked",
+            ]
+        )
+        edges.source_line_id.fetch(["state", "date_settled"])
+        decided = defaultdict(self.browse)
+        for line in self:
+            decision = line._readiness_decision(now)
+            if decision:
+                decided[decision] |= line
+        for (kind, value), lines in decided.items():
+            if kind == "skip":
+                lines._skip(reason=value)
+            elif kind == "wait":
+                lines.write({"state": "waiting", "date_resume": False})
+            elif kind == "schedule":
+                lines._schedule(value)
+            else:
+                lines.action_mark_ready(due=value)
+
+    def _readiness_decision(self, now):
         self.check_singleton()
         edges = self.edge_in_ids
-        now = self.env.cr.now()
         if not edges:
             due = self._start_due()
-            if due and due > now:
-                self._schedule(due)
-            else:
-                self.action_mark_ready()
-            return
+            return ("schedule", due) if due and due > now else ("ready", due)
         if any(edge.source_line_id.state not in SETTLED_STATES for edge in edges):
-            return
+            return None
         live = edges.filtered(lambda edge: edge.source_line_id.state != "skipped")
         verdicts = [edge._verdict(now) for edge in live]
         if not live or any(satisfied is False for satisfied, _due in verdicts):
-            self._skip(reason="revoked" if any(live.mapped("revoked")) else "branch")
-            return
+            return ("skip", "revoked" if any(live.mapped("revoked")) else "branch")
         if any(satisfied is None for satisfied, _due in verdicts):
-            if self.state == "scheduled":
-                self.write({"state": "waiting", "date_resume": False})
-            return
+            return ("wait", None) if self.state == "scheduled" else None
         due = max((due for _satisfied, due in verdicts if due), default=None)
-        if due:
-            self._schedule(due)
-            return
-        self.action_mark_ready()
-        _logger.info("Action '%s' (#%d) is now ready", self.name, self.id)
+        return ("schedule", due) if due and due > now else ("ready", due)
 
     def _start_due(self):
         self.check_singleton()
@@ -218,11 +235,19 @@ class AutomationRuntimeLine(models.Model):
                 "error_message": message,
             }
         )
-        for line in self:
-            line._activate_successors()
+        self._activate_successors()
 
     def _schedule(self, due):
         self.write({"state": "scheduled", "date_resume": due})
+        self._trigger_resume_at(due)
+
+    def _trigger_resume_at(self, due):
+        triggered = self.env.cr.precommit.data.setdefault(
+            "automation.resume_triggers", set()
+        )
+        if due in triggered:
+            return
+        triggered.add(due)
         self.env.ref("automation.ir_cron_data_automation_resume")._trigger(at=due)
 
     def _awaits_event(self):
@@ -231,7 +256,7 @@ class AutomationRuntimeLine(models.Model):
             edge.condition == "event"
             and not edge.date_event
             and not edge.revoked
-            and edge.source_line_id.state in ("done", "error")
+            and edge.source_line_id.state in ("done", "error", "cancel")
             for edge in self.edge_in_ids
         )
 
@@ -275,9 +300,7 @@ class AutomationRuntimeLine(models.Model):
         self.write(
             {"state": "paused", "date_resume": resume_at, "error_message": False}
         )
-        self.env.ref("automation.ir_cron_data_automation_resume")._trigger(
-            at=resume_at,
-        )
+        self._trigger_resume_at(resume_at)
         _logger.info(
             "Step '%s' (#%d) paused until %s",
             self.name,
@@ -384,15 +407,15 @@ class AutomationRuntimeLine(models.Model):
             runtime._advance()
 
     def action_resume(self):
-        for line in self.filtered(lambda step: step.state == "paused"):
-            line.write(
-                {
-                    "state": "done",
-                    "date_resume": False,
-                    "date_settled": self.env.cr.now(),
-                }
-            )
-            line._activate_successors()
+        paused = self.filtered(lambda step: step.state == "paused")
+        paused.write(
+            {
+                "state": "done",
+                "date_resume": False,
+                "date_settled": self.env.cr.now(),
+            }
+        )
+        paused._activate_successors()
 
     def action_mark_done(self):
         self.write(
@@ -409,8 +432,7 @@ class AutomationRuntimeLine(models.Model):
                 "error_message": error_msg,
             }
         )
-        for line in self.filtered(lambda line: line._contains_its_error()):
-            line._activate_successors()
+        self.filtered(lambda line: line._contains_its_error())._activate_successors()
 
     def action_execute(self):
         self.check_singleton()

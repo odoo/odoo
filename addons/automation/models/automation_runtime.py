@@ -1,4 +1,5 @@
 import logging
+from collections import defaultdict
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
@@ -151,7 +152,10 @@ class AutomationRuntime(models.Model):
             if "company_id" in vals:
                 seq_env = seq_env.with_company(vals["company_id"])
 
-            if vals.get("name", _("New")) == _("New"):
+            rule = self.env["automation.rule"].browse(vals.get("automation_id"))
+            if vals.get("name", _("New")) == _("New") and rule.run_mode == "queued":
+                vals["name"] = rule.sudo().name
+            elif vals.get("name", _("New")) == _("New"):
                 seq_date = (
                     fields.Datetime.context_timestamp(
                         seq_env,
@@ -203,7 +207,7 @@ class AutomationRuntime(models.Model):
         self._create_action_lines()
         self.state = "in_progress"
 
-        self.message_post(
+        self._log_run_message(
             body=_("Workflow started with %d steps", len(self.line_ids)),
             subject=_("Workflow Started"),
         )
@@ -270,23 +274,52 @@ class AutomationRuntime(models.Model):
         self.check_singleton()
         return self.automation_id.run_mode == "queued"
 
+    def _log_run_message(self, body, subject):
+        self.check_singleton()
+        if not self._is_queued():
+            self.message_post(body=body, subject=subject)
+
     def _launch(self):
-        for runtime in self:
+        drafts = self.filtered(lambda run: run.state == "draft")
+        queued = drafts.filtered(lambda run: run._is_queued())
+        if queued:
+            queued.with_context(tracking_disable=True)._launch_queued()
+        for runtime in drafts - queued:
             runtime.action_start()
-            if not runtime._is_queued():
-                runtime.action_run_all()
-            elif runtime.line_ids.filtered(lambda l: l.state == "ready"):
-                runtime._request_dispatch()
-            else:
+            runtime.action_run_all()
+
+    def _launch_queued(self):
+        for rule, runtimes in self.grouped("automation_id").items():
+            actions = rule.action_server_ids.sorted("sequence")
+            if not actions:
+                raise UserError(
+                    _("Automation '%s' has no server actions configured", rule.name),
+                )
+            runtimes.state = "in_progress"
+            lines = runtimes._materialize(actions)
+            lines.filtered(lambda line: not line.edge_in_ids)._settle_readiness()
+            idle = runtimes.filtered(
+                lambda run: not run.line_ids.filtered(lambda l: l.state == "ready"),
+            )
+            if runtimes - idle:
+                (runtimes - idle)._request_dispatch()
+            idle.line_ids.edge_in_ids.mapped("condition")
+            for runtime in idle:
                 runtime._settle_idle()
 
     def _request_dispatch(self):
+        requested = self.env.cr.precommit.data
+        if requested.get("automation.dispatch_requested"):
+            return
+        requested["automation.dispatch_requested"] = True
         self.env.ref("automation.ir_cron_data_automation_resume")._trigger()
 
     def _advance(self):
-        for runtime in self.filtered(
+        open_runs = self.filtered(
             lambda run: run.state in ("in_progress", "waiting_resume"),
-        ):
+        )
+        open_runs.line_ids.edge_in_ids.source_line_id.mapped("state")
+        for runtime in open_runs:
             if not runtime._is_queued():
                 runtime.state = "in_progress"
                 runtime.action_run_all()
@@ -297,25 +330,29 @@ class AutomationRuntime(models.Model):
                 runtime._settle_idle()
 
     def _finish_if_settled(self):
-        self.check_singleton()
-        if self.state not in ("in_progress", "waiting_resume"):
-            return False
-        if any(line.state not in SETTLED_STATES for line in self.line_ids):
-            return False
-        self.action_done()
-        return True
+        self.line_ids.mapped("state")
+        finished = self.filtered(
+            lambda run: (
+                run.state in ("in_progress", "waiting_resume")
+                and all(line.state in SETTLED_STATES for line in run.line_ids)
+            ),
+        )
+        for runtime in finished:
+            runtime.action_done()
+        return bool(finished)
 
     def action_cancel(self):
-        self.check_singleton()
-
-        if self.state in ["done", "cancel", "error"]:
+        runs = self.filtered(lambda run: run.state not in ("done", "cancel", "error"))
+        if not runs:
             return
-
-        self.state = "cancel"
-        self.line_ids.filtered(
+        runs.state = "cancel"
+        runs.line_ids.filtered(
             lambda l: l.state not in SETTLED_STATES,
         ).action_cancel()
-        self.message_post(body=_("Workflow cancelled"), subject=_("Workflow Cancelled"))
+        for run in runs:
+            run._log_run_message(
+                body=_("Workflow cancelled"), subject=_("Workflow Cancelled")
+            )
 
     def _release_parent_line(self):
         for runtime in self.filtered(
@@ -346,29 +383,33 @@ class AutomationRuntime(models.Model):
 
     def action_resume(self):
         now = self.env.cr.now()
-        for runtime in self.filtered(lambda run: run.state == "waiting_resume"):
-            due = runtime.line_ids.filtered(
-                lambda step: (
-                    step.state in ("paused", "scheduled")
-                    and step.date_resume
-                    and step.date_resume <= now
-                ),
-            )
-            if not due:
-                continue
-            runtime.state = "in_progress"
-            due.filtered(lambda step: step.state == "paused").action_resume()
-            for step in due.filtered(lambda step: step.state == "scheduled"):
-                step._settle_readiness()
-            runtime._advance()
+        due = self.filtered(
+            lambda run: run.state == "waiting_resume"
+        ).line_ids.filtered(
+            lambda step: (
+                step.state in ("paused", "scheduled")
+                and step.date_resume
+                and step.date_resume <= now
+            ),
+        )
+        if not due:
+            return
+        runtimes = due.runtime_id
+        runtimes.state = "in_progress"
+        due.filtered(lambda step: step.state == "paused").action_resume()
+        due.filtered(lambda step: step.state == "scheduled")._settle_readiness()
+        runtimes._advance()
 
     @api.model
     def _resume_waiting_executions(self, rules=None):
         waiting = self.search(
             [
                 ("state", "=", "waiting_resume"),
-                ("automation_id.active", "=", True),
-                *([("automation_id", "in", rules.ids)] if rules is not None else []),
+                *(
+                    [("automation_id", "in", rules.ids)]
+                    if rules is not None
+                    else [("automation_id.active", "=", True)]
+                ),
                 (
                     "line_ids",
                     "any",
@@ -386,6 +427,7 @@ class AutomationRuntime(models.Model):
 
     @api.model
     def _dispatch_due_steps(self, rules=None):
+        self = self.with_context(tracking_disable=True)
         self._resume_waiting_executions(rules=rules)
         Line = self.env["automation.runtime.line"]
         handled = set()
@@ -395,14 +437,13 @@ class AutomationRuntime(models.Model):
                 ("id", "not in", list(handled)),
                 ("runtime_id.state", "in", ("in_progress", "waiting_resume")),
                 ("runtime_id.automation_id.run_mode", "=", "queued"),
-                ("runtime_id.automation_id.active", "=", True),
                 *(
                     [("runtime_id.automation_id", "in", rules.ids)]
                     if rules is not None
-                    else []
+                    else [("runtime_id.automation_id.active", "=", True)]
                 ),
             ],
-            order="id",
+            order="action_id, id",
             limit=DISPATCH_BATCH_SIZE,
         ):
             handled.update(lines.ids)
@@ -415,6 +456,7 @@ class AutomationRuntime(models.Model):
                     lambda run: run.state == "waiting_resume"
                 ).state = "in_progress"
                 action._execute_runtime_lines(batch)
+                runtimes.line_ids.edge_in_ids.source_line_id.mapped("state")
                 for runtime in runtimes.filtered(
                     lambda run: (
                         run.state == "in_progress"
@@ -436,7 +478,7 @@ class AutomationRuntime(models.Model):
             return
 
         self.state = "done"
-        self.message_post(
+        self._log_run_message(
             body=_("Workflow completed successfully"),
             subject=_("Workflow Completed"),
         )
@@ -459,7 +501,7 @@ class AutomationRuntime(models.Model):
             }
         )
         self._release_parent_line()
-        self.message_post(
+        self._log_run_message(
             body=_(
                 "Workflow failed at: %(steps)s",
                 steps=", ".join(failed.mapped("name")) or _("unknown step"),
@@ -521,55 +563,86 @@ class AutomationRuntime(models.Model):
         return lines
 
     def _materialize(self, actions):
-        self.check_singleton()
         lines = self.env["automation.runtime.line"].create(
             [
                 {
-                    "runtime_id": self.id,
+                    "runtime_id": runtime.id,
                     "action_id": action.id,
                     "name": action.name,
                     "sequence": action.sequence,
                     "state": "waiting",
                 }
+                for runtime in self
                 for action in actions
             ]
         )
-        line_by_action = {line.action_id.id: line for line in self.line_ids}
-        linked = {
-            (edge.source_line_id.action_id.id, edge.target_line_id.action_id.id)
-            for edge in self.edge_ids
-        }
-        self.env["automation.runtime.edge"].create(
-            [
+        edge_vals = []
+        for runtime in self:
+            line_by_action = {line.action_id.id: line for line in runtime.line_ids}
+            linked = {
+                (edge.source_line_id.action_id.id, edge.target_line_id.action_id.id)
+                for edge in runtime.edge_ids
+            }
+            edge_vals += [
                 {
-                    "runtime_id": self.id,
+                    "runtime_id": runtime.id,
                     "source_line_id": line_by_action[edge.source_node_id.id].id,
                     "target_line_id": line_by_action[edge.target_node_id.id].id,
                     **edge._runtime_copy_vals(),
                 }
-                for edge in self.automation_id.edge_ids
+                for edge in runtime.automation_id.edge_ids
                 if edge.source_node_id.id in line_by_action
                 and edge.target_node_id.id in line_by_action
                 and (edge.source_node_id.id, edge.target_node_id.id) not in linked
             ]
-        )
+        self.env["automation.runtime.edge"].create(edge_vals)
         return lines
 
-    def _sync_to_definition(self):
-        for runtime in self.filtered(
+    def _add_steps(self, actions):
+        runs = self.filtered(
             lambda run: run.state in ("in_progress", "waiting_resume"),
-        ):
-            rule = runtime.automation_id
-            added = runtime._materialize(
-                rule.action_server_ids - runtime.line_ids.action_id,
-            )
+        )
+        added = runs._materialize_missing(actions)
+        added._settle_readiness()
+        added.runtime_id._advance()
+
+    def _materialize_missing(self, actions):
+        added = self.env["automation.runtime.line"]
+        self.line_ids.fetch(["action_id"])
+        missing_by_actions = defaultdict(self.browse)
+        for runtime in self:
+            missing = actions - runtime.line_ids.action_id
+            if missing:
+                missing_by_actions[missing] |= runtime
+        for missing, runtimes in missing_by_actions.items():
+            added |= runtimes._materialize(missing)
+        return added
+
+    def _sync_to_definition(self):
+        runs = self.filtered(
+            lambda run: run.state in ("in_progress", "waiting_resume"),
+        )
+        if not runs:
+            return
+        added = self.env["automation.runtime.line"]
+        changed = self.env["automation.runtime.line"]
+        for rule, rule_runs in runs.grouped("automation_id").items():
+            added |= rule_runs._materialize_missing(rule.action_server_ids)
             definition = {
                 (edge.source_node_id.id, edge.target_node_id.id): edge
                 for edge in rule.edge_ids
             }
-            for runtime_edge in runtime.edge_ids.filtered(
-                lambda edge: edge.target_line_id.state in ("waiting", "scheduled"),
-            ):
+            edges_by_vals = defaultdict(self.env["automation.runtime.edge"].browse)
+            pending_edges = rule_runs.edge_ids.filtered(
+                lambda edge: (
+                    edge.target_line_id.state in ("waiting", "scheduled", "ready")
+                ),
+            )
+            pending_edges.fetch(
+                ["source_line_id", "target_line_id", "condition", "condition_expr"]
+                + ["event_code", "delay", "delay_unit"]
+            )
+            for runtime_edge in pending_edges:
                 edge = definition.get(
                     (
                         runtime_edge.source_line_id.action_id.id,
@@ -584,13 +657,17 @@ class AutomationRuntime(models.Model):
                     if runtime_edge[name] != value
                 }
                 if vals:
-                    runtime_edge.write(vals)
-            for line in runtime.line_ids.filtered(
-                lambda line: line.state in ("waiting", "scheduled"),
-            ):
-                if line in added or line.edge_in_ids:
-                    line._settle_readiness()
-            runtime._advance()
+                    edges_by_vals[tuple(sorted(vals.items()))] |= runtime_edge
+            for vals, runtime_edges in edges_by_vals.items():
+                runtime_edges.write(dict(vals))
+                changed |= runtime_edges.target_line_id
+        runs.line_ids.filtered(
+            lambda line: (
+                line.state in ("waiting", "scheduled")
+                or (line.state == "ready" and (line in added or line in changed))
+            ),
+        )._settle_readiness()
+        runs._advance()
 
     def _get_target_record(self):
         self.check_singleton()

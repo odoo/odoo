@@ -42,6 +42,22 @@ class TestDelayedEdges(TimedEdgeCase):
         triggers = self.env["ir.cron.trigger"].search([("cron_id", "=", cron.id)])
         self.assertIn(due, triggers.mapped("call_at"))
 
+    def test_steps_due_at_the_same_time_share_one_cron_trigger(self):
+        cron = self.env.ref("automation.ir_cron_data_automation_resume")
+        first = self._action("first")
+        later = self._action("later")
+        other = self._action("other")
+        link(self.env, first, later, delay=1, delay_unit="day")
+        link(self.env, first, other, delay=1, delay_unit="day")
+        before = self.env["ir.cron.trigger"].search_count([("cron_id", "=", cron.id)])
+
+        self._run()
+
+        self.assertEqual(
+            self.env["ir.cron.trigger"].search_count([("cron_id", "=", cron.id)]),
+            before + 1,
+        )
+
     def test_a_scheduled_step_runs_once_due(self):
         first = self._action("first")
         later = self._action("later", "record.write({'ref': 'later ran'})")
