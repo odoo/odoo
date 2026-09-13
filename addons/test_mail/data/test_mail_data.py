@@ -1429,3 +1429,135 @@ Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 
 =C3=E8=D2=A7=A1=D2=C2='''
+
+_GIF_1PX = 'R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
+PNG_1PX = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='
+
+MAIL_MULTIPART_ENCRYPTED = """From: {email_from}
+To: {to}
+Subject: {subject}
+MIME-Version: 1.0
+Message-ID: <encrypted@test.example.com>
+Content-Type: multipart/encrypted; protocol="application/pgp-encrypted";
+ boundary="enc-boundary"
+
+--enc-boundary
+Content-Type: application/pgp-encrypted
+Content-Description: PGP/MIME version identification
+
+Version: 1
+
+--enc-boundary
+Content-Type: application/octet-stream; name="encrypted.asc"
+Content-Description: OpenPGP encrypted message
+Content-Disposition: inline; filename="encrypted.asc"
+
+-----BEGIN PGP MESSAGE-----
+
+hQEMA0RcS3JnotReallyEncryptedPayload==
+-----END PGP MESSAGE-----
+--enc-boundary--"""
+
+MAIL_MULTIPART_UNKNOWN_SUBTYPE = """From: {email_from}
+To: {to}
+Subject: {subject}
+MIME-Version: 1.0
+Message-ID: <xvendor@test.example.com>
+Content-Type: multipart/x-vendor-foo; boundary="xf"
+
+--xf
+Content-Type: text/html; charset="UTF-8"
+
+<p>Vendor multipart body.</p>
+--xf
+Content-Type: application/pdf; name="doc.pdf"
+Content-Disposition: attachment; filename="doc.pdf"
+Content-Transfer-Encoding: base64
+
+JVBERi0xLjEK
+--xf--"""
+
+# Digest with two messages whose parts have no explicit Content-Type
+MAIL_MULTIPART_DIGEST = """From: {email_from}
+To: {to}
+Subject: {subject}
+MIME-Version: 1.0
+Message-ID: <digest@test.example.com>
+Content-Type: multipart/digest; boundary="dg"
+
+--dg
+
+Message-ID: <inner1@test.example.com>
+From: alice@test.example.com
+Subject: First bundled
+
+First inner digest body.
+--dg
+
+Message-ID: <inner2@test.example.com>
+From: bob@test.example.com
+Subject: Second bundled
+
+Second inner digest body.
+--dg--"""
+
+# Nested tree: mixed[ alternative[ plain, related[html, png] ],
+# message/rfc822, signed[pdf, signature] ]
+MAIL_MULTIPART_DEEP_NEST = """From: {email_from}
+To: {to}
+Subject: {subject}
+MIME-Version: 1.0
+Message-ID: <deepnest@test.example.com>
+Content-Type: multipart/mixed; boundary="out"
+
+--out
+Content-Type: multipart/alternative; boundary="alt"
+
+--alt
+Content-Type: text/plain; charset="UTF-8"
+
+Plain fallback text that must not appear in the body.
+--alt
+Content-Type: multipart/related; boundary="rel"; type="text/html"
+
+--rel
+Content-Type: text/html; charset="UTF-8"
+
+<p>Rich related html <img src="cid:logo@nest"> body.</p>
+--rel
+Content-Type: image/gif; name="logo.gif"
+Content-Transfer-Encoding: base64
+Content-ID: <logo@nest>
+Content-Disposition: inline; filename="logo.gif"
+
+__GIF__
+--rel--
+--alt--
+--out
+Content-Type: message/rfc822; name="attached.eml"
+Content-Disposition: attachment; filename="attached.eml"
+
+Subject: Inner mail
+From: inner@test.example.com
+Content-Type: text/plain
+
+Inner encapsulated body that must not leak into the outer body.
+--out
+Content-Type: multipart/signed; protocol="application/pgp-signature";
+ micalg="pgp-sha256"; boundary="sig"
+
+--sig
+Content-Type: application/pdf; name="contract.pdf"
+Content-Disposition: attachment; filename="contract.pdf"
+Content-Transfer-Encoding: base64
+
+JVBERi0xLjEK
+--sig
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+notArealSignature
+-----END PGP SIGNATURE-----
+--sig--
+--out--""".replace('__GIF__', _GIF_1PX)
