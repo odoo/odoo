@@ -2,9 +2,13 @@ from __future__ import annotations
 
 import typing
 
+from odoo.libs.debug_log import DebugLog
+
 if typing.TYPE_CHECKING:
     from .._typing import BaseModel
     from .environment import Environment
+
+_debug = DebugLog(__name__)
 
 
 class MetaSchema:
@@ -20,14 +24,20 @@ class MetaSchema:
         relation_reflections: typing.Any,
         model_tables: typing.Any,
     ) -> None:
-        env["ir.model"]._reflect_models(model_names)
-        env["ir.model.fields"]._reflect_fields(model_names)
-        env["ir.model.fields.selection"]._reflect_selections(model_names)
-        env["ir.model.constraint"]._reflect_constraints(model_names)
-        env["ir.model.inherit"]._reflect_inherits(model_names)
-        env["ir.model.relation"]._reflect_relations(
-            relation_reflections, model_tables=model_tables
-        )
+        with _debug.perf(
+            "metaschema.reflect",
+            cr=getattr(env, "cr", None),
+            models=len(model_names),
+            relations=len(relation_reflections) if relation_reflections else 0,
+        ):
+            env["ir.model"]._reflect_models(model_names)
+            env["ir.model.fields"]._reflect_fields(model_names)
+            env["ir.model.fields.selection"]._reflect_selections(model_names)
+            env["ir.model.constraint"]._reflect_constraints(model_names)
+            env["ir.model.inherit"]._reflect_inherits(model_names)
+            env["ir.model.relation"]._reflect_relations(
+                relation_reflections, model_tables=model_tables
+            )
 
     def reflect_inherits(self, env: Environment, model_names: list[str]) -> None:
         env["ir.model.inherit"]._reflect_inherits(model_names)
@@ -45,7 +55,12 @@ class MetaSchema:
         )
 
     def finish_load(self, env: Environment, updated_modules: typing.Any) -> None:
-        env["ir.model.data"]._process_end(updated_modules)
+        with _debug.perf(
+            "metaschema.finish_load",
+            cr=getattr(env, "cr", None),
+            modules=len(updated_modules) if updated_modules else 0,
+        ):
+            env["ir.model.data"]._process_end(updated_modules)
 
     # -- manual models and fields
 
