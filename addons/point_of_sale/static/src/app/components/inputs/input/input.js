@@ -1,8 +1,17 @@
 /** @odoo-module native */
-import { onPatched, useRef, useState } from "@odoo/owl";
+import {
+    onPatched,
+    onWillDestroy,
+    onWillUpdateProps,
+    useRef,
+    useState,
+} from "@odoo/owl";
 import { TModelInput } from "@point_of_sale/app/components/inputs/t_model_input";
+import { makeLogger } from "@web/core/debug/debug_logger";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { debounce } from "@web/core/utils/timing";
+
+const log = makeLogger("pos.input");
 export class Input extends TModelInput {
     static template = "point_of_sale.input";
     static props = {
@@ -48,8 +57,17 @@ export class Input extends TModelInput {
                 })) ||
             useRef("input");
         this.props.getRef?.(ref);
+        onWillUpdateProps(() => {
+            // Flush before the binding and callback are replaced by the new props.
+            log.logic("flush pending input before updating props");
+            this.setValue.cancel(true);
+        });
         onPatched(() => {
             this.setValue.cancel(true);
+        });
+        onWillDestroy(() => {
+            log.lifecycle("cancel pending input on destroy");
+            this.setValue.cancel();
         });
     }
     setValue(newValue, tModel = this.props.tModel) {

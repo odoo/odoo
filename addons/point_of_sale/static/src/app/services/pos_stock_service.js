@@ -19,6 +19,9 @@ export class PosStockService {
         this.quantities = reactive({});
         /** @type {Set<number>} */
         this.pending = new Set();
+        /** @type {Set<number>} */
+        this.inFlight = new Set();
+        this.generation = 0;
         this.flushScheduled = false;
     }
 
@@ -28,7 +31,11 @@ export class PosStockService {
     request(productIds) {
         let added = 0;
         for (const id of productIds) {
-            if (!(id in this.quantities) && !this.pending.has(id)) {
+            if (
+                !(id in this.quantities) &&
+                !this.pending.has(id) &&
+                !this.inFlight.has(id)
+            ) {
                 this.pending.add(id);
                 added++;
             }
@@ -45,8 +52,17 @@ export class PosStockService {
     }
 
     refresh() {
-        const known = Object.keys(this.quantities).map(Number);
-        log.pipeline("refresh", () => ({ known: known.length }));
+        const known = new Set([
+            ...Object.keys(this.quantities).map(Number),
+            ...this.pending,
+            ...this.inFlight,
+        ]);
+        this.generation++;
+        this.inFlight.clear();
+        log.pipeline("refresh", () => ({
+            known: known.size,
+            generation: this.generation,
+        }));
         for (const id of known) {
             delete this.quantities[id];
         }
@@ -60,6 +76,10 @@ export class PosStockService {
         if (!ids.length) {
             return;
         }
+        const generation = this.generation;
+        for (const id of ids) {
+            this.inFlight.add(id);
+        }
         const endFlush = log.perf("flush get_pos_stock_quantities");
         try {
             const result = await this.orm.call(
@@ -67,15 +87,21 @@ export class PosStockService {
                 "get_pos_stock_quantities",
                 [ids, this.pos.config.id],
             );
+            if (generation !== this.generation) {
+                log.logic("flush: stale response ignored", () => ({ generation }));
+                return;
+            }
             for (const id of ids) {
                 this.quantities[id] = result[id] ?? 0;
             }
-            endFlush({ products: ids.length });
         } catch (error) {
+            if (generation !== this.generation) {
+                log.logic("flush: stale failure ignored", () => ({ generation }));
+                return;
+            }
             for (const id of ids) {
                 this.quantities[id] = null;
             }
-            endFlush({ products: ids.length, failed: true });
             logPosMessage(
                 "PosStockService",
                 "flush",
@@ -83,6 +109,13 @@ export class PosStockService {
                 undefined,
                 [error],
             );
+        } finally {
+            if (generation === this.generation) {
+                for (const id of ids) {
+                    this.inFlight.delete(id);
+                }
+            }
+            endFlush({ products: ids.length, stale: generation !== this.generation });
         }
     }
 }

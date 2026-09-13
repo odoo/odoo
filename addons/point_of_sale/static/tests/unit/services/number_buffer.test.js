@@ -1,4 +1,5 @@
 import { expect, test } from "@odoo/hoot";
+import { advanceTime } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { useService } from "@web/core/utils/hooks";
@@ -8,18 +9,19 @@ import { setupPosEnv } from "../utils.js";
 
 definePosModels();
 
-const mountBufferHolder = async () => {
+const mountHolder = async (config = {}) => {
     class Dummy extends Component {
         static template = xml`<div/>`;
         static props = {};
         setup() {
             this.numberBuffer = useService("number_buffer");
-            this.numberBuffer.use({});
+            this.numberBuffer.use(config);
         }
     }
     const comp = await mountWithCleanup(Dummy, { props: {} });
-    return comp.numberBuffer;
+    return comp;
 };
+const mountBufferHolder = async () => (await mountHolder()).numberBuffer;
 
 test("digit entry, negation toggle and backspace", async () => {
     await setupPosEnv();
@@ -61,4 +63,128 @@ test("the buffer stops growing past 12 digits", async () => {
         nb._updateBuffer("9");
     }
     expect(nb.get().length).toBeLessThan(14);
+});
+
+test("closing a holder cancels its keys before restoring the previous holder", async () => {
+    await setupPosEnv();
+    const parent = await mountHolder();
+    const nb = parent.numberBuffer;
+    nb.set("7");
+    const popup = await mountHolder({
+        triggerAtInput: () => expect.step("popup input"),
+    });
+    nb.sendKey("2");
+    popup.__owl__.app.destroy();
+    await advanceTime(100);
+    expect(nb.get()).toBe("7");
+    expect.verifySteps([]);
+});
+
+test("destroying the last holder cancels pending input callbacks", async () => {
+    await setupPosEnv();
+    const holder = await mountHolder({ triggerAtInput: () => expect.step("input") });
+    holder.numberBuffer.sendKey("2");
+    holder.__owl__.app.destroy();
+    await advanceTime(100);
+    holder.numberBuffer.sendKey("3");
+    await advanceTime(100);
+    expect.verifySteps([]);
+});
+
+test("keyboard and numpad events share a batch without losing either key", async () => {
+    await setupPosEnv();
+    const nb = await mountBufferHolder();
+    window.dispatchEvent(new KeyboardEvent("keyup", { key: "1" }));
+    nb.sendKey("2");
+    nb.capture();
+    expect(nb.get()).toBe("12");
+});
+
+test("positive sign after deleting an empty buffer does not throw", async () => {
+    await setupPosEnv();
+    const nb = await mountBufferHolder();
+    nb.sendKey("Delete");
+    nb.capture();
+    expect(nb.get()).toBe(null);
+    nb.sendKey("+");
+    nb.capture();
+    expect(nb.get()).toBe(null);
+});
+
+test("the browser Escape key invokes the configured escape action", async () => {
+    await setupPosEnv();
+    const holder = await mountHolder({ triggerAtEsc: () => expect.step("escape") });
+    window.dispatchEvent(new KeyboardEvent("keyup", { key: "Escape" }));
+    holder.numberBuffer.capture();
+    expect.verifySteps(["escape"]);
+});
+
+test("a callback that closes its holder stops the remaining batch", async () => {
+    await setupPosEnv();
+    const parent = await mountHolder();
+    const nb = parent.numberBuffer;
+    nb.set("7");
+    const popup = await mountHolder({
+        triggerAtEnter: () => popup.__owl__.app.destroy(),
+    });
+    nb.sendKey("Enter");
+    nb.sendKey("2");
+    nb.capture();
+    expect(nb.get()).toBe("7");
+});
+
+test("destroying an inactive holder preserves the active holder's pending keys", async () => {
+    await setupPosEnv();
+    const parent = await mountHolder();
+    const popup = await mountHolder();
+    const nb = popup.numberBuffer;
+    nb.sendKey("2");
+    parent.__owl__.app.destroy();
+    nb.capture();
+    expect(nb.get()).toBe("2");
+});
+
+test("a popup does not consume the previous holder's reset state", async () => {
+    await setupPosEnv();
+    const parent = await mountHolder();
+    const nb = parent.numberBuffer;
+    nb.reset();
+    const popup = await mountHolder();
+    nb.sendKey("2");
+    nb.capture();
+    popup.__owl__.app.destroy();
+    nb.sendKey("Delete");
+    nb.capture();
+    expect(nb.get()).toBe("");
+});
+
+test("a buffer-update listener can destroy the last holder during input", async () => {
+    await setupPosEnv();
+    const holder = await mountHolder({
+        triggerAtInput: () => expect.step("dead callback"),
+    });
+    const nb = holder.numberBuffer;
+    nb.addEventListener("buffer-update", () => holder.__owl__.app.destroy(), {
+        once: true,
+    });
+    nb.sendKey("2");
+    nb.capture();
+    expect.verifySteps([]);
+});
+
+test("buffer-update cannot redirect an input callback to the restored holder", async () => {
+    await setupPosEnv();
+    const parent = await mountHolder({
+        triggerAtInput: () => expect.step("parent callback"),
+    });
+    const popup = await mountHolder({
+        triggerAtInput: () => expect.step("dead callback"),
+    });
+    const nb = parent.numberBuffer;
+    nb.addEventListener("buffer-update", () => popup.__owl__.app.destroy(), {
+        once: true,
+    });
+    nb.sendKey("2");
+    nb.capture();
+    expect.verifySteps([]);
 });

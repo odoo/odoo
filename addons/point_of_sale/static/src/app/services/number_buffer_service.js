@@ -12,7 +12,7 @@ const INPUT_KEYS = new Set(
         "0123456789+-.,".split(""),
     ),
 );
-const CONTROL_KEYS = new Set(["Enter", "Esc"]);
+const CONTROL_KEYS = new Set(["Enter", "Escape", "Esc"]);
 const ALLOWED_KEYS = new Set([...INPUT_KEYS, ...CONTROL_KEYS]);
 const getDefaultConfig = () => ({
     decimalPoint: false,
@@ -68,8 +68,9 @@ class NumberBuffer extends EventBus {
                 holder: this.component?.constructor?.name,
             }));
             clearTimeout(this._timeout);
-            this.handler(true);
+            const handler = this.handler;
             delete this.handler;
+            handler(true);
         }
     }
     /**
@@ -87,7 +88,6 @@ class NumberBuffer extends EventBus {
      * @param {Boolean} config.useWithBarcode
      */
     use(config) {
-        this.eventsBuffer = [];
         const currentComponent = useComponent();
         config = Object.assign(getDefaultConfig(), config);
 
@@ -124,7 +124,24 @@ class NumberBuffer extends EventBus {
         return this.bufferHolderStack[this.bufferHolderStack.length - 1];
     }
     _setUp() {
+        if (this.activeHolder === this._currentBufferHolder) {
+            return;
+        }
+        log.lifecycle("active holder changed: cancel pending keys", () => ({
+            pending: this.eventsBuffer?.length || 0,
+        }));
+        clearTimeout(this._timeout);
+        delete this.handler;
+        this.eventsBuffer = [];
+        if (this.activeHolder) {
+            this.activeHolder.isReset = this.isReset;
+        }
+        this.activeHolder = this._currentBufferHolder;
+        this.isReset = this.activeHolder?.isReset || false;
         if (!this._currentBufferHolder) {
+            this.component = null;
+            this.state = {};
+            this.config = null;
             return;
         }
         const { component, state, config } = this._currentBufferHolder;
@@ -151,14 +168,13 @@ class NumberBuffer extends EventBus {
         );
     }
     sendKey(key) {
-        const event = new CustomEvent("", {
-            detail: {
-                key: key,
-            },
-        });
+        if (!this._currentBufferHolder) {
+            return;
+        }
+        const event = new KeyboardEvent("keyup", { key });
         Object.defineProperty(event, "target", { value: {} });
 
-        return this._bufferEvents(this._onInput((event) => event.detail.key))(event);
+        return this._bufferEvents(this._onInput((event) => event.key))(event);
     }
     _bufferEvents(handler) {
         return (event) => {
@@ -179,34 +195,40 @@ class NumberBuffer extends EventBus {
     }
     _onInput(keyAccessor) {
         return (manualCapture = false) => {
+            const events = this.eventsBuffer;
+            const holder = this._currentBufferHolder;
+            this.eventsBuffer = [];
+            delete this.handler;
             const process =
                 manualCapture ||
                 session.test_mode ||
-                (!manualCapture && this.eventsBuffer.length <= 2);
+                (!manualCapture && events.length <= 2);
             log.logic("onInput", () => ({
-                keys: this.eventsBuffer.map(keyAccessor),
+                keys: events.map(keyAccessor),
                 manualCapture,
                 process,
                 treatedAsBarcode: !process,
                 holder: this.component?.constructor?.name,
             }));
             if (process) {
-                for (const event of this.eventsBuffer) {
+                for (const event of events) {
                     if (!ALLOWED_KEYS.has(keyAccessor(event))) {
-                        this.eventsBuffer = [];
                         return;
                     }
                 }
-                for (const event of this.eventsBuffer) {
+                for (const event of events) {
+                    if (holder !== this._currentBufferHolder) {
+                        break;
+                    }
                     this._handleInput(keyAccessor(event));
                     event.preventDefault();
                     event.stopPropagation();
                 }
             }
-            this.eventsBuffer = [];
         };
     }
     _handleInput(key) {
+        const holder = this._currentBufferHolder;
         log.logic("handleInput", () => ({
             key,
             buffer: this.state.buffer,
@@ -214,10 +236,16 @@ class NumberBuffer extends EventBus {
         }));
         if (key === "Enter" && this.config.triggerAtEnter) {
             this.config.triggerAtEnter(this.state);
-        } else if (key === "Esc" && this.config.triggerAtEsc) {
+        } else if ((key === "Escape" || key === "Esc") && this.config.triggerAtEsc) {
             this.config.triggerAtEsc(this.state);
         } else if (INPUT_KEYS.has(key)) {
             this._updateBuffer(key);
+            if (holder !== this._currentBufferHolder) {
+                log.logic(
+                    "input callback canceled: holder changed during buffer-update",
+                );
+                return;
+            }
             if (this.config.triggerAtInput) {
                 this.config.triggerAtInput({
                     buffer: this.state.buffer,
@@ -269,7 +297,7 @@ class NumberBuffer extends EventBus {
                 this.state.buffer = buffer.substring(0, buffer.length - 1);
             }
         } else if (input === "+") {
-            if (this.state.buffer[0] === "-") {
+            if (!isFirstInput && this.state.buffer[0] === "-") {
                 this.state.buffer = this.state.buffer.substring(
                     1,
                     this.state.buffer.length,

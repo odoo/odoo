@@ -140,6 +140,10 @@ test("the ticket screen lists every line of a paid order and a click picks that 
         props: { stateOverride: { selectedOrderUuid: order.uuid, filter: "SYNCED" } },
     });
     await animationFrame();
+    if (screen.ui.isSmall) {
+        await click(".review-button");
+        await animationFrame();
+    }
     expect(rows()).toHaveLength(2);
     await click(rows()[1]);
     await animationFrame();

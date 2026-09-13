@@ -33,9 +33,13 @@ export class BarcodeReader {
     setup() {
         this.mutex = new Mutex();
         this.cbMaps = new Set();
-        this.exclusiveCbMap = null;
+        this.exclusiveRegistrations = [];
         this.remoteScanning = false;
         this.remoteActive = 0;
+    }
+
+    get exclusiveCbMap() {
+        return this.exclusiveRegistrations.at(-1)?.cbMap ?? null;
     }
 
     register(cbMap, exclusive) {
@@ -44,17 +48,26 @@ export class BarcodeReader {
             types: Object.keys(cbMap),
             registered: this.cbMaps.size,
         }));
+        const registration = { cbMap };
         if (exclusive) {
-            this.exclusiveCbMap = cbMap;
+            this.exclusiveRegistrations.push(registration);
         } else {
             this.cbMaps.add(cbMap);
         }
         return () => {
             if (exclusive) {
-                this.exclusiveCbMap = null;
+                const index = this.exclusiveRegistrations.indexOf(registration);
+                if (index !== -1) {
+                    this.exclusiveRegistrations.splice(index, 1);
+                }
             } else {
                 this.cbMaps.delete(cbMap);
             }
+            log.lifecycle("unregister", () => ({
+                exclusive: Boolean(exclusive),
+                exclusiveRemaining: this.exclusiveRegistrations.length,
+                registered: this.cbMaps.size,
+            }));
         };
     }
 
@@ -103,7 +116,16 @@ export class BarcodeReader {
                 elements: parseBarcode.map((e) => e.type),
                 handlers: cbMaps.filter((cb) => cb.gs1).length,
             }));
-            await Promise.all(cbMaps.map((cb) => cb.gs1?.(parseBarcode)));
+            // A failed callback must not release the scan mutex while another
+            // callback is still processing this barcode.
+            const results = await Promise.allSettled(
+                cbMaps.map(async (cb) => cb.gs1?.(parseBarcode)),
+            );
+            const failure = results.find((result) => result.status === "rejected");
+            if (failure) {
+                endScan({ code, error: failure.reason?.message });
+                throw failure.reason;
+            }
         } else {
             const cbs = cbMaps.map((cbMap) => cbMap[parseBarcode.type]).filter(Boolean);
             log.logic("scan: dispatch", () => ({
@@ -200,7 +222,7 @@ export class BarcodeReader {
 }
 
 export const barcodeReaderService = {
-    dependencies: [...BarcodeReader.serviceDependencies, "dialog", "barcode", "orm"],
+    dependencies: [...BarcodeReader.serviceDependencies, "barcode"],
     async start(env, deps) {
         const { dialog, barcode, orm } = deps;
         let barcodeReader = null;

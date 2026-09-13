@@ -1,5 +1,5 @@
 /** @odoo-module native */
-import { Component, useEffect, useState } from "@odoo/owl";
+import { Component, onWillDestroy, status, useEffect, useState } from "@odoo/owl";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { PartnerLine } from "@point_of_sale/app/screens/partner_list/partner_line/partner_line";
@@ -44,6 +44,8 @@ export class PartnerList extends Component {
         });
         this.searchInputRef = null;
         this.loadedPartnerIds = new Set(this.state.initialPartners.map((p) => p.id));
+        this.partnerRequests = new Map();
+        this.exhaustedQueries = new Set();
         log.lifecycle("setup: partners", () => ({
             initial: this.state.initialPartners.length,
             total: this.pos.models["res.partner"].length,
@@ -53,19 +55,20 @@ export class PartnerList extends Component {
             bypassEditableProtection: true,
         });
         this.onScroll = debounce(this.onScroll.bind(this), 200);
+        onWillDestroy(() => this.onScroll.cancel());
 
         useEffect(
             () => {
-                if (this.state.loading || !this.modalRef.el) {
+                const content = this.modalRef.el?.querySelector(".modal-body");
+                if (!content) {
                     return;
-                } else if (!this.modalContent) {
-                    this.modalContent = this.modalRef.el.querySelector(".modal-body");
                 }
-
-                const scrollMethod = this.onScroll.bind(this);
-                this.modalContent.addEventListener("scroll", scrollMethod);
+                this.modalContent = content;
+                content.addEventListener("scroll", this.onScroll);
                 return () => {
-                    this.modalContent.removeEventListener("scroll", scrollMethod);
+                    content.removeEventListener("scroll", this.onScroll);
+                    this.onScroll.cancel();
+                    this.modalContent = null;
                 };
             },
             () => [this.modalRef.el],
@@ -87,7 +90,9 @@ export class PartnerList extends Component {
                 query: this.state.query,
                 loaded: this.loadedPartnerIds.size,
             }));
-            this.getNewPartners();
+            this.getNewPartners().catch(() => {
+                log.logic("onScroll: page failed; retry remains available");
+            });
         }
     }
     async editPartner(p = false) {
@@ -104,7 +109,25 @@ export class PartnerList extends Component {
         if (!this.state.query) {
             return;
         }
-        const result = await this.searchPartner();
+        const query = this.state.query;
+        let result;
+        try {
+            result = await this.searchPartner();
+        } catch {
+            if (status(this) !== "destroyed" && query === this.state.query) {
+                this.notification.add(_t("Customer search failed. Please try again."), {
+                    type: "warning",
+                });
+            }
+            return;
+        }
+        if (status(this) === "destroyed" || query !== this.state.query) {
+            log.logic("onEnter: stale search ignored", () => ({
+                query,
+                currentQuery: this.state.query,
+            }));
+            return;
+        }
         log.logic("onEnter: server search", () => ({
             query: this.state.query,
             results: result.length,
@@ -112,7 +135,7 @@ export class PartnerList extends Component {
         if (result.length > 0) {
             this.notification.add(
                 _t('%s customer(s) found for "%s".', result.length, this.state.query),
-                3000,
+                { autocloseDelay: 3000 },
             );
         } else {
             this.notification.add(
@@ -197,19 +220,34 @@ export class PartnerList extends Component {
         const partner = await this.getNewPartners();
         return partner;
     }
-    async getNewPartners() {
+    getNewPartners() {
+        const query = this.state.query;
+        if (this.exhaustedQueries.has(query)) {
+            log.logic("getNewPartners: query exhausted", () => ({ query }));
+            return Promise.resolve([]);
+        }
+        if (this.partnerRequests.has(query)) {
+            log.logic("getNewPartners: reuse pending page", () => ({ query }));
+            return this.partnerRequests.get(query);
+        }
+        this.state.loading = true;
+        const request = this.getPartnerPage(query).finally(() => {
+            this.partnerRequests.delete(query);
+            this.state.loading = this.partnerRequests.size > 0;
+        });
+        this.partnerRequests.set(query, request);
+        return request;
+    }
+    async getPartnerPage(query) {
         let domain = [];
-        const offset = this.globalState.offsetBySearch[this.state.query] || 0;
+        const offsets = this.globalState.offsetBySearch;
+        const offset = Object.hasOwn(offsets, query) ? offsets[query] : 0;
         log.logic("getNewPartners", () => ({
-            query: this.state.query,
+            query,
             offset,
             loaded: this.loadedPartnerIds.size,
-            exhausted: offset > this.loadedPartnerIds.size,
         }));
-        if (offset > this.loadedPartnerIds.size) {
-            return [];
-        }
-        if (this.state.query) {
+        if (query) {
             const search_fields = [
                 "name",
                 "parent_name",
@@ -225,29 +263,29 @@ export class PartnerList extends Component {
             ];
             domain = [
                 ...Array(search_fields.length - 1).fill("|"),
-                ...search_fields.map((field) => [
-                    field,
-                    "ilike",
-                    this.state.query + "%",
-                ]),
+                ...search_fields.map((field) => [field, "ilike", query + "%"]),
             ];
         }
 
         const endFetch = log.perf("getNewPartners");
         try {
-            this.state.loading = true;
-
             const result = await this.pos.data.callRelated(
                 "res.partner",
                 "get_new_partner",
                 [this.pos.config.id, domain, offset],
             );
 
-            this.globalState.offsetBySearch[this.state.query] =
-                offset + (result["res.partner"].length || 100);
+            const partners = result["res.partner"];
+            this.globalState.offsetBySearch = {
+                ...this.globalState.offsetBySearch,
+                [query]: offset + partners.length,
+            };
+            if (!partners.length) {
+                this.exhaustedQueries.add(query);
+            }
 
             let added = 0;
-            for (const partner of result["res.partner"]) {
+            for (const partner of partners) {
                 if (!this.loadedPartnerIds.has(partner.id)) {
                     this.loadedPartnerIds.add(partner.id);
                     this.state.loadedPartners.push(partner);
@@ -256,17 +294,15 @@ export class PartnerList extends Component {
             }
 
             endFetch({
-                query: this.state.query,
+                query,
                 offset,
-                fetched: result["res.partner"].length,
+                fetched: partners.length,
                 added,
             });
-            return result["res.partner"];
-        } catch {
-            endFetch({ query: this.state.query, offset, failed: true });
-            return [];
-        } finally {
-            this.state.loading = false;
+            return partners;
+        } catch (error) {
+            endFetch({ query, offset, failed: true });
+            throw error;
         }
     }
 }

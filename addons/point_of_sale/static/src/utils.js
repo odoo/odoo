@@ -1,9 +1,11 @@
 /** @odoo-module native */
 /* global QRCode */
 
+import { makeLogger } from "@web/core/debug/debug_logger";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { getDataURLFromFile } from "@web/core/utils/urls";
 import { session } from "@web/session";
+const imageLog = makeLogger("pos.images");
 export function uuidv4() {
     if (typeof crypto !== "undefined") {
         if (typeof crypto.randomUUID === "function") {
@@ -146,37 +148,41 @@ export function loadImage(url, options = {}) {
 
 export function waitImages(containerElement, timeoutMs = 3000) {
     return new Promise((resolve) => {
-        const images = containerElement.querySelectorAll("img");
-        const total = images.length;
-        let loadedCount = 0;
-        let timedOut = false;
-
-        if (total === 0) {
+        const pending = new Set(
+            [...containerElement.querySelectorAll("img")].filter(
+                (img) => !img.complete,
+            ),
+        );
+        if (!pending.size) {
             resolve({ timedOut: false });
             return;
         }
-
-        const timeoutId = setTimeout(() => {
-            timedOut = true;
-            resolve({ timedOut: true });
-        }, timeoutMs);
-
-        const onLoadOrError = () => {
-            loadedCount++;
-            if (loadedCount === total && !timedOut) {
-                clearTimeout(timeoutId);
-                resolve({ timedOut: false });
+        const endWait = imageLog.perf("waitImages");
+        const removeListeners = (img) => {
+            img.removeEventListener("load", onLoadOrError);
+            img.removeEventListener("error", onLoadOrError);
+        };
+        const finish = (timedOut) => {
+            clearTimeout(timeoutId);
+            for (const img of pending) {
+                removeListeners(img);
+            }
+            endWait({ timedOut, pending: pending.size });
+            pending.clear();
+            resolve({ timedOut });
+        };
+        const onLoadOrError = ({ currentTarget: img }) => {
+            removeListeners(img);
+            pending.delete(img);
+            if (!pending.size) {
+                finish(false);
             }
         };
-
-        images.forEach((img) => {
-            if (img.complete) {
-                onLoadOrError();
-            } else {
-                img.addEventListener("load", onLoadOrError);
-                img.addEventListener("error", onLoadOrError);
-            }
-        });
+        const timeoutId = setTimeout(() => finish(true), timeoutMs);
+        for (const img of pending) {
+            img.addEventListener("load", onLoadOrError);
+            img.addEventListener("error", onLoadOrError);
+        }
     });
 }
 

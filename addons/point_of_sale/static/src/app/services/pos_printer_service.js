@@ -16,10 +16,6 @@ export const posPrinterService = {
     },
 };
 export class PosPrinterService extends PrinterService {
-    constructor(...args) {
-        super(...args);
-        this.setup(...args);
-    }
     setup(env, { hardware_proxy, dialog, renderer }) {
         super.setup(...arguments);
         this.renderer = renderer;
@@ -31,9 +27,9 @@ export class PosPrinterService extends PrinterService {
         this.setPrinter(this.hardware_proxy.printer);
         return super.print(...arguments);
     }
-    printWeb() {
+    async printWeb() {
         try {
-            return super.printWeb(...arguments);
+            return await super.printWeb(...arguments);
         } catch {
             log.logic("printWeb: unsupported browser");
             this.dialog.add(AlertDialog, {
