@@ -370,7 +370,9 @@ class AccessMixin(_ModelStubs):
                         if "company_id" in record
                         else record["company_ids"]
                     )
-                field = self.env["ir.model.fields"]._get(self._name, name)
+                field_string = self.env.registry.metaschema.field_strings(
+                    self.env, self._name
+                ).get(name, self._fields[name].string)
                 lines.append(
                     str(msg)
                     % {
@@ -378,8 +380,8 @@ class AccessMixin(_ModelStubs):
                         "company": ", ".join(
                             company.display_name or "" for company in companies
                         ),
-                        "field": field.field_description,
-                        "fname": field.name,
+                        "field": field_string,
+                        "fname": name,
                         "values": ", ".join(
                             repr(rec.display_name) for rec in corecords
                         ),

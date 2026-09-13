@@ -267,19 +267,9 @@ class SchemaMixin(_ModelStubs):
         if (constraint_name := exc.diag.constraint_name) and (
             cons := self._table_objects.get(constraint_name)
         ):
-            cons_rec = (
-                self.env["ir.model.constraint"]
-                .sudo()
-                .search_fetch(
-                    [
-                        ("name", "=", constraint_name),
-                        ("model.model", "=", self._name),
-                    ],
-                    ["message"],
-                    limit=1,
-                )
-            )
-            if message := cons_rec.message:
+            if message := self.env.registry.metaschema.constraint_message(
+                self.env, self._name, constraint_name
+            ):
                 _debug.logic(
                     "schema.sql_error.constraint_message",
                     model=self._name,

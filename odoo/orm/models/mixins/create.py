@@ -39,7 +39,7 @@ class CreateMixin(_ModelStubs):
         _fields = self._fields
         defaults = {}
         parent_fields = defaultdict(list)
-        ir_defaults = env["ir.default"]._get_model_defaults(self._name)
+        ir_defaults = env.registry.metaschema.model_defaults(env, self._name)
         context_defaults = env._context_defaults
 
         for name in fields:

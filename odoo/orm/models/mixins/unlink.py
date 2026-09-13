@@ -60,7 +60,6 @@ class UnlinkMixin(_ModelStubs):
         prof.mark("flush")
 
         cr = self.env.cr
-        Defaults = self.env["ir.default"].sudo()
         ir_model_data_unlink = self.env.registry.xmlids.records_of(self)
         ir_attachment_unlink = self.env.registry.file_store.of_records(self)
 
@@ -72,7 +71,7 @@ class UnlinkMixin(_ModelStubs):
 
         deleted_ids: list[int] = self.ids
         for sub_ids in batched(deleted_ids, cr.BATCH_SIZE, strict=False):
-            self._unlink_process_batch(sub_ids, Defaults)
+            self._unlink_process_batch(sub_ids)
         prof.mark("sql")
 
         if self.env.context.get(MODULE_UNINSTALL_FLAG):
@@ -189,8 +188,6 @@ class UnlinkMixin(_ModelStubs):
             keys=len(keys),
         )
 
-    def _unlink_process_batch(
-        self, sub_ids: tuple[int, ...], Defaults: typing.Any
-    ) -> None:
-        self.env.backend.unlink_rows(self, sub_ids, Defaults)
+    def _unlink_process_batch(self, sub_ids: tuple[int, ...]) -> None:
+        self.env.backend.unlink_rows(self, sub_ids)
         _debug.perf.count("unlink.batch", model=self._name, records=len(sub_ids))

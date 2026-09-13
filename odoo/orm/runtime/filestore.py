@@ -79,7 +79,7 @@ class FileStore:
             [
                 ("res_model", "=", model._name),
                 ("res_field", "=", field_name),
-                ("res_id", "!=", False),
+                ("res_id", ">", 0),
             ]
         )
 

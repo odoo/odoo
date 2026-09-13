@@ -27,6 +27,7 @@ from .runtime.access_policy import ACCESS_POLICY
 from .runtime.filestore import FILE_STORE
 from .runtime.metaschema import META_SCHEMA
 from .runtime.registry import CACHES_BY_KEY
+from .runtime.settings import SYSTEM_SETTINGS
 from .runtime.transaction import Transaction
 from .runtime.xmlids import XMLIDS
 
@@ -274,6 +275,7 @@ class ModelRegistry(_RegistryFieldsMixin, Mapping):
     access_policy = ACCESS_POLICY
     xmlids = XMLIDS
     file_store = FILE_STORE
+    settings = SYSTEM_SETTINGS
 
     def __init__(
         self,

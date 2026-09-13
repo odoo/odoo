@@ -43,12 +43,22 @@ class _StubIrModelData(models.Model):
     _description = "ir.model.data (differential test stub)"
     _log_access = False
 
+    module = fields.Char()
+    name = fields.Char()
+    model = fields.Char()
+    res_id = fields.Integer()
+    noupdate = fields.Boolean()
+
 
 class _StubIrAttachment(models.Model):
     _name = "ir.attachment"
     _module = _STUB_MODULE
     _description = "ir.attachment (differential test stub)"
     _log_access = False
+
+    res_model = fields.Char()
+    res_field = fields.Char()
+    res_id = fields.Integer()
 
 
 class _StubPartner(models.Model):

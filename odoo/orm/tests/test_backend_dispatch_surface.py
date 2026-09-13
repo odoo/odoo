@@ -36,10 +36,9 @@ DISPATCH_SITES: dict[tuple[str, str], str] = {
     ),
     ("models/mixins/unlink.py", "_unlink_process_batch"): (
         "LOSSY: PostgresBackend.unlink_rows runs the many2one_company_dependents "
-        "ir.default cleanup; InMemoryBackend.unlink_rows() only removes the rows. "
-        "It IS passed the Defaults recordset -- extracting PostgresBackend showed "
-        "the port's signature was missing an argument the operation needs. The "
-        "ir.model.data and ir.attachment rows left the port: the unlink mixin asks "
+        "guards and the ir.default cleanup through registry.metaschema; "
+        "InMemoryBackend.unlink_rows() only removes the rows. The ir.model.data "
+        "and ir.attachment rows left the port: the unlink mixin asks "
         "registry.xmlids and registry.file_store for them, so both tiers collect "
         "them alike."
     ),
@@ -152,16 +151,14 @@ def test_layer1_dispatch_stays_explicitly_enumerated():
     )
 
 
-def test_in_memory_unlink_rows_is_declared_lossy():
+def test_in_memory_unlink_rows_only_removes_rows():
     import inspect
 
     params = list(inspect.signature(InMemoryBackend.unlink_rows).parameters)
-    assert "Defaults" in params, (
-        "InMemoryBackend.unlink_rows no longer receives Defaults. It gained the "
-        "argument when PostgresBackend was extracted and the SQL path started "
-        "going through the port, which showed the signature was missing "
-        "something the operation needs. Narrowing the port back would re-open "
-        "the wider half of this divergence."
+    assert params == ["self", "model", "sub_ids"], (
+        "unlink_rows grew an argument. The meta-schema, xmlid and file ports "
+        "took the base models out of its signature; a new one belongs on a port, "
+        "not on the storage backend."
     )
 
 

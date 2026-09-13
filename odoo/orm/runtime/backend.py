@@ -21,8 +21,6 @@ from psycopg.types.json import Json, Jsonb, JsonDumper
 from odoo.exceptions import LockError, UserError
 from odoo.libs.accel import fast_clone
 from odoo.libs.debug_log import DebugLog
-from odoo.libs.json import dumps as json_dumps
-from odoo.libs.json import loads as json_loads
 from odoo.libs.profiling import _OrmProfile
 from odoo.tools import SQL, OrderedSet, Query, partition
 from odoo.tools.translate import _
@@ -462,9 +460,7 @@ class StorageBackend(typing.Protocol):
         limit: int | None = None,
     ) -> BaseModel: ...
 
-    def unlink_rows(
-        self, model: BaseModel, sub_ids: tuple[int, ...], Defaults: typing.Any
-    ) -> None: ...
+    def unlink_rows(self, model: BaseModel, sub_ids: tuple[int, ...]) -> None: ...
 
     def read_m2m_pairs(
         self,
@@ -1039,9 +1035,7 @@ class PostgresBackend:
         )
         return model.browse(i for i in model._ids if i in valid_ids)
 
-    def unlink_rows(
-        self, model: BaseModel, sub_ids: tuple[int, ...], Defaults: typing.Any
-    ) -> None:
+    def unlink_rows(self, model: BaseModel, sub_ids: tuple[int, ...]) -> None:
         env = model.env
         cr = env.cr
         records = model.browse(sub_ids)
@@ -1064,7 +1058,7 @@ class PostgresBackend:
             uninstalling=bool(uninstalling),
         )
         if many2one_fields and not uninstalling:
-            self._unlink_default_guard(model, sub_ids, Defaults, many2one_fields)
+            self._unlink_default_guard(model, sub_ids, many2one_fields)
 
         if many2one_fields and not all(
             isinstance(id_, int) and id_ > 0 for id_ in sub_ids
@@ -1079,45 +1073,32 @@ class PostgresBackend:
             else:
                 self._unlink_clear_company_dependent(referrer, field, sub_ids)
 
-        Defaults.discard_records(records)
+        env.registry.metaschema.discard_defaults(env, records)
 
     @staticmethod
     def _unlink_default_guard(
-        model: BaseModel,
-        sub_ids: tuple[int, ...],
-        Defaults: typing.Any,
-        many2one_fields,
+        model: BaseModel, sub_ids: tuple[int, ...], many2one_fields
     ) -> None:
-        metaschema = model.env.registry.metaschema
-        field_ids = tuple(
-            metaschema.field_ids_by_name(model.env, field.model_name).get(field.name)
-            for field in many2one_fields
+        referencing = model.env.registry.metaschema.default_referencing(
+            model.env, many2one_fields, sub_ids
         )
-        sub_ids_json_text = tuple(json_dumps(id_) for id_ in sub_ids)
-        if default := Defaults.search(
-            [
-                ("field_id", "in", field_ids),
-                ("json_value", "in", sub_ids_json_text),
-            ],
-            limit=1,
-            order="id desc",
-        ):
-            ir_field = default.field_id.sudo()
-            field = model.env[ir_field.model]._fields[ir_field.name]
-            record = model.browse(json_loads(default.json_value))
-            _debug.logic(
-                "backend.unlink.blocked_by_default",
-                model=model._name,
-                field=f"{field.model_name}.{field.name}",
-                record=record.id,
+        if referencing is None:
+            return
+        field, record_id = referencing
+        record = model.browse(record_id)
+        _debug.logic(
+            "backend.unlink.blocked_by_default",
+            model=model._name,
+            field=f"{field.model_name}.{field.name}",
+            record=record.id,
+        )
+        raise UserError(
+            _(
+                "Unable to delete %(record)s because it is used as the default value of %(field)s",
+                record=record,
+                field=field,
             )
-            raise UserError(
-                _(
-                    "Unable to delete %(record)s because it is used as the default value of %(field)s",
-                    record=record,
-                    field=field,
-                )
-            )
+        )
 
     @staticmethod
     def _unlink_restrict_guard(
@@ -1727,9 +1708,7 @@ class InMemoryBackend:
             locked = locked[:limit]
         return model.browse(locked)
 
-    def unlink_rows(
-        self, model: BaseModel, sub_ids: tuple[int, ...], Defaults: typing.Any
-    ) -> None:
+    def unlink_rows(self, model: BaseModel, sub_ids: tuple[int, ...]) -> None:
         self.storage.remove_rows(model._table, list(sub_ids))
 
     def _iter_m2m_rows(self, relation: str):

@@ -3,6 +3,8 @@ from __future__ import annotations
 import typing
 
 from odoo.libs.debug_log import DebugLog
+from odoo.libs.json import dumps as json_dumps
+from odoo.libs.json import loads as json_loads
 
 if typing.TYPE_CHECKING:
     from .._typing import BaseModel
@@ -38,6 +40,21 @@ class MetaSchema:
             env["ir.model.relation"]._reflect_relations(
                 relation_reflections, model_tables=model_tables
             )
+
+    def constraint_message(
+        self, env: Environment, model_name: str, constraint_name: str
+    ) -> str | None:
+        return (
+            env["ir.model.constraint"]
+            .sudo()
+            .search_fetch(
+                [("name", "=", constraint_name), ("model.model", "=", model_name)],
+                ["message"],
+                limit=1,
+            )
+            .message
+            or None
+        )
 
     def reflect_inherits(self, env: Environment, model_names: list[str]) -> None:
         env["ir.model.inherit"]._reflect_inherits(model_names)
@@ -86,7 +103,37 @@ class MetaSchema:
     def model_defaults(
         self, env: Environment, model_name: str, condition: str | bool = False
     ) -> dict[str, typing.Any]:
-        return env["ir.default"]._get_model_defaults(model_name, condition)
+        if condition:
+            return env["ir.default"]._get_model_defaults(model_name, condition)
+        return env["ir.default"]._get_model_defaults(model_name)
+
+    def default_referencing(
+        self, env: Environment, fields: typing.Iterable[typing.Any], ids: tuple
+    ) -> tuple[typing.Any, int] | None:
+        field_ids = tuple(
+            self.field_ids_by_name(env, field.model_name).get(field.name)
+            for field in fields
+        )
+        default = (
+            env["ir.default"]
+            .sudo()
+            .search(
+                [
+                    ("field_id", "in", field_ids),
+                    ("json_value", "in", tuple(json_dumps(id_) for id_ in ids)),
+                ],
+                limit=1,
+                order="id desc",
+            )
+        )
+        if not default:
+            return None
+        ir_field = default.field_id.sudo()
+        field = env[ir_field.model]._fields[ir_field.name]
+        return field, json_loads(default.json_value)
+
+    def discard_defaults(self, env: Environment, records: BaseModel) -> None:
+        env["ir.default"].sudo().discard_records(records)
 
     def field_column_fallbacks(
         self, env: Environment, model_name: str, field_name: str

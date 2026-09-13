@@ -908,9 +908,11 @@ class TestSearchRelated(TransactionCase):
             WHERE "test_orm_related"."foo_id" IN (
                 SELECT "test_orm_related_foo"."id"
                 FROM "test_orm_related_foo"
-                WHERE EXISTS (
-                    SELECT 1 FROM ir_attachment WHERE res_model = %s AND res_field = %s
-                    AND res_id = "test_orm_related_foo"."id"
+                WHERE "test_orm_related_foo"."id" IN (
+                    SELECT res_id FROM "ir_attachment"
+                    WHERE ("ir_attachment"."res_field" IN (%s)
+                        AND "ir_attachment"."res_id" > %s
+                        AND "ir_attachment"."res_model" IN (%s))
                 )
                 AND "test_orm_related_foo"."id" < %s
             )
@@ -948,9 +950,11 @@ class TestSearchRelated(TransactionCase):
                 ON ("test_orm_related"."foo_id" = "test_orm_related__foo_id"."id")
             WHERE (
                 "test_orm_related"."foo_id" IS NOT NULL
-                AND EXISTS (
-                    SELECT 1 FROM ir_attachment WHERE res_model = %s AND res_field = %s
-                    AND res_id = "test_orm_related__foo_id"."id"
+                AND "test_orm_related__foo_id"."id" IN (
+                    SELECT res_id FROM "ir_attachment"
+                    WHERE ("ir_attachment"."res_field" IN (%s)
+                        AND "ir_attachment"."res_id" > %s
+                        AND "ir_attachment"."res_model" IN (%s))
                 )
             )
             AND "test_orm_related"."id" < %s

@@ -82,7 +82,7 @@ class BaseModel(
     def get_base_url(self) -> str:
         if len(self) > 1:
             raise ValueError(f"Expected singleton or no record: {self}")
-        return self.env["ir.config_parameter"].sudo().get_param("web.base.url")
+        return self.env.registry.settings.get(self.env, "web.base.url")
 
 
 collections.abc.Set.register(BaseModel)
