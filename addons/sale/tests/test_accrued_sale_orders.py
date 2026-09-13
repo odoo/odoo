@@ -200,3 +200,30 @@ class TestAccruedSaleOrders(TestSaleCommon):
             {'debit': 0.0, 'credit': 90.0},
             {'debit': 90.0, 'credit': 0.0},
         ])
+
+    def test_accrued_order_excludes_order_policy_line(self):
+        """A fully invoiced order billed on ordered quantities has nothing left
+        to accrue, so the Accrued Revenue Entry generates no move."""
+        self.product_a.invoice_policy = "order"
+        sale_order = self.env["sale.order"].with_context(tracking_disable=True).create({
+            "partner_id": self.partner_a.id,
+            "order_line": [
+                Command.create({"product_id": self.product_a.id, "product_uom_qty": 10.0}),
+            ],
+        })
+        sale_order.action_confirm()
+        sale_order._create_invoices()
+        sale_order.invoice_ids.action_post()
+        self.assertRecordValues(sale_order.order_line, [
+            {"qty_invoiced": 10.0, "qty_delivered": 0.0},
+        ])
+
+        wizard = self.env["account.accrued.orders.wizard"].with_context(
+            active_model="sale.order",
+            active_ids=sale_order.ids,
+        ).create({
+            "account_id": self.account_expense.id,
+            "date": fields.Date.today(),
+        })
+        with self.assertRaises(UserError):
+            wizard.create_entries()
