@@ -299,6 +299,33 @@ test("scroll inside should keep dropdown open", async () => {
     expect(".o-autocomplete .dropdown-menu").toHaveCount(1);
 });
 
+test("scroll right after opening should not cancel result", async () => {
+    class Parent extends Component {
+        static components = { AutoComplete };
+        static template = xml`
+            <div>
+                <div class="unrelated"/>
+                <AutoComplete value="'Hello'" sources="this.sources" autoSelect="true"/>
+            </div>
+        `;
+
+        sources = buildSources(() => [item("World"), item("Hello")]);
+    }
+
+    await mountWithCleanup(Parent);
+    expect(".o-autocomplete .dropdown-menu").toHaveCount(0);
+
+    await contains(".o-autocomplete input").click();
+    expect(".o-autocomplete .dropdown-menu").toHaveCount(1);
+
+    queryOne(".unrelated").dispatchEvent(new Event("scroll"));
+    expect(".o-autocomplete .dropdown-menu").toHaveCount(1);
+
+    await animationFrame();
+    queryOne(".unrelated").dispatchEvent(new Event("scroll"));
+    expect(".o-autocomplete .dropdown-menu").toHaveCount(0);
+});
+
 test("losing focus should cancel result", async () => {
     class Parent extends Component {
         static components = { AutoComplete };
