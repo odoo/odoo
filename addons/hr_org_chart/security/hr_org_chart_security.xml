@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="hr_dept_base_user_access_rule" model="ir.rule">
+        <field name="name">Department Read Access For Non Managers</field>
+        <field name="model_id" ref="hr.model_hr_department"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="hr_dept_manager_access_rule" model="ir.rule">
+        <field name="name">Department Access For Managers</field>
+        <field name="model_id" ref="hr.model_hr_department"/>
+        <field name="domain_force">[('has_read_access', '=', True)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="hr_dept_hr_officer_access_rule" model="ir.rule">
+        <field name="name">Department Access For HR Officers</field>
+        <field name="model_id" ref="hr.model_hr_department"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('hr.group_hr_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+</odoo>

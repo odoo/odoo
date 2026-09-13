@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import AccessError, ValidationError
 
 
 class Department(models.Model):
@@ -14,7 +14,7 @@ class Department(models.Model):
     _parent_store = True
 
     name = fields.Char('Department Name', required=True)
-    complete_name = fields.Char('Complete Name', compute='_compute_complete_name', recursive=True, store=True)
+    complete_name = fields.Char('Complete Name', compute='_compute_complete_name', compute_sudo=True, recursive=True, store=True)
     active = fields.Boolean('Active', default=True)
     company_id = fields.Many2one('res.company', string='Company', index=True, default=lambda self: self.env.company)
     parent_id = fields.Many2one('hr.department', string='Parent Department', index=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
@@ -54,7 +54,7 @@ class Department(models.Model):
             department.master_department_id = int(department.parent_path.split('/')[0])
 
     def _compute_total_employee(self):
-        emp_data = self.env['hr.employee']._read_group([('department_id', 'in', self.ids)], ['department_id'], ['department_id'])
+        emp_data = self.env['hr.employee'].sudo()._read_group([('department_id', 'in', self.ids)], ['department_id'], ['department_id'])
         result = dict((data['department_id'][0], data['department_id_count']) for data in emp_data)
         for department in self:
             department.total_employee = result.get(department.id, 0)
@@ -129,6 +129,31 @@ class Department(models.Model):
         action = self.env['ir.actions.actions']._for_xml_id('hr.hr_plan_action')
         action['context'] = {'default_department_id': self.id, 'search_default_department_id': self.id}
         return action
+
+    def action_employee_from_department(self):
+        try:
+            self.env['hr.employee'].check_access_rights('read')
+            res_model = "hr.employee"
+            search_view_id = self.env.ref('hr.view_employee_filter').id
+        except AccessError:
+            res_model = "hr.employee.public"
+            search_view_id = self.env.ref('hr.hr_employee_public_view_search').id
+
+        return {
+            'name': _("Employees"),
+            'type': 'ir.actions.act_window',
+            'res_model': res_model,
+            'view_mode': 'list,kanban,form',
+            'views': [(False, 'list'), (False, 'kanban'), (False, 'form')],
+            'search_view_id': [search_view_id, 'search'],
+            'context': {
+                'searchpanel_default_department_id': self.id,
+                'default_department_id': self.id,
+                'search_default_group_department': 1,
+                'search_default_department_id': self.id,
+                'expand': 1
+            },
+        }
 
     def get_children_department_ids(self):
         return self.env['hr.department'].search([('id', 'child_of', self.ids)])

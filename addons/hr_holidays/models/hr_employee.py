@@ -362,4 +362,4 @@ class HrEmployee(models.Model):
         else:
             domain += [('department_ids', '=', False)]
 
-        return self.env['hr.leave.stress.day'].search(domain)
+        return self.env['hr.leave.stress.day'].sudo().search(domain)
