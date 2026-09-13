@@ -866,7 +866,11 @@ campaign ends; the recipe, the cost figures and the first findings are in
   omits its host defaults to the configured one and does it from the config
   rather than the environment, and `pool.py` contains no raw counter mutation
   at all. Each was verified to fail when its invariant is violated.
-  Add the check here when you add an invariant above.
+  Add the check here when you add an invariant above. One class per invariant:
+  a behavioural check against a fake and the structural one (`co_names`, AST)
+  sit together, with the AST helpers in `tests/_source.py`; `test_source_pins.py`
+  keeps the pins that have no behavioural twin (the lock-discipline scanner, the
+  seam's shape, the schema-cache call sites).
 
 - **Tier 2 real-import, no DB (ms)** — `odoo/db/tests/`, run from `odoo/` as
   `pytest odoo/db/tests` (it is in no `testpaths` and shares the Tier-2
