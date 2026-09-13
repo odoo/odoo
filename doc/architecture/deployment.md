@@ -177,7 +177,7 @@ Knobs, read from the environment:
 | Variable | Default | Bounds |
 |---|---|---|
 | `ODOO_MAX_HTTP_THREADS` | `(db_maxconn - max_cron_threads - job_workers) // 2` | concurrent requests on the threaded server; `0` is unbounded |
-| `ODOO_HTTP_SOCKET_TIMEOUT` | `2 s` (`5 s` under `test_enable`) | each blocking read or write while a request is served |
+| `ODOO_HTTP_SOCKET_TIMEOUT` | `2 s` (`5 s` under `test_enable`) | each blocking read or write of a body or a response; a pause inside the head is bounded by `ODOO_HTTP_HEAD_TIMEOUT` instead, on both servers |
 | `ODOO_HTTP_HEAD_TIMEOUT` | `10 s` | from the first byte of a request head to its end; a partial head past it gets `408` |
 | `ODOO_HTTP_KEEPALIVE_TIMEOUT` | `75 s` | an idle kept-alive connection is closed after this |
 | `ODOO_HTTP_MAX_IDLE_CONNECTIONS` | `4096` | idle connections held; past it the oldest idle one is closed |

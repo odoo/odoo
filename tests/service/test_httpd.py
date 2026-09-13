@@ -511,13 +511,19 @@ def test_control_characters_are_escaped_in_the_access_log(caplog):
     assert "\\x1b[31m" in caplog.records[0].getMessage()
 
 
-def test_a_prefork_connection_answers_http11_closes_and_never_exposes_the_socket():
+@contextmanager
+def _prefork_listener(**env):
     listener = socket.socket()
     listener.bind(("127.0.0.1", 0))
     listener.listen(1)
     port = listener.getsockname()[1]
-    identity = httpd.ServerIdentity("127.0.0.1", port, False, True, False)
-    with server_settings.override(test_enable=False):
+    identity = httpd.ServerIdentity(
+        "127.0.0.1", port, multithread=False, multiprocess=True, exposes_socket=False
+    )
+    with (
+        patch.dict(os.environ, env),
+        server_settings.override(test_enable=False),
+    ):
         limits = httpd.TransportLimits.from_environment()
 
     def serve():
@@ -526,15 +532,60 @@ def test_a_prefork_connection_answers_http11_closes_and_never_exposes_the_socket
 
     thread = threading.Thread(target=serve, daemon=True)
     thread.start()
-    started = time.monotonic()
-    raw = _talk(port, b"GET /p HTTP/1.1\r\nHost: h\r\n\r\n")
-    elapsed = time.monotonic() - started
-    thread.join(5)
-    listener.close()
+    try:
+        yield port
+    finally:
+        thread.join(5)
+        listener.close()
+
+
+def test_a_prefork_connection_answers_http11_closes_and_never_exposes_the_socket():
+    with _prefork_listener() as port:
+        started = time.monotonic()
+        raw = _talk(port, b"GET /p HTTP/1.1\r\nHost: h\r\n\r\n")
+        elapsed = time.monotonic() - started
     assert raw.startswith(b"HTTP/1.1 200")
     assert b"Connection: close" in raw
     assert _json_body(raw)["socket"] is False
     assert elapsed < 0.5, "a sized response must not wait on the client to close"
+
+
+def _talk_in_two_parts(port, first, second, pause):
+    sock = socket.create_connection(("127.0.0.1", port))
+    sock.settimeout(5)
+    sock.sendall(first)
+    time.sleep(pause)
+    buf = b""
+    try:
+        sock.sendall(second)
+        while chunk := sock.recv(65536):
+            buf += chunk
+    except OSError as exc:
+        buf += repr(exc).encode()
+    sock.close()
+    return buf
+
+
+def test_a_prefork_head_may_pause_longer_than_the_socket_timeout():
+    """The head phase is bounded by ODOO_HTTP_HEAD_TIMEOUT, as deployment.md
+    states; the per-read socket timeout governs bodies and responses."""
+    with _prefork_listener(
+        ODOO_HTTP_SOCKET_TIMEOUT="0.2", ODOO_HTTP_HEAD_TIMEOUT="2"
+    ) as port:
+        raw = _talk_in_two_parts(
+            port, b"GET /p HTTP/1.1\r\n", b"Host: h\r\n\r\n", pause=0.6
+        )
+    assert raw.startswith(b"HTTP/1.1 200"), raw[:80]
+
+
+def test_a_prefork_head_past_the_head_timeout_gets_a_408():
+    with _prefork_listener(
+        ODOO_HTTP_SOCKET_TIMEOUT="0.2", ODOO_HTTP_HEAD_TIMEOUT="0.5"
+    ) as port:
+        raw = _talk_in_two_parts(
+            port, b"GET /p HTTP/1.1\r\n", b"Host: h\r\n\r\n", pause=0.9
+        )
+    assert raw.startswith(b"HTTP/1.1 408"), raw[:80]
 
 
 def test_shutdown_before_serve_forever_does_not_hang():

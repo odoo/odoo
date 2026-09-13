@@ -475,8 +475,13 @@ def _read_head(conn: Connection, limits: TransportLimits) -> tuple[int, int] | N
                 HTTPStatus.REQUEST_TIMEOUT, "request head not received in time"
             )
         conn.sock.settimeout(min(limits.socket_timeout, remaining))
-        if not conn.source.fill():
-            return None
+        try:
+            if not conn.source.fill():
+                return None
+        except TimeoutError:
+            # A pause inside the head is bounded by head_timeout, not by the
+            # per-read socket timeout that governs a body or a response.
+            continue
     conn.sock.settimeout(limits.socket_timeout)
     return span
 
