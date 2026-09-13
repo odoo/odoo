@@ -15,13 +15,16 @@
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # NEDŽAD BEUS <nedzad.beus@implex.si>, 2026.
+# Jan Zorko <jan.zorko@implex.si>, 2026.
+# Žiga Trček <ziga.trcek@implex.si>, 2026.
+# Nedžad Beus <nedzad.beus@implex.si>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-12 17:36+0000\n"
-"PO-Revision-Date: 2026-08-08 00:25+0000\n"
-"Last-Translator: NEDŽAD BEUS <nedzad.beus@implex.si>\n"
+"PO-Revision-Date: 2026-09-10 11:13+0000\n"
+"Last-Translator: Jan Zorko <jan.zorko@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
 "hr_timesheet/sl/>\n"
 "Language: sl\n"
@@ -30,7 +33,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
 "n%100==4 ? 2 : 3;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -77,21 +80,18 @@ msgstr "Časovnice osebe %(name)s"
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
-#, fuzzy
 msgid "%(project_name)s (%(days)sd)"
 msgstr "%(project_name)s (%(days)sd)"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
-#, fuzzy
 msgid "%(project_name)s (%(sign)s%(hours)sh%(minutes)s)"
 msgstr "%(project_name)s (%(sign)s%(hours)sh%(minutes)s)"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
-#, fuzzy
 msgid "%(project_name)s (%(sign)s%(hours)sh)"
 msgstr "%(project_name)s (%(sign)s%(hours)sh)"
 
@@ -166,7 +166,6 @@ msgstr "<span class=\"text-nowrap\">Čas, porabljen za podnaloge:</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
-#, fuzzy
 msgid ""
 "<span invisible=\"has_timesheet\">\n"
 "                        Are you sure you want to delete these employees?\n"
@@ -343,7 +342,6 @@ msgstr "Pokličite stranko in se pogovorite o projektu"
 #. module: hr_timesheet
 #. odoo-javascript
 #: code:addons/hr_timesheet/static/src/views/timesheet_calendar/timesheet_calendar_model.js:0
-#, fuzzy
 msgid "Choose an employee to create their timesheet."
 msgstr "Izberite kadra, da ustvarite njegovo časovnico."
 
@@ -572,7 +570,7 @@ msgstr "Podaljšek"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Generate timesheets for validated time off requests and public holidays"
-msgstr "Ustvarite časovne liste za potrjene zahteve za prosti čas in praznike"
+msgstr "Ustvarite časovne liste za potrjene zahteve za odsotnost in praznike"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_ir_http
@@ -586,7 +584,6 @@ msgstr "Ima dostop vodje oddelka"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee_public__has_timesheet
-#, fuzzy
 msgid "Has Timesheet"
 msgstr "Ima časovnico"
 
@@ -619,7 +616,6 @@ msgstr "ID"
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
-#, fuzzy
 msgid "Import Template for Timesheets"
 msgstr "Predloga za uvoz časovnic"
 
@@ -758,7 +754,6 @@ msgstr "Podatkov še ni!"
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
-#, fuzzy
 msgid "No timesheets created: employees aren’t working on the selected days"
 msgstr "Časovnice niso bile ustvarjene: kadri ne delajo na izbranih dnevih"
 
@@ -801,13 +796,11 @@ msgstr "Partner"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_account_analytic_line_calendar_employee
-#, fuzzy
 msgid "Personal Filters on Employees for the Calendar view"
 msgstr "Osebni filtri na kadrih za pogled koledarja"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
-#, fuzzy
 msgid "Please first delete all of their timesheets."
 msgstr "Najprej izbrišite vse njihove časovnice."
 
@@ -882,7 +875,6 @@ msgstr ""
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_kanban_inherit_project_task_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_kanban_inherited_progress
-#, fuzzy
 msgid "Remaining days"
 msgstr "Preostali dnevi"
 
@@ -974,7 +966,6 @@ msgstr "Nastavitve"
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_task.py:0
-#, fuzzy
 msgid ""
 "Some timesheet entries are weighing down these tasks! Remove them first, "
 "then you’ll be able to delete the tasks!"
@@ -985,7 +976,6 @@ msgstr ""
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
-#, fuzzy
 msgid ""
 "Some timesheets were not created: employees aren’t working on the selected "
 "days"
@@ -1371,7 +1361,6 @@ msgstr "Časovnice od %(name)s"
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
-#, fuzzy
 msgid "Timesheets successfully created"
 msgstr "Časovnice so bile uspešno ustvarjene"
 
@@ -1450,7 +1439,6 @@ msgstr "Šolanje"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
-#, fuzzy
 msgid ""
 "Uh-oh! The employee you’re trying to delete still has some timesheets "
 "hanging around and can’t be deleted.\n"
@@ -1468,7 +1456,6 @@ msgstr ""
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__display_name
-#, fuzzy
 msgid ""
 "Use these keywords in the title to set new tasks:\n"
 "\n"
@@ -1580,7 +1567,6 @@ msgstr "datum"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_calendar_account_analytic_line_multi_create
-#, fuzzy
 msgid "e.g. Sending E-mails"
 msgstr "npr. Pošiljanje e-pošte"
 

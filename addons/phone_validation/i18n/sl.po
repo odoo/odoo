@@ -13,13 +13,14 @@
 # Žiga Trček <ziga.trcek@implex.si>, 2026.
 # Jan Zorko <jan.zorko@implex.si>, 2026.
 # NEDŽAD BEUS <nedzad.beus@implex.si>, 2026.
+# Nedžad Beus <nedzad.beus@implex.si>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:37+0000\n"
-"PO-Revision-Date: 2026-08-08 07:15+0000\n"
-"Last-Translator: NEDŽAD BEUS <nedzad.beus@implex.si>\n"
+"PO-Revision-Date: 2026-09-10 11:11+0000\n"
+"Last-Translator: Jan Zorko <jan.zorko@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
 "phone_validation/sl/>\n"
 "Language: sl\n"
@@ -28,12 +29,11 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
 "n%100==4 ? 2 : 3;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/models/phone_blacklist.py:0
-#, fuzzy
 msgid "%(error)s Please correct the number and try again."
 msgstr "%(error)s Prosimo, popravite številko in poskusite znova."
 
@@ -51,7 +51,6 @@ msgstr "Aktivno"
 
 #. module: phone_validation
 #: model_terms:ir.actions.act_window,help:phone_validation.phone_blacklist_action
-#, fuzzy
 msgid "Add a phone number in the blacklist"
 msgstr "Dodajte telefonsko številko na črni seznam"
 
@@ -64,7 +63,6 @@ msgstr "Arhivirano"
 #. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/models/mail_thread_phone.py:0
-#, fuzzy
 msgid "Are you sure you want to unblacklist this Phone Number?"
 msgstr ""
 "Ali ste prepričani, da želite to telefonsko številko odstraniti s črnega "
@@ -73,7 +71,6 @@ msgstr ""
 #. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/models/phone_blacklist.py:0
-#, fuzzy
 msgid "Are you sure you want to unblacklist this phone number?"
 msgstr ""
 "Ali ste prepričani, da želite to telefonsko številko odstraniti s črnega "
@@ -103,7 +100,6 @@ msgstr "Datum črne liste"
 
 #. module: phone_validation
 #: model:ir.actions.act_window,name:phone_validation.phone_blacklist_action
-#, fuzzy
 msgid "Blacklisted Phone Numbers"
 msgstr "Telefonske številke na črnem seznamu"
 
@@ -116,7 +112,6 @@ msgstr "Blacklisted Phone is Phone"
 
 #. module: phone_validation
 #: model_terms:ir.actions.act_window,help:phone_validation.phone_blacklist_action
-#, fuzzy
 msgid "Blacklisted phone numbers won't receive SMS Mailings anymore."
 msgstr ""
 "Na črni seznam uvrščene telefonske številke ne bodo več prejemale SMS-"
@@ -237,21 +232,18 @@ msgstr ""
 #. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/tools/phone_validation.py:0
-#, fuzzy
 msgid "Impossible number %s: not a valid country prefix."
 msgstr "Nemogoča številka %s: predpona države ni veljavna."
 
 #. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/tools/phone_validation.py:0
-#, fuzzy
 msgid "Impossible number %s: not enough digits."
 msgstr "Nemogoča številka %s: premalo števk."
 
 #. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/tools/phone_validation.py:0
-#, fuzzy
 msgid "Impossible number %s: too many digits."
 msgstr "Nemogoča številka %s: preveč števk."
 
@@ -271,14 +263,12 @@ msgstr ""
 #. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/tools/phone_validation.py:0
-#, fuzzy
 msgid "Invalid number %s: probably incorrect prefix."
 msgstr "Neveljavna številka %s: verjetno napačna predpona."
 
 #. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/models/mail_thread_phone.py:0
-#, fuzzy
 msgid "Invalid primary phone field on model %s"
 msgstr "Neveljavno polje za primarno telefonsko številko v modelu %s"
 
@@ -318,13 +308,11 @@ msgstr "Sporočila"
 #. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/models/mail_thread_phone.py:0
-#, fuzzy
 msgid "Missing definition of phone fields."
 msgstr "Manjka definicija telefonskih polj."
 
 #. module: phone_validation
 #: model:ir.model.constraint,message:phone_validation.constraint_phone_blacklist_unique_number
-#, fuzzy
 msgid "Number already exists"
 msgstr "Številka že obstaja"
 
@@ -358,13 +346,11 @@ msgstr "Število sporočil, ki niso bila pravilno dostavljena."
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_phone_blacklist__number
-#, fuzzy
 msgid "Number should be E164 formatted"
 msgstr "Številka mora biti oblikovana v formatu E164"
 
 #. module: phone_validation
 #: model:ir.ui.menu,name:phone_validation.phone_menu_main
-#, fuzzy
 msgid "Phone / SMS"
 msgstr "Telefon / SMS"
 
@@ -378,7 +364,6 @@ msgstr "Črni seznam v telefonu"
 
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_mail_thread_phone
-#, fuzzy
 msgid "Phone Blacklist Mixin"
 msgstr "Mixin črnega seznama v telefonu"
 
@@ -402,7 +387,6 @@ msgstr "Telefonska številka"
 #. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/models/mail_thread_phone.py:0
-#, fuzzy
 msgid "Please enter at least 3 characters when searching a Phone number."
 msgstr "Pri iskanju telefonske številke vnesite vsaj 3 znake."
 
@@ -415,7 +399,6 @@ msgstr "Razlog"
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_phone_blacklist_remove
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
-#, fuzzy
 msgid "Remove phone from blacklist"
 msgstr "Odstrani telefon s črnega seznama"
 
@@ -429,7 +412,6 @@ msgstr "Sanitized Number"
 #. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/tools/phone_validation.py:0
-#, fuzzy
 msgid ""
 "The phone number %s is invalid! Let's fix it - you are not dialing aliens."
 msgstr ""
@@ -439,7 +421,6 @@ msgstr ""
 #. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/tools/phone_validation.py:0
-#, fuzzy
 msgid "Unable to parse %(phone)s: %(error)s"
 msgstr "Ni mogoče razčleniti %(phone)s: %(error)s"
 
@@ -462,7 +443,6 @@ msgstr "Uporabnik"
 #. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/models/mail_thread_phone.py:0
-#, fuzzy
 msgid ""
 "You do not have the access right to unblacklist phone numbers. Please "
 "contact your administrator."
@@ -477,7 +457,6 @@ msgstr "npr. »Želite prejemati naša naslednja glasila«"
 
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
-#, fuzzy
 msgid "phone_blacklist_removal"
 msgstr "Odstranitev telefonske številke s črnega seznama"
 

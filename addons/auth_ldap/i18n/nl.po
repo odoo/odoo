@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
-"PO-Revision-Date: 2026-08-02 19:22+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"PO-Revision-Date: 2026-08-26 11:59+0000\n"
+"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/auth_ldap/"
 "nl/>\n"
 "Language: nl\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_filter
@@ -64,7 +64,7 @@ msgstr ""
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__create_user
 msgid "Automatically create local user accounts for new users authenticating via LDAP"
 msgstr ""
-"Maak automatisch locale gebruiker accounts voor nieuwe gebruikers welke "
+"Maak automatisch lokale gebruikersaccounts voor nieuwe gebruikers die "
 "inloggen via LDAP"
 
 #. module: auth_ldap
@@ -139,12 +139,12 @@ msgstr "LDAP Server"
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_server
 msgid "LDAP Server address"
-msgstr "LDAP server adres"
+msgstr "LDAP-serveradres"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_server_port
 msgid "LDAP Server port"
-msgstr "LDAP server poort"
+msgstr "LDAP-serverpoort"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_base
@@ -196,15 +196,15 @@ msgstr ""
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Process Parameter"
-msgstr "Verwerk parameter"
+msgstr "Procesparameter"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_tls
 msgid "Request secure TLS/SSL encryption when connecting to the LDAP server. This option requires a server with STARTTLS enabled, otherwise all authentication attempts will fail."
 msgstr ""
-"Vraag beveiligde TLS / SSL-codering bij het verbinden met de LDAP-server. "
-"Deze optie vereist een server met ingeschakeld STARTTLS, anders zullen alle "
-"authenticatie pogingen mislukken."
+"Vraag beveiligde TLS / SSL-versleuteling bij het verbinden met de LDAP-"
+"server. Deze optie vereist een server met STARTTLS ingeschakeld, anders "
+"zullen alle authenticatiepogingen mislukken."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__sequence
@@ -224,21 +224,21 @@ msgstr "Stel je LDAP server in"
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__user
 msgid "Template User"
-msgstr "Sjabloon gebruiker"
+msgstr "Gebruikerssjabloon"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_password
 msgid "The password of the user account on the LDAP server that is used to query the directory."
 msgstr ""
-"Het wachtwoord van de gebruikersaccount op de LDAP-server die wordt gebruikt "
-"om de map te verkennen."
+"Het wachtwoord van het gebruikersaccount op de LDAP-server dat wordt "
+"gebruikt om de map te verkennen."
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_binddn
 msgid "The user account on the LDAP server that is used to query the directory. Leave empty to connect anonymously."
 msgstr ""
-"De gebruikersaccount op de LDAP-server die wordt gebruikt om de map te "
-"verkennen. Laat leeg om verbinding anoniem."
+"Het gebruikersaccount op de LDAP-server dat wordt gebruikt om de map te "
+"verkennen. Laat leeg om anoniem te verbinden."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_tls
@@ -253,7 +253,7 @@ msgstr "Gebruikersinformatie"
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__user
 msgid "User to copy when creating new users"
-msgstr "Gebruiker welke wordt gekopieerd bij aanmaken nieuwe gebruikers"
+msgstr "Gebruiker die wordt gekopieerd bij het aanmaken van nieuwe gebruikers"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_users

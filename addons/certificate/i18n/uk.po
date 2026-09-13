@@ -4,13 +4,14 @@
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # Odoo Translation Bot <c3p@odoo.com>, 2026.
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-10 17:36+0000\n"
-"PO-Revision-Date: 2026-08-07 19:49+0000\n"
-"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
+"PO-Revision-Date: 2026-09-08 08:11+0000\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-19/"
 "certificate/uk/>\n"
 "Language: uk\n"
@@ -19,7 +20,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: certificate
 #. odoo-python
@@ -177,7 +178,7 @@ msgstr "Недійсний"
 #. module: certificate
 #: model:ir.model.fields,field_description:certificate.field_certificate_certificate__issuer_cert_id
 msgid "Issuer Certificate"
-msgstr ""
+msgstr "Сертифікат емітента"
 
 #. module: certificate
 #: model_terms:ir.ui.view,arch_db:certificate.certificate_key_view_list
@@ -229,6 +230,7 @@ msgstr "Обов’язково використовуйте закритий к
 #: code:addons/certificate/models/key.py:0
 msgid "Make sure to use a public key to verify the signature of documents."
 msgstr ""
+"Обов’язково використовуйте відкритий ключ для перевірки підпису документів."
 
 #. module: certificate
 #: model_terms:ir.ui.view,arch_db:certificate.res_config_settings_view_form
@@ -355,12 +357,12 @@ msgstr "Сертифікат та відкритий ключ несумісні
 #. module: certificate
 #: model:ir.model.fields,help:certificate.field_certificate_certificate__date_end
 msgid "The date on which the certificate expires"
-msgstr ""
+msgstr "Дата закінчення терміну дії сертифіката"
 
 #. module: certificate
 #: model:ir.model.fields,help:certificate.field_certificate_certificate__date_start
 msgid "The date on which the certificate starts to be valid"
-msgstr ""
+msgstr "Дата, з якої сертифікат починає бути дійсним"
 
 #. module: certificate
 #. odoo-python
@@ -412,6 +414,8 @@ msgid ""
 "This certificate could not be loaded. Please provide the certificate "
 "password."
 msgstr ""
+"Не вдалося завантажити цей сертифікат. Будь ласка, вкажіть пароль "
+"сертифіката."
 
 #. module: certificate
 #. odoo-python
@@ -454,6 +458,8 @@ msgid ""
 "Unsupported asymmetric cryptography algorithm '%s'. Currently supported for "
 "signature: ED25519, EC and RSA."
 msgstr ""
+"Непідтримуваний асиметричний криптографічний алгоритм '%s'. Наразі "
+"підтримуються для підпису: ED25519, EC та RSA."
 
 #. module: certificate
 #. odoo-python

@@ -12,13 +12,14 @@
 # Vlad Patenko <vlad.patenko@gmail.com>, 2026.
 # Lohushchenko <nadiia.lohushchenko@self-erp.com>, 2026.
 # Denys Nykula <nykula@ukr.net>, 2026.
+# Gvar <gvar@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-24 14:12+0000\n"
-"PO-Revision-Date: 2026-08-12 11:12+0000\n"
-"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>\n"
+"PO-Revision-Date: 2026-09-01 13:10+0000\n"
+"Last-Translator: Gvar <gvar@odoo.com>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-19/base/"
 "uk/>\n"
 "Language: uk\n"
@@ -29,7 +30,7 @@ msgstr ""
 "? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > "
 "14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % "
 "100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at_reports
@@ -13949,6 +13950,8 @@ msgid ""
 "%(integral_amount)s %(currency_unit)s and %(fractional_amount)s %"
 "(currency_subunit)s"
 msgstr ""
+"%(integral_amount)s %(currency_unit)s i %(fractional_amount)s %"
+"(currency_subunit)s"
 
 #. module: base
 #. odoo-python
@@ -18233,6 +18236,11 @@ msgid ""
 "Thanks to the following constraint: %(field_display)s\n"
 "How about archiving the record instead?"
 msgstr ""
+"Інша модель використовує запис, який ви намагаєтеся видалити.\n"
+"\n"
+"Джерело проблеми: %(model_display)s\n"
+"Через таке обмеження: %(field_display)s\n"
+"Можливо, натомість варто заархівувати цей запис?"
 
 #. module: base
 #. odoo-python
@@ -25705,7 +25713,7 @@ msgstr "Введіть опис і призначення ключа."
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_users_identitycheck_view_form
 msgid "Enter your password"
-msgstr ""
+msgstr "Введіть ваш пароль"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track_gantt
@@ -28813,7 +28821,7 @@ msgstr "Магазин будівельних матеріалів"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__has_diff
 msgid "Has Diff"
-msgstr "Є Diff"
+msgstr "Є Різниця"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__has_iap
@@ -29871,7 +29879,7 @@ msgstr "Імпорт банківської виписки QIF"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_shopee
 msgid "Import Shopee orders and sync deliveries"
-msgstr ""
+msgstr "Імпортуйте замовлення Shopee та синхронізуйте доставки"
 
 #. module: base
 #. odoo-python
@@ -31185,7 +31193,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner__function
 #: model:ir.model.fields,field_description:base.field_res_users__function
 msgid "Job Position"
-msgstr "Вакансія"
+msgstr "Посада"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -32930,7 +32938,7 @@ msgstr "Керуйте відпустками у розрахункових ли
 #. module: base
 #: model:ir.module.module,summary:base.module_databases
 msgid "Manage a fleet of Odoo databases"
-msgstr ""
+msgstr "Керування базами данних Odoo"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_forum
@@ -34570,7 +34578,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.ne
 msgid "Niger"
-msgstr "Респу́бліка Ні́гер"
+msgstr "Нігерія"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ne
@@ -38263,7 +38271,7 @@ msgstr "Зведена таблиця"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_gelato
 msgid "Place orders through Gelato's print-on-demand service"
-msgstr ""
+msgstr "Оформлюйте замовлення через сервіс друку на вимогу Gelato"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups_privilege__placeholder
@@ -38874,12 +38882,12 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_services_project
 #: model:ir.module.module,shortdesc:base.module_project
 msgid "Project"
-msgstr "Проект"
+msgstr "Проєкт"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_account
 msgid "Project - Account"
-msgstr "Проект - Рахунок"
+msgstr "Проєкт - Рахунок"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_purchase_stock
@@ -38889,12 +38897,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_sms
 msgid "Project - SMS"
-msgstr "Проект - SMS"
+msgstr "Проєкт - SMS"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_sale_expense
 msgid "Project - Sale - Expense"
-msgstr "Проект - Продажі - Витрати"
+msgstr "Проєкт - Продажі - Витрати"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_enterprise_hr_skills
@@ -38905,32 +38913,32 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_account_asset
 msgid "Project Accounting Assets"
-msgstr "Активи бухобліку проекту"
+msgstr "Активи бухобліку проєкту"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_account_budget
 msgid "Project Budget"
-msgstr "Бюджет проекту"
+msgstr "Бюджет проєкту"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_enterprise
 msgid "Project Enterprise"
-msgstr "Проект версії Enterprise"
+msgstr "Проєкт версії Enterprise"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_enterprise_hr
 msgid "Project Enterprise HR"
-msgstr "HR Проекту Enterprise"
+msgstr "HR Проєкту Enterprise"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_hr_expense
 msgid "Project Expenses"
-msgstr "Витрати проекту"
+msgstr "Витрати проєкту"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_helpdesk
 msgid "Project Helpdesk"
-msgstr "Проект Служба підтримки"
+msgstr "Проєкт Служба підтримки"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_mrp_stock_landed_costs
@@ -38940,7 +38948,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_mail_plugin
 msgid "Project Mail Plugin"
-msgstr "Плагін пошти проекту"
+msgstr "Плагін пошти проєкту"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project
@@ -39026,7 +39034,7 @@ msgid ""
 "accurate reports on your team's performance.\n"
 "\n"
 msgstr ""
-"Управління проектом\n"
+"Управління проєктом\n"
 "------------------\n"
 "\n"
 "### Безмежно гнучкий. Неймовірно простий у використанні.\n"
@@ -39112,27 +39120,27 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_data_merge_project
 msgid "Project Merge action"
-msgstr "Дія з'єднання проекту"
+msgstr "Дія з'єднання проєкту"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_hr_payroll_account
 msgid "Project Payroll Accounting"
-msgstr "Бухоблік зарплати проекту"
+msgstr "Бухоблік зарплати проєкту"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_forecast
 msgid "Project Planning"
-msgstr "Планування проекту"
+msgstr "Планування проєкту"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_purchase
 msgid "Project Purchase"
-msgstr "Купівлі проекту"
+msgstr "Купівлі проєкту"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_sale_subscription
 msgid "Project Sales Subscription"
-msgstr "Підписка продажів проекту"
+msgstr "Підписка продажів проєкту"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_subscription_timesheet
@@ -39157,48 +39165,48 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_holidays
 msgid "Project Time Off"
-msgstr "Відпустки проекту"
+msgstr "Відпустки проєкту"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_account_budget
 msgid "Project account budget"
-msgstr "Бюджету рахунку проекту"
+msgstr "Бюджету рахунку проєкту"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_account_asset
 msgid "Project accounting assets"
-msgstr "Активи бухобліку проекту"
+msgstr "Активи бухобліку проєкту"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_holidays
 msgid "Project and task integration with holidays"
-msgstr "Інтеграція проекту і завдань і з вихідними"
+msgstr "Інтеграція проєкту і завдань і з вихідними"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_hr_expense
 msgid "Project expenses"
-msgstr "Витрати проекту"
+msgstr "Витрати проєкту"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_project
 msgid "Project from documents"
-msgstr "Проект з документів"
+msgstr "Проєкт з документів"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_helpdesk
 msgid "Project helpdesk"
-msgstr "Проект служба підтримки"
+msgstr "Проєкт служба підтримки"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_hr_payroll_account
 msgid "Project payroll accounting"
-msgstr "Бухоблік зарплати проекту"
+msgstr "Бухоблік зарплати проєкту"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_sale_subscription
 #: model:ir.module.module,summary:base.module_sale_subscription_timesheet
 msgid "Project sales subscriptions"
-msgstr "Підписки продажів проекту"
+msgstr "Підписки продажів проєкту"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_enterprise_hr_skills
@@ -39210,43 +39218,43 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_helpdesk_fsm_sale
 msgid "Project, Helpdesk, FSM, Timesheet and Sale Orders"
 msgstr ""
-"Проекти, Служба підтримки, Виїзне обслуговування, Табелі та Замовлення на "
+"Проєкти, Служба підтримки, Виїзне обслуговування, Табелі та Замовлення на "
 "продаж"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_sale_timesheet
 msgid "Project, Helpdesk, Timesheet and Sale Orders"
-msgstr "Проект, Інформаційна панель, Табель та Замовлення на продаж"
+msgstr "Проєкт, Інформаційна панель, Табель та Замовлення на продаж"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_account
 msgid "Project, Tasks, Account"
-msgstr "Проект, Завдання, Обліковий запис"
+msgstr "Проєкт, Завдання, Рахунок"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_sale
 msgid "Project, Tasks, After Sales"
-msgstr "Проект, Завадання, Післяпродажне обслуговування"
+msgstr "Проєкт, Завадання, Післяпродажне обслуговування"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_repair
 msgid "Project, Tasks, Repair"
-msgstr "Проект, Завдання, Ремонт"
+msgstr "Проєкт, Завдання, Ремонт"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_sale_loyalty
 msgid "Project, Tasks, Sale Loyalty"
-msgstr "Проект, задачі, програма лояльності продажів"
+msgstr "Проєкт, задачі, програма лояльності продажів"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_stock
 msgid "Project, Tasks, Stock"
-msgstr "Проект, Завдання, Склад"
+msgstr "Проєкт, Завдання, Склад"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_timesheet
 msgid "Project, Tasks, Timesheet"
-msgstr "Проект, Завдання, Табель"
+msgstr "Проєкт, Завдання, Табель"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_properties_base_definition_mixin__properties
@@ -40944,12 +40952,12 @@ msgstr "Тести налаштування товару продажів"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_project_stock
 msgid "Sale Project - Sale Stock"
-msgstr "Продажі Проект - Продажі Склад"
+msgstr "Продажі Проєкт - Продажі Склад"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_project_forecast
 msgid "Sale Project Forecast"
-msgstr "Прогноз проекту продажів"
+msgstr "Прогноз проєкту продажів"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_project_stock_account
@@ -41049,7 +41057,7 @@ msgstr "Продажі та купівля"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_project
 msgid "Sales - Project"
-msgstr "Продажі - Проект"
+msgstr "Продажі - Проєкт"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_service
@@ -42397,7 +42405,7 @@ msgstr "LinkedIn"
 #: model:ir.module.category,name:base.module_category_marketing_social_marketing
 #: model:ir.module.module,shortdesc:base.module_social
 msgid "Social Marketing"
-msgstr "Меркетинг соцмереж"
+msgstr "Маркетинг соцмереж"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_media
@@ -43071,7 +43079,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_fleet
 msgid "Stock Transport: Dispatch Management System"
-msgstr ""
+msgstr "Управління складом і транспортом: система управління диспетчеризацією"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_enterprise
@@ -46073,6 +46081,8 @@ msgstr ""
 #: model:ir.module.module,description:base.module_stock_fleet
 msgid "Transport Management: organize packs in your fleet, or carriers."
 msgstr ""
+"Управління транспортом: організовуйте пакунки у вашому автопарку або через "
+"перевізників."
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_H
@@ -49568,7 +49578,7 @@ msgstr "вибір"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__value_field_to_show__selection_value
 msgid "selection_value"
-msgstr "значення_вибору"
+msgstr "selection_value"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__value_field_to_show__sequence_id
@@ -49691,7 +49701,7 @@ msgstr "від’єднати"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__value_field_to_show__update_boolean_value
 msgid "update_boolean_value"
-msgstr "оновити_логічне_значення"
+msgstr "update_boolean_value"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__value_field_to_show__value

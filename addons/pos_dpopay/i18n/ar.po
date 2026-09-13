@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-08-10 13:16+0000\n"
+"PO-Revision-Date: 2026-09-10 15:11+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/"
 "pos_dpopay/ar/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_bearer_token
@@ -26,6 +26,7 @@ msgid ""
 "Bearer token used for authenticating requests. Automatically refreshed when "
 "expired."
 msgstr ""
+"رمز الحامل المُستخدم لمصادقة الطلبات. يتم تحديثه تلقائيًا عند انتهاء صلاحيته."
 
 #. module: pos_dpopay
 #: model:ir.model.fields.selection,name:pos_dpopay.selection__pos_payment_method__dpopay_payment_mode__card
@@ -36,6 +37,7 @@ msgstr "بطاقة"
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_test_mode
 msgid "Check this to use DPO Pay's sandbox environment for testing purposes."
 msgstr ""
+"حدد هذا الخيار لاستخدام بيئة (sandbox) الخاصة بـ DPO Pay لأغراض الاختبار."
 
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_payment_mode
@@ -44,41 +46,44 @@ msgid ""
 "Card - regular card payments\n"
 "Mobile Money - M-Pesa / Airtel Mobile Money"
 msgstr ""
+"اختر طريقة الدفع المسموح بها:\n"
+"البطاقة - مدفوعات البطاقة العادية\n"
+"المال عبر الهاتف المحمول - M-Pesa / Airtel Mobile Money"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment__dpopay_mobile_money_phone
 msgid "Customer's phone number used to complete the Mobile Money payment."
-msgstr ""
+msgstr "رقم هاتف العميل المستخدم لإتمام الدفع عبر خدمة Mobile Money."
 
 #. module: pos_dpopay
 #: model_terms:ir.ui.view,arch_db:pos_dpopay.pos_payment_method_view_form_inherit_pos_dpopay
 msgid "DPO Pay"
-msgstr ""
+msgstr "DPO Pay"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_chain_id
 msgid "DPO Pay Chain-ID"
-msgstr ""
+msgstr "معرّف سلسلة الدفع DPO"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_client_id
 msgid "DPO Pay Client ID"
-msgstr ""
+msgstr "معرف عميل DPO Pay"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_client_secret
 msgid "DPO Pay Client Secret"
-msgstr ""
+msgstr "كلمة سر عميل DPO Pay"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_mid
 msgid "DPO Pay Merchant ID"
-msgstr ""
+msgstr "معرف التاجر في DPO Pay"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_tid
 msgid "DPO Pay Terminal ID"
-msgstr ""
+msgstr "معرف جهاز دفع DPO Pay"
 
 #. module: pos_dpopay
 #. odoo-javascript
@@ -96,22 +101,22 @@ msgstr "الاسم المعروض"
 #. odoo-javascript
 #: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
 msgid "Dpo Pay Error"
-msgstr ""
+msgstr "خطأ في Dpo Pay"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_bearer_token
 msgid "Dpopay Bearer Token"
-msgstr ""
+msgstr "رمز Dpopay القابل للتداول"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_payment_mode
 msgid "Dpopay Payment Mode"
-msgstr ""
+msgstr "طريقة دفع Dpopay"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_test_mode
 msgid "Enable Test Mode"
-msgstr ""
+msgstr "تمكين الوضع التجريبي"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_chain_id
@@ -170,12 +175,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/pos_dpopay/models/pos_payment_method.py:0
 msgid "Invalid endpoint"
-msgstr ""
+msgstr "نقطة نهاية غير صالحة"
 
 #. module: pos_dpopay
 #: model:ir.model.fields.selection,name:pos_dpopay.selection__pos_payment_method__dpopay_payment_mode__momo
 msgid "Mobile Money"
-msgstr ""
+msgstr "الأموال عبر الهاتف المحمول"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment__dpopay_mobile_money_phone
@@ -192,7 +197,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
 msgid "Payment is unsuccessful."
-msgstr ""
+msgstr "فشلت عملية الدفع."
 
 #. module: pos_dpopay
 #. odoo-python
@@ -242,7 +247,7 @@ msgstr ""
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment__dpopay_transaction_ref
 msgid "Transaction Reference"
-msgstr ""
+msgstr "مرجع المعالمة"
 
 #. module: pos_dpopay
 #. odoo-javascript
