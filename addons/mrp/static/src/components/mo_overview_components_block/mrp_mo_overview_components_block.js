@@ -14,6 +14,7 @@ export class MoOverviewComponentsBlock extends Component {
     };
     props = useProps({
         unfoldAll: t.boolean().optional(false),
+        summary: t.object().optional(),     // Used in an override in stock_account
         components: t.array().optional(),
         operations: t
             .object({

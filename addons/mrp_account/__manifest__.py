@@ -19,11 +19,13 @@ If the automated inventory valuation is active, the necessary accounting entries
     'depends': ['mrp', 'stock_account'],
     "data": [
         "views/product_views.xml",
+        'views/mrp_bom_views.xml',
         "views/mrp_production_views.xml",
         "views/analytic_account_views.xml",
         "views/account_move_views.xml",
         "views/mrp_workcenter_views.xml",
         "report/report_mrp_templates.xml",
+        "report/mrp_report_mo_overview.xml",
         "wizard/mrp_wip_accounting.xml",
         'security/ir.access.csv',
     ],

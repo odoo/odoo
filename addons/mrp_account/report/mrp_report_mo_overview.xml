@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="mrp_account.mo_overview_components" inherit_id="mrp.mo_overview_components">
+        <xpath expr="." position="inside">
+            <tr t-if="summary['extra_cost'] &gt; 0">
+                <td class="text-start"><div t-attf-style="margin-left: {{ summary['level'] * 20 }}px" class="d-inline-block">Extra BoM Cost</div></td>
+                <td t-if="data['show_replenishments']"/>
+                <td class="text-end"><t t-out="summary['quantity']" t-options="{'widget': 'float', 'precision': summary['uom_precision']}"/></td>
+                <td t-if="data['show_uom']" class="text-start" t-out="summary['uom_name']"/>
+                <td t-if="data['show_availabilities']" colspan="2"/>
+                <td t-if="data['show_receipts']"/>
+                <td class="text-end" t-if="data['show_unit_costs']">
+                    <t t-out="summary['extra_cost']" t-options="{'widget': 'monetary', 'display_currency': summary['currency']}"/>
+                </td>
+                <td t-if="data['show_mo_costs']" t-attf-class="text-end {{ data['get_color'](summary.get('mo_cost_decorator')) }}">
+                    <t t-out="summary['extra_cost'] * summary['quantity']" t-options="{'widget': 'monetary', 'display_currency': summary['currency']}"/>
+                </td>
+                <td t-if="data['show_bom_costs']" class="text-end">
+                    <t t-out="summary['extra_cost'] * summary['quantity']" t-options="{'widget': 'monetary', 'display_currency': summary['currency']}"/>
+                </td>
+                <td t-if="data['show_real_costs']" class="text-end">
+                    <t t-out="summary['extra_cost'] * summary['quantity']" t-options="{'widget': 'monetary', 'display_currency': summary['currency']}"/>
+                </td>
+            </tr>
+        </xpath>
+    </template>
+</odoo>
