@@ -576,7 +576,7 @@ class MrpWorkorder(models.Model):
         for workorder in workorders_with_new_wc:
             workorder.duration_expected = workorder._get_duration_expected()
             if workorder.date_start:
-                workorder.date_finished = workorder._calculate_date_finished(new_workcenter=new_workcenter)
+                workorder.with_context(bypass_duration_calculation=True).date_finished = workorder._calculate_date_finished(new_workcenter=new_workcenter)
 
         return res
 
