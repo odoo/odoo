@@ -1958,16 +1958,10 @@ class AccountJournal(models.Model):
         self.check_singleton()
         nb_lines, balance, amount_currency = self.env["account.move.line"]._read_group(
             domain=(
-                [
-                    ("account_id", "in", tuple(self.default_account_id.ids)),
-                    (
-                        "display_type",
-                        "not in",
-                        NON_ACCOUNTABLE_DISPLAY_TYPES,
-                    ),
-                    ("parent_state", "!=", "cancel"),
-                ]
-                + (domain or [])
+                Domain("account_id", "in", tuple(self.default_account_id.ids))
+                & Domain("display_type", "not in", NON_ACCOUNTABLE_DISPLAY_TYPES)
+                & Domain("parent_state", "!=", "cancel")
+                & Domain(domain or Domain.TRUE)
             ),
             aggregates=("__count", "balance:sum", "amount_currency:sum"),
         )[0]

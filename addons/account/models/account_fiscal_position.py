@@ -2,6 +2,7 @@ from collections import defaultdict
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import unique
 
@@ -457,7 +458,8 @@ class AccountFiscalPosition(models.Model):
             return self.env["account.fiscal.position"]
 
         all_auto_apply_fpos = self.search(
-            self._check_company_domain(company) + [("auto_apply", "=", True)]
+            Domain(self._check_company_domain(company))
+            & Domain("auto_apply", "=", True)
         )
 
         fpos = all_auto_apply_fpos._get_first_matching_fpos(delivery, company)
