@@ -60,7 +60,7 @@ Getters are not memoized; OWL batches renders within a tick.
 **SignalStore.**  ``SignalStore`` is the canonical class name and the only
 export; there is no `Reactive` alias, so
 `import { Reactive } from "@web/core/utils/reactive"` fails at module-load
-with a native "no such export" error.  27 production class declarations fork-wide
+with a native "no such export" error.  25 production class declarations fork-wide
 use ``extends SignalStore``.
 
 ## Keyed asynchronous work
