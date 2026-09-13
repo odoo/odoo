@@ -165,10 +165,9 @@ class Many2one(_Relational):
 
     @override
     def _update_inverse(self, records: BaseModel, value: BaseModel) -> None:
-        for record in records:
-            self._update_cache(
-                record, self.convert_to_cache(value, record, validate=False)
-            )
+        self._update_cache(
+            records, self.convert_to_cache(value, records, validate=False)
+        )
 
     @override
     def convert_to_column(

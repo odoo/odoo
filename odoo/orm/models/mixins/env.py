@@ -139,28 +139,35 @@ class EnvironmentMixin(_ModelStubs):
             field_values.sort(key=lambda item: item[0].write_sequence)
 
         field_inverses = self.pool.field_inverses
+        with_new_corecords = []
         for field, value in field_values:
             value = field.convert_to_cache(value, self, validate)
             field._update_cache(self, value)
+            if (
+                field.relational
+                and field_inverses[field]
+                and self._can_cache_value_hold_new_ids(value)
+            ):
+                with_new_corecords.append(field)
 
-            if field.relational:
-                inverses = field_inverses[field]
-                if not inverses:
+        for field in with_new_corecords:
+            inv_recs = self[field.name]._new_records
+            if not inv_recs:
+                continue
+            inverses = field_inverses[field]
+            _debug.logic(
+                "env.new_inverses_updated",
+                model=self._name,
+                field=field.name,
+                inverses=len(inverses),
+                new_records=len(inv_recs),
+            )
+            for invf in inverses:
+                if invf.is_x2many and not self.filtered_domain(
+                    invf.get_comodel_domain(inv_recs)
+                ):
                     continue
-                if not self._can_cache_value_hold_new_ids(value):
-                    continue
-                inv_recs = self[field.name]._new_records
-                if not inv_recs:
-                    continue
-                _debug.logic(
-                    "env.new_inverses_updated",
-                    model=self._name,
-                    field=field.name,
-                    inverses=len(inverses),
-                    new_records=len(inv_recs),
-                )
-                for invf in inverses:
-                    invf._update_inverse(inv_recs, self)
+                invf._update_inverse(inv_recs, self)
 
     def _convert_to_write(self, values: dict) -> ValuesType:
         fields = self._fields
