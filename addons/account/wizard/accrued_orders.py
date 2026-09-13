@@ -273,7 +273,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
                             unit_price=formatLang(self.env, price_unit, currency_obj=order.currency_id),
                         )
                         if expense_account and stock_variation_account:
-                            posted_invoice_lines = order_line.invoice_lines.filtered(lambda inv_line:
+                            posted_invoice_lines = order_line._get_invoice_lines().filtered(lambda inv_line:
                                 inv_line.move_id.state == 'posted' and inv_line.quantity)
                             expense_invoice_lines = self.env['account.move.line']
                             for account_move in posted_invoice_lines.move_id:
@@ -292,6 +292,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
                                 # First, compute the delivered value.
                                 stock_moves = order_line.move_ids.filtered(lambda m:
                                     m.state == 'done' and m.is_out
+                                    and fields.Date.context_today(m, m.date) <= accrual_entry_date
                                 )
                                 delivered_value = sum(m.value for m in stock_moves)
                                 # Then, compute the already invoiced value.
