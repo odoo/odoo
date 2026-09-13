@@ -52,7 +52,9 @@ azure_token_data = {
     "client_secret": azure_client_secret,
     "resource": "https://storage.azure.com/",
 }
-azure_token_response = requests.post(azure_token_url, data=azure_token_data, timeout=5)
+azure_token_response = requests.post(  # noqa: E8518 - a standalone script run outside the server, with no ir.egress to reach
+    azure_token_url, data=azure_token_data, timeout=5
+)
 azure_token = azure_token_response.json()["access_token"]
 
 _logger = logging.getLogger()
@@ -71,7 +73,9 @@ def list_blob_urls(container_name, batch_size=1000):
     }
 
     while True:
-        response = requests.get(url, headers=headers, params=params, timeout=5)
+        response = requests.get(  # noqa: E8518 - a standalone script run outside the server, with no ir.egress to reach
+            url, headers=headers, params=params, timeout=5
+        )
         response_xml = etree.fromstring(response.content)
         for blob in response_xml.findall(".//Blob"):
             cloud_storage_blobs_num += 1
@@ -114,7 +118,9 @@ def remove_blobs(blob_urls, max_worker=None):
 
     def remove_blob(blob_url):
         nonlocal deleted_cloud_storage_blobs_num
-        delete_response = requests.delete(blob_url, headers=headers, timeout=5)
+        delete_response = requests.delete(  # noqa: E8518 - a standalone script run outside the server, with no ir.egress to reach
+            blob_url, headers=headers, timeout=5
+        )
         if delete_response.status_code == 202:
             deleted_cloud_storage_blobs_num += 1
             _logger.info("%s is deleted", blob_url)

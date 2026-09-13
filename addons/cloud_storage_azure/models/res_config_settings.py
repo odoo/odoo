@@ -1,7 +1,5 @@
 from datetime import UTC, datetime, timedelta
 
-import requests
-
 from odoo import _, fields, models
 from odoo.exceptions import UserError, ValidationError
 
@@ -80,8 +78,13 @@ class ResConfigSettings(models.TransientModel):
         upload_url = self.env["ir.attachment"]._generate_cloud_storage_azure_sas_url(
             **blob_info, permission="c", expiry=upload_expiry
         )
-        upload_response = requests.put(
-            upload_url, data=b"", headers={"x-ms-blob-type": "BlockBlob"}, timeout=5
+        upload_response = self.env["ir.egress"].request(
+            "PUT",
+            upload_url,
+            purpose="cloud_storage",
+            data=b"",
+            headers={"x-ms-blob-type": "BlockBlob"},
+            timeout=5,
         )
         if upload_response.status_code != 201:
             raise ValidationError(
@@ -98,7 +101,9 @@ class ResConfigSettings(models.TransientModel):
         download_url = self.env["ir.attachment"]._generate_cloud_storage_azure_sas_url(
             **blob_info, permission="r", expiry=download_expiry
         )
-        download_response = requests.get(download_url, timeout=5)
+        download_response = self.env["ir.egress"].request(
+            "GET", download_url, purpose="cloud_storage", timeout=5
+        )
         if download_response.status_code != 200:
             raise ValidationError(
                 _(

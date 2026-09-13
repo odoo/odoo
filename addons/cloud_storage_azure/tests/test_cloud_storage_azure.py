@@ -7,6 +7,7 @@ import requests
 from requests import Response
 
 from odoo.exceptions import UserError, ValidationError
+from odoo.libs.guarded_http import GuardedSession
 from odoo.tests import Form
 from odoo.tests.common import TransactionCase
 
@@ -92,10 +93,7 @@ class TestCloudStorageAzure(TestCloudStorageAzureCommon, MockEmail):
                 response._content = self.DUMMY_USER_DELEGATION_KEY_XML
             return response
 
-        with patch(
-            "odoo.addons.cloud_storage_azure.utils.cloud_storage_azure_utils.requests.post",
-            post,
-        ):
+        with patch.object(GuardedSession, "post", staticmethod(post)):
             get_cloud_storage_azure_user_delegation_key(self.env)
             self.assertEqual(
                 request_num, 2, "2 requests to create new user_delegation_key"
@@ -143,10 +141,7 @@ class TestCloudStorageAzure(TestCloudStorageAzureCommon, MockEmail):
             return response
 
         with (
-            patch(
-                "odoo.addons.cloud_storage_azure.utils.cloud_storage_azure_utils.requests.post",
-                post,
-            ),
+            patch.object(GuardedSession, "post", staticmethod(post)),
             self.assertRaises(ValidationError),
         ):
             get_cloud_storage_azure_user_delegation_key(self.env)
@@ -157,10 +152,7 @@ class TestCloudStorageAzure(TestCloudStorageAzureCommon, MockEmail):
         )
 
         with (
-            patch(
-                "odoo.addons.cloud_storage_azure.utils.cloud_storage_azure_utils.requests.post",
-                post,
-            ),
+            patch.object(GuardedSession, "post", staticmethod(post)),
             self.assertRaises(ValidationError),
         ):
             get_cloud_storage_azure_user_delegation_key(self.env)
@@ -185,10 +177,7 @@ class TestCloudStorageAzure(TestCloudStorageAzureCommon, MockEmail):
             return response
 
         with (
-            patch(
-                "odoo.addons.cloud_storage_azure.utils.cloud_storage_azure_utils.requests.post",
-                post,
-            ),
+            patch.object(GuardedSession, "post", staticmethod(post)),
             self.assertRaises(ValidationError),
         ):
             get_cloud_storage_azure_user_delegation_key(self.env)
@@ -197,10 +186,7 @@ class TestCloudStorageAzure(TestCloudStorageAzureCommon, MockEmail):
         )
 
         with (
-            patch(
-                "odoo.addons.cloud_storage_azure.utils.cloud_storage_azure_utils.requests.post",
-                post,
-            ),
+            patch.object(GuardedSession, "post", staticmethod(post)),
             self.assertRaises(ValidationError),
         ):
             get_cloud_storage_azure_user_delegation_key(self.env)
@@ -221,10 +207,7 @@ class TestCloudStorageAzure(TestCloudStorageAzureCommon, MockEmail):
             return response
 
         with (
-            patch(
-                "odoo.addons.cloud_storage_azure.utils.cloud_storage_azure_utils.requests.post",
-                post,
-            ),
+            patch.object(GuardedSession, "post", staticmethod(post)),
             self.assertRaises(ValidationError),
         ):
             get_cloud_storage_azure_user_delegation_key(self.env)

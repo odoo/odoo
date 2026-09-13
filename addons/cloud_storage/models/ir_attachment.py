@@ -1,8 +1,6 @@
 import logging
 import uuid
 
-import requests
-
 from odoo import _, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.http import Stream
@@ -56,7 +54,9 @@ class IrAttachment(models.Model):
         if self.type != "cloud_storage":
             return super()._migrate_remote_to_local()
         url = self._generate_cloud_storage_download_info()["url"]
-        response = requests.get(url, timeout=10)
+        response = self.env["ir.egress"].request(
+            "GET", url, purpose="cloud_storage", timeout=10, max_bytes=None
+        )
         response.raise_for_status()
         if response.status_code != 200:
             raise ValidationError(
@@ -147,7 +147,14 @@ class IrAttachment(models.Model):
         url = self._generate_cloud_storage_download_info()["url"]
 
         def read_blocks(block_size):
-            with requests.get(url, stream=True, timeout=30) as response:
+            with self.env["ir.egress"].request(
+                "GET",
+                url,
+                purpose="cloud_storage",
+                stream=True,
+                timeout=30,
+                max_bytes=None,
+            ) as response:
                 response.raise_for_status()
                 yield from response.iter_content(block_size)
 

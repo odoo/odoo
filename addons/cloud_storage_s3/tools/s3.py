@@ -85,7 +85,7 @@ def get_client(env):
     keys = get_keys(env)
     if not keys:
         raise UserError(env._("The Amazon S3 IAM keys are missing or unreadable."))
-    client = boto3.client(
+    client = boto3.client(  # noqa: E8518 - botocore opens its own connections and takes no requests session
         "s3",
         aws_access_key_id=keys["access_key_id"],
         aws_secret_access_key=keys["secret_access_key"],

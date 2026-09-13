@@ -63,7 +63,9 @@ def list_blob_urls(bucket_name, batch_size=1000):
     headers = {"Authorization": f"Bearer {credentials.token}"}
 
     while True:
-        response = requests.get(url, params=params, headers=headers, timeout=5)
+        response = requests.get(  # noqa: E8518 - a standalone script run outside the server, with no ir.egress to reach
+            url, params=params, headers=headers, timeout=5
+        )
         data = response.json()
         for blob in data.get("items", []):
             cloud_storage_blobs_num += 1
@@ -102,7 +104,9 @@ def remove_blobs(blob_urls, max_workers=None):
 
     def remove_blob(blob_url):
         nonlocal deleted_cloud_storage_blobs_num
-        delete_response = requests.delete(blob_url, headers=headers, timeout=5)
+        delete_response = requests.delete(  # noqa: E8518 - a standalone script run outside the server, with no ir.egress to reach
+            blob_url, headers=headers, timeout=5
+        )
         if delete_response.status_code == 204:
             deleted_cloud_storage_blobs_num += 1
             _logger.info("%s is deleted", blob_url)

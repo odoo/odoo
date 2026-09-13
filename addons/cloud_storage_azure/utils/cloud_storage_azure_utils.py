@@ -14,6 +14,7 @@ import requests
 from lxml import etree
 
 from odoo.exceptions import ValidationError
+from odoo.libs import guarded_http, netguard
 
 X_MS_VERSION = "2023-11-03"
 
@@ -411,7 +412,8 @@ def get_user_delegation_key(
         "scope": f"https://{account_name}.blob.core.windows.net/.default",  # https://storage.azure.com/.default
         "grant_type": "client_credentials",
     }
-    token_response = requests.post(token_url, data=token_data, timeout=5)
+    with guarded_http.guarded_session(netguard.PUBLIC_ONLY) as session:
+        token_response = session.post(token_url, data=token_data, timeout=5)
     if token_response.status_code in (401, 403):
         raise ClientAuthenticationError(
             f"Failed to get access token: {token_response.content}"
@@ -431,9 +433,10 @@ def get_user_delegation_key(
     }
 
     try:
-        key_response = requests.post(
-            key_request_url, data=key_data, headers=headers, timeout=5
-        )
+        with guarded_http.guarded_session(netguard.PUBLIC_ONLY) as session:
+            key_response = session.post(
+                key_request_url, data=key_data, headers=headers, timeout=5
+            )
     except requests.exceptions.ConnectionError:
         raise ValidationError(
             "Failed to get user delegation key: the account name may be incorrect"

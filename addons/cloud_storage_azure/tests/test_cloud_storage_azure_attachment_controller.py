@@ -5,6 +5,7 @@ from unittest.mock import patch
 from requests import Response
 
 import odoo
+from odoo.libs.guarded_http import GuardedSession
 from odoo.libs.hashing import content_hash
 from odoo.tools.misc import file_open
 
@@ -34,10 +35,7 @@ class TestCloudStorageAttachmentController(
                 response._content = self.DUMMY_USER_DELEGATION_KEY_XML
             return response
 
-        with patch(
-            "odoo.addons.cloud_storage_azure.utils.cloud_storage_azure_utils.requests.post",
-            post,
-        ):
+        with patch.object(GuardedSession, "post", staticmethod(post)):
             with file_open("addons/web/__init__.py") as file:
                 res = self.url_open(
                     url="/mail/attachment/upload",
