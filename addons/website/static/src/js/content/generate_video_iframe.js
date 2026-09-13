@@ -6,6 +6,7 @@ import { Instagram } from "@html_editor/main/media/video/providers/instagram";
 import { Facebook } from "@html_editor/main/media/video/providers/facebook";
 import { Twitch } from "@html_editor/main/media/video/providers/twitch";
 import { Loom } from "@html_editor/main/media/video/providers/loom";
+import { VideoFile } from "@html_editor/main/media/video/providers/video_file";
 
 export const PLATFORMS = {
     youtube: Youtube,
@@ -40,13 +41,13 @@ function manageIframeSrcOnLoad(iframeEl, src) {
 }
 
 /**
- * Builds a video iframe for a saved `src` and appends it to the DOM.
+ * Builds the player of a saved video and appends it to the DOM.
  *
- * @param {HTMLElement} parentEl The iframe container.
+ * @param {HTMLElement} parentEl The player container.
  * @param {function} manageIframeSrcFct The iframe `src` handler.
- * @returns {HTMLIFrameElement}
+ * @returns {HTMLIFrameElement|HTMLVideoElement|null}
  */
-export function generateVideoIframe(parentEl, manageIframeSrcFct) {
+export function generateVideoPlayer(parentEl, manageIframeSrcFct) {
     // Depending on version / compatibility / instance, the src is saved in the
     // 'data-embed-url', 'data-src' attribute or the 'data-oe-expression' one.
     let src = parentEl.dataset.embedUrl || parentEl.dataset.src || parentEl.dataset.oeExpression;
@@ -78,6 +79,16 @@ export function generateVideoIframe(parentEl, manageIframeSrcFct) {
         // not a valid URL, don't inject iframe
         return null;
     }
+
+    // A video file is played by a `<video>` element, rebuilt from the options
+    // saved on the container since its url does not encode them.
+    if (parentEl.dataset.platform === VideoFile.id) {
+        const options = JSON.parse(parentEl.dataset.videoOptions || "{}");
+        const videoEl = VideoFile.createPlayerElement({ embedUrl: src, options });
+        parentEl.append(videoEl);
+        return videoEl;
+    }
+
     // Check if the url is from one of the supported platforms.
     let platform = false;
     let urlMatch;
@@ -105,12 +116,12 @@ export function generateVideoIframe(parentEl, manageIframeSrcFct) {
 }
 
 /**
- * Auto generate video iframes.
+ * Auto generate video players.
  */
 document.addEventListener("DOMContentLoaded", () => {
-    for (const videoIframeEl of document.querySelectorAll(".media_iframe_video")) {
-        if (!videoIframeEl.querySelector(":scope > iframe")) {
-            generateVideoIframe(videoIframeEl);
+    for (const videoContainerEl of document.querySelectorAll(".media_iframe_video")) {
+        if (!videoContainerEl.querySelector(":scope > :is(iframe, video)")) {
+            generateVideoPlayer(videoContainerEl);
         }
     }
 });

@@ -319,22 +319,25 @@ div.media_iframe_video {
     overflow: hidden;
     min-width: 100px;
 
-    iframe {
+    iframe, video {
         width: 100%;
         height: 100%;
         @include o-position-absolute($top: 0, $left: 0, $right: 0);
         margin: 0 auto;
     }
-    &.padding-small iframe {
+    video {
+        object-fit: cover;
+    }
+    &.padding-small :is(iframe, video) {
         padding: 4px;
     }
-    &.padding-medium iframe {
+    &.padding-medium :is(iframe, video) {
         padding: 8px;
     }
-    &.padding-large iframe {
+    &.padding-large :is(iframe, video) {
         padding: 16px;
     }
-    &.padding-xl iframe {
+    &.padding-xl :is(iframe, video) {
         padding: 32px;
     }
 

@@ -1,8 +1,14 @@
-import { expect, test, advanceTime } from "@odoo/hoot";
-import { animationFrame, dblclick, waitFor, queryOne } from "@odoo/hoot-dom";
+import { beforeEach, expect, test, advanceTime } from "@odoo/hoot";
+import { animationFrame, click, dblclick, edit, queryAll, waitFor, queryOne } from "@odoo/hoot-dom";
+import { patch } from "@web/core/utils/patch";
+import { VideoFile } from "@html_editor/main/media/video/providers/video_file";
 import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
 
 defineWebsiteModels();
+
+// A video file url is accepted once its metadata loaded, which no test
+// environment can carry out for real.
+beforeEach(() => patch(VideoFile, { isValidVideoUrl: (url) => Promise.resolve([url]) }));
 
 test("double click on video", async () => {
     await setupWebsiteBuilder(`
@@ -64,4 +70,72 @@ test("vertical toggle of video options", async () => {
     await waitFor(
         ".modal-content:contains(Select a media) .media_iframe_video .media_iframe_video_size_for_vertical"
     );
+});
+
+const VIDEO_FILE_SRC = "https://example.com/video/my-video.mp4";
+
+function getVideoOptionToggle(label) {
+    return queryAll(".modal-content .o_video_dialog_options .o_switch").find(
+        (el) => el.querySelector("span.ms-2")?.textContent.trim() === label
+    );
+}
+
+test("insert a video file through the media dialog", async () => {
+    await setupWebsiteBuilder(`
+        <div>
+            <div class="media_iframe_video o_snippet_drop_in_only">
+                <div class="css_editable_mode_display"></div>
+                <div class="media_iframe_video_size"></div>
+                <iframe frameborder="0" allowfullscreen="allowfullscreen" aria-label="Video"></iframe>
+            </div>
+        </div>
+    `);
+    await dblclick(":iframe iframe");
+    await waitFor(".modal-content:contains(Select a media) .o_video_dialog_form");
+
+    await click("#o_video_text");
+    await edit(VIDEO_FILE_SRC);
+    // `refreshVideoData()` is debounced.
+    await advanceTime(100);
+    await waitFor(".modal-content .o_video_preview video");
+
+    await click(".modal-content footer button:contains(Add)");
+    await animationFrame();
+
+    const videoEl = await waitFor(":iframe .media_iframe_video video");
+    expect(":iframe .media_iframe_video iframe").toHaveCount(0);
+    expect(videoEl.getAttribute("src")).toBe(VIDEO_FILE_SRC);
+    expect(queryOne(":iframe .media_iframe_video").dataset.platform).toBe("video_file");
+});
+
+test("reopening a video file keeps its options", async () => {
+    // No `controls` attribute: the "Hide player controls" option is on.
+    await setupWebsiteBuilder(`
+        <div>
+            <div class="media_iframe_video o_snippet_drop_in_only" data-platform="video_file">
+                <div class="css_editable_mode_display"></div>
+                <div class="media_iframe_video_size"></div>
+                <video src="${VIDEO_FILE_SRC}" playsinline="" contenteditable="false" loop=""></video>
+            </div>
+        </div>
+    `);
+
+    await dblclick(":iframe video");
+    await waitFor(".modal-content:contains(Select a media) .o_video_dialog_form");
+    await advanceTime(100);
+
+    expect("#o_video_text").toHaveValue(VIDEO_FILE_SRC);
+    await waitFor(".modal-content .o_video_dialog_options");
+    expect(getVideoOptionToggle("Loop").querySelector("input")).toBeChecked();
+    expect(getVideoOptionToggle("Hide player controls").querySelector("input")).toBeChecked();
+
+    // Turning "Loop" off must be reflected on the saved video.
+    await click(getVideoOptionToggle("Loop").querySelector("input").closest("label"));
+    await advanceTime(100);
+    await click(".modal-content footer button:contains(Add)");
+    await animationFrame();
+
+    const videoEl = await waitFor(":iframe .media_iframe_video video");
+    expect(videoEl.hasAttribute("loop")).toBe(false);
+    expect(videoEl.hasAttribute("controls")).toBe(false);
 });

@@ -696,7 +696,7 @@ class IrUiView(models.Model):
         # Related to these options:
         # background-video, background-shapes, parallax, visibility
         return ['style', 'class', 'target', 'href'] + [
-            'data-bg-video-src', 'data-shape', 'data-scroll-background-ratio',
+            'data-bg-video-src', 'data-bg-video-is-file', 'data-shape', 'data-scroll-background-ratio',
             'data-visibility', 'data-visibility-id', 'data-visibility-selectors',
         ] + [
             'data-visibility-value-' + param + suffix

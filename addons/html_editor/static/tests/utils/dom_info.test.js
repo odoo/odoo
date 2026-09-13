@@ -317,6 +317,13 @@ describe("isVisible", () => {
             const result = isVisible(table);
             expect(result).toBe(true);
         });
+
+        test("should identify a video as visible", () => {
+            const [video] = insertTestHtml(
+                `<video src="https://example.com/video/my-video.mp4"></video>`
+            );
+            expect(isVisible(video)).toBe(true);
+        });
     });
 });
 
@@ -399,6 +406,21 @@ describe("getDeepestEditablePosition", () => {
 
         expect(getDeepestEditablePosition(p, 0)).toEqual([p, 0]);
         expect(getDeepestEditablePosition(p, 1)).toEqual([p, 1]);
+    });
+
+    test("should get deepest editable position around a self-hosted video", () => {
+        const [div] = insertTestHtml(
+            unformat(`
+                <div class="media_iframe_video" contenteditable="false" data-platform="video_file">
+                    <div class="css_editable_mode_display"></div>
+                    <div class="media_iframe_video_size" contenteditable="false"></div>
+                    <video src="https://example.com/video/my-video.mp4" contenteditable="false"></video>
+                </div>
+            `)
+        );
+        const editable = div.parentElement;
+
+        expect(getDeepestEditablePosition(div, 3)).toEqual([editable, 1]);
     });
 
     test("should get deepest editable position before or after a non-editable sibling", () => {

@@ -3,7 +3,7 @@ import { registry } from "@web/core/registry";
 
 import { _t } from "@web/core/l10n/translation";
 import { setupAutoplay, triggerAutoplay } from "@website/utils/videos";
-import { generateVideoIframe } from "@website/js/content/generate_video_iframe";
+import { generateVideoPlayer } from "@website/js/content/generate_video_iframe";
 
 export class MediaVideo extends Interaction {
     static selector = ".media_iframe_video";
@@ -14,14 +14,22 @@ export class MediaVideo extends Interaction {
     dynamicContent = {
         _popup: {
             "t-on-shown.bs.modal": () => {
+                const iframeEl = this.el.querySelector("iframe");
+                if (!iframeEl) {
+                    return;
+                }
                 // TODO still oeExpression to remove someday
                 this.services.website_cookies.manageIframeSrc(
-                    this.el.querySelector("iframe"),
+                    iframeEl,
                     this.el.dataset.embedUrl || this.el.dataset.src || this.el.dataset.oeExpression
                 );
             },
             "t-on-hide.bs.modal": () => {
-                this.el.querySelector("iframe").src = "";
+                const iframeEl = this.el.querySelector("iframe");
+                if (!iframeEl) {
+                    return;
+                }
+                iframeEl.src = "";
             },
         },
         _document: {
@@ -39,27 +47,31 @@ export class MediaVideo extends Interaction {
     }
 
     start() {
-        let iframeEl = this.el.querySelector(":scope > iframe");
+        let playerEl = this.el.querySelector(":scope > :is(iframe, video)");
 
-        // Generate the video `<iframe/>` element when restarting interacions.
+        // Generate the video player element when restarting interacions.
         // In some cases (e.g., when adding a new video block), we don’t need
-        // to rebuild the same iframe while starting the widget.
-        if (!iframeEl) {
-            iframeEl = generateVideoIframe(this.el, this.services.website_cookies.manageIframeSrc);
+        // to rebuild the same player while starting the widget.
+        if (!playerEl) {
+            playerEl = generateVideoPlayer(this.el, this.services.website_cookies.manageIframeSrc);
         }
 
-        if (iframeEl && !iframeEl.getAttribute("aria-label")) {
-            iframeEl.setAttribute("aria-label", _t("Media video"));
+        if (playerEl && !playerEl.getAttribute("aria-label")) {
+            playerEl.setAttribute("aria-label", _t("Media video"));
         }
 
-        if (iframeEl?.hasAttribute("src")) {
+        if (playerEl?.tagName === "VIDEO") {
+            return;
+        }
+
+        if (playerEl?.hasAttribute("src")) {
             const promise = setupAutoplay(
-                iframeEl.getAttribute("src"),
+                playerEl.getAttribute("src"),
                 !!this.el.dataset.needCookiesApproval
             );
             if (promise) {
                 this.waitFor(promise).then(
-                    this.protectSyncAfterAsync(() => triggerAutoplay(iframeEl))
+                    this.protectSyncAfterAsync(() => triggerAutoplay(playerEl))
                 );
             }
         }
