@@ -157,7 +157,8 @@ test("Remove attachment from message", async () => {
     await openDiscuss(channelId, { target: env1 });
     await openDiscuss(channelId, { target: env2 });
     await contains(`${env1.selector} .o-mail-AttachmentCard:has(:text('test.txt'))`);
-    await click(`${env2.selector} .o-mail-Attachment-unlink`);
+    await click(`${env2.selector} .o-mail-AttachmentContainer [title='Actions']`);
+    await click(`${env2.selector} .dropdown-item:text('Remove')`);
     await click(`${env2.selector} .modal-footer .btn:text('Delete Attachment')`);
     await contains(`${env1.selector} .o-mail-AttachmentCard:has(:text('test.txt'))`, { count: 0 });
 });

@@ -20,5 +20,8 @@ const attachmentPatch = {
     get voice() {
         return this.voice_ids.length > 0;
     },
+    get voiceMetadata() {
+        return this.voice_ids[0];
+    },
 };
 patch(Attachment.prototype, attachmentPatch);

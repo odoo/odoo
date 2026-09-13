@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.VoicePlayerControls">
+        <div class="o-mail-VoicePlayerControls position-absolute top-0 start-0 p-1 d-flex align-items-center z-3">
+            <button class="btn btn-sm btn-light rounded px-1 py-0" aria-label="Playback speed" title="Playback speed"
+                t-on-click="() => this.cyclePlaybackRate()">
+                <span class="fw-semibold"><t t-out="this.playbackRate"/>x</span>
+            </button>
+        </div>
+    </t>
+</templates>
