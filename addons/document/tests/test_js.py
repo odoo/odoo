@@ -7,6 +7,7 @@ import odoo.addons.web.tests.test_js as web_test_js
 
 VIEW_SUITES = (
     "@document/views",
+    "@document/activity_view",
     "@document/kanban_view",
     "@document/list_view",
     "@document/multi_view",
@@ -22,6 +23,7 @@ PDF_SUITES = (
 MISC_SUITES = (
     "@document/activity_menu_patch",
     "@document/chatter_visible_storage",
+    "@document/cog_menu_pin_actions",
     "@document/details_panel",
     "@document/document_systray_activity_menu",
     "@document/document_to_restore",
