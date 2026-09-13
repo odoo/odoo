@@ -62,6 +62,7 @@ def _get_like_regex(value: str, exact: bool) -> str:
 
 class _FieldSqlMixin(_FieldStubs):
     _fetch_term: SQL | None = None
+    _column_term: SQL | None = None
     _fetch_terms_by_langs: dict[tuple[str, ...], SQL] | None = None
 
     def to_sql(self, model: ModelLike, alias: str) -> SQL:

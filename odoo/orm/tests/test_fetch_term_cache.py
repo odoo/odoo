@@ -30,6 +30,13 @@ def test_a_plain_column_term_is_built_once_and_access_checked_every_time():
         assert not first.params
         assert not tuple(first.to_flush)
         assert check.call_count == 2
+        # the same identifier, with the field to flush, serves every other
+        # spelling of the column against the model's own table
+        column = model._field_to_sql("term_thing", "code", query)
+        assert column is field._column_term
+        assert column.code == first.code
+        assert tuple(column.to_flush) == (field,)
+        assert model._field_to_sql("other_alias", "code", query) is not column
 
 
 def test_a_company_dependent_column_is_never_cached():

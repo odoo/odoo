@@ -702,14 +702,18 @@ def _fetch_term(model: BaseModel, field: Field, query: Query) -> SQL:
     if term is not None:
         model._check_field_access(field, "read")
         return term
-    sql = model._field_to_sql(model._table, field.name, query)
-    sql = SQL("%s", sql, to_flush=(f for f in sql.to_flush if f != field))
+    column = model._field_to_sql(model._table, field.name, query)
+    sql = SQL("%s", column, to_flush=(f for f in column.to_flush if f != field))
     if (
         not sql.params
         and not sql.to_flush
         and sql.code == f'"{model._table}"."{field.name}"'
     ):
         field._fetch_term = sql
+        if tuple(column.to_flush) == (field,):
+            # the same identifier with the field to flush, for every other
+            # place that spells the column against its own table
+            field._column_term = column
     return sql
 
 

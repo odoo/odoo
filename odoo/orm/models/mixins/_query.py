@@ -284,6 +284,14 @@ class _QueryMixin(_ModelStubs):
 
         self._check_field_access(field, "read")
 
+        if not property_name and alias == self._table:
+            # proven by the first fetch of the column to be exactly this
+            # identifier (see _fetch_term); spelled once, reused by every
+            # WHERE and ORDER BY on the model's own table
+            term = field._column_term
+            if term is not None:
+                return term
+
         sql = field.to_sql(self, alias)
         if property_name:
             if query is None:
