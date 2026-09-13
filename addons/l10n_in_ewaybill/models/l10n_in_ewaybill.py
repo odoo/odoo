@@ -374,12 +374,13 @@ class L10nInEwaybill(models.Model):
             }
         )
 
-    def action_print(self):
-        self.check_singleton()
-        if self.state in ["pending", "cancel"]:
+    def _check_printable(self):
+        if self.filtered(lambda ewaybill: ewaybill.state in ["pending", "cancel"]):
             raise UserError(_("Please generate the E-Waybill to print it."))
 
-        return self._generate_and_attach_pdf(_("Ewaybill"))
+    def _get_print_label(self):
+        self.check_singleton()
+        return _("Ewaybill")
 
     @api.model
     def _get_default_help_message(self, status):
@@ -922,14 +923,12 @@ class L10nInEwaybill(models.Model):
                 }
             )
 
-    def _generate_and_attach_pdf(self, doc_label):
+    def _add_printed_pdf_attachment(self, pdf_content):
         self.check_singleton()
-        pdf_content = self.env["ir.actions.report"]._render_qweb_pdf(
-            "l10n_in_ewaybill.report_ewaybill", res_ids=[self.id]
-        )[0]
+        label = self._get_print_label()
         attachment = self.env["ir.attachment"].create(
             {
-                "name": f"{doc_label} - {self.document_number}.pdf",
+                "name": f"{label} - {self.document_number}.pdf",
                 "type": "binary",
                 "datas": base64.b64encode(pdf_content),
                 "res_model": "l10n.in.ewaybill",
@@ -938,12 +937,8 @@ class L10nInEwaybill(models.Model):
             }
         )
         self.message_post(
-            body=_("%s has been generated.", doc_label), attachment_ids=[attachment.id]
+            body=_("%s has been generated.", label), attachment_ids=[attachment.id]
         )
-        return {
-            "type": "ir.actions.act_url",
-            "url": f"/web/content/{attachment.id}?download=true",
-        }
 
     @api.ondelete(at_uninstall=False)
     def _unlink_l10n_in_ewaybill_prevent(self):

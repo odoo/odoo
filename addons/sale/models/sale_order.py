@@ -1597,9 +1597,6 @@ class SaleOrder(models.Model):
     def _get_priced_lines(self):
         return self.line_ids.filtered(lambda x: not x.display_type)
 
-    def _get_print_report_xmlid(self):
-        return "sale.action_report_saleorder"
-
     def _prepare_analytic_account_data(self, prefix=None):
         self.check_singleton()
         name = self.name

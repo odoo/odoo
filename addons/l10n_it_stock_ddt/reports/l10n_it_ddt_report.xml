@@ -223,6 +223,9 @@
         <field name="report_file">report_ddt</field>
         <field
             name="print_report_name">'DDT - %s - %s' % (object.partner_id.name or '', object.l10n_it_ddt_number)</field>
+        <field name="domain">[('l10n_it_show_print_ddt_button', '=', True)]</field>
+        <field name="binding_model_id" ref="stock.model_stock_picking" />
+        <field name="binding_type">report</field>
     </record>
 
 </odoo>

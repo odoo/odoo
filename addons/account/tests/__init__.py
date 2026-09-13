@@ -47,6 +47,7 @@ from . import test_taxes_dispatching_base_lines
 from . import test_taxes_repartition_amounts
 from . import test_invoice_taxes
 from . import test_account_move_send
+from . import test_account_invoice_print
 from . import test_account_all_l10n
 from . import test_portal_attachment
 from . import test_portal_invoice

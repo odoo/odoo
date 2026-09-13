@@ -112,30 +112,49 @@ class TestOrderSharedFeatures(TransactionCase):
                 order._mark_as_sent()
                 self.assertEqual(order.count_sent, 2)
 
-    def test_print_flags_draft_orders_and_always_counts(self):
+    def _print_report_names(self, order):
+        return [
+            report_name
+            for report_name, model_name in self.env["ir.actions.report"]
+            ._get_order_print_report_map()
+            .items()
+            if model_name == order._name
+        ]
+
+    def test_rendering_a_print_report_flags_draft_orders_and_always_counts(self):
         for order in self._orders().values():
             with self.subTest(model=order._name):
-                order.action_print_order()
-                self.assertTrue(order.printed_before)
-                self.assertEqual(order.count_print, 1)
+                for count, report_name in enumerate(
+                    self._print_report_names(order), start=1
+                ):
+                    self.env["ir.actions.report"]._render_qweb_pdf(
+                        report_name, order.ids
+                    )
+                    self.assertTrue(order.printed_before)
+                    self.assertEqual(order.count_print, count)
 
-    def test_print_of_a_confirmed_order_counts_but_does_not_flag(self):
+    def test_rendering_a_print_report_of_a_confirmed_order_counts_but_does_not_flag(
+        self,
+    ):
         for order in self._orders().values():
             with self.subTest(model=order._name):
                 order.action_confirm()
-                order.action_print_order()
+                report_name = self._print_report_names(order)[0]
+                self.env["ir.actions.report"]._render_qweb_pdf(report_name, order.ids)
                 self.assertFalse(order.printed_before)
                 self.assertEqual(order.count_print, 1)
 
-    def test_print_returns_the_report_action_of_each_order_type(self):
+    def test_every_order_type_counts_at_least_one_print_report(self):
         for order in self._orders().values():
             with self.subTest(model=order._name):
-                action = order.action_print_order()
-                self.assertEqual(action["type"], "ir.actions.report")
-                self.assertEqual(
-                    action["report_name"],
-                    self.env.ref(order._get_print_report_xmlid()).report_name,
-                )
+                self.assertTrue(self._print_report_names(order))
+
+    def test_rendering_an_unrelated_report_of_the_order_model_does_not_count(self):
+        order = self._orders()["sale.order"]
+        self.env["ir.actions.report"]._render_qweb_pdf(
+            "sale.action_report_pro_forma_invoice", order.ids
+        )
+        self.assertEqual(order.count_print, 0)
 
     def test_send_by_email_opens_the_composer_with_the_template(self):
         for order in self._orders().values():

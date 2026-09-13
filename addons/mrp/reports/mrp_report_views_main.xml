@@ -10,6 +10,7 @@
             <field name="report_file">mrp.report.mrp_production_templates</field>
             <field
                 name="print_report_name">'Production Order - %s' % object.name</field>
+            <field name="domain">[('state', 'not in', ('draft', 'cancel'))]</field>
             <field name="binding_model_id" ref="model_mrp_production" />
             <field name="binding_type">report</field>
         </record>

@@ -13,7 +13,6 @@ class StockPickingReport(models.Model):
     _inherit = "stock.picking"
 
     def action_print_picking(self):
-        self.write({"printed": True})
         return self.env.ref("stock.action_report_picking").report_action(self)
 
     @dbg.timed

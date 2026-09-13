@@ -730,16 +730,6 @@
                         invisible="not show_send_button or highlight_send_button"
                         data-hotkey="y" />
                     <button
-                        name="action_print_pdf"
-                        type="object"
-                        string="Print"
-                        invisible="state != 'posted' or is_being_sent or invoice_pdf_report_id or move_type in ('entry', 'in_invoice','in_refund','in_receipt')" />
-                    <button
-                        name="action_print_pdf"
-                        type="object"
-                        string="Print"
-                        invisible="state != 'posted' or (not is_being_sent and not invoice_pdf_report_id) or move_type in ('in_invoice','in_refund','in_receipt')" />
-                    <button
                         name="action_register_payment"
                         id="account_invoice_payment_btn"
                         type="object"

@@ -6791,16 +6791,6 @@ class AccountMove(models.Model):
             "target": "download",
         }
 
-    @_debug.perf.timed
-    def action_print_pdf(self):
-        _debug.lifecycle("action_print_pdf", records=self)
-        self.check_singleton()
-        invoice_template = self.env[
-            "mixin.account.move.send"
-        ]._get_default_pdf_report_id(self)
-        report_action = invoice_template.report_action(self.id, config=False)
-        return self._get_action_with_base_document_layout_configurator(report_action)
-
     def preview_invoice(self):
         self.check_singleton()
         return {

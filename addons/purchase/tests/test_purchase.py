@@ -1000,12 +1000,14 @@ class TestPurchase(AccountTestInvoicingCommon):
         po = po_form.save()
         po.action_confirm()
         self.assertEqual(po.state, "done")
-        po.action_print_order()
+        report = self.env["ir.actions.report"]
+        report._render_qweb_pdf("purchase.action_report_purchase_order", po.ids)
         self.assertEqual(po.state, "done")
         po.action_cancel()
         self.assertEqual(po.state, "cancel")
-        po.action_print_order()
+        report._render_qweb_pdf("purchase.report_purchase_quotation", po.ids)
         self.assertEqual(po.state, "cancel")
+        self.assertEqual(po.count_print, 2)
 
     def test_purchase_warnings(self):
         partner_with_warning = self.env["res.partner"].create(

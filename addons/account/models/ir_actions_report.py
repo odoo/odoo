@@ -1,4 +1,5 @@
 from collections import OrderedDict
+from itertools import groupby
 from zlib import error as zlib_error
 
 import lxml.html
@@ -80,6 +81,31 @@ class IrActionsReport(models.Model):
             streams=len(collected_streams),
         )
         return collected_streams
+
+    def _render_qweb_pdf(self, report_ref, res_ids=None, data=None):
+        render = super()._render_qweb_pdf
+        move_ids, _data = self._normalize_render_args(res_ids, data, "pdf")
+        report = self._get_report(report_ref)
+        invoice_report = self.env.ref("account.account_invoices", False)
+        if not move_ids or report != invoice_report:
+            return render(report_ref, res_ids=res_ids, data=data)
+        if not self._is_pdf_rendering_enabled():
+            return render(report_ref, res_ids=res_ids, data=data)
+
+        send = self.env["mixin.account.move.send"]
+        runs = [
+            (template, [move.id for move in moves])
+            for template, moves in groupby(
+                self.env["account.move"].browse(move_ids),
+                key=send._get_default_pdf_report_id,
+            )
+        ]
+        if [template for template, _ids in runs] == [report]:
+            return render(report_ref, res_ids=res_ids, data=data)
+        documents = [render(template, ids, data=data)[0] for template, ids in runs]
+        if len(documents) == 1:
+            return documents[0], "pdf"
+        return pdf.merge_pdf(documents), "pdf"
 
     def _is_invoice_report(self, report_ref):
         report = self._get_report(report_ref)

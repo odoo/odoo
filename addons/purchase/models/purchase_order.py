@@ -375,11 +375,6 @@ class PurchaseOrder(models.Model):
         super()._merge_finalize(target, sources)
         target._merge_alternative_po(sources)
 
-    def _get_print_report_xmlid(self):
-        if all(order.state == "done" for order in self):
-            return "purchase.action_report_purchase_order"
-        return "purchase.report_purchase_quotation"
-
     def action_send_rfq(self):
         self.check_singleton()
         return self._action_send_by_email()

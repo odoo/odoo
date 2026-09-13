@@ -8,6 +8,7 @@
         <field name="report_name">approval.report_approval_request</field>
         <field name="report_file">approval.report_approval_request</field>
         <field name="print_report_name">'Approval - %s' % object.name</field>
+        <field name="domain">[('state', '=', 'approved')]</field>
         <field name="binding_model_id" ref="model_approval_request" />
         <field name="binding_type">report</field>
     </record>

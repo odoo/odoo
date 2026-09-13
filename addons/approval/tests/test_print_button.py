@@ -7,20 +7,27 @@ from .common import ApprovalCommon
 
 @tagged("post_install", "-at_install")
 class TestPrintButtonVisibility(ApprovalCommon):
-    def test_print_button_invisible_condition_no_longer_gates_on_approval_type(self):
+    def test_the_form_header_leaves_printing_to_the_gear_menu(self):
         view = self.env.ref("approval.view_approval_request_form")
         arch = etree.fromstring(view.arch)
-        buttons = arch.xpath(
-            '//button[@name="%d"]'
-            % self.env.ref("approval.action_report_approval_request").id
+        report = self.env.ref("approval.action_report_approval_request")
+        self.assertFalse(arch.xpath('//header/button[@name="%d"]' % report.id))
+
+    def test_the_print_report_is_offered_for_approved_requests_of_any_type(self):
+        category = self._make_category(
+            name=f"Print Gear Cat {self.id()}",
+            approvers=[self.approver_1],
+            approval_type="general",
         )
-        self.assertTrue(buttons, "Print button not found in the form arch")
-        invisible = buttons[0].get("invisible", "")
-        self.assertNotIn(
-            "approval_type",
-            invisible,
-            "the Print button's invisible condition must not reference "
-            "approval_type any more — it only gates on state == 'approved'",
+        request = self._prepare_request(category)
+        report = self.env.ref("approval.action_report_approval_request")
+        self.assertFalse(
+            report.get_valid_action_reports("approval.request", request.ids)
+        )
+        request.with_user(self.approver_1).action_approve()
+        self.assertEqual(
+            report.get_valid_action_reports("approval.request", request.ids),
+            report.ids,
         )
 
     def test_print_report_binding_is_generic_for_any_approval_type(self):

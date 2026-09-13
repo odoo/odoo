@@ -795,15 +795,6 @@ class MixinOrder(models.AbstractModel):
     def action_acknowledge(self):
         self.write({"acknowledged": True})
 
-    def action_print_order(self):
-        self._mark_as_printed()
-        return self.env.ref(self._get_print_report_xmlid()).report_action(self)
-
-    def _get_print_report_xmlid(self):
-        raise NotImplementedError(
-            f"{self._name} must implement _get_print_report_xmlid()"
-        )
-
     def _mark_as_printed(self):
         for order in self:
             vals = {"count_print": order.count_print + 1}

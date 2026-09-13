@@ -2939,3 +2939,30 @@ class TestReports(TestReportsCommon):
         self.assertEqual(linked_out.procure_method, "make_to_order")
         self.assertEqual(linked_out.product_qty, 6.0)
         self.assertEqual(len(delivery.move_ids), 2)
+
+
+class TestPickingPrint(TestReportsCommon):
+    def _picking(self):
+        return self.env["stock.picking"].create(
+            {
+                "picking_type_id": self.picking_type_in.id,
+                "location_id": self.supplier_location.id,
+                "location_dest_id": self.stock_location.id,
+                "partner_id": self.partner.id,
+            }
+        )
+
+    def test_rendering_the_picking_operations_report_marks_the_picking_printed(self):
+        picking = self._picking()
+        self.assertFalse(picking.printed)
+        self.env["ir.actions.report"]._render_qweb_pdf(
+            "stock.action_report_picking", picking.ids
+        )
+        self.assertTrue(picking.printed)
+
+    def test_rendering_the_delivery_slip_leaves_the_picking_unprinted(self):
+        picking = self._picking()
+        self.env["ir.actions.report"]._render_qweb_pdf(
+            "stock.action_report_delivery", picking.ids
+        )
+        self.assertFalse(picking.printed)

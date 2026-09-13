@@ -397,20 +397,6 @@
                         invisible="not id or picking_type_code != 'outgoing' or state == 'done' or is_signed"
                         full_name="partner_id" />
                     <button
-                        name="action_print_picking"
-                        type="object"
-                        string="Print"
-                        groups="stock.group_stock_user"
-                        invisible="state != 'assigned'"
-                        data-hotkey="o" />
-                    <button
-                        name="%(action_report_delivery)d"
-                        type="action"
-                        string="Print"
-                        groups="base.group_user"
-                        invisible="state != 'done'"
-                        data-hotkey="o" />
-                    <button
                         name="%(act_stock_return_picking)d"
                         type="action"
                         string="Return"

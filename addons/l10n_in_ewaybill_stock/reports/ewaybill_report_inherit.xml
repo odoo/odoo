@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <record id="l10n_in_ewaybill.action_report_ewaybill" model="ir.actions.report">
+        <field name="domain" eval="[('state', 'in', ('generated', 'challan'))]" />
+    </record>
+
     <template
         id="l10n_in_ewaybill_stock_inherit_report"
         inherit_id="l10n_in_ewaybill.report_ewaybill">

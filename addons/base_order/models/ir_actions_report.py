@@ -10,6 +10,18 @@ class IrActionsReport(models.Model):
     def _get_order_edi_report_map(self):
         return {}
 
+    def _get_order_print_report_map(self):
+        return {}
+
+    def _pre_render_qweb_pdf(self, report_ref, res_ids=None, data=None):
+        model_name = self._get_order_print_report_map().get(
+            self._get_report(report_ref).report_name
+        )
+        order_ids, _data = self._normalize_render_args(res_ids, data, "pdf")
+        if model_name and order_ids:
+            self.env[model_name].sudo().browse(order_ids)._mark_as_printed()
+        return super()._pre_render_qweb_pdf(report_ref, res_ids=res_ids, data=data)
+
     def _render_qweb_pdf_prepare_streams(self, report_ref, data, res_ids=None):
         collected_streams = super()._render_qweb_pdf_prepare_streams(
             report_ref,

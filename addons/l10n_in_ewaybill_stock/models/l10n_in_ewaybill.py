@@ -139,18 +139,21 @@ class L10nInEwaybill(models.Model):
             }
         )
 
-    def action_print(self):
-        self.check_singleton()
-        if self.state == "generated":
-            return super().action_print()
-        if self.state != "challan":
+    def _check_printable(self):
+        if self.filtered(
+            lambda ewaybill: ewaybill.state not in ["generated", "challan"]
+        ):
             raise UserError(
                 _(
                     "Please generate the E-Waybill or mark the document as a Challan to print it."
                 )
             )
 
-        return self._generate_and_attach_pdf(_("Challan"))
+    def _get_print_label(self):
+        self.check_singleton()
+        if self.state == "challan":
+            return _("Challan")
+        return super()._get_print_label()
 
     def _check_lines(self):
         if self.picking_id:
