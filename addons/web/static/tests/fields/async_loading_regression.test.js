@@ -2,7 +2,7 @@
 import { afterEach, beforeEach, expect, test } from "@odoo/hoot";
 import { queryAllTexts, queryText, queryValue } from "@odoo/hoot-dom";
 import { animationFrame, Deferred } from "@odoo/hoot-mock";
-import { Component, EventBus, reactive, useState, xml } from "@odoo/owl";
+import { Component, EventBus, onError, reactive, useState, xml } from "@odoo/owl";
 import {
     contains,
     defineModels,
@@ -558,6 +558,7 @@ test("replacement selection choices work with touch input", async () => {
 });
 
 test("special data: replacement during initial loading never renders uninitialized data", async () => {
+    await makeMockEnv();
     const requests = new Map();
     /** @type {Parent} */
     let parent;
@@ -598,4 +599,187 @@ test("special data: replacement during initial loading never renders uninitializ
     requests.get(2).resolve(["current"]);
     await mounted;
     expect(".initial-result").toHaveText("current");
+});
+
+test("special data: current initial data mounts without waiting for an obsolete request", async () => {
+    await makeMockEnv();
+    const old = new Deferred();
+    const requests = [];
+    const record = reactive({
+        data: { key: 1 },
+        model: { specialDataCaches: new Map() },
+    });
+    class Child extends Component {
+        static props = ["record"];
+        static template = xml`<span class="latest-initial" t-esc="result.data"/>`;
+        setup() {
+            this.result = useSpecialData((orm, props) => {
+                requests.push(props.record.data.key);
+                return props.record.data.key === 1 ? old : Promise.resolve("current");
+            });
+        }
+    }
+    const mounted = mountWithCleanup(Child, { props: { record } });
+    await animationFrame();
+    expect(requests).toEqual([1]);
+    record.data.key = 2;
+    await animationFrame();
+    expect(requests).toEqual([1, 2]);
+    log.logic("mount while obsolete request remains pending", {
+        shown: queryAllTexts(".latest-initial"),
+    });
+    expect(".latest-initial").toHaveText("current");
+    old.resolve("obsolete");
+    await mounted;
+    expect(".latest-initial").toHaveText("current");
+});
+
+test("special data: an obsolete rejection does not report an error after newer data", async () => {
+    const old = new Deferred();
+    const record = reactive({
+        data: { key: 0 },
+        model: { specialDataCaches: new Map() },
+    });
+    class Child extends Component {
+        static props = ["record"];
+        static template = xml`<span class="latest-success" t-esc="result.data"/>`;
+        setup() {
+            this.result = useSpecialData((orm, props) =>
+                props.record.data.key === 1
+                    ? old
+                    : Promise.resolve(props.record.data.key),
+            );
+        }
+    }
+    await mountWithCleanup(Child, { props: { record } });
+    record.data.key = 1;
+    await animationFrame();
+    record.data.key = 2;
+    await animationFrame();
+    old.reject(new Error("obsolete lookup failed"));
+    await animationFrame();
+    log.logic("current data after obsolete rejection", {
+        shown: queryText(".latest-success"),
+    });
+    expect(".latest-success").toHaveText("2");
+});
+
+test("special data: switching records stops observing the previous record", async () => {
+    const makeRecord = (key) =>
+        reactive({ data: { key }, model: { specialDataCaches: new Map() } });
+    const first = makeRecord(1);
+    const second = makeRecord(2);
+    const loads = [];
+    class Child extends Component {
+        static props = ["record"];
+        static template = xml`<span class="current-record" t-esc="result.data"/>`;
+        setup() {
+            this.result = useSpecialData((orm, props) => {
+                loads.push(props.record.data.key);
+                return Promise.resolve(props.record.data.key);
+            });
+        }
+    }
+    class Parent extends Component {
+        static props = [];
+        static components = { Child };
+        static template = xml`<Child record="state.record"/>`;
+        setup() {
+            this.state = useState({ record: first });
+        }
+    }
+    const parent = await mountWithCleanup(Parent);
+    if (!parent) {
+        throw new Error("The record-switching probe did not mount");
+    }
+    parent.state.record = second;
+    await animationFrame();
+    const before = loads.length;
+    first.data.key = 3;
+    await animationFrame();
+    log.logic("loads after changing retired record", { loads });
+    expect(loads).toHaveLength(before);
+    expect(".current-record").toHaveText("2");
+});
+
+test("special data: a current request failure remains visible and a later input recovers", async () => {
+    expect.errors(1);
+    const record = reactive({
+        data: { key: 0 },
+        model: { specialDataCaches: new Map() },
+    });
+    class Child extends Component {
+        static props = ["record"];
+        static template = xml`<span class="recoverable-result" t-esc="result.data"/>`;
+        setup() {
+            this.result = useSpecialData(async (orm, props) => {
+                if (props.record.data.key === 1) {
+                    throw new Error("current lookup failed");
+                }
+                return props.record.data.key;
+            });
+        }
+    }
+    const child = await mountWithCleanup(Child, { props: { record } });
+    if (!child) {
+        throw new Error("The special-data recovery probe did not mount");
+    }
+    record.data.key = 1;
+    await animationFrame();
+    expect.verifyErrors(["current lookup failed"]);
+    expect(child.result.isReady).toBe(false);
+    expect(".recoverable-result").toHaveText("0");
+    record.data.key = 2;
+    await animationFrame();
+    log.logic("recovered from current failure", { ready: child.result.isReady });
+    expect(child.result.isReady).toBe(true);
+    expect(".recoverable-result").toHaveText("2");
+});
+
+test("special data: a replacement initial failure reaches the Owl error boundary once", async () => {
+    await makeMockEnv();
+    const old = new Deferred();
+    const current = new Deferred();
+    const record = reactive({
+        data: { key: 0 },
+        model: { specialDataCaches: new Map() },
+    });
+    const errors = [];
+    const requests = [];
+    class Child extends Component {
+        static props = ["record"];
+        static template = xml`<span t-esc="result.data"/>`;
+        setup() {
+            this.result = useSpecialData((orm, props) => {
+                requests.push(props.record.data.key);
+                return props.record.data.key ? current : old;
+            });
+        }
+    }
+    class Parent extends Component {
+        static props = [];
+        static components = { Child };
+        static template = xml`<Child t-if="state.visible" record="record"/><span t-else="" class="load-error">Failed to load</span>`;
+        setup() {
+            this.record = record;
+            this.state = useState({ visible: true });
+            onError((error) => {
+                errors.push(error);
+                log.logic("initial load error boundary", { error });
+                this.state.visible = false;
+            });
+        }
+    }
+    const mounted = mountWithCleanup(Parent);
+    await animationFrame();
+    expect(requests).toEqual([0]);
+    record.data.key = 1;
+    await animationFrame();
+    expect(requests).toEqual([0, 1]);
+    current.reject(new Error("replacement initial lookup failed"));
+    await animationFrame();
+    old.resolve("obsolete");
+    await mounted;
+    expect(errors).toHaveLength(1);
+    expect(".load-error").toHaveText("Failed to load");
 });

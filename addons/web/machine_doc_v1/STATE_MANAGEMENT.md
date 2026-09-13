@@ -598,6 +598,12 @@ cache. Disk-cache refreshes notify only current subscribers, and changing inputs
 or destroying a widget removes its subscriptions. Debug namespace:
 `web.field.special_data` (`load`, `superseded`, `ready`, `failed`).
 
+Superseding a load releases its waiter without aborting shared RPC work. Initial
+mounting waits for current data, not an obsolete request; errors from current
+initial loads remain owned by Owl's error boundary. Replacing a load or destroying
+the widget disposes its record observations, including dependencies read after
+an obsolete asynchronous loader resumes.
+
 `update: "always"` consumers ask the cache to revalidate against the server on
 every read; the cache calls back with `(value, hasChanged)`.
 

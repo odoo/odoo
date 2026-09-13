@@ -12,6 +12,7 @@ import {
 } from "@odoo/owl";
 import { makeLogger } from "@web/core/debug/debug_logger";
 import { deepEqual } from "@web/core/utils/collections/objects";
+import { KeepLast } from "@web/core/utils/concurrency";
 import { useService } from "@web/core/utils/hooks";
 
 const log = makeLogger("web.field.special_data");
@@ -20,6 +21,27 @@ const log = makeLogger("web.field.special_data");
 
 /** @type {WeakMap<Map<string, Promise<any>>, Map<string, Set<() => void>>>} */
 const staleReloadSubscribers = new WeakMap();
+
+/** An observed control key lets disposal clear Owl's subscriptions as well. */
+function observeRecord(record, notify) {
+    let active = true;
+    const callback = () => {
+        if (active) {
+            notify();
+        }
+    };
+    const control = reactive({ version: 0 }, callback);
+    void control.version;
+    return {
+        record: reactive(record, callback),
+        dispose() {
+            active = false;
+            // Reading then changing this key clears every subscription belonging
+            // to callback, including reads made by an obsolete async loader.
+            control.version++;
+        },
+    };
+}
 
 /**
  * @param {Map<string, Promise<any>>} specialDataCaches
@@ -123,6 +145,8 @@ export function useSpecialData(loadFn) {
     let currentProps = component.props;
     let reloadQueued = false;
     let currentLoad;
+    const keepLast = new KeepLast({ rejectSuperseded: true });
+    let observation;
     const subscriptions = cacheSubscriptions(specialDataCaches, scheduleReload);
     function requestLoad(props) {
         return (currentLoad = load(props));
@@ -134,18 +158,23 @@ export function useSpecialData(loadFn) {
         // Invalidate immediately, before an older response can settle. Batch the
         // reads so one record update does not load once per changed dependency.
         ++loadTicket;
+        keepLast.cancel();
         result.isReady = false;
         reloadQueued = true;
         Promise.resolve().then(() => {
             reloadQueued = false;
             if (!destroyed) {
-                return requestLoad(currentProps);
+                // The initial mount observes currentLoad itself. Do not create
+                // a second rejecting promise outside Owl's error boundary.
+                void requestLoad(currentProps);
             }
         });
     }
     onWillDestroy(() => {
         destroyed = true;
         ++loadTicket;
+        keepLast.cancel();
+        observation?.dispose();
         subscriptions.clear();
     });
 
@@ -154,11 +183,16 @@ export function useSpecialData(loadFn) {
     async function load(nextProps) {
         currentProps = nextProps;
         const ticket = ++loadTicket;
+        keepLast.cancel();
+        observation?.dispose();
         subscriptions.clear();
         result.isReady = false;
         const props = { ...nextProps };
+        const currentObservation =
+            props.record && observeRecord(props.record, scheduleReload);
+        observation = currentObservation;
         if (props.record) {
-            props.record = reactive(props.record, scheduleReload);
+            props.record = currentObservation.record;
         }
         const ormWithCache = Object.create(orm);
         ormWithCache.call = (/** @type {Parameters<typeof orm.call>} */ ...args) => {
@@ -170,7 +204,15 @@ export function useSpecialData(loadFn) {
         };
         log.pipeline("load", { ticket, field: props.name });
         try {
-            const data = await loadFn(ormWithCache, props);
+            const data = await keepLast.add(
+                Promise.resolve(loadFn(ormWithCache, props)).finally(() => {
+                    if (destroyed || ticket !== loadTicket) {
+                        currentObservation?.dispose();
+                    }
+                }),
+                // RPC promises may be shared by other field instances.
+                { abort: () => {} },
+            );
             if (destroyed || ticket !== loadTicket) {
                 log.pipeline("superseded", { ticket });
                 return;
@@ -181,6 +223,10 @@ export function useSpecialData(loadFn) {
             result.isReady = true;
             log.pipeline("ready", { ticket });
         } catch (error) {
+            if (destroyed || ticket !== loadTicket) {
+                log.pipeline("superseded", { ticket });
+                return;
+            }
             log.pipeline("failed", { ticket });
             throw error;
         }
