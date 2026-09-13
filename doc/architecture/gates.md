@@ -62,8 +62,8 @@ The suites run this way: `base` (less the excluded `TestReportsRendering` and
 `hr_work_entry` with `hr_work_entry_holidays`, `hr_holidays`, the three
 `extract` branches, `test_base_order`, `approval` with `test_approval`,
 `api_ai`, `project_hr`, `exchange`, `date_range`, `account_coa`,
-`test_performance_compare`, `mail`, `test_mail`, `mail_group` and `speech`.
-`rpc`, `mail`, `test_mail`, `mail_group` and `speech` run **with** the HTTP
+`test_performance_compare`, `mail`, `test_mail`, `mail_group` and `mail_speech`.
+`rpc`, `mail`, `test_mail`, `mail_group` and `mail_speech` run **with** the HTTP
 server, because their `HttpCase` classes are the only end-to-end coverage of
 what they test and none is a tour; the rest run `--no-http`.
 
