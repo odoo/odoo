@@ -95,6 +95,8 @@ class AccountAccount(models.Model):
             (journal.default_account_id, journal)
             for journal in journals
             if journal.currency_id != journal.company_id.currency_id
+            # an account without a currency matched nothing in SQL: NULL != x is no row
+            and journal.default_account_id.currency_id
             and journal.default_account_id.currency_id != journal.currency_id
         ]
         if not mismatched:
@@ -118,6 +120,7 @@ class AccountAccount(models.Model):
                 for channel in channels
                 if channel.journal_id.currency_id
                 != channel.journal_id.company_id.currency_id
+                and channel.payment_account_id.currency_id
                 and channel.payment_account_id.currency_id
                 != channel.journal_id.currency_id
             ]
