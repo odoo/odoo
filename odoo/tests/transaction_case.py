@@ -1510,6 +1510,7 @@ class TransactionCase(BaseCase):
     registry_start_invalidated: ClassVar[bool]
     registry_start_sequence: ClassVar[int]
     registry_cache_sequences: ClassVar[dict]
+    _registry_models_touched: ClassVar[set[str] | None]
     _signal_changes_patcher: ClassVar[Any]
     commit_patcher: ClassVar[Any]
     rollback_patcher: ClassVar[Any]
@@ -1524,6 +1525,8 @@ class TransactionCase(BaseCase):
         cls.registry_start_invalidated = cls.registry.registry_invalidated
         cls.registry_start_sequence = cls.registry.registry_sequence
         cls.registry_cache_sequences = dict(cls.registry.cache_sequences)
+        cls.registry.registry_invalidated = False
+        cls._registry_models_touched = set()
         _debug.lifecycle(
             "test.registry.bound",
             cls=cls.__qualname__,
@@ -1534,20 +1537,34 @@ class TransactionCase(BaseCase):
             loaded=cls.registry.loaded,
         )
 
+        def note_touched_models():
+            if cls.registry.registry_invalidated:
+                touched = cls._registry_models_touched
+                now = cls.registry.invalidated_model_names
+                cls._registry_models_touched = (
+                    None if touched is None or now is None else touched | now
+                )
+
         def reset_changes():
             rebuild = (
                 cls.registry_start_sequence != cls.registry.registry_sequence
             ) or cls.registry.registry_invalidated
+            note_touched_models()
+            touched = cls._registry_models_touched
             with _debug.perf(
                 "test.registry.reset_changes",
                 cls=cls.__qualname__,
                 rebuild=rebuild,
+                scope="all" if touched is None else len(touched),
                 sequence=cls.registry.registry_sequence,
                 started_at=cls.registry_start_sequence,
             ):
                 if rebuild:
                     with cls.registry.cursor() as cr:
-                        cls.registry.setup_models(cr)
+                        if touched is None:
+                            cls.registry.setup_models(cr)
+                        else:
+                            cls.registry.setup_models(cr, touched)
                 cls.registry.registry_invalidated = cls.registry_start_invalidated
                 cls.registry.registry_sequence = cls.registry_start_sequence
                 with cls.muted_registry_logger:
@@ -1571,6 +1588,7 @@ class TransactionCase(BaseCase):
                 caches=sorted(cls.registry.cache_invalidated or ()),
             )
             if cls.registry.registry_invalidated:
+                note_touched_models()
                 cls.registry.registry_sequence += 1
             for cache_name in cls.registry.cache_invalidated or ():
                 cls.registry.cache_sequences[cache_name] += 1

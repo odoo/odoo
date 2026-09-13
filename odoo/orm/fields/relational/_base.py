@@ -459,8 +459,22 @@ class _RelationalMulti(_Relational):
         # Reading the field drops inactive corecords under the field's own
         # active_test, which a caller's with_context(active_test=False) cannot
         # lift; a write deriving the new relation from the old must see all of it.
+        env = record.env
+        field_cache = self._get_cache(env)
+        record_id = record.id
+        if (
+            not self.store
+            and record_id not in field_cache
+            and env.is_protected(self, record)
+        ):
+            # the compute assigning this field is running: there is no earlier
+            # value to derive a delta from; the read would answer the empty value
+            # and cache it, and a write that finds nothing changed relies on it
+            self._update_cache(record, ())
+            return ()
         record[self.name]
-        return self._get_cache(record.env)[record.id]
+        # the read may have replaced the cache dict the memo hands out
+        return self._get_cache(env)[record_id]
 
     @override
     def _get_origin_value(self, origin: BaseModel) -> BaseModel:

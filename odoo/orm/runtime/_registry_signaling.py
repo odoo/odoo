@@ -49,9 +49,9 @@ class _RegistryCaches:
             lru.clear()
 
 
-def _get_calling_frame() -> typing.Any:
+def _get_calling_frame(depth: int = 3) -> typing.Any:
     frame = inspect.currentframe()
-    for _ in range(3):
+    for _ in range(depth):
         if frame is None:
             return None
         frame = frame.f_back
@@ -79,6 +79,27 @@ class _RegistrySignalingMixin(_RegistryStubs):
     @registry_invalidated.setter
     def registry_invalidated(self, value: bool) -> None:
         self._invalidation_flags.registry = value
+        # a caller flipping the flag by hand says nothing about which models it
+        # changed, so the scope is the whole registry until the flag is cleared
+        self._invalidation_flags.models = None if value else set()
+        if value and _debug.logic.enabled:
+            _debug.logic(
+                "registry.invalidated_by_hand",
+                caller=format_frame(_get_calling_frame(depth=2)),
+            )
+
+    @property
+    def invalidated_model_names(self) -> set[str] | None:
+        if not self.registry_invalidated:
+            return set()
+        return getattr(self._invalidation_flags, "models", None)
+
+    def _note_invalidated_models(self, model_names: Collection[str] | None) -> None:
+        known = self.invalidated_model_names
+        self._invalidation_flags.registry = True
+        self._invalidation_flags.models = (
+            None if model_names is None or known is None else known | set(model_names)
+        )
 
     @property
     def cache_invalidated(self) -> set[str]:

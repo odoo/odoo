@@ -76,7 +76,7 @@ class _PropertiesMixin(_ModelStubs):
                 if not old_value:
                     continue
 
-                definitions = field._get_properties_definition(record)
+                definitions = field._get_properties_definition(record) or ()
                 all_names = {definition["name"] for definition in definitions}
                 new_values = {
                     name: value

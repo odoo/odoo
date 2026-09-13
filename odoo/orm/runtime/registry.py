@@ -404,6 +404,8 @@ class Registry(
         *,
         skip_if_clean: bool = False,
     ) -> None:
+        if model_names is not None:
+            model_names = list(model_names)
         if (
             skip_if_clean
             and model_names is not None
@@ -438,7 +440,7 @@ class Registry(
             try:
                 reset_cached_properties(self)
                 self.model_graph.clear_caches()
-                self.registry_invalidated = True
+                self._note_invalidated_models(model_names)
 
                 models_field_depends_done: set[type] = set()
 

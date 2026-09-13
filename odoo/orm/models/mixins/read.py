@@ -37,8 +37,9 @@ class ReadMixin(_ModelStubs):
         attributes: Collection[str] | None = None,
     ) -> dict[str, ValuesType]:
         res = {}
+        wanted = set(allfields) if allfields else None
         for fname, field in self._fields.items():
-            if allfields and fname not in allfields:
+            if wanted is not None and fname not in wanted:
                 continue
             if not self._has_field_access(field, "read"):
                 continue

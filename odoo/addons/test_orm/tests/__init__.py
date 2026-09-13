@@ -19,6 +19,7 @@ from . import (
     test_invalidate_pending_write,
     test_json_field_operations,
     test_many2many,
+    test_registry_cleanup_scope,
     test_registry_metadata_ondelete,
     test_many2many_operations,
     test_onchange,
