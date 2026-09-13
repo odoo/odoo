@@ -1,7 +1,6 @@
 import collections
 import contextlib
 import datetime
-import hmac
 import ipaddress
 import logging
 import time
@@ -27,7 +26,7 @@ from odoo.http import DEFAULT_LANG, request
 from odoo.libs.datetime import all_timezones
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.json import dumps as json_dumps
-from odoo.libs.password import _MAX_ROUNDS, CryptContext
+from odoo.libs.password import CryptContext
 from odoo.tools import (
     SQL,
     email_domain_extract,
@@ -38,12 +37,12 @@ from odoo.tools import (
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Generator
+from .res_users_auth import PasswordStore, session_token
 from .res_users_login_cooldown import LoginCooldown
 
 _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
 
-MIN_ROUNDS = 600_000
 
 _DUMMY_PASSWORD_HASH = (
     "$pbkdf2-sha512$600000$7w4wftbyNcmfyucdH94fxA$"
@@ -280,23 +279,12 @@ class ResUsers(models.Model):
         self.check_singleton()
         return self._get_group_ids() if self.id else self.all_group_ids._origin._ids
 
+    def _password_store(self) -> PasswordStore:
+        return PasswordStore(self.env)
+
     @tools.ormcache(cache="stable")
     def _get_crypt_context(self) -> CryptContext:
-        cfg = self.env["ir.config_parameter"].sudo()
-        try:
-            configured = int(cfg.get_param("password.hashing.rounds", 0))
-        except TypeError, ValueError:
-            _logger.warning(
-                "Ignoring non-numeric password.hashing.rounds %r; using %d",
-                cfg.get_param("password.hashing.rounds", 0),
-                MIN_ROUNDS,
-            )
-            configured = 0
-        return CryptContext(
-            ["pbkdf2_sha512", "plaintext"],
-            deprecated=["auto"],
-            pbkdf2_sha512__rounds=min(_MAX_ROUNDS, max(MIN_ROUNDS, configured)),
-        )
+        return self._password_store().crypt_context()
 
     def _check_company_domain(self, companies: Self | str | None) -> Domain:
         if not companies:
@@ -618,9 +606,7 @@ class ResUsers(models.Model):
         if not self:
             return
         self.flush_recordset(["password"])
-        self.env.backend.columns.write(
-            self.sudo(), "password", [(uid, None) for uid in self.ids]
-        )
+        self._password_store().clear(self)
         self.invalidate_recordset(["password"])
         self._invalidate_session_tokens()
 
@@ -630,12 +616,7 @@ class ResUsers(models.Model):
     def _update_encrypted_passwords(self, hashed: list[tuple[int, str]]) -> None:
         if not hashed:
             return
-        ctx = self._get_crypt_context()
-        if any(ctx.identify(pw) == "plaintext" for _uid, pw in hashed):
-            msg = "Refusing to store a plaintext password — encrypt first."
-            raise ValueError(msg)
-
-        self.env.backend.columns.write(self.sudo(), "password", hashed)
+        self._password_store().store(self, hashed)
         self.browse([uid for uid, _pw in hashed]).invalidate_recordset(["password"])
         self._invalidate_session_tokens()
 
@@ -662,12 +643,10 @@ class ResUsers(models.Model):
                     all _check_credentials environments"
                 )
 
-            stored = self.env.backend.columns.read(self.sudo(), "password", [self.id])
-            if self.id not in stored:
+            if self._password_store().stored_hash(self, self.id) is None:
                 raise AccessDenied
-            hashed = stored[self.id] or ""
-            valid, replacement = self._get_crypt_context().match_and_update(
-                credential["password"], hashed
+            valid, replacement = self._password_store().verify(
+                self, self.id, credential["password"]
             )
             _debug.logic(
                 "password_checked",
@@ -1232,13 +1211,7 @@ class ResUsers(models.Model):
     def _hash_session_token(
         self, sid: str, field_values: tuple[tuple[str, Any], ...] | bool
     ) -> str | bool:
-        if not field_values:
-            return False
-        key_tuple = tuple((k, v) for k, v in field_values if v is not None)
-        key = str(key_tuple).encode()
-        data = sid.encode()
-        h = hmac.new(key, data, sha256)
-        return h.hexdigest()
+        return session_token(sid, field_values)
 
     @api.model
     def change_password(self, old_passwd: str, new_passwd: str) -> bool:
