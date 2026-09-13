@@ -614,7 +614,8 @@ class MrpBom(models.Model):
             return True
 
         # Check that every no-variant attribute on the bom line has a matching value.
-        never_attribute_valid = len((no_variant_bom_attribute_values & never_attribute_values).attribute_id) == len(no_variant_bom_attribute_values.attribute_id)
+        never_attribute_values_origin = never_attribute_values._origin
+        never_attribute_valid = len((no_variant_bom_attribute_values & never_attribute_values_origin).attribute_id) == len(no_variant_bom_attribute_values.attribute_id)
 
         # If all the attributes values on the line are accounted for, it should not be skipped.
         return not (other_attribute_valid and never_attribute_valid)
