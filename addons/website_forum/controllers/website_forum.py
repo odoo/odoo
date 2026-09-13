@@ -2,8 +2,6 @@ import json
 import logging
 from urllib.parse import unquote_plus
 
-import lxml
-import requests
 import werkzeug.exceptions
 
 from odoo import _, http, tools
@@ -377,22 +375,6 @@ class WebsiteForum(WebsiteProfile):
             }
         )
         return request.render("website_forum.forum_index_tags", values)
-
-    @http.route(
-        "/forum/get_url_title",
-        type="jsonrpc",
-        auth="user",
-        methods=["POST"],
-        website=True,
-    )
-    def get_url_title(self, **kwargs):
-        try:
-            req = requests.get(kwargs.get("url"), timeout=10)
-            req.raise_for_status()
-            arch = lxml.html.fromstring(req.content)
-            return arch.find(".//title").text
-        except OSError:
-            return False
 
     @http.route(
         [
