@@ -1,5 +1,5 @@
 import { WORKER_STATE } from "@bus/workers/websocket_worker";
-import { reactive } from "@odoo/owl";
+import { reactive, EventBus } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 
@@ -9,6 +9,7 @@ import { registry } from "@web/core/registry";
  */
 export class BusMonitoringService {
     isConnectionLost = false;
+    bus = new EventBus();
 
     constructor(env, services) {
         const reactiveThis = reactive(this);
@@ -45,6 +46,7 @@ export class BusMonitoringService {
             }
             case WORKER_STATE.DISCONNECTED: {
                 if (this.isReconnecting) {
+                    this.bus.trigger("bus:connection_lost");
                     this.isConnectionLost = true;
                     this.isReconnecting = false;
                 }
