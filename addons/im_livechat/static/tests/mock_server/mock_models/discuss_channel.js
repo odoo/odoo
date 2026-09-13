@@ -1,8 +1,15 @@
 import { mailModels } from "@mail/../tests/mail_test_helpers";
 import { Store } from "@mail/../tests/mock_server/store";
+import { compareDatetime } from "@mail/utils/common/misc";
 
-import { fields, getKwArgs, makeKwArgs, serverState } from "@web/../tests/web_test_helpers";
-import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
+import {
+    fields,
+    getKwArgs,
+    makeKwArgs,
+    makeServerError,
+    serverState,
+} from "@web/../tests/web_test_helpers";
+import { deserializeDateTime, serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { ensureArray } from "@web/core/utils/arrays";
 
 const isLivechatChannel = (channel) => channel.channel_type === "livechat";
@@ -73,7 +80,92 @@ export class DiscussChannel extends mailModels.DiscussChannel {
         ];
     }
 
-    _store_livechat_extra_fields(res) {}
+    _store_livechat_extra_fields(res) {
+        if (!this.env.user.group_ids.includes(serverState.groupLivechatId)) {
+            return;
+        }
+        /** @type {import("mock_models").DiscussChannel} */
+        const DiscussChannel = this.env["discuss.channel"];
+        res.many("recent_channel_ids", ["description", "last_interest_dt", "livechat_end_dt"], {
+            predicate: isLivechatChannel,
+            value: (channel) => DiscussChannel._get_recent_channels(channel.id).slice(0, 5),
+        });
+        res.attr(
+            "recent_channels_count",
+            (channel) => DiscussChannel._get_recent_channels(channel.id).length,
+            { predicate: isLivechatChannel }
+        );
+    }
+
+    _get_recent_channels_match(channel, candidateChannel) {
+        /** @type {import("mock_models").LivechatChannelMemberHistory} */
+        const LivechatMemberHistory = this.env["im_livechat.channel.member.history"];
+        const visitorHistories = LivechatMemberHistory.browse(
+            channel.livechat_channel_member_history_ids
+        ).filter((history) => history.livechat_member_type === "visitor");
+        const partnerIds = new Set(visitorHistories.map((history) => history.partner_id));
+        const guestIds = new Set(visitorHistories.map((history) => history.guest_id));
+        const candidateVisitorHistories = LivechatMemberHistory.browse(
+            candidateChannel.livechat_channel_member_history_ids
+        ).filter((history) => history.livechat_member_type === "visitor");
+        return candidateVisitorHistories.some(
+            (history) =>
+                (history.partner_id && partnerIds.has(history.partner_id)) ||
+                (history.guest_id && guestIds.has(history.guest_id))
+        );
+    }
+
+    _get_recent_channels(channel_id) {
+        /** @type {import("mock_models").DiscussChannel} */
+        const DiscussChannel = this.env["discuss.channel"];
+        const [channel] = DiscussChannel.browse(channel_id);
+        if (!isLivechatChannel(channel)) {
+            return DiscussChannel.browse([]);
+        }
+        const recentChannels = DiscussChannel.browse(
+            DiscussChannel.search([
+                ["channel_type", "=", "livechat"],
+                ["id", "!=", channel.id],
+                [
+                    "last_interest_dt",
+                    ">=",
+                    serializeDateTime(luxon.DateTime.now().minus({ days: 7 })),
+                ],
+            ])
+        ).filter((candidateChannel) =>
+            DiscussChannel._get_recent_channels_match(channel, candidateChannel)
+        );
+        return recentChannels.sort(
+            (c1, c2) =>
+                !c2.livechat_end_dt - !c1.livechat_end_dt ||
+                compareDatetime(
+                    c2.last_interest_dt && deserializeDateTime(c2.last_interest_dt),
+                    c1.last_interest_dt && deserializeDateTime(c1.last_interest_dt)
+                ) ||
+                c2.id - c1.id
+        );
+    }
+
+    action_recent_channels(idOrIds) {
+        /** @type {import("mock_models").DiscussChannel} */
+        const DiscussChannel = this.env["discuss.channel"];
+        const channelId = ensureArray(idOrIds)[0]; // ensure_one
+        if (!this.env.user.group_ids.includes(serverState.groupLivechatId)) {
+            throw makeServerError({
+                errorName: "odoo.exceptions.AccessError",
+                message: "Only Live Chat operators can view recent conversations.",
+            });
+        }
+        const recentChannels = DiscussChannel._get_recent_channels(channelId);
+        return {
+            domain: [["id", "in", recentChannels.map((c) => c.id)]],
+            name: "Recent Conversations",
+            res_model: "discuss.channel",
+            target: "current",
+            type: "ir.actions.act_window",
+            views: [[false, "kanban"]],
+        };
+    }
 
     _store_channel_fields(res) {
         super._store_channel_fields(res);

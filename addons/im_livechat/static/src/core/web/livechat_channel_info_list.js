@@ -3,10 +3,12 @@ import { ExpertiseTagsAutocomplete } from "@im_livechat/core/web/expertise_tags_
 
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { prettifyMessageContent } from "@mail/utils/common/format";
+import { compareDatetime } from "@mail/utils/common/misc";
 
-import { Component, useEffect } from "@odoo/owl";
+import { Component, computed, useEffect } from "@odoo/owl";
 
 import { startUrl } from "@web/core/browser/router";
+import { toLocaleDateTimeString } from "@web/core/l10n/dates";
 import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
@@ -19,8 +21,18 @@ export class LivechatChannelInfoList extends Component {
     setup() {
         super.setup();
         this.actionService = useService("action");
+        this.orm = useService("orm");
         this.store = useService("mail.store");
         this.ui = useService("ui");
+        this.recentChannels = computed(() =>
+            [...this.props.thread.channel.recent_channel_ids].sort(
+                (c1, c2) =>
+                    !c2.livechat_end_dt - !c1.livechat_end_dt ||
+                    compareDatetime(c2.last_interest_dt, c1.last_interest_dt) ||
+                    c2.id - c1.id
+            )
+        );
+        this.toLocaleDateTimeString = toLocaleDateTimeString;
         useEffect(() => {
             if (this.props.thread.hasFetchedLivechatSessionData) {
                 return;
@@ -69,5 +81,19 @@ export class LivechatChannelInfoList extends Component {
             return url(`/${startUrl()}/res.partner/${visitorMember.partner_id.id}`);
         }
         return undefined;
+    }
+
+    get hasMoreRecentChannels() {
+        return (
+            this.props.thread.channel.recent_channels_count >
+            this.props.thread.channel.recent_channel_ids.length
+        );
+    }
+
+    async openRecentChannels(ev, isMiddleClick) {
+        const action = await this.orm.call("discuss.channel", "action_recent_channels", [
+            this.props.thread.channel.id,
+        ]);
+        this.actionService.doAction(action, { newWindow: isMiddleClick });
     }
 }
