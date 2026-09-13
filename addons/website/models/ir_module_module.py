@@ -689,20 +689,29 @@ class IrModuleModule(models.Model):
                     dynamic_snippets = [snippet for snippet, *_ in snippets_to_insert]
                     configurator_snippets[page] = list(dict.fromkeys(snippets + dynamic_snippets))
 
-        theme = self.env['website'].get_current_website().theme_id
-        if theme and theme.name == self.name:
+        is_theme = False
+        curr_category = self.category_id
+        theme_category = self.env.ref('base.module_category_theme')
+        while curr_category:
+            if curr_category == theme_category:
+                is_theme = True
+                break
+            curr_category = curr_category.parent_id
+        if is_theme:
             # The theme itself is being installed. Its manifest may add
             # snippets for already installed modules such as `website_sale`.
             addons = manifest.get('configurator_snippets_addons', {})
             add_addons_snippets(addons)
-        elif theme:
+        else:
             # Another module is being installed after the theme was selected.
             # Only include the theme addon snippets targeting this module.
-            theme_manifest = Manifest.for_addon(theme.name)
-            if theme_manifest:
-                theme_addons = theme_manifest.get('configurator_snippets_addons', {})
-                addons = {self.name: theme_addons.get(self.name, {})}
-                add_addons_snippets(addons)
+            addons = {self.name: {}}
+            for website in self.env['website'].search([]):
+                if website.theme_id.name and (theme_manifest := Manifest.for_addon(website.theme_id.name)):
+                    theme_addons = theme_manifest.get('configurator_snippets_addons', {})
+                    for page, snippets in theme_addons.get(self.name, {}).items():
+                        addons[self.name].setdefault(page, []).extend(snippets)
+            add_addons_snippets(addons)
 
         # Generate general configurator snippet templates
         create_values = []
