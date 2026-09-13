@@ -31,10 +31,17 @@ def OR(domains: Iterable) -> list:
     return list(Domain.OR(domains))
 
 
-def _get_visible_display_name(record: models.BaseModel) -> str:
-    if not record._filtered_display_name_access():
-        return ""
-    return record.sudo().display_name
+def _get_display_name_visible_ids(values: Iterable) -> set[int]:
+    first = None
+    ids: dict[int, None] = {}
+    for value in values:
+        if value:
+            first = first if first is not None else value
+            ids.update(dict.fromkeys(value._ids))
+    if first is None:
+        return set()
+    records = first.browse(list(ids)).with_prefetch(first._prefetch_ids)
+    return set(records._filtered_display_name_access()._ids)
 
 
 class Base(models.AbstractModel):
@@ -222,22 +229,26 @@ class Base(models.AbstractModel):
             return formatter_follow_many2one
 
         if field.type == "many2many":
+            visible_ids = _get_display_name_visible_ids(values)
 
             def formatter_many2many(value):
                 if not value:
                     return False, [(field_name, "not any", [])]
                 id_ = value.id
-                return (id_, _get_visible_display_name(value)), [(field_name, "=", id_)]
+                name = value.sudo().display_name if id_ in visible_ids else ""
+                return (id_, name), [(field_name, "=", id_)]
 
             return formatter_many2many
 
         if field.type == "many2one" or field_name == "id":
+            visible_ids = _get_display_name_visible_ids(values)
 
             def formatter_many2one(value):
                 if not value:
                     return False, [(field_name, "=", False)]
                 id_ = value.id
-                return (id_, _get_visible_display_name(value)), [(field_name, "=", id_)]
+                name = value.sudo().display_name if id_ in visible_ids else ""
+                return (id_, name), [(field_name, "=", id_)]
 
             return formatter_many2one
 
