@@ -1080,10 +1080,22 @@ class IrUiView(models.Model):
         return domain
 
     @api.model
-    def _get_filter_xmlid_query(self) -> str:
-        return """SELECT res_id FROM ir_model_data
-                  WHERE res_id = ANY(%(res_ids)s) AND model = 'ir.ui.view' AND module = ANY(%(modules)s)
-               """
+    def _get_loaded_view_ids(
+        self, res_ids: Collection[int], modules: Collection[str]
+    ) -> set[int]:
+        return {
+            data.res_id
+            for data in self.env["ir.model.data"]
+            .sudo()
+            .search_fetch(
+                [
+                    ("model", "=", "ir.ui.view"),
+                    ("res_id", "in", list(res_ids)),
+                    ("module", "in", list(modules)),
+                ],
+                ["res_id"],
+            )
+        }
 
     @api.model
     @tools.ormcache()
@@ -1133,9 +1145,7 @@ class IrUiView(models.Model):
         loaded_modules = list(self.pool.loaded_modules)
         if install_module:
             loaded_modules.append(install_module)
-        query = self._get_filter_xmlid_query()
-        sql = SQL(query, res_ids=list(ids_to_check), modules=loaded_modules)
-        valid_view_ids = {id_ for (id_,) in self.env.execute_query(sql)} | set(
+        valid_view_ids = self._get_loaded_view_ids(ids_to_check, loaded_modules) | set(
             check_view_ids
         )
         if include_loaded_xmlids:
@@ -1336,22 +1346,7 @@ class IrUiView(models.Model):
         else:
             return
 
-        rows = self.env.execute_query(
-            SQL(
-                """
-                WITH RECURSIVE ir_ui_view_ancestry AS (
-                    SELECT id, inherit_id FROM ir_ui_view WHERE id IN %(ids)s
-                UNION
-                    SELECT parent.id, parent.inherit_id
-                    FROM ir_ui_view parent
-                    INNER JOIN ir_ui_view_ancestry child
-                            ON child.inherit_id = parent.id
-                )
-                SELECT id, inherit_id FROM ir_ui_view_ancestry
-                """,
-                ids=tuple(self.ids),
-            )
-        )
+        rows = self.env.backend.ancestors(self, "inherit_id", self.ids)
         if not rows:
             return
         ids, inherit_ids = zip(*rows, strict=True)
@@ -3121,23 +3116,37 @@ class IrUiView(models.Model):
 
     @api.model
     def _has_valid_custom_views(self, model: str) -> bool:
-        rec = self.browse(
-            id_
-            for (id_,) in self.env.execute_query(
-                SQL(
-                    """
-                   SELECT max(v.id)
-                     FROM ir_ui_view v
-                LEFT JOIN ir_model_data md ON (md.model = 'ir.ui.view' AND md.res_id = v.id)
-                    WHERE md.module IN (SELECT name FROM ir_module_module) IS NOT TRUE
-                      AND v.model = %s
-                      AND v.active = true
-                 GROUP BY coalesce(v.inherit_id, v.id)
-                    """,
-                    model,
-                )
-            )
+        # a custom view is one no module ships: no xmlid, or an xmlid whose module
+        # is not a module the database knows
+        views = self.sudo().search_fetch(
+            [("model", "=", model), ("active", "=", True)], ["inherit_id"]
         )
+        module_names = set(
+            self.env["ir.module.module"]
+            .sudo()
+            .search_fetch([], ["name"])
+            .mapped("name")
+        )
+        shipped_ids = {
+            data.res_id
+            for data in self.env["ir.model.data"]
+            .sudo()
+            .search_fetch(
+                [
+                    ("model", "=", "ir.ui.view"),
+                    ("res_id", "in", views.ids),
+                    ("module", "in", list(module_names)),
+                ],
+                ["res_id"],
+            )
+        }
+        latest_by_root: dict[int, int] = {}
+        for view in views:
+            if view.id in shipped_ids:
+                continue
+            root = view.inherit_id.id or view.id
+            latest_by_root[root] = max(latest_by_root.get(root, 0), view.id)
+        rec = self.browse(sorted(latest_by_root.values()))
         _debug.pipeline("custom_views_check", model=model, views=len(rec))
         return rec.with_context({"load_all_views": True})._check_xml()
 
@@ -3160,19 +3169,18 @@ class IrUiView(models.Model):
             return
 
         views = self.browse(
-            id_
-            for (id_,) in self.env.execute_query(
-                SQL(
-                    """
-                    SELECT v.id
-                    FROM ir_ui_view v
-                    JOIN ir_model_data md ON (md.model = 'ir.ui.view' AND md.res_id = v.id)
-                    WHERE md.module = %s AND md.name = ANY(%s) AND md.noupdate
-                    """,
-                    module,
-                    list(names),
-                )
+            self.env["ir.model.data"]
+            .sudo()
+            .search_fetch(
+                [
+                    ("model", "=", "ir.ui.view"),
+                    ("module", "=", module),
+                    ("name", "in", list(names)),
+                    ("noupdate", "=", True),
+                ],
+                ["res_id"],
             )
+            .mapped("res_id")
         )
 
         _debug.pipeline(

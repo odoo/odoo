@@ -9,6 +9,10 @@ from odoo.orm.runtime.backend import InMemoryBackend, StorageBackend
 _ORM_DIR = pathlib.Path(__file__).resolve().parent.parent
 _MIXINS_DIR = _ORM_DIR / "models" / "mixins"
 _DISPATCH_DIRS = (_MIXINS_DIR, _ORM_DIR / "fields", _ORM_DIR / "domain")
+# base's models are port callers too (ir.ui.view walks view ancestry, res.users
+# reads password columns); they also name their file-storage backends `backend`,
+# so only the spelled-out `env.backend.` counts there
+_BASE_MODELS_DIR = _ORM_DIR.parent / "addons" / "base" / "models"
 
 _CAPABILITY_MEMBERS = {
     "supports_column_scan",
@@ -36,6 +40,9 @@ def test_every_protocol_method_has_a_dispatch_site():
         for path in directory.rglob("*.py"):
             text = path.read_text()
             dispatched.update(re.findall(r"\bbackend\.([a-z_0-9]+)\(", text))
+    for path in _BASE_MODELS_DIR.rglob("*.py"):
+        text = path.read_text()
+        dispatched.update(re.findall(r"\benv\.backend\.([a-z_0-9]+)\(", text))
     methods = _protocol_methods()
     missing_dispatch = methods - dispatched
     unknown_dispatch = dispatched - methods - _ATTRIBUTE_MEMBERS

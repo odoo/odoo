@@ -344,27 +344,24 @@ class IrUiView(models.Model):
         return views._filtered_most_specific().filtered("active")
 
     @api.model
-    def _get_filter_xmlid_query(self):
+    def _get_loaded_view_ids(self, res_ids, modules):
+        loaded = super()._get_loaded_view_ids(res_ids, modules)
         if not self.env.context.get("website_id"):
-            return super()._get_filter_xmlid_query()
-        else:
-            return """SELECT res_id
-                    FROM   ir_model_data
-                    WHERE  res_id = ANY(%(res_ids)s)
-                        AND model = 'ir.ui.view'
-                        AND module = ANY(%(modules)s)
-                    UNION
-                    SELECT sview.id
-                    FROM   ir_ui_view sview
-                        INNER JOIN ir_ui_view oview USING (key)
-                        INNER JOIN ir_model_data d
-                                ON oview.id = d.res_id
-                                    AND d.model = 'ir.ui.view'
-                                    AND d.module = ANY(%(modules)s)
-                    WHERE  sview.id = ANY(%(res_ids)s)
-                        AND sview.website_id IS NOT NULL
-                        AND oview.website_id IS NULL;
-                    """
+            return loaded
+        views = self.with_context(active_test=False)
+        specific = views.search(
+            [("id", "in", list(res_ids)), ("website_id", "!=", False)]
+        )
+        if not specific:
+            return loaded
+        generic = views.search(
+            [("key", "in", specific.mapped("key")), ("website_id", "=", False)]
+        )
+        loaded_generic = super(IrUiView, views)._get_loaded_view_ids(
+            generic.ids, modules
+        )
+        loaded_keys = {view.key for view in generic if view.id in loaded_generic}
+        return loaded | {view.id for view in specific if view.key in loaded_keys}
 
     @api.model
     def _get_field_names_in_cached_template(self):

@@ -422,6 +422,10 @@ class StorageBackend(typing.Protocol):
         same_columns: typing.Sequence[str] = (),
     ) -> Query: ...
 
+    def ancestors(
+        self, model: BaseModel, parent_field: str, ids: typing.Collection[int]
+    ) -> list[tuple[int, int | None]]: ...
+
     def read_group_rows(
         self,
         model: BaseModel,
@@ -895,6 +899,29 @@ class PostgresBackend:
         query = Query(model.env, model._table, model._table_sql)
         query.set_result_ids(model._ids, ordered)
         return query
+
+    def ancestors(
+        self, model: BaseModel, parent_field: str, ids: typing.Collection[int]
+    ) -> list[tuple[int, int | None]]:
+        if not ids:
+            return []
+        return model.env.execute_query(
+            SQL(
+                """
+                WITH RECURSIVE ancestry AS (
+                    SELECT id, %(parent)s AS parent_id FROM %(table)s WHERE id IN %(ids)s
+                UNION
+                    SELECT parent.id, parent.%(parent)s
+                    FROM %(table)s parent
+                    INNER JOIN ancestry child ON child.parent_id = parent.id
+                )
+                SELECT id, parent_id FROM ancestry
+                """,
+                table=SQL.identifier(model._table),
+                parent=SQL.identifier(parent_field),
+                ids=tuple(ids),
+            )
+        )
 
     def descendants(
         self,
@@ -1685,6 +1712,26 @@ class InMemoryBackend:
         query = Query(model.env, model._table, model._table_sql)
         query._ids = tuple(model._ids)
         return query
+
+    def ancestors(
+        self, model: BaseModel, parent_field: str, ids: typing.Collection[int]
+    ) -> list[tuple[int, int | None]]:
+        rows: dict[int, int | None] = {}
+        frontier = list(ids)
+        while frontier:
+            next_frontier = []
+            for id_ in frontier:
+                if id_ in rows:
+                    continue
+                row = self.storage.get_row(model._table, id_)
+                if row is None:
+                    continue
+                parent_id = row.get(parent_field) or None
+                rows[id_] = parent_id
+                if parent_id and parent_id not in rows:
+                    next_frontier.append(parent_id)
+            frontier = next_frontier
+        return list(rows.items())
 
     def descendants(
         self,
