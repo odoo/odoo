@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="discuss.WarningTooltip">
+        <div class="p-2 d-flex flex-row gap-1" style="max-width: 300px;" t-att-id="this.id()">
+            <div class="m-1 o-discuss-Tooltip">
+                <div>
+                    <i t-if="this.iconClass()" t-att-class="this.iconClass()" t-att-data-icon="this.icon()"/>
+                    <span t-if="this.headerText()" t-out="this.headerText()"/>
+                </div>
+                <div t-if="this.bodyText()" t-out="this.bodyText()"/>
+            </div>
+            <div class="align-self-start cursor-pointer" t-on-click="this.onClickClose" title="Dismiss warning">
+                <i class="oi" data-icon="close"/>
+            </div>
+        </div>
+    </t>
+</templates>

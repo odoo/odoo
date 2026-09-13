@@ -1,19 +1,19 @@
-import { Component, computed, signal, toRaw, types, useProps } from "@odoo/owl";
+import { Component, computed, signal, toRaw, types, useEffect, useProps } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { useCallActions } from "@mail/discuss/call/common/call_actions";
 import { usePopover } from "@web/core/popover/popover_hook";
-import { Tooltip } from "@web/core/tooltip/tooltip";
 import { ActionList } from "@mail/core/common/action_list";
 import { ACTION_TAGS } from "@mail/core/common/action";
+import { CallTooltip } from "@mail/discuss/call/common/call_tooltip";
 import { attClassObjectToString } from "@mail/utils/common/format";
-import { CALL_PROMOTE_FULLSCREEN } from "@mail/discuss/call/common/discuss_channel_model_patch";
 
 export class CallActionList extends Component {
     static components = { ActionList };
     static template = "discuss.CallActionList";
 
+    callLayoutMoreAction = signal(null);
     more = signal(null);
     root = signal.ref();
 
@@ -29,7 +29,9 @@ export class CallActionList extends Component {
         this.rtc = useService("discuss.rtc");
         this.pipService = useService("discuss.pip_service");
         this.callActions = useCallActions(this.callActionsParams);
-        this.popover = usePopover(Tooltip, {
+        this.popover = usePopover(CallTooltip, {
+            closeOnClickAway: false,
+            closeOnEscape: false,
             position: "top-middle",
         });
         this.actions = computed(() => {
@@ -78,40 +80,54 @@ export class CallActionList extends Component {
                 a.tags.includes(ACTION_TAGS.CALL_LAYOUT)
             );
             if (layoutActions.length) {
-                const layoutGroup = [
-                    this.callActions.more(
-                        this.callActionsParams,
-                        {
-                            actions: [layoutActions],
-                            // Pulse the toggle to nudge fullscreen, as the Fullscreen action that
-                            // used to carry the pulse now lives inside this menu.
-                            btnClass: ({ channel }) =>
-                                attClassObjectToString({
-                                    "o-discuss-CallActionList-pulse": Boolean(
-                                        channel?.promoteFullscreen ===
-                                            CALL_PROMOTE_FULLSCREEN.ACTIVE
-                                    ),
-                                }),
-                            dropdownMenuClass: attClassObjectToString({
-                                "o-discuss-CallActionList-callLayout m-0 mb-1 overflow-x-hidden": true,
-                                "o-discuss-CallActionList-menu o-inMeetingView": Boolean(
-                                    this.env.inMeetingView
-                                ),
-                            }),
-                            dropdownPosition: "top-end",
-                            id: "call-layout",
-                            name: this.MORE,
-                        },
-                        "call-layout"
-                    ),
-                ];
+                const moreAction = this.callActions.more(
+                    this.callActionsParams,
+                    {
+                        actions: [layoutActions],
+                        dropdownMenuClass: attClassObjectToString({
+                            "o-discuss-CallActionList-callLayout m-0 mb-1 overflow-x-hidden": true,
+                            "o-discuss-CallActionList-menu o-inMeetingView": Boolean(
+                                this.env.inMeetingView
+                            ),
+                        }),
+                        dropdownPosition: "top-end",
+                        id: "call-layout",
+                        name: this.MORE,
+                    },
+                    "call-layout"
+                );
+                this.callLayoutMoreAction.set(moreAction);
+                const layoutGroup = [moreAction];
                 group2.splice(
                     disconnectGroupIndex === -1 ? group2.length : disconnectGroupIndex,
                     0,
                     layoutGroup
                 );
+            } else {
+                this.callLayoutMoreAction.set(null);
             }
             return [...group2, other];
+        });
+        useEffect(() => {
+            this.actions();
+            const moreAction = this.callLayoutMoreAction();
+            const referenceEl = moreAction?.actionRef();
+            const showHint = this.rtc.showFullscreenHint;
+            if (moreAction && !this.popover.isOpen && referenceEl && showHint) {
+                this.popover.open(referenceEl, {
+                    id: "fullscreen_hint",
+                    icon: "info",
+                    iconClass: "oi fs-5 text-info me-2",
+                    headerText: "Switch to fullscreen mode",
+                    onDismiss: () => {
+                        if (this.rtc.showFullscreenHint) {
+                            this.rtc.isFullscreenHintDismissed = true;
+                        }
+                    },
+                });
+            } else {
+                this.popover.close();
+            }
         });
     }
 
