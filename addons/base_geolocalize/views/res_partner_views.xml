@@ -7,6 +7,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//page[@name='internal_notes']" position="before">
                     <page string="Partner Assignment" name="geo_location">
+                        <field name="geo_localization_failed" invisible="1"/>
                         <group string="Geolocation">
                             <group>
                                 <field name="partner_latitude" />
