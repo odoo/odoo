@@ -61,6 +61,40 @@ class ReportPosOrder(models.Model):
                 LEFT JOIN pos_category_product_template_rel pcpt ON (pt.id = pcpt.product_template_id)
                 LEFT JOIN pos_category pc ON (pcpt.pos_category_id = pc.id)
                 GROUP BY pt.id
+            ),
+            order_tax_summary AS (
+                SELECT
+                    pol.order_id,
+                    rel.account_tax_id AS tax_id,
+                    MAX(pol.id) AS taxed_line_id,
+                    SUM(pol.price_subtotal) AS base_total,
+                    SUM(pol.price_subtotal_incl - pol.price_subtotal) AS line_tax_total,
+                    SUM(pol.qty) AS qty_total,
+                    at.amount_type AS amount_type,
+                    at.amount AS amount,
+                    cur.decimal_places AS currency_decimals
+                FROM pos_order_line pol
+                INNER JOIN account_tax_pos_order_line_rel rel ON (rel.pos_order_line_id = pol.id)
+                INNER JOIN account_tax at ON (at.id = rel.account_tax_id)
+                INNER JOIN pos_order po ON (po.id = pol.order_id)
+                INNER JOIN pos_config pc ON (pc.id = po.config_id)
+                INNER JOIN res_currency cur ON (cur.id = pc.currency_id)
+                GROUP BY pol.order_id, rel.account_tax_id, at.amount_type, at.amount, cur.decimal_places
+            ),
+            order_line_deltas AS (
+                SELECT
+                    order_id,
+                    taxed_line_id AS line_id,
+                    SUM(
+                        CASE
+                            WHEN amount_type = 'percent' THEN ROUND(base_total * amount / 100.0, currency_decimals)
+                            WHEN amount_type = 'fixed' THEN ROUND(qty_total * amount, currency_decimals)
+                            WHEN amount_type = 'division' THEN ROUND(base_total * amount / (100.0 - amount), currency_decimals)
+                            ELSE 0.0
+                        END - line_tax_total
+                    ) AS line_delta
+                FROM order_tax_summary
+                GROUP BY order_id, taxed_line_id
             )
             SELECT
                 l.id AS id,
@@ -69,7 +103,7 @@ class ReportPosOrder(models.Model):
                 ROUND((SIGN(l.qty) * SIGN(l.price_unit) * ABS(l.price_subtotal)) / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END, cu.decimal_places) AS price_subtotal_excl,
                 l.qty AS product_qty,
                 l.qty * l.price_unit / COALESCE(NULLIF(s.currency_rate, 0), 1.0) AS price_sub_total,
-                ROUND((SIGN(l.qty) * SIGN(l.price_unit) * ABS(l.price_subtotal_incl)) / COALESCE(NULLIF(s.currency_rate, 0), 1.0), cu.decimal_places) AS price_total,
+                ROUND((SIGN(l.qty) * SIGN(l.price_unit) * ABS(l.price_subtotal_incl + COALESCE(old.line_delta, 0.0))) / COALESCE(NULLIF(s.currency_rate, 0), 1.0), cu.decimal_places) AS price_total,
                 (l.qty * l.price_unit) * (l.discount / 100) / COALESCE(NULLIF(s.currency_rate, 0), 1.0) AS total_discount,
                 CASE
                     WHEN l.qty * u.factor = 0 THEN NULL
@@ -108,6 +142,7 @@ class ReportPosOrder(models.Model):
                 LEFT JOIN payment_method_by_order_line pm ON (pm.pos_order_line_id=l.id)
                 LEFT JOIN pos_payment_method ppm ON (pm.payment_method_id=ppm.id)
                 LEFT JOIN first_pos_category fpc ON (pt.id = fpc.product_template_id)
+                LEFT JOIN order_line_deltas old ON (old.order_id = s.id AND old.line_id = l.id)
         """
 
     def _group_by(self):
