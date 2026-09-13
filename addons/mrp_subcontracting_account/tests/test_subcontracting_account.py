@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import timedelta
+
 from odoo import Command, fields
 from odoo.tests import Form, tagged
 from odoo.tools.float_utils import float_round, float_compare
@@ -77,6 +79,34 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon, TestStockValua
         scrap.do_scrap()
 
         self.assertEqual(self.finished.total_value, 0)
+
+    def test_subcontracting_backdated_receipt_past_valuation(self):
+        """
+        Ensure that backdated a subcontracting receipt also updates the
+        stock inventory valuation for these corresponding products
+
+        Backdating of 2 days the receipt, should imply a non-zero value
+        if we check stock inventory valuation for yesterday
+        """
+        today = fields.Datetime.now()
+        (self.comp1 | self.comp2 | self.finished).categ_id = self.category_avco_auto
+        # At creation, a product.value with value=0 at datetime.min is created, which
+        # would pollute this test.
+        self.env['product.value'].sudo().search([
+            ('product_id', 'in', (self.comp1 | self.comp2).ids), ('move_id', '=', False),
+        ]).unlink()
+
+        move = self._make_in_move(
+            self.finished, 1, unit_cost=100,
+            create_picking=True,
+            partner_id=self.subcontractor_partner1.id,
+        )
+        move.picking_id.write({'date_done': today - timedelta(days=2)})
+
+        at_between = today - timedelta(days=1)
+        self.assertEqual(self.finished.with_context(to_date=at_between).total_value, 130)
+        self.assertEqual(self.comp1.with_context(to_date=at_between).total_value, -10)
+        self.assertEqual(self.comp2.with_context(to_date=at_between).total_value, -20)
 
     def test_subcontracting_account_backorder(self):
         """ This test uses tracked (serial and lot) component and tracked (serial) finished product
