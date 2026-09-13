@@ -13,6 +13,7 @@ import {
 import { DateTimePicker } from "@web/components/datetime/datetime_picker";
 import { DateTimePickerPopover } from "@web/components/datetime/datetime_picker_popover";
 import { makeLogger } from "@web/core/debug/debug_logger";
+import { reportUncaught } from "@web/core/errors/error_utils";
 import {
     areDatesEqual,
     ConversionError,
@@ -116,6 +117,8 @@ export class DateTimePickerController {
         /** @type {(() => void) | null} */
         this.disableListeners = null;
         this.lastAppliedStringValue = "";
+        /** @type {Promise<any> | null} */
+        this.pendingApply = null;
         /** @type {(() => void) | null} */
         this.restoreTargetMargin = null;
         this.shouldFocus = false;
@@ -164,7 +167,11 @@ export class DateTimePickerController {
         };
         this.pickerProps = reactive(rawPickerProps, () => this.onPickerPropsUpdated());
         this.popover = this.createPopover(/** @type {any} */ (DateTimePickerPopover), {
-            onClose: () => this.onPopoverClose(),
+            onClose: () => {
+                // Dismiss the calendar while onchange runs. Field flushing awaits
+                // the same save through commitInputs, independently of the overlay.
+                this.onPopoverClose().catch(reportUncaught);
+            },
         });
 
         /** @type {DateTimePickerHandle} */
@@ -213,9 +220,12 @@ export class DateTimePickerController {
         }
         const { value } = this.pickerProps;
         const stringValue = JSON.stringify(value);
+        if (stringValue === this.lastAppliedStringValue && this.pendingApply) {
+            return this.pendingApply;
+        }
         if (
             stringValue === this.lastAppliedStringValue ||
-            stringValue === this.stringProps.value
+            (!this.pendingApply && stringValue === this.stringProps.value)
         ) {
             log.logic("apply skipped", () => ({ value: stringValue }));
             return;
@@ -225,9 +235,26 @@ export class DateTimePickerController {
         this.lastAppliedStringValue = stringValue;
         this.inputsChanged = ensureArray(value).map(() => false);
 
-        await this.params.onApply?.(value);
-
-        this.stringProps.value = stringValue;
+        let pending = null;
+        this.pendingApply = null;
+        try {
+            pending = Promise.resolve(this.params.onApply?.(value));
+            this.pendingApply = pending;
+            await pending;
+            if (this.pendingApply === pending) {
+                this.stringProps.value = stringValue;
+            }
+        } catch (error) {
+            if (this.pendingApply === pending) {
+                this.lastAppliedStringValue = "";
+            }
+            log.logic("apply failed");
+            throw error;
+        } finally {
+            if (this.pendingApply === pending) {
+                this.pendingApply = null;
+            }
+        }
     };
 
     commitInputs = async () => {

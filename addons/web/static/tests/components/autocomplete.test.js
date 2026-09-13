@@ -1787,3 +1787,44 @@ test("typing does not render the component until the debounced search opens the 
         message: "the debounced search renders once, with the loaded options",
     });
 });
+
+for (const outcome of ["resolve", "reject"]) {
+    test(`destroying autocomplete completes a pending open before its source can ${outcome}`, async () => {
+        const loaded = new Deferred();
+        const autocomplete = await mountWithCleanup(AutoComplete, {
+            props: { sources: [{ options: () => loaded }] },
+        });
+        patchWithCleanup(autocomplete, {
+            reportSourceError: () => expect.step("late error"),
+        });
+        let finished = false;
+        autocomplete.open().then(() => {
+            finished = true;
+        });
+        autocomplete.__owl__.app.destroy();
+        await animationFrame();
+        expect(finished).toBe(true);
+        if (outcome === "resolve") {
+            loaded.resolve([{ label: "Late option" }]);
+        } else {
+            loaded.reject(new Error("late source failure"));
+        }
+        await animationFrame();
+        expect.verifySteps([]);
+    });
+}
+
+test("waiting for current options does not focus an input destroyed during the wait", async () => {
+    const autocomplete = await mountWithCleanup(AutoComplete, {
+        props: { sources: [] },
+    });
+    const loaded = new Deferred();
+    autocomplete._loadedRequest = "old";
+    autocomplete.inputRef.el.value = "new";
+    autocomplete.loadingPromise = loaded;
+    const clicked = autocomplete.onOptionClick({});
+    autocomplete.__owl__.app.destroy();
+    loaded.resolve();
+    await clicked;
+    expect(autocomplete.inputRef.el).toBe(null);
+});

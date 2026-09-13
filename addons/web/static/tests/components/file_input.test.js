@@ -26,7 +26,7 @@ async function createFileInput({ mockPost, mockAdd, props }) {
     mockService("http", {
         post: mockPost || (() => {}),
     });
-    await mountWithCleanup(FileInput, { props });
+    return mountWithCleanup(FileInput, { props });
 }
 
 beforeEach(() => {
@@ -253,4 +253,62 @@ test("onUpload receives the files that were uploaded, not the ones that were pic
     await contains(".o_file_input input", { visible: false }).click();
     await setInputFiles([new File(["big"], "photo.png", { type: "image/png" })]);
     expect.verifySteps(["posted", "uploaded"]);
+});
+
+for (const reject of [false, true]) {
+    test(`upload remains busy until its ${reject ? "rejected" : "successful"} consumer finishes`, async () => {
+        const linking = new Deferred();
+        // A detached callback rejection must not hide the completion assertion.
+        linking.catch(() => {});
+        const input = await createFileInput({
+            mockPost: () => "[]",
+            props: { onUpload: () => linking },
+        });
+        let outcome = "pending";
+        const upload = input.onFileInputChange().then(
+            () => {
+                outcome = "resolved";
+            },
+            () => {
+                outcome = "rejected";
+            },
+        );
+        await animationFrame();
+        expect(outcome).toBe("pending");
+        expect(".o_file_input input").not.toBeEnabled();
+        if (reject) {
+            linking.reject(new Error("linking failed"));
+        } else {
+            linking.resolve();
+        }
+        await upload;
+        await animationFrame();
+        expect(outcome).toBe(reject ? "rejected" : "resolved");
+        expect(".o_file_input input").toBeEnabled();
+    });
+}
+
+test("a second change cannot post the same selection while upload is pending", async () => {
+    const pending = new Deferred();
+    const file = new File(["test"], "attachment.txt", { type: "text/plain" });
+    const input = await createFileInput({
+        mockPost: async (_route, params) => {
+            expect(params.ufile).toEqual([file]);
+            expect.step("post");
+            await pending;
+            return "[]";
+        },
+        props: { onUpload: () => expect.step("uploaded") },
+    });
+    const selection = new DataTransfer();
+    selection.items.add(file);
+    input.fileInputRef.el.files = selection.files;
+    const first = input.onFileInputChange();
+    const second = input.onFileInputChange();
+    await animationFrame();
+    expect.verifySteps(["post"]);
+    pending.resolve();
+    await Promise.all([first, second]);
+    expect.verifySteps(["uploaded"]);
+    expect(input.state.isDisable).toBe(false);
 });

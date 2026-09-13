@@ -1,25 +1,24 @@
 // @ts-check
 /** @odoo-module native */
 
-import { Component, useState } from "@odoo/owl";
+import { Component, status, useState } from "@odoo/owl";
+import { makeLogger } from "@web/core/debug/debug_logger";
 import { useService } from "@web/core/utils/hooks";
-import { useConfirmButton } from "@web/ui/dialog/confirm_button_hook";
 import { Dialog } from "@web/ui/dialog/dialog";
+
+const log = makeLogger("web.components.editor_dialog");
 
 export class EditorDialog extends Component {
     static components = { Dialog };
 
-    /** @type {(disabled: boolean) => void} */
-    setConfirmDisabled;
     /** @type {import("services").ServiceFactories["notification"]} */
     notification;
-    /** @type {{ value: any }} */
+    /** @type {{ value: any, confirming: boolean }} */
     state;
 
     setup() {
         this.notification = useService("notification");
-        this.state = useState({ value: this.initialValue });
-        this.setConfirmDisabled = useConfirmButton();
+        this.state = useState({ value: this.initialValue, confirming: false });
     }
 
     /** @returns {any} */
@@ -43,19 +42,29 @@ export class EditorDialog extends Component {
     }
 
     async onConfirm() {
-        this.setConfirmDisabled(true);
-        let valid;
-        try {
-            valid = await this.isValueValid();
-        } finally {
-            this.setConfirmDisabled(false);
-        }
-        if (!valid) {
-            this.notification.add(this.invalidMessage, { type: "danger" });
+        if (this.state.confirming) {
             return;
         }
-        this.props.onConfirm(this.state.value);
-        this.props.close();
+        const value = this.state.value;
+        this.state.confirming = true;
+        try {
+            const valid = await this.isValueValid();
+            if (status(this) === "destroyed" || value !== this.state.value) {
+                log.logic("validation discarded");
+                return;
+            }
+            if (!valid) {
+                this.notification.add(this.invalidMessage, { type: "danger" });
+                return;
+            }
+            log.logic("confirmation started");
+            await this.props.onConfirm(value);
+            if (status(this) !== "destroyed" && value === this.state.value) {
+                this.props.close();
+            }
+        } finally {
+            this.state.confirming = false;
+        }
     }
 
     onDiscard() {

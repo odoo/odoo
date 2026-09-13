@@ -7,6 +7,7 @@ import {
     onWillDestroy,
     onWillRender,
     onWillUpdateProps,
+    status,
     useRef,
     useState,
 } from "@odoo/owl";
@@ -220,7 +221,7 @@ export class AutoComplete extends Component {
             }
             this.externalClose();
         };
-        onWillDestroy(() => this._removeGlobalListeners());
+        onWillDestroy(() => this.close());
     }
 
     setupPresentation() {
@@ -327,6 +328,9 @@ export class AutoComplete extends Component {
      * @param {number} [entryDirection]
      */
     open(useInput = false, entryDirection = 0) {
+        if (status(this) === "destroyed") {
+            return Promise.resolve();
+        }
         log.logic("open", () => ({
             useInput,
             entryDirection,
@@ -460,7 +464,7 @@ export class AutoComplete extends Component {
      * @returns {boolean}
      */
     _isSourceCurrent(source) {
-        return this.sources.some((s) => s.id === source.id);
+        return this.state.open && this.sources.some((s) => s.id === source.id);
     }
 
     /** @returns {any | null} */
@@ -713,11 +717,11 @@ export class AutoComplete extends Component {
             try {
                 await this.loadingPromise;
             } catch {}
-            this.inputRef.el.focus();
+            this.inputRef.el?.focus();
             return;
         }
         this.selectOption(option);
-        this.inputRef.el.focus();
+        this.inputRef.el?.focus();
     }
     onOptionPointerDown(option, ev) {
         if (option.unselectable) {

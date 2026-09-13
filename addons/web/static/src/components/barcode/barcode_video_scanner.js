@@ -220,8 +220,16 @@ export class BarcodeVideoScanner extends Component {
             codes = await this.detector.detect(
                 /** @type {HTMLVideoElement} */ (this.videoPreviewRef.el),
             );
+            if (status(this) === "destroyed") {
+                log.logic("detection discarded", { outcome: "result" });
+                return;
+            }
             this.consecutiveDetectErrors = 0;
         } catch (err) {
+            if (status(this) === "destroyed") {
+                log.logic("detection discarded", { outcome: "error" });
+                return;
+            }
             this.consecutiveDetectErrors++;
             log.logic("detect failed", () => ({
                 consecutive: this.consecutiveDetectErrors,

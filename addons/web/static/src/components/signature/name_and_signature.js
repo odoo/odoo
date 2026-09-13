@@ -1,7 +1,14 @@
 // @ts-check
 /** @odoo-module native */
 
-import { Component, onWillStart, useEffect, useRef, useState } from "@odoo/owl";
+import {
+    Component,
+    onWillDestroy,
+    onWillStart,
+    useEffect,
+    useRef,
+    useState,
+} from "@odoo/owl";
 import { Dropdown } from "@web/components/dropdown/dropdown";
 import { DropdownItem } from "@web/components/dropdown/dropdown_item";
 import { isMobileOS } from "@web/core/browser/feature_detection";
@@ -92,6 +99,7 @@ export class NameAndSignature extends Component {
         this.props.signature.name ??= "";
         this.defaultName = this.props.signature.name;
         this.printImageKeepLast = new KeepLast({ rejectSuperseded: true });
+        onWillDestroy(() => this.printImageKeepLast.cancel());
 
         this.state = useState({
             signMode:
@@ -182,15 +190,15 @@ export class NameAndSignature extends Component {
     }
 
     clear() {
+        this.printImageKeepLast.cancel();
         this.signaturePad.clear();
         this.hasPaintedImage = false;
         this.props.signature.isSignatureEmpty = this.isSignatureEmpty;
     }
 
-    async fromDataURL(...args) {
-        await this.signaturePad.fromDataURL(...args);
-        this.props.signature.isSignatureEmpty = this.isSignatureEmpty;
-        this.props.onSignatureChange(this.state.signMode);
+    /** @param {string} imgSrc */
+    fromDataURL(imgSrc) {
+        return this.printImage(imgSrc);
     }
 
     /** @returns {string} */
@@ -255,8 +263,7 @@ export class NameAndSignature extends Component {
         }
         this.state.loadIsInvalid = false;
 
-        const result = await getDataURLFromFile(file);
-        await this.printImage(result);
+        await this.printImage(getDataURLFromFile(file));
     }
 
     onClickSignDrawClear() {
@@ -288,16 +295,20 @@ export class NameAndSignature extends Component {
         this.drawCurrentName();
     }
 
-    /** @param {string} imgSrc */
+    /** @param {string | Promise<string>} imgSrc */
     async printImage(imgSrc) {
         this.clear();
         const c = this.signaturePad.canvas;
         const img = new Image();
-        img.src = imgSrc;
+        const decode = async () => {
+            img.src = await imgSrc;
+            await img.decode();
+        };
         try {
-            await this.printImageKeepLast.add(img.decode());
+            await this.printImageKeepLast.add(decode());
         } catch (error) {
             if (error instanceof SupersededError) {
+                log.logic("image load discarded");
                 return;
             }
             if (this.state.signMode === "load") {

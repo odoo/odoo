@@ -1,7 +1,7 @@
 // @ts-check
 
 import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame } from "@odoo/hoot-mock";
+import { animationFrame, Deferred } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
 import {
     Country,
@@ -18,6 +18,7 @@ import {
     makeDialogMockEnv,
     mockService,
     mountWithCleanup,
+    patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 import { ExpressionEditorDialog } from "@web/components/expression_editor_dialog/expression_editor_dialog";
 
@@ -87,3 +88,71 @@ test("expr well sent but wrong, so notification when onConfirm", async () => {
     expect(getTreeEditorContent()).toEqual([{ level: 0, value: "all" }]);
     expect.verifySteps(["notification"]);
 });
+
+test("a value edited during validation is not confirmed using the old validation", async () => {
+    const validation = new Deferred();
+    patchWithCleanup(ExpressionEditorDialog.prototype, {
+        isValueValid() {
+            expect.step(`validate:${this.state.value}`);
+            return validation;
+        },
+    });
+    const dialog = await mountWithCleanup(ExpressionEditorDialog, {
+        env: await makeDialogMockEnv(),
+        props: {
+            expression: "1",
+            resModel: "partner",
+            fields: Partner._fields,
+            onConfirm: (value) => expect.step(`confirm:${value}`),
+            close: () => expect.step("close"),
+        },
+    });
+    const confirmation = dialog.onConfirm();
+    dialog.update("2");
+    validation.resolve(true);
+    await confirmation;
+    expect.verifySteps(["validate:1"]);
+    await dialog.onConfirm();
+    expect.verifySteps(["validate:2", "confirm:2", "close"]);
+});
+
+for (const outcome of ["resolve", "reject"]) {
+    test(`confirmation stays pending until its callback can ${outcome}`, async () => {
+        const saved = new Deferred();
+        saved.catch(() => {});
+        let attempts = 0;
+        const dialog = await mountWithCleanup(ExpressionEditorDialog, {
+            env: await makeDialogMockEnv(),
+            props: {
+                expression: "1",
+                resModel: "partner",
+                fields: Partner._fields,
+                onConfirm: () => {
+                    attempts++;
+                    return saved;
+                },
+                close: () => expect.step("close"),
+            },
+        });
+        const result = /** @type {{ failure?: Error }} */ ({});
+        const pending = dialog.onConfirm().catch((error) => {
+            result.failure = error;
+        });
+        await animationFrame();
+        expect(".modal-footer .btn-primary").toHaveAttribute("disabled");
+        await dialog.onConfirm();
+        expect(attempts).toBe(1);
+        expect.verifySteps([]);
+        const error = new Error("save rejected");
+        if (outcome === "reject") {
+            saved.reject(error);
+        } else {
+            saved.resolve();
+        }
+        await pending;
+        await animationFrame();
+        expect(result.failure).toBe(outcome === "reject" ? error : undefined);
+        expect(".modal-footer .btn-primary").not.toHaveAttribute("disabled");
+        expect.verifySteps(outcome === "reject" ? [] : ["close"]);
+    });
+}

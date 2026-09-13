@@ -2,7 +2,7 @@
 
 import { expect, test } from "@odoo/hoot";
 import { queryAllTexts, setInputFiles } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
+import { animationFrame, Deferred } from "@odoo/hoot-mock";
 import {
     contains,
     mountWithCleanup,
@@ -13,6 +13,31 @@ import { NameAndSignature } from "@web/components/signature/name_and_signature";
 
 const TINY_PNG =
     "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+BCQAHBQICJmhD1AAAAABJRU5ErkJggg==";
+
+for (const action of ["clear", "switch mode", "destroy"]) {
+    test(`pending image decoding cannot undo ${action}`, async () => {
+        const component = await mountWithCleanup(NameAndSignature, {
+            props: { signature: { name: "Owner" }, mode: "draw" },
+        });
+        const decoded = new Deferred();
+        patchWithCleanup(HTMLImageElement.prototype, { decode: () => decoded });
+        patchWithCleanup(component.signaturePad.canvas.getContext("2d"), {
+            drawImage: () => expect.step("paint"),
+        });
+        const pending = component.printImage(TINY_PNG);
+        if (action === "clear") {
+            component.clear();
+        } else if (action === "switch mode") {
+            component.setMode("load");
+        } else {
+            component.__owl__.app.destroy();
+        }
+        decoded.resolve();
+        await pending;
+        expect.verifySteps([]);
+        expect(component.props.signature.isSignatureEmpty).toBe(true);
+    });
+}
 
 const getNameAndSignatureButtonNames = () =>
     queryAllTexts(".card-header .col-auto").filter(
@@ -211,4 +236,139 @@ test("loading a file that is not an image says so", async () => {
 
     expect(".o_web_sign_load_invalid").toHaveCount(1);
     expect(".o_web_sign_load_invalid").toBeVisible();
+});
+
+for (const action of ["clear", "switch mode", "destroy"]) {
+    test(`a pending file read cannot undo ${action}`, async () => {
+        const component = await mountWithCleanup(NameAndSignature, {
+            props: { signature: { name: "Owner" }, mode: "draw" },
+        });
+        const captured = /** @type {{ reader?: FileReader }} */ ({});
+        patchWithCleanup(FileReader.prototype, {
+            readAsDataURL() {
+                captured.reader = this;
+            },
+        });
+        patchWithCleanup(HTMLImageElement.prototype, { decode: async () => {} });
+        patchWithCleanup(component.signaturePad.canvas.getContext("2d"), {
+            drawImage: () => expect.step("paint"),
+        });
+        // @ts-expect-error Exercise the private input handler while its file read is pending.
+        const pending = component.onChangeSignLoadInput(
+            /** @type {any} */ ({
+                target: {
+                    files: [
+                        new File(["image"], "signature.png", { type: "image/png" }),
+                    ],
+                    value: "",
+                },
+            }),
+        );
+        if (action === "clear") {
+            component.clear();
+        } else if (action === "switch mode") {
+            component.setMode("load");
+        } else {
+            component.__owl__.app.destroy();
+        }
+        const reader = captured.reader;
+        if (!reader) {
+            throw new Error("The input handler did not start a file read");
+        }
+        Object.defineProperty(reader, "result", { value: TINY_PNG });
+        reader.dispatchEvent(new Event("load"));
+        await pending;
+        expect.verifySteps([]);
+        expect(component.props.signature.isSignatureEmpty).toBe(true);
+    });
+}
+
+test("restoring an image cannot paint after clear", async () => {
+    const component = await mountWithCleanup(NameAndSignature, {
+        props: { signature: { name: "Owner" }, mode: "draw" },
+    });
+    const decoded = new Deferred();
+    const captured =
+        /** @type {{ image?: { width: number, height: number, onload?: () => void } }} */ ({});
+    patchWithCleanup(window, {
+        Image: /** @type {any} */ (
+            class {
+                constructor() {
+                    captured.image = this;
+                }
+                width = 1;
+                height = 1;
+                decode() {
+                    return decoded;
+                }
+            }
+        ),
+    });
+    patchWithCleanup(component.signaturePad.canvas.getContext("2d"), {
+        drawImage: () => expect.step("paint"),
+    });
+    const pending = component.fromDataURL(TINY_PNG);
+    component.clear();
+    const image = captured.image;
+    if (!image) {
+        throw new Error("Restoring the signature did not create an image");
+    }
+    image.onload?.();
+    decoded.resolve();
+    await pending;
+    expect.verifySteps([]);
+    expect(component.props.signature.isSignatureEmpty).toBe(true);
+});
+
+test("restoring a decoded image paints it and exposes a nonempty signature", async () => {
+    const component = await mountWithCleanup(NameAndSignature, {
+        props: { signature: { name: "Owner" }, mode: "draw" },
+    });
+    const source = document.createElement("canvas");
+    source.width = 2;
+    source.height = 1;
+    const sourceContext = source.getContext("2d");
+    sourceContext.fillStyle = "rgb(12, 34, 56)";
+    sourceContext.fillRect(0, 0, 2, 1);
+    await component.fromDataURL(source.toDataURL());
+    const canvas = component.signaturePad.canvas;
+    const pixel = canvas
+        .getContext("2d")
+        .getImageData(canvas.width / 2, canvas.height / 2, 1, 1).data;
+    expect(Array.from(pixel)).toEqual([12, 34, 56, 255]);
+    expect(component.props.signature.isSignatureEmpty).toBe(false);
+    component.clear();
+    expect(component.props.signature.isSignatureEmpty).toBe(true);
+});
+
+test("a newer upload wins even when the older file finishes reading last", async () => {
+    const component = await mountWithCleanup(NameAndSignature, {
+        props: { signature: { name: "Owner" }, mode: "draw" },
+    });
+    const readers = [];
+    patchWithCleanup(FileReader.prototype, {
+        readAsDataURL() {
+            readers.push(this);
+        },
+    });
+    patchWithCleanup(HTMLImageElement.prototype, { decode: async () => {} });
+    patchWithCleanup(component.signaturePad.canvas.getContext("2d"), {
+        drawImage: (image) => expect.step(image.src),
+    });
+    const event = /** @type {any} */ ({
+        target: {
+            files: [new File(["image"], "signature.png", { type: "image/png" })],
+            value: "",
+        },
+    });
+    const onInput = Reflect.get(component, "onChangeSignLoadInput").bind(component);
+    const first = onInput(event);
+    const second = onInput(event);
+    Object.defineProperty(readers[1], "result", { value: TINY_PNG + "#new" });
+    readers[1].dispatchEvent(new Event("load"));
+    await second;
+    Object.defineProperty(readers[0], "result", { value: TINY_PNG + "#old" });
+    readers[0].dispatchEvent(new Event("load"));
+    await first;
+    expect.verifySteps([TINY_PNG + "#new"]);
 });

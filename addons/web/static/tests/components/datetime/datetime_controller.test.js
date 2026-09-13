@@ -1,12 +1,61 @@
 // @ts-check
 
 import { beforeEach, expect, getFixture, test } from "@odoo/hoot";
+import { Deferred } from "@odoo/hoot-mock";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { DateTimePickerController } from "@web/components/datetime/datetime_picker_service";
 import { localization } from "@web/core/l10n/localization";
 import { luxon } from "@web/core/l10n/luxon";
 
 const { DateTime } = luxon;
+
+test("applying the same pending value waits for its save", async () => {
+    const saved = new Deferred();
+    const { controller } = createController({
+        pickerProps: { type: "date", value: DateTime.fromSQL("2023-07-07") },
+        onApply: () => {
+            expect.step("save");
+            return saved;
+        },
+    });
+    const first = controller.apply();
+    let finished = false;
+    const second = controller.apply().then(() => {
+        finished = true;
+    });
+    await Promise.resolve();
+    await Promise.resolve();
+    expect(finished).toBe(false);
+    expect.verifySteps(["save"]);
+    saved.resolve();
+    await Promise.all([first, second]);
+    expect(finished).toBe(true);
+});
+
+test("a failed apply can retry the same value", async () => {
+    let attempts = 0;
+    const failure = new Error("save rejected");
+    const { controller } = createController({
+        pickerProps: { type: "date", value: DateTime.fromSQL("2023-07-07") },
+        onApply: async () => {
+            attempts++;
+            if (attempts === 1) {
+                throw failure;
+            }
+        },
+    });
+    let error;
+    try {
+        await controller.apply();
+    } catch (caught) {
+        error = caught;
+    }
+    expect(error).toBe(failure);
+    await controller.apply();
+    expect(attempts).toBe(2);
+    await controller.apply();
+    expect(attempts).toBe(2);
+});
 
 beforeEach(() => {
     patchWithCleanup(localization, {
@@ -376,4 +425,61 @@ test("unregister only drops the registration, it is not enable's inverse", async
     controller.picker.unregister();
     expect(dateTimePickerList.has(controller.picker)).toBe(false);
     expect(controller.disableListeners).not.toBe(null);
+});
+
+test("reverting to the saved value while another save is pending applies the revert", async () => {
+    const saved = new Deferred();
+    const a = DateTime.fromSQL("2023-07-07");
+    const b = DateTime.fromSQL("2023-08-08");
+    const { controller, getPopover } = createController({
+        pickerProps: { type: "date", value: a },
+        onApply: (value) => {
+            expect.step(value.toISODate());
+            if (value === b) {
+                return saved;
+            }
+        },
+    });
+    getPopover().open(document.body, {});
+    await controller.apply();
+    controller.pickerProps.value = b;
+    const pending = controller.apply();
+    controller.pickerProps.value = a;
+    await controller.apply();
+    expect.verifySteps(["2023-07-07", "2023-08-08", "2023-07-07"]);
+    saved.resolve();
+    await pending;
+    await controller.apply();
+    expect.verifySteps([]);
+});
+
+test("an older failed save does not release the newer pending save", async () => {
+    const firstSaved = new Deferred();
+    const secondSaved = new Deferred();
+    const a = DateTime.fromSQL("2023-07-07");
+    const b = DateTime.fromSQL("2023-08-08");
+    const { controller, getPopover } = createController({
+        pickerProps: { type: "date", value: a },
+        onApply: (value) => {
+            expect.step(value.toISODate());
+            return value === a ? firstSaved : secondSaved;
+        },
+    });
+    getPopover().open(document.body, {});
+    const first = controller.apply().catch(() => {});
+    controller.pickerProps.value = b;
+    const second = controller.apply();
+    firstSaved.reject(new Error("older save failed"));
+    await first;
+    let finished = false;
+    const repeated = controller.apply().then(() => {
+        finished = true;
+    });
+    await Promise.resolve();
+    await Promise.resolve();
+    expect(finished).toBe(false);
+    expect.verifySteps(["2023-07-07", "2023-08-08"]);
+    secondSaved.resolve();
+    await Promise.all([second, repeated]);
+    expect(finished).toBe(true);
 });

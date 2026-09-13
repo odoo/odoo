@@ -2,10 +2,23 @@
 
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { click } from "@odoo/hoot-dom";
+import { Deferred } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
 import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { CopyButton } from "@web/components/copy_button/copy_button";
 import { browser } from "@web/core/browser/browser";
+
+test("a clipboard write finishing after destruction does not open a tooltip", async () => {
+    const write = new Deferred();
+    patchWithCleanup(browser.navigator.clipboard, { writeText: () => write });
+    const button = await mountWithCleanup(CopyButton, { props: { content: "copy" } });
+    const pending = button.onClick();
+    button.__owl__.app.destroy();
+    write.resolve();
+    await pending;
+    expect(button.tooltipCloseTimer).toBe(undefined);
+    expect(".o_popover").toHaveCount(0);
+});
 
 beforeEach(() => {
     patchWithCleanup(browser.navigator.clipboard, {

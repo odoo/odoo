@@ -2,7 +2,10 @@
 /** @odoo-module native */
 
 import { Component, onMounted, useRef, useState } from "@odoo/owl";
+import { makeLogger } from "@web/core/debug/debug_logger";
 import { useFileUploader } from "@web/core/utils/files";
+
+const log = makeLogger("web.components.file_input");
 /**
  * @typedef FileInputProps
  * @property {string} acceptedFileExtensions
@@ -80,21 +83,30 @@ export class FileInput extends Component {
     }
 
     async onFileInputChange() {
+        if (this.state.isDisable) {
+            log.logic("ignore change during upload");
+            return;
+        }
         this.state.isDisable = true;
         const httpParams = this.httpParams;
         try {
             if (this.props.onWillUploadFiles) {
                 httpParams.ufile = await this.props.onWillUploadFiles(httpParams.ufile);
             }
+            log.pipeline("upload prepared", () => ({
+                count: httpParams.ufile?.length ?? 0,
+            }));
             const parsedFileData = await this.uploadFiles(this.props.route, httpParams);
             if (parsedFileData) {
-                this.props.onUpload(parsedFileData, httpParams.ufile ?? []);
+                log.pipeline("upload consumer started");
+                await this.props.onUpload(parsedFileData, httpParams.ufile ?? []);
             }
         } finally {
             if (this.fileInputRef.el) {
                 this.fileInputRef.el.value = "";
             }
             this.state.isDisable = false;
+            log.pipeline("upload finished");
         }
     }
 

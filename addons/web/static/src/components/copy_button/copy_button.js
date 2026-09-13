@@ -33,7 +33,11 @@ export class CopyButton extends Component {
     }
 
     showTooltip() {
-        this.popover.open(/** @type {HTMLElement} */ (this.button.el), {
+        const target = this.button.el;
+        if (!target) {
+            return;
+        }
+        this.popover.open(target, {
             tooltip: this.props.successText,
         });
         browser.clearTimeout(this.tooltipCloseTimer);

@@ -8,6 +8,34 @@ import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpe
 import { BarcodeVideoScanner } from "@web/components/barcode/barcode_video_scanner";
 import { browser } from "@web/core/browser/browser";
 
+for (const outcome of ["result", "error"]) {
+    test(`a pending detection ignores its ${outcome} after destruction`, async () => {
+        const detection = new Deferred();
+        mockSourceCroppingDetector([]);
+        patchWithCleanup(BarcodeVideoScanner.prototype, { startScanning() {} });
+        const scanner = await mountWithCleanup(BarcodeVideoScanner, {
+            props: {
+                facingMode: "environment",
+                delayBetweenScan: 1000,
+                onResult: () => expect.step("result"),
+                onError: () => expect.step("error"),
+            },
+        });
+        scanner.detector.detect = () => detection;
+        scanner.consecutiveDetectErrors = 4;
+        const pending = scanner.detectCode();
+        scanner.__owl__.app.destroy();
+        if (outcome === "result") {
+            detection.resolve([{ rawValue: "late barcode" }]);
+        } else {
+            detection.reject(new Error("late detection failure"));
+        }
+        await pending;
+        expect.verifySteps([]);
+        expect(scanner.detectorTimeout).toBe(null);
+    });
+}
+
 /** @param {number} size */
 function mockCamera(size) {
     patchWithCleanup(browser.navigator, {

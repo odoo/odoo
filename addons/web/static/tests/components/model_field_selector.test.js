@@ -2,7 +2,7 @@
 
 import { expect, getFixture, test } from "@odoo/hoot";
 import { press, queryAllTexts, queryOne } from "@odoo/hoot-dom";
-import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
+import { animationFrame, Deferred, runAllTimers } from "@odoo/hoot-mock";
 import { Component, useState, xml } from "@odoo/owl";
 import {
     clickPrev,
@@ -20,6 +20,7 @@ import {
     models,
     mountWithCleanup,
     onRpc,
+    patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 import { ModelFieldSelector } from "@web/components/model_field_selector/model_field_selector";
 
@@ -1145,5 +1146,26 @@ test("Enter on a search that matches nothing commits nothing", async () => {
     await animationFrame();
     expect(".o_model_field_selector_popover").toHaveCount(1);
     expect(getDisplayedFieldNames()).toEqual([]);
+    expect.verifySteps([]);
+});
+
+test("reopening a field selector supersedes metadata from its previous close", async () => {
+    const selector = await mountWithCleanup(ModelFieldSelector, {
+        props: {
+            resModel: "partner",
+            path: "foo",
+            readonly: false,
+            update: (path) => expect.step(path),
+        },
+    });
+    await openModelFieldSelectorPopover();
+    const metadata = new Deferred();
+    patchWithCleanup(selector.fieldService, { loadFieldInfo: () => metadata });
+    selector.newPath = "bar";
+    const closing = selector.popover.close();
+    selector.openPopover(queryOne(".o_model_field_selector"));
+    metadata.resolve({ resModel: "partner", fieldDef: Partner._fields.bar });
+    await closing;
+    await animationFrame();
     expect.verifySteps([]);
 });
