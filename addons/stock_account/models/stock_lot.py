@@ -1,5 +1,4 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from odoo import _, api, fields, models
 
 
@@ -25,28 +24,50 @@ class StockLot(models.Model):
         company_id = self.env.company
         self.company_currency_id = company_id.currency_id
         at_date = fields.Datetime.to_datetime(self.env.context.get('to_date'))
+        fifo_lot_ids, avco_lot_ids, empty_lot_ids = [], [], []
+        is_valued_qty_cache_local = 'valued_qty_by_move_cache' not in self.env.cr.cache
+        if is_valued_qty_cache_local:
+            self.env.cr.cache['valued_qty_by_move_cache'] = {}
         for lot in self:
-            if not lot.lot_valuated:
-                lot.total_value = 0.0
-                lot.avg_cost = 0.0
-                continue
-            valuated_product = lot.product_id.with_context(at_date=at_date, lot_id=lot.id)
+            valuated_product = lot.product_id
             qty_valued = lot.product_qty
             qty_available = lot.with_context(warehouse_id=False).product_qty
-            if valuated_product.uom_id.is_zero(qty_valued):
-                lot.total_value = 0
-                lot.avg_cost = 0.0
+            if not lot.lot_valuated or valuated_product.uom_id.is_zero(qty_valued):
+                empty_lot_ids.append(lot.id)
             elif valuated_product.cost_method == 'standard' or valuated_product.uom_id.is_zero(qty_available):
                 lot.total_value = lot.standard_price * qty_valued
                 lot.avg_cost = lot.standard_price
             elif valuated_product.cost_method == 'average':
-                avco_result = valuated_product.with_context(warehouse_id=False)._run_avco(at_date=at_date, lot=lot.with_context(warehouse_id=False))
-                lot.total_value = avco_result[1] * qty_valued / qty_available
-                lot.avg_cost = avco_result[0]
-            else:
-                fifo_value = valuated_product.with_context(warehouse_id=False)._run_fifo(qty_available, at_date=at_date, lot=lot.with_context(warehouse_id=False))
-                lot.total_value = fifo_value * qty_valued / qty_available
-                lot.avg_cost = fifo_value / qty_available if qty_available else 0.0
+                avco_lot_ids.append(lot.id)
+            elif valuated_product.cost_method == 'fifo':
+                fifo_lot_ids.append(lot.id)
+
+        self.env['stock.lot'].browse(empty_lot_ids).total_value = 0
+        self.env['stock.lot'].browse(empty_lot_ids).avg_cost = 0.0
+
+        for lot in self.env['stock.lot'].browse(avco_lot_ids):
+            valuated_product = lot.product_id.with_context(at_date=at_date, lot_id=lot.id)
+            qty_valued = lot.product_qty
+            qty_available = lot.with_context(warehouse_id=False).product_qty
+            avco_result = valuated_product.with_context(warehouse_id=False)._run_avco(at_date=at_date, lot=lot.with_context(warehouse_id=False))
+            lot.total_value = avco_result[1] * qty_valued / qty_available
+            lot.avg_cost = avco_result[0]
+
+        fifo_cost_lots = self.env['stock.lot'].browse(fifo_lot_ids)
+        fifo_value_by_lot = self.env['product.product'].with_context(warehouse_id=False)._get_fifo_cost_by_stock_item(fifo_cost_lots.with_context(warehouse_id=False), {lot: lot.product_qty for lot in fifo_cost_lots.with_context(warehouse_id=False)}, at_date)
+
+        for lot in fifo_cost_lots:
+            fifo_value = fifo_value_by_lot[lot]
+            qty_available = lot.with_context(warehouse_id=False).product_qty
+            qty_valued = lot.product_qty
+            lot.total_value = fifo_value * qty_valued / qty_available if qty_available else 0
+            lot.avg_cost = fifo_value / qty_available if qty_available else 0.0
+
+        # Verify cache ownership: The cursor cache might have been initialized
+        # by an upstream caller (e.g., `_compute_value` on `product.product`).
+        # We must confirm this method actually introduced the cache before proceeding.
+        if is_valued_qty_cache_local:
+            self.env.cr.cache.pop('valued_qty_by_move_cache')
 
     # TODO: remove avg cost column in master and merge the two compute methods
     def _compute_avg_cost(self):
