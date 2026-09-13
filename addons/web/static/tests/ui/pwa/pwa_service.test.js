@@ -2,14 +2,17 @@
 
 import { after, describe, expect, getFixture, test } from "@odoo/hoot";
 import { Deferred, microTick } from "@odoo/hoot-mock";
+import { Component, xml } from "@odoo/owl";
 import {
     getService,
     makeMockEnv,
     mockService,
+    mountWithCleanup,
     onRpc,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
+import { useService } from "@web/core/utils/hooks";
 import { pwaService } from "@web/ui/pwa/pwa_service";
 
 describe.current.tags("headless");
@@ -365,4 +368,24 @@ test("declining an app synchronizes its live services without dismissing another
     expect(second.canPromptToInstall).toBe(false);
     expect(otherScope.canPromptToInstall).toBe(true);
     expect(second.isAvailable).toBe(true);
+});
+
+test("destroying PWA through a component's service view removes its subscription", async () => {
+    patchWithCleanup(browser, { BeforeInstallPromptEvent: Event });
+    class Owner extends Component {
+        static template = xml`<div/>`;
+        static props = {};
+        setup() {
+            this.pwa = useService("pwa");
+        }
+    }
+    const owner = await mountWithCleanup(Owner);
+    owner.pwa.destroy();
+    browser.dispatchEvent(
+        Object.assign(new Event("beforeinstallprompt"), {
+            prompt: async () => ({ outcome: "accepted" }),
+        }),
+    );
+    expect(getService("pwa").canPromptToInstall).toBe(false);
+    expect(getService("pwa").isAvailable).toBe(false);
 });

@@ -28,13 +28,13 @@ const log = makeLogger("web.ui.pwa");
 
 /** @type {Event | null} */
 let pendingPrompt = null;
-/** @type {Set<PwaService>} */
-const activeServices = new Set();
+/** @type {Map<symbol, PwaService>} */
+const activeServices = new Map();
 
 browser.addEventListener("beforeinstallprompt", (ev) => {
     pendingPrompt = ev;
     log.lifecycle("prompt received", () => ({ services: activeServices.size }));
-    for (const service of activeServices) {
+    for (const service of activeServices.values()) {
         service._handleBeforeInstallPrompt(ev, service._getInstallationState());
     }
 });
@@ -51,6 +51,7 @@ class PwaService {
      */
     constructor(env, { dialog }) {
         this.env = env;
+        this._registration = Symbol();
         this.dialog = dialog;
         /** @type {any} */
         this._manifest = undefined;
@@ -89,7 +90,7 @@ class PwaService {
         const installationState = this._getInstallationState();
 
         if (this.isSupportedOnBrowser) {
-            activeServices.add(this);
+            activeServices.set(this._registration, this);
             if (pendingPrompt) {
                 this._handleBeforeInstallPrompt(pendingPrompt, installationState);
             }
@@ -190,7 +191,7 @@ class PwaService {
             if (pendingPrompt === prompt) {
                 pendingPrompt = null;
             }
-            for (const service of activeServices) {
+            for (const service of activeServices.values()) {
                 if (service.nativePrompt === prompt) {
                     service.nativePrompt = null;
                     service.canPromptToInstall = false;
@@ -221,7 +222,7 @@ class PwaService {
     decline() {
         this._setInstallationState("dismissed");
         this.canPromptToInstall = false;
-        for (const service of activeServices) {
+        for (const service of activeServices.values()) {
             if (service.startUrl === this.startUrl) {
                 service.canPromptToInstall = false;
             }
@@ -229,7 +230,7 @@ class PwaService {
     }
 
     destroy() {
-        activeServices.delete(this);
+        activeServices.delete(this._registration);
         this.nativePrompt = null;
         this.canPromptToInstall = false;
         this.isAvailable = false;

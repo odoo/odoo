@@ -169,13 +169,18 @@ export class DialogService {
     }
 
     destroy() {
+        const ownedDialogs = this.stack.length > 0;
         this.closeAll().catch(() => {});
         this.stack.length = 0;
         this.nextId = 0;
         this.syncBodyClass();
-        if (!activeServices.size) {
+        if (ownedDialogs && !activeServices.size) {
             scrollOrigin = null;
         }
+        log.lifecycle("destroy", () => ({
+            ownedDialogs,
+            activeServices: activeServices.size,
+        }));
     }
 }
 

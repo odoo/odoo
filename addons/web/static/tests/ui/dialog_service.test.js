@@ -674,3 +674,24 @@ test("a failed first dialog add does not acquire the body lock", async () => {
     expect(dialog.stack).toHaveLength(0);
     expect(document.body).not.toHaveClass("modal-open");
 });
+
+test.tags("mobile");
+test("destroying an idle service preserves another dialog's pending scroll restoration", async () => {
+    const scrollCalls = [];
+    patchWithCleanup(browser, { scrollTo: (position) => scrollCalls.push(position) });
+    patchWithCleanup(window, { scrollY: 500 });
+    class Content extends Component {
+        static template = xml`<Dialog>content</Dialog>`;
+        static components = { Dialog };
+        static props = ["*"];
+    }
+    const idle = new DialogService(getMockEnv(), { overlay: getService("overlay") });
+    after(() => idle.destroy());
+    const close = getService("dialog").add(Content);
+    await animationFrame();
+    await close();
+    expect(scrollCalls).toHaveLength(0);
+    idle.destroy();
+    await animationFrame();
+    expect(scrollCalls).toEqual([{ top: 500, left: browser.scrollX }]);
+});

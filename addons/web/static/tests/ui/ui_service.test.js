@@ -645,3 +645,23 @@ test("destroy() removes isSmall rather than restoring makeEnv's throwing guard",
     expect("isSmall" in env).toBe(false);
     expect(env.isSmall).toBe(undefined);
 });
+
+test("a focus scope inside a closed shadow root restores its local opener", async () => {
+    const host = document.createElement("div");
+    getFixture().append(host);
+    const root = attachShadowRoot(host, { mode: "closed" });
+    const opener = document.createElement("button");
+    root.append(opener);
+    opener.focus();
+    class Scope extends Component {
+        static template = xml`<div t-ref="scope"><button>inside</button></div>`;
+        static props = {};
+        setup() {
+            useActiveElement("scope");
+        }
+    }
+    const scope = await mountWithCleanup(Scope, { target: root });
+    expect(root.activeElement?.textContent).toBe("inside");
+    destroy(scope);
+    expect(root.activeElement).toBe(opener);
+});

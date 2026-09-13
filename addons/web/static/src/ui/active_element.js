@@ -70,7 +70,8 @@ export function useActiveElement(refName) {
             if (el) {
                 const [firstTabableEl] = getFirstAndLastTabableElements(el);
                 const takesFocus = Boolean(firstTabableEl) || isFocusable(el);
-                const oldActiveElement = getDeepActiveElement(el.ownerDocument);
+                const oldActiveElement =
+                    getDeepActiveElement(el) ?? getDeepActiveElement(el.ownerDocument);
                 scope.el = el;
                 uiService.activateElement(el);
 
