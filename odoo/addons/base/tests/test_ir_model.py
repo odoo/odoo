@@ -1747,14 +1747,10 @@ class TestIrModelFieldsSelection(TransactionCase):
         return self.env[model.model], field
 
     def _set_jsonb(self, model, field, record, mapping):
-        self.env.cr.execute(
-            SQL(
-                "UPDATE %s SET %s = %s WHERE id = %s",
-                SQL.identifier(model._table),
-                SQL.identifier(field.name),
-                Json({str(cid): value for cid, value in mapping.items()}),
-                record.id,
-            )
+        self.env.backend.columns.write(
+            record,
+            field.name,
+            [(record.id, Json({str(cid): value for cid, value in mapping.items()}))],
         )
         record.invalidate_recordset([field.name])
 

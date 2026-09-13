@@ -392,7 +392,7 @@ class InMemoryColumnStore:
         rows: typing.Collection[tuple[int, typing.Any]],
     ) -> None:
         self.storage.update_rows(
-            model._table, [(id_, {column: value}) for id_, value in rows]
+            model._table, [(id_, {column: _unwrap_json(value)}) for id_, value in rows]
         )
 
     def fetch_and_add(
@@ -596,6 +596,45 @@ def _single_table_where(model: BaseModel, domain: Domain) -> SQL | None:
             f"and cannot carry a join. Got: {query.from_clause}"
         )
     return query.where_clause if query._where_clauses else None
+
+
+def _fetch_term(model: BaseModel, field: Field, query: Query) -> SQL:
+    if field.translate:
+        return _fetch_translated_term(model, field, query)
+    term = field._fetch_term
+    if term is not None:
+        model._check_field_access(field, "read")
+        return term
+    sql = model._field_to_sql(model._table, field.name, query)
+    sql = SQL("%s", sql, to_flush=(f for f in sql.to_flush if f != field))
+    if (
+        not sql.params
+        and not sql.to_flush
+        and sql.code == f'"{model._table}"."{field.name}"'
+    ):
+        field._fetch_term = sql
+    return sql
+
+
+def _fetch_translated_term(model: BaseModel, field: Field, query: Query) -> SQL:
+    if model.env.context.get("prefetch_langs"):
+        return model._field_to_sql(model._table, field.name, query)
+    langs = field.get_translation_fallback_langs(model.env)
+    terms = field._fetch_terms_by_langs
+    term = terms.get(langs) if terms is not None else None
+    if term is not None:
+        model._check_field_access(field, "read")
+        return term
+    sql = model._field_to_sql(model._table, field.name, query)
+    column = f'"{model._table}"."{field.name}"->>%s'
+    expected = (
+        column if len(langs) == 1 else f"COALESCE({', '.join([column] * len(langs))})"
+    )
+    if sql.params == langs and sql.code == expected and tuple(sql.to_flush) == (field,):
+        if terms is None:
+            terms = field._fetch_terms_by_langs = {}
+        terms[langs] = sql
+    return sql
 
 
 class PostgresBackend:
@@ -860,14 +899,15 @@ class PostgresBackend:
         if column_fields:
             sql_terms = [SQL.identifier(model._table, "id")]
             for field in column_fields:
-                sql = model._field_to_sql(model._table, field.name, query)
                 if field.is_binary and (
                     context.get("bin_size") or context.get("bin_size_" + field.name)
                 ):
-                    sql = SQL("pg_size_pretty(length(%s)::bigint)", sql)
-                elif not field.translate:
-                    to_flush = (f for f in sql.to_flush if f != field)
-                    sql = SQL("%s", sql, to_flush=to_flush)
+                    sql = SQL(
+                        "pg_size_pretty(length(%s)::bigint)",
+                        model._field_to_sql(model._table, field.name, query),
+                    )
+                else:
+                    sql = _fetch_term(model, field, query)
                 sql_terms.append(sql)
 
             rows = env.execute_query(query.select(*sql_terms))

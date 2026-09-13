@@ -1234,10 +1234,7 @@ class TestXMLTranslation(TransactionCase):
         val = {"en_US": archf % terms}
         for lang, trans_terms in kwargs.items():
             val[lang] = archf % trans_terms
-        query = """UPDATE ir_ui_view
-                      SET arch_db = %s
-                    WHERE id = %s"""
-        self.env.cr.execute(query, (Json(val), view.id))
+        self.env.backend.columns.write(view, "arch_db", [(view.id, Json(val))])
         return view
 
     def test_copy(self):
