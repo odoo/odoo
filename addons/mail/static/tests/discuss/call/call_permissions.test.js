@@ -7,6 +7,7 @@ import {
     openDiscuss,
     start,
     startServer,
+    triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 
 import { describe, test } from "@odoo/hoot";
@@ -100,4 +101,24 @@ test("Combined mic+camera button only shown when both permissions not granted", 
     await click(".o-discuss-CallActionList button[title='Unmute']");
     await contains(".modal-footer button");
     await contains(".modal-footer button", { text: "Use Microphone" });
+});
+
+test("Pressing Escape key on voice & video wizard does not trigger permission dialog", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    mockGetMedia();
+    mockPermissionsPrompt();
+    await start();
+    await openDiscuss(channelId);
+    await click("[title='Start Call']");
+    await click(".o-discuss-CallActionList button[name='Voice & Video']");
+    await triggerHotkey("Enter");
+    await contains(".o-discuss-CallPermissionDialog");
+    await contains(".o-discuss-CallSettings");
+    await triggerHotkey("Tab");
+    await contains(".o-discuss-CallPermissionDialog", { count: 0 });
+    await contains(".o-discuss-CallSettings");
+    await triggerHotkey("Escape");
+    await contains(".o-discuss-CallPermissionDialog", { count: 0 });
+    await contains(".o-discuss-CallSettings", { count: 0 });
 });
