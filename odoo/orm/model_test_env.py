@@ -4,7 +4,7 @@ from collections import defaultdict, deque
 from collections.abc import Iterable, Mapping
 from contextlib import contextmanager, suppress
 from datetime import UTC, datetime
-from functools import partial
+from functools import cached_property, partial
 from operator import attrgetter
 from typing import TYPE_CHECKING, Any, NoReturn, Self, cast
 
@@ -23,6 +23,7 @@ from .fields import Boolean, Char, Many2one
 from .models import AbstractModel, Model
 from .primitives import SUPERUSER_ID
 from .runtime._registry_fields import _RegistryFieldsMixin
+from .runtime._registry_models import index_model_names_by_inheritance_root
 from .runtime.access_policy import ACCESS_POLICY
 from .runtime.filestore import FILE_STORE
 from .runtime.locale import LOCALE
@@ -374,6 +375,10 @@ class ModelRegistry(_RegistryFieldsMixin, Mapping):
                 )
             for container in CACHES_BY_KEY.get(cache_name, (cache_name,)):
                 self.ormcache_lrus[container].clear()
+
+    @cached_property
+    def model_names_by_inheritance_root(self) -> dict[str, tuple[str, ...]]:
+        return index_model_names_by_inheritance_root(self.models)
 
     def is_an_ordinary_table(self, model) -> bool:
         return True

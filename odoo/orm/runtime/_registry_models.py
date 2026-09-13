@@ -1,7 +1,7 @@
 import functools
 import typing
 from collections import deque
-from collections.abc import Iterable, Iterator
+from collections.abc import Iterable, Iterator, Mapping
 from operator import attrgetter
 
 from odoo.libs.debug_log import DebugLog
@@ -13,6 +13,17 @@ if typing.TYPE_CHECKING:
     from odoo.models import BaseModel
 
 _debug = DebugLog(__name__)
+
+
+def index_model_names_by_inheritance_root(
+    models: Mapping[str, type[BaseModel]],
+) -> dict[str, tuple[str, ...]]:
+    by_root: dict[str, list[str]] = {}
+    for name, model_cls in models.items():
+        root = model_cls._table_inheritance_root
+        if root and not model_cls._abstract:
+            by_root.setdefault(root, []).append(name)
+    return {root: tuple(names) for root, names in by_root.items()}
 
 
 class _RegistryModelsMixin(_RegistryStubs):
@@ -57,6 +68,10 @@ class _RegistryModelsMixin(_RegistryStubs):
             tables=len(by_table),
         )
         return by_table
+
+    @functools.cached_property
+    def model_names_by_inheritance_root(self) -> dict[str, tuple[str, ...]]:
+        return index_model_names_by_inheritance_root(self.models)
 
     def _get_ancestors(self, model_cls: type[BaseModel]) -> set[str]:
         seen: set[str] = set()

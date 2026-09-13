@@ -284,13 +284,10 @@ class IrActionsActions(models.Model):
             self.env[model_name].invalidate_model([field_name])
 
     @api.model
-    @tools.ormcache(cache="stable")
     def _get_model_names_in_tree(self) -> frozenset[str]:
         root_table = self.env.registry["ir.actions.actions"]._table
         return frozenset(
-            name
-            for name, model in self.env.registry.items()
-            if not model._abstract and model._table_inheritance_root == root_table
+            self.env.registry.model_names_by_inheritance_root.get(root_table, ())
         )
 
     @api.model

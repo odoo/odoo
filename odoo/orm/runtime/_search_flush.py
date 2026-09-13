@@ -23,6 +23,9 @@ class _DependencyCollector:
         self.seen.add(key)
         if field.store:
             self.fields_by_model[records._name].add(name)
+            if records._is_table_inheritance_root():
+                # the root table reads rows every model of the tree writes
+                self._collect_inheritance_tree(records, name)
         elif field.related:
             target = records
             for part in field.related.split("."):
@@ -34,6 +37,12 @@ class _DependencyCollector:
         if prop and field.relational:
             self.collect_field(records.env[field.comodel_name], prop)
         return field
+
+    def _collect_inheritance_tree(self, records, name):
+        env = records.env
+        for model_name in env._table_inheritance_tree(records._name):
+            if name in env[model_name]._fields:
+                self.fields_by_model[model_name].add(name)
 
     def collect_domain(self, records, node):
         if isinstance(node, DomainCustom):

@@ -564,19 +564,39 @@ class Environment(Mapping[str, "BaseModel"]):
             first=f"{fields_to_flush[0].model_name}.{fields_to_flush[0].name}",
         )
         first = fields_to_flush[0]
-        if len(fields_to_flush) == 1:
-            self[first.model_name].flush_model([first.name])
-            return
         first_model = first.model_name
-        if all(f.model_name == first_model for f in fields_to_flush):
+        single_model = len(fields_to_flush) == 1 or all(
+            f.model_name == first_model for f in fields_to_flush
+        )
+        if single_model and not self.registry[first_model]._table_inheritance_root:
             self[first_model].flush_model([f.name for f in fields_to_flush])
             return
 
         fnames_to_flush = defaultdict[str, OrderedSet[str]](OrderedSet)
         for field in fields_to_flush:
             fnames_to_flush[field.model_name].add(field.name)
+        for model_name, field_names in list(fnames_to_flush.items()):
+            # a query on a table-inheritance root reads the rows every model
+            # of the tree writes, each through its own field cache
+            for tree_model_name in self._table_inheritance_tree(model_name):
+                fnames_to_flush[tree_model_name].update(
+                    name
+                    for name in field_names
+                    if name in self[tree_model_name]._fields
+                )
         for model_name, field_names in fnames_to_flush.items():
             self[model_name].flush_model(field_names)
+
+    def _table_inheritance_tree(self, model_name: str) -> tuple[str, ...]:
+        model_cls = self.registry[model_name]
+        root = model_cls._table_inheritance_root
+        if not root or root != model_cls._table:
+            return ()
+        return tuple(
+            name
+            for name in self.registry.model_names_by_inheritance_root.get(root, ())
+            if name != model_name
+        )
 
     def execute_query(self, query: SQL) -> list[tuple]:
         if not isinstance(query, SQL):
