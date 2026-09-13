@@ -819,20 +819,23 @@ class ChromeBrowser:
         )
 
         if log_type == "error":
+            if self.error_checker and not self.error_checker(message):
+                # an error the checker waves through is the page's own
+                # reporting (a HOOT verdict line, say), not a failure: it
+                # must neither settle the run nor poison its success signal
+                _debug.logic("test.browser.console_error", outcome="ignored_by_checker")
+                return
             self.had_failure = True
             if self._result.done():
                 _debug.logic("test.browser.console_error", outcome="after_done")
                 return
-            if not self.error_checker or self.error_checker(message):
-                _debug.logic(
-                    "test.browser.console_error",
-                    outcome="failed",
-                    checked=self.error_checker is not None,
-                )
-                self.take_screenshot()
-                self._settle_exception(ChromeBrowserException(message))
-            else:
-                _debug.logic("test.browser.console_error", outcome="ignored_by_checker")
+            _debug.logic(
+                "test.browser.console_error",
+                outcome="failed",
+                checked=self.error_checker is not None,
+            )
+            self.take_screenshot()
+            self._settle_exception(ChromeBrowserException(message))
         elif message == self.success_signal:
             _debug.logic("test.browser.success_signal", signal=self.success_signal)
             self._handle_success_signal(_logger)
