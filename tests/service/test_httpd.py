@@ -733,3 +733,71 @@ def test_serving_a_request_leaves_no_cyclic_garbage(server):
         f"{found} cyclic objects over 200 requests; every one waits for a gen-1 "
         f"collection, and those already pause the whole server for ~250 ms"
     )
+
+
+def _pipeline(port, n, timeout=3.0):
+    payload = b"".join(
+        f"GET /r{i} HTTP/1.1\r\nHost: h\r\n\r\n".encode() for i in range(n)
+    )
+    sock = socket.create_connection(("127.0.0.1", port))
+    sock.settimeout(timeout)
+    sock.sendall(payload)
+    buf = b""
+    try:
+        while buf.count(b"HTTP/1.1 200 OK") < n:
+            chunk = sock.recv(65536)
+            if not chunk:
+                break
+            buf += chunk
+    except TimeoutError:
+        pass
+    sock.close()
+    return buf
+
+
+def test_a_pipeline_longer_than_the_inline_cap_is_answered_in_full():
+    """Request _MAX_PIPELINED + 1 sits fully buffered when the worker hands the
+    connection back; nothing else will ever arrive to wake the selector for
+    it, so it must be resubmitted, not parked until the head timeout."""
+    n = httpd._MAX_PIPELINED + 1
+    with _server(ODOO_HTTP_HEAD_TIMEOUT="0.5") as srv:
+        raw = _pipeline(srv.server_port, n)
+    assert raw.count(b"HTTP/1.1 200 OK") == n
+    assert b"408" not in raw
+    assert f'"/r{n - 1}"'.encode() in raw
+
+
+def test_junk_after_a_served_request_is_a_400_not_a_worker_crash(caplog):
+    payload = b"GET /ok HTTP/1.1\r\nHost: h\r\n\r\n" + b"\r\n" * 100
+    with _server() as srv, caplog.at_level(logging.ERROR, "odoo.service.server"):
+        raw = _talk(srv.server_port, payload)
+    assert raw.count(b"HTTP/1.1 200 OK") == 1
+    assert b"HTTP/1.1 400 Bad Request" in raw
+    assert not [r for r in caplog.records if r.levelno >= logging.ERROR]
+
+
+class TestAccessLogStyling:
+    @pytest.fixture
+    def styled(self, monkeypatch):
+        def run(*, colors: bool, tty: bool) -> str:
+            monkeypatch.setattr(httpd, "root_handler_uses_colors", lambda: colors)
+            monkeypatch.setattr(httpd.sys.stderr, "isatty", lambda: tty, raising=False)
+            return httpd._style("GET / HTTP/1.1", "bold", "red")
+
+        return run
+
+    def test_follows_the_root_handler_not_stderr(self, styled):
+        assert styled(colors=False, tty=True) == "GET / HTTP/1.1"
+        assert styled(colors=True, tty=False) == "\x1b[1;31mGET / HTTP/1.1\x1b[0m"
+
+
+def test_close_is_idempotent_and_logged_once():
+    a, b = socket.socketpair()
+    try:
+        conn = httpd.Connection(a, ("127.0.0.1", 1))
+        conn.close()
+        assert conn.closed
+        conn.close()
+        assert a.fileno() == -1
+    finally:
+        b.close()

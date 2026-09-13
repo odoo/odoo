@@ -163,6 +163,13 @@ class TestGracefulStop:
         server, _, _, _ = stopped()
         server.httpd.shutdown.assert_called_once_with()
 
+    def test_wsgi_server_is_released_after_shutdown(self, stopped):
+        server, _, _, _ = stopped()
+        server.httpd.server_close.assert_called_once_with()
+        assert server.httpd.mock_calls.index(
+            ("shutdown", (), {})
+        ) < server.httpd.mock_calls.index(("server_close", (), {}))
+
     def test_database_connections_are_closed(self, stopped):
         _, close_all, _, _ = stopped()
         close_all.assert_called_once_with()

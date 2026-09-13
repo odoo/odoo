@@ -314,7 +314,9 @@ class WorkerHTTP(Worker):
             flags = fcntl.fcntl(client, fcntl.F_GETFD) | fcntl.FD_CLOEXEC
             fcntl.fcntl(client, fcntl.F_SETFD, flags)
             name, port = client.getsockname()[:2]
-            identity = ServerIdentity(name, port, False, True, False)
+            identity = ServerIdentity(
+                name, port, multithread=False, multiprocess=True, exposes_socket=False
+            )
             with contextlib.suppress(BrokenPipeError):
                 with _debug.perf(
                     "worker.http.request",

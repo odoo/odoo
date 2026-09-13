@@ -3,7 +3,6 @@ from __future__ import annotations
 import contextlib
 import errno
 import logging
-import os
 import selectors
 import socket
 import sys
@@ -37,9 +36,10 @@ from odoo.libs.http1 import (
     prepare_response_head,
 )
 from odoo.libs.worker_thread import as_worker_thread, current_worker_thread
+from odoo.logutils import root_handler_uses_colors
 
 from ._env import get_env_float, get_env_int
-from .settings import current
+from .settings import SD_LISTEN_FDS_START, current
 
 _logger = logging.getLogger("odoo.service.server")
 _access_logger = logging.getLogger("odoo.service.http.access")
@@ -142,6 +142,7 @@ class Outcome(Enum):
 class Connection:
     __slots__ = (
         "addr",
+        "closed",
         "deadline",
         "head_started",
         "idle_since",
@@ -160,6 +161,7 @@ class Connection:
         self.idle_since = time.monotonic()
         self.ready_at = self.idle_since
         self.requests = 0
+        self.closed = False
 
     def send(self, data: bytes) -> None:
         if len(data) <= _SEND_SLICE:
@@ -170,6 +172,9 @@ class Connection:
             self.sock.sendall(view[offset : offset + _SEND_SLICE])
 
     def close(self, *, linger: float = 0.0) -> None:
+        if self.closed:
+            return
+        self.closed = True
         _debug.lifecycle(
             "httpd.connection_closed",
             peer=self.addr[0],
@@ -190,7 +195,7 @@ class Connection:
 
 
 def _style(message: str, *styles: str) -> str:
-    if not sys.stderr.isatty():
+    if not root_handler_uses_colors():
         return message
     codes = ";".join(_ANSI[s] for s in styles)
     return f"\x1b[{codes}m{message}\x1b[0m"
@@ -922,7 +927,11 @@ class ThreadedHTTPServer:
             self.server_address[1],
         )
         self.identity = ServerIdentity(
-            self.server_name, self.server_port, True, False, True
+            self.server_name,
+            self.server_port,
+            multithread=True,
+            multiprocess=False,
+            exposes_socket=True,
         )
         self._pool = WorkerPool(
             self.max_http_threads or None, self._serve_connection, self._wake
@@ -952,14 +961,14 @@ class ThreadedHTTPServer:
     def _bind(
         host: str, port: int, *, announce: bool = True
     ) -> tuple[socket.socket, bool]:
-        if os.environ.get("LISTEN_FDS") == "1" and os.environ.get("LISTEN_PID") == str(
-            os.getpid()
-        ):
-            sock = socket.socket(fileno=3)
+        if current().http_socket_activation:
+            sock = socket.socket(fileno=SD_LISTEN_FDS_START)
             if announce:
                 _logger.info("HTTP service running through socket activation")
             sock.setblocking(False)
-            _debug.lifecycle("httpd.bound", source="socket_activation", fd=3)
+            _debug.lifecycle(
+                "httpd.bound", source="socket_activation", fd=SD_LISTEN_FDS_START
+            )
             return sock, True
         family = socket.AF_INET6 if ":" in host else socket.AF_INET
         sock = socket.socket(family, socket.SOCK_STREAM)
@@ -1015,7 +1024,7 @@ class ThreadedHTTPServer:
             if outcome is Outcome.CLOSE:
                 conn.close()
                 return
-            if find_head(conn.source.buffer, self.limits.head) is None:
+            if not self._holds_complete_head(conn):
                 break
             _debug.pipeline(
                 "httpd.pipelined_request_served_inline",
@@ -1056,9 +1065,12 @@ class ThreadedHTTPServer:
             self._wake_w.send(b"\0")
 
     def _dispatch(self, conn: Connection) -> None:
-        conn.ready_at = time.monotonic()
         self._selector.unregister(conn.sock)
         self._idle.pop(conn.sock.fileno(), None)
+        self._submit(conn)
+
+    def _submit(self, conn: Connection) -> None:
+        conn.ready_at = time.monotonic()
         conn.sock.setblocking(True)
         conn.sock.settimeout(self.limits.socket_timeout)
         if not self._pool.submit(conn):
@@ -1216,19 +1228,7 @@ class ThreadedHTTPServer:
         if not conn.head_started and conn.source.buffer.strip(b"\r\n"):
             conn.head_started = True
             conn.deadline = now + self.limits.head_timeout
-        try:
-            complete = (
-                find_head(conn.source.buffer, self.limits.head, scanned) is not None
-            )
-        except ProtocolError as exc:
-            _debug.logic(
-                "httpd.head_malformed_while_idle",
-                peer=conn.addr[0],
-                status=exc.status.value,
-                buffered=len(conn.source.buffer),
-            )
-            complete = True
-        if complete:
+        if self._holds_complete_head(conn, scanned):
             _debug.pipeline(
                 "httpd.head_complete",
                 peer=conn.addr[0],
@@ -1271,8 +1271,32 @@ class ThreadedHTTPServer:
         for conn in returned:
             if self._shutdown.is_set():
                 conn.close()
+            elif self._holds_complete_head(conn):
+                # A pipelined head the worker left behind at _MAX_PIPELINED: no
+                # byte will ever wake the selector for it, so it goes back to
+                # the pool now rather than parking until the head timeout.
+                _debug.pipeline(
+                    "httpd.returned_head_resubmitted",
+                    peer=conn.addr[0],
+                    requests=conn.requests,
+                    buffered=len(conn.source.buffer),
+                )
+                self._submit(conn)
             else:
                 self._park(conn, now)
+
+    def _holds_complete_head(self, conn: Connection, scanned: int = 0) -> bool:
+        try:
+            return find_head(conn.source.buffer, self.limits.head, scanned) is not None
+        except ProtocolError as exc:
+            # A malformed head is complete for dispatch: serve_one answers it.
+            _debug.logic(
+                "httpd.head_malformed_while_idle",
+                peer=conn.addr[0],
+                status=exc.status.value,
+                buffered=len(conn.source.buffer),
+            )
+            return True
 
     def _update_listening(self) -> None:
         want = (

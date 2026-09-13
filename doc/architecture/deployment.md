@@ -169,7 +169,7 @@ request and response wrappers still are.
 
 | Server | Connection handling |
 |---|---|
-| threaded (`workers = 0`) and the evented websocket port | one selector thread holds the listening socket and every idle connection and reads request heads without blocking; a request reaches a worker thread only once its head is complete. Connections are kept alive. A websocket leaves the pool at its `101` and runs on its own thread, named like a request thread so the test harness still waits for it |
+| threaded (`workers = 0`) and the evented websocket port | one selector thread holds the listening socket and every idle connection and reads request heads without blocking; a request reaches a worker thread only once its head is complete. Connections are kept alive; a worker serves up to 16 pipelined requests inline before handing the connection back, and a head already buffered at that point is re-queued at once rather than parked. Malformed bytes left after a served request are answered by the parser (`400`/`431`), never raised out of the worker. A websocket leaves the pool at its `101` and runs on its own thread, named like a request thread so the test harness still waits for it |
 | prefork (`workers > 0`) | one request per connection, answered `HTTP/1.1` with `Connection: close`. A single-threaded worker holding an idle connection would block its whole process. Workers never expose the socket, so a websocket handshake there gets the `503` that names the evented port |
 
 Knobs, read from the environment:

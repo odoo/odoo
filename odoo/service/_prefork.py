@@ -33,6 +33,7 @@ from ._env import _IS_POSIX, get_env_float
 from ._limits import empty_pipe, get_cron_real_time_budget, get_job_real_time_budget
 from ._worker import Worker, WorkerCron, WorkerHTTP, WorkerJob
 from .lifecycle import preload_registries
+from .settings import SD_LISTEN_FDS_START
 
 _logger = logging.getLogger("odoo.service.server")
 _debug = DebugLog(__name__)
@@ -755,7 +756,6 @@ class PreforkServer(CommonServer):
                     self.port,
                 )
             elif self.settings.http_socket_activation:
-                SD_LISTEN_FDS_START = 3
                 self.socket = socket.socket(fileno=SD_LISTEN_FDS_START)
                 self._set_socket_cloexec()
                 _debug.lifecycle("prefork.socket_bound", source="socket_activation")

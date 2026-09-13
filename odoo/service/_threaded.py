@@ -479,6 +479,7 @@ class ThreadedServer(CommonServer):
 
         if self.httpd:
             self.httpd.shutdown()
+            self.httpd.server_close()
 
         super().stop()
 

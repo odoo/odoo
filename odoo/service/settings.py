@@ -11,6 +11,7 @@ _debug = DebugLog(__name__)
 
 __all__ = [
     "INHERIT_FROM_CRON",
+    "SD_LISTEN_FDS_START",
     "ServerSettings",
     "current",
     "installed",
@@ -19,6 +20,8 @@ __all__ = [
 ]
 
 INHERIT_FROM_CRON = -1
+
+SD_LISTEN_FDS_START = 3
 
 
 def _is_inherited(limit: int) -> bool:
@@ -87,30 +90,32 @@ class ServerSettings:
 
     @classmethod
     def from_config(cls, config: OptionSource) -> Self:
-        _debug.lifecycle(
-            "settings.loaded",
-            workers=config["workers"],
-            http_enable=config["http_enable"],
-            http_port=config["http_port"],
-            max_cron_threads=config["max_cron_threads"],
-            job_workers=config["job_workers"],
-            limit_time_real=config["limit_time_real"],
-            limit_memory_soft=config["limit_memory_soft"],
-            db_maxconn=config["db_maxconn"],
-            dev_mode=len(config["dev_mode"] or ()),
-            test_enable=config["test_enable"],
-            db_name=len(config["db_name"] or ()),
-            init=len(config["init"] or ()),
-            update=len(config["update"] or ()),
-            socket_activation=_is_socket_activated(config),
-        )
+        socket_activation = _is_socket_activated(config)
+        if _debug.lifecycle.enabled:
+            _debug.lifecycle(
+                "settings.loaded",
+                workers=config["workers"],
+                http_enable=config["http_enable"],
+                http_port=config["http_port"],
+                max_cron_threads=config["max_cron_threads"],
+                job_workers=config["job_workers"],
+                limit_time_real=config["limit_time_real"],
+                limit_memory_soft=config["limit_memory_soft"],
+                db_maxconn=config["db_maxconn"],
+                dev_mode=len(config["dev_mode"] or ()),
+                test_enable=config["test_enable"],
+                db_name=len(config["db_name"] or ()),
+                init=len(config["init"] or ()),
+                update=len(config["update"] or ()),
+                socket_activation=socket_activation,
+            )
         return cls(
             workers=int(config["workers"] or 0),
             http_enable=bool(config["http_enable"]),
             http_interface=config["http_interface"] or "0.0.0.0",
             http_port=int(config["http_port"]),
             gevent_port=int(config["gevent_port"]),
-            http_socket_activation=_is_socket_activated(config),
+            http_socket_activation=socket_activation,
             max_cron_threads=int(config["max_cron_threads"] or 0),
             job_workers=int(config["job_workers"] or 0),
             limit_request=int(config["limit_request"] or 0),
