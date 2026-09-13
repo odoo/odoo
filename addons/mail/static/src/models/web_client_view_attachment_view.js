@@ -37,6 +37,7 @@ registerModel({
          * @private
          */
         _onChangeThreadAttachmentsInWebClientView() {
+            if (this.thread._pendingMainAttachment) return;
             if (
                 this.thread.areAttachmentsLoaded &&
                 !this.thread.isLoadingAttachments &&
