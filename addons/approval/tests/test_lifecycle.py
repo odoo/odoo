@@ -12,7 +12,6 @@ from .common import ApprovalCommon, isolate_group_approval_manager, record_appro
 @tagged("post_install", "-at_install")
 class TestCancelFlow(ApprovalCommon):
     def _category(self, **vals):
-        vals.setdefault("has_date", "optional")
         return self._make_category(
             name=f"Cancel Cat {self.id()}",
             approvers=[self.approver_1, self.approver_2],
@@ -75,9 +74,9 @@ class TestCancelFlow(ApprovalCommon):
         )
         request.with_user(self.approver_1).with_context(
             skip_wizard=True,
-            requested_change_field="date",
+            requested_change_field="reason",
         ).action_request_change(approver=approver_row)
-        self.assertEqual(request.pending_change_field, "date")
+        self.assertEqual(request.pending_change_field, "reason")
 
         request.with_user(self.owner_user).action_cancel()
         self.assertFalse(request.pending_change_field)
@@ -165,7 +164,6 @@ class TestAutoTerminalPaths(ApprovalCommon):
         category = self._make_category(
             name=f"Rule Cat {self.id()}",
             approvers=[self.approver_1],
-            has_amount="required",
         )
         self.env["approval.rule"].create(
             {
@@ -192,7 +190,6 @@ class TestPendingIntegrity(ApprovalCommon):
         category = self._make_category(
             name=f"Lock Cat {self.id()}",
             approvers=[self.approver_1],
-            has_amount="required",
         )
         request = self._prepare_request(category, amount=100)
         with self.assertRaises(ValidationError):
@@ -205,10 +202,10 @@ class TestPendingIntegrity(ApprovalCommon):
         category = self._make_category(
             name=f"Change Cat {self.id()}",
             approvers=[self.approver_1],
-            has_amount="required",
-            has_date="optional",
         )
-        request = self._prepare_request(category, amount=100)
+        request = self._prepare_request(
+            category, amount=100, date=fields.Datetime.now()
+        )
         approver_row = request.approver_ids
         request.with_user(self.approver_1).with_context(
             skip_wizard=True,
@@ -224,13 +221,12 @@ class TestPendingIntegrity(ApprovalCommon):
             name=f"Consent Cat {self.id()}",
             approvers=[self.approver_1],
             consent_approval_hours=4,
-            has_date="optional",
         )
         request = self._prepare_request(category)
         approver_row = request.approver_ids
         request.with_user(self.approver_1).with_context(
             skip_wizard=True,
-            requested_change_field="date",
+            requested_change_field="reason",
         ).action_request_change(approver=approver_row)
         request.date_confirmed = fields.Datetime.now() - timedelta(hours=10)
 
@@ -385,14 +381,14 @@ class TestActionLocking(ApprovalCommon):
         self._assert_locks(request, request.action_reset_to_draft)
 
     def test_action_request_change_inline_locks(self):
-        category = self._make_category(approvers=[self.approver_1], has_date="optional")
+        category = self._make_category(approvers=[self.approver_1])
         request = self._prepare_request(category)
         approver = request.approver_ids[0]
 
         def action():
             request.with_context(
                 skip_wizard=True,
-                requested_change_field="date",
+                requested_change_field="reason",
             ).action_request_change(approver=approver)
 
         self._assert_locks(request, action)

@@ -595,9 +595,7 @@ class TestApproverSyncTriggerFields(ApprovalCommon):
         )
 
     def test_date_range_change_resyncs_approvers(self):
-        category = self._category_with_rule(
-            "date_range_days", "gt", 5, has_date_range="optional"
-        )
+        category = self._category_with_rule("date_range_days", "gt", 5)
         request = self._prepare_request(category, confirm=False)
 
         request.write(
@@ -624,7 +622,6 @@ class TestApproverSyncTriggerFields(ApprovalCommon):
         category = self._make_category(
             name="Trigger currency",
             approvers=[(self.approver_1, False, 10)],
-            has_amount="optional",
         )
         common_tier = {
             "category_id": category.id,

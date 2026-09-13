@@ -4,7 +4,7 @@ from odoo import fields
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests import common, tagged
 
-from .common import ApprovalCommon, new_trip_category
+from odoo.addons.approval.tests.common import ApprovalCommon, new_trip_category
 
 
 @tagged("post_install", "-at_install")

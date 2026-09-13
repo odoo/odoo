@@ -12,7 +12,6 @@ from . import (
     approval_category_approver,
     approval_category_conversion,
     approval_category_step,
-    approval_document_requirement,
     mixin_approval,
     mixin_approval_state_sync,
     mixin_approval_subjects,
@@ -25,7 +24,6 @@ from . import (
     approval_request_routing,
     approval_decision_log,  # isort: skip -- extends approval.request
     approval_rule,
-    approval_template,
     approval_trace,
     approval_utils,
     ir_actions_report,

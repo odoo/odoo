@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_approval_request_form_fields" model="ir.ui.view">
+        <field name="name">approval.request.form.fields</field>
+        <field name="model">approval.request</field>
+        <field name="inherit_id" ref="approval.view_approval_request_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="before">
+                <field name="has_date" invisible="1" />
+                <field name="has_date_deadline" invisible="1" />
+                <field name="has_date_planned" invisible="1" />
+                <field name="has_date_range" invisible="1" />
+                <field name="has_quantity" invisible="1" />
+                <field name="has_amount" invisible="1" />
+                <field name="has_reference" invisible="1" />
+                <field name="has_partner" invisible="1" />
+                <field name="has_location" invisible="1" />
+                <field name="has_document" invisible="1" />
+                <field name="document_requirement_ids" invisible="1" />
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="invisible">has_partner == 'no' and not partner_id</attribute>
+                <attribute name="required">has_partner == 'required'</attribute>
+            </xpath>
+            <xpath expr="//field[@name='priority']" position="after">
+                <field
+                    name="reference"
+                    invisible="has_reference == 'no'"
+                    readonly="state != 'new'"
+                    required="has_reference == 'required'" />
+                <field
+                    name="location"
+                    placeholder="e.g. Brussels"
+                    invisible="has_location == 'no'"
+                    readonly="state != 'new'"
+                    required="has_location == 'required'" />
+            </xpath>
+            <xpath
+                expr="//div[@name='request_date']/preceding-sibling::label[1]"
+                position="attributes">
+                <attribute name="invisible">has_date == 'no' and not date</attribute>
+            </xpath>
+            <xpath expr="//div[@name='request_date']" position="attributes">
+                <attribute name="invisible">has_date == 'no' and not date</attribute>
+            </xpath>
+            <xpath
+                expr="//div[@name='request_date']//field[@name='date']"
+                position="attributes">
+                <attribute name="required">has_date == 'required' and state == 'new'</attribute>
+            </xpath>
+            <xpath expr="//div[@name='request_date']" position="after">
+                <label
+                    for="date_deadline"
+                    string="Date Deadline"
+                    invisible="has_date_deadline == 'no'" />
+                <div invisible="has_date_deadline == 'no'">
+                    <div>
+                        <field
+                            name="date_deadline"
+                            readonly="state != 'new'"
+                            required="has_date_deadline == 'required' and state == 'new'"
+                            class="oe_inline" />
+                    </div>
+                </div>
+                <label
+                    for="date_planned"
+                    string="Date Planned"
+                    invisible="has_date_planned == 'no'" />
+                <div invisible="has_date_planned == 'no'">
+                    <div>
+                        <field
+                            name="date_planned"
+                            readonly="state != 'new'"
+                            required="has_date_planned == 'required' and state == 'new'"
+                            class="oe_inline" />
+                    </div>
+                </div>
+            </xpath>
+            <xpath
+                expr="//div[@name='request_period']/preceding-sibling::label[1]"
+                position="attributes">
+                <attribute name="invisible">has_date_range == 'no' and not date_start and not date_end</attribute>
+            </xpath>
+            <xpath expr="//div[@name='request_period']" position="attributes">
+                <attribute name="invisible">has_date_range == 'no' and not date_start and not date_end</attribute>
+            </xpath>
+            <xpath
+                expr="//div[@name='request_period']//field[@name='date_start']"
+                position="attributes">
+                <attribute name="required">has_date_range == 'required' and state == 'new'</attribute>
+            </xpath>
+            <xpath
+                expr="//div[@name='request_period']//field[@name='date_end']"
+                position="attributes">
+                <attribute name="required">has_date_range == 'required' and state == 'new'</attribute>
+            </xpath>
+            <xpath expr="//field[@name='quantity']" position="attributes">
+                <attribute name="invisible">has_quantity == 'no' and not quantity</attribute>
+                <attribute name="required">has_quantity == 'required' and state == 'new'</attribute>
+            </xpath>
+            <xpath
+                expr="//div[@name='request_amount']/preceding-sibling::label[1]"
+                position="attributes">
+                <attribute name="invisible">has_amount == 'no' and not amount</attribute>
+            </xpath>
+            <xpath expr="//div[@name='request_amount']" position="attributes">
+                <attribute name="invisible">has_amount == 'no' and not amount</attribute>
+            </xpath>
+            <xpath
+                expr="//div[@name='request_amount']/field[@name='amount']"
+                position="attributes">
+                <attribute name="required">has_amount == 'required' and state == 'new'</attribute>
+            </xpath>
+            <xpath expr="//page[@name='decision_history']" position="before">
+                <page
+                    name="documents"
+                    string="Documents"
+                    invisible="not document_requirement_ids">
+                    <div class="alert alert-info" role="alert">
+                        Attach a file for each required document, then
+                        say which requirement it satisfies. The approvers
+                        see the answer; nothing is inferred from the file
+                        name.
+                    </div>
+                    <field name="attachment_ids">
+                        <list editable="bottom" create="false">
+                            <field name="name" readonly="1" />
+                            <field
+                                name="approval_requirement_id"
+                                domain="[('id', 'in', parent.document_requirement_ids)]"
+                                options="{'no_create': True}" />
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_approval_request_tree_fields" model="ir.ui.view">
+        <field name="name">approval.request.list.fields</field>
+        <field name="model">approval.request</field>
+        <field name="inherit_id" ref="approval.view_approval_request_tree" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='date']" position="after">
+                <field name="date_planned" string="Planned" optional="hide" />
+                <field name="date_deadline" string="Deadline" optional="hide" />
+            </xpath>
+            <xpath expr="//field[@name='date_confirmed']" position="after">
+                <field name="location" string="Location" optional="hide" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

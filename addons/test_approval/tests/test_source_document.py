@@ -52,7 +52,6 @@ class TestSourceDocumentIsNotified(ApprovalCommon):
         category = self._make_category(
             name=f"Cancel Notify Cat {self.id()}",
             approvers=[self.approver_1, self.approver_2],
-            has_date="optional",
         )
         doc = self.env["approval.test.document"].create(
             {

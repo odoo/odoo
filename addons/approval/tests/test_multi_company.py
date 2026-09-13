@@ -59,7 +59,6 @@ class MultiCompanyCase(common.TransactionCase):
                 "name": "Company B Category",
                 "company_id": cls.company_b.id,
                 "approval_minimum": 1,
-                "has_amount": "optional",
                 "sla_target_hours": 10,
                 "approver_ids": [
                     Command.create({"user_id": cls.approver_b.id, "required": True}),
@@ -89,13 +88,6 @@ class MultiCompanyCase(common.TransactionCase):
                 "threshold": 999999,
                 "threshold_max": 0,
                 "approver_ids": [Command.link(cls.approver_b.id)],
-            }
-        )
-        cls.template_b = cls.env["approval.template"].create(
-            {
-                "name": "Company B Template",
-                "category_id": cls.category_b.id,
-                "company_id": cls.company_b.id,
             }
         )
 
@@ -146,14 +138,6 @@ class TestMultiCompanyIsolation(MultiCompanyCase):
             .search([("id", "=", self.tier_b.id)])
         )
         self.assertFalse(found, "Company A manager must not see Company B's tier")
-
-    def test_template_isolated_across_companies(self):
-        found = (
-            self.env["approval.template"]
-            .with_user(self.user_a)
-            .search([("id", "=", self.template_b.id)])
-        )
-        self.assertFalse(found, "Company A manager must not see Company B's template")
 
     def test_request_and_approver_isolated_across_companies(self):
         found_request = (

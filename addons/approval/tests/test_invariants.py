@@ -305,7 +305,6 @@ class TestPredictionIsCurrencyAware(ApprovalCommon):
         category = self._make_category(
             "A4 currency",
             approvers=[(self.approver_1, True, 10)],
-            has_amount="optional",
         )
         for _index in range(4):
             historic = self._prepare_request(

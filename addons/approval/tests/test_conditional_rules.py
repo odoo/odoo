@@ -31,8 +31,6 @@ class TestConditionalRules(common.TransactionCase):
         cls.category.write(
             {
                 "approver_ids": [(5, 0, 0)],
-                "has_amount": "required",
-                "has_quantity": "optional",
             }
         )
         cls.env["approval.category.approver"].create(
@@ -51,7 +49,6 @@ class TestConditionalRules(common.TransactionCase):
             "request_owner_id": self.env.ref("base.user_admin").id,
             "date_start": fields.Datetime.now(),
             "date_end": fields.Datetime.now(),
-            "location": "testland",
         }
         vals.update(kwargs)
         return self.env["approval.request"].create(vals)
@@ -190,7 +187,6 @@ class TestConditionalRules(common.TransactionCase):
 
     def test_rule_date_range_days(self):
 
-        self.category.has_date_range = "required"
         self.env["approval.rule"].create(
             {
                 "name": "Extended Leave",

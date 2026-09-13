@@ -21,14 +21,82 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: approval_app
+#. odoo-python
+#: code:addons/approval_app/models/ir_attachment.py:0
+msgid ""
+"'%(requirement)s' is a document requirement of category '%(other)s', not of "
+"this request's category '%(category)s'."
+msgstr ""
+
+#. module: approval_app
+#: model:ir.model.fields,field_description:approval_app.field_approval_template__active
+msgid "Active"
+msgstr "Activo"
+
+#. module: approval_app
 #: model:ir.ui.menu,name:approval_app.approvals_approval_menu_all
 msgid "All Approvals"
 msgstr "Todas las aprobaciones"
 
 #. module: approval_app
+#. odoo-python
+#: code:addons/approval_app/models/approval_request.py:0
+#: model_terms:ir.ui.view,arch_db:approval_app.view_approval_category_form_fields
+msgid "Amount"
+msgstr "Importe"
+
+#. module: approval_app
+#: model_terms:ir.ui.view,arch_db:approval_app.view_approval_category_form_fields
+msgid "Amounts & Quantities"
+msgstr ""
+
+#. module: approval_app
+#: model:ir.model.fields,help:approval_app.field_approval_category__has_reference
+#: model:ir.model.fields,help:approval_app.field_approval_request__has_reference
+#: model:ir.model.fields,help:approval_app.field_approval_template__has_reference
+msgid "An additional reference that should be specified on the request."
+msgstr "Una referencia adicional que debe especificarse en la solicitud."
+
+#. module: approval_app
+#: model:ir.model.constraint,message:approval_app.constraint_approval_template_name_src_uniq
+msgid "An approval template with this name already exists for this company."
+msgstr ""
+
+#. module: approval_app
 #: model:ir.ui.menu,name:approval_app.approvals_category_menu_config
 msgid "Approval Categories"
 msgstr "Categorías de aprobación"
+
+#. module: approval_app
+#: model:ir.model,name:approval_app.model_approval_category
+msgid "Approval Category"
+msgstr "Categoría de aprobación"
+
+#. module: approval_app
+#: model:ir.model,name:approval_app.model_approval_document_requirement
+msgid "Approval Document Requirement"
+msgstr ""
+
+#. module: approval_app
+#: model:ir.model,name:approval_app.model_approval_request
+msgid "Approval Request"
+msgstr "Solicitud de aprobación"
+
+#. module: approval_app
+#: model:ir.model,name:approval_app.model_approval_template
+msgid "Approval Request Template"
+msgstr ""
+
+#. module: approval_app
+#: model_terms:ir.ui.view,arch_db:approval_app.view_approval_template_form
+msgid "Approval Template"
+msgstr ""
+
+#. module: approval_app
+#: model:ir.actions.act_window,name:approval_app.action_approval_template
+#: model_terms:ir.ui.view,arch_db:approval_app.view_approval_template_list
+msgid "Approval Templates"
+msgstr ""
 
 #. module: approval_app
 #: model:ir.ui.menu,name:approval_app.approvals_menu_root
@@ -39,6 +107,26 @@ msgstr "Aprobaciones"
 #: model:ir.ui.menu,name:approval_app.approvals_approval_menu_to_review
 msgid "Approvals to Review"
 msgstr "Aprobaciones a revisar"
+
+#. module: approval_app
+#: model_terms:ir.ui.view,arch_db:approval_app.view_approval_template_form
+#: model_terms:ir.ui.view,arch_db:approval_app.view_approval_template_search
+msgid "Archived"
+msgstr "Archivado"
+
+#. module: approval_app
+#: model_terms:ir.ui.view,arch_db:approval_app.view_approval_request_form_fields
+msgid ""
+"Attach a file for each required document, then\n"
+"                                say which requirement it satisfies. The approvers\n"
+"                                see the answer; nothing is inferred from the file\n"
+"                                name."
+msgstr ""
+
+#. module: approval_app
+#: model:ir.model,name:approval_app.model_ir_attachment
+msgid "Attachment"
+msgstr "Archivo adjunto"
 
 #. module: approval_app
 #: model:approval.category,name:approval_app.approval_category_data_borrow_items
@@ -56,9 +144,38 @@ msgid "Car Rental Application"
 msgstr "Solicitud de alquiler de coches"
 
 #. module: approval_app
+#: model:ir.model.fields,field_description:approval_app.field_approval_document_requirement__category_id
+#: model:ir.model.fields,field_description:approval_app.field_approval_template__category_id
+#: model_terms:ir.ui.view,arch_db:approval_app.view_approval_template_search
+msgid "Category"
+msgstr "Categoría"
+
+#. module: approval_app
+#: model:ir.model.fields,help:approval_app.field_approval_template__category_id
+msgid "Category this template creates requests for"
+msgstr ""
+
+#. module: approval_app
+#: model:ir.model.fields,field_description:approval_app.field_approval_template__company_id
+msgid "Company"
+msgstr "Compañía"
+
+#. module: approval_app
+#: model:ir.ui.menu,name:approval_app.menu_approval_rules
+msgid "Conditional Rules"
+msgstr ""
+
+#. module: approval_app
 #: model:ir.ui.menu,name:approval_app.approvals_menu_config
 msgid "Configuration"
 msgstr "Configuración"
+
+#. module: approval_app
+#. odoo-python
+#: code:addons/approval_app/models/approval_request.py:0
+#: model_terms:ir.ui.view,arch_db:approval_app.view_approval_category_form_fields
+msgid "Contact"
+msgstr "Contacto"
 
 #. module: approval_app
 #: model:approval.category,name:approval_app.approval_category_data_contract_approval
@@ -66,9 +183,185 @@ msgid "Contract Approval"
 msgstr "Aprobación del contrato"
 
 #. module: approval_app
+#: model_terms:ir.ui.view,arch_db:approval_app.view_approval_template_form
+msgid "Create Request"
+msgstr ""
+
+#. module: approval_app
+#: model_terms:ir.actions.act_window,help:approval_app.action_approval_template
+msgid "Create your first approval template"
+msgstr ""
+
+#. module: approval_app
+#: model:ir.model.fields,field_description:approval_app.field_approval_document_requirement__create_uid
+#: model:ir.model.fields,field_description:approval_app.field_approval_template__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: approval_app
+#: model:ir.model.fields,field_description:approval_app.field_approval_document_requirement__create_date
+#: model:ir.model.fields,field_description:approval_app.field_approval_template__create_date
+msgid "Created on"
+msgstr "Creado el"
+
+#. module: approval_app
 #: model:ir.ui.menu,name:approval_app.approvals_category_menu_new
 msgid "Dashboard"
 msgstr "Tablero"
+
+#. module: approval_app
+#. odoo-python
+#: code:addons/approval_app/models/approval_request.py:0
+#: model_terms:ir.ui.view,arch_db:approval_app.view_approval_category_form_fields
+msgid "Date"
+msgstr "Fecha"
+
+#. module: approval_app
+#: model:ir.model.fields,field_description:approval_app.field_approval_request__date_deadline
+#: model_terms:ir.ui.view,arch_db:approval_app.view_approval_request_form_fields
+msgid "Date Deadline"
+msgstr ""
+
+#. module: approval_app
+#: model:ir.model.fields,field_description:approval_app.field_approval_request__date_planned
+#: model_terms:ir.ui.view,arch_db:approval_app.view_approval_request_form_fields
+msgid "Date Planned"
+msgstr ""
+
+#. module: approval_app
+#: model_terms:ir.ui.view,arch_db:approval_app.view_approval_category_form_fields
+msgid "Dates"
+msgstr ""
+
+#. module: approval_app
+#. odoo-python
+#: code:addons/approval_app/models/approval_request.py:0
+#: model_terms:ir.ui.view,arch_db:approval_app.view_approval_category_form_fields
+#: model_terms:ir.ui.view,arch_db:approval_app.view_approval_request_tree_fields
+msgid "Deadline"
+msgstr ""
+
+#. module: approval_app
+#: model:ir.model.fields,field_description:approval_app.field_approval_template__default_amount
+msgid "Default Amount"
+msgstr ""
+
+#. module: approval_app
+#: model:ir.model.fields,field_description:approval_app.field_approval_template__default_partner_id
+msgid "Default Contact"
+msgstr ""
+
+#. module: approval_app
+#: model:ir.model.fields,field_description:approval_app.field_approval_template__default_reason
+#: model_terms:ir.ui.view,arch_db:approval_app.view_approval_template_form
+msgid "Default Description"
+msgstr ""
+
+#. module: approval_app
+#: model:ir.model.fields,field_description:approval_app.field_approval_template__default_location
+msgid "Default Location"
+msgstr ""
+
+#. module: approval_app
+#: model:ir.model.fields,field_description:approval_app.field_approval_template__default_priority
+msgid "Default Priority"
+msgstr ""
+
+#. module: approval_app
+#: model:ir.model.fields,field_description:approval_app.field_approval_template__default_quantity
+msgid "Default Quantity"
+msgstr ""
+
+#. module: approval_app
+#: model:ir.model.fields,field_description:approval_app.field_approval_template__default_reference
+msgid "Default Reference"
+msgstr ""
+
+#. module: approval_app
+#: model_terms:ir.ui.view,arch_db:approval_app.view_approval_template_form
+msgid "Default Values"
+msgstr ""
+
+#. module: approval_app
+#: model:ir.ui.menu,name:approval_app.approvals_request_menu_delegate
+msgid "Delegate My Approvals"
+msgstr ""
+
+#. module: approval_app
+#: model_terms:ir.ui.view,arch_db:approval_app.view_approval_template_form
+msgid "Describe when to use this template..."
+msgstr ""
+
+#. module: approval_app
+#: model:ir.model.fields,field_description:approval_app.field_approval_document_requirement__description
+#: model:ir.model.fields,field_description:approval_app.field_approval_template__description
+#: model_terms:ir.ui.view,arch_db:approval_app.view_approval_template_form
+msgid "Description"
+msgstr "Descripción"
+
+#. module: approval_app
+#: model:ir.model.fields,help:approval_app.field_approval_template__description
+msgid "Description shown to users when selecting this template"
+msgstr ""
+
+#. module: approval_app
+#: model:ir.model.fields,field_description:approval_app.field_approval_category__display_name
+#: model:ir.model.fields,field_description:approval_app.field_approval_document_requirement__display_name
+#: model:ir.model.fields,field_description:approval_app.field_approval_request__display_name
+#: model:ir.model.fields,field_description:approval_app.field_approval_template__display_name
+#: model:ir.model.fields,field_description:approval_app.field_ir_attachment__display_name
+msgid "Display Name"
+msgstr "Nombre mostrado"
+
+#. module: approval_app
+#: model_terms:ir.ui.view,arch_db:approval_app.view_approval_category_form_fields
+msgid "Document"
+msgstr "Documento"
+
+#. module: approval_app
+#: model:ir.model.fields,field_description:approval_app.field_approval_category__document_requirement_ids
+#: model_terms:ir.ui.view,arch_db:approval_app.view_approval_document_requirement_list
+msgid "Document Requirements"
+msgstr ""
+
+#. module: approval_app
+#: model:ir.model.constraint,message:approval_app.constraint_approval_document_requirement_name_src_uniq
+msgid "Document requirement name must be unique per category."
+msgstr ""
+
+#. module: approval_app
+#: model:ir.model.fields,help:approval_app.field_approval_document_requirement__name
+msgid ""
+"Document type name (e.g. 'Invoice PDF', 'Vendor Quote'). A LABEL, "
+"translatable for the ordinary reason: the requester picks it from a dropdown"
+" on the file they upload. It used to be load-bearing — the confirm-time "
+"check matched it as a substring of the uploaded file NAMES, so an "
+"untranslated value silently forced requesters to name their files in "
+"whatever language the category was configured in, and on an es_MX deployment"
+" 'Factura.pdf' failed a requirement called 'Invoice' with an error telling "
+"the user to rename their file. The link is structural now "
+"(ir.attachment.approval_requirement_id), so the name means nothing to the "
+"check — and the cross-language uniqueness constraint that matching needed is"
+" gone with it."
+msgstr ""
+
+#. module: approval_app
+#: model:ir.model.fields,field_description:approval_app.field_approval_category__has_document
+#: model:ir.model.fields,field_description:approval_app.field_approval_request__has_document
+#: model_terms:ir.ui.view,arch_db:approval_app.view_approval_category_form_fields
+#: model_terms:ir.ui.view,arch_db:approval_app.view_approval_request_form_fields
+msgid "Documents"
+msgstr "Documentos"
+
+#. module: approval_app
+#: model_terms:ir.ui.view,arch_db:approval_app.view_approval_category_form_fields
+msgid "Fields"
+msgstr "Campos"
+
+#. module: approval_app
+#: model:ir.ui.menu,name:approval_app.menu_approval_binding
+msgid "Gated Operations"
+msgstr ""
 
 #. module: approval_app
 #: model:approval.category,name:approval_app.approval_category_data_general_approval
@@ -76,38 +369,81 @@ msgid "General Approval"
 msgstr "Aprobación general"
 
 #. module: approval_app
-#: model:approval.category,name:approval_app.approval_category_data_job_referral_award
-msgid "Job Referral Award"
-msgstr "Premio por referir a alguien"
+#: model:ir.model.fields,field_description:approval_app.field_approval_category__has_amount
+#: model:ir.model.fields,field_description:approval_app.field_approval_request__has_amount
+#: model:ir.model.fields,field_description:approval_app.field_approval_template__has_amount
+msgid "Has Amount"
+msgstr "Tiene importe"
 
 #. module: approval_app
-#: model:ir.ui.menu,name:approval_app.approvals_menu_manager
-msgid "Manager"
-msgstr "Gerente"
+#: model:ir.model.fields,field_description:approval_app.field_approval_category__has_partner
+#: model:ir.model.fields,field_description:approval_app.field_approval_request__has_partner
+#: model:ir.model.fields,field_description:approval_app.field_approval_template__has_partner
+msgid "Has Contact"
+msgstr "Tiene un contacto"
 
 #. module: approval_app
-#: model:ir.ui.menu,name:approval_app.approvals_approval_menu
-msgid "My Approvals"
-msgstr "Mis aprobaciones"
+#: model:ir.model.fields,field_description:approval_app.field_approval_category__has_date
+#: model:ir.model.fields,field_description:approval_app.field_approval_request__has_date
+msgid "Has Date"
+msgstr "Tiene fecha"
 
 #. module: approval_app
-#: model:ir.ui.menu,name:approval_app.approvals_request_menu_my
-msgid "My Requests"
-msgstr "Mis solicitudes"
+#: model:ir.model.fields,field_description:approval_app.field_approval_category__has_date_deadline
+#: model:ir.model.fields,field_description:approval_app.field_approval_request__has_date_deadline
+msgid "Has Date Deadline"
+msgstr ""
 
 #. module: approval_app
-#: model:approval.category,name:approval_app.approval_category_data_payment_application
-msgid "Payment Application"
-msgstr "Solicitud de pago"
+#: model:ir.model.fields,field_description:approval_app.field_approval_category__has_date_planned
+#: model:ir.model.fields,field_description:approval_app.field_approval_request__has_date_planned
+msgid "Has Date Planned"
+msgstr ""
 
 #. module: approval_app
-#: model:approval.category,name:approval_app.approval_category_data_procurement
-msgid "Procurement"
-msgstr "Abastecimiento"
+#: model:ir.model.fields,field_description:approval_app.field_approval_category__has_date_range
+#: model:ir.model.fields,field_description:approval_app.field_approval_request__has_date_range
+msgid "Has Date Range"
+msgstr ""
 
 #. module: approval_app
-#: model:ir.ui.menu,name:approval_app.menu_approval_rules
-msgid "Conditional Rules"
+#: model:ir.model.fields,field_description:approval_app.field_approval_category__has_location
+#: model:ir.model.fields,field_description:approval_app.field_approval_request__has_location
+#: model:ir.model.fields,field_description:approval_app.field_approval_template__has_location
+msgid "Has Location"
+msgstr "Tiene ubicación"
+
+#. module: approval_app
+#: model:ir.model.fields,field_description:approval_app.field_approval_category__has_quantity
+#: model:ir.model.fields,field_description:approval_app.field_approval_request__has_quantity
+#: model:ir.model.fields,field_description:approval_app.field_approval_template__has_quantity
+msgid "Has Quantity"
+msgstr "Tiene cantidad"
+
+#. module: approval_app
+#: model:ir.model.fields,field_description:approval_app.field_approval_category__has_reference
+#: model:ir.model.fields,field_description:approval_app.field_approval_request__has_reference
+#: model:ir.model.fields,field_description:approval_app.field_approval_template__has_reference
+msgid "Has Reference"
+msgstr "Tiene referencia"
+
+#. module: approval_app
+#: model:ir.model.fields.selection,name:approval_app.selection__approval_template__default_priority__2
+msgid "High"
+msgstr ""
+
+#. module: approval_app
+#: model:ir.model.fields,field_description:approval_app.field_approval_category__id
+#: model:ir.model.fields,field_description:approval_app.field_approval_document_requirement__id
+#: model:ir.model.fields,field_description:approval_app.field_approval_request__id
+#: model:ir.model.fields,field_description:approval_app.field_approval_template__id
+#: model:ir.model.fields,field_description:approval_app.field_ir_attachment__id
+msgid "ID"
+msgstr ""
+
+#. module: approval_app
+#: model:ir.model.fields,help:approval_app.field_approval_document_requirement__required
+msgid "If checked, this document must be attached before submission"
 msgstr ""
 
 #. module: approval_app
@@ -116,8 +452,211 @@ msgid "Inbox"
 msgstr ""
 
 #. module: approval_app
+#: model:ir.model.fields,help:approval_app.field_approval_document_requirement__description
+msgid "Instructions for the requester about this document"
+msgstr ""
+
+#. module: approval_app
+#: model_terms:ir.ui.view,arch_db:approval_app.view_approval_category_form_fields
+msgid "Instructions..."
+msgstr ""
+
+#. module: approval_app
+#: model:approval.category,name:approval_app.approval_category_data_job_referral_award
+msgid "Job Referral Award"
+msgstr "Premio por referir a alguien"
+
+#. module: approval_app
+#: model:ir.model.fields,field_description:approval_app.field_approval_document_requirement__write_uid
+#: model:ir.model.fields,field_description:approval_app.field_approval_template__write_uid
+msgid "Last Updated by"
+msgstr "Última actualización por"
+
+#. module: approval_app
+#: model:ir.model.fields,field_description:approval_app.field_approval_document_requirement__write_date
+#: model:ir.model.fields,field_description:approval_app.field_approval_template__write_date
+msgid "Last Updated on"
+msgstr "Última actualización el"
+
+#. module: approval_app
+#. odoo-python
+#: code:addons/approval_app/models/approval_request.py:0
+#: model:ir.model.fields,field_description:approval_app.field_approval_request__location
+#: model_terms:ir.ui.view,arch_db:approval_app.report_approval_request_document_fields
+#: model_terms:ir.ui.view,arch_db:approval_app.view_approval_category_form_fields
+#: model_terms:ir.ui.view,arch_db:approval_app.view_approval_request_tree_fields
+msgid "Location"
+msgstr "Ubicación"
+
+#. module: approval_app
+#: model:ir.model.fields.selection,name:approval_app.selection__approval_template__default_priority__0
+msgid "Low"
+msgstr ""
+
+#. module: approval_app
+#: model:ir.ui.menu,name:approval_app.approvals_menu_manager
+msgid "Manager"
+msgstr "Gerente"
+
+#. module: approval_app
+#. odoo-python
+#: code:addons/approval_app/models/approval_request.py:0
+msgid ""
+"Missing required documents: %(missing)s\n"
+"\n"
+"Attach a file for each, and set its 'Satisfies Requirement' so the approvers know which document is which."
+msgstr ""
+
+#. module: approval_app
+#: model:ir.ui.menu,name:approval_app.approvals_approval_menu
+msgid "My Approvals"
+msgstr "Mis aprobaciones"
+
+#. module: approval_app
 #: model:ir.ui.menu,name:approval_app.approvals_request_menu_history
 msgid "My History"
+msgstr ""
+
+#. module: approval_app
+#: model:ir.ui.menu,name:approval_app.approvals_request_menu_my
+msgid "My Requests"
+msgstr "Mis solicitudes"
+
+#. module: approval_app
+#: model:ir.model.fields,field_description:approval_app.field_approval_document_requirement__name
+msgid "Name"
+msgstr "Nombre"
+
+#. module: approval_app
+#: model:ir.model.fields,help:approval_app.field_approval_template__name
+msgid "Name of this template (e.g., 'Weekly Expense Report')"
+msgstr ""
+
+#. module: approval_app
+#. odoo-python
+#: code:addons/approval_app/tests/test_request_form.py:0
+msgid "New"
+msgstr "Nuevo"
+
+#. module: approval_app
+#. odoo-python
+#: code:addons/approval_app/models/approval_template.py:0
+msgid "New Request from: %s"
+msgstr ""
+
+#. module: approval_app
+#: model:ir.model.fields.selection,name:approval_app.selection__approval_category__has_amount__no
+#: model:ir.model.fields.selection,name:approval_app.selection__approval_category__has_date__no
+#: model:ir.model.fields.selection,name:approval_app.selection__approval_category__has_date_deadline__no
+#: model:ir.model.fields.selection,name:approval_app.selection__approval_category__has_date_planned__no
+#: model:ir.model.fields.selection,name:approval_app.selection__approval_category__has_date_range__no
+#: model:ir.model.fields.selection,name:approval_app.selection__approval_category__has_location__no
+#: model:ir.model.fields.selection,name:approval_app.selection__approval_category__has_partner__no
+#: model:ir.model.fields.selection,name:approval_app.selection__approval_category__has_quantity__no
+#: model:ir.model.fields.selection,name:approval_app.selection__approval_category__has_reference__no
+msgid "None"
+msgstr "Ninguno"
+
+#. module: approval_app
+#: model:ir.model.fields.selection,name:approval_app.selection__approval_template__default_priority__1
+msgid "Normal"
+msgstr ""
+
+#. module: approval_app
+#: model:ir.model.fields,help:approval_app.field_approval_category__template_count
+msgid "Number of active templates"
+msgstr ""
+
+#. module: approval_app
+#: model:ir.model.fields,help:approval_app.field_approval_template__usage_count
+msgid "Number of requests created from this template"
+msgstr ""
+
+#. module: approval_app
+#. odoo-python
+#: code:addons/approval_app/models/ir_attachment.py:0
+msgid ""
+"Only a file attached to an approval request can satisfy one of its document "
+"requirements."
+msgstr ""
+
+#. module: approval_app
+#: model:ir.model.fields.selection,name:approval_app.selection__approval_category__has_amount__optional
+#: model:ir.model.fields.selection,name:approval_app.selection__approval_category__has_date__optional
+#: model:ir.model.fields.selection,name:approval_app.selection__approval_category__has_date_deadline__optional
+#: model:ir.model.fields.selection,name:approval_app.selection__approval_category__has_date_planned__optional
+#: model:ir.model.fields.selection,name:approval_app.selection__approval_category__has_date_range__optional
+#: model:ir.model.fields.selection,name:approval_app.selection__approval_category__has_document__optional
+#: model:ir.model.fields.selection,name:approval_app.selection__approval_category__has_location__optional
+#: model:ir.model.fields.selection,name:approval_app.selection__approval_category__has_partner__optional
+#: model:ir.model.fields.selection,name:approval_app.selection__approval_category__has_quantity__optional
+#: model:ir.model.fields.selection,name:approval_app.selection__approval_category__has_reference__optional
+msgid "Optional"
+msgstr "Opcional"
+
+#. module: approval_app
+#: model:approval.category,name:approval_app.approval_category_data_payment_application
+msgid "Payment Application"
+msgstr "Solicitud de pago"
+
+#. module: approval_app
+#: model_terms:ir.ui.view,arch_db:approval_app.view_approval_category_form_fields
+msgid "Period"
+msgstr "Periodo"
+
+#. module: approval_app
+#. odoo-python
+#: code:addons/approval_app/models/approval_request.py:0
+msgid "Period End Date"
+msgstr ""
+
+#. module: approval_app
+#. odoo-python
+#: code:addons/approval_app/models/approval_request.py:0
+msgid "Period Start Date"
+msgstr ""
+
+#. module: approval_app
+#: model_terms:ir.ui.view,arch_db:approval_app.view_approval_request_tree_fields
+msgid "Planned"
+msgstr ""
+
+#. module: approval_app
+#. odoo-python
+#: code:addons/approval_app/models/approval_request.py:0
+#: model_terms:ir.ui.view,arch_db:approval_app.view_approval_category_form_fields
+msgid "Planned Date"
+msgstr ""
+
+#. module: approval_app
+#: model:ir.model.fields,help:approval_app.field_approval_template__default_reason
+msgid "Pre-filled reason/description for the request"
+msgstr ""
+
+#. module: approval_app
+#: model:approval.category,name:approval_app.approval_category_data_procurement
+msgid "Procurement"
+msgstr "Abastecimiento"
+
+#. module: approval_app
+#. odoo-python
+#: code:addons/approval_app/models/approval_request.py:0
+#: model_terms:ir.ui.view,arch_db:approval_app.view_approval_category_form_fields
+msgid "Quantity"
+msgstr "Cantidad"
+
+#. module: approval_app
+#. odoo-python
+#: code:addons/approval_app/models/approval_request.py:0
+#: model:ir.model.fields,field_description:approval_app.field_approval_request__reference
+#: model_terms:ir.ui.view,arch_db:approval_app.report_approval_request_document_fields
+#: model_terms:ir.ui.view,arch_db:approval_app.view_approval_category_form_fields
+msgid "Reference"
+msgstr "Referencia"
+
+#. module: approval_app
+#: model_terms:ir.ui.view,arch_db:approval_app.view_approval_category_form_fields
+msgid "References & Contacts"
 msgstr ""
 
 #. module: approval_app
@@ -131,6 +670,159 @@ msgid "Reporting"
 msgstr ""
 
 #. module: approval_app
+#: model_terms:ir.ui.view,arch_db:approval_app.view_approval_template_form
+msgid "Requests"
+msgstr ""
+
+#. module: approval_app
+#. odoo-python
+#: code:addons/approval_app/models/approval_template.py:0
+msgid "Requests from: %s"
+msgstr ""
+
+#. module: approval_app
+#: model:ir.model.fields,field_description:approval_app.field_approval_document_requirement__required
+#: model:ir.model.fields.selection,name:approval_app.selection__approval_category__has_amount__required
+#: model:ir.model.fields.selection,name:approval_app.selection__approval_category__has_date__required
+#: model:ir.model.fields.selection,name:approval_app.selection__approval_category__has_date_deadline__required
+#: model:ir.model.fields.selection,name:approval_app.selection__approval_category__has_date_planned__required
+#: model:ir.model.fields.selection,name:approval_app.selection__approval_category__has_date_range__required
+#: model:ir.model.fields.selection,name:approval_app.selection__approval_category__has_document__required
+#: model:ir.model.fields.selection,name:approval_app.selection__approval_category__has_location__required
+#: model:ir.model.fields.selection,name:approval_app.selection__approval_category__has_partner__required
+#: model:ir.model.fields.selection,name:approval_app.selection__approval_category__has_quantity__required
+#: model:ir.model.fields.selection,name:approval_app.selection__approval_category__has_reference__required
+msgid "Required"
+msgstr "Requerido"
+
+#. module: approval_app
+#: model:ir.model.fields,field_description:approval_app.field_approval_request__document_requirement_ids
+#: model_terms:ir.ui.view,arch_db:approval_app.view_approval_category_form_fields
+msgid "Required Documents"
+msgstr ""
+
+#. module: approval_app
+#: model:ir.model.fields,field_description:approval_app.field_ir_attachment__approval_requirement_id
+msgid "Satisfies Requirement"
+msgstr ""
+
+#. module: approval_app
+#: model:ir.model.fields,field_description:approval_app.field_approval_document_requirement__sequence
+#: model:ir.model.fields,field_description:approval_app.field_approval_template__sequence
+msgid "Sequence"
+msgstr "Secuencia"
+
+#. module: approval_app
+#: model:ir.model.fields,field_description:approval_app.field_approval_request__template_id
+#: model_terms:ir.ui.view,arch_db:approval_app.report_approval_request_document_fields
+msgid "Template"
+msgstr ""
+
+#. module: approval_app
+#: model:ir.model.fields,field_description:approval_app.field_approval_category__template_count
+msgid "Template Count"
+msgstr ""
+
+#. module: approval_app
+#: model:ir.model.fields,field_description:approval_app.field_approval_template__name
+msgid "Template Name"
+msgstr ""
+
+#. module: approval_app
+#: model:ir.model.fields,help:approval_app.field_approval_request__template_id
+msgid "Template this request was created from (if any)"
+msgstr ""
+
+#. module: approval_app
 #: model:ir.ui.menu,name:approval_app.approvals_template_menu_config
+#: model_terms:ir.ui.view,arch_db:approval_app.view_approval_category_form_fields
 msgid "Templates"
+msgstr ""
+
+#. module: approval_app
+#: model_terms:ir.actions.act_window,help:approval_app.action_approval_template
+msgid ""
+"Templates pre-fill approval requests with default values,\n"
+"            reducing repetitive data entry for recurring workflows."
+msgstr ""
+
+#. module: approval_app
+#. odoo-python
+#: code:addons/approval_app/models/approval_category.py:0
+msgid "Templates: %s"
+msgstr ""
+
+#. module: approval_app
+#: model:ir.model.fields,help:approval_app.field_approval_request__document_requirement_ids
+msgid ""
+"The category's document requirements, related onto the request so the "
+"Documents page can offer exactly those in the 'Satisfies Requirement' "
+"dropdown beside each attachment."
+msgstr ""
+
+#. module: approval_app
+#. odoo-python
+#: code:addons/approval_app/models/approval_request.py:0
+msgid ""
+"The following required fields are empty:\n"
+"\n"
+"%(fields)s\n"
+"\n"
+"Please fill them before submitting the request."
+msgstr ""
+
+#. module: approval_app
+#: model:ir.model.fields,field_description:approval_app.field_approval_template__usage_count
+msgid "Times Used"
+msgstr ""
+
+#. module: approval_app
+#: model:ir.model.fields.selection,name:approval_app.selection__approval_template__default_priority__3
+msgid "Urgent"
+msgstr ""
+
+#. module: approval_app
+#: model_terms:ir.ui.view,arch_db:approval_app.view_approval_template_list
+msgid "Used"
+msgstr ""
+
+#. module: approval_app
+#: model:ir.model.fields,help:approval_app.field_ir_attachment__approval_requirement_id
+msgid ""
+"Which of the category's required documents this file IS. The requester says "
+"so; nothing infers it. Before this column the confirm-time check ran a "
+"bipartite matching over file NAMES, which cannot express the invariant it "
+"was asked to enforce: a file called 'holiday-photo-not-an-invoice.png' "
+"satisfied a requirement named 'Invoice', and a genuine invoice scanned to "
+"'scan001.pdf' did not."
+msgstr ""
+
+#. module: approval_app
+#. odoo-python
+#: code:addons/approval_app/models/ir_attachment.py:0
+msgid ""
+"You cannot change which requirement a document satisfies once its approval "
+"request is approved, refused or cancelled."
+msgstr ""
+
+#. module: approval_app
+#. odoo-python
+#: code:addons/approval_app/models/approval_request.py:0
+msgid "You have to attach at least one document."
+msgstr "Debe adjuntar al menos un documento."
+
+#. module: approval_app
+#: model_terms:ir.ui.view,arch_db:approval_app.view_approval_request_form_fields
+msgid "e.g. Brussels"
+msgstr "p. ej. Bruselas"
+
+#. module: approval_app
+#: model_terms:ir.ui.view,arch_db:approval_app.view_approval_category_form_fields
+#: model_terms:ir.ui.view,arch_db:approval_app.view_approval_document_requirement_list
+msgid "e.g. Invoice PDF"
+msgstr ""
+
+#. module: approval_app
+#: model_terms:ir.ui.view,arch_db:approval_app.view_approval_template_form
+msgid "e.g. Weekly Expense Report"
 msgstr ""

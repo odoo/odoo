@@ -245,11 +245,7 @@ class ApprovalRequestAccess(models.Model):
             "date",
             "date_start",
             "date_end",
-            "date_deadline",
-            "date_planned",
             "partner_id",
-            "reference",
-            "location",
             "reason",
             "request_owner_id",
             "company_id",
@@ -281,10 +277,9 @@ class ApprovalRequestAccess(models.Model):
 
     def _get_pending_change_candidates(self) -> frozenset[str]:
         self.check_singleton()
-        candidates = {"reason"}
-        if self.has_date != "no" or self.has_date_range != "no":
-            candidates.add("date")
-        return frozenset(candidates)
+        if self.date or self.date_start or self.date_end:
+            return frozenset({"reason", "date"})
+        return frozenset({"reason"})
 
     _COMPUTE_ONLY_FIELDS = frozenset(
         {

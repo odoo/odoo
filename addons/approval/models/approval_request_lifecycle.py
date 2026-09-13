@@ -1164,8 +1164,6 @@ class ApprovalRequestLifecycle(models.Model):
 
     def _check_confirm(self) -> None:
         self._check_enough_approvers()
-        self._check_has_document_has_attachment()
-        self._check_category_required_fields()
 
     def _check_enough_approvers(self) -> None:
         self.check_singleton()
@@ -1219,94 +1217,6 @@ class ApprovalRequestLifecycle(models.Model):
                         count=len(pool),
                     ),
                 )
-
-    def _check_has_document_has_attachment(self) -> None:
-        if self.has_document == "required" and not self.count_attachment:
-            trace.REFUSAL.event("no_attachment", request=self.id)
-            raise UserError(self.env._("You have to attach at least one document."))
-
-        if self.has_document != "required":
-            return
-        requirements = self.category_id.document_requirement_ids.filtered("required")
-        if not requirements:
-            return
-
-        satisfied = self.attachment_ids.approval_requirement_id
-        missing = requirements - satisfied
-        trace.DOCUMENT.event(
-            "requirements",
-            request=self.id,
-            category=self.category_id.id,
-            required=requirements.ids,
-            satisfied=satisfied.ids,
-            missing=missing.ids,
-            attachments=self.count_attachment,
-        )
-        if missing:
-            trace.REFUSAL.event(
-                "missing_documents",
-                request=self.id,
-                required=len(requirements),
-                missing=missing.ids,
-            )
-            raise UserError(
-                self.env._(
-                    "Missing required documents: %(missing)s\n\n"
-                    "Attach a file for each, and set its 'Satisfies "
-                    "Requirement' so the approvers know which document is "
-                    "which.",
-                    missing=", ".join(missing.mapped("name")),
-                ),
-            )
-
-    def _check_category_required_fields(self) -> None:
-        field_mapping = self._get_category_required_field_mapping()
-        missing_fields = []
-
-        for has_field, (field_name, field_label) in field_mapping.items():
-            has_value = getattr(self, has_field, "no")
-            if has_value == "required":
-                if self._is_required_field_skipped(has_field):
-                    continue
-                field_value = getattr(self, field_name, None)
-                if not field_value:
-                    missing_fields.append(field_label)
-
-        if self.has_date_range == "required" and not self.date_end:
-            missing_fields.append(self.env._("Period End Date"))
-
-        if missing_fields:
-            trace.REFUSAL.event(
-                "missing_required_fields",
-                request=self.id,
-                category=self.category_id.id,
-                fields=len(missing_fields),
-            )
-            raise UserError(
-                self.env._(
-                    "The following required fields are empty:\n\n%(fields)s\n\n"
-                    "Please fill them before submitting the request.",
-                    fields="\n".join(f"- {f}" for f in missing_fields),
-                ),
-            )
-
-    def _is_required_field_skipped(self, has_field: str) -> bool:
-        return False
-
-    def _get_category_required_field_mapping(
-        self,
-    ) -> dict[str, tuple[str, str]]:
-        return {
-            "has_date": ("date", self.env._("Date")),
-            "has_date_deadline": ("date_deadline", self.env._("Deadline")),
-            "has_date_planned": ("date_planned", self.env._("Planned Date")),
-            "has_date_range": ("date_start", self.env._("Period Start Date")),
-            "has_partner": ("partner_id", self.env._("Contact")),
-            "has_quantity": ("quantity", self.env._("Quantity")),
-            "has_amount": ("amount", self.env._("Amount")),
-            "has_reference": ("reference", self.env._("Reference")),
-            "has_location": ("location", self.env._("Location")),
-        }
 
     def action_withdraw_approver(
         self, approver_id: int, step_id: int | bool = False

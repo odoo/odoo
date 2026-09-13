@@ -404,7 +404,6 @@ class TestFlatRoutingOutcomes(RoutingOutcomesCase):
             approval_minimum=1,
             group_approval="exclusive",
             approver_group_id=self.pool.id,
-            has_amount="required",
         )
         self.env["approval.rule"].create(
             {
@@ -426,7 +425,6 @@ class TestFlatRoutingOutcomes(RoutingOutcomesCase):
             approval_minimum=1,
             group_approval="exclusive",
             approver_group_id=self.pool.id,
-            has_amount="required",
             **vals,
         )
         self.env["approval.rule"].create(
@@ -479,9 +477,7 @@ class TestFlatRoutingOutcomes(RoutingOutcomesCase):
         )
 
     def _amount_category(self, action_type, rule_users, **rule_vals):
-        category = self._flat(
-            [("a", False, 10)], approval_minimum=1, has_amount="required"
-        )
+        category = self._flat([("a", False, 10)], approval_minimum=1)
         self.env["approval.rule"].create(
             {
                 "name": "Routing rule",
@@ -556,7 +552,6 @@ class TestFlatRoutingOutcomes(RoutingOutcomesCase):
             [("a", True, 10), ("b", True, 20)],
             approval_minimum=2,
             approve_sequentially=True,
-            has_amount="required",
         )
         self.env["approval.rule"].create(
             {
@@ -592,8 +587,6 @@ class TestFlatRoutingOutcomes(RoutingOutcomesCase):
             [("a", True, 10), ("b", True, 20)],
             approval_minimum=2,
             approve_sequentially=True,
-            has_amount="required",
-            has_quantity="required",
             **vals,
         )
         self.env["approval.rule"].create(
@@ -685,8 +678,6 @@ class TestFlatRoutingOutcomes(RoutingOutcomesCase):
         return self._flat(
             [("a", False, 10)],
             approval_minimum=1,
-            has_amount="required",
-            has_quantity="required",
             **vals,
         )
 
@@ -807,9 +798,7 @@ class TestFlatRoutingOutcomes(RoutingOutcomesCase):
         )
 
     def test_a_rule_on_a_figure_a_request_may_lack(self):
-        category = self._flat(
-            [("a", False, 10)], approval_minimum=1, has_date_range="optional"
-        )
+        category = self._flat([("a", False, 10)], approval_minimum=1)
         self._rule(
             category,
             "add_approver",
@@ -820,9 +809,7 @@ class TestFlatRoutingOutcomes(RoutingOutcomesCase):
         self._run(category, "rule_below_its_threshold")
 
     def test_a_rule_on_a_figure_a_request_has(self):
-        category = self._flat(
-            [("a", False, 10)], approval_minimum=1, has_date_range="optional"
-        )
+        category = self._flat([("a", False, 10)], approval_minimum=1)
         self._rule(
             category,
             "add_approver",
@@ -1020,7 +1007,7 @@ class TestStepRoutingOutcomes(RoutingOutcomesCase):
         )
 
     def _amount_steps(self, steps):
-        return self._stepped(steps, has_amount="required")
+        return self._stepped(steps)
 
     def test_rule_adds_a_required_approver(self):
         # The rule's approver is a step of its own, applicable above the threshold.
@@ -1138,7 +1125,6 @@ class TestConvertedRoutingOutcomes(TestFlatRoutingOutcomes):
         category = self._flat(
             [("a", False, 10), ("b", False, 20)],
             approval_minimum=1,
-            has_amount="required",
         )
         for index in range(6):
             self.env["approval.rule"].create(
@@ -1249,7 +1235,7 @@ class TestConvertingEveryCategory(RoutingOutcomesCase):
 
     def test_the_sweep_converts_every_category_whatever_its_case_count(self):
         convertible = self._flat_category()
-        many_cases = self._flat_category(has_amount="required")
+        many_cases = self._flat_category()
         for index in range(6):
             self.env["approval.rule"].create(
                 {
@@ -1303,7 +1289,7 @@ class TestConvertingEveryCategory(RoutingOutcomesCase):
 
     def test_a_request_confirmed_on_the_list_keeps_its_rule_approvers(self):
         with self._routing_by_list():
-            category = self._flat_category(has_amount="required")
+            category = self._flat_category()
             self.env["approval.rule"].create(
                 {
                     "name": "Routing rule before the conversion",
@@ -1328,7 +1314,7 @@ class TestConvertingEveryCategory(RoutingOutcomesCase):
             self.assertEqual(request.state, "approved")
 
     def test_the_rules_steps_apply_by_stay_conditions(self):
-        category = self._flat_category(has_amount="required", has_quantity="required")
+        category = self._flat_category()
         rules = self.env["approval.rule"]
         for field, threshold, user in (("amount", 1000, "c"), ("quantity", 5, "d")):
             rules |= self.env["approval.rule"].create(
@@ -1370,7 +1356,7 @@ class TestConvertingEveryCategory(RoutingOutcomesCase):
             )
 
     def test_a_rule_left_beside_steps_becomes_a_step_of_its_approvers(self):
-        category = self._flat_category(has_amount="required")
+        category = self._flat_category()
         rule = self.env["approval.rule"].create(
             {
                 "name": "Rule beside steps",

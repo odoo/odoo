@@ -478,7 +478,6 @@ class TestApproverDraftWriteAccess(ApprovalCommon):
         cls.category = cls._make_category(
             name="Draft Write Cat",
             approvers=[(cls.approver_1, False, 10), (cls.approver_2, False, 20)],
-            has_amount="optional",
         )
 
     def test_approver_cannot_write_a_draft_they_do_not_own(self):

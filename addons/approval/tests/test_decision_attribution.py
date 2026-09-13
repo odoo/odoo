@@ -253,7 +253,6 @@ class TestManualApproverPreservation(ApprovalCommon):
         category = self._make_category(
             "Manual Preservation",
             approvers=[(self.approver_1, True, 10)],
-            has_amount="optional",
         )
         self.env["approval.rule"].create(
             {
@@ -294,7 +293,6 @@ class TestManualApproverPreservation(ApprovalCommon):
         category = self._make_category(
             "Orphan Removal",
             approvers=[(self.approver_1, True, 10)],
-            has_amount="optional",
         )
         self.env["approval.rule"].create(
             {
@@ -324,74 +322,6 @@ class TestManualApproverPreservation(ApprovalCommon):
             request.approver_ids.user_id,
             "the injection's source stopped producing it — it must be removed",
         )
-
-
-@tagged("post_install", "-at_install")
-class TestDocumentRequirementLanguage(ApprovalCommon):
-    def _install_spanish(self):
-        lang = (
-            self.env["res.lang"]
-            .with_context(active_test=False)
-            .search([("code", "=", "es_MX")], limit=1)
-        )
-        if not lang:
-            self.skipTest("es_MX language not available in this database")
-        lang.active = True
-
-    def test_a_spanish_deployment_never_has_to_rename_a_file(self):
-        self._install_spanish()
-        category = self._make_category(
-            "Doc Language",
-            approvers=[(self.approver_1, True, 10)],
-            has_document="required",
-        )
-        requirement = self.env["approval.document.requirement"].create(
-            {"category_id": category.id, "name": "Invoice", "required": True},
-        )
-        requirement.with_context(lang="es_MX").name = "Factura"
-
-        request = self._prepare_request(category, confirm=False)
-        self.env["ir.attachment"].create(
-            {
-                "name": "escaneo-0001.pdf",
-                "res_model": "approval.request",
-                "res_id": request.id,
-                "raw": b"real document",
-                "approval_requirement_id": requirement.id,
-            },
-        )
-        request.action_confirm()
-        self.assertEqual(request.state, "pending")
-
-    def test_two_requirements_may_now_share_a_translation(self):
-        self._install_spanish()
-        category = self._make_category(
-            "Doc Collision",
-            approvers=[(self.approver_1, True, 10)],
-            has_document="required",
-        )
-        first = self.env["approval.document.requirement"].create(
-            {"category_id": category.id, "name": "Invoice", "required": True},
-        )
-        second = self.env["approval.document.requirement"].create(
-            {"category_id": category.id, "name": "Receipt", "required": True},
-        )
-        first.with_context(lang="es_MX").name = "Factura"
-        second.with_context(lang="es_MX").name = "Factura"
-
-        request = self._prepare_request(category, confirm=False)
-        for requirement in (first, second):
-            self.env["ir.attachment"].create(
-                {
-                    "name": "doc-%d.pdf" % requirement.id,
-                    "res_model": "approval.request",
-                    "res_id": request.id,
-                    "raw": b"real document",
-                    "approval_requirement_id": requirement.id,
-                },
-            )
-        request.action_confirm()
-        self.assertEqual(request.state, "pending")
 
 
 @tagged("post_install", "-at_install")

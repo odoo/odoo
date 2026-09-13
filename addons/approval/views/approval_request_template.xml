@@ -31,21 +31,9 @@
                             <td class="fw-bold" style="width: 40%;">Requested By</td>
                             <td><span t-field="o.request_owner_id" /></td>
                         </tr>
-                        <tr t-if="o.partner_id">
+                        <tr name="request_contact" t-if="o.partner_id">
                             <td class="fw-bold">Contact</td>
                             <td><span t-field="o.partner_id" /></td>
-                        </tr>
-                        <tr t-if="o.location">
-                            <td class="fw-bold">Location</td>
-                            <td><span t-field="o.location" /></td>
-                        </tr>
-                        <tr t-if="o.reference">
-                            <td class="fw-bold">Reference</td>
-                            <td><span t-field="o.reference" /></td>
-                        </tr>
-                        <tr t-if="o.template_id">
-                            <td class="fw-bold">Template</td>
-                            <td><span t-field="o.template_id" /></td>
                         </tr>
                     </table>
                 </div>

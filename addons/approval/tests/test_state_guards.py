@@ -72,7 +72,7 @@ class TestStateGuards(ApprovalCommon):
         request = self._prepare_request(category)
         with self.assertRaises(UserError):
             request.with_user(self.owner_user).with_context(
-                skip_wizard=True, requested_change_field="date"
+                skip_wizard=True, requested_change_field="reason"
             ).action_request_change()
         self.assertFalse(request.pending_change_field)
 
@@ -227,22 +227,6 @@ class TestSubmittedRequestGuards(ApprovalCommon):
             clone.date_confirmed, "a fresh draft clone must not inherit submission time"
         )
 
-    def test_template_creates_prefilled_request_action(self):
-        category = self._category()
-        template = self.env["approval.template"].create(
-            {
-                "name": "Weekly",
-                "category_id": category.id,
-                "default_priority": "2",
-            }
-        )
-        self.assertEqual(template.usage_count, 0)
-        action = template.action_create_request()
-        self.assertEqual(action["res_model"], "approval.request")
-        self.assertEqual(action["context"]["default_category_id"], category.id)
-        self.assertEqual(action["context"]["default_template_id"], template.id)
-        self.assertEqual(action["context"]["default_priority"], "2")
-
 
 @tagged("post_install", "-at_install")
 class TestLockedFields(ApprovalCommon):
@@ -264,8 +248,7 @@ class TestLockedFields(ApprovalCommon):
             "company_id": request.company_id.id,
             "name": "HACKED-0001",
             "date_confirmed": "2020-01-01 00:00:00",
-            "reference": "new-ref",
-            "location": "elsewhere",
+            "quantity": 7.0,
             "amount": 999.0,
         }
         for field, value in frozen_attempts.items():
@@ -295,11 +278,9 @@ class TestLockedFields(ApprovalCommon):
         category = self._category()
         draft = self._prepare_request(category, confirm=False)
         self.assertEqual(draft.state, "new")
-        draft.with_user(self.owner_user).write(
-            {"priority": "3", "reference": "draft-ref"}
-        )
+        draft.with_user(self.owner_user).write({"priority": "3", "quantity": 3.0})
         self.assertEqual(draft.priority, "3")
-        self.assertEqual(draft.reference, "draft-ref")
+        self.assertEqual(draft.quantity, 3.0)
 
     def test_reset_to_draft_reopens_frozen_fields(self):
         category = self._category()
@@ -308,5 +289,5 @@ class TestLockedFields(ApprovalCommon):
         request.with_user(self.manager_user).action_reset_to_draft()
         self.assertEqual(request.state, "new")
         self.assertFalse(request.date_confirmed)
-        request.with_user(self.owner_user).write({"reference": "reopened-ref"})
-        self.assertEqual(request.reference, "reopened-ref")
+        request.with_user(self.owner_user).write({"quantity": 4.0})
+        self.assertEqual(request.quantity, 4.0)

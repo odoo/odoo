@@ -33,7 +33,7 @@ class TestSubjectConditions(common.TransactionCase):
             }
         )
         cls.category = new_trip_category(cls.env)
-        cls.category.write({"approver_ids": [(5, 0, 0)], "has_amount": "optional"})
+        cls.category.write({"approver_ids": [(5, 0, 0)]})
         cls.env["approval.category.approver"].create(
             {
                 "category_id": cls.category.id,
@@ -57,7 +57,6 @@ class TestSubjectConditions(common.TransactionCase):
             "request_owner_id": self.env.ref("base.user_admin").id,
             "date_start": fields.Datetime.now(),
             "date_end": fields.Datetime.now(),
-            "location": "testland",
         }
         vals.update(kwargs)
         return self.env["approval.request"].create(vals)

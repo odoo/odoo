@@ -7,7 +7,7 @@
 |                        approval.category                             |
 |  Blueprint: field visibility, approval minimums, escalation, SLA,    |
 |  privacy visibility (read audience)                                  |
-|  approver_ids  rule_ids  document_requirement_ids                    |
+|  approver_ids  rule_ids  step_ids                                    |
 +----+----------------+-----------+------------------------------------+
      |                |           |
      v                v           v
@@ -96,9 +96,9 @@
    |       it is what stops an old draft confirming with a stale set
    +-- _check_confirm()
    |   +-- _check_enough_approvers()
-   |   +-- _check_has_document_has_attachment()  (each required doc type
-   |   |       must match a DISTINCT attachment)
-   |   +-- _check_category_required_fields()
+   |   +-- approval_app: _check_has_document_has_attachment()  (each
+   |   |       required doc type must match a DISTINCT attachment)
+   |   +-- approval_app: _check_category_required_fields()
    +-- name = category sequence consecutive (deferred numbering; a
    |       reset-then-reconfirmed request keeps its original number)
    +-- _build_category_snapshot() -> category_snapshot (JSON audit,
@@ -842,7 +842,7 @@ and `has_product` now live in `approval_product`, which depends on
 | `_get_approval_category_fallback(categories)` | Generic category for approval triggered by a flag outside the category criteria | account / stock |
 | `_raise_approval_category_not_configured()` / `_raise_approval_category_not_matched(categories)` | Turn "no category" into a named configuration error instead of "no approval needed" | sale / purchase / maintenance / rma / credit_management_approval |
 | `_get_approval_reason_html()` | Justification stored on the request; base returns the document display name | account / sale / purchase / stock / rma / credit_management_approval |
-| `_get_category_required_field_mapping()` | Add required field validation | Extensions adding custom fields (must also add the field — base no longer maps `payment_method_id`) |
+| `_get_category_required_field_mapping()` | Add required field validation, on `approval_app`, which owns the form fields it maps | Extensions adding custom fields (must also add the field — base no longer maps `payment_method_id`) |
 | `_get_fields_locked()` | Extend the post-submit frozen field set | Extensions adding value fields |
 | `_approval_rate_limit_exceeded(...)` | Submission throttle: too many, or too much in value, from this creator within a window. Multi-currency — thresholds are given in company currency and converted per counterparty currency before comparison | approval_purchase / approval_sale |
 | `_approval_rate_limit_rate_date()` | Pin the conversion date used by the throttle | any consumer |

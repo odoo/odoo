@@ -29,9 +29,9 @@ Both sit under the `res_groups_privilege_approvals` privilege
 | `approval.request` | full CRUD | (inherits from user) |
 | `approval.approver` | full CRUD (ACL level) | (inherits from user) |
 | `approval.refusal.reason` | read | full CRUD |
-| `approval.template` | read | full CRUD |
+| `approval.template` | read | full CRUD *(`approval_app`)* |
 | `approval.rule` | read | full CRUD |
-| `approval.document.requirement` | read | full CRUD |
+| `approval.document.requirement` | read | full CRUD *(`approval_app`)* |
 | `approval.dashboard` | **none** (0,0,0,0) | full CRUD |
 | `approval.metrics` | **none** (0,0,0,0) | full CRUD |
 | `approver.performance` | **none** (0,0,0,0) | full CRUD |
@@ -420,18 +420,18 @@ factories) instead of rebuilding user fixtures.
 | When You Modify... | Also Update... |
 |---------------------|---------------|
 | `approval.category` approver_ids | PENDING requests are frozen (their approver set is the audit trail); DRAFTS pick the change up at `action_confirm()`, which re-syncs against the current category configuration |
-| `approval.category` fields (has_*, approval_minimum) | Existing drafts are not rewritten on the spot, but `approval_minimum` is re-derived from the category at `action_confirm()`; `has_*` are related fields, so they follow immediately |
+| `approval.category` fields (has_* from `approval_app`, approval_minimum) | Existing drafts are not rewritten on the spot, but `approval_minimum` is re-derived from the category at `action_confirm()`; `has_*` are related fields, so they follow immediately |
 | `_compute_state()` logic | The action methods that call `_notify_if_terminal_transition()` -- the compute itself must stay side-effect free |
 | `_compute_sla_status()` logic | `_search_sla_status()` -- its SQL CASE mirrors the compute exactly; update both together |
 | `_sync_approvers()` / `_compute_desired_approvers()` sources | `_merge_approver_to_staging()` merge rules (required OR, sequence MIN); rows always stage 'new' (sync is draft-only) |
 | `_get_additional_approvers()` override | Must return `list[tuple[int, bool, int]]` (user_id, required, sequence) |
 | `ESCALATION_RULES` constant (`approval_request.py`) | `_get_escalation_rules()` overlays `approval.escalation.<priority>.<kind>` system parameters on top of it -- do not restate the numbers elsewhere |
-| `action_confirm()` validation | `_check_confirm()` which calls `_check_enough_approvers()`, `_check_has_document_has_attachment()`, `_check_category_required_fields()` |
+| `action_confirm()` validation | `_check_confirm()`, which calls `_check_enough_approvers()`; `approval_app` extends it with `_check_has_document_has_attachment()` and `_check_category_required_fields()` |
 | `_LOCKED_FIELDS` / `_get_fields_locked()` | `_PENDING_CHANGE_EDITABLE` (fields reopened by the change flow) and the form view `readonly` attrs |
 | `approval_type` / `target_model` selection | Both are on `approval.category` with `selection_add` -- extend there, not on request (request uses related) |
 | Approver CRUD access checks | `approval_approver.py` (`_check_access_create/write/unlink`, `_check_business_rules_*`) — every o2m command on `approver_ids` reaches the row model, so the request has no second copy |
 | `_check_withdraw_allowed()` override | Use `_raise_withdraw_blocked()` for the canonical message; provide clear reasons why withdrawal is blocked |
-| New category fields for validation | Extend `_get_category_required_field_mapping()` in `approval_request_lifecycle.py`  |
+| New category fields for validation | Extend `_get_category_required_field_mapping()` in `approval_app/models/approval_request.py` |
 | Terminal transitions added in new code | Route through `_apply_decision()` (decisions) or `_force_terminal()` (non-decisions) so metadata, activities and notifications stay consistent |
 | SQL views (`approval_metrics`, `approver_performance`) | Both are `_auto = False` + `mixin.sql.report`, which builds the statement at query time from `_get_fields_select()` / `_get_from_tables()` / `_get_where_conditions()` / `_get_fields_group_by()`. A new field needs its own SELECT entry — the field list and the query are not linked |
 | `approval.request.amount` or any threshold | `amount` is **Monetary** in `currency_id`. Never compare it to a rule threshold directly — go through `mixin.approval.threshold._convert_request_amount()`, which converts into the rule's own currency |

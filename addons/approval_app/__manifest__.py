@@ -18,6 +18,11 @@ and eight request categories in the engine appeared on every database that
 installed any of them. The engine keeps the models, security, decision ledger
 and the forms an approver decides from; this module is what a company installs
 when it wants approvals as a product.
+
+It also carries the form a person fills to raise a request by hand: which fields
+a category asks for, templates, document requirements, the checks at confirm,
+autofill and clone defaults. A document's request fills no form, so the engine
+routes and decides without one.
 """,
     "author": "AgroMarin",
     "license": "LGPL-3",
@@ -25,6 +30,13 @@ when it wants approvals as a product.
         "approval",
     ],
     "data": [
+        "security/ir.model.access.csv",
+        "security/ir_rule.xml",
+        "views/approval_category_views.xml",
+        "views/approval_request_views.xml",
+        "views/approval_template_views.xml",
+        "views/approval_document_requirement_views.xml",
+        "views/approval_request_template.xml",
         "data/approval_category_data.xml",
         "views/approvals_menuitem_views.xml",
     ],

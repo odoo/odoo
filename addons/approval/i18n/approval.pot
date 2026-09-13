@@ -6,29 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 11:05+0000\n"
-"PO-Revision-Date: 2026-09-11 11:05+0000\n"
+"POT-Creation-Date: 2026-09-13 13:04+0000\n"
+"PO-Revision-Date: 2026-09-13 13:04+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
-
-#. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "% vs last month)"
-msgstr ""
-
-#. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "% vs last week)"
-msgstr ""
-
-#. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "% vs prev 15d)"
-msgstr ""
 
 #. module: approval
 #. odoo-python
@@ -75,7 +60,15 @@ msgstr ""
 
 #. module: approval
 #. odoo-python
-#: code:addons/approval/wizard/approval_delegate_wizard.py:0
+#: code:addons/approval/models/approval_category_conversion.py:0
+msgid ""
+"%(category)s cannot be converted to steps without changing how its requests are routed:\n"
+"%(reasons)s"
+msgstr ""
+
+#. module: approval
+#. odoo-python
+#: code:addons/approval/wizards/approval_delegate_wizard.py:0
 msgid ""
 "%(count)d approval(s) were skipped because %(delegate)s is the request owner"
 " or already an approver on them."
@@ -109,6 +102,14 @@ msgstr ""
 
 #. module: approval
 #. odoo-python
+#: code:addons/approval/models/mixin_approval.py:0
+msgid ""
+"%(document)s cannot be linked to approval request %(request)s: that request "
+"is about another record, or was already decided without one."
+msgstr ""
+
+#. module: approval
+#. odoo-python
 #: code:addons/approval/models/approval_approver.py:0
 msgid ""
 "%(fields)s cannot be changed once the request is approved, refused or "
@@ -130,6 +131,14 @@ msgstr ""
 msgid ""
 "%(fields)s cannot be set directly — these are computed by the approval "
 "workflow itself and change only as a consequence of real approver decisions."
+msgstr ""
+
+#. module: approval
+#. odoo-python
+#: code:addons/approval/models/mixin_approval.py:0
+msgid ""
+"%(fields)s cannot be written: a document's approval status is its approval "
+"request's, and changes only through a decision on that request."
 msgstr ""
 
 #. module: approval
@@ -260,6 +269,22 @@ msgstr ""
 
 #. module: approval
 #. odoo-python
+#: code:addons/approval/models/approval_request_access.py:0
+msgid ""
+"%(owner)s asked for %(name)s and cannot also approve or refuse it. Its "
+"category does not allow self-approval."
+msgstr ""
+
+#. module: approval
+#. odoo-python
+#: code:addons/approval/models/approval_request_access.py:0
+msgid ""
+"%(owner)s cannot own a request of %(company)s: they do not work in that "
+"company."
+msgstr ""
+
+#. module: approval
+#. odoo-python
 #: code:addons/approval/models/approval_request_routing.py:0
 msgid ""
 "%(principal)s's delegation to %(delegate)s was ended: %(delegate)s is now an"
@@ -358,6 +383,14 @@ msgstr ""
 
 #. module: approval
 #. odoo-python
+#: code:addons/approval/models/approval_request_lifecycle.py:0
+msgid ""
+"%(user)s cannot decide %(steps)s on %(name)s yet: its members decide in "
+"order, and an earlier one has not approved it."
+msgstr ""
+
+#. module: approval
+#. odoo-python
 #: code:addons/approval/models/mixin_approval_state_sync.py:0
 msgid ""
 "%(user)s decided the first step before this approval request existed and "
@@ -425,10 +458,27 @@ msgstr ""
 
 #. module: approval
 #. odoo-python
-#: code:addons/approval/models/ir_attachment.py:0
+#: code:addons/approval/models/approval_category_approver.py:0
 msgid ""
-"'%(requirement)s' is a document requirement of category '%(other)s', not of "
-"this request's category '%(category)s'."
+"'%(category)s' routes its requests by steps, so its approver list is not "
+"read: add %(user)s to one of its steps instead."
+msgstr ""
+
+#. module: approval
+#. odoo-python
+#: code:addons/approval/models/approval_rule.py:0
+msgid ""
+"'%(category)s' routes its requests by steps, which read no rule that adds or"
+" replaces approvers: give a step the approvers, and make '%(rule)s' a step "
+"condition it applies by."
+msgstr ""
+
+#. module: approval
+#. odoo-python
+#: code:addons/approval/models/approval_category.py:0
+msgid ""
+"'%(category)s' takes its approvers from a security group, whose members have"
+" no order: turn off Approvers Sequence."
 msgstr ""
 
 #. module: approval
@@ -458,57 +508,6 @@ msgid ""
 msgstr ""
 
 #. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "15-Day Avg"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_dashboard__trend_15days_display
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "15-Day Trend"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_dashboard__trend_15days
-msgid "15-Day Trend %"
-msgstr ""
-
-#. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "30-Day Avg"
-msgstr ""
-
-#. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "30-Day Trend"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_dashboard__trend_30days
-msgid "30-Day Trend %"
-msgstr ""
-
-#. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "7-Day Avg"
-msgstr ""
-
-#. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "7-Day Trend"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_dashboard__trend_7days
-msgid "7-Day Trend %"
-msgstr ""
-
-#. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "<i class=\"fa-regular fa-clock fa-3x\" title=\"Pending Today\"/>"
-msgstr ""
-
-#. module: approval
 #: model_terms:ir.ui.view,arch_db:approval.view_approval_category_kanban
 msgid "<i class=\"fa-regular fa-clock\"/> Overdue ("
 msgstr ""
@@ -519,18 +518,8 @@ msgid "<i class=\"fa-solid fa-archive\"/> Archive"
 msgstr ""
 
 #. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "<i class=\"fa-solid fa-arrows-rotate\"/> Refresh Data"
-msgstr ""
-
-#. module: approval
 #: model_terms:ir.ui.view,arch_db:approval.view_approval_category_kanban
 msgid "<i class=\"fa-solid fa-check\" title=\"Approved\"/>"
-msgstr ""
-
-#. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "<i class=\"fa-solid fa-check-circle fa-3x\" title=\"Approved Today\"/>"
 msgstr ""
 
 #. module: approval
@@ -539,18 +528,8 @@ msgid "<i class=\"fa-solid fa-cog\"/> Configuration"
 msgstr ""
 
 #. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "<i class=\"fa-solid fa-gauge-high me-2\" title=\"Dashboard\"/>"
-msgstr ""
-
-#. module: approval
 #: model_terms:ir.ui.view,arch_db:approval.view_approval_category_kanban
 msgid "<i class=\"fa-solid fa-gavel\"/> Review Pending ("
-msgstr ""
-
-#. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "<i class=\"fa-solid fa-inbox fa-3x\" title=\"Submitted Today\"/>"
 msgstr ""
 
 #. module: approval
@@ -576,13 +555,8 @@ msgid "<i class=\"fa-solid fa-times\" title=\"Refused\"/>"
 msgstr ""
 
 #. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "<i class=\"fa-solid fa-times-circle fa-3x\" title=\"Refused Today\"/>"
-msgstr ""
-
-#. module: approval
 #. odoo-python
-#: code:addons/approval/wizard/approval_delegate_wizard.py:0
+#: code:addons/approval/wizards/approval_delegate_wizard.py:0
 msgid ""
 "<p>%(user)s has delegated their approval to you for this "
 "request.</p><p>Delegation period: %(start)s to %(end)s</p>"
@@ -714,6 +688,18 @@ msgstr ""
 
 #. module: approval
 #. odoo-python
+#: code:addons/approval/models/approval_decision_log.py:0
+msgid "A recorded approval decision cannot be changed."
+msgstr ""
+
+#. module: approval
+#. odoo-python
+#: code:addons/approval/models/approval_decision_log.py:0
+msgid "A recorded approval decision cannot be deleted."
+msgstr ""
+
+#. module: approval
+#. odoo-python
 #: code:addons/approval/models/approval_request_access.py:0
 msgid ""
 "A refusal on %(name)s stands until whoever refused it, an approval manager, "
@@ -755,6 +741,11 @@ msgid "Access Groups"
 msgstr ""
 
 #. module: approval
+#: model:ir.model.fields,field_description:approval.field_approval_decision_log__user_id
+msgid "Acted By"
+msgstr ""
+
+#. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_binding__action_id
 #: model_terms:ir.ui.view,arch_db:approval.view_approval_rule_form
 msgid "Action"
@@ -787,7 +778,8 @@ msgid ""
 "• Add Approver: inject additional approvers into the workflow\n"
 "• Replace Approvers: these approvers instead of the category's, and this rule's Minimum Approval instead of the category's. The first matching rule by sequence wins. Skipped entirely when the category takes its approvers from a security group, which is where this differs from Add Approver\n"
 "• Auto-Approve: skip approval entirely (logged in audit trail)\n"
-"• Auto-Refuse: automatically refuse the request"
+"• Auto-Refuse: automatically refuse the request\n"
+"• Step Condition: nothing by itself; a step of the category applies when it matches, or unless it does"
 msgstr ""
 
 #. module: approval
@@ -796,7 +788,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:approval.field_approval_category_step__active
 #: model:ir.model.fields,field_description:approval.field_approval_refusal_reason__active
 #: model:ir.model.fields,field_description:approval.field_approval_rule__active
-#: model:ir.model.fields,field_description:approval.field_approval_template__active
 #: model_terms:ir.ui.view,arch_db:approval.view_approval_refusal_reason_search
 msgid "Active"
 msgstr ""
@@ -865,7 +856,6 @@ msgstr ""
 
 #. module: approval
 #: model:ir.actions.act_window,name:approval.action_approval_request_all
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
 msgid "All Approvals"
 msgstr ""
 
@@ -877,6 +867,12 @@ msgstr ""
 #. module: approval
 #: model:ir.model.fields.selection,name:approval.selection__approval_category__privacy_visibility__employees
 msgid "All internal users"
+msgstr ""
+
+#. module: approval
+#: model:ir.model.fields,field_description:approval.field_approval_category__allow_self_approval
+#: model:ir.model.fields,field_description:approval.field_approval_request__allow_self_approval
+msgid "Allow Self Approval"
 msgstr ""
 
 #. module: approval
@@ -895,26 +891,13 @@ msgid "Allowed Users"
 msgstr ""
 
 #. module: approval
-#. odoo-python
-#: code:addons/approval/models/approval_request_lifecycle.py:0
 #: model:ir.model.fields,field_description:approval.field_approval_request__amount
+#: model:ir.model.fields.selection,name:approval.selection__approval_category_step__condition_field__amount
 #: model:ir.model.fields.selection,name:approval.selection__approval_rule__condition_field__amount
+#: model:ir.model.fields.selection,name:approval.selection__mixin_approval_threshold__condition_field__amount
 #: model_terms:ir.ui.view,arch_db:approval.report_approval_request_document
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_category_form
 #: model_terms:ir.ui.view,arch_db:approval.view_approval_request_tree
 msgid "Amount"
-msgstr ""
-
-#. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_category_form
-msgid "Amounts & Quantities"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,help:approval.field_approval_category__has_reference
-#: model:ir.model.fields,help:approval.field_approval_request__has_reference
-#: model:ir.model.fields,help:approval.field_approval_template__has_reference
-msgid "An additional reference that should be specified on the request."
 msgstr ""
 
 #. module: approval
@@ -924,13 +907,16 @@ msgstr ""
 
 #. module: approval
 #. odoo-python
-#: code:addons/approval/models/mixin_approval.py:0
-msgid "An approval request already exists for this document."
+#: code:addons/approval/models/approval_approver.py:0
+msgid ""
+"An approval is recorded by deciding the request, never by writing an "
+"approver's status."
 msgstr ""
 
 #. module: approval
-#: model:ir.model.constraint,message:approval.constraint_approval_template_name_src_uniq
-msgid "An approval template with this name already exists for this company."
+#. odoo-python
+#: code:addons/approval/models/mixin_approval.py:0
+msgid "An approval request already exists for this document."
 msgstr ""
 
 #. module: approval
@@ -1023,7 +1009,6 @@ msgstr ""
 #. module: approval
 #: model:ir.model,name:approval.model_approval_category
 #: model:ir.model.fields,field_description:approval.field_approval_category_approver__category_id
-#: model:ir.model.fields,field_description:approval.field_approval_metrics__category_id
 #: model_terms:ir.ui.view,arch_db:approval.view_approval_category_form
 msgid "Approval Category"
 msgstr ""
@@ -1044,12 +1029,6 @@ msgid "Approval Change Requested"
 msgstr ""
 
 #. module: approval
-#: model:ir.model,name:approval.model_approval_dashboard
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "Approval Dashboard"
-msgstr ""
-
-#. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_request__approval_deadline
 msgid "Approval Deadline"
 msgstr ""
@@ -1060,6 +1039,7 @@ msgid "Approval Deadline (Hours)"
 msgstr ""
 
 #. module: approval
+#: model:ir.model,name:approval.model_approval_decision_log
 #: model_terms:ir.ui.view,arch_db:approval.view_approval_decision_wizard_form
 msgid "Approval Decision"
 msgstr ""
@@ -1075,8 +1055,8 @@ msgid "Approval Delegation Wizard"
 msgstr ""
 
 #. module: approval
-#: model:ir.model,name:approval.model_approval_document_requirement
-msgid "Approval Document Requirement"
+#: model:ir.actions.server,name:approval.ir_cron_hand_delegated_activities_over_ir_actions_server
+msgid "Approval Delegations: Hand Activities Over"
 msgstr ""
 
 #. module: approval
@@ -1096,15 +1076,6 @@ msgid "Approval Inbox"
 msgstr ""
 
 #. module: approval
-#: model:ir.actions.act_window,name:approval.action_approval_metrics
-#: model:ir.model,name:approval.model_approval_metrics
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_metrics_graph
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_metrics_list
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_metrics_pivot
-msgid "Approval Metrics"
-msgstr ""
-
-#. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_request__approval_minimum
 #: model:ir.model.fields,field_description:approval.field_approval_rule__approval_minimum
 msgid "Approval Minimum"
@@ -1120,12 +1091,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:approval.field_mixin_approval__approval_progress
 #: model:ir.model.fields,field_description:approval.field_mixin_approval_state_sync__approval_progress
 msgid "Approval Progress"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_metrics__approval_rate
-#: model:ir.model.fields,field_description:approval.field_approver_performance__approval_rate
-msgid "Approval Rate %"
 msgstr ""
 
 #. module: approval
@@ -1155,11 +1120,6 @@ msgstr ""
 #. module: approval
 #: model:ir.model,name:approval.model_mixin_approval_state_sync
 msgid "Approval Request Following Its Document's State"
-msgstr ""
-
-#. module: approval
-#: model:ir.model,name:approval.model_approval_template
-msgid "Approval Request Template"
 msgstr ""
 
 #. module: approval
@@ -1237,17 +1197,6 @@ msgid "Approval Subject Domain"
 msgstr ""
 
 #. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_template_form
-msgid "Approval Template"
-msgstr ""
-
-#. module: approval
-#: model:ir.actions.act_window,name:approval.action_approval_template
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_template_list
-msgid "Approval Templates"
-msgstr ""
-
-#. module: approval
 #: model:ir.model,name:approval.model_mixin_approval_threshold
 msgid "Approval Threshold Comparison"
 msgstr ""
@@ -1283,11 +1232,6 @@ msgid ""
 msgstr ""
 
 #. module: approval
-#: model:ir.model.fields,help:approval.field_approval_metrics__sla_target_hours
-msgid "Approval deadline configured on the category"
-msgstr ""
-
-#. module: approval
 #. odoo-python
 #: code:addons/approval/models/mixin_approval.py:0
 msgid "Approval for %s"
@@ -1305,13 +1249,6 @@ msgstr ""
 msgid ""
 "Approval link cleared (previous approval: %s). A new approval can be "
 "requested when confirming."
-msgstr ""
-
-#. module: approval
-#: model_terms:ir.actions.act_window,help:approval.action_approval_metrics
-msgid ""
-"Approval metrics will appear here once you have submitted approval requests.\n"
-"                This view provides insights into approval performance by category."
 msgstr ""
 
 #. module: approval
@@ -1345,19 +1282,13 @@ msgstr ""
 
 #. module: approval
 #. odoo-python
-#: code:addons/approval/models/approval_binding.py:0
-msgid "Approval reset: %(binding)s"
-msgstr ""
-
-#. module: approval
-#. odoo-python
 #: code:addons/approval/models/mixin_approval.py:0
 msgid "Approval was withdrawn"
 msgstr ""
 
 #. module: approval
-#: model:res.groups.privilege,name:approval.res_groups_privilege_approvals
 #: model:ir.ui.menu,name:approval.menu_approval_technical
+#: model:res.groups.privilege,name:approval.res_groups_privilege_approvals
 msgid "Approvals"
 msgstr ""
 
@@ -1371,21 +1302,6 @@ msgstr ""
 #: code:addons/approval/models/approval_request.py:0
 #: model:ir.actions.act_window,name:approval.action_approval_request_to_review
 msgid "Approvals to Review"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_dashboard__approvals_per_day_15d
-msgid "Approvals/Day (15-day avg)"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_dashboard__approvals_per_day_30d
-msgid "Approvals/Day (30-day avg)"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_dashboard__approvals_per_day_7d
-msgid "Approvals/Day (7-day avg)"
 msgstr ""
 
 #. module: approval
@@ -1406,9 +1322,8 @@ msgstr ""
 #. module: approval
 #. odoo-python
 #: code:addons/approval/models/approval_category.py:0
-#: model:ir.model.fields,field_description:approval.field_approval_metrics__approved_count
-#: model:ir.model.fields,field_description:approval.field_approver_performance__approved_count
 #: model:ir.model.fields.selection,name:approval.selection__approval_approver__state__approved
+#: model:ir.model.fields.selection,name:approval.selection__approval_decision_log__verdict__approved
 #: model:ir.model.fields.selection,name:approval.selection__approval_request__state__approved
 #: model:ir.model.fields.selection,name:approval.selection__approval_request__user_approver_state__approved
 #: model_terms:ir.ui.view,arch_db:approval.report_approval_request_document
@@ -1422,17 +1337,11 @@ msgid "Approved On"
 msgstr ""
 
 #. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_dashboard__approved_today
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "Approved Today"
-msgstr ""
-
-#. module: approval
 #: model:ir.model,name:approval.model_approval_approver
+#: model:ir.model.fields,field_description:approval.field_approval_decision_log__approver_id
 #: model:ir.model.fields,field_description:approval.field_approval_decision_wizard__approver_id
 #: model:ir.model.fields,field_description:approval.field_approval_delegate_wizard__user_id
 #: model:ir.model.fields,field_description:approval.field_approval_request__approver_ids
-#: model:ir.model.fields,field_description:approval.field_approver_performance__user_id
 #: model:ir.model.fields,field_description:approval.field_mail_activity__approver_id
 #: model:res.groups,name:approval.group_approval_approver
 #: model_terms:ir.ui.view,arch_db:approval.report_approval_request_document
@@ -1444,21 +1353,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:approval.field_approval_category__approver_group_id
 #: model:ir.model.fields,field_description:approval.field_approval_request__approver_group_id
 msgid "Approver Group"
-msgstr ""
-
-#. module: approval
-#: model:ir.actions.act_window,name:approval.action_approver_performance
-#: model:ir.ui.menu,name:approval.menu_approver_performance
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-#: model_terms:ir.ui.view,arch_db:approval.view_approver_performance_graph
-#: model_terms:ir.ui.view,arch_db:approval.view_approver_performance_list
-#: model_terms:ir.ui.view,arch_db:approval.view_approver_performance_pivot
-msgid "Approver Performance"
-msgstr ""
-
-#. module: approval
-#: model:ir.model,name:approval.model_approver_performance
-msgid "Approver Performance Metrics"
 msgstr ""
 
 #. module: approval
@@ -1486,24 +1380,6 @@ msgid "Approver Source"
 msgstr ""
 
 #. module: approval
-#: model_terms:ir.actions.act_window,help:approval.action_approver_performance
-msgid ""
-"Approver performance metrics will appear here once approvers start\n"
-"                making decisions. This view helps identify response times and workload\n"
-"                distribution across approvers."
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,help:approval.field_approval_dashboard__slowest_approver_id
-msgid "Approver with longest average response time"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,help:approval.field_approval_dashboard__most_pending_approver_id
-msgid "Approver with most pending requests"
-msgstr ""
-
-#. module: approval
 #: model_terms:ir.ui.view,arch_db:approval.view_approval_request_form
 msgid "Approver(s)"
 msgstr ""
@@ -1518,6 +1394,17 @@ msgid ""
 msgstr ""
 
 #. module: approval
+#. odoo-python
+#: code:addons/approval/models/approval_request_routing.py:0
+msgid ""
+"Approver(s) added because the request changed: %(names)s.\n"
+"\n"
+"The steps of category '%(category)s' now ask for them. Approvals already given stand."
+msgstr ""
+
+#. module: approval
+#. odoo-python
+#: code:addons/approval/models/approval_category_conversion.py:0
 #: model:ir.model.fields,field_description:approval.field_approval_category__approver_ids
 #: model:ir.model.fields,field_description:approval.field_approval_category_step__user_ids
 #: model:ir.model.fields,field_description:approval.field_mixin_approval__approval_user_ids
@@ -1536,6 +1423,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:approval.field_approval_category__approve_sequentially
 #: model:ir.model.fields,field_description:approval.field_approval_request__approve_sequentially
 msgid "Approvers Sequence?"
+msgstr ""
+
+#. module: approval
+#: model:ir.model.fields,help:approval.field_approval_category_step__counts_added_approvers
+msgid ""
+"Approvers added by hand to a request, beyond those routing names, join this "
+"step: they are asked, may decide it, and their approvals count toward its "
+"quorum. It is how a category routed by its approver list treated them."
 msgstr ""
 
 #. module: approval
@@ -1581,14 +1476,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:approval.view_approval_refusal_reason_search
 #: model_terms:ir.ui.view,arch_db:approval.view_approval_rule_form
 #: model_terms:ir.ui.view,arch_db:approval.view_approval_rule_search
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_template_form
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_template_search
 msgid "Archived"
 msgstr ""
 
 #. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_category__activity_target
 msgid "Ask Approvers On"
+msgstr ""
+
+#. module: approval
+#: model:ir.model.fields,field_description:approval.field_approval_category_step__asks_group_members
+msgid "Asks the Group's Members"
 msgstr ""
 
 #. module: approval
@@ -1599,15 +1497,6 @@ msgstr ""
 #. module: approval
 #: model_terms:ir.ui.view,arch_db:approval.view_approval_request_form
 msgid "Attach Document"
-msgstr ""
-
-#. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_request_form
-msgid ""
-"Attach a file for each required document, then\n"
-"                                say which requirement it satisfies. The approvers\n"
-"                                see the answer; nothing is inferred from the file\n"
-"                                name."
 msgstr ""
 
 #. module: approval
@@ -1704,114 +1593,6 @@ msgid "Automatically refused by rule '%(rule)s'."
 msgstr ""
 
 #. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_category__automation_id
-#: model:ir.model.fields,field_description:approval.field_approval_request__automation_id
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_category_form
-msgid "Automation"
-msgstr ""
-
-#. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_request_form
-msgid "Automation Details"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_request__automation_runtime_id
-msgid "Automation Runtime"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,help:approval.field_approval_category__has_automation
-#: model:ir.model.fields,help:approval.field_approval_request__has_automation
-msgid "Automation flows that should be specified on the request."
-msgstr ""
-
-#. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "Average Response"
-msgstr ""
-
-#. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "Average Response Time"
-msgstr ""
-
-#. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "Average Time"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,help:approval.field_approval_dashboard__slowest_category_hours
-msgid "Average approval time for slowest category"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,help:approval.field_approval_dashboard__slowest_approver_hours
-msgid "Average response time for slowest approver"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,help:approval.field_approver_performance__avg_response_hours
-msgid "Average time from request submission to approval/refusal"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,help:approval.field_approval_metrics__avg_approval_hours
-msgid "Average time from submission to approval"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,help:approval.field_approval_dashboard__avg_approval_time_all_time
-msgid "Average time from submission to approval across all requests"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,help:approval.field_approval_dashboard__avg_response_time_hours
-msgid "Average time from submission to decision for requests resolved today"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_dashboard__avg_approval_time_all_time
-msgid "Avg Approval Time (All Time, hours)"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_metrics__avg_approval_hours
-msgid "Avg Approval Time (hours)"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_dashboard__avg_response_hours_15d
-msgid "Avg Response Time (15d, hours)"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_dashboard__avg_response_hours_30d
-msgid "Avg Response Time (30d, hours)"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_dashboard__avg_response_hours_7d
-msgid "Avg Response Time (7d, hours)"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approver_performance__avg_response_hours
-msgid "Avg Response Time (hours)"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_dashboard__avg_response_time_hours
-msgid "Avg Response Time Today (hours)"
-msgstr ""
-
-#. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "Avg:"
-msgstr ""
-
-#. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_request__is_pending_my_review
 msgid "Awaiting My Decision"
 msgstr ""
@@ -1837,7 +1618,9 @@ msgid "Behaviour"
 msgstr ""
 
 #. module: approval
+#: model:ir.model.fields.selection,name:approval.selection__approval_category_step__operator__between
 #: model:ir.model.fields.selection,name:approval.selection__approval_rule__operator__between
+#: model:ir.model.fields.selection,name:approval.selection__mixin_approval_threshold__operator__between
 msgid "Between"
 msgstr ""
 
@@ -1919,8 +1702,8 @@ msgid ""
 msgstr ""
 
 #. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_metrics__cancelled_count
 #: model:ir.model.fields.selection,name:approval.selection__approval_approver__state__cancelled
+#: model:ir.model.fields.selection,name:approval.selection__approval_decision_log__verdict__cancelled
 #: model:ir.model.fields.selection,name:approval.selection__approval_request__revoked_state__cancelled
 #: model:ir.model.fields.selection,name:approval.selection__approval_request__state__cancelled
 #: model:ir.model.fields.selection,name:approval.selection__approval_request__user_approver_state__cancelled
@@ -2042,20 +1825,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:approval.field_approval_binding__category_id
 #: model:ir.model.fields,field_description:approval.field_approval_category_step__category_id
 #: model:ir.model.fields,field_description:approval.field_approval_decision_wizard__category_id
-#: model:ir.model.fields,field_description:approval.field_approval_document_requirement__category_id
 #: model:ir.model.fields,field_description:approval.field_approval_request__category_id
 #: model:ir.model.fields,field_description:approval.field_approval_rule__category_id
-#: model:ir.model.fields,field_description:approval.field_approval_template__category_id
 #: model_terms:ir.ui.view,arch_db:approval.view_approval_rule_search
 #: model_terms:ir.ui.view,arch_db:approval.view_approval_search_search
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_template_search
 msgid "Category"
-msgstr ""
-
-#. module: approval
-#: model:ir.ui.menu,name:approval.menu_approval_metrics
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "Category Metrics"
 msgstr ""
 
 #. module: approval
@@ -2073,16 +1847,6 @@ msgstr ""
 msgid ""
 "Category of approval for filtering and grouping purposes (e.g., 'purchase', "
 "'expense', 'vacation'). Used to organize and filter approval requests."
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,help:approval.field_approval_template__category_id
-msgid "Category this template creates requests for"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,help:approval.field_approval_dashboard__slowest_category_id
-msgid "Category with longest average approval time"
 msgstr ""
 
 #. module: approval
@@ -2128,12 +1892,10 @@ msgstr ""
 #: model:ir.model.fields,field_description:approval.field_approval_category_approver__company_id
 #: model:ir.model.fields,field_description:approval.field_approval_category_step__company_id
 #: model:ir.model.fields,field_description:approval.field_approval_category_step_member__company_id
-#: model:ir.model.fields,field_description:approval.field_approval_metrics__company_id
+#: model:ir.model.fields,field_description:approval.field_approval_decision_log__company_id
 #: model:ir.model.fields,field_description:approval.field_approval_refusal_reason__company_id
 #: model:ir.model.fields,field_description:approval.field_approval_request__company_id
 #: model:ir.model.fields,field_description:approval.field_approval_rule__company_id
-#: model:ir.model.fields,field_description:approval.field_approval_template__company_id
-#: model:ir.model.fields,field_description:approval.field_approver_performance__company_id
 #: model:ir.model.fields,field_description:approval.field_mixin_approval_threshold__company_id
 msgid "Company"
 msgstr ""
@@ -2144,6 +1906,8 @@ msgid "Company Currency"
 msgstr ""
 
 #. module: approval
+#: model:ir.model.fields,help:approval.field_approval_category_step__company_id
+#: model:ir.model.fields,help:approval.field_approval_category_step_member__company_id
 #: model:ir.model.fields,help:approval.field_approval_rule__company_id
 #: model:ir.model.fields,help:approval.field_mixin_approval_threshold__company_id
 msgid ""
@@ -2153,7 +1917,9 @@ msgid ""
 msgstr ""
 
 #. module: approval
+#: model:ir.model.fields,field_description:approval.field_approval_category_step__operator
 #: model:ir.model.fields,field_description:approval.field_approval_rule__operator
+#: model:ir.model.fields,field_description:approval.field_mixin_approval_threshold__operator
 msgid "Comparison"
 msgstr ""
 
@@ -2164,7 +1930,9 @@ msgid "Condition"
 msgstr ""
 
 #. module: approval
+#: model:ir.model.fields,field_description:approval.field_approval_category_step__condition_field
 #: model:ir.model.fields,field_description:approval.field_approval_rule__condition_field
+#: model:ir.model.fields,field_description:approval.field_mixin_approval_threshold__condition_field
 msgid "Condition Field"
 msgstr ""
 
@@ -2228,12 +1996,14 @@ msgid ""
 msgstr ""
 
 #. module: approval
-#. odoo-python
-#: code:addons/approval/models/approval_request_lifecycle.py:0
 #: model_terms:ir.ui.view,arch_db:approval.report_approval_request_document
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_category_form
 #: model_terms:ir.ui.view,arch_db:approval.view_approval_search_search
 msgid "Contact"
+msgstr ""
+
+#. module: approval
+#: model_terms:ir.ui.view,arch_db:approval.approval_category_view_form_steps
+msgid "Convert Approvers to Steps"
 msgstr ""
 
 #. module: approval
@@ -2242,23 +2012,18 @@ msgid "Count Attachment"
 msgstr ""
 
 #. module: approval
+#: model:ir.model.fields,field_description:approval.field_approval_category_step__counts_added_approvers
+msgid "Counts Approvers Added to the Request"
+msgstr ""
+
+#. module: approval
 #: model_terms:ir.ui.view,arch_db:approval.view_approval_search_search
 msgid "Create Date"
 msgstr ""
 
 #. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_template_form
-msgid "Create Request"
-msgstr ""
-
-#. module: approval
 #: model_terms:ir.actions.act_window,help:approval.action_approval_category_dashboard
 msgid "Create approval categories to organize your approval workflows."
-msgstr ""
-
-#. module: approval
-#: model_terms:ir.actions.act_window,help:approval.action_approval_template
-msgid "Create your first approval template"
 msgstr ""
 
 #. module: approval
@@ -2279,14 +2044,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:approval.field_approval_category_approver__create_uid
 #: model:ir.model.fields,field_description:approval.field_approval_category_step__create_uid
 #: model:ir.model.fields,field_description:approval.field_approval_category_step_member__create_uid
-#: model:ir.model.fields,field_description:approval.field_approval_dashboard__create_uid
+#: model:ir.model.fields,field_description:approval.field_approval_decision_log__create_uid
 #: model:ir.model.fields,field_description:approval.field_approval_decision_wizard__create_uid
 #: model:ir.model.fields,field_description:approval.field_approval_delegate_wizard__create_uid
-#: model:ir.model.fields,field_description:approval.field_approval_document_requirement__create_uid
 #: model:ir.model.fields,field_description:approval.field_approval_refusal_reason__create_uid
 #: model:ir.model.fields,field_description:approval.field_approval_request__create_uid
 #: model:ir.model.fields,field_description:approval.field_approval_rule__create_uid
-#: model:ir.model.fields,field_description:approval.field_approval_template__create_uid
 msgid "Created by"
 msgstr ""
 
@@ -2298,18 +2061,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:approval.field_approval_category_approver__create_date
 #: model:ir.model.fields,field_description:approval.field_approval_category_step__create_date
 #: model:ir.model.fields,field_description:approval.field_approval_category_step_member__create_date
-#: model:ir.model.fields,field_description:approval.field_approval_dashboard__create_date
+#: model:ir.model.fields,field_description:approval.field_approval_decision_log__create_date
 #: model:ir.model.fields,field_description:approval.field_approval_decision_wizard__create_date
 #: model:ir.model.fields,field_description:approval.field_approval_delegate_wizard__create_date
-#: model:ir.model.fields,field_description:approval.field_approval_document_requirement__create_date
 #: model:ir.model.fields,field_description:approval.field_approval_refusal_reason__create_date
 #: model:ir.model.fields,field_description:approval.field_approval_request__create_date
 #: model:ir.model.fields,field_description:approval.field_approval_rule__create_date
-#: model:ir.model.fields,field_description:approval.field_approval_template__create_date
 msgid "Created on"
 msgstr ""
 
 #. module: approval
+#: model:ir.model.fields,field_description:approval.field_approval_category_step__currency_id
 #: model:ir.model.fields,field_description:approval.field_approval_request__currency_id
 #: model:ir.model.fields,field_description:approval.field_approval_rule__currency_id
 #: model:ir.model.fields,field_description:approval.field_mixin_approval_threshold__currency_id
@@ -2327,6 +2089,7 @@ msgid ""
 msgstr ""
 
 #. module: approval
+#: model:ir.model.fields,help:approval.field_approval_category_step__currency_id
 #: model:ir.model.fields,help:approval.field_approval_rule__currency_id
 #: model:ir.model.fields,help:approval.field_mixin_approval_threshold__currency_id
 msgid ""
@@ -2354,15 +2117,8 @@ msgid "Currently Delegated"
 msgstr ""
 
 #. module: approval
-#: model:ir.actions.act_window,name:approval.action_approval_dashboard
-#: model:ir.ui.menu,name:approval.menu_approval_dashboard
 #: model_terms:ir.ui.view,arch_db:approval.view_approval_category_form
 msgid "Dashboard"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_dashboard__name
-msgid "Dashboard Name"
 msgstr ""
 
 #. module: approval
@@ -2371,14 +2127,12 @@ msgid "Data migration"
 msgstr ""
 
 #. module: approval
-#. odoo-python
-#: code:addons/approval/models/approval_request_lifecycle.py:0
 #: model:ir.model.fields,field_description:approval.field_approval_binding_observation__date
+#: model:ir.model.fields,field_description:approval.field_approval_decision_log__date
 #: model:ir.model.fields,field_description:approval.field_approval_request__date
 #: model:ir.model.fields.selection,name:approval.selection__approval_decision_wizard__change_field__date
 #: model:ir.model.fields.selection,name:approval.selection__approval_request__pending_change_field__date
 #: model_terms:ir.ui.view,arch_db:approval.report_approval_request_document
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_category_form
 #: model_terms:ir.ui.view,arch_db:approval.view_approval_request_form
 #: model_terms:ir.ui.view,arch_db:approval.view_approval_request_tree
 #: model_terms:ir.ui.view,arch_db:approval.view_approval_search_search
@@ -2406,24 +2160,14 @@ msgid "Date Confirmed"
 msgstr ""
 
 #. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_request__date_deadline
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_request_form
-msgid "Date Deadline"
-msgstr ""
-
-#. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_request__date_end
 msgid "Date End"
 msgstr ""
 
 #. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_request__date_planned
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_request_form
-msgid "Date Planned"
-msgstr ""
-
-#. module: approval
+#: model:ir.model.fields.selection,name:approval.selection__approval_category_step__condition_field__date_range_days
 #: model:ir.model.fields.selection,name:approval.selection__approval_rule__condition_field__date_range_days
+#: model:ir.model.fields.selection,name:approval.selection__mixin_approval_threshold__condition_field__date_range_days
 msgid "Date Range (Days)"
 msgstr ""
 
@@ -2470,19 +2214,6 @@ msgid ""
 msgstr ""
 
 #. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_category_form
-msgid "Dates"
-msgstr ""
-
-#. module: approval
-#. odoo-python
-#: code:addons/approval/models/approval_request_lifecycle.py:0
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_category_form
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_request_tree
-msgid "Deadline"
-msgstr ""
-
-#. module: approval
 #: model:ir.model.fields,help:approval.field_approval_request__approval_deadline
 msgid "Deadline for approval decision based on category settings"
 msgstr ""
@@ -2514,6 +2245,12 @@ msgid "Decision Date"
 msgstr ""
 
 #. module: approval
+#: model:ir.model.fields,field_description:approval.field_approval_request__decision_log_ids
+#: model_terms:ir.ui.view,arch_db:approval.view_approval_request_form
+msgid "Decision History"
+msgstr ""
+
+#. module: approval
 #: model:ir.model.fields,help:approval.field_approval_category__step_ids
 msgid ""
 "Declare steps when approval must pass several pools, each needing its own "
@@ -2522,49 +2259,8 @@ msgid ""
 msgstr ""
 
 #. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_template__default_amount
-msgid "Default Amount"
-msgstr ""
-
-#. module: approval
 #: model_terms:ir.ui.view,arch_db:approval.view_approval_category_form
 msgid "Default Approvers"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_template__default_partner_id
-msgid "Default Contact"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_template__default_reason
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_template_form
-msgid "Default Description"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_template__default_location
-msgid "Default Location"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_template__default_priority
-msgid "Default Priority"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_template__default_quantity
-msgid "Default Quantity"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_template__default_reference
-msgid "Default Reference"
-msgstr ""
-
-#. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_template_form
-msgid "Default Values"
 msgstr ""
 
 #. module: approval
@@ -2581,7 +2277,7 @@ msgstr ""
 
 #. module: approval
 #. odoo-python
-#: code:addons/approval/wizard/approval_delegate_wizard.py:0
+#: code:addons/approval/wizards/approval_delegate_wizard.py:0
 msgid "Delegated Approval: %s"
 msgstr ""
 
@@ -2602,7 +2298,7 @@ msgstr ""
 
 #. module: approval
 #. odoo-python
-#: code:addons/approval/wizard/approval_delegate_wizard.py:0
+#: code:addons/approval/wizards/approval_delegate_wizard.py:0
 msgid "Delegation Set"
 msgstr ""
 
@@ -2629,25 +2325,12 @@ msgid "Deleted Document"
 msgstr ""
 
 #. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_template_form
-msgid "Describe when to use this template..."
-msgstr ""
-
-#. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_category__description
-#: model:ir.model.fields,field_description:approval.field_approval_document_requirement__description
-#: model:ir.model.fields,field_description:approval.field_approval_template__description
 #: model:ir.model.fields.selection,name:approval.selection__approval_decision_wizard__change_field__reason
 #: model:ir.model.fields.selection,name:approval.selection__approval_request__pending_change_field__reason
 #: model_terms:ir.ui.view,arch_db:approval.report_approval_request_document
 #: model_terms:ir.ui.view,arch_db:approval.view_approval_request_form
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_template_form
 msgid "Description"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,help:approval.field_approval_template__description
-msgid "Description shown to users when selecting this template"
 msgstr ""
 
 #. module: approval
@@ -2669,16 +2352,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:approval.field_approval_category_approver__display_name
 #: model:ir.model.fields,field_description:approval.field_approval_category_step__display_name
 #: model:ir.model.fields,field_description:approval.field_approval_category_step_member__display_name
-#: model:ir.model.fields,field_description:approval.field_approval_dashboard__display_name
+#: model:ir.model.fields,field_description:approval.field_approval_decision_log__display_name
 #: model:ir.model.fields,field_description:approval.field_approval_decision_wizard__display_name
 #: model:ir.model.fields,field_description:approval.field_approval_delegate_wizard__display_name
-#: model:ir.model.fields,field_description:approval.field_approval_document_requirement__display_name
-#: model:ir.model.fields,field_description:approval.field_approval_metrics__display_name
 #: model:ir.model.fields,field_description:approval.field_approval_refusal_reason__display_name
 #: model:ir.model.fields,field_description:approval.field_approval_request__display_name
 #: model:ir.model.fields,field_description:approval.field_approval_rule__display_name
-#: model:ir.model.fields,field_description:approval.field_approval_template__display_name
-#: model:ir.model.fields,field_description:approval.field_approver_performance__display_name
 #: model:ir.model.fields,field_description:approval.field_ir_actions_report__display_name
 #: model:ir.model.fields,field_description:approval.field_ir_actions_server__display_name
 #: model:ir.model.fields,field_description:approval.field_ir_attachment__display_name
@@ -2701,47 +2380,8 @@ msgid "Display name of the source document"
 msgstr ""
 
 #. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_category_form
-msgid "Document"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_category__document_requirement_ids
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_document_requirement_list
-msgid "Document Requirements"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.constraint,message:approval.constraint_approval_document_requirement_name_src_uniq
-msgid "Document requirement name must be unique per category."
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,help:approval.field_approval_document_requirement__name
-msgid ""
-"Document type name (e.g. 'Invoice PDF', 'Vendor Quote'). A LABEL, "
-"translatable for the ordinary reason: the requester picks it from a dropdown"
-" on the file they upload. It used to be load-bearing — the confirm-time "
-"check matched it as a substring of the uploaded file NAMES, so an "
-"untranslated value silently forced requesters to name their files in "
-"whatever language the category was configured in, and on an es_MX deployment"
-" 'Factura.pdf' failed a requirement called 'Invoice' with an error telling "
-"the user to rename their file. The link is structural now "
-"(ir.attachment.approval_requirement_id), so the name means nothing to the "
-"check — and the cross-language uniqueness constraint that matching needed is"
-" gone with it."
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_category__has_document
-#: model:ir.model.fields,field_description:approval.field_approval_request__has_document
 #: model_terms:ir.ui.view,arch_db:approval.view_approval_request_form
 msgid "Documents"
-msgstr ""
-
-#. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_category_form
-msgid "Documents & Automation"
 msgstr ""
 
 #. module: approval
@@ -2752,17 +2392,6 @@ msgstr ""
 #. module: approval
 #: model:ir.model.fields,help:approval.field_approval_binding__subject_domain
 msgid "Domain on the gated model. Empty means every record."
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,help:approval.field_approval_binding__reset_domain
-msgid ""
-"Domain on the gated model. When a covered record comes to match it, the "
-"approval that covered the record is reset to draft, so the next call asks "
-"again -- the way web_studio resets its approvals when a sale order, invoice "
-"or purchase order returns to draft, for any model and condition. It fires on"
-" the transition INTO the condition only, so an approval given while the "
-"record already matches is not wiped by the next edit."
 msgstr ""
 
 #. module: approval
@@ -2834,11 +2463,13 @@ msgstr ""
 
 #. module: approval
 #: model:ir.model.fields.selection,name:approval.selection__approval_binding_observation__elevation__self_elevated
+#: model:ir.model.fields.selection,name:approval.selection__approval_decision_log__elevation__self_elevated
 msgid "Elevated by sudo()"
 msgstr ""
 
 #. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_binding_observation__elevation
+#: model:ir.model.fields,field_description:approval.field_approval_decision_log__elevation
 msgid "Elevation"
 msgstr ""
 
@@ -2867,12 +2498,14 @@ msgstr ""
 #. module: approval
 #. odoo-python
 #: code:addons/approval/models/approval_request_access.py:0
-#: code:addons/approval/wizard/approval_delegate_wizard.py:0
+#: code:addons/approval/wizards/approval_delegate_wizard.py:0
 msgid "End date must be after start date."
 msgstr ""
 
 #. module: approval
+#: model:ir.model.fields.selection,name:approval.selection__approval_category_step__operator__eq
 #: model:ir.model.fields.selection,name:approval.selection__approval_rule__operator__eq
+#: model:ir.model.fields.selection,name:approval.selection__mixin_approval_threshold__operator__eq
 msgid "Equal to"
 msgstr ""
 
@@ -2890,6 +2523,14 @@ msgstr ""
 #. odoo-python
 #: code:addons/approval/models/approval_request_escalation.py:0
 msgid "Escalation: Overdue Approval - %(name)s"
+msgstr ""
+
+#. module: approval
+#: model:ir.model.fields,help:approval.field_approval_category_step__asks_group_members
+msgid ""
+"Every member of the approval group is asked, with an activity and an e-mail."
+" Off, the group is a queue its members decide from To Review, and only the "
+"step's listed members are asked."
 msgstr ""
 
 #. module: approval
@@ -2916,7 +2557,7 @@ msgstr ""
 
 #. module: approval
 #. odoo-python
-#: code:addons/approval/wizard/approval_decision_wizard.py:0
+#: code:addons/approval/wizards/approval_decision_wizard.py:0
 msgid "Explain what the requester should change."
 msgstr ""
 
@@ -2961,8 +2602,11 @@ msgid "Field to Modify"
 msgstr ""
 
 #. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_category_form
-msgid "Fields"
+#: model:ir.model.fields,help:approval.field_approval_category_step__condition_field
+#: model:ir.model.fields,help:approval.field_mixin_approval_threshold__condition_field
+msgid ""
+"Figure on the request to compare: the amount, converted into this record's "
+"currency, the quantity, the date range in days, or the priority."
 msgstr ""
 
 #. module: approval
@@ -3025,12 +2669,21 @@ msgid "Granted By User"
 msgstr ""
 
 #. module: approval
+#: model:ir.model.fields.selection,name:approval.selection__approval_decision_log__verdict__granted
+msgid "Granted without a decision"
+msgstr ""
+
+#. module: approval
+#: model:ir.model.fields.selection,name:approval.selection__approval_category_step__operator__gt
 #: model:ir.model.fields.selection,name:approval.selection__approval_rule__operator__gt
+#: model:ir.model.fields.selection,name:approval.selection__mixin_approval_threshold__operator__gt
 msgid "Greater than"
 msgstr ""
 
 #. module: approval
+#: model:ir.model.fields.selection,name:approval.selection__approval_category_step__operator__gte
 #: model:ir.model.fields.selection,name:approval.selection__approval_rule__operator__gte
+#: model:ir.model.fields.selection,name:approval.selection__mixin_approval_threshold__operator__gte
 msgid "Greater than or equal"
 msgstr ""
 
@@ -3041,74 +2694,9 @@ msgid "Group Members"
 msgstr ""
 
 #. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_category__has_amount
-#: model:ir.model.fields,field_description:approval.field_approval_request__has_amount
-#: model:ir.model.fields,field_description:approval.field_approval_template__has_amount
-msgid "Has Amount"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_category__has_automation
-#: model:ir.model.fields,field_description:approval.field_approval_request__has_automation
-msgid "Has Automation"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_category__has_partner
-#: model:ir.model.fields,field_description:approval.field_approval_request__has_partner
-#: model:ir.model.fields,field_description:approval.field_approval_template__has_partner
-msgid "Has Contact"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_category__has_date
-#: model:ir.model.fields,field_description:approval.field_approval_request__has_date
-msgid "Has Date"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_category__has_date_deadline
-#: model:ir.model.fields,field_description:approval.field_approval_request__has_date_deadline
-msgid "Has Date Deadline"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_category__has_date_planned
-#: model:ir.model.fields,field_description:approval.field_approval_request__has_date_planned
-msgid "Has Date Planned"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_category__has_date_range
-#: model:ir.model.fields,field_description:approval.field_approval_request__has_date_range
-msgid "Has Date Range"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_category__has_location
-#: model:ir.model.fields,field_description:approval.field_approval_request__has_location
-#: model:ir.model.fields,field_description:approval.field_approval_template__has_location
-msgid "Has Location"
-msgstr ""
-
-#. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_category__has_message
 #: model:ir.model.fields,field_description:approval.field_approval_request__has_message
 msgid "Has Message"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_category__has_quantity
-#: model:ir.model.fields,field_description:approval.field_approval_request__has_quantity
-#: model:ir.model.fields,field_description:approval.field_approval_template__has_quantity
-msgid "Has Quantity"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_category__has_reference
-#: model:ir.model.fields,field_description:approval.field_approval_request__has_reference
-#: model:ir.model.fields,field_description:approval.field_approval_template__has_reference
-msgid "Has Reference"
 msgstr ""
 
 #. module: approval
@@ -3118,7 +2706,6 @@ msgstr ""
 
 #. module: approval
 #: model:ir.model.fields.selection,name:approval.selection__approval_request__priority__2
-#: model:ir.model.fields.selection,name:approval.selection__approval_template__default_priority__2
 #: model_terms:ir.ui.view,arch_db:approval.report_approval_request_document
 msgid "High"
 msgstr ""
@@ -3126,11 +2713,6 @@ msgstr ""
 #. module: approval
 #: model_terms:ir.ui.view,arch_db:approval.view_approval_search_search
 msgid "High & Urgent"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_dashboard__most_pending_count
-msgid "Highest Pending Count"
 msgstr ""
 
 #. module: approval
@@ -3149,18 +2731,9 @@ msgid "How many approvals from this step's pool complete it."
 msgstr ""
 
 #. module: approval
-#: model:ir.model.fields,help:approval.field_approval_dashboard__trend_15days_display
-msgid "Human-readable 15-day trend with arrow"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,help:approval.field_approval_dashboard__trend_30days_display
-msgid "Human-readable 30-day trend with arrow"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,help:approval.field_approval_dashboard__trend_7days_display
-msgid "Human-readable 7-day trend with arrow"
+#: model:ir.model.fields,help:approval.field_approval_category_step__operator
+#: model:ir.model.fields,help:approval.field_mixin_approval_threshold__operator
+msgid "How the request's figure compares with the threshold."
 msgstr ""
 
 #. module: approval
@@ -3171,16 +2744,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:approval.field_approval_category_approver__id
 #: model:ir.model.fields,field_description:approval.field_approval_category_step__id
 #: model:ir.model.fields,field_description:approval.field_approval_category_step_member__id
-#: model:ir.model.fields,field_description:approval.field_approval_dashboard__id
+#: model:ir.model.fields,field_description:approval.field_approval_decision_log__id
 #: model:ir.model.fields,field_description:approval.field_approval_decision_wizard__id
 #: model:ir.model.fields,field_description:approval.field_approval_delegate_wizard__id
-#: model:ir.model.fields,field_description:approval.field_approval_document_requirement__id
-#: model:ir.model.fields,field_description:approval.field_approval_metrics__id
 #: model:ir.model.fields,field_description:approval.field_approval_refusal_reason__id
 #: model:ir.model.fields,field_description:approval.field_approval_request__id
 #: model:ir.model.fields,field_description:approval.field_approval_rule__id
-#: model:ir.model.fields,field_description:approval.field_approval_template__id
-#: model:ir.model.fields,field_description:approval.field_approver_performance__id
 #: model:ir.model.fields,field_description:approval.field_ir_actions_report__id
 #: model:ir.model.fields,field_description:approval.field_ir_actions_server__id
 #: model:ir.model.fields,field_description:approval.field_ir_attachment__id
@@ -3215,9 +2784,7 @@ msgstr ""
 
 #. module: approval
 #: model:ir.model.fields,help:approval.field_approval_category__message_has_error
-#: model:ir.model.fields,help:approval.field_approval_category__message_has_sms_error
 #: model:ir.model.fields,help:approval.field_approval_request__message_has_error
-#: model:ir.model.fields,help:approval.field_approval_request__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr ""
 
@@ -3231,14 +2798,15 @@ msgid ""
 msgstr ""
 
 #. module: approval
-#: model:ir.model.fields,help:approval.field_approval_document_requirement__required
-msgid "If checked, this document must be attached before submission"
-msgstr ""
-
-#. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_category__image
 #: model:ir.model.fields,field_description:approval.field_approval_request__category_image
 msgid "Image"
+msgstr ""
+
+#. module: approval
+#. odoo-python
+#: code:addons/approval/models/approval_category_conversion.py:0
+msgid "In order"
 msgstr ""
 
 #. module: approval
@@ -3265,16 +2833,6 @@ msgstr ""
 #. module: approval
 #: model:approval.refusal.reason,description:approval.refusal_reason_incorrect_information
 msgid "Information provided is inaccurate, incomplete, or contains errors."
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,help:approval.field_approval_document_requirement__description
-msgid "Instructions for the requester about this document"
-msgstr ""
-
-#. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_category_form
-msgid "Instructions..."
 msgstr ""
 
 #. module: approval
@@ -3329,13 +2887,16 @@ msgid "Is Terminal"
 msgstr ""
 
 #. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_category__kanban_dashboard
-msgid "Kanban Dashboard"
+#. odoo-python
+#: code:addons/approval/models/approval_category_conversion.py:0
+msgid ""
+"Its routing rules combine into %(count)s cases, each a step of its own; at "
+"most %(maximum)s are converted."
 msgstr ""
 
 #. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_dashboard__last_refresh
-msgid "Last Refreshed"
+#: model:ir.model.fields,field_description:approval.field_approval_category__kanban_dashboard
+msgid "Kanban Dashboard"
 msgstr ""
 
 #. module: approval
@@ -3351,14 +2912,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:approval.field_approval_category_approver__write_uid
 #: model:ir.model.fields,field_description:approval.field_approval_category_step__write_uid
 #: model:ir.model.fields,field_description:approval.field_approval_category_step_member__write_uid
-#: model:ir.model.fields,field_description:approval.field_approval_dashboard__write_uid
+#: model:ir.model.fields,field_description:approval.field_approval_decision_log__write_uid
 #: model:ir.model.fields,field_description:approval.field_approval_decision_wizard__write_uid
 #: model:ir.model.fields,field_description:approval.field_approval_delegate_wizard__write_uid
-#: model:ir.model.fields,field_description:approval.field_approval_document_requirement__write_uid
 #: model:ir.model.fields,field_description:approval.field_approval_refusal_reason__write_uid
 #: model:ir.model.fields,field_description:approval.field_approval_request__write_uid
 #: model:ir.model.fields,field_description:approval.field_approval_rule__write_uid
-#: model:ir.model.fields,field_description:approval.field_approval_template__write_uid
 msgid "Last Updated by"
 msgstr ""
 
@@ -3370,14 +2929,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:approval.field_approval_category_approver__write_date
 #: model:ir.model.fields,field_description:approval.field_approval_category_step__write_date
 #: model:ir.model.fields,field_description:approval.field_approval_category_step_member__write_date
-#: model:ir.model.fields,field_description:approval.field_approval_dashboard__write_date
+#: model:ir.model.fields,field_description:approval.field_approval_decision_log__write_date
 #: model:ir.model.fields,field_description:approval.field_approval_decision_wizard__write_date
 #: model:ir.model.fields,field_description:approval.field_approval_delegate_wizard__write_date
-#: model:ir.model.fields,field_description:approval.field_approval_document_requirement__write_date
 #: model:ir.model.fields,field_description:approval.field_approval_refusal_reason__write_date
 #: model:ir.model.fields,field_description:approval.field_approval_request__write_date
 #: model:ir.model.fields,field_description:approval.field_approval_rule__write_date
-#: model:ir.model.fields,field_description:approval.field_approval_template__write_date
 msgid "Last Updated on"
 msgstr ""
 
@@ -3391,11 +2948,6 @@ msgstr ""
 msgid ""
 "Last day this user may approve the step. Empty means no end, so a delegation"
 " until a date is a membership with an end date."
-msgstr ""
-
-#. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "Last refreshed:"
 msgstr ""
 
 #. module: approval
@@ -3418,12 +2970,16 @@ msgid ""
 msgstr ""
 
 #. module: approval
+#: model:ir.model.fields.selection,name:approval.selection__approval_category_step__operator__lt
 #: model:ir.model.fields.selection,name:approval.selection__approval_rule__operator__lt
+#: model:ir.model.fields.selection,name:approval.selection__mixin_approval_threshold__operator__lt
 msgid "Less than"
 msgstr ""
 
 #. module: approval
+#: model:ir.model.fields.selection,name:approval.selection__approval_category_step__operator__lte
 #: model:ir.model.fields.selection,name:approval.selection__approval_rule__operator__lte
+#: model:ir.model.fields.selection,name:approval.selection__mixin_approval_threshold__operator__lte
 msgid "Less than or equal"
 msgstr ""
 
@@ -3454,18 +3010,7 @@ msgid ""
 msgstr ""
 
 #. module: approval
-#. odoo-python
-#: code:addons/approval/models/approval_request_lifecycle.py:0
-#: model:ir.model.fields,field_description:approval.field_approval_request__location
-#: model_terms:ir.ui.view,arch_db:approval.report_approval_request_document
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_category_form
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_request_tree
-msgid "Location"
-msgstr ""
-
-#. module: approval
 #: model:ir.model.fields.selection,name:approval.selection__approval_request__priority__0
-#: model:ir.model.fields.selection,name:approval.selection__approval_template__default_priority__0
 #: model_terms:ir.ui.view,arch_db:approval.report_approval_request_document
 msgid "Low"
 msgstr ""
@@ -3476,36 +3021,14 @@ msgid "Main Attachment"
 msgstr ""
 
 #. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "Mean (All Time)"
-msgstr ""
-
-#. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "Median (90d)"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_dashboard__median_approval_hours
-#: model:ir.model.fields,field_description:approval.field_approval_metrics__median_approval_hours
-msgid "Median Approval Time (hours)"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,help:approval.field_approval_metrics__median_approval_hours
-msgid "Median time from submission to approval (50th percentile)"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,help:approval.field_approval_dashboard__median_approval_hours
-msgid ""
-"Median time from submission to approval (50th percentile, last 90 days)"
-msgstr ""
-
-#. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_category_step__member_ids
 #: model_terms:ir.ui.view,arch_db:approval.approval_category_step_view_form
 msgid "Members"
+msgstr ""
+
+#. module: approval
+#: model:ir.model.fields,field_description:approval.field_approval_category_step__in_order
+msgid "Members Decide in Order"
 msgstr ""
 
 #. module: approval
@@ -3582,23 +3105,18 @@ msgid "Missing Documentation"
 msgstr ""
 
 #. module: approval
-#. odoo-python
-#: code:addons/approval/models/approval_request_lifecycle.py:0
-msgid ""
-"Missing required documents: %(missing)s\n"
-"\n"
-"Attach a file for each, and set its 'Satisfies Requirement' so the approvers know which document is which."
-msgstr ""
-
-#. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_binding__mode
 msgid "Mode"
 msgstr ""
 
 #. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_binding__model_id
-#: model:ir.model.fields,field_description:approval.field_approval_binding__model_name
 msgid "Model"
+msgstr ""
+
+#. module: approval
+#: model:ir.model.fields,field_description:approval.field_approval_binding__model_name
+msgid "Model Name"
 msgstr ""
 
 #. module: approval
@@ -3630,21 +3148,6 @@ msgid ""
 msgstr ""
 
 #. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_dashboard__trend_30days_display
-msgid "Month Trend"
-msgstr ""
-
-#. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "Most Overloaded"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_dashboard__most_pending_approver_id
-msgid "Most Overloaded Approver"
-msgstr ""
-
-#. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_request__my_activity_date_deadline
 msgid "My Activity Deadline"
 msgstr ""
@@ -3652,16 +3155,6 @@ msgstr ""
 #. module: approval
 #: model:ir.actions.act_window,name:approval.action_approval_my_history
 msgid "My Approval History"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_dashboard__my_avg_response_hours
-msgid "My Avg Response Time (hours)"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_dashboard__my_pending_count
-msgid "My Pending Approvals"
 msgstr ""
 
 #. module: approval
@@ -3674,28 +3167,17 @@ msgid "My Requests"
 msgstr ""
 
 #. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_dashboard__my_pending_urgent_count
-msgid "My Urgent Pending"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,help:approval.field_approval_dashboard__my_avg_response_hours
-msgid "My average time to approve/refuse requests"
-msgstr ""
-
-#. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_binding__name
 #: model:ir.model.fields,field_description:approval.field_approval_category__name
 #: model:ir.model.fields,field_description:approval.field_approval_category_step__name
-#: model:ir.model.fields,field_description:approval.field_approval_document_requirement__name
 #: model:ir.model.fields,field_description:approval.field_approval_request__name
 #: model:ir.model.fields,field_description:approval.field_approval_rule__name
 msgid "Name"
 msgstr ""
 
 #. module: approval
-#: model:ir.model.fields,help:approval.field_approval_template__name
-msgid "Name of this template (e.g., 'Weekly Expense Report')"
+#: model:ir.model.fields,field_description:approval.field_approval_category_step__subject_user_required
+msgid "Named Users Are Required"
 msgstr ""
 
 #. module: approval
@@ -3734,12 +3216,6 @@ msgid "New Request"
 msgstr ""
 
 #. module: approval
-#. odoo-python
-#: code:addons/approval/models/approval_template.py:0
-msgid "New Request from: %s"
-msgstr ""
-
-#. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_request__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr ""
@@ -3761,7 +3237,7 @@ msgstr ""
 
 #. module: approval
 #. odoo-python
-#: code:addons/approval/wizard/approval_delegate_wizard.py:0
+#: code:addons/approval/wizards/approval_delegate_wizard.py:0
 #: model_terms:ir.actions.act_window,help:approval.action_approval_request_all
 msgid "No Approvals"
 msgstr ""
@@ -3803,19 +3279,9 @@ msgid "No approval is asked for this on %(record)s."
 msgstr ""
 
 #. module: approval
-#: model_terms:ir.actions.act_window,help:approval.action_approval_metrics
-msgid "No approval metrics available yet"
-msgstr ""
-
-#. module: approval
 #. odoo-python
-#: code:addons/approval/wizard/approval_delegate_wizard.py:0
+#: code:addons/approval/wizards/approval_delegate_wizard.py:0
 msgid "No approvals found to delegate."
-msgstr ""
-
-#. module: approval
-#: model_terms:ir.actions.act_window,help:approval.action_approver_performance
-msgid "No approver performance data available yet"
 msgstr ""
 
 #. module: approval
@@ -3829,22 +3295,7 @@ msgid "No new approvals to review"
 msgstr ""
 
 #. module: approval
-#: model:ir.model.fields.selection,name:approval.selection__approval_category__has_amount__no
-#: model:ir.model.fields.selection,name:approval.selection__approval_category__has_automation__no
-#: model:ir.model.fields.selection,name:approval.selection__approval_category__has_date__no
-#: model:ir.model.fields.selection,name:approval.selection__approval_category__has_date_deadline__no
-#: model:ir.model.fields.selection,name:approval.selection__approval_category__has_date_planned__no
-#: model:ir.model.fields.selection,name:approval.selection__approval_category__has_date_range__no
-#: model:ir.model.fields.selection,name:approval.selection__approval_category__has_location__no
-#: model:ir.model.fields.selection,name:approval.selection__approval_category__has_partner__no
-#: model:ir.model.fields.selection,name:approval.selection__approval_category__has_quantity__no
-#: model:ir.model.fields.selection,name:approval.selection__approval_category__has_reference__no
-msgid "None"
-msgstr ""
-
-#. module: approval
 #: model:ir.model.fields.selection,name:approval.selection__approval_request__priority__1
-#: model:ir.model.fields.selection,name:approval.selection__approval_template__default_priority__1
 msgid "Normal"
 msgstr ""
 
@@ -3865,12 +3316,15 @@ msgid "Not enough comparable decided requests to predict an outcome."
 msgstr ""
 
 #. module: approval
+#: model:ir.model.fields.selection,name:approval.selection__approval_category_step__operator__neq
 #: model:ir.model.fields.selection,name:approval.selection__approval_rule__operator__neq
+#: model:ir.model.fields.selection,name:approval.selection__mixin_approval_threshold__operator__neq
 msgid "Not equal to"
 msgstr ""
 
 #. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_approver__note
+#: model:ir.model.fields,field_description:approval.field_approval_decision_log__note
 #: model:ir.model.fields,field_description:approval.field_approval_decision_wizard__note
 #: model_terms:ir.ui.view,arch_db:approval.report_approval_request_document
 #: model_terms:ir.ui.view,arch_db:approval.view_approval_decision_wizard_form
@@ -3895,6 +3349,11 @@ msgid "Notify"
 msgstr ""
 
 #. module: approval
+#: model:ir.model.fields,field_description:approval.field_approval_category__notify_pool_members
+msgid "Notify Pool Members"
+msgstr ""
+
+#. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_category__message_needaction_counter
 #: model:ir.model.fields,field_description:approval.field_approval_request__message_needaction_counter
 msgid "Number of Actions"
@@ -3903,21 +3362,6 @@ msgstr ""
 #. module: approval
 #: model:ir.model.fields,help:approval.field_approval_category__rule_count
 msgid "Number of active conditional rules"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,help:approval.field_approval_category__template_count
-msgid "Number of active templates"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,help:approval.field_approval_metrics__sla_compliant_count
-msgid "Number of approved requests resolved within the SLA target"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,help:approval.field_approval_metrics__cancelled_count
-msgid "Number of cancelled requests (owner retraction / auto-expiration)"
 msgstr ""
 
 #. module: approval
@@ -3956,36 +3400,6 @@ msgid "Number of pending approvals that will be delegated"
 msgstr ""
 
 #. module: approval
-#: model:ir.model.fields,help:approval.field_approval_dashboard__most_pending_count
-msgid "Number of pending requests for most overloaded approver"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,help:approval.field_approver_performance__approved_count
-msgid "Number of requests approved by this user"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,help:approval.field_approval_dashboard__my_pending_count
-msgid "Number of requests awaiting my approval"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,help:approval.field_approval_template__usage_count
-msgid "Number of requests created from this template"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,help:approval.field_approver_performance__pending_count
-msgid "Number of requests currently awaiting this user's approval"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,help:approval.field_approver_performance__refused_count
-msgid "Number of requests this user moved to the terminal refused state."
-msgstr ""
-
-#. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_category__count_request_to_validate
 msgid "Number of requests to validate"
 msgstr ""
@@ -3993,11 +3407,6 @@ msgstr ""
 #. module: approval
 #: model:ir.model.fields,help:approval.field_approval_refusal_reason__usage_count
 msgid "Number of times this reason has been used"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,help:approval.field_approval_dashboard__my_pending_urgent_count
-msgid "Number of urgent requests awaiting my approval"
 msgstr ""
 
 #. module: approval
@@ -4011,7 +3420,9 @@ msgid "Numeric threshold"
 msgstr ""
 
 #. module: approval
+#: model:ir.model.fields,help:approval.field_approval_category_step__threshold
 #: model:ir.model.fields,help:approval.field_approval_rule__threshold
+#: model:ir.model.fields,help:approval.field_mixin_approval_threshold__threshold
 msgid ""
 "Numeric threshold to compare against, and the lower bound (inclusive) when "
 "the comparison is 'Between'. For priority: 0=Low, 1=Normal, 2=High, "
@@ -4040,8 +3451,28 @@ msgid "Observed"
 msgstr ""
 
 #. module: approval
+#: model:ir.model.fields,field_description:approval.field_approval_decision_log__principal_id
+msgid "On Behalf Of"
+msgstr ""
+
+#. module: approval
 #: model:ir.model.fields.selection,name:approval.selection__approval_request__sla_status__on_track
 msgid "On Track"
+msgstr ""
+
+#. module: approval
+#: model:ir.model.fields,help:approval.field_approval_category_step__subject_user_sequence
+msgid ""
+"On a step whose members decide in order, where the users the source field "
+"names stand among the members' sequences."
+msgstr ""
+
+#. module: approval
+#. odoo-python
+#: code:addons/approval/models/mixin_approval.py:0
+msgid ""
+"One approval request is about one record; it cannot be linked to %(count)s "
+"at once."
 msgstr ""
 
 #. module: approval
@@ -4050,14 +3481,6 @@ msgstr ""
 msgid ""
 "Only %(approver)s, an approval manager, or a member of a later step can "
 "withdraw that decision on %(name)s."
-msgstr ""
-
-#. module: approval
-#. odoo-python
-#: code:addons/approval/models/ir_attachment.py:0
-msgid ""
-"Only a file attached to an approval request can satisfy one of its document "
-"requirements."
 msgstr ""
 
 #. module: approval
@@ -4105,7 +3528,9 @@ msgid ""
 msgstr ""
 
 #. module: approval
+#: model:ir.model.fields,help:approval.field_approval_category_step__threshold_max
 #: model:ir.model.fields,help:approval.field_approval_rule__threshold_max
+#: model:ir.model.fields,help:approval.field_mixin_approval_threshold__threshold_max
 msgid ""
 "Only for the 'Between' comparison: the upper bound, exclusive. 0 means "
 "unlimited, which is how the highest band is expressed."
@@ -4179,31 +3604,6 @@ msgid ""
 msgstr ""
 
 #. module: approval
-#: model:ir.actions.server,name:approval.action_approval_dashboard_view_singleton
-msgid "Open Approval Dashboard"
-msgstr ""
-
-#. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_request_form
-msgid "Operation Generation"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields.selection,name:approval.selection__approval_category__has_amount__optional
-#: model:ir.model.fields.selection,name:approval.selection__approval_category__has_automation__optional
-#: model:ir.model.fields.selection,name:approval.selection__approval_category__has_date__optional
-#: model:ir.model.fields.selection,name:approval.selection__approval_category__has_date_deadline__optional
-#: model:ir.model.fields.selection,name:approval.selection__approval_category__has_date_planned__optional
-#: model:ir.model.fields.selection,name:approval.selection__approval_category__has_date_range__optional
-#: model:ir.model.fields.selection,name:approval.selection__approval_category__has_document__optional
-#: model:ir.model.fields.selection,name:approval.selection__approval_category__has_location__optional
-#: model:ir.model.fields.selection,name:approval.selection__approval_category__has_partner__optional
-#: model:ir.model.fields.selection,name:approval.selection__approval_category__has_quantity__optional
-#: model:ir.model.fields.selection,name:approval.selection__approval_category__has_reference__optional
-msgid "Optional"
-msgstr ""
-
-#. module: approval
 #: model:ir.model.fields,help:approval.field_approval_refusal_reason__description
 msgid "Optional detailed explanation of when this reason should be used"
 msgstr ""
@@ -4242,25 +3642,15 @@ msgid "Outcome prediction"
 msgstr ""
 
 #. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_dashboard__overall_approval_rate
-msgid "Overall Approval Rate %"
-msgstr ""
-
-#. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "Overall Metrics"
-msgstr ""
-
-#. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "Overall Performance"
-msgstr ""
-
-#. module: approval
 #. odoo-python
 #: code:addons/approval/models/approval_category.py:0
 #: model_terms:ir.ui.view,arch_db:approval.view_approval_search_search
 msgid "Overdue"
+msgstr ""
+
+#. module: approval
+#: model:ir.model.fields.selection,name:approval.selection__approval_decision_log__elevation__none
+msgid "Own rights"
 msgstr ""
 
 #. module: approval
@@ -4282,7 +3672,6 @@ msgstr ""
 #. module: approval
 #. odoo-python
 #: code:addons/approval/models/approval_category.py:0
-#: model:ir.model.fields,field_description:approval.field_approval_metrics__pending_count
 #: model_terms:ir.ui.view,arch_db:approval.report_approval_request_document
 #: model_terms:ir.ui.view,arch_db:approval.view_approval_search_search
 msgid "Pending"
@@ -4306,12 +3695,6 @@ msgid "Pending Approvals Only"
 msgstr ""
 
 #. module: approval
-#. odoo-python
-#: code:addons/approval/report/approval_dashboard.py:0
-msgid "Pending Approvals: %s"
-msgstr ""
-
-#. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_request__pending_approver_ids
 msgid "Pending Approver"
 msgstr ""
@@ -4323,24 +3706,8 @@ msgid "Pending Approvers"
 msgstr ""
 
 #. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "Pending Count"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approver_performance__pending_count
-msgid "Pending Now"
-msgstr ""
-
-#. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_approver__pending_since
 msgid "Pending Since"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_dashboard__pending_today
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "Pending Today"
 msgstr ""
 
 #. module: approval
@@ -4357,35 +3724,6 @@ msgid ""
 msgstr ""
 
 #. module: approval
-#: model:ir.model.fields,help:approval.field_approval_dashboard__trend_30days
-msgid "Percentage change in submission volume vs last month"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,help:approval.field_approval_dashboard__trend_7days
-msgid "Percentage change in submission volume vs last week"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,help:approval.field_approval_dashboard__trend_15days
-msgid "Percentage change in submission volume vs previous 15 days"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,help:approval.field_approval_metrics__approval_rate
-msgid ""
-"Percentage of DECIDED requests that were approved. The denominator counts "
-"approvals and refusals only — a cancelled request was retracted or expired, "
-"so nobody decided it, and counting it would drag the rate down without any "
-"approver having said no."
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,help:approval.field_approval_dashboard__overall_approval_rate
-msgid "Percentage of all requests that were approved"
-msgstr ""
-
-#. module: approval
 #: model:ir.model.fields,help:approval.field_approval_request__approval_progress
 #: model:ir.model.fields,help:approval.field_mixin_approval__approval_progress
 #: model:ir.model.fields,help:approval.field_mixin_approval_state_sync__approval_progress
@@ -4393,44 +3731,14 @@ msgid "Percentage of approvals completed (approved / total approvers)"
 msgstr ""
 
 #. module: approval
-#: model:ir.model.fields,help:approval.field_approval_metrics__sla_compliance_rate
-msgid "Percentage of approved requests that met the SLA deadline"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,help:approval.field_approver_performance__approval_rate
-msgid "Percentage of decisions that were approvals (vs refusals)"
-msgstr ""
-
-#. module: approval
 #: model_terms:ir.ui.view,arch_db:approval.report_approval_request_document
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_category_form
 #: model_terms:ir.ui.view,arch_db:approval.view_approval_request_form
 msgid "Period"
 msgstr ""
 
 #. module: approval
-#. odoo-python
-#: code:addons/approval/models/approval_request_lifecycle.py:0
-msgid "Period End Date"
-msgstr ""
-
-#. module: approval
-#. odoo-python
-#: code:addons/approval/models/approval_request_lifecycle.py:0
-msgid "Period Start Date"
-msgstr ""
-
-#. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_request_tree
-msgid "Planned"
-msgstr ""
-
-#. module: approval
-#. odoo-python
-#: code:addons/approval/models/approval_request_lifecycle.py:0
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_category_form
-msgid "Planned Date"
+#: model:ir.model.fields,field_description:approval.field_approval_category_step__subject_user_sequence
+msgid "Place in Order"
 msgstr ""
 
 #. module: approval
@@ -4447,7 +3755,7 @@ msgstr ""
 
 #. module: approval
 #. odoo-python
-#: code:addons/approval/wizard/approval_decision_wizard.py:0
+#: code:addons/approval/wizards/approval_decision_wizard.py:0
 msgid "Please select a reason for refusing this request."
 msgstr ""
 
@@ -4457,25 +3765,8 @@ msgid "Policy Violation"
 msgstr ""
 
 #. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_category__website_message_ids
-#: model:ir.model.fields,field_description:approval.field_approval_request__website_message_ids
-msgid "Portal Messages"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,help:approval.field_approval_category__website_message_ids
-#: model:ir.model.fields,help:approval.field_approval_request__website_message_ids
-msgid "Portal communication history for this record."
-msgstr ""
-
-#. module: approval
 #: model:ir.model.fields,help:approval.field_approval_category_step__notify_user_ids
 msgid "Posted an internal note when an approver of this step decides."
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,help:approval.field_approval_template__default_reason
-msgid "Pre-filled reason/description for the request"
 msgstr ""
 
 #. module: approval
@@ -4502,7 +3793,9 @@ msgstr ""
 
 #. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_request__priority
+#: model:ir.model.fields.selection,name:approval.selection__approval_category_step__condition_field__priority
 #: model:ir.model.fields.selection,name:approval.selection__approval_rule__condition_field__priority
+#: model:ir.model.fields.selection,name:approval.selection__mixin_approval_threshold__condition_field__priority
 #: model_terms:ir.ui.view,arch_db:approval.view_approval_search_search
 msgid "Priority"
 msgstr ""
@@ -4530,17 +3823,11 @@ msgid "Privacy"
 msgstr ""
 
 #. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "Processing Rate (Approvals/Day)"
-msgstr ""
-
-#. module: approval
-#. odoo-python
-#: code:addons/approval/models/approval_request_lifecycle.py:0
 #: model:ir.model.fields,field_description:approval.field_approval_request__quantity
+#: model:ir.model.fields.selection,name:approval.selection__approval_category_step__condition_field__quantity
 #: model:ir.model.fields.selection,name:approval.selection__approval_rule__condition_field__quantity
+#: model:ir.model.fields.selection,name:approval.selection__mixin_approval_threshold__condition_field__quantity
 #: model_terms:ir.ui.view,arch_db:approval.report_approval_request_document
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_category_form
 msgid "Quantity"
 msgstr ""
 
@@ -4591,15 +3878,6 @@ msgid "Record an Approval Request Is Raised For"
 msgstr ""
 
 #. module: approval
-#. odoo-python
-#: code:addons/approval/models/approval_request_lifecycle.py:0
-#: model:ir.model.fields,field_description:approval.field_approval_request__reference
-#: model_terms:ir.ui.view,arch_db:approval.report_approval_request_document
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_category_form
-msgid "Reference"
-msgstr ""
-
-#. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_category__sequence_id
 msgid "Reference Sequence"
 msgstr ""
@@ -4612,22 +3890,13 @@ msgid ""
 msgstr ""
 
 #. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_category_form
-msgid "References & Contacts"
-msgstr ""
-
-#. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "Refresh"
-msgstr ""
-
-#. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_request__refusal_note
 msgid "Refusal Note"
 msgstr ""
 
 #. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_approver__refusal_reason_id
+#: model:ir.model.fields,field_description:approval.field_approval_decision_log__refusal_reason_id
 #: model:ir.model.fields,field_description:approval.field_approval_decision_wizard__refusal_reason_id
 #: model:ir.model.fields,field_description:approval.field_approval_request__refusal_reason_id
 #: model_terms:ir.ui.view,arch_db:approval.view_approval_refusal_reason_form
@@ -4636,8 +3905,8 @@ msgstr ""
 
 #. module: approval
 #: model:ir.actions.act_window,name:approval.action_approval_refusal_reason
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_refusal_reason_list
 #: model:ir.ui.menu,name:approval.menu_approval_technical_refusal_reason
+#: model_terms:ir.ui.view,arch_db:approval.view_approval_refusal_reason_list
 msgid "Refusal Reasons"
 msgstr ""
 
@@ -4675,20 +3944,14 @@ msgstr ""
 #. module: approval
 #. odoo-python
 #: code:addons/approval/models/approval_category.py:0
-#: model:ir.model.fields,field_description:approval.field_approver_performance__refused_count
 #: model:ir.model.fields.selection,name:approval.selection__approval_approver__state__refused
+#: model:ir.model.fields.selection,name:approval.selection__approval_decision_log__verdict__refused
 #: model:ir.model.fields.selection,name:approval.selection__approval_request__revoked_state__refused
 #: model:ir.model.fields.selection,name:approval.selection__approval_request__state__refused
 #: model:ir.model.fields.selection,name:approval.selection__approval_request__user_approver_state__refused
 #: model_terms:ir.ui.view,arch_db:approval.report_approval_request_document
 #: model_terms:ir.ui.view,arch_db:approval.view_approval_search_search
 msgid "Refused"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_dashboard__refused_today
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "Refused Today"
 msgstr ""
 
 #. module: approval
@@ -4701,11 +3964,6 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/approval/static/src/views/view_button/approval_button_popover.xml:0
 msgid "Refused. The refusal stands until it is reopened."
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_metrics__rejected_count
-msgid "Rejected"
 msgstr ""
 
 #. module: approval
@@ -4744,6 +4002,7 @@ msgstr ""
 
 #. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_approver__request_id
+#: model:ir.model.fields,field_description:approval.field_approval_decision_log__request_id
 #: model:ir.model.fields,field_description:approval.field_approval_decision_wizard__request_name
 #: model:ir.model.fields.selection,name:approval.selection__approval_binding__mode__request
 #: model_terms:ir.ui.view,arch_db:approval.view_approval_request_form
@@ -4851,65 +4110,15 @@ msgstr ""
 
 #. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_decision_wizard__request_ids
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_template_form
 msgid "Requests"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,help:approval.field_approval_dashboard__pending_today
-msgid "Requests currently pending (submitted today)"
-msgstr ""
-
-#. module: approval
-#. odoo-python
-#: code:addons/approval/models/approval_template.py:0
-msgid "Requests from: %s"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_dashboard__requests_per_day_15d
-msgid "Requests/Day (15-day avg)"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_dashboard__requests_per_day_30d
-msgid "Requests/Day (30-day avg)"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_dashboard__requests_per_day_7d
-msgid "Requests/Day (7-day avg)"
-msgstr ""
-
-#. module: approval
-#. odoo-python
-#: code:addons/approval/report/approval_dashboard.py:0
-msgid "Requests: %s"
 msgstr ""
 
 #. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_approver__required
 #: model:ir.model.fields,field_description:approval.field_approval_category_approver__required
-#: model:ir.model.fields,field_description:approval.field_approval_document_requirement__required
-#: model:ir.model.fields.selection,name:approval.selection__approval_category__has_amount__required
-#: model:ir.model.fields.selection,name:approval.selection__approval_category__has_automation__required
-#: model:ir.model.fields.selection,name:approval.selection__approval_category__has_date__required
-#: model:ir.model.fields.selection,name:approval.selection__approval_category__has_date_deadline__required
-#: model:ir.model.fields.selection,name:approval.selection__approval_category__has_date_planned__required
-#: model:ir.model.fields.selection,name:approval.selection__approval_category__has_date_range__required
-#: model:ir.model.fields.selection,name:approval.selection__approval_category__has_document__required
-#: model:ir.model.fields.selection,name:approval.selection__approval_category__has_location__required
-#: model:ir.model.fields.selection,name:approval.selection__approval_category__has_partner__required
-#: model:ir.model.fields.selection,name:approval.selection__approval_category__has_quantity__required
-#: model:ir.model.fields.selection,name:approval.selection__approval_category__has_reference__required
+#: model:ir.model.fields,field_description:approval.field_approval_category_step_member__required
 #: model_terms:ir.ui.view,arch_db:approval.report_approval_request_document
 msgid "Required"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_request__document_requirement_ids
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_category_form
-msgid "Required Documents"
 msgstr ""
 
 #. module: approval
@@ -4946,22 +4155,6 @@ msgid "Res Name"
 msgstr ""
 
 #. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_binding__reset_automation_id
-msgid "Reset Automation"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_binding__reset_domain
-msgid "Reset When"
-msgstr ""
-
-#. module: approval
-#. odoo-python
-#: code:addons/approval/models/approval_binding.py:0
-msgid "Reset the approvals of %(binding)s"
-msgstr ""
-
-#. module: approval
 #: model_terms:ir.ui.view,arch_db:approval.view_approval_request_form
 msgid ""
 "Reset this APPROVED request to draft? This revokes the approval and notifies"
@@ -4975,14 +4168,14 @@ msgid "Reset to Draft"
 msgstr ""
 
 #. module: approval
-#. odoo-python
-#: code:addons/approval/models/approval_request_lifecycle.py:0
-msgid "Reset to draft from '%(state)s' by %(user)s."
+#: model:ir.model.fields.selection,name:approval.selection__approval_decision_log__verdict__reset
+msgid "Reset to draft"
 msgstr ""
 
 #. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "Response Time"
+#. odoo-python
+#: code:addons/approval/models/approval_request_lifecycle.py:0
+msgid "Reset to draft from '%(state)s' by %(user)s."
 msgstr ""
 
 #. module: approval
@@ -5001,18 +4194,8 @@ msgid "Restricted to selected users"
 msgstr ""
 
 #. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "Review My Pending"
-msgstr ""
-
-#. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "Review Pending"
-msgstr ""
-
-#. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "Review pending →"
+#: model:ir.model.fields.selection,name:approval.selection__approval_decision_log__verdict__revoked
+msgid "Revoked"
 msgstr ""
 
 #. module: approval
@@ -5023,6 +4206,13 @@ msgstr ""
 #. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_request__revoked_state
 msgid "Revoked State"
+msgstr ""
+
+#. module: approval
+#: model_terms:ir.ui.view,arch_db:approval.approval_category_view_form_steps
+msgid ""
+"Rewrite this category's approvers and routing rules as steps? Submitted "
+"requests keep their approvers and decisions and continue by the steps."
 msgstr ""
 
 #. module: approval
@@ -5129,16 +4319,6 @@ msgid "SLA Breached"
 msgstr ""
 
 #. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_metrics__sla_compliance_rate
-msgid "SLA Compliance %"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_metrics__sla_compliant_count
-msgid "SLA Compliant"
-msgstr ""
-
-#. module: approval
 #: model:ir.model.fields.selection,name:approval.selection__approval_request__sla_status__met
 msgid "SLA Met"
 msgstr ""
@@ -5146,11 +4326,6 @@ msgstr ""
 #. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_category__sla_target_hours
 msgid "SLA Target (Hours)"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_metrics__sla_target_hours
-msgid "SLA Target (hours)"
 msgstr ""
 
 #. module: approval
@@ -5169,17 +4344,6 @@ msgid ""
 "SLA compliance status for this request. Non-stored: the value tracks the "
 "wall clock (see _compute_sla_status); filtering goes through "
 "_search_sla_status."
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_category__message_has_sms_error
-#: model:ir.model.fields,field_description:approval.field_approval_request__message_has_sms_error
-msgid "SMS Delivery error"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_ir_attachment__approval_requirement_id
-msgid "Satisfies Requirement"
 msgstr ""
 
 #. module: approval
@@ -5225,7 +4389,7 @@ msgstr ""
 
 #. module: approval
 #. odoo-python
-#: code:addons/approval/wizard/approval_decision_wizard.py:0
+#: code:addons/approval/wizards/approval_decision_wizard.py:0
 msgid "Select which field the requester must update (date or description)."
 msgstr ""
 
@@ -5240,10 +4404,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:approval.field_approval_category__sequence
 #: model:ir.model.fields,field_description:approval.field_approval_category_approver__sequence
 #: model:ir.model.fields,field_description:approval.field_approval_category_step__sequence
-#: model:ir.model.fields,field_description:approval.field_approval_document_requirement__sequence
+#: model:ir.model.fields,field_description:approval.field_approval_category_step_member__sequence
 #: model:ir.model.fields,field_description:approval.field_approval_refusal_reason__sequence
 #: model:ir.model.fields,field_description:approval.field_approval_rule__sequence
-#: model:ir.model.fields,field_description:approval.field_approval_template__sequence
 msgid "Sequence"
 msgstr ""
 
@@ -5359,28 +4522,6 @@ msgid "Sla Status"
 msgstr ""
 
 #. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_dashboard__slowest_approver_id
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "Slowest Approver"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_dashboard__slowest_approver_hours
-msgid "Slowest Approver Time (hours)"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_dashboard__slowest_category_id
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "Slowest Category"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_dashboard__slowest_category_hours
-msgid "Slowest Category Time (hours)"
-msgstr ""
-
-#. module: approval
 #: model:ir.actions.server,name:approval.ir_cron_smart_escalation_ir_actions_server
 msgid "Smart Approval Escalation"
 msgstr ""
@@ -5459,6 +4600,11 @@ msgid "State"
 msgstr ""
 
 #. module: approval
+#: model:ir.model.fields,field_description:approval.field_approval_decision_log__state_after
+msgid "State After"
+msgstr ""
+
+#. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_approver__state
 #: model_terms:ir.ui.view,arch_db:approval.view_approval_search_search
 msgid "Status"
@@ -5475,6 +4621,7 @@ msgstr ""
 
 #. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_category_step_member__step_id
+#: model:ir.model.fields,field_description:approval.field_approval_decision_log__step_ids
 msgid "Step"
 msgstr ""
 
@@ -5482,6 +4629,22 @@ msgstr ""
 #. odoo-python
 #: code:addons/approval/models/approval_binding_editor.py:0
 msgid "Step %(sequence)s"
+msgstr ""
+
+#. module: approval
+#. odoo-python
+#: code:addons/approval/models/approval_category_step.py:0
+msgid ""
+"Step '%(step)s' applies between %(low)s and %(high)s: the upper bound must "
+"be above the lower one, or 0 for no bound."
+msgstr ""
+
+#. module: approval
+#. odoo-python
+#: code:addons/approval/models/approval_category_step.py:0
+msgid ""
+"Step '%(step)s' compares the request's %(field)s but says not how: choose a "
+"comparison."
 msgstr ""
 
 #. module: approval
@@ -5498,6 +4661,22 @@ msgstr ""
 msgid ""
 "Step '%(step)s' has nobody who could approve it: give it members, an "
 "approval group, or a field on the source document that names its approvers."
+msgstr ""
+
+#. module: approval
+#. odoo-python
+#: code:addons/approval/models/approval_category_step.py:0
+msgid ""
+"Step '%(step)s' lets its members decide in order, and consent-based auto-"
+"approval approves every member at once. Disable one or the other."
+msgstr ""
+
+#. module: approval
+#. odoo-python
+#: code:addons/approval/models/approval_category_step.py:0
+msgid ""
+"Step '%(step)s' lets its members decide in order, so a group's users, who "
+"have no place in that order, cannot decide it."
 msgstr ""
 
 #. module: approval
@@ -5532,10 +4711,23 @@ msgid "Step '%(step)s' needs at least one approval."
 msgstr ""
 
 #. module: approval
+#: model:ir.model.fields.selection,name:approval.selection__approval_rule__action_type__condition
+msgid "Step Condition"
+msgstr ""
+
+#. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_approver__step_ids
 #: model:ir.model.fields,field_description:approval.field_approval_category__step_ids
 #: model_terms:ir.ui.view,arch_db:approval.approval_category_view_form_steps
 msgid "Steps"
+msgstr ""
+
+#. module: approval
+#. odoo-python
+#: code:addons/approval/models/approval_rule.py:0
+msgid ""
+"Steps %(steps)s apply by these rules, so the rules must stay active step "
+"conditions: change the steps first."
 msgstr ""
 
 #. module: approval
@@ -5546,11 +4738,6 @@ msgstr ""
 #. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_request__subject_key
 msgid "Subject Key"
-msgstr ""
-
-#. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "Submission Rate (Requests/Day)"
 msgstr ""
 
 #. module: approval
@@ -5565,14 +4752,8 @@ msgid "Submitted"
 msgstr ""
 
 #. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_dashboard__submitted_today
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "Submitted Today"
-msgstr ""
-
-#. module: approval
 #. odoo-python
-#: code:addons/approval/wizard/approval_delegate_wizard.py:0
+#: code:addons/approval/wizards/approval_delegate_wizard.py:0
 msgid ""
 "Successfully delegated %(count)d approval(s) to %(delegate)s from %(start)s "
 "to %(end)s"
@@ -5585,6 +4766,7 @@ msgstr ""
 
 #. module: approval
 #: model:ir.model.fields.selection,name:approval.selection__approval_binding_observation__elevation__superuser
+#: model:ir.model.fields.selection,name:approval.selection__approval_decision_log__elevation__superuser
 msgid "Superuser"
 msgstr ""
 
@@ -5625,45 +4807,6 @@ msgid ""
 "empty if the approval is for an existing record (e.g., approving a purchase "
 "order). Set to model name (e.g., 'purchase.order') if approval should create"
 " a new record."
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_request__template_id
-#: model_terms:ir.ui.view,arch_db:approval.report_approval_request_document
-msgid "Template"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_category__template_count
-msgid "Template Count"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_template__name
-msgid "Template Name"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,help:approval.field_approval_request__template_id
-msgid "Template this request was created from (if any)"
-msgstr ""
-
-#. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_category_form
-msgid "Templates"
-msgstr ""
-
-#. module: approval
-#: model_terms:ir.actions.act_window,help:approval.action_approval_template
-msgid ""
-"Templates pre-fill approval requests with default values,\n"
-"            reducing repetitive data entry for recurring workflows."
-msgstr ""
-
-#. module: approval
-#. odoo-python
-#: code:addons/approval/models/approval_category.py:0
-msgid "Templates: %s"
 msgstr ""
 
 #. module: approval
@@ -5730,6 +4873,14 @@ msgid ""
 msgstr ""
 
 #. module: approval
+#. odoo-python
+#: code:addons/approval/models/mixin_approval.py:0
+msgid ""
+"The approved document changed (%(fields)s) by %(user)s, so the approval no "
+"longer covers it."
+msgstr ""
+
+#. module: approval
 #: model:ir.model.fields,help:approval.field_approval_decision_wizard__approver_id
 msgid ""
 "The approver record making this decision. Empty in batch mode, where "
@@ -5746,8 +4897,8 @@ msgid ""
 msgstr ""
 
 #. module: approval
-#: model:ir.model.fields,help:approval.field_approval_binding__reset_automation_id
-msgid "The automation rule this binding keeps in step with Reset When."
+#: model:ir.model.fields,help:approval.field_approval_decision_log__principal_id
+msgid "The approver whose row a delegate decided."
 msgstr ""
 
 #. module: approval
@@ -5758,11 +4909,9 @@ msgid ""
 msgstr ""
 
 #. module: approval
-#: model:ir.model.fields,help:approval.field_approval_request__document_requirement_ids
-msgid ""
-"The category's document requirements, related onto the request so the "
-"Documents page can offer exactly those in the 'Satisfies Requirement' "
-"dropdown beside each attachment."
+#. odoo-python
+#: code:addons/approval/models/approval_category_conversion.py:0
+msgid "The category already routes by steps."
 msgstr ""
 
 #. module: approval
@@ -5776,21 +4925,10 @@ msgstr ""
 
 #. module: approval
 #. odoo-python
-#: code:addons/approval/wizard/approval_delegate_wizard.py:0
+#: code:addons/approval/wizards/approval_delegate_wizard.py:0
 msgid ""
 "The delegation period has already ended. Choose an end date of today or "
 "later."
-msgstr ""
-
-#. module: approval
-#. odoo-python
-#: code:addons/approval/models/approval_request_lifecycle.py:0
-msgid ""
-"The following required fields are empty:\n"
-"\n"
-"%(fields)s\n"
-"\n"
-"Please fill them before submitting the request."
 msgstr ""
 
 #. module: approval
@@ -5824,15 +4962,20 @@ msgid ""
 msgstr ""
 
 #. module: approval
+#: model:ir.model.fields,help:approval.field_approval_category_step_member__sequence
+msgid "The member's place when the step's members decide in order."
+msgstr ""
+
+#. module: approval
 #. odoo-python
-#: code:addons/approval/wizard/approval_decision_wizard.py:0
+#: code:addons/approval/wizards/approval_decision_wizard.py:0
 msgid ""
 "The reason '%(reason)s' is not available for the '%(category)s' category."
 msgstr ""
 
 #. module: approval
 #. odoo-python
-#: code:addons/approval/wizard/approval_decision_wizard.py:0
+#: code:addons/approval/wizards/approval_decision_wizard.py:0
 msgid ""
 "The reason '%(reason)s' is restricted to another company and cannot be used "
 "on this request."
@@ -5896,6 +5039,31 @@ msgid ""
 msgstr ""
 
 #. module: approval
+#: model:ir.model.fields,help:approval.field_approval_category_step__when_rule_ids
+msgid ""
+"The step applies only when every one of these rules matches the request, as "
+"the rule itself evaluates it: a figure, the source document, and the rule's "
+"company."
+msgstr ""
+
+#. module: approval
+#: model:ir.model.fields,help:approval.field_approval_category_step__unless_rule_ids
+msgid "The step does not apply when any of these rules matches the request."
+msgstr ""
+
+#. module: approval
+#: model:ir.model.fields,help:approval.field_approval_category_step_member__required
+msgid ""
+"The step is not met without this member's approval, whatever its quorum."
+msgstr ""
+
+#. module: approval
+#: model:ir.model.fields,help:approval.field_approval_category_step__subject_user_required
+msgid ""
+"The step waits for every user the source field names, whatever its quorum."
+msgstr ""
+
+#. module: approval
 #: model:ir.model.fields,help:approval.field_approval_category_step__advisory
 msgid ""
 "The step's approvers are asked and their decisions recorded, but the step "
@@ -5908,6 +5076,14 @@ msgstr ""
 msgid ""
 "The step's current members, as an editable list. Delegated members are kept "
 "as they are when this list is edited."
+msgstr ""
+
+#. module: approval
+#: model:ir.model.fields,help:approval.field_approval_category_step__in_order
+msgid ""
+"The step's members decide one after another, in the members' order: only the"
+" first who has not approved it yet is asked and may decide. The step's "
+"quorum ends the chain, so a quorum of one stops at the first approval."
 msgstr ""
 
 #. module: approval
@@ -5934,7 +5110,7 @@ msgstr ""
 
 #. module: approval
 #. odoo-python
-#: code:addons/approval/wizard/approval_decision_wizard.py:0
+#: code:addons/approval/wizards/approval_decision_wizard.py:0
 msgid "There is no approval to refuse."
 msgstr ""
 
@@ -5979,13 +5155,6 @@ msgstr ""
 msgid ""
 "This approval or the one you already submitted limits you to a single "
 "approval on %(name)s. Another user is required to decide the other steps."
-msgstr ""
-
-#. module: approval
-#: model_terms:ir.actions.act_window,help:approval.action_approval_dashboard
-msgid ""
-"This dashboard provides real-time insights into your approval workflow performance,\n"
-"                trends, and bottlenecks."
 msgstr ""
 
 #. module: approval
@@ -6034,13 +5203,14 @@ msgid ""
 msgstr ""
 
 #. module: approval
+#: model:ir.model.fields,field_description:approval.field_approval_category_step__threshold
 #: model:ir.model.fields,field_description:approval.field_approval_rule__threshold
+#: model:ir.model.fields,field_description:approval.field_mixin_approval_threshold__threshold
 msgid "Threshold"
 msgstr ""
 
 #. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_refusal_reason__usage_count
-#: model:ir.model.fields,field_description:approval.field_approval_template__usage_count
 msgid "Times Used"
 msgstr ""
 
@@ -6070,51 +5240,6 @@ msgstr ""
 #. module: approval
 #: model:ir.model.fields.selection,name:approval.selection__approval_request__state__new
 msgid "To Submit"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approver_performance__total_approvals
-msgid "Total Approvals"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_dashboard__total_pending_all_time
-msgid "Total Pending (All Time)"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_metrics__total_requests
-msgid "Total Requests"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_dashboard__total_requests_all_time
-msgid "Total Requests (All Time)"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,help:approval.field_approval_dashboard__total_requests_all_time
-msgid "Total approval requests submitted since system deployment"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,help:approval.field_approver_performance__total_approvals
-msgid "Total number of approval decisions made"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,help:approval.field_approval_metrics__total_requests
-msgid "Total number of approval requests submitted"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,help:approval.field_approval_dashboard__total_pending_all_time
-msgid "Total requests currently pending approval"
-msgstr ""
-
-#. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "Trends & Performance"
 msgstr ""
 
 #. module: approval
@@ -6179,18 +5304,24 @@ msgstr ""
 
 #. module: approval
 #. odoo-python
-#: code:addons/approval/models/approval_rule.py:0
-msgid "Unknown operator '%(op)s' on approval rule '%(name)s'."
+#: code:addons/approval/models/mixin_approval_threshold.py:0
+msgid "Unknown operator '%(op)s' on '%(name)s'."
 msgstr ""
 
 #. module: approval
+#: model:ir.model.fields,field_description:approval.field_approval_category_step__unless_rule_ids
+msgid "Unless Rules Match"
+msgstr ""
+
+#. module: approval
+#: model:ir.model.fields,field_description:approval.field_approval_category_step__threshold_max
 #: model:ir.model.fields,field_description:approval.field_approval_rule__threshold_max
+#: model:ir.model.fields,field_description:approval.field_mixin_approval_threshold__threshold_max
 msgid "Upper Bound (exclusive)"
 msgstr ""
 
 #. module: approval
 #: model:ir.model.fields.selection,name:approval.selection__approval_request__priority__3
-#: model:ir.model.fields.selection,name:approval.selection__approval_template__default_priority__3
 #: model_terms:ir.ui.view,arch_db:approval.report_approval_request_document
 #: model_terms:ir.ui.view,arch_db:approval.view_approval_search_search
 msgid "Urgent"
@@ -6198,7 +5329,6 @@ msgstr ""
 
 #. module: approval
 #: model_terms:ir.ui.view,arch_db:approval.view_approval_refusal_reason_form
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_template_list
 msgid "Used"
 msgstr ""
 
@@ -6303,23 +5433,8 @@ msgid ""
 msgstr ""
 
 #. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "View Pending"
-msgstr ""
-
-#. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "View Requests"
-msgstr ""
-
-#. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "View Workload"
-msgstr ""
-
-#. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "View all requests →"
+#: model:ir.model.fields,field_description:approval.field_approval_decision_log__verdict
+msgid "Verdict"
 msgstr ""
 
 #. module: approval
@@ -6330,11 +5445,6 @@ msgstr ""
 #. module: approval
 #: model_terms:ir.ui.view,arch_db:approval.view_approval_category_form
 msgid "Visible to all"
-msgstr ""
-
-#. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "Volume Trends"
 msgstr ""
 
 #. module: approval
@@ -6361,13 +5471,10 @@ msgid "Warn when this percentage of SLA time has elapsed"
 msgstr ""
 
 #. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_dashboard__trend_7days_display
-msgid "Week Trend"
-msgstr ""
-
-#. module: approval
-#: model_terms:ir.actions.act_window,help:approval.action_approval_dashboard
-msgid "Welcome to the Approval Dashboard!"
+#: model:ir.model.fields,help:approval.field_approval_category__steps_conversion_blockers
+msgid ""
+"What keeps this category's approvers and routing rules from being rewritten "
+"as steps that route every request the same. Empty when it can."
 msgstr ""
 
 #. module: approval
@@ -6428,6 +5535,11 @@ msgstr ""
 #. module: approval
 #: model_terms:ir.ui.view,arch_db:approval.approval_category_step_view_form
 msgid "When"
+msgstr ""
+
+#. module: approval
+#: model:ir.model.fields,field_description:approval.field_approval_category_step__when_rule_ids
+msgid "When Rules Match"
 msgstr ""
 
 #. module: approval
@@ -6505,6 +5617,15 @@ msgid "Whether the added approvers are mandatory"
 msgstr ""
 
 #. module: approval
+#: model:ir.model.fields,help:approval.field_approval_category__allow_self_approval
+#: model:ir.model.fields,help:approval.field_approval_request__allow_self_approval
+msgid ""
+"Whether the person asking may also decide their own request. Off, the "
+"requester is never asked and any decision they attempt is refused, on every "
+"routing path: listed approvers, the security group, rules and steps."
+msgstr ""
+
+#. module: approval
 #: model:ir.model.fields,help:approval.field_approval_binding__is_enforced
 msgid ""
 "Whether the server itself refuses the operation. False for a window or "
@@ -6534,17 +5655,6 @@ msgstr ""
 #. module: approval
 #: model:ir.model.fields,help:approval.field_approval_delegate_wizard__apply_to
 msgid "Which approvals to delegate"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,help:approval.field_ir_attachment__approval_requirement_id
-msgid ""
-"Which of the category's required documents this file IS. The requester says "
-"so; nothing infers it. Before this column the confirm-time check ran a "
-"bipartite matching over file NAMES, which cannot express the invariant it "
-"was asked to enforce: a file called 'holiday-photo-not-an-invoice.png' "
-"satisfied a requirement named 'Invoice', and a genuine invoice scanned to "
-"'scan001.pdf' did not."
 msgstr ""
 
 #. module: approval
@@ -6629,10 +5739,23 @@ msgid "Whoever decides this step decides no other step on this record"
 msgstr ""
 
 #. module: approval
+#: model:ir.model.fields,field_description:approval.field_approval_category__steps_conversion_blockers
+msgid "Why It Cannot Convert"
+msgstr ""
+
+#. module: approval
 #: model:ir.model.fields,help:approval.field_approval_request__binding_replay_error
 msgid ""
 "Why the gated operation did not run after approval. The approval itself "
 "stands."
+msgstr ""
+
+#. module: approval
+#: model:ir.model.fields,help:approval.field_approval_category__notify_pool_members
+msgid ""
+"With a security group as approvers, ask every member with an activity and an"
+" e-mail. Off, the group is a queue: its members decide from To Review and "
+"nobody is notified individually."
 msgstr ""
 
 #. module: approval
@@ -6644,8 +5767,8 @@ msgid "Withdraw"
 msgstr ""
 
 #. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "Workload"
+#: model:ir.model.fields.selection,name:approval.selection__approval_decision_log__verdict__withdrawn
+msgid "Withdrawn"
 msgstr ""
 
 #. module: approval
@@ -6686,7 +5809,7 @@ msgstr ""
 
 #. module: approval
 #. odoo-python
-#: code:addons/approval/wizard/approval_delegate_wizard.py:0
+#: code:addons/approval/wizards/approval_delegate_wizard.py:0
 msgid ""
 "You can only delegate your own approvals.\n"
 "\n"
@@ -6749,7 +5872,7 @@ msgstr ""
 
 #. module: approval
 #. odoo-python
-#: code:addons/approval/wizard/approval_delegate_wizard.py:0
+#: code:addons/approval/wizards/approval_delegate_wizard.py:0
 msgid "You cannot delegate approvals to yourself."
 msgstr ""
 
@@ -6842,12 +5965,6 @@ msgstr ""
 
 #. module: approval
 #. odoo-python
-#: code:addons/approval/models/approval_request_lifecycle.py:0
-msgid "You have to attach at least one document."
-msgstr ""
-
-#. module: approval
-#. odoo-python
 #: code:addons/approval/models/approval_category.py:0
 msgid "You must select a security group when group approval is enabled."
 msgstr ""
@@ -6900,11 +6017,6 @@ msgid "created"
 msgstr ""
 
 #. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_request_form
-msgid "e.g. Brussels"
-msgstr ""
-
-#. module: approval
 #: model_terms:ir.ui.view,arch_db:approval.approval_category_step_view_form
 #: model_terms:ir.ui.view,arch_db:approval.approval_category_step_view_form_quick_create
 msgid "e.g. Finance review"
@@ -6917,18 +6029,7 @@ msgstr ""
 
 #. module: approval
 #: model_terms:ir.ui.view,arch_db:approval.view_approval_category_form
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_document_requirement_list
-msgid "e.g. Invoice PDF"
-msgstr ""
-
-#. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_category_form
 msgid "e.g. Procurement"
-msgstr ""
-
-#. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_template_form
-msgid "e.g. Weekly Expense Report"
 msgstr ""
 
 #. module: approval
@@ -6999,11 +6100,6 @@ msgid "waiting approval(s)"
 msgstr ""
 
 #. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "⏱ Response Time Analysis"
-msgstr ""
-
-#. module: approval
 #. odoo-python
 #: code:addons/approval/tests/test_deadline_escalation.py:0
 msgid ""
@@ -7031,24 +6127,4 @@ msgstr ""
 #. odoo-python
 #: code:addons/approval/tests/test_deadline_escalation.py:0
 msgid "⚠ Overdue Approval: %s"
-msgstr ""
-
-#. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "⚠ Performance Bottlenecks"
-msgstr ""
-
-#. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "⚡ Quick Actions"
-msgstr ""
-
-#. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "👤 My Pending Approvals"
-msgstr ""
-
-#. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_dashboard_form
-msgid "📈 Approval Velocity"
 msgstr ""

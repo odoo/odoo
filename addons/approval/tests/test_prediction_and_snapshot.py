@@ -21,8 +21,6 @@ class TestApprovalInsights(common.TransactionCase):
         cls.category.write(
             {
                 "approver_ids": [(5, 0, 0)],
-                "has_amount": "required",
-                "has_partner": "optional",
                 "approval_minimum": 1,
             }
         )
@@ -42,7 +40,6 @@ class TestApprovalInsights(common.TransactionCase):
             "request_owner_id": self.owner.id,
             "date_start": fields.Datetime.now(),
             "date_end": fields.Datetime.now(),
-            "location": "testland",
         }
         vals.update(kwargs)
         return self.env["approval.request"].create(vals)
@@ -130,8 +127,6 @@ class TestApprovalInsightsAuditRegressions(ApprovalCommon):
     def test_m3_predicted_outcome_batches_queries_across_rows(self):
         category = self._make_category(
             approvers=[self.approver_1],
-            has_amount="optional",
-            has_partner="optional",
         )
 
         requests = self.env["approval.request"].create(
@@ -169,7 +164,6 @@ class TestPredictionExcludesNonDecisions(ApprovalCommon):
         cls.category = cls._make_category(
             name="Prediction Cat",
             approvers=[(cls.approver_1, False, 10)],
-            has_amount="optional",
         )
 
     def _resolved(self, outcome, amount=100.0):
@@ -234,7 +228,6 @@ class TestPredictionOnNegativeAmounts(ApprovalCommon):
         cls.category = cls._make_category(
             name="Refund Cat",
             approvers=[(cls.approver_1, False, 10)],
-            has_amount="optional",
         )
 
     def _approved(self, amount):

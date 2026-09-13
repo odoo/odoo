@@ -14,7 +14,7 @@ dashboards.
 | Key | Value |
 |-----|-------|
 | Technical name | `approval` |
-| Version | 19.0.2.5.0 (matches `__manifest__.py`) |
+| Version | 19.0.2.6.0 (matches `__manifest__.py`) |
 | Category | Human Resources/Approvals |
 | Dependencies | `mail`, and nothing else. `approval_automation` (which needs `automation`) and `approval_analytics` (which needs `mixin_report_sql`) were split out at 19.0.2.0.0 so that adopting `mixin.approval` costs one manifest row rather than nineteen prerequisites; both auto-install |
 | Conflicts | `approvals` (upstream module — the two cannot coexist, and NOTHING enforces it: this fork's loader reads no `excludes` manifest key, so the one that used to sit here was inert) |
@@ -61,11 +61,9 @@ dashboards.
 | `approval_binding_editor.py` | extends `approval.binding` | What Studio's editor asks: `create_step_for_button` (binds the button on its first step), `action_open_button_steps` (a kanban of the button's steps first) |
 | `ir_actions_server.py` | `ir.actions.server` (extended) | `run()` consults the bindings on the action before running, on the server. web_studio gated a server action only in the browser, so any RPC caller ran it unchecked |
 | `ir_actions_report.py` | `ir.actions.report` (extended) | The PDF, HTML and text render entry points consult the bindings on the report. Checked at the entry, because a PDF stored as an attachment is returned without rendering again |
-| `approval_template.py` | `approval.template` | Request templates with smart defaults |
-| `approval_document_requirement.py` | `approval.document.requirement` | Required document types per category. A LABEL model since 19.0.1.0.23: the confirm-time check reads `ir.attachment.approval_requirement_id`, not the file name |
 | `approval_utils.py` | — (no model) | Module-level helpers shared across the split files: `is_approval_manager(env)` and `boolean_search_domain()` (the `search=` builder behind `is_overdue`, `is_delegated`, `is_pending_my_review`) |
 | `approval_trace.py` | — (no model) | **TEMPORARY campaign instrumentation.** The `odoo.approval.<target>` log targets, the span/ledger helpers and `CALL_TRACES`, the table of entry points wrapped at registry load by `models.py`'s `_register_hook`. Quiet unless a target is named on the command line; removed when the campaign ends. Reference: conventions.md, "Campaign Instrumentation" |
-| `ir_attachment.py` | extends `ir.attachment` | `approval_requirement_id` — which required document a file IS — and blocks deletion of attachments on finalized requests |
+| `ir_attachment.py` | extends `ir.attachment` | Blocks deletion of attachments on finalized requests |
 | `mail_activity.py` | extends `mail.activity` | Stores `approver_id`, the approver row an approval activity asks, and derives `approval_request_id` from it; an approval activity marked done by its row's effective approver approves, on the request or on the document |
 | `mail_activity_type.py` | extends `mail.activity.type` | Registers approval activity type metadata |
 | `models.py` | extends `base` | `get_views` flags every related model that has a Block or Request binding (`has_approval_bindings`) |
@@ -113,7 +111,6 @@ dashboards.
 | `test_binding_editor.py` | Studio's editor on the engine: the first step binds the button as Studio did, further steps join it up to order nine, an action button named by xmlid, the approvers list keeping delegations, the steps action, the steps opening as a kanban with a quick-create card, a button whose steps are all archived no longer gated |
 | `test_binding_studio_parity.py` | What a Studio rule did, held by steps and bindings, each test naming its Studio test: a record no step applies to is not gated, an exclusive approval counts toward the exclusive step first, an archived step is ignored in any context, a group member decides but only listed members are asked, a step holding decisions is archived not deleted, a binding's target is fixed once it has requests |
 | `test_approver_replacement.py` | Approver-replacing rules: band matching, overlap validation, minimum override, batched constraints |
-| `test_document_requirements.py` | Required document validation on confirm, through the structural attachment link |
 | `test_engine_shape.py` | The engine ships no application: no root menu, no category records, its own menus only under Settings > Technical |
 | `test_sla_tracking.py` | SLA status computation, compliance tracking |
 | `test_lifecycle.py` | Cancelled state, reset-to-draft, forced-terminal paths, locked fields, delegation fan-in (19.0.1.0.7) |
@@ -220,8 +217,6 @@ approval/
 |   +-- approval_binding_observation.py # Observed gated calls
 |   +-- ir_actions_server.py          # Server actions consult bindings in run()
 |   +-- ir_actions_report.py          # Report render entry points consult bindings
-|   +-- approval_template.py          # Request templates
-|   +-- approval_document_requirement.py # Required documents
 |   +-- approval_utils.py             # Module-level helpers (no model)
 |   +-- approval_trace.py             # Campaign instrumentation (no model, TEMPORARY)
 |   +-- ir_attachment.py              # Attachment protection
@@ -234,8 +229,8 @@ approval/
 |   +-- approval_delegate_wizard.py   # Delegation setup
 +-- reports/
 |   +-- approval_request_report.xml   # QWeb PDF report action
-+-- migrations/                       # 27 script directories (1.0.1 .. 2.5)
-+-- tests/                            # 47 test modules + common.py
++-- migrations/                       # 28 script directories (1.0.1 .. 2.6)
++-- tests/                            # 46 test modules + common.py
 +-- views/                            # 11 XML view files
 +-- data/                             # 6 XML data files
 +-- security/                         # Groups, rules, ACL
@@ -247,19 +242,19 @@ approval/
 | Metric | Count |
 |--------|-------|
 | Python files (non-test, incl. `__init__`/`__manifest__`) | 44 |
-| Python test files | 47 (+ `common.py`) |
+| Python test files | 46 (+ `common.py`) |
 | XML files (non-static) | 28 |
 | XML files (static templates) | 4 |
 | JS files | 25 |
 | SCSS files | 4 |
-| ORM models (new) | 19 in `models/` + 2 wizards + 3 report models |
+| ORM models (new) | 17 in `models/` + 2 wizards + 3 report models |
 | ORM models (extended) | 8 (base, ir.actions.report, ir.actions.server, ir.attachment, mail.activity, mail.activity.type, res.groups, res.users) |
 | Abstract models | 6 (mixin.approval.source, mixin.approval, mixin.approval.state.sync, mixin.approval.subjects, mixin.approval.threshold, mixin.approval.domain) |
 | SQL view models | 2 |
 | Transient models | 2 |
 | Test-only models | 3 |
 | Cron jobs | 4 |
-| Migration script directories | 27 |
+| Migration script directories | 28 |
 
 Re-measure rather than trusting these: `find . -name '*.py' -not -path './tests/*'
 -not -path './migrations/*' -not -path '*__pycache__*' -not -path './machine_doc_v1/*'
@@ -399,7 +394,6 @@ ships no controllers and no post-init hook.
 - `_refuse_approval_request()` -- Cooperative rollback of documents created from the approval
 - `_on_approval_state_changed()` -- React to approval decisions in source docs
 - `_get_domain_approval_category()` -- Map document types to categories
-- `_get_category_required_field_mapping()` -- Add required field validation
 - `_get_fields_locked()` -- Extend the post-submit frozen field set
 - `_approval_rate_limit_exceeded()` -- Submission throttle on the mixin: "has this
   user filed more than N documents, or more than X in value, in the last H hours?"

@@ -55,72 +55,6 @@ class ApprovalCategory(models.Model):
     image = fields.Binary(default=lambda self: self._default_image())
     description = fields.Char(translate=True)
 
-    has_date = fields.Selection(
-        selection=CATEGORY_SELECTION,
-        default="no",
-        required=True,
-        tracking=True,
-    )
-    has_date_deadline = fields.Selection(
-        selection=CATEGORY_SELECTION,
-        default="no",
-        required=True,
-        tracking=True,
-    )
-    has_date_planned = fields.Selection(
-        selection=CATEGORY_SELECTION,
-        default="no",
-        required=True,
-        tracking=True,
-    )
-    has_date_range = fields.Selection(
-        selection=CATEGORY_SELECTION,
-        default="no",
-        required=True,
-        tracking=True,
-    )
-    has_partner = fields.Selection(
-        selection=CATEGORY_SELECTION,
-        string="Has Contact",
-        default="no",
-        required=True,
-        tracking=True,
-    )
-    has_quantity = fields.Selection(
-        selection=CATEGORY_SELECTION,
-        default="no",
-        required=True,
-        tracking=True,
-    )
-    has_amount = fields.Selection(
-        selection=CATEGORY_SELECTION,
-        default="no",
-        required=True,
-        tracking=True,
-    )
-    has_reference = fields.Selection(
-        selection=CATEGORY_SELECTION,
-        help="An additional reference that should be specified on the request.",
-        default="no",
-        required=True,
-        tracking=True,
-    )
-    has_location = fields.Selection(
-        selection=CATEGORY_SELECTION,
-        default="no",
-        required=True,
-        tracking=True,
-    )
-    has_document = fields.Selection(
-        selection=[
-            ("required", "Required"),
-            ("optional", "Optional"),
-        ],
-        string="Documents",
-        default="optional",
-        required=True,
-        tracking=True,
-    )
     allow_self_approval = fields.Boolean(
         help="Whether the person asking may also decide their own request. Off, "
         "the requester is never asked and any decision they attempt is refused, "
@@ -258,11 +192,6 @@ class ApprovalCategory(models.Model):
         inverse_name="category_id",
         string="Approvers",
     )
-    document_requirement_ids = fields.One2many(
-        comodel_name="approval.document.requirement",
-        inverse_name="category_id",
-        string="Document Requirements",
-    )
     rule_ids = fields.One2many(
         comodel_name="approval.rule",
         inverse_name="category_id",
@@ -298,10 +227,6 @@ class ApprovalCategory(models.Model):
     rule_count = fields.Integer(
         help="Number of active conditional rules",
         compute="_compute_rule_count",
-    )
-    template_count = fields.Integer(
-        help="Number of active templates",
-        compute="_compute_template_count",
     )
     invalid_minimum = fields.Boolean(compute="_compute_minimum_validity")
     invalid_minimum_warning = fields.Char(compute="_compute_minimum_validity")
@@ -683,22 +608,6 @@ class ApprovalCategory(models.Model):
             rules=sum(mapped.values()),
         )
 
-    def _compute_template_count(self) -> None:
-        data = self.env["approval.template"]._read_group(
-            [("category_id", "in", self.ids), ("active", "=", True)],
-            ["category_id"],
-            ["__count"],
-        )
-        mapped = {cat.id: count for cat, count in data}
-        for category in self:
-            category.template_count = mapped.get(category.id, 0)
-        trace.TEMPLATE.event(
-            "template_count",
-            n=len(self),
-            with_templates=len(mapped),
-            templates=sum(mapped.values()),
-        )
-
     @api.depends_context("uid")
     def _compute_kanban_dashboard(self) -> None:
         if not self:
@@ -784,7 +693,6 @@ class ApprovalCategory(models.Model):
                 "has_late_requests": late_count > 0,
                 "show_company": show_company,
                 "rule_count": category.rule_count,
-                "template_count": category.template_count,
             }
             trace.COMPUTE.event(
                 "kanban_dashboard",
@@ -968,17 +876,6 @@ class ApprovalCategory(models.Model):
             "name": self.env._("Rules: %s", self.name),
             "type": "ir.actions.act_window",
             "res_model": "approval.rule",
-            "view_mode": "list,form",
-            "domain": [("category_id", "=", self.id)],
-            "context": {"default_category_id": self.id},
-        }
-
-    def view_templates(self) -> dict[str, Any]:
-        self.check_singleton()
-        return {
-            "name": self.env._("Templates: %s", self.name),
-            "type": "ir.actions.act_window",
-            "res_model": "approval.template",
             "view_mode": "list,form",
             "domain": [("category_id", "=", self.id)],
             "context": {"default_category_id": self.id},

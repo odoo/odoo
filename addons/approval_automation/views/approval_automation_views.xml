@@ -6,16 +6,15 @@
         <field name="model">approval.category</field>
         <field name="inherit_id" ref="approval.view_approval_category_form" />
         <field name="arch" type="xml">
-            <group name="fields_documents" position="attributes">
-                <attribute name="string">Documents &amp; Automation</attribute>
-            </group>
-            <group name="fields_documents" position="inside">
-                <field
-                    name="has_automation"
-                    string="Automation"
-                    widget="radio"
-                    options="{'horizontal': true}" />
-                <field name="automation_id" invisible="has_automation == 'no'" />
+            <group name="settings_group" position="inside">
+                <group name="automation" string="Automation">
+                    <field
+                        name="has_automation"
+                        string="Automation"
+                        widget="radio"
+                        options="{'horizontal': true}" />
+                    <field name="automation_id" invisible="has_automation == 'no'" />
+                </group>
             </group>
         </field>
     </record>
@@ -25,7 +24,7 @@
         <field name="model">approval.request</field>
         <field name="inherit_id" ref="approval.view_approval_request_form" />
         <field name="arch" type="xml">
-            <page name="documents" position="before">
+            <page name="decision_history" position="before">
                 <page
                     name="automation_details"
                     string="Automation Details"

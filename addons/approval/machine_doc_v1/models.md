@@ -1,5 +1,9 @@
 # Approval Models
 
+`approval.template` and `approval.document.requirement` belong to `approval_app`
+since 19.0.2.6.0, together with the request form's fields marked below: the
+engine routes and decides a request, the application is how a person raises one.
+
 ## Model Relationship Diagram
 
 ```
@@ -17,8 +21,8 @@ approval.category                       [inherits mixin.mail.thread, mixin.catal
     |                           |                   +-- user_id / delegated_by_id -> res.users
     |                           +-- group_id -> res.groups
     |                           +-- notify_user_ids -> res.users (m2m)
-    +-- document_requirement_ids -> approval.document.requirement
-    +-- template_count ----> approval.template (o2m via category_id)
+    +-- document_requirement_ids -> approval.document.requirement   (approval_app)
+    +-- template_count ----> approval.template (o2m via category_id)   (approval_app)
     +-- allowed_user_ids --> res.users (m2m)
     +-- allowed_group_ids -> res.groups (m2m)
     +-- approver_group_id -> res.groups
@@ -41,7 +45,7 @@ approval.request
     |                           +-- source_rule_id -> approval.rule
     |                           +-- refusal_reason_id -> approval.refusal.reason
     +-- refusal_reason_id -> approval.refusal.reason (canonical, request-level)
-    +-- template_id -------> approval.template
+    +-- template_id -------> approval.template   (approval_app)
     +-- applied_rule_ids --> approval.rule (m2m)
     +-- res_model/res_id --> Any model (Many2oneReference)
     +-- attachment_ids ----> ir.attachment (o2m)
@@ -119,17 +123,17 @@ so category names are unique per company, archived rows included.
 | `sequence_id` | Many2one(`ir.sequence`) | Yes | No | check_company |
 | `image` | Binary | Yes | No | default=Folder.png |
 | `description` | Char | Yes | No | translate |
-| `has_date` | Selection(required/optional/no) | Yes | Yes | default="no", tracking |
-| `has_date_deadline` | Selection | Yes | Yes | default="no", tracking |
-| `has_date_planned` | Selection | Yes | Yes | default="no", tracking |
-| `has_date_range` | Selection | Yes | Yes | default="no", tracking |
-| `has_partner` | Selection | Yes | Yes | default="no", tracking |
+| `has_date` | Selection(required/optional/no) | Yes | Yes | default="no", tracking *(added by `approval_app`)* |
+| `has_date_deadline` | Selection | Yes | Yes | default="no", tracking *(added by `approval_app`)* |
+| `has_date_planned` | Selection | Yes | Yes | default="no", tracking *(added by `approval_app`)* |
+| `has_date_range` | Selection | Yes | Yes | default="no", tracking *(added by `approval_app`)* |
+| `has_partner` | Selection | Yes | Yes | default="no", tracking *(added by `approval_app`)* |
 | `has_automation` | Selection | Yes | Yes | default="no", tracking *(added by `approval_automation`)* |
-| `has_quantity` | Selection | Yes | Yes | default="no", tracking |
-| `has_amount` | Selection | Yes | Yes | default="no", tracking |
-| `has_reference` | Selection | Yes | Yes | default="no", tracking |
-| `has_location` | Selection | Yes | Yes | default="no", tracking |
-| `has_document` | Selection(required/optional) | Yes | Yes | default="optional", tracking |
+| `has_quantity` | Selection | Yes | Yes | default="no", tracking *(added by `approval_app`)* |
+| `has_amount` | Selection | Yes | Yes | default="no", tracking *(added by `approval_app`)* |
+| `has_reference` | Selection | Yes | Yes | default="no", tracking *(added by `approval_app`)* |
+| `has_location` | Selection | Yes | Yes | default="no", tracking *(added by `approval_app`)* |
+| `has_document` | Selection(required/optional) | Yes | Yes | default="optional", tracking *(added by `approval_app`)* |
 | `group_approval` | Selection(`no`="Users" / `exclusive`="Security group") | Yes | Yes | default="no", tracking. Labelled "Approver Source". Only two values, so `!= "no"` and `== "exclusive"` are the same test in `_compute_desired_approvers` — in `exclusive` mode the category list, the manager hook and approver-replacing rules are all bypassed and the group's `all_user_ids` become the approvers, all optional |
 | `allow_self_approval` | Boolean | No | Yes | Whether the request owner may also decide. Off by default; categories existing at 19.0.2.1.0 were migrated to on |
 | `notify_pool_members` | Boolean | No | Yes | With a security group as approvers, whether each member gets an activity. Off, the group is a queue decided from To Review (`_is_notifiable`), though an approver a rule adds is still asked; group categories existing at 19.0.2.2.0 were migrated to on |
@@ -143,10 +147,10 @@ so category names are unique per company, archived rows included.
 | `target_model` | Selection([]) | Yes | No | tracking, extensible |
 | `approve_sequentially` | Boolean | Yes | No | tracking |
 | `approver_ids` | One2many(`approval.category.approver`) | Yes | No | |
-| `document_requirement_ids` | One2many(`approval.document.requirement`) | Yes | No | |
+| `document_requirement_ids` | One2many(`approval.document.requirement`) | Yes | No | *(added by `approval_app`)* |
 | `rule_ids` | One2many(`approval.rule`) | Yes | No | |
 | `rule_count` | Integer | No | No | compute |
-| `template_count` | Integer | No | No | compute |
+| `template_count` | Integer | No | No | compute *(added by `approval_app`)* |
 | `invalid_minimum` | Boolean | No | No | compute |
 | `invalid_minimum_warning` | Char | No | No | compute |
 | `count_request_to_validate` | Integer | No | No | compute |
@@ -246,8 +250,8 @@ so category names are unique per company, archived rows included.
 | `date` | Datetime | Yes | No | |
 | `date_start` | Datetime | Yes | No | |
 | `date_end` | Datetime | Yes | No | |
-| `date_deadline` | Datetime | Yes | No | |
-| `date_planned` | Datetime | Yes | No | |
+| `date_deadline` | Datetime | Yes | No | *(added by `approval_app`)* |
+| `date_planned` | Datetime | Yes | No | *(added by `approval_app`)* |
 | `date_confirmed` | Datetime | Yes | No | index (cleared by reset-to-draft) |
 | `date_approval_granted` | Datetime | Yes | No | compute, store, index, copy=False; cleared whenever the request leaves `approved`, except on a revoked request (`revoked_state`), which keeps the date its approval was granted |
 | `date_refused` | Datetime | Yes | No | compute, store, index, copy=False, cleared whenever the request is not in the state it records |
@@ -258,9 +262,9 @@ so category names are unique per company, archived rows included.
 | `granted_by_user_id` | Many2one(`res.users`) | Yes | No | readonly, copy=False. Set by `_approve_without_decision()` when a pending request is approved from outside its decisions; `_compute_state` reads it after `revoked_state` and before the approver rows. Cleared by `_force_draft()`; a request carrying it refuses withdrawal |
 | `refusal_reason_id` | Many2one(`approval.refusal.reason`) | Yes | No | readonly, copy=False, tracking. Canonical reason of the terminal refusal (wizard, cascade or auto-rule) |
 | `refusal_note` | Text | Yes | No | readonly, copy=False, tracking |
-| `pending_change_field` | Selection(date/reason) | Yes | No | readonly, copy=False. Field the requester must update before approval can resume |
-| `location` | Char | Yes | No | |
-| `reference` | Char | Yes | No | |
+| `pending_change_field` | Selection(date/reason) | Yes | No | readonly, copy=False. Field the requester must update before approval can resume. `_get_pending_change_candidates()` offers `reason` always and `date` once the request carries a date or a period; `approval_app` offers `date` by what the category's form exposes instead |
+| `location` | Char | Yes | No | *(added by `approval_app`)* |
+| `reference` | Char | Yes | No | *(added by `approval_app`)* |
 | `reason` | Html | Yes | No | |
 | `quantity` | Float | Yes | No | |
 | `amount` | **Monetary** | Yes | No | Expressed in `currency_id`, NOT company currency |
@@ -272,7 +276,7 @@ so category names are unique per company, archived rows included.
 | `is_terminal` | Boolean | No | No | compute. True once the request reaches approved, refused or cancelled — exists so views can say "this is over" BY NAME instead of spelling `_TERMINAL_STATES` out as a literal triple in four `invisible` expressions |
 | `is_pending_my_review` | Boolean | No | No | compute (context=uid), search (via `boolean_search_domain`). Delegation-aware "is this in my queue right now" — backs the review inbox |
 | `can_change_request_owner` | Boolean | No | No | compute |
-| `has_*` | Selection | No | No | 11 related fields from category (there is no `has_product` — see `approval_product`, and no `has_payment_method` since 19.0.1.0.26) |
+| `has_*` | Selection | No | No | 10 related fields from category *(added by `approval_app`)* (there is no `has_product` — see `approval_product`, and no `has_payment_method` since 19.0.1.0.26) |
 | `approval_minimum` | Integer | Yes | No | default=1, readonly, copy=True. Effective minimum (an approver-replacing rule's override, or the category default) |
 | `approve_sequentially` | Boolean | No | No | related |
 | `group_approval` | Selection | No | No | related |
@@ -289,7 +293,7 @@ so category names are unique per company, archived rows included.
 | `sla_elapsed_hours` | Float | No | No | compute |
 | `sla_remaining_hours` | Float | No | No | compute |
 | `can_withdraw` | Boolean | No | No | compute (context=uid) |
-| `template_id` | Many2one(`approval.template`) | Yes | No | readonly, copy=False, index=btree_not_null |
+| `template_id` | Many2one(`approval.template`) | Yes | No | readonly, copy=False, index=btree_not_null *(added by `approval_app`)* |
 | `applied_rule_ids` | Many2many(`approval.rule`) | Yes | No | readonly, copy=False (cleared by reset-to-draft) |
 | `category_snapshot` | Json | Yes | No | readonly, copy=False (built at confirm; cleared by reset-to-draft) |
 | `res_model` | Char | Yes | No | readonly, index |
@@ -348,7 +352,7 @@ requester re-submits (`action_resubmit`).
 |--------|------|---------|
 | `create()` | request.py | Approval minimum from category, subscribe owner, sync approvers (no name assignment — deferred to confirm) |
 | `write()` | request.py | Access check, forged-compute and locked-fields business rules, category-change guard, owner re-subscription, sync approvers when a field in `_get_fields_approver_sync_trigger()` is written |
-| `copy_data()` / `copy()` | request.py | Duplicate with smart defaults from owner history (`_smart_clone_defaults`) + "Duplicated from" log |
+| `copy()` | request.py | Duplicate with a "Duplicated from" log; `approval_app` overrides `copy_data()` to seed smart defaults from the owner's history (`_smart_clone_defaults`) |
 | `unlink()` | request.py | Two-layer validation (access + business rules: draft only) |
 | `_compute_display_name()` | request.py | Translated "New" placeholder for unnumbered drafts |
 | `_compute_state()` | request.py | Core state machine (no side effects) |
@@ -1011,77 +1015,6 @@ does not is left as it was.
 ### SQL constraints
 
 - `_step_user_uniq`: unique(step_id, user_id)
-
----
-
-## approval.template
-
-| Key | Value |
-|-----|-------|
-| Model | `approval.template` |
-| File | `models/approval_template.py` |
-| Type | Model |
-| Inherits | `mixin.catalog` (`name` required+translate, `active`); `_name_src_uniq` rescoped to `company_id` |
-| Order | `sequence, name` |
-
-### Fields
-
-| Field | Type | Stored | Required | Key Attributes |
-|-------|------|--------|----------|----------------|
-| `name` | Char | Yes | Yes | translate |
-| `active` | Boolean | Yes | No | default=True |
-| `sequence` | Integer | Yes | No | default=10 |
-| `description` | Text | Yes | No | translate |
-| `category_id` | Many2one(`approval.category`) | Yes | Yes | ondelete=cascade, index |
-| `company_id` | Many2one(`res.company`) | Yes | No | default=env.company, index |
-| `default_reason` | Html | Yes | No | translate |
-| `default_amount` | Float | Yes | No | |
-| `default_quantity` | Float | Yes | No | |
-| `default_location` | Char | Yes | No | |
-| `default_partner_id` | Many2one(`res.partner`) | Yes | No | |
-| `default_reference` | Char | Yes | No | |
-| `default_priority` | Selection(0-3) | Yes | No | default="1" |
-| `has_*` | Selection | No | No | 5 related fields from category |
-| `usage_count` | Integer | No | No | compute |
-
-### Key Methods
-
-| Method | Purpose |
-|--------|---------|
-| `action_create_request()` | Open form with template defaults in context |
-| `action_view_requests()` | View requests from this template |
-
----
-
-## approval.document.requirement
-
-| Key | Value |
-|-----|-------|
-| Model | `approval.document.requirement` |
-| File | `models/approval_document_requirement.py` |
-| Type | Model |
-| Order | `category_id, sequence` |
-
-### Fields
-
-| Field | Type | Stored | Required | Key Attributes |
-|-------|------|--------|----------|----------------|
-| `name` | Char | Yes | Yes | |
-| `category_id` | Many2one(`approval.category`) | Yes | Yes | ondelete=cascade, index |
-| `sequence` | Integer | Yes | No | default=10 |
-| `required` | Boolean | Yes | No | default=True |
-| `description` | Text | Yes | No | |
-
-### Constraints
-
-- `_name_src_uniq`: `name_uniq_index("category_id", nulls_distinct=True)` — UNIQUE over the `en_US` source term, not the jsonb document
-
-`_check_name_unique_per_language` is **gone** (19.0.1.0.23), along with
-`_name_variants`. It existed because the confirm-time check matched
-attachments by NAME, so two requirements sharing a name in any installed
-translation made the matching ambiguous. The link is structural now —
-`ir.attachment.approval_requirement_id`, set by the requester — so the name
-is a label and two requirements may share a translation freely.
 
 ---
 

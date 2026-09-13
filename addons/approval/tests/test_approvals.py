@@ -47,7 +47,6 @@ class TestRequest(common.TransactionCase):
                 "category_id": category_test.id,
                 "date_start": fields.Datetime.now(),
                 "date_end": fields.Datetime.now(),
-                "location": "testland",
             }
         )
         first_approver = self.env["approval.approver"].create(
@@ -143,7 +142,6 @@ class TestRequest(common.TransactionCase):
                 "category_id": category_test.id,
                 "date_start": fields.Datetime.now(),
                 "date_end": fields.Datetime.now(),
-                "location": "testland",
             }
         )
         first_approver = record.approver_ids.filtered(
@@ -172,12 +170,11 @@ class TestRequest(common.TransactionCase):
         record.action_approve(second_approver)
         self.assertEqual(record.state, "approved")
 
-    def test_copy_uses_smart_defaults_and_logs_source(self):
+    def test_copy_logs_source_and_resets_the_name(self):
         category = self.env["approval.category"].create(
             {
                 "sequence_code": "SC0005",
                 "name": "Smart Clone Cat",
-                "has_amount": "required",
                 "approval_minimum": 1,
                 "approver_ids": [
                     Command.create(
@@ -210,7 +207,6 @@ class TestRequest(common.TransactionCase):
 
         self.assertFalse(duplicate.name)
         self.assertEqual(duplicate.display_name, self.env._("New"))
-        self.assertEqual(duplicate.amount, 150.0)
         body = " ".join(duplicate.message_ids.mapped("body"))
         self.assertIn("Duplicated from", body)
         self.assertIn(str(source.id), body)
@@ -222,7 +218,6 @@ class TestRequest(common.TransactionCase):
                 "category_id": new_trip_category(self.env).id,
                 "date_start": fields.Datetime.now(),
                 "date_end": fields.Datetime.now(),
-                "location": "testland",
             }
         )
         self.env["ir.attachment"].create(
@@ -265,298 +260,6 @@ class TestRequest(common.TransactionCase):
         )
         approval_request.action_confirm()
         self.assertEqual(approval_request.name, "123400001")
-
-    def test_onchange_category_autofill_copies_required_fields(self):
-        category = self.env["approval.category"].create(
-            {
-                "sequence_code": "SC0006",
-                "name": "Test Autofill Category",
-                "approval_minimum": 1,
-                "has_location": "required",
-                "has_partner": "required",
-                "has_reference": "required",
-            }
-        )
-
-        partner = self.env["res.partner"].create({"name": "Test Partner"})
-
-        previous_request = self.env["approval.request"].create(
-            {
-                "name": "Previous Request",
-                "request_owner_id": self.env.user.id,
-                "category_id": category.id,
-                "location": "Test Location",
-                "partner_id": partner.id,
-                "reference": "REF-123",
-            }
-        )
-
-        self.env["approval.approver"].create(
-            {
-                "user_id": self.approver_user_1.id,
-                "request_id": previous_request.id,
-            }
-        )
-        previous_request.action_confirm()
-        record_approval(previous_request.approver_ids)
-
-        new_request = self.env["approval.request"].new(
-            {
-                "name": "New Request",
-                "request_owner_id": self.env.user.id,
-            }
-        )
-
-        new_request.category_id = category
-        new_request._onchange_category_autofill()
-
-        self.assertEqual(
-            new_request.location,
-            "Test Location",
-            "Location should be auto-filled from previous request",
-        )
-        self.assertEqual(
-            new_request.partner_id,
-            partner,
-            "Partner should be auto-filled from previous request",
-        )
-        self.assertEqual(
-            new_request.reference,
-            "REF-123",
-            "Reference should be auto-filled from previous request",
-        )
-
-    def test_onchange_category_autofill_skips_optional_fields(self):
-        category = self.env["approval.category"].create(
-            {
-                "sequence_code": "SC0007",
-                "name": "Test Optional Autofill",
-                "approval_minimum": 1,
-                "has_location": "optional",
-                "has_partner": "required",
-            }
-        )
-
-        partner = self.env["res.partner"].create({"name": "Test Partner"})
-
-        previous_request = self.env["approval.request"].create(
-            {
-                "name": "Previous Request",
-                "request_owner_id": self.env.user.id,
-                "category_id": category.id,
-                "location": "Should Not Copy",
-                "partner_id": partner.id,
-            }
-        )
-        self.env["approval.approver"].create(
-            {
-                "user_id": self.approver_user_1.id,
-                "request_id": previous_request.id,
-            }
-        )
-        previous_request.action_confirm()
-        record_approval(previous_request.approver_ids)
-
-        new_request = self.env["approval.request"].new(
-            {
-                "name": "New Request",
-                "request_owner_id": self.env.user.id,
-            }
-        )
-
-        new_request.category_id = category
-        new_request._onchange_category_autofill()
-
-        self.assertFalse(
-            new_request.location,
-            "Optional location should NOT be auto-filled",
-        )
-        self.assertEqual(
-            new_request.partner_id,
-            partner,
-            "Required partner should be auto-filled",
-        )
-
-    def test_onchange_category_autofill_respects_existing_values(self):
-        category = self.env["approval.category"].create(
-            {
-                "sequence_code": "SC0008",
-                "name": "Test Respect Existing",
-                "approval_minimum": 1,
-                "has_location": "required",
-            }
-        )
-
-        previous_request = self.env["approval.request"].create(
-            {
-                "name": "Previous Request",
-                "request_owner_id": self.env.user.id,
-                "category_id": category.id,
-                "location": "Old Location",
-            }
-        )
-        self.env["approval.approver"].create(
-            {
-                "user_id": self.approver_user_1.id,
-                "request_id": previous_request.id,
-            }
-        )
-        previous_request.action_confirm()
-        record_approval(previous_request.approver_ids)
-
-        new_request = self.env["approval.request"].new(
-            {
-                "name": "New Request",
-                "request_owner_id": self.env.user.id,
-                "location": "My Custom Location",
-            }
-        )
-
-        new_request.category_id = category
-        new_request._onchange_category_autofill()
-
-        self.assertEqual(
-            new_request.location,
-            "My Custom Location",
-            "Existing location value should NOT be overwritten by autofill",
-        )
-
-    def test_onchange_category_autofill_no_previous_request(self):
-        category = self.env["approval.category"].create(
-            {
-                "sequence_code": "SC0009",
-                "name": "Test No Previous",
-                "approval_minimum": 1,
-                "has_location": "required",
-            }
-        )
-
-        new_request = self.env["approval.request"].new(
-            {
-                "name": "First Request",
-                "request_owner_id": self.env.user.id,
-            }
-        )
-
-        new_request.category_id = category
-        new_request._onchange_category_autofill()
-
-        self.assertFalse(
-            new_request.location,
-            "Location should be empty when no previous request",
-        )
-
-    def test_onchange_category_autofill_uses_most_recent_approved(self):
-        category = self.env["approval.category"].create(
-            {
-                "sequence_code": "SC0010",
-                "name": "Test Most Recent",
-                "approval_minimum": 1,
-                "has_location": "required",
-            }
-        )
-
-        older_request = self.env["approval.request"].create(
-            {
-                "name": "Older Request",
-                "request_owner_id": self.env.user.id,
-                "category_id": category.id,
-                "location": "Older Location",
-            }
-        )
-        self.env["approval.approver"].create(
-            {
-                "user_id": self.approver_user_1.id,
-                "request_id": older_request.id,
-            }
-        )
-        older_request.action_confirm()
-        record_approval(older_request.approver_ids)
-        older_request.sudo().write({"date_confirmed": "2025-01-01 10:00:00"})
-
-        newer_request = self.env["approval.request"].create(
-            {
-                "name": "Newer Request",
-                "request_owner_id": self.env.user.id,
-                "category_id": category.id,
-                "location": "Newer Location",
-            }
-        )
-        self.env["approval.approver"].create(
-            {
-                "user_id": self.approver_user_2.id,
-                "request_id": newer_request.id,
-            }
-        )
-        newer_request.action_confirm()
-        record_approval(newer_request.approver_ids)
-        newer_request.sudo().write({"date_confirmed": "2025-10-01 10:00:00"})
-
-        new_request = self.env["approval.request"].new(
-            {
-                "name": "Latest Request",
-                "request_owner_id": self.env.user.id,
-            }
-        )
-
-        new_request.category_id = category
-        new_request._onchange_category_autofill()
-
-        self.assertEqual(
-            new_request.location,
-            "Newer Location",
-            "Should use location from most recently approved request",
-        )
-
-    def test_onchange_category_autofill_only_current_user_requests(self):
-        category = self.env["approval.category"].create(
-            {
-                "sequence_code": "SC0011",
-                "name": "Test User Filtering",
-                "approval_minimum": 1,
-                "has_location": "required",
-            }
-        )
-
-        other_user = self.env["res.users"].create(
-            {
-                "name": "Other User",
-                "login": "other_user",
-                "email": "other@test.com",
-            }
-        )
-
-        other_user_request = self.env["approval.request"].create(
-            {
-                "name": "Other User Request",
-                "request_owner_id": other_user.id,
-                "category_id": category.id,
-                "location": "Other User Location",
-            }
-        )
-        self.env["approval.approver"].create(
-            {
-                "user_id": self.approver_user_1.id,
-                "request_id": other_user_request.id,
-            }
-        )
-        other_user_request.action_confirm()
-        record_approval(other_user_request.approver_ids)
-
-        new_request = self.env["approval.request"].new(
-            {
-                "name": "Current User Request",
-                "request_owner_id": self.env.user.id,
-            }
-        )
-
-        new_request.category_id = category
-        new_request._onchange_category_autofill()
-
-        self.assertFalse(
-            new_request.location,
-            "Should NOT use other user's request data for autofill",
-        )
 
 
 @tagged("post_install", "-at_install")
@@ -774,71 +477,6 @@ class TestWithdrawCloseOut(ApprovalCommon):
             notified,
             [],
             "The request never left 'approved'; the document has nothing to react to.",
-        )
-
-
-@tagged("post_install", "-at_install")
-class TestSmartCloneUsesTheOwnersHistory(ApprovalCommon):
-    def test_duplicating_anothers_request_seeds_from_that_owners_history(self):
-        category = self._make_category("Clone Cat", approvers=[self.approver_1])
-        category.write({"has_amount": "optional", "has_partner": "optional"})
-        owner_partner = self.env["res.partner"].create({"name": "Owner Partner"})
-        other_partner = self.env["res.partner"].create({"name": "Other Partner"})
-
-        for _ in range(3):
-            request = self._prepare_request(
-                category,
-                amount=1000.0,
-                partner_id=owner_partner.id,
-            )
-            request.with_user(self.approver_1).action_approve()
-        for _ in range(3):
-            request = self._prepare_request(
-                category,
-                owner=self.manager_user,
-                amount=7.0,
-                partner_id=other_partner.id,
-            )
-            request.with_user(self.approver_1).action_approve()
-
-        source = self._prepare_request(
-            category,
-            confirm=False,
-            amount=1000.0,
-            partner_id=owner_partner.id,
-        )
-        clone = source.with_user(self.manager_user).copy()
-
-        self.assertEqual(clone.request_owner_id, self.owner_user)
-        self.assertAlmostEqual(clone.amount, 1000.0, places=2)
-        self.assertEqual(clone.partner_id, owner_partner)
-
-    def test_the_history_lookup_is_bounded(self):
-        category = self._make_category("Bounded Cat", approvers=[self.approver_1])
-        for index in range(40):
-            request = self._prepare_request(category, amount=100.0 + index)
-            request.with_user(self.approver_1).action_approve()
-        request = self._prepare_request(category, confirm=False)
-
-        loaded = []
-        Request = type(self.env["approval.request"])
-        original = Request.search
-
-        def spy(records, domain, *args, **kwargs):
-            result = original(records, domain, *args, **kwargs)
-            if "'approved'" in repr(domain):
-                loaded.append(len(result))
-            return result
-
-        self.patch(Request, "search", spy)
-        recent = request._recent_approved_by_owner(limit=10)
-
-        self.assertEqual(len(recent), 10)
-        self.assertTrue(loaded)
-        self.assertLessEqual(
-            loaded[0],
-            10,
-            "the lookup keeps 10 rows for one category but loaded %s" % loaded[0],
         )
 
 

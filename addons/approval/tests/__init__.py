@@ -24,7 +24,6 @@ from . import (
     test_decision_log,
     test_decision_wizard,
     test_delegation,
-    test_document_requirements,
     test_engine_shape,
     test_group_approval,
     test_invariants,

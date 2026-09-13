@@ -22,7 +22,6 @@ class TestAutoActionRules(common.TransactionCase):
         cls.category.write(
             {
                 "approver_ids": [(5, 0, 0)],
-                "has_amount": "required",
             }
         )
         cls.env["approval.category.approver"].create(
@@ -41,7 +40,6 @@ class TestAutoActionRules(common.TransactionCase):
             "request_owner_id": self.owner.id,
             "date_start": fields.Datetime.now(),
             "date_end": fields.Datetime.now(),
-            "location": "testland",
         }
         vals.update(kwargs)
         return self.env["approval.request"].create(vals)
@@ -225,7 +223,6 @@ class TestAutoActionRulesAuditRegressions(ApprovalCommon):
     def test_h2_date_confirmed_before_date_approval_granted(self):
         category = self._make_category(
             approvers=[self.approver_1],
-            has_amount="optional",
         )
         self.env["approval.rule"].create(
             {

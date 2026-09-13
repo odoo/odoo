@@ -100,8 +100,6 @@ class ApprovalRequest(models.Model):
     date = fields.Datetime()
     date_start = fields.Datetime()
     date_end = fields.Datetime()
-    date_deadline = fields.Datetime()
-    date_planned = fields.Datetime()
     date_confirmed = fields.Datetime(
         help="Set at confirmation (action_confirm). Never copied: a "
         "duplicated request is a fresh draft and must not inherit the "
@@ -188,8 +186,6 @@ class ApprovalRequest(models.Model):
         copy=False,
         readonly=True,
     )
-    location = fields.Char()
-    reference = fields.Char()
     reason = fields.Html()
     quantity = fields.Float()
     currency_id = fields.Many2one(
@@ -255,23 +251,6 @@ class ApprovalRequest(models.Model):
     )
     can_change_request_owner = fields.Boolean(
         compute="_compute_can_change_request_owner"
-    )
-    has_date = fields.Selection(related="category_id.has_date")
-    has_date_deadline = fields.Selection(related="category_id.has_date_deadline")
-    has_date_planned = fields.Selection(related="category_id.has_date_planned")
-    has_date_range = fields.Selection(related="category_id.has_date_range")
-    has_quantity = fields.Selection(related="category_id.has_quantity")
-    has_amount = fields.Selection(related="category_id.has_amount")
-    has_reference = fields.Selection(related="category_id.has_reference")
-    has_partner = fields.Selection(related="category_id.has_partner")
-    has_location = fields.Selection(related="category_id.has_location")
-    has_document = fields.Selection(related="category_id.has_document")
-    document_requirement_ids = fields.One2many(
-        related="category_id.document_requirement_ids",
-        string="Required Documents",
-        help="The category's document requirements, related onto the request "
-        "so the Documents page can offer exactly those in the 'Satisfies "
-        "Requirement' dropdown beside each attachment.",
     )
     approval_minimum = fields.Integer(
         help="Effective minimum approvals needed. Defaults from category, "
@@ -351,13 +330,6 @@ class ApprovalRequest(models.Model):
         "the delegator, who can no longer act, still saw the request.",
         compute="_compute_is_pending_my_review",
         search="_search_is_pending_my_review",
-    )
-    template_id = fields.Many2one(
-        comodel_name="approval.template",
-        help="Template this request was created from (if any)",
-        index="btree_not_null",
-        copy=False,
-        readonly=True,
     )
     applied_rule_ids = fields.Many2many(
         comodel_name="approval.rule",
@@ -550,107 +522,6 @@ class ApprovalRequest(models.Model):
             self._subscribe_owners()
 
         return res
-
-    def _recent_approved_by_owner(self, limit: int = 10) -> Self:
-        self.check_singleton()
-        return self._recent_approved_by_category(
-            self.category_id,
-            self.request_owner_id,
-            limit=limit,
-        )[self.category_id.id]
-
-    def _recent_approved_by_category(self, categories, owner, limit: int = 10) -> dict:
-        by_category: dict[int, list[int]] = {
-            category_id: [] for category_id in categories.ids
-        }
-        if not categories or not owner:
-            return {category_id: self.browse() for category_id in by_category}
-        with trace.SEARCH.span(
-            "recent_approved_by_category",
-            categories=len(by_category),
-            owner=owner.id,
-            limit=limit,
-        ) as span:
-            candidates = self.search(
-                [
-                    ("request_owner_id", "=", owner.id),
-                    ("category_id", "in", categories.ids),
-                    ("state", "=", "approved"),
-                ],
-                order="date_confirmed desc",
-                limit=limit * len(categories),
-            )
-            for request in candidates:
-                bucket = by_category[request.category_id.id]
-                if len(bucket) < limit:
-                    bucket.append(request.id)
-            span["n"] = len(candidates)
-            span["truncated"] = len(candidates) == limit * len(by_category)
-            span["short"] = sum(1 for ids in by_category.values() if len(ids) < limit)
-        return {
-            category_id: self.browse(ids) for category_id, ids in by_category.items()
-        }
-
-    def _smart_clone_defaults(self, recent=None) -> dict[str, Any]:
-        self.check_singleton()
-        category = self.category_id
-        smart: dict[str, Any] = {}
-        if recent is None:
-            recent = self._recent_approved_by_owner(limit=10)
-
-        if category.has_amount != "no":
-            amounts = [r.amount for r in recent if r.amount]
-            if amounts:
-                smart["amount"] = sum(amounts) / len(amounts)
-
-        if category.has_partner != "no" and recent:
-            partners = recent.mapped("partner_id").filtered(bool)
-            if partners:
-                smart["partner_id"] = Counter(partners).most_common(1)[0][0].id
-
-        if trace.PREDICTION.on():
-            trace.PREDICTION.event(
-                "smart_clone_defaults",
-                request=self.id,
-                category=category.id,
-                recent=len(recent),
-                inferred=sorted(smart),
-                asks_amount=category.has_amount,
-                asks_partner=category.has_partner,
-            )
-        return smart
-
-    def copy_data(self, default: dict[str, Any] | None = None) -> list[dict[str, Any]]:
-        explicit = dict(default or {})
-        vals_list = super().copy_data(default=explicit)
-        recent_by_owner = {
-            owner.id: self._recent_approved_by_category(
-                self.filtered(lambda r, o=owner: r.request_owner_id == o).category_id,
-                owner,
-            )
-            for owner in self.request_owner_id
-        }
-        applied = 0
-        suppressed = 0
-        for source, vals in zip(self, vals_list, strict=True):
-            recent = recent_by_owner.get(source.request_owner_id.id, {}).get(
-                source.category_id.id, self.browse()
-            )
-            for key, value in source._smart_clone_defaults(recent).items():
-                if key in explicit:
-                    suppressed += 1
-                    continue
-                vals[key] = value
-                applied += 1
-        trace.CRUD.event(
-            "copy_data",
-            requests=len(vals_list),
-            owners=len(recent_by_owner),
-            explicit=sorted(explicit),
-            applied=applied,
-            suppressed=suppressed,
-        )
-        return vals_list
 
     def copy(self, default: dict[str, Any] | None = None) -> Self:
         new_records = super().copy(default=default)
@@ -1208,25 +1079,6 @@ class ApprovalRequest(models.Model):
                 self.id,
             )
             return False
-
-    @api.onchange("category_id")
-    def _onchange_category_autofill(self) -> None:
-        if not self.category_id:
-            return
-
-        last_request = self._recent_approved_by_owner(limit=1)
-
-        if not last_request:
-            return
-
-        if self.category_id.has_location == "required" and not self.location:
-            self.location = last_request.location
-
-        if self.category_id.has_partner == "required" and not self.partner_id:
-            self.partner_id = last_request.partner_id
-
-        if self.category_id.has_reference == "required" and not self.reference:
-            self.reference = last_request.reference
 
     def action_view_attachment(self) -> dict[str, Any]:
         self.check_singleton()

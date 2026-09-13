@@ -46,7 +46,6 @@ class TestConsentApproval(common.TransactionCase):
             "request_owner_id": self.owner.id,
             "date_start": fields.Datetime.now(),
             "date_end": fields.Datetime.now(),
-            "location": "testland",
         }
         vals.update(kwargs)
         request = self.env["approval.request"].create(vals)

@@ -36,7 +36,6 @@ class TestApprovalTiers(common.TransactionCase):
         cls.category.write(
             {
                 "approver_ids": [(5, 0, 0)],
-                "has_amount": "required",
             }
         )
         cls.env["approval.category.approver"].create(
@@ -55,7 +54,6 @@ class TestApprovalTiers(common.TransactionCase):
             "request_owner_id": self.owner.id,
             "date_start": fields.Datetime.now(),
             "date_end": fields.Datetime.now(),
-            "location": "testland",
         }
         vals.update(kwargs)
         return self.env["approval.request"].create(vals)
@@ -552,7 +550,6 @@ class TestReplacementMatchingIsExtensible(ApprovalCommon):
         category = self._make_category(
             name="Extensible Tiers",
             approvers=[(self.approver_1, False, 10)],
-            has_amount="optional",
         )
         tier = self.env["approval.rule"].create(
             {

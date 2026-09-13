@@ -2,7 +2,7 @@ from typing import Any
 
 from odoo import fields, models
 
-from . import approval_trace as trace
+from odoo.addons.approval.models import approval_trace as trace
 from odoo.addons.base.models.mixin_catalog import name_uniq_index
 
 

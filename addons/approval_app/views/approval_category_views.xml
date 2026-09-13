@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_approval_category_form_fields" model="ir.ui.view">
+        <field name="name">approval.category.form.fields</field>
+        <field name="model">approval.category</field>
+        <field name="inherit_id" ref="approval.view_approval_category_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button
+                    name="view_templates"
+                    type="object"
+                    icon="fa-files-o"
+                    groups="approval.group_approval_manager"
+                    invisible="template_count == 0"
+                    class="oe_stat_button">
+                    <field name="template_count" string="Templates" widget="statinfo" />
+                </button>
+            </xpath>
+            <xpath expr="//page[@name='approvers']" position="before">
+                <page name="fields" string="Fields">
+                    <group name="request_fields_group">
+                        <group name="fields_dates" string="Dates">
+                            <field
+                                name="has_date"
+                                string="Date"
+                                widget="radio"
+                                options="{'horizontal': true}" />
+                            <field
+                                name="has_date_deadline"
+                                string="Deadline"
+                                widget="radio"
+                                options="{'horizontal': true}" />
+                            <field
+                                name="has_date_planned"
+                                string="Planned Date"
+                                widget="radio"
+                                options="{'horizontal': true}" />
+                            <field
+                                name="has_date_range"
+                                string="Period"
+                                widget="radio"
+                                options="{'horizontal': true}" />
+                        </group>
+                        <group name="fields_amounts" string="Amounts &amp; Quantities">
+                            <field
+                                name="has_amount"
+                                string="Amount"
+                                widget="radio"
+                                options="{'horizontal': true}" />
+                            <field
+                                name="has_quantity"
+                                string="Quantity"
+                                widget="radio"
+                                options="{'horizontal': true}" />
+                        </group>
+                        <group
+                            name="fields_references"
+                            string="References &amp; Contacts">
+                            <field
+                                name="has_partner"
+                                string="Contact"
+                                widget="radio"
+                                options="{'horizontal': true}" />
+                            <field
+                                name="has_reference"
+                                string="Reference"
+                                widget="radio"
+                                options="{'horizontal': true}" />
+                            <field
+                                name="has_location"
+                                string="Location"
+                                widget="radio"
+                                options="{'horizontal': true}" />
+                        </group>
+                        <group name="fields_documents" string="Documents">
+                            <field
+                                name="has_document"
+                                string="Document"
+                                widget="radio"
+                                options="{'horizontal': true}" />
+                        </group>
+                        <group
+                            name="document_requirements_group"
+                            string="Required Documents"
+                            colspan="2"
+                            invisible="has_document == 'optional'">
+                            <field
+                                name="document_requirement_ids"
+                                colspan="2"
+                                nolabel="1"
+                                context="{'default_category_id': id}">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle" />
+                                    <field name="name" placeholder="e.g. Invoice PDF" />
+                                    <field name="required" />
+                                    <field
+                                        name="description"
+                                        placeholder="Instructions..."
+                                        optional="show" />
+                                </list>
+                            </field>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,3 +1,5 @@
+from . import models
+
 _ENGINE_SHELL_XMLIDS = [
     "approval_attachment_training_program",
     "approval_category_approver_business_trip",
