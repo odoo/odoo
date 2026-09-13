@@ -107,7 +107,12 @@
         >
             <t t-if="this.props.slots and this.props.slots.choice" t-call-slot="choice" data="choice"/>
             <t t-else="">
-                <div class="text-truncate" t-out="choice.label" />
+                <t t-if="this.props.alternativeChoiceItemTemplate">
+                    <t t-call="{{ this.props.alternativeChoiceItemTemplate }}"/>
+                </t>
+                <t t-else="">
+                    <div class="text-truncate" t-out="choice.label" />
+                </t>
             </t>
         </DropdownItem>
     </t>

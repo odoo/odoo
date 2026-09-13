@@ -75,6 +75,7 @@ export const selectMenuProps = {
     onClosed: t.function().optional(() => () => {}),
     slots: t.object().optional(),
     disabled: t.boolean().optional(false),
+    alternativeChoiceItemTemplate: t.string().optional(),
 };
 
 export class SelectMenu extends Component {

@@ -19,6 +19,7 @@
         'google_recaptcha',
         'utm',
         'html_builder',
+        'base_geolocalize',
     ],
     'external_dependencies': {
         'python': ['geoip2'],
@@ -205,6 +206,7 @@
         'views/snippets/s_hours_and_place.xml',
         'views/snippets/s_showcase_square.xml',
         'views/snippets/s_services_grid.xml',
+        'views/snippets/s_store_locator.xml',
         'views/snippets/s_dynamic_snippet.xml',
         'views/snippets/s_dynamic_snippet_carousel.xml',
         'views/snippets/s_banner_product.xml',
@@ -246,6 +248,7 @@
         'views/website_pages_views.xml',
         'views/website_controller_pages_views.xml',
         'views/website_visitor_views.xml',
+        'views/website_locations_views.xml',
         'views/res_config_settings_views.xml',
         'views/website_rewrite.xml',
         'views/ir_actions_server_views.xml',
@@ -316,6 +319,7 @@
             'website/static/src/js/highlight_utils.js',
             'website/static/src/client_actions/website_preview/website_builder_action.editor.scss',
             'website/static/src/components/user_switch.*',
+            'website/static/src/components/location_selector/**/*',
         ],
         'web.assets_frontend_minimal': [
             'website/static/src/utils/misc.js',
@@ -410,6 +414,7 @@
             'website/static/src/xml/website.xml',
             'website/static/src/scss/website_controller_page_kanban.scss',
             'website/static/src/mail/core/common/**/*',
+            'website/static/src/components/location_selector/**/*',
 
             'website/static/src/xml/website_form_editor.xml',
             # TODO when moving options to website: load this from website
