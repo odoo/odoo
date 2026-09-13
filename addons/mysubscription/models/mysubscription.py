@@ -1,4 +1,6 @@
-from odoo import models, api
+from datetime import datetime
+
+from odoo import models, api, fields
 
 
 class MySubscription(models.AbstractModel):
@@ -10,19 +12,22 @@ class MySubscription(models.AbstractModel):
         is_system = self.env.is_system()
         icp_sudo = self.env['ir.config_parameter'].sudo()
 
-        data = {
-            'expiration_date': icp_sudo.get_str('database.expiration_date'),
-            'expiration_reason': icp_sudo.get_str('database.expiration_reason'),
+        enterprise_code = icp_sudo.get_str('database.enterprise_code')
+        expiration_date = icp_sudo.get_str('database.expiration_date')
+
+        return {
             'base_url': icp_sudo.get_str('web.base.url'),
-            'is_system': is_system,
+            'has_subscription': self._has_subscription(enterprise_code, expiration_date),
+            'enterprise_code': enterprise_code if is_system else '',
         }
 
-        if is_system:
-            data['enterprise_code'] = icp_sudo.get_str('database.enterprise_code')
-        else:
-            data['enterprise_code'] = None
-
-        return data
+    def _has_subscription(self, enterprise_code, expiration_date):
+        """ We need both an enterprise_code and a future expiration_date to
+        consider the database as having an active subscription. """
+        if not enterprise_code or not expiration_date:
+            return False
+        expiration_datetime = fields.Datetime.from_string(expiration_date)
+        return bool(expiration_datetime) and expiration_datetime > datetime.utcnow()
 
     @api.model
     def get_iap_data(self):
