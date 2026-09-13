@@ -15,6 +15,10 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
 const CODE_BLOCK_CLASS = "o_syntax_highlighting";
 const CODE_BLOCK_SELECTOR = `div.${CODE_BLOCK_CLASS}`;
 
+function isTextareaOfSyntaxHighlight(el) {
+    return el.nodeName === "TEXTAREA" && el.classList.contains("o_prism_source");
+}
+
 export class SyntaxHighlightingPlugin extends Plugin {
     static id = "syntaxHighlighting";
     static dependencies = [
@@ -42,13 +46,19 @@ export class SyntaxHighlightingPlugin extends Plugin {
         on_will_mount_component_handlers: this.setupNewCodeBlock.bind(this),
         on_history_commit_undone_handlers: () => this.addCodeBlocks(this.editable, true),
         on_history_commit_redone_handlers: () => this.addCodeBlocks(this.editable, true),
+
+        is_retagging_safe_predicates: (block) => {
+            if (isTextareaOfSyntaxHighlight(block)) {
+                return true;
+            }
+        },
         on_will_set_tag_handlers: (params) => {
             const { block, tagName, cursors } = params;
             if (tagName.toLowerCase() === "pre") {
                 // Remove invisible whitespace that would become visible in a `<pre>` element.
                 removeInvisibleWhitespace(params.block, cursors);
             }
-            if (block.nodeName === "TEXTAREA" && block.classList.contains("o_prism_source")) {
+            if (isTextareaOfSyntaxHighlight(block)) {
                 params.block = this.convertToParagraph(block);
             }
         },
@@ -68,7 +78,7 @@ export class SyntaxHighlightingPlugin extends Plugin {
 
         /** Predicates */
         is_link_allowed_on_selection_predicates: () => {
-            if (this.document.activeElement.matches("textarea.o_prism_source")) {
+            if (isTextareaOfSyntaxHighlight(this.document.activeElement)) {
                 return false;
             }
         },

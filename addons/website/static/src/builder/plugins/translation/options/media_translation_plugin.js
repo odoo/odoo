@@ -34,8 +34,6 @@ export class MediaTranslationPlugin extends Plugin {
             translateImageOptionSelector,
             translateDocumentOptionSelector,
         },
-        on_get_dirty_translations_handlers: this.registerImageDirtyTranslations.bind(this),
-        on_image_saved_handlers: this.updateTranslationsOnImageSaved.bind(this),
         on_will_save_media_dialog_handlers: withSequence(
             5,
             this.onWillSaveMediaDialogHandlers.bind(this)
@@ -47,14 +45,12 @@ export class MediaTranslationPlugin extends Plugin {
             const newParams = this.getMediaDialogProps({ mediaEl: params.node });
             return Object.assign(params, newParams);
         },
+        on_media_replaced_handlers: ({ newMediaEl }) => {
+            if (newMediaEl.classList.contains("data-oe-translation-state")) {
+                newMediaEl.classList.add("oe_translated");
+            }
+        },
     };
-
-    setup() {
-        this.imageTranslationsMap = new Map();
-        this.savingMap = {
-            images: this.saveImage.bind(this),
-        };
-    }
 
     async onWillSaveMediaDialogHandlers(elements, { node }) {
         for (const toProcessEl of elements) {
@@ -67,56 +63,23 @@ export class MediaTranslationPlugin extends Plugin {
             // those options should also be adaptable. We should have
             // translation options to handle the new image exactly like what is
             // possible in the builder.
-            const dataAttrsToCopy = ["oeTranslationState"];
+            const attrsToCopy = [
+                "data-oe-translation-state",
+                "alt",
+                "title",
+                ...node
+                    .getAttributeNames()
+                    .filter((n) => n.startsWith("data-translated-attribute-info-")),
+            ];
             const mimetype = await getMimetypeBeforeShape(toProcessEl);
             if (await isImageSupportedForProcessing(toProcessEl, mimetype)) {
-                dataAttrsToCopy.push("glFilter", "resizeWidth");
+                attrsToCopy.push("data-gl-filter", "data-resize-width");
             }
-            for (const dataAttr of dataAttrsToCopy) {
-                if (node.dataset[dataAttr]) {
-                    toProcessEl.dataset[dataAttr] = node.dataset[dataAttr];
+            for (const attr of attrsToCopy) {
+                if (node.hasAttribute(attr)) {
+                    toProcessEl.setAttribute(attr, node.getAttribute(attr));
                 }
             }
-        }
-    }
-
-    /**
-     * Prepares and keeps track of the dirty images translations before they are
-     * actually saved, so that they can be updated one last time _after_ the
-     * images have been processed and saved in DB (with the right info).
-     * @see updateTranslationsOnImageSaved
-     *
-     * @param {HTMLElement} translateEl - image element
-     * @param {HTMLSpanElement} spanEl - recreated translation span
-     * @param {string} attr - attribute currently processed on `translateEl`
-     */
-    registerImageDirtyTranslations(translateEl, spanEl, attr) {
-        if (translateEl.matches(".o_modified_image_to_save") && ["src", "srcset"].includes(attr)) {
-            if (this.imageTranslationsMap.has(translateEl)) {
-                this.imageTranslationsMap.get(translateEl).push([attr, spanEl]);
-            } else {
-                this.imageTranslationsMap.set(translateEl, [[attr, spanEl]]);
-            }
-        }
-    }
-    /**
-     * Updates the image translations after their final processing, just before
-     * save. Typically to change src/srcset from base64 to actual URLs.
-     * @see ImageSavePlugin.saveModifiedImage
-     *
-     * @param {Object} info
-     * @param {HTMLImageElement} info.imageEl
-     */
-    updateTranslationsOnImageSaved({ imageEl }) {
-        const fallbackAttributes = { srcset: "src" };
-        if (this.imageTranslationsMap.has(imageEl)) {
-            for (const [attr, spanEl] of this.imageTranslationsMap.get(imageEl)) {
-                spanEl.textContent =
-                    imageEl.getAttribute(attr) ||
-                    imageEl.getAttribute(fallbackAttributes[attr]) ||
-                    spanEl.textContent;
-            }
-            this.imageTranslationsMap.delete(imageEl);
         }
     }
 
@@ -127,15 +90,6 @@ export class MediaTranslationPlugin extends Plugin {
             noImages: mediaType !== "images",
             visibleTabs: [mediaType.toUpperCase()],
             node: mediaEl,
-            save:
-                mediaType === "documents"
-                    ? null
-                    : (newMediaEl) => {
-                          this.savingMap[mediaType](mediaEl, newMediaEl);
-                          mediaEl.classList.add("oe_translated");
-                          this.trigger("on_media_replaced_handlers", { newMediaEl: mediaEl });
-                          this.dependencies.history.commit(); // Needed for the dblclick
-                      },
         };
     }
 
@@ -164,60 +118,11 @@ export class MediaTranslationPlugin extends Plugin {
             onClose.then(resolve);
         });
     }
-    /**
-     * @param {HTMLElement} el - element whose attribute is translated
-     * @param {string} translation - new translation
-     * @param {string} originalText - text before the new translation
-     * @param {string} attribute - attribute to update in the translation map
-     */
-    handleTranslationMapHistory(el, translation, originalText, attribute) {
-        const updateTranslationMap = this.dependencies.translation.updateTranslationMap;
-        this.dependencies.domObserver.applyCustomMutation({
-            apply: () => {
-                updateTranslationMap(el, translation, attribute);
-            },
-            revert: () => {
-                updateTranslationMap(el, originalText, attribute);
-            },
-        });
-    }
-
-    saveImage(editingElement, newImgEl) {
-        // Replicate all attributes from the new image to the current element,
-        // so that the translations are linked to the original element on save.
-        const attributesToKeep = ["alt", "title"];
-        for (const attr of [...editingElement.attributes]) {
-            if (!attributesToKeep.includes(attr.name)) {
-                editingElement.removeAttribute(attr.name);
-            }
-        }
-        for (const attr of newImgEl.attributes) {
-            if (!attributesToKeep.includes(attr.name)) {
-                editingElement.setAttribute(attr.name, attr.value);
-            }
-        }
-        const elTranslationInfo = this.dependencies.translation.getTranslationInfo(editingElement);
-        const originalSrc = elTranslationInfo.src.translation;
-        const originalSrcset = elTranslationInfo.srcset?.translation;
-        const translatedSrc = editingElement.getAttribute("src");
-        this.handleTranslationMapHistory(editingElement, translatedSrc, originalSrc, "src");
-        if (originalSrcset) {
-            // Hack: we don't have the new srcset yet (it's computed on save).
-            // Instead, register the new src: on most images, the actual srcset
-            // will be updated on save; on others (e.g. CORS-protected), it will
-            // make up for the lack of actual srcset.
-            this.handleTranslationMapHistory(
-                editingElement,
-                translatedSrc,
-                originalSrcset,
-                "srcset"
-            );
-        }
-    }
 }
 
 registry.category("translation-plugins").add(MediaTranslationPlugin.id, MediaTranslationPlugin);
 
+// TODO: why not use the existing action `replaceMedia`
 export class TranslateMediaSrcAction extends BuilderAction {
     static id = "translateMediaSrc";
     static dependencies = ["mediaTranslation"];
