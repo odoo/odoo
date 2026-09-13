@@ -313,12 +313,16 @@ class BundleWalk:
         if directive == APPEND_DIRECTIVE:
             asset_paths.append_paths(paths, bundle)
         elif directive == PREPEND_DIRECTIVE:
-            self._warn_stranded_sources(directive, paths, targets, bundle, target)
+            self._warn_stranded_sources(
+                directive, paths, targets, bundle, target, frame.anchor.index, 0
+            )
             asset_paths.insert_paths(paths, bundle, frame.anchor.index)
         elif directive in (AFTER_DIRECTIVE, BEFORE_DIRECTIVE):
-            self._warn_stranded_sources(directive, paths, targets, bundle, target)
             offset = 1 if directive == AFTER_DIRECTIVE else 0
             target_index = asset_paths.get_index_of_first(targets, bundle)
+            self._warn_stranded_sources(
+                directive, paths, targets, bundle, target, target_index, offset
+            )
             asset_paths.insert_paths(paths, bundle, target_index + offset)
         elif directive == REMOVE_DIRECTIVE:
             if not paths:
@@ -385,12 +389,28 @@ class BundleWalk:
         targets: Sequence[str],
         bundle: str,
         target: str | None,
+        pivot: int,
+        offset: int,
     ) -> None:
-        stranded = [
+        # a source already on the side of the pivot the directive asks for
+        # is not stranded: the ordering it states already holds
+        present = {
             path
             for path, _full_path, _last_modified in paths
             if path in self.paths.memo and path not in targets
-        ]
+        }
+        if not present:
+            return
+        positions = {
+            asset.path: index
+            for index, asset in enumerate(self.paths.list)
+            if asset.path in present
+        }
+        stranded = sorted(
+            path
+            for path in present
+            if (positions[path] < pivot if offset else positions[path] > pivot)
+        )
         if stranded:
             _logger.warning(
                 "Asset directive %r in bundle %r: source(s) %s are already "

@@ -858,6 +858,43 @@ class TestAssetsManifest(AddonManifestPatched):
         bundle = self.env["ir.qweb"]._get_asset_bundle("test_assetsbundle.bundle4")
         self.assertBundleJs(bundle, 1, 2, 4, 3)
 
+    def test_24_1_before_already_satisfied_does_not_warn(self):
+        # jsfile1 already precedes jsfile2 in bundle4: the directive states an
+        # ordering that holds, so nothing is stranded
+        self.declare_sibling_module(
+            {
+                "test_assetsbundle.bundle4": [
+                    (
+                        "before",
+                        "/test_assetsbundle/static/src/js/test_jsfile2.js",
+                        "/test_assetsbundle/static/src/js/test_jsfile1.js",
+                    )
+                ]
+            }
+        )
+        with self.assertNoLogs("odoo.addons.base.models.ir_asset_paths", "WARNING"):
+            bundle = self.env["ir.qweb"]._get_asset_bundle("test_assetsbundle.bundle4")
+        self.assertBundleJs(bundle, 1, 2, 3)
+
+    def test_24_2_before_violated_by_a_present_file_warns(self):
+        self.declare_sibling_module(
+            {
+                "test_assetsbundle.bundle4": [
+                    (
+                        "before",
+                        "/test_assetsbundle/static/src/js/test_jsfile1.js",
+                        "/test_assetsbundle/static/src/js/test_jsfile2.js",
+                    )
+                ]
+            }
+        )
+        with self.assertLogs(
+            "odoo.addons.base.models.ir_asset_paths", "WARNING"
+        ) as logs:
+            bundle = self.env["ir.qweb"]._get_asset_bundle("test_assetsbundle.bundle4")
+        self.assertIn("NOT repositioned", "\n".join(logs.output))
+        self.assertBundleJs(bundle, 1, 2, 3)
+
     def test_25_js_before_js_in_irasset(self):
         self.env["ir.asset"].create(
             {
