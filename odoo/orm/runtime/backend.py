@@ -376,8 +376,6 @@ class StorageBackend(typing.Protocol):
     supports_parent_store: bool
     supports_record_rules: bool
 
-    supports_joined_m2m_read: bool
-
     supports_column_scan: bool
 
     supports_translation_terms: bool
@@ -462,14 +460,14 @@ class StorageBackend(typing.Protocol):
 
     def unlink_rows(self, model: BaseModel, sub_ids: tuple[int, ...]) -> None: ...
 
-    def read_m2m_pairs(
+    def read_m2m_groups(
         self,
-        model: BaseModel,
+        records: BaseModel,
         relation: str,
         column1: str,
         column2: str,
-        ids: typing.Collection[int],
-    ) -> list[tuple[int, int]]: ...
+        query: Query,
+    ) -> dict[int, list[int]]: ...
 
     def link_m2m_pairs(
         self,
@@ -560,8 +558,6 @@ class PostgresBackend:
     supports_parent_store: bool = True
 
     supports_record_rules: bool = True
-
-    supports_joined_m2m_read: bool = True
 
     supports_column_scan: bool = True
 
@@ -1175,34 +1171,27 @@ class PostgresBackend:
             affected_recs = referrer.browse(row[0] for row in affected)
             affected_recs.modified([field.name])
 
-    def read_m2m_pairs(
+    def read_m2m_groups(
         self,
-        model: BaseModel,
+        records: BaseModel,
         relation: str,
         column1: str,
         column2: str,
-        ids: typing.Collection[int],
-    ) -> list[tuple[int, int]]:
+        query: Query,
+    ) -> dict[int, list[int]]:
         sql_id1 = SQL.identifier(relation, column1)
         sql_id2 = SQL.identifier(relation, column2)
-        rows = model.env.execute_query(
-            SQL(
-                "SELECT %s, %s FROM %s WHERE %s = ANY(%s)",
-                sql_id1,
-                sql_id2,
-                SQL.identifier(relation),
-                sql_id1,
-                list(ids),
-            )
+        query.add_join(
+            "JOIN",
+            relation,
+            None,
+            SQL("%s = %s", sql_id2, SQL.identifier(query.table, "id")),
         )
-        _debug.perf.count(
-            "backend.m2m.pairs_read",
-            model=model._name,
-            relation=relation,
-            records=len(ids),
-            pairs=len(rows),
-        )
-        return [(id1, id2) for id1, id2 in rows]
+        query.add_where(SQL("%s = ANY(%s)", sql_id1, list(records.ids)))
+        group: dict[int, list[int]] = defaultdict(list)
+        for id1, id2 in records.env.execute_query(query.select(sql_id1, sql_id2)):
+            group[id1].append(id2)
+        return group
 
     def link_m2m_pairs(
         self,
@@ -1426,8 +1415,6 @@ class InMemoryBackend:
     supports_parent_store: bool = False
 
     supports_record_rules: bool = False
-
-    supports_joined_m2m_read: bool = False
 
     supports_column_scan: bool = False
 
@@ -1717,7 +1704,7 @@ class InMemoryBackend:
             if row is not None:
                 yield row_id, row
 
-    def read_m2m_pairs(
+    def _read_m2m_pairs(
         self,
         model: BaseModel,
         relation: str,
@@ -1731,6 +1718,25 @@ class InMemoryBackend:
             for _row_id, row in self._iter_m2m_rows(relation)
             if row.get(column1) in wanted
         ]
+
+    def read_m2m_groups(
+        self,
+        records: BaseModel,
+        relation: str,
+        column1: str,
+        column2: str,
+        query: Query,
+    ) -> dict[int, list[int]]:
+        position = {id2: index for index, id2 in enumerate(query.get_result_ids())}
+        group: dict[int, list[int]] = defaultdict(list)
+        for id1, id2 in self._read_m2m_pairs(
+            records, relation, column1, column2, records.ids
+        ):
+            if id2 in position:
+                group[id1].append(id2)
+        for ids2 in group.values():
+            ids2.sort(key=position.__getitem__)
+        return group
 
     def link_m2m_pairs(
         self,

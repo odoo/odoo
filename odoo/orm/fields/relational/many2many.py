@@ -187,43 +187,17 @@ class Many2many(_RelationalMulti):
                 records.env._("Failed to read field %s", self) + "\n" + str(e)
             ) from e
 
-        group = defaultdict(list)
         relation, column1, column2 = self._get_relation_columns()
-        backend = records.env.backend
+        group = records.env.backend.read_m2m_groups(
+            records, relation, column1, column2, query
+        )
         _debug.logic(
-            "field.many2many.read_strategy",
+            "field.many2many.read_groups",
             model=self.model_name,
             field=self.name,
             records=len(records),
-            strategy="joined" if backend.supports_joined_m2m_read else "pairs",
             filter_access=filter_access,
         )
-        if not backend.supports_joined_m2m_read:
-            position = {id2: index for index, id2 in enumerate(query.get_result_ids())}
-            pairs = backend.read_m2m_pairs(
-                records, relation, column1, column2, records.ids
-            )
-            for id1, id2 in pairs:
-                if id2 in position:
-                    group[id1].append(id2)
-            for ids2 in group.values():
-                ids2.sort(key=position.__getitem__)
-        else:
-            sql_id1 = SQL.identifier(relation, column1)
-            sql_id2 = SQL.identifier(relation, column2)
-            query.add_join(
-                "JOIN",
-                relation,
-                None,
-                SQL(
-                    "%s = %s",
-                    sql_id2,
-                    SQL.identifier(comodel._table, "id"),
-                ),
-            )
-            query.add_where(SQL("%s = ANY(%s)", sql_id1, list(records.ids)))
-            for id1, id2 in records.env.execute_query(query.select(sql_id1, sql_id2)):
-                group[id1].append(id2)
 
         if filter_access and group:
             corecord_ids = OrderedSet(id_ for ids in group.values() for id_ in ids)
