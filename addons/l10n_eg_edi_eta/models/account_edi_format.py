@@ -62,7 +62,7 @@ class AccountEdiFormat(models.Model):
         ) or self._l10n_eg_get_eta_api_domain(production_enviroment)
         request_url = api_domain + request_url
         try:
-            session = requests.session()
+            session = self.env["ir.egress"].session(purpose="l10n_eg_eta")
             session.mount("https://", LegacyHTTPAdapter())
             request_response = session.request(
                 method,

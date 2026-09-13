@@ -4,7 +4,18 @@ from collections.abc import Iterator
 from dataclasses import dataclass
 
 _REQUESTS_CALLS = frozenset(
-    {"get", "post", "put", "patch", "delete", "head", "options", "request", "Session"}
+    {
+        "get",
+        "post",
+        "put",
+        "patch",
+        "delete",
+        "head",
+        "options",
+        "request",
+        "Session",
+        "session",
+    }
 )
 _SECRET_NAME = re.compile(r"KEY|TOKEN|SECRET|PASSW|CREDENTIAL", re.IGNORECASE)
 
@@ -54,7 +65,7 @@ def _egress_target(call: ast.Call, modules, names) -> str | None:
     module, _, attr = dotted.rpartition(".")
     if module == "requests" and attr in _REQUESTS_CALLS:
         return dotted
-    if module == "requests.sessions" and attr == "Session":
+    if module == "requests.sessions" and attr in ("Session", "session"):
         return dotted
     if module == "httpx" or module.startswith("httpx."):
         return dotted

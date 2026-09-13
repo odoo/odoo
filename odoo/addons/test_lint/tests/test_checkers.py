@@ -1838,6 +1838,17 @@ class TestRawEgressLint(BaseCase):
             ["requests.post", "requests.Session"],
         )
 
+    def test_the_lowercase_session_factory_is_egress(self):
+        self.assertEqual(
+            self._targets("""
+            import requests
+            from requests.sessions import session
+            requests.session()
+            session()
+            """),
+            ["requests.session", "requests.sessions.session"],
+        )
+
     def test_aliases_and_from_imports_are_followed(self):
         self.assertEqual(
             self._targets("""
