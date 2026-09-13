@@ -3266,6 +3266,73 @@ test(`buttons should be in .o_statusbar_buttons in form view header on mobile`, 
     expect(`.o-dropdown--menu div.o_field_widget`).toHaveAttribute("name", "foo");
 });
 
+test.tags("desktop");
+test(`header separators divide the visible button groups and collapse around empty ones`, async () => {
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <header>
+                    <separator name="leading"/>
+                    <button name="a1" string="A1"/>
+                    <button name="a2" string="A2"/>
+                    <separator name="first"/>
+                    <button name="hidden" string="Hidden" invisible="1"/>
+                    <separator name="second"/>
+                    <separator name="third"/>
+                    <button name="b1" string="B1"/>
+                    <separator name="trailing"/>
+                    <button name="c1" string="C1" invisible="not bar"/>
+                </header>
+                <sheet>
+                    <field name="bar"/>
+                </sheet>
+            </form>
+        `,
+        resId: 5,
+    });
+    expect(`.o_statusbar_buttons > *`).toHaveCount(4);
+    expect(`.o_statusbar_buttons > *:eq(2)`).toHaveClass(
+        "o_statusbar_buttons_separator",
+    );
+    expect(`.o_statusbar_buttons > button:eq(2)`).toHaveAttribute("name", "b1");
+
+    await contains(`.o_field_widget[name=bar] input`).click();
+    expect(`.o_statusbar_buttons > *`).toHaveCount(6);
+    expect(`.o_statusbar_buttons > *:eq(4)`).toHaveClass(
+        "o_statusbar_buttons_separator",
+    );
+    expect(`.o_statusbar_buttons > button:eq(3)`).toHaveAttribute("name", "c1");
+});
+
+test.tags("mobile");
+test(`header separators become dividers in the mobile dropdown`, async () => {
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <header>
+                    <button name="a1" string="A1"/>
+                    <separator name="first"/>
+                    <button name="b1" string="B1"/>
+                    <button name="b2" string="B2"/>
+                    <separator name="second"/>
+                    <button name="c1" string="C1"/>
+                </header>
+            </form>
+        `,
+        resId: 2,
+    });
+    expect(`.o_statusbar_buttons > button:eq(0)`).toHaveAttribute("name", "a1");
+    expect(`.o_statusbar_buttons_separator`).toHaveCount(0);
+    await contains(".o_statusbar_buttons .dropdown-toggle:has(.oi-ellipsis-v)").click();
+    expect(`.o-dropdown--menu > *`).toHaveCount(4);
+    expect(`.o-dropdown--menu > .dropdown-divider`).toHaveCount(1);
+    expect(`.o-dropdown--menu > *:eq(2)`).toHaveClass("dropdown-divider");
+});
+
 test(`button in form view and long willStart`, async () => {
     mockService("action", {
         async doActionButton(params) {

@@ -5,7 +5,7 @@
         <div class="o_statusbar_buttons d-flex align-items-center align-content-around flex-wrap gap-1">
             <t t-if="env.isSmall">
                 <t t-set="firstSlot" t-value="visibleSlotNames[0]" />
-                <t t-set="otherSlots" t-value="visibleSlotNames.slice(1)" />
+                <t t-set="otherSlots" t-value="dropdownSlotNames" />
                 <t t-if="firstSlot" t-slot="{{ firstSlot }}" />
                 <Dropdown t-if="otherSlots.length">
                     <button class="btn btn-secondary" title="More">
@@ -13,7 +13,8 @@
                     </button>
                     <t t-set-slot="content">
                         <t t-foreach="otherSlots" t-as="slot" t-key="slot">
-                            <DropdownItem class="'o-dropdown-item-unstyled-button'">
+                            <div t-if="isSeparator(slot)" class="dropdown-divider" role="separator" />
+                            <DropdownItem t-else="" class="'o-dropdown-item-unstyled-button'">
                                 <t t-slot="{{ slot }}" />
                             </DropdownItem>
                         </t>
@@ -22,7 +23,8 @@
             </t>
             <t t-else="">
                 <t t-foreach="visibleSlotNames" t-as="slot" t-key="slot">
-                    <t t-slot="{{ slot }}" />
+                    <div t-if="isSeparator(slot)" class="o_statusbar_buttons_separator" role="separator" />
+                    <t t-else="" t-slot="{{ slot }}" />
                 </t>
             </t>
         </div>

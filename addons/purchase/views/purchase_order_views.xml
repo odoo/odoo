@@ -525,15 +525,6 @@
                 <header>
                     <field name="locked" invisible="1" />
                     <button
-                        name="action_send_rfq"
-                        id="send_primary"
-                        type="object"
-                        string="Send"
-                        groups="purchase.group_purchase_user"
-                        invisible="state != 'draft' or sent"
-                        class="btn-primary"
-                        data-hotkey="g" />
-                    <button
                         name="action_confirm"
                         id="action_confirm"
                         type="object"
@@ -551,7 +542,16 @@
                         groups="purchase.group_purchase_user"
                         invisible="state != 'draft' or sent"
                         data-hotkey="q" />
-                    <widget name="purchase_file_uploader" invisible="state != 'done'" />
+                    <button
+                        name="action_send_rfq"
+                        id="send_primary"
+                        type="object"
+                        string="Send"
+                        groups="purchase.group_purchase_user"
+                        invisible="state != 'draft' or sent"
+                        class="btn-primary"
+                        data-hotkey="g" />
+                    <separator name="workflow" />
                     <button
                         name="action_send_rfq"
                         id="send"
@@ -561,17 +561,20 @@
                         invisible="state == 'cancel' or (state == 'draft' and not sent)"
                         data-hotkey="g" />
                     <button
-                        name="action_acknowledge"
-                        type="object"
-                        string="Acknowledge"
-                        groups="purchase.group_purchase_user"
-                        invisible="acknowledged or state != 'done'" />
-                    <button
                         name="action_print_order"
                         type="object"
                         string="Print"
                         groups="base.group_user"
                         data-hotkey="k" />
+                    <separator name="documents" />
+                    <button
+                        name="action_acknowledge"
+                        type="object"
+                        string="Acknowledge"
+                        groups="purchase.group_purchase_user"
+                        invisible="acknowledged or state != 'done'" />
+                    <widget name="purchase_file_uploader" invisible="state != 'done'" />
+                    <separator name="operations" />
                     <button
                         name="action_lock"
                         type="object"

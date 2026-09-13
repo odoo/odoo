@@ -6,14 +6,14 @@
         <field name="model">purchase.order</field>
         <field name="inherit_id" ref="purchase.view_purchase_order_form" />
         <field name="arch" type="xml">
-            <xpath expr="//header/button[@name='action_send_rfq']" position="after">
+            <separator name="operations" position="before">
                 <button
                     name="action_receipt_matching"
                     type="object"
                     string="Match Receipts"
                     groups="stock.group_stock_user"
                     invisible="state != 'done' or transfer_state in ('no', 'done')" />
-            </xpath>
+            </separator>
             <button name="action_view_invoice" position="before">
                 <button
                     name="action_view_picking"

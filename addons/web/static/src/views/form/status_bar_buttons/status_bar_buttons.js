@@ -19,8 +19,36 @@ export class StatusBarButtons extends Component {
         if (!this.props.slots) {
             return [];
         }
-        return Object.entries(this.props.slots)
-            .filter(([, slot]) => !("isVisible" in slot) || slot.isVisible)
-            .map((entry) => entry[0]);
+        const names = [];
+        for (const [name, slot] of Object.entries(this.props.slots)) {
+            if ("isVisible" in slot && !slot.isVisible) {
+                continue;
+            }
+            if (slot.isSeparator && (!names.length || this.isSeparator(names.at(-1)))) {
+                continue;
+            }
+            names.push(name);
+        }
+        if (names.length && this.isSeparator(names.at(-1))) {
+            names.pop();
+        }
+        return names;
+    }
+
+    /** @returns {string[]} */
+    get dropdownSlotNames() {
+        const names = this.visibleSlotNames.slice(1);
+        if (names.length && this.isSeparator(names[0])) {
+            names.shift();
+        }
+        return names;
+    }
+
+    /**
+     * @param {string} name
+     * @returns {boolean}
+     */
+    isSeparator(name) {
+        return Boolean(this.props.slots?.[name]?.isSeparator);
     }
 }

@@ -412,25 +412,6 @@
                     <field name="sent" invisible="1" />
                     <field name="has_authorized_transaction_ids" invisible="1" />
                     <button
-                        name="action_send_quotation"
-                        id="quotation_send_primary"
-                        type="object"
-                        string="Send"
-                        context="{'validate_analytic': True, 'check_document_layout': True}"
-                        groups="sales_team.group_sale_salesman"
-                        invisible="state != 'draft' or sent"
-                        class="btn-primary"
-                        data-hotkey="g" />
-                    <button
-                        name="action_send_quotation"
-                        id="send_proforma_primary"
-                        type="object"
-                        string="Send PRO-FORMA Invoice"
-                        context="{'proforma': True, 'validate_analytic': True}"
-                        groups="sale.group_proforma_sales"
-                        invisible="state != 'draft' or invoice_count &gt;= 1"
-                        class="btn-primary" />
-                    <button
                         name="action_confirm"
                         id="action_confirm"
                         type="object"
@@ -449,6 +430,16 @@
                         invisible="state != 'draft' or sent"
                         data-hotkey="q" />
                     <button
+                        name="action_send_quotation"
+                        id="quotation_send_primary"
+                        type="object"
+                        string="Send"
+                        context="{'validate_analytic': True, 'check_document_layout': True}"
+                        groups="sales_team.group_sale_salesman"
+                        invisible="state != 'draft' or sent"
+                        class="btn-primary"
+                        data-hotkey="g" />
+                    <button
                         name="%(sale.action_view_sale_advance_payment_inv)d"
                         id="create_invoice"
                         type="action"
@@ -466,6 +457,7 @@
                         groups="sales_team.group_sale_salesman"
                         invisible="invoice_state != 'no' or state != 'done'"
                         data-hotkey="q" />
+                    <separator name="workflow" />
                     <button
                         name="action_send_quotation"
                         id="quotation_send"
@@ -482,7 +474,19 @@
                         string="Send PRO-FORMA Invoice"
                         context="{'proforma': True, 'validate_analytic': True}"
                         groups="sale.group_proforma_sales"
-                        invisible="state == 'draft' or invoice_count &gt;= 1" />
+                        invisible="invoice_count &gt;= 1" />
+                    <button
+                        name="action_print_order"
+                        type="object"
+                        string="Print"
+                        groups="base.group_user"
+                        data-hotkey="k" />
+                    <button
+                        name="action_preview_sale_order"
+                        type="object"
+                        string="Preview"
+                        class="btn-secondary" />
+                    <separator name="documents" />
                     <button
                         name="payment_action_capture"
                         type="object"
@@ -499,17 +503,8 @@
                         groups="sales_team.group_sale_salesman"
                         invisible="not has_authorized_transaction_ids"
                         data-hotkey="shift+v" />
-                    <button
-                        name="action_print_order"
-                        type="object"
-                        string="Print"
-                        groups="base.group_user"
-                        data-hotkey="k" />
-                    <button
-                        name="action_preview_sale_order"
-                        type="object"
-                        string="Preview"
-                        class="btn-secondary" />
+                    <separator name="payment" />
+                    <separator name="operations" />
                     <button
                         name="action_lock"
                         type="object"

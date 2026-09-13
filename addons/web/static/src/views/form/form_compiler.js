@@ -479,39 +479,42 @@ export class FormCompiler extends ViewCompiler {
             "t-att-class": "{ 'shadow-sm': __comp__.state.isStatusbarStickyPinned }",
         });
         statusBar.className = "o_form_statusbar d-flex justify-content-between py-2";
-        const buttons = [];
+        const statusBarButtons = createElement("StatusBarButtons");
         const others = [];
+        let slotId = 0;
         for (const child of el.childNodes) {
+            if (getTag(child, true) === "separator") {
+                append(
+                    statusBarButtons,
+                    createElement("t", {
+                        "t-set-slot": `button_${slotId++}`,
+                        isSeparator: "true",
+                    }),
+                );
+                continue;
+            }
             const compiled = this.compileNode(/** @type {Element} */ (child), params);
             if (!compiled || isTextNode(compiled)) {
                 continue;
             }
+            const compiledEl = /** @type {Element} */ (compiled);
             if (
                 getTag(child, true) === "field" &&
                 !(/** @type {Element} */ (child).classList.contains("btn"))
             ) {
-                /** @type {Element} */ (compiled).setAttribute("showTooltip", "true");
+                compiledEl.setAttribute("showTooltip", "true");
                 others.push(compiled);
-            } else {
-                if (/** @type {Element} */ (compiled).tagName === "ViewButton") {
-                    /** @type {Element} */ (compiled).setAttribute(
-                        "defaultRank",
-                        "'btn-secondary'",
-                    );
-                }
-                buttons.push(compiled);
+                continue;
             }
-        }
-        let slotId = 0;
-        const statusBarButtons = createElement("StatusBarButtons");
-        for (const button of buttons) {
-            const buttonEl = /** @type {Element} */ (button);
+            if (compiledEl.tagName === "ViewButton") {
+                compiledEl.setAttribute("defaultRank", "'btn-secondary'");
+            }
             const slot = createElement("t", {
                 "t-set-slot": `button_${slotId++}`,
-                isVisible: buttonEl.getAttribute("t-if") || "true",
+                isVisible: compiledEl.getAttribute("t-if") || "true",
             });
-            buttonEl.removeAttribute("t-if");
-            append(slot, button);
+            compiledEl.removeAttribute("t-if");
+            append(slot, compiled);
             append(statusBarButtons, slot);
         }
         append(statusBar, statusBarButtons);
