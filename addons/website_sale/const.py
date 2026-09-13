@@ -312,12 +312,6 @@ PRODUCT_PAGE_STYLE_MAPPING = {
 _COMMON_PRODUCT_SNIPPET = {
     "filter_xmlid": "website_sale.dynamic_filter_newest_products",
     "template_key": "website_sale.dynamic_filter_template_product_product_products_item",
-    "data_attributes": {
-        "product-category-id": "all",
-        "number-of-elements": "4",
-        "number-of-elements-small-devices": "2",
-        "split-variants": "true",
-    },
     "add_classes": [
         "o_wsale_products_opt_design_cards",
         "o_wsale_products_opt_has_comparison",
@@ -335,13 +329,11 @@ _COMMON_PRODUCT_SNIPPET = {
 }
 
 
-def _product_snippet(snippet_name, **extra_data_attributes):
+def _product_snippet(snippet_name):
     return {
         **_COMMON_PRODUCT_SNIPPET,
         "data_attributes": {
-            **_COMMON_PRODUCT_SNIPPET["data_attributes"],
             "snippet": snippet_name,
-            **extra_data_attributes,
         },
     }
 
@@ -349,14 +341,9 @@ def _product_snippet(snippet_name, **extra_data_attributes):
 SNIPPET_DEFAULTS = {
     "website_sale.s_dynamic_snippet_products_carousel": _product_snippet(
         "s_dynamic_snippet_products_carousel",
-        **{"carousel-interval": "5000"},
     ),
     "website_sale.s_dynamic_snippet_products_grid": _product_snippet(
         "s_dynamic_snippet_products_grid",
-        **{
-            "grid-columns": "4",
-            "mobile-columns": "2",
-        },
     ),
     "website_sale.s_dynamic_snippet_category_list": {
         "filter_xmlid": "website_sale.dynamic_filter_category_list",
@@ -365,12 +352,6 @@ SNIPPET_DEFAULTS = {
         ),
         "data_attributes": {
             "snippet": "s_dynamic_snippet_category_list",
-            "show-parent": "true",
-            "columns": "4",
-            "rounded": "2",
-            "gap": "2",
-            "size": "medium",
-            "alignment": "center",
         },
     },
 }

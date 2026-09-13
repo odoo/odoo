@@ -50,7 +50,7 @@ class EventTrack(models.Model):
     user_id = fields.Many2one('res.users', 'Responsible', tracking=True, default=lambda self: self.env.user)
     company_id = fields.Many2one('res.company', related='event_id.company_id')
     tag_ids = fields.Many2many('event.track.tag', string='Tags')
-    description = fields.Html(translate=html_translate, sanitize_attributes=False, sanitize_form=False)
+    description = fields.Qweb(translate=html_translate, sanitize_attributes=False, sanitize_form=False)
     color = fields.Integer('Agenda Color')
     priority = fields.Selection([
         ('0', 'Low'), ('1', 'Medium'),
@@ -91,7 +91,7 @@ class EventTrack(models.Model):
     partner_phone = fields.Char(
         string='Phone', compute='_compute_partner_phone',
         readonly=False, store=True, tracking=30)
-    partner_biography = fields.Html(
+    partner_biography = fields.Qweb(
         string='Biography', compute='_compute_partner_biography',
         sanitize_attributes=False,
         readonly=False, store=True)
