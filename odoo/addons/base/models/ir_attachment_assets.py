@@ -34,6 +34,38 @@ class IrAttachment(models.Model):
         return res
 
     @api.model
+    def _prepare_generated_asset_vals(
+        self, *, name: str, mimetype: str, raw: bytes, url: str
+    ) -> dict:
+        return {
+            "name": name,
+            "mimetype": mimetype,
+            "res_model": "ir.ui.view",
+            "res_id": False,
+            "type": "binary",
+            "public": True,
+            "raw": raw,
+            "url": url,
+        }
+
+    @api.model
+    def _is_generated_asset_vals(self, values: dict) -> bool:
+        return bool(
+            (values.get("url") or "").startswith(ASSETS_URL_PREFIX)
+            and values.get("res_model") == "ir.ui.view"
+            and not values.get("res_id")
+            and values.get("public")
+        )
+
+    @api.model
+    def _should_index_content(self, values: dict) -> bool:
+        # nobody searches a compiled bundle by its words; indexing one costs
+        # the text extraction of a megabyte of minified code per row
+        return not self._is_generated_asset_vals(
+            values
+        ) and super()._should_index_content(values)
+
+    @api.model
     def _get_domain_generated_assets(
         self, url: str | None = None, url_pattern: str | None = None
     ) -> Domain:

@@ -58,19 +58,15 @@ class IrQweb(models.AbstractModel):
                 continue
             path = _lib.files[declared_url]
             vals_list.append(
-                {
-                    "name": declared_url.lstrip("/"),
-                    "mimetype": "text/javascript",
-                    "res_model": "ir.ui.view",
-                    "res_id": False,
-                    "type": "binary",
-                    "public": True,
-                    "raw": served_lib_content(
+                IrAttachment._prepare_generated_asset_vals(
+                    name=declared_url.lstrip("/"),
+                    mimetype="text/javascript",
+                    raw=served_lib_content(
                         served_url,
                         functools.partial(self._minify_served_lib, path, declared_url),
                     ),
-                    "url": served_url,
-                }
+                    url=served_url,
+                )
             )
         _debug.lifecycle(
             "served_libs",

@@ -630,20 +630,16 @@ class IrQweb(models.AbstractModel):
         )
         present = set(existing.mapped("url"))
         vals_list = [
-            {
-                "name": filename,
-                "mimetype": (
+            IrAttachment._prepare_generated_asset_vals(
+                name=filename,
+                mimetype=(
                     "text/javascript"
                     if filename.endswith(".js")
                     else "application/json"
                 ),
-                "res_model": "ir.ui.view",
-                "res_id": False,
-                "type": "binary",
-                "public": True,
-                "raw": content,
-                "url": f"{prefix}{filename}",
-            }
+                raw=content,
+                url=f"{prefix}{filename}",
+            )
             for filename, content in files.items()
             if f"{prefix}{filename}" not in present
         ]
@@ -1544,16 +1540,9 @@ class IrQweb(models.AbstractModel):
             touch_ids.extend(existing.ids)
             return False
         rows.append(
-            {
-                "name": name,
-                "mimetype": mimetype,
-                "res_model": "ir.ui.view",
-                "res_id": False,
-                "type": "binary",
-                "public": True,
-                "raw": content,
-                "url": url,
-            }
+            IrAttachment._prepare_generated_asset_vals(
+                name=name, mimetype=mimetype, raw=content, url=url
+            )
         )
         return True
 

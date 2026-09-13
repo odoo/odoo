@@ -1427,6 +1427,32 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
             "the backstop truncation must agree with the bounded extraction",
         )
 
+    def test_generated_asset_rows_carry_no_index(self):
+        vals = self.Attachment._prepare_generated_asset_vals(
+            name="web.assets_web.min.js",
+            mimetype="text/javascript",
+            raw=b"function f(){return 1}" * 100,
+            url="/web/assets/abc123/web.assets_web.min.js",
+        )
+        with patch.object(
+            type(self.Attachment),
+            "_extract_index_content",
+            side_effect=AssertionError("a compiled bundle must not be indexed"),
+        ):
+            attachment = self.Attachment.sudo().create(vals)
+        self.assertFalse(attachment.index_content)
+        self.assertTrue(attachment.public)
+        plain = self.Attachment.create(
+            {"name": "notes.txt", "mimetype": "text/plain", "raw": b"alpha bravo"}
+        )
+        self.assertIn("bravo", plain.index_content)
+        self.assertIn(
+            attachment,
+            self.Attachment.sudo().search(
+                self.Attachment._get_domain_generated_assets(vals["url"])
+            ),
+        )
+
     def test_index_honours_a_disabled_limit(self):
         self.env["ir.config_parameter"].set_param("ir_attachment.index_max_chars", "0")
         blob = b"alpha bravo charlie delta " * 500

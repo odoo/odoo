@@ -98,11 +98,12 @@ class IrAttachment(models.Model):
             cached_content = index_content_cache.get(checksum)
             if cached_content:
                 return cached_content
-        if not bin_data:
+        if not bin_data or (mimetype or "").startswith("text/"):
             # An attachment may legally have no content, and `Document` refuses
             # empty bytes rather than pretending to hold a document. Every
             # `_index_*` used to answer "" here, so this branch is what the walk
-            # did rather than a new tolerance.
+            # did rather than a new tolerance. Plain text is base's: its word
+            # scan is bounded and needs no reader.
             return super()._get_index_content(bin_data, mimetype, checksum=checksum)
 
         document = Document(

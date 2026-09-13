@@ -36,6 +36,10 @@ _debug = DebugLog(__name__)
 
 TEXT_MAX_CHARS = 60_000
 
+# media families: their bytes may decode under some codec and pass the
+# text-likeness sieve when short (a PNG header did), but carry no words
+_OPAQUE_MIMETYPE_FAMILIES = ("image/", "audio/", "video/", "font/", "model/")
+
 DEFAULT_READ_UP_TO = CHEAP
 
 _DEFAULT_MIMETYPES = {
@@ -171,11 +175,14 @@ class Document:
         derived = self._derive(TEXT)
         if derived is None:
             if not get_readers(self.mimetype, TEXT):
-                try:
-                    decoded = decode(self.data)
-                except UnicodeDecodeError as e:
-                    _logger.info("Could not decode %r: %s", self.name, e)
+                if self.mimetype.startswith(_OPAQUE_MIMETYPE_FAMILIES):
                     decoded = ""
+                else:
+                    try:
+                        decoded = decode(self.data)
+                    except UnicodeDecodeError as e:
+                        _logger.info("Could not decode %r: %s", self.name, e)
+                        decoded = ""
                 derived = decoded if is_text_like(decoded) else ""
                 self._derived[TEXT] = _clamp(derived, self.name, self.text_max_chars)
         return self._derived.get(TEXT) or ""

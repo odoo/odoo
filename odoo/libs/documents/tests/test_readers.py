@@ -420,6 +420,15 @@ class TestTheAuditFoundThese(unittest.TestCase):
         self.assertEqual(doc.mimetype, "application/xml")
         self.assertIsNotNone(doc.tree)
 
+    def test_media_is_never_decoded_as_text(self):
+        for mimetype, data in (
+            ("image/png", b"\x89PNG\r\n"),
+            ("audio/mpeg", b"ID3\x03\x00abc"),
+            ("font/woff2", b"wOF2ok"),
+        ):
+            with self.subTest(mimetype=mimetype):
+                self.assertEqual(Document(data, mimetype, "m").text, "")
+
     def test_bytes_that_decode_but_are_not_text_yield_none(self):
         for name, data in (
             ("nul and controls", b"\x00\x01\x02\x03"),

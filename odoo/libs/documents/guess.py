@@ -31,7 +31,20 @@ def _first_non_ascii_chunk(data: bytes) -> int:
     return 0
 
 
+def _is_valid_utf8(data: bytes) -> bool:
+    try:
+        data.decode("utf-8")
+    except UnicodeDecodeError:
+        return False
+    return True
+
+
 def guess_encoding(data: bytes) -> str | None:
+    # UTF-8 validates itself: a multibyte sequence that decodes strictly is
+    # UTF-8 for any practical purpose, while chardet's probers, fed a short
+    # Spanish sentence, answered johab
+    if not data.isascii() and _is_valid_utf8(data):
+        return "utf-8-sig" if data.startswith(codecs.BOM_UTF8) else "utf-8"
     if chardet is None:
         return None
     detector = chardet.UniversalDetector()

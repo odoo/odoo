@@ -80,16 +80,9 @@ class AssetAttachmentStore:
     def _attachment_values(
         self, *, name: str, mimetype: str, raw: bytes, url: str
     ) -> dict[str, Any]:
-        return {
-            "name": name,
-            "mimetype": mimetype,
-            "res_model": "ir.ui.view",
-            "res_id": False,
-            "type": "binary",
-            "public": True,
-            "raw": raw,
-            "url": url,
-        }
+        return self.env["ir.attachment"]._prepare_generated_asset_vals(
+            name=name, mimetype=mimetype, raw=raw, url=url
+        )
 
     def _unlink_attachments(self, attachments: IrAttachment) -> None:
         fname_by_id = {

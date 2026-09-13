@@ -1,3 +1,4 @@
+import codecs
 import unittest
 
 from odoo.libs.documents.guess import decode, guess_encoding
@@ -6,6 +7,16 @@ from odoo.libs.documents.guess import decode, guess_encoding
 class TestGuessEncoding(unittest.TestCase):
     def test_utf8(self):
         self.assertEqual(guess_encoding("Café Ñoño".encode()), "utf-8")
+
+    def test_short_utf8_is_not_left_to_the_probers(self):
+        spanish = "Configuración del módulo árbol genealógico".encode()
+        self.assertEqual(guess_encoding(spanish), "utf-8")
+        self.assertEqual(decode(spanish), "Configuración del módulo árbol genealógico")
+
+    def test_a_utf8_bom_is_stripped(self):
+        data = codecs.BOM_UTF8 + "Café".encode()
+        self.assertEqual(guess_encoding(data), "utf-8-sig")
+        self.assertEqual(decode(data), "Café")
 
     def test_latin1_is_not_utf8(self):
         self.assertNotEqual(guess_encoding("Café".encode("latin-1")), "utf-8")

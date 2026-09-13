@@ -301,7 +301,7 @@ class IrAttachment(models.Model):
 
         backend = self._get_storage_backend()
         verify_collision = self._is_content_collision_check_enabled()
-        memo: dict[tuple[str, str], tuple[bytes, dict[str, Any]]] = {}
+        memo: dict[tuple[str, str, bool], tuple[bytes, dict[str, Any]]] = {}
         for index, values in enumerate(vals_list):
             values, has_content = self._normalize_content_vals(values)
 
@@ -315,6 +315,7 @@ class IrAttachment(models.Model):
                         values["mimetype"],
                         backend,
                         verify_collision=verify_collision,
+                        index=self._should_index_content(values),
                     )
                 )
 
@@ -677,22 +678,29 @@ class IrAttachment(models.Model):
             return None
         return self._with_bin_size_disabled().raw or None
 
+    @api.model
+    def _should_index_content(self, values: dict[str, Any]) -> bool:
+        return True
+
     def _get_content_vals_memoized(
         self,
-        memo: dict[tuple[str, str], tuple[bytes, dict[str, Any]]],
+        memo: dict[tuple[str, str, bool], tuple[bytes, dict[str, Any]]],
         data: bytes,
         mimetype: str,
         backend: AttachmentStorage,
         *,
         verify_collision: bool,
+        index: bool = True,
     ) -> dict[str, Any]:
         checksum = self._get_content_checksum(data)
-        key = (checksum, mimetype)
+        key = (checksum, mimetype, index)
         cached = memo.get(key)
         if cached is not None and (not verify_collision or cached[0] == data):
             _debug.logic("content_memo_hit", checksum=checksum, size=len(data))
             return cached[1]
-        vals = self._prepare_content_vals(data, mimetype, backend, checksum=checksum)
+        vals = self._prepare_content_vals(
+            data, mimetype, backend, checksum=checksum, index=index
+        )
         memo[key] = (data, vals)
         return vals
 
@@ -702,10 +710,20 @@ class IrAttachment(models.Model):
         mimetype: str,
         backend: AttachmentStorage | None = None,
         checksum: str | None = None,
+        *,
+        index: bool = True,
     ) -> dict[str, Any]:
         if checksum is None:
             checksum = self._get_content_checksum(data)
-        index_content = self._extract_index_content(data, mimetype, checksum=checksum)
+        index_vals = (
+            {
+                "index_content": self._extract_index_content(
+                    data, mimetype, checksum=checksum
+                )
+            }
+            if index
+            else {}
+        )
         if backend is None:
             backend = self._get_storage_backend()
         with _debug.perf(
@@ -713,13 +731,13 @@ class IrAttachment(models.Model):
             size=len(data),
             mimetype=mimetype,
             backend=type(backend).__name__,
-            indexed=bool(index_content),
+            indexed=bool(index_vals.get("index_content")),
         ):
             stored = backend.write(data, checksum)
         return {
             "file_size": len(data),
             "checksum": checksum,
-            "index_content": index_content,
+            **index_vals,
             **stored,
         }
 
@@ -908,7 +926,7 @@ class IrAttachment(models.Model):
         wrote_content = False
         backend = self._get_storage_backend()
         verify_collision = self._is_content_collision_check_enabled()
-        memo: dict[tuple[str, str], tuple[bytes, dict[str, Any]]] = {}
+        memo: dict[tuple[str, str, bool], tuple[bytes, dict[str, Any]]] = {}
 
         for attach in self._with_bin_size_disabled():
             bin_data = asbytes(attach)
