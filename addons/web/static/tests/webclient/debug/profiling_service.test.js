@@ -4,6 +4,7 @@ import "@web/webclient/debug/profiling/profiling_service";
 
 import { describe, expect, test } from "@odoo/hoot";
 import { Deferred } from "@odoo/hoot-mock";
+import { makeLogger } from "@web/core/debug/debug_logger";
 import { registry } from "@web/core/registry";
 
 describe.current.tags("headless");
@@ -81,4 +82,39 @@ test("profiling serializes derived parameter edits without losing earlier keys",
     await Promise.all([a, b]);
     expect(service.state.params).toEqual({ first: 1, second: 2 });
     expect(calls[1].params).toEqual({ first: 1, second: 2 });
+});
+
+test("a rejected profiling mutation does not poison the next queued edit", async () => {
+    let calls = 0;
+    const service = registry
+        .category("services")
+        .get("profiling")
+        .start(
+            { debug: true },
+            {
+                action: {},
+                lazy_session: { getValue: async () => false },
+                orm: {
+                    call: async (_model, _method, _args, kwargs) => {
+                        makeLogger("web.profiling.test").logic("mutation", {
+                            params: kwargs.params,
+                        });
+                        if (++calls === 1) {
+                            throw new Error("first mutation rejected");
+                        }
+                        return {
+                            session: false,
+                            collectors: kwargs.collectors,
+                            params: kwargs.params,
+                        };
+                    },
+                },
+            },
+        );
+    const first = service.setParam("rejected", 1).catch((error) => error.message);
+    const second = service.setParam("accepted", 2);
+    expect(await first).toBe("first mutation rejected");
+    await second;
+    expect(calls).toBe(2);
+    expect(service.state.params).toEqual({ accepted: 2 });
 });

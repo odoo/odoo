@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame } from "@odoo/hoot-mock";
+import { animationFrame, Deferred } from "@odoo/hoot-mock";
 import {
     contains,
     defineModels,
@@ -12,6 +12,7 @@ import {
     toggleKanbanColumnActions,
     webModels,
 } from "@web/../tests/web_test_helpers";
+import { makeLogger } from "@web/core/debug/debug_logger";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
 import { PromoteStudioDialog } from "@web/webclient/promote_studio/promote_studio_dialog";
@@ -113,5 +114,47 @@ for (const stage of ["lookup", "install", "missing"]) {
         await expect(dialog.onClickInstallStudio()).rejects.toThrow();
         expect(getService("ui").blockCount).toBe(0);
         expect(dialog.disableClick).toBe(false);
+    });
+}
+
+for (const stage of ["lookup", "install"]) {
+    test(`closing Studio during ${stage} releases only its own UI block`, async () => {
+        let dialog;
+        const pending = new Deferred();
+        patchWithCleanup(PromoteStudioDialog.prototype, {
+            setup() {
+                super.setup(...arguments);
+                dialog = this;
+            },
+        });
+        await mountWithCleanup(PromoteStudioSystrayItem);
+        const close = getService("dialog").add(PromoteStudioDialog, {
+            title: "Studio",
+        });
+        await animationFrame();
+        patchWithCleanup(getService("orm"), {
+            searchRead: async () => (stage === "lookup" ? pending : [{ id: 1 }]),
+            call: async () => {
+                expect.step("install");
+                return pending;
+            },
+        });
+        const ui = getService("ui");
+        ui.block();
+        dialog.onClickInstallStudio();
+        await animationFrame();
+        expect(ui.blockCount).toBe(2);
+        close();
+        await animationFrame();
+        makeLogger("web.studio.test").lifecycle("closed while pending", {
+            stage,
+            blockCount: ui.blockCount,
+        });
+        expect(ui.blockCount).toBe(1);
+        pending.resolve(stage === "lookup" ? [{ id: 1 }] : true);
+        await animationFrame();
+        expect(ui.blockCount).toBe(1);
+        expect.verifySteps(stage === "install" ? ["install"] : []);
+        ui.unblock();
     });
 }

@@ -5,6 +5,7 @@ import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { download } from "@web/core/network/download";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
+import { NavigationTracker } from "@web/webclient/actions/navigation_token";
 import { ReportAction } from "@web/webclient/actions/reports/report_action";
 import {
     executeReportAction,
@@ -17,6 +18,7 @@ function makeFakeAm(overrides = {}) {
     /** @type {Record<string, any[]>} */
     const calls = { updateUI: [], doAction: [], ui: [], actionInfo: [] };
     const am = {
+        navigation: new NavigationTracker(),
         confirmLeave: async () => true,
         env: { marker: "the-env" },
         uiService: {

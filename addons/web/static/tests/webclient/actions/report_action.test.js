@@ -2,7 +2,8 @@
 
 import { expect, test } from "@odoo/hoot";
 import { waitFor } from "@odoo/hoot-dom";
-import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
+import { animationFrame, Deferred, runAllTimers } from "@odoo/hoot-mock";
+import { Component, xml } from "@odoo/owl";
 import {
     contains,
     defineActions,
@@ -18,9 +19,11 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
 import { router } from "@web/core/browser/router";
+import { makeLogger } from "@web/core/debug/debug_logger";
 import { AppEvent } from "@web/core/events";
 import { download } from "@web/core/network/download";
 import { registry } from "@web/core/registry";
+import { SupersededError } from "@web/core/utils/concurrency";
 import { ReportAction } from "@web/webclient/actions/reports/report_action";
 import { downloadReport } from "@web/webclient/actions/reports/utils";
 
@@ -421,4 +424,45 @@ test("direct HTML report dispatch respects an inline leave veto", async () => {
     });
     expect(action.currentController).toBe(controller);
     webClient.env.bus.removeEventListener(AppEvent.CLEAR_UNCOMMITTED_CHANGES, veto);
+});
+
+test("a delayed report handler cannot revive a superseded inline report", async () => {
+    class NewerAction extends Component {
+        static template = xml`<div>Newer navigation</div>`;
+        static props = ["*"];
+    }
+    registry.category("actions").add("newer_review", NewerAction);
+    patchWithCleanup(ReportAction.prototype, {
+        init() {
+            super.init(...arguments);
+            this.reportUrl = "about:blank";
+        },
+    });
+    const pending = new Deferred();
+    const entered = new Deferred();
+    registry.category("ir.actions.report handlers").add("delayed_review", async () => {
+        entered.resolve();
+        return pending;
+    });
+    await mountWebClient();
+    const action = getService("action");
+    const report = action
+        .doAction({
+            type: "ir.actions.report",
+            report_type: "qweb-html",
+            report_name: "stale",
+        })
+        .catch((error) => error);
+    await entered;
+    await action.doAction({
+        type: "ir.actions.client",
+        tag: "newer_review",
+    });
+    const current = action.currentController;
+    pending.resolve(false);
+    expect(await report).toBeInstanceOf(SupersededError);
+    makeLogger("web.report.test").logic("late handler returned", {
+        action: action.currentController?.action.type,
+    });
+    expect(action.currentController?.jsId).toBe(current?.jsId);
 });

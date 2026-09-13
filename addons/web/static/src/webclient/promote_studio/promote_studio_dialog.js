@@ -1,7 +1,7 @@
 // @ts-check
 /** @odoo-module native */
 
-import { Component, useExternalListener } from "@odoo/owl";
+import { Component, onWillDestroy, useExternalListener } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { useChildRef, useService } from "@web/core/utils/hooks";
 import { Dialog } from "@web/ui/dialog";
@@ -29,6 +29,7 @@ export class PromoteStudioDialog extends Component {
         this.uiService = useService("ui");
 
         this.modalRef = useChildRef();
+        onWillDestroy(() => this.releaseInstallBlock());
 
         useExternalListener(window, "mousedown", this.onWindowMouseDown);
     }
@@ -54,8 +55,14 @@ export class PromoteStudioDialog extends Component {
             browser.localStorage.setItem("openStudioOnReload", "main");
             browser.location.reload();
         } finally {
-            this.uiService.unblock();
+            this.releaseInstallBlock();
+        }
+    }
+
+    releaseInstallBlock() {
+        if (this.disableClick) {
             this.disableClick = false;
+            this.uiService.unblock();
         }
     }
 
