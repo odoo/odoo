@@ -14,6 +14,20 @@ from odoo.libs.debug_log import (
 class _FakeCursor:
     def __init__(self) -> None:
         self.sql_log_count = 0
+        self.sql_statement_count = 0
+
+
+class _FakeEnv:
+    def __init__(self, cr: _FakeCursor) -> None:
+        self.cr = cr
+
+
+class _FakeRecords:
+    _name = "res.partner"
+
+    def __init__(self, ids: tuple, cr: _FakeCursor) -> None:
+        self._ids = ids
+        self.env = _FakeEnv(cr)
 
 
 class TestDebugScope(unittest.TestCase):
@@ -47,6 +61,22 @@ class TestFormatEvent(unittest.TestCase):
 
     def test_empty_string_is_quoted_so_the_key_keeps_a_value(self):
         self.assertEqual(format_event("x", {"s": ""}), "event=x s=''")
+
+    def test_recordset_prints_its_model_and_at_most_eight_ids(self):
+        cr = _FakeCursor()
+        few = _FakeRecords((1, 2), cr)
+        many = _FakeRecords(tuple(range(1, 13)), cr)
+        none = _FakeRecords((), cr)
+        self.assertEqual(
+            format_event("x", {"a": few, "b": many, "c": none}),
+            "event=x a=res.partner(1,2) b=res.partner(1,2,3,4,5,6,7,8,+4) "
+            "c=res.partner()",
+        )
+
+    def test_a_model_class_is_not_a_recordset(self):
+        self.assertEqual(
+            format_event("x", {"cls": _FakeRecords}), f"event=x cls={_FakeRecords}"
+        )
 
 
 class TestDebugLog(unittest.TestCase):
@@ -92,11 +122,69 @@ class TestDebugLog(unittest.TestCase):
         cr = _FakeCursor()
         with self.assertLogs(f"{ROOT}.perf", logging.DEBUG) as captured:
             with self.debug.perf("read", cr=cr, model="res.partner") as span:
-                cr.sql_log_count += 3
+                cr.sql_statement_count += 3
                 span.set(rows=7)
         (line,) = captured.output
         self.assertIn("event=read model=res.partner rows=7 ms=", line)
         self.assertTrue(line.endswith(" queries=3"))
+
+    def test_perf_span_counts_round_trips_not_rows(self):
+        cr = _FakeCursor()
+        with self.assertLogs(f"{ROOT}.perf", logging.DEBUG) as captured:
+            with self.debug.perf("insert", cr=cr):
+                cr.sql_statement_count += 1
+                cr.sql_log_count += 500
+        (line,) = captured.output
+        self.assertTrue(line.endswith(" queries=1"))
+
+    def test_timed_names_the_method_and_reads_receiver_and_cursor(self):
+        cr = _FakeCursor()
+
+        class Model:
+            _name = "res.partner"
+
+            def __init__(self) -> None:
+                self._ids = (4, 5)
+                self.env = _FakeEnv(cr)
+
+            @self.debug.perf.timed
+            def action_post(self, value):
+                cr.sql_statement_count += 2
+                return value * 2
+
+        with self.assertLogs(f"{ROOT}.perf", logging.DEBUG) as captured:
+            self.assertEqual(Model().action_post(21), 42)
+        (line,) = captured.output
+        self.assertIn("event=action_post records=res.partner(4,5) ms=", line)
+        self.assertTrue(line.endswith(" queries=2"))
+        self.assertEqual(Model.action_post.__name__, "action_post")
+
+    def test_timed_is_a_plain_call_when_disabled(self):
+        perf = logging.getLogger(f"{ROOT}.perf")
+        perf.setLevel(logging.INFO)
+        self.addCleanup(perf.setLevel, logging.NOTSET)
+        calls = []
+
+        @self.debug.perf.timed
+        def helper(value):
+            calls.append(value)
+            return value
+
+        with self.assertNoLogs(self.root, logging.DEBUG):
+            self.assertEqual(helper(3), 3)
+        self.assertEqual(calls, [3])
+
+    def test_timed_names_the_exception_and_reraises(self):
+        @self.debug.perf.timed
+        def boom():
+            raise ValueError("x")
+
+        with self.assertLogs(f"{ROOT}.perf", logging.DEBUG) as captured:
+            with self.assertRaises(ValueError):
+                boom()
+        (line,) = captured.output
+        self.assertIn("event=boom ms=", line)
+        self.assertTrue(line.endswith(" error=ValueError"))
 
     def test_perf_count_is_a_single_line(self):
         with self.assertLogs(f"{ROOT}.perf", logging.DEBUG) as captured:

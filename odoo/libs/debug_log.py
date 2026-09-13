@@ -1,11 +1,13 @@
 from __future__ import annotations
 
+import functools
 import logging
 import time
-from typing import TYPE_CHECKING, Any, Self
+from typing import TYPE_CHECKING, Any, Self, cast
 
 if TYPE_CHECKING:
     import types
+    from collections.abc import Callable
 
 __all__ = ["CHANNELS", "ROOT", "DebugLog", "debug_scope", "format_event"]
 
@@ -31,11 +33,27 @@ def debug_scope(module_name: str) -> str:
     return ".".join(parts)
 
 
+_MAX_IDS = 8
+
+
+def _format_records(model: str, ids: Any) -> str:
+    shown = ",".join(str(i).replace(" ", "") for i in ids[:_MAX_IDS])
+    hidden = len(ids) - _MAX_IDS
+    return f"{model}({shown},+{hidden})" if hidden > 0 else f"{model}({shown})"
+
+
 def _format_value(value: Any) -> str:
     if isinstance(value, str):
         return value if value and not any(c.isspace() for c in value) else repr(value)
     if isinstance(value, float):
         return f"{value:.3f}"
+    # Duck-typed recordset, so a site passes the recordset itself: nothing is
+    # computed when the channel is off, and a large one prints bounded.
+    model = getattr(value, "_name", None)
+    if isinstance(model, str) and not isinstance(value, type):
+        ids = getattr(value, "_ids", None)
+        if isinstance(ids, tuple):
+            return _format_records(model, ids)
     return str(value)
 
 
@@ -60,6 +78,12 @@ class _Channel:
             self.logger.debug("%s", format_event(event, fields))
 
 
+# Round trips, not sql_log_count: executemany adds len(rows) to the latter, so a
+# batched INSERT of N rows would read as N queries.
+def _statements(cr: Any) -> int:
+    return getattr(cr, "sql_statement_count", 0)
+
+
 class _Span:
     __slots__ = ("_cr", "_fields", "_logger", "_queries", "_start", "event")
 
@@ -77,7 +101,7 @@ class _Span:
         self._fields.update(fields)
 
     def __enter__(self) -> Self:
-        self._queries = getattr(self._cr, "sql_log_count", 0)
+        self._queries = _statements(self._cr)
         self._start = time.perf_counter()
         return self
 
@@ -91,7 +115,7 @@ class _Span:
         fields = self._fields
         fields["ms"] = elapsed_ms
         if self._cr is not None:
-            fields["queries"] = getattr(self._cr, "sql_log_count", 0) - self._queries
+            fields["queries"] = _statements(self._cr) - self._queries
         if exc_type is not None:
             fields["error"] = exc_type.__name__
         self._logger.debug("%s", format_event(self.event, fields))
@@ -131,6 +155,26 @@ class _PerfChannel(_Channel):
         if not self.logger.isEnabledFor(logging.DEBUG):
             return _DISABLED_SPAN
         return _Span(self.logger, event, cr, fields)
+
+    def timed[F: Callable[..., Any]](self, func: F) -> F:
+        logger = self.logger
+        event = func.__name__
+
+        @functools.wraps(func)
+        def wrapper(*args: Any, **kwargs: Any) -> Any:
+            if not logger.isEnabledFor(logging.DEBUG):
+                return func(*args, **kwargs)
+            receiver = args[0] if args else None
+            fields: dict[str, Any] = {}
+            cr = None
+            if receiver is not None and not isinstance(receiver, type):
+                if isinstance(getattr(receiver, "_name", None), str):
+                    fields["records"] = receiver
+                cr = getattr(getattr(receiver, "env", None), "cr", None)
+            with _Span(logger, event, cr, fields):
+                return func(*args, **kwargs)
+
+        return cast("F", wrapper)
 
 
 class DebugLog:
