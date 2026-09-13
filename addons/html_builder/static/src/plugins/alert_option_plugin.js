@@ -32,9 +32,7 @@ export class AlertIconAction extends BuilderAction {
         if (!icon) {
             return;
         }
-        fonts.computeFonts();
-        const allFaIcons = fonts.fontIcons[0].alias;
-        icon.classList.remove(...allFaIcons);
+        icon.classList.remove(...fonts.iconNames());
         icon.classList.add(className);
     }
     clean({ editingElement, params: { mainParam: className } }) {

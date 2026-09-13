@@ -122,6 +122,10 @@ registerWebsitePreviewTour(
             trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:first",
             run: "click",
         },
+        {
+            content: "Wait for the Popup to be shown before dropping into it.",
+            trigger: ":iframe #wrap .s_popup .modal.show",
+        },
         goBackToBlocks(),
         {
             content:

@@ -165,17 +165,23 @@ export class MediaDialog extends Component {
                 TABS.ICONS.Component.tagNames.includes(this.props.media.tagName)
             ) {
                 const classes = this.props.media.className.split(/\s+/);
-                const predefinedMediaFont = fonts.find((font) =>
-                    classes.includes(font.base),
+                // the media's own face first: a few names exist in two faces
+                const byAffinity = [...fonts].sort(
+                    (a, b) => classes.includes(b.base) - classes.includes(a.base),
                 );
-                if (predefinedMediaFont) {
-                    const selectedIcon = predefinedMediaFont.icons.find((icon) =>
+                let selectedIcon;
+                for (const font of byAffinity) {
+                    selectedIcon = font.icons.find((icon) =>
                         icon.names.some((name) => classes.includes(name)),
                     );
                     if (selectedIcon) {
-                        this.initialIconClasses.push(...selectedIcon.names);
-                        this.selectMedia(selectedIcon, TABS.ICONS.id);
+                        selectedIcon = { ...selectedIcon, fontBase: font.base };
+                        break;
                     }
+                }
+                if (selectedIcon) {
+                    this.initialIconClasses.push(...selectedIcon.names);
+                    this.selectMedia(selectedIcon, TABS.ICONS.id);
                 } else {
                     const iconRegex = new RegExp(
                         `\\b(?:${iconClasses.join("|")})(?:-\\S+)?\\b`,
@@ -195,11 +201,11 @@ export class MediaDialog extends Component {
      * @returns {Array<HTMLElement>}
      */
     async renderMedia(selectedMedia) {
-        const elements = await this.tabs[this.state.activeTab].Component.createElements(
-            selectedMedia,
-            { orm: this.orm },
-        );
-        elements.forEach((element) => {
+        const ActiveComponent = this.tabs[this.state.activeTab].Component;
+        const elements = await ActiveComponent.createElements(selectedMedia, {
+            orm: this.orm,
+        });
+        elements.forEach((element, index) => {
             if (this.props.media) {
                 element.classList.add(...this.props.media.classList);
                 const style = this.props.media.getAttribute("style");
@@ -250,9 +256,17 @@ export class MediaDialog extends Component {
             element.classList.remove(...this.initialIconClasses);
             element.classList.remove("o_modified_image_to_save");
             element.classList.remove("oe_edited_link");
-            element.classList.add(
-                ...this.tabs[this.state.activeTab].Component.mediaSpecificClasses,
+            // a tab may own several classes but stamp only some on a given
+            // media (an icon font renders in exactly one face)
+            const specificClasses =
+                ActiveComponent.getMediaSpecificClasses?.(selectedMedia[index]) ??
+                ActiveComponent.mediaSpecificClasses;
+            element.classList.remove(
+                ...ActiveComponent.mediaSpecificClasses.filter(
+                    (cls) => !specificClasses.includes(cls),
+                ),
             );
+            element.classList.add(...specificClasses);
         });
         return elements;
     }

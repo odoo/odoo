@@ -32,12 +32,14 @@ registerWebsitePreviewTour(
             trigger: ":iframe .o_loading_screen",
         },
         {
-            content: "Wait for the builder to mount after iframe reload",
-            trigger: ":iframe body.editor_enable",
-        },
-        {
             content: "Check that the header changed to 'Sidebar'",
             trigger: ":iframe #wrapwrap>header.o_header_sidebar",
+        },
+        {
+            // only the builder remounted on the reloaded page marks its body:
+            // checked after the new header, or the page being replaced passes
+            content: "Wait for the builder to mount after iframe reload",
+            trigger: ":iframe body.editor_enable",
         },
         ...goToTheme(),
         {

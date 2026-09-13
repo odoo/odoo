@@ -502,7 +502,7 @@ registerWebsitePreviewTour(
         }),
         {
             content: "Switch to desktop view",
-            trigger: "button:has(> span.fa-mobile)",
+            trigger: "button:has(> span.fa-mobile-screen-button)",
             run: "click",
         },
         openMenu(),

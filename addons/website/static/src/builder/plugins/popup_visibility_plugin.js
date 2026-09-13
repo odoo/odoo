@@ -86,7 +86,44 @@ export class PopupVisibilityPlugin extends Plugin {
         const Modal = this.getModal();
         if (modalEl && Modal) {
             log.pipeline("onTargetShow show popup modal", () => ({ id: targetEl.id }));
-            Modal.getOrCreateInstance(modalEl).show();
+            this.settleModal(Modal.getOrCreateInstance(modalEl), true);
+        }
+    }
+
+    /**
+     * Bootstrap silently drops a show() or hide() that arrives while the
+     * opposite transition is still running (the eye toggled twice within a
+     * fade), leaving the popup in the state the panel does not claim. The
+     * call is replayed once that transition ends.
+     *
+     * @param {import("bootstrap").Modal} modal
+     * @param {boolean} shown the state the popup must end in
+     */
+    settleModal(modal, shown) {
+        if (modal._isTransitioning && modal._isShown !== shown) {
+            const event = shown ? "hidden.bs.modal" : "shown.bs.modal";
+            log.logic("settleModal: transition in flight, replaying after", () => ({
+                event,
+            }));
+            const endWait = log.perf("settleModal wait", () => ({ event }));
+            modal._element.addEventListener(
+                event,
+                () => {
+                    endWait();
+                    if (shown) {
+                        modal.show();
+                    } else {
+                        modal.hide();
+                    }
+                },
+                { once: true },
+            );
+            return;
+        }
+        if (shown) {
+            modal.show();
+        } else {
+            modal.hide();
         }
     }
 
@@ -99,7 +136,7 @@ export class PopupVisibilityPlugin extends Plugin {
         const Modal = this.getModal();
         if (modalEl && Modal) {
             log.pipeline("onTargetHide hide popup modal", () => ({ id: targetEl.id }));
-            Modal.getOrCreateInstance(modalEl).hide();
+            this.settleModal(Modal.getOrCreateInstance(modalEl), false);
         }
     }
 

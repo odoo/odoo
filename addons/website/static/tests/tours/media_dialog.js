@@ -260,7 +260,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Verify that the icon was inserted",
-            trigger: ":iframe .s_text_block p > span.fa",
+            trigger: ":iframe .s_text_block p > span.fa-solid",
         },
     ],
 );

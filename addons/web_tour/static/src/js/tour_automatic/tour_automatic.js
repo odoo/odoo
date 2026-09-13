@@ -108,7 +108,10 @@ export class TourAutomatic {
                         } else {
                             console.log(step.describeMe);
                         }
-                        if (!step.expectUnloadPage) {
+                        // a step that only observes may catch a state that
+                        // exists while requests are in flight (a loading
+                        // screen); only acting waits for the client to settle
+                        if (!step.expectUnloadPage && step.hasAction) {
                             await this.whenClientSettles();
                         }
                     },

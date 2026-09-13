@@ -1,11 +1,12 @@
 /** @odoo-module native */
+import { iconClasses } from "@html_editor/utils/dom_info";
 import { fonts } from "@html_editor/utils/fonts";
 import { Component, useState } from "@odoo/owl";
 
 import { SearchMedia } from "./search_media.js";
 
 export class IconSelector extends Component {
-    static mediaSpecificClasses = ["fa-solid"];
+    static mediaSpecificClasses = iconClasses;
     static mediaSpecificStyles = ["color", "background-color"];
     static mediaExtraClasses = [/^text-\S+$/, /^bg-\S+$/, /^fa-\S+$/];
     static tagNames = ["SPAN", "I"];
@@ -49,6 +50,10 @@ export class IconSelector extends Component {
                 !icon.names.some((name) => this.props.media.classList.contains(name)),
         });
         await this.props.save();
+    }
+
+    static getMediaSpecificClasses(icon) {
+        return [icon.fontBase];
     }
 
     static createElements(selectedMedia) {

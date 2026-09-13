@@ -519,16 +519,18 @@ export class EditSocialMediaLinkAction extends BuilderAction {
             editingElement,
         );
         let iconClass;
+        let face = "fa-brands";
         if (info.media) {
             editingElement.classList.add(`s_social_media_${info.name}`);
             iconClass = info.media.iconClass;
         } else if (info.name) {
             const endFonts = log.perf("EditSocialMediaLinkAction computeFonts");
-            fonts.computeFonts();
-            endFonts();
-            iconClass = fonts.fontIcons[0].alias
+            iconClass = fonts
+                .iconNames()
                 .filter((el) => el.replace(/^fa-/, "").includes(info.name))
                 .reduce((a, b) => (a.length && a.length <= b.length ? a : b), "");
+            face = fonts.faceOf(iconClass) || "fa-solid";
+            endFonts();
         }
 
         if (iconClass) {
@@ -536,7 +538,7 @@ export class EditSocialMediaLinkAction extends BuilderAction {
             this.dependencies.socialMediaOptionPlugin.setIconClass(
                 editingElement,
                 iconClass,
-                info.media ? "fa-brands" : "fa-solid",
+                face,
             );
         }
     }

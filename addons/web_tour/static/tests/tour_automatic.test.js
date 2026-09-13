@@ -18,6 +18,7 @@ import { useService } from "@web/core/utils/hooks";
 import { Macro } from "@web/core/utils/macro";
 import { Dialog } from "@web/ui/dialog";
 import { TourAutomatic } from "@web_tour/js/tour_automatic/tour_automatic";
+import { tourState } from "@web_tour/js/tour_state";
 
 describe.current.tags("desktop");
 
@@ -146,6 +147,58 @@ test("a step waits for an RPC the previous step left in flight", async () => {
     rpcBus.trigger(RpcEvent.RESPONSE, pending);
     await waitForMacro();
     expect.verifySteps(["second step acted"]);
+});
+
+test("a step that only observes is neither delayed by in-flight requests nor by a blocked UI", async () => {
+    class Root extends Component {
+        static components = {};
+        static template = xml`
+            <t>
+                <div class="o_blockUI"/>
+                <button class="button0">Button 0</button>
+                <button class="button1">Button 1</button>
+            </t>
+        `;
+        static props = ["*"];
+    }
+    await mountWithCleanup(Root);
+
+    const pending = { data: { id: 779 }, url: "/website/theme_customize_data" };
+    rpcBus.trigger(RpcEvent.REQUEST, pending);
+    tourRegistry.add("tour_observe_while_busy", {
+        steps: () => [
+            {
+                trigger: ".button0",
+            },
+            {
+                trigger: ".button1",
+                run() {
+                    expect.step("action step acted");
+                },
+            },
+        ],
+    });
+
+    await odoo.startTour("tour_observe_while_busy", { mode: "auto" });
+    await animationFrame();
+    await animationFrame();
+    expect(tourState.getCurrentIndex()).toBe(1);
+    for (let i = 0; i < 5; i++) {
+        await animationFrame();
+        await advanceTime(265);
+    }
+    expect.verifySteps([]);
+
+    rpcBus.trigger(RpcEvent.RESPONSE, pending);
+    for (let i = 0; i < 5; i++) {
+        await animationFrame();
+        await advanceTime(265);
+    }
+    expect.verifySteps([]);
+
+    queryFirst(".o_blockUI").remove();
+    await waitForMacro();
+    expect.verifySteps(["action step acted"]);
 });
 
 test("a step that expects the page to unload does not wait for the client to settle", async () => {

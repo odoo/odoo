@@ -362,6 +362,75 @@ test("Can replace a font awesome regular icon", async () => {
     expect("span.far.fa-money-bill-alt").toHaveCount(0);
 });
 
+test("Picking a brand icon stamps the brands face, not the solid one", async () => {
+    const { el, editor } = await setupEditor(
+        `<p><span class="fa-solid fa-heart"></span></p>`,
+    );
+    setSelection({
+        anchorNode: el.firstChild,
+        anchorOffset: 1,
+        focusNode: el.firstChild,
+        focusOffset: 2,
+    });
+    execCommand(editor, "replaceIcon");
+    await animationFrame();
+    expect("main.modal-body span.font-icons-icon.fa-brands.fa-instagram").toHaveCount(
+        1,
+    );
+    expect("main.modal-body span.font-icons-icon.fa-solid.fa-instagram").toHaveCount(0);
+    await contains("main.modal-body span.fa-brands.fa-instagram").click();
+    await animationFrame();
+    expect(getContent(el)).toBe(
+        `<p>\ufeff[<span class="fa-brands fa-instagram" contenteditable="false">\u200b</span>]\ufeff</p>`,
+    );
+});
+
+test("A brand icon is preselected in its own face and swaps back to solid", async () => {
+    const { el, editor } = await setupEditor(
+        `<p><span class="fa-brands fa-instagram fa-2x"></span></p>`,
+    );
+    setSelection({
+        anchorNode: el.firstChild,
+        anchorOffset: 1,
+        focusNode: el.firstChild,
+        focusOffset: 2,
+    });
+    execCommand(editor, "replaceIcon");
+    await animationFrame();
+    expect("main.modal-body a.nav-link.active").toHaveText("Icons");
+    expect("main.modal-body span.o_we_attachment_selected").toHaveCount(1);
+    expect(
+        "main.modal-body span.o_we_attachment_selected.fa-brands.fa-instagram",
+    ).toHaveCount(1);
+    await contains("main.modal-body span.fa-solid.fa-magnifying-glass").click();
+    await animationFrame();
+    expect(getContent(el)).toBe(
+        `<p>\ufeff[<span class="fa-solid fa-magnifying-glass fa-2x" contenteditable="false">\u200b</span>]\ufeff</p>`,
+    );
+});
+
+test("A brand icon stored under the solid face is still recognised", async () => {
+    const { el, editor } = await setupEditor(
+        `<p><span class="fa-solid fa-instagram"></span></p>`,
+    );
+    setSelection({
+        anchorNode: el.firstChild,
+        anchorOffset: 1,
+        focusNode: el.firstChild,
+        focusOffset: 2,
+    });
+    execCommand(editor, "replaceIcon");
+    await animationFrame();
+    expect(
+        "main.modal-body span.o_we_attachment_selected.fa-brands.fa-instagram",
+    ).toHaveCount(1);
+    await contains("main.modal-body span.fa-solid.fa-heart").click();
+    await animationFrame();
+    expect(getContent(el)).toBe(
+        `<p>\ufeff[<span class="fa-solid fa-heart" contenteditable="false">\u200b</span>]\ufeff</p>`,
+    );
+});
+
 test("Should be able to undo after adding spin effect to an icon", async () => {
     const { el, editor } = await setupEditor(
         '<p><span class="fa-solid fa-martini-glass-empty"></span></p>',

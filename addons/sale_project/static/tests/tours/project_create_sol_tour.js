@@ -28,7 +28,7 @@ registry.category("web_tour.tours").add("project_create_sol_tour", {
         },
         {
             isActive: ["auto"],
-            trigger: ".ui-autocomplete > li > a:not(:has(i.fa))",
+            trigger: ".ui-autocomplete > li > a:not(:has(i.fa-spin))",
             content: "Select the customer in the autocomplete dropdown",
             run: "click",
         },

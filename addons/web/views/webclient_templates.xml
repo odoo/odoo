@@ -36,6 +36,12 @@ window.odoo = {csrf_token: "<t t-out="request.csrf_token(None)" />",debug: "<t t
         <xpath expr="//head/link[last()]" position="after">
             <t t-call-assets="web.assets_frontend" t-js="false" />
         </xpath>
+        <!-- the public app flips it to "true" once its interactions run; until
+             then a page whose DOM is parsed but whose scripts have not run must
+             not read as ready to a tour or to the website preview -->
+        <xpath expr="//body" position="attributes">
+            <attribute name="is-ready">false</attribute>
+        </xpath>
         <xpath expr="//head/script[@id='web.layout.odooscript']" position="after">
             <script> odoo.__session_info__ = <t t-out="json.dumps(request.env['ir.http'].get_frontend_session_info())" />;
                 if (!/(^|;\s)tz=/.test(document.cookie)) {

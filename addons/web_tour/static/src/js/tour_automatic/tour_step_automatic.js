@@ -140,7 +140,7 @@ export class TourStepAutomatic extends TourStep {
         const visible = !/:(hidden|visible)\b/.test(this.trigger);
         this.element = hoot.queryFirst(this.trigger, { visible });
         if (this.element) {
-            return !this.isUIBlocked &&
+            return (!this.hasAction || !this.isUIBlocked) &&
                 this.elementIsEnabled &&
                 this.elementIsInModal &&
                 this.parentFrameIsReady

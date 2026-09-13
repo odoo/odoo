@@ -1,6 +1,6 @@
 # Directory Map
 
-> **142 directories** under `static/src/` | **346 `.js` files** | Maps directory
+> **142 directories** under `static/src/` | **347 `.js` files** | Maps directory
 > → runtime + responsibility.
 >
 > Two runtimes: **public** (visitor-facing Interaction framework) and

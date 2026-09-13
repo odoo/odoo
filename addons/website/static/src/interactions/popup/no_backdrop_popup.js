@@ -33,6 +33,21 @@ export class NoBackdropPopup extends Interaction {
         const modalContentEl = this.el.querySelector(".modal-content");
         const isOverflowing = isScrollableY(modalContentEl);
         const bsModal = Modal.getOrCreateInstance(this.el);
+        // Bootstrap locks the page behind every modal; without a backdrop the
+        // page stays usable, so the lock is given back unless the popup's own
+        // content scrolls, since two scrollbars stacked leave the inner one
+        // unreachable. The body class tells which state Bootstrap's helper is
+        // in: hiding an already hidden overflow would save "hidden" as the
+        // value to restore.
+        const locked = document.body.classList.contains("modal-open");
+        if (isOverflowing && !locked) {
+            bsModal._scrollBar.hide();
+            document.body.classList.add("modal-open");
+        } else if (!isOverflowing && locked) {
+            bsModal._scrollBar.reset();
+            document.body.classList.remove("modal-open");
+        }
+        log.logic("updateScrollbar", () => ({ id: this.el.id, isOverflowing, locked }));
         if (isOverflowing) {
             bsModal._adjustDialog();
         } else {

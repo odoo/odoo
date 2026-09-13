@@ -36,6 +36,14 @@ export class AutoCompleteWithPages extends AutoComplete {
                 input.addEventListener("input", targetInput);
                 input.addEventListener("keydown", targetKeydown);
                 input.addEventListener("focus", targetFocus);
+                if (input.ownerDocument.activeElement === input && input.value) {
+                    // typing began before the listeners existed (the picker
+                    // mounts its autocomplete after its own mount): the
+                    // value already typed deserves the suggestions the next
+                    // keystroke would bring
+                    log.logic("target input focused before attach: syncing value");
+                    this._syncInputValue();
+                }
                 return () => {
                     log.lifecycle("target input listeners removed");
                     input.removeEventListener("blur", targetBlur);
