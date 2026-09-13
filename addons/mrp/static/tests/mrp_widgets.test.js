@@ -91,7 +91,7 @@ test("getStateDecorator maps a model+state to a bootstrap contextual class", () 
     expect(getStateDecorator("mrp.production", "done")).toBe("text-bg-success");
     expect(getStateDecorator("mrp.workorder", "progress")).toBe("text-bg-info");
     expect(getStateDecorator("stock.picking", "assigned")).toBe("text-bg-info");
-    expect(getStateDecorator("purchase.order", "purchase")).toBe("text-bg-info");
+    expect(getStateDecorator("purchase.order", "done")).toBe("text-bg-info");
     expect(getStateDecorator("no.such.model", "done")).toBe("");
 });
 

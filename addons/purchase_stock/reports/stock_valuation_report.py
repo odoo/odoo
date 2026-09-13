@@ -17,7 +17,7 @@ class StockValuationReport(models.AbstractModel):
         if product_category:
             domain += [("product_id.categ_id", "=", product_category.id)]
         if date:
-            domain += [("date_approve", "<=", date)]
+            domain += [("date_confirmed", "<=", date)]
         pol_by_order = self.env["purchase.order.line"]._read_group(
             domain=domain,
             groupby=["order_id"],

@@ -18,19 +18,19 @@
                     <td>Order Reference:</td>
                     <td><t t-out="o.partner_ref" /></td>
                 </tr>
-                <tr t-if="o.date_approve">
+                <tr t-if="o.date_confirmed">
                     <td>Order Date:</td>
-                    <td><t t-out="o.date_approve" t-options="{'widget': 'date'}" /></td>
+                    <td><t t-out="o.date_confirmed" t-options="{'widget': 'date'}" /></td>
                 </tr>
                 <tr t-if="o.date_order">
                     <td>Order Deadline:</td>
                     <td><t t-out="o.date_order" t-options="{'widget': 'date'}" /></td>
                 </tr>
-                <tr t-if="o.date_planned">
+                <tr t-if="o.date_commitment">
                     <td>Expected Arrival:</td>
-                    <td><t t-out="o.date_planned" t-options="{'widget': 'date'}" /></td>
+                    <td><t t-out="o.date_commitment" t-options="{'widget': 'date'}" /></td>
                 </tr>
-                <tr t-if="o.incoterm_id">
+                <tr t-if="'incoterm_id' in o._fields and o.incoterm_id">
                     <td>Incoterm:</td>
                     <td><t t-out="o.incoterm_id.code" /></td>
                 </tr>
