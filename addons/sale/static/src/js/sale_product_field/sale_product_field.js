@@ -6,10 +6,27 @@ import {
 } from "@account/components/product_label_section_and_note_field/product_label_section_and_note_field";
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
-import { saleProductMixin } from "../sale_product_mixin";
+import { Many2One, many2OneProps } from "@web/views/fields/many2one/many2one";
+import { ProductSearchMany2XAutocomplete, saleProductMixin } from "../sale_product_mixin";
+
+class ProductSearchMany2One extends Many2One {
+    static components = {
+        ...Many2One.components,
+        Many2XAutocomplete: ProductSearchMany2XAutocomplete,
+    };
+    props = useProps({ ...many2OneProps, onProductSearch: t.function().optional() });
+
+    /**
+     * @override
+     */
+    get many2XAutocompleteProps() {
+        return { ...super.many2XAutocompleteProps, onProductSearch: this.props.onProductSearch };
+    }
+}
 
 export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
     static template = "sale.SaleProductField";
+    static components = { Many2One: ProductSearchMany2One };
     props = useProps({
         ...productLabelSectionAndNoteFieldProps,
         readonlyField: t.boolean().optional(),
@@ -19,6 +36,7 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         super.setup();
         this.isInternalUpdate = false;
         this.wasCombo = false;
+        this.lastProductSearch = "";
         let isMounted = false;
 
         useEffect(() => {
@@ -72,6 +90,9 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         return {
             ...props,
             canOpen: this.props.canOpen && (!this.props.readonly || this.isProductClickable),
+            onProductSearch: (name) => {
+                this.lastProductSearch = name;
+            },
             update: (value) => {
                 this.isInternalUpdate = true;
                 this.wasCombo = this.isCombo;
