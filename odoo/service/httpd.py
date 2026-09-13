@@ -437,7 +437,9 @@ class Exchange:
         return response.framing is not Framing.CLOSE
 
 
-def _error_response(conn: Connection, status: HTTPStatus, detail: str) -> int:
+def _error_response(
+    conn: Connection, status: HTTPStatus, detail: str, *, method: str = "GET"
+) -> int:
     body = f"{status.value} {status.phrase}: {detail}\n".encode()
     head = prepare_response_head(
         f"{status.value} {status.phrase}",
@@ -445,10 +447,12 @@ def _error_response(conn: Connection, status: HTTPStatus, detail: str) -> int:
             ("Content-Type", "text/plain; charset=utf-8"),
             ("Content-Length", str(len(body))),
         ],
-        method="GET",
+        method=method,
         version=(1, 1),
         keep_alive=False,
     )
+    if method == "HEAD":
+        body = b""
     _debug.pipeline(
         "httpd.error_response",
         status=status.value,
@@ -506,7 +510,9 @@ def serve_one(
     except ProtocolError as exc:
         _reset_request_attributes()
         line = _first_line(conn.source.buffer)
-        size = _error_response(conn, exc.status, exc.detail)
+        size = _error_response(
+            conn, exc.status, exc.detail, method=line.partition(" ")[0]
+        )
         log_access(conn, line or "-", "", exc.status.value, size)
         _debug.logic("httpd.protocol_error", status=exc.status.value, detail=exc.detail)
         return Outcome.CLOSE
@@ -590,7 +596,10 @@ def _run_exchange(
         if exchange.response is None:
             exchange.status = None
             size = _error_response(
-                conn, HTTPStatus.INTERNAL_SERVER_ERROR, "internal error"
+                conn,
+                HTTPStatus.INTERNAL_SERVER_ERROR,
+                "internal error",
+                method=head.method,
             )
             log_access(
                 conn,

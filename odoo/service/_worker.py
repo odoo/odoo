@@ -5,6 +5,7 @@ import errno
 import logging
 import os
 import random
+import select
 import selectors
 import signal
 import socket
@@ -59,6 +60,22 @@ _debug = DebugLog(__name__)
 
 class CpuTimeLimitExceeded(Exception):
     pass
+
+
+_EPOLLEXCLUSIVE = getattr(select, "EPOLLEXCLUSIVE", 0)
+
+
+def watch_accept(selector: selectors.BaseSelector, sock: socket.socket) -> bool:
+    key = selector.register(sock, selectors.EVENT_READ)
+    epoll = getattr(selector, "_selector", None)
+    if not _EPOLLEXCLUSIVE or not isinstance(epoll, select.epoll):
+        return False
+    # Every worker sleeps on this one inherited socket; without EPOLLEXCLUSIVE
+    # each connection wakes all of them and all but one accept EAGAIN.  The
+    # flag is refused by EPOLL_CTL_MOD, so the fd is registered again.
+    epoll.unregister(key.fd)
+    epoll.register(key.fd, select.EPOLLIN | _EPOLLEXCLUSIVE)
+    return True
 
 
 class Worker:
@@ -352,12 +369,14 @@ class WorkerHTTP(Worker):
 
     def start(self) -> None:
         Worker.start(self)
+        exclusive = False
         if self.multi.socket is not None:
-            self._selector.register(self.multi.socket, selectors.EVENT_READ)
+            exclusive = watch_accept(self._selector, self.multi.socket)
         _debug.lifecycle(
             "worker.http.serving",
             pid=self.pid,
             socket=self.multi.socket is not None,
+            exclusive_accept=exclusive,
             sock_timeout=self.sock_timeout,
         )
 

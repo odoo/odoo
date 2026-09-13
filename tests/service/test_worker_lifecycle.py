@@ -3,6 +3,8 @@ import errno
 import os
 import pathlib
 import resource
+import select
+import selectors
 import socket
 from unittest.mock import MagicMock, patch
 
@@ -324,3 +326,47 @@ class TestTheCursorIsReleasedAndTheConnectionIsLeftAlone:
         ):
             _cron.open_cron_listener("ch", _cron._logger)
         assert order == ["cursor"]
+
+
+class TestTheListeningSocketIsWatchedExclusively:
+    @staticmethod
+    def _epoll_events(epoll_fd, target_fd):
+        text = pathlib.Path(f"/proc/self/fdinfo/{epoll_fd}").read_text(encoding="ascii")
+        for line in text.splitlines():
+            if line.startswith("tfd:") and int(line.split()[1]) == target_fd:
+                return int(line.split()[3], 16)
+        return None
+
+    @pytest.mark.skipif(not hasattr(select, "EPOLLEXCLUSIVE"), reason="Linux only")
+    def test_the_accept_registration_carries_epollexclusive(self):
+        sock = socket.socket()
+        sock.bind(("127.0.0.1", 0))
+        sock.listen(1)
+        selector = selectors.DefaultSelector()
+        try:
+            assert _worker.watch_accept(selector, sock) is True
+            assert sock in {k.fileobj for k in selector.get_map().values()}
+            events = self._epoll_events(selector._selector.fileno(), sock.fileno())
+            assert events is not None and events & select.EPOLLEXCLUSIVE, hex(events)
+            # The selector still resolves readiness to the socket's key.
+            client = socket.create_connection(sock.getsockname())
+            try:
+                ready = selector.select(timeout=1)
+                assert [key.fileobj for key, _ in ready] == [sock]
+            finally:
+                client.close()
+        finally:
+            selector.close()
+            sock.close()
+
+    def test_a_selector_without_epoll_falls_back_to_a_plain_registration(self):
+        sock = socket.socket()
+        sock.bind(("127.0.0.1", 0))
+        sock.listen(1)
+        selector = selectors.PollSelector()
+        try:
+            assert _worker.watch_accept(selector, sock) is False
+            assert sock in {k.fileobj for k in selector.get_map().values()}
+        finally:
+            selector.close()
+            sock.close()

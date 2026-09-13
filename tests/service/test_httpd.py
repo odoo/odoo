@@ -801,3 +801,20 @@ def test_close_is_idempotent_and_logged_once():
         assert a.fileno() == -1
     finally:
         b.close()
+
+
+def test_a_malformed_head_request_gets_a_bodiless_error(server):
+    raw = _talk(
+        server.server_port, b"HEAD /x HTTP/1.1\r\nHost: h\r\nBad Header: x\r\n\r\n"
+    )
+    head, _, body = raw.partition(b"\r\n\r\n")
+    assert head.startswith(b"HTTP/1.1 400 Bad Request")
+    assert b"Content-Length: 45" in head
+    assert body == b""
+
+
+def test_the_application_failing_on_a_head_request_gets_a_bodiless_500(server):
+    raw = _talk(server.server_port, b"HEAD /boom HTTP/1.1\r\nHost: h\r\n\r\n")
+    head, _, body = raw.partition(b"\r\n\r\n")
+    assert head.startswith(b"HTTP/1.1 500 Internal Server Error")
+    assert body == b""
