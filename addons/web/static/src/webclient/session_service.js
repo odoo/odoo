@@ -1,6 +1,7 @@
 import { registry } from "@web/core/registry";
 import { deepCopy } from "@web/core/utils/objects";
 
+/** @satisfies {import("registries").ServicesRegistryItemShape} */
 export const lazySession = {
     dependencies: ["orm"],
     start(env, { orm }) {

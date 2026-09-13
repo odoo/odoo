@@ -45,6 +45,7 @@ export const SHOW_AFTER_DELAY = 250;
 const TOOLTIP_SELECTOR = "[data-tooltip], [data-tooltip-template]";
 const TOOLTIP_SELECTOR_WITH_TITLE = TOOLTIP_SELECTOR + ", [title]";
 
+/** @satisfies {import("registries").ServicesRegistryItemShape} */
 export const tooltipService = {
     dependencies: ["popover"],
     start(env, { popover }) {
