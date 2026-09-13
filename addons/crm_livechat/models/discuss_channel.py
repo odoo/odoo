@@ -41,6 +41,10 @@ class DiscussChannel(models.Model):
         else:
             lead = self._convert_visitor_to_lead(self.env.user.partner_id, key)
             msg = _("Created a new lead: %s", lead._get_html_link())
+            if self.env["crm.lead"].has_access("read"):
+                Store(bus_channel=self, bus_subchannel="internal_users").add(
+                    self, fields=self._get_livechat_session_fields_to_store()
+                ).bus_send()
         self.env.user._bus_send_transient_message(self, msg)
 
     def _convert_visitor_to_lead(self, partner, key):
@@ -48,22 +52,11 @@ class DiscussChannel(models.Model):
         :param partner: internal user partner (operator) that created the lead;
         :param key: operator input in chat ('/lead Lead about Product')
         """
-        # if public user is part of the chat: consider lead to be linked to an
-        # anonymous user whatever the participants. Otherwise keep only share
-        # partners (no user or portal user) to link to the lead.
-        customers = self.env['res.partner']
-        for customer in self.with_context(active_test=False).channel_partner_ids.filtered(lambda p: p != partner and p.partner_share):
-            if customer.is_public:
-                customers = self.env['res.partner']
-                break
-            else:
-                customers |= customer
-
         utm_source = self.env.ref('crm_livechat.utm_source_livechat', raise_if_not_found=False)
         return self.env['crm.lead'].create({
             "origin_channel_id": self.id,
             'name': html2plaintext(key[5:]),
-            'partner_id': customers[0].id if customers else False,
+            'partner_id': self.livechat_customer_partner_ids[:1].id,
             'user_id': False,
             'team_id': False,
             'description': self._get_channel_history(),
