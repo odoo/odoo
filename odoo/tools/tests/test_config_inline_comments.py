@@ -62,3 +62,19 @@ class TestInlineComments(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestEmptyValueIsUnset(unittest.TestCase):
+    def _load(self, body: str) -> dict:
+        return TestInlineComments._load(self, body)
+
+    def test_an_empty_boolean_or_integer_is_left_to_its_default(self):
+        options = self._load("""
+            [options]
+            db_discard_on_return =
+            db_port =
+            db_host =
+        """)
+        self.assertNotIn("db_discard_on_return", options)
+        self.assertNotIn("db_port", options)
+        self.assertEqual(options["db_host"], "")

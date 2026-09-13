@@ -189,6 +189,10 @@ class _Unset:
 
 UNSET = _Unset()
 SMTP_SSL_MODES = ("starttls_strict", "starttls", "ssl_strict", "ssl")
+# an empty value is "unset" in the config file; these types have no empty literal
+_TYPES_WITHOUT_AN_EMPTY_VALUE = frozenset(
+    {"int", "float", "bool", "choice", "smtp_ssl", "without_demo"}
+)
 
 
 def _accept_none(check: Callable[..., Any]) -> Callable[..., Any]:
@@ -2205,6 +2209,12 @@ class configmanager:
                 if not option.file_loadable:
                     _debug.logic(
                         "config.file.option_skipped", option=name, reason="cli_only"
+                    )
+                    skipped += 1  # debuglog
+                    continue
+                if value == "" and option.type in _TYPES_WITHOUT_AN_EMPTY_VALUE:
+                    _debug.logic(
+                        "config.file.option_skipped", option=name, reason="empty_unset"
                     )
                     skipped += 1  # debuglog
                     continue
