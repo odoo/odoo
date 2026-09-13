@@ -405,6 +405,11 @@ class RecomputeMixin(_ModelStubs):
 
     @api.private
     def flush_model(self, fnames: Collection[str] | None = None) -> None:
+        self._flush_model_own(fnames)
+        if self._is_table_inheritance_root():
+            self._flush_table_inheritance_descendants(fnames)
+
+    def _flush_model_own(self, fnames: Collection[str] | None) -> None:
         fields = None if fnames is None else get_fields_by_name(self, fnames)
         if fields is not None:
             core = self.env.core
@@ -428,6 +433,24 @@ class RecomputeMixin(_ModelStubs):
 
         prof.stop("flush")
         prof.report(_orm_cache, "flush_model %s", self._name)
+
+    def _flush_table_inheritance_descendants(
+        self, fnames: Collection[str] | None
+    ) -> None:
+        for name, model_class in self.env.registry.items():
+            if (
+                name == self._name
+                or model_class._abstract
+                or model_class._table_inheritance_root != self._table
+            ):
+                continue
+            descendant = self.env[name]
+            if fnames is None:
+                descendant._flush_model_own(None)
+                continue
+            shared = [fname for fname in fnames if fname in descendant._fields]
+            if shared:
+                descendant._flush_model_own(shared)
 
     @api.private
     def flush_recordset(self, fnames: Collection[str] | None = None) -> None:

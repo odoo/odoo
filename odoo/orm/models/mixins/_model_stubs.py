@@ -65,7 +65,10 @@ class _ModelStubs:
         _display_name_search_default: bool
         _display_name_search_exact: tuple[str, ...]
         _table_objects: dict
+        _table_inheritance_root: str
         _check_company_auto: bool
+
+        def _is_table_inheritance_root(self) -> bool: ...
 
         def browse(self, ids: int | typing.Iterable[IdType] = ()) -> Self: ...
         def new(
