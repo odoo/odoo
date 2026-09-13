@@ -55,8 +55,9 @@ def _compile_static_dbfilter(pattern: str) -> re.Pattern[str] | None:
         return None
 
 
-def get_static_dbfilter() -> re.Pattern[str] | None:
-    pattern = current().dbfilter
+def get_static_dbfilter(pattern: str | None = None) -> re.Pattern[str] | None:
+    if pattern is None:
+        pattern = current().dbfilter
     return _compile_static_dbfilter(pattern) if pattern else None
 
 
@@ -66,12 +67,13 @@ def is_db_rpc_exposed(db_name: object) -> bool:
     if is_maintenance_db(db_name):
         _debug.logic("rpc.db_not_exposed", db=db_name, reason="maintenance")
         return False
-    exposed = current().db_name
+    settings = current()
+    exposed = settings.db_name
     if exposed:
         allowed = db_name in exposed
         reason = "db_name"
     else:
-        dbfilter = get_static_dbfilter()
+        dbfilter = get_static_dbfilter(settings.dbfilter)
         allowed = dbfilter is None or dbfilter.match(db_name) is not None
         reason = "dbfilter"
     if _debug.logic.enabled and not allowed:

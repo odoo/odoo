@@ -280,13 +280,15 @@ class CronListener:
             return False
         return True
 
-    def wait(self, timeout: float) -> None:
-        if self._selector is not None:
-            with _debug.perf(
-                "cron.listener.waited", channel=self._channel, timeout=timeout
-            ) as span:
-                ready = self._selector.select(timeout=timeout)
-                span.set(woken=bool(ready))
+    def wait(self, timeout: float) -> bool:
+        if self._selector is None:
+            return False
+        with _debug.perf(
+            "cron.listener.waited", channel=self._channel, timeout=timeout
+        ) as span:
+            ready = self._selector.select(timeout=timeout)
+            span.set(woken=bool(ready))
+        return bool(ready)
 
     def drain(self) -> OrderedSet:
         if self._cursor is None:

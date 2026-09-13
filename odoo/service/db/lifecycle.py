@@ -171,11 +171,22 @@ def _create_empty_database(
     if already_exists and not setup_if_exists:
         raise DatabaseExists(f"database {name!r} already exists!")
 
+    with odoo.db.db_connect(name).cursor() as cr:
+        _create_extensions(cr, name, force_unaccent or odoo.tools.config["unaccent"])
+        _open_public_schema(cr, name)
+    _create_faketime_now_function(name)
+
+    invalidate_catalog_caches()
+
+    if already_exists:
+        raise DatabaseExists(f"database {name!r} already exists!")
+
+
+def _create_extensions(cr: BaseCursor, name: str, unaccent: bool) -> None:
     try:
-        db = odoo.db.db_connect(name)
-        with db.cursor() as cr:
+        with cr.savepoint(flush=False):
             cr.execute("CREATE EXTENSION IF NOT EXISTS pg_trgm")
-            if force_unaccent or odoo.tools.config["unaccent"]:
+            if unaccent:
                 cr.execute("CREATE EXTENSION IF NOT EXISTS unaccent")
                 unaccent_status = odoo.db.get_unaccent_status(cr)
                 _debug.logic(
@@ -188,11 +199,7 @@ def _create_empty_database(
                         "ALTER FUNCTION unaccent(text) IMMUTABLE",
                         log_exceptions=False,
                     )
-        _debug.pipeline(
-            "database.extensions_created",
-            db=name,
-            unaccent=bool(force_unaccent or odoo.tools.config["unaccent"]),
-        )
+        _debug.pipeline("database.extensions_created", db=name, unaccent=unaccent)
     except psycopg.Error as e:
         _debug.logic("database.extensions_failed", db=name, error=type(e).__name__)
         _logger.error(
@@ -203,20 +210,15 @@ def _create_empty_database(
             name,
             e,
         )
-    _create_faketime_now_function(name)
 
+
+def _open_public_schema(cr: BaseCursor, name: str) -> None:
     try:
-        db = odoo.db.db_connect(name)
-        with db.cursor() as cr:
+        with cr.savepoint(flush=False):
             cr.execute("GRANT CREATE ON SCHEMA PUBLIC TO PUBLIC")
     except psycopg.Error as e:
         _logger.warning("Unable to make public schema public-accessible: %s", e)
         _debug.logic("database.public_grant_failed", db=name, error=type(e).__name__)
-
-    invalidate_catalog_caches()
-
-    if already_exists:
-        raise DatabaseExists(f"database {name!r} already exists!")
 
 
 def _rollback_new_database(db_name: str, what: str) -> None:

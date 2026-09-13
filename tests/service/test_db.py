@@ -900,7 +900,9 @@ class TestCreateEmptyDatabaseTOCTOU:
         )
 
         with (
-            patch.object(odoo.tools, "config", {"db_template": "template0"}),
+            patch.object(
+                odoo.tools, "config", {"db_template": "template0", "unaccent": False}
+            ),
             patch("odoo.service.db.lifecycle.odoo.db.db_connect", return_value=fake_db),
             patch("odoo.service.db.lifecycle.get_database_identifier", return_value=""),
             patch("odoo.service.db.lifecycle._create_faketime_now_function"),

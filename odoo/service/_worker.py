@@ -160,8 +160,9 @@ class Worker:
                 requests=self.request_count,
             )
             self.alive = False
+        settings = current()
         memory = get_memory_over_soft_limit(
-            self._process_handle, current().limit_memory_soft
+            self._process_handle, settings.limit_memory_soft
         )
         if memory is not None:
             self.logger.info("RSS memory soft-limit reached: %s bytes.", memory)
@@ -174,7 +175,7 @@ class Worker:
             )
             self.alive = False
 
-        limit_time_cpu = current().limit_time_cpu
+        limit_time_cpu = settings.limit_time_cpu
         if limit_time_cpu > 0:
             r = resource.getrusage(resource.RUSAGE_SELF)
             cpu_time = r.ru_utime + r.ru_stime
@@ -313,6 +314,8 @@ class Worker:
 
 
 class WorkerHTTP(Worker):
+    identity: ServerIdentity | None = None
+
     def __init__(self, multi: PreforkServer) -> None:
         super().__init__(multi)
 
@@ -326,10 +329,7 @@ class WorkerHTTP(Worker):
             client.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
             flags = fcntl.fcntl(client, fcntl.F_GETFD) | fcntl.FD_CLOEXEC
             fcntl.fcntl(client, fcntl.F_SETFD, flags)
-            name, port = client.getsockname()[:2]
-            identity = ServerIdentity(
-                name, port, multithread=False, multiprocess=True, exposes_socket=False
-            )
+            identity = self.identity or self._get_identity(client)
             with contextlib.suppress(BrokenPipeError):
                 with _debug.perf(
                     "worker.http.request",
@@ -345,6 +345,12 @@ class WorkerHTTP(Worker):
             with contextlib.suppress(OSError):
                 client.close()
         self.request_count += 1
+
+    def _get_identity(self, sock: socket.socket) -> ServerIdentity:
+        name, port = sock.getsockname()[:2]
+        return ServerIdentity(
+            name, port, multithread=False, multiprocess=True, exposes_socket=False
+        )
 
     def process_work(self) -> None:
         if self.multi.socket is None:
@@ -371,6 +377,7 @@ class WorkerHTTP(Worker):
         Worker.start(self)
         exclusive = False
         if self.multi.socket is not None:
+            self.identity = self._get_identity(self.multi.socket)
             exclusive = watch_accept(self._selector, self.multi.socket)
         _debug.lifecycle(
             "worker.http.serving",
@@ -441,8 +448,8 @@ class WorkerCron(Worker):
                 polling_delay_s=self.schedule.polling_delay,
                 watchdog_timeout=self.watchdog_timeout,
             )
-            self.listener.wait(interval)
-            time.sleep(random.uniform(0, CRON_NOTIFY_JITTER_MAX_S))
+            if self.listener.wait(interval):
+                time.sleep(random.uniform(0, CRON_NOTIFY_JITTER_MAX_S))
             empty_pipe(self.wakeup_fd_r)
 
     def get_max_age(self) -> int:

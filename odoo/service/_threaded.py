@@ -267,9 +267,10 @@ class ThreadedServer(CommonServer):
             poll_interval_s=CRON_POLL_INTERVAL_S + number,
         )
         while max_age <= 0 or (time.monotonic() - alive_time) <= max_age:
-            listener.wait(0 if first_pass else CRON_POLL_INTERVAL_S + number)
+            woken = listener.wait(0 if first_pass else CRON_POLL_INTERVAL_S + number)
             first_pass = False
-            time.sleep(random.uniform(0, CRON_NOTIFY_JITTER_MAX_S))
+            if woken:
+                time.sleep(random.uniform(0, CRON_NOTIFY_JITTER_MAX_S))
             try:
                 notified = listener.drain()
             except Exception as exc:

@@ -105,16 +105,15 @@ class CommonServer:
         return {}
 
     def get_memory_over_soft_limit(self) -> int | None:
-        memory = get_memory_over_soft_limit(
-            self._process_handle, self.get_memory_soft_limit()
-        )
+        limit = self.get_memory_soft_limit()
+        memory = get_memory_over_soft_limit(self._process_handle, limit)
         if memory is not None:
             self.logger.warning("RSS memory soft-limit reached: %s bytes.", memory)
             _debug.logic(
                 "server.memory_soft_limit_exceeded",
                 flavor=self.flavor,
                 rss=memory,
-                limit=self.get_memory_soft_limit(),
+                limit=limit,
             )
         return memory
 

@@ -1121,7 +1121,7 @@ class PreforkServer(CommonServer):
                     if code is not None:
                         _debug.logic("prefork.replacement_exited", returncode=code)
                         self.stop()
-                        return code
+                        return code if code >= 0 else 128 - code
                     time.sleep(self.beat)
                     continue
                 self.kill_timed_out_workers()
