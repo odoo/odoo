@@ -20,6 +20,8 @@ from psycopg.errors import (
 from psycopg.types.json import Json, Jsonb, JsonDumper
 
 from odoo.exceptions import LockError, UserError
+from psycopg import errors as pgerrors
+
 from odoo.libs.accel import fast_clone
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.profiling import _OrmProfile
@@ -315,6 +317,10 @@ class ColumnStore(typing.Protocol):
         self, model: BaseModel, column: str, record_id: int, delta: int
     ) -> int: ...
 
+    def try_write(
+        self, model: BaseModel, column: str, record_id: int, value: typing.Any
+    ) -> bool: ...
+
 
 class PostgresColumnStore:
     __slots__ = ()
@@ -373,6 +379,29 @@ class PostgresColumnStore:
         )[0]
         return value
 
+    def try_write(
+        self, model: BaseModel, column: str, record_id: int, value: typing.Any
+    ) -> bool:
+        # a value the table refuses (a unique or exclusion constraint) is an
+        # answer, not an error: the caller picks the next candidate
+        cr = model.env.cr
+        with cr.savepoint(flush=False) as savepoint:
+            try:
+                cr.execute(
+                    SQL(
+                        "UPDATE %s SET %s = %s WHERE id = %s",
+                        SQL.identifier(model._table),
+                        SQL.identifier(column),
+                        value,
+                        record_id,
+                    ),
+                    log_exceptions=False,
+                )
+            except pgerrors.ExclusionViolation, pgerrors.UniqueViolation:
+                savepoint.rollback()
+                return False
+        return True
+
 
 class InMemoryColumnStore:
     __slots__ = ("storage",)
@@ -403,6 +432,12 @@ class InMemoryColumnStore:
         value = row.get(column) or 0
         self.storage.update_rows(model._table, [(record_id, {column: value + delta})])
         return value
+
+    def try_write(
+        self, model: BaseModel, column: str, record_id: int, value: typing.Any
+    ) -> bool:
+        self.storage.update_rows(model._table, [(record_id, {column: value})])
+        return True
 
 
 @typing.runtime_checkable
@@ -1475,13 +1510,18 @@ class _InMemoryReadGroup:
             "supported in memory; use a DB-backed TransactionCase"
         )
 
-    def _groupby_reader(self, spec: str):
+    def _groupby_reader(self, spec: str, model: BaseModel | None = None):
         from ..parsing import parse_read_group_spec
 
+        model = self.model if model is None else model
         fname, seq_fnames, granularity = parse_read_group_spec(spec)
-        field = self.model._fields[fname]
-        if seq_fnames or field.is_properties or field.is_many2many:
+        field = model._fields[fname]
+        if field.is_properties or field.is_many2many:
             self._unsupported(f"groupby {spec!r}")
+        if seq_fnames:
+            return self._many2one_path_reader(
+                model, fname, field, seq_fnames, granularity, spec
+            )
 
         def read(record):
             value = record[fname]
@@ -1494,6 +1534,37 @@ class _InMemoryReadGroup:
             if field.is_text:
                 return value or None
             return value if value is not False else None
+
+        return read
+
+    def _many2one_path_reader(self, model, fname, field, seq_fnames, granularity, spec):
+        # the SQL path LEFT JOINs the comodel under the user's record rules
+        # and groups by the rest of the spec on the joined row
+        if not field.is_many2one:
+            raise ValueError(
+                f"Only many2one path is accepted for the {spec!r} groupby spec"
+            )
+        env = model.env
+        comodel = env[field.comodel_name]
+        rules = None
+        if not env.su:
+            sec_domain = env.registry.access_policy.record_domain(
+                env, comodel._name, "read"
+            )
+            if not sec_domain.is_true():
+                rules = sec_domain
+        rest = f"{seq_fnames}:{granularity}" if granularity else seq_fnames
+        read_rest = self._groupby_reader(rest, comodel)
+
+        def read(record):
+            corecord = record[fname]
+            if not corecord:
+                return None
+            if rules is not None and not (
+                corecord.sudo().with_context(active_test=False).filtered_domain(rules)
+            ):
+                return None
+            return read_rest(corecord)
 
         return read
 
@@ -1701,11 +1772,12 @@ class _InMemoryReadGroup:
             rank = None
             if term in self.groupby_specs:
                 index = self.groupby_specs.index(term)
-                fname, _, granularity = parse_read_group_spec(term)
+                fname, seq_fnames, granularity = parse_read_group_spec(term)
                 if granularity == "day_of_week":
                     self._unsupported(f"order {order_part.strip()!r}")
                 field = self.model._fields[fname]
-                if field.is_many2one:
+                # a path spec groups by the comodel's field, which sorts as is
+                if field.is_many2one and not seq_fnames:
                     comodel = self.model.env[field.comodel_name]
                     if comodel._order != "id":
                         ids = [row[index] for row in rows if row[index] is not None]

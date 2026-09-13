@@ -24,6 +24,7 @@ class Score(models.Model):
     points = fields.Integer()
     day = fields.Date()
     won = fields.Boolean()
+    tag_ids = fields.Many2many("rg.team")
 
 
 def _seed(env):
@@ -92,4 +93,4 @@ def test_the_unsupported_shapes_say_so():
     with model_test_env(Team, Score) as env:
         _seed(env)
         with pytest.raises(NotImplementedError, match="groupby"):
-            env["rg.score"]._read_group([], ["team_id.name"], ["__count"])
+            env["rg.score"]._read_group([], ["tag_ids"], ["__count"])
