@@ -10,6 +10,7 @@ import {
     useRef,
 } from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/browser/hotkeys";
+import { makeLogger } from "@web/core/debug/debug_logger";
 import { _t } from "@web/core/translation";
 import {
     convertCSSColorToRgba,
@@ -22,6 +23,8 @@ import {
 import { clamp } from "@web/core/utils/format/numbers";
 import { uniqueId } from "@web/core/utils/functions";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
+
+const log = makeLogger("web.components.custom_color_picker");
 
 const ARROW_KEYS = ["arrowup", "arrowdown", "arrowleft", "arrowright"];
 const SLIDER_KEYS = [...ARROW_KEYS, "pageup", "pagedown", "home", "end"];
@@ -51,6 +54,8 @@ export class CustomColorPicker extends Component {
 
     /** @type {"picker" | "slider" | "opacity" | null} */
     dragging = null;
+    /** @type {number | null} */
+    activePointerId = null;
     /** @type {Document[]} */
     draggedDocuments = [];
 
@@ -72,6 +77,7 @@ export class CustomColorPicker extends Component {
         this.lastFocusedSliderEl = undefined;
         this.selectedColor = this.props.selectedColor || this.defaultColor;
         this.onPointerUp = this.onPointerUp.bind(this);
+        this.onPointerCancel = this.onPointerCancel.bind(this);
         this.onEscapeKeydown = this.onEscapeKeydown.bind(this);
 
         this.elRef = useRef("el");
@@ -117,6 +123,11 @@ export class CustomColorPicker extends Component {
                     return this.onPointerMoveOpacitySlider(ev);
             }
         });
+        this.onPointerMove = (ev) => {
+            if (ev.pointerId === this.activePointerId) {
+                return this.throttleOnPointerMove(ev);
+            }
+        };
         for (const doc of this.reachableDocuments()) {
             useExternalListener(
                 doc,
@@ -128,24 +139,36 @@ export class CustomColorPicker extends Component {
         onWillUnmount(() => this.stopDrag());
     }
 
-    /** @param {"picker" | "slider" | "opacity"} kind */
-    startDrag(kind) {
+    /**
+     * @param {"picker" | "slider" | "opacity"} kind
+     * @param {PointerEvent} ev
+     */
+    startDrag(kind, ev) {
+        if (ev.button !== 0 || this.dragging) {
+            return false;
+        }
         this.stopDrag();
         this.dragging = kind;
+        this.activePointerId = ev.pointerId;
         this.draggedDocuments = this.reachableDocuments();
         for (const doc of this.draggedDocuments) {
-            doc.addEventListener("pointermove", this.throttleOnPointerMove);
+            doc.addEventListener("pointermove", this.onPointerMove);
             doc.addEventListener("pointerup", this.onPointerUp);
+            doc.addEventListener("pointercancel", this.onPointerCancel);
         }
+        return true;
     }
 
     stopDrag() {
+        this.throttleOnPointerMove.cancel();
         for (const doc of this.draggedDocuments) {
-            doc.removeEventListener("pointermove", this.throttleOnPointerMove);
+            doc.removeEventListener("pointermove", this.onPointerMove);
             doc.removeEventListener("pointerup", this.onPointerUp);
+            doc.removeEventListener("pointercancel", this.onPointerCancel);
         }
         this.draggedDocuments = [];
         this.dragging = null;
+        this.activePointerId = null;
     }
 
     /** @returns {Document[]} */
@@ -476,7 +499,19 @@ export class CustomColorPicker extends Component {
         }
         this.selectedHexValue = "";
     }
-    onPointerUp() {
+    /** @param {PointerEvent} ev */
+    onPointerCancel(ev) {
+        if (ev.pointerId === this.activePointerId) {
+            log.logic("drag cancelled");
+            this.stopDrag();
+            this.lastFocusedSliderEl = undefined;
+        }
+    }
+    /** @param {PointerEvent} ev */
+    onPointerUp(ev) {
+        if (ev.pointerId !== this.activePointerId) {
+            return;
+        }
         if (this.dragging) {
             this.shouldSetSelectedColor = true;
             this._updateCssColor();
@@ -500,7 +535,9 @@ export class CustomColorPicker extends Component {
      * @param {PointerEvent} ev
      */
     onPointerDownPicker(ev) {
-        this.startDrag("picker");
+        if (!this.startDrag("picker", ev)) {
+            return;
+        }
         ev.preventDefault();
         this.onPointerMovePicker(ev);
         this.setLastFocusedSliderEl(this.colorPickerPointerRef.el);
@@ -556,7 +593,9 @@ export class CustomColorPicker extends Component {
      * @param {PointerEvent} ev
      */
     onPointerDownSlider(ev) {
-        this.startDrag("slider");
+        if (!this.startDrag("slider", ev)) {
+            return;
+        }
         ev.preventDefault();
         this.onPointerMoveSlider(ev);
         this.setLastFocusedSliderEl(this.colorSliderPointerRef.el);
@@ -610,7 +649,9 @@ export class CustomColorPicker extends Component {
      * @param {PointerEvent} ev
      */
     onPointerDownOpacitySlider(ev) {
-        this.startDrag("opacity");
+        if (!this.startDrag("opacity", ev)) {
+            return;
+        }
         ev.preventDefault();
         this.onPointerMoveOpacitySlider(ev);
         this.setLastFocusedSliderEl(this.opacitySliderPointerRef.el);

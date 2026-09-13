@@ -1,14 +1,7 @@
 // @ts-check
 /** @odoo-module native */
 
-import {
-    Component,
-    onMounted,
-    onWillUnmount,
-    status,
-    useRef,
-    useState,
-} from "@odoo/owl";
+import { Component, onWillUnmount, status, useRef, useState } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { makeLogger } from "@web/core/debug/debug_logger";
 import { reportUncaught } from "@web/core/errors/error_utils";
@@ -27,16 +20,17 @@ const SCROLL_LOCK_THRESHOLD = 40;
  * @param {"left" | "right"} direction
  * @returns {boolean}
  */
-const isScrollSwipable = (scrollables, direction) => {
-    if (direction === "left") {
-        return !scrollables.some((e) => e.scrollLeft !== 0);
-    }
-    return !scrollables.some(
-        (e) =>
-            e.scrollLeft + Math.round(e.getBoundingClientRect().width) !==
-            e.scrollWidth,
-    );
-};
+const isScrollSwipable = (scrollables, direction) =>
+    scrollables.every((el) => {
+        const range = Math.max(0, el.scrollWidth - el.clientWidth);
+        const rtl = getComputedStyle(el).direction === "rtl";
+        const left = rtl ? -range : 0;
+        const right = rtl ? 0 : range;
+        // scrollLeft is fractional; clientWidth and scrollWidth are rounded.
+        return direction === "left"
+            ? el.scrollLeft <= left + 1
+            : el.scrollLeft >= right - 1;
+    });
 
 export class ActionSwiper extends Component {
     static template = "web.ActionSwiper";
@@ -87,11 +81,6 @@ export class ActionSwiper extends Component {
         this.startX = undefined;
         this.swipedDistance = 0;
         this.isScrollValidated = false;
-        onMounted(() => {
-            if (this.targetContainer.el) {
-                this.width = this.targetContainer.el.getBoundingClientRect().width;
-            }
-        });
         onWillUnmount(() => {
             browser.clearTimeout(this.actionTimeoutId);
             browser.clearTimeout(this.resetTimeoutId);
@@ -193,16 +182,14 @@ export class ActionSwiper extends Component {
                 return (
                     el.nodeType === 1 &&
                     this.targetContainer.el.contains(el) &&
-                    el.scrollWidth > el.getBoundingClientRect().width &&
+                    el.scrollWidth > el.clientWidth &&
                     ["auto", "scroll"].includes(
                         window.getComputedStyle(el)["overflow-x"],
                     )
                 );
             })
         );
-        if (!this.width) {
-            this.width = this.targetContainer.el?.getBoundingClientRect().width;
-        }
+        this.width = this.targetContainer.el?.getBoundingClientRect().width;
         this.state.isSwiping = true;
         this.isScrollValidated = false;
         this.startX = ev.touches[0].clientX;

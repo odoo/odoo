@@ -9,8 +9,10 @@ import {
     useExternalListener,
     useRef,
 } from "@odoo/owl";
+import { makeLogger } from "@web/core/debug/debug_logger";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 
+const log = makeLogger("web.components.resizable_panel");
 const DEFAULT_SPACING = 10;
 export const DEFAULT_PANEL_WIDTH = 400;
 
@@ -39,7 +41,7 @@ class ResizeController {
         this.minWidth = params.getMinWidth(props);
         this.resizeSide = params.getResizeSide(props);
         this.initialWidth = params.getInitialWidth(props);
-        /** @type {{ direction: 1 | -1, fixedEdge: number, limit: number, spacing: number } | null} */
+        /** @type {{ direction: 1 | -1, fixedEdge: number, limit: number, spacing: number, pointerId: number } | null} */
         this.drag = null;
         this.onPointerDown = this.onPointerDown.bind(this);
         this.onPointerMove = this.onPointerMove.bind(this);
@@ -71,12 +73,15 @@ class ResizeController {
         this.resize(this.clampWidth(this.initialWidth));
         handle.addEventListener("pointerdown", this.onPointerDown);
         handle.style.touchAction = "none";
-        return () => handle.removeEventListener("pointerdown", this.onPointerDown);
+        return () => {
+            handle.removeEventListener("pointerdown", this.onPointerDown);
+            this.onPointerUp();
+        };
     }
 
     /** @param {PointerEvent} ev */
     onPointerDown(ev) {
-        if (!this.containerRef.el) {
+        if (!this.containerRef.el || ev.button !== 0 || this.drag) {
             return;
         }
         const docDirection = getComputedStyle(this.containerRef.el).direction;
@@ -86,11 +91,13 @@ class ResizeController {
                 ? 1
                 : -1;
         this.drag = {
+            pointerId: ev.pointerId,
             direction,
             fixedEdge: this.containerRect()[direction === 1 ? "left" : "right"],
             limit: this.limitWidth(),
             spacing: this.handleSpacing(),
         };
+        log.logic("resize started", () => ({ pointerId: ev.pointerId }));
         document.body.classList.add("pe-none", "user-select-none");
         try {
             this.handleRef.el?.setPointerCapture(ev.pointerId);
@@ -100,7 +107,15 @@ class ResizeController {
         document.addEventListener("pointercancel", this.onPointerUp);
     }
 
-    onPointerUp() {
+    /** @param {PointerEvent} [ev] */
+    onPointerUp(ev) {
+        if (!this.drag || (ev && ev.pointerId !== this.drag.pointerId)) {
+            return;
+        }
+        try {
+            this.handleRef.el?.releasePointerCapture(this.drag.pointerId);
+        } catch {}
+        log.logic("resize stopped");
         this.drag = null;
         document.body.classList.remove("pe-none", "user-select-none");
         document.removeEventListener("pointermove", this.onPointerMove);
@@ -110,7 +125,11 @@ class ResizeController {
 
     /** @param {PointerEvent} ev */
     onPointerMove(ev) {
-        if (!this.drag || !this.containerRef.el) {
+        if (
+            !this.drag ||
+            ev.pointerId !== this.drag.pointerId ||
+            !this.containerRef.el
+        ) {
             return;
         }
         const { direction, fixedEdge, limit, spacing } = this.drag;

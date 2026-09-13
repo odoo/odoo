@@ -339,3 +339,23 @@ test("a drag measures the panel once, at pointerdown, and only writes on each mo
     await dragHelper.drop();
     expect(panel.style.width).not.toBe("300px");
 });
+
+test("resizing ignores secondary buttons and unrelated pointers", async () => {
+    await mountWithCleanup(ResizablePanel, {
+        props: { minWidth: 20, initialWidth: 100, slots: {} },
+    });
+    const panel = queryOne(".o_resizable_panel");
+    const handle = queryOne(".o_resizable_panel_handle");
+    handle.dispatchEvent(new PointerEvent("pointerdown", { button: 2, pointerId: 7 }));
+    expect(document.body).not.toHaveClass("pe-none");
+    document.dispatchEvent(new PointerEvent("pointerup", { pointerId: 7 }));
+    handle.dispatchEvent(new PointerEvent("pointerdown", { pointerId: 7 }));
+    document.dispatchEvent(
+        new PointerEvent("pointermove", { pointerId: 8, clientX: 250 }),
+    );
+    expect(panel.style.width).toBe("100px");
+    document.dispatchEvent(new PointerEvent("pointerup", { pointerId: 8 }));
+    expect(document.body).toHaveClass("pe-none");
+    document.dispatchEvent(new PointerEvent("pointercancel", { pointerId: 7 }));
+    expect(document.body).not.toHaveClass("pe-none");
+});

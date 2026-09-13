@@ -141,3 +141,89 @@ test("the document hears pointer moves only while a drag is in progress", async 
     expect(moveListeners).toBe(0);
     expect(picker.dragging).toBe(null);
 });
+
+test("a cancelled pointer stops color dragging without selecting a color", async () => {
+    const picker = await mountWithCleanup(CustomColorPicker);
+    const slider = picker.colorSliderRef.el;
+    const { x, y } = slider.getBoundingClientRect();
+    slider.dispatchEvent(
+        new PointerEvent("pointerdown", {
+            bubbles: true,
+            pointerId: 41,
+            clientX: x,
+            clientY: y + 20,
+        }),
+    );
+    document.dispatchEvent(new PointerEvent("pointercancel", { pointerId: 41 }));
+    const color = picker.colorComponents.hex;
+    document.dispatchEvent(
+        new PointerEvent("pointermove", {
+            pointerId: 41,
+            clientX: x,
+            clientY: y + 80,
+        }),
+    );
+    await animationFrame();
+    expect(picker.dragging).toBe(null);
+    expect(picker.colorComponents.hex).toBe(color);
+    expect(picker.shouldSetSelectedColor).toBe(false);
+});
+
+test("color dragging ignores secondary buttons and other pointers", async () => {
+    const picker = await mountWithCleanup(CustomColorPicker);
+    const slider = picker.colorSliderRef.el;
+    const { x, y } = slider.getBoundingClientRect();
+    slider.dispatchEvent(
+        new PointerEvent("pointerdown", { bubbles: true, button: 2, pointerId: 3 }),
+    );
+    expect(picker.dragging).toBe(null);
+    slider.dispatchEvent(
+        new PointerEvent("pointerdown", {
+            bubbles: true,
+            pointerId: 3,
+            clientX: x,
+            clientY: y + 20,
+        }),
+    );
+    const color = picker.colorComponents.hex;
+    document.dispatchEvent(
+        new PointerEvent("pointermove", { pointerId: 4, clientX: x, clientY: y + 90 }),
+    );
+    document.dispatchEvent(new PointerEvent("pointerup", { pointerId: 4 }));
+    await animationFrame();
+    expect(picker.colorComponents.hex).toBe(color);
+    expect(picker.dragging).toBe("slider");
+    document.dispatchEvent(new PointerEvent("pointerup", { pointerId: 3 }));
+    expect(picker.dragging).toBe(null);
+    expect(picker.shouldSetSelectedColor).toBe(true);
+});
+
+test("another pointer cannot replace the active pointer's queued move", async () => {
+    const picker = await mountWithCleanup(CustomColorPicker);
+    const slider = picker.colorSliderRef.el;
+    const { x, y } = slider.getBoundingClientRect();
+    slider.dispatchEvent(
+        new PointerEvent("pointerdown", {
+            bubbles: true,
+            pointerId: 3,
+            clientX: x,
+            clientY: y + 20,
+        }),
+    );
+    const move = (pointerId, offset) =>
+        document.dispatchEvent(
+            new PointerEvent("pointermove", {
+                pointerId,
+                clientX: x,
+                clientY: y + offset,
+            }),
+        );
+    move(3, 30);
+    move(3, 60);
+    move(4, 90);
+    await animationFrame();
+    expect(picker.colorComponents.hue).toBe(
+        Math.round((360 * (slider.clientHeight - 60)) / slider.clientHeight),
+    );
+    document.dispatchEvent(new PointerEvent("pointercancel", { pointerId: 3 }));
+});
