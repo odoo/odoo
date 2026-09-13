@@ -162,9 +162,11 @@ in about a second while the worst case is twenty minutes.
 
 ## The HTTP transport
 
-`service/httpd.py` owns the connection: it parses requests with the strict
+`service/_transport.py` owns the connection: it parses requests with the strict
 HTTP/1.1 parser in `libs/http1.py`, frames responses, and hands each request to
-the WSGI `Application` unchanged. `werkzeug.serving` is not used; werkzeug's
+the WSGI `Application` unchanged; `service/httpd.py` is the threaded server built
+on it (the selector, the worker pool, keep-alive), and a prefork worker calls the
+transport directly. `werkzeug.serving` is not used; werkzeug's
 request and response wrappers still are.
 
 | Server | Connection handling |

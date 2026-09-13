@@ -44,7 +44,7 @@ from ._cron import (
 )
 from ._env import get_env_int
 from ._limits import empty_pipe, get_memory_over_soft_limit
-from .httpd import (
+from ._transport import (
     ServerIdentity,
     TransportLimits,
     serve_prefork_connection,

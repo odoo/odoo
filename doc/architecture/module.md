@@ -49,7 +49,10 @@ odoo/
 ├── service/        Process lifecycle + the servers
 │   ├── server, _base_server, _threaded (ThreadedServer + EventServer),
 │   │   _prefork, _census (the master's worker counts, a file its
-│   │   children read for /web/metrics), _worker, _watcher, httpd, _cron, lifecycle,
+│   │   children read for /web/metrics), _worker, _watcher, _transport (one
+│   │   HTTP/1.1 exchange: head, body reader, WSGI environ, response framing,
+│   │   the access log; what a prefork worker serves a connection with),
+│   │   httpd (the threaded server: selector, pool, keep-alive), _cron, lifecycle,
 │   │   _factory (picks and runs a server), _process_state (its two globals),
 │   │   settings (ServerSettings: derived from the live config on each current() read; a change is logged when the lifecycle channel is on)
 │   ├── db/         Database management, the /web/database/manager service

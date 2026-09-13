@@ -3,7 +3,7 @@ import logging
 import pytest
 
 from odoo import logutils
-from odoo.service import httpd
+from odoo.service import _transport as transport
 
 _TOUCHED = (
     "",
@@ -40,7 +40,7 @@ def _access_level():
 
 
 def test_the_transport_logs_on_the_configured_access_logger():
-    assert httpd._access_logger.name == logutils.ACCESS_LOGGER
+    assert transport._access_logger.name == logutils.ACCESS_LOGGER
 
 
 def test_debug_level_does_not_print_static_access_lines(configure):

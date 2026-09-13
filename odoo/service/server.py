@@ -3,6 +3,7 @@ from ._factory import start
 from ._prefork import PreforkServer
 from ._process_state import get_server
 from ._threaded import EventServer, ThreadedServer
+from ._transport import serve_prefork_connection
 from ._worker import (
     CpuTimeLimitExceeded,
     Worker,
@@ -10,7 +11,7 @@ from ._worker import (
     WorkerHTTP,
     WorkerJob,
 )
-from .httpd import ThreadedHTTPServer, serve_prefork_connection
+from .httpd import ThreadedHTTPServer
 from .lifecycle import (
     load_server_wide_modules,
     preload_registries,

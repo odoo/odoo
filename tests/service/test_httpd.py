@@ -11,6 +11,7 @@ from unittest.mock import patch
 
 import pytest
 
+from odoo.service import _transport as transport
 from odoo.service import httpd
 from odoo.service import settings as server_settings
 
@@ -367,7 +368,7 @@ def _starved_server():
 
 def _parked(srv, *, requests, head_started, name):
     left, right = socket.socketpair()
-    conn = httpd.Connection(left, (name, 0))
+    conn = transport.Connection(left, (name, 0))
     conn.requests = requests
     if head_started:
         conn.source.buffer += b"GET / HTTP/1.1\r\n"
@@ -440,13 +441,13 @@ def test_the_access_log_line_keeps_its_shape(server, caplog):
 
 
 def test_static_requests_are_logged_at_debug_outside_dev_mode(caplog):
-    conn = httpd.Connection(socket.socket(), ("127.0.0.1", 1))
+    conn = transport.Connection(socket.socket(), ("127.0.0.1", 1))
     try:
         with (
             server_settings.override(dev_mode=[]),
             caplog.at_level(logging.DEBUG, logger="odoo.service.http.access"),
         ):
-            httpd.log_access(
+            transport.log_access(
                 conn, "GET /web/static/x.js HTTP/1.1", "/web/static/x.js", 200, 1
             )
     finally:
@@ -455,10 +456,10 @@ def test_static_requests_are_logged_at_debug_outside_dev_mode(caplog):
 
 
 def test_access_records_carry_the_request_line_first_for_filters(caplog):
-    conn = httpd.Connection(socket.socket(), ("127.0.0.1", 1))
+    conn = transport.Connection(socket.socket(), ("127.0.0.1", 1))
     try:
         with caplog.at_level(logging.INFO, logger="odoo.service.http.access"):
-            httpd.log_access(conn, "GET /hw_proxy/hello HTTP/1.1", "/hw", 200, 7)
+            transport.log_access(conn, "GET /hw_proxy/hello HTTP/1.1", "/hw", 200, 7)
     finally:
         conn.sock.close()
     [record] = caplog.records
@@ -477,10 +478,10 @@ def test_a_filter_on_the_access_logger_rewrites_the_line(caplog):
     logger = logging.getLogger("odoo.service.http.access")
     mask = Mask()
     logger.addFilter(mask)
-    conn = httpd.Connection(socket.socket(), ("127.0.0.1", 1))
+    conn = transport.Connection(socket.socket(), ("127.0.0.1", 1))
     try:
         with caplog.at_level(logging.INFO, logger="odoo.service.http.access"):
-            httpd.log_access(conn, "POST /hook/s3cr3t HTTP/1.1", "/hook", 200, 0)
+            transport.log_access(conn, "POST /hook/s3cr3t HTTP/1.1", "/hook", 200, 0)
     finally:
         logger.removeFilter(mask)
         conn.sock.close()
@@ -489,23 +490,23 @@ def test_a_filter_on_the_access_logger_rewrites_the_line(caplog):
 
 
 def test_a_percent_in_the_peer_address_is_not_a_format_directive(caplog):
-    conn = httpd.Connection(socket.socket(), ("fe80::1%eth0", 1))
+    conn = transport.Connection(socket.socket(), ("fe80::1%eth0", 1))
     try:
         with caplog.at_level(logging.INFO, logger="odoo.service.http.access"):
-            httpd.log_access(conn, "GET / HTTP/1.1", "/", 200, 0)
+            transport.log_access(conn, "GET / HTTP/1.1", "/", 200, 0)
     finally:
         conn.sock.close()
     assert caplog.records[0].getMessage().startswith("fe80::1%eth0 - - [")
 
 
 def test_control_characters_are_escaped_in_the_access_log(caplog):
-    conn = httpd.Connection(socket.socket(), ("127.0.0.1", 1))
+    conn = transport.Connection(socket.socket(), ("127.0.0.1", 1))
     try:
         with (
             server_settings.override(dev_mode=[]),
             caplog.at_level(logging.INFO, logger="odoo.service.http.access"),
         ):
-            httpd.log_access(conn, "GET /a\x1b[31m HTTP/1.1", "/a", 200, 1)
+            transport.log_access(conn, "GET /a\x1b[31m HTTP/1.1", "/a", 200, 1)
     finally:
         conn.sock.close()
     assert "\\x1b[31m" in caplog.records[0].getMessage()
@@ -517,18 +518,18 @@ def _prefork_listener(**env):
     listener.bind(("127.0.0.1", 0))
     listener.listen(1)
     port = listener.getsockname()[1]
-    identity = httpd.ServerIdentity(
+    identity = transport.ServerIdentity(
         "127.0.0.1", port, multithread=False, multiprocess=True, exposes_socket=False
     )
     with (
         patch.dict(os.environ, env),
         server_settings.override(test_enable=False),
     ):
-        limits = httpd.TransportLimits.from_environment()
+        limits = transport.TransportLimits.from_environment()
 
     def serve():
         client, addr = listener.accept()
-        httpd.serve_prefork_connection(client, addr, _app, identity, limits)
+        transport.serve_prefork_connection(client, addr, _app, identity, limits)
 
     thread = threading.Thread(target=serve, daemon=True)
     thread.start()
@@ -570,20 +571,20 @@ def test_a_prefork_head_may_pause_longer_than_the_socket_timeout():
     """The head phase is bounded by ODOO_HTTP_HEAD_TIMEOUT, as deployment.md
     states; the per-read socket timeout governs bodies and responses."""
     with _prefork_listener(
-        ODOO_HTTP_SOCKET_TIMEOUT="0.2", ODOO_HTTP_HEAD_TIMEOUT="5"
+        ODOO_HTTP_SOCKET_TIMEOUT="0.1", ODOO_HTTP_HEAD_TIMEOUT="5"
     ) as port:
         raw = _talk_in_two_parts(
-            port, b"GET /p HTTP/1.1\r\n", b"Host: h\r\n\r\n", pause=0.6
+            port, b"GET /p HTTP/1.1\r\n", b"Host: h\r\n\r\n", pause=0.3
         )
     assert raw.startswith(b"HTTP/1.1 200"), raw[:80]
 
 
 def test_a_prefork_head_past_the_head_timeout_gets_a_408():
     with _prefork_listener(
-        ODOO_HTTP_SOCKET_TIMEOUT="0.2", ODOO_HTTP_HEAD_TIMEOUT="0.5"
+        ODOO_HTTP_SOCKET_TIMEOUT="0.1", ODOO_HTTP_HEAD_TIMEOUT="0.3"
     ) as port:
         raw = _talk_in_two_parts(
-            port, b"GET /p HTTP/1.1\r\n", b"Host: h\r\n\r\n", pause=0.9
+            port, b"GET /p HTTP/1.1\r\n", b"Host: h\r\n\r\n", pause=0.6
         )
     assert raw.startswith(b"HTTP/1.1 408"), raw[:80]
 
@@ -651,14 +652,14 @@ def test_the_socket_timeout_knob_is_clamped_and_degrades_safely(
     monkeypatch, raw, expected
 ):
     monkeypatch.setenv("ODOO_HTTP_SOCKET_TIMEOUT", raw)
-    assert httpd.get_http_socket_timeout() == expected
+    assert transport.get_http_socket_timeout() == expected
 
 
 @pytest.mark.parametrize("test_enable", [False, True])
 def test_test_mode_keeps_the_longer_socket_timeout(monkeypatch, test_enable):
     monkeypatch.setenv("ODOO_HTTP_SOCKET_TIMEOUT", "2.5")
     with server_settings.override(test_enable=test_enable):
-        limits = httpd.TransportLimits.from_environment()
+        limits = transport.TransportLimits.from_environment()
     assert limits.socket_timeout == (5.0 if test_enable else 2.5)
 
 
@@ -676,7 +677,7 @@ def test_a_connection_finishing_after_shutdown_is_closed_not_queued():
     ):
         srv = httpd.ThreadedHTTPServer("127.0.0.1", 0, _app)
     left, right = socket.socketpair()
-    conn = httpd.Connection(left, ("127.0.0.1", 1))
+    conn = transport.Connection(left, ("127.0.0.1", 1))
     try:
         assert srv._stopped.is_set(), "a server that is not serving counts as stopped"
         with patch.object(httpd, "serve_one", return_value=httpd.Outcome.PERSIST):
@@ -831,9 +832,11 @@ class TestAccessLogStyling:
     @pytest.fixture
     def styled(self, monkeypatch):
         def run(*, colors: bool, tty: bool) -> str:
-            monkeypatch.setattr(httpd, "root_handler_uses_colors", lambda: colors)
-            monkeypatch.setattr(httpd.sys.stderr, "isatty", lambda: tty, raising=False)
-            return httpd._style("GET / HTTP/1.1", "bold", "red")
+            monkeypatch.setattr(transport, "root_handler_uses_colors", lambda: colors)
+            monkeypatch.setattr(
+                transport.sys.stderr, "isatty", lambda: tty, raising=False
+            )
+            return transport._style("GET / HTTP/1.1", "bold", "red")
 
         return run
 
@@ -845,7 +848,7 @@ class TestAccessLogStyling:
 def test_close_is_idempotent_and_logged_once():
     a, b = socket.socketpair()
     try:
-        conn = httpd.Connection(a, ("127.0.0.1", 1))
+        conn = transport.Connection(a, ("127.0.0.1", 1))
         conn.close()
         assert conn.closed
         conn.close()
