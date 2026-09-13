@@ -73,9 +73,12 @@ CREATE TABLE orm_signaling_<name> (id SERIAL PRIMARY KEY, date TIMESTAMP DEFAULT
 
 **There is no message and no payload — the row's generated `id` *is* the version
 number.** To invalidate, a worker inserts a row and keeps the id PostgreSQL
-assigned; every other worker compares the table's max id against the one it last
-saw, on its next `check_signaling()`, and rebuilds its registry or clears the
-named caches accordingly.
+assigned; every other worker compares the serial's last value (one sequence read
+per table, not a `max(id)` scan) against the one it last saw, on its next
+`check_signaling()`, and rebuilds its registry or clears the named caches
+accordingly. A serial moves even when the inserting transaction rolls back, so a
+rolled-back registry change costs the other workers one spare reload — rare, and
+cheaper than planning eleven subselects on every request.
 
 This is why the process model is architectural rather than a deployment knob
 (`workers > 0` means no shared memory), and why any process-lifetime cache must
@@ -140,7 +143,7 @@ The question to ask of any change: *if these disagreed, which one wins?*
 |---|---|---|
 | Which fields a model has **in this database** | `ir_model_fields` | the Python class |
 | Which modules are installed | `ir_module_module` | `addons_path` contents |
-| Whether a cached value is stale | `orm_signaling_*` max id | process uptime |
+| Whether a cached value is stale | `orm_signaling_*_id_seq` last value | process uptime |
 | An attachment's bytes | `store_fname` **xor** `db_datas` | either alone |
 | The identity of a record across upgrades | `ir_model_data` XML id | the numeric `id` |
 

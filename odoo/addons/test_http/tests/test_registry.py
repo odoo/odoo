@@ -287,7 +287,7 @@ class TestHttpRegistry(BaseCase):
                 [
                     Like(
                         "WARNING:odoo.http.application:Database or registry unusable, trying without\n"
-                        'Traceback...relation "orm_signaling_registry" does not exist...'
+                        'Traceback...relation "orm_signaling_registry_id_seq" does not exist...'
                     )
                 ],
             )

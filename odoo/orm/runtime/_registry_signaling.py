@@ -30,6 +30,16 @@ SIGNALING_TABLES = tuple(
 
 _SIGNALING_TABLES = SIGNALING_TABLES
 
+# every request reads the eleven watermarks; the serial's last value answers in
+# one sequence read each, where max(id) planned eleven subselects per call
+_SEQUENCES_QUERY = SQL(
+    "SELECT %s",
+    SQL(", ").join(
+        SQL("coalesce(pg_sequence_last_value(%s::regclass), 0)", f"{table}_id_seq")
+        for table in _SIGNALING_TABLES
+    ),
+)
+
 
 class _RegistryCaches:
     __slots__ = ("lrus",)
@@ -198,16 +208,7 @@ class _RegistrySignalingMixin(_RegistryStubs):
         )
 
     def get_sequences(self, cr: BaseCursor) -> tuple[int, dict[str, int]]:
-        signaling_selects = SQL(", ").join(
-            [
-                SQL(
-                    "( SELECT coalesce(max(id), 0) FROM %s)",
-                    SQL.identifier(signaling_table),
-                )
-                for signaling_table in _SIGNALING_TABLES
-            ]
-        )
-        cr.execute(SQL("SELECT %s", signaling_selects))
+        cr.execute(_SEQUENCES_QUERY)
         row = cr.fetchone()
         if row is None:
             raise RuntimeError("No result when reading signaling sequences")

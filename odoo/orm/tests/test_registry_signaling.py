@@ -315,26 +315,29 @@ def test_signalled_id_falls_back_when_no_row_comes_back():
     assert Registry._get_signalled_id(typing.cast("typing.Any", _NoRowCursor()), 7) == 8
 
 
-def test_get_sequences_coalesces_an_empty_signalling_table():
+def test_get_sequences_reads_every_serial_once_and_coalesces_an_unused_one():
 
-    class _EmptyTableCursor:
+    class _SequenceCursor:
         def __init__(self):
             self.sql = ""
+            self.params = ()
 
         def execute(self, query, params=None, **kwargs):
             self.sql = query.code if hasattr(query, "code") else str(query)
+            self.params = query.params if hasattr(query, "params") else params
 
         def fetchone(self):
             return (0, *([0] * len(CACHES_BY_KEY)))
 
-    cur = _EmptyTableCursor()
+    cur = _SequenceCursor()
     reg = _make_registry("_seq_empty_db", -1, -1)
     registry_sequence, cache_sequences = reg.get_sequences(cur)
 
-    assert "coalesce(max(id), 0)" in cur.sql, (
-        "the empty-table guard is gone from the signalling query; a truncated "
-        "signalling table will return NULL and brick check_signaling"
-    )
+    assert cur.sql.count("coalesce(pg_sequence_last_value(") == len(
+        _SIGNALING_TABLES
+    ), "one sequence read per watermark, guarded against a never-used serial"
+    assert "max(id)" not in cur.sql, "a max(id) subselect plans per call"
+    assert tuple(cur.params) == tuple(f"{table}_id_seq" for table in _SIGNALING_TABLES)
     assert registry_sequence == 0
     assert cache_sequences == dict.fromkeys(CACHES_BY_KEY, 0)
 
