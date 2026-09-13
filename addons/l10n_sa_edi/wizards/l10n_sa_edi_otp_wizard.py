@@ -8,14 +8,14 @@ class L10n_Sa_EdiOtpWizard(models.TransientModel):
 
     l10n_sa_renewal = fields.Boolean(
         string="PCSID Renewal",
-        help="Used to decide whether we should call the PCSID renewal API or the CCSID API",
         default=False,
+        help="Used to decide whether we should call the PCSID renewal API or the CCSID API",
     )
     l10n_sa_otp = fields.Char(
         string="OTP",
+        copy=False,
         help="OTP required to get a CCSID. Can only be acquired through "
         "the Fatoora portal.",
-        copy=False,
     )
     journal_id = fields.Many2one(
         comodel_name="account.journal",

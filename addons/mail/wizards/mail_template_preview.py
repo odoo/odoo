@@ -69,27 +69,27 @@ class MailTemplatePreview(models.TransientModel):
     subject = fields.Char(compute="_compute_mail_template_fields")
     email_from = fields.Char(
         string="From",
-        help="Sender address",
         compute="_compute_mail_template_fields",
+        help="Sender address",
     )
     email_to = fields.Char(
         string="To",
-        help="Comma-separated recipient addresses",
         compute="_compute_mail_template_fields",
+        help="Comma-separated recipient addresses",
     )
     email_cc = fields.Char(
         string="Cc",
-        help="Carbon copy recipients",
         compute="_compute_mail_template_fields",
+        help="Carbon copy recipients",
     )
     reply_to = fields.Char(
         string="Reply-To",
-        help="Preferred response address",
         compute="_compute_mail_template_fields",
+        help="Preferred response address",
     )
     scheduled_date = fields.Char(
-        help="The queue manager will send the email after the date",
         compute="_compute_mail_template_fields",
+        help="The queue manager will send the email after the date",
     )
     body_html = fields.Html(
         string="Body",

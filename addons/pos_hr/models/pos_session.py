@@ -7,8 +7,8 @@ class PosSession(models.Model):
     employee_id = fields.Many2one(
         comodel_name="hr.employee",
         string="Cashier",
-        help="The employee who currently uses the cash register",
         tracking=True,
+        help="The employee who currently uses the cash register",
     )
 
     @api.model

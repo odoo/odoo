@@ -25,9 +25,9 @@ class PosPayment(models.Model):
         ondelete="cascade",
     )
     amount = fields.Monetary(
-        help="Total amount of the payment.",
         currency_field="currency_id",
         required=True,
+        help="Total amount of the payment.",
     )
     payment_method_id = fields.Many2one(
         comodel_name="pos.payment.method",

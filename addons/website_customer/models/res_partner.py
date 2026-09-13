@@ -43,9 +43,9 @@ class ResPartnerWebsiteTag(models.Model):
     classname = fields.Selection(
         selection="_selection_classname",
         string="Class",
-        help="Bootstrap class to customize the color",
         default="info",
         required=True,
+        help="Bootstrap class to customize the color",
     )
     active = fields.Boolean(default=True)
 

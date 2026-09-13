@@ -15,8 +15,8 @@ class EventTrackStage(models.Model):
     mail_template_id = fields.Many2one(
         comodel_name="mail.template",
         string="Email Template",
-        help="If set an email will be sent to the customer when the track reaches this step.",
         domain=[("model", "=", "event.track")],
+        help="If set an email will be sent to the customer when the track reaches this step.",
     )
     color = fields.Integer()
     description = fields.Text(translate=True)
@@ -41,15 +41,15 @@ class EventTrackStage(models.Model):
     )
     is_visible_in_agenda = fields.Boolean(
         string="Visible in agenda",
-        help="If checked, the related tracks will be visible in the frontend.",
         compute="_compute_is_visible_in_agenda",
         store=True,
+        help="If checked, the related tracks will be visible in the frontend.",
     )
     is_fully_accessible = fields.Boolean(
         string="Fully accessible",
-        help="If checked, automatically publish tracks so that access links to customers are provided.",
         compute="_compute_is_fully_accessible",
         store=True,
+        help="If checked, automatically publish tracks so that access links to customers are provided.",
     )
     is_cancel = fields.Boolean(string="Cancelled Stage")
 

@@ -14,10 +14,10 @@ class SaleOrderLine(models.Model):
     event_booth_pending_ids = fields.Many2many(
         comodel_name="event.booth",
         string="Pending Booths",
-        help="Used to create registration when providing the desired event booth.",
         compute="_compute_event_booth_pending_ids",
         inverse="_inverse_event_booth_pending_ids",
         search="_search_event_booth_pending_ids",
+        help="Used to create registration when providing the desired event booth.",
     )
     event_booth_registration_ids = fields.One2many(
         comodel_name="event.booth.registration",

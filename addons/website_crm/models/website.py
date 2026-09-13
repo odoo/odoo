@@ -12,13 +12,13 @@ class Website(models.Model):
     crm_default_team_id = fields.Many2one(
         comodel_name="crm.team",
         string="Default Sales Teams",
-        help="Default Sales Team for new leads created through the Contact Us form.",
         default=lambda self: self.env["crm.team"].search([], limit=1),
         domain=lambda self: self._get_domain_crm_default_team(),
+        help="Default Sales Team for new leads created through the Contact Us form.",
     )
     crm_default_user_id = fields.Many2one(
         comodel_name="res.users",
         string="Default Salesperson",
-        help="Default salesperson for new leads created through the Contact Us form.",
         domain=[("share", "=", False)],
+        help="Default salesperson for new leads created through the Contact Us form.",
     )

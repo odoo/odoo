@@ -54,9 +54,9 @@ class ResGroups(models.Model):
 
     # Technical fields for the user interface
     has_lock_timeout = fields.Boolean(
-        help="Requires re-authentication after the user's last connection",
         compute="_compute_has_lock_timeout",
         readonly=False,
+        help="Requires re-authentication after the user's last connection",
     )
     lock_timeout_delay_unit = fields.Selection(
         selection=DELAY_UNITS,
@@ -77,9 +77,9 @@ class ResGroups(models.Model):
     )
 
     has_lock_timeout_inactivity = fields.Boolean(
-        help="Requires re-authentication after a period of user inactivity",
         compute="_compute_lock_timeout_inactivity_bool",
         readonly=False,
+        help="Requires re-authentication after a period of user inactivity",
     )
     lock_timeout_inactivity_delay_unit = fields.Selection(
         selection=DELAY_UNITS,

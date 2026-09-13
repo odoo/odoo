@@ -65,13 +65,13 @@ class SurveyQuestion(models.Model):
     )
     sequence = fields.Integer(default=10)
     description = fields.Html(
+        translate=True,
+        sanitize=True,
+        sanitize_overridable=True,
         help="Use this field to add additional explanations about your question or to "
         "illustrate it with pictures or a video.\n"
         "Write {{Q42}} to pipe in the respondent's answer to question 42 — the same "
         "question id a calculated field's Q42 refers to.",
-        translate=True,
-        sanitize=True,
-        sanitize_overridable=True,
     )
     question_placeholder = fields.Char(
         string="Placeholder",
@@ -98,13 +98,13 @@ class SurveyQuestion(models.Model):
     )
     questions_selection = fields.Selection(
         related="survey_id.questions_selection",
-        help="If randomized is selected, add the number of random questions next to the section.",
         readonly=True,
+        help="If randomized is selected, add the number of random questions next to the section.",
     )
     random_questions_count = fields.Integer(
         string="# Questions Randomly Picked",
-        help="Used on randomized sections to take X random questions from all the questions of that section.",
         default=1,
+        help="Used on randomized sections to take X random questions from all the questions of that section.",
     )
 
     page_id = fields.Many2one(
@@ -140,11 +140,11 @@ class SurveyQuestion(models.Model):
     )
     is_scored_question = fields.Boolean(
         string="Scored",
-        help="Include this question as part of quiz scoring. Requires an answer and answer score to be taken into account.",
         compute="_compute_is_scored_question",
         store=True,
         copy=True,
         readonly=False,
+        help="Include this question as part of quiz scoring. Requires an answer and answer score to be taken into account.",
     )
     has_image_only_suggested_answer = fields.Boolean(
         string="Has image only suggested answer",
@@ -168,26 +168,26 @@ class SurveyQuestion(models.Model):
     )
     save_as_email = fields.Boolean(
         string="Save as user email",
-        help="If checked, this option will save the user's answer as its email address.",
         compute="_compute_save_as_email",
         store=True,
         copy=True,
         readonly=False,
+        help="If checked, this option will save the user's answer as its email address.",
     )
     save_as_nickname = fields.Boolean(
         string="Save as user nickname",
-        help="If checked, this option will save the user's answer as its nickname.",
         compute="_compute_save_as_nickname",
         store=True,
         copy=True,
         readonly=False,
+        help="If checked, this option will save the user's answer as its nickname.",
     )
     suggested_answer_ids = fields.One2many(
         comodel_name="survey.question.answer",
         inverse_name="question_id",
         string="Types of answers",
-        help="Labels used for proposed choices: simple choice, multiple choice and columns of matrix",
         copy=True,
+        help="Labels used for proposed choices: simple choice, multiple choice and columns of matrix",
     )
     matrix_subtype = fields.Selection(
         selection=[
@@ -201,8 +201,8 @@ class SurveyQuestion(models.Model):
         comodel_name="survey.question.answer",
         inverse_name="matrix_question_id",
         string="Matrix Rows",
-        help="Labels used for proposed choices: rows of matrix or Likert statements",
         copy=True,
+        help="Labels used for proposed choices: rows of matrix or Likert statements",
     )
     likert_preset = fields.Selection(
         selection=[
@@ -248,8 +248,8 @@ class SurveyQuestion(models.Model):
     )
     rating_max = fields.Integer(
         string="Rating Maximum",
-        help="Number of rating icons (1 to 10).",
         default=5,
+        help="Number of rating icons (1 to 10).",
     )
     rating_icon = fields.Selection(
         selection=[("star", "Stars"), ("heart", "Hearts"), ("thumb", "Thumbs Up")],
@@ -257,18 +257,18 @@ class SurveyQuestion(models.Model):
     )
     constant_sum_total = fields.Integer(
         string="Total Points",
-        help="The total that all distributed values must sum to.",
         default=100,
+        help="The total that all distributed values must sum to.",
     )
     file_upload_types = fields.Char(
         string="Allowed File Types",
-        help="Comma-separated list of allowed file extensions.",
         default=".pdf,.doc,.docx,.jpg,.png",
+        help="Comma-separated list of allowed file extensions.",
     )
     file_upload_max_size = fields.Integer(
         string="Max File Size (MB)",
-        help="Maximum file size in megabytes.",
         default=10,
+        help="Maximum file size in megabytes.",
     )
     calculated_expression = fields.Char(
         string="Formula",
@@ -340,9 +340,9 @@ class SurveyQuestion(models.Model):
     triggering_question_ids = fields.Many2many(
         comodel_name="survey.question",
         string="Triggering Questions",
-        help="Questions containing the triggering answer(s) to display the current question.",
         compute="_compute_triggering_question_ids",
         store=False,
+        help="Questions containing the triggering answer(s) to display the current question.",
     )
 
     allowed_triggering_question_ids = fields.Many2many(
@@ -353,14 +353,12 @@ class SurveyQuestion(models.Model):
     )
     is_placed_before_trigger = fields.Boolean(
         string="Is misplaced?",
-        help="Is this question placed before any of its trigger questions?",
         compute="_compute_triggering_questions",
+        help="Is this question placed before any of its trigger questions?",
     )
     triggering_answer_ids = fields.Many2many(
         comodel_name="survey.question.answer",
         string="Triggering Answers",
-        help="Picking any of these answers will trigger this question.\n"
-        "Leave the field empty if the question should always be displayed.",
         copy=False,
         readonly=False,
         domain="""[
@@ -370,12 +368,12 @@ class SurveyQuestion(models.Model):
                      ('question_id.sequence', '<', sequence),
                      '&', ('question_id.sequence', '=', sequence), ('question_id.id', '<', id)
         ]""",
+        help="Picking any of these answers will trigger this question.\n"
+        "Leave the field empty if the question should always be displayed.",
     )
     triggering_question_id = fields.Many2one(
         comodel_name="survey.question",
         string="Triggering Question (value-based)",
-        help="Show this question only when the selected question's answer meets the operator condition.\n"
-        "Use this for non-choice questions (numerical, text, date, scale, etc.).",
         domain="""[
             ('survey_id', '=', survey_id),
             ('is_page', '=', False),
@@ -384,6 +382,8 @@ class SurveyQuestion(models.Model):
                  '&', ('sequence', '=', sequence), ('id', '<', id)
         ]""",
         ondelete="set null",
+        help="Show this question only when the selected question's answer meets the operator condition.\n"
+        "Use this for non-choice questions (numerical, text, date, scale, etc.).",
     )
     triggering_operator = fields.Selection(
         selection=[
@@ -398,8 +398,8 @@ class SurveyQuestion(models.Model):
             ("contains", "Contains"),
         ],
         string="Trigger Operator",
-        help="Comparison operator for value-based conditional trigger.",
         default="is_answered",
+        help="Comparison operator for value-based conditional trigger.",
     )
     triggering_value = fields.Char(
         string="Trigger Value",

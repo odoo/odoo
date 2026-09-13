@@ -80,8 +80,8 @@ class ResCompany(models.Model):
 
     l10n_es_tbai_test_env = fields.Boolean(
         string="TBAI Test Mode",
-        help="Use the test environment for TicketBAI",
         default=True,
+        help="Use the test environment for TicketBAI",
     )
 
     l10n_es_tbai_is_enabled = fields.Boolean(compute="_compute_l10n_es_tbai_is_enabled")

@@ -37,14 +37,14 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         required=True,
     )
     edi_identification = fields.Char(
-        help="The unique id that identifies this user, typically the vat",
         required=True,
+        help="The unique id that identifies this user, typically the vat",
     )
     private_key_id = fields.Many2one(
         comodel_name="certificate.key",
-        help="The key to encrypt all the user's data",
         required=True,
         domain=[("public", "=", False)],
+        help="The key to encrypt all the user's data",
     )
     refresh_token = fields.Char(groups="base.group_system")
     is_token_out_of_sync = fields.Boolean(

@@ -22,9 +22,9 @@ class MrpBomByproduct(models.Model):
     )
     cost_share = fields.Float(
         string="Cost Share (%)",
+        digits=(5, 2),
         help="The percentage of the final production cost for this by-product line (divided between the quantity produced)."
         "The total of all by-products' cost share must be less than or equal to 100.",
-        digits=(5, 2),
     )
 
     def _get_uom_mismatch_message(self):

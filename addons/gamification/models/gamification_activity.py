@@ -42,10 +42,10 @@ class GamificationActivity(models.Model):
     )
     target_user_id = fields.Many2one(
         comodel_name="res.users",
-        help="Secondary user (e.g. kudos recipient).",
         index=True,
         readonly=True,
         ondelete="set null",
+        help="Secondary user (e.g. kudos recipient).",
     )
     company_id = fields.Many2one(
         comodel_name="res.company",

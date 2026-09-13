@@ -23,8 +23,8 @@ class PaymentProvider(models.Model):
     dpo_company_token = fields.Char(
         string="DPO Company Token",
         copy=False,
-        groups="base.group_system",
         required_if_provider="dpo",
+        groups="base.group_system",
     )
 
     # === CRUD METHODS === #

@@ -27,9 +27,9 @@ class IotDevice(models.Model):
             ("fiscal_data_module", "Fiscal Data Module"),
             ("unsupported", "Unsupported"),
         ],
-        help="Type of device.",
         default="device",
         readonly=True,
+        help="Type of device.",
     )
     manufacturer = fields.Char(readonly=True)
     connection = fields.Selection(
@@ -40,8 +40,8 @@ class IotDevice(models.Model):
             ("serial", "Serial"),
             ("hdmi", "HDMI"),
         ],
-        help="Type of connection.",
         readonly=True,
+        help="Type of connection.",
     )
     report_ids = fields.Many2many(
         comodel_name="ir.actions.report",
@@ -68,13 +68,13 @@ class IotDevice(models.Model):
         "leave empty for the default page of whichever app claims it.",
     )
     manual_measurement = fields.Boolean(
-        help="Manually read the measurement from the device",
         compute="_compute_manual_measurement",
+        help="Manually read the measurement from the device",
     )
     is_scanner = fields.Boolean(
-        help="Manually switch the device type between keyboard and scanner",
         compute="_compute_is_scanner",
         inverse="_inverse_is_scanner",
+        help="Manually switch the device type between keyboard and scanner",
     )
     subtype = fields.Selection(
         selection=[
@@ -83,8 +83,8 @@ class IotDevice(models.Model):
             ("office_printer", "Office Printer"),
             ("", ""),
         ],
-        help="Subtype of device.",
         default="",
+        help="Subtype of device.",
     )
 
     @api.depends("name", "iot_id", "connection")

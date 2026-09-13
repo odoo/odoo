@@ -55,11 +55,11 @@ class PurchaseOrder(models.Model):
     dest_address_id = fields.Many2one(
         comodel_name="res.partner",
         string="Dropship Address",
-        help="Put an address if you want to deliver directly from the vendor to the customer. "
-        "Otherwise, keep empty to deliver to your own company.",
         index=True,
         check_company=True,
         tracking=True,
+        help="Put an address if you want to deliver directly from the vendor to the customer. "
+        "Otherwise, keep empty to deliver to your own company.",
     )
     user_id = fields.Many2one(
         string="Buyer",
@@ -74,9 +74,9 @@ class PurchaseOrder(models.Model):
         ),
     )
     journal_id = fields.Many2one(
+        domain=[("type", "=", "purchase")],
         help="If set, the PO will invoice in this journal; "
         "otherwise the purchase journal with the lowest sequence is used.",
-        domain=[("type", "=", "purchase")],
     )
     state = fields.Selection(selection=const.ORDER_STATE)
     tag_ids = fields.Many2many(
@@ -97,12 +97,12 @@ class PurchaseOrder(models.Model):
     line_ids = fields.One2many(comodel_name="purchase.order.line")
     date_commitment = fields.Datetime(
         string="Expected Arrival",
-        help="Delivery date promised by vendor. "
-        "This date is used to determine expected arrival of products.",
         compute="_compute_date_commitment",
         store=True,
         index=True,
         readonly=False,
+        help="Delivery date promised by vendor. "
+        "This date is used to determine expected arrival of products.",
     )
     invoice_ids = fields.Many2many(string="Bills")
     invoice_count = fields.Integer(string="Bill Count")
@@ -126,9 +126,9 @@ class PurchaseOrder(models.Model):
     printed_before = fields.Boolean(help="The RFQ has already been printed.")
     purchase_warning_text = fields.Text(
         string="Purchase Warning",
-        help="Internal warning for the partner or the products as set by the user.",
         compute="_compute_purchase_warning_text",
         depends_context=("uid",),
+        help="Internal warning for the partner or the products as set by the user.",
     )
     duplicated_order_ids = fields.Many2many(comodel_name="purchase.order")
     receipt_reminder_email = fields.Boolean(

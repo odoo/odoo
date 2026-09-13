@@ -59,8 +59,8 @@ class CrmRevealRule(models.Model):
     )
     filter_on_size = fields.Boolean(
         string="Filter on Size",
-        help="Filter companies based on their size.",
         default=True,
+        help="Filter companies based on their size.",
     )
     company_size_min = fields.Integer(
         string="Company Size",
@@ -82,8 +82,8 @@ class CrmRevealRule(models.Model):
     seniority_id = fields.Many2one(comodel_name="crm.iap.lead.seniority")
     extra_contacts = fields.Integer(
         string="Number of Contacts",
-        help="This is the number of contacts to track if their role/seniority match your criteria. Their details will show up in the history thread of generated leads/opportunities. One credit is consumed per tracked contact.",
         default=1,
+        help="This is the number of contacts to track if their role/seniority match your criteria. Their details will show up in the history thread of generated leads/opportunities. One credit is consumed per tracked contact.",
     )
 
     lead_for = fields.Selection(
@@ -92,9 +92,9 @@ class CrmRevealRule(models.Model):
             ("people", "Companies and their Contacts"),
         ],
         string="Data Tracking",
-        help="Choose whether to track companies only or companies and their contacts",
         default="companies",
         required=True,
+        help="Choose whether to track companies only or companies and their contacts",
     )
     lead_type = fields.Selection(
         selection=[("lead", "Lead"), ("opportunity", "Opportunity")],

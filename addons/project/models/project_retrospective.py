@@ -151,12 +151,12 @@ class ProjectRetrospectiveAction(models.Model):
         required=True,
     )
     state_order = fields.Integer(
-        help="Sort key: outstanding actions first. Ordering by ``state`` "
-        "directly sorts on the stored keys, which puts Done and Dropped "
-        "above the open items this list exists to surface.",
         export_string_translation=False,
         compute="_compute_state_order",
         store=True,
+        help="Sort key: outstanding actions first. Ordering by ``state`` "
+        "directly sorts on the stored keys, which puts Done and Dropped "
+        "above the open items this list exists to surface.",
     )
     resolution_note = fields.Text(help="How was this action resolved?")
     carried_from_id = fields.Many2one(

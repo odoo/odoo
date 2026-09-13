@@ -42,8 +42,8 @@ class MailNotification(models.Model):
     mail_mail_id: MailMail = fields.Many2one(
         comodel_name="mail.mail",
         string="Mail",
-        help="Optional mail_mail ID. Used mainly to optimize searches.",
         index=True,
+        help="Optional mail_mail ID. Used mainly to optimize searches.",
     )
     res_partner_id: ResPartner = fields.Many2one(
         comodel_name="res.partner",

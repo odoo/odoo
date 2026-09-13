@@ -130,13 +130,13 @@ class StockPackage(models.Model):
     picking_ids = fields.Many2many(
         comodel_name="stock.picking",
         string="Transfers",
-        help="Transfers in which the Package is set as Destination Package",
         compute="_compute_picking_ids",
         search="_search_picking_ids",
+        help="Transfers in which the Package is set as Destination Package",
     )
     shipping_weight = fields.Float(
-        help="Total weight of the package.",
         digits="Stock Weight",
+        help="Total weight of the package.",
     )
     valid_sscc = fields.Boolean(
         string="Package name is valid SSCC",

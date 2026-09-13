@@ -16,8 +16,8 @@ class ResPartnerIap(models.Model):
     )
     iap_enrich_info = fields.Text(
         string="IAP Enrich Info",
-        help="IAP response stored as a JSON string",
         readonly=True,
+        help="IAP response stored as a JSON string",
     )
 
     _unique_partner_id = models.Constraint(

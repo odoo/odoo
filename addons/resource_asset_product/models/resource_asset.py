@@ -7,9 +7,9 @@ class ResourceAsset(models.Model):
     product_id = fields.Many2one(
         comodel_name="product.product",
         string="Model",
-        help="The model this unit is an instance of. Its template carries the spec sheet.",
         index="btree_not_null",
         domain="[('asset_kind_id', '!=', False)]",
+        help="The model this unit is an instance of. Its template carries the spec sheet.",
     )
     product_tmpl_id = fields.Many2one(
         related="product_id.product_tmpl_id",

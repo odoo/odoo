@@ -27,9 +27,9 @@ class AccountMove(models.Model):
         export_string_translation=False,
     )
     timesheet_total_duration = fields.Integer(
-        help="Total recorded duration, expressed in the encoding UoM, and rounded to the unit",
         compute="_compute_timesheet_total_duration",
         compute_sudo=True,
+        help="Total recorded duration, expressed in the encoding UoM, and rounded to the unit",
     )
 
     @api.depends("timesheet_ids", "company_id.timesheet_encode_uom_id")

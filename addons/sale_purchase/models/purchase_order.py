@@ -13,9 +13,9 @@ class PurchaseOrder(models.Model):
     )
     has_sale_order = fields.Boolean(
         string="Has Source Sale",
-        help="Technical field: whether the purchase order has associated sale orders.",
         compute="_compute_sale_orders",
         groups="sales_team.group_sale_salesman",
+        help="Technical field: whether the purchase order has associated sale orders.",
     )
 
     @api.depends("line_ids.sale_order_id")

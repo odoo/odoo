@@ -64,9 +64,9 @@ class ResourceReservation(models.Model):
 
     resource_id = fields.Many2one(
         comodel_name="resource.resource",
-        help="The resource (person, equipment) assigned to this schedule.",
         index=True,
         check_company=True,
+        help="The resource (person, equipment) assigned to this schedule.",
     )
     resource_calendar_id = fields.Many2one(
         comodel_name="resource.calendar",
@@ -78,15 +78,15 @@ class ResourceReservation(models.Model):
     )
 
     allocated_hours = fields.Float(
-        help="Working hours between start and end, respecting the resource calendar.",
         compute="_compute_allocated_hours",
         store=True,
         readonly=False,
+        help="Working hours between start and end, respecting the resource calendar.",
     )
     allocated_percentage = fields.Float(
         string="Allocation %",
-        help="Percentage of the resource's work capacity allocated to this schedule.",
         default=100.0,
+        help="Percentage of the resource's work capacity allocated to this schedule.",
     )
     _check_allocated_percentage = models.Constraint(
         "CHECK(allocated_percentage IS NOT NULL"
@@ -183,23 +183,23 @@ class ResourceReservation(models.Model):
 
     res_model = fields.Char(
         string="Source Model",
-        help="Technical name of the model that created this reservation.",
         index=True,
         readonly=True,
+        help="Technical name of the model that created this reservation.",
     )
     res_id = fields.Many2oneReference(
         model_field="res_model",
         string="Source Record",
-        help="ID of the record in the source model.",
         index=True,
         readonly=True,
+        help="ID of the record in the source model.",
     )
 
     enforcement_mode = fields.Selection(
         selection=[("soft", "Warning"), ("hard", "Block")],
-        help="Warning permits excess capacity unless the resource enforces its ceiling. Block prevents total simultaneous allocation from exceeding the resource ceiling.",
         default="soft",
         required=True,
+        help="Warning permits excess capacity unless the resource enforces its ceiling. Block prevents total simultaneous allocation from exceeding the resource ceiling.",
     )
 
     origin_display = fields.Char(

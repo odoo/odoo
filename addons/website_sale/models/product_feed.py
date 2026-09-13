@@ -29,22 +29,22 @@ class ProductFeed(models.Model):
     )
     pricelist_id = fields.Many2one(
         comodel_name="product.pricelist",
+        domain="[('website_id', 'in', (False, website_id)), ('selectable', '=', True)]",
         help="Specify a pricelist to localize the feed with a specific currency."
         " If not set, the default website pricelist will be used."
         "\nNote that the pricelist must be selectable on the website.",
-        domain="[('website_id', 'in', (False, website_id)), ('selectable', '=', True)]",
     )
     lang_id = fields.Many2one(
         comodel_name="res.lang",
         string="Language",
-        help="Select the language to translate product names, descriptions,"
-        " and other text in the feed.",
         compute="_compute_lang_id",
         precompute=True,
         store=True,
         readonly=False,
         required=True,
         domain="[('id', 'in', website_lang_ids)]",
+        help="Select the language to translate product names, descriptions,"
+        " and other text in the feed.",
     )
     website_lang_ids = fields.Many2many(related="website_id.language_ids")
     product_category_ids = fields.Many2many(

@@ -37,9 +37,9 @@ class HrEmployee(models.Model):
     exceptional_location_id = fields.Many2one(
         comodel_name="hr.work.location",
         string="Current",
-        help="This is the exceptional, non-weekly, location set for today.",
         compute="_compute_exceptional_location_id",
         groups="hr.group_hr_user",
+        help="This is the exceptional, non-weekly, location set for today.",
     )
     hr_icon_display = fields.Selection(
         selection_add=[

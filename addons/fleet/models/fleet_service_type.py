@@ -12,6 +12,6 @@ class FleetServiceType(models.Model):
     )
     category = fields.Selection(
         selection=[("contract", "Contract"), ("service", "Service")],
-        help="Choose whether the service refer to contracts, vehicle services or both",
         required=True,
+        help="Choose whether the service refer to contracts, vehicle services or both",
     )

@@ -12,8 +12,8 @@ class AccountMove(models.Model):
         column1="move_id",
         column2="production_id",
         string="Relevant WIP MOs",
-        help="The MOs that this WIP entry was based on. Expected to be set at time of WIP entry creation.",
         copy=False,
+        help="The MOs that this WIP entry was based on. Expected to be set at time of WIP entry creation.",
     )
     wip_production_count = fields.Count(
         count_of="wip_production_ids",

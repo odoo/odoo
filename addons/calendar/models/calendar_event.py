@@ -255,18 +255,18 @@ class CalendarEvent(models.Model):
             ("private", "Private"),
             ("confidential", "Only internal users"),
         ],
-        help="Whether the event is private, considering the user privacy",
         compute="_compute_effective_privacy",
+        help="Whether the event is private, considering the user privacy",
     )
     show_as = fields.Selection(
         selection=[("free", "Available"), ("busy", "Busy")],
         string="Show as",
+        default="busy",
+        required=True,
         help="If the time is shown as 'busy', this event will be visible to other people with either the full \
         information or simply 'busy' written depending on its privacy. Use this option to let other people know \
         that you are unavailable during that period of time. \n If the event is shown as 'free', other users know \
         that you are available during that period of time.",
-        default="busy",
-        required=True,
     )
     is_highlighted = fields.Boolean(
         string="Is the Event Highlighted",
@@ -274,15 +274,15 @@ class CalendarEvent(models.Model):
     )
     is_organizer_alone = fields.Boolean(
         string="Is the Organizer Alone",
+        compute="_compute_is_organizer_alone",
         help="""Check if the organizer is alone in the event, i.e. if the organizer is the only one that hasn't declined
         the event (only if the organizer is not the only attendee)""",
-        compute="_compute_is_organizer_alone",
     )
     # filtering
     active = fields.Boolean(
-        help="If the active field is set to false, it will allow you to hide the event alarm information without removing it.",
         default=True,
         tracking=True,
+        help="If the active field is set to false, it will allow you to hide the event alarm information without removing it.",
     )
     categ_ids = fields.Many2many(
         comodel_name="calendar.event.type",
@@ -293,20 +293,20 @@ class CalendarEvent(models.Model):
     )
     # timing
     start = fields.Datetime(
-        help="Start date of an event, without time for full days events",
         default=_default_start,
         index=True,
         required=True,
         tracking=True,
+        help="Start date of an event, without time for full days events",
     )
     stop = fields.Datetime(
-        help="Stop date of an event, without time for full days events",
         compute="_compute_stop",
         default=_default_stop,
         store=True,
         readonly=False,
         required=True,
         tracking=True,
+        help="Stop date of an event, without time for full days events",
     )
     display_time = fields.Char(
         string="Event Time",
@@ -405,8 +405,8 @@ class CalendarEvent(models.Model):
         comodel_name="calendar.alarm",
         relation="calendar_alarm_calendar_event_rel",
         string="Reminders",
-        help="Notifications sent to all attendees to remind of the meeting.",
         ondelete="restrict",
+        help="Notifications sent to all attendees to remind of the meeting.",
     )
     # RECURRENCE FIELD
     recurrency = fields.Boolean(string="Recurrent")
@@ -439,16 +439,16 @@ class CalendarEvent(models.Model):
     repeat_unit_ui = fields.Selection(
         selection=REPEAT_UNIT_SELECTION_UI,
         string="Repeat",
-        help="Let the event automatically repeat at that interval",
         compute="_compute_repeat_unit_ui",
         readonly=False,
+        help="Let the event automatically repeat at that interval",
     )
     repeat_unit = fields.Selection(
         selection=REPEAT_UNIT_SELECTION,
         string="Recurrence",
-        help="Let the event automatically repeat at that interval",
         compute="_compute_recurrence",
         readonly=False,
+        help="Let the event automatically repeat at that interval",
     )
     event_tz = fields.Selection(
         selection=_selection_timezones,
@@ -464,15 +464,15 @@ class CalendarEvent(models.Model):
     )
     repeat_interval = fields.Integer(
         string="Repeat On",
-        help="Repeat every (Days/Week/Month/Year)",
         compute="_compute_recurrence",
         readonly=False,
+        help="Repeat every (Days/Week/Month/Year)",
     )
     repeat_number = fields.Integer(
         string="Number of Repetitions",
-        help="Repeat x times",
         compute="_compute_recurrence",
         readonly=False,
+        help="Repeat x times",
     )
     mon = fields.Boolean(
         compute="_compute_recurrence",

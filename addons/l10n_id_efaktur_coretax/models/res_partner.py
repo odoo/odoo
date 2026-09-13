@@ -26,17 +26,17 @@ class Partner(models.Model):
     l10n_id_nik = fields.Char(string="NIK")
     l10n_id_pkp = fields.Boolean(
         string="Is PKP",
-        help="Denoting whether the following partner is taxable",
         compute="_compute_l10n_id_pkp",
         store=True,
         readonly=False,
+        help="Denoting whether the following partner is taxable",
     )
     l10n_id_kode_transaksi = fields.Selection(
         selection=TAX_TRANSACTION_CODE,
         string="Invoice Transaction Code",
-        help="he first 2 digits of tax code",
         default="04",
         tracking=True,
+        help="he first 2 digits of tax code",
     )
 
     @api.depends("vat", "country_code")

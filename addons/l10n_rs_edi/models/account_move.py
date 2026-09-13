@@ -14,23 +14,23 @@ class AccountMove(models.Model):
 
     l10n_rs_edi_uuid = fields.Char(
         string="RS Invoice UUID",
-        help="Unique Identifier for an invoice used as request id",
         compute="_compute_l10n_rs_edi_uuid",
         store=True,
         copy=False,
+        help="Unique Identifier for an invoice used as request id",
     )
 
     l10n_rs_edi_is_eligible = fields.Boolean(
-        help="Technical field to determine if this invoice is eligible to be e-invoiced.",
         compute="_compute_l10n_rs_edi_is_eligible",
         store=True,
+        help="Technical field to determine if this invoice is eligible to be e-invoiced.",
     )
 
     l10n_rs_edi_attachment_file = fields.Binary(
         string="Serbian E-Invoice XML File",
-        help="Serbia: technical field holding the e-invoice XML data.",
         attachment=True,
         copy=False,
+        help="Serbia: technical field holding the e-invoice XML data.",
     )
 
     l10n_rs_edi_attachment_id = fields.Many2one(

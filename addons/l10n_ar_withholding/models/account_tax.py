@@ -33,15 +33,15 @@ class AccountTax(models.Model):
     l10n_ar_withholding_sequence_id = fields.Many2one(
         comodel_name="ir.sequence",
         string="WTH Sequence",
-        help="If no sequence provided then it will be required for you to enter withholding number when registering one.",
         copy=False,
         check_company=True,
+        help="If no sequence provided then it will be required for you to enter withholding number when registering one.",
     )
     l10n_ar_code = fields.Char(string="ARCA Code")
     l10n_ar_non_taxable_amount = fields.Float(
         string="Non Taxable Amount",
-        help="Until this base amount, the tax is not applied.",
         digits="Account",
+        help="Until this base amount, the tax is not applied.",
     )
     l10n_ar_minimum_threshold = fields.Float(
         string="Minimum Treshold",

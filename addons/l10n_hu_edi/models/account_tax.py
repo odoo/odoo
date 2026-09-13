@@ -72,9 +72,9 @@ class AccountTax(models.Model):
     )
     l10n_hu_tax_reason = fields.Char(
         string="NAV VAT Tax Exemption Reason",
-        help="May be used to provide support for the use of a VAT-exempt VAT tax type.",
         compute="_compute_l10n_hu_tax_reason",
         readonly=False,
+        help="May be used to provide support for the use of a VAT-exempt VAT tax type.",
     )
 
     @api.depends("l10n_hu_tax_type")

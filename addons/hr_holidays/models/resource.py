@@ -15,8 +15,8 @@ class ResourceCalendarLeaves(models.Model):
     )
     eligible_for_accrual_rate = fields.Boolean(
         string="Eligible for Accrual Rate",
-        help="If checked, this time off type will be taken into account for accruals computation.",
         default=False,
+        help="If checked, this time off type will be taken into account for accruals computation.",
     )
 
     @api.constrains("date_from", "date_to", "calendar_id")

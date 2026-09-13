@@ -21,21 +21,21 @@ class HrJob(models.Model):
     sequence = fields.Integer(default=10)
     expected_employees = fields.Integer(
         string="Total Forecasted Employees",
-        help="Expected number of employees for this job position after new recruitment.",
         compute="_compute_employee_counts",
         groups="hr.group_hr_user",
+        help="Expected number of employees for this job position after new recruitment.",
     )
     no_of_employee = fields.Integer(
         string="Current Number of Employees",
-        help="Number of employees currently occupying this job position.",
         compute="_compute_employee_counts",
         groups="hr.group_hr_user",
+        help="Number of employees currently occupying this job position.",
     )
     no_of_recruitment = fields.Integer(
         string="Target",
-        help="Number of new employees you expect to recruit.",
         default=1,
         copy=False,
+        help="Number of new employees you expect to recruit.",
     )
     employee_ids = fields.One2many(
         comodel_name="hr.employee",
@@ -51,12 +51,12 @@ class HrJob(models.Model):
     user_id = fields.Many2one(
         comodel_name="res.users",
         string="Recruiter",
-        help="The Recruiter will be the default value for all Applicants in this job \
-            position. The Recruiter is automatically added to all meetings with the Applicant.",
         default=lambda self: self.env.user,
         domain="[('share', '=', False), ('company_ids', '=?', company_id)]",
-        groups="hr.group_hr_user",
         tracking=True,
+        groups="hr.group_hr_user",
+        help="The Recruiter will be the default value for all Applicants in this job \
+            position. The Recruiter is automatically added to all meetings with the Applicant.",
     )
     department_id = fields.Many2one(
         comodel_name="hr.department",

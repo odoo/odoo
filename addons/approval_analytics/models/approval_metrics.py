@@ -20,8 +20,8 @@ class ApprovalMetrics(models.Model):
         readonly=True,
     )
     total_requests = fields.Integer(
-        help="Total number of approval requests submitted",
         readonly=True,
+        help="Total number of approval requests submitted",
     )
     approved_count = fields.Integer(
         string="Approved",
@@ -37,42 +37,42 @@ class ApprovalMetrics(models.Model):
     )
     cancelled_count = fields.Integer(
         string="Cancelled",
-        help="Number of cancelled requests (owner retraction / auto-expiration)",
         readonly=True,
+        help="Number of cancelled requests (owner retraction / auto-expiration)",
     )
     approval_rate = fields.Float(
         string="Approval Rate %",
+        readonly=True,
         help="Percentage of DECIDED requests that were approved. The "
         "denominator counts approvals and refusals only — a cancelled "
         "request was retracted or expired, so nobody decided it, and "
         "counting it would drag the rate down without any approver "
         "having said no.",
-        readonly=True,
     )
     avg_approval_hours = fields.Float(
         string="Avg Approval Time (hours)",
-        help="Average time from submission to approval",
         readonly=True,
+        help="Average time from submission to approval",
     )
     median_approval_hours = fields.Float(
         string="Median Approval Time (hours)",
-        help="Median time from submission to approval (50th percentile)",
         readonly=True,
+        help="Median time from submission to approval (50th percentile)",
     )
     sla_target_hours = fields.Float(
         string="SLA Target (hours)",
-        help="Approval deadline configured on the category",
         readonly=True,
+        help="Approval deadline configured on the category",
     )
     sla_compliant_count = fields.Integer(
         string="SLA Compliant",
-        help="Number of approved requests resolved within the SLA target",
         readonly=True,
+        help="Number of approved requests resolved within the SLA target",
     )
     sla_compliance_rate = fields.Float(
         string="SLA Compliance %",
-        help="Percentage of approved requests that met the SLA deadline",
         readonly=True,
+        help="Percentage of approved requests that met the SLA deadline",
     )
 
     _SLA_ELIGIBLE = (

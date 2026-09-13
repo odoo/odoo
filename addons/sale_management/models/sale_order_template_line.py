@@ -24,8 +24,8 @@ class SaleOrderTemplateLine(models.Model):
         ondelete="cascade",
     )
     sequence = fields.Integer(
-        help="Gives the sequence order when displaying a list of sale quote lines.",
         default=10,
+        help="Gives the sequence order when displaying a list of sale quote lines.",
     )
 
     company_id = fields.Many2one(

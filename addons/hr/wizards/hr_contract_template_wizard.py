@@ -9,13 +9,13 @@ class HrContractTemplateWizard(models.TransientModel):
 
     contract_template_id = fields.Many2one(
         comodel_name="hr.version",
-        help="Select a contract template to auto-fill the contract form with predefined values. You can still edit the fields as needed after applying the template.",
         required=True,
         domain=lambda self: [
             ("company_id", "=", self.env.company.id),
             ("employee_id", "=", False),
         ],
         groups="hr.group_hr_user",
+        help="Select a contract template to auto-fill the contract form with predefined values. You can still edit the fields as needed after applying the template.",
     )
 
     def action_load_template(self):

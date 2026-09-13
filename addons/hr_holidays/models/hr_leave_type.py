@@ -47,8 +47,8 @@ class HrLeaveType(models.Model):
         required=True,
     )
     sequence = fields.Integer(
-        help="The type with the smallest sequence is the default value in time off request",
         default=100,
+        help="The type with the smallest sequence is the default value in time off request",
     )
     create_calendar_meeting = fields.Boolean(
         string="Display Time Off in Calendar",
@@ -63,30 +63,30 @@ class HrLeaveType(models.Model):
         domain="[('res_model', '=', 'hr.leave.type'), ('res_field', '=', 'icon_id')]",
     )
     active = fields.Boolean(
-        help="If the active field is set to false, it will allow you to hide the time off type without removing it.",
         default=True,
+        help="If the active field is set to false, it will allow you to hide the time off type without removing it.",
     )
     hide_on_dashboard = fields.Boolean(
-        help="Non-visible allocations can still be selected when taking a leave, but will simply not be displayed on the leave dashboard.",
         default=False,
+        help="Non-visible allocations can still be selected when taking a leave, but will simply not be displayed on the leave dashboard.",
     )
 
     max_leaves = fields.Float(
         string="Maximum Allowed",
-        help="This value is given by the sum of all time off requests with a positive value.",
         compute="_compute_leaves",
         search="_search_max_leaves",
+        help="This value is given by the sum of all time off requests with a positive value.",
     )
     leaves_taken = fields.Float(
         string="Time off Already Taken",
-        help="This value is given by the sum of all time off requests with a negative value.",
         compute="_compute_leaves",
+        help="This value is given by the sum of all time off requests with a negative value.",
     )
     virtual_remaining_leaves = fields.Float(
         string="Virtual Remaining Time Off",
-        help="Maximum Time Off Allowed - Time Off Already Taken - Time Off Waiting Approval",
         compute="_compute_leaves",
         search="_search_virtual_remaining_leaves",
+        help="Maximum Time Off Allowed - Time Off Already Taken - Time Off Waiting Approval",
     )
 
     allocation_count = fields.Integer(
@@ -120,7 +120,6 @@ class HrLeaveType(models.Model):
         column1="hr_leave_type_id",
         column2="res_users_id",
         string="Notify HR",
-        help="Choose the Time Off Officers who will be notified to approve allocation or Time Off Request. If empty, nobody will be notified",
         domain=lambda self: [
             (
                 "all_group_ids",
@@ -130,6 +129,7 @@ class HrLeaveType(models.Model):
             ("share", "=", False),
             ("company_ids", "in", self.env.company.id),
         ],
+        help="Choose the Time Off Officers who will be notified to approve allocation or Time Off Request. If empty, nobody will be notified",
     )
     leave_validation_type = fields.Selection(
         selection=[
@@ -148,10 +148,10 @@ class HrLeaveType(models.Model):
     )
     employee_requests = fields.Boolean(
         string="Allow Employee Requests",
-        help="""Extra Days Requests Allowed: User can request an allocation for himself.\n
-        Not Allowed: User cannot request an allocation.""",
         default=False,
         required=True,
+        help="""Extra Days Requests Allowed: User can request an allocation for himself.\n
+        Not Allowed: User cannot request an allocation.""",
     )
     allocation_validation_type = fields.Selection(
         selection=[
@@ -161,23 +161,23 @@ class HrLeaveType(models.Model):
             ("both", "By Employee's Approver and Time Off Officer"),
         ],
         string="Approval",
+        default="hr",
         help="""Select the level of approval needed in case of request by employee
             #     - No validation needed: The employee's request is automatically approved.
             #     - Approved by Time Off Officer: The employee's request need to be manually approved
             #       by the Time Off Officer, Employee's Approver or both.""",
-        default="hr",
     )
 
     has_valid_allocation = fields.Boolean(
-        help="This indicates if it is still possible to use this type of leave",
         compute="_compute_has_valid_allocation",
         search="_search_has_valid_allocation",
+        help="This indicates if it is still possible to use this type of leave",
     )
     time_type = fields.Selection(
         selection=[("other", "Worked Time"), ("leave", "Absence")],
         string="Kind of Time Off",
-        help="The distinction between working time (ex. Attendance) and absence (ex. Training) will be used in the computation of Accrual's plan rate.",
         default="leave",
+        help="The distinction between working time (ex. Attendance) and absence (ex. Training) will be used in the computation of Accrual's plan rate.",
     )
     request_unit = fields.Selection(
         selection=[("day", "Day"), ("half_day", "Half-Day"), ("hour", "Hours")],
@@ -191,8 +191,8 @@ class HrLeaveType(models.Model):
     )
     include_public_holidays_in_duration = fields.Boolean(
         string="Ignore Public Holidays",
-        help="Public holidays should be counted in the leave duration when applying for leaves",
         default=False,
+        help="Public holidays should be counted in the leave duration when applying for leaves",
     )
     leave_notif_subtype_id = fields.Many2one(
         comodel_name="mail.message.subtype",
@@ -211,15 +211,15 @@ class HrLeaveType(models.Model):
     support_document = fields.Boolean(string="Supporting Document")
     allow_request_on_top = fields.Boolean(
         string="Allow Request on Top",
-        help="If checked, users can request another leave on top of the ones of this type.",
         default=False,
+        help="If checked, users can request another leave on top of the ones of this type.",
     )
     eligible_for_accrual_rate = fields.Boolean(
         string="Eligible for Accrual Rate",
-        help="If checked, this time off type will be taken into account for accruals computation.",
         compute="_compute_eligible_for_accrual_rate",
         store=True,
         readonly=False,
+        help="If checked, this time off type will be taken into account for accruals computation.",
     )
     accruals_ids = fields.One2many(
         comodel_name="hr.leave.accrual.plan",

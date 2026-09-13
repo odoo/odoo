@@ -139,7 +139,7 @@ The same file is the vocabulary for how a declaration is *written*:
 `POSITIONAL_PARAMETERS` names each field class's positional parameters and
 `FIELD_ATTRIBUTE_ORDER` the order its keywords are read in (what the field is,
 what it says, its shape, how its value is produced, how it is stored, what it
-points at, who sees it). `field-positional-argument` (E8525) is any positional
+points at, who tracks it, then `groups=` second to last and `help=` last). `field-positional-argument` (E8525) is any positional
 argument -- a bare string that only the signature can tell is a label, a
 comodel or a selection; `field-attribute-order` (E8526) is keywords out of
 that order, or two or more sharing a line; `dead-field-attribute` (E8527) is

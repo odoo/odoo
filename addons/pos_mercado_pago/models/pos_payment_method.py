@@ -13,13 +13,13 @@ class PosPaymentMethod(models.Model):
 
     mp_bearer_token = fields.Char(
         string="Production user token",
-        help="Mercado Pago customer production user token: https://www.mercadopago.com.mx/developers/en/reference",
         groups="point_of_sale.group_pos_manager",
+        help="Mercado Pago customer production user token: https://www.mercadopago.com.mx/developers/en/reference",
     )
     mp_webhook_secret_key = fields.Char(
         string="Production secret key",
-        help="Mercado Pago production secret key from integration application: https://www.mercadopago.com.mx/developers/panel/app",
         groups="point_of_sale.group_pos_manager",
+        help="Mercado Pago production secret key from integration application: https://www.mercadopago.com.mx/developers/panel/app",
     )
     mp_id_point_smart = fields.Char(
         string="Terminal S/N",

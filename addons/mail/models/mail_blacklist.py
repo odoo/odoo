@@ -18,10 +18,10 @@ class MailBlacklist(models.Model):
 
     email = fields.Char(
         string="Email Address",
-        help="This field is case insensitive.",
         index="trigram",
         required=True,
         tracking=1,
+        help="This field is case insensitive.",
     )
     active = fields.Boolean(
         default=True,

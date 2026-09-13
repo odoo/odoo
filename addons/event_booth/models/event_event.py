@@ -30,8 +30,8 @@ class EventEvent(models.Model):
     )
     event_booth_category_available_ids = fields.Many2many(
         comodel_name="event.booth.category",
-        help="Booth Category for which booths are still available. Used in frontend",
         compute="_compute_event_booth_category_available_ids",
+        help="Booth Category for which booths are still available. Used in frontend",
     )
 
     @api.depends("event_type_id")

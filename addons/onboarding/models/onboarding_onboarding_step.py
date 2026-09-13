@@ -19,10 +19,10 @@ class OnboardingOnboardingStep(models.Model):
     description = fields.Char(translate=True)
     button_text = fields.Char(
         string="Button text",
-        help="Text on the panel's button to start this step",
         translate=True,
         default=lambda s: s.env._("Let's do it"),
         required=True,
+        help="Text on the panel's button to start this step",
     )
     done_icon = fields.Char(
         string="Font Awesome Icon when completed",
@@ -37,22 +37,22 @@ class OnboardingOnboardingStep(models.Model):
     step_image_filename = fields.Char()
     step_image_alt = fields.Char(
         string="Alt Text for the Step Image",
-        help="Show when impossible to load the image",
         translate=True,
         default="Onboarding Step Image",
+        help="Show when impossible to load the image",
     )
     panel_step_open_action_name = fields.Char(
         string="Opening action",
+        required=False,
         help="Name of the onboarding step model action to execute when opening the step, "
         "e.g. action_view_onboarding_1_step_1",
-        required=False,
     )
 
     current_progress_step_id = fields.Many2one(
         comodel_name="onboarding.progress.step",
         string="Step Progress",
-        help="Onboarding Progress Step for the current context (company).",
         compute="_compute_current_progress",
+        help="Onboarding Progress Step for the current context (company).",
     )
     current_step_state = fields.Selection(
         selection=ONBOARDING_PROGRESS_STATES,
@@ -63,8 +63,8 @@ class OnboardingOnboardingStep(models.Model):
         comodel_name="onboarding.progress.step",
         inverse_name="step_id",
         string="Onboarding Progress Step Records",
-        help="All related Onboarding Progress Step Records (across companies)",
         readonly=True,
+        help="All related Onboarding Progress Step Records (across companies)",
     )
 
     is_per_company = fields.Boolean(

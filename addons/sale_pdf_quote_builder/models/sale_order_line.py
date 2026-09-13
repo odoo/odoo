@@ -17,9 +17,9 @@ class SaleOrderLine(models.Model):
         comodel_name="document.document",
         relation="sale_order_line_product_document_rel",
         string="Product Documents",
-        help="The product documents for this order line that will be merged in the PDF quote.",
         readonly=False,
         domain="[('id', 'in', available_product_document_ids)]",
+        help="The product documents for this order line that will be merged in the PDF quote.",
     )
 
     @api.onchange("product_id", "product_template_id")

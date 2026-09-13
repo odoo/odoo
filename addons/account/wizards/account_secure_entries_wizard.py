@@ -21,31 +21,31 @@ class AccountSecureEntriesWizard(models.TransientModel):
     country_code = fields.Char(related="company_id.account_fiscal_country_id.code")
     hash_date = fields.Date(
         string="Hash All Entries",
-        help="The selected Date",
         compute="_compute_hash_date",
         store=True,
         readonly=False,
         required=True,
+        help="The selected Date",
     )
     chains_to_hash_with_gaps = fields.Json(compute="_compute_data")
     max_hash_date = fields.Date(
-        help="Highest Date such that all posted journal entries prior to (including) the date are secured. Only journal entries after the hard lock date are considered.",
         compute="_compute_max_hash_date",
+        help="Highest Date such that all posted journal entries prior to (including) the date are secured. Only journal entries after the hard lock date are considered.",
     )
     unreconciled_bank_statement_line_ids = fields.Many2many(
         comodel_name="account.bank.statement.line",
-        help="All unreconciled bank statement lines before the selected date.",
         compute="_compute_data",
+        help="All unreconciled bank statement lines before the selected date.",
     )
     not_hashable_unlocked_move_ids = fields.Many2many(
         comodel_name="account.move",
-        help="All unhashable moves before the selected date that are not protected by the Hard Lock Date",
         compute="_compute_data",
+        help="All unhashable moves before the selected date that are not protected by the Hard Lock Date",
     )
     move_to_hash_ids = fields.Many2many(
         comodel_name="account.move",
-        help="All moves that will be hashed",
         compute="_compute_data",
+        help="All moves that will be hashed",
     )
     warnings = fields.Json(compute="_compute_warnings")
 

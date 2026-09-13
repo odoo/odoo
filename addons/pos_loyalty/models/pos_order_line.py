@@ -9,14 +9,14 @@ class PosOrderLine(models.Model):
     )
     reward_id = fields.Many2one(
         comodel_name="loyalty.reward",
-        help="The reward associated with this line.",
         index="btree_not_null",
         ondelete="restrict",
+        help="The reward associated with this line.",
     )
     coupon_id = fields.Many2one(
         comodel_name="loyalty.card",
-        help="The coupon used to claim that reward.",
         ondelete="restrict",
+        help="The coupon used to claim that reward.",
     )
     reward_identifier_code = fields.Char(
         help="""

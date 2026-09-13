@@ -40,9 +40,9 @@ class FleetVehicleLogServices(models.Model):
     )
     odometer = fields.Float(
         string="Odometer Value",
-        help="Odometer measure of the vehicle at the moment of this log",
         compute="_compute_odometer",
         inverse="_inverse_odometer",
+        help="Odometer measure of the vehicle at the moment of this log",
     )
     odometer_unit = fields.Selection(
         related="vehicle_id.odometer_unit",
@@ -50,8 +50,8 @@ class FleetVehicleLogServices(models.Model):
         readonly=True,
     )
     date = fields.Date(
-        help="Date when the cost has been executed",
         default=fields.Date.context_today,
+        help="Date when the cost has been executed",
     )
     company_id = fields.Many2one(
         comodel_name="res.company",

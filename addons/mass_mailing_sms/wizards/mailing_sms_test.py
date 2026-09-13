@@ -22,9 +22,9 @@ class MailingSmsTest(models.TransientModel):
 
     numbers = fields.Text(
         string="Number(s)",
-        help="Carriage-return-separated list of phone numbers",
         default=_default_numbers,
         required=True,
+        help="Carriage-return-separated list of phone numbers",
     )
     mailing_id = fields.Many2one(
         comodel_name="mailing.mailing",

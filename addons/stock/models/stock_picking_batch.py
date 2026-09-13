@@ -38,9 +38,9 @@ class StockPickingBatch(models.Model):
         comodel_name="stock.picking",
         inverse_name="batch_id",
         string="Transfers",
-        help="List of transfers associated to this batch",
         domain="[('id', 'in', allowed_picking_ids)]",
         check_company=True,
+        help="List of transfers associated to this batch",
     )
     show_check_availability = fields.Boolean(compute="_compute_show_check_availability")
     show_allocation = fields.Boolean(
@@ -93,14 +93,14 @@ class StockPickingBatch(models.Model):
     picking_type_code = fields.Selection(related="picking_type_id.code")
     date_planned = fields.Datetime(
         string="Scheduled Date",
-        help="""Scheduled date for the transfers to be processed.
-              - If manually set then scheduled date for all transfers in batch will automatically update to this date.
-              - If not manually changed and transfers are added/removed/updated then this will be their earliest scheduled date
-                but this scheduled date will not be set for all transfers in batch.""",
         compute="_compute_date_planned",
         store=True,
         copy=False,
         readonly=False,
+        help="""Scheduled date for the transfers to be processed.
+              - If manually set then scheduled date for all transfers in batch will automatically update to this date.
+              - If not manually changed and transfers are added/removed/updated then this will be their earliest scheduled date
+                but this scheduled date will not be set for all transfers in batch.""",
     )
     is_wave = fields.Boolean(string="This batch is a wave")
     wave_product_id = fields.Many2one(
@@ -145,13 +145,13 @@ class StockPickingBatch(models.Model):
     )
     wave_location_id = fields.Many2one(
         comodel_name="stock.location",
-        help="One of the operation type's wave locations. An empty wave declaring "
-        "its grouping values here is filled by automatic waving; once it holds "
-        "lines, the values are read from them.",
         compute="_compute_wave_grouping",
         store=True,
         readonly=False,
         domain="[('id', 'in', picking_type_id.wave_location_ids)]",
+        help="One of the operation type's wave locations. An empty wave declaring "
+        "its grouping values here is filled by automatic waving; once it holds "
+        "lines, the values are read from them.",
     )
     show_lots_text = fields.Boolean(compute="_compute_show_lots_text")
     estimated_shipping_weight = fields.Float(

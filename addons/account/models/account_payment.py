@@ -165,15 +165,20 @@ class AccountPayment(models.Model):
     )
     paired_internal_transfer_payment_id = fields.Many2one(
         comodel_name="account.payment",
-        help="When an internal transfer is posted, a paired payment is created. "
-        "They are cross referenced through this field",
         index="btree_not_null",
         copy=False,
+        help="When an internal transfer is posted, a paired payment is created. "
+        "They are cross referenced through this field",
     )
 
     payment_channel_id = fields.Many2one(
         comodel_name="account.payment.channel",
         string="Payment Method",
+        compute="_compute_payment_channel_id",
+        store=True,
+        copy=False,
+        readonly=False,
+        domain="[('id', 'in', available_payment_channel_ids)]",
         help="Manual: Pay or Get paid by any method outside of Odoo.\n"
         "Payment Providers: Each payment provider has its own Payment Method. Request a transaction on/to a card thanks to a payment token saved by the partner when buying or subscribing online.\n"
         "Check: Pay bills by check and print it from Odoo.\n"
@@ -181,11 +186,6 @@ class AccountPayment(models.Model):
         "SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_iso20022 is necessary.\n"
         "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_iso20022 is necessary.\n"
         "U.S. ISO20022: Pay in the US by submitting an ISO20022 file to your bank. Module account_iso20022 is necessary.\n",
-        compute="_compute_payment_channel_id",
-        store=True,
-        copy=False,
-        readonly=False,
-        domain="[('id', 'in', available_payment_channel_ids)]",
     )
     available_payment_channel_ids = fields.Many2many(
         comodel_name="account.payment.channel",
@@ -226,17 +226,17 @@ class AccountPayment(models.Model):
         tracking=True,
     )
     payment_reference = fields.Char(
-        help="Reference of the document used to issue this payment. Eg. check number, file name, etc.",
         copy=False,
         tracking=True,
+        help="Reference of the document used to issue this payment. Eg. check number, file name, etc.",
     )
     currency_id = fields.Many2one(
         comodel_name="res.currency",
-        help="The payment's currency.",
         compute="_compute_currency_id",
         precompute=True,
         store=True,
         readonly=False,
+        help="The payment's currency.",
     )
     company_currency_id = fields.Many2one(
         related="company_id.currency_id",
@@ -277,9 +277,9 @@ class AccountPayment(models.Model):
     reconciled_invoice_ids = fields.Many2many(
         comodel_name="account.move",
         string="Reconciled Invoices",
-        help="Invoices whose journal items have been reconciled with these payments.",
         compute="_compute_stat_buttons_from_reconciliation",
         search="_search_reconciled_invoice_ids",
+        help="Invoices whose journal items have been reconciled with these payments.",
     )
     reconciled_invoices_count = fields.Count(
         count_of="reconciled_invoice_ids",
@@ -293,9 +293,9 @@ class AccountPayment(models.Model):
     reconciled_bill_ids = fields.Many2many(
         comodel_name="account.move",
         string="Reconciled Bills",
-        help="Bills whose journal items have been reconciled with these payments.",
         compute="_compute_stat_buttons_from_reconciliation",
         search="_search_reconciled_bill_ids",
+        help="Bills whose journal items have been reconciled with these payments.",
     )
     reconciled_bills_count = fields.Count(
         count_of="reconciled_bill_ids",
@@ -304,8 +304,8 @@ class AccountPayment(models.Model):
     reconciled_statement_line_ids = fields.Many2many(
         comodel_name="account.bank.statement.line",
         string="Reconciled Statement Lines",
-        help="Statements lines matched to this payment",
         compute="_compute_stat_buttons_from_reconciliation",
+        help="Statements lines matched to this payment",
     )
     reconciled_statement_lines_count = fields.Count(
         count_of="reconciled_statement_line_ids",
@@ -324,10 +324,10 @@ class AccountPayment(models.Model):
     )
     country_code = fields.Char(related="company_id.account_fiscal_country_id.code")
     amount_signed = fields.Monetary(
-        help="Negative value of amount field if payment_type is outbound",
         currency_field="currency_id",
         compute="_compute_amount_signed",
         tracking=True,
+        help="Negative value of amount field if payment_type is outbound",
     )
     amount_company_currency_signed = fields.Monetary(
         currency_field="company_currency_id",

@@ -202,8 +202,8 @@ class ReportPaperformat(models.Model):
     format = fields.Selection(
         selection=[(ps["key"], ps["description"]) for ps in PAPER_SIZES],
         string="Paper size",
-        help="Select Proper Paper size",
         default="A4",
+        help="Select Proper Paper size",
     )
     margin_top = fields.Float(
         string="Top Margin (mm)",
@@ -239,9 +239,9 @@ class ReportPaperformat(models.Model):
     )
     header_spacing = fields.Integer(
         string="Header spacing (mm)",
+        default=35,
         help="Height in mm of the header area. Used by report templates (e.g. DIN 5008) "
         "as a layout variable. Has no effect on standard Odoo reports.",
-        default=35,
     )
     disable_shrinking = fields.Boolean(
         string="Disable auto-shrinking",
@@ -250,10 +250,10 @@ class ReportPaperformat(models.Model):
     )
     dpi = fields.Integer(
         string="Preview DPI",
-        help="DPI used to scale the HTML preview in Web Studio (96 / dpi = zoom factor). "
-        "Does not affect WeasyPrint PDF output, which is resolution-independent.",
         default=90,
         required=True,
+        help="DPI used to scale the HTML preview in Web Studio (96 / dpi = zoom factor). "
+        "Does not affect WeasyPrint PDF output, which is resolution-independent.",
     )
     report_ids = fields.One2many(
         comodel_name="ir.actions.report",
@@ -271,11 +271,11 @@ class ReportPaperformat(models.Model):
     )
     css_margins = fields.Boolean(
         string="Use body padding margins",
+        default=False,
         help="When enabled, horizontal spacing is applied as CSS body padding (8 mm) "
         "rather than @page margin rules. Header/footer running elements add matching "
         "padding to stay aligned with the body content. Typically used together with "
         "margin_left=0 and margin_right=0.",
-        default=False,
     )
 
     @api.constrains("format", "page_width", "page_height")

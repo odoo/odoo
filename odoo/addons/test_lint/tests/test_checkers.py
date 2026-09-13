@@ -2140,9 +2140,25 @@ class TestFieldDeclarationLint(BaseCase):
     def test_the_canonical_order_reads_what_it_is_before_how_it_is_stored(self):
         self.assertEqual(
             _checker_field_declaration.canonical_order(
-                ["store", "string", "compute", "comodel_name", "zzz_custom", "help"]
+                [
+                    "help",
+                    "store",
+                    "groups",
+                    "string",
+                    "compute",
+                    "comodel_name",
+                    "zzz_custom",
+                ]
             ),
-            ["comodel_name", "string", "help", "compute", "store", "zzz_custom"],
+            [
+                "comodel_name",
+                "string",
+                "compute",
+                "store",
+                "zzz_custom",
+                "groups",
+                "help",
+            ],
         )
 
     def test_an_attribute_setup_ignores_is_flagged(self):

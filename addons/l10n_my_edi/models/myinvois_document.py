@@ -94,10 +94,10 @@ class MyInvoisDocument(models.Model):
             ("cancelled", "Cancelled"),
         ],
         string="MyInvois State",
-        help="State of this document on the MyInvois portal.\nA document awaiting validation will be automatically updated once the validation status is available.",
         copy=False,
         readonly=True,
         tracking=True,
+        help="State of this document on the MyInvois portal.\nA document awaiting validation will be automatically updated once the validation status is available.",
     )
     myinvois_error_document_hash = fields.Char(
         string="Document Hash",
@@ -123,16 +123,16 @@ class MyInvoisDocument(models.Model):
     # API information fields
     myinvois_submission_uid = fields.Char(
         string="Submission UID",
-        help="Unique ID assigned to a batch of documents when sent to MyInvois.",
         copy=False,
         readonly=True,
+        help="Unique ID assigned to a batch of documents when sent to MyInvois.",
     )
     myinvois_external_uuid = fields.Char(
         string="MyInvois ID",
-        help="Unique ID assigned to a specific document when sent to MyInvois.",
         index=True,
         copy=False,
         readonly=True,
+        help="Unique ID assigned to a specific document when sent to MyInvois.",
     )
     myinvois_validation_time = fields.Datetime(
         string="Validation Time",

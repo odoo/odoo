@@ -17,8 +17,8 @@ class UtmTag(models.Model):
     )
     color = fields.Integer(
         string="Color Index",
-        help="Tag color. No color means no display in kanban to distinguish internal tags from public categorization tags.",
         default=lambda self: self._default_color(),
+        help="Tag color. No color means no display in kanban to distinguish internal tags from public categorization tags.",
     )
 
     _name_src_uniq = name_uniq_index(

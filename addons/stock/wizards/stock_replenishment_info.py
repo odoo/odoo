@@ -54,9 +54,9 @@ class StockReplenishmentInfo(models.TransientModel):
             ("last_year_quarter", "Last year quarter"),
         ],
         string="Based on",
-        help="Estimate the sales volume for the period based on past period or order the forecasted quantity for that period.",
         default="one_month",
         required=True,
+        help="Estimate the sales volume for the period based on past period or order the forecasted quantity for that period.",
     )
     percent_factor = fields.Integer(
         default=100,

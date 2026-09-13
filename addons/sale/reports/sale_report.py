@@ -121,9 +121,9 @@ class SaleReport(models.Model):
     qty_to_invoice = fields.Float(readonly=True)
     price_average = fields.Monetary(
         string="Average Price",
-        help="Quantity-weighted average sale price (not a cost).",
         readonly=True,
         aggregator="avg",
+        help="Quantity-weighted average sale price (not a cost).",
     )
     discount = fields.Float(
         string="Discount %",

@@ -33,11 +33,11 @@ class CrmLead(models.Model):
     )
     date_partner_assign = fields.Date(
         string="Partner Assignment Date",
-        help="Last date this case was forwarded/assigned to a partner",
         compute="_compute_date_partner_assign",
         store=True,
         copy=True,
         readonly=False,
+        help="Last date this case was forwarded/assigned to a partner",
     )
 
     @api.depends("partner_assigned_id")

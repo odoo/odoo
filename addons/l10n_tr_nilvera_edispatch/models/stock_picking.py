@@ -20,34 +20,34 @@ class StockPicking(models.Model):
             ("MATBUDAN", "Pre-printed"),
         ],
         string="Dispatch Type",
-        help="Used to populate the type of dispatch.",
         default="SEVK",
         copy=False,
         tracking=True,
+        help="Used to populate the type of dispatch.",
     )
     l10n_tr_nilvera_carrier_id = fields.Many2one(
         comodel_name="res.partner",
         string="Carrier (TR)",
-        help="Used when the dispatch is made through a third-party carrier company. Populating this makes the Vehicle Plate and Drivers optional.",
         copy=False,
+        help="Used when the dispatch is made through a third-party carrier company. Populating this makes the Vehicle Plate and Drivers optional.",
     )
     l10n_tr_nilvera_buyer_id = fields.Many2one(
         comodel_name="res.partner",
         string="Buyer",
-        help="Used for the original party who purchases the good when the Delivery Address is for another recipient",
         copy=False,
+        help="Used for the original party who purchases the good when the Delivery Address is for another recipient",
     )
     l10n_tr_nilvera_seller_supplier_id = fields.Many2one(
         comodel_name="res.partner",
         string="Seller Supplier",
-        help="Used for the information of the supplier of the goods in the delivery note.",
         copy=False,
+        help="Used for the information of the supplier of the goods in the delivery note.",
     )
     l10n_tr_nilvera_buyer_originator_id = fields.Many2one(
         comodel_name="res.partner",
         string="Buyer Originator",
-        help="Used for the original initiator of the goods acquisition and requesting process.",
         copy=False,
+        help="Used for the original initiator of the goods acquisition and requesting process.",
     )
     l10n_tr_nilvera_delivery_printed_number = fields.Char(
         string="Printed Delivery Note Number",
@@ -60,23 +60,23 @@ class StockPicking(models.Model):
     l10n_tr_vehicle_plate = fields.Many2one(
         comodel_name="l10n_tr.nilvera.trailer.plate",
         string="Vehicle Plate",
-        help="Used to input the plate number of the truck.",
         copy=False,
         domain="[('plate_number_type', '=', 'vehicle')]",
+        help="Used to input the plate number of the truck.",
     )
     l10n_tr_nilvera_trailer_plate_ids = fields.Many2many(
         comodel_name="l10n_tr.nilvera.trailer.plate",
         relation="l10n_tr_nilvera_delivery_vehicle_rel",
         string="Trailer Plates",
-        help="Used to input the plate numbers of the trailers attached to the truck.",
         copy=False,
         domain="[('plate_number_type', '=', 'trailer')]",
+        help="Used to input the plate numbers of the trailers attached to the truck.",
     )
     l10n_tr_nilvera_driver_ids = fields.Many2many(
         comodel_name="res.partner",
         string="Drivers",
-        help="Used for the individuals driving the truck.",
         copy=False,
+        help="Used for the individuals driving the truck.",
     )
     l10n_tr_nilvera_delivery_notes = fields.Char(
         string="Delivery Notes",

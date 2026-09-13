@@ -99,10 +99,10 @@ class AccountReturnType(models.Model):
             ("generic_state_only_pay", "Pay"),
         ],
         string="States",
-        help="Determines the workflow of the return.",
         compute="_compute_states_workflow",
         store=True,
         readonly=False,
+        help="Determines the workflow of the return.",
     )
 
     deadline_periodicity = fields.Selection(
@@ -117,16 +117,16 @@ class AccountReturnType(models.Model):
     )
     deadline_start_date = fields.Date(
         string="Start Date",
-        help="Used to compute covered period based on the selected periodicity.",
         company_dependent=True,
         tracking=True,
+        help="Used to compute covered period based on the selected periodicity.",
     )
     default_deadline_start_date = fields.Date(string="Default Start Date")
     deadline_days_delay = fields.Integer(
         string="Deadline",
-        help="By default, Odoo applies its own deadline for returns (shown as 0). Entering a value here will override it and be used as the new deadline.",
         company_dependent=True,
         tracking=True,
+        help="By default, Odoo applies its own deadline for returns (shown as 0). Entering a value here will override it and be used as the new deadline.",
     )
     default_deadline_days_delay = fields.Integer(string="Default Deadline")
     is_master_data = fields.Boolean(compute="_compute_is_master_data")

@@ -6,8 +6,8 @@ class PurchaseOrder(models.Model):
 
     subcontracting_resupply_picking_count = fields.Integer(
         string="Count of Subcontracting Resupply",
-        help="Count of Subcontracting Resupply for component",
         compute="_compute_subcontracting_resupply_picking_count",
+        help="Count of Subcontracting Resupply for component",
     )
 
     @api.depends("line_ids.move_ids")

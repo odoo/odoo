@@ -11,10 +11,10 @@ class LoyaltyProgram(models.Model):
     pos_config_ids = fields.Many2many(
         comodel_name="pos.config",
         string="Point of Sales",
-        help="Restrict publishing to those shops. Note: A program will only be used in the shops using the same currency as the program.",
         compute="_compute_pos_config_ids",
         store=True,
         readonly=False,
+        help="Restrict publishing to those shops. Note: A program will only be used in the shops using the same currency as the program.",
     )
     pos_order_count = fields.Integer(
         string="PoS Order Count",
@@ -27,11 +27,11 @@ class LoyaltyProgram(models.Model):
     pos_report_print_id = fields.Many2one(
         comodel_name="ir.actions.report",
         string="Print Report",
-        help="This is used to print the generated gift cards from PoS.",
         compute="_compute_pos_report_print_id",
         inverse="_inverse_pos_report_print_id",
         readonly=False,
         domain=[("model", "=", "loyalty.card")],
+        help="This is used to print the generated gift cards from PoS.",
     )
 
     @api.model

@@ -22,8 +22,8 @@ class ResUsers(models.Model):
     )
     oauth_uid = fields.Char(
         string="OAuth User ID",
-        help="Oauth Provider user_id",
         copy=False,
+        help="Oauth Provider user_id",
     )
     oauth_access_token = fields.Char(
         string="OAuth Access Token Store",

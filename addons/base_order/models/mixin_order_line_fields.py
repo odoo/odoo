@@ -532,13 +532,13 @@ class MixinOrderLineFields(models.AbstractModel):
             ("stock_move", "Stock Moves"),
         ],
         string="Transferred Qty Method",
+        compute="_compute_qty_transferred_method",
+        precompute=True,
+        store=True,
         help="Method used to compute the transferred quantity:\n"
         "  - Manual: set manually on the line\n"
         "  - Analytic: sum of analytic line unit amounts\n"
         "  - Stock Moves: from confirmed pickings\n",
-        compute="_compute_qty_transferred_method",
-        precompute=True,
-        store=True,
     )
     qty_transferred = fields.Float(
         string="Transferred Qty",

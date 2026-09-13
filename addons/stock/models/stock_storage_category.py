@@ -13,9 +13,9 @@ class StockStorageCategory(models.Model):
         required=True,
     )
     max_weight = fields.Float(
+        digits="Stock Weight",
         help="Maximum weight the locations of this storage category can hold. "
         "Leave 0 for no weight limit.",
-        digits="Stock Weight",
     )
     capacity_ids = fields.One2many(
         comodel_name="stock.storage.category.capacity",

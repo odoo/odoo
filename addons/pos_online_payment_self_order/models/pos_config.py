@@ -8,10 +8,10 @@ class PosConfig(models.Model):
     self_order_online_payment_method_id = fields.Many2one(
         comodel_name="pos.payment.method",
         string="Self Online Payment",
-        help="The online payment method to use when a customer pays a self-order online.",
         store=True,
         readonly=False,
         domain=[("is_online_payment", "=", True)],
+        help="The online payment method to use when a customer pays a self-order online.",
     )
 
     @api.constrains("self_order_online_payment_method_id")

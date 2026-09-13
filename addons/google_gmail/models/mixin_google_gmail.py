@@ -60,9 +60,9 @@ class MixinGoogleGmail(models.AbstractModel):
     )
     google_gmail_uri = fields.Char(
         string="URI",
-        help="The URL to generate the authorization code from Google",
         compute="_compute_gmail_uri",
         groups="base.group_system",
+        help="The URL to generate the authorization code from Google",
     )
 
     @api.depends("oauth2_credential_id")

@@ -21,11 +21,11 @@ class SaleOrder(models.Model):
         export_string_translation=False,
     )
     timesheet_total_duration = fields.Integer(
-        help="Total recorded duration, expressed in the encoding UoM, and rounded to the unit",
         export_string_translation=False,
         compute="_compute_timesheet_total_duration",
         compute_sudo=True,
         groups="hr_timesheet.group_hr_timesheet_user",
+        help="Total recorded duration, expressed in the encoding UoM, and rounded to the unit",
     )
     show_hours_recorded_button = fields.Boolean(
         export_string_translation=False,

@@ -18,12 +18,12 @@ class HrEmployee(models.Model):
     leave_manager_id = fields.Many2one(
         comodel_name="res.users",
         string="Time Off Approver",
-        help='Select the user responsible for approving "Time Off" of this employee.\n'
-        "If empty, the approval is done by an Administrator or Approver (determined in settings/users).",
         compute="_compute_leave_manager_id",
         store=True,
         readonly=False,
         domain="[('share', '=', False), ('company_ids', 'in', company_id)]",
+        help='Select the user responsible for approving "Time Off" of this employee.\n'
+        "If empty, the approval is done by an Administrator or Approver (determined in settings/users).",
     )
     leave_ids = fields.One2many(
         comodel_name="hr.leave",

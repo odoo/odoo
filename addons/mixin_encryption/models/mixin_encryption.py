@@ -33,10 +33,10 @@ class MixinEncryption(models.AbstractModel):
     _ENCRYPTED_FALLBACK_FIELDS: dict[str, str] = {}
 
     encryption_key_version = fields.Integer(
+        readonly=True,
         help="Version of the encryption key used for this record's encrypted "
         "columns (for key-rotation tracking). 0/unset means untracked — the "
         "rotation migration treats such rows as eligible.",
-        readonly=True,
     )
 
     def _is_encryption_available(self) -> bool:

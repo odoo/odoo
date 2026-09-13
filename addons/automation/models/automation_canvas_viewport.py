@@ -32,8 +32,8 @@ class AutomationCanvasViewport(models.Model):
         help="Vertical translation of the canvas, in screen pixels",
     )
     scale = fields.Float(
-        help="Zoom factor of the canvas, 1.0 being unzoomed",
         default=1.0,
+        help="Zoom factor of the canvas, 1.0 being unzoomed",
     )
 
     _viewport_uniq = models.Constraint(

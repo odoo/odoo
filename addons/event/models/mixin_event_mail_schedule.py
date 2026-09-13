@@ -35,10 +35,10 @@ class MixinEventMailSchedule(models.AbstractModel):
             ("before_event_end", "Before the event ends"),
         ],
         string="Trigger",
-        help="Indicates when the communication is sent. "
-        "If the event has multiple slots, the interval is related to each time slot instead of the whole event.",
         default="before_event",
         required=True,
+        help="Indicates when the communication is sent. "
+        "If the event has multiple slots, the interval is related to each time slot instead of the whole event.",
     )
     notification_type = fields.Selection(
         selection=[("mail", "Mail")],

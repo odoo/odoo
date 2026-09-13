@@ -110,8 +110,8 @@ class MailActivitySchedule(models.TransientModel):
     plan_on_demand_user_id: ResUsers = fields.Many2one(
         comodel_name="res.users",
         string="Assigned To",
-        help="Choose assignation for activities with on demand assignation.",
         default=lambda self: self.env.user,
+        help="Choose assignation for activities with on demand assignation.",
     )
     plan_date = fields.Date(
         compute="_compute_plan_date",

@@ -88,8 +88,8 @@ class WebsiteMenu(models.Model):
     group_ids = fields.Many2many(
         comodel_name="res.groups",
         string="Visible Groups",
-        help="User needs to be at least in one of these groups to see the menu",
         groups="base.group_user",
+        help="User needs to be at least in one of these groups to see the menu",
     )
     is_mega_menu = fields.Boolean(
         compute=_compute_is_mega_menu,

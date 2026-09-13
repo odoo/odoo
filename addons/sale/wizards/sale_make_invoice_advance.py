@@ -15,10 +15,10 @@ class SaleAdvancePaymentInv(models.TransientModel):
             ("fixed", "Down payment (fixed amount)"),
         ],
         string="Create Invoice",
-        help="A standard invoice is issued with all the order lines ready for invoicing,"
-        "according to their invoicing policy (based on ordered or delivered quantity).",
         default="delivered",
         required=True,
+        help="A standard invoice is issued with all the order lines ready for invoicing,"
+        "according to their invoicing policy (based on ordered or delivered quantity).",
     )
     count = fields.Count(
         count_of="sale_order_ids",
@@ -58,17 +58,17 @@ class SaleAdvancePaymentInv(models.TransientModel):
     )
     amount_taxinc_invoiced = fields.Monetary(
         string="Already invoiced",
-        help="Only confirmed down payments are considered.",
         compute="_compute_amount_taxinc_invoiced",
+        help="Only confirmed down payments are considered.",
     )
 
     display_draft_invoice_warning = fields.Boolean(
         compute="_compute_display_draft_invoice_warning"
     )
     consolidated_billing = fields.Boolean(
+        default=True,
         help="Create one invoice for all orders related to same customer, same invoicing address"
         " and same delivery address.",
-        default=True,
     )
 
     @api.depends("sale_order_ids")

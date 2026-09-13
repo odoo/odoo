@@ -28,13 +28,13 @@ class EventSlot(models.Model):
     date_tz = fields.Selection(related="event_id.date_tz")
     start_hour = fields.Float(
         string="Starting Hour",
-        help="Expressed in the event timezone.",
         required=True,
+        help="Expressed in the event timezone.",
     )
     end_hour = fields.Float(
         string="Ending Hour",
-        help="Expressed in the event timezone.",
         required=True,
+        help="Expressed in the event timezone.",
     )
     start_datetime = fields.Datetime(
         compute="_compute_datetimes",
@@ -48,8 +48,8 @@ class EventSlot(models.Model):
     # Registrations
     is_sold_out = fields.Boolean(
         string="Sold Out",
-        help="Whether seats are sold out for this slot.",
         compute="_compute_is_sold_out",
+        help="Whether seats are sold out for this slot.",
     )
     registration_ids = fields.One2many(
         comodel_name="event.registration",

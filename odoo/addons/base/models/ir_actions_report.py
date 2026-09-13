@@ -1113,12 +1113,12 @@ class IrActionsReport(models.Model):
             ("qweb-pdf", "PDF"),
             ("qweb-text", "Text"),
         ],
+        default="qweb-pdf",
+        required=True,
         help="The type of the report that will be rendered, each one having its own"
         " rendering method. HTML means the report will be opened directly in your"
         " browser. PDF means the report will be rendered using WeasyPrint and"
         " downloaded by the user.",
-        default="qweb-pdf",
-        required=True,
     )
     report_name = fields.Char(
         string="Template Name",
@@ -1126,10 +1126,10 @@ class IrActionsReport(models.Model):
         required=True,
     )
     report_file = fields.Char(
-        help="The path to the main report file (depending on Report Type) or empty if the content is in another field",
         store=True,
         readonly=False,
         required=False,
+        help="The path to the main report file (depending on Report Type) or empty if the content is in another field",
     )
     group_ids = fields.Many2many(
         comodel_name="res.groups",
@@ -1153,8 +1153,8 @@ class IrActionsReport(models.Model):
     )
     print_report_name = fields.Char(
         string="Printed Report Name",
-        help="This is the filename of the report going to download. Keep empty to not change the report filename. You can use a python expression with the 'object' and 'time' variables.",
         translate=True,
+        help="This is the filename of the report going to download. Keep empty to not change the report filename. You can use a python expression with the 'object' and 'time' variables.",
     )
     attachment_use = fields.Boolean(
         string="Reload from Attachment",

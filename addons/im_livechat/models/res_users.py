@@ -31,11 +31,11 @@ class ResUsers(models.Model):
     livechat_expertise_ids = fields.Many2many(
         comodel_name="im_livechat.expertise",
         string="Live Chat Expertise",
-        help="When forwarding live chat conversations, the chatbot will prioritize users with matching expertise.",
         compute="_compute_livechat_expertise_ids",
         inverse="_inverse_livechat_expertise_ids",
         store=False,
         groups="im_livechat.im_livechat_group_user,base.group_erp_manager",
+        help="When forwarding live chat conversations, the chatbot will prioritize users with matching expertise.",
     )
     livechat_ongoing_session_count = fields.Integer(
         string="Number of Ongoing sessions",
@@ -43,9 +43,9 @@ class ResUsers(models.Model):
         groups="im_livechat.im_livechat_group_user",
     )
     livechat_is_in_call = fields.Boolean(
-        help="Whether the user is in a call, only available if the user is in a live chat agent",
         compute="_compute_livechat_is_in_call",
         groups="im_livechat.im_livechat_group_user",
+        help="Whether the user is in a call, only available if the user is in a live chat agent",
     )
     has_access_livechat = fields.Boolean(
         string="Has access to Livechat",

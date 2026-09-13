@@ -40,9 +40,9 @@ class ResGroups(models.Model):
 
     all_users_count = fields.Integer(
         string="# Users",
-        help="Number of users having this group (implicitly or explicitly)",
         compute="_compute_all_users_count",
         compute_sudo=True,
+        help="Number of users having this group (implicitly or explicitly)",
     )
 
     model_access = fields.One2many(
@@ -119,11 +119,11 @@ class ResGroups(models.Model):
     all_implied_ids = fields.Many2many(
         comodel_name="res.groups",
         string="Transitively Implied Groups",
-        help="The group itself with all its implied groups.",
         compute="_compute_all_implied_ids",
         search="_search_all_implied_ids",
         compute_sudo=True,
         recursive=True,
+        help="The group itself with all its implied groups.",
     )
     implied_by_ids = fields.Many2many(
         comodel_name="res.groups",
@@ -144,8 +144,8 @@ class ResGroups(models.Model):
     disjoint_ids = fields.Many2many(
         comodel_name="res.groups",
         string="Disjoint Groups",
-        help="A user may not belong to this group and one of those.  For instance, users may not be portal users and internal users.",
         compute="_compute_disjoint_ids",
+        help="A user may not belong to this group and one of those.  For instance, users may not be portal users and internal users.",
     )
 
     @api.constrains("implied_ids", "implied_by_ids")

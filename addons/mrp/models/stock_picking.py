@@ -39,8 +39,8 @@ class StockPickingType(models.Model):
     )
     use_create_components_lots = fields.Boolean(
         string="Create New Lots/Serial Numbers for Components",
-        help="Allow to create new lot/serial numbers for the components",
         default=False,
+        help="Allow to create new lot/serial numbers for the components",
     )
 
     auto_print_done_production_order = fields.Boolean(

@@ -66,9 +66,9 @@ class MailTrackingValue(models.Model):
 
     currency_id: ResCurrency = fields.Many2one(
         comodel_name="res.currency",
-        help="Used to display the currency when tracking monetary values",
         readonly=True,
         ondelete="set null",
+        help="Used to display the currency when tracking monetary values",
     )
 
     mail_message_id: MailMessage = fields.Many2one(

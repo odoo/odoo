@@ -35,11 +35,11 @@ class AccountMove(models.Model):
             ("cancelled", "Cancelled"),
         ],
         string="MyInvois State",
-        help="State of this document on the MyInvois portal.\nA document awaiting validation will be automatically updated once the validation status is available.",
         export_string_translation=False,
         compute="_compute_l10n_my_edi_state",
         store=True,
         tracking=True,
+        help="State of this document on the MyInvois portal.\nA document awaiting validation will be automatically updated once the validation status is available.",
     )
     # Fields required to be set on the document in some cases.
     l10n_my_edi_exemption_reason = fields.Char(

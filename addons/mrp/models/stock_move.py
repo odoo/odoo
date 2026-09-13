@@ -92,8 +92,8 @@ class StockMove(models.Model):
     byproduct_id = fields.Many2one(
         comodel_name="mrp.bom.byproduct",
         string="By-products",
-        help="By-product line that generated the move in a manufacturing order",
         check_company=True,
+        help="By-product line that generated the move in a manufacturing order",
     )
     unit_factor = fields.Float(
         compute="_compute_unit_factor",
@@ -111,8 +111,8 @@ class StockMove(models.Model):
     )
     cost_share = fields.Float(
         string="Cost Share (%)",
-        help="The percentage of the final production cost for this by-product. The total of all by-products' cost share must be smaller or equal to 100.",
         digits=0,
+        help="The percentage of the final production cost for this by-product. The total of all by-products' cost share must be smaller or equal to 100.",
     )
     product_qty_available = fields.Float(
         related="product_id.qty_available",
@@ -125,11 +125,11 @@ class StockMove(models.Model):
         depends=["product_id"],
     )
     manual_consumption = fields.Boolean(
-        help="When activated, then the registration of consumption for that component is recorded manually exclusively.\n"
-        "If not activated, and any of the components consumption is edited manually on the manufacturing order, Odoo assumes manual consumption also.",
         compute="_compute_manual_consumption",
         store=True,
         readonly=False,
+        help="When activated, then the registration of consumption for that component is recorded manually exclusively.\n"
+        "If not activated, and any of the components consumption is edited manually on the manufacturing order, Odoo assumes manual consumption also.",
     )
 
     _one_production = models.Constraint(

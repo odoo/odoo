@@ -32,9 +32,9 @@ class MailMessageSchedule(models.Model):
     notification_parameters = fields.Text(string="Notification Parameter")
     scheduled_datetime = fields.Datetime(
         string="Scheduled Send Date",
-        help="Datetime at which notification should be sent.",
         index=True,
         required=True,
+        help="Datetime at which notification should be sent.",
     )
 
     @api.model_create_multi

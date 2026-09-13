@@ -7,9 +7,9 @@ class ProductTemplate(models.Model):
 
     service_to_purchase = fields.Boolean(
         string="Subcontract Service",
-        help="If ticked, each time you sell this product through a SO, a RfQ is automatically created to buy the product. Tip: don't forget to set a vendor on the product.",
         copy=False,
         company_dependent=True,
+        help="If ticked, each time you sell this product through a SO, a RfQ is automatically created to buy the product. Tip: don't forget to set a vendor on the product.",
     )
 
     @api.constrains("service_to_purchase", "seller_ids", "type", "expense_policy")

@@ -15,13 +15,13 @@ class ResCompany(models.Model):
             ("real", "In real time"),
         ],
         string="Update quantities in stock",
-        help="At the session closing: A picking is created for the entire session when it's closed\n In real time: Each order sent to the server create its own picking",
         default="real",
+        help="At the session closing: A picking is created for the entire session when it's closed\n In real time: Each order sent to the server create its own picking",
     )
     point_of_sale_use_ticket_qr_code = fields.Boolean(
         string="Self-service invoicing",
-        help="Print information on the receipt to allow the customer to easily access the invoice anytime, from Odoo's portal.",
         default=True,
+        help="Print information on the receipt to allow the customer to easily access the invoice anytime, from Odoo's portal.",
     )
     point_of_sale_ticket_unique_code = fields.Boolean(
         string="Generate a code on ticket",
@@ -34,9 +34,9 @@ class ResCompany(models.Model):
             ("qr_code_and_url", "QR code + URL"),
         ],
         string="Print",
-        help="Choose how the URL to the portal will be print on the receipt.",
         default="qr_code_and_url",
         required=True,
+        help="Choose how the URL to the portal will be print on the receipt.",
     )
 
     @api.model

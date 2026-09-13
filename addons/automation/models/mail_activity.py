@@ -7,9 +7,9 @@ class MailActivity(models.Model):
     automation_runtime_line_id = fields.Many2one(
         comodel_name="automation.runtime.line",
         string="Workflow Step",
-        help="The Approval step waiting on this activity",
         index="btree_not_null",
         ondelete="cascade",
+        help="The Approval step waiting on this activity",
     )
 
     def _action_done(self, feedback=False, attachment_ids=None):

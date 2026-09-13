@@ -49,14 +49,14 @@ class SaleOrderLine(models.Model):
         help="The section or subsection this line belongs to.",
     )
     collapse_prices = fields.Boolean(
-        help="Whether this section's lines' prices will be hidden in reports and in the portal.",
         default=False,
         copy=True,
+        help="Whether this section's lines' prices will be hidden in reports and in the portal.",
     )
     collapse_composition = fields.Boolean(
-        help="Whether this section's lines will be hidden in reports and in the portal.",
         default=False,
         copy=True,
+        help="Whether this section's lines will be hidden in reports and in the portal.",
     )
     linked_line_id = fields.Many2one(
         comodel_name="sale.order.line",
@@ -124,22 +124,22 @@ class SaleOrderLine(models.Model):
     )
     price_unit_auto = fields.Float(
         string="Automatic Price",
-        help="Price from pricelist. Compared with price_unit to detect manual overrides. "
-        "When price_unit != price_unit_auto, the price is considered manually set.",
         min_display_digits="Product Price",
         compute="_compute_price_and_discount",
         precompute=True,
         store=True,
         copy=True,
+        help="Price from pricelist. Compared with price_unit to detect manual overrides. "
+        "When price_unit != price_unit_auto, the price is considered manually set.",
     )
     discount = fields.Float(recursive=True)
     customer_lead = fields.Float(
         string="Lead Time",
-        help="Number of days between the order confirmation and the shipping of the products to the customer",
         compute="_compute_customer_lead",
         precompute=True,
         store=True,
         readonly=False,
+        help="Number of days between the order confirmation and the shipping of the products to the customer",
     )
     virtual_id = fields.Char(
         help="Uniquely identifies this sale order line before "
@@ -150,8 +150,8 @@ class SaleOrderLine(models.Model):
     )
 
     selected_combo_items = fields.Char(
-        help="Local storage of this sale order line's selected combo items, iff this is a combo product line.",
         store=False,
+        help="Local storage of this sale order line's selected combo items, iff this is a combo product line.",
     )
     combo_item_id = fields.Many2one(comodel_name="product.combo.item")
 
@@ -182,10 +182,10 @@ class SaleOrderLine(models.Model):
 
     product_readonly = fields.Boolean(
         string="Product is readonly",
+        compute="_compute_product_readonly",
         help="Indicates whether the product field should be readonly based on order state, "
         "invoiced/delivered quantities, and locked status. "
         "Used in views for readonly attribute to match product_uom_readonly pattern.",
-        compute="_compute_product_readonly",
     )
     product_uom_readonly = fields.Boolean(compute="_compute_product_uom_readonly")
 

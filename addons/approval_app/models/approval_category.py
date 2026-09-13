@@ -54,10 +54,10 @@ class ApprovalCategory(models.Model):
     )
     has_reference = fields.Selection(
         selection=CATEGORY_SELECTION,
-        help="An additional reference that should be specified on the request.",
         default="no",
         required=True,
         tracking=True,
+        help="An additional reference that should be specified on the request.",
     )
     has_location = fields.Selection(
         selection=CATEGORY_SELECTION,
@@ -81,8 +81,8 @@ class ApprovalCategory(models.Model):
         string="Document Requirements",
     )
     template_count = fields.Integer(
-        help="Number of active templates",
         compute="_compute_template_count",
+        help="Number of active templates",
     )
 
     def _compute_template_count(self) -> None:

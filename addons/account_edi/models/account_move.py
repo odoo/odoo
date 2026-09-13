@@ -17,13 +17,13 @@ class AccountMove(models.Model):
             ("cancelled", "Cancelled"),
         ],
         string="Electronic invoicing",
-        help="The aggregated state of all the EDIs with web-service of this move",
         compute="_compute_edi_state",
         store=True,
+        help="The aggregated state of all the EDIs with web-service of this move",
     )
     edi_error_count = fields.Integer(
-        help="How many EDIs are in error for this move?",
         compute="_compute_edi_error_count",
+        help="How many EDIs are in error for this move?",
     )
     edi_blocking_level = fields.Selection(
         selection=[("info", "Info"), ("warning", "Warning"), ("error", "Error")],

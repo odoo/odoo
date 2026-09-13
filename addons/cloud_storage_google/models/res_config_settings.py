@@ -21,10 +21,10 @@ class ResConfigSettings(models.TransientModel):
 
     cloud_storage_google_bucket_name = fields.Char(
         string="Google Bucket Name",
+        config_parameter="cloud_storage_google_bucket_name",
         help="If changed and the old bucket name is still in use, you "
         "should promise the current service account has the permission "
         "to access the old bucket.",
-        config_parameter="cloud_storage_google_bucket_name",
     )
     # Google Service Account Key in JSON format
     cloud_storage_google_service_account_key = fields.Binary(

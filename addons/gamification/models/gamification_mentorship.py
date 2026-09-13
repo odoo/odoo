@@ -68,21 +68,21 @@ class GamificationMentorship(models.Model):
     # confirms it -- see ``_check_may_accept``.
     mentor_karma_per_milestone = fields.Integer(
         string="Mentor Karma per Milestone",
-        help="Karma granted to the mentor when the mentee reaches a new rank.",
         default=25,
         groups="base.group_erp_manager",
+        help="Karma granted to the mentor when the mentee reaches a new rank.",
     )
     mentor_karma_on_completion = fields.Integer(
         string="Mentor Karma on Completion",
-        help="Karma bonus for the mentor when the mentorship is completed.",
         default=100,
         groups="base.group_erp_manager",
+        help="Karma bonus for the mentor when the mentorship is completed.",
     )
     mentee_milestones_reached = fields.Integer(
         string="Milestones Reached",
-        help="Number of rank-ups the mentee achieved during this mentorship.",
         default=0,
         readonly=True,
+        help="Number of rank-ups the mentee achieved during this mentorship.",
     )
     total_mentor_karma = fields.Integer(
         string="Total Mentor Karma Earned",
@@ -95,8 +95,8 @@ class GamificationMentorship(models.Model):
     # "you can not grant a badge to yourself" guard.
     completion_badge_id = fields.Many2one(
         comodel_name="gamification.badge",
-        help="Badge granted to both mentor and mentee on completion.",
         groups="base.group_erp_manager",
+        help="Badge granted to both mentor and mentee on completion.",
     )
 
     # One mentorship per (mentor, mentee) pair that is not cancelled.  Scoping

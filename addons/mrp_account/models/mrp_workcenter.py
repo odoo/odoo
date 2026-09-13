@@ -7,8 +7,8 @@ class MrpWorkcenter(models.Model):
 
     expense_account_id = fields.Many2one(
         comodel_name="account.account",
-        help="The expense is accounted for when the manufacturing order is marked as done. If not set, it is the expense account of the final product that will be used instead.",
         check_company=True,
+        help="The expense is accounted for when the manufacturing order is marked as done. If not set, it is the expense account of the final product that will be used instead.",
     )
 
 

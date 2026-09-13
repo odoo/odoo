@@ -7,8 +7,8 @@ class PosPreset(models.Model):
 
     use_guest = fields.Boolean(
         string="Guest",
-        help="Force guest selection when clicking on order button in PoS restaurant",
         default=False,
+        help="Force guest selection when clicking on order button in PoS restaurant",
     )
 
     @api.model

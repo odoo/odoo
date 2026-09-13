@@ -6,6 +6,6 @@ class ResCountryState(models.Model):
 
     l10n_in_tin = fields.Char(
         string="TIN Number",
-        help="TIN number-first two digits",
         size=2,
+        help="TIN number-first two digits",
     )

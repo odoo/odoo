@@ -45,9 +45,9 @@ class AccountAutoReconcileWizard(models.TransientModel):
             ("zero_balance", "Clear Account"),
         ],
         string="Reconcile",
-        help="Reconcile journal items with opposite balance or clear accounts with a zero balance",
         default="one_to_one",
         required=True,
+        help="Reconcile journal items with opposite balance or clear accounts with a zero balance",
     )
 
     @api.model

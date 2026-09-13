@@ -118,12 +118,12 @@ class MailingMailing(models.Model):
         required=True,
     )
     preview = fields.Char(
-        help="Catchy preview sentence that encourages recipients to open this email.\n"
-        "In most inboxes, this is displayed next to the subject.\n"
-        "Keep it empty if you prefer the first characters of your email content to appear instead.",
         translate=False,
         render_engine="inline_template",
         render_options={"post_process": True},
+        help="Catchy preview sentence that encourages recipients to open this email.\n"
+        "In most inboxes, this is displayed next to the subject.\n"
+        "Keep it empty if you prefer the first characters of your email content to appear instead.",
     )
     email_from = fields.Char(
         string="Send From",
@@ -138,10 +138,10 @@ class MailingMailing(models.Model):
     )
     date_favorite = fields.Datetime(
         string="Favorite Date",
-        help="When this mailing was added in the favorites",
         compute="_compute_date_favorite",
         store=True,
         copy=False,
+        help="When this mailing was added in the favorites",
     )
     sent_date = fields.Datetime(copy=False)
     schedule_type = fields.Selection(
@@ -160,10 +160,10 @@ class MailingMailing(models.Model):
         tracking=True,
     )
     calendar_date = fields.Datetime(
-        help="Date at which the mailing was or will be sent.",
         compute="_compute_calendar_date",
         store=True,
         copy=False,
+        help="Date at which the mailing was or will be sent.",
     )
     # don't translate 'body_arch', the translations are only on 'body_html'
     body_arch = fields.Html(
@@ -196,11 +196,11 @@ class MailingMailing(models.Model):
     )
     medium_id = fields.Many2one(
         comodel_name="utm.medium",
-        help="UTM Medium: delivery method (email, sms, ...)",
         compute="_compute_medium_id",
         store=True,
         readonly=False,
         ondelete="restrict",
+        help="UTM Medium: delivery method (email, sms, ...)",
     )
     state = fields.Selection(
         selection=[
@@ -236,16 +236,16 @@ class MailingMailing(models.Model):
             ("new", "Specified Email Address"),
         ],
         string="Reply-To Mode",
-        help="Thread: replies go to target document. Email: replies are routed to a given email.",
         compute="_compute_reply_to_mode",
         store=True,
         readonly=False,
+        help="Thread: replies go to target document. Email: replies are routed to a given email.",
     )
     reply_to = fields.Char(
-        help="Preferred Reply-To Address",
         compute="_compute_reply_to",
         store=True,
         readonly=False,
+        help="Preferred Reply-To Address",
     )
     # recipients
     mailing_model_real = fields.Char(
@@ -278,14 +278,14 @@ class MailingMailing(models.Model):
         readonly=False,
     )
     mail_server_available = fields.Boolean(
-        help="Technical field used to know if the user has activated the outgoing mail server option in the settings",
         compute="_compute_mail_server_available",
+        help="Technical field used to know if the user has activated the outgoing mail server option in the settings",
     )
     mail_server_id = fields.Many2one(
         comodel_name="ir.mail_server",
-        help="Use a specific mail server in priority. Otherwise Odoo relies on the first outgoing mail server available (based on their sequencing) as it does for normal mails.",
         default=_default_mail_server_id,
         index="btree_not_null",
+        help="Use a specific mail server in priority. Otherwise Odoo relies on the first outgoing mail server available (based on their sequencing) as it does for normal mails.",
     )
     contact_list_ids = fields.Many2many(
         comodel_name="mailing.list",
@@ -293,9 +293,9 @@ class MailingMailing(models.Model):
         string="Mailing Lists",
     )
     use_exclusion_list = fields.Boolean(
-        help="Prevent sending messages to blacklisted contacts. Disable only when absolutely necessary.",
         default=True,
         copy=False,
+        help="Prevent sending messages to blacklisted contacts. Disable only when absolutely necessary.",
     )
     # Mailing Filter
     mailing_filter_id = fields.Many2one(
@@ -322,10 +322,10 @@ class MailingMailing(models.Model):
     )
     ab_testing_enabled = fields.Boolean(
         string="Allow A/B Testing",
+        default=False,
         help="If checked, recipients will be mailed only once for the whole campaign. "
         "This lets you send different mailings to randomly selected recipients and test "
         "the effectiveness of the mailings, without causing duplicate messages.",
-        default=False,
     )
     ab_testing_is_winner_mailing = fields.Boolean(
         string="Is the Winner of its Campaign",
@@ -336,8 +336,8 @@ class MailingMailing(models.Model):
     )
     ab_testing_pc = fields.Integer(
         string="A/B Testing percentage",
-        help="Percentage of the contacts that will be mailed. Recipients will be chosen randomly.",
         default=10,
+        help="Percentage of the contacts that will be mailed. Recipients will be chosen randomly.",
     )
     ab_testing_schedule_datetime = fields.Datetime(
         related="campaign_id.ab_testing_schedule_datetime",
@@ -392,8 +392,8 @@ class MailingMailing(models.Model):
     # UX
     next_departure_is_past = fields.Boolean(compute="_compute_next_departure")
     warning_message = fields.Char(
-        help="Warning message displayed in the mailing form view",
         compute="_compute_warning_message",
+        help="Warning message displayed in the mailing form view",
     )
 
     _percentage_valid = models.Constraint(

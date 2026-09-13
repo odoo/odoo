@@ -6,8 +6,8 @@ class WebsiteVisitor(models.Model):
 
     visitor_product_count = fields.Integer(
         string="Product Views",
-        help="Total number of views on products",
         compute="_compute_product_statistics",
+        help="Total number of views on products",
     )
     product_ids = fields.Many2many(
         comodel_name="product.product",
@@ -16,8 +16,8 @@ class WebsiteVisitor(models.Model):
     )
     product_count = fields.Integer(
         string="Products Views",
-        help="Total number of product viewed",
         compute="_compute_product_statistics",
+        help="Total number of product viewed",
     )
 
     @api.depends("website_track_ids")

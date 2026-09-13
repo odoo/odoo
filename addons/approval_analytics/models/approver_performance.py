@@ -20,33 +20,33 @@ class ApproverPerformance(models.Model):
         readonly=True,
     )
     total_approvals = fields.Integer(
-        help="Total number of approval decisions made",
         readonly=True,
+        help="Total number of approval decisions made",
     )
     approved_count = fields.Integer(
         string="Approved",
-        help="Number of requests approved by this user",
         readonly=True,
+        help="Number of requests approved by this user",
     )
     refused_count = fields.Integer(
         string="Refused",
-        help="Number of requests this user moved to the terminal refused state.",
         readonly=True,
+        help="Number of requests this user moved to the terminal refused state.",
     )
     pending_count = fields.Integer(
         string="Pending Now",
-        help="Number of requests currently awaiting this user's approval",
         readonly=True,
+        help="Number of requests currently awaiting this user's approval",
     )
     avg_response_hours = fields.Float(
         string="Avg Response Time (hours)",
-        help="Average time from request submission to approval/refusal",
         readonly=True,
+        help="Average time from request submission to approval/refusal",
     )
     approval_rate = fields.Float(
         string="Approval Rate %",
-        help="Percentage of decisions that were approvals (vs refusals)",
         readonly=True,
+        help="Percentage of decisions that were approvals (vs refusals)",
     )
 
     def _get_fields_select(self) -> dict:

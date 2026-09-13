@@ -17,11 +17,11 @@ class HrEmployee(models.Model):
     attendance_manager_id = fields.Many2one(
         comodel_name="res.users",
         string="Attendance Approver",
-        help="The user set in Attendance will access the attendance of the employee through the dedicated app and will be able to edit them.",
         store=True,
         readonly=False,
         domain="[('share', '=', False), ('company_ids', 'in', company_id)]",
         groups="hr_attendance.group_hr_attendance_officer",
+        help="The user set in Attendance will access the attendance of the employee through the dedicated app and will be able to edit them.",
     )
     attendance_ids = fields.One2many(
         comodel_name="hr.attendance",
@@ -37,14 +37,14 @@ class HrEmployee(models.Model):
     last_check_in = fields.Datetime(
         related="last_attendance_id.check_in",
         store=True,
-        groups="hr_attendance.group_hr_attendance_officer,hr.group_hr_user",
         tracking=False,
+        groups="hr_attendance.group_hr_attendance_officer,hr.group_hr_user",
     )
     last_check_out = fields.Datetime(
         related="last_attendance_id.check_out",
         store=True,
-        groups="hr_attendance.group_hr_attendance_officer,hr.group_hr_user",
         tracking=False,
+        groups="hr_attendance.group_hr_attendance_officer,hr.group_hr_user",
     )
     attendance_state = fields.Selection(
         selection=[("checked_out", "Checked out"), ("checked_in", "Checked in")],

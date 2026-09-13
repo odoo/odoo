@@ -43,9 +43,9 @@ class PosOrder(models.Model):
     l10n_es_tbai_refund_reason = fields.Selection(
         selection=TBAI_REFUND_REASONS,
         string="Invoice Refund Reason Code (TicketBai)",
+        copy=False,
         help="BOE-A-1992-28740. Ley 37/1992, de 28 de diciembre, del Impuesto sobre el "
         "Valor Añadido. Artículo 80. Modificación de la base imponible.",
-        copy=False,
     )
 
     # -------------------------------------------------------------------------

@@ -6,8 +6,8 @@ class HrDepartureWizard(models.TransientModel):
 
     unassign_equipment = fields.Boolean(
         string="Free Equiments",
-        help="Unassign Employee from Equipments",
         default=True,
+        help="Unassign Employee from Equipments",
     )
 
     def action_register_departure(self):

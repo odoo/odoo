@@ -99,11 +99,11 @@ class ResPartner(models.Model):
 
     vies_valid = fields.Boolean(
         string="Intra-Community Valid",
-        help="European VAT numbers are automatically checked on the VIES database.",
         compute="_compute_vies_valid",
         store=True,
         readonly=False,
         tracking=True,
+        help="European VAT numbers are automatically checked on the VIES database.",
     )
     # Field representing whether vies_valid is relevant for selecting a fiscal position on this partner
     perform_vies_validation = fields.Boolean(compute="_compute_perform_vies_validation")

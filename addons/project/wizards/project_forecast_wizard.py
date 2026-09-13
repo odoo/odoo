@@ -21,20 +21,20 @@ class ProjectForecastWizard(models.TransientModel):
         required=True,
     )
     remaining_items = fields.Integer(
-        help="Number of tasks to complete. Defaults to open task count.",
         compute="_compute_remaining_items",
         store=True,
         readonly=False,
+        help="Number of tasks to complete. Defaults to open task count.",
     )
     simulation_count = fields.Integer(
         string="Simulations",
-        help="Number of Monte Carlo iterations (more = more accurate).",
         default=1000,
+        help="Number of Monte Carlo iterations (more = more accurate).",
     )
     weeks_of_history = fields.Integer(
         string="Weeks of History",
-        help="How many weeks of throughput data to sample from.",
         default=12,
+        help="How many weeks of throughput data to sample from.",
     )
     p50_weeks = fields.Float(
         string="50th Percentile (weeks)",

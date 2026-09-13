@@ -6,9 +6,9 @@ class ResConfigSettings(models.TransientModel):
 
     minlength = fields.Integer(
         string="Minimum Password Length",
-        help="Minimum number of characters passwords must contain, set to 0 to disable.",
         default=0,
         config_parameter="auth_password_policy.minlength",
+        help="Minimum number of characters passwords must contain, set to 0 to disable.",
     )
 
     @api.onchange("minlength")

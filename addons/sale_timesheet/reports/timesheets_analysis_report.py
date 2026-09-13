@@ -24,27 +24,27 @@ class TimesheetsAnalysisReport(models.Model):
     timesheet_invoice_id = fields.Many2one(
         comodel_name="account.move",
         string="Invoice",
-        help="Invoice created from the timesheet",
         readonly=True,
+        help="Invoice created from the timesheet",
     )
     timesheet_revenues = fields.Monetary(
-        help="Number of hours spent multiplied by the unit price per hour/day.",
         currency_field="currency_id",
         readonly=True,
+        help="Number of hours spent multiplied by the unit price per hour/day.",
     )
     margin = fields.Monetary(
-        help="Timesheets revenues minus the costs",
         currency_field="currency_id",
         readonly=True,
+        help="Timesheets revenues minus the costs",
     )
     billable_time = fields.Float(
-        help="Number of hours/days linked to a SOL.",
         readonly=True,
+        help="Number of hours/days linked to a SOL.",
     )
     non_billable_time = fields.Float(
         string="Non-billable Time",
-        help="Number of hours/days not linked to a SOL.",
         readonly=True,
+        help="Number of hours/days not linked to a SOL.",
     )
 
     @property

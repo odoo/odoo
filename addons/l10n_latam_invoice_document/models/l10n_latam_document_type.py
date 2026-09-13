@@ -10,21 +10,21 @@ class L10n_LatamDocumentType(models.Model):
 
     active = fields.Boolean(default=True)
     sequence = fields.Integer(
-        help="To set in which order show the documents type taking into account the most"
-        " commonly used first",
         default=10,
         required=True,
+        help="To set in which order show the documents type taking into account the most"
+        " commonly used first",
     )
     country_id = fields.Many2one(
         comodel_name="res.country",
-        help="Country in which this type of document is valid",
         index=True,
         required=True,
+        help="Country in which this type of document is valid",
     )
     name = fields.Char(
-        help="The document name",
         translate=True,
         required=True,
+        help="The document name",
     )
     doc_code_prefix = fields.Char(
         string="Document Code Prefix",
@@ -34,8 +34,8 @@ class L10n_LatamDocumentType(models.Model):
     code = fields.Char(help="Code used by different localizations")
     report_name = fields.Char(
         string="Name on Reports",
-        help='Name that will be printed in reports, for example "CREDIT NOTE"',
         translate=True,
+        help='Name that will be printed in reports, for example "CREDIT NOTE"',
     )
     internal_type = fields.Selection(
         selection=[

@@ -11,8 +11,8 @@ class SurveySurvey(models.Model):
     )
     lead_count = fields.Integer(
         string="Leads",
-        help="Number of leads created by this survey",
         compute="_compute_lead_count",
+        help="Number of leads created by this survey",
     )
     lead_ids = fields.One2many(
         comodel_name="crm.lead",

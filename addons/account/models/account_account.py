@@ -40,8 +40,8 @@ class AccountAccount(models.Model):
     )
     group_id = fields.Many2one(
         comodel_name="account.group",
-        help="Account prefixes can determine account groups.",
         compute="_compute_group_id",
+        help="Account prefixes can determine account groups.",
     )
     used = fields.Boolean(
         compute="_compute_used",

@@ -16,15 +16,15 @@ class L10n_It_Edi_DoiDeclaration_Of_Intent(models.Model):
             ("revoked", "Revoked"),
             ("terminated", "Terminated"),
         ],
+        default="draft",
+        readonly=True,
+        required=True,
+        tracking=True,
         help="The state of this Declaration of Intent. \n"
         "- 'Draft' means that the Declaration of Intent still needs to be confirmed before being usable. \n"
         "- 'Active' means that the Declaration of Intent is usable. \n"
         "- 'Terminated' designates that the Declaration of Intent has been marked as not to use anymore without invalidating usages of it. \n"
         "- 'Revoked' means the Declaration of Intent should not have been used. You will probably need to revert previous usages of it, if any.\n",
-        default="draft",
-        readonly=True,
-        required=True,
-        tracking=True,
     )
 
     company_id = fields.Many2one(
@@ -50,48 +50,48 @@ class L10n_It_Edi_DoiDeclaration_Of_Intent(models.Model):
 
     issue_date = fields.Date(
         string="Date of Issue",
-        help="Date on which the Declaration of Intent was issued",
         default=fields.Date.context_today,
         copy=False,
         required=True,
+        help="Date on which the Declaration of Intent was issued",
     )
 
     start_date = fields.Date(
-        help="First date on which the Declaration of Intent is valid",
         copy=False,
         required=True,
+        help="First date on which the Declaration of Intent is valid",
     )
 
     end_date = fields.Date(
-        help="Last date on which the Declaration of Intent is valid",
         copy=False,
         required=True,
+        help="Last date on which the Declaration of Intent is valid",
     )
 
     threshold = fields.Monetary(
-        help="Total amount of allowed sales without VAT under this Declaration of Intent",
         required=True,
+        help="Total amount of allowed sales without VAT under this Declaration of Intent",
     )
 
     invoiced = fields.Monetary(
-        help="Total amount of sales under this Declaration of Intent",
         compute="_compute_invoiced",
         store=True,
         readonly=True,
+        help="Total amount of sales under this Declaration of Intent",
     )
 
     not_yet_invoiced = fields.Monetary(
-        help="Total amount of planned sales under this Declaration of Intent (i.e. current quotation and sales orders) that can still be invoiced",
         compute="_compute_not_yet_invoiced",
         store=True,
         readonly=True,
+        help="Total amount of planned sales under this Declaration of Intent (i.e. current quotation and sales orders) that can still be invoiced",
     )
 
     remaining = fields.Monetary(
-        help="Remaining amount after deduction of the Invoiced and Not Yet Invoiced amounts.",
         compute="_compute_remaining",
         store=True,
         readonly=True,
+        help="Remaining amount after deduction of the Invoiced and Not Yet Invoiced amounts.",
     )
 
     protocol_number_part1 = fields.Char(

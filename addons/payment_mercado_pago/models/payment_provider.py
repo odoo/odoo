@@ -25,12 +25,12 @@ class PaymentProvider(models.Model):
     )
     mercado_pago_account_country_id = fields.Many2one(
         comodel_name="res.country",
-        help="The country of the Mercado Pago account. The currency will be updated to match the"
-        " country of the Mercado Pago account.",
         inverse="_inverse_mercado_pago_account_country_id",
         copy=False,
         domain=[("code", "in", list(const.SUPPORTED_COUNTRIES))],
         required_if_provider="mercado_pago",
+        help="The country of the Mercado Pago account. The currency will be updated to match the"
+        " country of the Mercado Pago account.",
     )
     # TODO anko remove in 19.1
     mercado_pago_is_oauth_supported = fields.Boolean(

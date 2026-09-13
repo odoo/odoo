@@ -16,11 +16,11 @@ class MailActivity(models.Model):
     )
     approver_id = fields.Many2one(
         comodel_name="approval.approver",
+        index="btree_not_null",
+        ondelete="cascade",
         help="The approver row this activity asks. Stored when the engine creates the "
         "activity, so the activity is an approval wherever it lives -- on the request "
         "or on the document it approves.",
-        index="btree_not_null",
-        ondelete="cascade",
     )
 
     @api.depends("approver_id")

@@ -35,10 +35,10 @@ class ProductTemplateAttributeValue(models.Model):
     )
     price_extra = fields.Float(
         string="Extra Price",
-        help="Extra price for the variant with this attribute value on sale price."
-        " eg. 200 price extra, 1000 + 200 = 1200.",
         min_display_digits="Product Price",
         default=0.0,
+        help="Extra price for the variant with this attribute value on sale price."
+        " eg. 200 price extra, 1000 + 200 = 1200.",
     )
     currency_id = fields.Many2one(
         related="attribute_line_id.product_tmpl_id.currency_id"

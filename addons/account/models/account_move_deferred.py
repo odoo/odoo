@@ -24,8 +24,8 @@ class AccountMove(models.Model):
         column1="original_move_id",
         column2="deferred_move_id",
         string="Deferred Entries",
-        help="The deferred entries created by this invoice",
         copy=False,
+        help="The deferred entries created by this invoice",
     )
     deferred_original_move_ids = fields.Many2many(
         comodel_name="account.move",
@@ -33,8 +33,8 @@ class AccountMove(models.Model):
         column1="deferred_move_id",
         column2="original_move_id",
         string="Original Invoices",
-        help="The original invoices that created the deferred entries",
         copy=False,
+        help="The original invoices that created the deferred entries",
     )
     deferred_entry_type = fields.Selection(
         selection=[
@@ -530,18 +530,18 @@ class AccountMoveLine(models.Model):
 
     deferred_start_date = fields.Date(
         string="Start Date",
-        help="Date at which the deferred expense/revenue starts",
         compute="_compute_deferred_start_date",
         store=True,
         index="btree_not_null",
         copy=False,
         readonly=False,
+        help="Date at which the deferred expense/revenue starts",
     )
     deferred_end_date = fields.Date(
         string="End Date",
-        help="Date at which the deferred expense/revenue ends",
         index="btree_not_null",
         copy=False,
+        help="Date at which the deferred expense/revenue ends",
     )
     has_deferred_moves = fields.Boolean(
         compute="_compute_has_deferred_moves",

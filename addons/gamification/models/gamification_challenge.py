@@ -101,9 +101,9 @@ class GamificationChallenge(models.Model):
             ("yearly", "Yearly"),
         ],
         string="Periodicity",
-        help="Period of automatic goal assignment. If none is selected, should be launched manually.",
         default="once",
         required=True,
+        help="Period of automatic goal assignment. If none is selected, should be launched manually.",
     )
     start_date = fields.Date(
         help="The day a new challenge will be automatically started. If no periodicity is set, will use this date as the goal start date."
@@ -122,9 +122,9 @@ class GamificationChallenge(models.Model):
         comodel_name="gamification.challenge.line",
         inverse_name="challenge_id",
         string="Lines",
-        help="List of goals that will be set",
         copy=True,
         required=True,
+        help="List of goals that will be set",
     )
 
     reward_id = fields.Many2one(
@@ -147,8 +147,8 @@ class GamificationChallenge(models.Model):
     reward_failure = fields.Boolean(string="Reward Bests if not Succeeded?")
     reward_realtime = fields.Boolean(
         string="Reward as soon as every goal is reached",
-        help="With this option enabled, a user can receive a badge only once. The top 3 badges are still rewarded only at the end of the challenge.",
         default=True,
+        help="With this option enabled, a user can receive a badge only once. The top 3 badges are still rewarded only at the end of the challenge.",
     )
 
     visibility_mode = fields.Selection(
@@ -214,9 +214,9 @@ class GamificationChallenge(models.Model):
 
     season_id = fields.Many2one(
         comodel_name="gamification.season",
-        help="Season this challenge belongs to. Leave empty for permanent challenges.",
         index="btree_not_null",
         ondelete="set null",
+        help="Season this challenge belongs to. Leave empty for permanent challenges.",
     )
 
     challenge_category = fields.Selection(
@@ -225,9 +225,9 @@ class GamificationChallenge(models.Model):
             ("other", "Settings / Gamification Tools"),
         ],
         string="Appears in",
-        help="Define the visibility of the challenge through menus",
         default="hr",
         required=True,
+        help="Define the visibility of the challenge through menus",
     )
 
     @api.depends("user_ids", "user_ids.active")

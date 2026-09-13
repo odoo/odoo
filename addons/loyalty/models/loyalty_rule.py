@@ -70,8 +70,8 @@ class LoyaltyRule(models.Model):
     # Only used for program_id.applies_on == 'future'
     reward_point_split = fields.Boolean(
         string="Split per unit",
-        help="Whether to separate reward coupons per matched unit, only applies to 'future' programs and trigger mode per money spent or unit paid...",
         default=False,
+        help="Whether to separate reward coupons per matched unit, only applies to 'future' programs and trigger mode per money spent or unit paid...",
     )
     reward_point_name = fields.Char(
         related="program_id.portal_point_name",

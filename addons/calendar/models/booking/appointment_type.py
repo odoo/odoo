@@ -102,22 +102,22 @@ class AppointmentType(models.Model):
     )
     appointment_duration_formatted = fields.Char(
         string="Appointment Duration Formatted ",
-        help="Appointment Duration formatted in words",
         compute="_compute_appointment_duration_formatted",
         readonly=True,
+        help="Appointment Duration formatted in words",
     )
     appointment_tz = fields.Selection(
         selection=_selection_timezones,
         string="Timezone",
-        help="Timezone where appointment take place",
         default=lambda self: self.env.user.tz or "UTC",
         required=True,
+        help="Timezone where appointment take place",
     )
     auto_confirm = fields.Boolean(
+        default=True,
         help="""Automatically confirm appointments at creation, up to the given percentage of the total capacity reserved.
             If unchecked, the appointments will be created as requests and will need manual confirmation.
             Requested appointments are still considered as reserved for the slots availability""",
-        default=True,
     )
     # Technical field. True when bookings will always be confirmed
     # e.g. 1.0 manual_confirmation_percentage and auto_confirm True
@@ -126,9 +126,9 @@ class AppointmentType(models.Model):
     location_id = fields.Many2one(comodel_name="res.partner")
     location = fields.Char(
         string="Location formatted",
-        help="Location formatted for one line uses",
         compute="_compute_location",
         compute_sudo=True,
+        help="Location formatted for one line uses",
     )
     event_videocall_source = fields.Selection(
         selection=[("discuss", "Odoo Discuss")],
@@ -141,9 +141,9 @@ class AppointmentType(models.Model):
     )
     manual_confirmation_percentage = fields.Float(
         string="Capacity Percentage",
+        default=1.0,
         help="""Bookings will not be automatically confirmed once the total
         reserved user/resource capacity exceeds this percentage of total capacity.""",
-        default=1.0,
     )
     manage_capacity = fields.Boolean(
         string="Manage Capacities",
@@ -151,9 +151,9 @@ class AppointmentType(models.Model):
     )
     max_bookings = fields.Integer(
         string="Total Bookings",
+        default=1,
         help="""The maximum amount of bookings per slot the appointment can handle (e.g. Allow 6 bookings for the given user/resource).
             This field is only used if the appointment type is not set to manage capacity.""",
-        default=1,
     )
     # 'punctual' types are time-bound
     start_datetime = fields.Datetime()
@@ -162,36 +162,36 @@ class AppointmentType(models.Model):
     booked_mail_template_id = fields.Many2one(
         comodel_name="mail.template",
         string="Booking Email",
-        help="If set an email will be sent to the customer when the appointment is booked.",
         default=_default_booked_mail_template_id,
         domain=[("model", "=", "calendar.attendee")],
         ondelete="restrict",
+        help="If set an email will be sent to the customer when the appointment is booked.",
     )
     canceled_mail_template_id = fields.Many2one(
         comodel_name="mail.template",
         string="Cancellation Email",
-        help="If set an email will be sent to the customer when the appointment is cancelled.",
         default=_default_canceled_mail_template_id,
         domain=[("model", "=", "calendar.event")],
         ondelete="restrict",
+        help="If set an email will be sent to the customer when the appointment is cancelled.",
     )
 
     # Assignment flow
     assignment_method = fields.Selection(
         selection=[("auto", "Automatically"), ("manual", "By visitor")],
         string="Assignment",
-        help="How users and resources will be assigned to the meetings that customers book on your website.",
         compute="_compute_assignment_method",
         readonly=False,
+        help="How users and resources will be assigned to the meetings that customers book on your website.",
     )
     is_auto_assign = fields.Boolean(string="Assign automatically")
     is_date_first = fields.Boolean(string="Select date and time first")
     select_first = fields.Selection(
         selection=[("date", "Date"), ("user_resource", "User / Resource")],
         string="Starts with",
-        help="What is selected first by the customer when booking an appointment.",
         compute="_compute_select_first",
         readonly=False,
+        help="What is selected first by the customer when booking an appointment.",
     )
 
     category = fields.Selection(
@@ -201,15 +201,15 @@ class AppointmentType(models.Model):
             ("custom", "Flexible Schedule"),
             ("anytime", "Calendar Link"),
         ],
+        compute="_compute_category_id",
+        inverse="_inverse_category",
+        store="True",
         help="""Used to define this appointment type's category.\n
         Can be one of:\n
             - Weekly Schedule: the default category, weekly recurring slots. Accessible from the website\n
             - Date-limited: regular slots limited between 2 datetimes. Accessible from the website\n
             - Flexible Schedule: the user will create and share to another user a custom appointment type with hand-picked time slots\n
             - Calendar Link: the user will create and share to another user an appointment type covering all their time slots""",
-        compute="_compute_category_id",
-        inverse="_inverse_category",
-        store="True",
     )
     category_slot_scheduling = fields.Selection(
         selection=[("weekly", "Weekly"), ("flexible", "Flexible")],
@@ -236,14 +236,14 @@ class AppointmentType(models.Model):
     # Frontend Settings
     message_confirmation = fields.Html(
         string="Confirmation Message",
-        help="Extra information provided once the appointment is booked.",
         translate=True,
+        help="Extra information provided once the appointment is booked.",
     )
     message_intro = fields.Html(
         string="Introduction Message",
-        help="Small description of the appointment type.",
         translate=True,
         sanitize_attributes=False,
+        help="Small description of the appointment type.",
     )
 
     # Display Settings
@@ -251,10 +251,10 @@ class AppointmentType(models.Model):
     hide_timezone = fields.Boolean(string="Hide Time Zone")
     show_avatars = fields.Boolean(
         string="Display pictures",
-        help="""Display user or resource images across the entire booking flow.""",
         compute="_compute_show_avatars",
         store=True,
         readonly=False,
+        help="""Display user or resource images across the entire booking flow.""",
     )
 
     # Scheduling Configuration
@@ -303,8 +303,8 @@ class AppointmentType(models.Model):
     )
     slot_creation_interval = fields.Float(
         string="Create slot every",
-        help="Starting from the beginning of the time slot, Odoo will create a new slot at regular intervals based on the time specified here.",
         default=1.0,
+        help="Starting from the beginning of the time slot, Odoo will create a new slot at regular intervals based on the time specified here.",
     )
 
     # Staff Users Management
@@ -324,8 +324,8 @@ class AppointmentType(models.Model):
         string="# Staff Users",
     )
     user_capacity = fields.Integer(
-        help="The maximum amount of capacity a user can handle when manage capacity is enabled.",
         default=1,
+        help="The maximum amount of capacity a user can handle when manage capacity is enabled.",
     )
 
     # Resources Management

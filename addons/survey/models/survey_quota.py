@@ -30,11 +30,11 @@ class SurveyQuota(models.Model):
     )
     limit = fields.Integer(
         string="Quota Limit",
+        default=100,
+        required=True,
         help="Maximum number of responses that can select this answer. A response in "
         "progress reserves its place so the quota cannot be oversold, and releases it "
         "again if it is abandoned.",
-        default=100,
-        required=True,
     )
     current_count = fields.Integer(compute="_compute_quota_usage")
     is_full = fields.Boolean(

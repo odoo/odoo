@@ -17,9 +17,9 @@ class ResUsersSettings(models.Model):
     )
     microsoft_last_sync_date = fields.Datetime(
         string="Last Sync Date",
-        help="Last synchronization date with Outlook Calendar",
         copy=False,
         groups="base.group_system",
+        help="Last synchronization date with Outlook Calendar",
     )
 
     @api.model

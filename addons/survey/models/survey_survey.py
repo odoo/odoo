@@ -56,7 +56,6 @@ class SurveySurvey(models.Model):
     lang_ids = fields.Many2many(
         comodel_name="res.lang",
         string="Languages",
-        help="Leave the field empty to support all installed languages.",
         default=lambda self: self.env["res.lang"]._get_lang_cached(
             self.env.context.get("lang") or self.env["res.lang"].get_installed()[0][0]
         ),
@@ -72,6 +71,7 @@ class SurveySurvey(models.Model):
                 ],
             )
         ],
+        help="Leave the field empty to support all installed languages.",
     )
     allowed_survey_types = fields.Json(
         string="Allowed survey types",
@@ -95,15 +95,15 @@ class SurveySurvey(models.Model):
         index="btree_not_null",
     )
     description = fields.Html(
-        help="The description will be displayed on the home page of the survey. You can use this to give the purpose and guidelines to your candidates before they start it.",
         translate=True,
         sanitize=True,
         sanitize_overridable=True,
+        help="The description will be displayed on the home page of the survey. You can use this to give the purpose and guidelines to your candidates before they start it.",
     )
     description_done = fields.Html(
         string="End Message",
-        help="This message will be displayed when survey is completed",
         translate=True,
+        help="This message will be displayed when survey is completed",
     )
     background_image = fields.Image()
     background_image_url = fields.Char(
@@ -158,15 +158,15 @@ class SurveySurvey(models.Model):
     questions_selection = fields.Selection(
         selection=[("all", "All questions"), ("random", "Randomized per Section")],
         string="Question Selection",
-        help="If randomized is selected, you can configure the number of random questions by section. This mode is ignored in live session.",
         default="all",
         required=True,
+        help="If randomized is selected, you can configure the number of random questions by section. This mode is ignored in live session.",
     )
     progression_mode = fields.Selection(
         selection=[("percent", "Percentage left"), ("number", "Number")],
         string="Display Progress as",
-        help="If Number is selected, it will display the number of questions answered on the total number of question to answer.",
         default="percent",
+        help="If Number is selected, it will display the number of questions answered on the total number of question to answer.",
     )
     user_input_ids = fields.One2many(
         comodel_name="survey.user_input",
@@ -206,9 +206,9 @@ class SurveySurvey(models.Model):
     )
     data_retention_days = fields.Integer(
         string="Data Retention (days)",
+        default=0,
         help="Automatically delete completed responses older than this many days. "
         "Set to 0 to keep responses indefinitely.",
-        default=0,
     )
     anonymize_ip = fields.Boolean(
         string="Anonymize IP Addresses",
@@ -224,9 +224,9 @@ class SurveySurvey(models.Model):
             ("completed", "On completion only"),
             ("all", "On start, page submit, and completion"),
         ],
+        default="completed",
         help="Which events trigger the webhook. 'All' fires on survey_started, "
         "page_submitted, and survey_completed.",
-        default="completed",
     )
     survey_url = fields.Char(
         string="Survey URL",
@@ -238,8 +238,8 @@ class SurveySurvey(models.Model):
     )
     survey_embed_code = fields.Text(
         string="Embed Code",
-        help="HTML iframe snippet for embedding this survey on an external website.",
         compute="_compute_survey_embed_code",
+        help="HTML iframe snippet for embedding this survey on an external website.",
     )
     followup_rule_ids = fields.One2many(
         comodel_name="survey.followup.rule",
@@ -262,16 +262,16 @@ class SurveySurvey(models.Model):
     )
     date_schedule_applied = fields.Datetime(
         string="Schedule Applied On",
+        copy=False,
+        readonly=True,
         help="When the Opens On schedule was last acted on — either the "
         "scheduler opened the survey, or someone archived it and overrode the "
         "schedule. Cleared when Opens On changes, which arms it again.",
-        copy=False,
-        readonly=True,
     )
     theme_color = fields.Char(
         string="Primary Color",
-        help="Primary color for buttons and accents (hex code, e.g. #714B67).",
         default="#714B67",
+        help="Primary color for buttons and accents (hex code, e.g. #714B67).",
     )
     theme_font = fields.Selection(
         selection=[
@@ -301,8 +301,8 @@ class SurveySurvey(models.Model):
     )
     answer_duration_avg = fields.Float(
         string="Average Duration",
-        help="Average duration of the survey (in hours)",
         compute="_compute_answer_duration_avg",
+        help="Average duration of the survey (in hours)",
     )
     success_count = fields.Integer(
         string="Success",
@@ -336,10 +336,10 @@ class SurveySurvey(models.Model):
     )
     is_attempts_limited = fields.Boolean(
         string="Limited number of attempts",
-        help="Check this option if you want to limit the number of attempts per user",
         compute="_compute_is_attempts_limited",
         store=True,
         readonly=False,
+        help="Check this option if you want to limit the number of attempts per user",
     )
     attempts_limit = fields.Integer(
         string="Number of attempts",
@@ -360,8 +360,8 @@ class SurveySurvey(models.Model):
     certification_mail_template_id = fields.Many2one(
         comodel_name="mail.template",
         string="Certified Email Template",
-        help="Automated email sent to the user when they succeed the certification, containing their certification document.",
         domain="[('model', '=', 'survey.user_input')]",
+        help="Automated email sent to the user when they succeed the certification, containing their certification document.",
     )
     certification_report_layout = fields.Selection(
         selection=[
@@ -403,19 +403,19 @@ class SurveySurvey(models.Model):
         copy=False,
     )
     session_code = fields.Char(
-        help="This code will be used by your attendees to reach your session. Feel free to customize it however you like!",
         compute="_compute_session_code",
         precompute=True,
         store=True,
         copy=False,
         readonly=False,
+        help="This code will be used by your attendees to reach your session. Feel free to customize it however you like!",
     )
     session_link = fields.Char(compute="_compute_session_link")
     session_question_id = fields.Many2one(
         comodel_name="survey.question",
         string="Current Question",
-        help="The current question of the survey session.",
         copy=False,
+        help="The current question of the survey session.",
     )
     session_start_time = fields.Datetime(
         string="Current Session Start Time",
@@ -423,8 +423,8 @@ class SurveySurvey(models.Model):
     )
     session_question_start_time = fields.Datetime(
         string="Current Question Start Time",
-        help="The time at which the current question has started, used to handle the timer for attendees.",
         copy=False,
+        help="The time at which the current question has started, used to handle the timer for attendees.",
     )
     session_answer_count = fields.Integer(
         string="Answers Count",
@@ -436,8 +436,8 @@ class SurveySurvey(models.Model):
     )
     session_show_leaderboard = fields.Boolean(
         string="Show Session Leaderboard",
-        help="Whether or not we want to show the attendees leaderboard for this survey.",
         compute="_compute_session_show_leaderboard",
+        help="Whether or not we want to show the attendees leaderboard for this survey.",
     )
     session_speed_rating = fields.Boolean(
         string="Reward quick answers",

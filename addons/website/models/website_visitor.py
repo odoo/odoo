@@ -82,10 +82,10 @@ class WebsiteVisitor(models.Model):
     partner_id = fields.Many2one(
         comodel_name="res.partner",
         string="Contact",
-        help="Partner of the last logged in user.",
         compute="_compute_partner_id",
         store=True,
         index="btree_not_null",
+        help="Partner of the last logged in user.",
     )
     partner_image = fields.Binary(related="partner_id.image_1920")
 
@@ -114,9 +114,9 @@ class WebsiteVisitor(models.Model):
 
     visit_count = fields.Integer(
         string="# Visits",
-        help="A new visit is considered if last connection was more than 8 hours ago.",
         default=1,
         readonly=True,
+        help="A new visit is considered if last connection was more than 8 hours ago.",
     )
     website_track_ids = fields.One2many(
         comodel_name="website.track",
@@ -126,8 +126,8 @@ class WebsiteVisitor(models.Model):
     )
     visitor_page_count = fields.Integer(
         string="Page Views",
-        help="Total number of visits on tracked pages",
         compute="_compute_page_statistics",
+        help="Total number of visits on tracked pages",
     )
     page_ids = fields.Many2many(
         comodel_name="website.page",
@@ -138,8 +138,8 @@ class WebsiteVisitor(models.Model):
     )
     page_count = fields.Integer(
         string="# Visited Pages",
-        help="Total number of tracked page visited",
         compute="_compute_page_statistics",
+        help="Total number of tracked page visited",
     )
     last_visited_page_id = fields.Many2one(
         comodel_name="website.page",
@@ -152,19 +152,19 @@ class WebsiteVisitor(models.Model):
     )
     last_connection_datetime = fields.Datetime(
         string="Last Connection",
-        help="Last page view date",
         default=fields.Datetime.now,
         readonly=True,
+        help="Last page view date",
     )
     time_since_last_action = fields.Char(
         string="Last action",
-        help="Time since last page view. E.g.: 2 minutes ago",
         compute="_compute_time_statistics",
+        help="Time since last page view. E.g.: 2 minutes ago",
     )
     is_connected = fields.Boolean(
         string="Is connected?",
-        help="A visitor is considered as connected if his last page view was within the last 5 minutes.",
         compute="_compute_time_statistics",
+        help="A visitor is considered as connected if his last page view was within the last 5 minutes.",
     )
 
     _access_token_unique = models.Constraint(

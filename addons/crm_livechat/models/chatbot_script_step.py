@@ -18,10 +18,10 @@ class ChatbotScriptStep(models.Model):
     crm_team_id = fields.Many2one(
         comodel_name="crm.team",
         string="Sales Team",
-        help="Used in combination with 'create_lead' step type in order to automatically "
-        "assign the created lead/opportunity to the defined team",
         index="btree_not_null",
         ondelete="set null",
+        help="Used in combination with 'create_lead' step type in order to automatically "
+        "assign the created lead/opportunity to the defined team",
     )
 
     def _compute_is_forward_operator(self):

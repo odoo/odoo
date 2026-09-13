@@ -18,22 +18,22 @@ class PartnerScoreLine(models.Model):
         selection=[
             ("partner_attr", "Contact Attribute"),
         ],
-        help="Scoring dimension this row belongs to.",
         required=True,
+        help="Scoring dimension this row belongs to.",
     )
     source_key = fields.Char(
+        index=True,
+        required=True,
         help="Stable identity of the row's source, as record ids -- e.g. "
         "'crop:12' or 'partner_attr:5:19'. This is what the refresh matches on, "
         "so a row survives a rename, a translation and a rescore from a session "
         "in another language.",
-        index=True,
-        required=True,
     )
     source_ref = fields.Char(
+        compute="_compute_source_ref",
         help="Human-readable source of the points, resolved from source_key in "
         "the reader's language: the crop, bucket or attribute value that "
         "produced them.",
-        compute="_compute_source_ref",
     )
     points = fields.Float(help="Points contributed by this source.")
     max_points = fields.Float(
@@ -42,9 +42,9 @@ class PartnerScoreLine(models.Model):
         "the catalog -- see res.partner._get_score_max_possible."
     )
     applied = fields.Boolean(
+        default=True,
         help="Unchecked when the aggregation mode discarded this "
         "contribution (e.g. not the highest value under 'max').",
-        default=True,
     )
     note = fields.Char(compute="_compute_note")
 

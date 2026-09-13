@@ -145,8 +145,8 @@ class MailActivity(models.Model):
     feedback = fields.Text()
     automated = fields.Boolean(
         string="Automated activity",
-        help="Indicates this activity has been created automatically and not by any user.",
         readonly=True,
+        help="Indicates this activity has been created automatically and not by any user.",
     )
     attachment_ids: IrAttachment = fields.Many2many(
         comodel_name="ir.attachment",

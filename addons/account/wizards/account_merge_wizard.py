@@ -15,8 +15,8 @@ class AccountMergeWizard(models.TransientModel):
     account_ids = fields.Many2many(comodel_name="account.account")
     is_group_by_name = fields.Boolean(
         string="Group by name?",
-        help="Tick this checkbox if you want accounts to be grouped by name for merging.",
         default=False,
+        help="Tick this checkbox if you want accounts to be grouped by name for merging.",
     )
     wizard_line_ids = fields.One2many(
         comodel_name="account.merge.wizard.line",
@@ -323,8 +323,8 @@ class AccountMergeWizardLine(models.TransientModel):
         string="Companies",
     )
     info = fields.Char(
-        help="Contains either the section name or error message, depending on the line type.",
         compute="_compute_info",
+        help="Contains either the section name or error message, depending on the line type.",
     )
     account_has_hashed_entries = fields.Boolean(
         compute="_compute_account_has_hashed_entries"

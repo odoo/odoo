@@ -161,19 +161,19 @@ class MailComposeMessage(models.TransientModel):
     )
     email_from = fields.Char(
         string="From",
-        help="Email address of the sender. This field is set when no matching partner is found and replaces the author_id field in the chatter.",
         compute="_compute_authorship",
         compute_sudo=False,
         store=True,
         readonly=False,
+        help="Email address of the sender. This field is set when no matching partner is found and replaces the author_id field in the chatter.",
     )
     author_id: ResPartner = fields.Many2one(
         comodel_name="res.partner",
-        help="Author of the message. If not set, email_from may hold an email address that did not match any partner.",
         compute="_compute_authorship",
         compute_sudo=False,
         store=True,
         readonly=False,
+        help="Author of the message. If not set, email_from may hold an email address that did not match any partner.",
     )
     composition_mode = fields.Selection(
         selection=[
@@ -234,10 +234,10 @@ class MailComposeMessage(models.TransientModel):
             ("notification", "System notification"),
         ],
         string="Type",
-        help="Message type: email for email message, notification for system "
-        "message, comment for other messages such as user replies",
         default="comment",
         required=True,
+        help="Message type: email for email message, notification for system "
+        "message, comment for other messages such as user replies",
     )
     subtype_id: MailMessageSubtype = fields.Many2one(
         comodel_name="mail.message.subtype",
@@ -255,18 +255,18 @@ class MailComposeMessage(models.TransientModel):
         ondelete="set null",
     )
     reply_to = fields.Char(
-        help="Reply email address. Setting the reply_to bypasses the automatic thread creation.",
         compute="_compute_reply_to",
         compute_sudo=False,
         store=True,
         readonly=False,
+        help="Reply email address. Setting the reply_to bypasses the automatic thread creation.",
     )
     reply_to_force_new = fields.Boolean(
         string="Considers answers as new thread",
-        help="Manage answers as new incoming emails instead of replies going to the same thread.",
         compute="_compute_reply_to_force_new",
         store=True,
         readonly=False,
+        help="Manage answers as new incoming emails instead of replies going to the same thread.",
     )
     reply_to_mode = fields.Selection(
         selection=[
@@ -274,9 +274,9 @@ class MailComposeMessage(models.TransientModel):
             ("new", "Collect replies on a specific email address"),
         ],
         string="Replies",
-        help="Original Discussion: Answers go in the original document discussion thread. \n Another Email Address: Answers go to the email address mentioned in the tracking message-id instead of original document discussion thread. \n This has an impact on the generated message-id.",
         compute="_compute_reply_to_mode",
         inverse="_inverse_reply_to_mode",
+        help="Original Discussion: Answers go in the original document discussion thread. \n Another Email Address: Answers go to the email address mentioned in the tracking message-id instead of original document discussion thread. \n This has an impact on the generated message-id.",
     )
     partner_ids: ResPartner = fields.Many2many(
         comodel_name="res.partner",
@@ -297,18 +297,18 @@ class MailComposeMessage(models.TransientModel):
     )
     auto_delete = fields.Boolean(
         string="Delete Emails",
-        help="This option permanently removes any track of email after it's been sent, including from the Technical menu in the Settings, in order to preserve storage space of your Odoo database.",
         compute="_compute_auto_delete",
         compute_sudo=False,
         store=True,
         readonly=False,
+        help="This option permanently removes any track of email after it's been sent, including from the Technical menu in the Settings, in order to preserve storage space of your Odoo database.",
     )
     auto_delete_keep_log = fields.Boolean(
         string="Keep Message Copy",
-        help="Keep a copy of the email content if emails are removed (mass mailing only)",
         compute="_compute_auto_delete_keep_log",
         store=True,
         readonly=False,
+        help="Keep a copy of the email content if emails are removed (mass mailing only)",
     )
     force_send = fields.Boolean(
         string="Send mailing or notifications directly",
@@ -340,18 +340,18 @@ class MailComposeMessage(models.TransientModel):
         readonly=False,
     )
     scheduled_date = fields.Char(
-        help="In comment mode: if set, postpone notifications sending. "
-        "In mass mail mode: if sent, send emails after that date. "
-        "This date is considered as being in UTC timezone.",
         compute="_compute_scheduled_date",
         compute_sudo=False,
         store=True,
         readonly=False,
+        help="In comment mode: if set, postpone notifications sending. "
+        "In mass mail mode: if sent, send emails after that date. "
+        "This date is considered as being in UTC timezone.",
     )
     use_exclusion_list = fields.Boolean(
-        help="Prevent sending messages to blacklisted contacts. Disable only when absolutely necessary.",
         default=True,
         copy=False,
+        help="Prevent sending messages to blacklisted contacts. Disable only when absolutely necessary.",
     )
     template_name = fields.Char()
 

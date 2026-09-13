@@ -13,9 +13,9 @@ class MixinMailThread(models.AbstractModel):
 
     message_has_sms_error = fields.Boolean(
         string="SMS Delivery error",
-        help="If checked, some messages have a delivery error.",
         compute="_compute_message_has_sms_error",
         search="_search_message_has_sms_error",
+        help="If checked, some messages have a delivery error.",
     )
 
     @api.depends_context("uid")

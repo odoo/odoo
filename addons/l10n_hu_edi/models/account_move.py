@@ -107,13 +107,13 @@ class AccountMove(models.Model):
 
     l10n_hu_invoice_chain_index = fields.Integer(
         string="Invoice Chain Index",
+        copy=False,
         help="""
             Index in the chain of modification invoices:
                 -1 for a base invoice;
                 1, 2, 3, ... for modification invoices;
                 0 for rejected/cancelled invoices or if it has not yet been set.
             """,
-        copy=False,
     )
     l10n_hu_edi_attachment_filename = fields.Char(
         string="Invoice XML filename",

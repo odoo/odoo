@@ -8,9 +8,9 @@ class SurveySurvey(models.Model):
     slide_channel_ids = fields.One2many(
         comodel_name="slide.channel",
         string="Certification Courses",
-        help="The courses this survey is linked to through the e-learning application",
         compute="_compute_slide_channel_data",
         groups="website_slides.group_website_slides_officer",
+        help="The courses this survey is linked to through the e-learning application",
     )
     slide_channel_count = fields.Count(
         count_of="slide_channel_ids",

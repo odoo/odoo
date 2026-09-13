@@ -7,8 +7,8 @@ class StockRulesReport(models.TransientModel):
     so_route_ids = fields.Many2many(
         comodel_name="stock.route",
         string="Apply specific routes",
-        help="Choose to apply SO lines specific routes.",
         domain="[('sale_selectable', '=', True)]",
+        help="Choose to apply SO lines specific routes.",
     )
 
     def _prepare_report_data(self):

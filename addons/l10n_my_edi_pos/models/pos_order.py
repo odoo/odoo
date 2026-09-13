@@ -14,8 +14,8 @@ class PosOrder(models.Model):
         relation="myinvois_document_pos_order_rel",
         column1="order_id",
         column2="document_id",
-        groups="account.group_account_invoice",
         name="Consolidated Invoices",
+        groups="account.group_account_invoice",
     )
 
     # -----------------------

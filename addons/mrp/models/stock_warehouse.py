@@ -6,10 +6,10 @@ class StockWarehouse(models.Model):
 
     manufacture_to_resupply = fields.Boolean(
         string="Manufacture to Resupply",
-        help="When products are manufactured, they can be manufactured in this warehouse.",
         compute="_compute_manufacture_to_resupply",
         inverse="_inverse_manufacture_to_resupply",
         default=True,
+        help="When products are manufactured, they can be manufactured in this warehouse.",
     )
     manufacture_pull_id = fields.Many2one(
         comodel_name="stock.rule",
@@ -59,11 +59,11 @@ class StockWarehouse(models.Model):
             ("pbm_sam", "Pick components, manufacture, then store products (3 steps)"),
         ],
         string="Manufacture",
+        default="mrp_one_step",
+        required=True,
         help="1 Step: Consume components from stock and produce.\n\
               2 Steps: Pick components from stock and then produce.\n\
               3 Steps: Pick components from stock, produce, and then move final product(s) from production area to stock.",
-        default="mrp_one_step",
-        required=True,
     )
 
     pbm_route_id = fields.Many2one(

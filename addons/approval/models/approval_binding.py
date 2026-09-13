@@ -67,23 +67,23 @@ class ApprovalBinding(models.Model):
     )
     action_id = fields.Many2one(
         comodel_name="ir.actions.actions",
+        index="btree_not_null",
+        ondelete="cascade",
         help="Action to gate, instead of a method. A server action or a report is "
         "refused on the server; a window or client action only opens a view, so a "
         "binding on one is honoured by the client's check alone.",
-        index="btree_not_null",
-        ondelete="cascade",
     )
     is_enforced = fields.Boolean(
+        compute="_compute_is_enforced",
         help="Whether the server itself refuses the operation. False for a window "
         "or client action: opening a view is nothing the server can intercept, so "
         "only the client's check stands in the way.",
-        compute="_compute_is_enforced",
     )
     category_id = fields.Many2one(
         comodel_name="approval.category",
+        ondelete="cascade",
         help="Approval configuration consulted for this operation. Required "
         "for every mode but 'Observe'.",
-        ondelete="cascade",
     )
     subject_domain = fields.Char(
         string="Applies When",
@@ -95,6 +95,8 @@ class ApprovalBinding(models.Model):
             ("block", "Block"),
             ("request", "Request"),
         ],
+        default="advise",
+        required=True,
         help="""What the binding does when it applies:
 
         • Observe: the operation runs. Every call is recorded, including
@@ -109,8 +111,6 @@ class ApprovalBinding(models.Model):
           Approval, the operation then runs once the request is approved --
           exactly once, and as the person who called it; without it, approval
           only clears the gate for the next call.""",
-        default="advise",
-        required=True,
     )
     sudo_policy = fields.Selection(
         selection=[
@@ -118,6 +118,8 @@ class ApprovalBinding(models.Model):
             ("superuser", "Superuser passes"),
             ("bypass", "Any elevated caller passes"),
         ],
+        default="superuser",
+        required=True,
         help="""Who the gate does NOT apply to.
 
         `sudo()` flips `su` and keeps `uid`, so "elevated" covers both the
@@ -130,8 +132,6 @@ class ApprovalBinding(models.Model):
           ordinary user cannot self-elevate past the gate.
         • Any elevated caller passes: what `web_studio` does unconditionally.
           Every bypass is still recorded, which is the part it does not do.""",
-        default="superuser",
-        required=True,
     )
 
     approve_on_invoke = fields.Boolean(
@@ -142,11 +142,11 @@ class ApprovalBinding(models.Model):
         "call waits."
     )
     run_on_approval = fields.Boolean(
+        default=True,
         help="Request mode only. Run the operation, once and as the person who "
         "asked, when the request is approved. Off, approval only clears the gate "
         "and the operation runs when it is next called, which is how Studio "
         "approvals behave.",
-        default=True,
     )
     observation_ids = fields.One2many(
         comodel_name="approval.binding.observation",

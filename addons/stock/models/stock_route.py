@@ -16,8 +16,8 @@ class StockRoute(models.Model):
         required=True,
     )
     active = fields.Boolean(
-        help="If the active field is set to False, it will allow you to hide the route without removing it.",
         default=True,
+        help="If the active field is set to False, it will allow you to hide the route without removing it.",
     )
     sequence = fields.Integer(default=0)
     rule_ids = fields.One2many(
@@ -28,8 +28,8 @@ class StockRoute(models.Model):
     )
     product_selectable = fields.Boolean(
         string="Applicable on Product",
-        help="When checked, the route will be selectable in the Inventory tab of the Product form.",
         default=True,
+        help="When checked, the route will be selectable in the Inventory tab of the Product form.",
     )
     product_categ_selectable = fields.Boolean(
         string="Applicable on Product Category",
@@ -54,9 +54,9 @@ class StockRoute(models.Model):
     )
     company_id = fields.Many2one(
         comodel_name="res.company",
-        help="Leave this field empty if this route is shared between all companies",
         default=lambda self: self.env.company,
         index=True,
+        help="Leave this field empty if this route is shared between all companies",
     )
     product_ids = fields.Many2many(
         comodel_name="product.template",

@@ -128,8 +128,8 @@ class Website(models.Model):
     )
     auto_redirect_lang = fields.Boolean(
         string="Autoredirect Language",
-        help="Should users be redirected to their browser's language",
         default=True,
+        help="Should users be redirected to their browser's language",
     )
     cookies_bar = fields.Boolean(
         help="Display a customizable cookies bar on your website."
@@ -139,8 +139,8 @@ class Website(models.Model):
     )
     block_third_party_domains = fields.Boolean(
         string="Block 3rd-party domains",
-        help="Block 3rd-party domains that may track users (YouTube, Google Maps, etc.).",
         default=True,
+        help="Block 3rd-party domains that may track users (YouTube, Google Maps, etc.).",
     )
     custom_blocked_third_party_domains = fields.Text(
         string="User list of blocked 3rd-party domains",
@@ -161,8 +161,8 @@ class Website(models.Model):
 
     logo = fields.Binary(
         string="Website Logo",
-        help="Display this logo on the website.",
         default=_default_logo,
+        help="Display this logo on the website.",
     )
     social_twitter = fields.Char(
         string="X Account",
@@ -227,8 +227,8 @@ class Website(models.Model):
     )
     cdn_filters = fields.Text(
         string="CDN Filters",
-        help="URL matching those filters will be rewritten using the CDN Base URL",
         default=lambda s: "\n".join(DEFAULT_CDN_FILTERS),
+        help="URL matching those filters will be rewritten using the CDN Base URL",
     )
     partner_id = fields.Many2one(
         related="user_id.partner_id",
@@ -263,8 +263,8 @@ class Website(models.Model):
 
     favicon = fields.Binary(
         string="Website Favicon",
-        help="This field holds the image used to display a favicon on the website.",
         default=_default_favicon,
+        help="This field holds the image used to display a favicon on the website.",
     )
     theme_id = fields.Many2one(
         comodel_name="ir.module.module",

@@ -11,8 +11,8 @@ class ProjectBaseline(models.Model):
 
     name = fields.Char(
         string="Baseline Name",
-        help="e.g. 'Original Plan', 'Replan v2'.",
         required=True,
+        help="e.g. 'Original Plan', 'Replan v2'.",
     )
     project_id = fields.Many2one(
         comodel_name="project.project",
@@ -32,9 +32,9 @@ class ProjectBaseline(models.Model):
     )
     is_current = fields.Boolean(
         string="Current Baseline",
-        help="Only one baseline per project can be marked as current.",
         default=False,
         copy=False,
+        help="Only one baseline per project can be marked as current.",
     )
     line_ids = fields.One2many(
         comodel_name="project.baseline.line",
@@ -120,9 +120,9 @@ class ProjectBaselineLine(models.Model):
     )
     task_id = fields.Many2one(
         comodel_name="project.task",
-        help="Link to the original task (may be deleted since snapshot).",
         index=True,
         ondelete="set null",
+        help="Link to the original task (may be deleted since snapshot).",
     )
     task_name = fields.Char(
         string="Task Name (snapshot)",

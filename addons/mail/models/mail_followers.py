@@ -175,8 +175,8 @@ class MailFollowers(models.Model):
     res_id = fields.Many2oneReference(
         model_field="res_model",
         string="Related Document ID",
-        help="Id of the followed resource",
         index=True,
+        help="Id of the followed resource",
     )
     partner_id: ResPartner = fields.Many2one(
         comodel_name="res.partner",

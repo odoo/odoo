@@ -87,18 +87,18 @@ class MrpProduction(models.Model):
     )
     priority = fields.Selection(
         selection=PROCUREMENT_PRIORITIES,
-        help="Components will be reserved first for the MO with the highest priorities.",
         default="0",
+        help="Components will be reserved first for the MO with the highest priorities.",
     )
     backorder_sequence = fields.Integer(
-        help="Backorder sequence, if equals to 0 means there is not related backorder",
         default=0,
         copy=False,
+        help="Backorder sequence, if equals to 0 means there is not related backorder",
     )
     origin = fields.Char(
         string="Source",
-        help="Reference of the document that generated this production order request.",
         copy=False,
+        help="Reference of the document that generated this production order request.",
     )
 
     product_id = fields.Many2one(
@@ -209,7 +209,6 @@ class MrpProduction(models.Model):
     location_src_id = fields.Many2one(
         comodel_name="stock.location",
         string="Components Location",
-        help="Location where the system will look for components.",
         compute="_compute_locations",
         precompute=True,
         store=True,
@@ -217,12 +216,12 @@ class MrpProduction(models.Model):
         required=True,
         domain="[('usage','=','internal')]",
         check_company=True,
+        help="Location where the system will look for components.",
     )
     warehouse_id = fields.Many2one(related="location_src_id.warehouse_id")
     location_dest_id = fields.Many2one(
         comodel_name="stock.location",
         string="Finished Products Location",
-        help="Location where the system will stock the finished products.",
         compute="_compute_locations",
         precompute=True,
         store=True,
@@ -230,6 +229,7 @@ class MrpProduction(models.Model):
         required=True,
         domain="[('usage','=','internal')]",
         check_company=True,
+        help="Location where the system will stock the finished products.",
     )
     location_final_id = fields.Many2one(
         comodel_name="stock.location",
@@ -237,43 +237,42 @@ class MrpProduction(models.Model):
     )
     date_deadline = fields.Datetime(
         string="Deadline",
-        help="Informative date allowing to define when the manufacturing order should be processed at the latest to fulfill delivery on time.",
         compute="_compute_date_deadline",
         store=True,
         copy=False,
         readonly=False,
+        help="Informative date allowing to define when the manufacturing order should be processed at the latest to fulfill delivery on time.",
     )
     date_start = fields.Datetime(
         string="Start",
-        help="Date you plan to start production or date you actually started production.",
         default=_default_date_start,
         index=True,
         copy=False,
         required=True,
+        help="Date you plan to start production or date you actually started production.",
     )
     date_end = fields.Datetime(
         string="End",
-        help="Date you expect to finish production or actual date you finished production.",
         compute="_compute_date_end",
         default=_default_date_end,
         store=True,
         copy=False,
+        help="Date you expect to finish production or actual date you finished production.",
     )
     duration_expected = fields.Float(
         string="Expected Duration",
-        help="Total expected duration (in minutes)",
         compute="_compute_duration_expected",
+        help="Total expected duration (in minutes)",
     )
     duration = fields.Float(
         string="Real Duration",
-        help="Total real duration (in minutes)",
         compute="_compute_duration",
+        help="Total real duration (in minutes)",
     )
 
     bom_id = fields.Many2one(
         comodel_name="mrp.bom",
         string="Bill of Material",
-        help="Bills of Materials, also called recipes, are used to autocomplete components and work order instructions.",
         compute="_compute_bom_id",
         precompute=True,
         store=True,
@@ -291,6 +290,7 @@ class MrpProduction(models.Model):
                         ('product_id','=',False),
         ('type', '=', 'normal')]""",
         check_company=True,
+        help="Bills of Materials, also called recipes, are used to autocomplete components and work order instructions.",
     )
 
     state = fields.Selection(
@@ -302,18 +302,18 @@ class MrpProduction(models.Model):
             ("done", "Done"),
             ("cancel", "Cancelled"),
         ],
-        help=" * Draft: The MO is not confirmed yet.\n"
-        " * Confirmed: The MO is confirmed, the stock rules and the reordering of the components are trigerred.\n"
-        " * In Progress: The production has started (on the MO or on the WO).\n"
-        " * To Close: The production is done, the MO has to be closed.\n"
-        " * Done: The MO is closed, the stock moves are posted. \n"
-        " * Cancelled: The MO has been cancelled, can't be confirmed anymore.",
         compute="_compute_state",
         store=True,
         index=True,
         copy=False,
         readonly=True,
         tracking=True,
+        help=" * Draft: The MO is not confirmed yet.\n"
+        " * Confirmed: The MO is confirmed, the stock rules and the reordering of the components are trigerred.\n"
+        " * In Progress: The production has started (on the MO or on the WO).\n"
+        " * To Close: The production is done, the MO has to be closed.\n"
+        " * Done: The MO is closed, the stock moves are posted. \n"
+        " * Cancelled: The MO has been cancelled, can't be confirmed anymore.",
     )
     reservation_state = fields.Selection(
         selection=[
@@ -322,15 +322,15 @@ class MrpProduction(models.Model):
             ("waiting", "Waiting Another Operation"),
         ],
         string="MO Readiness",
-        help="Manufacturing readiness for this MO, as per bill of material configuration:\n\
-            * Ready: The material is available to start the production.\n\
-            * Waiting: The material is not available to start the production.\n",
         compute="_compute_reservation_state",
         store=True,
         index=True,
         copy=False,
         readonly=True,
         tracking=True,
+        help="Manufacturing readiness for this MO, as per bill of material configuration:\n\
+            * Ready: The material is available to start the production.\n\
+            * Waiting: The material is not available to start the production.\n",
     )
 
     move_raw_ids = fields.One2many(
@@ -389,13 +389,13 @@ class MrpProduction(models.Model):
 
     unreserve_visible = fields.Boolean(
         string="Allowed to Unreserve Production",
-        help="Technical field to check when we can unreserve",
         compute="_compute_reservation_visibility",
+        help="Technical field to check when we can unreserve",
     )
     reserve_visible = fields.Boolean(
         string="Allowed to Reserve Production",
-        help="Technical field to check when we can reserve quantities",
         compute="_compute_reservation_visibility",
+        help="Technical field to check when we can reserve quantities",
     )
     user_id = fields.Many2one(
         comodel_name="res.users",
@@ -515,8 +515,8 @@ class MrpProduction(models.Model):
     )
     components_availability = fields.Char(
         string="Component Status",
-        help="Latest component availability status for this MO. If green, then the MO's readiness status is ready, as per BOM configuration.",
         compute="_compute_component_availability",
+        help="Latest component availability status for this MO. If green, then the MO's readiness status is ready, as per BOM configuration.",
     )
     components_availability_state = fields.Selection(
         selection=[
@@ -529,8 +529,8 @@ class MrpProduction(models.Model):
         search="_search_components_availability_state",
     )
     production_capacity = fields.Float(
-        help="Quantity that can be produced with the current stock of components",
         compute="_compute_production_capacity",
+        help="Quantity that can be produced with the current stock of components",
     )
     show_lot_ids = fields.Boolean(
         string="Display the serial number shortcut on the moves",
@@ -538,23 +538,23 @@ class MrpProduction(models.Model):
     )
     forecasted_issue = fields.Boolean(compute="_compute_forecasted_issue")
     show_allocation = fields.Boolean(
-        help='Technical Field used to decide whether the button "Allocation" should be displayed.',
         compute="_compute_show_allocation",
+        help='Technical Field used to decide whether the button "Allocation" should be displayed.',
     )
     allow_workorder_dependencies = fields.Boolean(
         string="Allow Work Order Dependencies"
     )
     show_produce = fields.Boolean(
-        help="Technical field to check if produce button can be shown",
         compute="_compute_produce_visibility",
+        help="Technical field to check if produce button can be shown",
     )
     show_generate_bom = fields.Boolean(
         string="Show Generate BOM",
         compute="_compute_show_generate_bom",
     )
     show_produce_all = fields.Boolean(
-        help="Technical field to check if produce all button can be shown",
         compute="_compute_produce_visibility",
+        help="Technical field to check if produce all button can be shown",
     )
     is_outdated_bom = fields.Boolean(
         string="Outdated BoM",

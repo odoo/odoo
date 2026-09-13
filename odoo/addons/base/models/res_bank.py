@@ -48,8 +48,8 @@ class ResBank(models.Model):
     active = fields.Boolean(default=True)
     bic = fields.Char(
         string="Bank Identifier Code",
-        help="Sometimes called BIC or Swift.",
         index=True,
+        help="Sometimes called BIC or Swift.",
     )
 
     @api.depends("name", "bic")
@@ -112,8 +112,8 @@ class ResPartnerBank(models.Model):
     acc_type = fields.Selection(
         selection=lambda x: x.env["res.partner.bank"]._get_account_types_supported(),
         string="Type",
-        help="Bank account type: Normal or IBAN. Inferred from the bank account number.",
         compute="_compute_acc_type",
+        help="Bank account type: Normal or IBAN. Inferred from the bank account number.",
     )
     acc_number = fields.Char(
         string="Account Number",
@@ -129,10 +129,10 @@ class ResPartnerBank(models.Model):
     )
     acc_holder_name = fields.Char(
         string="Account Holder Name",
-        help="Account holder name, in case it is different than the name of the Account Holder",
         compute="_compute_acc_holder_name",
         store=True,
         readonly=False,
+        help="Account holder name, in case it is different than the name of the Account Holder",
     )
     partner_id = fields.Many2one(
         comodel_name="res.partner",
@@ -144,10 +144,10 @@ class ResPartnerBank(models.Model):
     )
     allow_out_payment = fields.Boolean(
         string="Send Money",
-        help="This account can be used for outgoing payments",
         default=False,
         copy=False,
         readonly=False,
+        help="This account can be used for outgoing payments",
     )
     bank_id = fields.Many2one(comodel_name="res.bank")
     bank_name = fields.Char(

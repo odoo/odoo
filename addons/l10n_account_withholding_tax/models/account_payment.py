@@ -11,11 +11,11 @@ class AccountPayment(models.Model):
     display_withholding = fields.Boolean(compute="_compute_display_withholding")
     should_withhold_tax = fields.Boolean(
         string="Withhold Tax Amounts",
-        help="Withhold tax amounts from the payment amount.",
         compute="_compute_should_withhold_tax",
         store=True,
         copy=False,
         readonly=False,
+        help="Withhold tax amounts from the payment amount.",
     )
     withholding_line_ids = fields.One2many(
         comodel_name="account.payment.withholding.line",

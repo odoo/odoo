@@ -22,10 +22,10 @@ class ResUsers(models.Model):
     sale_team_id = fields.Many2one(
         comodel_name="crm.team",
         string="User Sales Team",
-        help="Main user sales team. Used notably for pipeline, or to set sales team in invoicing or subscription.",
         compute="_compute_sale_team_id",
         store=True,
         readonly=True,
+        help="Main user sales team. Used notably for pipeline, or to set sales team in invoicing or subscription.",
     )
 
     @api.depends("crm_team_member_ids.active", "crm_team_member_ids.crm_team_id")

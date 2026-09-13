@@ -61,10 +61,10 @@ class MailingContact(models.Model):
         string="Tags",
     )
     opt_out = fields.Boolean(
-        help="Opt out flag for a specific mailing list. "
-        "This field should not be used in a view without a unique and active mailing list context.",
         compute="_compute_opt_out",
         search="_search_opt_out",
+        help="Opt out flag for a specific mailing list. "
+        "This field should not be used in a view without a unique and active mailing list context.",
     )
 
     @api.model

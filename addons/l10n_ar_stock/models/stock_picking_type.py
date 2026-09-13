@@ -10,47 +10,47 @@ class StockPickingType(models.Model):
     l10n_ar_document_type_id = fields.Many2one(
         comodel_name="l10n_latam.document.type",
         string="Document Type",
-        help="Argentina: Select the document type to be assigned on the Remito",
         domain=lambda self: [("id", "in", self._get_allowed_document_type_ids())],
+        help="Argentina: Select the document type to be assigned on the Remito",
     )
     l10n_ar_cai_authorization_code = fields.Char(
         string="CAI",
-        help="Argentina: Add the CAI number for Remitos given by ARCA",
         copy=False,
+        help="Argentina: Add the CAI number for Remitos given by ARCA",
     )
     l10n_ar_cai_expiration_date = fields.Date(
         string="CAI Expiration Date",
-        help="Argentina: Add the CAI expiration date given by ARCA for the sequence configured here",
         copy=False,
+        help="Argentina: Add the CAI expiration date given by ARCA for the sequence configured here",
     )
     l10n_ar_sequence_number_start = fields.Char(
         string="Sequence From",
-        help="Argentina: Add the first sequence number given by ARCA for this CAI",
         copy=False,
+        help="Argentina: Add the first sequence number given by ARCA for this CAI",
     )
     l10n_ar_sequence_number_end = fields.Char(
         string="Sequence To",
-        help="Argentina: Add the last sequence number given by ARCA for this CAI",
         copy=False,
+        help="Argentina: Add the last sequence number given by ARCA for this CAI",
     )
     l10n_ar_delivery_sequence_prefix = fields.Char(
         string="Delivery Guide Prefix",
-        help="Argentina: Prefix for the delivery guide sequence number. It is used to generate the delivery guide number.",
         compute="_compute_l10n_ar_stock_sequence_fields",
         inverse="_inverse_l10n_ar_delivery_sequence_prefix",
         default="00001",
+        help="Argentina: Prefix for the delivery guide sequence number. It is used to generate the delivery guide number.",
     )
     l10n_ar_next_delivery_number = fields.Integer(
         string="Next Delivery Guide Number",
-        help="Argentina: Hold the next sequence to use as delivery guide number.",
         compute="_compute_l10n_ar_stock_sequence_fields",
         inverse="_inverse_l10n_ar_next_delivery_number",
+        help="Argentina: Hold the next sequence to use as delivery guide number.",
     )
     l10n_ar_sequence_id = fields.Many2one(
         comodel_name="ir.sequence",
         string="Delivery Guide Number Sequence",
-        help="Argentina: Hold the sequence to generate a delivery guide number.",
         copy=False,
+        help="Argentina: Hold the sequence to generate a delivery guide number.",
     )
 
     # === BUSINESS METHODS === #

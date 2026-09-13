@@ -13,13 +13,13 @@ class MyInvoisStatusUpdateWizard(models.TransientModel):
         required=True,
     )
     reason = fields.Char(
-        help="Reason for updating the document.",
         required=True,
+        help="Reason for updating the document.",
     )
     new_status = fields.Char(
-        help="New status to set on the document.",
         readonly=True,
         required=True,
+        help="New status to set on the document.",
     )
 
     def button_request_update(self):

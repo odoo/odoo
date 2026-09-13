@@ -33,8 +33,8 @@ class HrEmployeeCertificationReport(models.BaseModel):
         aggregator="avg",
     )
     active = fields.Boolean(
-        help="A certification is active while it is valid today.",
         readonly=True,
+        help="A certification is active while it is valid today.",
     )
 
     def init(self):

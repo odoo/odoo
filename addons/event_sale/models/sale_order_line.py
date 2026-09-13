@@ -7,30 +7,30 @@ class SaleOrderLine(models.Model):
 
     event_id = fields.Many2one(
         comodel_name="event.event",
-        help="Choose an event and it will automatically create a registration for this event.",
         compute="_compute_event_id",
         precompute=True,
         store=True,
         index="btree_not_null",
         readonly=False,
+        help="Choose an event and it will automatically create a registration for this event.",
     )
     event_slot_id = fields.Many2one(
         comodel_name="event.slot",
         string="Slot",
-        help="Choose an event slot and it will automatically create a registration for this event slot.",
         compute="_compute_event_related",
         precompute=True,
         store=True,
         readonly=False,
+        help="Choose an event slot and it will automatically create a registration for this event slot.",
     )
     event_ticket_id = fields.Many2one(
         comodel_name="event.event.ticket",
         string="Ticket Type",
-        help="Choose an event ticket and it will automatically create a registration for this event ticket.",
         compute="_compute_event_related",
         precompute=True,
         store=True,
         readonly=False,
+        help="Choose an event ticket and it will automatically create a registration for this event ticket.",
     )
     is_multi_slots = fields.Boolean(related="event_id.is_multi_slots")
     registration_ids = fields.One2many(

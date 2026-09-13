@@ -290,8 +290,8 @@ RULES: tuple[Rule, ...] = (
         "E8526",
         "keywords in FIELD_ATTRIBUTE_ORDER, one per line once there are two: "
         "what the field is, what it says, its shape, how its value is produced, "
-        "how it is stored, what it points at, who sees it -- run "
-        "_sort_field_attributes.py",
+        "how it is stored, what it points at, who tracks it, then groups= and "
+        "help= last -- run _sort_field_attributes.py",
     ),
     Rule(
         "dead-field-attribute",

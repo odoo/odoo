@@ -29,9 +29,9 @@ class IrActionsAct_Window(models.Model):
     )
     context = fields.Char(
         string="Context Value",
-        help="Context dictionary as Python expression, empty by default (Default: {})",
         default="{}",
         required=True,
+        help="Context dictionary as Python expression, empty by default (Default: {})",
     )
     res_id = fields.Integer(
         string="Record ID",
@@ -39,8 +39,8 @@ class IrActionsAct_Window(models.Model):
     )
     res_model = fields.Char(
         string="Destination Model",
-        help="Model name of the object to open in the view window",
         required=True,
+        help="Model name of the object to open in the view window",
     )
     target = fields.Selection(
         selection=[
@@ -53,13 +53,13 @@ class IrActionsAct_Window(models.Model):
         default="current",
     )
     view_mode = fields.Char(
-        help="Comma-separated list of allowed view modes, such as 'form', 'list', 'calendar', etc. (Default: list,form)",
         default="list,form",
         required=True,
+        help="Comma-separated list of allowed view modes, such as 'form', 'list', 'calendar', etc. (Default: list,form)",
     )
     mobile_view_mode = fields.Char(
-        help="First view mode in mobile and small screen environments (default='kanban'). If it can't be found among available view modes, the same mode as for wider screens is used)",
         default="kanban",
+        help="First view mode in mobile and small screen environments (default='kanban'). If it can't be found among available view modes, the same mode as for wider screens is used)",
     )
     usage = fields.Char(
         string="Action Usage",
@@ -71,14 +71,14 @@ class IrActionsAct_Window(models.Model):
         string="No of Views",
     )
     views = fields.Binary(
+        compute="_compute_views",
         help="This function field computes the ordered list of views that should be enabled "
         "when displaying the result of an action, federating view mode, views and "
         "reference view. The result is returned as an ordered list of pairs (view_id,view_mode).",
-        compute="_compute_views",
     )
     limit = fields.Integer(
-        help="Default limit for the list view",
         default=80,
+        help="Default limit for the list view",
     )
     group_ids = fields.Many2many(
         comodel_name="res.groups",
@@ -103,8 +103,8 @@ class IrActionsAct_Window(models.Model):
     )
     cache = fields.Boolean(
         string="Data Caching",
-        help="If enabled, this action will cache the related data used in list, Kanban and form views with the aim to increase the loading speed",
         default=True,
+        help="If enabled, this action will cache the related data used in list, Kanban and form views with the aim to increase the loading speed",
     )
 
     @api.constrains("res_model")

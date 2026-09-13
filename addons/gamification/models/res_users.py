@@ -73,10 +73,10 @@ class ResUsers(models.Model):
             ("public", "Public"),
         ],
         string="Profile Visibility",
+        default="public",
         help="Keeps you out of the leaderboards, the activity feed, the mentor "
         "suggestions and other people's badge and achievement lists. It does "
         "not hide your karma or rank from someone who opens your user record.",
-        default="public",
     )
     last_gamification_nudge_date = fields.Date(
         string="Last Nudge Date",

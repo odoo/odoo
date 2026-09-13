@@ -54,15 +54,15 @@ class SmsComposer(models.TransientModel):
     res_ids = fields.Char(string="Document IDs")
     res_ids_count = fields.Integer(
         string="Visible records count",
-        help="Number of recipients that will receive the SMS if sent in mass mode, without applying the Active Domain value",
         compute="_compute_res_ids_count",
         compute_sudo=False,
+        help="Number of recipients that will receive the SMS if sent in mass mode, without applying the Active Domain value",
     )
     comment_single_recipient = fields.Boolean(
         string="Single Mode",
-        help="Indicates if the SMS composer targets a single specific recipient",
         compute="_compute_comment_single_recipient",
         compute_sudo=False,
+        help="Indicates if the SMS composer targets a single specific recipient",
     )
     # options for comment and mass mode
     mass_keep_log = fields.Boolean(
@@ -74,9 +74,9 @@ class SmsComposer(models.TransientModel):
         default=False,
     )
     use_exclusion_list = fields.Boolean(
-        help="Prevent sending messages to blacklisted contacts. Disable only when absolutely necessary.",
         default=True,
         copy=False,
+        help="Prevent sending messages to blacklisted contacts. Disable only when absolutely necessary.",
     )
     # recipients
     recipient_valid_count = fields.Integer(
@@ -101,11 +101,11 @@ class SmsComposer(models.TransientModel):
     )
     recipient_single_number_itf = fields.Char(
         string="Recipient Number",
-        help="Phone number of the recipient. If changed, it will be recorded on recipient's profile.",
         compute="_compute_recipient_single_stored",
         compute_sudo=False,
         store=True,
         readonly=False,
+        help="Phone number of the recipient. If changed, it will be recorded on recipient's profile.",
     )
     recipient_single_valid = fields.Boolean(
         string="Is valid",

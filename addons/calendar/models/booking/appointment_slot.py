@@ -22,14 +22,14 @@ class AppointmentSlot(models.Model):
     slot_type = fields.Selection(
         selection=[("recurring", "Regular"), ("unique", "One Shot")],
         string="Slot type",
-        help="""Defines the type of slot. The regular slot is the default type which is used for
-        appointment type that are used recurringly in type like medical appointment.
-        The one shot type is only used when an user create a custom appointment type for a client by
-        defining non-recurring time slot (e.g. 10th of April 2021 from 10 to 11 am) from its calendar.""",
         compute="_compute_slot_type",
         default="recurring",
         store=True,
         required=True,
+        help="""Defines the type of slot. The regular slot is the default type which is used for
+        appointment type that are used recurringly in type like medical appointment.
+        The one shot type is only used when an user create a custom appointment type for a client by
+        defining non-recurring time slot (e.g. 10th of April 2021 from 10 to 11 am) from its calendar.""",
     )
     allday = fields.Boolean(
         string="All day",
@@ -38,20 +38,20 @@ class AppointmentSlot(models.Model):
     restrict_to_user_ids = fields.Many2many(
         comodel_name="res.users",
         string="Restrict to Users",
-        help="If empty, all users are considered to be available.\n"
-        "If set, only the selected users will be taken into account for this slot.",
         compute="_compute_restrict_to_user_ids",
         store=True,
         readonly=False,
+        help="If empty, all users are considered to be available.\n"
+        "If set, only the selected users will be taken into account for this slot.",
     )
     restrict_to_resource_ids = fields.Many2many(
         comodel_name="appointment.resource",
         string="Restrict to Resources",
-        help="If empty, all resources are considered to be available.\n"
-        "If set, only the selected resources will be taken into account for this slot.",
         compute="_compute_restrict_to_resource_ids",
         store=True,
         readonly=False,
+        help="If empty, all resources are considered to be available.\n"
+        "If set, only the selected resources will be taken into account for this slot.",
     )
     # Recurring slot
     weekday = fields.Selection(

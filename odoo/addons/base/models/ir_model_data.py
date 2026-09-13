@@ -31,8 +31,8 @@ class IrModelData(models.Model):
 
     name = fields.Char(
         string="External Identifier",
-        help="External Key/Identifier that can be used for data integration with third-party systems",
         required=True,
+        help="External Key/Identifier that can be used for data integration with third-party systems",
     )
     complete_name = fields.Char(
         string="Complete ID",

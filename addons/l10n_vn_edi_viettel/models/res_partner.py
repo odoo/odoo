@@ -10,7 +10,7 @@ class ResPartner(models.Model):
     l10n_vn_edi_symbol = fields.Many2one(
         comodel_name="l10n_vn_edi_viettel.sinvoice.symbol",
         string="Default Symbol",
-        help="If set, this symbol will be used as the default symbol for all invoices of this customer.",
         copy=False,
         company_dependent=True,
+        help="If set, this symbol will be used as the default symbol for all invoices of this customer.",
     )

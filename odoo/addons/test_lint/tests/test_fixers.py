@@ -923,9 +923,9 @@ class TestSortFieldAttributes(BaseCase):
             class M(models.Model):
                 f = fields.Char(
                     string="F",  # the label
-                    help="h",
                     # why it is required
                     required=True,
+                    help="h",
                 )
             """),
         )
@@ -990,6 +990,13 @@ class TestSortFieldAttributes(BaseCase):
         self.assertLess(order.index("compute"), order.index("store"))
         self.assertLess(order.index("store"), order.index("domain"))
         self.assertLess(order.index("domain"), order.index("groups"))
+        self.assertEqual(order[-2:], ("groups", "help"))
+        self.assertEqual(
+            _checker_field_declaration.canonical_order(
+                ["help", "zzz", "groups", "string"]
+            ),
+            ["string", "zzz", "groups", "help"],
+        )
 
 
 @no_retry

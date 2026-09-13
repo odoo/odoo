@@ -143,29 +143,29 @@ class ResCompany(models.Model):
     )
     fiscalyear_lock_date = fields.Date(
         string="Global Lock Date",
-        help="Any entry up to and including that date will be postponed to a later time, in accordance with its journal's sequence.",
         tracking=True,
+        help="Any entry up to and including that date will be postponed to a later time, in accordance with its journal's sequence.",
     )
     tax_lock_date = fields.Date(
         string="Tax Return Lock Date",
+        tracking=True,
         help="Any entry with taxes up to and including that date will be postponed to a later time, in accordance with its journal's sequence. "
         "The tax lock date is automatically set when the tax closing entry is posted.",
-        tracking=True,
     )
     sale_lock_date = fields.Date(
         string="Sales Lock Date",
-        help="Any sales entry prior to and including this date will be postponed to a later date, in accordance with its journal's sequence.",
         tracking=True,
+        help="Any sales entry prior to and including this date will be postponed to a later date, in accordance with its journal's sequence.",
     )
     purchase_lock_date = fields.Date(
         string="Purchase Lock date",
-        help="Any purchase entry prior to and including this date will be postponed to a later date, in accordance with its journal's sequence.",
         tracking=True,
+        help="Any purchase entry prior to and including this date will be postponed to a later date, in accordance with its journal's sequence.",
     )
     hard_lock_date = fields.Date(
+        tracking=True,
         help="Any entry up to and including that date will be postponed to a later time, in accordance with its journal sequence. "
         "This lock date is irreversible and does not allow any exception.",
-        tracking=True,
     )
     user_fiscalyear_lock_date = fields.Date(
         compute="_compute_user_fiscalyear_lock_date"
@@ -177,9 +177,9 @@ class ResCompany(models.Model):
     transfer_account_id = fields.Many2one(
         comodel_name="account.account",
         string="Inter-Banks Transfer Account",
-        help="Intermediary account used when moving money from a liquidity account to another",
         domain="[('reconcile', '=', True), ('account_type', '=', 'asset_current')]",
         check_company=True,
+        help="Intermediary account used when moving money from a liquidity account to another",
     )
     expects_chart_of_accounts = fields.Boolean(
         string="Expects a Chart of Accounts",
@@ -296,8 +296,8 @@ class ResCompany(models.Model):
         comodel_name="account.journal",
         related="account_opening_move_id.journal_id",
         string="Opening Journal",
-        help="Journal where the opening entry of this company's accounting has been posted.",
         readonly=False,
+        help="Journal where the opening entry of this company's accounting has been posted.",
     )
     account_opening_date = fields.Date(
         string="Opening Entry",
@@ -330,21 +330,21 @@ class ResCompany(models.Model):
 
     expense_accrual_account_id = fields.Many2one(
         comodel_name="account.account",
-        help="Account used to move the period of an expense",
         domain="[('internal_group', '=', 'liability'), ('account_type', 'not in', ('asset_receivable', 'liability_payable'))]",
         check_company=True,
+        help="Account used to move the period of an expense",
     )
     revenue_accrual_account_id = fields.Many2one(
         comodel_name="account.account",
-        help="Account used to move the period of a revenue",
         domain="[('internal_group', '=', 'asset'), ('account_type', 'not in', ('asset_receivable', 'liability_payable'))]",
         check_company=True,
+        help="Account used to move the period of a revenue",
     )
     automatic_entry_default_journal_id = fields.Many2one(
         comodel_name="account.journal",
-        help="Journal used by default for moving the period of an entry",
         domain="[('type', '=', 'general')]",
         check_company=True,
+        help="Journal used by default for moving the period of an entry",
     )
 
     domestic_fiscal_position_id = fields.Many2one(
@@ -355,10 +355,10 @@ class ResCompany(models.Model):
     account_fiscal_country_id = fields.Many2one(
         comodel_name="res.country",
         string="Fiscal Country",
-        help="The country to use the tax reports from for this company",
         compute="_compute_account_fiscal_country_id",
         store=True,
         readonly=False,
+        help="The country to use the tax reports from for this company",
     )
     account_fiscal_country_group_codes = fields.Json(
         compute="_compute_account_fiscal_country_group_codes"
@@ -367,9 +367,9 @@ class ResCompany(models.Model):
     account_enabled_tax_country_ids = fields.Many2many(
         comodel_name="res.country",
         string="l10n-used countries",
+        compute="_compute_account_enabled_tax_country_ids",
         help="Technical field containing the countries for which this company is using tax-related features"
         "(hence the ones for which l10n modules need to show tax-related fields).",
-        compute="_compute_account_enabled_tax_country_ids",
     )
 
     tax_exigibility = fields.Boolean(string="Use Cash Basis")
@@ -381,9 +381,9 @@ class ResCompany(models.Model):
     account_cash_basis_base_account_id = fields.Many2one(
         comodel_name="account.account",
         string="Base Tax Received Account",
+        check_company=True,
         help="Account that will be set on lines created in cash basis journal entry and used to keep track of the "
         "tax base amount.",
-        check_company=True,
     )
 
     account_storno = fields.Boolean(
@@ -401,8 +401,8 @@ class ResCompany(models.Model):
     multi_vat_foreign_country_ids = fields.Many2many(
         comodel_name="res.country",
         string="Foreign VAT countries",
-        help="Countries for which the company has a VAT number",
         compute="_compute_multi_vat_foreign_country_ids",
+        help="Countries for which the company has a VAT number",
     )
 
     quick_edit_mode = fields.Selection(
@@ -424,8 +424,8 @@ class ResCompany(models.Model):
     )
 
     restrictive_audit_trail = fields.Boolean(
-        help="Enable this option to prevent deletion of journal item related logs",
         tracking=True,
+        help="Enable this option to prevent deletion of journal item related logs",
     )
     force_restrictive_audit_trail = fields.Boolean(
         string="Force Audit Trail",
@@ -440,28 +440,28 @@ class ResCompany(models.Model):
     account_price_include = fields.Selection(
         selection=[("tax_included", "Tax Included"), ("tax_excluded", "Tax Excluded")],
         string="Default Sales Price Include",
-        help="Default on whether the sales price used on the product and invoices with this Company includes its taxes.",
         default="tax_excluded",
         required=True,
+        help="Default on whether the sales price used on the product and invoices with this Company includes its taxes.",
     )
     company_vat_placeholder = fields.Char(compute="_compute_company_vat_placeholder")
 
     income_account_id = fields.Many2one(
         comodel_name="account.account",
-        help="This account will be used when validating a customer invoice.",
         domain=ACCOUNT_DOMAIN,
+        help="This account will be used when validating a customer invoice.",
     )
     expense_account_id = fields.Many2one(
         comodel_name="account.account",
+        domain=ACCOUNT_DOMAIN,
         help="The expense is accounted for when a vendor bill is validated, except in anglo-saxon"
         " accounting with perpetual inventory valuation in which case the expense (Cost of"
         " Goods Sold account) is recognized at the customer invoice validation.",
-        domain=ACCOUNT_DOMAIN,
     )
     price_difference_account_id = fields.Many2one(
         comodel_name="account.account",
-        help="During perpetual valuation, this account will hold the price difference between the standard price and the bill price.",
         domain=ACCOUNT_DOMAIN,
+        help="During perpetual valuation, this account will hold the price difference between the standard price and the bill price.",
     )
 
     @api.constrains("restrictive_audit_trail")

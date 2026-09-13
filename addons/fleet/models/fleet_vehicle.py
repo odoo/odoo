@@ -80,35 +80,35 @@ class FleetVehicle(models.Model):
         depends=["country_id"],
     )
     license_plate = fields.Char(
-        help="License plate number of the vehicle (i = plate number for a car)",
         tracking=True,
+        help="License plate number of the vehicle (i = plate number for a car)",
     )
     vin_sn = fields.Char(
         string="Chassis Number",
-        help="Unique number written on the vehicle motor (VIN/SN number)",
         copy=False,
         tracking=True,
+        help="Unique number written on the vehicle motor (VIN/SN number)",
     )
     trailer_hook = fields.Boolean(
         string="Trailer Hitch",
-        help="A trailer hitch is a device attached to a vehicle's chassis for towing purposes, \
-            such as pulling trailers, boats, or other vehicles.",
         compute="_compute_trailer_hook",
         store=True,
         readonly=False,
+        help="A trailer hitch is a device attached to a vehicle's chassis for towing purposes, \
+            such as pulling trailers, boats, or other vehicles.",
     )
     driver_id = fields.Many2one(
         comodel_name="res.partner",
-        help="Driver address of the vehicle",
         copy=False,
         tracking=True,
+        help="Driver address of the vehicle",
     )
     future_driver_id = fields.Many2one(
         comodel_name="res.partner",
-        help="Next Driver Address of the vehicle",
         copy=False,
         check_company=True,
         tracking=True,
+        help="Next Driver Address of the vehicle",
     )
     model_id = fields.Many2one(
         comodel_name="fleet.vehicle.model",
@@ -157,15 +157,15 @@ class FleetVehicle(models.Model):
     order_date = fields.Date()
     acquisition_date = fields.Date(
         string="Registration Date",
-        help="Date of vehicle registration",
         default=fields.Date.today,
         required=False,
         tracking=True,
+        help="Date of vehicle registration",
     )
     write_off_date = fields.Date(
         string="Cancellation Date",
-        help="Date when the vehicle's license plate has been cancelled/removed.",
         tracking=True,
+        help="Date when the vehicle's license plate has been cancelled/removed.",
     )
     contract_date_start = fields.Date(
         string="First Contract Date",
@@ -173,40 +173,40 @@ class FleetVehicle(models.Model):
         tracking=True,
     )
     color = fields.Char(
-        help="Color of the vehicle",
         compute="_compute_color",
         store=True,
         readonly=False,
+        help="Color of the vehicle",
     )
     state_id = fields.Many2one(
         comodel_name="fleet.vehicle.state",
-        help="Current state of the vehicle",
         default=_default_state_id,
         group_expand="_read_group_expand_full",
         ondelete="set null",
         tracking=True,
+        help="Current state of the vehicle",
     )
     location = fields.Char(help="Location of the vehicle (garage, ...)")
     seats = fields.Integer(
         string="Seating Capacity",
-        help="Number of seats of the vehicle",
         compute="_compute_seats",
         store=True,
         readonly=False,
+        help="Number of seats of the vehicle",
     )
     model_year = fields.Selection(
         selection="_selection_years",
-        help="Year of the model",
         compute="_compute_model_year",
         store=True,
         readonly=False,
+        help="Year of the model",
     )
     doors = fields.Integer(
         string="Number of Doors",
-        help="Number of doors of the vehicle",
         compute="_compute_doors",
         store=True,
         readonly=False,
+        help="Number of doors of the vehicle",
     )
     tag_ids = fields.Many2many(
         comodel_name="fleet.vehicle.tag",
@@ -218,9 +218,9 @@ class FleetVehicle(models.Model):
     )
     odometer = fields.Float(
         string="Last Odometer",
-        help="Odometer measure of the vehicle at the moment of this log",
         compute="_compute_odometer",
         inverse="_inverse_odometer",
+        help="Odometer measure of the vehicle at the moment of this log",
     )
     odometer_unit = fields.Selection(
         selection=[("kilometers", "km"), ("miles", "mi")],
@@ -256,19 +256,19 @@ class FleetVehicle(models.Model):
         readonly=False,
     )
     power = fields.Float(
-        help="Power in kW of the vehicle",
         compute="_compute_power",
         store=True,
         readonly=False,
+        help="Power in kW of the vehicle",
     )
     co2 = fields.Float(
         string="CO₂ Emissions",
-        help="CO2 emissions of the vehicle",
         compute="_compute_co2",
         store=True,
         readonly=False,
         aggregator=None,
         tracking=True,
+        help="CO2 emissions of the vehicle",
     )
     co2_emission_unit = fields.Selection(
         selection=[("g/km", "g/km"), ("g/mi", "g/mi")],
@@ -279,11 +279,11 @@ class FleetVehicle(models.Model):
     )
     co2_standard = fields.Char(
         string="Emission Standard",
-        help="Emission Standard specifies the regulatory test procedure \
-            or guideline under which a vehicle's emissions are measured.",
         compute="_compute_co2_standard",
         store=True,
         readonly=False,
+        help="Emission Standard specifies the regulatory test procedure \
+            or guideline under which a vehicle's emissions are measured.",
     )
     category_id = fields.Many2one(
         comodel_name="fleet.vehicle.model.category",

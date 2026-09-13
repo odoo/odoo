@@ -200,14 +200,14 @@ class EventRegistration(models.Model):
             ("cancel", "Cancelled"),
         ],
         string="Status",
-        help="Unconfirmed: registrations in a pending state waiting for an action (specific case, notably with sale status)\n"
-        "Registered: registrations considered taken by a client\n"
-        "Attended: registrations for which the attendee attended the event\n"
-        "Cancelled: registrations cancelled manually",
         default="open",
         copy=False,
         readonly=True,
         tracking=6,
+        help="Unconfirmed: registrations in a pending state waiting for an action (specific case, notably with sale status)\n"
+        "Registered: registrations considered taken by a client\n"
+        "Attended: registrations for which the attendee attended the event\n"
+        "Cancelled: registrations cancelled manually",
     )
     # questions
     registration_answer_ids = fields.One2many(

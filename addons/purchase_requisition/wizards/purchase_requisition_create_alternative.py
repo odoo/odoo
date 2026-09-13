@@ -14,8 +14,8 @@ class PurchaseRequisitionCreateAlternative(models.TransientModel):
     partner_ids = fields.Many2many(
         comodel_name="res.partner",
         string="Vendor",
-        help="Choose a vendor for alternative PO",
         required=True,
+        help="Choose a vendor for alternative PO",
     )
     purchase_warn_msg = fields.Text(
         string="Warning Messages",
@@ -23,8 +23,8 @@ class PurchaseRequisitionCreateAlternative(models.TransientModel):
         groups="purchase.group_warning_purchase",
     )
     copy_products = fields.Boolean(
-        help="If this is checked, the product quantities of the original PO will be copied",
         default=True,
+        help="If this is checked, the product quantities of the original PO will be copied",
     )
 
     @api.depends("partner_ids", "copy_products")

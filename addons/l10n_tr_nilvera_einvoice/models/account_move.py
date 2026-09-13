@@ -38,9 +38,9 @@ class AccountMove(models.Model):
 
     l10n_tr_nilvera_uuid = fields.Char(
         string="Nilvera Document UUID",
-        help="Universally unique identifier of the Invoice",
         copy=False,
         readonly=True,
+        help="Universally unique identifier of the Invoice",
     )
 
     l10n_tr_nilvera_send_status = fields.Selection(

@@ -24,8 +24,8 @@ class CrmTeam(models.Model):
     )
     use_opportunities = fields.Boolean(
         string="Pipeline",
-        help="Check this box to manage a presales process with opportunities.",
         default=True,
+        help="Check this box to manage a presales process with opportunities.",
     )
     alias_id = fields.Many2one(
         help="The email address associated with this channel. New emails received will automatically create new leads assigned to the channel."
@@ -41,12 +41,12 @@ class CrmTeam(models.Model):
     assignment_optout = fields.Boolean(string="Skip auto assignment")
     assignment_max = fields.Integer(
         string="Lead Average Capacity",
-        help="Monthly average leads capacity for all salesmen belonging to the team",
         compute="_compute_assignment_max",
+        help="Monthly average leads capacity for all salesmen belonging to the team",
     )
     assignment_domain = fields.Char(
-        help="Additional filter domain when fetching unassigned leads to allocate to the team.",
         tracking=True,
+        help="Additional filter domain when fetching unassigned leads to allocate to the team.",
     )
     lead_unassigned_count = fields.Integer(
         string="# Unassigned Leads",
@@ -54,13 +54,13 @@ class CrmTeam(models.Model):
     )
     lead_all_assigned_month_count = fields.Integer(
         string="# Leads/Opps assigned this month",
-        help="Number of leads and opportunities assigned this last month.",
         compute="_compute_lead_all_assigned_month_count",
+        help="Number of leads and opportunities assigned this last month.",
     )
     lead_all_assigned_month_exceeded = fields.Boolean(
         string="Exceed monthly lead assignement",
-        help="True if the monthly lead assignment count is greater than the maximum assignment limit, false otherwise.",
         compute="_compute_lead_all_assigned_month_count",
+        help="True if the monthly lead assignment count is greater than the maximum assignment limit, false otherwise.",
     )
     lead_properties_definition = fields.PropertiesDefinition(string="Lead Properties")
 

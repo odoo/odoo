@@ -34,8 +34,8 @@ class IrModelAccess(models.Model):
         required=True,
     )
     active = fields.Boolean(
-        help="If you uncheck the active field, it will disable the ACL without deleting it (if you delete a native ACL, it will be re-created when you reload the module).",
         default=True,
+        help="If you uncheck the active field, it will disable the ACL without deleting it (if you delete a native ACL, it will be re-created when you reload the module).",
     )
     model_id = fields.Many2one(
         comodel_name="ir.model",

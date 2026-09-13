@@ -26,8 +26,8 @@ class MrpProduction(models.Model):
     )
     bom_product_ids = fields.Many2many(
         comodel_name="product.product",
-        help="List of Products used in the BoM, used to filter the list of products in the subcontracting portal view",
         compute="_compute_bom_product_ids",
+        help="List of Products used in the BoM, used to filter the list of products in the subcontracting portal view",
     )
 
     incoming_picking = fields.Many2one(

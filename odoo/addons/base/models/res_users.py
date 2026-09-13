@@ -320,11 +320,11 @@ class ResUsers(models.Model):
     partner_id = fields.Many2one(
         comodel_name="res.partner",
         string="Related Partner",
-        help="Partner-related data of the user",
         index=True,
         required=True,
         ondelete="restrict",
         bypass_search_access=True,
+        help="Partner-related data of the user",
     )
     active_partner = fields.Boolean(
         related="partner_id.active",
@@ -351,22 +351,22 @@ class ResUsers(models.Model):
     active = fields.Boolean(default=True)
 
     login = fields.Char(
-        help="Used to log into the system",
         required=True,
+        help="Used to log into the system",
     )
     password = fields.Char(
-        help="Keep empty if you don't want the user to be able to connect on the system.",
         compute="_compute_passwords",
         inverse="_inverse_password",
         copy=False,
+        help="Keep empty if you don't want the user to be able to connect on the system.",
     )
     new_password = fields.Char(
         string="Set Password",
+        compute="_compute_passwords",
+        inverse="_inverse_new_password",
         help="Specify a value only when creating a user or if you're "
         "changing the user's password, otherwise leave empty. After "
         "a change of password, the user has to login again.",
-        compute="_compute_passwords",
-        inverse="_inverse_new_password",
     )
     api_key_ids = fields.One2many(
         comodel_name="res.users.apikeys",
@@ -415,10 +415,10 @@ class ResUsers(models.Model):
 
     company_id = fields.Many2one(
         comodel_name="res.company",
-        help="The default company for this user.",
         default=lambda self: self.env.company.id,
         required=True,
         context={"user_preference": True},
+        help="The default company for this user.",
     )
     company_ids = fields.Many2many(
         comodel_name="res.company",
@@ -439,8 +439,8 @@ class ResUsers(models.Model):
         column1="uid",
         column2="gid",
         string="Groups",
-        help="Groups explicitly assigned to the user",
         default=lambda s: s._default_group_ids(),
+        help="Groups explicitly assigned to the user",
     )
     all_group_ids = fields.Many2many(
         comodel_name="res.groups",
@@ -451,30 +451,30 @@ class ResUsers(models.Model):
     )
     share = fields.Boolean(
         string="Share User",
-        help="External user with limited access, created only for the purpose of sharing data.",
         compute="_compute_share",
         precompute=True,
         compute_sudo=True,
         store=True,
+        help="External user with limited access, created only for the purpose of sharing data.",
     )
 
     accesses_count = fields.Integer(
         string="# Access Rights",
-        help="Number of access rights that apply to the current user",
         compute="_compute_access_counts",
         compute_sudo=True,
+        help="Number of access rights that apply to the current user",
     )
     rules_count = fields.Integer(
         string="# Record Rules",
-        help="Number of record rules that apply to the current user",
         compute="_compute_access_counts",
         compute_sudo=True,
+        help="Number of record rules that apply to the current user",
     )
     groups_count = fields.Integer(
         string="# Groups",
-        help="Number of groups that apply to the current user",
         compute="_compute_access_counts",
         compute_sudo=True,
+        help="Number of groups that apply to the current user",
     )
 
     view_group_hierarchy = fields.Json(

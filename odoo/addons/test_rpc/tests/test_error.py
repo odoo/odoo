@@ -110,6 +110,25 @@ class TestError(common.HttpCase):
             e.faultString,
         )
 
+    def test_02_dangling_reference(self):
+        b1 = self.rpc("test_rpc.model_b", "create", {"name": "B1"})
+        self.rpc("test_rpc.model_b", "unlink", b1)
+
+        with (
+            self.assertRaises(Fault) as ctx,
+            mute_logger("odoo.db", "odoo.http"),
+        ):
+            self.rpc("test_rpc.model_a", "create", {"name": "A1", "field_b1": b1})
+
+        e = ctx.exception
+        self.assertIn("The operation cannot be completed:", e.faultString)
+        self.assertIn(
+            "'required field' (field_b1) of 'Model A' (test_rpc.model_a) refers "
+            "to a record that does not exist",
+            e.faultString,
+        )
+        self.assertNotIn("trying to delete", e.faultString)
+
     def test_03_sql_constraint(self):
         with (
             mute_logger("odoo.db"),

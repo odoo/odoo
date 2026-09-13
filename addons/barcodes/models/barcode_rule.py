@@ -65,8 +65,8 @@ class BarcodeRule(models.Model):
 
     name = fields.Char(
         string="Rule Name",
-        help="An internal identification for this barcode nomenclature rule",
         required=True,
+        help="An internal identification for this barcode nomenclature rule",
     )
     barcode_nomenclature_id = fields.Many2one(
         comodel_name="barcode.nomenclature",
@@ -82,9 +82,9 @@ class BarcodeRule(models.Model):
             ("ean8", "EAN-8"),
             ("upca", "UPC-A"),
         ],
-        help="This rule will apply only if the barcode is encoded with the specified encoding",
         default="any",
         required=True,
+        help="This rule will apply only if the barcode is encoded with the specified encoding",
     )
     type = fields.Selection(
         selection=[
@@ -96,9 +96,9 @@ class BarcodeRule(models.Model):
     )
     pattern = fields.Char(
         string="Barcode Pattern",
-        help="The barcode matching pattern",
         default=".*",
         required=True,
+        help="The barcode matching pattern",
     )
     alias = fields.Char(help="The matched pattern will alias to this barcode")
 

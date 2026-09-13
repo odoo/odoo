@@ -61,9 +61,9 @@ class MrpWorkorder(models.Model):
 
     is_late = fields.Boolean(
         string="Late",
-        help="Should have started already.",
         compute="_compute_is_late",
         search="_search_is_late",
+        help="Should have started already.",
     )
     name = fields.Char(
         string="Work Order",
@@ -135,10 +135,10 @@ class MrpWorkorder(models.Model):
     )
     qty_produced = fields.Float(
         string="Quantity Done",
-        help="The number of products already handled by this work order",
         digits="Product Unit",
         default=0.0,
         copy=False,
+        help="The number of products already handled by this work order",
     )
     qty_ready = fields.Float(
         string="Quantity Ready",
@@ -167,8 +167,8 @@ class MrpWorkorder(models.Model):
     )
     reservation_id = fields.Many2one(
         comodel_name="resource.reservation",
-        help="Resource reservation booking this workcenter time slot.",
         compute="_compute_reservation_id",
+        help="Resource reservation booking this workcenter time slot.",
     )
     date_start = fields.Datetime(
         string="Start",
@@ -195,9 +195,9 @@ class MrpWorkorder(models.Model):
     )
     duration_live = fields.Float(
         string="Live Duration",
+        compute="_compute_duration_live",
         help="Real duration including the time accrued so far on a running "
         "timer. Technical: read by the timer widget.",
-        compute="_compute_duration_live",
     )
     duration_unit = fields.Float(
         string="Duration Per Unit",
@@ -308,9 +308,9 @@ class MrpWorkorder(models.Model):
     consumption = fields.Selection(related="production_id.consumption")
     qty_reported_from_previous_wo = fields.Float(
         string="Carried Quantity",
-        help="The quantity already produced awaiting allocation in the backorders chain.",
         digits="Product Unit",
         copy=False,
+        help="The quantity already produced awaiting allocation in the backorders chain.",
     )
     is_planned = fields.Boolean(related="production_id.is_planned")
     allow_workorder_dependencies = fields.Boolean(

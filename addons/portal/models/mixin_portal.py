@@ -11,8 +11,8 @@ class MixinPortal(models.AbstractModel):
 
     access_url = fields.Char(
         string="Portal Access URL",
-        help="Portal URL for this record (overridden by concrete models).",
         compute="_compute_access_url",
+        help="Portal URL for this record (overridden by concrete models).",
     )
     access_token = fields.Char(
         string="Security Token",

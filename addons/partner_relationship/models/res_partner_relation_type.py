@@ -49,14 +49,14 @@ class ResPartnerRelationType(models.Model):
         required=True,
     )
     degree = fields.Integer(
+        default=0,
         help="Civil-law kinship distance. Zero for a tie that carries no"
         " genealogical distance, such as a compadre or a business partner.",
-        default=0,
     )
     weight_risk = fields.Float(
+        default=0.0,
         help="How strongly this tie implies a shared economic interest, from 0"
         " to 1. Consumed by the credit and compliance bridges.",
-        default=0.0,
     )
 
     count_relation = fields.Integer(compute="_compute_count_relation")

@@ -76,15 +76,15 @@ class AccountMove(models.Model):
             ("5", "iPass"),
         ],
         string="Carrier Type",
+        compute="_compute_carrier_info",
+        store=True,
+        copy=False,
+        readonly=False,
         help="""
     - Citizen Digital Certificate: The carrier number format is 2 capital letters following 14 digits.
     - Mobile Barcode: The carrier number format is / following 7 alphanumeric or +-. string.
     - EasyCard or iPass: The carrier number is the card hidden code, the carrier number 2 is the card visible code.
         """,
-        compute="_compute_carrier_info",
-        store=True,
-        copy=False,
-        readonly=False,
     )
     l10n_tw_edi_carrier_number = fields.Char(
         string="Carrier Number",

@@ -18,8 +18,8 @@ class MailFollowersEdit(models.TransientModel):
 
     res_model = fields.Char(
         string="Related Document Model",
-        help="Model of the followed resource",
         required=True,
+        help="Model of the followed resource",
     )
     res_ids = fields.Char(
         string="Related Document IDs",

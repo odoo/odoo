@@ -22,14 +22,14 @@ class MixinTag(models.AbstractModel):
         aggregator=False,
     )
     code = fields.Char(
-        help="Stable identifier for imports, filters and data files. Unlike the "
-        "name it is never translated, so it means the same thing to every "
-        "reader.",
         compute="_compute_code",
         store=True,
         index="btree",
         copy=False,
         readonly=False,
+        help="Stable identifier for imports, filters and data files. Unlike the "
+        "name it is never translated, so it means the same thing to every "
+        "reader.",
     )
     _code_uniq = models.Constraint(
         "unique(code)",

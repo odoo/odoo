@@ -25,10 +25,10 @@ class ExtractLineProposal(models.TransientModel):
     )
     sequence = fields.Integer(default=10)
     read_index = fields.Integer(
+        readonly=True,
         help="Position of this line in what the document said. Kept so a "
         "correction is attributed to the line it was made on even after the "
         "rows are reordered.",
-        readonly=True,
     )
     accepted = fields.Boolean(default=True)
     description = fields.Char(required=True)

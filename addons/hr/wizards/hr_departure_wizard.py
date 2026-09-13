@@ -66,8 +66,8 @@ class HrDepartureWizard(models.TransientModel):
 
     set_date_end = fields.Boolean(
         string="Set Contract End Date",
-        help="Set the end date on the current contract.",
         default=lambda self: self.env.user.has_group("hr.group_hr_manager"),
+        help="Set the end date on the current contract.",
     )
 
     @api.depends("employee_ids.user_id")

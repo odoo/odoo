@@ -130,15 +130,15 @@ class PosSession(models.Model):
     )
     cash_register_balance_end = fields.Monetary(
         string="Theoretical Closing Balance",
-        help="Opening balance summed to all cash transactions.",
         compute="_compute_cash_balance",
         readonly=True,
+        help="Opening balance summed to all cash transactions.",
     )
     cash_register_difference = fields.Monetary(
         string="Before Closing Difference",
-        help="Difference between the theoretical closing balance and the real closing balance.",
         compute="_compute_cash_balance",
         readonly=True,
+        help="Difference between the theoretical closing balance and the real closing balance.",
     )
 
     cash_real_transaction = fields.Monetary(
@@ -166,9 +166,9 @@ class PosSession(models.Model):
     )
     rescue = fields.Boolean(
         string="Recovery Session",
-        help="Auto-generated session for orphan orders, ignored in constraints",
         copy=False,
         readonly=True,
+        help="Auto-generated session for orphan orders, ignored in constraints",
     )
     move_id = fields.Many2one(
         comodel_name="account.move",

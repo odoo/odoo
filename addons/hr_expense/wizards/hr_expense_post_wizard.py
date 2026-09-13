@@ -33,16 +33,16 @@ class HrExpensePostWizard(models.TransientModel):
     )
 
     accounting_date = fields.Date(
-        help="Specify the bill date of the related vendor bill.",
         default=fields.Date.context_today,
+        help="Specify the bill date of the related vendor bill.",
     )
     employee_journal_id = fields.Many2one(
         comodel_name="account.journal",
         string="Journal",
-        help="The journal used when the expense is paid by employee.",
         default=_default_employee_journal_id,
         domain=[("type", "=", "purchase")],
         check_company=True,
+        help="The journal used when the expense is paid by employee.",
     )
 
     def action_post_entry(self):

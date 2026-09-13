@@ -31,8 +31,8 @@ class ResCurrency(models.Model):
     _inherit = ["res.currency", "mixin.fiscal.country.codes"]
 
     display_rounding_warning = fields.Boolean(
-        help="The warning informs a rounding factor change might be dangerous on res.currency's form view.",
         compute="_compute_display_rounding_warning",
+        help="The warning informs a rounding factor change might be dangerous on res.currency's form view.",
     )
 
     @api.depends("rounding")

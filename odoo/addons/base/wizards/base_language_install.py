@@ -31,13 +31,13 @@ class BaseLanguageInstall(models.TransientModel):
     )
     overwrite = fields.Boolean(
         string="Overwrite Existing Terms",
-        help="If you check this box, your customized translations will be overwritten and replaced by the official ones.",
         default=True,
+        help="If you check this box, your customized translations will be overwritten and replaced by the official ones.",
     )
     first_lang_id = fields.Many2one(
         comodel_name="res.lang",
-        help="Used when the user only selects one language and is given the option to switch to it",
         compute="_compute_first_lang_id",
+        help="Used when the user only selects one language and is given the option to switch to it",
     )
 
     @api.depends("lang_ids")

@@ -24,11 +24,11 @@ class ResPartner(models.Model):
 
     partner_weight = fields.Integer(
         string="Level Weight",
-        help="This should be a numerical value greater than 0 which will decide the contention for this partner to take this lead/opportunity.",
         compute="_compute_partner_weight",
         store=True,
         readonly=False,
         tracking=True,
+        help="This should be a numerical value greater than 0 which will decide the contention for this partner to take this lead/opportunity.",
     )
     grade_sequence = fields.Integer(
         related="grade_id.sequence",

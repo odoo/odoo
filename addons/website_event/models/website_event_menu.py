@@ -20,8 +20,8 @@ class WebsiteEventMenu(models.Model):
     )
     view_id = fields.Many2one(
         comodel_name="ir.ui.view",
-        help="Used when not being an url based menu",
         ondelete="cascade",
+        help="Used when not being an url based menu",
     )
     menu_type = fields.Selection(
         selection=[

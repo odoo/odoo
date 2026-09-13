@@ -18,9 +18,9 @@ class MixinBomVariantLine(models.AbstractModel):
     bom_product_template_attribute_value_ids = fields.Many2many(
         comodel_name="product.template.attribute.value",
         string="Apply on Variants",
-        help="BOM Product Variants needed to apply this line.",
         domain="[('id', 'in', possible_bom_product_template_attribute_value_ids)]",
         ondelete="restrict",
+        help="BOM Product Variants needed to apply this line.",
     )
 
     def _is_bom_line_skipped(self, product, never_attribute_values=False):

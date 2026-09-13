@@ -29,8 +29,8 @@ class IrRule(models.Model):
 
     name = fields.Char()
     active = fields.Boolean(
-        help="If you uncheck the active field, it will disable the record rule without deleting it (if you delete a native record rule, it may be re-created when you reload the module).",
         default=True,
+        help="If you uncheck the active field, it will disable the record rule without deleting it (if you delete a native record rule, it may be re-created when you reload the module).",
     )
     model_id = fields.Many2one(
         comodel_name="ir.model",
@@ -48,12 +48,12 @@ class IrRule(models.Model):
     domain_force = fields.Text(string="Domain")
     composition = fields.Selection(
         selection=[("grant", "Grant"), ("restrict", "Restrict")],
+        default="grant",
+        required=True,
         help="Grant: the rule's records are added to what the group's members may "
         "reach, and every grant rule a user matches is combined with OR. "
         "Restrict: the rule's domain is combined with AND, like a rule with no "
         "groups but only for the group's members, so no other rule can widen it.",
-        default="grant",
-        required=True,
     )
     perm_read = fields.Boolean(
         string="Read",

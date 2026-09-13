@@ -14,8 +14,8 @@ class EventTypeTicket(models.Model):
         required=True,
     )
     description = fields.Text(
-        help="A description of the ticket that you want to communicate to your customers.",
         translate=True,
+        help="A description of the ticket that you want to communicate to your customers.",
     )
     event_type_id = fields.Many2one(
         comodel_name="event.type",

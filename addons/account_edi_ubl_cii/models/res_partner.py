@@ -42,11 +42,11 @@ class ResPartner(models.Model):
         compute="_compute_is_peppol_edi_format"
     )  # TODO remove in master
     peppol_endpoint = fields.Char(
-        help="Unique identifier used by the BIS Billing 3.0 and its derivatives, also known as 'Endpoint ID'.",
         compute="_compute_peppol_endpoint",
         store=True,
         readonly=False,
         tracking=True,
+        help="Unique identifier used by the BIS Billing 3.0 and its derivatives, also known as 'Endpoint ID'.",
     )
     peppol_eas = fields.Selection(
         selection=[
@@ -139,12 +139,12 @@ class ResPartner(models.Model):
             ("EM", "Electronic mail"),
         ],
         string="Peppol e-address (EAS)",
-        help="""Code used to identify the Endpoint for BIS Billing 3.0 and its derivatives.
-             List available at https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/""",
         compute="_compute_peppol_eas",
         store=True,
         readonly=False,
         tracking=True,
+        help="""Code used to identify the Endpoint for BIS Billing 3.0 and its derivatives.
+             List available at https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/""",
     )
     available_peppol_eas = fields.Json(compute="_compute_available_peppol_eas")
 

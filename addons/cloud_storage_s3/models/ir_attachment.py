@@ -21,15 +21,15 @@ class IrAttachment(models.Model):
     _inherit = "ir.attachment"
 
     s3_blob_name = fields.Char(
-        help="Object key of the copy mirrored to S3 in hybrid mode.",
         copy=False,
+        help="Object key of the copy mirrored to S3 in hybrid mode.",
     )
     s3_mirror_pending = fields.Boolean(
-        help="Set when this attachment still needs to be mirrored to S3 "
-        "(hybrid mode). Cleared once the upload succeeds.",
         default=False,
         index=True,
         copy=False,
+        help="Set when this attachment still needs to be mirrored to S3 "
+        "(hybrid mode). Cleared once the upload succeeds.",
     )
 
     def _s3_is_enabled(self):

@@ -54,10 +54,10 @@ class HrJob(models.Model):
     address_id = fields.Many2one(
         comodel_name="res.partner",
         string="Job Location",
-        help="Select the location where the applicant will work. Addresses listed here are defined on the company's contact information.",
         default=_default_address_id,
         domain=lambda self: self._domain_address_id(),
         tracking=True,
+        help="Select the location where the applicant will work. Addresses listed here are defined on the company's contact information.",
     )
     application_ids = fields.One2many(
         comodel_name="hr.applicant",
@@ -70,9 +70,9 @@ class HrJob(models.Model):
         groups="hr_recruitment.group_hr_recruitment_interviewer",
     )
     open_application_count = fields.Integer(
-        help="Number of applications that are still ongoing (not hired or refused)",
         compute="_compute_open_application_count",
         groups="hr_recruitment.group_hr_recruitment_interviewer",
+        help="Number of applications that are still ongoing (not hired or refused)",
     )
     all_application_count = fields.Integer(
         compute="_compute_all_application_count",
@@ -80,9 +80,9 @@ class HrJob(models.Model):
     )
     new_application_count = fields.Integer(
         string="New Application",
-        help="Number of applications that are new in the flow (typically at first step of the flow)",
         compute="_compute_new_application_count",
         groups="hr_recruitment.group_hr_recruitment_interviewer",
+        help="Number of applications that are new in the flow (typically at first step of the flow)",
     )
     old_application_count = fields.Integer(
         string="Old Application",
@@ -116,8 +116,8 @@ class HrJob(models.Model):
     )
     employee_count = fields.Integer(compute="_compute_employee_count")
     alias_id = fields.Many2one(
-        help="Email alias for this job position. New emails will automatically create new applicants for this job position.",
         groups="hr_recruitment.group_hr_recruitment_interviewer",
+        help="Email alias for this job position. New emails will automatically create new applicants for this job position.",
     )
     color = fields.Integer(string="Color Index")
     favorite_user_ids = fields.Many2many(
@@ -129,9 +129,9 @@ class HrJob(models.Model):
     interviewer_ids = fields.Many2many(
         comodel_name="res.users",
         string="Interviewers",
-        help="The Interviewers set on the job position can see all Applicants in it. They have access to the information, the attachments, the meeting management and they can refuse him. You don't need to have Recruitment rights to be set as an interviewer.",
         domain="[('share', '=', False), ('company_ids', '=?', company_id)]",
         groups="hr_recruitment.group_hr_recruitment_interviewer",
+        help="The Interviewers set on the job position can see all Applicants in it. They have access to the information, the attachments, the meeting management and they can refuse him. You don't need to have Recruitment rights to be set as an interviewer.",
     )
     extended_interviewer_ids = fields.Many2many(
         comodel_name="res.users",
@@ -142,8 +142,8 @@ class HrJob(models.Model):
     )
     industry_id = fields.Many2one(
         comodel_name="res.partner.industry",
-        groups="hr_recruitment.group_hr_recruitment_interviewer",
         tracking=True,
+        groups="hr_recruitment.group_hr_recruitment_interviewer",
     )
     expected_degree = fields.Many2one(
         comodel_name="hr.recruitment.degree",
@@ -167,11 +167,11 @@ class HrJob(models.Model):
     )
     no_of_hired_employee = fields.Integer(
         string="Hired",
-        help="Number of hired employees for this job position during recruitment phase.",
         compute="_compute_no_of_hired_employee",
         store=True,
         copy=False,
         groups="hr_recruitment.group_hr_recruitment_interviewer",
+        help="Number of hired employees for this job position during recruitment phase.",
     )
 
     job_source_ids = fields.One2many(

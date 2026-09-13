@@ -25,10 +25,10 @@ class CalendarEvent(models.Model):
 
     booking_capacity_enforced = fields.Boolean(
         string="Enforce Booking Ceiling",
-        help="Public bookings retain their resource capacity constraint when edited or rescheduled.",
         default=False,
         copy=False,
         readonly=True,
+        help="Public bookings retain their resource capacity constraint when edited or rescheduled.",
     )
 
     @api.model
@@ -127,12 +127,12 @@ class CalendarEvent(models.Model):
     )
     booking_access_token = fields.Char(
         string="Booking Management Token",
-        help="Authorize managing a booking. Conference URLs never contain this token.",
         default=lambda self: str(uuid.uuid4()),
         index=True,
         copy=False,
         readonly=True,
         groups="base.group_system",
+        help="Authorize managing a booking. Conference URLs never contain this token.",
     )
     _booking_access_token_unique = models.Constraint(
         "UNIQUE(booking_access_token)", "Booking management credentials must be unique."

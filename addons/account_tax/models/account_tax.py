@@ -53,19 +53,19 @@ class AccountTaxGroup(models.Model):
     )
     country_id = fields.Many2one(
         comodel_name="res.country",
-        help="The country for which this tax group is applicable.",
         compute="_compute_country_id",
         precompute=True,
         store=True,
         readonly=False,
+        help="The country for which this tax group is applicable.",
     )
     country_code = fields.Char(related="country_id.code")
     preceding_subtotal = fields.Char(
+        translate=True,
         help="If set, this value will be used on documents as the label of a "
         "subtotal excluding this tax group before displaying it. "
         "If not set, the tax group will be displayed after the "
         "'Untaxed amount' subtotal.",
-        translate=True,
     )
     pos_receipt_label = fields.Char(string="PoS receipt label")
 
@@ -114,11 +114,11 @@ class AccountTax(models.Model):
     type_tax_use = fields.Selection(
         selection=TYPE_TAX_USE,
         string="Tax Type",
-        help="Determines where the tax is selectable. Note: 'None' means a tax "
-        "can't be used by itself, however it can still be used in a group.",
         default="sale",
         required=True,
         tracking=True,
+        help="Determines where the tax is selectable. Note: 'None' means a tax "
+        "can't be used by itself, however it can still be used in a group.",
     )
     tax_scope = fields.Selection(
         selection=[("service", "Services"), ("consu", "Goods")]
@@ -131,6 +131,9 @@ class AccountTax(models.Model):
             ("division", "Percentage Tax Included"),
         ],
         string="Tax Computation",
+        default="percent",
+        required=True,
+        tracking=True,
         help="""
     - Group of Taxes: The tax is a set of sub taxes.
     - Fixed: The tax amount stays the same whatever the price.
@@ -141,13 +144,10 @@ class AccountTax(models.Model):
         e.g 180 / (1 - 10%) = 200 (not price included)
         e.g 200 * (1 - 10%) = 180 (price included)
         """,
-        default="percent",
-        required=True,
-        tracking=True,
     )
     active = fields.Boolean(
-        help="Set active to false to hide the tax without removing it.",
         default=True,
+        help="Set active to false to hide the tax without removing it.",
     )
     company_ids = fields.Many2many(
         comodel_name="res.company",
@@ -165,9 +165,9 @@ class AccountTax(models.Model):
         check_company=True,
     )
     sequence = fields.Integer(
-        help="The sequence field is used to define order in which the tax lines are applied.",
         default=1,
         required=True,
+        help="The sequence field is used to define order in which the tax lines are applied.",
     )
     amount = fields.Float(
         digits=(16, 4),
@@ -183,9 +183,9 @@ class AccountTax(models.Model):
     tax_label = fields.Char(compute="_compute_tax_label")
 
     price_include = fields.Boolean(
-        help="Determines whether the price you use on the product and invoices includes this tax.",
         compute="_compute_price_include",
         search="_search_price_include",
+        help="Determines whether the price you use on the product and invoices includes this tax.",
     )
     company_price_include = fields.Selection(
         selection=[("tax_included", "Tax Included"), ("tax_excluded", "Tax Excluded")],
@@ -194,21 +194,21 @@ class AccountTax(models.Model):
     price_include_override = fields.Selection(
         selection=[("tax_included", "Tax Included"), ("tax_excluded", "Tax Excluded")],
         string="Included in Price",
+        tracking=True,
         help="Overrides the Company's default on whether the price you use on "
         "the product and invoices includes this tax.",
-        tracking=True,
     )
     include_base_amount = fields.Boolean(
         string="Affect Base of Subsequent Taxes",
-        help="If set, taxes with a higher sequence than this one will be affected by it, provided they accept it.",
         default=False,
         tracking=True,
+        help="If set, taxes with a higher sequence than this one will be affected by it, provided they accept it.",
     )
     is_base_affected = fields.Boolean(
         string="Base Affected by Previous Taxes",
-        help="If set, taxes with a lower sequence might affect this one, provided they try to do it.",
         default=True,
         tracking=True,
+        help="If set, taxes with a lower sequence might affect this one, provided they try to do it.",
     )
 
     tax_group_id = fields.Many2one(
@@ -224,21 +224,21 @@ class AccountTax(models.Model):
         comodel_name="account.tax.repartition.line",
         inverse_name="tax_id",
         string="Distribution for Invoices",
-        help="Distribution when the tax is used on an invoice",
         compute="_compute_invoice_repartition_line_ids",
         store=True,
         readonly=False,
         domain=[("document_type", "=", "invoice")],
+        help="Distribution when the tax is used on an invoice",
     )
     refund_repartition_line_ids = fields.One2many(
         comodel_name="account.tax.repartition.line",
         inverse_name="tax_id",
         string="Distribution for Refund Invoices",
-        help="Distribution when the tax is used on a refund",
         compute="_compute_refund_repartition_line_ids",
         store=True,
         readonly=False,
         domain=[("document_type", "=", "refund")],
+        help="Distribution when the tax is used on a refund",
     )
     repartition_line_ids = fields.One2many(
         comodel_name="account.tax.repartition.line",
@@ -249,12 +249,12 @@ class AccountTax(models.Model):
 
     country_id = fields.Many2one(
         comodel_name="res.country",
-        help="The country for which this tax is applicable.",
         compute="_compute_country_id",
         precompute=True,
         store=True,
         readonly=False,
         required=True,
+        help="The country for which this tax is applicable.",
     )
     country_code = fields.Char(
         related="country_id.code",
@@ -4206,22 +4206,22 @@ class AccountTaxRepartitionLine(models.Model):
 
     factor_percent = fields.Float(
         string="%",
-        help="Factor to apply on the account move lines generated from this distribution line, in percents",
         digits=(16, 12),
         default=100,
         required=True,
+        help="Factor to apply on the account move lines generated from this distribution line, in percents",
     )
     factor = fields.Float(
         string="Factor Ratio",
-        help="Factor to apply on the account move lines generated from this distribution line",
         compute="_compute_factor",
+        help="Factor to apply on the account move lines generated from this distribution line",
     )
     repartition_type = fields.Selection(
         selection=[("base", "Base"), ("tax", "of tax")],
         string="Based On",
-        help="Base on which the factor will be applied.",
         default="tax",
         required=True,
+        help="Base on which the factor will be applied.",
     )
     document_type = fields.Selection(
         selection=[("invoice", "Invoice"), ("refund", "Refund")],
@@ -4241,11 +4241,11 @@ class AccountTaxRepartitionLine(models.Model):
         help="The companies this distribution line belongs to.",
     )
     sequence = fields.Integer(
+        default=1,
         help="The order in which distribution lines are displayed and matched. "
         "For refunds to work properly, invoice distribution lines should be "
         "arranged in the same order as the credit note distribution lines "
         "they correspond to.",
-        default=1,
     )
 
     @api.depends("factor_percent")

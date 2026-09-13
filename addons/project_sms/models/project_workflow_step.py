@@ -7,6 +7,6 @@ class ProjectWorkflowStep(models.Model):
     sms_template_id = fields.Many2one(
         comodel_name="sms.template",
         string="SMS Template",
-        help="If set, an SMS Text Message will be automatically sent to the customer when the task reaches this stage.",
         domain=[("model", "=", "project.task")],
+        help="If set, an SMS Text Message will be automatically sent to the customer when the task reaches this stage.",
     )

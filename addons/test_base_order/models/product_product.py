@@ -10,8 +10,8 @@ class ProductProduct(models.Model):
             ("transferred", "Delivered quantities"),
         ],
         string="Base Order Test Invoicing Policy",
+        default="ordered",
         help="`sale` and `purchase` each name their own policy field and this "
         "module depends on neither, so it declares the one its line model "
         "points `_invoice_policy_field` at.",
-        default="ordered",
     )

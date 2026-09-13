@@ -30,11 +30,11 @@ class IapAccount(models.Model):
     )  # If True, the service can't be edited anymore
     description = fields.Char(related="service_id.description")
     account_token = fields.Char(
-        help="Account token is your authentication key for this service. Do not share it.",
         size=43,
         default=lambda s: uuid.uuid4().hex,
         copy=False,
         groups="base.group_system",
+        help="Account token is your authentication key for this service. Do not share it.",
     )
     company_ids = fields.Many2many(comodel_name="res.company")
 

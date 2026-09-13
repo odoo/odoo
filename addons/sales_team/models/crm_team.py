@@ -20,8 +20,8 @@ class CrmTeam(models.Model):
     )
     sequence = fields.Integer(default=10)
     active = fields.Boolean(
-        help="If the active field is set to false, it will allow you to hide the Sales Team without removing it.",
         default=True,
+        help="If the active field is set to false, it will allow you to hide the Sales Team without removing it.",
     )
     company_id = fields.Many2one(
         comodel_name="res.company",
@@ -41,22 +41,22 @@ class CrmTeam(models.Model):
     )
     is_membership_multi = fields.Boolean(
         string="Multiple Memberships Allowed",
-        help="If True, users may belong to several sales teams. Otherwise membership is limited to a single sales team.",
         compute="_compute_is_membership_multi",
+        help="If True, users may belong to several sales teams. Otherwise membership is limited to a single sales team.",
     )
     member_ids = fields.Many2many(
         comodel_name="res.users",
         string="Salespersons",
-        help="Users assigned to this team.",
         compute="_compute_member_ids",
         inverse="_inverse_member_ids",
         search="_search_member_ids",
         domain="['&', ('share', '=', False), ('company_ids', 'in', member_company_ids)]",
+        help="Users assigned to this team.",
     )
     member_company_ids = fields.Many2many(
         comodel_name="res.company",
-        help="UX: Limit to team company or all if no company",
         compute="_compute_member_company_ids",
+        help="UX: Limit to team company or all if no company",
     )
     member_warning = fields.Text(
         string="Membership Issue Warning",
@@ -66,8 +66,8 @@ class CrmTeam(models.Model):
         comodel_name="crm.team.member",
         inverse_name="crm_team_id",
         string="Sales Team Members",
-        help="Add members to automatically assign their documents to this sales team.",
         context={"active_test": True},
+        help="Add members to automatically assign their documents to this sales team.",
     )
     crm_team_member_all_ids = fields.One2many(
         comodel_name="crm.team.member",
@@ -77,8 +77,8 @@ class CrmTeam(models.Model):
     )
     color = fields.Integer(
         string="Color Index",
-        help="The color of the channel",
         default=lambda self: self._default_color(),
+        help="The color of the channel",
     )
     favorite_user_ids = fields.Many2many(
         string="Favorite Members",

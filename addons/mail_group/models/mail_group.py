@@ -53,8 +53,8 @@ class MailGroup(models.Model):
         max_height=128,
     )
     is_closed = fields.Boolean(
-        help="Closed groups might still be accessed, but emails sent to it will bounce",
         copy=False,
+        help="Closed groups might still be accessed, but emails sent to it will bounce",
     )
     mail_group_message_ids = fields.One2many(
         comodel_name="mail.group.message",
@@ -67,13 +67,13 @@ class MailGroup(models.Model):
     )
     mail_group_message_count = fields.Integer(
         string="Messages Count",
-        help="Number of message in this group",
         compute="_compute_mail_group_message_count",
+        help="Number of message in this group",
     )
     mail_group_message_moderation_count = fields.Integer(
         string="Pending Messages Count",
-        help="Messages that need an action",
         compute="_compute_mail_group_message_moderation_count",
+        help="Messages that need an action",
     )
     is_member = fields.Boolean(compute="_compute_is_member")
     member_ids = fields.One2many(
@@ -93,8 +93,8 @@ class MailGroup(models.Model):
     )
     is_moderator = fields.Boolean(
         string="Moderator",
-        help="Current user is a moderator of the group",
         compute="_compute_is_moderator",
+        help="Current user is a moderator of the group",
     )
     moderation = fields.Boolean(string="Moderate")
     moderation_rule_count = fields.Count(
@@ -141,8 +141,8 @@ class MailGroup(models.Model):
     )
     can_manage_group = fields.Boolean(
         string="Can Manage",
-        help="Can manage the members",
         compute="_compute_can_manage_group",
+        help="Can manage the members",
     )
 
     @api.depends(

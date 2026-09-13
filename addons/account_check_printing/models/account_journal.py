@@ -17,20 +17,20 @@ class AccountJournal(models.Model):
 
     check_manual_sequencing = fields.Boolean(
         string="Manual Numbering",
-        help="Check this option if your pre-printed checks are not numbered.",
         default=False,
+        help="Check this option if your pre-printed checks are not numbered.",
     )
     check_sequence_id = fields.Many2one(
         comodel_name="ir.sequence",
-        help="Checks numbering sequence.",
         copy=False,
         readonly=True,
+        help="Checks numbering sequence.",
     )
     check_next_number = fields.Char(
         string="Next Check Number",
-        help="Sequence number of the next printed check.",
         compute="_compute_check_next_number",
         inverse="_inverse_check_next_number",
+        help="Sequence number of the next printed check.",
     )
 
     bank_check_printing_layout = fields.Selection(

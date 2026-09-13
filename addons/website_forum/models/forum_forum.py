@@ -55,9 +55,9 @@ class ForumForum(models.Model):
             ("questions", "Questions (1 answer)"),
             ("discussions", "Discussions (multiple answers)"),
         ],
-        help="Questions mode: only one answer allowed\n Discussions mode: multiple answers allowed",
         default="questions",
         required=True,
+        help="Questions mode: only one answer allowed\n Discussions mode: multiple answers allowed",
     )
     privacy = fields.Selection(
         selection=[
@@ -65,8 +65,8 @@ class ForumForum(models.Model):
             ("connected", "Signed In"),
             ("private", "Some users"),
         ],
-        help="Public: Forum is public\nSigned In: Forum is visible for signed in users\nSome users: Forum and their content are hidden for non members of selected group",
         default="public",
+        help="Public: Forum is public\nSigned In: Forum is visible for signed in users\nSome users: Forum and their content are hidden for non members of selected group",
     )
     authorized_group_id = fields.Many2one(comodel_name="res.groups")
     active = fields.Boolean(default=True)
@@ -97,8 +97,8 @@ class ForumForum(models.Model):
     )
     relevancy_post_vote = fields.Float(
         string="First Relevance Parameter",
-        help="This formula is used in order to sort by relevance. The variable 'votes' represents number of votes for a post, and 'days' is number of days since the post creation",
         default=0.8,
+        help="This formula is used in order to sort by relevance. The variable 'votes' represents number of votes for a post, and 'days' is number of days since the post creation",
     )
     relevancy_time_decay = fields.Float(
         string="Second Relevance Parameter",
@@ -106,10 +106,10 @@ class ForumForum(models.Model):
     )
     allow_share = fields.Boolean(
         string="Sharing Options",
+        default=True,
         help="After posting the user will be proposed to share its question "
         "or answer on social networks, enabling social network propagation "
         "of the forum content.",
-        default=True,
     )
     post_ids = fields.One2many(
         comodel_name="forum.post",
@@ -262,8 +262,8 @@ class ForumForum(models.Model):
     )
     karma_dofollow = fields.Integer(
         string="Nofollow links",
-        help="If the author has not enough karma, a nofollow attribute is added to links",
         default=500,
+        help="If the author has not enough karma, a nofollow attribute is added to links",
     )
     karma_editor = fields.Integer(
         string="Editor Features: image and links",

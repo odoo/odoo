@@ -57,13 +57,13 @@ class PaymentTransaction(models.Model):
         compute="_compute_primary_payment_method_id",
     )
     reference = fields.Char(
-        help="The internal reference of the transaction",
         readonly=True,
         required=True,
+        help="The internal reference of the transaction",
     )  # Already has an index from the UNIQUE SQL constraint.
     provider_reference = fields.Char(
-        help="The provider reference of the transaction",
         readonly=True,
+        help="The provider reference of the transaction",
     )  # This is not the same thing as the provider reference of the token.
     amount = fields.Monetary(
         currency_field="currency_id",
@@ -101,8 +101,8 @@ class PaymentTransaction(models.Model):
     )
     state_message = fields.Text(
         string="Message",
-        help="The complementary information message about the state",
         readonly=True,
+        help="The complementary information message about the state",
     )
     last_state_change = fields.Datetime(
         string="Last State Change Date",
@@ -131,16 +131,16 @@ class PaymentTransaction(models.Model):
     )
     source_transaction_id = fields.Many2one(
         comodel_name="payment.transaction",
-        help="The source transaction of the related child transactions",
         index="btree_not_null",
         readonly=True,
+        help="The source transaction of the related child transactions",
     )
     child_transaction_ids = fields.One2many(
         comodel_name="payment.transaction",
         inverse_name="source_transaction_id",
         string="Child Transactions",
-        help="The child transactions of the transaction.",
         readonly=True,
+        help="The child transactions of the transaction.",
     )
     refunds_count = fields.Integer(compute="_compute_refunds_count")
 

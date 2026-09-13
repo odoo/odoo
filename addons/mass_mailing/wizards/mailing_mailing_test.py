@@ -31,9 +31,9 @@ class MailingMailingTest(models.TransientModel):
 
     email_to = fields.Text(
         string="Recipients",
-        help="Carriage-return-separated list of email addresses.",
         default=_default_email_to,
         required=True,
+        help="Carriage-return-separated list of email addresses.",
     )
     mass_mailing_id = fields.Many2one(
         comodel_name="mailing.mailing",

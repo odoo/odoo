@@ -10,6 +10,7 @@ class DocumentsDocument(models.Model):
 
     attached_on_sale = fields.Selection(
         selection_add=[("inside", "Inside quote pdf")],
+        ondelete={"inside": "set default"},
         help="Allows you to share the document with your customers within a sale.\n"
         "Leave it empty if you don't want to share this document with sales customer.\n"
         "On quote: the document will be sent to and accessible by customers at any time.\n"
@@ -19,7 +20,6 @@ class DocumentsDocument(models.Model):
         " ecommerce. \n"
         "Inside quote: The document will be included in the pdf of the quotation and sale"
         " order between the header pages and the quote table. ",
-        ondelete={"inside": "set default"},
     )
     form_field_ids = fields.Many2many(
         comodel_name="sale.pdf.form.field",

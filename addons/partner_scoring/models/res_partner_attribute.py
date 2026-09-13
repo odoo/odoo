@@ -19,12 +19,12 @@ class ResPartnerAttribute(models.Model):
             ("max", "Highest value"),
             ("none", "Not scored"),
         ],
+        default="sum",
+        required=True,
         help="How the selected values of this attribute contribute to the "
         "partner score: added together, only the highest one, or excluded. "
         "An excluded attribute, and any attribute whose values are all worth "
         "zero, is left out of the ceiling entirely and produces no row in the "
         "partner's score breakdown -- the captured values are kept, they are "
         "simply not explained there.",
-        default="sum",
-        required=True,
     )

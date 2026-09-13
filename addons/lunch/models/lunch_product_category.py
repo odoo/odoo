@@ -27,8 +27,8 @@ class LunchProductCategory(models.Model):
         related="company_id.currency_id",
     )
     product_count = fields.Integer(
-        help="The number of products related to this category",
         compute="_compute_product_count",
+        help="The number of products related to this category",
     )
     active = fields.Boolean(default=True)
     image_1920 = fields.Image(default=_default_image_1920)

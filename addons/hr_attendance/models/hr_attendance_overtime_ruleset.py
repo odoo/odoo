@@ -24,12 +24,12 @@ class HrAttendanceOvertimeRuleset(models.Model):
             ("max", "Maximum Rate"),
             ("sum", "Sum of all rates"),
         ],
+        default="max",
+        required=True,
         help="Controls how the rates from the different rules that apply are combined.\n"
         "  Max: use the highest rate. (e.g.: combined for 150% and 120 = 150%)\n"
         "  Sum: sum the *extra* pay (i.e. above 100%).\n"
         "    e.g.: combined rate for 150% & 120% = 100% (baseline) + (150-100)% + (120-100)% = 170%\n",
-        default="max",
-        required=True,
     )
     rules_count = fields.Count(count_of="rule_ids")
     active = fields.Boolean(

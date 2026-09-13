@@ -31,13 +31,13 @@ class IrProfile(models.Model):
     session = fields.Char(index=True)
     name = fields.Char(string="Description")
     duration = fields.Float(
-        help="Real elapsed time",
         digits=(9, 3),
+        help="Real elapsed time",
     )
     cpu_duration = fields.Float(
         string="CPU Duration",
-        help="CPU clock (not including other processes or SQL)",
         digits=(9, 3),
+        help="CPU clock (not including other processes or SQL)",
     )
 
     init_stack_trace = fields.Text(

@@ -22,9 +22,9 @@ class ProductAttribute(models.Model):
         help="If unchecked, it will allow you to hide the attribute without removing it."
     )
     sequence = fields.Integer(
-        help="Determine the display order",
         default=20,
         index=True,
+        help="Determine the display order",
     )
     create_variant = fields.Selection(
         selection=[
@@ -33,20 +33,20 @@ class ProductAttribute(models.Model):
             ("no_variant", "Never"),
         ],
         string="Variant Creation",
+        default="always",
+        required=True,
         help="""- Instantly: All possible variants are created as soon as the attribute and its values are added to a product.
         - Dynamically: Each variant is created only when its corresponding attributes and values are added to a sales order.
         - Never: Variants are never created for the attribute.
         Note: this cannot be changed once the attribute is used on a product.""",
-        default="always",
-        required=True,
     )
     display_type = fields.Selection(
         help="The display type used in the Product Configurator."
     )
     value_type = fields.Selection(
+        default="multi",
         help="How many values a single attribute line may hold. Always 'multi' "
         "for products: a line carries every value the template offers.",
-        default="multi",
     )
 
     value_ids = fields.One2many(

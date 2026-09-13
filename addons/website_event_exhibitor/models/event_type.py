@@ -6,10 +6,10 @@ class EventType(models.Model):
 
     exhibitor_menu = fields.Boolean(
         string="Showcase Exhibitors",
-        help="Display exhibitors on website, in the footer of every page of the event.",
         compute="_compute_exhibitor_menu",
         store=True,
         readonly=False,
+        help="Display exhibitors on website, in the footer of every page of the event.",
     )
 
     @api.depends("website_menu")

@@ -40,36 +40,36 @@ class Im_LivechatChannel(models.Model):
     )
     default_message = fields.Char(
         string="Welcome Message",
-        help="This is an automated 'welcome' message that your visitor will see when they initiate a new conversation.",
         translate=True,
         default=_default_default_message,
+        help="This is an automated 'welcome' message that your visitor will see when they initiate a new conversation.",
     )
     header_background_color = fields.Char(
-        help="Default background color of the channel header once open",
         default="#875A7B",
+        help="Default background color of the channel header once open",
     )
     title_color = fields.Char(
-        help="Default title color of the channel once open",
         default="#FFFFFF",
+        help="Default title color of the channel once open",
     )
     button_background_color = fields.Char(
-        help="Default background color of the Livechat button",
         default="#875A7B",
+        help="Default background color of the Livechat button",
     )
     button_text_color = fields.Char(
-        help="Default text color of the Livechat button",
         default="#FFFFFF",
+        help="Default text color of the Livechat button",
     )
     max_sessions_mode = fields.Selection(
         selection=[("unlimited", "Unlimited"), ("limited", "Limited")],
         string="Sessions per Operator",
-        help="If limited, operators will only handle the selected number of sessions at a time.",
         default="unlimited",
+        help="If limited, operators will only handle the selected number of sessions at a time.",
     )
     max_sessions = fields.Integer(
         string="Maximum Sessions",
-        help="Maximum number of concurrent sessions per operator.",
         default=10,
+        help="Maximum number of concurrent sessions per operator.",
     )
     block_assignment_during_call = fields.Boolean(
         string="No Chats During Call",
@@ -80,10 +80,10 @@ class Im_LivechatChannel(models.Model):
     )
 
     web_page = fields.Char(
-        help="URL to a static page where you client can discuss with the operator of the channel.",
         compute="_compute_web_page_link",
         store=False,
         readonly=True,
+        help="URL to a static page where you client can discuss with the operator of the channel.",
     )
     are_you_inside = fields.Boolean(
         string="Are you inside the matrix?",
@@ -709,17 +709,17 @@ class Im_LivechatChannelRule(models.Model):
             ("hide_button", "Hide"),
         ],
         string="Live Chat Button",
+        default="display_button",
+        required=True,
         help="* 'Show' displays the chat button on the pages.\n"
         "* 'Show with notification' is 'Show' in addition to a floating text just next to the button.\n"
         "* 'Open automatically' displays the button and automatically opens the conversation pane.\n"
         "* 'Hide' hides the chat button on the pages.\n",
-        default="display_button",
-        required=True,
     )
     auto_popup_timer = fields.Integer(
         string="Time to Open",
-        help="Delay (in seconds) to automatically open the conversation window. Note: the selected action must be 'Open automatically' otherwise this parameter will not be taken into account.",
         default=0,
+        help="Delay (in seconds) to automatically open the conversation window. Note: the selected action must be 'Open automatically' otherwise this parameter will not be taken into account.",
     )
     chatbot_script_id = fields.Many2one(
         comodel_name="chatbot.script",
@@ -737,8 +737,8 @@ class Im_LivechatChannelRule(models.Model):
     )
     channel_id = fields.Many2one(
         comodel_name="im_livechat.channel",
-        help="The channel of the rule",
         index="btree_not_null",
+        help="The channel of the rule",
     )
     country_ids = fields.Many2many(
         comodel_name="res.country",
@@ -750,8 +750,8 @@ class Im_LivechatChannelRule(models.Model):
     )
     sequence = fields.Integer(
         string="Matching order",
-        help="Given the order to find a matching rule. If 2 rules are matching for the given url/country, the one with the lowest sequence will be chosen.",
         default=10,
+        help="Given the order to find a matching rule. If 2 rules are matching for the given url/country, the one with the lowest sequence will be chosen.",
     )
 
     def match_rule(self, channel_id, url, country_id=False):

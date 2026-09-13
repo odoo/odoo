@@ -30,10 +30,10 @@ class MrpBom(models.Model):
     code = fields.Char(string="Reference")
     active = fields.Boolean(default=True)
     archived_with_product = fields.Boolean(
+        copy=False,
         help="Technical: this BoM was archived because its product was, so "
         "unarchiving the product brings it back. A BoM retired on its own "
         "does not carry the flag and stays retired.",
-        copy=False,
     )
     type = fields.Selection(
         selection=[("normal", "Manufacture this product"), ("phantom", "Kit")],
@@ -52,10 +52,10 @@ class MrpBom(models.Model):
     product_id = fields.Many2one(
         comodel_name="product.product",
         string="Product Variant",
-        help="If a product variant is defined the BOM is available only for this product.",
         index=True,
         domain="['&', ('product_tmpl_id', '=', product_tmpl_id), ('type', '=', 'consu')]",
         check_company=True,
+        help="If a product variant is defined the BOM is available only for this product.",
     )
     bom_line_ids = fields.One2many(
         comodel_name="mrp.bom.line",
@@ -71,16 +71,16 @@ class MrpBom(models.Model):
     )
     product_qty = fields.Float(
         string="Quantity",
-        help="This should be the smallest quantity that this product can be produced in. If the BOM contains operations, make sure the work center capacity is accurate.",
         digits="Product Unit",
         default=1.0,
         required=True,
+        help="This should be the smallest quantity that this product can be produced in. If the BOM contains operations, make sure the work center capacity is accurate.",
     )
     product_uom_id = fields.Many2one(
         comodel_name="uom.uom",
         string="Unit",
-        help="Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control",
         required=True,
+        help="Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control",
     )
     sequence = fields.Integer()
     operation_ids = fields.One2many(
@@ -94,8 +94,8 @@ class MrpBom(models.Model):
         compute="_compute_operation_count",
     )
     show_copy_operations_button = fields.Boolean(
-        help="Technical field used to control the visibility of the 'Copy Existing Operations' button.",
         compute="_compute_show_copy_operations_button",
+        help="Technical field used to control the visibility of the 'Copy Existing Operations' button.",
     )
     ready_to_produce = fields.Selection(
         selection=[
@@ -109,12 +109,12 @@ class MrpBom(models.Model):
     picking_type_id = fields.Many2one(
         comodel_name="stock.picking.type",
         string="Operation Type",
+        domain="[('code', '=', 'mrp_operation')]",
+        check_company=True,
         help="When a procurement has a ‘produce’ route with a operation type set, it will try to create "
         "a Manufacturing Order for that product using a BoM of the same operation type.If not,"
         "the operation type is not taken into account in the BoM search. That allows "
         "to define stock rules which trigger different manufacturing orders with different BoMs.",
-        domain="[('code', '=', 'mrp_operation')]",
-        check_company=True,
     )
     company_id = fields.Many2one(
         comodel_name="res.company",
@@ -128,13 +128,13 @@ class MrpBom(models.Model):
             ("strict", "Blocked"),
         ],
         string="Flexible Consumption",
+        default="warning",
+        required=True,
         help="Defines if you can consume more or less components than the quantity defined on the BoM:\n"
         "  * Allowed: allowed for all manufacturing users.\n"
         "  * Allowed with warning: allowed for all manufacturing users with summary of consumption differences when closing the manufacturing order.\n"
         "  Note that in the case of component Highlight Consumption, where consumption is registered manually exclusively, consumption warnings will still be issued when appropriate also.\n"
         "  * Blocked: only a manager can close a manufacturing order when the BoM consumption is not respected.",
-        default="warning",
-        required=True,
     )
     possible_product_template_attribute_value_ids = fields.Many2many(
         comodel_name="product.template.attribute.value",
@@ -146,19 +146,19 @@ class MrpBom(models.Model):
     )
     produce_delay = fields.Integer(
         string="Manufacturing Lead Time",
-        help="Average lead time in days to manufacture this product. In the case of multi-level BOM, the manufacturing lead times of the components will be added. In case the product is subcontracted, this can be used to determine the date at which components should be sent to the subcontractor.",
         default=0,
+        help="Average lead time in days to manufacture this product. In the case of multi-level BOM, the manufacturing lead times of the components will be added. In case the product is subcontracted, this can be used to determine the date at which components should be sent to the subcontractor.",
     )
     days_to_prepare_mo = fields.Integer(
         string="Days to prepare Manufacturing Order",
-        help="Create and confirm Manufacturing Orders this many days in advance, to have enough time to replenish components or manufacture semi-finished products.",
         default=0,
+        help="Create and confirm Manufacturing Orders this many days in advance, to have enough time to replenish components or manufacture semi-finished products.",
     )
     show_set_bom_button = fields.Boolean(compute="_compute_show_set_bom_button")
     batch_size = fields.Float(
-        help="All automatically generated manufacturing orders for this product will be of this size.",
         digits="Product Unit",
         default=1.0,
+        help="All automatically generated manufacturing orders for this product will be of this size.",
     )
     enable_batch_size = fields.Boolean(default=False)
 

@@ -76,23 +76,22 @@ class SaleOrder(models.Model):
         check_company=True,
     )
     allow_external_delivery_address = fields.Boolean(
+        default=False,
+        tracking=True,
         help="Allow selecting a delivery address that does not belong to the "
         "customer's company (e.g. drop-shipping to a third party). When "
         "disabled, the delivery address is limited to the customer's own contacts.",
-        default=False,
-        tracking=True,
     )
     partner_invoice_domain = fields.Binary(
-        help="Dynamic domain limiting invoice address selection.",
         compute="_compute_partner_address_domains",
+        help="Dynamic domain limiting invoice address selection.",
     )
     partner_shipping_domain = fields.Binary(
-        help="Dynamic domain limiting delivery address selection.",
         compute="_compute_partner_address_domains",
+        help="Dynamic domain limiting delivery address selection.",
     )
     pricelist_id = fields.Many2one(
         comodel_name="product.pricelist",
-        help="If you change the pricelist, only newly added lines will be affected.",
         compute="_compute_pricelist_id",
         precompute=True,
         store=True,
@@ -100,6 +99,7 @@ class SaleOrder(models.Model):
         domain="[('company_id', 'in', [False, company_id])]",
         check_company=True,
         tracking=1,
+        help="If you change the pricelist, only newly added lines will be affected.",
     )
     user_id = fields.Many2one(
         string="Salesperson",
@@ -128,9 +128,9 @@ class SaleOrder(models.Model):
         tracking=True,
     )
     journal_id = fields.Many2one(
+        domain=[("type", "=", "sale")],
         help="If set, the SO will invoice in this journal; "
         "otherwise the sales journal with the lowest sequence is used.",
-        domain=[("type", "=", "sale")],
     )
     state = fields.Selection(
         selection=const.ORDER_STATE,
@@ -153,18 +153,18 @@ class SaleOrder(models.Model):
     )
     date_planned = fields.Datetime(
         string="Expected Date",
-        help="Delivery date you can promise to the customer, computed from the minimum lead time of the order lines.",
         compute="_compute_date_planned",
         store=False,
+        help="Delivery date you can promise to the customer, computed from the minimum lead time of the order lines.",
     )
 
     require_signature = fields.Boolean(
         string="Online signature",
-        help="Request a online signature from the customer to confirm the order.",
         compute="_compute_require_signature",
         precompute=True,
         store=True,
         readonly=False,
+        help="Request a online signature from the customer to confirm the order.",
     )
     signature = fields.Image(
         attachment=True,
@@ -177,19 +177,19 @@ class SaleOrder(models.Model):
 
     require_payment = fields.Boolean(
         string="Online payment",
-        help="Request a online payment from the customer to confirm the order.",
         compute="_compute_require_payment",
         precompute=True,
         store=True,
         readonly=False,
+        help="Request a online payment from the customer to confirm the order.",
     )
     prepayment_percent = fields.Float(
         string="Prepayment percentage",
-        help="The percentage of the amount needed that must be paid by the customer to confirm the order.",
         compute="_compute_prepayment_percent",
         precompute=True,
         store=True,
         readonly=False,
+        help="The percentage of the amount needed that must be paid by the customer to confirm the order.",
     )
     preferred_payment_channel_id = fields.Many2one(
         comodel_name="account.payment.channel",
@@ -211,10 +211,10 @@ class SaleOrder(models.Model):
     amount_total = fields.Monetary(tracking=4)
     has_upsell_opportunity = fields.Boolean(
         string="Has Upselling Opportunity",
-        help="Set when a line invoiced on ordered quantities has delivered more than "
-        "was ordered: the excess is not billable until the order is increased.",
         compute="_compute_has_upsell_opportunity",
         store=True,
+        help="Set when a line invoiced on ordered quantities has delivered more than "
+        "was ordered: the excess is not billable until the order is increased.",
     )
 
     transaction_ids = fields.Many2many(
@@ -242,10 +242,10 @@ class SaleOrder(models.Model):
     )
     amount_paid = fields.Float(
         string="Payment Transactions Amount",
-        help="Sum of transactions made in through the online payment form that are in the state"
-        " 'done' or 'authorized' and linked to this order.",
         compute="_compute_amount_paid",
         compute_sudo=True,
+        help="Sum of transactions made in through the online payment form that are in the state"
+        " 'done' or 'authorized' and linked to this order.",
     )
 
     campaign_id = fields.Many2one(ondelete="set null")
@@ -262,8 +262,8 @@ class SaleOrder(models.Model):
     partner_invoice_count = fields.Integer(related="partner_id.customer_invoice_count")
     reference = fields.Char(
         string="Payment Ref.",
-        help="The payment communication of this sale order.",
         copy=False,
+        help="The payment communication of this sale order.",
     )
     notes = fields.Html(
         compute="_compute_notes",
@@ -288,9 +288,9 @@ class SaleOrder(models.Model):
     duplicated_order_ids = fields.Many2many(comodel_name="sale.order")
     sale_warning_text = fields.Text(
         string="Sale Warning",
-        help="Internal warning for the partner or the products as set by the user.",
         compute="_compute_sale_warning_text",
         depends_context=("uid",),
+        help="Internal warning for the partner or the products as set by the user.",
     )
     acknowledged = fields.Boolean(
         help="It indicates that the customer has acknowledged the receipt of the sales order."
@@ -298,13 +298,13 @@ class SaleOrder(models.Model):
     has_active_pricelist = fields.Boolean(compute="_compute_has_active_pricelist")
     show_update_fpos = fields.Boolean(
         string="Has Fiscal Position Changed",
-        help="True if the fiscal position was changed",
         store=False,
+        help="True if the fiscal position was changed",
     )
     show_update_pricelist = fields.Boolean(
         string="Has Pricelist Changed",
-        help="True if the pricelist was changed",
         store=False,
+        help="True if the pricelist was changed",
     )
 
     _date_order_id_idx = models.Index("(date_order desc, id desc)")

@@ -8,13 +8,13 @@ class ProductCombo(models.Model):
 
     qty_max = fields.Integer(
         string="Maximum quantity",
-        help="Maximum number of items to select in the combo.",
         default=1,
+        help="Maximum number of items to select in the combo.",
     )
     qty_free = fields.Integer(
         string="Free quantity",
-        help="Number of free items included in the combo.",
         default=1,
+        help="Number of free items included in the combo.",
     )
 
     @api.model

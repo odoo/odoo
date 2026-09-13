@@ -27,8 +27,8 @@ class IotBox(models.Model):
     )
     drivers_auto_update = fields.Boolean(
         string="Automatic drivers update",
-        help="Automatically update drivers when the IoT Box boots",
         default=True,
+        help="Automatically update drivers when the IoT Box boots",
     )
     version = fields.Char(
         string="Image Version",

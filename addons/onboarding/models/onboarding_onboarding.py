@@ -24,8 +24,8 @@ class OnboardingOnboarding(models.Model):
 
     text_completed = fields.Char(
         string="Message at completion",
-        help="Text shown on onboarding when completed",
         default=lambda s: s.env._("Nice work! Your configuration is done."),
+        help="Text shown on onboarding when completed",
     )
 
     is_per_company = fields.Boolean(
@@ -42,8 +42,8 @@ class OnboardingOnboarding(models.Model):
     current_progress_id = fields.Many2one(
         comodel_name="onboarding.progress",
         string="Onboarding Progress",
-        help="Onboarding Progress for the current context (company).",
         compute="_compute_current_progress",
+        help="Onboarding Progress for the current context (company).",
     )
     current_onboarding_state = fields.Selection(
         selection=ONBOARDING_PROGRESS_STATES,
@@ -60,8 +60,8 @@ class OnboardingOnboarding(models.Model):
         comodel_name="onboarding.progress",
         inverse_name="onboarding_id",
         string="Onboarding Progress Records",
-        help="All Onboarding Progress Records (across companies).",
         readonly=True,
+        help="All Onboarding Progress Records (across companies).",
     )
 
     sequence = fields.Integer(default=10)

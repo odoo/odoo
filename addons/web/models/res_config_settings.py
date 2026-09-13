@@ -33,8 +33,8 @@ class ResConfigSettings(models.TransientModel):
     report_footer = fields.Html(
         related="company_id.report_footer",
         string="Custom Report Footer",
-        help="Footer text displayed at the bottom of all reports.",
         readonly=False,
+        help="Footer text displayed at the bottom of all reports.",
     )
     external_report_layout_id = fields.Many2one(
         related="company_id.external_report_layout_id"
@@ -79,8 +79,8 @@ class ResConfigSettings(models.TransientModel):
 
     group_multi_currency = fields.Boolean(
         string="Multi-Currencies",
-        help="Allows to work in a multi currency environment",
         implied_group="base.group_multi_currency",
+        help="Allows to work in a multi currency environment",
     )
 
     show_effect = fields.Boolean(config_parameter="base.show_effect")

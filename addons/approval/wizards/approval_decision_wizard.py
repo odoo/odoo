@@ -10,25 +10,25 @@ class ApprovalDecisionWizard(models.TransientModel):
 
     approver_id = fields.Many2one(
         comodel_name="approval.approver",
+        readonly=True,
         help="The approver record making this decision. Empty in batch mode, "
         "where request_ids carries the targets and each request resolves "
         "its own pending row for the current user.",
-        readonly=True,
     )
     request_ids = fields.Many2many(
         comodel_name="approval.request",
         string="Requests",
-        help="Batch mode: every request refused with the reason below.",
         readonly=True,
+        help="Batch mode: every request refused with the reason below.",
     )
     request_id = fields.Many2one(
         comodel_name="approval.request",
         string="Approval Request",
-        help="The approval request being decided. Auto-populated from ``approver_id``.",
         compute="_compute_request_id",
         precompute=True,
         store=True,
         readonly=True,
+        help="The approval request being decided. Auto-populated from ``approver_id``.",
     )
     user_id = fields.Many2one(
         comodel_name="res.users",
@@ -42,9 +42,9 @@ class ApprovalDecisionWizard(models.TransientModel):
             ("change", "Request Change"),
         ],
         string="Decision",
-        help="Type of decision being made",
         readonly=True,
         required=True,
+        help="Type of decision being made",
     )
 
     refusal_reason_id = fields.Many2one(
@@ -53,11 +53,11 @@ class ApprovalDecisionWizard(models.TransientModel):
     )
     refusal_reason_description = fields.Text(
         related="refusal_reason_id.description",
+        readonly=True,
         help="Internal guidance shown to the approver to clarify when "
         "this reason applies. Rendered as a read-only info banner in "
         "the wizard; never persisted on the request or sent to the "
         "requester.",
-        readonly=True,
     )
     change_field = fields.Selection(
         selection=[

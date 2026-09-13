@@ -53,9 +53,9 @@ class CertificateKey(models.Model):
     )
     name = fields.Char(default="New key")
     active = fields.Boolean(
-        help="Set active to false to archive the key.",
         default=True,
         name="Active",
+        help="Set active to false to archive the key.",
     )
     content = fields.Binary(
         string="Key file",

@@ -8,14 +8,14 @@ class AccountPaymentRegister(models.TransientModel):
     payment_token_id = fields.Many2one(
         comodel_name="payment.token",
         string="Saved payment token",
-        help="Note that tokens from providers set to only authorize transactions (instead of capturing the amount) are "
-        "not available.",
         compute="_compute_payment_token_id",
         store=True,
         readonly=False,
         domain="""[
             ('id', 'in', suitable_payment_token_ids),
         ]""",
+        help="Note that tokens from providers set to only authorize transactions (instead of capturing the amount) are "
+        "not available.",
     )
 
     # == Display purpose fields ==

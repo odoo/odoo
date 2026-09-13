@@ -43,8 +43,8 @@ class DeliveryCarrier(models.Model):
     )
     active = fields.Boolean(default=True)
     sequence = fields.Integer(
-        help="Determine the display order",
         default=10,
+        help="Determine the display order",
     )
     # This field will be overwritten by internal shipping providers by adding their own type (ex: 'fedex')
     delivery_type = fields.Selection(
@@ -62,8 +62,8 @@ class DeliveryCarrier(models.Model):
             ("rate", "Get Rate"),
             ("rate_and_ship", "Get Rate and Create Shipment"),
         ],
-        help="Action while validating Delivery Orders",
         default="rate_and_ship",
+        help="Action while validating Delivery Orders",
     )
     prod_environment = fields.Boolean(
         string="Environment",
@@ -95,9 +95,9 @@ class DeliveryCarrier(models.Model):
     invoice_policy = fields.Selection(
         selection=[("estimated", "Estimated cost")],
         string="Invoicing Policy",
-        help="Estimated Cost: the customer will be invoiced the estimated cost of the shipping.",
         default="estimated",
         required=True,
+        help="Estimated Cost: the customer will be invoiced the estimated cost of the shipping.",
     )
 
     country_ids = fields.Many2many(
@@ -139,10 +139,10 @@ class DeliveryCarrier(models.Model):
     carrier_credential_id = fields.Many2one(
         comodel_name="credential.credential",
         string="Credential",
-        help="Holds this carrier's API secrets.",
         copy=False,
         ondelete="restrict",
         groups="base.group_system",
+        help="Holds this carrier's API secrets.",
     )
 
     weight_uom_name = fields.Char(
@@ -170,9 +170,9 @@ class DeliveryCarrier(models.Model):
     )
 
     carrier_description = fields.Text(
+        translate=True,
         help="A description of the delivery method that you want to communicate to your customers on the Sales Order and sales confirmation email."
         "E.g. instructions for customers to follow.",
-        translate=True,
     )
 
     margin = fields.Float(help="This percentage will be added to the shipping price.")
@@ -181,12 +181,12 @@ class DeliveryCarrier(models.Model):
     )
     free_over = fields.Boolean(
         string="Free if order amount is above",
-        help="If the order total amount (shipping excluded) is above or equal to this value, the customer benefits from a free shipping",
         default=False,
+        help="If the order total amount (shipping excluded) is above or equal to this value, the customer benefits from a free shipping",
     )
     amount = fields.Float(
-        help="Amount of the order to benefit from a free shipping, expressed in the company currency",
         default=1000,
+        help="Amount of the order to benefit from a free shipping, expressed in the company currency",
     )
 
     can_generate_return = fields.Boolean(compute="_compute_can_generate_return")
@@ -204,8 +204,8 @@ class DeliveryCarrier(models.Model):
     )
     shipping_insurance = fields.Integer(
         string="Insurance Percentage",
-        help="Shipping insurance is a service which may reimburse senders whose parcels are lost, stolen, and/or damaged in transit.",
         default=0,
+        help="Shipping insurance is a service which may reimburse senders whose parcels are lost, stolen, and/or damaged in transit.",
     )
 
     price_rule_ids = fields.One2many(

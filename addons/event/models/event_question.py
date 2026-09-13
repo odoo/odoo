@@ -44,10 +44,10 @@ class EventQuestion(models.Model):
         help="Include by default in new events.",
     )
     is_reusable = fields.Boolean(
-        help="Allow this question to be selected and reused for any future event. Always true for default questions.",
         compute="_compute_is_reusable",
         default=True,
         store=True,
+        help="Allow this question to be selected and reused for any future event. Always true for default questions.",
     )
     answer_ids = fields.One2many(
         comodel_name="event.question.answer",

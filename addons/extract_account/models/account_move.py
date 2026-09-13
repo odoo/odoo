@@ -25,11 +25,11 @@ class AccountMove(models.Model):
     extract_can_be_read = fields.Boolean(compute="_compute_extract_can_be_read")
     extract_has_lines = fields.Boolean(compute="_compute_extract_has_lines")
     extract_lines_applied = fields.Boolean(
+        copy=False,
+        readonly=True,
         help="Whether the lines read from the document have already been added "
         "to this bill. Kept so the screen that offers them cannot add them "
         "a second time.",
-        copy=False,
-        readonly=True,
     )
 
     @api.depends("state", "move_type", "extract_state")

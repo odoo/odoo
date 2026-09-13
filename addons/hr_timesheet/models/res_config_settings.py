@@ -16,10 +16,10 @@ class ResConfigSettings(models.TransientModel):
         comodel_name="uom.uom",
         related="company_id.project_time_mode_id",
         string="Project Time Unit",
+        readonly=False,
         help="This will set the unit of measure used in projects and tasks.\n"
         "If you use the timesheet linked to projects, don't "
         "forget to setup the right unit of measure in your employees.",
-        readonly=False,
     )
     is_encode_uom_days = fields.Boolean(
         export_string_translation=False,

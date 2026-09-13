@@ -7,8 +7,8 @@ class ResPartnerGrade(models.Model):
 
     partner_weight = fields.Integer(
         string="Level Weight",
-        help="Gives the probability to assign a lead to this partner. (0 means no assignment.)",
         default=1,
+        help="Gives the probability to assign a lead to this partner. (0 means no assignment.)",
     )
 
     def _compute_website_url(self):

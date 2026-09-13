@@ -41,18 +41,18 @@ class IrModelConstraint(models.Model):
 
     name = fields.Char(
         string="Constraint",
-        help="PostgreSQL constraint or foreign key name.",
         index=True,
         readonly=True,
         required=True,
+        help="PostgreSQL constraint or foreign key name.",
     )
     definition = fields.Char(
-        help="PostgreSQL constraint definition",
         readonly=True,
+        help="PostgreSQL constraint definition",
     )
     message = fields.Char(
-        help="Error message returned when the constraint is violated.",
         translate=True,
+        help="Error message returned when the constraint is violated.",
     )
     model = fields.Many2one(
         comodel_name="ir.model",
@@ -70,10 +70,10 @@ class IrModelConstraint(models.Model):
     )
     type = fields.Char(
         string="Constraint Type",
-        help="Type of the constraint: `f` for a foreign key, `u` for other constraints.",
         size=1,
         readonly=True,
         required=True,
+        help="Type of the constraint: `f` for a foreign key, `u` for other constraints.",
     )
 
     _module_name_uniq = models.Constraint(
@@ -352,9 +352,9 @@ class IrModelRelation(models.Model):
 
     name = fields.Char(
         string="Relation Name",
-        help="PostgreSQL table name implementing a many2many relation.",
         index=True,
         required=True,
+        help="PostgreSQL table name implementing a many2many relation.",
     )
     model = fields.Many2one(
         comodel_name="ir.model",

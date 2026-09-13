@@ -60,6 +60,7 @@ class ResCompanyLdap(models.Model):
     )
     ldap_filter = fields.Char(
         string="LDAP filter",
+        required=True,
         help="""\
     Filter used to look up user accounts in the LDAP database. It is an\
     arbitrary LDAP filter in string representation. Any `%s` placeholder\
@@ -77,12 +78,11 @@ class ResCompanyLdap(models.Model):
 
         (|(mail=%s)(uid=%s))
     """,
-        required=True,
     )
     ldap_base = fields.Char(
         string="LDAP base",
-        help="DN of the user search scope: all descendants of this base will be searched for users.",
         required=True,
+        help="DN of the user search scope: all descendants of this base will be searched for users.",
     )
     user = fields.Many2one(
         comodel_name="res.users",
@@ -90,8 +90,8 @@ class ResCompanyLdap(models.Model):
         help="User to copy when creating new users",
     )
     create_user = fields.Boolean(
-        help="Automatically create local user accounts for new users authenticating via LDAP",
         default=True,
+        help="Automatically create local user accounts for new users authenticating via LDAP",
     )
     ldap_tls = fields.Boolean(
         string="Use TLS",

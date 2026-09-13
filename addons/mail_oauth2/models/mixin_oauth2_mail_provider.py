@@ -31,10 +31,10 @@ class MixinOauth2MailProvider(models.AbstractModel):
     oauth2_credential_id = fields.Many2one(
         comodel_name="credential.credential",
         string="OAuth2 Credential",
-        help="Holds this record's OAuth tokens.",
         copy=False,
         ondelete="restrict",
         groups="base.group_system",
+        help="Holds this record's OAuth tokens.",
     )
 
     def _oauth2_stored_tokens(self):

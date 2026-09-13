@@ -36,15 +36,15 @@ class ResourceCalendarLeaves(models.Model):
     )
     resource_id = fields.Many2one(
         comodel_name="resource.resource",
-        help="If empty, this is a generic time off for the company. If a resource is set, the time off is only for this resource",
         index=True,
         ondelete="cascade",
         check_company=True,
+        help="If empty, this is a generic time off for the company. If a resource is set, the time off is only for this resource",
     )
     time_type = fields.Selection(
         selection=[("leave", "Time Off"), ("other", "Other")],
-        help="Whether this should be computed as a time off or as work time (eg: formation)",
         default="leave",
+        help="Whether this should be computed as a time off or as work time (eg: formation)",
     )
     date_from = fields.Datetime(
         string="Start Date",

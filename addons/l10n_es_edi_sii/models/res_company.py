@@ -27,8 +27,8 @@ class ResCompany(models.Model):
     )
     l10n_es_sii_test_env = fields.Boolean(
         string="SII Test Mode",
-        help="Use the test environment for SII",
         default=True,
+        help="Use the test environment for SII",
     )
 
     @api.depends("country_id", "l10n_es_sii_certificate_ids")

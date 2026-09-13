@@ -39,11 +39,11 @@ class CalendarAlarm(models.Model):
     mail_template_id = fields.Many2one(
         comodel_name="mail.template",
         string="Email Template",
-        help="Template used to render mail reminder content.",
         compute="_compute_mail_template_id",
         store=True,
         readonly=False,
         domain=[("model", "in", ["calendar.attendee"])],
+        help="Template used to render mail reminder content.",
     )
     body = fields.Text(
         string="Additional Message",
@@ -51,8 +51,8 @@ class CalendarAlarm(models.Model):
     )
     notify_responsible = fields.Boolean(default=False)
     notify_responsible_available = fields.Boolean(
-        help="Technical: whether this alarm's channel can single out the organizer.",
         compute="_compute_notify_responsible_available",
+        help="Technical: whether this alarm's channel can single out the organizer.",
     )
 
     @api.constrains("duration")

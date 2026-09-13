@@ -8,12 +8,12 @@ class PaymentProvider(models.Model):
     journal_id = fields.Many2one(
         comodel_name="account.journal",
         string="Payment Journal",
-        help="The journal in which the successful transactions are posted.",
         compute="_compute_journal_id",
         inverse="_inverse_journal_id",
         copy=False,
         domain='[("type", "=", "bank")]',
         check_company=True,
+        help="The journal in which the successful transactions are posted.",
     )
 
     # === COMPUTE METHODS ===#

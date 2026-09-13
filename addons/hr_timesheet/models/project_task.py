@@ -46,10 +46,10 @@ class ProjectTask(models.Model):
     )
     remaining_hours = fields.Float(
         string="Time Remaining",
-        help="Number of planned hours minus the number of hours spent.",
         compute="_compute_remaining_hours",
         store=True,
         readonly=True,
+        help="Number of planned hours minus the number of hours spent.",
     )
     remaining_hours_percentage = fields.Float(
         export_string_translation=False,
@@ -64,9 +64,9 @@ class ProjectTask(models.Model):
     )
     total_hours_spent = fields.Float(
         string="Total Time Spent",
-        help="Time spent on this task and its sub-tasks (and their own sub-tasks).",
         compute="_compute_total_hours_spent",
         store=True,
+        help="Time spent on this task and its sub-tasks (and their own sub-tasks).",
     )
     progress = fields.Float(
         compute="_compute_progress_hours",
@@ -79,10 +79,10 @@ class ProjectTask(models.Model):
     )
     subtask_effective_hours = fields.Float(
         string="Time Spent on Sub-tasks",
-        help="Time spent on the sub-tasks (and their own sub-tasks) of this task.",
         compute="_compute_subtask_effective_hours",
         recursive=True,
         store=True,
+        help="Time spent on the sub-tasks (and their own sub-tasks) of this task.",
     )
     timesheet_ids = fields.One2many(
         comodel_name="account.analytic.line",

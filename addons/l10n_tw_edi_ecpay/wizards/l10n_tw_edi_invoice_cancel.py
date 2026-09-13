@@ -13,8 +13,8 @@ class L10nTwEDIInvoiceCancel(models.TransientModel):
         required=True,
     )
     reason = fields.Char(
-        help="Reason for cancelling the document.",
         required=True,
+        help="Reason for cancelling the document.",
     )
 
     def button_request_cancel(self):

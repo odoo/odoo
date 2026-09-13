@@ -13,34 +13,34 @@ class StockLot(models.Model):
         string="Use Expiration Date",
     )
     expiration_date = fields.Datetime(
-        help="This is the date on which the goods with this Serial Number may become dangerous and must not be consumed.",
         compute="_compute_expiration_date",
         store=True,
         readonly=False,
+        help="This is the date on which the goods with this Serial Number may become dangerous and must not be consumed.",
     )
     use_date = fields.Datetime(
         string="Best before Date",
-        help="This is the date on which the goods with this Serial Number start deteriorating, without being dangerous yet.",
         compute="_compute_use_date",
         store=True,
         readonly=False,
+        help="This is the date on which the goods with this Serial Number start deteriorating, without being dangerous yet.",
     )
     removal_date = fields.Datetime(
-        help="This is the date on which the goods with this Serial Number should be removed from the stock and not be counted in the Fresh On Hand Stock anymore. This date will be used in FEFO removal strategy.",
         compute="_compute_removal_date",
         store=True,
         readonly=False,
+        help="This is the date on which the goods with this Serial Number should be removed from the stock and not be counted in the Fresh On Hand Stock anymore. This date will be used in FEFO removal strategy.",
     )
     alert_date = fields.Datetime(
-        help='Date to determine the expired lots and serial numbers using the filter "Expiration Alerts".',
         compute="_compute_alert_date",
         store=True,
         index="btree_not_null",
         readonly=False,
+        help='Date to determine the expired lots and serial numbers using the filter "Expiration Alerts".',
     )
     product_expiry_alert = fields.Boolean(
-        help="The Expiration Date has been reached.",
         compute="_compute_product_expiry_alert",
+        help="The Expiration Date has been reached.",
     )
     product_expiry_reminded = fields.Boolean(string="Expiry has been reminded")
 

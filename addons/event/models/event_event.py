@@ -120,8 +120,8 @@ class EventEvent(models.Model):
     event_type_id = fields.Many2one(
         comodel_name="event.type",
         string="Template",
-        help="Choose a template to auto-fill tickets, communications, descriptions and other fields.",
         ondelete="set null",
+        help="Choose a template to auto-fill tickets, communications, descriptions and other fields.",
     )
     event_mail_ids = fields.One2many(
         comodel_name="event.mail",
@@ -169,11 +169,11 @@ class EventEvent(models.Model):
     # Seats and computation
     seats_max = fields.Integer(
         string="Maximum Attendees",
-        help="For each event you can define a maximum registration of seats(number of attendees), above this number the registrations are not accepted. "
-        "If the event has multiple slots, this maximum number is applied per slot.",
         compute="_compute_seats_max",
         store=True,
         readonly=False,
+        help="For each event you can define a maximum registration of seats(number of attendees), above this number the registrations are not accepted. "
+        "If the event has multiple slots, this maximum number is applied per slot.",
     )
     seats_limited = fields.Boolean(
         string="Limit Attendees",
@@ -214,10 +214,10 @@ class EventEvent(models.Model):
         string="Attendees",
     )
     is_multi_slots = fields.Boolean(
+        copy=True,
         help="Allow multiple time slots. "
         "The communications, the maximum number of attendees and the maximum number of tickets registrations "
         "are defined for each time slot instead of the whole event.",
-        copy=True,
     )
     event_slot_ids = fields.One2many(
         comodel_name="event.slot",
@@ -240,45 +240,45 @@ class EventEvent(models.Model):
     )
     event_registrations_started = fields.Boolean(
         string="Registrations started",
-        help="registrations have started if the current datetime is after the earliest starting date of tickets.",
         compute="_compute_event_registrations_started",
+        help="registrations have started if the current datetime is after the earliest starting date of tickets.",
     )
     event_registrations_open = fields.Boolean(
         string="Registration open",
+        compute="_compute_event_registrations_open",
+        compute_sudo=True,
         help="Registrations are open if:\n"
         "- the event is not ended or not cancelled\n"
         "- there are seats available on event\n"
         "- the tickets are sellable (if ticketing is used)",
-        compute="_compute_event_registrations_open",
-        compute_sudo=True,
     )
     event_registrations_sold_out = fields.Boolean(
         string="Sold Out",
-        help="The event is sold out if no more seats are available on event. If ticketing is used and all tickets are sold out, the event will be sold out.",
         compute="_compute_event_registrations_sold_out",
         compute_sudo=True,
+        help="The event is sold out if no more seats are available on event. If ticketing is used and all tickets are sold out, the event will be sold out.",
     )
     start_sale_datetime = fields.Datetime(
         string="Start sale date",
-        help="If ticketing is used, contains the earliest starting sale date of tickets.",
         compute="_compute_start_sale_datetime",
+        help="If ticketing is used, contains the earliest starting sale date of tickets.",
     )
     # Date fields
     date_tz = fields.Selection(
         selection=_selection_timezones,
         string="Display Timezone",
-        help="Indicates the timezone in which the event dates/times will be displayed on the website.",
         compute="_compute_date_tz",
         precompute=True,
         store=True,
         readonly=False,
         required=True,
+        help="Indicates the timezone in which the event dates/times will be displayed on the website.",
     )
     date_begin = fields.Datetime(
         string="Start Date",
-        help="When the event is scheduled to take place (expressed in your local timezone on the form view).",
         required=True,
         tracking=True,
+        help="When the event is scheduled to take place (expressed in your local timezone on the form view).",
     )
     date_end = fields.Datetime(
         string="End Date",
@@ -322,10 +322,10 @@ class EventEvent(models.Model):
     )
     event_url = fields.Char(
         string="Online Event URL",
-        help="Link where the online event will take place.",
         compute="_compute_event_url",
         store=True,
         readonly=False,
+        help="Link where the online event will take place.",
     )
     event_share_url = fields.Char(
         string="Event Share URL",
@@ -353,11 +353,11 @@ class EventEvent(models.Model):
         max_height=1024,
     )
     ticket_instructions = fields.Html(
-        help="This information will be printed on your tickets.",
         translate=True,
         compute="_compute_ticket_instructions",
         store=True,
         readonly=False,
+        help="This information will be printed on your tickets.",
     )
     # questions
     question_ids = fields.Many2many(

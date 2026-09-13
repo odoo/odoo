@@ -14,9 +14,9 @@ class ResPartner(models.Model):
     )
     customer_on_time_rate = fields.Float(
         string="Customer On-Time Delivery Rate",
+        compute="_compute_customer_on_time_rate",
         help="Over the past x days; the number of products delivered on time to this customer divided by the number of ordered products. "
         "x is either the System Parameter sale_stock.on_time_delivery_days or the default 365",
-        compute="_compute_customer_on_time_rate",
     )
 
     @api.depends("sale_line_ids")

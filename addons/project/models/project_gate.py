@@ -28,8 +28,8 @@ class ProjectGate(models.Model):
     milestone_id = fields.Many2one(
         comodel_name="project.milestone",
         string="Trigger Milestone",
-        help="Review is triggered when this milestone is reached.",
         domain="[('project_id', '=', project_id)]",
+        help="Review is triggered when this milestone is reached.",
     )
     criterion_ids = fields.One2many(
         comodel_name="project.gate.criterion",

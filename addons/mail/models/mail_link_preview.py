@@ -36,10 +36,10 @@ class MailLinkPreview(models.Model):
     )
     source_url_netloc = fields.Char(
         string="URL host",
-        help="Parsed host of source_url, used for per-host throttling.",
         compute="_compute_source_url_netloc",
         store=True,
         index=True,
+        help="Parsed host of source_url, used for per-host throttling.",
     )
     og_type = fields.Char(string="Type")
     og_title = fields.Char(string="Title")

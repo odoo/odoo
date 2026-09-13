@@ -6,8 +6,8 @@ class ResCompany(models.Model):
 
     l10n_ke_oscu_is_active = fields.Boolean(
         string="Is OSCU active?",
-        help="Whether this company is set up for OSCU flows.",
         compute="_compute_l10n_ke_oscu_is_active",
+        help="Whether this company is set up for OSCU flows.",
     )
 
     def _compute_l10n_ke_oscu_is_active(self):

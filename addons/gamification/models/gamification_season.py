@@ -29,8 +29,8 @@ class GamificationSeason(models.Model):
         sanitize_attributes=False,
     )
     theme = fields.Char(
-        help="Visual theme or motto (e.g., 'The Quality Quarter', 'Innovation Sprint').",
         translate=True,
+        help="Visual theme or motto (e.g., 'The Quality Quarter', 'Innovation Sprint').",
     )
     icon = fields.Image(
         max_width=128,

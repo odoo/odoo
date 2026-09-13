@@ -65,8 +65,8 @@ class ResourceCalendar(models.Model):
 
     name = fields.Char(required=True)
     active = fields.Boolean(
-        help="If the active field is set to false, it will allow you to hide the Working Time without removing it.",
         default=True,
+        help="If the active field is set to false, it will allow you to hide the Working Time without removing it.",
     )
     attendance_ids = fields.One2many(
         comodel_name="resource.calendar.attendance",
@@ -112,11 +112,11 @@ class ResourceCalendar(models.Model):
             ("flexible", "Flexible"),
             ("fully_fixed", "Fully Fixed"),
         ],
+        compute="_compute_schedule_type",
+        inverse="_inverse_schedule_type",
         help="Choose which level of definition you want to define on your Schedule\n"
         "- Flexible : Define an amount of hours to work on the week.\n"
         "- Fully Fixed : define the days, periods and the start & end time for each period of the day",
-        compute="_compute_schedule_type",
-        inverse="_inverse_schedule_type",
     )
     duration_based = fields.Boolean(
         string="Attendance based on duration",
@@ -127,10 +127,10 @@ class ResourceCalendar(models.Model):
     )
     full_time_required_hours = fields.Float(
         string="Full Time Equivalent",
-        help="Number of hours to work on the company schedule to be considered as fulltime.",
         compute="_compute_full_time_required_hours",
         store=True,
         readonly=False,
+        help="Number of hours to work on the company schedule to be considered as fulltime.",
     )
     global_leave_ids = fields.One2many(
         comodel_name="resource.calendar.leaves",
@@ -141,11 +141,11 @@ class ResourceCalendar(models.Model):
     )
     hours_per_day = fields.Float(
         string="Average Hour per Day",
-        help="Average hours per day a resource is supposed to work with this calendar.",
         digits=(2, 2),
         compute="_compute_hours_per_day",
         store=True,
         readonly=False,
+        help="Average hours per day a resource is supposed to work with this calendar.",
     )
     hours_per_week = fields.Float(
         string="Hours per Week",
@@ -176,9 +176,9 @@ class ResourceCalendar(models.Model):
     tz = fields.Selection(
         selection=_selection_timezones,
         string="Timezone",
-        help="This field is used in order to define in which timezone the resources will work.",
         default=lambda self: self._default_tz(),
         required=True,
+        help="This field is used in order to define in which timezone the resources will work.",
     )
     tz_offset = fields.Char(
         string="Timezone offset",
@@ -189,9 +189,9 @@ class ResourceCalendar(models.Model):
         compute="_compute_work_resources_count",
     )
     work_time_rate = fields.Float(
-        help="Work time rate versus full time working schedule, should be between 0 and 100 %.",
         compute="_compute_work_time",
         search="_search_work_time_rate",
+        help="Work time rate versus full time working schedule, should be between 0 and 100 %.",
     )
 
     @api.constrains("attendance_ids", "two_weeks_calendar")

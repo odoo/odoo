@@ -497,11 +497,11 @@ class AccountMove(models.Model):
     l10n_id_kode_transaksi = fields.Selection(
         selection=TAX_TRANSACTION_CODE,
         string="Kode Transaksi",
-        help="The first 2 digits of tax code",
         compute="_compute_kode_transaksi",
         store=True,
         copy=False,
         readonly=False,
+        help="The first 2 digits of tax code",
     )
 
     @api.depends("partner_id")

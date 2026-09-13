@@ -15,14 +15,14 @@ class PaymentProvider(models.Model):
     )
     buckaroo_website_key = fields.Char(
         string="Website Key",
-        help="The key solely used to identify the website with Buckaroo",
         copy=False,
         required_if_provider="buckaroo",
+        help="The key solely used to identify the website with Buckaroo",
     )
     buckaroo_secret_key = fields.Char(
         copy=False,
-        groups="base.group_system",
         required_if_provider="buckaroo",
+        groups="base.group_system",
     )
 
     # === COMPUTE METHODS ===#

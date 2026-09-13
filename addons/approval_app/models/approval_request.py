@@ -37,10 +37,10 @@ class ApprovalRequest(models.Model):
     )
     template_id = fields.Many2one(
         comodel_name="approval.template",
-        help="Template this request was created from (if any)",
         index="btree_not_null",
         copy=False,
         readonly=True,
+        help="Template this request was created from (if any)",
     )
 
     def _check_confirm(self) -> None:

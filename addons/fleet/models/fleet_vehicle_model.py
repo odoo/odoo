@@ -78,15 +78,15 @@ class FleetVehicleModel(models.Model):
     )
     doors = fields.Integer(
         string="Number of Doors",
-        help="Specifies the total number of doors, including the truck and hatch doors, if applicable.",
         tracking=True,
+        help="Specifies the total number of doors, including the truck and hatch doors, if applicable.",
     )
     trailer_hook = fields.Boolean(
         string="Trailer Hitch",
-        help="A trailer hitch is a device attached to a vehicle's chassis for towing purposes,\
-            such as pulling trailers, boats, or other vehicles.",
         default=False,
         tracking=True,
+        help="A trailer hitch is a device attached to a vehicle's chassis for towing purposes,\
+            such as pulling trailers, boats, or other vehicles.",
     )
     default_co2 = fields.Float(
         string="CO₂ Emissions",
@@ -99,9 +99,9 @@ class FleetVehicleModel(models.Model):
     )
     co2_standard = fields.Char(
         string="Emission Standard",
+        tracking=True,
         help="""Emission Standard specifies the regulatory test procedure or \
             guideline under which a vehicle's emissions are measured.""",
-        tracking=True,
     )
     default_fuel_type = fields.Selection(
         selection=FUEL_TYPES,

@@ -34,11 +34,11 @@ class ResPartner(models.Model):
     l10n_in_pan_entity_id = fields.Many2one(
         comodel_name="l10n_in.pan.entity",
         string="PAN",
+        ondelete="restrict",
         help="PAN enables the department to link all transactions of the person with the department.\n"
         "These transactions include taxpayments, TDS/TCS credits, returns of income/wealth/gift/FBT,"
         " specified transactions, correspondence, and so on.\n"
         "Thus, PAN acts as an identifier for the person with the tax department.",
-        ondelete="restrict",
     )
     l10n_in_tan = fields.Char(string="TAN")
 

@@ -13,8 +13,8 @@ class ResCompany(models.Model):
     stock_sms_confirmation_template_id = fields.Many2one(
         comodel_name="sms.template",
         string="SMS Template",
-        help="SMS sent to the customer once the order is delivered.",
         default=_default_stock_sms_confirmation_template_id,
         domain="[('model', '=', 'stock.picking')]",
+        help="SMS sent to the customer once the order is delivered.",
     )
     has_received_warning_stock_sms = fields.Boolean()

@@ -100,41 +100,41 @@ class StockQuant(models.Model):
     )
     sn_duplicated = fields.Boolean(
         string="Duplicated Serial Number",
-        help="If the same SN is in another Quant",
         compute="_compute_sn_duplicated",
+        help="If the same SN is in another Quant",
     )
     package_id = fields.Many2one(
         comodel_name="stock.package",
-        help="The package containing this quant",
         index=True,
         domain="['|', ('location_id', '=', location_id), '&', ('location_id', '=', False), ('quant_ids', '=', False)]",
         ondelete="restrict",
         check_company=True,
+        help="The package containing this quant",
     )
     owner_id = fields.Many2one(
         comodel_name="res.partner",
-        help="This is the owner of the quant",
         index="btree_not_null",
         check_company=True,
+        help="This is the owner of the quant",
     )
     quantity = fields.Float(
-        help="Quantity of products in this quant, in the default unit of measure of the product",
         min_display_digits="Product Unit",
         default=0.0,
         readonly=True,
         required=True,
+        help="Quantity of products in this quant, in the default unit of measure of the product",
     )
     reserved_quantity = fields.Float(
-        help="Quantity of reserved products in this quant, in the default unit of measure of the product",
         min_display_digits="Product Unit",
         default=0.0,
         readonly=True,
         required=True,
+        help="Quantity of reserved products in this quant, in the default unit of measure of the product",
     )
     available_quantity = fields.Float(
-        help="On hand quantity which hasn't been reserved on a transfer, in the default unit of measure of the product",
         min_display_digits="Product Unit",
         compute="_compute_available_quantity",
+        help="On hand quantity which hasn't been reserved on a transfer, in the default unit of measure of the product",
     )
     in_date = fields.Datetime(
         string="Incoming Date",
@@ -148,23 +148,23 @@ class StockQuant(models.Model):
     )
     date_last_movement = fields.Datetime(
         string="Last Movement",
+        compute="_compute_last_movement",
         help="Date of the most recent done move line that took goods out of, or "
         "brought goods into, this quant. Inventory adjustments do not count: a "
         "cycle count is not a movement (see Last Count Date for those).",
-        compute="_compute_last_movement",
     )
     days_since_last_movement = fields.Integer(
         string="Days Static",
-        help="Days the goods in this quant have sat untouched. Counted from the "
-        "incoming date when no movement has ever matched the quant.",
         compute="_compute_last_movement",
         search="_search_days_since_last_movement",
+        help="Days the goods in this quant have sat untouched. Counted from the "
+        "incoming date when no movement has ever matched the quant.",
     )
 
     inventory_quantity = fields.Float(
         string="Counted",
-        help="The product's counted quantity.",
         digits="Product Unit",
+        help="The product's counted quantity.",
     )
     inventory_quantity_auto_apply = fields.Float(
         string="Inventoried Quantity",
@@ -175,22 +175,22 @@ class StockQuant(models.Model):
     )
     inventory_diff_quantity = fields.Float(
         string="Difference",
-        help="Indicates the gap between the product's theoretical quantity and its counted quantity.",
         digits="Product Unit",
         compute="_compute_inventory_diff_quantity",
         store=True,
         readonly=True,
+        help="Indicates the gap between the product's theoretical quantity and its counted quantity.",
     )
     inventory_date = fields.Date(
         string="Scheduled",
-        help="Next date the On Hand Quantity should be counted.",
         compute="_compute_inventory_date",
         store=True,
         readonly=False,
+        help="Next date the On Hand Quantity should be counted.",
     )
     last_count_date = fields.Date(
-        help="Last time the Quantity was Updated",
         compute="_compute_last_count_date",
+        help="Last time the Quantity was Updated",
     )
     inventory_quantity_set = fields.Boolean(
         compute="_compute_inventory_quantity_set",
@@ -205,10 +205,10 @@ class StockQuant(models.Model):
     user_id = fields.Many2one(
         comodel_name="res.users",
         string="Assigned To",
-        help="User assigned to do product count.",
         domain=lambda self: [
             ("all_group_ids", "in", self.env.ref("stock.group_stock_user").id)
         ],
+        help="User assigned to do product count.",
     )
 
     _quant_merge_idx = models.Index(

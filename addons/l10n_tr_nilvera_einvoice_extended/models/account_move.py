@@ -10,8 +10,8 @@ class AccountMove(models.Model):
             ("KAMU", "Public Sector"),
         ],
         string="Invoice Scenario",
-        help="The scenario of the invoice to be sent to GİB.",
         default="TEMELFATURA",
+        help="The scenario of the invoice to be sent to GİB.",
     )
     l10n_tr_gib_invoice_type = fields.Selection(
         selection=[
@@ -21,10 +21,10 @@ class AccountMove(models.Model):
             ("ISTISNA", "Tax Exempt"),
         ],
         string="GIB Invoice Type",
-        help="The type of invoice to be sent to GİB.",
         compute="_compute_l10n_tr_gib_invoice_type",
         store=True,
         readonly=False,
+        help="The type of invoice to be sent to GİB.",
     )
     l10n_tr_is_export_invoice = fields.Boolean(string="Is GIB Export")
     l10n_tr_shipping_type = fields.Selection(
@@ -45,10 +45,10 @@ class AccountMove(models.Model):
     l10n_tr_exemption_code_id = fields.Many2one(
         comodel_name="l10n_tr_nilvera_einvoice_extended.account.tax.code",
         string="Exemption Reason",
-        help="The exception reason of the invoice.",
         compute="_compute_l10n_tr_exemption_code_id",
         store=True,
         readonly=False,
+        help="The exception reason of the invoice.",
     )
     l10n_tr_exemption_code_domain_list = fields.Binary(
         compute="_compute_l10n_tr_exemption_code_domain_list"

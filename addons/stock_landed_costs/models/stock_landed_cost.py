@@ -351,12 +351,12 @@ class StockLandedCostLines(models.Model):
     )
     split_method = fields.Selection(
         selection=SPLIT_METHOD,
+        required=True,
         help="Equal: Cost will be equally divided.\n"
         "By Quantity: Cost will be divided according to product's quantity.\n"
         "By Current cost: Cost will be divided according to product's current cost.\n"
         "By Weight: Cost will be divided depending on its weight.\n"
         "By Volume: Cost will be divided depending on its volume.",
-        required=True,
     )
     account_id = fields.Many2one(comodel_name="account.account")
     currency_id = fields.Many2one(

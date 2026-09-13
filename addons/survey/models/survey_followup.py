@@ -39,16 +39,16 @@ class SurveyFollowupRule(models.Model):
     )
     score_max = fields.Float(
         string="Max Score (%)",
-        help="Maximum scoring_percentage to trigger (inclusive).",
         default=100,
+        help="Maximum scoring_percentage to trigger (inclusive).",
     )
 
     mail_template_id = fields.Many2one(
         comodel_name="mail.template",
         string="Email Template",
-        help="Email template to send. Available variables: object (survey.user_input).",
         required=True,
         domain="[('model', '=', 'survey.user_input')]",
+        help="Email template to send. Available variables: object (survey.user_input).",
     )
 
     def _evaluate(self, user_input):

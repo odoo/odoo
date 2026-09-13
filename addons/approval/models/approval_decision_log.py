@@ -64,9 +64,9 @@ class ApprovalDecisionLog(models.Model):
     principal_id = fields.Many2one(
         comodel_name="res.users",
         string="On Behalf Of",
-        help="The approver whose row a delegate decided.",
         readonly=True,
         ondelete="restrict",
+        help="The approver whose row a delegate decided.",
     )
     elevation = fields.Selection(
         selection=[

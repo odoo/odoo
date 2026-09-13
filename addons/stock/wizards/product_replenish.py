@@ -42,12 +42,12 @@ class ProductReplenish(models.TransientModel):
     )
     date_planned = fields.Datetime(
         string="Scheduled Date",
-        help="Date at which the replenishment should take place.",
         compute="_compute_date_planned",
         precompute=True,
         store=True,
         readonly=False,
         required=True,
+        help="Date at which the replenishment should take place.",
     )
     warehouse_id = fields.Many2one(
         comodel_name="stock.warehouse",

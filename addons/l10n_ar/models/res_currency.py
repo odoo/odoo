@@ -6,6 +6,6 @@ class ResCurrency(models.Model):
 
     l10n_ar_afip_code = fields.Char(
         string="ARCA Code",
-        help="This code will be used on electronic invoice",
         size=4,
+        help="This code will be used on electronic invoice",
     )

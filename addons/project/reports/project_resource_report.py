@@ -39,11 +39,11 @@ class ProjectResourceReport(models.Model):
     )
     is_overallocated = fields.Boolean(
         string="Overallocated",
+        readonly=True,
         help="True when the user's busiest single week exceeds their working "
         "calendar's weekly capacity across all active projects "
         "(reservations are bucketed by ISO week on their start date). "
         "Falls back to 40h for a resource with no calendar.",
-        readonly=True,
     )
 
     @dbg.timed

@@ -21,17 +21,17 @@ class PosPaymentMethod(models.Model):
     # Adyen
     adyen_api_key = fields.Char(
         string="Adyen API key",
-        help="Used when connecting to Adyen: https://docs.adyen.com/user-management/how-to-get-the-api-key/#description",
         copy=False,
         groups="base.group_erp_manager",
+        help="Used when connecting to Adyen: https://docs.adyen.com/user-management/how-to-get-the-api-key/#description",
     )
     adyen_terminal_identifier = fields.Char(
-        help="[Terminal model]-[Serial number], for example: P400Plus-123456789",
         copy=False,
+        help="[Terminal model]-[Serial number], for example: P400Plus-123456789",
     )
     adyen_test_mode = fields.Boolean(
-        help="Run transactions in the test environment.",
         groups="base.group_erp_manager",
+        help="Run transactions in the test environment.",
     )
 
     adyen_latest_response = fields.Char(
@@ -40,10 +40,10 @@ class PosPaymentMethod(models.Model):
     )  # used to buffer the latest asynchronous notification from Adyen.
     adyen_event_url = fields.Char(
         string="Event URL",
-        help="This URL needs to be pasted on Adyen's portal terminal settings.",
         default=lambda self: f"{self.get_base_url()}/pos_adyen/notification",
         store=False,
         readonly=True,
+        help="This URL needs to be pasted on Adyen's portal terminal settings.",
     )
 
     @api.model

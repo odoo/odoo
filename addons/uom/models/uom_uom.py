@@ -35,18 +35,18 @@ class UomUom(models.Model):
     )
     relative_factor = fields.Float(
         string="Contains",
-        help="How much bigger or smaller this unit is compared to the reference UoM for this unit",
         digits=0,  # falsy digits force NUMERIC with unlimited precision
         default=1.0,
         required=True,
+        help="How much bigger or smaller this unit is compared to the reference UoM for this unit",
     )
     rounding = fields.Float(
         string="Rounding Precision",
         compute="_compute_rounding",
     )
     active = fields.Boolean(
-        help="Uncheck the active field to disable a unit of measure without deleting it.",
         default=True,
+        help="Uncheck the active field to disable a unit of measure without deleting it.",
     )
     relative_uom_id = fields.Many2one(
         comodel_name="uom.uom",
@@ -64,12 +64,12 @@ class UomUom(models.Model):
     reference_uom_id = fields.Many2one(
         comodel_name="uom.uom",
         string="Dimension",
-        help="The root unit this one is ultimately defined against."
-        " Two units are convertible if and only if they share it.",
         compute="_compute_reference_uom_id",
         recursive=True,
         store=True,
         index="btree_not_null",
+        help="The root unit this one is ultimately defined against."
+        " Two units are convertible if and only if they share it.",
     )
     parent_path = fields.Char(index=True)
 

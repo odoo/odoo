@@ -107,8 +107,8 @@ class CrmLead2opportunityPartner(models.TransientModel):
     )
     force_assignment = fields.Boolean(
         string="Force assignment",
-        help="If checked, forces salesman to be updated on updated opportunities even if already set.",
         default=True,
+        help="If checked, forces salesman to be updated on updated opportunities even if already set.",
     )
 
     @api.depends("duplicated_lead_ids")

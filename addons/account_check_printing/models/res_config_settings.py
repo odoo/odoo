@@ -7,38 +7,38 @@ class ResConfigSettings(models.TransientModel):
     account_check_printing_layout = fields.Selection(
         related="company_id.account_check_printing_layout",
         string="Check Layout",
+        readonly=False,
         help="Select the format corresponding to the check paper you will be printing your checks on.\n"
         "In order to disable the printing feature, select 'None'.",
-        readonly=False,
     )
     account_check_printing_date_label = fields.Boolean(
         related="company_id.account_check_printing_date_label",
         string="Print Date Label",
+        readonly=False,
         help="This option allows you to print the date label on the check as per CPA.\n"
         "Disable this if your pre-printed check includes the date label.",
-        readonly=False,
     )
     account_check_printing_multi_stub = fields.Boolean(
         related="company_id.account_check_printing_multi_stub",
         string="Multi-Pages Check Stub",
-        help="This option allows you to print check details (stub) on multiple pages if they don't fit on a single page.",
         readonly=False,
+        help="This option allows you to print check details (stub) on multiple pages if they don't fit on a single page.",
     )
     account_check_printing_margin_top = fields.Float(
         related="company_id.account_check_printing_margin_top",
         string="Check Top Margin",
-        help="Adjust the margins of generated checks to make it fit your printer's settings.",
         readonly=False,
+        help="Adjust the margins of generated checks to make it fit your printer's settings.",
     )
     account_check_printing_margin_left = fields.Float(
         related="company_id.account_check_printing_margin_left",
         string="Check Left Margin",
-        help="Adjust the margins of generated checks to make it fit your printer's settings.",
         readonly=False,
+        help="Adjust the margins of generated checks to make it fit your printer's settings.",
     )
     account_check_printing_margin_right = fields.Float(
         related="company_id.account_check_printing_margin_right",
         string="Check Right Margin",
-        help="Adjust the margins of generated checks to make it fit your printer's settings.",
         readonly=False,
+        help="Adjust the margins of generated checks to make it fit your printer's settings.",
     )

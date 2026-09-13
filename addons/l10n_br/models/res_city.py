@@ -13,8 +13,8 @@ class ResCity(models.Model):
 
     l10n_br_zip_ranges = fields.Char(
         string="Frontend Zip Ranges",
-        help="Brazil: technical field that maps a city to one or more zip code ranges for the frontend.",
         compute="_compute_l10n_br_zip_ranges",
+        help="Brazil: technical field that maps a city to one or more zip code ranges for the frontend.",
     )
 
     @api.depends("l10n_br_zip_range_ids")

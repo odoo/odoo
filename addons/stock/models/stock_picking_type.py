@@ -77,24 +77,24 @@ class StockPickingType(models.Model):
     default_location_src_id = fields.Many2one(
         comodel_name="stock.location",
         string="Source Location",
-        help="This is the default source location when this operation is manually created. However, it is possible to change it afterwards or that the routes use another one by default.",
         compute="_compute_default_location_src_id",
         precompute=True,
         store=True,
         readonly=False,
         required=True,
         check_company=True,
+        help="This is the default source location when this operation is manually created. However, it is possible to change it afterwards or that the routes use another one by default.",
     )
     default_location_dest_id = fields.Many2one(
         comodel_name="stock.location",
         string="Destination Location",
-        help="This is the default destination location when this operation is manually created. However, it is possible to change it afterwards or that the routes use another one by default.",
         compute="_compute_default_location_dest_id",
         precompute=True,
         store=True,
         readonly=False,
         required=True,
         check_company=True,
+        help="This is the default destination location when this operation is manually created. However, it is possible to change it afterwards or that the routes use another one by default.",
     )
 
     return_picking_type_id = fields.Many2one(
@@ -109,18 +109,18 @@ class StockPickingType(models.Model):
             ("one", "When all products are ready"),
         ],
         string="Shipping Policy",
-        help="It specifies goods to be transferred partially or all at once",
         default="direct",
         required=True,
+        help="It specifies goods to be transferred partially or all at once",
     )
     create_backorder = fields.Selection(
         selection=[("ask", "Ask"), ("always", "Always"), ("never", "Never")],
+        default="ask",
+        required=True,
         help="When validating a transfer:\n"
         " * Ask: users are asked to choose if they want to make a backorder for remaining products\n"
         " * Always: a backorder is automatically created for the remaining products\n"
         " * Never: remaining products are cancelled",
-        default="ask",
-        required=True,
     )
 
     reservation_method = fields.Selection(
@@ -129,9 +129,9 @@ class StockPickingType(models.Model):
             ("manual", "Manually"),
             ("by_date", "Before scheduled date"),
         ],
-        help="How products in transfers of this operation type should be reserved.",
         default="at_confirm",
         required=True,
+        help="How products in transfers of this operation type should be reserved.",
     )
     reservation_days_before = fields.Integer(
         string="Days",
@@ -144,36 +144,36 @@ class StockPickingType(models.Model):
 
     use_create_lots = fields.Boolean(
         string="Create New Lots/Serial Numbers",
-        help="If this is checked only, it will suppose you want to create new Lots/Serial Numbers, so you can provide them in a text field. ",
         compute="_compute_use_create_lots",
         default=True,
         store=True,
         readonly=False,
+        help="If this is checked only, it will suppose you want to create new Lots/Serial Numbers, so you can provide them in a text field. ",
     )
     use_existing_lots = fields.Boolean(
         string="Use Existing Lots/Serial Numbers",
-        help="If this is checked, you will be able to choose the Lots/Serial Numbers. You can also decide to not put lots in this operation type.  This means it will create stock with no lot or not put a restriction on the lot taken. ",
         compute="_compute_use_existing_lots",
         default=True,
         store=True,
         readonly=False,
+        help="If this is checked, you will be able to choose the Lots/Serial Numbers. You can also decide to not put lots in this operation type.  This means it will create stock with no lot or not put a restriction on the lot taken. ",
     )
     show_entire_packs = fields.Boolean(
         string="Move Entire Packages",
-        help="If ticked, packages to move will be directly displayed in Barcode instead of the products they contain",
         default=False,
+        help="If ticked, packages to move will be directly displayed in Barcode instead of the products they contain",
     )
     set_package_type = fields.Boolean(
-        help="If ticked, you will be able to select which package or package type to use in a put in pack",
         default=False,
+        help="If ticked, you will be able to select which package or package type to use in a put in pack",
     )
 
     print_label = fields.Boolean(
         string="Generate Shipping Labels",
-        help="Check this box if you want to generate shipping label in this operation.",
         compute="_compute_print_label",
         store=True,
         readonly=False,
+        help="Check this box if you want to generate shipping label in this operation.",
     )
     auto_print_delivery_slip = fields.Boolean(
         help="If this checkbox is ticked, Odoo will automatically print the delivery slip of a picking when it is validated."
@@ -242,8 +242,8 @@ class StockPickingType(models.Model):
 
     show_operations = fields.Boolean(
         string="Show Detailed Operations",
-        help="If this checkbox is ticked, the pickings lines will represent detailed stock operations. If not, the picking lines will represent an aggregate of detailed stock operations.",
         default=False,
+        help="If this checkbox is ticked, the pickings lines will represent detailed stock operations. If not, the picking lines will represent an aggregate of detailed stock operations.",
     )
     hide_reservation_method = fields.Boolean(compute="_compute_hide_reservation_method")
     show_picking_type = fields.Boolean(compute="_compute_show_picking_type")
@@ -716,8 +716,8 @@ class StockPickingType(models.Model):
     wave_location_ids = fields.Many2many(
         comodel_name="stock.location",
         string="Wave Locations",
-        help="Locations to consider when grouping waves.",
         domain="[('usage', '=', 'internal')]",
+        help="Locations to consider when grouping waves.",
     )
 
     batch_max_lines = fields.Integer(

@@ -174,19 +174,19 @@ class HrExpense(models.Model):
     )
     tax_amount_currency = fields.Monetary(
         string="Tax amount in Currency",
-        help="Tax amount in currency",
         currency_field="currency_id",
         compute="_compute_tax_amount_currency",
         precompute=True,
         store=True,
+        help="Tax amount in currency",
     )
     tax_amount = fields.Monetary(
         string="Tax amount",
-        help="Tax amount in company currency",
         currency_field="company_currency_id",
         compute="_compute_tax_amount",
         precompute=True,
         store=True,
+        help="Tax amount in company currency",
     )
     total_amount_currency = fields.Monetary(
         string="Total In Currency",
@@ -280,11 +280,11 @@ class HrExpense(models.Model):
     payment_channel_id = fields.Many2one(
         comodel_name="account.payment.channel",
         string="Payment Method",
-        help="The payment method used when the expense is paid by the company.",
         compute="_compute_payment_channel_id",
         store=True,
         readonly=False,
         domain="[('id', 'in', selectable_payment_channel_ids)]",
+        help="The payment method used when the expense is paid by the company.",
     )
     account_move_id = fields.Many2one(
         comodel_name="account.move",
@@ -306,13 +306,13 @@ class HrExpense(models.Model):
     vendor_id = fields.Many2one(comodel_name="res.partner")
     account_id = fields.Many2one(
         comodel_name="account.account",
-        help="An expense account is expected",
         compute="_compute_account_id",
         precompute=True,
         store=True,
         readonly=False,
         domain="[('account_type', 'not in', ('asset_receivable', 'liability_payable', 'asset_cash', 'liability_credit_card'))]",
         check_company=True,
+        help="An expense account is expected",
     )
     tax_ids = fields.Many2many(
         comodel_name="account.tax",
@@ -320,13 +320,13 @@ class HrExpense(models.Model):
         column1="expense_id",
         column2="tax_id",
         string="Included taxes",
-        help="Both price-included and price-excluded taxes will behave as price-included taxes for expenses.",
         compute="_compute_tax_ids",
         precompute=True,
         store=True,
         readonly=False,
         domain="[('type_tax_use', '=', 'purchase')]",
         check_company=True,
+        help="Both price-included and price-excluded taxes will behave as price-included taxes for expenses.",
     )
 
     is_editable = fields.Boolean(

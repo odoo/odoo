@@ -41,8 +41,8 @@ class AccountJournal(models.Model):
     kanban_dashboard_graph = fields.Text(compute="_compute_kanban_dashboard_graph")
     show_on_dashboard = fields.Boolean(
         string="Show journal on dashboard",
-        help="Whether this journal should be displayed on the dashboard or not",
         default=True,
+        help="Whether this journal should be displayed on the dashboard or not",
     )
     color = fields.Integer(
         string="Color Index",

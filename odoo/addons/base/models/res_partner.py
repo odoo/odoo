@@ -202,11 +202,11 @@ class ResPartner(models.Model):
     user_id: ResUsers = fields.Many2one(
         comodel_name="res.users",
         string="Salesperson",
-        help="The internal user in charge of this contact.",
         compute="_compute_user_id",
         precompute=True,
         store=True,
         readonly=False,
+        help="The internal user in charge of this contact.",
     )
     tag_ids = fields.Many2many(
         comodel_name="res.partner.tag",
@@ -216,9 +216,9 @@ class ResPartner(models.Model):
         default=lambda self: self._default_tag_ids(),
     )
     barcode = fields.Char(
-        help="Use a barcode to identify this contact.",
         copy=False,
         company_dependent=True,
+        help="Use a barcode to identify this contact.",
     )
     ref = fields.Char(
         string="Reference",
@@ -227,19 +227,19 @@ class ResPartner(models.Model):
     lang = fields.Selection(
         selection=_selection_installed_langs,
         string="Language",
-        help="All the emails and documents sent to this contact will be translated in this language.",
         compute="_compute_lang",
         store=True,
         readonly=False,
+        help="All the emails and documents sent to this contact will be translated in this language.",
     )
     active_lang_count = fields.Integer(compute="_compute_active_lang_count")
     tz = fields.Selection(
         selection=_tzs,
         string="Timezone",
+        default=lambda self: self.env.context.get("tz"),
         help="When printing documents and exporting/importing data, time values are computed according to this timezone.\n"
         "If the timezone is not set, UTC (Coordinated Universal Time) is used.\n"
         "Anywhere else, time values are computed according to the time offset of your web client.",
-        default=lambda self: self.env.context.get("tz"),
     )
     tz_offset = fields.Char(
         string="Timezone offset",
@@ -247,8 +247,8 @@ class ResPartner(models.Model):
     )
     vat = fields.Char(
         string="Tax ID",
-        help="The Tax Identification Number. Values here will be validated based on the country format. You can use '/' to indicate that the partner is not subject to tax.",
         index=True,
+        help="The Tax Identification Number. Values here will be validated based on the country format. You can use '/' to indicate that the partner is not subject to tax.",
     )
     vat_label = fields.Char(
         string="Tax ID Label",
@@ -262,11 +262,11 @@ class ResPartner(models.Model):
     )
     company_registry = fields.Char(
         string="Company ID",
-        help="The registry number of the company. Use it if it is different from the Tax ID. It must be unique across all partners of a same country",
         compute="_compute_company_registry",
         store=True,
         index="btree_not_null",
         readonly=False,
+        help="The registry number of the company. Use it if it is different from the Tax ID. It must be unique across all partners of a same country",
     )
     company_registry_label = fields.Char(
         string="Company ID Label",
@@ -336,8 +336,8 @@ class ResPartner(models.Model):
     email = fields.Char()
     email_formatted = fields.Char(
         string="Formatted Email",
-        help='Format email address "Name <email@domain>"',
         compute="_compute_email_formatted",
+        help='Format email address "Name <email@domain>"',
     )
     phone_ids = fields.Many2many(
         comodel_name="phone.number",
@@ -348,19 +348,19 @@ class ResPartner(models.Model):
     )
     main_phone_id = fields.Many2one(
         comodel_name="phone.number",
+        compute="_compute_main_phone_ids",
+        store=True,
         help="The landline this contact is reached on when a single number is "
         "needed. The first active number typed Landline, by the order phone "
         "numbers carry.",
-        compute="_compute_main_phone_ids",
-        store=True,
     )
     main_mobile_id = fields.Many2one(
         comodel_name="phone.number",
+        compute="_compute_main_phone_ids",
+        store=True,
         help="The mobile this contact is reached on when a single number is "
         "needed. The first active number typed Mobile, by the order phone "
         "numbers carry.",
-        compute="_compute_main_phone_ids",
-        store=True,
     )
     gender = fields.Selection(
         selection=[
@@ -382,13 +382,13 @@ class ResPartner(models.Model):
     )
     primary_industry_id = fields.Many2one(
         comodel_name="res.partner.industry",
+        compute="_compute_primary_industry_id",
+        store=True,
+        readonly=False,
         help="The one sector analytics report this contact under, because a sum "
         "cannot be split across several. Defaults to the first of Industries, and "
         "returns to it whenever Industries changes and the current pick is no "
         "longer among them.",
-        compute="_compute_primary_industry_id",
-        store=True,
-        readonly=False,
     )
     user_ids: ResUsers = fields.One2many(
         comodel_name="res.users",
@@ -398,9 +398,9 @@ class ResPartner(models.Model):
     )
     main_user_id = fields.Many2one(
         comodel_name="res.users",
+        compute="_compute_main_user_id",
         help="There can be several users related to the same partner. "
         "When a single user is needed, this field attempts to find the most appropriate one.",
-        compute="_compute_main_user_id",
     )
     duplicate_ids = fields.Many2many(
         comodel_name="res.partner",
@@ -421,15 +421,15 @@ class ResPartner(models.Model):
     main_bank_id = fields.Many2one(
         comodel_name="res.partner.bank",
         string="Main Bank Account",
-        help="The account this contact is paid on when a single one is needed. "
-        "The first active account, by the order bank accounts carry.",
         compute="_compute_main_bank_id",
         store=True,
+        help="The account this contact is paid on when a single one is needed. "
+        "The first active account, by the order bank accounts carry.",
     )
     is_company = fields.Boolean(
         string="Is a Company",
-        help="Check if the contact is a company, otherwise it is a person",
         default=False,
+        help="Check if the contact is a company, otherwise it is a person",
     )
     is_public = fields.Boolean(
         compute="_compute_is_public",
@@ -437,10 +437,10 @@ class ResPartner(models.Model):
     )
     partner_share = fields.Boolean(
         string="Share Partner",
-        help="Either customer (not a user), either shared user. Indicated the current partner is a customer without "
-        "access or with a limited access created for sharing data.",
         compute="_compute_partner_share",
         store=True,
+        help="Either customer (not a user), either shared user. Indicated the current partner is a customer without "
+        "access or with a limited access created for sharing data.",
     )
 
     application_statistics = fields.Json(

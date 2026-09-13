@@ -18,10 +18,10 @@ class ApprovalRefusalReason(models.Model):
 
     company_id = fields.Many2one(
         comodel_name="res.company",
-        help="Leave empty to make this reason available to all companies. "
-        "Set a company to restrict this reason to that company only.",
         default=False,
         index=True,
+        help="Leave empty to make this reason available to all companies. "
+        "Set a company to restrict this reason to that company only.",
     )
     name = fields.Char(
         string="Reason",
@@ -31,13 +31,13 @@ class ApprovalRefusalReason(models.Model):
         help="Inactive reasons are hidden but preserved for historical records"
     )
     sequence = fields.Integer(
-        help="Order in which reasons appear in selection lists (lower = first)",
         default=10,
+        help="Order in which reasons appear in selection lists (lower = first)",
     )
     description = fields.Text(
         string="Detailed Description",
-        help="Optional detailed explanation of when this reason should be used",
         translate=True,
+        help="Optional detailed explanation of when this reason should be used",
     )
     category_ids = fields.Many2many(
         comodel_name="approval.category",
@@ -45,15 +45,15 @@ class ApprovalRefusalReason(models.Model):
         column1="reason_id",
         column2="category_id",
         string="Applicable Categories",
+        check_company=True,
         help="Leave empty to make this reason available for all categories. "
         "Select specific categories to restrict availability.",
-        check_company=True,
     )
 
     usage_count = fields.Integer(
         string="Times Used",
-        help="Number of times this reason has been used",
         compute="_compute_usage_count",
+        help="Number of times this reason has been used",
     )
 
     def _compute_usage_count(self):

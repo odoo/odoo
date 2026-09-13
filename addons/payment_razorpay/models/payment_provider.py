@@ -24,8 +24,8 @@ class PaymentProvider(models.Model):
     )
     razorpay_key_id = fields.Char(
         string="Razorpay Key Id",
-        help="The key solely used to identify the account with Razorpay.",
         copy=False,
+        help="The key solely used to identify the account with Razorpay.",
     )
     razorpay_key_secret = fields.Char(
         copy=False,

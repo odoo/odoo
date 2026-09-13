@@ -40,8 +40,8 @@ class HrJob(models.Model):
         prefetch=False,
     )
     website_published = fields.Boolean(
-        help="Set if the application is published on the website of the company.",
         tracking=True,
+        help="Set if the application is published on the website of the company.",
     )
     website_description = fields.Html(
         string="Website description",
@@ -54,10 +54,10 @@ class HrJob(models.Model):
     )
     job_details = fields.Html(
         string="Process Details",
-        help="Complementary information that will appear on the job submission page",
         translate=True,
         sanitize_attributes=False,
         default=_default_job_details,
+        help="Complementary information that will appear on the job submission page",
     )
     published_date = fields.Date(
         compute="_compute_published_date",

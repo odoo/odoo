@@ -27,8 +27,8 @@ class PaymentProvider(models.Model):
     iyzico_key_secret = fields.Char(
         string="Iyzico Secret Key",
         copy=False,
-        groups="base.group_system",
         required_if_provider="iyzico",
+        groups="base.group_system",
     )
 
     # === COMPUTE METHODS === #

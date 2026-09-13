@@ -89,13 +89,13 @@ class SnailmailLetter(models.Model):
             ("canceled", "Cancelled"),
         ],
         string="Status",
-        help="When a letter is created, the status is 'Pending'.\n"
-        "If the letter is correctly sent, the status goes in 'Sent',\n"
-        "If not, it will got in state 'Error' and the error message will be displayed in the field 'Error Message'.",
         default="pending",
         copy=False,
         readonly=True,
         required=True,
+        help="When a letter is created, the status is 'Pending'.\n"
+        "If the letter is correctly sent, the status goes in 'Sent',\n"
+        "If not, it will got in state 'Error' and the error message will be displayed in the field 'Error Message'.",
     )
     error_code = fields.Selection(
         selection=[(err_code, err_code) for err_code in ERROR_CODES],

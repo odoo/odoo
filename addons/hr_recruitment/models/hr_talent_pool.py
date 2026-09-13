@@ -29,8 +29,8 @@ class HrTalentPool(models.Model):
     )
     no_of_talents = fields.Integer(
         string="# Talents",
-        help="The number of talents in this talent pool.",
         compute="_compute_no_of_talents",
+        help="The number of talents in this talent pool.",
     )
     description = fields.Html(string="Talent Pool Description")
     color = fields.Integer(default=lambda self: self._default_color())

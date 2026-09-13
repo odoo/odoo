@@ -27,8 +27,8 @@ class ApiEndpointOutbound(models.Model):
             ("hour", "Per Hour"),
             ("day", "Per Day"),
         ],
-        help="Time period for rate limiting",
         default="minute",
+        help="Time period for rate limiting",
     )
 
     category = fields.Selection(
@@ -63,8 +63,8 @@ class ApiEndpointOutbound(models.Model):
     )
 
     endpoint_url = fields.Char(
-        help="Base URL for production environment",
         required=True,
+        help="Base URL for production environment",
     )
     endpoint_url_test = fields.Char(help="Base URL for test environment")
     allowed_hosts = fields.Char(
@@ -99,11 +99,11 @@ class ApiEndpointOutbound(models.Model):
     api_version = fields.Char()
     send_version_headers = fields.Boolean(
         string="Send Generic Version Headers",
+        default=True,
         help="Send API-Version and X-API-Version built from the API Version "
         "field. Turn this off for a vendor that carries its version its own "
         "way — in the URL path, or in a header of its own name — where the "
         "generic pair is at best ignored and at worst rejected.",
-        default=True,
     )
     auth_type = fields.Selection(
         selection_add=[
@@ -119,11 +119,11 @@ class ApiEndpointOutbound(models.Model):
     )
     allow_user_credentials = fields.Boolean(
         string="Allow Personal Credentials",
+        default=False,
         help="Let a user hold their own credential for this endpoint, so calls "
         "they trigger are attributed to them rather than to the company. When "
         "a user has no personal credential the company one is used, so turning "
         "this on changes nothing until someone creates one.",
-        default=False,
     )
     api_key_header = fields.Char(
         string="API Key Header",
@@ -159,12 +159,12 @@ class ApiEndpointOutbound(models.Model):
 
     verify_tls = fields.Boolean(
         string="Verify TLS certificate",
+        default=True,
         help="Uncheck only for an endpoint presenting a certificate this server "
         "cannot validate — typically a device on the local network with a "
         "self-signed certificate. Unchecking makes the connection "
         "interceptable; it is not a way to silence a certificate warning "
         "from a public endpoint.",
-        default=True,
     )
 
     @api.constrains("verify_tls", "endpoint_url")
@@ -230,11 +230,12 @@ class ApiEndpointOutbound(models.Model):
     )
 
     log_retention_days = fields.Integer(
+        default=0,
         help="Delete this endpoint's event logs older than this many days. 0 uses "
         "the retention set in API Transport settings.",
-        default=0,
     )
     log_request_payload = fields.Boolean(
+        default=True,
         help="Store the request body on each api.event.log row.\n\n"
         "Turn this off for a service whose payload is secret by construction "
         "rather than by field name — signing and cancellation calls that carry "
@@ -242,12 +243,11 @@ class ApiEndpointOutbound(models.Model):
         "protect a payload whose names it does not know, and these rows are "
         "readable by everyone with API Transport access. The exchange is still "
         "recorded: URL, status, timing, error and trace id are unaffected.",
-        default=True,
     )
     allow_multiple_credentials = fields.Boolean(
+        default=False,
         help="Allow multiple active credentials per company/environment. "
         "Useful for services like Telegram that support multiple bots.",
-        default=False,
     )
 
     credential_ids = fields.One2many(

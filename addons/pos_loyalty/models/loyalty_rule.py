@@ -9,21 +9,21 @@ class LoyaltyRule(models.Model):
     valid_product_ids = fields.Many2many(
         comodel_name="product.product",
         relation="Valid Products",
-        help="These are the products that are valid for this rule.",
         compute="_compute_valid_products",
+        help="These are the products that are valid for this rule.",
     )
     any_product = fields.Boolean(
-        help="Technical field, whether all product match",
         compute="_compute_valid_products",
+        help="Technical field, whether all product match",
     )
 
     promo_barcode = fields.Char(
         string="Barcode",
-        help="A technical field used as an alternative to the promo code. "
-        "This is automatically generated when the promo code is changed.",
         compute="_compute_promo_barcode",
         store=True,
         readonly=False,
+        help="A technical field used as an alternative to the promo code. "
+        "This is automatically generated when the promo code is changed.",
     )
 
     @api.model

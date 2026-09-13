@@ -27,9 +27,9 @@ class AccountPaymentRegister(models.TransientModel):
     )
     withholding_net_amount = fields.Monetary(
         string="Net Amount",
-        help="Net amount after deducting the withholding lines",
         compute="_compute_withholding_net_amount",
         store=True,
+        help="Net amount after deducting the withholding lines",
     )
     # We need to define the outstanding account of the payment in order for it to have the proper journal entry.
     # To that end, we'll have this field required if we have a withholding tax impacting the payment, and we don't have a payment account set on the payment method.

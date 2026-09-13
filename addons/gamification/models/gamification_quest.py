@@ -22,9 +22,9 @@ class GamificationQuest(models.Model):
     )
     description = fields.Html(
         string="Story",
-        help="Narrative framing for the quest (e.g., 'The Data Quality Crusade').",
         translate=True,
         sanitize_attributes=False,
+        help="Narrative framing for the quest (e.g., 'The Data Quality Crusade').",
     )
     sequence = fields.Integer(default=10)
     active = fields.Boolean(default=True)
@@ -53,8 +53,8 @@ class GamificationQuest(models.Model):
     )
     reward_karma = fields.Integer(
         string="Completion Karma",
-        help="Bonus karma granted on quest completion (on top of step rewards).",
         default=0,
+        help="Bonus karma granted on quest completion (on top of step rewards).",
     )
 
     # Targeting
@@ -131,8 +131,8 @@ class GamificationQuestStep(models.Model):
         required=True,
     )
     description = fields.Text(
-        help="What the user needs to do for this step.",
         translate=True,
+        help="What the user needs to do for this step.",
     )
     sequence = fields.Integer(default=10)
 
@@ -145,8 +145,8 @@ class GamificationQuestStep(models.Model):
     )
     target_goal = fields.Float(
         string="Target",
-        help="Target value for the goal (e.g., 10 leads, 5 invoices).",
         default=1,
+        help="Target value for the goal (e.g., 10 leads, 5 invoices).",
     )
 
     # Prerequisites (other steps in the same quest)
@@ -156,8 +156,8 @@ class GamificationQuestStep(models.Model):
         column1="step_id",
         column2="prereq_id",
         string="Prerequisites",
-        help="Steps that must be completed before this one unlocks.",
         domain="[('quest_id', '=', quest_id), ('id', '!=', id)]",
+        help="Steps that must be completed before this one unlocks.",
     )
 
     # Rewards per step
@@ -174,8 +174,8 @@ class GamificationQuestStep(models.Model):
     # Skill tree link
     skill_node_id = fields.Many2one(
         comodel_name="gamification.skill.node",
-        help="Skill tree node this step contributes to.",
         ondelete="set null",
+        help="Skill tree node this step contributes to.",
     )
 
     @api.constrains("prerequisite_ids")

@@ -69,9 +69,9 @@ class MixinOrder(models.AbstractModel):
     )
 
     show_comparison = fields.Boolean(
+        compute="_compute_show_comparison",
         help="Whether any product on this order was also bought or sold on "
         "another confirmed order, so a price comparison has something to show.",
-        compute="_compute_show_comparison",
     )
     product_id = fields.Many2one(
         comodel_name="product.product",
@@ -111,34 +111,34 @@ class MixinOrder(models.AbstractModel):
 
     date_order = fields.Datetime(
         string="Order Date",
-        help="Creation date of draft/sent orders,\nConfirmation date of confirmed orders.",
         default=fields.Datetime.now,
         index=True,
         copy=False,
         required=True,
+        help="Creation date of draft/sent orders,\nConfirmation date of confirmed orders.",
     )
     date_confirmed = fields.Datetime(
         string="Confirmation Date",
-        help="Date when the order was confirmed.",
         index=True,
         copy=False,
         readonly=True,
+        help="Date when the order was confirmed.",
     )
     date_commitment = fields.Datetime(
         string="Commitment Date",
+        copy=False,
         help="The date somebody committed to: the delivery date promised to "
         "the customer on a sale, the arrival date promised by the vendor on a "
         "purchase.",
-        copy=False,
     )
     date_validity = fields.Date(
         string="Expiration",
-        help="Validity of the quotation, after which it expires.",
         compute="_compute_date_validity",
         precompute=True,
         store=True,
         copy=False,
         readonly=False,
+        help="Validity of the quotation, after which it expires.",
     )
 
     company_id = fields.Many2one(
@@ -203,14 +203,14 @@ class MixinOrder(models.AbstractModel):
     )
     fiscal_position_id = fields.Many2one(
         comodel_name="account.fiscal.position",
-        help="Fiscal positions are used to adapt taxes and accounts for particular "
-        "partners or orders/invoices. The default value comes from the partner.",
         compute="_compute_fiscal_position_id",
         precompute=True,
         store=True,
         readonly=False,
         domain="[('company_id', 'in', [False, company_id])]",
         check_company=True,
+        help="Fiscal positions are used to adapt taxes and accounts for particular "
+        "partners or orders/invoices. The default value comes from the partner.",
     )
     tax_country_id = fields.Many2one(
         comodel_name="res.country",
@@ -220,32 +220,32 @@ class MixinOrder(models.AbstractModel):
     )
     journal_id = fields.Many2one(
         comodel_name="account.journal",
-        help="If set, the order will invoice in this journal; otherwise the "
-        "journal with the lowest sequence is used.",
         compute="_compute_journal_id",
         precompute=True,
         store=True,
         readonly=False,
         check_company=True,
+        help="If set, the order will invoice in this journal; otherwise the "
+        "journal with the lowest sequence is used.",
     )
 
     locked = fields.Boolean(
-        help="Locked orders cannot be modified.",
         default=False,
         copy=False,
         tracking=True,
+        help="Locked orders cannot be modified.",
     )
     acknowledged = fields.Boolean(
-        help="It indicates that the partner has acknowledged the receipt of the order.",
         copy=False,
         tracking=True,
+        help="It indicates that the partner has acknowledged the receipt of the order.",
     )
 
     sent = fields.Boolean(
-        help="The order has been sent to the partner.",
         default=False,
         copy=False,
         tracking=True,
+        help="The order has been sent to the partner.",
     )
     count_sent = fields.Integer(
         string="Sent Count",
@@ -253,10 +253,10 @@ class MixinOrder(models.AbstractModel):
         copy=False,
     )
     printed_before = fields.Boolean(
-        help="The order has already been printed.",
         default=False,
         copy=False,
         tracking=True,
+        help="The order has already been printed.",
     )
     count_print = fields.Integer(
         string="Print Count",
@@ -266,8 +266,8 @@ class MixinOrder(models.AbstractModel):
 
     origin = fields.Char(
         string="Source Document",
-        help="Reference of the document that generated this order request.",
         copy=False,
+        help="Reference of the document that generated this order request.",
     )
     partner_ref = fields.Char(
         string="Partner Reference",
@@ -283,9 +283,9 @@ class MixinOrder(models.AbstractModel):
 
     is_expired = fields.Boolean(compute="_compute_is_expired")
     is_late = fields.Boolean(
-        help="True when the order is confirmed and its planned date has passed.",
         compute="_compute_is_late",
         search="_search_is_late",
+        help="True when the order is confirmed and its planned date has passed.",
     )
     type_name = fields.Char(compute="_compute_type_name")
     has_archived_products = fields.Boolean(compute="_compute_has_archived_products")

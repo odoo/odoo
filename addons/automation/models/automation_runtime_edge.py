@@ -53,9 +53,9 @@ class AutomationRuntimeEdge(models.Model):
         readonly=True,
     )
     revoked = fields.Boolean(
-        help="An exclusive event on the source closed this edge",
         copy=False,
         readonly=True,
+        help="An exclusive event on the source closed this edge",
     )
 
     def _verdict(self, now):

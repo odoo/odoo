@@ -17,10 +17,10 @@ class AccountPayment(models.Model):
     payment_token_id = fields.Many2one(
         comodel_name="payment.token",
         string="Saved Payment Token",
-        help="Note that only tokens from providers allowing to capture the amount are available.",
         domain="""[
             ('id', 'in', suitable_payment_token_ids),
         ]""",
+        help="Note that only tokens from providers allowing to capture the amount are available.",
     )
     amount_available_for_refund = fields.Monetary(
         compute="_compute_amount_available_for_refund"
@@ -40,11 +40,11 @@ class AccountPayment(models.Model):
     # == Fields used for traceability ==
     source_payment_id = fields.Many2one(
         comodel_name="account.payment",
-        help="The source payment of related refund payments",
         compute="_compute_source_payment_id",
         store=True,  # Stored for the group by in `_compute_refunds_count`
         index="btree_not_null",
         readonly=True,
+        help="The source payment of related refund payments",
     )
     refunds_count = fields.Integer(compute="_compute_refunds_count")
 

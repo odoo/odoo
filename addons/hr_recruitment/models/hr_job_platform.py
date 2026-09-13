@@ -8,9 +8,9 @@ class HrJobPlatform(models.Model):
 
     name = fields.Char(required=True)
     email = fields.Char(
+        required=True,
         help="Applications received from this Email won't be linked to a contact."
         "There will be no email address set on the Applicant either.",
-        required=True,
     )
     regex = fields.Char(
         help="The regex facilitates to extract information from the subject or body "

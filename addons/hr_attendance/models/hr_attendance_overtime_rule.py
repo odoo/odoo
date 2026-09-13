@@ -49,11 +49,11 @@ class HrAttendanceOvertimeRule(models.Model):
             ("timing", "Timing"),
         ],
         string="Based Off",
+        default="quantity",
+        required=True,
         help="Base for overtime calculation.\n"
         "Use 'Quantity' when overtime hours are those in excess of a certain amount per day/week.\n"
         "Use 'Timing' when overtime hours happen on specific days or at specific times",
-        default="quantity",
-        required=True,
     )
 
     timing_type = fields.Selection(
@@ -75,8 +75,8 @@ class HrAttendanceOvertimeRule(models.Model):
     )
     expected_hours_from_contract = fields.Boolean(
         string="Hours from employee schedule",
-        help="When enabled, expected hours are derived from the employee's contract/schedule instead of the fixed 'Expected Hours' value. With Absence Management enabled, this also allows the attendance to go into negative extra hours to represent hours missing compared to what is expected.",
         default=True,
+        help="When enabled, expected hours are derived from the employee's contract/schedule instead of the fixed 'Expected Hours' value. With Absence Management enabled, this also allows the attendance to go into negative extra hours to represent hours missing compared to what is expected.",
     )
 
     resource_calendar_id = fields.Many2one(

@@ -24,116 +24,116 @@ class ApprovalDashboard(models.TransientModel):
     )
 
     pending_today = fields.Integer(
-        help="Requests currently pending (submitted today)",
         compute="_compute_today_stats",
+        help="Requests currently pending (submitted today)",
     )
     approved_today = fields.Integer(compute="_compute_today_stats")
     refused_today = fields.Integer(compute="_compute_today_stats")
     submitted_today = fields.Integer(compute="_compute_today_stats")
     avg_response_time_hours = fields.Float(
         string="Avg Response Time Today (hours)",
-        help="Average time from submission to decision for requests resolved today",
         compute="_compute_today_stats",
+        help="Average time from submission to decision for requests resolved today",
     )
 
     trend_7days = fields.Float(
         string="7-Day Trend %",
-        help="Percentage change in submission volume vs last week",
         compute="_compute_trends",
+        help="Percentage change in submission volume vs last week",
     )
     trend_15days = fields.Float(
         string="15-Day Trend %",
-        help="Percentage change in submission volume vs previous 15 days",
         compute="_compute_trends",
+        help="Percentage change in submission volume vs previous 15 days",
     )
     trend_30days = fields.Float(
         string="30-Day Trend %",
-        help="Percentage change in submission volume vs last month",
         compute="_compute_trends",
+        help="Percentage change in submission volume vs last month",
     )
     trend_7days_display = fields.Char(
         string="Week Trend",
-        help="Human-readable 7-day trend with arrow",
         compute="_compute_trends",
+        help="Human-readable 7-day trend with arrow",
     )
     trend_15days_display = fields.Char(
         string="15-Day Trend",
-        help="Human-readable 15-day trend with arrow",
         compute="_compute_trends",
+        help="Human-readable 15-day trend with arrow",
     )
     trend_30days_display = fields.Char(
         string="Month Trend",
-        help="Human-readable 30-day trend with arrow",
         compute="_compute_trends",
+        help="Human-readable 30-day trend with arrow",
     )
 
     slowest_category_id = fields.Many2one(
         comodel_name="approval.category",
-        help="Category with longest average approval time",
         compute="_compute_bottlenecks",
+        help="Category with longest average approval time",
     )
     slowest_category_hours = fields.Float(
         string="Slowest Category Time (hours)",
-        help="Average approval time for slowest category",
         compute="_compute_bottlenecks",
+        help="Average approval time for slowest category",
     )
     slowest_approver_id = fields.Many2one(
         comodel_name="res.users",
-        help="Approver with longest average response time",
         compute="_compute_bottlenecks",
+        help="Approver with longest average response time",
     )
     slowest_approver_hours = fields.Float(
         string="Slowest Approver Time (hours)",
-        help="Average response time for slowest approver",
         compute="_compute_bottlenecks",
+        help="Average response time for slowest approver",
     )
     most_pending_approver_id = fields.Many2one(
         comodel_name="res.users",
         string="Most Overloaded Approver",
-        help="Approver with most pending requests",
         compute="_compute_bottlenecks",
+        help="Approver with most pending requests",
     )
     most_pending_count = fields.Integer(
         string="Highest Pending Count",
-        help="Number of pending requests for most overloaded approver",
         compute="_compute_bottlenecks",
+        help="Number of pending requests for most overloaded approver",
     )
 
     total_requests_all_time = fields.Integer(
         string="Total Requests (All Time)",
-        help="Total approval requests submitted since system deployment",
         compute="_compute_all_time_stats",
+        help="Total approval requests submitted since system deployment",
     )
     total_pending_all_time = fields.Integer(
         string="Total Pending (All Time)",
-        help="Total requests currently pending approval",
         compute="_compute_all_time_stats",
+        help="Total requests currently pending approval",
     )
     overall_approval_rate = fields.Float(
         string="Overall Approval Rate %",
-        help="Percentage of all requests that were approved",
         compute="_compute_all_time_stats",
+        help="Percentage of all requests that were approved",
     )
     avg_approval_time_all_time = fields.Float(
         string="Avg Approval Time (All Time, hours)",
-        help="Average time from submission to approval across all requests",
         compute="_compute_all_time_stats",
+        help="Average time from submission to approval across all requests",
     )
 
     my_pending_count = fields.Integer(
         string="My Pending Approvals",
-        help="Number of requests awaiting my approval",
         compute="_compute_user_metrics",
+        help="Number of requests awaiting my approval",
     )
     my_pending_urgent_count = fields.Integer(
         string="My Urgent Pending",
-        help="Number of urgent requests awaiting my approval",
         compute="_compute_user_metrics",
+        help="Number of urgent requests awaiting my approval",
     )
     my_avg_response_hours = fields.Float(
         string="My Avg Response Time (hours)",
-        help="My average time to approve/refuse requests",
         compute="_compute_user_metrics",
+        help="My average time to approve/refuse requests",
     )
 
     requests_per_day_7d = fields.Float(
@@ -174,8 +174,8 @@ class ApprovalDashboard(models.TransientModel):
     )
     median_approval_hours = fields.Float(
         string="Median Approval Time (hours)",
-        help="Median time from submission to approval (50th percentile, last 90 days)",
         compute="_compute_velocity_metrics",
+        help="Median time from submission to approval (50th percentile, last 90 days)",
     )
 
     def _compute_last_refresh(self) -> None:

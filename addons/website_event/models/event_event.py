@@ -60,19 +60,19 @@ class EventEvent(models.Model):
             ("link", "Via a Link"),
             ("logged_users", "Logged Users"),
         ],
-        help="""Defines the Visibility of the Event on the Website and searches.\n
-            Note that the EventEvent is however always available via its link.""",
         default="public",
         required=True,
         tracking=True,
+        help="""Defines the Visibility of the Event on the Website and searches.\n
+            Note that the EventEvent is however always available via its link.""",
     )
     website_published = fields.Boolean(tracking=True)
     website_menu = fields.Boolean(
-        help="Allows to display and manage event-specific menus on website.",
         compute="_compute_website_menu",
         precompute=True,
         store=True,
         readonly=False,
+        help="Allows to display and manage event-specific menus on website.",
     )
     menu_id = fields.Many2one(
         comodel_name="website.menu",
@@ -103,10 +103,10 @@ class EventEvent(models.Model):
         domain=[("menu_type", "=", "register")],
     )
     community_menu = fields.Boolean(
-        help="Display community tab on website",
         compute="_compute_community_menu",
         store=True,
         readonly=False,
+        help="Display community tab on website",
     )
     community_menu_ids = fields.One2many(
         comodel_name="website.event.menu",
@@ -121,19 +121,19 @@ class EventEvent(models.Model):
         domain=[("menu_type", "=", "other")],
     )
     is_ongoing = fields.Boolean(
-        help="Whether event has begun",
         compute="_compute_time_data",
         search="_search_is_ongoing",
+        help="Whether event has begun",
     )
     is_done = fields.Boolean(compute="_compute_time_data")
     start_today = fields.Boolean(
-        help="Whether event is going to start today if still not ongoing",
         compute="_compute_time_data",
+        help="Whether event is going to start today if still not ongoing",
     )
     start_remaining = fields.Integer(
         string="Remaining before start",
-        help="Remaining time before event starts (minutes)",
         compute="_compute_time_data",
+        help="Remaining time before event starts (minutes)",
     )
 
     @api.depends("website_url")

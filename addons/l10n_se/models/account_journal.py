@@ -19,8 +19,8 @@ class AccountJournal(models.Model):
     )
     l10n_se_invoice_ocr_length = fields.Integer(
         string="OCR Number Length",
-        help="Total length of OCR Reference Number including checksum.",
         default=6,
+        help="Total length of OCR Reference Number including checksum.",
     )
 
     @api.constrains("l10n_se_invoice_ocr_length")

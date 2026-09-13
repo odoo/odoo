@@ -12,31 +12,31 @@ class AccountTaxUnit(models.Model):
     name = fields.Char(required=True)
     country_id = fields.Many2one(
         comodel_name="res.country",
-        help="The country in which this tax unit is used to group your companies' tax reports declaration.",
         inverse="_inverse_vat_and_country_id",
         required=True,
+        help="The country in which this tax unit is used to group your companies' tax reports declaration.",
     )
     vat = fields.Char(
         string="Tax ID",
-        help="The identifier to be used when submitting a report for this unit.",
         inverse="_inverse_vat_and_country_id",
         required=True,
+        help="The identifier to be used when submitting a report for this unit.",
     )
     company_ids = fields.Many2many(
         comodel_name="res.company",
         string="Companies",
-        help="Members of this unit",
         required=True,
+        help="Members of this unit",
     )
     main_company_id = fields.Many2one(
         comodel_name="res.company",
-        help="Main company of this unit; the one actually reporting and paying the taxes.",
         required=True,
+        help="Main company of this unit; the one actually reporting and paying the taxes.",
     )
     fpos_synced = fields.Boolean(
         string="Fiscal Positions Synchronised",
-        help="Technical field indicating whether Fiscal Positions exist for all companies in the unit",
         compute="_compute_fpos_synced",
+        help="Technical field indicating whether Fiscal Positions exist for all companies in the unit",
     )
 
     @api.model_create_multi

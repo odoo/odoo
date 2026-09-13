@@ -54,15 +54,15 @@ class ApprovalApprover(models.Model):
             ("cancelled", "Cancelled"),
         ],
         string="Status",
+        default="new",
+        index=True,
+        copy=False,
+        readonly=True,
         help="Never copied: _sync_approvers() matches a copied approver "
         "row to its category source by user_id and only ever updates "
         "required/sequence on a match, never state — so a decided row "
         "(approved/refused) copied verbatim would stay decided forever "
         "on a request that was never confirmed.",
-        default="new",
-        index=True,
-        copy=False,
-        readonly=True,
     )
     required = fields.Boolean(
         default=False,
@@ -74,11 +74,11 @@ class ApprovalApprover(models.Model):
         column1="approver_id",
         column2="step_id",
         string="Steps",
-        help="The steps this approver may decide. Rows are one per user per "
-        "request, so a user in the pools of two steps appears once, with both here.",
         copy=False,
         readonly=True,
         context={"active_test": True},
+        help="The steps this approver may decide. Rows are one per user per "
+        "request, so a user in the pools of two steps appears once, with both here.",
     )
     decided_step_ids = fields.Many2many(
         comodel_name="approval.category.step",
@@ -86,25 +86,27 @@ class ApprovalApprover(models.Model):
         column1="approver_id",
         column2="step_id",
         string="Decided Steps",
-        help="The steps this row's decision was given for, which are the steps the "
-        "quorum counts it toward. The approval button decides the step it is drawn "
-        "under; any other decision is given for every step of the row.",
         copy=False,
         readonly=True,
         context={"active_test": True},
+        help="The steps this row's decision was given for, which are the steps the "
+        "quorum counts it toward. The approval button decides the step it is drawn "
+        "under; any other decision is given for every step of the row.",
     )
     source_rule_id = fields.Many2one(
         comodel_name="approval.rule",
-        help="Conditional rule that injected this approver, if any — an "
-        "adding rule or the replacing rule this request fell into (audit + "
-        "re-sync provenance). There used to be a second column, "
-        "source_tier_id, for the separate approval.tier model.",
         index="btree_not_null",
         copy=False,
         readonly=True,
         ondelete="set null",
+        help="Conditional rule that injected this approver, if any — an "
+        "adding rule or the replacing rule this request fell into (audit + "
+        "re-sync provenance). There used to be a second column, "
+        "source_tier_id, for the separate approval.tier model.",
     )
     source_synced = fields.Boolean(
+        copy=False,
+        readonly=True,
         help="Set when this row was produced by the approver sync from an "
         "automated source (category approver, tier, rule, security group, "
         "extension hook such as the HR manager). False on genuinely manual "
@@ -112,10 +114,11 @@ class ApprovalApprover(models.Model):
         "synced row whose source stopped producing it (approver removed "
         "from the category, owner changed away from a manager) is deleted "
         "instead of surviving as a phantom optional approver.",
-        copy=False,
-        readonly=True,
     )
     pending_since = fields.Datetime(
+        index="btree_not_null",
+        copy=False,
+        readonly=True,
         help="When this row ENTERED the decision window (state became "
         "'pending'). The symmetric half of decision_date, which records "
         "when it left. Approver-response analytics measure "
@@ -127,13 +130,13 @@ class ApprovalApprover(models.Model):
         "chain. Cleared when the row returns to 'new' (reset-to-draft) "
         "and re-stamped on every re-entry, so a withdraw-and-reopen "
         "cycle times the new decision window, not the original one.",
-        index="btree_not_null",
-        copy=False,
-        readonly=True,
     )
     decided_by_user_id = fields.Many2one(
         comodel_name="res.users",
         string="Decided By",
+        index="btree_not_null",
+        copy=False,
+        readonly=True,
         help="Who actually made the decision recorded in decision_date — "
         "the delegate when the row was decided inside an active delegation "
         "window, otherwise user_id itself. The pair (user_id, "
@@ -145,11 +148,11 @@ class ApprovalApprover(models.Model):
         "while the delegate who did the work scored nothing. Left empty for "
         "rows flipped by non-decisions, exactly like decision_date, and "
         "cleared beside it on withdraw and reset-to-draft.",
+    )
+    decision_date = fields.Datetime(
         index="btree_not_null",
         copy=False,
         readonly=True,
-    )
-    decision_date = fields.Datetime(
         help="When THIS approver personally approved or refused, stamped "
         "by the decision funnel (_apply_decision). Left empty for rows "
         "flipped by non-decisions — consent auto-approval, sequential/"
@@ -157,29 +160,29 @@ class ApprovalApprover(models.Model):
         "approver-performance analytics count only genuine decisions and "
         "measure each approver's own response time (cleared on withdraw "
         "and reset-to-draft).",
-        index="btree_not_null",
-        copy=False,
-        readonly=True,
     )
     delegate_id = fields.Many2one(
         comodel_name="res.users",
         string="Delegate To",
-        help="Temporary delegate who can approve on your behalf",
         copy=False,
         check_company=True,
+        help="Temporary delegate who can approve on your behalf",
     )
     delegate_start_date = fields.Date(
         string="Delegation Start",
-        help="Start date for delegation period",
         copy=False,
+        help="Start date for delegation period",
     )
     delegate_end_date = fields.Date(
         string="Delegation End",
-        help="End date for delegation period",
         copy=False,
+        help="End date for delegation period",
     )
     is_delegated = fields.Boolean(
         string="Currently Delegated",
+        compute="_compute_is_delegated",
+        search="_search_is_delegated",
+        copy=False,
         help="Indicates if approval is currently delegated to another user. "
         "Non-stored on purpose: the value is a function of wall-clock "
         "'today' vs the delegation window, and no ORM write happens when "
@@ -187,20 +190,17 @@ class ApprovalApprover(models.Model):
         "would freeze at False forever for any delegation scheduled "
         "in advance. A custom search method keeps the field usable in "
         "domain filters (e.g. the 'Delegated to Me' search view).",
-        compute="_compute_is_delegated",
-        search="_search_is_delegated",
-        copy=False,
     )
 
     note = fields.Text(
+        copy=False,
         help="Optional note or comment added when approving or refusing the request. "
         "Use this to provide context, conditions, or reasons for your decision.",
-        copy=False,
     )
     refusal_reason_id = fields.Many2one(
         comodel_name="approval.refusal.reason",
-        help="Structured reason for refusing the request",
         copy=False,
+        help="Structured reason for refusing the request",
     )
 
     @api.constrains("delegate_id", "delegate_start_date", "delegate_end_date")

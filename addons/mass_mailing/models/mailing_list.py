@@ -78,9 +78,9 @@ class MailingList(models.Model):
     )
     is_public = fields.Boolean(
         string="Show In Preferences",
+        default=False,
         help="The mailing list can be accessible by recipients in the subscription "
         "management page to allow them to update their preferences.",
-        default=False,
     )
 
     # ------------------------------------------------------

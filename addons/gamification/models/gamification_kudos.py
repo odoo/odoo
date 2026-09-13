@@ -22,8 +22,8 @@ class GamificationKudosCategory(models.Model):
     sequence = fields.Integer(default=10)
     icon = fields.Char(
         string="Icon CSS Class",
-        help="Font Awesome icon class, e.g. 'fa fa-star', 'fa fa-heart'.",
         default="fa fa-thumbs-up",
+        help="Font Awesome icon class, e.g. 'fa fa-star', 'fa fa-heart'.",
     )
     color = fields.Integer(
         string="Color Index",
@@ -31,8 +31,8 @@ class GamificationKudosCategory(models.Model):
     )
     karma_granted = fields.Integer(
         string="Karma Bonus",
-        help="Karma automatically granted to the recipient when kudos is sent.",
         default=5,
+        help="Karma automatically granted to the recipient when kudos is sent.",
     )
     active = fields.Boolean(default=True)
     kudos_ids = fields.One2many(
@@ -121,8 +121,8 @@ class GamificationKudos(models.Model):
         store=True,
     )
     karma_granted = fields.Integer(
-        help="Karma points granted to the recipient.",
         readonly=True,
+        help="Karma points granted to the recipient.",
     )
 
     @api.depends("sender_id.name", "recipient_id.name", "category_id.name")

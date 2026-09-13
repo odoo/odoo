@@ -32,10 +32,10 @@ class SaleOrder(models.Model):
     )
     grid = fields.Char(
         string="Matrix local storage",
+        store=False,
         help="Technical local storage of grid. "
         "\nIf grid_update, will be loaded on the SO."
         "\nIf not, represents the matrix to open.",
-        store=False,
     )
 
     @api.onchange("grid_product_tmpl_id")

@@ -17,19 +17,19 @@ class PaymentProvider(models.Model):
         ondelete={"flutterwave": "set default"},
     )
     flutterwave_public_key = fields.Char(
-        help="The key solely used to identify the account with Flutterwave.",
         copy=False,
         required_if_provider="flutterwave",
+        help="The key solely used to identify the account with Flutterwave.",
     )
     flutterwave_secret_key = fields.Char(
         copy=False,
-        groups="base.group_system",
         required_if_provider="flutterwave",
+        groups="base.group_system",
     )
     flutterwave_webhook_secret = fields.Char(
         copy=False,
-        groups="base.group_system",
         required_if_provider="flutterwave",
+        groups="base.group_system",
     )
 
     # === COMPUTE METHODS ===#

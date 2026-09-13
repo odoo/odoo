@@ -12,14 +12,14 @@ class L10n_ItDdt(models.Model):
     )
     name = fields.Char(
         string="Numero DDT",
-        help="Transport document number",
         size=20,
         required=True,
+        help="Transport document number",
     )
     date = fields.Date(
         string="Data DDT",
-        help="Transport document date",
         required=True,
+        help="Transport document date",
     )
 
     @api.depends("date")

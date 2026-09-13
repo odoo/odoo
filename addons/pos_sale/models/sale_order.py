@@ -20,9 +20,9 @@ class SaleOrder(models.Model):
     )
     amount_unpaid = fields.Monetary(
         string="Amount To Pay In POS",
-        help="Amount left to pay in POS to avoid double payment or double invoicing.",
         compute="_compute_amount_unpaid",
         store=True,
+        help="Amount left to pay in POS to avoid double payment or double invoicing.",
     )
 
     @api.model

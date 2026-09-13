@@ -12,17 +12,17 @@ class ResCompany(models.Model):
 
     internal_transit_location_id = fields.Many2one(
         comodel_name="stock.location",
-        help="Used for resupply routes between warehouses that belong to this company",
         ondelete="restrict",
         check_company=True,
+        help="Used for resupply routes between warehouses that belong to this company",
     )
     stock_move_email_validation = fields.Boolean(string="Email Confirmation picking")
     stock_mail_confirmation_template_id = fields.Many2one(
         comodel_name="mail.template",
         string="Email Template confirmation picking",
-        help="Email sent to the customer once the order is done.",
         default=lambda self: self._default_stock_mail_confirmation_template_id(),
         domain="[('model', '=', 'stock.picking')]",
+        help="Email sent to the customer once the order is done.",
     )
     annual_inventory_month = fields.Selection(
         selection=[
@@ -39,30 +39,30 @@ class ResCompany(models.Model):
             ("11", "November"),
             ("12", "December"),
         ],
-        help="Annual inventory month for products not in a location with a cyclic inventory date. Set to no month if no automatic annual inventory.",
         default="12",
+        help="Annual inventory month for products not in a location with a cyclic inventory date. Set to no month if no automatic annual inventory.",
     )
     annual_inventory_day = fields.Integer(
         string="Day of the month",
+        default=31,
         help="""Day of the month when the annual inventory should occur. If zero or negative, then the first day of the month will be selected instead.
         If greater than the last day of a month, then the last day of the month will be selected instead.""",
-        default=31,
     )
     horizon_days = fields.Integer(
         string="Replenishment Horizon",
+        default=365,
+        required=True,
         help="""Configure your horizon to trigger reordering rules earlier to get
          a head start on replenishment and avoid delays, or trigger it just-in-time
          ('0 days') to avoid overstocking.""",
-        default=365,
-        required=True,
     )
 
     stock_text_confirmation = fields.Boolean()
     stock_confirmation_type = fields.Selection(
         selection=[("sms", "SMS")],
         string="Confirmation Channel",
-        help="Channel used to send the delivery text confirmation to the customer.",
         default="sms",
+        help="Channel used to send the delivery text confirmation to the customer.",
     )
 
     @api.constrains("horizon_days")

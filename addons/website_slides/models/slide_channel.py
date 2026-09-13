@@ -65,17 +65,17 @@ class SlideChannel(models.Model):
         tracking=100,
     )
     description = fields.Html(
-        help="The description that is displayed on top of the course page, just below the title",
         translate=True,
         sanitize_attributes=False,
         sanitize_form=False,
+        help="The description that is displayed on top of the course page, just below the title",
     )
     description_short = fields.Html(
         string="Short Description",
-        help="The description that is displayed on the course card",
         translate=True,
         sanitize_attributes=False,
         sanitize_form=False,
+        help="The description that is displayed on the course card",
     )
     description_html = fields.Html(
         string="Detailed Description",
@@ -86,9 +86,9 @@ class SlideChannel(models.Model):
     channel_type = fields.Selection(
         selection=[("training", "Training"), ("documentation", "Documentation")],
         string="Course type",
-        help='Defines the course type (e.g., "Training" for interactive learning, or "Documentation" for resources and guides).',
         default="training",
         required=True,
+        help='Defines the course type (e.g., "Training" for interactive learning, or "Documentation" for resources and guides).',
     )
     sequence = fields.Integer(default=10)
     user_id = fields.Many2one(
@@ -98,8 +98,8 @@ class SlideChannel(models.Model):
     )
     color = fields.Integer(
         string="Color Index",
-        help="Used to decorate kanban view",
         default=0,
+        help="Used to decorate kanban view",
     )
     tag_ids = fields.Many2many(
         comodel_name="slide.channel.tag",
@@ -146,10 +146,10 @@ class SlideChannel(models.Model):
             ("none", "None"),
         ],
         string="Featured Content",
-        help="Defines the content that will be promoted on the course home page",
         default="latest",
         copy=False,
         required=False,
+        help="Defines the content that will be promoted on the course home page",
     )
     promoted_slide_id = fields.Many2one(
         comodel_name="slide.slide",
@@ -219,63 +219,63 @@ class SlideChannel(models.Model):
     )
     allow_comment = fields.Boolean(
         string="Allow rating on Course",
-        help="Allow Attendees to like and comment your content and to submit reviews on your course.",
         compute="_compute_allow_comment",
         precompute=True,
         store=True,
         readonly=False,
+        help="Allow Attendees to like and comment your content and to submit reviews on your course.",
     )
     publish_template_id = fields.Many2one(
         comodel_name="mail.template",
         string="New Content Notification",
-        help="Defines the email your Attendees will receive each time you upload new content.",
         default=lambda self: self.env["ir.model.data"]._xmlid_to_res_id(
             "website_slides.slide_template_published"
         ),
         domain=[("model", "=", "slide.slide")],
+        help="Defines the email your Attendees will receive each time you upload new content.",
     )
     share_channel_template_id = fields.Many2one(
         comodel_name="mail.template",
         string="Channel Share Template",
-        help="Email template used when sharing a channel",
         default=lambda self: self.env["ir.model.data"]._xmlid_to_res_id(
             "website_slides.mail_template_channel_shared"
         ),
+        help="Email template used when sharing a channel",
     )
     share_slide_template_id = fields.Many2one(
         comodel_name="mail.template",
         string="Share Template",
-        help="Email template used when sharing a slide",
         default=lambda self: self.env["ir.model.data"]._xmlid_to_res_id(
             "website_slides.slide_template_shared"
         ),
+        help="Email template used when sharing a slide",
     )
     completed_template_id = fields.Many2one(
         comodel_name="mail.template",
         string="Completion Notification",
-        help="Defines the email your Attendees will receive once they reach the end of your course.",
         default=lambda self: self.env["ir.model.data"]._xmlid_to_res_id(
             "website_slides.mail_template_channel_completed"
         ),
         domain=[("model", "=", "slide.channel.partner")],
+        help="Defines the email your Attendees will receive once they reach the end of your course.",
     )
     enroll = fields.Selection(
         selection=[("public", "Open"), ("invite", "On Invitation")],
         string="Enroll Policy",
-        help="Defines how people can enroll to your Course.",
         compute="_compute_enroll",
         precompute=True,
         store=True,
         copy=False,
         readonly=False,
         required=True,
+        help="Defines how people can enroll to your Course.",
     )
     enroll_msg = fields.Html(
         string="Enroll Message",
-        help="Message explaining the enroll process",
         translate=tools.html_translate,
         sanitize_attributes=False,
         default=_default_enroll_msg,
+        help="Message explaining the enroll process",
     )
     enroll_group_ids = fields.Many2many(
         comodel_name="res.groups",
@@ -290,9 +290,9 @@ class SlideChannel(models.Model):
             ("link", "Anyone with the link"),
         ],
         string="Show Course To",
-        help="Defines who can access your courses and their content.",
         default="public",
         required=True,
+        help="Defines who can access your courses and their content.",
     )
     upload_group_ids = fields.Many2many(
         comodel_name="res.groups",
@@ -300,10 +300,10 @@ class SlideChannel(models.Model):
         column1="channel_id",
         column2="group_id",
         string="Upload Groups",
+        groups="base.group_user",
         help="Groups whose members may add contents to this course. It grants "
         "uploading, not publishing: only the responsible and eLearning managers "
         "can publish. Leave empty to restrict uploading to those two.",
-        groups="base.group_user",
     )
     website_default_background_image_url = fields.Char(
         string="Background image URL",
@@ -332,8 +332,8 @@ class SlideChannel(models.Model):
     )
     members_engaged_count = fields.Integer(
         string="# Active Attendees",
-        help="Active attendees include both 'joined' and 'ongoing' attendees.",
         compute="_compute_members_counts",
+        help="Active attendees include both 'joined' and 'ongoing' attendees.",
     )
     members_completed_count = fields.Integer(
         string="# Completed Attendees",
@@ -346,9 +346,9 @@ class SlideChannel(models.Model):
     partner_ids = fields.Many2many(
         comodel_name="res.partner",
         string="Attendees",
-        help="Enrolled partners in the course",
         compute="_compute_partners",
         search="_search_partner_ids",
+        help="Enrolled partners in the course",
     )
     completed = fields.Boolean(
         string="Done",
@@ -370,15 +370,15 @@ class SlideChannel(models.Model):
     )
     is_member = fields.Boolean(
         string="Is Enrolled Attendee",
-        help="Is the attendee actively enrolled.",
         compute="_compute_membership_values",
         search="_search_is_member",
+        help="Is the attendee actively enrolled.",
     )
     is_member_invited = fields.Boolean(
         string="Is Invited Attendee",
-        help="Is the invitation for this attendee pending.",
         compute="_compute_membership_values",
         search="_search_is_member_invited",
+        help="Is the invitation for this attendee pending.",
     )
     is_visible = fields.Boolean(
         string="Is Visible On Website",
@@ -399,18 +399,18 @@ class SlideChannel(models.Model):
     )
     karma_review = fields.Integer(
         string="Add Review",
-        help="Karma needed to add a review on the course",
         default=10,
+        help="Karma needed to add a review on the course",
     )
     karma_slide_comment = fields.Integer(
         string="Add Comment",
-        help="Karma needed to add a comment on a slide of this course",
         default=3,
+        help="Karma needed to add a comment on a slide of this course",
     )
     karma_slide_vote = fields.Integer(
         string="Vote",
-        help="Karma needed to like/dislike a slide of this course.",
         default=3,
+        help="Karma needed to like/dislike a slide of this course.",
     )
     can_review = fields.Boolean(
         compute="_compute_action_rights",
@@ -430,8 +430,8 @@ class SlideChannel(models.Model):
         column1="channel_id",
         column2="prerequisite_channel_id",
         string="Prerequisites",
-        help="Prerequisite courses to complete before accessing this one.",
         domain="[('id', '!=', id), ('visibility', '=', visibility), ('website_published', '=', website_published)]",
+        help="Prerequisite courses to complete before accessing this one.",
     )
     prerequisite_of_channel_ids = fields.Many2many(
         comodel_name="slide.channel",

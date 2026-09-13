@@ -41,13 +41,13 @@ class ResourceResource(models.Model):
     partner_id = fields.Many2one(
         comodel_name="res.partner",
         string="Party",
-        help="The person this resource is. A material resource has none.",
         index="btree_not_null",
         ondelete="restrict",
+        help="The person this resource is. A material resource has none.",
     )
     active = fields.Boolean(
-        help="If the active field is set to False, it will allow you to hide the resource record without removing it.",
         default=True,
+        help="If the active field is set to False, it will allow you to hide the resource record without removing it.",
     )
     company_id = fields.Many2one(
         comodel_name="res.company",
@@ -61,8 +61,8 @@ class ResourceResource(models.Model):
     )
     user_id = fields.Many2one(
         comodel_name="res.users",
-        help="Related user name for the resource to manage its access.",
         index="btree_not_null",
+        help="Related user name for the resource to manage its access.",
     )
     avatar_128 = fields.Image(compute="_compute_avatar_128")
     share = fields.Boolean(related="user_id.share")
@@ -72,10 +72,10 @@ class ResourceResource(models.Model):
     calendar_id = fields.Many2one(
         comodel_name="resource.calendar",
         string="Working Time",
-        help="Define the working schedule of the resource. If not set, the resource will have fully flexible working hours.",
         default=lambda self: self.env.company.resource_calendar_id,
         index="btree_not_null",
         domain="[('company_id', 'in', [company_id, False])]",
+        help="Define the working schedule of the resource. If not set, the resource will have fully flexible working hours.",
     )
     tz = fields.Selection(
         selection=_selection_timezones,
@@ -91,9 +91,9 @@ class ResourceResource(models.Model):
     color = fields.Integer(default=lambda self: self._default_color())
     time_efficiency = fields.Float(
         string="Efficiency Factor",
-        help="This field is used to calculate the expected duration of a work order at this work center. For example, if a work order takes one hour and the efficiency factor is 100%, then the expected duration will be one hour. If the efficiency factor is 200%, however the expected duration will be 30 minutes.",
         default=100,
         required=True,
+        help="This field is used to calculate the expected duration of a work order at this work center. For example, if a work order takes one hour and the efficiency factor is 100%, then the expected duration will be one hour. If the efficiency factor is 200%, however the expected duration will be 30 minutes.",
     )
 
     assignment_ids = fields.One2many(
@@ -108,9 +108,9 @@ class ResourceResource(models.Model):
         search="_search_holder_id",
     )
     capacity = fields.Integer(
-        help="How many claims the resource can hold at once: seats at a table, concurrent users of a machine. A reservation's allocated percentage is a share of this.",
         default=1,
         required=True,
+        help="How many claims the resource can hold at once: seats at a table, concurrent users of a machine. A reservation's allocated percentage is a share of this.",
     )
 
     role_ids = fields.Many2many(
@@ -122,18 +122,18 @@ class ResourceResource(models.Model):
     )
     default_role_id = fields.Many2one(
         comodel_name="resource.role",
-        help="Preferred role when assigning this resource. The default is always included in its roles.",
         compute="_compute_default_role_id",
         inverse="_inverse_default_role_id",
         store=True,
         readonly=False,
+        help="Preferred role when assigning this resource. The default is always included in its roles.",
     )
 
     booking_limit_percentage = fields.Float(
         string="Booking Ceiling %",
-        help="Maximum simultaneous allocation for enforced bookings. 100% permits full booking; 120% permits 20% overbooking. Warning-only reservations can exceed this ceiling when resource enforcement is disabled.",
         default=100.0,
         required=True,
+        help="Maximum simultaneous allocation for enforced bookings. 100% permits full booking; 120% permits 20% overbooking. Warning-only reservations can exceed this ceiling when resource enforcement is disabled.",
     )
     enforce_booking_limit = fields.Boolean(
         string="Enforce Booking Ceiling",

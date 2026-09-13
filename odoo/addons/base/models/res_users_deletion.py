@@ -23,11 +23,11 @@ class ResUsersDeletion(models.Model):
     )
     state = fields.Selection(
         selection=[("todo", "To Do"), ("done", "Done"), ("fail", "Failed")],
+        default="todo",
+        required=True,
         help="Deletion request lifecycle: 'todo' when queued, 'done' once the "
         "user is deleted, 'fail' if deletion was attempted but could not "
         "complete (the user is then archived instead).",
-        default="todo",
-        required=True,
     )
 
     @api.depends("user_id")

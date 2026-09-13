@@ -22,8 +22,8 @@ class MixinOrderStock(models.AbstractModel):
         store=True,
     )
     force_fully_delivered = fields.Boolean(
-        help="Report this order as fully transferred regardless of its lines.",
         copy=False,
+        help="Report this order as fully transferred regardless of its lines.",
     )
 
     date_effective = fields.Datetime(

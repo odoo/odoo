@@ -27,8 +27,8 @@ class PaymentProvider(models.Model):
     )
     redsys_secret_key = fields.Char(
         copy=False,
-        groups="base.group_system",
         required_if_provider="redsys",
+        groups="base.group_system",
     )
 
     # === CRUD METHODS === #

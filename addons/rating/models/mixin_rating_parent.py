@@ -31,10 +31,10 @@ class MixinRatingParent(models.AbstractModel):
     )
     rating_child_percentage_satisfaction = fields.Integer(
         string="Rating Satisfaction",
-        help="Percentage of happy ratings",
         compute="_compute_rating_child_stats",
         compute_sudo=True,
         store=False,
+        help="Percentage of happy ratings",
     )
     rating_child_count = fields.Integer(
         string="# Ratings",

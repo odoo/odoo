@@ -27,8 +27,8 @@ class MrpRoutingWorkcenter(models.Model):
         tracking=True,
     )
     sequence = fields.Integer(
-        help="Gives the sequence order when displaying a list of routing Work Centers.",
         default=100,
+        help="Gives the sequence order when displaying a list of routing Work Centers.",
     )
     bom_id = fields.Many2one(
         comodel_name="mrp.bom",
@@ -48,16 +48,16 @@ class MrpRoutingWorkcenter(models.Model):
     archived_bom_line_ids = fields.Many2many(
         comodel_name="mrp.bom.line",
         relation="mrp_routing_workcenter_archived_bom_line_rel",
+        copy=False,
         help="Technical: bom lines that pointed to this operation before it "
         "was archived, so unarchiving can restore the link.",
-        copy=False,
     )
     archived_byproduct_ids = fields.Many2many(
         comodel_name="mrp.bom.byproduct",
         relation="mrp_routing_workcenter_archived_byproduct_rel",
+        copy=False,
         help="Technical: byproduct lines that pointed to this operation before "
         "it was archived, so unarchiving can restore the link.",
-        copy=False,
     )
     time_mode = fields.Selection(
         selection=[("manual", "Fixed"), ("auto", "Computed")],
@@ -75,11 +75,11 @@ class MrpRoutingWorkcenter(models.Model):
     )
     time_cycle_manual = fields.Float(
         string="Manual Duration",
+        default=60,
+        tracking=True,
         help="Time in minutes:"
         "- In fixed mode, time used"
         "- In computed mode, supposed first time when there aren't any work orders yet",
-        default=60,
-        tracking=True,
     )
     time_cycle = fields.Float(
         string="Cycles",
@@ -103,9 +103,9 @@ class MrpRoutingWorkcenter(models.Model):
         column1="operation_id",
         column2="blocked_by_id",
         string="Blocked By",
-        help="Operations that need to be completed before this operation can start.",
         copy=False,
         domain="[('allow_operation_dependencies', '=', True), ('id', '!=', id), ('bom_id', '=', bom_id)]",
+        help="Operations that need to be completed before this operation can start.",
     )
     needed_by_operation_ids = fields.Many2many(
         comodel_name="mrp.routing.workcenter",
@@ -113,9 +113,9 @@ class MrpRoutingWorkcenter(models.Model):
         column1="blocked_by_id",
         column2="operation_id",
         string="Blocks",
-        help="Operations that cannot start before this operation is completed.",
         copy=False,
         domain="[('allow_operation_dependencies', '=', True), ('id', '!=', id), ('bom_id', '=', bom_id)]",
+        help="Operations that cannot start before this operation is completed.",
     )
     cycle_number = fields.Integer(
         string="Repetitions",
@@ -132,11 +132,11 @@ class MrpRoutingWorkcenter(models.Model):
     cost_mode = fields.Selection(
         selection=[("actual", "Actual time"), ("estimated", "Theorical time")],
         string="Cost based on",
+        default="actual",
+        tracking=True,
         help="Determines the way Odoo calculates the cost of the operation:\n"
         "- Based on Actual time: the cost will be calculated based on tracked time and real employee costs.\n"
         "- Based on Estimated time: the cost will be calculated based on estimated time and costs.",
-        default="actual",
-        tracking=True,
     )
     cost = fields.Float(compute="_compute_cost")
 

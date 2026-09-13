@@ -69,9 +69,9 @@ class IrModelFields(models.Model):
     )
     model = fields.Char(
         string="Model Name",
-        help="The technical name of the model this field belongs to",
         index=True,
         required=True,
+        help="The technical name of the model this field belongs to",
     )
     relation = fields.Char(
         string="Related Model",
@@ -89,10 +89,10 @@ class IrModelFields(models.Model):
     )
     model_id = fields.Many2one(
         comodel_name="ir.model",
-        help="The model this field belongs to",
         index=True,
         required=True,
         ondelete="cascade",
+        help="The model this field belongs to",
     )
     field_description = fields.Char(
         string="Field Label",
@@ -121,10 +121,10 @@ class IrModelFields(models.Model):
         copy=True,
     )
     copied = fields.Boolean(
-        help="Whether the value is copied when duplicating a record.",
         compute="_compute_copied",
         store=True,
         readonly=False,
+        help="Whether the value is copied when duplicating a record.",
     )
     related = fields.Char(
         string="Related Field Definition",
@@ -149,8 +149,8 @@ class IrModelFields(models.Model):
         help="Whether values for this field can be translated (enables the translation mechanism for that field)",
     )
     company_dependent = fields.Boolean(
-        help="Whether values for this field is company dependent",
         readonly=True,
+        help="Whether values for this field is company dependent",
     )
     size = fields.Integer()
     state = fields.Selection(
@@ -167,14 +167,14 @@ class IrModelFields(models.Model):
             ("set null", "Set NULL"),
             ("restrict", "Restrict"),
         ],
-        help="On delete property for many2one fields",
         default="set null",
+        help="On delete property for many2one fields",
     )
     domain = fields.Char(
+        default="[]",
         help="The optional domain to restrict possible values for relationship fields, "
         "specified as a Python expression defining a list of triplets. "
         "For example: [('color','=','red')]",
-        default="[]",
     )
     groups = fields.Many2many(
         comodel_name="res.groups",
@@ -198,8 +198,8 @@ class IrModelFields(models.Model):
     selectable = fields.Boolean(default=True)
     modules = fields.Char(
         string="In Apps",
-        help="List of modules in which the field is defined",
         compute="_compute_modules",
+        help="List of modules in which the field is defined",
     )
     relation_table = fields.Char(
         help="Used for custom many2many fields to define a custom relation table name"
@@ -225,8 +225,8 @@ class IrModelFields(models.Model):
     )
     store = fields.Boolean(
         string="Stored",
-        help="Whether the value is stored in the database.",
         default=True,
+        help="Whether the value is stored in the database.",
     )
     currency_field = fields.Char(
         string="Currency field",

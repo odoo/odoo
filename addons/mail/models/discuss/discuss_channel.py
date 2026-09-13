@@ -116,16 +116,16 @@ class DiscussChannel(models.Model):
     name = fields.Char(required=True)
 
     active = fields.Boolean(
-        help="Set active to false to hide the channel without removing it.",
         default=True,
+        help="Set active to false to hide the channel without removing it.",
     )
 
     channel_type = fields.Selection(
         selection=[("chat", "Chat"), ("channel", "Channel"), ("group", "Group")],
-        help="Chat is private and unique between 2 persons. Group is private among invited persons. Channel can be freely joined (depending on its configuration).",
         default="channel",
         readonly=True,
         required=True,
+        help="Chat is private and unique between 2 persons. Group is private among invited persons. Channel can be freely joined (depending on its configuration).",
     )
 
     is_editable = fields.Boolean(compute="_compute_is_editable")
@@ -168,12 +168,12 @@ class DiscussChannel(models.Model):
 
     parent_channel_id: DiscussChannel = fields.Many2one(
         comodel_name="discuss.channel",
-        help="Parent channel",
         index=True,
         copy=False,
         readonly=True,
         ondelete="cascade",
         bypass_search_access=True,
+        help="Parent channel",
     )
 
     sub_channel_ids: DiscussChannel = fields.One2many(
@@ -185,9 +185,9 @@ class DiscussChannel(models.Model):
 
     from_message_id: MailMessage = fields.Many2one(
         comodel_name="mail.message",
-        help="The message the channel was created from.",
         copy=False,
         readonly=True,
+        help="The message the channel was created from.",
     )
 
     pinned_message_ids: MailMessage = fields.One2many(
@@ -243,9 +243,9 @@ class DiscussChannel(models.Model):
 
     last_interest_dt = fields.Datetime(
         string="Last Interest",
-        help="Contains the date and time of the last interesting event that happened in this channel. This updates itself when new message posted.",
         default=lambda self: fields.Datetime.now() - timedelta(seconds=1),
         index=True,
+        help="Contains the date and time of the last interesting event that happened in this channel. This updates itself when new message posted.",
     )
 
     group_ids: ResGroups = fields.Many2many(
@@ -279,8 +279,8 @@ class DiscussChannel(models.Model):
 
     channel_name_member_ids: DiscussChannelMember = fields.One2many(
         comodel_name="discuss.channel.member",
-        help="Members from which the channel name is computed when the name field is empty.",
         compute="_compute_channel_name_member_ids",
+        help="Members from which the channel name is computed when the name field is empty.",
     )
 
     _from_message_id_unique = models.Constraint(

@@ -81,9 +81,9 @@ class DiscussChannelMember(models.Model):
         index="btree_not_null",
     )
     new_message_separator = fields.Integer(
-        help="Message id before which the separator should be displayed",
         default=0,
         required=True,
+        help="Message id before which the separator should be displayed",
     )
     message_unread_counter = fields.Integer(
         string="Unread Messages Counter",
@@ -110,14 +110,14 @@ class DiscussChannelMember(models.Model):
     )
     unpin_dt = fields.Datetime(
         string="Unpin date",
-        help="Contains the date and time when the channel was unpinned by the user.",
         index=True,
+        help="Contains the date and time when the channel was unpinned by the user.",
     )
     last_interest_dt = fields.Datetime(
         string="Last Interest",
-        help="Contains the date and time of the last interesting event that happened in this channel for this user. This includes: creating, joining, pinning",
         default=lambda self: fields.Datetime.now() - timedelta(seconds=1),
         index=True,
+        help="Contains the date and time of the last interesting event that happened in this channel for this user. This includes: creating, joining, pinning",
     )
     last_seen_dt = fields.Datetime(string="Last seen date")
     rtc_session_ids: DiscussChannelRtcSession = fields.One2many(

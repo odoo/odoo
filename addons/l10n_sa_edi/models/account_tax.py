@@ -40,8 +40,8 @@ class AccountTax(models.Model):
 
     l10n_sa_is_retention = fields.Boolean(
         string="Is Retention",
-        help="Determines whether or not a tax counts as a Withholding Tax",
         default=False,
+        help="Determines whether or not a tax counts as a Withholding Tax",
     )
 
     l10n_sa_exemption_reason_code = fields.Selection(

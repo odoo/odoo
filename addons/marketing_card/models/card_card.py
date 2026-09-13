@@ -24,8 +24,8 @@ class CardCard(models.Model):
     )
     image = fields.Image()
     requires_sync = fields.Boolean(
-        help="Whether the image needs to be updated to match the campaign template.",
         default=True,
+        help="Whether the image needs to be updated to match the campaign template.",
     )
     share_status = fields.Selection(
         selection=[

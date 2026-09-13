@@ -6,10 +6,10 @@ class EventType(models.Model):
 
     website_menu = fields.Boolean(string="Display a dedicated menu on Website")
     community_menu = fields.Boolean(
-        help="Display community tab on website",
         compute="_compute_community_menu",
         store=True,
         readonly=False,
+        help="Display community tab on website",
     )
 
     @api.depends("website_menu")

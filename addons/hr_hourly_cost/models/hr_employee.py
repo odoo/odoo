@@ -8,8 +8,8 @@ class HrEmployee(models.Model):
     hourly_cost = fields.Monetary(
         currency_field="currency_id",
         default=0.0,
-        groups="hr.group_hr_user",
         tracking=True,
+        groups="hr.group_hr_user",
     )
 
     @api.constrains("hourly_cost")

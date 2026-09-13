@@ -27,23 +27,23 @@ class PosPaymentMethod(models.Model):
 
     name = fields.Char(
         string="Method",
-        help="Defines the name of the payment method that will be displayed in the Point of Sale when the payments are selected.",
         translate=True,
         required=True,
+        help="Defines the name of the payment method that will be displayed in the Point of Sale when the payments are selected.",
     )
     sequence = fields.Integer(copy=False)
     outstanding_account_id = fields.Many2one(
         comodel_name="account.account",
-        help="Account used as outstanding account when creating accounting payment records for bank payments.",
         ondelete="restrict",
+        help="Account used as outstanding account when creating accounting payment records for bank payments.",
     )
     receivable_account_id = fields.Many2one(
         comodel_name="account.account",
         string="Intermediary Account",
-        help="Leave empty to use the default account from the company setting.\n"
-        "Overrides the company's receivable account (for Point of Sale) used in the journal entries.",
         domain=[("reconcile", "=", True), ("account_type", "=", "asset_receivable")],
         ondelete="restrict",
+        help="Leave empty to use the default account from the company setting.\n"
+        "Overrides the company's receivable account (for Point of Sale) used in the journal entries.",
     )
     is_cash_count = fields.Boolean(
         string="Cash",
@@ -52,11 +52,6 @@ class PosPaymentMethod(models.Model):
     )
     journal_id = fields.Many2one(
         comodel_name="account.journal",
-        help="Leave empty to use the receivable account of customer.\n"
-        "Defines the journal where to book the accumulated payments (or individual payment if Identify Customer is true) after closing the session.\n"
-        "For cash journal, we directly write to the default account in the journal via statement lines.\n"
-        "For bank journal, we write to the outstanding account specified in this payment method.\n"
-        "Only cash and bank journals are allowed.",
         index="btree_not_null",
         domain=[
             "|",
@@ -67,17 +62,22 @@ class PosPaymentMethod(models.Model):
         ],
         ondelete="restrict",
         check_company=True,
+        help="Leave empty to use the receivable account of customer.\n"
+        "Defines the journal where to book the accumulated payments (or individual payment if Identify Customer is true) after closing the session.\n"
+        "For cash journal, we directly write to the default account in the journal via statement lines.\n"
+        "For bank journal, we write to the outstanding account specified in this payment method.\n"
+        "Only cash and bank journals are allowed.",
     )
     split_transactions = fields.Boolean(
         string="Identify Customer",
-        help="Forces to set a customer when using this payment method and splits the journal entries for each customer. It could slow down the closing process.",
         default=False,
+        help="Forces to set a customer when using this payment method and splits the journal entries for each customer. It could slow down the closing process.",
     )
     open_session_ids = fields.Many2many(
         comodel_name="pos.session",
         string="Pos Sessions",
-        help="Open PoS sessions that are using this payment method.",
         compute="_compute_open_session_ids",
+        help="Open PoS sessions that are using this payment method.",
     )
     config_ids = fields.Many2many(
         comodel_name="pos.config",
@@ -124,8 +124,8 @@ class PosPaymentMethod(models.Model):
             "res.partner.bank"
         ].get_available_qr_methods_in_sequence(),
         string="QR Code Format",
-        help="Type of QR-code to be generated for this payment method.",
         copy=False,
+        help="Type of QR-code to be generated for this payment method.",
     )
     hide_qr_code_method = fields.Boolean(compute="_compute_hide_qr_code_method")
 

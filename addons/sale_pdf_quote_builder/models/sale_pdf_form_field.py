@@ -14,9 +14,9 @@ class SalePdfFormField(models.Model):
 
     name = fields.Char(
         string="Form Field Name",
-        help="The form field name as written in the PDF.",
         readonly=True,
         required=True,
+        help="The form field name as written in the PDF.",
     )
     document_type = fields.Selection(
         selection=[

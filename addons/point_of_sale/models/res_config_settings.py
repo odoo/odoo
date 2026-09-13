@@ -406,8 +406,8 @@ class ResConfigSettings(models.TransientModel):
     )
     group_pos_preset = fields.Boolean(
         string="Presets",
-        help="Hide or show the Presets menu in the Point of Sale configuration.",
         implied_group="point_of_sale.group_pos_preset",
+        help="Hide or show the Presets menu in the Point of Sale configuration.",
     )
     pos_epson_printer_ip = fields.Char(
         related="pos_config_id.epson_printer_ip",

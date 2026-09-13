@@ -27,9 +27,9 @@ class AccountAnalyticAccount(models.Model):
         tracking=True,
     )
     active = fields.Boolean(
-        help="Deactivate the account.",
         default=True,
         tracking=True,
+        help="Deactivate the account.",
     )
     plan_id = fields.Many2one(
         comodel_name="account.analytic.plan",

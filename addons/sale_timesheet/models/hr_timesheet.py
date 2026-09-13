@@ -50,18 +50,18 @@ class AccountAnalyticLine(models.Model):
     timesheet_invoice_id = fields.Many2one(
         comodel_name="account.move",
         string="Invoice",
-        help="Invoice created from the timesheet",
         index="btree_not_null",
         copy=False,
         readonly=True,
+        help="Invoice created from the timesheet",
     )
     so_line = fields.Many2one(
-        help="Sales order item to which the time spent will be added in order to be invoiced to your customer. Remove the sales order item for the timesheet entry to be non-billable.",
         compute="_compute_so_line",
         store=True,
         readonly=False,
         falsy_value_label="Non-billable",
         domain=_domain_so_line,
+        help="Sales order item to which the time spent will be added in order to be invoiced to your customer. Remove the sales order item for the timesheet entry to be non-billable.",
     )
     order_id = fields.Many2one(
         related="so_line.order_id",

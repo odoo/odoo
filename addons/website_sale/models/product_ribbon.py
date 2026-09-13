@@ -30,11 +30,11 @@ class ProductRibbon(models.Model):
     )
     style = fields.Selection(
         selection=[("ribbon", "Ribbon"), ("tag", "Badge")],
+        default="ribbon",
+        required=True,
         help="Defines the display style:\n"
         "- Ribbon: Shows a ribbon banner on the product image.\n"
         "- Badge: Shows a small badge label on the product image.",
-        default="ribbon",
-        required=True,
     )
     assign = fields.Selection(
         selection=[
@@ -42,12 +42,12 @@ class ProductRibbon(models.Model):
             ("sale", "On Sale"),
             ("new", "When New"),
         ],
+        default="manual",
+        required=True,
         help="Defines how this ribbon is assigned to products:\n"
         "- Manually: You assign the ribbon manually to products.\n"
         "- Sale: Applied when the product is visibly on sale.\n"
         "- New: Applied based on the New period you will define.\n",
-        default="manual",
-        required=True,
     )
     new_period = fields.Integer(default=30)
 

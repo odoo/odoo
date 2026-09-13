@@ -142,8 +142,8 @@ class AutomationRule(models.Model):
     RANGE_FIELDS = ["trg_date_range", "trg_date_range_type"]
 
     sequence = fields.Integer(
-        help="Determines the execution order when multiple automations match the same trigger.",
         default=10,
+        help="Determines the execution order when multiple automations match the same trigger.",
     )
     name = fields.Char(
         string="Automation Rule Name",
@@ -152,8 +152,8 @@ class AutomationRule(models.Model):
         tracking=True,
     )
     active = fields.Boolean(
-        help="When unchecked, the rule is hidden and will not be executed.",
         default=True,
+        help="When unchecked, the rule is hidden and will not be executed.",
     )
     description = fields.Html()
     model_id = fields.Many2one(
@@ -172,28 +172,28 @@ class AutomationRule(models.Model):
     model_is_mail_thread = fields.Boolean(related="model_id.is_mail_thread")
     last_run = fields.Datetime(
         string="Process Records From",
+        copy=False,
         help="Lower bound of the window the scheduler examines; it advances to "
         "the current time after every run.\n\n"
         "Leave empty and the first run reaches back over the entire history — "
         "every record that already satisfies the condition is processed at "
         "once, which on an existing database can mean thousands of records. "
         "Set it to scope that first run.",
-        copy=False,
     )
     filter_pre_domain = fields.Char(
         string="Before Update Domain",
-        help="If present, this condition must be satisfied before the update of the record. "
-        "Not checked on record creation.",
         compute="_compute_filter_pre_domain",
         store=True,
         readonly=False,
+        help="If present, this condition must be satisfied before the update of the record. "
+        "Not checked on record creation.",
     )
     filter_domain = fields.Char(
         string="Apply on",
-        help="If present, this condition must be satisfied before executing the automation rule.",
         compute="_compute_filter_domain",
         store=True,
         readonly=False,
+        help="If present, this condition must be satisfied before executing the automation rule.",
     )
     previous_domain = fields.Char(
         default=lambda self: self.filter_domain,
@@ -209,19 +209,18 @@ class AutomationRule(models.Model):
         comodel_name="workflow.edge",
         inverse_name="automation_rule_id",
         string="Workflow Edges",
-        help="Typed dependencies between this automation's steps",
         copy=False,
+        help="Typed dependencies between this automation's steps",
     )
     step_count = fields.Count(
         count_of="action_server_ids",
         string="Steps",
-        help="How many steps this automation runs",
         store=True,
+        help="How many steps this automation runs",
     )
     edge_count = fields.Count(
         count_of="edge_ids",
         string="Connections",
-        help="How many typed dependencies order this automation's steps",
         # An edge is cascade-deleted with either endpoint, and the ORM sees that
         # as a change to `action_server_ids` rather than to `edge_ids`, so
         # counting only what Count counts leaves the stored value one high after
@@ -229,45 +228,46 @@ class AutomationRule(models.Model):
         # that sequence.
         depends=["edge_ids", "action_server_ids"],
         store=True,
+        help="How many typed dependencies order this automation's steps",
     )
     run_mode = fields.Selection(
         selection=[
             ("immediate", "Immediately"),
             ("queued", "In Batches"),
         ],
+        default="immediate",
+        required=True,
         help="Immediately: a run executes its steps as soon as it starts, or as soon "
         "as a step becomes ready.\n"
         "In Batches: steps wait for the background dispatcher, which executes the "
         "ready steps of all runs together, one batch per step.",
-        default="immediate",
-        required=True,
     )
     step_error_policy = fields.Selection(
         selection=[
             ("fail_run", "Fail the run"),
             ("close_branch", "Close only its branch"),
         ],
+        default="fail_run",
+        required=True,
         help="What an unhandled failure of a step does.\n"
         "Fail the run: the whole run stops, and its unfinished steps are marked "
         "failed.\n"
         "Close only its branch: what depended on the failed step is skipped, and "
         "the run's other branches carry on.",
-        default="fail_run",
-        required=True,
     )
     create_runtime_instance = fields.Boolean(
         string="Record Every Run",
+        default=False,
         help="Create an Automation Runtime for every execution, so each step's "
         "outcome is recorded and the workflow's edge conditions are evaluated.\n\n"
         "Off by default: an automation on a high-volume trigger would write one "
         "runtime per event. Leave it off for a lightweight rule; turn it on for "
         "anything that branches, or whose history you need.",
-        default=False,
     )
 
     url = fields.Char(
-        help="Use this URL in the third-party app to call this webhook.",
         compute="_compute_url",
+        help="Use this URL in the third-party app to call this webhook.",
     )
     webhook_uuid = fields.Char(
         string="Webhook UUID",
@@ -290,9 +290,9 @@ class AutomationRule(models.Model):
 
     auth_type = fields.Selection(
         string="Webhook Authentication",
+        default="none",
         help="How incoming webhook calls are authenticated. HMAC/bearer read "
         "their secret from the linked credential.",
-        default="none",
     )
     credential_id = fields.Many2one(
         string="Webhook Secret",
@@ -304,8 +304,8 @@ class AutomationRule(models.Model):
     )
     rate_limit_requests = fields.Integer(
         string="Requests / Window",
-        help="Token-bucket capacity (read by the rate-limit bucket).",
         default=100,
+        help="Token-bucket capacity (read by the rate-limit bucket).",
     )
 
     trigger = fields.Selection(
@@ -339,11 +339,11 @@ class AutomationRule(models.Model):
     trg_selection_field_id = fields.Many2one(
         comodel_name="ir.model.fields.selection",
         string="Trigger Field",
-        help="Some triggers need a reference to a selection field. This field is used to store it.",
         compute="_compute_trg_selection_field_id",
         store=True,
         readonly=False,
         domain="[('field_id', 'in', trigger_field_ids)]",
+        help="Some triggers need a reference to a selection field. This field is used to store it.",
     )
     trg_field_ref_model_name = fields.Char(
         string="Trigger Field Model",
@@ -352,21 +352,21 @@ class AutomationRule(models.Model):
     trg_field_ref = fields.Many2oneReference(
         model_field="trg_field_ref_model_name",
         string="Trigger Reference",
-        help="Some triggers need a reference to another field. This field is used to store it.",
         compute="_compute_trg_field_ref",
         store=True,
         readonly=False,
+        help="Some triggers need a reference to another field. This field is used to store it.",
     )
     trg_date_id = fields.Many2one(
         comodel_name="ir.model.fields",
         string="Trigger Date",
-        help="""When should the condition be triggered.
-                If present, will be checked by the scheduler. If empty, will be checked at creation and update.""",
         compute="_compute_trg_date_id",
         store=True,
         readonly=False,
         domain="[('model_id', '=', model_id), ('ttype', 'in', ('date', 'datetime'))]",
         tracking=True,
+        help="""When should the condition be triggered.
+                If present, will be checked by the scheduler. If empty, will be checked at creation and update.""",
     )
     trg_date_range = fields.Integer(
         string="Delay",
@@ -394,29 +394,29 @@ class AutomationRule(models.Model):
     trg_date_calendar_id = fields.Many2one(
         comodel_name="resource.calendar",
         string="Use Calendar",
-        help="When calculating a day-based timed condition, it is possible "
-        "to use a calendar to compute the date based on working days.",
         compute="_compute_trg_date_calendar_id",
         store=True,
         readonly=False,
+        help="When calculating a day-based timed condition, it is possible "
+        "to use a calendar to compute the date based on working days.",
     )
     on_change_field_ids = fields.Many2many(
         comodel_name="ir.model.fields",
         relation="automation_rule_onchange_fields_rel",
         string="On Change Fields Trigger",
-        help="Fields that trigger the onchange.",
         compute="_compute_on_change_field_ids",
         store=True,
         readonly=False,
+        help="Fields that trigger the onchange.",
     )
     trigger_field_ids = fields.Many2many(
         comodel_name="ir.model.fields",
         string="Trigger Fields",
-        help="The automation rule will be triggered if and only if one of these fields is updated."
-        "If empty, all fields are watched.",
         compute="_compute_trigger_field_ids",
         store=True,
         readonly=False,
+        help="The automation rule will be triggered if and only if one of these fields is updated."
+        "If empty, all fields are watched.",
     )
 
     @api.constrains("model_id", "action_server_ids")

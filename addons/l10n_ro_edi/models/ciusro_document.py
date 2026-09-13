@@ -18,12 +18,12 @@ class L10n_Ro_EdiDocument(models.Model):
             ("invoice_validated", "Validated"),
         ],
         string="E-Factura Status",
+        readonly=True,
+        required=True,
         help="""Sent -> Successfully sent to the SPV, waiting for validation.
                 Validated -> Sent & validated by the SPV.
                 Refused -> Sent & refused by the SPV.
         """,
-        readonly=True,
-        required=True,
     )
     datetime = fields.Datetime(
         default=fields.Datetime.now,

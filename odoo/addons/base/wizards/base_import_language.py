@@ -23,8 +23,8 @@ class BaseLanguageImport(models.TransientModel):
     )
     code = fields.Char(
         string="ISO Code",
-        help="ISO Language and Country code, e.g. en_US",
         required=True,
+        help="ISO Language and Country code, e.g. en_US",
     )
     data = fields.Binary(
         string="File",
@@ -37,9 +37,9 @@ class BaseLanguageImport(models.TransientModel):
     )
     overwrite = fields.Boolean(
         string="Overwrite Existing Terms",
+        default=True,
         help="If you enable this option, existing translations (including custom ones) "
         "will be overwritten and replaced by those in this file",
-        default=True,
     )
 
     def import_lang(self) -> bool:

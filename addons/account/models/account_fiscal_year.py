@@ -12,13 +12,13 @@ class AccountFiscalYear(models.Model):
     name = fields.Char(required=True)
     date_from = fields.Date(
         string="Start Date",
-        help="Start Date, included in the fiscal year.",
         required=True,
+        help="Start Date, included in the fiscal year.",
     )
     date_to = fields.Date(
         string="End Date",
-        help="Ending Date, included in the fiscal year.",
         required=True,
+        help="Ending Date, included in the fiscal year.",
     )
     company_id = fields.Many2one(
         comodel_name="res.company",

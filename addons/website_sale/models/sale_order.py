@@ -21,8 +21,8 @@ class SaleOrder(models.Model):
 
     website_id = fields.Many2one(
         comodel_name="website",
-        help="Website through which this order was placed for eCommerce orders.",
         readonly=True,
+        help="Website through which this order was placed for eCommerce orders.",
     )
 
     cart_recovery_email_sent = fields.Boolean(string="Cart recovery email already sent")
@@ -35,8 +35,8 @@ class SaleOrder(models.Model):
     )
     amount_delivery = fields.Monetary(
         string="Delivery Amount",
-        help="Tax included or excluded depending on the website configuration.",
         compute="_compute_amount_delivery",
+        help="Tax included or excluded depending on the website configuration.",
     )
     cart_quantity = fields.Integer(compute="_compute_cart_info")
     only_services = fields.Boolean(compute="_compute_cart_info")

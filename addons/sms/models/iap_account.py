@@ -5,8 +5,8 @@ class IapAccount(models.Model):
     _inherit = "iap.account"
 
     sender_name = fields.Char(
-        help="This is the name that will be displayed as the sender of the SMS.",
         readonly=True,
+        help="This is the name that will be displayed as the sender of the SMS.",
     )
 
     def action_view_registration_wizard(self):

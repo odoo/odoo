@@ -13,15 +13,15 @@ class HrEmployee(models.Model):
     badge_ids = fields.One2many(
         comodel_name="gamification.badge.user",
         string="Employee Badges",
-        help="All employee badges, linked to the employee either directly or through the user",
         compute="_compute_employee_badges",
+        help="All employee badges, linked to the employee either directly or through the user",
     )
     has_badges = fields.Boolean(compute="_compute_employee_badges")
     direct_badge_ids = fields.One2many(
         comodel_name="gamification.badge.user",
         inverse_name="employee_id",
-        help="Badges directly linked to the employee",
         groups="hr.group_hr_user",
+        help="Badges directly linked to the employee",
     )
 
     @api.depends("user_id.goal_ids.challenge_id.challenge_category")

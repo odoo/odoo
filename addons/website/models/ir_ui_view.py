@@ -31,12 +31,12 @@ class IrUiView(models.Model):
     first_page_id = fields.Many2one(
         comodel_name="website.page",
         string="Website Page",
-        help="First page linked to this view",
         compute="_compute_first_page_id",
+        help="First page linked to this view",
     )
     track = fields.Boolean(
-        help="Allow to specify for one page of the website to be trackable or not",
         default=False,
+        help="Allow to specify for one page of the website to be trackable or not",
     )
     visibility = fields.Selection(
         selection=[

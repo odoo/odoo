@@ -14,10 +14,10 @@ class ProductTemplate(models.Model):
 
     can_be_expensed = fields.Boolean(
         string="Expenses",
-        help="Specify whether the product can be selected in an expense.",
         compute="_compute_can_be_expensed",
         store=True,
         readonly=False,
+        help="Specify whether the product can be selected in an expense.",
     )
 
     def _auto_init(self):

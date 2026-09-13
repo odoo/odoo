@@ -7,9 +7,9 @@ class ResCompany(models.Model):
     expense_journal_id = fields.Many2one(
         comodel_name="account.journal",
         string="Default Expense Journal",
-        help="The company's default journal used when an employee expense is created.",
         domain="[('type', '=', 'purchase')]",
         check_company=True,
+        help="The company's default journal used when an employee expense is created.",
     )
     company_expense_allowed_payment_channel_ids = fields.Many2many(
         comodel_name="account.payment.channel",

@@ -102,9 +102,9 @@ class PosOrder(models.Model):
         readonly=True,
     )
     pos_version = fields.Char(
-        help="Version of Odoo that created the order",
         copy=False,
         readonly=True,
+        help="Version of Odoo that created the order",
     )
 
     @api.depends("l10n_fr_secure_sequence_number")

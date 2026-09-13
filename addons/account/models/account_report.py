@@ -97,8 +97,8 @@ class AccountReport(models.Model):
     )
     root_report_id = fields.Many2one(
         comodel_name="account.report",
-        help="The report this report is a variant of.",
         index="btree_not_null",
+        help="The report this report is a variant of.",
     )
     variant_report_ids = fields.One2many(
         comodel_name="account.report",
@@ -121,10 +121,10 @@ class AccountReport(models.Model):
     )
     use_sections = fields.Boolean(
         string="Composite Report",
-        help="Create a structured report with multiple sections for convenient navigation and simultaneous printing.",
         compute="_compute_use_sections",
         store=True,
         readonly=False,
+        help="Create a structured report with multiple sections for convenient navigation and simultaneous printing.",
     )
     chart_template = fields.Selection(
         selection=lambda self: self.env[

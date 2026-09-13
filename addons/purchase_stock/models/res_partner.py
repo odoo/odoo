@@ -14,9 +14,9 @@ class ResPartner(models.Model):
     )
     on_time_rate = fields.Float(
         string="On-Time Delivery Rate",
+        compute="_compute_on_time_rate",
         help="Over the past x days; the number of products received on time divided by the number of ordered products."
         "x is either the System Parameter purchase_stock.on_time_delivery_days or the default 365",
-        compute="_compute_on_time_rate",
     )
     suggest_based_on = fields.Char(default="30_days")
     suggest_days = fields.Integer(default=7)
@@ -29,14 +29,14 @@ class ResPartner(models.Model):
             ("all", "Always"),
         ],
         string="Group RFQ",
+        default="default",
+        required=True,
         help="Define if RFQ should be grouped \
         together based on expected arrival, except for dropship operations.\n \
         On Order: Replenishment needs will be grouped together except for MTO.\n \
         Daily: Replenishment needs will be grouped if the expected arrival is the same day\n \
         Weekly: Replenishment needs will be grouped if the expected arrival is the same week or week day\n \
         Always: Replenishment needs will always be grouped.",
-        default="default",
-        required=True,
     )
     group_on = fields.Selection(
         selection=[

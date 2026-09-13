@@ -5,9 +5,9 @@ class AccountTax(models.Model):
     _inherit = "account.tax"
 
     l10n_de_datev_code = fields.Char(
-        help="4 digits code use by Datev",
         size=4,
         tracking=True,
+        help="4 digits code use by Datev",
     )
 
 

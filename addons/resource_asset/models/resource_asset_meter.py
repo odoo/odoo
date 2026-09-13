@@ -35,8 +35,8 @@ class ResourceAssetMeter(models.Model):
         string="Unit",
     )
     monotonic = fields.Boolean(
-        help="A reading below the previous one is rejected: an odometer only goes up.",
         default=True,
+        help="A reading below the previous one is rejected: an odometer only goes up.",
     )
     reading_ids = fields.One2many(
         comodel_name="resource.asset.meter.reading",

@@ -70,11 +70,11 @@ class ProjectSaleLineEmployeeMap(models.Model):
         readonly=False,
     )
     cost = fields.Monetary(
-        help="This cost overrides the employee's default employee hourly wage in employee's HR Settings",
         currency_field="cost_currency_id",
         compute="_compute_cost",
         store=True,
         readonly=False,
+        help="This cost overrides the employee's default employee hourly wage in employee's HR Settings",
     )
     display_cost = fields.Monetary(
         string="Hourly Cost",

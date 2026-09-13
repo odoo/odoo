@@ -17,9 +17,9 @@ class AccountCashRounding(models.Model):
     )
     rounding = fields.Float(
         string="Rounding Precision",
-        help="Represent the non-zero value smallest coinage (for example, 0.05).",
         default=0.01,
         required=True,
+        help="Represent the non-zero value smallest coinage (for example, 0.05).",
     )
     strategy = fields.Selection(
         selection=[
@@ -27,9 +27,9 @@ class AccountCashRounding(models.Model):
             ("add_invoice_line", "Add a rounding line"),
         ],
         string="Rounding Strategy",
-        help="Specify which way will be used to round the invoice amount to the rounding precision",
         default="add_invoice_line",
         required=True,
+        help="Specify which way will be used to round the invoice amount to the rounding precision",
     )
     profit_account_id = fields.Many2one(
         comodel_name="account.account",
@@ -47,9 +47,9 @@ class AccountCashRounding(models.Model):
     )
     rounding_method = fields.Selection(
         selection=[("UP", "Up"), ("DOWN", "Down"), ("HALF-UP", "Nearest")],
-        help="The tie-breaking rule used for float rounding operations",
         default="HALF-UP",
         required=True,
+        help="The tie-breaking rule used for float rounding operations",
     )
 
     @api.constrains("rounding")

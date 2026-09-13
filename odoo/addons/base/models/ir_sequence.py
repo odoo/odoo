@@ -166,45 +166,45 @@ class IrSequence(models.Model):
     code = fields.Char(string="Sequence Code")
     implementation = fields.Selection(
         selection=[("standard", "Standard"), ("no_gap", "No gap")],
+        default="standard",
+        required=True,
         help="While assigning a sequence number to a record, the 'no gap' sequence implementation ensures that each previous sequence number has been assigned already. "
         "While this sequence implementation will not skip any sequence number upon assignment, there can still be gaps in the sequence if records are deleted. "
         "The 'no gap' implementation is slower than the standard one.",
-        default="standard",
-        required=True,
     )
     active = fields.Boolean(default=True)
     prefix = fields.Char(
-        help="Prefix value of the record for the sequence",
         trim=False,
+        help="Prefix value of the record for the sequence",
     )
     suffix = fields.Char(
-        help="Suffix value of the record for the sequence",
         trim=False,
+        help="Suffix value of the record for the sequence",
     )
     number_next = fields.Integer(
         string="Next Number",
-        help="Next number of this sequence",
         default=1,
         required=True,
+        help="Next number of this sequence",
     )
     number_next_actual = fields.Integer(
         string="Actual Next Number",
-        help="Next number that will be used. This number can be incremented "
-        "frequently so the displayed value might already be obsolete",
         compute="_compute_number_next_actual",
         inverse="_inverse_number_next_actual",
+        help="Next number that will be used. This number can be incremented "
+        "frequently so the displayed value might already be obsolete",
     )
     number_increment = fields.Integer(
         string="Step",
-        help="The next number of the sequence will be incremented by this number",
         default=1,
         required=True,
+        help="The next number of the sequence will be incremented by this number",
     )
     padding = fields.Integer(
         string="Sequence Size",
-        help="Odoo will automatically adds some '0' on the left of the 'Next Number' to get the required padding size.",
         default=0,
         required=True,
+        help="Odoo will automatically adds some '0' on the left of the 'Next Number' to get the required padding size.",
     )
     company_id = fields.Many2one(
         comodel_name="res.company",
@@ -735,16 +735,16 @@ class IrSequenceDate_Range(models.Model):
     )
     number_next = fields.Integer(
         string="Next Number",
-        help="Next number of this sequence",
         default=1,
         required=True,
+        help="Next number of this sequence",
     )
     number_next_actual = fields.Integer(
         string="Actual Next Number",
-        help="Next number that will be used. This number can be incremented "
-        "frequently so the displayed value might already be obsolete",
         compute="_compute_number_next_actual",
         inverse="_inverse_number_next_actual",
+        help="Next number that will be used. This number can be incremented "
+        "frequently so the displayed value might already be obsolete",
     )
 
     @api.constrains("sequence_id", "date_from", "date_to")

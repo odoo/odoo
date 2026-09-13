@@ -39,13 +39,13 @@ class MixinOrderLineAmount(models.AbstractModel):
     )
     price_unit_auto = fields.Float(
         string="Automatic Price",
-        help="Price from the pricelist/seller. Compared with price_unit to "
-        "detect manual overrides.",
         min_display_digits="Product Price",
         compute="_compute_price_and_discount",
         precompute=True,
         store=True,
         copy=True,
+        help="Price from the pricelist/seller. Compared with price_unit to "
+        "detect manual overrides.",
     )
     discount = fields.Float(
         string="Discount (%)",
@@ -57,13 +57,13 @@ class MixinOrderLineAmount(models.AbstractModel):
     )
     discount_auto = fields.Float(
         string="Automatic Discount",
-        help="Discount from the pricelist/seller. Compared with discount to "
-        "detect manual overrides.",
         digits="Discount",
         compute="_compute_price_and_discount",
         precompute=True,
         store=True,
         copy=True,
+        help="Discount from the pricelist/seller. Compared with discount to "
+        "detect manual overrides.",
     )
     tax_ids = fields.Many2many(
         comodel_name="account.tax",
@@ -338,24 +338,24 @@ class MixinOrderLineAmount(models.AbstractModel):
     )
     price_unit_product_uom = fields.Float(
         string="Unit Price Product UoM",
-        help="The price of one unit of the product's own unit of measure. "
-        "Comparable across lines that were bought or sold in different units.",
         min_display_digits="Product Price",
         compute="_compute_price_unit_product_uom",
         precompute=True,
         store=True,
+        help="The price of one unit of the product's own unit of measure. "
+        "Comparable across lines that were bought or sold in different units.",
     )
     price_unit_discounted_taxexc_product_uom = fields.Float(
         string="Net Unit Price Product UoM",
+        min_display_digits="Product Price",
+        compute="_compute_price_unit_discounted_taxexc_product_uom",
+        precompute=True,
+        store=True,
         help="`price_unit_discounted_taxexc` expressed in the product's own "
         "unit of measure: the discount applied, taxes excluded, units "
         "normalized. The only per-line price that compares across both, which "
         "is why it is stored rather than computed -- price statistics read it "
         "with MIN/MAX in SQL instead of looping over a capped sample.",
-        min_display_digits="Product Price",
-        compute="_compute_price_unit_discounted_taxexc_product_uom",
-        precompute=True,
-        store=True,
     )
 
     def _get_price_discounted(self):

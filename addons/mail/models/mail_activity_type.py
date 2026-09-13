@@ -46,9 +46,9 @@ class MailActivityType(models.Model):
             ("previous_activity", "after previous activity deadline"),
         ],
         string="Delay Type",
-        help="Type of delay",
         default="previous_activity",
         required=True,
+        help="Type of delay",
     )
     icon = fields.Char(help="Font awesome icon e.g. fa-tasks")
     decoration_type = fields.Selection(
@@ -64,13 +64,13 @@ class MailActivityType(models.Model):
     triggered_next_type_id: MailActivityType = fields.Many2one(
         comodel_name="mail.activity.type",
         string="Trigger",
-        help="Automatically schedule this activity once the current one is marked as done.",
         compute="_compute_triggered_next_type_id",
         inverse="_inverse_triggered_next_type_id",
         store=True,
         readonly=False,
         domain="['|', ('res_model', '=', False), ('res_model', '=', res_model)]",
         ondelete="restrict",
+        help="Automatically schedule this activity once the current one is marked as done.",
     )
     chaining_type = fields.Selection(
         selection=[
@@ -86,12 +86,12 @@ class MailActivityType(models.Model):
         column1="activity_id",
         column2="recommended_id",
         string="Suggest",
-        help="Suggest these activities once the current one is marked as done.",
         compute="_compute_suggested_next_type_ids",
         inverse="_inverse_suggested_next_type_ids",
         store=True,
         readonly=False,
         domain="['|', ('res_model', '=', False), ('res_model', '=', res_model)]",
+        help="Suggest these activities once the current one is marked as done.",
     )
     previous_type_ids: MailActivityType = fields.Many2many(
         comodel_name="mail.activity.type",
@@ -108,8 +108,8 @@ class MailActivityType(models.Model):
             ("phonecall", "Phonecall"),
         ],
         string="Action",
-        help="Actions may trigger specific behavior like opening calendar view or automatically mark as done when a document is uploaded",
         default="default",
+        help="Actions may trigger specific behavior like opening calendar view or automatically mark as done when a document is uploaded",
     )
     mail_template_ids: MailTemplate = fields.Many2many(
         comodel_name="mail.template",

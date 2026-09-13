@@ -21,11 +21,11 @@ class IrModelFields(models.Model):
     # registry build and made this module impossible to install.
     serialization_field_id = fields.Many2one(
         comodel_name="ir.model.fields",
+        domain="[('ttype','=','serialized'), ('model_id', '=', model_id)]",
+        ondelete="cascade",
         help="If set, this field will be stored in the sparse structure of the "
         "serialization field, instead of having its own database column. "
         "This cannot be changed after creation.",
-        domain="[('ttype','=','serialized'), ('model_id', '=', model_id)]",
-        ondelete="cascade",
     )
 
     def write(self, vals):

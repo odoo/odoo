@@ -19,10 +19,10 @@ class IrActionsClient(models.Model):
     type = fields.Char(default="ir.actions.client")
     tag = fields.Char(
         string="Client action tag",
+        required=True,
         help="An arbitrary string, interpreted by the client"
         " according to its own needs and wishes. There "
         "is no central tag repository across clients.",
-        required=True,
     )
     target = fields.Selection(
         selection=[
@@ -40,15 +40,15 @@ class IrActionsClient(models.Model):
     )
     context = fields.Char(
         string="Context Value",
-        help="Context dictionary as Python expression, empty by default (Default: {})",
         default="{}",
         required=True,
+        help="Context dictionary as Python expression, empty by default (Default: {})",
     )
     params = fields.Binary(
         string="Supplementary arguments",
-        help="Arguments sent to the client along with the view tag",
         compute="_compute_params",
         inverse="_inverse_params",
+        help="Arguments sent to the client along with the view tag",
     )
     params_store = fields.Binary(
         string="Params storage",

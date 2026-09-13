@@ -23,12 +23,12 @@ class GamificationAchievement(models.Model):
         required=True,
     )
     description = fields.Text(
-        help="Shown after the achievement is unlocked.",
         translate=True,
+        help="Shown after the achievement is unlocked.",
     )
     hint = fields.Text(
-        help="Optional hint shown before unlock. Leave empty for full mystery.",
         translate=True,
+        help="Optional hint shown before unlock. Leave empty for full mystery.",
     )
     sequence = fields.Integer(default=10)
     active = fields.Boolean(default=True)
@@ -41,12 +41,14 @@ class GamificationAchievement(models.Model):
     model_id = fields.Many2one(
         comodel_name="ir.model",
         string="Trigger Model",
-        help="The model to evaluate for this achievement.",
         required=True,
         ondelete="cascade",
+        help="The model to evaluate for this achievement.",
     )
     model_name = fields.Char(related="model_id.model")
     trigger_domain = fields.Char(
+        default="[]",
+        required=True,
         help="Domain evaluated per user. May reference 'user'. "
         "Achievement unlocks when at least one record matches.\n"
         "Every candidate user whose domain evaluates to the same text "
@@ -57,14 +59,12 @@ class GamificationAchievement(models.Model):
         "supported shape for a company-wide achievement (e.g. 'anyone "
         "closed a deal'); it is a misconfiguration if a per-user "
         "achievement was intended.",
-        default="[]",
-        required=True,
     )
     trigger_count = fields.Integer(
         string="Required Count",
+        default=1,
         help="Number of records that must match the domain to unlock. "
         "Use 1 for simple presence checks, higher for cumulative achievements.",
-        default=1,
     )
 
     # Rewards
@@ -74,8 +74,8 @@ class GamificationAchievement(models.Model):
         help="Badge automatically granted when the achievement is unlocked.",
     )
     karma_reward = fields.Integer(
-        help="Karma points granted on unlock.",
         default=0,
+        help="Karma points granted on unlock.",
     )
     rarity = fields.Selection(
         selection=[
@@ -89,9 +89,9 @@ class GamificationAchievement(models.Model):
     )
     hidden = fields.Boolean(
         string="Mystery Achievement",
+        default=True,
         help="If checked, the achievement name and description are hidden "
         "until unlocked. Only the hint (if any) is visible.",
-        default=True,
     )
 
     # Tracking

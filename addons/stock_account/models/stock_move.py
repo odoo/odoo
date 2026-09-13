@@ -17,9 +17,9 @@ class StockMove(models.Model):
 
     to_refund = fields.Boolean(
         string="Update quantities on SO/PO",
-        help="Trigger a decrease of the delivered/received quantity in the associated Sale Order/Purchase Order",
         default=True,
         copy=True,
+        help="Trigger a decrease of the delivered/received quantity in the associated Sale Order/Purchase Order",
     )
     company_currency_id = fields.Many2one(
         comodel_name="res.currency",
@@ -28,9 +28,9 @@ class StockMove(models.Model):
         readonly=True,
     )
     value = fields.Monetary(
-        help="The current value of the move. It's zero if the move is not valued.",
         currency_field="company_currency_id",
         copy=False,
+        help="The current value of the move. It's zero if the move is not valued.",
     )
     value_justification = fields.Text(
         string="Value Description",
@@ -66,11 +66,11 @@ class StockMove(models.Model):
     is_valued = fields.Boolean(compute="_compute_is_valued")
     valued_qty = fields.Float(
         string="Valued Quantity",
-        help="The quantity `value` was computed over, in the product's unit of"
-        " measure: the picked, company-owned lines crossing a valuation boundary.",
         min_display_digits="Product Unit",
         compute="_compute_valued_qty",
         store=True,
+        help="The quantity `value` was computed over, in the product's unit of"
+        " measure: the picked, company-owned lines crossing a valuation boundary.",
     )
 
     remaining_qty = fields.Float(

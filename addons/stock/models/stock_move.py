@@ -61,19 +61,19 @@ class StockMove(models.Model):
     partner_id = fields.Many2one(
         comodel_name="res.partner",
         string="Destination Address ",
-        help="Optional address where goods are to be delivered, specifically used for allotment",
         compute="_compute_partner_id",
         store=True,
         index="btree_not_null",
         readonly=False,
+        help="Optional address where goods are to be delivered, specifically used for allotment",
     )
     origin_returned_move_id = fields.Many2one(
         comodel_name="stock.move",
         string="Origin return move",
-        help="Move that created the return move",
         index=True,
         copy=False,
         check_company=True,
+        help="Move that created the return move",
     )
     returned_move_ids = fields.One2many(
         comodel_name="stock.move",
@@ -91,22 +91,21 @@ class StockMove(models.Model):
     origin = fields.Char(string="Source Document")
     date = fields.Datetime(
         string="Date Scheduled",
-        help="Scheduled date until move is done, then date of actual move processing",
         default=fields.Datetime.now,
         index=True,
         required=True,
+        help="Scheduled date until move is done, then date of actual move processing",
     )
     date_deadline = fields.Datetime(
         string="Deadline",
-        help="In case of outgoing flow, validate the transfer before this date to allow to deliver at promised date to the customer.\n\
-        In case of incoming flow, validate the transfer before this date in order to have these products in stock at the date promised by the supplier",
         copy=False,
         readonly=True,
+        help="In case of outgoing flow, validate the transfer before this date to allow to deliver at promised date to the customer.\n\
+        In case of incoming flow, validate the transfer before this date in order to have these products in stock at the date promised by the supplier",
     )
     location_id = fields.Many2one(
         comodel_name="stock.location",
         string="Source Location",
-        help="The operation takes and suggests products from this location.",
         compute="_compute_location_id",
         precompute=True,
         store=True,
@@ -115,6 +114,7 @@ class StockMove(models.Model):
         required=True,
         check_company=True,
         bypass_search_access=True,
+        help="The operation takes and suggests products from this location.",
     )
     location_usage = fields.Selection(
         related="location_id.usage",
@@ -123,7 +123,6 @@ class StockMove(models.Model):
     location_dest_id = fields.Many2one(
         comodel_name="stock.location",
         string="Intermediate Location",
-        help="The operations brings product to this location",
         compute="_compute_location_dest_id",
         inverse="_inverse_location_dest_id",
         precompute=True,
@@ -131,6 +130,7 @@ class StockMove(models.Model):
         index=True,
         readonly=False,
         required=True,
+        help="The operations brings product to this location",
     )
     location_dest_usage = fields.Selection(
         related="location_dest_id.usage",
@@ -139,13 +139,13 @@ class StockMove(models.Model):
     location_final_id = fields.Many2one(
         comodel_name="stock.location",
         string="Final Location",
-        help="The operation brings the products to the intermediate location."
-        "But this operation is part of a chain of operations targeting the final location.",
         store=True,
         index=True,
         readonly=False,
         check_company=True,
         bypass_search_access=True,
+        help="The operation brings the products to the intermediate location."
+        "But this operation is part of a chain of operations targeting the final location.",
     )
     procure_method = fields.Selection(
         selection=[
@@ -153,13 +153,13 @@ class StockMove(models.Model):
             ("make_to_order", "Advanced: Apply Procurement Rules"),
         ],
         string="Supply Method",
+        default="make_to_stock",
+        copy=False,
+        required=True,
         help="By default, the system will take from the stock in the source location and passively wait for availability. "
         "The other possibility allows you to directly create a procurement on the source location (and thus ignore "
         "its current stock) to gather products. If we want to chain moves and have this one to wait for the previous, "
         "this second option should be chosen.",
-        default="make_to_stock",
-        copy=False,
-        required=True,
     )
     state = fields.Selection(
         selection=[
@@ -172,15 +172,15 @@ class StockMove(models.Model):
             ("cancel", "Cancelled"),
         ],
         string="Status",
+        default="draft",
+        index=True,
+        copy=False,
+        readonly=True,
         help="* New: The stock move is created but not confirmed.\n"
         "* Waiting Another Move: A linked stock move should be done before this one.\n"
         "* Waiting: The stock move is confirmed but the product can't be reserved.\n"
         "* Available: The product of the stock move is reserved.\n"
         "* Done: The product has been transferred and the transfer has been confirmed.",
-        default="draft",
-        index=True,
-        copy=False,
-        readonly=True,
     )
 
     product_id = fields.Many2one(
@@ -229,22 +229,22 @@ class StockMove(models.Model):
     )
     product_uom_qty = fields.Float(
         string="Demand",
+        digits="Product Unit",
+        default=0,
+        required=True,
         help="This is the quantity of product that is planned to be moved."
         "Lowering this quantity does not generate a backorder."
         "Changing this quantity on assigned moves affects "
         "the product reservation, and should be done with care.",
-        digits="Product Unit",
-        default=0,
-        required=True,
     )
     product_qty = fields.Float(
         string="Real Quantity",
-        help="Quantity in the default UoM of the product",
         digits=0,
         compute="_compute_product_qty",
         inverse="_inverse_product_qty",
         compute_sudo=True,
         store=True,
+        help="Quantity in the default UoM of the product",
     )
     description_picking_manual = fields.Text(readonly=True)
     description_picking = fields.Text(
@@ -259,8 +259,8 @@ class StockMove(models.Model):
         column1="move_dest_id",
         column2="move_orig_id",
         string="Original Move",
-        help="Optional: previous stock move when chaining them",
         copy=False,
+        help="Optional: previous stock move when chaining them",
     )
     move_dest_ids = fields.Many2many(
         comodel_name="stock.move",
@@ -268,8 +268,8 @@ class StockMove(models.Model):
         column1="move_orig_id",
         column2="move_dest_id",
         string="Destination Moves",
-        help="Optional: next stock move when chaining them",
         copy=False,
+        help="Optional: next stock move when chaining them",
     )
 
     price_unit = fields.Float(
@@ -293,20 +293,20 @@ class StockMove(models.Model):
     rule_id = fields.Many2one(
         comodel_name="stock.rule",
         string="Stock Rule",
-        help="The stock rule that created this stock move",
         ondelete="restrict",
         check_company=True,
+        help="The stock rule that created this stock move",
     )
     propagate_cancel = fields.Boolean(
         string="Propagate cancel and split",
-        help="If checked, when this move is cancelled, cancel the linked move too",
         default=True,
+        help="If checked, when this move is cancelled, cancel the linked move too",
     )
     date_delay_alert = fields.Datetime(
         string="Delay Alert Date",
-        help="Process at this date to be on time",
         compute="_compute_date_delay_alert",
         store=True,
+        help="Process at this date to be on time",
     )
     is_inventory = fields.Boolean(string="Inventory")
     inventory_name = fields.Char(readonly=True)
@@ -356,12 +356,12 @@ class StockMove(models.Model):
         default=False,
     )
     picked = fields.Boolean(
-        help="This checkbox is just indicative, it doesn't validate or generate any product moves.",
         compute="_compute_picked",
         inverse="_inverse_picked",
         store=True,
         copy=False,
         readonly=False,
+        help="This checkbox is just indicative, it doesn't validate or generate any product moves.",
     )
     is_locked = fields.Boolean(
         compute="_compute_is_locked",
@@ -378,8 +378,8 @@ class StockMove(models.Model):
     move_lines_count = fields.Count(count_of="move_line_ids")
     show_lot_actions = fields.Boolean(
         string="Show Lot/Serial Actions",
-        help="Whether the Generate/Import Serials-Lots buttons apply to this move.",
         compute="_compute_show_info",
+        help="Whether the Generate/Import Serials-Lots buttons apply to this move.",
     )
     next_serial = fields.Char(string="First SN/Lot")
     next_serial_count = fields.Integer(string="Number of SN/Lots")
@@ -407,23 +407,23 @@ class StockMove(models.Model):
     )
     date_reservation = fields.Date(
         string="Date to Reserve",
-        help="Computes when a move should be reserved",
         compute="_compute_date_reservation",
         store=True,
+        help="Computes when a move should be reserved",
     )
     packaging_uom_id = fields.Many2one(
         comodel_name="uom.uom",
         string="Packaging",
-        help="Packaging unit from sale or purchase orders",
         compute="_compute_packaging_uom_id",
         precompute=True,
         store=True,
+        help="Packaging unit from sale or purchase orders",
     )
     quantity_packaging_uom = fields.Float(
         string="Packaging Quantity",
-        help="Quantity in the packaging unit",
         compute="_compute_quantity_packaging_uom",
         store=True,
+        help="Quantity in the packaging unit",
     )
     show_quant = fields.Boolean(compute="_compute_show_info")
     show_lots_m2o = fields.Boolean(
@@ -437,12 +437,12 @@ class StockMove(models.Model):
 
     completion_sequence = fields.Integer(
         string="Completion Order",
-        help="Position of this move among all moves that reached 'Done'. `date` has"
-        " one-second resolution and a move's id is its creation order, so neither"
-        " tells two moves done in the same second apart; this does.",
         index="btree_not_null",
         copy=False,
         readonly=True,
+        help="Position of this move among all moves that reached 'Done'. `date` has"
+        " one-second resolution and a move's id is its creation order, so neither"
+        " tells two moves done in the same second apart; this does.",
     )
 
     _product_location_index = models.Index(

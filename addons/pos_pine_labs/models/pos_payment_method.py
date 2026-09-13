@@ -9,18 +9,18 @@ class PosPaymentMethod(models.Model):
 
     pine_labs_merchant = fields.Char(
         string="Pine Labs Merchant ID",
-        help="A merchant id issued directly to the merchant by Pine Labs.",
         copy=False,
+        help="A merchant id issued directly to the merchant by Pine Labs.",
     )
     pine_labs_store = fields.Char(
         string="Pine Labs Store ID",
-        help="A store id issued directly to the merchant by Pine Labs.",
         copy=False,
+        help="A store id issued directly to the merchant by Pine Labs.",
     )
     pine_labs_client = fields.Char(
         string="Pine Labs Client ID",
-        help="A client id issued directly to the merchant by Pine Labs.",
         copy=False,
+        help="A client id issued directly to the merchant by Pine Labs.",
     )
     pine_labs_security_token = fields.Char(
         help="A security token issued directly to the merchant by Pine Labs."

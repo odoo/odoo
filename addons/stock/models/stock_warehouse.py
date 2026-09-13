@@ -80,16 +80,16 @@ class StockWarehouse(models.Model):
     active = fields.Boolean(default=True)
 
     sequence = fields.Integer(
-        help="Gives the sequence of this line when displaying the warehouses.",
         default=10,
+        help="Gives the sequence of this line when displaying the warehouses.",
     )
 
     company_id = fields.Many2one(
         comodel_name="res.company",
-        help="The company is automatically set from your user preferences.",
         default=lambda self: self.env.company,
         readonly=True,
         required=True,
+        help="The company is automatically set from your user preferences.",
     )
 
     partner_id = fields.Many2one(
@@ -119,9 +119,9 @@ class StockWarehouse(models.Model):
 
     code = fields.Char(
         string="Short Name",
-        help="Short name used to identify your warehouse",
         size=5,
         required=True,
+        help="Short name used to identify your warehouse",
     )
 
     route_ids = fields.Many2many(
@@ -130,10 +130,10 @@ class StockWarehouse(models.Model):
         column1="warehouse_id",
         column2="route_id",
         string="Routes",
-        help="Defaults routes through the warehouse",
         copy=False,
         domain="[('warehouse_selectable', '=', True), ('company_id', 'in', [False, company_id])]",
         check_company=True,
+        help="Defaults routes through the warehouse",
     )
 
     reception_steps = fields.Selection(
@@ -143,9 +143,9 @@ class StockWarehouse(models.Model):
             ("three_steps", "Receive, Quality Control, then Store (3 steps)"),
         ],
         string="Incoming Shipments",
-        help="Default incoming route to follow",
         default="one_step",
         required=True,
+        help="Default incoming route to follow",
     )
 
     delivery_steps = fields.Selection(
@@ -155,9 +155,9 @@ class StockWarehouse(models.Model):
             ("pick_pack_ship", "Pick, Pack, then Deliver (3 steps)"),
         ],
         string="Outgoing Shipments",
-        help="Default outgoing route to follow",
         default="ship_only",
         required=True,
+        help="Default outgoing route to follow",
     )
 
     wh_input_stock_loc_id = fields.Many2one(
@@ -272,8 +272,8 @@ class StockWarehouse(models.Model):
         comodel_name="stock.route",
         inverse_name="supplied_wh_id",
         string="Resupply Routes",
-        help="Routes will be created for these resupply warehouses and you can select them on products and product categories",
         copy=False,
+        help="Routes will be created for these resupply warehouses and you can select them on products and product categories",
     )
 
     _warehouse_name_uniq = models.Constraint(

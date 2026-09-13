@@ -10,7 +10,7 @@ class PaymentProvider(models.Model):
             ("partner", "Based on Customer ID"),
         ],
         string="Communication",
+        default="so_name",
         help="You can set here the communication type that will appear on sales orders."
         "The communication will be given to the customer when they choose the payment method.",
-        default="so_name",
     )

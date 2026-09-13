@@ -30,42 +30,42 @@ class StockPickingType(models.Model):
     default_product_location_src_id = fields.Many2one(
         comodel_name="stock.location",
         string="Product Source Location",
-        help="This is the default source location for the product to be repaired in repair orders with this operation type.",
         compute="_compute_default_product_location_id",
         precompute=True,
         store=True,
         readonly=False,
         check_company=True,
+        help="This is the default source location for the product to be repaired in repair orders with this operation type.",
     )
     default_product_location_dest_id = fields.Many2one(
         comodel_name="stock.location",
         string="Product Destination Location",
-        help="This is the default destination location for the product to be repaired in repair orders with this operation type.",
         compute="_compute_default_product_location_id",
         precompute=True,
         store=True,
         readonly=False,
         check_company=True,
+        help="This is the default destination location for the product to be repaired in repair orders with this operation type.",
     )
     default_remove_location_dest_id = fields.Many2one(
         comodel_name="stock.location",
         string="Remove Destination Location",
-        help="This is the default remove destination location when you create a repair order with this operation type.",
         compute="_compute_default_remove_location_dest_id",
         precompute=True,
         store=True,
         readonly=False,
         check_company=True,
+        help="This is the default remove destination location when you create a repair order with this operation type.",
     )
     default_recycle_location_dest_id = fields.Many2one(
         comodel_name="stock.location",
         string="Recycle Destination Location",
-        help="This is the default recycle destination location when you create a repair order with this operation type.",
         compute="_compute_default_recycle_location_dest_id",
         precompute=True,
         store=True,
         readonly=False,
         check_company=True,
+        help="This is the default recycle destination location when you create a repair order with this operation type.",
     )
 
     repair_properties_definition = fields.PropertiesDefinition(

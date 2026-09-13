@@ -38,34 +38,34 @@ class AutomationRuntime(models.Model):
     )
     automation_id = fields.Many2one(
         comodel_name="automation.rule",
-        help="The automation workflow definition being executed",
         index=True,
         required=True,
         ondelete="restrict",
         tracking=True,
+        help="The automation workflow definition being executed",
     )
     partner_id = fields.Many2one(
         comodel_name="res.partner",
-        help="Main partner for this operation (optional)",
         index=True,
         domain=["|", ("parent_id", "=", False), ("is_company", "=", True)],
         tracking=True,
+        help="Main partner for this operation (optional)",
     )
     diff_partner_id = fields.Many2one(
         comodel_name="res.partner",
         string="Alternative Partner",
-        help="Alternative partner for specific actions in workflow",
         domain=["|", ("parent_id", "=", False), ("is_company", "=", True)],
+        help="Alternative partner for specific actions in workflow",
     )
     res_model = fields.Char(
         string="Target Model",
-        help="Model of the record being automated (e.g. 'res.partner')",
         index=True,
+        help="Model of the record being automated (e.g. 'res.partner')",
     )
     res_id = fields.Integer(
         string="Target Record ID",
-        help="ID of the specific record being automated",
         index=True,
+        help="ID of the specific record being automated",
     )
     name = fields.Char(
         string="Operation",
@@ -77,14 +77,14 @@ class AutomationRuntime(models.Model):
         tracking=True,
     )
     amount = fields.Monetary(
-        help="Operation amount",
         currency_field="currency_id",
         tracking=True,
+        help="Operation amount",
     )
     reference = fields.Char(
-        help="External reference or description",
         copy=False,
         tracking=True,
+        help="External reference or description",
     )
     state = fields.Selection(
         selection=[
@@ -95,54 +95,54 @@ class AutomationRuntime(models.Model):
             ("error", "Failed"),
             ("cancel", "Cancelled"),
         ],
-        help="Workflow execution state",
         default="draft",
         copy=False,
         readonly=True,
         required=True,
         tracking=True,
+        help="Workflow execution state",
     )
     date = fields.Date(
-        help="Reference date for this workflow execution",
         default=fields.Date.context_today,
         required=True,
         tracking=True,
+        help="Reference date for this workflow execution",
     )
     line_ids = fields.One2many(
         comodel_name="automation.runtime.line",
         inverse_name="runtime_id",
         string="Workflow Steps",
-        help="Per-step execution history",
         readonly=True,
+        help="Per-step execution history",
     )
     parent_line_id = fields.Many2one(
         comodel_name="automation.runtime.line",
         string="Parent Step",
-        help="The Sub-workflow step this run was started by, if any",
         index="btree_not_null",
         copy=False,
         readonly=True,
         ondelete="cascade",
+        help="The Sub-workflow step this run was started by, if any",
     )
     edge_ids = fields.One2many(
         comodel_name="automation.runtime.edge",
         inverse_name="runtime_id",
         string="Workflow Edges",
-        help="The DAG this run was started with, conditions included",
         readonly=True,
+        help="The DAG this run was started with, conditions included",
     )
     progress = fields.Integer(
         string="Progress %",
-        help="Completion percentage (0-100)",
         compute="_compute_progress",
         compute_sudo=True,
         store=True,
+        help="Completion percentage (0-100)",
     )
     progress_display = fields.Char(
         string="Progress",
-        help="Human-readable progress display",
         compute="_compute_progress_display",
         compute_sudo=True,
+        help="Human-readable progress display",
     )
 
     @api.model_create_multi

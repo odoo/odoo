@@ -38,9 +38,9 @@ class AccountMove(models.Model):
     )
     l10n_sa_confirmation_datetime = fields.Datetime(
         string="ZATCA Issue Date",
-        help="""Date on which the invoice is generated as final document (after securing all internal approvals).""",
         copy=False,
         readonly=True,
+        help="""Date on which the invoice is generated as final document (after securing all internal approvals).""",
     )
 
     def _get_name_invoice_report(self):

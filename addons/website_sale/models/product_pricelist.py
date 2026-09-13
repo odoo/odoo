@@ -18,13 +18,13 @@ class ProductPricelist(models.Model):
 
     website_id = fields.Many2one(
         comodel_name="website",
-        help="If you want a pricelist to be available on a website,"
-        "you must fill in this field or make it selectable."
-        "Otherwise, the pricelist will not apply to any website.",
         default=_default_website_id,
         domain="[('company_id', '=?', company_id)]",
         ondelete="restrict",
         tracking=20,
+        help="If you want a pricelist to be available on a website,"
+        "you must fill in this field or make it selectable."
+        "Otherwise, the pricelist will not apply to any website.",
     )
     code = fields.Char(
         string="E-commerce Promotional Code",

@@ -53,13 +53,13 @@ class PosCategory(models.Model):
     )
     hour_until = fields.Float(
         string="Availability Until",
-        help="The product will be available until this hour for online order and self order.",
         default=24.0,
+        help="The product will be available until this hour for online order and self order.",
     )
     hour_after = fields.Float(
         string="Availability After",
-        help="The product will be available after this hour for online order and self order.",
         default=0.0,
+        help="The product will be available after this hour for online order and self order.",
     )
 
     has_image = fields.Boolean(compute="_compute_has_image")

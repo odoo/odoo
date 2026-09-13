@@ -93,8 +93,8 @@ class Test_HttpGalaxy(models.Model):
     _description = "Galaxy"
 
     name = fields.Char(
-        help="The galaxy common name.",
         required=True,
+        help="The galaxy common name.",
     )
     translated_name = fields.Char(translate=True)
     picture = fields.Image(

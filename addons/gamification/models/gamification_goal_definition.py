@@ -24,16 +24,16 @@ class GamificationGoalDefinition(models.Model):
     description = fields.Text(string="Goal Description")
     monetary = fields.Boolean(
         string="Monetary Value",
-        help="The target and current value are defined in the company currency.",
         default=False,
+        help="The target and current value are defined in the company currency.",
     )
     suffix = fields.Char(
-        help="The unit of the target and current values",
         translate=True,
+        help="The unit of the target and current values",
     )
     full_suffix = fields.Char(
-        help="The currency and suffix field",
         compute="_compute_full_suffix",
+        help="The currency and suffix field",
     )
     computation_mode = fields.Selection(
         selection=[
@@ -42,9 +42,9 @@ class GamificationGoalDefinition(models.Model):
             ("sum", "Automatic: sum on a field"),
             ("python", "Automatic: execute a specific Python code"),
         ],
-        help="Define how the goals will be computed. The result of the operation will be stored in the field 'Current'.",
         default="manually",
         required=True,
+        help="Define how the goals will be computed. The result of the operation will be stored in the field 'Current'.",
     )
     display_mode = fields.Selection(
         selection=[
@@ -71,17 +71,17 @@ class GamificationGoalDefinition(models.Model):
     field_date_id = fields.Many2one(
         comodel_name="ir.model.fields",
         string="Date Field",
-        help="The date to use for the time period evaluated",
         domain=DOMAIN_TEMPLATE % ", ('ttype', 'in', ('date', 'datetime'))",
+        help="The date to use for the time period evaluated",
     )
     domain = fields.Char(
         string="Filter Domain",
+        default="[]",
+        required=True,
         help="Domain for filtering records. General rule, not user depending,"
         " e.g. [('state', '=', 'done')]. The expression can contain"
         " reference to 'user' which is a browse record of the current"
         " user if not in batch mode.",
-        default="[]",
-        required=True,
     )
 
     batch_mode = fields.Boolean(
@@ -106,9 +106,9 @@ class GamificationGoalDefinition(models.Model):
             ("lower", "The lower the better"),
         ],
         string="Goal Performance",
-        help="A goal is considered as completed when the current value is compared to the value to reach",
         default="higher",
         required=True,
+        help="A goal is considered as completed when the current value is compared to the value to reach",
     )
     action_id = fields.Many2one(
         comodel_name="ir.actions.act_window",

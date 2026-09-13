@@ -113,10 +113,10 @@ class AccountAnalyticLine(models.Model):
     )
     employee_id = fields.Many2one(
         comodel_name="hr.employee",
-        help="Define an 'hourly cost' on the employee to track the cost of their time.",
         index=True,
         domain=_domain_employee_id,
         context={"active_test": False},
+        help="Define an 'hourly cost' on the employee to track the cost of their time.",
     )
     job_title = fields.Char(
         related="employee_id.job_title",

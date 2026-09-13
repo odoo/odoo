@@ -9,8 +9,8 @@ class PurchaseOrder(models.Model):
 
     report_grids = fields.Boolean(
         string="Print Variant Grids",
-        help="If set, the matrix of configurable products will be shown on the report of this order.",
         default=True,
+        help="If set, the matrix of configurable products will be shown on the report of this order.",
     )
 
     """ Matrix loading and update: fields and methods :
@@ -25,17 +25,17 @@ class PurchaseOrder(models.Model):
 
     grid_product_tmpl_id = fields.Many2one(
         comodel_name="product.template",
-        help="Technical field for product_matrix functionalities.",
         store=False,
+        help="Technical field for product_matrix functionalities.",
     )
     grid_update = fields.Boolean(
-        help="Whether the grid field contains a new matrix to apply or not.",
         default=False,
         store=False,
+        help="Whether the grid field contains a new matrix to apply or not.",
     )
     grid = fields.Char(
-        help="Technical storage of grid. \nIf grid_update, will be loaded on the PO. \nIf not, represents the matrix to open.",
         store=False,
+        help="Technical storage of grid. \nIf grid_update, will be loaded on the PO. \nIf not, represents the matrix to open.",
     )
 
     @api.onchange("grid_product_tmpl_id")

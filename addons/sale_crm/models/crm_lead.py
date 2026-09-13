@@ -7,9 +7,9 @@ class CrmLead(models.Model):
 
     sale_amount_total = fields.Monetary(
         string="Sum of Orders",
-        help="Untaxed Total of Confirmed Orders",
         currency_field="company_currency",
         compute="_compute_sale_data",
+        help="Untaxed Total of Confirmed Orders",
     )
     quotation_count = fields.Integer(
         string="Number of Quotations",

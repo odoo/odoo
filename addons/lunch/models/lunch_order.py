@@ -134,16 +134,16 @@ class LunchOrder(models.Model):
     image_128 = fields.Image(compute="_compute_product_images")
 
     available_toppings_1 = fields.Boolean(
-        help="Are extras available for this product",
         compute="_compute_available_toppings",
+        help="Are extras available for this product",
     )
     available_toppings_2 = fields.Boolean(
-        help="Are extras available for this product",
         compute="_compute_available_toppings",
+        help="Are extras available for this product",
     )
     available_toppings_3 = fields.Boolean(
-        help="Are extras available for this product",
         compute="_compute_available_toppings",
+        help="Are extras available for this product",
     )
     display_reorder_button = fields.Boolean(compute="_compute_display_reorder_button")
     display_add_button = fields.Boolean(compute="_compute_display_add_button")

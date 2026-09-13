@@ -31,8 +31,8 @@ class ResUsersSettings(models.Model):
     )
     voice_active_duration = fields.Integer(
         string="Duration of voice activity in ms",
-        help="How long the audio broadcast will remain active after passing the volume threshold",
         default=200,
+        help="How long the audio broadcast will remain active after passing the volume threshold",
     )
     volume_settings_ids: ResUsersSettingsVolumes = fields.One2many(
         comodel_name="res.users.settings.volumes",

@@ -53,8 +53,8 @@ class IrLogging(models.Model):
         required=True,
     )
     line = fields.Char(
-        help="Source line. Text rather than integer because client/minified line references may be non-numeric.",
         required=True,
+        help="Source line. Text rather than integer because client/minified line references may be non-numeric.",
     )
 
     def init(self) -> None:

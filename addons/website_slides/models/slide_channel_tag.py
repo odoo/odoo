@@ -64,8 +64,8 @@ class SlideChannelTag(models.Model):
     )
     color = fields.Integer(
         string="Color Index",
-        help="Tag color used in both backend and website. No color means no display in kanban or front-end, to distinguish internal tags from public categorization tags",
         default=lambda self: self._default_color(),
+        help="Tag color used in both backend and website. No color means no display in kanban or front-end, to distinguish internal tags from public categorization tags",
     )
 
     @api.model

@@ -32,8 +32,8 @@ class AuthOauthProvider(models.Model):
     )
     body = fields.Char(
         string="Login button label",
-        help="Link text in Login Dialog",
         translate=True,
         required=True,
+        help="Link text in Login Dialog",
     )
     sequence = fields.Integer(default=10)

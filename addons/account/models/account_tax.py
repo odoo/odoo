@@ -18,19 +18,19 @@ class AccountTaxGroup(models.Model):
 
     tax_payable_account_id = fields.Many2one(
         comodel_name="account.account",
-        help="Tax current account used as a counterpart to the Tax Closing Entry when in favor of the authorities.",
         check_company=True,
+        help="Tax current account used as a counterpart to the Tax Closing Entry when in favor of the authorities.",
     )
     tax_receivable_account_id = fields.Many2one(
         comodel_name="account.account",
-        help="Tax current account used as a counterpart to the Tax Closing Entry when in favor of the company.",
         check_company=True,
+        help="Tax current account used as a counterpart to the Tax Closing Entry when in favor of the company.",
     )
     advance_tax_payment_account_id = fields.Many2one(
         comodel_name="account.account",
         string="Tax Advance Account",
-        help="Downpayments posted on this account will be considered by the Tax Closing Entry.",
         check_company=True,
+        help="Downpayments posted on this account will be considered by the Tax Closing Entry.",
     )
 
 
@@ -50,12 +50,12 @@ class AccountTax(models.Model):
         column1="dest_tax_id",
         column2="src_tax_id",
         string="Replaces",
-        help="List of taxes to replace when applying any of the stipulated fiscal positions.",
         domain="""[
             ('type_tax_use', '=', type_tax_use),
             ('is_domestic', '=', True),
         ]""",
         ondelete="cascade",
+        help="List of taxes to replace when applying any of the stipulated fiscal positions.",
     )
     replacing_tax_ids = fields.Many2many(
         comodel_name="account.tax",
@@ -85,15 +85,15 @@ class AccountTax(models.Model):
             ("on_invoice", "Based on Invoice"),
             ("on_payment", "Based on Payment"),
         ],
+        default="on_invoice",
         help="Based on Invoice: the tax is due as soon as the invoice is validated.\n"
         "Based on Payment: the tax is due as soon as the payment of the invoice is received.",
-        default="on_invoice",
     )
     cash_basis_transition_account_id = fields.Many2one(
         comodel_name="account.account",
-        help="Account used to transition the tax amount for cash basis taxes. It will contain the tax amount as long as the original invoice has not been reconciled ; at reconciliation, this amount cancelled on this account and put on the regular tax account.",
         domain="[('account_type', 'not in', ('asset_receivable', 'liability_payable'))]",
         check_company=True,
+        help="Account used to transition the tax amount for cash basis taxes. It will contain the tax amount as long as the original invoice has not been reconciled ; at reconciliation, this amount cancelled on this account and put on the regular tax account.",
     )
     is_used = fields.Boolean(
         string="Tax used",
@@ -106,8 +106,8 @@ class AccountTax(models.Model):
     )
     invoice_legal_notes = fields.Html(
         string="Legal Notes",
-        help="Legal mentions that have to be printed on the invoices.",
         translate=True,
+        help="Legal mentions that have to be printed on the invoices.",
     )
 
     @api.constrains("tax_exigibility", "cash_basis_transition_account_id")
@@ -1310,9 +1310,9 @@ class AccountTaxRepartitionLine(models.Model):
 
     account_id = fields.Many2one(
         comodel_name="account.account",
-        help="Account on which to post the tax amount",
         domain="[('account_type', 'not in', ('asset_receivable', 'liability_payable', 'off_balance'))]",
         check_company=True,
+        help="Account on which to post the tax amount",
     )
     tag_ids = fields.Many2many(
         comodel_name="account.account.tag",
@@ -1330,8 +1330,8 @@ class AccountTaxRepartitionLine(models.Model):
     )
     tag_ids_domain = fields.Binary(
         string="tag domain",
-        help="Dynamic domain used for the tag that can be set on tax",
         compute="_compute_tag_ids_domain",
+        help="Dynamic domain used for the tag that can be set on tax",
     )
 
     def _sorted_for_positional_pairing(self):

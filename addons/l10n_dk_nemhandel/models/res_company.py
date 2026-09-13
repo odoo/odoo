@@ -16,17 +16,17 @@ class ResCompany(models.Model):
 
     nemhandel_contact_email = fields.Char(
         string="Nemhandel Contact email",
-        help="Primary contact email for Nemhandel-related communication",
         compute="_compute_nemhandel_contact_email",
         store=True,
         readonly=False,
+        help="Primary contact email for Nemhandel-related communication",
     )
     nemhandel_phone_number = fields.Char(
         string="Nemhandel Phone number (for validation)",
-        help="You will receive a verification code to this phone number",
         compute="_compute_nemhandel_phone_number",
         store=True,
         readonly=False,
+        help="You will receive a verification code to this phone number",
     )
     l10n_dk_nemhandel_proxy_state = fields.Selection(
         selection=[

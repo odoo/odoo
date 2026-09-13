@@ -29,21 +29,21 @@ class ResPartnerBank(models.Model):
         comodel_name="account.journal",
         inverse_name="bank_account_id",
         string="Account Journal",
-        help="The accounting journal corresponding to this bank account.",
         readonly=True,
         domain=[("type", "=", "bank")],
         check_company=True,
+        help="The accounting journal corresponding to this bank account.",
     )
     has_iban_warning = fields.Boolean(
-        help="Technical field used to display a warning if the IBAN country is different than the holder country.",
         compute="_compute_display_account_warning",
         store=True,
+        help="Technical field used to display a warning if the IBAN country is different than the holder country.",
     )
     partner_country_name = fields.Char(related="partner_id.country_id.name")
     has_money_transfer_warning = fields.Boolean(
-        help="Technical field used to display a warning if the account is a transfer service account.",
         compute="_compute_display_account_warning",
         store=True,
+        help="Technical field used to display a warning if the account is a transfer service account.",
     )
     money_transfer_service = fields.Char(compute="_compute_money_transfer_service")
     partner_supplier_rank = fields.Integer(related="partner_id.supplier_rank")
@@ -63,10 +63,10 @@ class ResPartnerBank(models.Model):
         compute="_compute_user_has_group_validate_bank_account"
     )
     allow_out_payment = fields.Boolean(
+        tracking=True,
         help="Sending fake invoices with a fraudulent account number is a common phishing practice. "
         "To protect yourself, always verify new bank account numbers, preferably by calling the vendor, as phishing "
         "usually happens when their emails are compromised. Once verified, you can activate the ability to send money.",
-        tracking=True,
     )
     currency_id = fields.Many2one(tracking=True)
     lock_trust_fields = fields.Boolean(compute="_compute_lock_trust_fields")

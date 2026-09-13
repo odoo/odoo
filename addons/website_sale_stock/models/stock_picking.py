@@ -8,7 +8,7 @@ class StockPicking(models.Model):
         comodel_name="website",
         related="sale_id.website_id",
         string="Website",
-        help="Website where this order has been placed, for eCommerce orders.",
         store=True,
         readonly=True,
+        help="Website where this order has been placed, for eCommerce orders.",
     )

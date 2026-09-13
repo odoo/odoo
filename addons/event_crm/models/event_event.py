@@ -9,8 +9,8 @@ class EventEvent(models.Model):
         comodel_name="crm.lead",
         inverse_name="event_id",
         string="Leads",
-        help="Leads generated from this event",
         groups="sales_team.group_sale_salesman",
+        help="Leads generated from this event",
     )
     lead_count = fields.Integer(
         string="# Leads",

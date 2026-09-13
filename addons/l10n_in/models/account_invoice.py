@@ -66,8 +66,8 @@ class AccountMove(models.Model):
     l10n_in_reseller_partner_id = fields.Many2one(
         comodel_name="res.partner",
         string="Reseller",
-        help="Only Registered Reseller",
         domain=[("vat", "!=", False)],
+        help="Only Registered Reseller",
     )
     l10n_in_journal_type = fields.Selection(
         related="journal_id.type",
@@ -85,24 +85,24 @@ class AccountMove(models.Model):
     # withholding related fields
     l10n_in_is_withholding = fields.Boolean(
         string="Is Indian TDS Entry",
-        help="Technical field to identify Indian withholding entry",
         copy=False,
+        help="Technical field to identify Indian withholding entry",
     )
     l10n_in_withholding_ref_move_id = fields.Many2one(
         comodel_name="account.move",
         string="Indian TDS Ref Move",
-        help="Reference move for withholding entry",
         index="btree_not_null",
         copy=False,
         readonly=True,
+        help="Reference move for withholding entry",
     )
     l10n_in_withholding_ref_payment_id = fields.Many2one(
         comodel_name="account.payment",
         string="Indian TDS Ref Payment",
-        help="Reference Payment for withholding entry",
         index="btree_not_null",
         copy=False,
         readonly=True,
+        help="Reference Payment for withholding entry",
     )
     l10n_in_withhold_move_ids = fields.One2many(
         comodel_name="account.move",
@@ -117,8 +117,8 @@ class AccountMove(models.Model):
     )
     l10n_in_total_withholding_amount = fields.Monetary(
         string="Total Indian TDS Amount",
-        help="Total withholding amount for the move",
         compute="_compute_l10n_in_total_withholding_amount",
+        help="Total withholding amount for the move",
     )
     l10n_in_display_higher_tcs_button = fields.Boolean(
         string="Display higher TCS button",

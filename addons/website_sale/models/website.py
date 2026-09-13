@@ -143,7 +143,6 @@ class Website(models.Model):
 
     shop_opt_products_design_classes = fields.Char(
         string="Shop Design Class",
-        help="CSS class for shop products design",
         default="o_wsale_products_opt_layout_catalog o_wsale_products_opt_design_thumbs "
         "o_wsale_products_opt_name_color_regular o_wsale_products_opt_rounded_2 "
         "o_wsale_products_opt_thumb_cover o_wsale_products_opt_img_secondary_show "
@@ -151,6 +150,7 @@ class Website(models.Model):
         "o_wsale_products_opt_actions_onhover o_wsale_products_opt_has_wishlist "
         "o_wsale_products_opt_wishlist_fixed o_wsale_products_opt_has_description "
         "o_wsale_products_opt_actions_subtle o_wsale_products_opt_cc1",
+        help="CSS class for shop products design",
     )
 
     shop_default_sort = fields.Selection(

@@ -22,9 +22,9 @@ class MixinExchangeSubject(models.AbstractModel):
             ("annulled", "Annulled"),
         ],
         string="Exchange Status",
+        compute="_compute_exchange_state",
         help="Rolled up from this record's transmissions. The counterparty's "
         "verdict, not whether a call completed.",
-        compute="_compute_exchange_state",
     )
 
     def _compute_transmissions(self):

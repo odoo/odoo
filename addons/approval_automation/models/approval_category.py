@@ -8,10 +8,10 @@ class ApprovalCategory(models.Model):
 
     has_automation = fields.Selection(
         selection=CATEGORY_SELECTION,
-        help="Automation flows that should be specified on the request.",
         default="no",
         required=True,
         tracking=True,
+        help="Automation flows that should be specified on the request.",
     )
     automation_id = fields.Many2one(
         comodel_name="automation.rule",

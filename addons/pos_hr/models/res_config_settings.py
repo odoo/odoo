@@ -7,18 +7,18 @@ class ResConfigSettings(models.TransientModel):
     # pos.config fields
     pos_basic_employee_ids = fields.Many2many(
         related="pos_config_id.basic_employee_ids",
-        help="If left empty, all employees can log in to PoS",
         readonly=False,
+        help="If left empty, all employees can log in to PoS",
     )
     pos_advanced_employee_ids = fields.Many2many(
         related="pos_config_id.advanced_employee_ids",
-        help="Employees linked to users with the PoS Manager role are automatically added to this list",
         readonly=False,
+        help="Employees linked to users with the PoS Manager role are automatically added to this list",
     )
     pos_minimal_employee_ids = fields.Many2many(
         related="pos_config_id.minimal_employee_ids",
-        help="If left empty, all employees can log in to PoS",
         readonly=False,
+        help="If left empty, all employees can log in to PoS",
     )
 
     @api.model_create_multi

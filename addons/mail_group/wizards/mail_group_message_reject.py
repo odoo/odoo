@@ -31,8 +31,8 @@ class MailGroupMessageReject(models.TransientModel):
     )
 
     send_email = fields.Boolean(
-        help="Send an email to the author of the message",
         compute="_compute_send_email",
+        help="Send an email to the author of the message",
     )
 
     @api.depends("mail_group_message_id")

@@ -6,6 +6,6 @@ class AccountMove(models.Model):
 
     l10n_vn_e_invoice_number = fields.Char(
         string="eInvoice Number",
-        help="Electronic Invoicing number.",
         copy=False,
+        help="Electronic Invoicing number.",
     )

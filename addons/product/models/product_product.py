@@ -46,8 +46,8 @@ class ProductProduct(models.Model):
         readonly=False,
     )
     active = fields.Boolean(
-        help="If unchecked, it will allow you to hide the product without removing it.",
         default=True,
+        help="If unchecked, it will allow you to hide the product without removing it.",
     )
     is_product_variant = fields.Boolean(compute="_compute_is_product_variant")
     default_code = fields.Char(
@@ -59,9 +59,9 @@ class ProductProduct(models.Model):
         compute="_compute_code",
     )
     barcode = fields.Char(
-        help="International Article Number used for product identification.",
         index="btree_not_null",
         copy=False,
+        help="International Article Number used for product identification.",
     )
     partner_ref = fields.Char(
         string="Customer Ref",
@@ -85,26 +85,26 @@ class ProductProduct(models.Model):
 
     price_extra = fields.Float(
         string="Variant Price Extra",
-        help="This is the sum of the extra price of all attributes",
         min_display_digits="Product Price",
         compute="_compute_price_extra",
+        help="This is the sum of the extra price of all attributes",
     )
     lst_price = fields.Float(
         string="Public Price",
-        help="The sale price is managed from the product template. Click on the 'Configure Variants' button to set the extra attribute prices.",
         min_display_digits="Product Price",
         compute="_compute_lst_price",
         inverse="_inverse_lst_price",
+        help="The sale price is managed from the product template. Click on the 'Configure Variants' button to set the extra attribute prices.",
     )
 
     standard_price = fields.Float(
         string="Cost",
-        help="""Value of the product (automatically computed in AVCO).
-        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).
-        Used to compute margins on sale orders.""",
         min_display_digits="Product Price",
         company_dependent=True,
         groups="base.group_user",
+        help="""Value of the product (automatically computed in AVCO).
+        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).
+        Used to compute margins on sale orders.""",
     )
     volume = fields.Float(digits="Volume")
     weight = fields.Float(digits="Stock Weight")

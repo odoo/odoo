@@ -24,8 +24,8 @@ class ProductSupplierinfo(models.Model):
         help="This vendor's product code will be used when printing a request for quotation. Keep empty to use the internal one.",
     )
     sequence = fields.Integer(
-        help="Assigns the priority to the list of product vendor.",
         default=1,
+        help="Assigns the priority to the list of product vendor.",
     )
     product_uom_id = fields.Many2one(
         comodel_name="uom.uom",
@@ -38,16 +38,16 @@ class ProductSupplierinfo(models.Model):
     )
     min_qty = fields.Float(
         string="Quantity",
-        help="The quantity to purchase from this vendor to benefit from the unit price. If a vendor unit is set, quantity should be specified in this unit, otherwise it should be specified in the default unit of the product.",
         digits="Product Unit",
         default=0.0,
         required=True,
+        help="The quantity to purchase from this vendor to benefit from the unit price. If a vendor unit is set, quantity should be specified in this unit, otherwise it should be specified in the default unit of the product.",
     )
     price = fields.Float(
         string="Unit Price",
-        help="The price to purchase a product",
         min_display_digits="Product Price",
         default=0.0,
+        help="The price to purchase a product",
     )
     price_discounted = fields.Float(
         string="Discounted Price",
@@ -74,13 +74,13 @@ class ProductSupplierinfo(models.Model):
     product_id = fields.Many2one(
         comodel_name="product.product",
         string="Product Variant",
-        help="If not set, the vendor price will apply to all variants of this product.",
         compute="_compute_product_id",
         precompute=True,
         store=True,
         readonly=False,
         domain="[('product_tmpl_id', '=', product_tmpl_id)] if product_tmpl_id else []",
         check_company=True,
+        help="If not set, the vendor price will apply to all variants of this product.",
     )
     product_tmpl_id = fields.Many2one(
         comodel_name="product.template",
@@ -100,9 +100,9 @@ class ProductSupplierinfo(models.Model):
     )
     delay = fields.Integer(
         string="Lead Time",
-        help="Lead time in days between the confirmation of the purchase order and the receipt of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning.",
         default=1,
         required=True,
+        help="Lead time in days between the confirmation of the purchase order and the receipt of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning.",
     )
     discount = fields.Float(
         string="Discount (%)",

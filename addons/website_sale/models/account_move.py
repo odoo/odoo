@@ -7,11 +7,11 @@ class AccountMove(models.Model):
 
     website_id = fields.Many2one(
         comodel_name="website",
-        help="Website through which this invoice was created for eCommerce orders.",
         compute="_compute_website_id",
         store=True,
         readonly=True,
         tracking=True,
+        help="Website through which this invoice was created for eCommerce orders.",
     )
 
     def _auto_init(self):

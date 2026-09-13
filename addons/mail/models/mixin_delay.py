@@ -16,9 +16,9 @@ class MixinDelay(models.AbstractModel):
             for unit, label in time_unit_selection("day", "week", "month")
         ],
         string="Delay units",
-        help="Unit of delay",
         default="day",
         required=True,
+        help="Unit of delay",
     )
 
     def _get_delay_delta(self):

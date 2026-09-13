@@ -22,8 +22,8 @@ class ResPartner(models.Model):
             ("OTH", "Other ID"),
         ],
         string="Identification Scheme",
-        help="Additional Identification Scheme for the Seller/Buyer",
         default="OTH",
+        help="Additional Identification Scheme for the Seller/Buyer",
     )
 
     l10n_sa_edi_additional_identification_number = fields.Char(

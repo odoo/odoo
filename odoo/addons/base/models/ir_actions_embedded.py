@@ -34,8 +34,8 @@ class IrEmbeddedActions(models.Model):
     python_method = fields.Char(help="Python method returning an action")
     user_id = fields.Many2one(
         comodel_name="res.users",
-        help="User specific embedded action. If empty, shared embedded action",
         ondelete="cascade",
+        help="User specific embedded action. If empty, shared embedded action",
     )
     is_deletable = fields.Boolean(compute="_compute_is_deletable")
     default_view_mode = fields.Char(
@@ -49,16 +49,16 @@ class IrEmbeddedActions(models.Model):
     )
     is_visible = fields.Boolean(
         string="Embedded visibility",
-        help="Computed field to check if the record should be visible according to the domain",
         compute="_compute_is_visible",
+        help="Computed field to check if the record should be visible according to the domain",
     )
     domain = fields.Char(
-        help="Domain applied to the active id of the parent model",
         default="[]",
+        help="Domain applied to the active id of the parent model",
     )
     context = fields.Char(
-        help="Context dictionary as Python expression, empty by default (Default: {})",
         default="{}",
+        help="Context dictionary as Python expression, empty by default (Default: {})",
     )
     group_ids = fields.Many2many(
         comodel_name="res.groups",

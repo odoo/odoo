@@ -42,9 +42,9 @@ class SurveyQuestionAnswer(models.Model):
     )
     value_image_filename = fields.Char(string="Image Filename")
     value_label = fields.Char(
+        compute="_compute_value_label",
         help="Answer label as either the value itself if not empty "
         "or a letter representing the index of the answer otherwise.",
-        compute="_compute_value_label",
     )
     is_correct = fields.Boolean(string="Correct")
     answer_score = fields.Float(
@@ -52,8 +52,8 @@ class SurveyQuestionAnswer(models.Model):
         help="A positive score indicates a correct choice; a negative or null score indicates a wrong answer",
     )
     comment = fields.Text(
-        help="Feedback shown to the learner when this answer is selected.",
         translate=True,
+        help="Feedback shown to the learner when this answer is selected.",
     )
     skip_action = fields.Selection(
         selection=[
@@ -62,14 +62,14 @@ class SurveyQuestionAnswer(models.Model):
             ("end_survey", "End survey"),
             ("redirect", "Redirect to URL"),
         ],
-        help="Action to perform when this answer is selected and the page is submitted.",
         default="next",
+        help="Action to perform when this answer is selected and the page is submitted.",
     )
     skip_target_id = fields.Many2one(
         comodel_name="survey.question",
         string="Skip To",
-        help="Question or page to skip to when 'Skip to question/page' is selected.",
         ondelete="set null",
+        help="Question or page to skip to when 'Skip to question/page' is selected.",
     )
     skip_redirect_url = fields.Char(
         string="Redirect URL",

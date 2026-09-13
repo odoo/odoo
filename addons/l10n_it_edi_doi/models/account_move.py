@@ -26,10 +26,10 @@ class AccountMove(models.Model):
 
     l10n_it_edi_doi_amount = fields.Monetary(
         string="Declaration of Intent Amount",
-        help="Total amount of sales under the Declaration of Intent of this document",
         compute="_compute_l10n_it_edi_doi_amount",
         store=True,
         readonly=True,
+        help="Total amount of sales under the Declaration of Intent of this document",
     )
 
     l10n_it_edi_doi_warning = fields.Text(

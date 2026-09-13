@@ -63,12 +63,12 @@ class ProductTemplate(models.Model):
         required=True,
     )
     active = fields.Boolean(
-        help="If unchecked, it will allow you to hide the product without removing it.",
         default=True,
+        help="If unchecked, it will allow you to hide the product without removing it.",
     )
     sequence = fields.Integer(
-        help="Gives the sequence order when displaying a product list",
         default=1,
+        help="Gives the sequence order when displaying a product list",
     )
     color = fields.Integer(string="Color Index")
     is_product_variant = fields.Boolean(
@@ -82,10 +82,10 @@ class ProductTemplate(models.Model):
             ("combo", "Combo"),
         ],
         string="Product Type",
-        help="Goods are tangible materials and merchandise you provide.\n"
-        "A service is a non-material product you provide.",
         default="consu",
         required=True,
+        help="Goods are tangible materials and merchandise you provide.\n"
+        "A service is a non-material product you provide.",
     )
     service_tracking = fields.Selection(
         selection=[
@@ -106,18 +106,18 @@ class ProductTemplate(models.Model):
     )
     description_sale = fields.Text(
         string="Sales Description",
+        translate=True,
         help="A description of the Product that you want to communicate to your customers. "
         "This description will be copied to every Sales Order, Delivery Order and Customer Invoice/Credit Note",
-        translate=True,
     )
 
     uom_id = fields.Many2one(
         comodel_name="uom.uom",
         string="Unit",
-        help="Default unit of measure used for all stock operations.",
         default=lambda self: self._default_uom_id(),
         required=True,
         tracking=True,
+        help="Default unit of measure used for all stock operations.",
     )
     uom_name = fields.Char(
         related="uom_id.name",
@@ -127,10 +127,10 @@ class ProductTemplate(models.Model):
     uom_ids = fields.Many2many(
         comodel_name="uom.uom",
         string="Packagings",
+        domain="[('id', '!=', uom_id)]",
         help="Additional packagings for this product which can be used for sales.\n"
         "They must measure the same thing as the product's unit (a box of 6, a"
         " pallet, ...), so that a quantity or a price can be converted between them.",
-        domain="[('id', '!=', uom_id)]",
     )
 
     combo_ids = fields.Many2many(
@@ -153,21 +153,21 @@ class ProductTemplate(models.Model):
 
     list_price = fields.Float(
         string="Sales Price",
-        help="Price at which the product is sold to customers.",
         min_display_digits="Product Price",
         default=1.0,
         tracking=True,
+        help="Price at which the product is sold to customers.",
     )
     standard_price = fields.Float(
         string="Cost",
-        help="""Value of the product (automatically computed in AVCO).
-        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).
-        Used to compute margins on sale orders.""",
         min_display_digits="Product Price",
         compute="_compute_standard_price",
         inverse="_inverse_standard_price",
         search="_search_standard_price",
         groups="base.group_user",
+        help="""Value of the product (automatically computed in AVCO).
+        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).
+        Used to compute margins on sale orders.""",
     )
 
     volume = fields.Float(

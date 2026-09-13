@@ -8,7 +8,6 @@ class StockLocation(models.Model):
     valuation_account_id = fields.Many2one(
         comodel_name="account.account",
         string="Stock Valuation Account",
-        help="Expense account used to re-qualify products removed from stock and sent to this location",
         domain=[
             (
                 "account_type",
@@ -21,6 +20,7 @@ class StockLocation(models.Model):
                 ),
             )
         ],
+        help="Expense account used to re-qualify products removed from stock and sent to this location",
     )
     is_valued_internal = fields.Boolean(
         string="Is valued inside the company",

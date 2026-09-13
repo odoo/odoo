@@ -27,11 +27,11 @@ class AccountChangeLockDate(models.TransientModel):
 
     fiscalyear_lock_date = fields.Date(
         string="Lock Everything",
-        help="Any entry up to and including that date will be postponed to a later time, in accordance with its journal's sequence.",
         compute="_compute_lock_dates",
         precompute=True,
         store=True,
         readonly=False,
+        help="Any entry up to and including that date will be postponed to a later time, in accordance with its journal's sequence.",
     )
     fiscalyear_lock_date_for_me = fields.Date(
         string="Lock Everything For Me",
@@ -52,12 +52,12 @@ class AccountChangeLockDate(models.TransientModel):
 
     tax_lock_date = fields.Date(
         string="Lock Tax Return",
-        help="Any entry with taxes up to and including that date will be postponed to a later time, in accordance with its journal's sequence. "
-        "The tax lock date is automatically set when the tax closing entry is posted.",
         compute="_compute_lock_dates",
         precompute=True,
         store=True,
         readonly=False,
+        help="Any entry with taxes up to and including that date will be postponed to a later time, in accordance with its journal's sequence. "
+        "The tax lock date is automatically set when the tax closing entry is posted.",
     )
     tax_lock_date_for_me = fields.Date(
         string="Lock Tax Return For Me",
@@ -78,11 +78,11 @@ class AccountChangeLockDate(models.TransientModel):
 
     sale_lock_date = fields.Date(
         string="Lock Sales",
-        help="Any sales entry prior to and including this date will be postponed to a later date, in accordance with its journal's sequence.",
         compute="_compute_lock_dates",
         precompute=True,
         store=True,
         readonly=False,
+        help="Any sales entry prior to and including this date will be postponed to a later date, in accordance with its journal's sequence.",
     )
     sale_lock_date_for_me = fields.Date(
         string="Lock Sales For Me",
@@ -103,11 +103,11 @@ class AccountChangeLockDate(models.TransientModel):
 
     purchase_lock_date = fields.Date(
         string="Lock Purchases",
-        help="Any purchase entry prior to and including this date will be postponed to a later date, in accordance with its journal's sequence.",
         compute="_compute_lock_dates",
         precompute=True,
         store=True,
         readonly=False,
+        help="Any purchase entry prior to and including this date will be postponed to a later date, in accordance with its journal's sequence.",
     )
     purchase_lock_date_for_me = fields.Date(
         string="Lock Purchases For Me",
@@ -128,12 +128,12 @@ class AccountChangeLockDate(models.TransientModel):
 
     hard_lock_date = fields.Date(
         string="Hard Lock",
-        help="Any entry up to and including that date will be postponed to a later time, in accordance with its journal sequence. "
-        "This lock date is irreversible and does not allow any exception.",
         compute="_compute_lock_dates",
         precompute=True,
         store=True,
         readonly=False,
+        help="Any entry up to and including that date will be postponed to a later time, in accordance with its journal sequence. "
+        "This lock date is irreversible and does not allow any exception.",
     )
     current_hard_lock_date = fields.Date(
         related="company_id.hard_lock_date",

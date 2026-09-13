@@ -29,8 +29,8 @@ class ResUsersSettingsVolumes(models.Model):
         ondelete="cascade",
     )
     volume = fields.Float(
-        help="Ranges between 0.0 and 1.0, scale depends on the browser implementation",
         default=0.5,
+        help="Ranges between 0.0 and 1.0, scale depends on the browser implementation",
     )
 
     _partner_unique = models.UniqueIndex(

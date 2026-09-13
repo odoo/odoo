@@ -27,15 +27,15 @@ class ProjectProject(models.Model):
     sale_line_id = fields.Many2one(
         comodel_name="sale.order.line",
         string="Sales Order Item",
-        help="Sales order item that will be selected by default on the tasks and timesheets of this project,"
-        " except if the employee set on the timesheets is explicitely linked to another sales order item on the project.\n"
-        "It can be modified on each task and timesheet entry individually if necessary.",
         compute="_compute_sale_line_id",
         store=True,
         index="btree_not_null",
         copy=False,
         readonly=False,
         domain=lambda self: str(self._domain_sale_line_id()),
+        help="Sales order item that will be selected by default on the tasks and timesheets of this project,"
+        " except if the employee set on the timesheets is explicitely linked to another sales order item on the project.\n"
+        "It can be modified on each task and timesheet entry individually if necessary.",
     )
     sale_order_id = fields.Many2one(
         related="sale_line_id.order_id",
@@ -88,11 +88,11 @@ class ProjectProject(models.Model):
     reinvoiced_sale_order_id = fields.Many2one(
         comodel_name="sale.order",
         string="Sales Order",
-        help="Products added to stock pickings, whose operation type is configured to generate analytic costs, will be re-invoiced in this sales order if they are set up for it.",
         index="btree_not_null",
         copy=False,
         domain="[('partner_id', '=', partner_id)]",
         groups="sales_team.group_sale_salesman",
+        help="Products added to stock pickings, whose operation type is configured to generate analytic costs, will be re-invoiced in this sales order if they are set up for it.",
     )
 
     @api.model

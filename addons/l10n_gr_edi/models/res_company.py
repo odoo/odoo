@@ -16,6 +16,6 @@ class ResCompany(models.Model):
     )
     l10n_gr_edi_test_env = fields.Boolean(
         string="Greece Test Environment",
-        help="Enable test environments with credentials obtained from https://mydata-dev-register.azurewebsites.net/",
         default=True,
+        help="Enable test environments with credentials obtained from https://mydata-dev-register.azurewebsites.net/",
     )

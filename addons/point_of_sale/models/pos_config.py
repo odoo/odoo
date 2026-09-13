@@ -89,8 +89,8 @@ class PosConfig(models.Model):
 
     name = fields.Char(
         string="Point of Sale",
-        help="An internal identification of the point of sale.",
         required=True,
+        help="An internal identification of the point of sale.",
     )
     printer_ids = fields.Many2many(
         comodel_name="pos.printer",
@@ -118,18 +118,18 @@ class PosConfig(models.Model):
     journal_id = fields.Many2one(
         comodel_name="account.journal",
         string="Point of Sale Journal",
-        help="Accounting journal used to post POS session journal entries and POS invoice payments.",
         default=_default_journal_id,
         domain=[("type", "in", ("general", "sale"))],
         ondelete="restrict",
         check_company=True,
+        help="Accounting journal used to post POS session journal entries and POS invoice payments.",
     )
     invoice_journal_id = fields.Many2one(
         comodel_name="account.journal",
-        help="Accounting journal used to create invoices.",
         default=_default_invoice_journal_id,
         domain=[("type", "=", "sale")],
         check_company=True,
+        help="Accounting journal used to create invoices.",
     )
     currency_id = fields.Many2one(
         comodel_name="res.currency",
@@ -187,13 +187,13 @@ class PosConfig(models.Model):
     )
     iface_print_auto = fields.Boolean(
         string="Automatic Receipt Printing",
-        help="The receipt will automatically be printed at the end of each order.",
         default=False,
+        help="The receipt will automatically be printed at the end of each order.",
     )
     iface_print_skip_screen = fields.Boolean(
         string="Skip Preview Screen",
-        help="The receipt screen will be skipped if the receipt can be printed automatically.",
         default=True,
+        help="The receipt screen will be skipped if the receipt can be printed automatically.",
     )
     iface_tax_included = fields.Selection(
         selection=[("subtotal", "Tax-Excluded Price"), ("total", "Tax-Included Price")],
@@ -218,13 +218,13 @@ class PosConfig(models.Model):
     )
     is_margins_costs_accessible_to_every_user = fields.Boolean(
         string="Margins & Costs",
-        help="When disabled, only PoS manager can view the margin and cost of product among the Product info.",
         default=False,
+        help="When disabled, only PoS manager can view the margin and cost of product among the Product info.",
     )
     cash_control = fields.Boolean(
         string="Advanced Cash Control",
-        help="Check the amount of the cashbox at opening and closing.",
         compute="_compute_cash_control",
+        help="Check the amount of the cashbox at opening and closing.",
     )
     set_maximum_difference = fields.Boolean(
         help="Set a maximum difference allowed between the expected and counted money during the closing of the session."
@@ -240,15 +240,15 @@ class PosConfig(models.Model):
     )
     proxy_ip = fields.Char(
         string="IP Address",
-        help="The hostname or ip address of the hardware proxy, Will be autodetected if left empty.",
         size=45,
+        help="The hostname or ip address of the hardware proxy, Will be autodetected if left empty.",
     )
     active = fields.Boolean(default=True)
     uuid = fields.Char(
-        help="A globally unique identifier for this pos configuration, used to prevent conflicts in client-generated data.",
         default=lambda self: str(uuid4()),
         copy=False,
         readonly=True,
+        help="A globally unique identifier for this pos configuration, used to prevent conflicts in client-generated data.",
     )
     session_ids = fields.One2many(
         comodel_name="pos.session",
@@ -287,20 +287,20 @@ class PosConfig(models.Model):
     group_pos_manager_id = fields.Many2one(
         comodel_name="res.groups",
         string="Point of Sale Manager Group",
-        help="This field is there to pass the id of the pos manager group to the point of sale client.",
         default=_default_group_pos_manager_id,
+        help="This field is there to pass the id of the pos manager group to the point of sale client.",
     )
     group_pos_user_id = fields.Many2one(
         comodel_name="res.groups",
         string="Point of Sale User Group",
-        help="This field is there to pass the id of the pos user group to the point of sale client.",
         default=_default_group_pos_user_id,
+        help="This field is there to pass the id of the pos user group to the point of sale client.",
     )
     iface_tipproduct = fields.Boolean(string="Product tips")
     tip_product_id = fields.Many2one(
         comodel_name="product.product",
-        help="This product is used as reference on customer receipts.",
         default=_default_tip_product_id,
+        help="This product is used as reference on customer receipts.",
     )
     fiscal_position_ids = fields.Many2many(
         comodel_name="account.fiscal.position",
@@ -382,14 +382,14 @@ class PosConfig(models.Model):
             ("one", "When all products are ready"),
         ],
         string="Shipping Policy",
-        help="If you deliver all products at once, the delivery order will be scheduled based on the greatest "
-        "product lead time. Otherwise, it will be based on the shortest.",
         default="direct",
         required=True,
+        help="If you deliver all products at once, the delivery order will be scheduled based on the greatest "
+        "product lead time. Otherwise, it will be based on the shortest.",
     )
     auto_validate_terminal_payment = fields.Boolean(
-        help="Automatically validates orders paid with a payment terminal.",
         default=True,
+        help="Automatically validates orders paid with a payment terminal.",
     )
     trusted_config_ids = fields.Many2many(
         comodel_name="pos.config",
@@ -400,12 +400,12 @@ class PosConfig(models.Model):
         domain="[('company_id', '=', company_id)]",
     )
     show_product_images = fields.Boolean(
-        help="Show product images in the Point of Sale interface.",
         default=True,
+        help="Show product images in the Point of Sale interface.",
     )
     show_category_images = fields.Boolean(
-        help="Show category images in the Point of Sale interface.",
         default=True,
+        help="Show category images in the Point of Sale interface.",
     )
     note_ids = fields.Many2many(
         comodel_name="pos.note",
@@ -422,8 +422,8 @@ class PosConfig(models.Model):
     )
     order_edit_tracking = fields.Boolean(
         string="Track orders edits",
-        help="Store edited orders in the backend",
         default=False,
+        help="Store edited orders in the backend",
     )
     last_data_change = fields.Datetime(
         string="Last Write Date",
@@ -445,10 +445,10 @@ class PosConfig(models.Model):
         comodel_name="pos.payment.method",
         relation="pos_payment_method_config_fast_validation_relation",
         string="Fast Payment Methods",
-        help="These payment methods will be available for fast payment",
         compute="_compute_fast_payment_method_ids",
         store=True,
         readonly=False,
+        help="These payment methods will be available for fast payment",
     )
     statistics_for_current_session = fields.Json(
         string="Session Statistics",

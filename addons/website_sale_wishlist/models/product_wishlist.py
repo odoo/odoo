@@ -31,8 +31,8 @@ class ProductWishlist(models.Model):
         help="Pricelist when added",
     )
     price = fields.Monetary(
-        help="Price of the product when it has been added in the wishlist",
         currency_field="currency_id",
+        help="Price of the product when it has been added in the wishlist",
     )
     website_id = fields.Many2one(
         comodel_name="website",

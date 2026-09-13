@@ -100,7 +100,6 @@ class MrpUnbuild(models.Model):
     location_id = fields.Many2one(
         comodel_name="stock.location",
         string="Source Location",
-        help="Location where the product you want to unbuild is.",
         compute="_compute_locations",
         precompute=True,
         store=True,
@@ -108,11 +107,11 @@ class MrpUnbuild(models.Model):
         required=True,
         domain="[('usage','=','internal')]",
         check_company=True,
+        help="Location where the product you want to unbuild is.",
     )
     location_dest_id = fields.Many2one(
         comodel_name="stock.location",
         string="Destination Location",
-        help="Location where you want to send the components resulting from the unbuild order.",
         compute="_compute_locations",
         precompute=True,
         store=True,
@@ -120,6 +119,7 @@ class MrpUnbuild(models.Model):
         required=True,
         domain="[('usage','=','internal')]",
         check_company=True,
+        help="Location where you want to send the components resulting from the unbuild order.",
     )
     consume_line_ids = fields.One2many(
         comodel_name="stock.move",

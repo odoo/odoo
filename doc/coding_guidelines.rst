@@ -981,15 +981,17 @@ says whether it is the label, the comodel or the selection; ``comodel_name=``,
 the order of ``FIELD_ATTRIBUTE_ORDER`` in
 ``odoo/addons/test_lint/tests/_checker_field_declaration.py``: what the field
 is (``comodel_name``, ``inverse_name``, ``relation``, ``selection``,
-``related``), what it says (``string``, ``help``), its shape (``size``,
-``digits``, ``currency_field``, ``translate``, ``sanitize``), how its value is
-produced (``compute``, ``inverse``, ``search``, ``depends``, ``precompute``,
+``related``), what it says (``string``), its shape (``size``, ``digits``,
+``currency_field``, ``translate``, ``sanitize``), how its value is produced
+(``compute``, ``inverse``, ``search``, ``depends``, ``precompute``,
 ``default``), how it is stored and read (``store``, ``index``, ``copy``,
 ``readonly``, ``required``, ``company_dependent``), what it points at and under
 which conditions (``domain``, ``context``, ``ondelete``, ``check_company``),
-who sees and tracks it (``groups``, ``tracking``); an attribute the table does
-not know sorts after them alphabetically. Two or more keywords go one per
-line, none on the line of the call -- ruff's magic-trailing-comma layout.
+who tracks it (``tracking``); an attribute the table does not know sorts
+alphabetically after those; and last of all who may see it and the help text,
+``groups`` second to last and ``help`` last, so the two lines a reader skips
+sit together at the bottom. Two or more keywords go one per line, none on the
+line of the call -- ruff's magic-trailing-comma layout.
 ``_sort_field_attributes.py`` in the same directory rewrites a tree to this
 form and refuses any rewrite that changes more than argument spelling and
 order; a comment inside the parentheses travels with the argument it trails or
@@ -1006,6 +1008,8 @@ precedes.
        domain="[('is_company', '=', True)]",
        check_company=True,
        tracking=True,
+       groups="base.group_user",
+       help="The company invoiced for this order.",
    )
 
 **An attribute setup ignores is a dead attribute** ``[test_lint E8527]``:

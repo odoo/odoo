@@ -17,8 +17,8 @@ class ProductCategory(models.Model):
         required=True,
     )
     active = fields.Boolean(
-        help="If unchecked, it will allow you to hide the category without removing it.",
         default=True,
+        help="If unchecked, it will allow you to hide the category without removing it.",
     )
     parent_id = fields.Many2one(
         comodel_name="product.category",
@@ -43,17 +43,17 @@ class ProductCategory(models.Model):
     )
     product_count = fields.Integer(
         string="# Products",
-        help="The number of products under this category and its children.",
         compute="_compute_product_count",
         recursive=True,
+        help="The number of products under this category and its children.",
     )
     product_properties_definition = fields.PropertiesDefinition(
         string="Product Properties"
     )
     company_id = fields.Many2one(
         comodel_name="res.company",
-        help="Keep empty to share this category with every company.",
         tracking=True,
+        help="Keep empty to share this category with every company.",
     )
 
     _hierarchy_cycle_message = _lt("You cannot create recursive categories.")

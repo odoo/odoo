@@ -7,8 +7,8 @@ class LoyaltyCard(models.Model):
     order_id = fields.Many2one(
         comodel_name="sale.order",
         string="Order Reference",
-        help="The sales order from which coupon is generated",
         readonly=True,
+        help="The sales order from which coupon is generated",
     )
     order_id_partner_id = fields.Many2one(
         comodel_name="res.partner",

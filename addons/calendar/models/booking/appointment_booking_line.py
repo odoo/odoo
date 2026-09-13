@@ -29,16 +29,16 @@ class AppointmentBookingLine(models.Model):
         ondelete="cascade",
     )
     capacity_reserved = fields.Integer(
-        help="Capacity reserved by the user",
         default=1,
         required=True,
+        help="Capacity reserved by the user",
     )
     capacity_used = fields.Integer(
-        help="Capacity that will be used based on the capacity and user/resource selected",
         compute="_compute_capacity_used",
         precompute=True,
         store=True,
         readonly=True,
+        help="Capacity that will be used based on the capacity and user/resource selected",
     )
     calendar_event_id = fields.Many2one(
         comodel_name="calendar.event",

@@ -64,28 +64,28 @@ class ResPartner(models.Model):
     name = fields.Char(tracking=True)
     credit = fields.Monetary(
         string="Total Receivable",
-        help="Total amount this customer owes you.",
         compute="_compute_credit_debit",
         search="_search_credit",
         groups="account.group_account_invoice,account.group_account_readonly",
+        help="Total amount this customer owes you.",
     )
     credit_to_invoice = fields.Monetary(
         compute="_compute_credit_to_invoice",
         groups="account.group_account_invoice,account.group_account_readonly",
     )
     credit_limit = fields.Float(
-        help="Credit limit specific to this partner.",
         copy=False,
         readonly=False,
         company_dependent=True,
         groups="account.group_account_invoice,account.group_account_readonly",
+        help="Credit limit specific to this partner.",
     )
     use_partner_credit_limit = fields.Boolean(
         string="Partner Limit",
-        help="Set a value greater than 0.0 to activate a credit limit check",
         compute="_compute_use_partner_credit_limit",
         inverse="_inverse_use_partner_credit_limit",
         groups="account.group_account_invoice,account.group_account_readonly",
+        help="Set a value greater than 0.0 to activate a credit limit check",
     )
     show_credit_limit = fields.Boolean(
         compute="_compute_show_credit_limit",
@@ -93,16 +93,16 @@ class ResPartner(models.Model):
     )
     days_sales_outstanding = fields.Float(
         string="Days Sales Outstanding (DSO)",
-        help="[(Total Receivable/Total Revenue) * number of days since the first invoice] for this customer",
         compute="_compute_days_sales_outstanding",
         groups="account.group_account_invoice,account.group_account_readonly",
+        help="[(Total Receivable/Total Revenue) * number of days since the first invoice] for this customer",
     )
     debit = fields.Monetary(
         string="Total Payable",
-        help="Total amount you have to pay to this vendor.",
         compute="_compute_credit_debit",
         search="_search_debit",
         groups="account.group_account_invoice,account.group_account_readonly",
+        help="Total amount you have to pay to this vendor.",
     )
     total_invoiced = fields.Monetary(
         compute="_compute_total_invoiced",
@@ -132,9 +132,9 @@ class ResPartner(models.Model):
     property_account_position_id = fields.Many2one(
         comodel_name="account.fiscal.position",
         string="Fiscal Position",
-        help="The fiscal position determines the taxes/accounts used for this contact.",
         company_dependent=True,
         check_company=True,
+        help="The fiscal position determines the taxes/accounts used for this contact.",
     )
     property_payment_term_id = fields.Many2one(
         comodel_name="account.payment.term",
@@ -244,9 +244,9 @@ class ResPartner(models.Model):
             ("never", "Never"),
         ],
         string="Auto-post bills",
-        help="Automatically post bills for this trusted partner",
         default="ask",
         required=True,
+        help="Automatically post bills for this trusted partner",
     )
 
     property_outbound_payment_channel_id = fields.Many2one(

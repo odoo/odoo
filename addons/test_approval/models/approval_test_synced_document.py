@@ -46,8 +46,8 @@ class ApprovalTestSyncedDocument(models.Model):
         help="When set, the document's own policy refuses every decision with it"
     )
     applied_outcomes = fields.Char(
-        help="Each outcome the request applied to this document, in order",
         default="",
+        help="Each outcome the request applied to this document, in order",
     )
     never_requests = fields.Boolean(
         help="The adopter's own exclusion: this document never holds a request"

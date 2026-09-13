@@ -24,25 +24,25 @@ class ResConfigSettings(models.TransientModel):
     crm_auto_assignment_action = fields.Selection(
         selection=[("manual", "Manually"), ("auto", "Repeatedly")],
         string="Auto Assignment Action",
-        help="Manual assign allow to trigger assignment from team form view using an action button. Automatic configures a cron running repeatedly assignment in all teams.",
         compute="_compute_crm_auto_assignment_data",
         store=True,
         readonly=False,
+        help="Manual assign allow to trigger assignment from team form view using an action button. Automatic configures a cron running repeatedly assignment in all teams.",
     )
     crm_auto_assignment_repeat_unit = fields.Selection(
         selection=time_unit_selection("minute", "hour", "day", "week"),
         string="Auto Assignment Interval Unit",
-        help="Interval type between each cron run (e.g. each 2 days or each 2 hours)",
         compute="_compute_crm_auto_assignment_data",
         store=True,
         readonly=False,
+        help="Interval type between each cron run (e.g. each 2 days or each 2 hours)",
     )
     crm_auto_assignment_repeat_interval = fields.Integer(
         string="Repeat every",
-        help="Number of interval type between each cron run (e.g. each 2 days or each 4 days)",
         compute="_compute_crm_auto_assignment_data",
         store=True,
         readonly=False,
+        help="Number of interval type between each cron run (e.g. each 2 days or each 4 days)",
     )
     crm_auto_assignment_run_datetime = fields.Datetime(
         string="Auto Assignment Next Execution Date",

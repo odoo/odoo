@@ -223,9 +223,9 @@ class IrCron(models.Model):
     active = fields.Boolean(default=True)
     repeat_interval = fields.Integer(
         string="Execute Every",
-        help="Repeat every x.",
         required=True,
         aggregator="avg",
+        help="Repeat every x.",
     )
     repeat_unit = fields.Selection(
         selection_add=[("minute", "Minutes"), ("hour", "Hours"), ("day",)],
@@ -236,22 +236,22 @@ class IrCron(models.Model):
     )
     nextcall = fields.Datetime(
         string="Next Execution Date",
-        help="Next planned execution date for this job.",
         default=fields.Datetime.now,
         required=True,
+        help="Next planned execution date for this job.",
     )
     lastcall = fields.Datetime(
         string="Last Execution Date",
         help="Previous time the cron ran to completion (whether it finished or failed), provided to the job through the context on the `lastcall` key",
     )
     priority = fields.Integer(
-        help="The priority of the job, as an integer: 0 means higher priority, 10 means lower priority.",
         default=5,
         aggregator=None,
+        help="The priority of the job, as an integer: 0 means higher priority, 10 means lower priority.",
     )
     failure_count = fields.Integer(
-        help="The number of consecutive failures of this job. It is automatically reset on success.",
         default=0,
+        help="The number of consecutive failures of this job. It is automatically reset on success.",
     )
     first_failure_date = fields.Datetime(
         help="The first time the cron failed. It is automatically reset on success."

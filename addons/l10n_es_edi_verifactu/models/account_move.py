@@ -21,12 +21,12 @@ class AccountMove(models.Model):
             ("cancelled", "Cancelled"),
         ],
         string="Veri*Factu Status",
+        compute="_compute_l10n_es_edi_verifactu_state",
+        store=True,
         help="""- Rejected: Successfully sent to the AEAT, but it was rejected during validation
                 - Registered with Errors: Registered at the AEAT, but the AEAT has some issues with the sent document
                 - Accepted: Registered by the AEAT without errors
                 - Cancelled: Registered by the AEAT as cancelled""",
-        compute="_compute_l10n_es_edi_verifactu_state",
-        store=True,
     )
     l10n_es_edi_verifactu_warning_level = fields.Char(
         string="Veri*Factu Warning Level",
@@ -46,8 +46,8 @@ class AccountMove(models.Model):
     )
     l10n_es_edi_verifactu_available_clave_regimens = fields.Char(
         string="Available Veri*Factu Regime Key",
-        help='Technical field to enable a dynamic selection of the field "Veri*Factu Regime Key"',
         compute="_compute_l10n_es_edi_verifactu_available_clave_regimens",
+        help='Technical field to enable a dynamic selection of the field "Veri*Factu Regime Key"',
     )
     l10n_es_edi_verifactu_clave_regimen = fields.Selection(
         selection="_selection_l10n_es_edi_verifactu_clave_regimen",

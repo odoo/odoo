@@ -37,10 +37,10 @@ class PurchaseOrder(models.Model):
         comodel_name="purchase.order",
         related="purchase_group_id.order_ids",
         string="Alternative POs",
-        help="Other potential purchase orders for purchasing products",
         readonly=False,
         domain="[('id', '!=', id), ('state', '=', 'draft')]",
         check_company=True,
+        help="Other potential purchase orders for purchasing products",
     )
 
     @api.onchange("requisition_id")

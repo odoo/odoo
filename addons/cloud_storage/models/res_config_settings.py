@@ -19,11 +19,11 @@ class ResConfigSettings(models.TransientModel):
 
     cloud_storage_min_file_size = fields.Integer(
         string="Minimum File Size (bytes)",
+        default=DEFAULT_CLOUD_STORAGE_MIN_FILE_SIZE,
+        config_parameter="cloud_storage_min_file_size",
         help="""webclient can upload files larger than the minimum file size
         (in bytes) as url attachments to the server and then upload the file to
         the cloud storage.""",
-        default=DEFAULT_CLOUD_STORAGE_MIN_FILE_SIZE,
-        config_parameter="cloud_storage_min_file_size",
     )
 
     def _setup_cloud_storage_provider(self):

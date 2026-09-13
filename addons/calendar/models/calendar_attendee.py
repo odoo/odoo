@@ -84,8 +84,8 @@ class CalendarAttendee(models.Model):
     )
     mail_tz = fields.Selection(
         selection=_selection_timezones,
-        help="Timezone used for displaying time in the mail template",
         compute="_compute_mail_tz",
+        help="Timezone used for displaying time in the mail template",
     )
     # state
     state = fields.Selection(

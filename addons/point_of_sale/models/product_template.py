@@ -11,8 +11,8 @@ class ProductTemplate(models.Model):
 
     available_in_pos = fields.Boolean(
         string="Available in POS",
-        help="Check if you want this product to appear in the Point of Sale.",
         default=False,
+        help="Check if you want this product to appear in the Point of Sale.",
     )
     to_weight = fields.Boolean(
         string="To Weigh With Scale",
@@ -43,8 +43,8 @@ class ProductTemplate(models.Model):
     )
     pos_sequence = fields.Integer(
         string="POS Sequence",
-        help="Determine the display order in the POS Terminal",
         copy=False,
+        help="Determine the display order in the POS Terminal",
     )
 
     @api.constrains("available_in_pos")

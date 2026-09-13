@@ -32,9 +32,9 @@ class HrRecruitmentStage(models.Model):
     )
     rotting_threshold_days = fields.Integer(
         string="Days to rot",
+        default=0,
         help="Day count before applicants in this stage become stale. \
         Set to 0 to disable.  Changing this parameter will not affect the rotting status/date of resources last updated before this change.",
-        default=0,
     )
     legend_blocked = fields.Char(
         string="Red Kanban Label",

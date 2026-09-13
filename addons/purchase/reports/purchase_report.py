@@ -85,17 +85,17 @@ class PurchaseReport(models.Model):
     )
     delay = fields.Float(
         string="Days to Confirm",
-        help="Amount of time between purchase confirmation and order by date.",
         digits=(16, 2),
         readonly=True,
         aggregator="avg",
+        help="Amount of time between purchase confirmation and order by date.",
     )
     delay_pass = fields.Float(
         string="Days to Receive",
-        help="Amount of time between date planned and order by date for each purchase order line.",
         digits=(16, 2),
         readonly=True,
         aggregator="avg",
+        help="Amount of time between date planned and order by date for each purchase order line.",
     )
 
     def _get_fields_select(self) -> dict:

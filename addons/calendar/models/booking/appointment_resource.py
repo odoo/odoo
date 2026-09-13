@@ -34,15 +34,14 @@ class AppointmentResource(models.Model):
         readonly=False,
     )
     sequence = fields.Integer(
-        help="""The sequence dictates if the resource is going to be picked in higher priority against another resource
-        (e.g. for 2 tables of 4, the lowest sequence will be picked first)""",
         default=1,
         required=True,
+        help="""The sequence dictates if the resource is going to be picked in higher priority against another resource
+        (e.g. for 2 tables of 4, the lowest sequence will be picked first)""",
     )
     company_id = fields.Many2one(default=False)
     resource_id = fields.Many2one(copy=False)
     resource_calendar_id = fields.Many2one(
-        help="If kept empty, the working schedule of the company set on the resource will be used",
         default=lambda self: (
             self.env.ref(
                 "calendar.appointment_default_resource_calendar",
@@ -50,6 +49,7 @@ class AppointmentResource(models.Model):
             )
             or self.env.company.resource_calendar_id
         ),
+        help="If kept empty, the working schedule of the company set on the resource will be used",
     )
     capacity = fields.Integer(
         related="resource_id.capacity",
@@ -88,11 +88,11 @@ class AppointmentResource(models.Model):
     )
     linked_resource_ids = fields.Many2many(
         comodel_name="appointment.resource",
-        help="""List of resources that can be combined to handle a bigger demand.""",
         compute="_compute_linked_resource_ids",
         inverse="_inverse_linked_resource_ids",
         store=False,
         domain="[('id', '!=', id)]",
+        help="""List of resources that can be combined to handle a bigger demand.""",
     )
     description = fields.Html(
         translate=html_translate,

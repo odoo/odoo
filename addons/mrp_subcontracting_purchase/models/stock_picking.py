@@ -6,8 +6,8 @@ class StockPicking(models.Model):
 
     subcontracting_source_purchase_count = fields.Integer(
         string="Number of subcontracting PO Source",
-        help="Number of subcontracting Purchase Order Source",
         compute="_compute_subcontracting_source_purchase_count",
+        help="Number of subcontracting Purchase Order Source",
     )
 
     @api.depends("move_ids.move_dest_ids.raw_material_production_id")

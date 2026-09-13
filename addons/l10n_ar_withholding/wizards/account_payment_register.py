@@ -19,9 +19,9 @@ class AccountPaymentRegister(models.TransientModel):
         readonly=False,
     )
     l10n_ar_net_amount = fields.Monetary(
-        help="Net amount after withholdings",
         compute="_compute_l10n_ar_net_amount",
         readonly=True,
+        help="Net amount after withholdings",
     )
     l10n_ar_adjustment_warning = fields.Boolean(
         compute="_compute_l10n_ar_adjustment_warning"

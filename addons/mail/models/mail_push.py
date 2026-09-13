@@ -35,10 +35,10 @@ class MailPush(models.Model):
     )
     payload = fields.Text()
     retry_after = fields.Datetime(
+        index=True,
         help="Set when the device endpoint could not be resolved; the "
         "notification is skipped by the sending cron until this date so a "
         "single unreachable endpoint cannot starve the rest of the queue.",
-        index=True,
     )
 
     @api.model

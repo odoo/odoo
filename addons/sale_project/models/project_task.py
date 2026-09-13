@@ -29,17 +29,14 @@ class ProjectTask(models.Model):
     sale_order_id = fields.Many2one(
         comodel_name="sale.order",
         string="Sales Order",
-        help="Sales order to which the task is linked.",
         compute="_compute_sale_order_id",
         store=True,
         group_expand="_group_expand_sales_order",
+        help="Sales order to which the task is linked.",
     )
     sale_line_id = fields.Many2one(
         comodel_name="sale.order.line",
         string="Sales Order Item",
-        help="Sales Order Item to which the time spent on this task will be added in order to be invoiced to your customer.\n"
-        "By default the sales order item set on the project will be selected. In the absence of one, the last prepaid sales order item that has time remaining will be used.\n"
-        "Remove the sales order item in order to make this task non billable. You can also change or remove the sales order item of each timesheet entry individually.",
         compute="_compute_sale_line_id",
         recursive=True,
         store=True,
@@ -48,6 +45,9 @@ class ProjectTask(models.Model):
         readonly=False,
         domain=lambda self: str(self._domain_sale_line_id()),
         tracking=True,
+        help="Sales Order Item to which the time spent on this task will be added in order to be invoiced to your customer.\n"
+        "By default the sales order item set on the project will be selected. In the absence of one, the last prepaid sales order item that has time remaining will be used.\n"
+        "Remove the sales order item in order to make this task non billable. You can also change or remove the sales order item of each timesheet entry individually.",
     )
     project_sale_order_id = fields.Many2one(
         comodel_name="sale.order",
@@ -57,12 +57,12 @@ class ProjectTask(models.Model):
     sale_order_state = fields.Selection(related="sale_order_id.state")
     task_to_invoice = fields.Boolean(
         string="To invoice",
-        help="True when the task's sale order still has something left to invoice "
-        "(fork invoice_state 'to do' or 'partial'); false when there is nothing to "
-        "invoice ('no'), it is fully invoiced ('done'), or over-invoiced ('over done').",
         compute="_compute_task_to_invoice",
         search="_search_task_to_invoice",
         groups="sales_team.group_sale_salesman_all_leads",
+        help="True when the task's sale order still has something left to invoice "
+        "(fork invoice_state 'to do' or 'partial'); false when there is nothing to "
+        "invoice ('no'), it is fully invoiced ('done'), or over-invoiced ('over done').",
     )
     allow_billable = fields.Boolean(related="project_id.allow_billable")
     partner_id = fields.Many2one(inverse="_inverse_partner_id")

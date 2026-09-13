@@ -28,15 +28,15 @@ class IrActionsServer(models.Model):
         comodel_name="workflow.edge",
         inverse_name="target_node_id",
         string="Incoming Edges",
-        help="Edges that must be satisfied before this action can execute",
         copy=False,
+        help="Edges that must be satisfied before this action can execute",
     )
     edge_out_ids = fields.One2many(
         comodel_name="workflow.edge",
         inverse_name="source_node_id",
         string="Outgoing Edges",
-        help="Edges this action's outcome can satisfy",
         copy=False,
+        help="Edges this action's outcome can satisfy",
     )
 
     node_type = fields.Selection(
@@ -46,15 +46,15 @@ class IrActionsServer(models.Model):
             ("approval", "Approval"),
             ("subflow", "Sub-workflow"),
         ],
-        help="What this step does when the workflow reaches it. An Action runs "
-        "the server action; a Wait pauses the run and resumes it later.",
         default="action",
         required=True,
+        help="What this step does when the workflow reaches it. An Action runs "
+        "the server action; a Wait pauses the run and resumes it later.",
     )
     wait_delay = fields.Integer(
         string="Wait For",
-        help="How long a Wait step pauses the run before its successors advance",
         default=1,
+        help="How long a Wait step pauses the run before its successors advance",
     )
     wait_unit = fields.Selection(
         selection=time_unit_selection("minute", "hour", "day"),
@@ -63,10 +63,10 @@ class IrActionsServer(models.Model):
     )
 
     start_delay = fields.Integer(
+        default=0,
         help="For a step no edge leads to: how long after its run starts it "
         "becomes ready. Ignored on a step with predecessors, whose edges carry "
         "their own delays.",
-        default=0,
     )
     start_delay_unit = fields.Selection(
         selection=time_unit_selection("minute", "hour", "day", "week", "month"),
@@ -75,9 +75,9 @@ class IrActionsServer(models.Model):
     )
     validity_delay = fields.Integer(
         string="Valid For",
+        default=0,
         help="How long after the step becomes ready it may still run. A step "
         "reached later is skipped instead. Zero means it never expires.",
-        default=0,
     )
     validity_unit = fields.Selection(
         selection=time_unit_selection("minute", "hour", "day", "week", "month"),

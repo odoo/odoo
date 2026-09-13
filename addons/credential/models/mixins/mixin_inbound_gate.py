@@ -21,12 +21,12 @@ class MixinInboundGate(models.AbstractModel):
     _description = "Inbound Request Gate Mixin"
 
     signature_header = fields.Char(
-        help="HTTP header containing the HMAC signature",
         default="X-Hub-Signature-256",
+        help="HTTP header containing the HMAC signature",
     )
     signature_prefix = fields.Char(
-        help="Prefix before signature value (e.g., 'sha256=')",
         default="sha256=",
+        help="Prefix before signature value (e.g., 'sha256=')",
     )
     verification_method = fields.Char(
         help="Python method path for custom verification (format: 'model.method_name'). "
@@ -34,16 +34,16 @@ class MixinInboundGate(models.AbstractModel):
     )
 
     timestamp_verification_enabled = fields.Boolean(
-        help="Enable timestamp verification to prevent replay attacks",
         default=False,
+        help="Enable timestamp verification to prevent replay attacks",
     )
     timestamp_header = fields.Char(
-        help="HTTP header containing the request timestamp",
         default="X-Webhook-Timestamp",
+        help="HTTP header containing the request timestamp",
     )
     timestamp_max_age_seconds = fields.Integer(
-        help="Maximum age of request timestamp. Default: 5 minutes",
         default=300,
+        help="Maximum age of request timestamp. Default: 5 minutes",
     )
 
     ip_whitelist = fields.Text(
@@ -51,15 +51,15 @@ class MixinInboundGate(models.AbstractModel):
         "Leave empty to allow all IPs."
     )
     max_payload_size = fields.Integer(
-        help="Maximum allowed payload size for DoS prevention. Default: 1MB",
         default=1048576,
+        help="Maximum allowed payload size for DoS prevention. Default: 1MB",
     )
 
     rate_limit_strict = fields.Boolean(default=True)
     rate_limit_window_seconds = fields.Integer(
         string="Rate Window (s)",
-        help="Length of the rate-limit window in seconds.",
         default=60,
+        help="Length of the rate-limit window in seconds.",
     )
 
     AUTH_MODE_ENFORCE = "enforce"
@@ -240,11 +240,11 @@ class MixinInboundGate(models.AbstractModel):
 
     log_inbound_access = fields.Boolean(
         string="Log Every Inbound Request",
+        default=False,
         help="Record admitted requests as well as refused ones. Refusals are "
         "always recorded. Turn this on only for an endpoint whose traffic you "
         "want a row per call for — a device reporting once per position fix "
         "will fill the table.",
-        default=False,
     )
 
     def _record_inbound_verdict(

@@ -40,10 +40,10 @@ class SmsSms(models.Model):
 
     uuid = fields.Char(
         string="UUID",
-        help="Alternate way to identify a SMS record, used for delivery reports",
         default=lambda self: uuid4().hex,
         copy=False,
         readonly=True,
+        help="Alternate way to identify a SMS record, used for delivery reports",
     )
     number = fields.Char()
     body = fields.Text()
@@ -94,8 +94,8 @@ class SmsSms(models.Model):
     )
     to_delete = fields.Boolean(
         string="Marked for deletion",
-        help="Will automatically be deleted, while notifications will not be deleted in any case.",
         default=False,
+        help="Will automatically be deleted, while notifications will not be deleted in any case.",
     )
 
     _uuid_unique = models.Constraint(

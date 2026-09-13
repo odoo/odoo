@@ -11,14 +11,14 @@ class ProjectHistory(models.Model):
 
     project_id = fields.Many2one(
         comodel_name="project.project",
-        help="Link to the original project (may be archived or deleted).",
         index=True,
         ondelete="set null",
+        help="Link to the original project (may be archived or deleted).",
     )
     name = fields.Char(
         string="Project Name (snapshot)",
-        help="Frozen project name at time of archival.",
         required=True,
+        help="Frozen project name at time of archival.",
     )
     date_completed = fields.Date(required=True)
     date_start = fields.Date(string="Date Started")
@@ -32,10 +32,10 @@ class ProjectHistory(models.Model):
     )
     duration_variance_pct = fields.Float(
         string="Duration Variance %",
-        help="(actual - planned) / planned * 100. Positive = over-schedule.",
         export_string_translation=False,
         compute="_compute_variances",
         store=True,
+        help="(actual - planned) / planned * 100. Positive = over-schedule.",
     )
     planned_hours = fields.Float(string="Planned Hours (sum of task.planned_hours)")
     actual_hours = fields.Float(
@@ -43,10 +43,10 @@ class ProjectHistory(models.Model):
     )
     hours_variance_pct = fields.Float(
         string="Hours Variance %",
-        help="(actual - planned) / planned * 100. Positive = over-budget.",
         export_string_translation=False,
         compute="_compute_variances",
         store=True,
+        help="(actual - planned) / planned * 100. Positive = over-budget.",
     )
     task_count = fields.Integer(string="Total Tasks")
     team_size = fields.Integer(string="Team Size (distinct assignees)")

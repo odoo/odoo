@@ -45,6 +45,8 @@ class WorkflowEdge(models.Model):
 
     condition = fields.Selection(
         selection=CONDITION_SELECTION,
+        default="on_success",
+        required=True,
         help="When this edge lets the target advance:\n"
         "- On Success: the source completed\n"
         "- On Error: the source failed\n"
@@ -52,8 +54,6 @@ class WorkflowEdge(models.Model):
         "- Expression: the source settled and the expression is truthy\n"
         "- On Event: the source received the event\n"
         "- Without Event: the source did not receive the event within the delay",
-        default="on_success",
-        required=True,
     )
     condition_expr = fields.Char(
         string="Expression",
@@ -66,9 +66,9 @@ class WorkflowEdge(models.Model):
         "required when the condition is On Event or Without Event",
     )
     delay = fields.Integer(
+        default=0,
         help="How long after its condition holds the target becomes ready. "
         "For Without Event, how long the source waits for the event.",
-        default=0,
     )
     delay_unit = fields.Selection(
         selection=EDGE_DELAY_UNITS,

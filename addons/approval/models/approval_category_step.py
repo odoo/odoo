@@ -31,8 +31,8 @@ class ApprovalCategoryStep(models.Model):
     active = fields.Boolean(default=True)
     minimum = fields.Integer(
         string="Approvals Needed",
-        help="How many approvals from this step's pool complete it.",
         default=1,
+        help="How many approvals from this step's pool complete it.",
     )
     member_ids = fields.One2many(
         comodel_name="approval.category.step.member",
@@ -42,10 +42,10 @@ class ApprovalCategoryStep(models.Model):
     user_ids = fields.Many2many(
         comodel_name="res.users",
         string="Approvers",
-        help="The step's current members, as an editable list. Delegated members are "
-        "kept as they are when this list is edited.",
         compute="_compute_user_ids",
         inverse="_inverse_user_ids",
+        help="The step's current members, as an editable list. Delegated members are "
+        "kept as they are when this list is edited.",
     )
     group_id = fields.Many2one(
         comodel_name="res.groups",
@@ -93,8 +93,8 @@ class ApprovalCategoryStep(models.Model):
     subject_model_id = fields.Many2one(
         comodel_name="ir.model",
         string="Source Model",
-        help="Model the condition reads. Required when a condition is set.",
         ondelete="cascade",
+        help="Model the condition reads. Required when a condition is set.",
     )
     subject_model_name = fields.Char(
         related="subject_model_id.model",
@@ -134,9 +134,9 @@ class ApprovalCategoryStep(models.Model):
     )
     subject_user_sequence = fields.Integer(
         string="Place in Order",
+        default=10,
         help="On a step whose members decide in order, where the users the source "
         "field names stand among the members' sequences.",
-        default=10,
     )
     subject_user_required = fields.Boolean(
         string="Named Users Are Required",
@@ -585,8 +585,8 @@ class ApprovalCategoryStepMember(models.Model):
         readonly=True,
     )
     sequence = fields.Integer(
-        help="The member's place when the step's members decide in order.",
         default=10,
+        help="The member's place when the step's members decide in order.",
     )
     required = fields.Boolean(
         help="The step is not met without this member's approval, whatever its quorum."

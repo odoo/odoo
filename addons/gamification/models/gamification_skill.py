@@ -69,8 +69,8 @@ class GamificationSkillNode(models.Model):
     sequence = fields.Integer(default=10)
     level = fields.Integer(
         string="Tree Level",
-        help="Vertical position in the tree (1 = root, higher = deeper).",
         default=1,
+        help="Vertical position in the tree (1 = root, higher = deeper).",
     )
 
     # Prerequisites
@@ -93,14 +93,14 @@ class GamificationSkillNode(models.Model):
 
     # Unlock conditions
     karma_threshold = fields.Integer(
-        help="Minimum karma required to unlock (0 = no karma requirement).",
         default=0,
+        help="Minimum karma required to unlock (0 = no karma requirement).",
     )
     quest_id = fields.Many2one(
         comodel_name="gamification.quest",
         string="Required Quest",
-        help="Quest that must be completed to unlock this node.",
         ondelete="set null",
+        help="Quest that must be completed to unlock this node.",
     )
 
     # Rewards

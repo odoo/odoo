@@ -15,18 +15,18 @@ class MixinUtm(models.AbstractModel):
 
     campaign_id = fields.Many2one(
         comodel_name="utm.campaign",
-        help="This is a name that helps you keep track of your different campaign efforts, e.g. Fall_Drive, Christmas_Special",
         index="btree_not_null",
+        help="This is a name that helps you keep track of your different campaign efforts, e.g. Fall_Drive, Christmas_Special",
     )
     source_id = fields.Many2one(
         comodel_name="utm.source",
-        help="This is the source of the link, e.g. Search Engine, another domain, or name of email list",
         index="btree_not_null",
+        help="This is the source of the link, e.g. Search Engine, another domain, or name of email list",
     )
     medium_id = fields.Many2one(
         comodel_name="utm.medium",
-        help="This is the method of delivery, e.g. Postcard, Email, or Banner Ad",
         index="btree_not_null",
+        help="This is the method of delivery, e.g. Postcard, Email, or Banner Ad",
     )
 
     @api.model

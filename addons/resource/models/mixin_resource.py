@@ -24,8 +24,8 @@ class MixinResource(models.AbstractModel):
     tz = fields.Selection(
         related="resource_id.tz",
         string="Timezone",
-        help="This field is used in order to define in which timezone the resources will work.",
         readonly=False,
+        help="This field is used in order to define in which timezone the resources will work.",
     )
     company_id = fields.Many2one(
         comodel_name="res.company",

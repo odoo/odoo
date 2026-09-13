@@ -13,11 +13,11 @@ class ResPartner(models.Model):
             ("4", "Foreigner"),
         ],
         string="Taxpayer Type",
+        index="btree_not_null",
         help="1 - VAT Affected (1st Category) (Most of the cases)\n"
         "2 - Fees Receipt Issuer (Applies to suppliers who issue fees receipt)\n"
         "3 - End consumer (only receipts)\n"
         "4 - Foreigner",
-        index="btree_not_null",
     )
     l10n_cl_activity_description = fields.Char(
         string="Activity Description",

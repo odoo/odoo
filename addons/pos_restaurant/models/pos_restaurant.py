@@ -138,9 +138,9 @@ class RestaurantTable(models.Model):
         index="btree_not_null",
     )
     table_number = fields.Integer(
-        help="The number of the table as displayed on the floor plan",
         default=0,
         required=True,
+        help="The number of the table as displayed on the floor plan",
     )
     shape = fields.Selection(
         selection=[("square", "Square"), ("round", "Round")],
@@ -149,25 +149,25 @@ class RestaurantTable(models.Model):
     )
     position_h = fields.Float(
         string="Horizontal Position",
-        help="The table's horizontal position from the left side to the table's center, in pixels",
         default=10,
+        help="The table's horizontal position from the left side to the table's center, in pixels",
     )
     position_v = fields.Float(
         string="Vertical Position",
-        help="The table's vertical position from the top to the table's center, in pixels",
         default=10,
+        help="The table's vertical position from the top to the table's center, in pixels",
     )
     width = fields.Float(
-        help="The table's width in pixels",
         default=50,
+        help="The table's width in pixels",
     )
     height = fields.Float(
-        help="The table's height in pixels",
         default=50,
+        help="The table's height in pixels",
     )
     seats = fields.Integer(
-        help="The default number of customer served at this table.",
         default=1,
+        help="The default number of customer served at this table.",
     )
     color = fields.Char(
         help="The table's color, expressed as a valid 'background' CSS property value"
@@ -178,8 +178,8 @@ class RestaurantTable(models.Model):
         help="The parent table if this table is part of a group of tables",
     )
     active = fields.Boolean(
-        help="If false, the table is deactivated and will not be available in the point of sale",
         default=True,
+        help="If false, the table is deactivated and will not be available in the point of sale",
     )
 
     @api.depends("table_number", "floor_id")

@@ -19,6 +19,6 @@ class HrVersion(models.Model):
             "hr_attendance.hr_attendance_default_ruleset", raise_if_not_found=False
         ),
         domain=_domain_current_countries,
-        groups="hr.group_hr_manager",
         tracking=True,
+        groups="hr.group_hr_manager",
     )

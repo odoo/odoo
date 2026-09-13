@@ -21,10 +21,10 @@ class PaymentProvider(models.Model):
     )
     paypal_email_account = fields.Char(
         string="Email",
-        help="The public business email solely used to identify the account with PayPal",
         default=lambda self: self.env.company.email,
         copy=False,
         required_if_provider="paypal",
+        help="The public business email solely used to identify the account with PayPal",
     )
     paypal_client_id = fields.Char(
         string="PayPal Client ID",
@@ -38,16 +38,16 @@ class PaymentProvider(models.Model):
     )
     paypal_access_token = fields.Char(
         string="PayPal Access Token",
-        help="The short-lived token used to access Paypal APIs",
         copy=False,
         groups="base.group_system",
+        help="The short-lived token used to access Paypal APIs",
     )
     paypal_access_token_expiry = fields.Datetime(
         string="PayPal Access Token Expiry",
-        help="The moment at which the access token becomes invalid.",
         default="1970-01-01",
         copy=False,
         groups="base.group_system",
+        help="The moment at which the access token becomes invalid.",
     )
     paypal_webhook_id = fields.Char(
         string="PayPal Webhook ID",

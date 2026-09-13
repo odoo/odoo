@@ -12,8 +12,8 @@ class PosPaymentMethod(models.Model):
 
     # Stripe
     stripe_serial_number = fields.Char(
-        help="[Serial number of the stripe terminal], for example: WSC513105011295",
         copy=False,
+        help="[Serial number of the stripe terminal], for example: WSC513105011295",
     )
 
     @api.model

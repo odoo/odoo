@@ -10,8 +10,8 @@ class DigestTip(models.Model):
     _order = "sequence"
 
     sequence = fields.Integer(
-        help="Used to display digest tip in email template base on order",
         default=1,
+        help="Used to display digest tip in email template base on order",
     )
     name = fields.Char(translate=True)
     user_ids = fields.Many2many(

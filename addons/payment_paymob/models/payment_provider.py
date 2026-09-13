@@ -20,12 +20,12 @@ class PaymentProvider(models.Model):
     )
     paymob_account_country_id = fields.Many2one(
         comodel_name="res.country",
-        help="The country of the Paymob account. The currency will be updated to match the country"
-        " of the Paymob account.",
         inverse="_inverse_paymob_account_country_id",
         copy=False,
         domain=f'[("code", "in", {list(const.API_MAPPING.keys())})]',
         required_if_provider="paymob",
+        help="The country of the Paymob account. The currency will be updated to match the country"
+        " of the Paymob account.",
     )
     paymob_public_key = fields.Char(
         copy=False,
@@ -33,8 +33,8 @@ class PaymentProvider(models.Model):
     )
     paymob_secret_key = fields.Char(
         copy=False,
-        groups="base.group_system",
         required_if_provider="paymob",
+        groups="base.group_system",
     )
     paymob_hmac_key = fields.Char(
         string="Paymob HMAC Key",

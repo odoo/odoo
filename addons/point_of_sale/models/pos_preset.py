@@ -26,8 +26,8 @@ class PosPreset(models.Model):
     )
     is_return = fields.Boolean(
         string="Return mode",
-        help="All quantity in the cart will be in negative. Ideal for return managment.",
         default=False,
+        help="All quantity in the cart will be in negative. Ideal for return managment.",
     )
     color = fields.Integer(default=0)
     image_512 = fields.Image(

@@ -28,10 +28,10 @@ class SaleOrder(models.Model):
             ("one", "When all products are ready"),
         ],
         string="Shipping Policy",
-        help="If you deliver all products at once, the delivery order will be scheduled based on the greatest "
-        "product lead time. Otherwise, it will be based on the shortest.",
         default="direct",
         required=True,
+        help="If you deliver all products at once, the delivery order will be scheduled based on the greatest "
+        "product lead time. Otherwise, it will be based on the shortest.",
     )
     picking_ids = fields.One2many(
         comodel_name="stock.picking",
@@ -57,9 +57,9 @@ class SaleOrder(models.Model):
             Green: Fully transferred",
     )
     late_availability = fields.Boolean(
-        help="True if any related picking has late availability",
         compute="_compute_late_availability",
         search="_search_late_availability",
+        help="True if any related picking has late availability",
     )
     date_planned = fields.Datetime(
         help="Delivery date you can promise to the customer, computed from the minimum lead time of "

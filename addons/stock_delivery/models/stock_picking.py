@@ -37,11 +37,11 @@ class StockPicking(models.Model):
         check_company=True,
     )
     weight = fields.Float(
-        help="Total weight of the products in the picking.",
         digits="Stock Weight",
         compute="_compute_weight",
         compute_sudo=True,
         store=True,
+        help="Total weight of the products in the picking.",
     )
     carrier_tracking_ref = fields.Char(
         string="Tracking Reference",

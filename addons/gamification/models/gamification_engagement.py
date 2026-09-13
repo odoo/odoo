@@ -42,13 +42,13 @@ class GamificationEngagementSnapshot(models.Model):
     )
     active_users_7d = fields.Integer(
         string="Active Users (7 days)",
-        help="Users who earned karma in the last 7 days.",
         readonly=True,
+        help="Users who earned karma in the last 7 days.",
     )
     active_users_30d = fields.Integer(
         string="Active Users (30 days)",
-        help="Users who earned karma in the last 30 days.",
         readonly=True,
+        help="Users who earned karma in the last 30 days.",
     )
 
     # ── Challenge & Goals ───────────────────────────────────────────
@@ -56,13 +56,13 @@ class GamificationEngagementSnapshot(models.Model):
     goals_in_progress = fields.Integer(readonly=True)
     goals_reached_7d = fields.Integer(
         string="Goals Reached (7 days)",
-        help="Goals that reached their target in the last 7 days.",
         readonly=True,
+        help="Goals that reached their target in the last 7 days.",
     )
     goal_completion_rate = fields.Float(
         string="Goal Completion Rate %",
-        help="Percentage of non-draft, non-canceled goals that are reached.",
         readonly=True,
+        help="Percentage of non-draft, non-canceled goals that are reached.",
     )
 
     # ── Badges ──────────────────────────────────────────────────────
@@ -100,13 +100,13 @@ class GamificationEngagementSnapshot(models.Model):
     )
     streaks_past_7d = fields.Integer(
         string="Streaks >= 7 days",
-        help="Active streaks that have survived at least 7 days.",
         readonly=True,
+        help="Active streaks that have survived at least 7 days.",
     )
     streaks_past_30d = fields.Integer(
         string="Streaks >= 30 days",
-        help="Active streaks that have survived at least 30 days.",
         readonly=True,
+        help="Active streaks that have survived at least 30 days.",
     )
 
     # ── Achievements ────────────────────────────────────────────────

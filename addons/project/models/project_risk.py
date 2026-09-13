@@ -25,8 +25,8 @@ class ProjectRisk(models.Model):
     task_id = fields.Many2one(
         comodel_name="project.task",
         string="Related Task",
-        help="Optional link to a specific task affected by this risk.",
         index="btree_not_null",
+        help="Optional link to a specific task affected by this risk.",
     )
     category = fields.Selection(
         selection=[
@@ -65,9 +65,9 @@ class ProjectRisk(models.Model):
         tracking=True,
     )
     risk_score = fields.Integer(
-        help="Probability × Impact (1–25).",
         compute="_compute_risk_score_and_level",
         store=True,
+        help="Probability × Impact (1–25).",
     )
     risk_level = fields.Selection(
         selection=[
@@ -93,8 +93,8 @@ class ProjectRisk(models.Model):
     owner_id = fields.Many2one(
         comodel_name="res.users",
         string="Risk Owner",
-        help="Person responsible for monitoring and responding to this risk.",
         tracking=True,
+        help="Person responsible for monitoring and responding to this risk.",
     )
     state = fields.Selection(
         selection=[

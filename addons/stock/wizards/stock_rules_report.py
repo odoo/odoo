@@ -19,8 +19,8 @@ class StockRulesReport(models.TransientModel):
     warehouse_ids = fields.Many2many(
         comodel_name="stock.warehouse",
         string="Warehouses",
-        help="Show the routes that apply on selected warehouses.",
         required=True,
+        help="Show the routes that apply on selected warehouses.",
     )
     product_has_variants = fields.Boolean(
         string="Has variants",

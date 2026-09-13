@@ -181,13 +181,13 @@ class MailMail(models.Model):
         search="_search_body_content",
     )
     references = fields.Text(
-        help="Message references, such as identifiers of previous messages",
         readonly=True,
+        help="Message references, such as identifiers of previous messages",
     )
     headers = fields.Json(
+        copy=False,
         help="Extra SMTP headers to stamp on the outgoing message, as a mapping "
         "of header name to value.",
-        copy=False,
     )
     restricted_attachment_count = fields.Integer(
         string="Restricted attachments",
@@ -233,9 +233,9 @@ class MailMail(models.Model):
         string="Failure type",
     )
     failure_reason = fields.Text(
-        help="Failure reason. This is usually the exception thrown by the email server, stored to ease the debugging of mailing issues.",
         copy=False,
         readonly=True,
+        help="Failure reason. This is usually the exception thrown by the email server, stored to ease the debugging of mailing issues.",
     )
     auto_delete = fields.Boolean(
         help="This option permanently removes any track of email after it's been sent, including from the Technical menu in the Settings, in order to preserve storage space of your Odoo database."

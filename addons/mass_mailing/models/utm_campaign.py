@@ -44,8 +44,8 @@ class UtmCampaign(models.Model):
     )
     ab_testing_schedule_datetime = fields.Datetime(
         string="Send Final On",
-        help="Date that will be used to know when to determine and send the winner mailing",
         default=lambda self: fields.Datetime.now() + relativedelta(days=1),
+        help="Date that will be used to know when to determine and send the winner mailing",
     )
     ab_testing_winner_selection = fields.Selection(
         selection=[
@@ -55,8 +55,8 @@ class UtmCampaign(models.Model):
             ("replied_ratio", "Highest Reply Rate"),
         ],
         string="Winner Selection",
-        help="Selection to determine the winner mailing that will be sent.",
         default="opened_ratio",
+        help="Selection to determine the winner mailing that will be sent.",
     )
 
     # stat fields

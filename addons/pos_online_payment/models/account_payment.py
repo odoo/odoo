@@ -7,8 +7,8 @@ class AccountPayment(models.Model):
     pos_order_id = fields.Many2one(
         comodel_name="pos.order",
         string="POS Order",
-        help="The Point of Sale order linked to this payment",
         readonly=True,
+        help="The Point of Sale order linked to this payment",
     )
 
     def action_view_pos_order(self):

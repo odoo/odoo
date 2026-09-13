@@ -33,8 +33,8 @@ class CrmTeamMember(models.Model):
     )
     user_company_ids = fields.Many2many(
         comodel_name="res.company",
-        help="UX: Limit to team company or all if no company",
         compute="_compute_user_company_ids",
+        help="UX: Limit to team company or all if no company",
     )
     active = fields.Boolean(default=True)
     member_warning = fields.Text(compute="_compute_member_warning")

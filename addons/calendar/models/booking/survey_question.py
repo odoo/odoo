@@ -32,11 +32,11 @@ class SurveyQuestion(models.Model):
         help="Include by default in new appointment types.",
     )
     is_reusable = fields.Boolean(
-        help="Will appear in the list of available questions when adding one in any appointment. Always true for default questions.",
         compute="_compute_is_reusable",
         default=True,
         store=True,
         readonly=False,
+        help="Will appear in the list of available questions when adding one in any appointment. Always true for default questions.",
     )
     _check_default_question_is_reusable = models.Constraint(
         "CHECK(is_default IS DISTINCT FROM TRUE OR is_reusable IS TRUE)",

@@ -12,14 +12,14 @@ class AIUseCaseTag(models.Model):
         help="Human-readable tag name (e.g., 'Vision Processing')",
     )
     code = fields.Char(
-        help="Unique identifier used in code (e.g., 'vision', 'reasoning')",
         index=True,
         required=True,
+        help="Unique identifier used in code (e.g., 'vision', 'reasoning')",
     )
     sequence = fields.Integer(default=10)
     description = fields.Text(
-        help="What this use case represents and when to use it",
         translate=True,
+        help="What this use case represents and when to use it",
     )
     color = fields.Integer(help="Color for UI display")
     _code_uniq = models.Constraint(

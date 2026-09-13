@@ -37,8 +37,8 @@ class AccountMove(models.Model):
     l10n_ar_afip_concept = fields.Selection(
         selection="_selection_afip_invoice_concepts",
         string="ARCA Concept",
-        help="A concept is suggested regarding the type of the products on the invoice.",
         compute="_compute_l10n_ar_afip_concept",
+        help="A concept is suggested regarding the type of the products on the invoice.",
     )
     l10n_ar_afip_service_start = fields.Date(string="ARCA Service Start Date")
     l10n_ar_afip_service_end = fields.Date(string="ARCA Service End Date")

@@ -17,18 +17,18 @@ class ProjectTaskDependency(models.Model):
     task_id = fields.Many2one(
         comodel_name="project.task",
         string="Dependent Task",
-        help="The task that is blocked or constrained.",
         index=True,
         required=True,
         ondelete="cascade",
+        help="The task that is blocked or constrained.",
     )
     depends_on_id = fields.Many2one(
         comodel_name="project.task",
         string="Predecessor Task",
-        help="The task that must complete (or start) first.",
         index=True,
         required=True,
         ondelete="cascade",
+        help="The task that must complete (or start) first.",
     )
     dependency_type = fields.Selection(
         selection=[
@@ -38,17 +38,17 @@ class ProjectTaskDependency(models.Model):
             ("sf", "Start-to-Finish"),
         ],
         string="Type",
+        default="fs",
+        required=True,
         help="FS: B waits for A to finish (default). "
         "SS: B waits for A to start. "
         "FF: B cannot finish until A finishes. "
         "SF: B cannot finish until A starts.",
-        default="fs",
-        required=True,
     )
     lag_hours = fields.Float(
         string="Lag (hours)",
-        help="Delay after the dependency condition is met. Negative = lead time.",
         default=0.0,
+        help="Delay after the dependency condition is met. Negative = lead time.",
     )
     project_id = fields.Many2one(
         related="task_id.project_id",

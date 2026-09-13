@@ -95,14 +95,14 @@ class AccountMove(models.Model):
             ),
         ],
         string="SDI State",
-        help="This state is updated by default, but you can force the value. ",
         copy=False,
         tracking=True,
+        help="This state is updated by default, but you can force the value. ",
     )
     l10n_it_edi_header = fields.Html(
-        help="User description of the current state, with hints to make the flow progress",
         copy=False,
         readonly=True,
+        help="User description of the current state, with hints to make the flow progress",
     )
     l10n_it_edi_transaction = fields.Char(
         string="FatturaPA Transaction",
@@ -147,13 +147,13 @@ class AccountMove(models.Model):
     )
     l10n_it_cig = fields.Char(
         string="CIG",
-        help="Tender Unique Identifier",
         copy=False,
+        help="Tender Unique Identifier",
     )
     l10n_it_cup = fields.Char(
         string="CUP",
-        help="Public Investment Unique Identifier",
         copy=False,
+        help="Public Investment Unique Identifier",
     )
     # Technical field for showing the above fields or not
     l10n_it_partner_pa = fields.Boolean(compute="_compute_l10n_it_partner_pa")

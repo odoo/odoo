@@ -35,9 +35,9 @@ class ApprovalCategoryConversion(models.Model):
 
     steps_conversion_blockers = fields.Text(
         string="Why It Cannot Convert",
+        compute="_compute_steps_conversion_blockers",
         help="What keeps this category's approvers and routing rules from being "
         "rewritten as steps that route every request the same. Empty when it can.",
-        compute="_compute_steps_conversion_blockers",
     )
 
     @api.model

@@ -11,8 +11,8 @@ class MixinStockReplenish(models.AbstractModel):
     route_id = fields.Many2one(
         comodel_name="stock.route",
         string="Preferred Route",
-        help="Apply specific route for the replenishment instead of product's default routes.",
         check_company=True,
+        help="Apply specific route for the replenishment instead of product's default routes.",
     )
     allowed_route_ids = fields.Many2many(
         comodel_name="stock.route",

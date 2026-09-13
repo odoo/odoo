@@ -85,10 +85,10 @@ class SaleOrder(models.Model):
     )
     project_id = fields.Many2one(
         comodel_name="project.project",
-        help="A task will be created for the project upon sales order confirmation. The analytic distribution of this project will also serve as a reference for newly created sales order items.",
         index="btree_not_null",
         copy=False,
         domain=[("allow_billable", "=", True), ("is_template", "=", False)],
+        help="A task will be created for the project upon sales order confirmation. The analytic distribution of this project will also serve as a reference for newly created sales order items.",
     )
     project_account_id = fields.Many2one(
         comodel_name="account.analytic.account",

@@ -93,11 +93,11 @@ class ForumPost(models.Model):
     )
     last_activity_date = fields.Datetime(
         string="Last activity on",
-        help="Field to keep track of a post's last activity. Updated whenever it is replied to, "
-        "or when a comment is added on the post or one of its replies.",
         default=fields.Datetime.now,
         readonly=True,
         required=True,
+        help="Field to keep track of a post's last activity. Updated whenever it is replied to, "
+        "or when a comment is added on the post or one of its replies.",
     )
     write_uid = fields.Many2one(
         comodel_name="res.users",

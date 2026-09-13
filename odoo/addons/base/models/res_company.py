@@ -118,10 +118,10 @@ class ResCompany(models.Model):
 
     code = fields.Char(
         string="Short Code",
+        size=6,
         help="Short, untranslated handle for the company, shown wherever the "
         "company is referenced instead of its full legal name. Companies "
         "without one are referenced by name.",
-        size=6,
     )
     complete_name = fields.Char(
         compute="_compute_complete_name",
@@ -129,8 +129,8 @@ class ResCompany(models.Model):
     )
     active = fields.Boolean(default=True)
     sequence = fields.Integer(
-        help="Used to order Companies in the company switcher",
         default=10,
+        help="Used to order Companies in the company switcher",
     )
 
     parent_id = fields.Many2one(
@@ -183,16 +183,16 @@ class ResCompany(models.Model):
     )
     report_header = fields.Html(
         string="Company Tagline",
-        help="Company tagline, which is included in a printed document's header or footer (depending on the selected layout).",
         translate=True,
+        help="Company tagline, which is included in a printed document's header or footer (depending on the selected layout).",
     )
     report_footer = fields.Html(
-        help="Footer text displayed at the bottom of all reports.",
         translate=True,
+        help="Footer text displayed at the bottom of all reports.",
     )
     company_details = fields.Html(
-        help="Header text displayed at the top of all reports.",
         translate=True,
+        help="Header text displayed at the top of all reports.",
     )
     is_company_details_empty = fields.Boolean(
         compute="_compute_is_company_details_empty"

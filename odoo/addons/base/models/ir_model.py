@@ -69,9 +69,9 @@ class IrModel(models.Model):
         required=True,
     )
     order = fields.Char(
-        help='SQL expression for ordering records in the model; e.g. "x_sequence asc, id desc"',
         default="id",
         required=True,
+        help='SQL expression for ordering records in the model; e.g. "x_sequence asc, id desc"',
     )
     info = fields.Text(string="Information")
     field_id = fields.One2many(
@@ -85,8 +85,8 @@ class IrModel(models.Model):
     inherited_model_ids = fields.Many2many(
         comodel_name="ir.model",
         string="Inherited models",
-        help="The parent models this model delegates to (via _inherits).",
         compute="_compute_inherited_model_ids",
+        help="The parent models this model delegates to (via _inherits).",
     )
     state = fields.Selection(
         selection=[("manual", "Custom Object"), ("base", "Base Object")],
@@ -107,8 +107,8 @@ class IrModel(models.Model):
     transient = fields.Boolean(string="Transient Model")
     modules = fields.Char(
         string="In Apps",
-        help="List of modules in which the object is defined or inherited",
         compute="_compute_modules",
+        help="List of modules in which the object is defined or inherited",
     )
     view_ids = fields.One2many(
         comodel_name="ir.ui.view",
@@ -117,8 +117,8 @@ class IrModel(models.Model):
     )
     count = fields.Integer(
         string="Count (Incl. Archived)",
-        help="Total number of records in this model",
         compute="_compute_count",
+        help="Total number of records in this model",
     )
     fold_name = fields.Char(
         string="Fold Field",

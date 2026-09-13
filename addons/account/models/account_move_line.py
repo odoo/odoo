@@ -113,11 +113,11 @@ class AccountMoveLine(models.Model):
     )
     is_storno = fields.Boolean(
         string="Company Storno Accounting",
-        help="Utility field to express whether the journal item is subject to storno accounting",
         compute="_compute_is_storno",
         precompute=True,
         store=True,
         readonly=False,
+        help="Utility field to express whether the journal item is subject to storno accounting",
     )
     sequence = fields.Integer(
         compute="_compute_sequence",
@@ -183,23 +183,23 @@ class AccountMoveLine(models.Model):
         tracking=True,
     )
     cumulated_balance = fields.Monetary(
-        help="Cumulated balance depending on the domain and the order chosen in the view.",
         currency_field="company_currency_id",
         compute="_compute_cumulated_balance",
         exportable=False,
+        help="Cumulated balance depending on the domain and the order chosen in the view.",
     )
     currency_rate = fields.Float(
-        help="Currency rate from company currency to document currency.",
         compute="_compute_currency_rate",
+        help="Currency rate from company currency to document currency.",
     )
     amount_currency = fields.Monetary(
         string="Amount in Currency",
-        help="The amount expressed in an optional other currency if it is a multi-currency entry.",
         compute="_compute_amount_currency",
         inverse="_inverse_amount_currency",
         precompute=True,
         store=True,
         readonly=False,
+        help="The amount expressed in an optional other currency if it is a multi-currency entry.",
     )
     currency_id = fields.Many2one(
         comodel_name="res.currency",
@@ -232,27 +232,27 @@ class AccountMoveLine(models.Model):
         comodel_name="account.payment",
         related="move_id.origin_payment_id",
         string="Originator Payment",
-        help="The payment that created this entry",
         store=True,
         index="btree_not_null",
         bypass_search_access=True,
+        help="The payment that created this entry",
     )
     statement_line_id = fields.Many2one(
         comodel_name="account.bank.statement.line",
         related="move_id.statement_line_id",
         string="Originator Statement Line",
-        help="The statement line that created this entry",
         store=True,
         index="btree_not_null",
         bypass_search_access=True,
+        help="The statement line that created this entry",
     )
     statement_id = fields.Many2one(
         related="statement_line_id.statement_id",
-        help="The bank statement used for bank reconciliation",
         store=True,
         index="btree_not_null",
         copy=False,
         bypass_search_access=True,
+        help="The bank statement used for bank reconciliation",
     )
     commercial_partner_country = fields.Many2one(
         related="move_id.commercial_partner_id.country_id",
@@ -280,10 +280,10 @@ class AccountMoveLine(models.Model):
         comodel_name="account.tax",
         related="tax_repartition_line_id.tax_id",
         string="Originator Tax",
-        help="Indicates that this journal item is a tax line",
         precompute=True,
         store=True,
         ondelete="restrict",
+        help="Indicates that this journal item is a tax line",
     )
     tax_group_id = fields.Many2one(
         related="tax_line_id.tax_group_id",
@@ -299,34 +299,34 @@ class AccountMoveLine(models.Model):
     tax_repartition_line_id = fields.Many2one(
         comodel_name="account.tax.repartition.line",
         string="Originator Tax Distribution Line",
-        help="Tax distribution line that caused the creation of this move line, if any",
         readonly=True,
         ondelete="restrict",
         check_company=True,
+        help="Tax distribution line that caused the creation of this move line, if any",
     )
     tax_tag_ids = fields.Many2many(
         comodel_name="account.account.tag",
         string="Tags",
-        help="Tags assigned to this line by the tax creating it, if any. It determines its impact on financial reports.",
         context={"active_test": False},
         ondelete="restrict",
         tracking=True,
+        help="Tags assigned to this line by the tax creating it, if any. It determines its impact on financial reports.",
     )
     extra_tax_data = fields.Json()
 
     amount_residual = fields.Monetary(
         string="Residual Amount",
-        help="The residual amount on a journal item expressed in the company currency.",
         currency_field="company_currency_id",
         compute="_compute_reconciliation",
         store=True,
+        help="The residual amount on a journal item expressed in the company currency.",
     )
     amount_residual_currency = fields.Monetary(
         string="Residual Amount in Currency",
-        help="The residual amount on a journal item expressed in its currency (possibly not the "
-        "company currency).",
         compute="_compute_reconciliation",
         store=True,
+        help="The residual amount on a journal item expressed in its currency (possibly not the "
+        "company currency).",
     )
     reconciled = fields.Boolean(
         compute="_compute_reconciliation",
@@ -343,15 +343,15 @@ class AccountMoveLine(models.Model):
         comodel_name="account.partial.reconcile",
         inverse_name="credit_move_id",
         string="Matched Debits",
-        help="Debit journal items that are matched with this journal item.",
         readonly=True,
+        help="Debit journal items that are matched with this journal item.",
     )
     matched_credit_ids = fields.One2many(
         comodel_name="account.partial.reconcile",
         inverse_name="debit_move_id",
         string="Matched Credits",
-        help="Credit journal items that are matched with this journal item.",
         readonly=True,
+        help="Credit journal items that are matched with this journal item.",
     )
     reconciled_lines_ids = fields.Many2many(
         comodel_name="account.move.line",
@@ -366,10 +366,10 @@ class AccountMoveLine(models.Model):
 
     matching_number = fields.Char(
         string="Matching #",
-        help="Matching number for this line, 'P' if it is only partially reconcile, or the name of "
-        "the full reconcile if it exists.",
         index="btree",
         copy=False,
+        help="Matching number for this line, 'P' if it is only partially reconcile, or the name of "
+        "the full reconcile if it exists.",
     )
     is_account_reconcile = fields.Boolean(
         related="account_id.reconcile",
@@ -447,20 +447,20 @@ class AccountMoveLine(models.Model):
         ondelete="restrict",
     )
     quantity = fields.Float(
-        help="The optional quantity expressed by this line, eg: number of product sold. "
-        "The quantity is not a legal requirement but is very useful for some reports.",
         digits="Product Unit",
         compute="_compute_quantity",
         precompute=True,
         store=True,
         readonly=False,
+        help="The optional quantity expressed by this line, eg: number of product sold. "
+        "The quantity is not a legal requirement but is very useful for some reports.",
     )
     date_maturity = fields.Date(
         string="Due Date",
-        help="This field is used for payable and receivable journal entries. "
-        "You can put the limit date for the payment of this line.",
         index=True,
         tracking=True,
+        help="This field is used for payable and receivable journal entries. "
+        "You can put the limit date for the payment of this line.",
     )
 
     price_unit = fields.Float(
@@ -536,9 +536,9 @@ class AccountMoveLine(models.Model):
     has_invalid_analytics = fields.Boolean(compute="_compute_has_invalid_analytics")
 
     discount_date = fields.Date(
-        help="Last date at which the discounted amount must be paid in order for the Early Payment Discount to be granted",
         store=True,
         readonly=True,
+        help="Last date at which the discounted amount must be paid in order for the Early Payment Discount to be granted",
     )
     discount_amount_currency = fields.Monetary(
         string="Discount amount in Currency",
@@ -560,11 +560,11 @@ class AccountMoveLine(models.Model):
 
     no_followup = fields.Boolean(
         string="No Follow-Up",
-        help="Exclude this journal item from follow-up reports.",
         compute="_compute_no_followup",
         inverse="_inverse_no_followup",
         store=True,
         readonly=False,
+        help="Exclude this journal item from follow-up reports.",
     )
 
     _check_credit_debit = models.Constraint(

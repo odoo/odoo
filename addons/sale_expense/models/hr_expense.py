@@ -7,7 +7,6 @@ class HrExpense(models.Model):
     sale_order_id = fields.Many2one(
         comodel_name="sale.order",
         string="Customer to Reinvoice",
-        help="If the category has an expense policy, it will be reinvoiced on this sales order",
         compute="_compute_sale_order",
         store=True,
         index="btree_not_null",
@@ -15,6 +14,7 @@ class HrExpense(models.Model):
         domain="[('state', '=', 'done')]",
         check_company=True,
         tracking=True,
+        help="If the category has an expense policy, it will be reinvoiced on this sales order",
     )
     sale_order_line_id = fields.Many2one(
         comodel_name="sale.order.line",

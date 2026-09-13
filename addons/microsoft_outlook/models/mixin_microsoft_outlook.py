@@ -67,9 +67,9 @@ class MixinMicrosoftOutlook(models.AbstractModel):
     )
     microsoft_outlook_uri = fields.Char(
         string="Authentication URI",
-        help="The URL to generate the authorization code from Outlook",
         compute="_compute_outlook_uri",
         groups="base.group_system",
+        help="The URL to generate the authorization code from Outlook",
     )
 
     @api.depends("oauth2_credential_id")

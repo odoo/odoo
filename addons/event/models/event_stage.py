@@ -22,6 +22,6 @@ class EventStage(models.Model):
     )
     pipe_end = fields.Boolean(
         string="End Stage",
-        help="Events will automatically be moved into this stage when they are finished. The event moved into this stage will automatically be set as green.",
         default=False,
+        help="Events will automatically be moved into this stage when they are finished. The event moved into this stage will automatically be set as green.",
     )

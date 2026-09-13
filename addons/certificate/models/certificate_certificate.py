@@ -53,9 +53,9 @@ class CertificateCertificate(models.Model):
     )
     name = fields.Char()
     active = fields.Boolean(
-        help="Set active to false to archive the certificate",
         default=True,
         name="Active",
+        help="Set active to false to archive the certificate",
     )
     content = fields.Binary(
         string="Certificate",
@@ -72,10 +72,10 @@ class CertificateCertificate(models.Model):
     content_plain = fields.Binary(string="Certificate (unencrypted)")
     pkcs12_password = fields.Char(
         string="Certificate Password",
-        help="Password to decrypt the PKS file.",
         compute="_compute_pkcs12_password",
         inverse="_inverse_pkcs12_password",
         store=False,
+        help="Password to decrypt the PKS file.",
     )
     pkcs12_password_encrypted = fields.Binary(
         string="Certificate Password (encrypted)",
@@ -92,21 +92,21 @@ class CertificateCertificate(models.Model):
     )
     public_key_id = fields.Many2one(
         comodel_name="certificate.key",
+        domain=[("public", "=", True)],
+        check_company=True,
         help="""Used to set a public key in case the one self-contained in the certificate is erroneus.
                 When a public key is set this way, it will be used instead of the one in the certificate.
              """,
-        domain=[("public", "=", True)],
-        check_company=True,
     )
     scope = fields.Selection(
         selection=[
             ("general", "General"),
         ],
         string="Certificate scope",
+        default="general",
         help="What this certificate may be used for. Every consumer selects on "
         "this field, so a certificate is inert until it is scoped "
         "deliberately -- 'General' is the safe default, not a fiscal role.",
-        default="general",
     )
     content_format = fields.Selection(
         selection=[
@@ -130,21 +130,21 @@ class CertificateCertificate(models.Model):
     )
     serial_number = fields.Char(
         string="Serial number",
-        help="The serial number to add to electronic documents",
         compute="_compute_pem_certificate",
         store=True,
+        help="The serial number to add to electronic documents",
     )
     date_start = fields.Datetime(
         string="Available date",
-        help="The date on which the certificate starts to be valid",
         compute="_compute_pem_certificate",
         store=True,
+        help="The date on which the certificate starts to be valid",
     )
     date_end = fields.Datetime(
         string="Expiration date",
-        help="The date on which the certificate expires",
         compute="_compute_pem_certificate",
         store=True,
+        help="The date on which the certificate expires",
     )
     loading_error = fields.Text(
         string="Loading error",

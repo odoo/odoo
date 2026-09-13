@@ -24,8 +24,8 @@ class ResourceCalendarAttendance(models.Model):
     )
     name = fields.Char(required=True)
     sequence = fields.Integer(
-        help="Gives the sequence of this line when displaying the resource calendar.",
         default=10,
+        help="Gives the sequence of this line when displaying the resource calendar.",
     )
     dayofweek = fields.Selection(
         selection=[
@@ -44,11 +44,11 @@ class ResourceCalendarAttendance(models.Model):
     )
     hour_from = fields.Float(
         string="Work from",
-        help="Start and End time of working.\n"
-        "A specific value of 24:00 is interpreted as 23:59:59.999999.",
         default=0,
         index=True,
         required=True,
+        help="Start and End time of working.\n"
+        "A specific value of 24:00 is interpreted as 23:59:59.999999.",
     )
     hour_to = fields.Float(
         string="Work to",
@@ -85,8 +85,8 @@ class ResourceCalendarAttendance(models.Model):
     )
     display_type = fields.Selection(
         selection=[("line_section", "Section")],
-        help="Technical field for UX purpose.",
         default=False,
+        help="Technical field for UX purpose.",
     )
 
     @api.constrains("day_period")

@@ -18,8 +18,8 @@ class ProductPricelist(models.Model):
         required=True,
     )
     active = fields.Boolean(
-        help="If unchecked, it will allow you to hide the pricelist without removing it.",
         default=True,
+        help="If unchecked, it will allow you to hide the pricelist without removing it.",
     )
     sequence = fields.Integer(default=16)
 

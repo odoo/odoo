@@ -47,8 +47,8 @@ class PosOrder(models.Model):
     user_id = fields.Many2one(
         comodel_name="res.users",
         string="Employee",
-        help="Employee who uses the cash register.",
         default=lambda self: self.env.uid,
+        help="Employee who uses the cash register.",
     )
     amount_difference = fields.Monetary(
         string="Difference",
@@ -84,9 +84,9 @@ class PosOrder(models.Model):
         store=True,
     )
     is_total_cost_computed = fields.Boolean(
-        help="Allows to know if all the total cost of the order lines have already been computed",
         compute="_compute_is_total_cost_computed",
         store=True,
+        help="Allows to know if all the total cost of the order lines have already been computed",
     )
     lines = fields.One2many(
         comodel_name="pos.order.line",
@@ -109,8 +109,8 @@ class PosOrder(models.Model):
         index="btree_not_null",
     )
     sequence_number = fields.Integer(
-        help="A session-unique sequence number for the order. Negative if generated from the client",
         copy=False,
+        help="A session-unique sequence number for the order. Negative if generated from the client",
     )
     session_id = fields.Many2one(
         comodel_name="pos.session",
@@ -130,20 +130,20 @@ class PosOrder(models.Model):
         string="Currency",
     )
     currency_rate = fields.Float(
-        help="The rate of the currency to the currency of rate applicable at the date of the order",
         digits=0,
         compute="_compute_currency_rate",
         compute_sudo=True,
         store=True,
         readonly=True,
+        help="The rate of the currency to the currency of rate applicable at the date of the order",
     )
 
     is_refund = fields.Boolean(
+        default=False,
+        readonly=True,
         help="Provenance: this order was created by refunding another. It "
         "carries no amount's sign -- `price_subtotal`, `total_cost` and "
         "`amount_total` each carry their own.",
-        default=False,
-        readonly=True,
     )
     state = fields.Selection(
         selection=[
@@ -241,13 +241,13 @@ class PosOrder(models.Model):
     tip_amount = fields.Monetary(readonly=True)
     refund_orders_count = fields.Integer(
         string="Number of Refund Orders",
-        help="Number of orders where items from this order were refunded",
         compute="_compute_refund_related_fields",
+        help="Number of orders where items from this order were refunded",
     )
     refunded_order_id = fields.Many2one(
         comodel_name="pos.order",
-        help="Order from which items were refunded in this order",
         compute="_compute_refund_related_fields",
+        help="Order from which items were refunded in this order",
     )
     has_refundable_lines = fields.Boolean(compute="_compute_has_refundable_lines")
     ticket_code = fields.Char(
@@ -2703,15 +2703,15 @@ class PosOrderLine(models.Model):
     )
     price_subtotal = fields.Monetary(
         string="Tax Excl.",
-        help="Signed like `qty`, as `total_cost` and `amount_total` are.",
         readonly=True,
         required=True,
+        help="Signed like `qty`, as `total_cost` and `amount_total` are.",
     )
     price_subtotal_incl = fields.Monetary(
         string="Tax Incl.",
-        help="Signed like `qty`, as `price_subtotal` is.",
         readonly=True,
         required=True,
+        help="Signed like `qty`, as `price_subtotal` is.",
     )
     price_extra = fields.Float(string="Price extra")
     price_type = fields.Selection(
@@ -2739,9 +2739,9 @@ class PosOrderLine(models.Model):
     )
     price_cost = fields.Float(
         string="Cost",
+        readonly=True,
         help="Unit cost behind `total_cost`, which stores `qty * cost` converted "
         "to the line currency. Reporting needs the two separately.",
-        readonly=True,
     )
     is_total_cost_computed = fields.Boolean(
         help="Allows to know if the total cost has already been computed or not"
@@ -2793,13 +2793,13 @@ class PosOrderLine(models.Model):
     refunded_orderline_id = fields.Many2one(
         comodel_name="pos.order.line",
         string="Refunded Order Line",
-        help="If this orderline is a refund, then the refunded orderline is specified in this field.",
         index="btree_not_null",
+        help="If this orderline is a refund, then the refunded orderline is specified in this field.",
     )
     refunded_qty = fields.Float(
         string="Refunded Quantity",
-        help="Number of items refunded in this orderline.",
         compute="_compute_refunded_qty",
+        help="Number of items refunded in this orderline.",
     )
     uuid = fields.Char(
         default=lambda self: str(uuid4()),

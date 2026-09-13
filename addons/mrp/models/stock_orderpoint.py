@@ -24,10 +24,10 @@ class StockWarehouseOrderpoint(models.Model):
     effective_bom_id = fields.Many2one(
         comodel_name="mrp.bom",
         string="Effective Bill of Materials",
-        help="Either the Bill of Materials set directly or the one computed to be used by this replenishment",
         compute="_compute_effective_bom_id",
         search="_search_effective_bom_id",
         store=False,
+        help="Either the Bill of Materials set directly or the one computed to be used by this replenishment",
     )
 
     def _inverse_route_id(self):

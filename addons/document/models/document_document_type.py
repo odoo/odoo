@@ -13,9 +13,9 @@ class DocumentDocument(models.Model):
 
     document_type_id = fields.Many2one(
         comodel_name="document.type",
+        index=True,
         help="What kind of document this is. The type decides which attributes "
         "apply, starting with whether the document expires",
-        index=True,
     )
     has_expiration = fields.Boolean(related="document_type_id.has_expiration")
     legal_number = fields.Char(
@@ -28,8 +28,8 @@ class DocumentDocument(models.Model):
     date_issued = fields.Date(help="The date when this document was officially issued")
     date_expiration = fields.Date(help="The date when this document expires")
     days_left = fields.Integer(
-        help="Number of days remaining until document expires (0 for non-expiring documents)",
         compute="_compute_days_left",
+        help="Number of days remaining until document expires (0 for non-expiring documents)",
     )
     expiration_state = fields.Selection(
         selection=[
@@ -38,12 +38,12 @@ class DocumentDocument(models.Model):
             ("expired", "Expired"),
             ("missing", "Missing"),
         ],
+        compute="_compute_expiration_state",
+        store=True,
         help="Where the document stands against its expiration date: Valid (more "
         "than 30 days left), Expiring Soon (30 days or fewer), Expired (past date), "
         "Missing (the type expires and no date is set). Empty when the type does "
         "not expire",
-        compute="_compute_expiration_state",
-        store=True,
     )
 
     is_renewable = fields.Boolean(related="document_type_id.is_renewable")
@@ -57,25 +57,25 @@ class DocumentDocument(models.Model):
     )
     renewed_by_document_id = fields.Many2one(
         comodel_name="document.document",
-        help="The newer document that renewed this one",
         compute="_compute_renewed_by_document_id",
+        help="The newer document that renewed this one",
     )
     renewal_count = fields.Integer(
-        help="Number of documents before this one in its renewal chain",
         compute="_compute_renewal_count",
         recursive=True,
+        help="Number of documents before this one in its renewal chain",
     )
     renewal_state = fields.Selection(
         selection=[
             ("due", "Renewal Due"),
             ("renewed", "Renewed"),
         ],
+        compute="_compute_renewal_state",
+        store=True,
         help="Where a renewable document stands: Renewal Due (expiring soon, "
         "expired or missing its date, and not yet renewed), Renewed (a newer "
         "document renews it). Empty when the type is not renewable or nothing is "
         "due",
-        compute="_compute_renewal_state",
-        store=True,
     )
 
     _legal_number_uniq = models.UniqueIndex(

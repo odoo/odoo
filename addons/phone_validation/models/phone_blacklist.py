@@ -13,10 +13,10 @@ class PhoneBlacklist(models.Model):
 
     number = fields.Char(
         string="Phone Number",
-        help="Number should be E164 formatted",
         search="_search_number",
         required=True,
         tracking=True,
+        help="Number should be E164 formatted",
     )
     active = fields.Boolean(
         default=True,

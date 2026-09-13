@@ -21,16 +21,16 @@ class CrmTeamMember(models.Model):
     )
     lead_day_count = fields.Integer(
         string="Leads (last 24h)",
+        compute="_compute_lead_day_count",
         help="Number of leads assigned to this member in the last 24 hours, "
         "archived and lost ones included. This is what the daily assignment "
         "quota is spent against.",
-        compute="_compute_lead_day_count",
     )
     lead_month_count = fields.Integer(
         string="Leads (30 days)",
+        compute="_compute_lead_month_count",
         help="Number of leads assigned to this member in the last 30 days, "
         "archived and lost ones included",
-        compute="_compute_lead_month_count",
     )
 
     @api.depends("user_id", "crm_team_id")

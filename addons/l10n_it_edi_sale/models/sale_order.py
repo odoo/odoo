@@ -23,13 +23,13 @@ class SaleOrder(models.Model):
     )
     l10n_it_cig = fields.Char(
         string="CIG",
-        help="Tender Unique Identifier",
         copy=False,
+        help="Tender Unique Identifier",
     )
     l10n_it_cup = fields.Char(
         string="CUP",
-        help="Public Investment Unique Identifier",
         copy=False,
+        help="Public Investment Unique Identifier",
     )
     # Technical field for showing the above fields or not
     l10n_it_partner_pa = fields.Boolean(compute="_compute_l10n_it_partner_pa")

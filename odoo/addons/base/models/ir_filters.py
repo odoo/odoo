@@ -35,8 +35,8 @@ class IrFilters(models.Model):
     user_ids = fields.Many2many(
         comodel_name="res.users",
         string="Users",
-        help="The users the filter is shared with. If empty, the filter is shared with all users.",
         ondelete="cascade",
+        help="The users the filter is shared with. If empty, the filter is shared with all users.",
     )
     domain = fields.Text(
         default="[]",
@@ -53,14 +53,14 @@ class IrFilters(models.Model):
     is_default = fields.Boolean(string="Default Filter")
     action_id = fields.Many2one(
         comodel_name="ir.actions.actions",
-        help="The menu action this filter applies to. When left empty the filter applies to all menus for this model.",
         ondelete="cascade",
+        help="The menu action this filter applies to. When left empty the filter applies to all menus for this model.",
     )
     embedded_action_id = fields.Many2one(
         comodel_name="ir.embedded.actions",
-        help="The embedded action this filter is applied to",
         index="btree_not_null",
         ondelete="cascade",
+        help="The embedded action this filter is applied to",
     )
     embedded_parent_res_id = fields.Integer(
         help="id of the record the filter should be applied to. Only used in combination with embedded actions"

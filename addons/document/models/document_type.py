@@ -16,31 +16,31 @@ class DocumentType(models.Model):
         help="Name of this document type (e.g., 'Passport', 'Driver License', 'Work Permit')"
     )
     code = fields.Char(
-        help="Short code for this document type (e.g., 'PASSPORT', 'DL', 'WP')",
         required=True,
+        help="Short code for this document type (e.g., 'PASSPORT', 'DL', 'WP')",
     )
     active = fields.Boolean(
         help="Uncheck to archive this document type without deleting it"
     )
     sequence = fields.Integer(
-        help="Used to order document types in lists and menus (lower numbers appear first)",
         default=10,
+        help="Used to order document types in lists and menus (lower numbers appear first)",
     )
     description = fields.Text(
-        help="Detailed description of this document type and its purpose",
         translate=True,
+        help="Detailed description of this document type and its purpose",
     )
 
     has_expiration = fields.Boolean(
-        help="Check if documents of this type have an expiration date",
         default=True,
+        help="Check if documents of this type have an expiration date",
     )
     default_validity_days = fields.Integer(
         help="Default number of days a new document of this type is valid for (e.g., 365 for annual permits)"
     )
     is_renewable = fields.Boolean(
-        help="Check if documents of this type can be renewed when they expire",
         default=True,
+        help="Check if documents of this type can be renewed when they expire",
     )
 
     tag_ids = fields.Many2many(
@@ -52,8 +52,8 @@ class DocumentType(models.Model):
     )
     folder_id = fields.Many2one(
         comodel_name="document.document",
-        help="Default folder where documents of this type should be stored",
         domain="[('type', '=', 'folder')]",
+        help="Default folder where documents of this type should be stored",
     )
 
     document_ids = fields.One2many(
@@ -62,22 +62,22 @@ class DocumentType(models.Model):
         help="Documents of this type",
     )
     document_count = fields.Integer(
-        help="Total number of documents of this type",
         compute="_compute_document_counts",
+        help="Total number of documents of this type",
     )
     expired_document_count = fields.Integer(
-        help="Number of documents of this type that are currently expired",
         compute="_compute_document_counts",
+        help="Number of documents of this type that are currently expired",
     )
     expiring_soon_count = fields.Integer(
-        help="Number of documents of this type expiring within the next 30 days",
         compute="_compute_document_counts",
+        help="Number of documents of this type expiring within the next 30 days",
     )
 
     company_id = fields.Many2one(
         comodel_name="res.company",
-        help="Company this document type belongs to (leave empty for all companies)",
         default=lambda self: self.env.company,
+        help="Company this document type belongs to (leave empty for all companies)",
     )
 
     _code_company_uniq = models.UniqueIndex(

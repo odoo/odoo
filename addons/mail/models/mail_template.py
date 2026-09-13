@@ -210,8 +210,8 @@ class MailTemplate(models.Model):
     name = fields.Char(translate=True)
     description = fields.Text(
         string="Template Description",
-        help="This field is used for internal description of the template's usage.",
         translate=True,
+        help="This field is used for internal description of the template's usage.",
     )
     active = fields.Boolean(default=True)
     template_category = fields.Selection(
@@ -237,9 +237,9 @@ class MailTemplate(models.Model):
         readonly=True,
     )
     subject = fields.Char(
-        help="Subject (placeholders may be used here)",
         translate=True,
         prefetch=True,
+        help="Subject (placeholders may be used here)",
     )
     email_from = fields.Char(
         string="Send From",
@@ -253,10 +253,10 @@ class MailTemplate(models.Model):
     )
     use_default_to = fields.Boolean(
         string="Default Recipients",
+        default=True,
         help="Default recipients of the record:\n"
         "- partner (using id on a partner or the partner_id field) OR\n"
         "- email (using email_from or email field)",
-        default=True,
     )
     email_to = fields.Char(
         string="To (Emails)",
@@ -304,30 +304,30 @@ class MailTemplate(models.Model):
     mail_server_id: IrMail_Server = fields.Many2one(
         comodel_name="ir.mail_server",
         string="Outgoing Mail Server",
-        help="Optional preferred server for outgoing mails. If not set, the highest "
-        "priority one will be used.",
         index="btree_not_null",
         readonly=False,
+        help="Optional preferred server for outgoing mails. If not set, the highest "
+        "priority one will be used.",
     )
     scheduled_date = fields.Char(
         help="If set, the queue manager will send the email after the date. If not set, the email will be send as soon as possible. You can use dynamic expression."
     )
     auto_delete = fields.Boolean(
-        help="This option permanently removes any track of email after it's been sent, including from the Technical menu in the Settings, in order to preserve storage space of your Odoo database.",
         default=True,
+        help="This option permanently removes any track of email after it's been sent, including from the Technical menu in the Settings, in order to preserve storage space of your Odoo database.",
     )
     ref_ir_act_window: IrActionsAct_Window = fields.Many2one(
         comodel_name="ir.actions.act_window",
         string="Sidebar action",
-        help="Sidebar action to make this template available on records "
-        "of the related document model",
         copy=False,
         readonly=True,
+        help="Sidebar action to make this template available on records "
+        "of the related document model",
     )
 
     can_write = fields.Boolean(
-        help="The current user can edit the template.",
         compute="_compute_can_write",
+        help="The current user can edit the template.",
     )
     is_template_editor = fields.Boolean(compute="_compute_is_template_editor")
 

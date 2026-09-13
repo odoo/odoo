@@ -9,21 +9,21 @@ class IrActionsServer(models.Model):
 
     xml_id = fields.Char(
         string="External ID",
-        help="ID of the action if defined in a XML file",
         compute="_compute_xml_id",
+        help="ID of the action if defined in a XML file",
     )
     website_path = fields.Char()
     website_url = fields.Char(
-        help="The full URL to access the server action through the website.",
         compute="_compute_website_url",
+        help="The full URL to access the server action through the website.",
     )
     website_published = fields.Boolean(
         string="Available on the Website",
+        copy=False,
         help="A code server action can be executed from the website, using a dedicated "
         "controller. The address is <base>/website/action/<website_path>. "
         "Set this field as True to allow users to run this action. If it "
         "is set to False the action cannot be run through the website.",
-        copy=False,
     )
 
     def _compute_xml_id(self):

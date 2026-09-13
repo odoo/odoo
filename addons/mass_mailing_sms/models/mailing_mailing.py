@@ -37,10 +37,10 @@ class MailingMailing(models.Model):
     sms_subject = fields.Char(
         related="subject",
         string="Title",
-        help="For an email, the subject your recipients will see in their inbox.\n"
-        "For an SMS, the internal title of the message.",
         translate=False,
         readonly=False,
+        help="For an email, the subject your recipients will see in their inbox.\n"
+        "For an SMS, the internal title of the message.",
     )
     # sms options
     body_plaintext = fields.Text(

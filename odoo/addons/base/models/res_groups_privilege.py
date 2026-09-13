@@ -18,8 +18,8 @@ class ResGroupsPrivilege(models.Model):
     )
     description = fields.Text()
     placeholder = fields.Char(
-        help="Label shown for the empty option in the privilege selection field of the user form (e.g. 'No' access).",
         default="No",
+        help="Label shown for the empty option in the privilege selection field of the user form (e.g. 'No' access).",
     )
     sequence = fields.Integer(default=100)
     category_id = fields.Many2one(

@@ -24,8 +24,8 @@ class DiscussChannel(models.Model):
         ondelete={"livechat": "cascade"},
     )
     duration = fields.Float(
-        help="Duration of the session in hours",
         compute="_compute_duration",
+        help="Duration of the session in hours",
     )
     livechat_lang_id = fields.Many2one(
         comodel_name="res.lang",
@@ -116,9 +116,9 @@ class DiscussChannel(models.Model):
     )
     livechat_note = fields.Html(
         string="Live Chat Note",
-        help="Note about the session, visible to all internal users having access to the session.",
         sanitize_style=True,
         groups="base.group_user",
+        help="Note about the session, visible to all internal users having access to the session.",
     )
     livechat_status = fields.Selection(
         selection=[
@@ -145,8 +145,8 @@ class DiscussChannel(models.Model):
         comodel_name="im_livechat.conversation.tag",
         relation="livechat_conversation_tag_rel",
         string="Live Chat Conversation Tags",
-        help="Tags to qualify the conversation.",
         groups="im_livechat.im_livechat_group_user",
+        help="Tags to qualify the conversation.",
     )
     livechat_start_hour = fields.Float(
         string="Session Start Hour",

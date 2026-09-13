@@ -42,27 +42,27 @@ class AccountAutomaticEntryWizard(models.TransientModel):
         related="company_id.currency_id",
     )
     percentage = fields.Float(
-        help="Percentage of each line to execute the action on.",
         compute="_compute_percentage",
         store=True,
         readonly=False,
+        help="Percentage of each line to execute the action on.",
     )
     total_amount = fields.Monetary(
-        help="Total amount impacted by the automatic entry.",
         currency_field="company_currency_id",
         compute="_compute_total_amount",
         store=True,
         readonly=False,
+        help="Total amount impacted by the automatic entry.",
     )
     journal_id = fields.Many2one(
         comodel_name="account.journal",
-        help="Journal where to create the entry.",
         compute="_compute_journal_id",
         inverse="_inverse_journal_id",
         readonly=False,
         required=True,
         domain="[('type', '=', 'general')]",
         check_company=True,
+        help="Journal where to create the entry.",
     )
 
     account_type = fields.Selection(
@@ -91,8 +91,8 @@ class AccountAutomaticEntryWizard(models.TransientModel):
     destination_account_id = fields.Many2one(
         comodel_name="account.account",
         string="To",
-        help="Account to transfer to.",
         check_company=True,
+        help="Account to transfer to.",
     )
     display_currency_helper = fields.Boolean(
         string="Currency Conversion Helper",

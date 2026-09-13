@@ -230,17 +230,17 @@ class HrLeave(models.Model):
     )
     number_of_days = fields.Float(
         string="Duration (Days)",
-        help="Number of days of the time off request. Used in the calculation.",
         compute="_compute_duration",
         store=True,
         tracking=True,
+        help="Number of days of the time off request. Used in the calculation.",
     )
     number_of_hours = fields.Float(
         string="Duration (Hours)",
-        help="Number of hours of the time off request. Used in the calculation.",
         compute="_compute_duration",
         store=True,
         tracking=True,
+        help="Number of hours of the time off request. Used in the calculation.",
     )
     last_several_days = fields.Boolean(
         string="All day",
@@ -258,16 +258,16 @@ class HrLeave(models.Model):
     first_approver_id = fields.Many2one(
         comodel_name="hr.employee",
         string="First Approval",
-        help="This area is automatically filled by the user who validate the time off",
         copy=False,
         readonly=True,
+        help="This area is automatically filled by the user who validate the time off",
     )
     second_approver_id = fields.Many2one(
         comodel_name="hr.employee",
         string="Second Approval",
-        help="This area is automatically filled by the user who validate the time off with second level (If time off type need second validation)",
         copy=False,
         readonly=True,
+        help="This area is automatically filled by the user who validate the time off with second level (If time off type need second validation)",
     )
 
     can_cancel = fields.Boolean(

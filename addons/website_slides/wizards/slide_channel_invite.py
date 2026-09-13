@@ -41,8 +41,8 @@ class SlideChannelInvite(models.TransientModel):
     channel_published = fields.Boolean(related="channel_id.is_published")
     enroll_mode = fields.Boolean(
         string="Enroll partners",
-        help="Whether invited partners will be added as enrolled. Otherwise, they will be added as invited.",
         readonly=True,
+        help="Whether invited partners will be added as enrolled. Otherwise, they will be added as invited.",
     )
 
     @api.depends("channel_id")

@@ -15,6 +15,8 @@ class ApprovalDocumentRequirement(models.Model):
     )
 
     name = fields.Char(
+        translate=True,
+        required=True,
         help="Document type name (e.g. 'Invoice PDF', 'Vendor Quote'). A "
         "LABEL, translatable for the ordinary reason: the requester picks "
         "it from a dropdown on the file they upload. It used to be "
@@ -27,8 +29,6 @@ class ApprovalDocumentRequirement(models.Model):
         "(ir.attachment.approval_requirement_id), so the name means "
         "nothing to the check — and the cross-language uniqueness "
         "constraint that matching needed is gone with it.",
-        translate=True,
-        required=True,
     )
     category_id = fields.Many2one(
         comodel_name="approval.category",
@@ -38,7 +38,7 @@ class ApprovalDocumentRequirement(models.Model):
     )
     sequence = fields.Integer(default=10)
     required = fields.Boolean(
-        help="If checked, this document must be attached before submission",
         default=True,
+        help="If checked, this document must be attached before submission",
     )
     description = fields.Text(help="Instructions for the requester about this document")

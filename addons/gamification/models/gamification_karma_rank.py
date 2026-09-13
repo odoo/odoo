@@ -26,16 +26,16 @@ class GamificationKarmaRank(models.Model):
     )
     description_motivational = fields.Html(
         string="Motivational",
-        help="Motivational phrase to reach this rank on your profile page.",
         translate=html_translate,
         sanitize_overridable=True,
         sanitize_attributes=False,
+        help="Motivational phrase to reach this rank on your profile page.",
     )
     description_perks = fields.Html(
         string="Unlocked Perks",
-        help="Describe what capabilities or permissions this rank unlocks.",
         translate=html_translate,
         sanitize_attributes=False,
+        help="Describe what capabilities or permissions this rank unlocks.",
     )
     karma_min = fields.Integer(
         string="Required Karma (XP)",
@@ -44,9 +44,9 @@ class GamificationKarmaRank(models.Model):
     )
     level_number = fields.Integer(
         string="Level",
+        default=0,
         help="Sequential level number for display (1, 2, 3, ...). "
         "Set to 0 for auto-ordering by karma_min.",
-        default=0,
     )
     unlock_badge_ids = fields.Many2many(
         comodel_name="gamification.badge",

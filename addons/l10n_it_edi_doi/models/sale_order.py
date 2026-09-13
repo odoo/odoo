@@ -26,10 +26,10 @@ class SaleOrder(models.Model):
 
     l10n_it_edi_doi_not_yet_invoiced = fields.Monetary(
         string="Declaration of Intent Amount Not Yet Invoiced",
-        help="Total under the Declaration of Intent of this document that can still be invoiced",
         compute="_compute_l10n_it_edi_doi_not_yet_invoiced",
         store=True,
         readonly=True,
+        help="Total under the Declaration of Intent of this document that can still be invoiced",
     )
 
     l10n_it_edi_doi_warning = fields.Text(

@@ -39,19 +39,19 @@ class ResPartner(models.Model):
             ("0198", "SE"),
         ],
         string="Nemhandel Endpoint Type",
-        help="Unique identifier used by OIOUBL and Nemhandel",
         compute="_compute_nemhandel_identifier_type",
         store=True,
         readonly=False,
         tracking=True,
+        help="Unique identifier used by OIOUBL and Nemhandel",
     )
     nemhandel_identifier_value = fields.Char(
         string="Nemhandel Endpoint",
-        help="Code used to identify the Endpoint on Nemhandel",
         compute="_compute_nemhandel_identifier_value",
         store=True,
         readonly=False,
         tracking=True,
+        help="Code used to identify the Endpoint on Nemhandel",
     )
 
     is_using_nemhandel = fields.Boolean(compute="_compute_is_using_nemhandel")

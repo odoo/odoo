@@ -45,8 +45,8 @@ class AccountReportAnnotation(models.Model):
         required=True,
     )
     date = fields.Date(
-        help="Date considered as annotated by the annotation.",
         required=True,
+        help="Date considered as annotated by the annotation.",
     )
 
 

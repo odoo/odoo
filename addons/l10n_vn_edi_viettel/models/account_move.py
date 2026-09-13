@@ -68,9 +68,9 @@ class AccountMove(models.Model):
     # This id is important when sending by batches in order to recognize individual invoices.
     l10n_vn_edi_invoice_transaction_id = fields.Char(
         string="SInvoice Transaction ID",
-        help="Technical field to store the transaction ID if needed",
         export_string_translation=False,
         copy=False,
+        help="Technical field to store the transaction ID if needed",
     )
     l10n_vn_edi_invoice_symbol = fields.Many2one(
         comodel_name="l10n_vn_edi_viettel.sinvoice.symbol",
@@ -81,21 +81,21 @@ class AccountMove(models.Model):
     )
     l10n_vn_edi_invoice_number = fields.Char(
         string="SInvoice Number",
-        help="Invoice Number as appearing on SInvoice.",
         copy=False,
         readonly=True,
+        help="Invoice Number as appearing on SInvoice.",
     )
     l10n_vn_edi_reservation_code = fields.Char(
         string="Secret Code",
-        help="Secret code that can be used by a customer to lookup an invoice on SInvoice.",
         copy=False,
         readonly=True,
+        help="Secret code that can be used by a customer to lookup an invoice on SInvoice.",
     )
     l10n_vn_edi_issue_date = fields.Datetime(
         string="Issue Date",
-        help="Date of issue of the invoice on the e-invoicing system.",
         copy=False,
         readonly=True,
+        help="Date of issue of the invoice on the e-invoicing system.",
     )
     l10n_vn_edi_sinvoice_file_id = fields.Many2one(
         comodel_name="ir.attachment",

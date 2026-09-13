@@ -11,10 +11,10 @@ class DeliveryCarrier(models.Model):
 
     invoice_policy = fields.Selection(
         selection_add=[("real", "Real cost")],
+        ondelete={"real": "set default"},
         help="Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
         "Real Cost: the customer will be invoiced the real cost of the shipping, the cost of the"
         "shipping will be updated on the SO after the delivery.",
-        ondelete={"real": "set default"},
     )
 
     route_ids = fields.Many2many(

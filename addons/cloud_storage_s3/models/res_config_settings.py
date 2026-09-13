@@ -30,12 +30,12 @@ class ResConfigSettings(models.TransientModel):
     )
     cloud_storage_s3_enabled = fields.Boolean(
         string="Use S3 in this environment",
+        default=False,
+        config_parameter="cloud_storage_s3_enabled",
         help="Master switch for THIS environment. When off, attachments are "
         "served from the local filestore and S3 is never contacted, even if a "
         "provider and credentials are configured (e.g. on a database restored "
         "from production). Production must turn this on explicitly.",
-        default=False,
-        config_parameter="cloud_storage_s3_enabled",
     )
     cloud_storage_s3_storage_mode = fields.Selection(
         selection=[
@@ -43,12 +43,12 @@ class ResConfigSettings(models.TransientModel):
             ("hybrid", "Hybrid (S3 + Local)"),
         ],
         string="S3 Storage Mode",
+        default="s3_only",
+        config_parameter="cloud_storage_s3_storage_mode",
         help="S3 Only: new attachments are uploaded straight to S3 from the "
         "browser and not kept locally. Hybrid: attachments are stored in the "
         "local filestore and mirrored to S3 by a scheduled job, keeping the "
         "local copy.",
-        default="s3_only",
-        config_parameter="cloud_storage_s3_storage_mode",
     )
 
     def _is_s3_provider(self):

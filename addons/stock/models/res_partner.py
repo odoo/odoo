@@ -10,18 +10,18 @@ class ResPartner(models.Model):
     property_stock_customer = fields.Many2one(
         comodel_name="stock.location",
         string="Customer Location",
-        help="The stock location used as destination when sending goods to this contact.",
         company_dependent=True,
         domain="[('company_id', 'in', [False, allowed_company_ids[0]])]",
         check_company=True,
+        help="The stock location used as destination when sending goods to this contact.",
     )
     property_stock_supplier = fields.Many2one(
         comodel_name="stock.location",
         string="Vendor Location",
-        help="The stock location used as source when receiving goods from this contact.",
         company_dependent=True,
         domain="[('company_id', 'in', [False, allowed_company_ids[0]])]",
         check_company=True,
+        help="The stock location used as source when receiving goods from this contact.",
     )
     picking_warn_msg = fields.Text(string="Message for Stock Picking")
 

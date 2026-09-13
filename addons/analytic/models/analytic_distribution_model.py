@@ -15,19 +15,19 @@ class AccountAnalyticDistributionModel(models.Model):
     sequence = fields.Integer(default=10)
     partner_id = fields.Many2one(
         comodel_name="res.partner",
-        help="Select a partner for which the analytic distribution will be used (e.g. create new customer invoice or Sales order if we select this partner, it will automatically take this as an analytic account)",
         ondelete="cascade",
+        help="Select a partner for which the analytic distribution will be used (e.g. create new customer invoice or Sales order if we select this partner, it will automatically take this as an analytic account)",
     )
     partner_tag_id = fields.Many2one(
         comodel_name="res.partner.tag",
-        help="Select a partner tag for which the analytic distribution will be used (e.g. create new customer invoice or Sales order if we select this partner, it will automatically take this as an analytic account)",
         ondelete="cascade",
+        help="Select a partner tag for which the analytic distribution will be used (e.g. create new customer invoice or Sales order if we select this partner, it will automatically take this as an analytic account)",
     )
     company_id = fields.Many2one(
         comodel_name="res.company",
-        help="Select a company for which the analytic distribution will be used (e.g. create new customer invoice or Sales order if we select this company, it will automatically take this as an analytic account)",
         default=lambda self: self.env.company,
         ondelete="cascade",
+        help="Select a company for which the analytic distribution will be used (e.g. create new customer invoice or Sales order if we select this company, it will automatically take this as an analytic account)",
     )
 
     @api.constrains("company_id")

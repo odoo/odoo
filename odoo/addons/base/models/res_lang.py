@@ -70,8 +70,8 @@ class ResLang(models.Model):
     name = fields.Char(required=True)
     code = fields.Char(
         string="Locale Code",
-        help="This field is used to set/get locales for user",
         required=True,
+        help="This field is used to set/get locales for user",
     )
     iso_code = fields.Char(
         string="ISO code",
@@ -79,8 +79,8 @@ class ResLang(models.Model):
     )
     url_code = fields.Char(
         string="URL Code",
-        help="The Lang Code displayed in the URL",
         required=True,
+        help="The Lang Code displayed in the URL",
     )
     active = fields.Boolean()
     direction = fields.Selection(
@@ -121,10 +121,10 @@ class ResLang(models.Model):
             ("[3,2,0]", "Indian Grouping"),
         ],
         string="Separator Format",
-        help="The International Grouping will represent 123456789 to be 123,456,789.00; "
-        "The Indian Grouping will represent 123456789 to be 12,34,56,789.00",
         default="[3,0]",
         required=True,
+        help="The International Grouping will represent 123456789 to be 123,456,789.00; "
+        "The Indian Grouping will represent 123456789 to be 12,34,56,789.00",
     )
     decimal_point = fields.Char(
         string="Decimal Separator",

@@ -44,9 +44,9 @@ class GamificationBadge(models.Model):
             ("nobody", "No one, assigned through challenges"),
         ],
         string="Allowance to Grant",
-        help="Who can grant this badge",
         default="everyone",
         required=True,
+        help="Who can grant this badge",
     )
     rule_auth_user_ids = fields.Many2many(
         comodel_name="res.users",
@@ -93,46 +93,46 @@ class GamificationBadge(models.Model):
 
     granted_count = fields.Integer(
         string="Total",
-        help="The number of time this badge has been received.",
         compute="_compute_owner_stats",
+        help="The number of time this badge has been received.",
     )
     granted_users_count = fields.Integer(
         string="Number of users",
-        help="The number of time this badge has been received by unique users.",
         compute="_compute_owner_stats",
+        help="The number of time this badge has been received by unique users.",
     )
     unique_owner_ids = fields.Many2many(
         comodel_name="res.users",
         string="Unique Owners",
-        help="The list of unique users having received this badge.",
         compute="_compute_owner_stats",
+        help="The list of unique users having received this badge.",
     )
 
     stat_this_month = fields.Integer(
         string="Monthly total",
-        help="The number of time this badge has been received this month.",
         compute="_compute_owner_stats",
+        help="The number of time this badge has been received this month.",
     )
     stat_my = fields.Integer(
         string="My Total",
-        help="The number of time the current user has received this badge.",
         compute="_compute_owner_stats",
+        help="The number of time the current user has received this badge.",
     )
     stat_my_this_month = fields.Integer(
         string="My Monthly Total",
-        help="The number of time the current user has received this badge this month.",
         compute="_compute_owner_stats",
+        help="The number of time the current user has received this badge this month.",
     )
     stat_my_monthly_sending = fields.Integer(
         string="My Monthly Sending Total",
-        help="The number of time the current user has sent this badge this month.",
         compute="_compute_owner_stats",
+        help="The number of time the current user has sent this badge this month.",
     )
 
     remaining_sending = fields.Integer(
         string="Remaining Sending Allowed",
-        help="If a maximum is set",
         compute="_compute_remaining_sending",
+        help="If a maximum is set",
     )
 
     # Every column here is "as seen by the acting user": the four stat_* ones

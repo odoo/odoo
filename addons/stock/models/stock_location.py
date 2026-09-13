@@ -70,8 +70,8 @@ class StockLocation(models.Model):
         store=True,
     )
     active = fields.Boolean(
-        help="By unchecking the active field, you may hide a location without deleting it.",
         default=True,
+        help="By unchecking the active field, you may hide a location without deleting it.",
     )
     usage = fields.Selection(
         selection=[
@@ -84,6 +84,9 @@ class StockLocation(models.Model):
             ("transit", "Transit"),
         ],
         string="Location Type",
+        default="internal",
+        index=True,
+        required=True,
         help="* Vendor: Virtual location representing the source location for products coming from your vendors"
         "\n* Virtual: Virtual location used to create a hierarchical structure for your warehouse by aggregating its child locations. Can't directly contain products"
         "\n* Internal: Physical locations inside your warehouses,"
@@ -91,16 +94,13 @@ class StockLocation(models.Model):
         "\n* Inventory Loss: Virtual location serving as the counterpart for inventory operations done to correct stock levels (Physical inventories)"
         "\n* Production: Virtual counterpart location for production operations. I.e. This location consumes components and produces finished products"
         "\n* Transit: Counterpart location that should be used for inter-company or inter-warehouses operations",
-        default="internal",
-        index=True,
-        required=True,
     )
     location_id = fields.Many2one(
         comodel_name="stock.location",
         string="Parent Location",
-        help="The parent location that includes this location. Example : The 'Dispatch Zone' is the 'Gate 1' parent location.",
         index=True,
         check_company=True,
+        help="The parent location that includes this location. Example : The 'Dispatch Zone' is the 'Gate 1' parent location.",
     )
     child_ids = fields.One2many(
         comodel_name="stock.location",
@@ -110,23 +110,23 @@ class StockLocation(models.Model):
     child_internal_location_ids = fields.Many2many(
         comodel_name="stock.location",
         string="Internal locations among descendants",
-        help="This location (if it's internal) and all its descendants filtered by type=Internal.",
         compute="_compute_child_internal_location_ids",
+        help="This location (if it's internal) and all its descendants filtered by type=Internal.",
     )
     parent_path = fields.Char(index=True)
     company_id = fields.Many2one(
         comodel_name="res.company",
-        help="Let this field empty if this location is shared between companies",
         default=lambda self: self.env.company,
         index=True,
+        help="Let this field empty if this location is shared between companies",
     )
     replenish_location = fields.Boolean(
         string="Replenishments",
-        help="Trigger replenishment suggestions for this location when required",
         compute="_compute_replenish_location",
         store=True,
         copy=False,
         readonly=False,
+        help="Trigger replenishment suggestions for this location when required",
     )
     removal_strategy_id = fields.Many2one(
         comodel_name="product.removal",
@@ -153,19 +153,19 @@ class StockLocation(models.Model):
     )
     cyclic_inventory_frequency = fields.Integer(
         string="Inventory Frequency",
-        help=" When different than 0, inventory count date for products stored at this location will be automatically set at the defined frequency.",
         default=0,
+        help=" When different than 0, inventory count date for products stored at this location will be automatically set at the defined frequency.",
     )
     last_inventory_date = fields.Date(
         string="Last Inventory",
-        help="Date of the last inventory at this location.",
         readonly=True,
+        help="Date of the last inventory at this location.",
     )
     next_inventory_date = fields.Date(
         string="Next Expected",
-        help="Date for next planned inventory based on cyclic schedule.",
         compute="_compute_next_inventory_date",
         store=True,
+        help="Date for next planned inventory based on cyclic schedule.",
     )
     warehouse_view_ids = fields.One2many(
         comodel_name="stock.warehouse",
@@ -202,6 +202,9 @@ class StockLocation(models.Model):
     )
     block_type = fields.Selection(
         selection=BLOCK_TYPE_SELECTION,
+        default="none",
+        required=True,
+        tracking=True,
         help="Blocking Mode:\n\n"
         "\u2022 No Blocking: Normal warehouse operations\n\n"
         "\u2022 Soft Block Incoming: Prevents NEW incoming stock but allows:\n"
@@ -221,47 +224,44 @@ class StockLocation(models.Model):
         "  - Requires the Hard Block override group to lift, to archive the\n"
         "    location, or to move it out from under the block\n"
         "  Use for: Inventory counts, audits, legal holds, emergency quarantine",
-        default="none",
-        required=True,
-        tracking=True,
     )
     effective_block_type = fields.Selection(
         selection=BLOCK_TYPE_SELECTION,
         string="Effective Blocking",
-        help="The blocking actually in force here: this location's own mode merged "
-        "with every ancestor's. Stored so the reservation and visibility filters "
-        "are a single indexed join instead of a subtree walk per query.",
         compute="_compute_effective_block_type",
         recursive=True,
         store=True,
         readonly=True,
+        help="The blocking actually in force here: this location's own mode merged "
+        "with every ancestor's. Stored so the reservation and visibility filters "
+        "are a single indexed join instead of a subtree walk per query.",
     )
     block_reason = fields.Text(
         string="Blocking Reason",
-        help="Detailed explanation for why this location is blocked",
         tracking=True,
+        help="Detailed explanation for why this location is blocked",
     )
     blocked_date = fields.Datetime(
         string="Blocked Since",
-        help="Date and time when blocking was applied",
         copy=False,
         readonly=True,
+        help="Date and time when blocking was applied",
     )
     blocked_by_user_id = fields.Many2one(
         comodel_name="res.users",
         string="Blocked By",
-        help="User who applied the block",
         copy=False,
         readonly=True,
+        help="User who applied the block",
     )
     reserved_qty_when_blocked = fields.Float(
+        digits="Product Unit",
+        copy=False,
+        readonly=True,
         help="Reserved quantity in this location and its children at the time "
         "blocking was applied, summed across products.\n"
         "Comparable only where the location holds a single unit of measure; the "
         "chatter entry posted at blocking time carries the per-unit breakdown.",
-        digits="Product Unit",
-        copy=False,
-        readonly=True,
     )
 
     _barcode_company_unique_idx = models.UniqueIndex(

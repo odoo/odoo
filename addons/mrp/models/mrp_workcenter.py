@@ -46,9 +46,9 @@ class MrpWorkcenter(models.Model):
     code = fields.Char(copy=False)
     note = fields.Html(string="Description")
     sequence = fields.Integer(
-        help="Gives the sequence order when displaying a list of work centers.",
         default=1,
         required=True,
+        help="Gives the sequence order when displaying a list of work centers.",
     )
     color = fields.Integer()
     currency_id = fields.Many2one(
@@ -60,9 +60,9 @@ class MrpWorkcenter(models.Model):
     )
     costs_hour = fields.Float(
         string="Cost per hour",
-        help="Hourly processing cost.",
         default=0.0,
         tracking=True,
+        help="Hourly processing cost.",
     )
     time_start = fields.Float(string="Setup Time")
     time_stop = fields.Float(string="Cleanup Time")
@@ -72,8 +72,8 @@ class MrpWorkcenter(models.Model):
         string="Routing Lines",
     )
     has_routing_lines = fields.Boolean(
-        help="Technical field for workcenter views",
         compute="_compute_has_routing_lines",
+        help="Technical field for workcenter views",
     )
     order_ids = fields.One2many(
         comodel_name="mrp.workorder",
@@ -117,29 +117,29 @@ class MrpWorkcenter(models.Model):
         store=True,
     )
     blocked_time = fields.Float(
-        help="Blocked hours over the last month",
         digits=(16, 2),
         compute="_compute_effectiveness_times",
+        help="Blocked hours over the last month",
     )
     productive_time = fields.Float(
-        help="Productive hours over the last month",
         digits=(16, 2),
         compute="_compute_effectiveness_times",
+        help="Productive hours over the last month",
     )
     oee = fields.Float(
         string="OEE",
-        help="Overall Equipment Effectiveness, based on the last month",
         digits=(16, 2),
         compute="_compute_effectiveness_times",
+        help="Overall Equipment Effectiveness, based on the last month",
     )
     oee_target = fields.Float(
         string="OEE Target",
-        help="Overall Effective Efficiency Target in percentage",
         default=90,
+        help="Overall Effective Efficiency Target in percentage",
     )
     performance = fields.Integer(
-        help="Performance over the last month",
         compute="_compute_performance",
+        help="Performance over the last month",
     )
     workcenter_load = fields.Float(
         string="Work Center Load",
@@ -151,17 +151,17 @@ class MrpWorkcenter(models.Model):
         column1="workcenter_id",
         column2="alternative_workcenter_id",
         string="Alternative Workcenters",
-        help="Alternative workcenters that can be substituted to this one in order to dispatch production",
         domain="[('id', '!=', id), '|', ('company_id', '=', company_id), ('company_id', '=', False)]",
         check_company=True,
+        help="Alternative workcenters that can be substituted to this one in order to dispatch production",
     )
     tag_ids = fields.Many2many(comodel_name="mrp.workcenter.tag")
     capacity_ids = fields.One2many(
         comodel_name="mrp.workcenter.capacity",
         inverse_name="workcenter_id",
         string="Product Capacities",
-        help="Specific number of pieces that can be produced in parallel per product.",
         copy=True,
+        help="Specific number of pieces that can be produced in parallel per product.",
     )
     kanban_dashboard_graph = fields.Text(compute="_compute_kanban_dashboard_graph")
     resource_calendar_id = fields.Many2one(
@@ -1103,19 +1103,19 @@ class MrpWorkcenterCapacity(models.Model):
     )
     time_start = fields.Float(
         string="Setup Time (minutes)",
-        help="Time in minutes for the setup.",
         compute="_compute_times",
         precompute=True,
         store=True,
         readonly=False,
+        help="Time in minutes for the setup.",
     )
     time_stop = fields.Float(
         string="Cleanup Time (minutes)",
-        help="Time in minutes for the cleaning.",
         compute="_compute_times",
         precompute=True,
         store=True,
         readonly=False,
+        help="Time in minutes for the cleaning.",
     )
 
     _positive_capacity = models.Constraint(

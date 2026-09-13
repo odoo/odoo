@@ -8,6 +8,6 @@ class ResConfigSettings(models.TransientModel):
         comodel_name="account.account",
         related="company_id.l10n_ar_tax_base_account_id",
         string="Tax Base Account",
-        help="Account that will be set on lines created to represent the tax base amounts.",
         readonly=False,
+        help="Account that will be set on lines created to represent the tax base amounts.",
     )

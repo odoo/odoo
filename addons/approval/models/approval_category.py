@@ -42,9 +42,9 @@ class ApprovalCategory(models.Model):
     sequence = fields.Integer()
     sequence_code = fields.Char(
         string="Code",
+        required=True,
         help="Prefix used to build the request numbering sequence "
         "(e.g. 'BIZTRIP' → BIZTRIP00001). Must be unique per company.",
-        required=True,
     )
     sequence_id = fields.Many2one(
         comodel_name="ir.sequence",
@@ -56,17 +56,17 @@ class ApprovalCategory(models.Model):
     description = fields.Char(translate=True)
 
     allow_self_approval = fields.Boolean(
+        tracking=True,
         help="Whether the person asking may also decide their own request. Off, "
         "the requester is never asked and any decision they attempt is refused, "
         "on every routing path: listed approvers, the security group, rules and "
         "steps.",
-        tracking=True,
     )
     notify_pool_members = fields.Boolean(
+        tracking=True,
         help="With a security group as approvers, ask every member with an activity "
         "and an e-mail. Off, the group is a queue: its members decide from To Review "
         "and nobody is notified individually.",
-        tracking=True,
     )
     group_approval = fields.Selection(
         selection=[
@@ -74,6 +74,9 @@ class ApprovalCategory(models.Model):
             ("exclusive", "Security group"),
         ],
         string="Approver Source",
+        default="no",
+        required=True,
+        tracking=True,
         help="""Where the request's approvers come from:
 
         • Users: approvers are the ones listed below (plus the
@@ -86,14 +89,11 @@ class ApprovalCategory(models.Model):
         - In 'Security group' mode approvers are ONLY the group members; the
           explicit list, the Employee's Manager and tiers are all bypassed
         - A user added by multiple mechanisms appears only once""",
-        default="no",
-        required=True,
-        tracking=True,
     )
     approver_group_id = fields.Many2one(
         comodel_name="res.groups",
-        help="Users in this security group can approve requests for this category",
         tracking=True,
+        help="Users in this security group can approve requests for this category",
     )
     approver_group_user_ids = fields.Many2many(
         comodel_name="res.users",
@@ -134,6 +134,9 @@ class ApprovalCategory(models.Model):
             ("employees", "All internal users"),
         ],
         string="Approval Visibility",
+        default="private",
+        required=True,
+        tracking=True,
         help="""Who may READ the requests of this category (additive on top of
         the always-allowed requester/approvers/delegate and managers):
 
@@ -157,9 +160,6 @@ class ApprovalCategory(models.Model):
         file in the category; if that is not what you want, keep the category
         'Only people involved' and give the supervisors the Administrator
         group instead, which reads everything without touching creation.""",
-        default="private",
-        required=True,
-        tracking=True,
     )
     approval_minimum = fields.Integer(
         string="Minimum Approval",
@@ -169,23 +169,23 @@ class ApprovalCategory(models.Model):
     )
     approval_type = fields.Selection(
         selection=[("general", "General")],
+        tracking=True,
         help="Category of approval for filtering and grouping purposes "
         "(e.g., 'purchase', 'expense', 'vacation'). "
         "Used to organize and filter approval requests.",
-        tracking=True,
     )
     target_model = fields.Selection(
         selection=[],
+        tracking=True,
         help="Technical name of the model to create when this approval is granted. "
         "Leave empty if the approval is for an existing record (e.g., approving a purchase order). "
         "Set to model name (e.g., 'purchase.order') if approval should create a new record.",
-        tracking=True,
     )
     approve_sequentially = fields.Boolean(
         string="Approvers Sequence?",
+        tracking=True,
         help="If checked, the approvers have to approve in sequence (one after the other). "
         "If Employee's Manager is selected as approver, they will be the first in line.",
-        tracking=True,
     )
     approver_ids = fields.One2many(
         comodel_name="approval.category.approver",
@@ -201,17 +201,17 @@ class ApprovalCategory(models.Model):
         comodel_name="approval.category.step",
         inverse_name="category_id",
         string="Steps",
+        context={"active_test": True},
         help="Declare steps when approval must pass several pools, each needing its "
         "own approvals. Without steps the flat approver list and Minimum Approval "
         "apply exactly as before.",
-        context={"active_test": True},
     )
     notify_sequentially = fields.Boolean(
         string="Request Steps In Order",
+        tracking=True,
         help="Only for categories with steps. Every step may be decided at any time, "
         "but its approvers are only asked -- given an activity -- once every earlier "
         "step is met. It orders the asking, not the deciding.",
-        tracking=True,
     )
     activity_target = fields.Selection(
         selection=[
@@ -219,14 +219,14 @@ class ApprovalCategory(models.Model):
             ("document", "Source Document"),
         ],
         string="Ask Approvers On",
+        default="request",
         help="Where an approver's activity is created. Source Document asks on the "
         "record being approved, when the request has one that can hold activities; "
         "the activity still decides the request when done.",
-        default="request",
     )
     rule_count = fields.Integer(
-        help="Number of active conditional rules",
         compute="_compute_rule_count",
+        help="Number of active conditional rules",
     )
     invalid_minimum = fields.Boolean(compute="_compute_minimum_validity")
     invalid_minimum_warning = fields.Char(compute="_compute_minimum_validity")
@@ -236,70 +236,70 @@ class ApprovalCategory(models.Model):
     )
 
     kanban_dashboard = fields.Json(
+        compute="_compute_kanban_dashboard",
         help="The counters the category kanban card renders. A Json field, "
         "not Text holding JSON: the template used to JSON.parse() the raw "
         "value in two separate t-set expressions, which is the client "
         "re-deriving a structure the ORM can hand it directly.",
-        compute="_compute_kanban_dashboard",
     )
     show_on_dashboard = fields.Boolean(
         string="Show on Dashboard",
-        help="Show this category on the approval dashboard",
         default=True,
+        help="Show this category on the approval dashboard",
     )
 
     approval_deadline_hours = fields.Integer(
         string="Approval Deadline (Hours)",
-        help="Number of hours before approval is considered overdue. "
-        "Set to 0 to disable deadline tracking for this category.",
         default=48,
         tracking=True,
+        help="Number of hours before approval is considered overdue. "
+        "Set to 0 to disable deadline tracking for this category.",
     )
     escalate_overdue = fields.Boolean(
         string="Auto-Escalate Overdue Requests",
-        help="Automatically escalate overdue requests to escalation contact",
         default=False,
         tracking=True,
+        help="Automatically escalate overdue requests to escalation contact",
     )
     escalation_user_id = fields.Many2one(
         comodel_name="res.users",
         string="Escalation Contact",
+        tracking=True,
         help="User notified by the escalation cron when this category's "
         "requests are overdue and no approver-specific manager is found "
         "(see _get_escalation_manager). Leave empty to fall back to a "
         "plain reminder to the pending approvers.",
-        tracking=True,
     )
     auto_expire_hours = fields.Integer(
         string="Auto-Expire After (Hours)",
+        default=0,
+        tracking=True,
         help="Automatically CANCEL requests that remain pending beyond this "
         "many hours (terminal 'cancelled', recoverable via reset to draft — "
         "expiration is not a refusal: nobody decided). Set to 0 to disable.",
-        default=0,
-        tracking=True,
     )
 
     sla_target_hours = fields.Integer(
         string="SLA Target (Hours)",
-        help="Target time for complete approval cycle. "
-        "Used for compliance reporting. 0 = no SLA tracking.",
         default=0,
         tracking=True,
+        help="Target time for complete approval cycle. "
+        "Used for compliance reporting. 0 = no SLA tracking.",
     )
     sla_warning_pct = fields.Integer(
         string="SLA Warning (%)",
-        help="Warn when this percentage of SLA time has elapsed",
         default=80,
         tracking=True,
+        help="Warn when this percentage of SLA time has elapsed",
     )
 
     consent_approval_hours = fields.Integer(
         string="Consent Approval (Hours)",
+        default=0,
+        tracking=True,
         help="Auto-approve if no objection within N hours. "
         "0 = disabled. Only applies when all required approvers "
         "have not refused within the window.",
-        default=0,
-        tracking=True,
     )
 
     _name_src_uniq = name_uniq_index(

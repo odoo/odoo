@@ -84,13 +84,13 @@ class WebsiteRewrite(models.Model):
             ("308", "308 Redirect / Rewrite"),
         ],
         string="Action",
+        default="302",
         help="""Type of redirect/Rewrite:\n
         301 Moved permanently: The browser will keep in cache the new url.
         302 Moved temporarily: The browser will not keep in cache the new url and ask again the next time the new url.
         404 Not Found: If you want remove a specific page/controller (e.g. Ecommerce is installed, but you don't want /shop on a specific website)
         308 Redirect / Rewrite: If you want rename a controller with a new url. (Eg: /shop -> /garden - Both url will be accessible but /shop will automatically be redirected to /garden)
     """,
-        default="302",
     )
 
     sequence = fields.Integer()

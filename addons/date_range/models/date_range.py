@@ -43,42 +43,42 @@ class DateRange(models.Model):
         index=True,
     )
     active = fields.Boolean(
+        default=True,
         help="Uncheck to hide the date range without removing it. Archiving a "
         "date range type archives its ranges too; restoring the type does not "
         "restore them, so a range archived by hand stays archived.",
-        default=True,
     )
     allow_overlap = fields.Boolean(
         related="type_id.allow_overlap",
+        store=True,
         # Denormalised so the ``date_range_no_overlap`` exclusion constraint can
         # test it: an index predicate cannot reach into date_range_type.
         help="Technical mirror of the type's setting; do not set by hand.",
-        store=True,
     )
     duration_days = fields.Integer(
         string="Duration (days)",
-        help="Number of days in this date range (inclusive)",
         compute="_compute_duration_days",
         store=True,
+        help="Number of days in this date range (inclusive)",
     )
     business_days = fields.Integer(
-        help="Number of business days (Mon-Fri) in this date range",
         compute="_compute_day_counts",
         store=True,
+        help="Number of business days (Mon-Fri) in this date range",
     )
     weekend_days = fields.Integer(
-        help="Number of weekend days (Sat-Sun) in this date range",
         compute="_compute_day_counts",
         store=True,
+        help="Number of weekend days (Sat-Sun) in this date range",
     )
     parent_id = fields.Many2one(
         comodel_name="date.range",
         string="Parent Range",
-        help="Nest this range inside another one of the same type. Overlap is "
-        "checked between siblings only, so a sub-range may span its parent.",
         index=True,
         ondelete="cascade",
         check_company=True,
+        help="Nest this range inside another one of the same type. Overlap is "
+        "checked between siblings only, so a sub-range may span its parent.",
     )
     child_ids = fields.One2many(
         comodel_name="date.range",

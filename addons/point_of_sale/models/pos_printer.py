@@ -27,9 +27,9 @@ class PosPrinter(models.Model):
 
     name = fields.Char(
         string="Printer Name",
-        help="An internal identification of the printer",
         default="Printer",
         required=True,
+        help="An internal identification of the printer",
     )
     printer_type = fields.Selection(
         selection=[
@@ -62,9 +62,9 @@ class PosPrinter(models.Model):
     )
     epson_printer_ip = fields.Char(
         string="Epson Printer IP Address",
+        default="0.0.0.0",
         help="Local IP address of an Epson receipt printer, or its serial number if the "
         "'Automatic Certificate Update' option is enabled in the printer settings.",
-        default="0.0.0.0",
     )
 
     @api.model

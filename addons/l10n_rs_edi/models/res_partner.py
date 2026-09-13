@@ -7,13 +7,13 @@ class ResPartner(models.Model):
 
     l10n_rs_edi_registration_number = fields.Char(
         string="Registration Number",
-        help="Company ID ( Matični Broj ) assigned by the Serbian Business Registers Agency (APR) ",
         size=13,
+        help="Company ID ( Matični Broj ) assigned by the Serbian Business Registers Agency (APR) ",
     )
     l10n_rs_edi_public_funds = fields.Char(
         string="JBKJS",
-        help="Unique Identifier of Public Funds Users such as Government agencies, public institutions and state-owned enterprises.",
         size=5,
+        help="Unique Identifier of Public Funds Users such as Government agencies, public institutions and state-owned enterprises.",
     )
 
     @api.constrains("l10n_rs_edi_public_funds")

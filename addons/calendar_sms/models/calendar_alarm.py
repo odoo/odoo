@@ -11,11 +11,11 @@ class CalendarAlarm(models.Model):
     sms_template_id = fields.Many2one(
         comodel_name="sms.template",
         string="SMS Template",
-        help="Template used to render SMS reminder content.",
         compute="_compute_sms_template_id",
         store=True,
         readonly=False,
         domain=[("model", "in", ["calendar.event"])],
+        help="Template used to render SMS reminder content.",
     )
 
     @api.model

@@ -50,8 +50,9 @@ _DEFAULT_POSITIONAL = ("string",)
 
 # The order a declaration's keywords are read in: what the field is, what it
 # says, its shape, how its value is produced, how it is stored and read, what
-# it points at and under which conditions, who sees and tracks it. An
-# attribute the table does not know sorts after them alphabetically.
+# it points at and under which conditions, who tracks it -- then, last of
+# all, who may see it and the help text. An attribute the table does not know
+# sorts alphabetically before that tail.
 FIELD_ATTRIBUTE_ORDER: tuple[str, ...] = (
     "comodel_name",
     "inverse_name",
@@ -68,7 +69,6 @@ FIELD_ATTRIBUTE_ORDER: tuple[str, ...] = (
     "definition_record_field",
     "delegate",
     "string",
-    "help",
     "export_string_translation",
     "size",
     "trim",
@@ -123,11 +123,13 @@ FIELD_ATTRIBUTE_ORDER: tuple[str, ...] = (
     "check_company",
     "bypass_search_access",
     "auto_join",
-    "groups",
-    "write_groups",
     "tracking",
     "implied_group",
+    "write_groups",
+    "groups",
+    "help",
 )
+_TAIL: tuple[str, ...] = ("write_groups", "groups", "help")
 _RANK = {name: index for index, name in enumerate(FIELD_ATTRIBUTE_ORDER)}
 
 
@@ -136,8 +138,12 @@ def positional_names(call: ast.Call) -> tuple[str, ...]:
 
 
 def canonical_order(names: list[str]) -> list[str]:
-    known = sorted((n for n in names if n in _RANK), key=_RANK.__getitem__)
-    return known + sorted(n for n in names if n not in _RANK)
+    known = sorted(
+        (n for n in names if n in _RANK and n not in _TAIL), key=_RANK.__getitem__
+    )
+    unknown = sorted(n for n in names if n not in _RANK)
+    tail = sorted((n for n in names if n in _TAIL), key=_RANK.__getitem__)
+    return known + unknown + tail
 
 
 @dataclass

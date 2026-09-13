@@ -11,11 +11,11 @@ class ResUsersSettings(models.Model):
             ("private", "Private"),
             ("confidential", "Only internal users"),
         ],
-        help="Default privacy setting for whom the calendar events will be visible.",
         default="public",
         store=True,
         readonly=False,
         required=True,
+        help="Default privacy setting for whom the calendar events will be visible.",
     )
 
     @api.model

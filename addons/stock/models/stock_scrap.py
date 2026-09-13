@@ -86,10 +86,6 @@ class StockScrap(models.Model):
     )
     scrap_location_id = fields.Many2one(
         comodel_name="stock.location",
-        help="Inventory-loss location the scrapped goods are moved to. Any"
-        " inventory-loss location qualifies; a company can designate its"
-        " dedicated scrap location by tagging it with the external id"
-        " 'stock.stock_location_scrap_company_<company_id>'.",
         compute="_compute_scrap_location_id",
         precompute=True,
         store=True,
@@ -97,6 +93,10 @@ class StockScrap(models.Model):
         required=True,
         domain="[('usage', '=', 'inventory')]",
         check_company=True,
+        help="Inventory-loss location the scrapped goods are moved to. Any"
+        " inventory-loss location qualifies; a company can designate its"
+        " dedicated scrap location by tagging it with the external id"
+        " 'stock.stock_location_scrap_company_<company_id>'.",
     )
     scrap_qty = fields.Float(
         string="Quantity",

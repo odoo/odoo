@@ -17,20 +17,20 @@ class ResourceAssignment(models.Model):
     active = fields.Boolean(default=True)
     resource_id = fields.Many2one(
         comodel_name="resource.resource",
-        help="What is held: a vehicle, a machine, a room, a device.",
         index=True,
         required=True,
         ondelete="restrict",
         check_company=True,
+        help="What is held: a vehicle, a machine, a room, a device.",
     )
     assignee_id = fields.Many2one(
         comodel_name="resource.resource",
-        help="Who holds it.",
         index=True,
         required=True,
         domain="[('resource_type', '=', 'user')]",
         ondelete="restrict",
         check_company=True,
+        help="Who holds it.",
     )
     assignee_partner_id = fields.Many2one(
         related="assignee_id.partner_id",

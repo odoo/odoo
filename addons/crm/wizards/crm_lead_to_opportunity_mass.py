@@ -20,8 +20,8 @@ class CrmLead2opportunityPartnerMass(models.TransientModel):
     )
     deduplicate = fields.Boolean(
         string="Apply deduplication",
-        help="Merge with existing leads/opportunities of each partner",
         default=True,
+        help="Merge with existing leads/opportunities of each partner",
     )
     action = fields.Selection(
         selection_add=[

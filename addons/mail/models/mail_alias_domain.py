@@ -37,8 +37,8 @@ class MailAliasDomain(models.Model):
     _order = "sequence ASC, id ASC"
 
     name = fields.Char(
-        help="Email domain e.g. 'example.com' in 'odoo@example.com'",
         required=True,
+        help="Email domain e.g. 'example.com' in 'odoo@example.com'",
     )
     company_ids: ResCompany = fields.One2many(
         comodel_name="res.company",
@@ -48,25 +48,25 @@ class MailAliasDomain(models.Model):
     )
     sequence = fields.Integer(default=10)
     bounce_alias = fields.Char(
-        help="Local-part of email used for Return-Path used when emails bounce e.g. "
-        "'bounce' in 'bounce@example.com'",
         default="bounce",
         required=True,
+        help="Local-part of email used for Return-Path used when emails bounce e.g. "
+        "'bounce' in 'bounce@example.com'",
     )
     bounce_email = fields.Char(compute="_compute_bounce_email")
     catchall_alias = fields.Char(
-        help="Local-part of email used for Reply-To to catch answers e.g. "
-        "'catchall' in 'catchall@example.com'",
         default="catchall",
         required=True,
+        help="Local-part of email used for Reply-To to catch answers e.g. "
+        "'catchall' in 'catchall@example.com'",
     )
     catchall_email = fields.Char(compute="_compute_catchall_email")
     default_from = fields.Char(
         string="Default From Alias",
+        default="notifications",
         help="Default from when it does not match outgoing server filters. Can be either "
         "a local-part e.g. 'notifications' either a complete email address e.g. "
         "'notifications@example.com' to override all outgoing emails.",
-        default="notifications",
     )
     default_from_email = fields.Char(
         string="Default From",

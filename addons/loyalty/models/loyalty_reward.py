@@ -127,10 +127,10 @@ class LoyaltyReward(models.Model):
     )
     discount_line_product_id = fields.Many2one(
         comodel_name="product.product",
-        help="Product used in the sales order to apply the discount. Each reward has its own"
-        " product for reporting purpose",
         copy=False,
         ondelete="restrict",
+        help="Product used in the sales order to apply the discount. Each reward has its own"
+        " product for reporting purpose",
     )
     is_global_discount = fields.Boolean(compute="_compute_is_global_discount")
 
@@ -148,9 +148,9 @@ class LoyaltyReward(models.Model):
     reward_product_ids = fields.Many2many(
         comodel_name="product.product",
         string="Reward Products",
-        help="These are the products that can be claimed with this rule.",
         compute="_compute_reward_products",
         search="_search_reward_product_ids",
+        help="These are the products that can be claimed with this rule.",
     )
     reward_product_qty = fields.Integer(default=1)
     reward_product_uom_id = fields.Many2one(

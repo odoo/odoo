@@ -7,11 +7,11 @@ class ResPartner(models.Model):
     property_product_pricelist = fields.Many2one(
         comodel_name="product.pricelist",
         string="Pricelist",
-        help="Used for sales to the current partner",
         compute="_compute_property_product_pricelist",
         inverse="_inverse_property_product_pricelist",
         company_dependent=False,
         domain=lambda self: [("company_id", "in", (self.env.company.id, False))],
+        help="Used for sales to the current partner",
     )
 
     specific_property_product_pricelist = fields.Many2one(

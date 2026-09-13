@@ -10,17 +10,17 @@ class AccountJournal(models.Model):
     edi_format_ids = fields.Many2many(
         comodel_name="account.edi.format",
         string="Electronic invoicing",
-        help="Send XML/EDI invoices",
         compute="_compute_edi_format_ids",
         store=True,
         readonly=False,
         domain="[('id', 'in', compatible_edi_ids)]",
+        help="Send XML/EDI invoices",
     )
 
     compatible_edi_ids = fields.Many2many(
         comodel_name="account.edi.format",
-        help="EDI format that support moves in this journal",
         compute="_compute_compatible_edi_ids",
+        help="EDI format that support moves in this journal",
     )
 
     def write(self, vals):

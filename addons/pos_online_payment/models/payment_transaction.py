@@ -8,8 +8,8 @@ class PaymentTransaction(models.Model):
     pos_order_id = fields.Many2one(
         comodel_name="pos.order",
         string="POS Order",
-        help="The Point of Sale order linked to the payment transaction",
         readonly=True,
+        help="The Point of Sale order linked to the payment transaction",
     )
 
     @api.model

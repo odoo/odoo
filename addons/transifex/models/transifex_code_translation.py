@@ -19,8 +19,8 @@ class TransifexCodeTranslation(models.Model):
     )
     transifex_url = fields.Char(
         string="Transifex URL",
-        help="Propose a modification in the official version of Odoo",
         compute="_compute_transifex_url",
+        help="Propose a modification in the official version of Odoo",
     )
 
     def _selection_installed_langs(self):

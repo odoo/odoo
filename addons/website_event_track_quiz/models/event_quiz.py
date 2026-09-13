@@ -117,9 +117,9 @@ class EventQuizAnswer(models.Model):
     )
     comment = fields.Text(
         string="Extra Comment",
+        translate=True,
         help="""This comment will be displayed to the user if they select this answer, after submitting the quiz.
                 It is used as a small informational text helping to understand why this answer is correct / incorrect.""",
-        translate=True,
     )
     awarded_points = fields.Integer(
         string="Points",

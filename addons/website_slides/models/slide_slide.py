@@ -103,8 +103,8 @@ class SlideSlide(models.Model):
     )
     is_preview = fields.Boolean(
         string="Allow Preview",
-        help="The course is accessible by anyone : the users don't need to join the channel to access the content of the course.",
         default=False,
+        help="The course is accessible by anyone : the users don't need to join the channel to access the content of the course.",
     )
     is_new_slide = fields.Boolean(compute="_compute_is_new_slide")
     completion_time = fields.Float(
@@ -150,9 +150,9 @@ class SlideSlide(models.Model):
     user_membership_id = fields.Many2one(
         comodel_name="slide.slide.partner",
         string="Subscriber information",
-        help="Subscriber information for the current logged in user",
         compute="_compute_user_membership_id",
         compute_sudo=False,
+        help="Subscriber information for the current logged in user",
     )
     user_vote = fields.Integer(
         string="User vote",
@@ -174,9 +174,9 @@ class SlideSlide(models.Model):
         index="btree_not_null",
     )
     has_questions = fields.Boolean(
-        help="Whether this slide has quiz/certification questions (via its linked survey).",
         compute="_compute_has_questions",
         store=True,
+        help="Whether this slide has quiz/certification questions (via its linked survey).",
     )
     questions_count = fields.Integer(
         string="Number of Questions",
@@ -205,13 +205,13 @@ class SlideSlide(models.Model):
     )
     can_self_mark_completed = fields.Boolean(
         string="Can Mark Completed",
-        help="The slide can be marked as completed even without opening it",
         compute="_compute_mark_complete_actions",
+        help="The slide can be marked as completed even without opening it",
     )
     can_self_mark_uncompleted = fields.Boolean(
         string="Can Mark Uncompleted",
-        help="The slide can be marked as not completed and the progression",
         compute="_compute_mark_complete_actions",
+        help="The slide can be marked as not completed and the progression",
     )
     slide_category = fields.Selection(
         selection=[
@@ -250,8 +250,8 @@ class SlideSlide(models.Model):
     )
     slide_resource_downloadable = fields.Boolean(
         string="Allow Download",
-        help="Allow the user to download the content of the slide.",
         default=False,
+        help="Allow the user to download the content of the slide.",
     )
     google_drive_id = fields.Char(
         string="Google Drive ID of the external URL",
@@ -259,11 +259,11 @@ class SlideSlide(models.Model):
     )
     html_content = fields.Html(
         string="HTML Content",
-        help="Custom HTML content for slides of category 'Article'.",
         translate=True,
         sanitize_overridable=True,
         sanitize_attributes=False,
         sanitize_form=False,
+        help="Custom HTML content for slides of category 'Article'.",
     )
     image_binary_content = fields.Binary(
         related="binary_content",
@@ -273,8 +273,8 @@ class SlideSlide(models.Model):
     image_google_url = fields.Char(
         related="url",
         string="Image Link",
-        help="Link of the image (we currently only support Google Drive as source)",
         readonly=False,
+        help="Link of the image (we currently only support Google Drive as source)",
     )
     slide_icon_class = fields.Char(
         string="Slide Icon fa-class",
@@ -294,16 +294,16 @@ class SlideSlide(models.Model):
             ("vimeo_video", "Vimeo Video"),
             ("certification", "Certification"),
         ],
-        help="Subtype of the slide category, allows more precision on the actual file type / source type.",
         compute="_compute_slide_type",
         store=True,
         readonly=False,
+        help="Subtype of the slide category, allows more precision on the actual file type / source type.",
     )
     document_google_url = fields.Char(
         related="url",
         string="Document Link",
-        help="Link of the document (we currently only support Google Drive as source)",
         readonly=False,
+        help="Link of the document (we currently only support Google Drive as source)",
     )
     document_binary_content = fields.Binary(
         related="binary_content",
@@ -313,8 +313,8 @@ class SlideSlide(models.Model):
     video_url = fields.Char(
         related="url",
         string="Video Link",
-        help="Link of the video (we support YouTube, Google Drive and Vimeo as sources)",
         readonly=False,
+        help="Link of the video (we support YouTube, Google Drive and Vimeo as sources)",
     )
     video_source_type = fields.Selection(
         selection=[
@@ -360,10 +360,10 @@ class SlideSlide(models.Model):
     )
     embed_code_external = fields.Html(
         string="External Embed Code",
-        help="Same as 'Embed Code' but used to embed the content on an external website.",
         sanitize=False,
         compute="_compute_embed_code",
         readonly=True,
+        help="Same as 'Embed Code' but used to embed the content on an external website.",
     )
     website_share_url = fields.Char(
         string="Share URL",

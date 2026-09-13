@@ -6,13 +6,13 @@ class ResConfigSettings(models.TransientModel):
 
     group_mass_mailing_campaign = fields.Boolean(
         string="Mailing Campaigns",
-        help="""This is useful if your marketing campaigns are composed of several emails""",
         implied_group="mass_mailing.group_mass_mailing_campaign",
+        help="""This is useful if your marketing campaigns are composed of several emails""",
     )
     mass_mailing_outgoing_mail_server = fields.Boolean(
         string="Dedicated Server",
-        help="Use a specific mail server in priority. Otherwise Odoo relies on the first outgoing mail server available (based on their sequencing) as it does for normal mails.",
         config_parameter="mass_mailing.outgoing_mail_server",
+        help="Use a specific mail server in priority. Otherwise Odoo relies on the first outgoing mail server available (based on their sequencing) as it does for normal mails.",
     )
     mass_mailing_mail_server_id = fields.Many2one(
         comodel_name="ir.mail_server",
@@ -21,13 +21,13 @@ class ResConfigSettings(models.TransientModel):
     )
     show_blacklist_buttons = fields.Boolean(
         string="Blacklist Option when Unsubscribing",
-        help="""Allow the recipient to manage themselves their state in the blacklist via the unsubscription page.""",
         config_parameter="mass_mailing.show_blacklist_buttons",
+        help="""Allow the recipient to manage themselves their state in the blacklist via the unsubscription page.""",
     )
     mass_mailing_reports = fields.Boolean(
         string="24H Stat Mailing Reports",
-        help="Check how well your mailing is doing a day after it has been sent.",
         config_parameter="mass_mailing.mass_mailing_reports",
+        help="Check how well your mailing is doing a day after it has been sent.",
     )
     mass_mailing_split_contact_name = fields.Boolean(
         string="Split First and Last Name",

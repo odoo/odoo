@@ -230,8 +230,8 @@ class IrMail_Server(models.Model):
     )
     smtp_port = fields.Integer(
         string="SMTP Port",
-        help="SMTP Port. Usually 465 for SSL, and 25 or 587 for other cases.",
         default=25,
+        help="SMTP Port. Usually 465 for SSL, and 25 or 587 for other cases.",
     )
     smtp_authentication = fields.Selection(
         selection=[
@@ -249,13 +249,13 @@ class IrMail_Server(models.Model):
     )
     smtp_user = fields.Char(
         string="Username",
-        help="Optional username for SMTP authentication",
         groups="base.group_system",
+        help="Optional username for SMTP authentication",
     )
     smtp_pass = fields.Char(
         string="Password",
-        help="Optional password for SMTP authentication",
         groups="base.group_system",
+        help="Optional password for SMTP authentication",
     )
     smtp_encryption = fields.Selection(
         selection=[
@@ -266,6 +266,8 @@ class IrMail_Server(models.Model):
             ("ssl", "SSL/TLS, encryption only"),
         ],
         string="Connection Encryption",
+        default="none",
+        required=True,
         help="Choose the connection encryption scheme:\n"
         "- None: SMTP sessions are done in cleartext.\n"
         "- TLS (STARTTLS): TLS encryption is requested at start of SMTP session (Recommended)\n"
@@ -274,20 +276,18 @@ class IrMail_Server(models.Model):
         "Choose an additional variant for SSL or TLS:\n"
         "- encryption and validation: encrypt the data and authenticate the server using its SSL certificate (Recommended)\n"
         "- encryption only: encrypt the data but skip server authentication",
-        default="none",
-        required=True,
     )
     smtp_ssl_certificate = fields.Binary(
         string="SSL Certificate",
-        help="SSL certificate used for authentication",
         attachment=False,
         groups="base.group_system",
+        help="SSL certificate used for authentication",
     )
     smtp_ssl_private_key = fields.Binary(
         string="SSL Private Key",
-        help="SSL private key used for authentication",
         attachment=False,
         groups="base.group_system",
+        help="SSL private key used for authentication",
     )
     smtp_debug = fields.Boolean(
         string="Debugging",
@@ -300,9 +300,9 @@ class IrMail_Server(models.Model):
     max_email_size = fields.Float()
     sequence = fields.Integer(
         string="Priority",
+        default=10,
         help="When no specific mail server is requested for a mail, the highest priority one "
         "is used. Default priority is 10 (smaller number = higher priority)",
-        default=10,
     )
     active = fields.Boolean(default=True)
 

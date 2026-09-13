@@ -22,8 +22,8 @@ class AccountFiscalPosition(models.Model):
         required=True,
     )
     active = fields.Boolean(
-        help="By unchecking the active field, you may hide a fiscal position without deleting it.",
         default=True,
+        help="By unchecking the active field, you may hide a fiscal position without deleting it.",
     )
     sequence = fields.Integer()
     company_id = fields.Many2one(
@@ -50,8 +50,8 @@ class AccountFiscalPosition(models.Model):
     tax_map = fields.Binary(compute="_compute_tax_map")
     note = fields.Html(
         string="Notes",
-        help="Legal mentions that have to be printed on the invoices.",
         translate=True,
+        help="Legal mentions that have to be printed on the invoices.",
     )
     auto_apply = fields.Boolean(
         string="Detect Automatically",
@@ -71,8 +71,8 @@ class AccountFiscalPosition(models.Model):
     )
     country_id = fields.Many2one(
         comodel_name="res.country",
-        help="Apply only if delivery country matches.",
         inverse="_inverse_vat_territory",
+        help="Apply only if delivery country matches.",
     )
     is_domestic = fields.Boolean(
         compute="_compute_is_domestic",
@@ -80,8 +80,8 @@ class AccountFiscalPosition(models.Model):
     )
     country_group_id = fields.Many2one(
         comodel_name="res.country.group",
-        help="Apply only if delivery country matches the group.",
         inverse="_inverse_vat_territory",
+        help="Apply only if delivery country matches the group.",
     )
     state_ids = fields.Many2many(
         comodel_name="res.country.state",
@@ -92,8 +92,8 @@ class AccountFiscalPosition(models.Model):
     states_count = fields.Integer(compute="_compute_states_count")
     foreign_vat = fields.Char(
         string="Foreign Tax ID",
-        help="The tax ID of your company in the region mapped by this fiscal position.",
         inverse="_inverse_vat_territory",
+        help="The tax ID of your company in the region mapped by this fiscal position.",
     )
 
     foreign_vat_header_mode = fields.Selection(

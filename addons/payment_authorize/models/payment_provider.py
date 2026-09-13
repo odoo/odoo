@@ -21,26 +21,26 @@ class PaymentProvider(models.Model):
     )
     authorize_login = fields.Char(
         string="API Login ID",
-        help="The ID solely used to identify the account with Authorize.Net",
         copy=False,
         required_if_provider="authorize",
+        help="The ID solely used to identify the account with Authorize.Net",
     )
     authorize_transaction_key = fields.Char(
         string="API Transaction Key",
         copy=False,
-        groups="base.group_system",
         required_if_provider="authorize",
+        groups="base.group_system",
     )
     authorize_signature_key = fields.Char(
         string="API Signature Key",
         copy=False,
-        groups="base.group_system",
         required_if_provider="authorize",
+        groups="base.group_system",
     )
     authorize_client_key = fields.Char(
         string="API Client Key",
-        help="The public client key. To generate directly from Odoo or from Authorize.Net backend.",
         copy=False,
+        help="The public client key. To generate directly from Odoo or from Authorize.Net backend.",
     )
 
     # === CONSTRAINT METHODS ===#

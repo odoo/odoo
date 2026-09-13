@@ -19,21 +19,21 @@ class AccountFinancialYearOp(models.TransientModel):
     opening_date = fields.Date(
         related="company_id.account_opening_date",
         string="Opening Date",
-        help="Date from which the accounting is managed in Odoo. It is the date of the opening entry.",
         readonly=False,
         required=True,
+        help="Date from which the accounting is managed in Odoo. It is the date of the opening entry.",
     )
     fiscalyear_last_day = fields.Integer(
         related="company_id.fiscalyear_last_day",
-        help="The last day of the month will be used if the chosen day doesn't exist.",
         readonly=False,
         required=True,
+        help="The last day of the month will be used if the chosen day doesn't exist.",
     )
     fiscalyear_last_month = fields.Selection(
         related="company_id.fiscalyear_last_month",
-        help="The last day of the month will be used if the chosen day doesn't exist.",
         readonly=False,
         required=True,
+        help="The last day of the month will be used if the chosen day doesn't exist.",
     )
 
     @api.depends("company_id.account_opening_move_id")
@@ -139,10 +139,10 @@ class AccountSetupBankManualConfig(models.TransientModel):
         ondelete="cascade",
     )
     new_journal_name = fields.Char(
-        help="Will be used to name the Journal related to this bank account",
         inverse="_inverse_linked_journal",
         default=lambda self: self.linked_journal_id.name,
         required=True,
+        help="Will be used to name the Journal related to this bank account",
     )
     linked_journal_id = fields.Many2one(
         comodel_name="account.journal",

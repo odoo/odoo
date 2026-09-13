@@ -45,8 +45,8 @@ class ProductTag(models.Model):
     )
     visible_to_customers = fields.Boolean(
         string="Visible to customers",
-        help="Whether the tag is displayed to customers.",
         default=True,
+        help="Whether the tag is displayed to customers.",
     )
     image = fields.Image(
         max_width=200,

@@ -29,13 +29,13 @@ class MixinMailTrackingDuration(models.AbstractModel):
 
     duration_tracking = fields.Json(
         string="Status time",
-        help="JSON that maps ids from a many2one field to seconds spent",
         compute="_compute_duration_tracking",
+        help="JSON that maps ids from a many2one field to seconds spent",
     )
     rotting_days = fields.Integer(
         string="Days Rotting",
-        help="Days since the last update, counted only while the record is rotting",
         compute="_compute_rotting",
+        help="Days since the last update, counted only while the record is rotting",
     )
     is_rotting = fields.Boolean(
         string="Rotting",

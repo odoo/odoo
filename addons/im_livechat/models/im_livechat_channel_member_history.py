@@ -66,10 +66,10 @@ class ImLivechatChannelMemberHistory(models.Model):
     session_week_day = fields.Selection(related="channel_id.livechat_week_day")
     session_duration_hour = fields.Float(
         string="Session Duration",
-        help="Time spent by the persona in the session in hours",
         compute="_compute_session_duration_hour",
         store=True,
         aggregator="avg",
+        help="Time spent by the persona in the session in hours",
     )
     rating_id = fields.Many2one(
         comodel_name="rating.rating",

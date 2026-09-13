@@ -27,9 +27,9 @@ class HrSkillType(models.Model):
     )
     color = fields.Integer(default=lambda self: self._default_color())
     levels_count = fields.Integer(
-        help="Number of levels linked to this skill type",
         compute="_compute_levels_count",
         store=True,
+        help="Number of levels linked to this skill type",
     )
     is_certification = fields.Boolean(
         string="Certification",

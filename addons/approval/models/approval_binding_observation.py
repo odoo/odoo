@@ -34,11 +34,11 @@ class ApprovalBindingObservation(models.Model):
             ("superuser", "Superuser"),
             ("self_elevated", "Elevated by sudo()"),
         ],
+        index=True,
+        required=True,
         help="`sudo()` keeps `uid`, so a caller elevated by sudo() is "
         "distinguishable from the real superuser. The two are different "
         "risks and the point of observing is to count them separately.",
-        index=True,
-        required=True,
     )
     would_block = fields.Boolean(
         help="Whether this call would have been refused had the binding been "

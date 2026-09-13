@@ -270,21 +270,21 @@ class IrUiView(models.Model):
     )
     arch = fields.Text(
         string="View Architecture",
-        help="""This field should be used when accessing view arch. It will use translation.
-                               Note that it will read `arch_db` or `arch_fs` if in dev-xml mode.""",
         compute="_compute_arch",
         inverse="_inverse_arch",
+        help="""This field should be used when accessing view arch. It will use translation.
+                               Note that it will read `arch_db` or `arch_fs` if in dev-xml mode.""",
     )
     arch_base = fields.Text(
         string="Base View Architecture",
-        help="This field is the same as `arch` field without translations",
         compute="_compute_arch_base",
         inverse="_inverse_arch_base",
+        help="This field is the same as `arch` field without translations",
     )
     arch_db = fields.Text(
         string="Arch Blob",
-        help="This field stores the view arch.",
         translate=xml_translate,
+        help="This field stores the view arch.",
     )
     arch_fs = fields.Char(
         string="Arch Filename",
@@ -315,8 +315,8 @@ class IrUiView(models.Model):
     )
     xml_id = fields.Char(
         string="External ID",
-        help="ID of the view defined in xml file",
         compute="_compute_model_data",
+        help="ID of the view defined in xml file",
     )
     group_ids = fields.Many2many(
         comodel_name="res.groups",
@@ -329,6 +329,8 @@ class IrUiView(models.Model):
     mode = fields.Selection(
         selection=[("primary", "Base view"), ("extension", "Extension View")],
         string="View inheritance mode",
+        default="primary",
+        required=True,
         help="Only applies if this view inherits from an other one"
         " (inherit_id is not False/Null).\n\n"
         "* if extension (default), if this view is requested the closest primary view"
@@ -338,8 +340,6 @@ class IrUiView(models.Model):
         " different model than this one), then this view's inheritance specs"
         " (<xpath/>) are applied, and the result is used as if it were this view's"
         " actual arch.",
-        default="primary",
-        required=True,
     )
 
     warning_info = fields.Html(
@@ -348,10 +348,10 @@ class IrUiView(models.Model):
     )
 
     active = fields.Boolean(
+        default=True,
         help="If this view is inherited,\n\n"
         "* if True, the view always extends its parent\n"
         "* if False, the view currently does not extend its parent but can be enabled",
-        default=True,
     )
     model_id = fields.Many2one(
         comodel_name="ir.model",

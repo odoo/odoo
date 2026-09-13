@@ -37,13 +37,13 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
             ("department", "By Department"),
             ("category", "By Employee Tag"),
         ],
+        default="employee",
+        readonly=False,
+        required=True,
         help="Allow to create requests in batchs:\n- By Employee: for a specific employee"
         "\n- By Company: all employees of the specified company"
         "\n- By Department: all employees of the specified department"
         "\n- By Employee Tag: all employees of the specific employee group category",
-        default="employee",
-        readonly=False,
-        required=True,
     )
     employee_ids = fields.Many2many(
         comodel_name="hr.employee",

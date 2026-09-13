@@ -15,9 +15,9 @@ class AccountTax(models.Model):
     )
     withholding_sequence_id = fields.Many2one(
         comodel_name="ir.sequence",
-        help="This sequence will be used to generate default numbers on payment withholding lines.",
         copy=False,
         check_company=True,
+        help="This sequence will be used to generate default numbers on payment withholding lines.",
     )
 
     # ----------------------------

@@ -77,10 +77,10 @@ class StockMoveLine(models.Model):
     picking_id = fields.Many2one(
         comodel_name="stock.picking",
         string="Transfer",
-        help="The stock operation where the packing has been made",
         index=True,
         check_company=True,
         bypass_search_access=True,
+        help="The stock operation where the packing has been made",
     )
     picking_partner_id = fields.Many2one(
         related="picking_id.partner_id",
@@ -173,14 +173,14 @@ class StockMoveLine(models.Model):
     owner_id = fields.Many2one(
         comodel_name="res.partner",
         string="From Owner",
-        help="When validating the transfer, the products will be taken from this owner.",
         index="btree_not_null",
         check_company=True,
+        help="When validating the transfer, the products will be taken from this owner.",
     )
     date = fields.Datetime(
-        help="Creation date of this move line until updated due to: quantity being increased, 'picked' status has updated, or move line is done.",
         default=fields.Datetime.now,
         required=True,
+        help="Creation date of this move line until updated due to: quantity being increased, 'picked' status has updated, or move line is done.",
     )
 
     product_id = fields.Many2one(
@@ -250,7 +250,6 @@ class StockMoveLine(models.Model):
     result_package_id = fields.Many2one(
         comodel_name="stock.package",
         string="Destination Package",
-        help="If set, the operations are packed into this package",
         required=False,
         domain="""[
         '|', '|',
@@ -262,6 +261,7 @@ class StockMoveLine(models.Model):
         ]""",
         ondelete="restrict",
         check_company=True,
+        help="If set, the operations are packed into this package",
     )
     result_package_dest_name = fields.Char(
         related="result_package_id.dest_complete_name",

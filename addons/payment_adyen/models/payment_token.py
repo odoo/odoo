@@ -6,6 +6,6 @@ class PaymentToken(models.Model):
 
     adyen_shopper_reference = fields.Char(
         string="Shopper Reference",
-        help="The unique reference of the partner owning this token",
         readonly=True,
+        help="The unique reference of the partner owning this token",
     )

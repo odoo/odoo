@@ -58,11 +58,11 @@ class ResCompany(models.Model):
 
     account_peppol_contact_email = fields.Char(
         string="Primary contact email",
-        help="Primary contact email for Peppol connection related communications and notifications.\n"
-        "In particular, this email is used by Odoo to reconnect your Peppol account in case of database change.",
         compute="_compute_account_peppol_contact_email",
         store=True,
         readonly=False,
+        help="Primary contact email for Peppol connection related communications and notifications.\n"
+        "In particular, this email is used by Odoo to reconnect your Peppol account in case of database change.",
     )
     account_peppol_migration_key = fields.Char(
         string="Migration Key",
@@ -70,10 +70,10 @@ class ResCompany(models.Model):
     )
     account_peppol_phone_number = fields.Char(
         string="Mobile number",
-        help="This number is used for identification purposes only.",
         compute="_compute_account_peppol_phone_number",
         store=True,
         readonly=False,
+        help="This number is used for identification purposes only.",
     )
     account_peppol_proxy_state = fields.Selection(
         selection=[
@@ -126,12 +126,12 @@ class ResCompany(models.Model):
     peppol_self_billing_reception_journal_id = fields.Many2one(
         comodel_name="account.journal",
         string="Self-Billing reception journal",
-        help="Any self-billed invoices / credit notes received via Peppol will be created in draft in this journal. Defaults to the first sale journal.",
         compute="_compute_peppol_self_billing_reception_journal_id",
         inverse="_inverse_peppol_self_billing_reception_journal_id",
         store=True,
         readonly=False,
         domain=[("type", "=", "sale")],
+        help="Any self-billed invoices / credit notes received via Peppol will be created in draft in this journal. Defaults to the first sale journal.",
     )
 
     # -------------------------------------------------------------------------

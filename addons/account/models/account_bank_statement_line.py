@@ -116,11 +116,11 @@ class AccountBankStatementLine(models.Model):
     )
     amount_currency = fields.Monetary(
         string="Amount in Currency",
-        help="The amount expressed in an optional other currency if it is a multi-currency entry.",
         currency_field="foreign_currency_id",
         compute="_compute_amount_currency",
         store=True,
         readonly=False,
+        help="The amount expressed in an optional other currency if it is a multi-currency entry.",
     )
 
     amount_residual = fields.Float(

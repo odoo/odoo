@@ -33,14 +33,14 @@ class BankAccountVerification(models.Model):
                 "An error occurred during check with Government API",
             ),  # API called -> error
         ],
+        readonly=True,
+        required=True,
         help="Flag the payment verification status with one of the following:\n"
         "- Valid: The partner VAT is linked to the bank account used for this payment.\n"
         "- Invalid: The partner VAT is not linked to the bank account used for this payment.\n"
         "- Incomplete partner: The partner has no VAT or no bank account.\n"
         "- Partner not found: Partner VAT not found in Government files.\n"
         "- Error: An error occurred during check with Government API.\n",
-        readonly=True,
-        required=True,
     )
     # Timestamp received in PL tz by the API, stored in UTC
     verification_timestamp = fields.Datetime(readonly=True)

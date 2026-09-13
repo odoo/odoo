@@ -7,9 +7,9 @@ class L10n_ItDocumentType(models.Model):
     _description = "Italian Document Type"
 
     name = fields.Char(
-        help="The document type name",
         translate=True,
         required=True,
+        help="The document type name",
     )
     code = fields.Char(required=True)
     # not used, to be removed in master

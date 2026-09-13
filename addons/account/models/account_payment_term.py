@@ -39,8 +39,8 @@ class AccountPaymentTerm(models.Model):
         required=True,
     )
     active = fields.Boolean(
-        help="If the active field is set to False, it will allow you to hide the payment terms without removing it.",
         default=True,
+        help="If the active field is set to False, it will allow you to hide the payment terms without removing it.",
     )
     note = fields.Html(
         string="Description on the Invoice",
@@ -90,12 +90,12 @@ class AccountPaymentTerm(models.Model):
 
     discount_percentage = fields.Float(
         string="Discount %",
-        help="Early Payment Discount granted for this payment term",
         default=2.0,
+        help="Early Payment Discount granted for this payment term",
     )
     discount_days = fields.Integer(
-        help="Number of days before the early payment proposition expires",
         default=10,
+        help="Number of days before the early payment proposition expires",
     )
     early_pay_discount_computation = fields.Selection(
         selection=[
@@ -111,10 +111,10 @@ class AccountPaymentTerm(models.Model):
     early_discount = fields.Boolean()
     is_immediate = fields.Boolean(
         string="Immediate Payment Term",
-        help="True when the whole amount falls due on the invoice date itself: "
-        "a single 100% line, no delay, counted from the invoice date.",
         compute="_compute_is_immediate",
         store=True,
+        help="True when the whole amount falls due on the invoice date itself: "
+        "a single 100% line, no delay, counted from the invoice date.",
     )
 
     def _get_percent_precision(self):
@@ -479,17 +479,17 @@ class AccountPaymentTermLine(models.Model):
     )
     value = fields.Selection(
         selection=[("percent", "Percent"), ("fixed", "Fixed")],
-        help="Select here the kind of valuation related to this payment terms line.",
         default="percent",
         required=True,
+        help="Select here the kind of valuation related to this payment terms line.",
     )
     value_amount = fields.Float(
         string="Due",
-        help="For percent enter a ratio between 0-100.",
         digits="Payment Terms",
         compute="_compute_value_amount",
         store=True,
         readonly=False,
+        help="For percent enter a ratio between 0-100.",
     )
     delay_type = fields.Selection(
         selection=[

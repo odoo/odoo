@@ -39,16 +39,16 @@ class ProjectMilestone(models.Model):
     sale_line_id = fields.Many2one(
         comodel_name="sale.order.line",
         string="Sales Order Item",
-        help="Sales Order Item that will be updated once the milestone is reached.",
         default=_default_sale_line_id,
         index="btree_not_null",
         domain="[('partner_id', '=?', project_partner_id), ('qty_transferred_method', '=', 'milestones')]",
+        help="Sales Order Item that will be updated once the milestone is reached.",
     )
     quantity_percentage = fields.Float(
         string="Quantity (%)",
-        help="Percentage of the ordered quantity that will automatically be delivered once the milestone is reached.",
         compute="_compute_quantity_percentage",
         store=True,
+        help="Percentage of the ordered quantity that will automatically be delivered once the milestone is reached.",
     )
 
     sale_line_display_name = fields.Char(

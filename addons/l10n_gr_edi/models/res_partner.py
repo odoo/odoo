@@ -7,10 +7,10 @@ class ResPartner(models.Model):
 
     l10n_gr_edi_branch_number = fields.Integer(
         string="Branch Number",
-        help="Branch number in the Tax Registry",
         compute="_compute_l10n_gr_edi_branch_number",
         store=True,
         readonly=False,
+        help="Branch number in the Tax Registry",
     )
 
     def _auto_init(self):

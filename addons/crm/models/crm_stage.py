@@ -20,15 +20,15 @@ class CrmStage(models.Model):
         required=True,
     )
     sequence = fields.Integer(
-        help="Used to order stages. Lower is better.",
         default=1,
+        help="Used to order stages. Lower is better.",
     )
     is_won = fields.Boolean(string="Is Won Stage?")
     rotting_threshold_days = fields.Integer(
         string="Days to rot",
+        default=0,
         help="Highlight opportunities that haven't been updated for this many days. \
         Set to 0 to disable. Changing this parameter will not affect the rotting status/date of resources last updated before this change.",
-        default=0,
     )
     requirements = fields.Text(
         help="Enter here the internal requirements for this stage (ex: Offer sent to customer). It will appear as a tooltip over the stage's name."

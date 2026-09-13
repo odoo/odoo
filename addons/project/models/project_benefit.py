@@ -40,16 +40,16 @@ class ProjectBenefit(models.Model):
     actual_value = fields.Float()
     achievement_pct = fields.Float(
         string="Achievement %",
-        help="Actual / Target as a percentage.",
         export_string_translation=False,
         compute="_compute_achievement_pct",
         store=True,
+        help="Actual / Target as a percentage.",
     )
     accountable_id = fields.Many2one(
         comodel_name="res.users",
         string="Accountable Owner",
-        help="Business owner responsible for realizing and measuring this benefit.",
         tracking=True,
+        help="Business owner responsible for realizing and measuring this benefit.",
     )
     date_review = fields.Date(
         string="Next Review Date",
@@ -57,10 +57,10 @@ class ProjectBenefit(models.Model):
     )
     date_review_reminder = fields.Date(
         string="Reminder Scheduled For",
+        copy=False,
         help="Internal: the date_review for which a reminder activity was last "
         "scheduled by the cron. Prevents re-nagging every day once a reminder "
         "has been raised; a new reminder is only scheduled when date_review moves.",
-        copy=False,
     )
     state = fields.Selection(
         selection=[

@@ -93,11 +93,11 @@ class LunchSupplier(models.Model):
 
     responsible_id = fields.Many2one(
         comodel_name="res.users",
-        help="The responsible is the person that will order lunch for everyone. It will be used as the 'from' when sending the automatic email.",
         default=lambda self: self.env.user,
         domain=lambda self: [
             ("all_group_ids", "in", self.env.ref("lunch.group_lunch_manager").id)
         ],
+        help="The responsible is the person that will order lunch for everyone. It will be used as the 'from' when sending the automatic email.",
     )
 
     send_by = fields.Selection(

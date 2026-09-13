@@ -12,8 +12,8 @@ class IrActionsReport(models.Model):
     device_ids = fields.Many2many(
         comodel_name="iot.device",
         string="IoT Devices",
-        help="When setting a device here, the report will be printed through this device on the IoT Box",
         domain="[('type', '=', 'printer')]",
+        help="When setting a device here, the report will be printed through this device on the IoT Box",
     )
 
     def render_document(self, device_id_list, res_ids, data=None):

@@ -65,19 +65,19 @@ class AccountPartialReconcile(models.Model):
     )
 
     amount = fields.Monetary(
-        help="Non-negative amount concerned by this matching expressed in the company currency.",
         currency_field="company_currency_id",
         required=True,
+        help="Non-negative amount concerned by this matching expressed in the company currency.",
     )
     debit_amount_currency = fields.Monetary(
-        help="Non-negative amount concerned by this matching expressed in the debit line foreign currency.",
         currency_field="debit_currency_id",
         required=True,
+        help="Non-negative amount concerned by this matching expressed in the debit line foreign currency.",
     )
     credit_amount_currency = fields.Monetary(
-        help="Non-negative amount concerned by this matching expressed in the credit line foreign currency.",
         currency_field="credit_currency_id",
         required=True,
+        help="Non-negative amount concerned by this matching expressed in the credit line foreign currency.",
     )
 
     company_id = fields.Many2one(

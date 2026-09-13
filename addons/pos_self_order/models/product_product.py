@@ -7,8 +7,8 @@ class ProductTemplate(models.Model):
 
     self_order_available = fields.Boolean(
         string="Available in Self Order",
-        help="If this product is available in the Self Order screens",
         default=True,
+        help="If this product is available in the Self Order screens",
     )
 
     self_order_visible = fields.Boolean(compute="_compute_self_order_visible")

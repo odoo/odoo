@@ -47,12 +47,12 @@ class ChatbotScriptStep(models.Model):
     triggering_answer_ids = fields.Many2many(
         comodel_name="chatbot.script.answer",
         string="Only If",
-        help="Show this step only if all of these answers have been selected.",
         compute="_compute_triggering_answer_ids",
         store=True,
         copy=False,
         readonly=False,
         domain="[('script_step_id.sequence', '<', sequence), ('script_step_id.chatbot_script_id', '=', chatbot_script_id)]",
+        help="Show this step only if all of these answers have been selected.",
     )
     is_forward_operator = fields.Boolean(compute="_compute_is_forward_operator")
     is_forward_operator_child = fields.Boolean(

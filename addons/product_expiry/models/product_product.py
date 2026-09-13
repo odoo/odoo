@@ -69,12 +69,12 @@ class ProductTemplate(models.Model):
         return super()._compute_quantities()
 
     use_expiration_date = fields.Boolean(
-        help="When this box is ticked, you have the possibility to specify dates to manage"
-        " product expiration, on the product and on the corresponding lot/serial numbers."
-        " Defaults to the product category setting.",
         compute="_compute_use_expiration_date",
         store=True,
         readonly=False,
+        help="When this box is ticked, you have the possibility to specify dates to manage"
+        " product expiration, on the product and on the corresponding lot/serial numbers."
+        " Defaults to the product category setting.",
     )
     expiration_time = fields.Integer(
         string="Expiration Date",

@@ -32,12 +32,12 @@ class StockLot(models.Model):
     )
     standard_price = fields.Float(
         string="Cost",
-        help="""Value of the lot (automatically computed in AVCO).
-        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).
-        Used to compute margins on sale orders.""",
         min_display_digits="Product Price",
         company_dependent=True,
         groups="base.group_user",
+        help="""Value of the lot (automatically computed in AVCO).
+        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).
+        Used to compute margins on sale orders.""",
     )
 
     @api.depends(

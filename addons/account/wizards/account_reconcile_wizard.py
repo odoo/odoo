@@ -151,8 +151,8 @@ class AccountReconcileWizard(models.TransientModel):
         check_company=True,
     )
     to_check = fields.Boolean(
-        help="Check if you are not certain of all the information of the counterpart.",
         default=False,
+        help="Check if you are not certain of all the information of the counterpart.",
     )
     is_write_off_required = fields.Boolean(
         string="Is a write-off move required to reconcile",

@@ -62,10 +62,10 @@ class ApplicantGetRefuseReason(models.TransientModel):
         bypass_search_access=True,
     )
     scheduled_date = fields.Char(
-        help="send emails after that date. This date is considered as being in UTC timezone.",
         compute="_compute_from_template_id",
         store=True,
         readonly=False,
+        help="send emails after that date. This date is considered as being in UTC timezone.",
     )
 
     @api.depends("refuse_reason_id", "applicant_without_email")

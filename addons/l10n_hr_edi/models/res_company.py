@@ -35,8 +35,8 @@ class ResCompany(models.Model):
     )
     l10n_hr_mer_software_ident = fields.Char(
         string="MojEracun SoftwareId",
-        help="Default SoftwareID for Odoo is 'Saodoo-001'",
         default="Saodoo-001",
+        help="Default SoftwareID for Odoo is 'Saodoo-001'",
     )
     l10n_hr_mer_connection_state = fields.Selection(
         selection=[

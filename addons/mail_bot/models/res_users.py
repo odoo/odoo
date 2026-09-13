@@ -24,10 +24,10 @@ class ResUsers(models.Model):
     odoobot_canned_response_id = fields.Many2one(
         comodel_name="mail.canned.response",
         string="OdooBot Onboarding Canned Response",
-        help="The throw-away canned response created for the onboarding tour, "
-        "removed once the user has tried it.",
         readonly=True,
         ondelete="set null",
+        help="The throw-away canned response created for the onboarding tour, "
+        "removed once the user has tried it.",
     )
 
     @property

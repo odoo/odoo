@@ -19,18 +19,18 @@ class CredentialCredential(models.Model):
     endpoint_id = fields.Many2one(
         comodel_name="api.endpoint.outbound",
         string="Outbound Endpoint",
-        help="The outbound API endpoint this credential is associated with.",
         index=True,
         ondelete="cascade",
+        help="The outbound API endpoint this credential is associated with.",
     )
     endpoint_auth_type = fields.Selection(
         related="endpoint_id.auth_type",
-        help="Authentication scheme declared by the outbound endpoint.",
         readonly=True,
+        help="Authentication scheme declared by the outbound endpoint.",
     )
     custom_headers = fields.Text(
-        help="Additional HTTP headers in JSON format: {'X-Custom-Header': 'value'}",
         groups="base.group_system",
+        help="Additional HTTP headers in JSON format: {'X-Custom-Header': 'value'}",
     )
 
     @api.constrains("custom_headers")

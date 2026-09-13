@@ -19,13 +19,13 @@ class StockLot(models.Model):
 
     name = fields.Char(
         string="Lot/Serial Number",
-        help="Unique Lot/Serial Number",
         compute="_compute_name",
         precompute=True,
         store=True,
         index="trigram",
         readonly=False,
         required=True,
+        help="Unique Lot/Serial Number",
     )
     active = fields.Boolean(default=True)
     ref = fields.Char(

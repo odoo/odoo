@@ -11,8 +11,8 @@ class SaleOrder(models.Model):
     carrier_id = fields.Many2one(
         comodel_name="delivery.carrier",
         string="Delivery Method",
-        help="Fill this field if you plan to invoice the shipping based on picking.",
         check_company=True,
+        help="Fill this field if you plan to invoice the shipping based on picking.",
     )
     delivery_message = fields.Char(
         copy=False,

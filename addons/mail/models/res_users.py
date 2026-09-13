@@ -45,14 +45,14 @@ class ResUsers(models.Model):
     notification_type = fields.Selection(
         selection=[("email", "By Emails"), ("inbox", "In Odoo")],
         string="Notification",
-        help="Policy on how to handle Chatter notifications:\n"
-        "- By Emails: notifications are sent to your email address\n"
-        "- In Odoo: notifications appear in your Odoo Inbox",
         compute="_compute_notification_type",
         inverse="_inverse_notification_type",
         precompute=True,
         store=True,
         required=True,
+        help="Policy on how to handle Chatter notifications:\n"
+        "- By Emails: notifications are sent to your email address\n"
+        "- In Odoo: notifications appear in your Odoo Inbox",
     )
     presence_ids: MailPresence = fields.One2many(
         comodel_name="mail.presence",

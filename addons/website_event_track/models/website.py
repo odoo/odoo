@@ -11,16 +11,16 @@ class Website(models.Model):
 
     app_icon = fields.Image(
         string="Website App Icon",
-        help="This field holds the image used as mobile app icon on the website (PNG format).",
         compute="_compute_app_icon",
         store=True,
         readonly=True,
+        help="This field holds the image used as mobile app icon on the website (PNG format).",
     )
     events_app_name = fields.Char(
-        help="This fields holds the Event's Progressive Web App name.",
         compute="_compute_events_app_name",
         store=True,
         readonly=False,
+        help="This fields holds the Event's Progressive Web App name.",
     )
 
     @api.depends("name")

@@ -19,50 +19,50 @@ class ResPartner(models.Model):
         string="Profile attributes",
     )
     score_points = fields.Float(
-        help="Sum of the applied audit rows (see the score breakdown).",
         compute="_compute_score",
         precompute=True,
         compute_sudo=True,
         store=True,
+        help="Sum of the applied audit rows (see the score breakdown).",
     )
     score_max_possible = fields.Float(
+        compute="_compute_score_max_possible",
+        compute_sudo=True,
         help="Normalization denominator: the maximum points reachable "
         "across all active scoring dimensions with configured weights. A "
         "property of the catalog, read live rather than stored per partner.",
-        compute="_compute_score_max_possible",
-        compute_sudo=True,
     )
     score_pct = fields.Float(
         string="Score (%)",
-        help="Normalized score percentage (0-100) used to classify the "
-        "partner into a commercial profile.",
         compute="_compute_score",
         precompute=True,
         compute_sudo=True,
         store=True,
+        help="Normalized score percentage (0-100) used to classify the "
+        "partner into a commercial profile.",
     )
     date_last_score_update = fields.Datetime(
         string="Score Last Updated",
+        readonly=True,
         help="When the score audit rows were last regenerated. A catalog "
         "weight change queues an async recompute (see "
         "_delay_profile_scores_recompute) -- this timestamp is how to tell "
         "the score is current versus still pending that background job.",
-        readonly=True,
     )
     partner_profile_id = fields.Many2one(
         comodel_name="partner.profile",
         string="Commercial Profile",
+        compute="_compute_partner_profile_id",
+        compute_sudo=True,
+        recursive=True,
+        store=True,
+        tracking=True,
         help="First active profile whose score range contains the partner's "
         "score percentage. A contact carries its commercial entity's profile: "
         "the score describes the customer, not the person. Tracked, so the "
         "chatter carries the band history. score_pct is deliberately not "
         "tracked: it moves on every catalog edit and every attribute capture, "
         "and would bury the transitions that carry commercial meaning.",
-        compute="_compute_partner_profile_id",
-        compute_sudo=True,
-        recursive=True,
-        store=True,
-        tracking=True,
     )
     factor = fields.Float(
         related="partner_profile_id.factor",
@@ -77,10 +77,10 @@ class ResPartner(models.Model):
     score_line_count = fields.Count(
         count_of="score_line_ids",
         string="Score Rows",
+        store=True,
         help="How many audit rows explain the score. Stored so the partner "
         "form can decide whether to offer the breakdown without loading "
         "every row of it.",
-        store=True,
     )
 
     @api.model_create_multi

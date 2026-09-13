@@ -71,10 +71,10 @@ class MailingTrace(models.Model):
     )
     mail_mail_id_int = fields.Integer(
         string="Mail ID (tech)",
+        index="btree_not_null",
         help="ID of the related mail_mail. This field is an integer field because "
         "the related mail_mail can be deleted separately from its statistics. "
         "However the ID is needed for several action and controllers.",
-        index="btree_not_null",
     )
     email = fields.Char(help="Normalized email address")
     message_id = fields.Char(string="Message-ID")  # email Message-ID (RFC 2392)

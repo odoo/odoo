@@ -7,9 +7,9 @@ class PosConfig(models.Model):
     crm_team_id = fields.Many2one(
         comodel_name="crm.team",
         string="Sales Team",
-        help="This Point of sale's sales will be related to this Sales Team.",
         index="btree_not_null",
         ondelete="set null",
+        help="This Point of sale's sales will be related to this Sales Team.",
     )
     down_payment_product_id = fields.Many2one(
         comodel_name="product.product",

@@ -18,10 +18,10 @@ class ResPartnerIdentifierType(models.Model):
     _order = "sequence, name"
 
     code = fields.Char(
+        required=True,
         help="Stable key this type is resolved by. Localizations and "
         "integrations name the code, never the label, which is translated "
         "and editable.",
-        required=True,
     )
     sequence = fields.Integer(default=10)
     country_ids = fields.Many2many(
@@ -36,27 +36,27 @@ class ResPartnerIdentifierType(models.Model):
         "anchored at both ends. Checked before any code-specific rule.",
     )
     unique_across_contacts = fields.Boolean(
+        default=True,
         help="Refuse a value another contact already carries under this type. "
         "Turn it off for an identifier that is legitimately shared, such as a "
         "group-wide registration.",
-        default=True,
     )
     multiple_per_contact = fields.Boolean(
-        help="Allow one contact to carry several values of this type.",
         default=False,
+        help="Allow one contact to carry several values of this type.",
     )
     confidential = fields.Boolean(
+        default=False,
         help="Restrict this identifier to its own holder and to the groups "
         "granted full access by a record rule. Use it for what identifies a "
         "person to the state -- a national number, a passport -- and leave it "
         "off for what a company publishes about itself, such as a tax ID.",
-        default=False,
     )
     synced_with_commercial = fields.Boolean(
+        default=False,
         help="Copy this identifier from the commercial entity down to its "
         "contacts. Use it for what identifies the *company* -- a tax ID -- and "
         "leave it off for what identifies a person, such as a national number.",
-        default=False,
     )
 
     _code_uniq = models.Constraint(

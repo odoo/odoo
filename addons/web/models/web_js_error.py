@@ -19,11 +19,11 @@ class WebJsError(models.Model):
     )
     user_id = fields.Many2one(
         comodel_name="res.users",
-        help="User whose session emitted the beacon; null for anonymous "
-        "frontend traffic.",
         index="btree_not_null",
         readonly=True,
         ondelete="set null",
+        help="User whose session emitted the beacon; null for anonymous "
+        "frontend traffic.",
     )
     phase = fields.Selection(
         selection=[
@@ -32,10 +32,10 @@ class WebJsError(models.Model):
             ("unknown", "Unknown"),
         ],
         string="Boot Phase",
+        readonly=True,
         help="Whether the module system had finished booting. A pre_boot "
         "failure means the loader itself did not come up, so nothing else in "
         "the client is trustworthy at that point.",
-        readonly=True,
     )
     kind = fields.Selection(
         selection=[
@@ -49,19 +49,19 @@ class WebJsError(models.Model):
         readonly=True,
     )
     message = fields.Char(
-        help="Capped at 4096 chars at the DB level so a writer bypassing the "
-        "controller cannot bloat the row.",
         size=4096,
         readonly=True,
         required=True,
+        help="Capped at 4096 chars at the DB level so a writer bypassing the "
+        "controller cannot bloat the row.",
     )
     cause = fields.Text(
         string="Cause Chain",
+        readonly=True,
         help="Flattened ``error.cause`` chain, one 'Caused by:' segment per "
         "level. This is the field an OWL lifecycle error points at: its own "
         "message says to read `cause`, and without it the report names a "
         "failure without saying why it happened.",
-        readonly=True,
     )
     stack = fields.Text(readonly=True)
     filename = fields.Char(
@@ -86,11 +86,11 @@ class WebJsError(models.Model):
     reloaded = fields.Selection(
         selection=[("reloaded", "Reloaded"), ("suppressed", "Suppressed")],
         string="Self-heal",
+        readonly=True,
         help="Only set for asset_load_error: whether the loader's one-per-minute "
         "self-heal reload fired, or the guard suppressed it. Null everywhere "
         "else — an absent value must not read as 'suppressed', which would "
         "claim a reload was withheld when none was ever attempted.",
-        readonly=True,
     )
 
     _check_cause_len = models.Constraint(

@@ -22,19 +22,19 @@ class MailMessageTranslation(models.Model):
     )
     source_lang = fields.Char(
         string="Source Language",
-        help="Result of the language detection based on its content.",
         required=True,
+        help="Result of the language detection based on its content.",
     )
     target_lang = fields.Char(
         string="Target Language",
-        help="Shortened language code used as the target for the translation request.",
         required=True,
+        help="Shortened language code used as the target for the translation request.",
     )
     body = fields.Html(
         string="Translation Body",
-        help="String received from the translation request.",
         sanitize_style=True,
         required=True,
+        help="String received from the translation request.",
     )
     create_date = fields.Datetime(index=True)
 

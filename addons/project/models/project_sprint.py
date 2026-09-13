@@ -73,15 +73,15 @@ class ProjectSprint(models.Model):
         compute="_compute_task_metrics",
     )
     committed_hours = fields.Float(
-        help="Sum of planned_hours for all sprint tasks (PMI scope baseline).",
         export_string_translation=False,
         compute="_compute_task_metrics",
+        help="Sum of planned_hours for all sprint tasks (PMI scope baseline).",
     )
     velocity = fields.Float(
         string="Velocity (hours)",
-        help="Sum of planned_hours for completed sprint tasks.",
         export_string_translation=False,
         compute="_compute_task_metrics",
+        help="Sum of planned_hours for completed sprint tasks.",
     )
     story_points_committed = fields.Float(
         export_string_translation=False,
@@ -93,10 +93,10 @@ class ProjectSprint(models.Model):
     )
     carried_over_count = fields.Integer(
         string="Carried Over",
-        help="Tasks still unfinished when this sprint closed, returned to the "
-        "backlog. Counted in the sprint's commitment, not in its velocity.",
         copy=False,
         readonly=True,
+        help="Tasks still unfinished when this sprint closed, returned to the "
+        "backlog. Counted in the sprint's commitment, not in its velocity.",
     )
     carried_over_hours = fields.Float(
         export_string_translation=False,

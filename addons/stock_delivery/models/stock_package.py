@@ -31,9 +31,9 @@ class StockPackage(models.Model):
         self.weight_uom_rounding = uom_id.rounding
 
     weight = fields.Float(
-        help="Total weight of all the products contained in the package.",
         digits="Stock Weight",
         compute="_compute_weight",
+        help="Total weight of all the products contained in the package.",
     )
     weight_uom_name = fields.Char(
         string="Weight unit of measure label",

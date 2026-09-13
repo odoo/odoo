@@ -183,25 +183,25 @@ class MixinMailThread(models.AbstractModel):
     )
     message_needaction = fields.Boolean(
         string="Action Needed",
-        help="If checked, new messages require your attention.",
         compute="_compute_message_needaction_stats",
         search="_search_message_needaction",
+        help="If checked, new messages require your attention.",
     )
     message_needaction_counter = fields.Integer(
         string="Number of Actions",
-        help="Number of messages requiring action",
         compute="_compute_message_needaction_stats",
+        help="Number of messages requiring action",
     )
     message_has_error = fields.Boolean(
         string="Message Delivery error",
-        help="If checked, some messages have a delivery error.",
         compute="_compute_message_has_error_stats",
         search="_search_message_has_error",
+        help="If checked, some messages have a delivery error.",
     )
     message_has_error_counter = fields.Integer(
         string="Number of errors",
-        help="Number of messages with delivery error",
         compute="_compute_message_has_error_stats",
+        help="Number of messages with delivery error",
     )
     message_attachment_count = fields.Integer(
         string="Attachment Count",

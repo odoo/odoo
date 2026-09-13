@@ -21,8 +21,8 @@ class HrExpenseSplitWizard(models.TransientModel):
     total_amount_currency_original = fields.Monetary(
         related="expense_id.total_amount_currency",
         string="Total amount original",
-        help="Total amount of the original Expense that we are splitting",
         currency_field="currency_id",
+        help="Total amount of the original Expense that we are splitting",
     )
     tax_amount_currency = fields.Monetary(
         string="Taxes",
@@ -30,8 +30,8 @@ class HrExpenseSplitWizard(models.TransientModel):
         compute="_compute_tax_amount_currency",
     )
     split_possible = fields.Boolean(
-        help="The sum of after split shut remain the same",
         compute="_compute_split_possible",
+        help="The sum of after split shut remain the same",
     )
     currency_id = fields.Many2one(
         comodel_name="res.currency",

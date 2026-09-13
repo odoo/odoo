@@ -70,13 +70,13 @@ class HrLeaveAllocation(models.Model):
             ("validate", "Approved"),
         ],
         string="Status",
-        help="The status is 'To Approve', when an allocation request is created."
-        "\nThe status is 'Refused', when an allocation request is refused by manager."
-        "\nThe status is 'Approved', when an allocation request is approved by manager.",
         default="confirm",
         copy=False,
         readonly=True,
         tracking=True,
+        help="The status is 'To Approve', when an allocation request is created."
+        "\nThe status is 'Refused', when an allocation request is refused by manager."
+        "\nThe status is 'Approved', when an allocation request is approved by manager.",
     )
     date_from = fields.Date(
         string="Start Date",
@@ -131,44 +131,44 @@ class HrLeaveAllocation(models.Model):
     )
     number_of_days = fields.Float(
         string="Number of Days",
-        help="Duration in days. Reference field to use when necessary.",
         compute="_compute_number_of_days",
         default=1,
         store=True,
         readonly=False,
         tracking=True,
+        help="Duration in days. Reference field to use when necessary.",
     )
     number_of_days_display = fields.Float(
         string="Duration (days)",
-        help="For an Accrual Allocation, this field contains the theorical amount of time given to the employee, due to a previous start date, on the first run of the plan. This can be manually edited.",
         compute="_compute_number_of_days_display",
+        help="For an Accrual Allocation, this field contains the theorical amount of time given to the employee, due to a previous start date, on the first run of the plan. This can be manually edited.",
     )
     number_of_hours_display = fields.Float(
         string="Duration (hours)",
-        help="For an Accrual Allocation, this field contains the theorical amount of time given to the employee, due to a previous start date, on the first run of the plan. This can be manually edited.",
         compute="_compute_number_of_hours_display",
         store=True,
         default_export_compatible=True,
+        help="For an Accrual Allocation, this field contains the theorical amount of time given to the employee, due to a previous start date, on the first run of the plan. This can be manually edited.",
     )
     duration_display = fields.Char(
         string="Allocated (Days/Hours)",
-        help="Field allowing to see the allocation duration in days or hours depending on the type_request_unit",
         compute="_compute_duration_display",
+        help="Field allowing to see the allocation duration in days or hours depending on the type_request_unit",
     )
     last_executed_carryover_date = fields.Date(export_string_translation=False)
     approver_id = fields.Many2one(
         comodel_name="hr.employee",
         string="First Approval",
-        help="This area is automatically filled by the user who validates the allocation",
         copy=False,
         readonly=True,
+        help="This area is automatically filled by the user who validates the allocation",
     )
     second_approver_id = fields.Many2one(
         comodel_name="hr.employee",
         string="Second Approval",
-        help="This area is automatically filled by the user who validates the allocation with second level (If time off type need second validation)",
         copy=False,
         readonly=True,
+        help="This area is automatically filled by the user who validates the allocation with second level (If time off type need second validation)",
     )
     validation_type = fields.Selection(
         related="holiday_status_id.allocation_validation_type",

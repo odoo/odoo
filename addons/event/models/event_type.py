@@ -73,10 +73,10 @@ class EventType(models.Model):
     has_seats_limitation = fields.Boolean(string="Limited Seats")
     seats_max = fields.Integer(
         string="Maximum Registrations",
-        help="It will select this default maximum value when you choose this event",
         compute="_compute_seats_max",
         store=True,
         readonly=False,
+        help="It will select this default maximum value when you choose this event",
     )
     default_timezone = fields.Selection(
         selection=_selection_timezones,
@@ -92,8 +92,8 @@ class EventType(models.Model):
     )
     # ticket reports
     ticket_instructions = fields.Html(
-        help="This information will be printed on your tickets.",
         translate=True,
+        help="This information will be printed on your tickets.",
     )
     question_ids = fields.Many2many(
         comodel_name="event.question",

@@ -62,9 +62,9 @@ class MrpBomLine(models.Model):
 
     cost_share = fields.Float(
         string="Cost Share (%)",
+        digits=0,
         help="The percentage of the component repartition cost when purchasing a kit."
         "The total of all components' cost have to be equal to 100.",
-        digits=0,
     )
 
     @api.constrains("cost_share")

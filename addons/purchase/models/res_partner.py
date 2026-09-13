@@ -8,18 +8,18 @@ class ResPartner(models.Model):
     user_purchase_id = fields.Many2one(
         comodel_name="res.users",
         string="Buyer",
-        help="The internal user in charge of purchases from this contact.",
         compute="_compute_user_purchase_id",
         precompute=True,
         store=True,
         readonly=False,
         tracking=True,
+        help="The internal user in charge of purchases from this contact.",
     )
     property_purchase_currency_id = fields.Many2one(
         comodel_name="res.currency",
         string="Supplier Currency",
-        help="This currency will be used for purchases from the current partner",
         company_dependent=True,
+        help="This currency will be used for purchases from the current partner",
     )
     purchase_order_ids = fields.One2many(
         comodel_name="purchase.order",
@@ -32,13 +32,13 @@ class ResPartner(models.Model):
     purchase_warn_msg = fields.Text(string="Message for Purchase Order")
     receipt_reminder_email = fields.Boolean(
         string="Receipt Reminder",
-        help="Automatically send a confirmation email to the vendor X days before the expected receipt date, asking him to confirm the exact date.",
         company_dependent=True,
+        help="Automatically send a confirmation email to the vendor X days before the expected receipt date, asking him to confirm the exact date.",
     )
     reminder_date_before_receipt = fields.Integer(
         string="Days Before Receipt",
-        help="Number of days to send reminder email before the promised receipt date",
         company_dependent=True,
+        help="Number of days to send reminder email before the promised receipt date",
     )
 
     @api.depends("parent_id")

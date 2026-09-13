@@ -101,8 +101,8 @@ class HrVersion(models.Model):
     date_version = fields.Date(
         default=fields.Date.today,
         required=True,
-        groups="hr.group_hr_user",
         tracking=True,
+        groups="hr.group_hr_user",
     )
     pending_employee_vals = fields.Json(
         copy=False,
@@ -133,8 +133,8 @@ class HrVersion(models.Model):
         ],
         default="employee",
         required=True,
-        groups="hr.group_hr_user",
         tracking=True,
+        groups="hr.group_hr_user",
     )
     department_id = fields.Many2one(
         comodel_name="hr.department",
@@ -144,9 +144,9 @@ class HrVersion(models.Model):
     )
     member_of_department = fields.Boolean(
         string="Member of department",
-        help="Whether the employee is a member of the active user's department or one of it's child department.",
         compute="_compute_member_of_department",
         search="_search_member_of_department",
+        help="Whether the employee is a member of the active user's department or one of it's child department.",
     )
     job_id = fields.Many2one(
         comodel_name="hr.job",
@@ -186,8 +186,8 @@ class HrVersion(models.Model):
         comodel_name="hr.departure.reason",
         copy=False,
         ondelete="restrict",
-        groups="hr.group_hr_user",
         tracking=True,
+        groups="hr.group_hr_user",
     )
     departure_description = fields.Html(
         string="Additional Information",
@@ -196,8 +196,8 @@ class HrVersion(models.Model):
     )
     departure_date = fields.Date(
         copy=False,
-        groups="hr.group_hr_user",
         tracking=True,
+        groups="hr.group_hr_user",
     )
 
     resource_calendar_id = fields.Many2one(
@@ -224,20 +224,20 @@ class HrVersion(models.Model):
 
     contract_date_start = fields.Date(
         string="Contract Start Date",
-        groups="hr.group_hr_manager",
         tracking=True,
+        groups="hr.group_hr_manager",
     )
     contract_date_end = fields.Date(
         string="Contract End Date",
-        help="End date of the contract (if it's a fixed-term contract).",
-        groups="hr.group_hr_manager",
         tracking=True,
+        groups="hr.group_hr_manager",
+        help="End date of the contract (if it's a fixed-term contract).",
     )
     trial_date_end = fields.Date(
         string="End of Trial Period",
-        help="End date of the trial period (if there is one).",
-        groups="hr.group_hr_manager",
         tracking=True,
+        groups="hr.group_hr_manager",
+        help="End date of the trial period (if there is one).",
     )
     date_start = fields.Date(
         compute="_compute_dates",
@@ -268,10 +268,10 @@ class HrVersion(models.Model):
 
     contract_template_id = fields.Many2one(
         comodel_name="hr.version",
-        help="Select a contract template to auto-fill the contract form with predefined values. You can still edit the fields as needed after applying the template.",
         domain="[('company_id', '=', company_id), ('employee_id', '=', False)]",
-        groups="hr.group_hr_user",
         tracking=True,
+        groups="hr.group_hr_user",
+        help="Select a contract template to auto-fill the contract form with predefined values. You can still edit the fields as needed after applying the template.",
     )
     structure_type_id = fields.Many2one(
         comodel_name="hr.payroll.structure.type",
@@ -279,8 +279,8 @@ class HrVersion(models.Model):
         compute="_compute_structure_type_id",
         store=True,
         readonly=False,
-        groups="hr.group_hr_manager",
         tracking=True,
+        groups="hr.group_hr_manager",
     )
     active_employee = fields.Boolean(
         related="employee_id.active",
@@ -293,10 +293,10 @@ class HrVersion(models.Model):
         readonly=True,
     )
     wage = fields.Monetary(
-        help="Employee's monthly gross wage.",
         aggregator="avg",
-        groups="hr.group_hr_manager",
         tracking=True,
+        groups="hr.group_hr_manager",
+        help="Employee's monthly gross wage.",
     )
     contract_wage = fields.Monetary(
         compute="_compute_contract_wage",
@@ -315,12 +315,12 @@ class HrVersion(models.Model):
     )
     contract_type_id = fields.Many2one(
         comodel_name="hr.contract.type",
-        groups="hr.group_hr_manager",
         tracking=True,
+        groups="hr.group_hr_manager",
     )
     additional_note = fields.Text(
-        groups="hr.group_hr_user",
         tracking=True,
+        groups="hr.group_hr_user",
     )
 
     def _domain_hr_responsible_id(self):
@@ -332,12 +332,12 @@ class HrVersion(models.Model):
     hr_responsible_id = fields.Many2one(
         comodel_name="res.users",
         string="HR Responsible",
-        help="Person responsible for validating the employee's contracts.",
         default=lambda self: self.env.user,
         required=True,
         domain=_domain_hr_responsible_id,
-        groups="hr.group_hr_user",
         tracking=True,
+        groups="hr.group_hr_user",
+        help="Person responsible for validating the employee's contracts.",
     )
 
     _check_contract_start_date_defined = models.Constraint(

@@ -20,29 +20,29 @@ class CredentialCategoryField(models.Model):
         ondelete="cascade",
     )
     code = fields.Char(
-        help="Key this value is stored under inside the encrypted payload.",
         required=True,
+        help="Key this value is stored under inside the encrypted payload.",
     )
     name = fields.Char(
-        help="Label shown on the credential form.",
         required=True,
+        help="Label shown on the credential form.",
     )
     sequence = fields.Integer(default=10)
     placeholder = fields.Char()
     help_text = fields.Char()
     required = fields.Boolean(
-        help="A credential of this category cannot be saved without a value.",
         default=True,
+        help="A credential of this category cannot be saved without a value.",
     )
     requirement_group = fields.Char(
         help="Fields sharing a group satisfy the requirement between them, so any "
         "one of them is enough. Leave empty to require this field on its own."
     )
     is_blob_key = fields.Boolean(
-        help="Stored inside the encrypted JSON payload rather than as the whole "
-        "payload of the simple storage mode.",
         compute="_compute_is_blob_key",
         store=True,
+        help="Stored inside the encrypted JSON payload rather than as the whole "
+        "payload of the simple storage mode.",
     )
 
     _code_uniq = models.Constraint(

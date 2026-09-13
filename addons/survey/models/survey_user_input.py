@@ -118,14 +118,14 @@ class SurveyUser_Input(models.Model):
     )
     ip_address = fields.Char(
         string="IP Address",
-        help="Respondent's IP address. Not stored if survey has 'Anonymize IP' enabled.",
         readonly=True,
+        help="Respondent's IP address. Not stored if survey has 'Anonymize IP' enabled.",
     )
     save_later_datetime = fields.Datetime(
         string="Resume Link Sent",
-        help="When the 'continue later' link was last emailed for this attempt.",
         copy=False,
         readonly=True,
+        help="When the 'continue later' link was last emailed for this attempt.",
     )
     user_input_line_ids = fields.One2many(
         comodel_name="survey.user_input.line",
@@ -161,21 +161,21 @@ class SurveyUser_Input(models.Model):
     survey_first_submitted = fields.Boolean()
     is_speeder = fields.Boolean(
         string="Speeder",
-        help="Respondent completed the survey in less than a third of this survey's "
-        "median duration, compared against every response as it stands now.",
         compute="_compute_is_speeder",
         search="_search_is_speeder",
+        help="Respondent completed the survey in less than a third of this survey's "
+        "median duration, compared against every response as it stands now.",
     )
     is_straight_liner = fields.Boolean(
         string="Straight-liner",
-        help="Respondent selected the same answer for every choice/matrix question.",
         compute="_compute_is_straight_liner",
         store=True,
+        help="Respondent selected the same answer for every choice/matrix question.",
     )
     quality_score = fields.Integer(
-        help="Response quality from 0 (worst) to 100 (best). Based on speed and answer variety.",
         compute="_compute_quality_score",
         search="_search_quality_score",
+        help="Response quality from 0 (worst) to 100 (best). Based on speed and answer variety.",
     )
     is_session_answer = fields.Boolean(
         string="Is in a Session",

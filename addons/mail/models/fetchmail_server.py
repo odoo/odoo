@@ -160,6 +160,8 @@ class FetchmailServer(models.Model):
     encryption = fields.Selection(
         selection=ENCRYPTION_SELECTION,
         string="Connection Encryption",
+        default="ssl_strict",
+        required=True,
         help="Choose the connection encryption scheme:\n"
         "- None: the session, including your password, is sent in cleartext.\n"
         "- TLS (STARTTLS): encryption is negotiated on the standard port (IMAP=143, POP3=110)\n"
@@ -171,14 +173,12 @@ class FetchmailServer(models.Model):
         "certificate (Recommended)\n"
         "- encryption only: encrypt but accept any certificate, which cannot detect "
         "an impostor server",
-        default="ssl_strict",
-        required=True,
     )
     attach = fields.Boolean(
         string="Keep Attachments",
+        default=True,
         help="Whether attachments should be downloaded. "
         "If not enabled, incoming emails will be stripped of any attachments before being processed",
-        default=True,
     )
     original = fields.Boolean(
         string="Keep Original",
@@ -187,20 +187,20 @@ class FetchmailServer(models.Model):
     )
     date = fields.Datetime(
         string="Last Fetch Attempt",
-        help="When this server was last polled, whether or not the poll succeeded.",
         readonly=True,
+        help="When this server was last polled, whether or not the poll succeeded.",
     )
     error_since = fields.Datetime(
         string="Failing Since",
+        readonly=True,
         help="Start of the current run of failures, cleared by the first successful "
         "fetch. A server that keeps failing for longer than five days is "
         "unconfirmed automatically.",
-        readonly=True,
     )
     error_message = fields.Text(
         string="Last Error Message",
-        help="The most recent failure, cleared by the first successful fetch.",
         readonly=True,
+        help="The most recent failure, cleared by the first successful fetch.",
     )
     user = fields.Char(
         string="Username",
@@ -210,27 +210,27 @@ class FetchmailServer(models.Model):
     object_id: IrModel = fields.Many2one(
         comodel_name="ir.model",
         string="Create a New Record",
-        help="Process each incoming mail as part of a conversation "
-        "corresponding to this document type. This will create "
-        "new documents for new conversations, or attach follow-up "
-        "emails to the existing conversations (documents).",
         domain=[
             ("is_mail_thread", "=", True),
             ("abstract", "=", False),
             ("transient", "=", False),
         ],
+        help="Process each incoming mail as part of a conversation "
+        "corresponding to this document type. This will create "
+        "new documents for new conversations, or attach follow-up "
+        "emails to the existing conversations (documents).",
     )
     priority = fields.Integer(
         string="Server Priority",
-        help="Defines the order of processing, lower values mean higher priority",
         default=5,
+        help="Defines the order of processing, lower values mean higher priority",
     )
     message_ids: MailMail = fields.One2many(
         comodel_name="mail.mail",
         inverse_name="fetchmail_server_id",
         string="Outgoing Mails",
-        help="Mails sent while processing what this server delivered.",
         readonly=True,
+        help="Mails sent while processing what this server delivered.",
     )
     configuration = fields.Text(
         compute="_compute_configuration",

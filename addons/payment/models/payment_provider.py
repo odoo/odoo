@@ -36,9 +36,9 @@ class PaymentProvider(models.Model):
     sequence = fields.Integer(help="Define the display order")
     code = fields.Selection(
         selection=[("none", "No Provider Set")],
-        help="The technical code of this payment provider.",
         default="none",
         required=True,
+        help="The technical code of this payment provider.",
     )
     state = fields.Selection(
         selection=[
@@ -46,17 +46,17 @@ class PaymentProvider(models.Model):
             ("enabled", "Enabled"),
             ("test", "Test Mode"),
         ],
-        help="In test mode, a fake payment is processed through a test payment interface.\n"
-        "This mode is advised when setting up the provider.",
         default="disabled",
         copy=False,
         required=True,
+        help="In test mode, a fake payment is processed through a test payment interface.\n"
+        "This mode is advised when setting up the provider.",
     )
     is_published = fields.Boolean(
         string="Published",
+        copy=False,
         help="Whether the provider is visible on the website or not. Tokens remain functional but "
         "are only visible on manage forms.",
-        copy=False,
     )
     company_id = fields.Many2one(
         # Indexed to speed-up ORM searches (from ir_rule or others)
@@ -93,30 +93,30 @@ class PaymentProvider(models.Model):
     redirect_form_view_id = fields.Many2one(
         comodel_name="ir.ui.view",
         string="Redirect Form Template",
-        help="The template rendering a form submitted to redirect the user when making a payment",
         domain=[("type", "=", "qweb")],
         ondelete="restrict",
+        help="The template rendering a form submitted to redirect the user when making a payment",
     )
     inline_form_view_id = fields.Many2one(
         comodel_name="ir.ui.view",
         string="Inline Form Template",
-        help="The template rendering the inline payment form when making a direct payment",
         domain=[("type", "=", "qweb")],
         ondelete="restrict",
+        help="The template rendering the inline payment form when making a direct payment",
     )
     token_inline_form_view_id = fields.Many2one(
         comodel_name="ir.ui.view",
         string="Token Inline Form Template",
-        help="The template rendering the inline payment form when making a payment by token.",
         domain=[("type", "=", "qweb")],
         ondelete="restrict",
+        help="The template rendering the inline payment form when making a payment by token.",
     )
     express_checkout_form_view_id = fields.Many2one(
         comodel_name="ir.ui.view",
         string="Express Checkout Form Template",
-        help="The template rendering the express payment methods' form.",
         domain=[("type", "=", "qweb")],
         ondelete="restrict",
+        help="The template rendering the express payment methods' form.",
     )
 
     # Availability fields
@@ -135,50 +135,50 @@ class PaymentProvider(models.Model):
         column1="payment_provider_id",
         column2="currency_id",
         string="Currencies",
-        help="The currencies available with this payment provider. Leave empty not to restrict "
-        "any.",
         compute="_compute_available_currency_ids",
         store=True,
         readonly=False,
         context={"active_test": False},
+        help="The currencies available with this payment provider. Leave empty not to restrict "
+        "any.",
     )
     maximum_amount = fields.Monetary(
+        currency_field="main_currency_id",
         help="The maximum payment amount that this payment provider is available for. Leave blank "
         "to make it available for any payment amount.",
-        currency_field="main_currency_id",
     )
 
     # Message fields
     pre_msg = fields.Html(
         string="Help Message",
-        help="The message displayed to explain and help the payment process",
         translate=True,
+        help="The message displayed to explain and help the payment process",
     )
     pending_msg = fields.Html(
         string="Pending Message",
-        help="The message displayed if the order pending after the payment process",
         translate=True,
         default=lambda self: _(
             "Your payment has been processed but is waiting for approval."
         ),
+        help="The message displayed if the order pending after the payment process",
     )
     auth_msg = fields.Html(
         string="Authorize Message",
-        help="The message displayed if payment is authorized",
         translate=True,
         default=lambda self: _("Your payment has been authorized."),
+        help="The message displayed if payment is authorized",
     )
     done_msg = fields.Html(
         string="Done Message",
-        help="The message displayed if the order is successfully done after the payment process",
         translate=True,
         default=lambda self: _("Your payment has been processed."),
+        help="The message displayed if the order is successfully done after the payment process",
     )
     cancel_msg = fields.Html(
         string="Cancelled Message",
-        help="The message displayed if the order is cancelled during the payment process",
         translate=True,
         default=lambda self: _("Your payment has been cancelled."),
+        help="The message displayed if the order is cancelled during the payment process",
     )
 
     # Feature support fields
@@ -202,8 +202,8 @@ class PaymentProvider(models.Model):
             ("partial", "Full & Partial"),
         ],
         string="Refund",
-        help="Refund is a feature allowing to refund customers directly from the payment in Odoo.",
         compute="_compute_feature_support_fields",
+        help="Refund is a feature allowing to refund customers directly from the payment in Odoo.",
     )
 
     # Kanban view fields
@@ -213,9 +213,9 @@ class PaymentProvider(models.Model):
         max_height=128,
     )
     color = fields.Integer(
-        help="The color of the card in kanban view",
         compute="_compute_color",
         store=True,
+        help="The color of the card in kanban view",
     )
 
     # Module-related fields

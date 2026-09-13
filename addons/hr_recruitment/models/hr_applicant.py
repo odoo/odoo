@@ -41,9 +41,9 @@ class HrApplicant(models.Model):
         index=True,
     )
     active = fields.Boolean(
-        help="If the active field is set to false, it will allow you to hide the case without removing it.",
         default=True,
         index=True,
+        help="If the active field is set to false, it will allow you to hide the case without removing it.",
     )
 
     partner_id = fields.Many2one(
@@ -80,8 +80,8 @@ class HrApplicant(models.Model):
     )
     degree_id = fields.Many2one(comodel_name="hr.recruitment.degree")
     availability = fields.Date(
-        help="The date at which the applicant will be available to start working",
         tracking=True,
+        help="The date at which the applicant will be available to start working",
     )
     color = fields.Integer(
         string="Color Index",
@@ -89,9 +89,9 @@ class HrApplicant(models.Model):
     )
     employee_id = fields.Many2one(
         comodel_name="hr.employee",
-        help="Employee linked to the applicant.",
         index="btree_not_null",
         copy=False,
+        help="Employee linked to the applicant.",
     )
     emp_is_active = fields.Boolean(
         related="employee_id.active",
@@ -174,29 +174,29 @@ class HrApplicant(models.Model):
     )
     salary_proposed_extra = fields.Char(
         string="Proposed Salary Extra",
-        help="Salary Proposed by the Organisation, extra advantages",
-        groups="hr_recruitment.group_hr_recruitment_user",
         tracking=True,
+        groups="hr_recruitment.group_hr_recruitment_user",
+        help="Salary Proposed by the Organisation, extra advantages",
     )
     salary_expected_extra = fields.Char(
         string="Expected Salary Extra",
-        help="Salary Expected by Applicant, extra advantages",
-        groups="hr_recruitment.group_hr_recruitment_user",
         tracking=True,
+        groups="hr_recruitment.group_hr_recruitment_user",
+        help="Salary Expected by Applicant, extra advantages",
     )
     salary_proposed = fields.Float(
         string="Proposed",
-        help="Salary Proposed by the Organisation",
         aggregator="avg",
-        groups="hr_recruitment.group_hr_recruitment_user",
         tracking=True,
+        groups="hr_recruitment.group_hr_recruitment_user",
+        help="Salary Proposed by the Organisation",
     )
     salary_expected = fields.Float(
         string="Expected",
-        help="Salary Expected by Applicant",
         aggregator="avg",
-        groups="hr_recruitment.group_hr_recruitment_user",
         tracking=True,
+        groups="hr_recruitment.group_hr_recruitment_user",
+        help="Salary Expected by Applicant",
     )
     department_id = fields.Many2one(
         comodel_name="hr.department",
@@ -208,11 +208,11 @@ class HrApplicant(models.Model):
     )
     delay_close = fields.Float(
         string="Delay to Close",
-        help="Number of days to close",
         compute="_compute_delay_close",
         store=True,
         readonly=True,
         aggregator="avg",
+        help="Number of days to close",
     )
     user_email = fields.Char(
         related="user_id.email",
@@ -269,8 +269,8 @@ class HrApplicant(models.Model):
     meeting_display_date = fields.Date(compute="_compute_meeting_display")
     campaign_id = fields.Many2one(ondelete="set null")
     medium_id = fields.Many2one(
-        help="This displays how the applicant has reached out, e.g. via Email, LinkedIn, Website, etc.",
         ondelete="set null",
+        help="This displays how the applicant has reached out, e.g. via Email, LinkedIn, Website, etc.",
     )
     source_id = fields.Many2one(ondelete="set null")
     interviewer_ids = fields.Many2many(
@@ -292,8 +292,8 @@ class HrApplicant(models.Model):
         search="_search_application_status",
     )
     application_count = fields.Integer(
-        help="Applications with the same email or phone or mobile",
         compute="_compute_application_count",
+        help="Applications with the same email or phone or mobile",
     )
     applicant_properties = fields.Properties(
         definition="job_id.applicant_properties_definition",

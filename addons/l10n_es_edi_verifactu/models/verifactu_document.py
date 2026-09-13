@@ -116,9 +116,9 @@ class L10nEsEdiVerifactuDocument(models.Model):
         readonly=True,
     )
     chain_index = fields.Integer(
-        help="Index in the chain of Veri*Factu Documents. It is only set if the generation was succesful.",
         copy=False,
         readonly=True,
+        help="Index in the chain of Veri*Factu Documents. It is only set if the generation was succesful.",
     )
     document_type = fields.Selection(
         selection=[
@@ -150,9 +150,9 @@ class L10nEsEdiVerifactuDocument(models.Model):
     )
     response_csv = fields.Char(
         string="Response CSV",
-        help="The CSV of the response from the tax agency. There may not be one in case all documents of the batch were rejected.",
         copy=False,
         readonly=True,
+        help="The CSV of the response from the tax agency. There may not be one in case all documents of the batch were rejected.",
     )
     state = fields.Selection(
         selection=[
@@ -161,11 +161,11 @@ class L10nEsEdiVerifactuDocument(models.Model):
             ("accepted", "Accepted"),
         ],
         string="Status",
+        copy=False,
+        readonly=True,
         help="""- Rejected: Successfully sent to the AEAT, but it was rejected during validation
                 - Registered with Errors: Registered at the AEAT, but the AEAT has some issues with the sent record
                 - Accepted: Registered by the AEAT without errors""",
-        copy=False,
-        readonly=True,
     )
 
     @api.depends("document_type")

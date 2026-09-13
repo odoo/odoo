@@ -10,7 +10,7 @@ class ProductRemoval(models.Model):
         required=True,
     )
     method = fields.Char(
-        help="FIFO, LIFO...",
         translate=True,
         required=True,
+        help="FIFO, LIFO...",
     )

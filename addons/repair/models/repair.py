@@ -54,16 +54,16 @@ class RepairOrder(models.Model):
             ("cancel", "Cancelled"),
         ],
         string="Status",
-        help="* The 'New' status is used when a user is encoding a new and unconfirmed repair order.\n"
-        "* The 'Confirmed' status is used when a user confirms the repair order.\n"
-        "* The 'Under Repair' status is used when the repair is ongoing.\n"
-        "* The 'Repaired' status is set when repairing is completed.\n"
-        "* The 'Cancelled' status is used when user cancel repair order.",
         default="draft",
         index=True,
         copy=False,
         readonly=True,
         tracking=True,
+        help="* The 'New' status is used when a user is encoding a new and unconfirmed repair order.\n"
+        "* The 'Confirmed' status is used when a user confirms the repair order.\n"
+        "* The 'Under Repair' status is used when the repair is ongoing.\n"
+        "* The 'Repaired' status is set when repairing is completed.\n"
+        "* The 'Cancelled' status is used when user cancel repair order.",
     )
     priority = fields.Selection(
         selection=[("0", "Normal"), ("1", "Urgent")],
@@ -72,13 +72,13 @@ class RepairOrder(models.Model):
     partner_id = fields.Many2one(
         comodel_name="res.partner",
         string="Customer",
-        help="Choose partner for whom the order will be invoiced and delivered. You can find a partner by its Name, TIN, Email or Internal Reference.",
         compute="_compute_partner_id",
         change_default=True,
         store=True,
         index=True,
         readonly=False,
         check_company=True,
+        help="Choose partner for whom the order will be invoiced and delivered. You can find a partner by its Name, TIN, Email or Internal Reference.",
     )
     user_id = fields.Many2one(
         comodel_name="res.users",
@@ -148,11 +148,11 @@ class RepairOrder(models.Model):
     lot_id = fields.Many2one(
         comodel_name="stock.lot",
         string="Lot/Serial",
-        help="Products repaired are all belonging to this lot",
         compute="_compute_lot_id",
         store=True,
         domain="[('id', 'in', allowed_lot_ids)]",
         check_company=True,
+        help="Products repaired are all belonging to this lot",
     )
     tracking = fields.Selection(
         related="product_id.tracking",
@@ -185,7 +185,6 @@ class RepairOrder(models.Model):
     location_id = fields.Many2one(
         comodel_name="stock.location",
         string="Component Source Location",
-        help="This is the location where the components of product to repair is located.",
         compute="_compute_location_id",
         precompute=True,
         store=True,
@@ -193,11 +192,11 @@ class RepairOrder(models.Model):
         readonly=False,
         required=True,
         check_company=True,
+        help="This is the location where the components of product to repair is located.",
     )
     product_location_src_id = fields.Many2one(
         comodel_name="stock.location",
         string="Product Source Location",
-        help="This is the location where the product to repair is located.",
         compute="_compute_product_location_src_id",
         precompute=True,
         store=True,
@@ -205,11 +204,11 @@ class RepairOrder(models.Model):
         readonly=False,
         required=True,
         check_company=True,
+        help="This is the location where the product to repair is located.",
     )
     product_location_dest_id = fields.Many2one(
         comodel_name="stock.location",
         string="Product Destination Location",
-        help="This is the location where the repaired product is located.",
         compute="_compute_product_location_dest_id",
         precompute=True,
         store=True,
@@ -217,12 +216,12 @@ class RepairOrder(models.Model):
         readonly=False,
         required=True,
         check_company=True,
+        help="This is the location where the repaired product is located.",
     )
     location_dest_id = fields.Many2one(
         comodel_name="stock.location",
         related="picking_type_id.default_location_dest_id",
         string="Added Parts Destination Location",
-        help="This is the location where the repaired product is located.",
         depends=["picking_type_id"],
         precompute=True,
         store=True,
@@ -230,12 +229,12 @@ class RepairOrder(models.Model):
         readonly=True,
         required=True,
         check_company=True,
+        help="This is the location where the repaired product is located.",
     )
     parts_location_id = fields.Many2one(
         comodel_name="stock.location",
         related="picking_type_id.default_remove_location_dest_id",
         string="Removed Parts Destination Location",
-        help="This is the location where the repair parts are located.",
         depends=["picking_type_id"],
         precompute=True,
         store=True,
@@ -243,11 +242,11 @@ class RepairOrder(models.Model):
         readonly=True,
         required=True,
         check_company=True,
+        help="This is the location where the repair parts are located.",
     )
     recycle_location_id = fields.Many2one(
         comodel_name="stock.location",
         string="Recycled Parts Destination Location",
-        help="This is the location where the repair parts are located.",
         compute="_compute_recycle_location_id",
         precompute=True,
         store=True,
@@ -255,6 +254,7 @@ class RepairOrder(models.Model):
         readonly=False,
         required=True,
         check_company=True,
+        help="This is the location where the repair parts are located.",
     )
 
     # Parts
@@ -268,8 +268,8 @@ class RepairOrder(models.Model):
     )  # Once RO switch to state done, a binded move is created for the "Product to repair" (move_id), this move appears in 'move_ids' if not filtered
     parts_availability = fields.Char(
         string="Component Status",
-        help="Latest parts availability status for this RO. If green, then the RO's readiness status is ready.",
         compute="_compute_parts_availability_and_state",
+        help="Latest parts availability status for this RO. If green, then the RO's readiness status is ready.",
     )
     parts_availability_state = fields.Selection(
         selection=[
@@ -295,18 +295,18 @@ class RepairOrder(models.Model):
     # Sale Order Binding
     sale_order_id = fields.Many2one(
         comodel_name="sale.order",
-        help="Sale Order from which the Repair Order comes from.",
         index="btree_not_null",
         copy=False,
         readonly=True,
         check_company=True,
+        help="Sale Order from which the Repair Order comes from.",
     )
     sale_order_line_id = fields.Many2one(
         comodel_name="sale.order.line",
-        help="Sale Order Line from which the Repair Order comes from.",
         copy=False,
         readonly=True,
         check_company=True,
+        help="Sale Order Line from which the Repair Order comes from.",
     )
     repair_request = fields.Text(
         related="sale_order_line_id.name",
@@ -318,11 +318,11 @@ class RepairOrder(models.Model):
     picking_id = fields.Many2one(
         comodel_name="stock.picking",
         string="Transfer",
-        help="Transfer from which the product to be repaired is picked",
         index="btree_not_null",
         copy=False,
         domain="[('return_id', '!=', False), ('product_id', '=?', product_id)]",
         check_company=True,
+        help="Transfer from which the product to be repaired is picked",
     )
     picking_product_ids = fields.One2many(
         comodel_name="product.product",
@@ -337,13 +337,13 @@ class RepairOrder(models.Model):
     has_uncomplete_moves = fields.Boolean(compute="_compute_has_uncomplete_moves")
     unreserve_visible = fields.Boolean(
         string="Allowed to Unreserve Production",
-        help="Technical field to check when we can unreserve",
         compute="_compute_reservation_visibility",
+        help="Technical field to check when we can unreserve",
     )
     reserve_visible = fields.Boolean(
         string="Allowed to Reserve Production",
-        help="Technical field to check when we can reserve quantities",
         compute="_compute_reservation_visibility",
+        help="Technical field to check when we can reserve quantities",
     )
     picking_type_visible = fields.Boolean(compute="_compute_picking_type_visible")
 

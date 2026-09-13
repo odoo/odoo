@@ -52,11 +52,11 @@ class WebsiteControllerPage(models.Model):
     )
     name_slugified = fields.Char(
         string="URL",
-        help="The name of the page usable in a URL",
         compute="_compute_name_slugified",
         inverse="_inverse_name_slugified",
         precompute=True,
         store=True,
+        help="The name of the page usable in a URL",
     )
     url_demo = fields.Char(
         string="Demo URL",

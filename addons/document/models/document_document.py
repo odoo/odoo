@@ -204,10 +204,10 @@ class DocumentsDocument(models.Model):
     )
     url_preview_pending = fields.Boolean(
         string="URL preview to fetch",
-        help="Set when a URL document still needs its link preview fetched "
-        "asynchronously (see _cron_update_url_preview).",
         default=False,
         copy=False,
+        help="Set when a URL document still needs its link preview fetched "
+        "asynchronously (see _cron_update_url_preview).",
     )
     request_activity_id = fields.Many2one(comodel_name="mail.activity")
     requestee_partner_id = fields.Many2one(comodel_name="res.partner")
@@ -237,9 +237,9 @@ class DocumentsDocument(models.Model):
     )
     is_access_via_link_hidden = fields.Boolean(
         string="Link Access Hidden",
+        index=True,
         help='If "True", only people given direct access to this document will be able to view it. '
         'If "False", access with the link also given to all who can access the parent folder.',
-        index=True,
     )
     access_via_link = fields.Selection(
         selection=[("view", "Viewer"), ("edit", "Editor"), ("none", "None")],
@@ -250,10 +250,10 @@ class DocumentsDocument(models.Model):
     )
     is_download_blocked = fields.Boolean(
         string="Block Download",
+        default=False,
         help="If set, people who can only view this document cannot download "
         "it. Editors are unaffected: they can replace the content, so "
         "withholding it from them would mean nothing.",
-        default=False,
     )
     access_internal = fields.Selection(
         selection=[("view", "Viewer"), ("edit", "Editor"), ("none", "None")],
@@ -303,8 +303,8 @@ class DocumentsDocument(models.Model):
 
     deletion_delay = fields.Integer(
         string="Deletion delay",
-        help="Delay after permanent deletion of the document in the trash (days)",
         compute="_compute_deletion_delay",
+        help="Delay after permanent deletion of the document in the trash (days)",
     )
 
     create_activity_option = fields.Boolean(
@@ -345,8 +345,8 @@ class DocumentsDocument(models.Model):
     mail_alias_domain_count = fields.Integer(compute="_compute_mail_alias_domain_count")
 
     is_editable_attachment = fields.Boolean(
-        help="True if we can edit the link attachment.",
         default=False,
+        help="True if we can edit the link attachment.",
     )
     is_multipage = fields.Boolean(
         string="Is considered multipage",

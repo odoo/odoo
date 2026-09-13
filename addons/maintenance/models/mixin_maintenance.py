@@ -14,9 +14,9 @@ class MixinMaintenance(models.AbstractModel):
     )
     date_effective = fields.Date(
         string="Effective Date",
-        help="This date will be used to compute the Mean Time Between Failure.",
         default=fields.Date.context_today,
         required=True,
+        help="This date will be used to compute the Mean Time Between Failure.",
     )
     maintenance_team_id = fields.Many2one(
         comodel_name="maintenance.team",
@@ -49,18 +49,18 @@ class MixinMaintenance(models.AbstractModel):
     )
     mtbf = fields.Integer(
         string="MTBF",
-        help="Mean Time Between Failure, computed based on done corrective maintenances.",
         compute="_compute_maintenance_request",
+        help="Mean Time Between Failure, computed based on done corrective maintenances.",
     )
     mttr = fields.Integer(
         string="MTTR",
-        help="Mean Time To Repair",
         compute="_compute_maintenance_request",
+        help="Mean Time To Repair",
     )
     estimated_next_failure = fields.Date(
         string="Estimated time before next failure (in days)",
-        help="Computed as Latest Failure Date + MTBF",
         compute="_compute_maintenance_request",
+        help="Computed as Latest Failure Date + MTBF",
     )
     latest_failure_date = fields.Date(compute="_compute_maintenance_request")
 

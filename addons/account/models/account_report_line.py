@@ -78,11 +78,11 @@ class AccountReportLine(models.Model):
     )
     user_groupby = fields.Char(
         string="User Group By",
-        help="Comma-separated list of fields from account.move.line (Journal Item). When set, this line will generate sublines grouped by those keys.",
         compute="_compute_user_groupby",
         precompute=True,
         store=True,
         readonly=False,
+        help="Comma-separated list of fields from account.move.line (Journal Item). When set, this line will generate sublines grouped by those keys.",
     )
     sequence = fields.Integer()
     code = fields.Char(help="Unique identifier for this line.")
@@ -102,31 +102,31 @@ class AccountReportLine(models.Model):
     )
     domain_formula = fields.Char(
         string="Domain Formula Shortcut",
-        help="Internal field to shorten expression_ids creation for the domain engine",
         inverse="_inverse_domain_formula",
         store=False,
         copy=False,
+        help="Internal field to shorten expression_ids creation for the domain engine",
     )
     account_codes_formula = fields.Char(
         string="Account Codes Formula Shortcut",
-        help="Internal field to shorten expression_ids creation for the account_codes engine",
         inverse="_inverse_account_codes_formula",
         store=False,
         copy=False,
+        help="Internal field to shorten expression_ids creation for the account_codes engine",
     )
     aggregation_formula = fields.Char(
         string="Aggregation Formula Shortcut",
-        help="Internal field to shorten expression_ids creation for the aggregation engine",
         inverse="_inverse_aggregation_formula",
         store=False,
         copy=False,
+        help="Internal field to shorten expression_ids creation for the aggregation engine",
     )
     external_formula = fields.Char(
         string="External Formula Shortcut",
-        help="Internal field to shorten expression_ids creation for the external engine",
         inverse="_inverse_external_formula",
         store=False,
         copy=False,
+        help="Internal field to shorten expression_ids creation for the external engine",
     )
     horizontal_split_side = fields.Selection(
         selection=[("left", "Left"), ("right", "Right")],
@@ -137,10 +137,10 @@ class AccountReportLine(models.Model):
     )
     tax_tags_formula = fields.Char(
         string="Tax Tags Formula Shortcut",
-        help="Internal field to shorten expression_ids creation for the tax_tags engine",
         inverse="_inverse_tax_tags_formula",
         store=False,
         copy=False,
+        help="Internal field to shorten expression_ids creation for the tax_tags engine",
     )
 
     _code_uniq = models.UniqueIndex(

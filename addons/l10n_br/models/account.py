@@ -12,15 +12,15 @@ class AccountTax(models.Model):
     )
     base_reduction = fields.Float(
         string="Redution",
-        help="Um percentual decimal em % entre 0-1.",
         digits=0,
         default=0,
         required=True,
+        help="Um percentual decimal em % entre 0-1.",
     )
     amount_mva = fields.Float(
         string="MVA Percent",
-        help="Um percentual decimal em % entre 0-1.",
         digits=0,
         default=0,
         required=True,
+        help="Um percentual decimal em % entre 0-1.",
     )

@@ -30,6 +30,6 @@ class ResConfigSettings(models.TransientModel):
 
     cal_microsoft_sync_paused = fields.Boolean(
         string="Microsoft Synchronization Paused",
-        help="Indicates if synchronization with Outlook Calendar is paused or not.",
         config_parameter="microsoft_calendar_sync_paused",
+        help="Indicates if synchronization with Outlook Calendar is paused or not.",
     )

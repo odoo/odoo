@@ -12,10 +12,10 @@ class ResConfigSettings(models.TransientModel):
     )
     group_product_price_comparison = fields.Boolean(
         string="Comparison Price",
-        help="Add a strikethrough price to your /shop and product pages for comparison purposes."
-        "It will not be displayed if pricelists apply.",
         implied_group="website_sale.group_product_price_comparison",
         group="base.group_user",
+        help="Add a strikethrough price to your /shop and product pages for comparison purposes."
+        "It will not be displayed if pricelists apply.",
     )
     group_gmc_feed = fields.Boolean(
         related="website_id.enabled_gmc_src",

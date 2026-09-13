@@ -6,8 +6,8 @@ class AccountJournal(models.Model):
 
     l10n_br_invoice_serial = fields.Char(
         string="Series",
-        help="Brazil: Series number associated with this Journal. If more than one Series needs to be used, duplicate this Journal and assign the new Series to the duplicated Journal.",
         copy=False,
+        help="Brazil: Series number associated with this Journal. If more than one Series needs to be used, duplicate this Journal and assign the new Series to the duplicated Journal.",
     )
 
     @api.depends("l10n_br_invoice_serial")

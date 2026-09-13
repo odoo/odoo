@@ -26,16 +26,16 @@ class StockWarehouseOrderpoint(models.Model):
     )
     effective_vendor_id = fields.Many2one(
         comodel_name="res.partner",
-        help="Either the vendor set directly or the one computed to be used by this replenishment",
         compute="_compute_effective_vendor_id",
         search="_search_effective_vendor_id",
         store=False,
+        help="Either the vendor set directly or the one computed to be used by this replenishment",
     )
     available_vendor = fields.Many2one(
         comodel_name="res.partner",
-        help="Any vendor on the product's pricelist",
         search="_search_available_vendor",
         store=False,
+        help="Any vendor on the product's pricelist",
     )
 
     def _compute_days_to_order(self):

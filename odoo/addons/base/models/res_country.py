@@ -48,12 +48,13 @@ class ResCountry(models.Model):
     )
     code = fields.Char(
         string="Country Code",
-        help="The ISO country code in two chars. \nYou can use this field for quick search.",
         size=2,
         required=True,
+        help="The ISO country code in two chars. \nYou can use this field for quick search.",
     )
     address_format = fields.Text(
         string="Layout in Reports",
+        default="%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s",
         help="Display format to use for addresses belonging to this country.\n\n"
         "You can use python-style string pattern with all the fields of the address "
         "(for example, use '%(street)s' to display the field 'street') plus"
@@ -61,22 +62,21 @@ class ResCountry(models.Model):
         "\n%(state_code)s: the code of the state"
         "\n%(country_name)s: the name of the country"
         "\n%(country_code)s: the code of the country",
-        default="%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s",
     )
     address_view_id = fields.Many2one(
         comodel_name="ir.ui.view",
         string="Input View",
+        domain=[("model", "=", "res.partner"), ("type", "=", "form")],
         help="Use this field if you want to replace the usual way to encode a complete address. "
         "Note that the address_format field is used to modify the way to display addresses "
         "(in reports for example), while this field is used to modify the input form for "
         "addresses.",
-        domain=[("model", "=", "res.partner"), ("type", "=", "form")],
     )
     currency_id = fields.Many2one(comodel_name="res.currency")
     image_url = fields.Char(
         string="Flag",
-        help="Url of static flag image",
         compute="_compute_image_url",
+        help="Url of static flag image",
     )
     phone_code = fields.Integer(string="Country Calling Code")
     country_group_ids = fields.Many2many(
@@ -98,13 +98,13 @@ class ResCountry(models.Model):
             ("after", "After Address"),
         ],
         string="Customer Name Position",
-        help="Determines where the customer/company name should be placed, i.e. after or before the address.",
         default="before",
+        help="Determines where the customer/company name should be placed, i.e. after or before the address.",
     )
     vat_label = fields.Char(
-        help="Use this field if you want to change vat label.",
         translate=True,
         prefetch=True,
+        help="Use this field if you want to change vat label.",
     )
 
     state_required = fields.Boolean(default=False)
@@ -276,13 +276,13 @@ class ResCountryState(models.Model):
     )
     name = fields.Char(
         string="State Name",
-        help="Administrative divisions of a country. E.g. Fed. State, Department, Canton",
         required=True,
+        help="Administrative divisions of a country. E.g. Fed. State, Department, Canton",
     )
     code = fields.Char(
         string="State Code",
-        help="The state code.",
         required=True,
+        help="The state code.",
     )
 
     _name_code_uniq = models.Constraint(

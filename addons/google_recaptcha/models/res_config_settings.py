@@ -22,8 +22,8 @@ class ResConfigSettings(models.TransientModel):
     )
     recaptcha_min_score = fields.Float(
         string="Minimum score",
-        help="By default, should be one of 0.1, 0.3, 0.7, 0.9.\n1.0 is very likely a good interaction, 0.0 is very likely a bot",
         default="0.7",
         config_parameter="recaptcha_min_score",
         groups="base.group_system",
+        help="By default, should be one of 0.1, 0.3, 0.7, 0.9.\n1.0 is very likely a good interaction, 0.0 is very likely a bot",
     )

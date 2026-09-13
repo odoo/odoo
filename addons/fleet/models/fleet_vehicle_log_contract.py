@@ -28,8 +28,8 @@ class FleetVehicleLogContract(models.Model):
     cost_subtype_id = fields.Many2one(
         comodel_name="fleet.service.type",
         string="Type",
-        help="Cost type purchased with this cost",
         domain=[("category", "=", "contract")],
+        help="Cost type purchased with this cost",
     )
     amount = fields.Monetary(
         string="Cost",
@@ -62,17 +62,17 @@ class FleetVehicleLogContract(models.Model):
     )
     start_date = fields.Date(
         string="Contract Start Date",
-        help="Date when the coverage of the contract begins",
         default=fields.Date.context_today,
         tracking=True,
+        help="Date when the coverage of the contract begins",
     )
     expiration_date = fields.Date(
         string="Contract Expiration Date",
-        help="Date when the coverage of the contract expirates (by default, one year after begin date)",
         default=lambda self: self.compute_next_year_date(
             fields.Date.context_today(self)
         ),
         tracking=True,
+        help="Date when the coverage of the contract expirates (by default, one year after begin date)",
     )
     days_left = fields.Integer(
         string="Warning Date",
@@ -101,10 +101,10 @@ class FleetVehicleLogContract(models.Model):
             ("closed", "Cancelled"),
         ],
         string="Status",
-        help="Choose whether the contract is still valid or not",
         default="open",
         copy=False,
         tracking=True,
+        help="Choose whether the contract is still valid or not",
     )
     notes = fields.Html(
         string="Terms and Conditions",
@@ -130,9 +130,9 @@ class FleetVehicleLogContract(models.Model):
     )
     repeat_unit = fields.Selection(
         string="Recurring Cost Frequency",
-        help="Leave empty for a contract that generates no recurring cost.",
         default="month",
         tracking=True,
+        help="Leave empty for a contract that generates no recurring cost.",
     )
     service_ids = fields.Many2many(
         comodel_name="fleet.service.type",

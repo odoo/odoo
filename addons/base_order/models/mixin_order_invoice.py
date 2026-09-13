@@ -34,8 +34,8 @@ class MixinOrderInvoice(models.AbstractModel):
         copy=False,
     )
     force_fully_invoiced = fields.Boolean(
-        help="Report this order as fully invoiced regardless of its lines.",
         copy=False,
+        help="Report this order as fully invoiced regardless of its lines.",
     )
 
     def _get_invoice_move_types(self):

@@ -14,16 +14,16 @@ class MailMessageSubtype(models.Model):
 
     name = fields.Char(
         string="Message Type",
-        help="Precise message type, mostly for system notifications (e.g. New, "
-        "Stage change). Lets users fine-tune which notifications they receive.",
         translate=True,
         required=True,
+        help="Precise message type, mostly for system notifications (e.g. New, "
+        "Stage change). Lets users fine-tune which notifications they receive.",
     )
     description = fields.Text(
-        help="Description that will be added in the message posted for this "
-        "subtype. If void, the name will be added instead.",
         translate=True,
         prefetch=True,
+        help="Description that will be added in the message posted for this "
+        "subtype. If void, the name will be added instead.",
     )
     internal = fields.Boolean(
         string="Internal Only",
@@ -31,9 +31,9 @@ class MailMessageSubtype(models.Model):
     )
     parent_id: MailMessageSubtype = fields.Many2one(
         comodel_name="mail.message.subtype",
+        ondelete="set null",
         help="Parent subtype, used for automatic subscription (e.g. a project "
         "subtype's parent_id points to the related task subtype).",
-        ondelete="set null",
     )
     relation_field = fields.Char(
         string="Relation field",
@@ -46,12 +46,12 @@ class MailMessageSubtype(models.Model):
         help="Model the subtype applies to. If False, this subtype applies to all models.",
     )
     default = fields.Boolean(
-        help="Activated by default when subscribing.",
         default=True,
+        help="Activated by default when subscribing.",
     )
     sequence = fields.Integer(
-        help="Used to order subtypes.",
         default=1,
+        help="Used to order subtypes.",
     )
     hidden = fields.Boolean(help="Hide the subtype in the follower options")
     track_recipients = fields.Boolean(

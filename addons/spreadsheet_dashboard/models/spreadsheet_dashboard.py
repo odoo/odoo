@@ -32,8 +32,8 @@ class SpreadsheetDashboard(models.Model):
     )
     favorite_user_ids = fields.Many2many(
         string="Favorite Users",
-        help="Users who have favorited this dashboard",
         domain=lambda self: [("id", "=", self.env.uid)],
+        help="Users who have favorited this dashboard",
     )
     is_user_favorite = fields.Boolean(
         string="Is Favorite",

@@ -12,17 +12,17 @@ class ResPartner(models.Model):
         comodel_name="hr.employee",
         inverse_name="partner_id",
         string="Employees",
-        help="Related employees based on their private address",
         groups="hr.group_hr_user",
+        help="Related employees based on their private address",
     )
     employees_count = fields.Integer(
         compute="_compute_employees_count",
         groups="hr.group_hr_user",
     )
     employee = fields.Boolean(
-        help="Whether this contact is an Employee.",
         compute="_compute_employee",
         search="_search_employee",
+        help="Whether this contact is an Employee.",
     )
 
     # What a person IS, kept where an employee's confidential facts already

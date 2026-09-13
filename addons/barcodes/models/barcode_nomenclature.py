@@ -42,8 +42,8 @@ class BarcodeNomenclature(models.Model):
 
     name = fields.Char(
         string="Barcode Nomenclature",
-        help="An internal identification of the barcode nomenclature",
         required=True,
+        help="An internal identification of the barcode nomenclature",
     )
     rule_ids = fields.One2many(
         comodel_name="barcode.rule",
@@ -54,9 +54,9 @@ class BarcodeNomenclature(models.Model):
     upc_ean_conv = fields.Selection(
         selection=UPC_EAN_CONVERSIONS,
         string="UPC/EAN Conversion",
-        help="UPC Codes can be converted to EAN by prefixing them with a zero. This setting determines if a UPC/EAN barcode should be automatically converted in one way or another when trying to match a rule with the other encoding.",
         default="always",
         required=True,
+        help="UPC Codes can be converted to EAN by prefixing them with a zero. This setting determines if a UPC/EAN barcode should be automatically converted in one way or another when trying to match a rule with the other encoding.",
     )
 
     def _sanitize_ean(self, ean):

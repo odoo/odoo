@@ -40,10 +40,10 @@ class IrAttachment(models.Model):
         readonly=True,
     )
     speech_cues = fields.Json(
-        help="What is said in this recording, with the moment each phrase "
-        "starts and ends.",
         copy=False,
         readonly=True,
+        help="What is said in this recording, with the moment each phrase "
+        "starts and ends.",
     )
     speech_language = fields.Char(
         copy=False,

@@ -65,13 +65,13 @@ class IrActionsServer(models.Model):
             ("specific", "Specific Followers"),
             ("generic", "Dynamic Followers"),
         ],
+        compute="_compute_followers_type",
+        store=True,
+        readonly=False,
         help="""
             - Specific Followers: select specific contacts to add/remove from record's followers.
             - Dynamic Followers: all contacts of the chosen record's field will be added/removed from followers.
         """,
-        compute="_compute_followers_type",
-        store=True,
-        readonly=False,
     )
     followers_partner_field_name = fields.Char(
         string="Followers Field",
@@ -151,10 +151,10 @@ class IrActionsServer(models.Model):
             ("generic", "Dynamic User (based on record)"),
         ],
         string="User Type",
-        help="Use 'Specific User' to always assign the same user on the next activity. Use 'Dynamic User' to specify the field name of the user to choose on the record.",
         compute="_compute_activity_info",
         store=True,
         readonly=False,
+        help="Use 'Specific User' to always assign the same user on the next activity. Use 'Dynamic User' to specify the field name of the user to choose on the record.",
     )
     activity_user_id: ResUsers = fields.Many2one(
         comodel_name="res.users",

@@ -15,8 +15,8 @@ class AccountAccountTag(models.Model):
         required=True,
     )
     active = fields.Boolean(
-        help="Set active to false to hide the Account Tag without removing it.",
         default=True,
+        help="Set active to false to hide the Account Tag without removing it.",
     )
     color = fields.Integer(string="Color Index")
     applicability = fields.Selection(

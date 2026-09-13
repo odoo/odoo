@@ -130,10 +130,10 @@ class IrAttachment(models.Model):
     )
     type = fields.Selection(
         selection=[("url", "URL"), ("binary", "File")],
-        help="You can either upload a file from your computer or copy/paste an internet link to your file.",
         default="binary",
         change_default=True,
         required=True,
+        help="You can either upload a file from your computer or copy/paste an internet link to your file.",
     )
     url = fields.Char(
         size=1024,

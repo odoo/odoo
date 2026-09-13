@@ -37,21 +37,21 @@ class AccountPaymentRegister(models.TransientModel):
     )
     group_payment = fields.Boolean(
         string="Group Payments",
-        help="Only one payment will be created by partner (bank), instead of one per bill.",
         compute="_compute_group_payment",
         store=True,
         readonly=False,
+        help="Only one payment will be created by partner (bank), instead of one per bill.",
     )
     early_payment_discount_mode = fields.Boolean(
         compute="_compute_early_payment_discount_mode"
     )
     currency_id = fields.Many2one(
         comodel_name="res.currency",
-        help="The payment's currency.",
         compute="_compute_currency_id",
         precompute=True,
         store=True,
         readonly=False,
+        help="The payment's currency.",
     )
     journal_id = fields.Many2one(
         comodel_name="account.journal",
@@ -193,16 +193,16 @@ class AccountPaymentRegister(models.TransientModel):
     payment_channel_id = fields.Many2one(
         comodel_name="account.payment.channel",
         string="Payment Method",
+        compute="_compute_payment_channel_id",
+        store=True,
+        readonly=False,
+        domain="[('id', 'in', available_payment_channel_ids)]",
         help="Manual: Pay or Get paid by any method outside of Odoo.\n"
         "Payment Providers: Each payment provider has its own Payment Method. Request a transaction on/to a card thanks to a payment token saved by the partner when buying or subscribing online.\n"
         "Check: Pay bills by check and print it from Odoo.\n"
         "Batch Deposit: Collect several customer checks at once generating and submitting a batch deposit to your bank. Module account_batch_payment is necessary.\n"
         "SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
         "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n",
-        compute="_compute_payment_channel_id",
-        store=True,
-        readonly=False,
-        domain="[('id', 'in', available_payment_channel_ids)]",
     )
     available_payment_channel_ids = fields.Many2many(
         comodel_name="account.payment.channel",
@@ -225,8 +225,8 @@ class AccountPaymentRegister(models.TransientModel):
     )
     writeoff_label = fields.Char(
         string="Journal Item Label",
-        help="Change label of the counterpart that will hold the payment difference",
         default="Write-Off",
+        help="Change label of the counterpart that will hold the payment difference",
     )
     writeoff_is_exchange_account = fields.Boolean(
         compute="_compute_writeoff_is_exchange_account"

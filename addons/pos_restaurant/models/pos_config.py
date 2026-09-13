@@ -16,8 +16,8 @@ class PosConfig(models.Model):
     floor_ids = fields.Many2many(
         comodel_name="restaurant.floor",
         string="Restaurant Floors",
-        help="The restaurant floors served by this point of sale.",
         copy=False,
+        help="The restaurant floors served by this point of sale.",
     )
     set_tip_after_payment = fields.Boolean(
         help="Adjust the amount authorized by payment terminals to add a tip after the customers left or at the end of the day."

@@ -39,18 +39,18 @@ class StockPicking(models.Model):
     )
     origin = fields.Char(
         string="Source Document",
-        help="Reference of the document",
         index="trigram",
+        help="Reference of the document",
     )
     note = fields.Html(string="Notes")
     backorder_id = fields.Many2one(
         comodel_name="stock.picking",
         string="Back Order of",
-        help="If this shipment was split, then this field links to the shipment which contains the already processed part.",
         index="btree_not_null",
         copy=False,
         readonly=True,
         check_company=True,
+        help="If this shipment was split, then this field links to the shipment which contains the already processed part.",
     )
     backorder_ids = fields.One2many(
         comodel_name="stock.picking",
@@ -60,11 +60,11 @@ class StockPicking(models.Model):
     return_id = fields.Many2one(
         comodel_name="stock.picking",
         string="Return of",
-        help="If this picking was created as a return of another picking, this field links to the original picking.",
         index="btree_not_null",
         copy=False,
         readonly=True,
         check_company=True,
+        help="If this picking was created as a return of another picking, this field links to the original picking.",
     )
     return_ids = fields.One2many(
         comodel_name="stock.picking",
@@ -83,12 +83,12 @@ class StockPicking(models.Model):
             ("one", "When all products are ready"),
         ],
         string="Shipping Policy",
-        help="It specifies goods to be deliver partially or all at once",
         compute="_compute_move_type",
         precompute=True,
         store=True,
         readonly=False,
         required=True,
+        help="It specifies goods to be deliver partially or all at once",
     )
     state = fields.Selection(
         selection=[
@@ -100,18 +100,18 @@ class StockPicking(models.Model):
             ("cancel", "Cancelled"),
         ],
         string="Status",
-        help=" * Draft: The transfer is not confirmed yet. Reservation doesn't apply.\n"
-        " * Waiting another operation: This transfer is waiting for another operation before being ready.\n"
-        ' * Waiting: The transfer is waiting for the availability of some products.\n(a) The shipping policy is "As soon as possible": no product could be reserved.\n(b) The shipping policy is "When all products are ready": not all the products could be reserved.\n'
-        ' * Ready: The transfer is ready to be processed.\n(a) The shipping policy is "As soon as possible": at least one product has been reserved.\n(b) The shipping policy is "When all products are ready": all product have been reserved.\n'
-        " * Done: The transfer has been processed.\n"
-        " * Cancelled: The transfer has been cancelled.",
         compute="_compute_state",
         store=True,
         index=True,
         copy=False,
         readonly=True,
         tracking=True,
+        help=" * Draft: The transfer is not confirmed yet. Reservation doesn't apply.\n"
+        " * Waiting another operation: This transfer is waiting for another operation before being ready.\n"
+        ' * Waiting: The transfer is waiting for the availability of some products.\n(a) The shipping policy is "As soon as possible": no product could be reserved.\n(b) The shipping policy is "When all products are ready": not all the products could be reserved.\n'
+        ' * Ready: The transfer is ready to be processed.\n(a) The shipping policy is "As soon as possible": at least one product has been reserved.\n(b) The shipping policy is "When all products are ready": all product have been reserved.\n'
+        " * Done: The transfer has been processed.\n"
+        " * Cancelled: The transfer has been cancelled.",
     )
     reference_ids = fields.Many2many(
         comodel_name="stock.reference",
@@ -121,35 +121,35 @@ class StockPicking(models.Model):
     )
     priority = fields.Selection(
         selection=PROCUREMENT_PRIORITIES,
-        help="Products will be reserved first for the transfers with the highest priorities.",
         default="0",
+        help="Products will be reserved first for the transfers with the highest priorities.",
     )
     date_planned = fields.Datetime(
         string="Scheduled Date",
-        help="Scheduled time for the first part of the shipment to be processed. Setting manually a value here would set it as expected date for all the stock moves.",
         compute="_compute_date_planned",
         inverse="_inverse_date_planned",
         store=True,
         index=True,
         tracking=True,
+        help="Scheduled time for the first part of the shipment to be processed. Setting manually a value here would set it as expected date for all the stock moves.",
     )
     date_deadline = fields.Datetime(
         string="Deadline",
-        help="In case of outgoing flow, validate the transfer before this date to allow to deliver at promised date to the customer.\n\
-        In case of incoming flow, validate the transfer before this date in order to have these products in stock at the date promised by the supplier",
         compute="_compute_date_deadline",
         store=True,
+        help="In case of outgoing flow, validate the transfer before this date to allow to deliver at promised date to the customer.\n\
+        In case of incoming flow, validate the transfer before this date in order to have these products in stock at the date promised by the supplier",
     )
     has_deadline_issue = fields.Boolean(
         string="Is late",
-        help="Is late or will be late depending on the deadline and scheduled date",
         compute="_compute_has_deadline_issue",
         store=True,
+        help="Is late or will be late depending on the deadline and scheduled date",
     )
     date_done = fields.Datetime(
         string="Date of Transfer",
-        help="Date at which the transfer was processed. Cancelling never sets it.",
         copy=False,
+        help="Date at which the transfer was processed. Cancelling never sets it.",
     )
     date_delay_alert = fields.Datetime(
         string="Delay Alert Date",
@@ -210,10 +210,10 @@ class StockPicking(models.Model):
     batch_id = fields.Many2one(
         comodel_name="stock.picking.batch",
         string="Batch Transfer",
-        help="Batch associated to this transfer",
         index=True,
         copy=False,
         check_company=True,
+        help="Batch associated to this transfer",
     )
     batch_sequence = fields.Integer(string="Sequence")
     picking_type_entire_packs = fields.Boolean(
@@ -260,19 +260,19 @@ class StockPicking(models.Model):
         copy=False,
     )
     show_check_availability = fields.Boolean(
-        help='Technical field used to compute whether the button "Check Availability" should be displayed.',
         compute="_compute_show_check_availability",
+        help='Technical field used to compute whether the button "Check Availability" should be displayed.',
     )
     show_allocation = fields.Boolean(
-        help='Technical Field used to decide whether the button "Allocation" should be displayed.',
         compute="_compute_show_allocation",
+        help='Technical Field used to decide whether the button "Allocation" should be displayed.',
     )
     owner_id = fields.Many2one(
         comodel_name="res.partner",
         string="Assign Owner",
-        help="When validating the transfer, the products will be assigned to this owner.",
         index="btree_not_null",
         check_company=True,
+        help="When validating the transfer, the products will be assigned to this owner.",
     )
     printed = fields.Boolean(copy=False)
     signature = fields.Image(
@@ -282,17 +282,17 @@ class StockPicking(models.Model):
     is_signed = fields.Boolean(compute="_compute_is_signed")
     is_cancelled = fields.Boolean(
         string="Cancelled",
-        help="Records that this transfer was cancelled. Its moves express that "
-        "while they exist; this is what answers once they are gone.",
         copy=False,
         readonly=True,
+        help="Records that this transfer was cancelled. Its moves express that "
+        "while they exist; this is what answers once they are gone.",
     )
     is_locked = fields.Boolean(
+        default=True,
+        copy=False,
         help="When the picking is not done this allows changing the "
         "initial demand. When the picking is done this allows "
         "changing the done quantities.",
-        default=True,
-        copy=False,
     )
     is_date_editable = fields.Boolean(
         string="Is Scheduled Date Editable",
@@ -301,18 +301,18 @@ class StockPicking(models.Model):
 
     weight_bulk = fields.Float(
         string="Bulk Weight",
-        help="Total weight of products which are not in a package.",
         compute="_compute_weight_bulk",
+        help="Total weight of products which are not in a package.",
     )
     shipping_weight = fields.Float(
         string="Weight for Shipping",
-        help="Total weight of packages and products not in a package. "
-        "Packages with no shipping weight specified will default to their products' total weight. "
-        "This is the weight used to compute the cost of the shipping.",
         digits="Stock Weight",
         compute="_compute_shipping_weight",
         store=True,
         readonly=False,
+        help="Total weight of packages and products not in a package. "
+        "Packages with no shipping weight specified will default to their products' total weight. "
+        "This is the weight used to compute the cost of the shipping.",
     )
     shipping_volume = fields.Float(
         string="Volume for Shipping",
@@ -335,8 +335,8 @@ class StockPicking(models.Model):
     has_tracking = fields.Boolean(compute="_compute_has_tracking")
     products_availability = fields.Char(
         string="Product Availability",
-        help="Latest product availability status of the picking",
         compute="_compute_availability_status",
+        help="Latest product availability status of the picking",
     )
     products_availability_state = fields.Selection(
         selection=[
@@ -360,8 +360,8 @@ class StockPicking(models.Model):
     )
     picking_warning_text = fields.Text(
         string="Picking Instructions",
-        help="Internal instructions for the partner or its parent company as set by the user.",
         compute="_compute_picking_warning_text",
+        help="Internal instructions for the partner or its parent company as set by the user.",
     )
 
     _name_uniq = models.UniqueIndex(

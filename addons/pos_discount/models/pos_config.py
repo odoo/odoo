@@ -11,13 +11,13 @@ class PosConfig(models.Model):
     )
     discount_pc = fields.Float(
         string="Discount Percentage",
-        help="The default discount percentage when clicking on the Discount button",
         default=10.0,
+        help="The default discount percentage when clicking on the Discount button",
     )
     discount_product_id = fields.Many2one(
         comodel_name="product.product",
-        help="The product used to apply the discount on the ticket.",
         domain=[("sale_ok", "=", True)],
+        help="The product used to apply the discount on the ticket.",
     )
 
     @api.model

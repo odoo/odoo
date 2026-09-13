@@ -8,14 +8,14 @@ class ResCompany(models.Model):
     l10n_ar_gross_income_number = fields.Char(
         related="partner_id.l10n_ar_gross_income_number",
         string="Gross Income Number",
-        help="This field is required in order to print the invoice report properly",
         readonly=False,
+        help="This field is required in order to print the invoice report properly",
     )
     l10n_ar_gross_income_type = fields.Selection(
         related="partner_id.l10n_ar_gross_income_type",
         string="Gross Income",
-        help="This field is required in order to print the invoice report properly",
         readonly=False,
+        help="This field is required in order to print the invoice report properly",
     )
     l10n_ar_afip_responsibility_type_id = fields.Many2one(
         related="partner_id.l10n_ar_afip_responsibility_type_id",

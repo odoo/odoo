@@ -54,10 +54,10 @@ class PeppolConfigWizard(models.TransientModel):
     # Deprecated
     peppol_activate_self_billing = fields.Boolean(
         string="Activate self-billing",
-        help="If activated, you will be able to send and receive self-billed invoices via Peppol."
-        "You can still disable reception by disabling the self-billing document types below.",
         compute="_compute_peppol_activate_self_billing",
         inverse="_inverse_peppol_activate_self_billing",
+        help="If activated, you will be able to send and receive self-billed invoices via Peppol."
+        "You can still disable reception by disabling the self-billing document types below.",
     )
     # Deprecated
     peppol_self_billing_reception_journal_id = fields.Many2one(
@@ -66,10 +66,10 @@ class PeppolConfigWizard(models.TransientModel):
     )
 
     service_json = fields.Json(
-        help="JSON representation of peppol services as retrieved from the peppol server.",
         compute="_compute_service_json",
         store=True,
         readonly=False,
+        help="JSON representation of peppol services as retrieved from the peppol server.",
     )
     service_info = fields.Html(compute="_compute_service_info")
     service_ids = fields.One2many(

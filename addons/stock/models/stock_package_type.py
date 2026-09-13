@@ -13,8 +13,8 @@ class StockPackageType(models.Model):
         required=True,
     )
     sequence = fields.Integer(
-        help="The first in the sequence is the default one.",
         default=1,
+        help="The first in the sequence is the default one.",
     )
     sequence_id = fields.Many2one(
         comodel_name="ir.sequence",
@@ -58,10 +58,10 @@ class StockPackageType(models.Model):
             ("disposable", "Disposable Box"),
             ("reusable", "Reusable Box (totes)"),
         ],
-        help="""Reusable boxes are used for batch picking and emptied afterwards to be reused. In the barcode application, scanning a reusable box will add the products in this box.
-        Disposable boxes aren't reused, when scanning a disposable box in the barcode application, the contained products are added to the transfer.""",
         default="disposable",
         required=True,
+        help="""Reusable boxes are used for batch picking and emptied afterwards to be reused. In the barcode application, scanning a reusable box will add the products in this box.
+        Disposable boxes aren't reused, when scanning a disposable box in the barcode application, the contained products are added to the transfer.""",
     )
     has_quants = fields.Boolean(
         string="Has Contents",

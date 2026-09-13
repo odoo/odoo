@@ -44,11 +44,11 @@ class GamificationGoal(models.Model):
     )
     challenge_id = fields.Many2one(
         related="line_id.challenge_id",
-        help="Challenge that generated the goal, assign challenge to users "
-        "to generate goals with a value in this field.",
         store=True,
         index=True,
         readonly=True,
+        help="Challenge that generated the goal, assign challenge to users "
+        "to generate goals with a value in this field.",
     )
     start_date = fields.Date(default=fields.Date.today)
     end_date = fields.Date()  # no start and end = always active

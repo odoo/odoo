@@ -23,20 +23,20 @@ class ResConfigSettings(models.TransientModel):
         comodel_name="mail.alias.domain",
         related="company_id.alias_domain_id",
         string="Alias Domain",
-        help="If you have setup a catch-all email domain redirected to the Odoo server, enter the domain name here.",
         readonly=False,
+        help="If you have setup a catch-all email domain redirected to the Odoo server, enter the domain name here.",
     )
     module_google_gmail = fields.Boolean(string="Support Gmail Authentication")
     module_microsoft_outlook = fields.Boolean(string="Support Outlook Authentication")
     restrict_template_rendering = fields.Boolean(
+        config_parameter="mail.restrict.template.rendering",
         help="Users will still be able to render templates.\n"
         "However only Mail Template Editors will be able to create new dynamic templates or modify existing ones.",
-        config_parameter="mail.restrict.template.rendering",
     )
     use_twilio_rtc_servers = fields.Boolean(
         string="Use Twilio ICE servers",
-        help="If you want to use twilio as TURN/STUN server provider",
         config_parameter="mail.use_twilio_rtc_servers",
+        help="If you want to use twilio as TURN/STUN server provider",
     )
     twilio_account_sid = fields.Char(
         string="Account SID",
@@ -48,8 +48,8 @@ class ResConfigSettings(models.TransientModel):
     )
     use_sfu_server = fields.Boolean(
         string="Use SFU server",
-        help="If you want to setup SFU server for large group calls.",
         config_parameter="mail.use_sfu_server",
+        help="If you want to setup SFU server for large group calls.",
     )
     sfu_server_url = fields.Char(
         string="SFU Server URL",
@@ -57,8 +57,8 @@ class ResConfigSettings(models.TransientModel):
     )
     sfu_server_key = fields.Char(
         string="SFU Server key",
-        help="Base64 encoded key",
         config_parameter="mail.sfu_server_key",
+        help="Base64 encoded key",
     )
     email_primary_color = fields.Char(
         related="company_id.email_primary_color",
@@ -71,14 +71,14 @@ class ResConfigSettings(models.TransientModel):
 
     tenor_api_key = fields.Char(
         string="Klipy API key",
+        config_parameter="discuss.klipy_api_key",
         help="Add a Klipy GIF API key to enable GIFs support. https://docs.klipy.com/getting-started\n"
         "If you were using a Tenor GIF API key (service shutdown on June 30, 2026), please replace it here with a Klipy GIF API key",
-        config_parameter="discuss.klipy_api_key",
     )
     google_translate_api_key = fields.Char(
         string="Message Translation API Key",
-        help="A valid Google API key is required to enable message translation. https://cloud.google.com/translate/docs/setup",
         config_parameter="mail.google_translate_api_key",
+        help="A valid Google API key is required to enable message translation. https://cloud.google.com/translate/docs/setup",
     )
 
     def _compute_fail_counter(self) -> None:

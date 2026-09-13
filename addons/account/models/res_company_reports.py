@@ -15,18 +15,18 @@ class ResCompany(models.Model):
 
     totals_below_sections = fields.Boolean(
         string="Add totals below sections",
-        help="When ticked, totals and subtotals appear below the sections of the report.",
         compute="_compute_totals_below_sections",
         store=True,
         readonly=False,
+        help="When ticked, totals and subtotals appear below the sections of the report.",
     )
 
     account_return_periodicity = fields.Selection(
         selection=PERIODS,
         string="Delay units",
-        help="Periodicity",
         default="monthly",
         required=True,
+        help="Periodicity",
     )
     account_return_reminder_day = fields.Integer(
         string="Start from",
@@ -62,8 +62,8 @@ class ResCompany(models.Model):
     account_representative_id = fields.Many2one(
         comodel_name="res.partner",
         string="Accounting Firm",
-        help="Specify an Accounting Firm that will act as a representative when exporting reports.",
         index="btree_not_null",
+        help="Specify an Accounting Firm that will act as a representative when exporting reports.",
     )
     account_display_representative_field = fields.Boolean(
         compute="_compute_account_display_representative_field"

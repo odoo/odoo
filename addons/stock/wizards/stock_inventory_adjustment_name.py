@@ -13,8 +13,8 @@ class StockInventoryAdjustmentName(models.TransientModel):
         default="Physical Inventory",
     )
     counting_date = fields.Datetime(
-        help="Date at which the resulting moves will be dated.",
         default=fields.Datetime.now,
+        help="Date at which the resulting moves will be dated.",
     )
 
     def _get_quants_context(self):

@@ -53,6 +53,8 @@ class ApprovalRequest(models.Model):
         check_company=True,
     )
     name = fields.Char(
+        copy=False,
+        tracking=True,
         help="Empty until the request is confirmed, then set to the "
         "category's sequence consecutive (deferred so discarded drafts "
         "never burn sequence numbers). Draft requests display a "
@@ -60,8 +62,6 @@ class ApprovalRequest(models.Model):
         "itself stays language-neutral: storing a translated "
         "placeholder made the numbering check fail when the creator "
         "and the confirmer used different languages.",
-        copy=False,
-        tracking=True,
     )
     priority = fields.Selection(
         selection=[
@@ -70,59 +70,59 @@ class ApprovalRequest(models.Model):
             ("2", "High"),
             ("3", "Urgent"),
         ],
+        default="1",
+        index=True,
+        required=True,
+        tracking=True,
         help="Priority drives how quickly reminders and manager escalation "
         "fire for pending approvals (see the escalation schedule in the "
         "category/cron documentation; configurable via system parameters). "
         "Indexed because cron_smart_escalation filters and groups pending "
         "requests by (state, priority) every 4 hours.",
-        default="1",
-        index=True,
-        required=True,
-        tracking=True,
     )
     last_reminder_date = fields.Datetime(
-        help="Timestamp of last escalation reminder sent to approvers",
         copy=False,
         readonly=True,
+        help="Timestamp of last escalation reminder sent to approvers",
     )
     reminder_count = fields.Integer(
-        help="Number of escalation reminders sent for this request",
         default=0,
         copy=False,
         readonly=True,
+        help="Number of escalation reminders sent for this request",
     )
     escalated_to_manager = fields.Boolean(
-        help="Whether this request has been escalated to approver's manager",
         default=False,
         copy=False,
         readonly=True,
+        help="Whether this request has been escalated to approver's manager",
     )
     date = fields.Datetime()
     date_start = fields.Datetime()
     date_end = fields.Datetime()
     date_confirmed = fields.Datetime(
+        index=True,
+        copy=False,
         help="Set at confirmation (action_confirm). Never copied: a "
         "duplicated request is a fresh draft and must not inherit the "
         "source's submission time, which would skew SLA/deadline "
         "arithmetic and the analytics views.",
-        index=True,
-        copy=False,
     )
     date_approval_granted = fields.Datetime(
-        help="Date and time when final approval was granted",
         compute="_compute_date_approval_granted",
         store=True,
         index=True,
         copy=False,
         readonly=True,
+        help="Date and time when final approval was granted",
     )
     revoked_state = fields.Selection(
         selection=[("refused", "Refused"), ("cancelled", "Cancelled")],
+        copy=False,
+        readonly=True,
         help="Set when an approved request was overturned from outside its decisions, "
         "e.g. a validated leave refused by an officer. The state reads it before the "
         "approver rows, whose decisions stay as they were given.",
-        copy=False,
-        readonly=True,
     )
     revoked_by_user_id = fields.Many2one(
         comodel_name="res.users",
@@ -135,43 +135,43 @@ class ApprovalRequest(models.Model):
     )
     granted_by_user_id = fields.Many2one(
         comodel_name="res.users",
+        copy=False,
+        readonly=True,
         help="Set when a pending request was approved from outside its decisions, "
         "e.g. a leave the system validated. The state reads it before the approver "
         "rows, none of which is recorded as deciding.",
-        copy=False,
-        readonly=True,
     )
     date_refused = fields.Datetime(
-        help="Date and time when request reached the terminal refused state "
-        "(set on refuse).",
         compute="_compute_date_refused",
         store=True,
         index=True,
         copy=False,
         readonly=True,
+        help="Date and time when request reached the terminal refused state "
+        "(set on refuse).",
     )
     date_cancelled = fields.Datetime(
-        help="Date and time when the request reached the terminal cancelled "
-        "state (owner cancellation or auto-expiration).",
         compute="_compute_date_cancelled",
         store=True,
         index=True,
         copy=False,
         readonly=True,
+        help="Date and time when the request reached the terminal cancelled "
+        "state (owner cancellation or auto-expiration).",
     )
     refusal_reason_id = fields.Many2one(
         comodel_name="approval.refusal.reason",
+        copy=False,
+        readonly=True,
+        tracking=True,
         help="Canonical reason for the terminal refused transition. "
         "For refused requests it stores the deciding approver's choice.",
-        copy=False,
-        readonly=True,
-        tracking=True,
     )
     refusal_note = fields.Text(
-        help="Free-text note attached to the terminal refused transition.",
         copy=False,
         readonly=True,
         tracking=True,
+        help="Free-text note attached to the terminal refused transition.",
     )
     pending_change_field = fields.Selection(
         selection=[
@@ -179,30 +179,30 @@ class ApprovalRequest(models.Model):
             ("reason", "Description"),
         ],
         string="Requested Change",
+        copy=False,
+        readonly=True,
         help="Field the requester must update before approval can resume. "
         "Set by the approver via the decision wizard; cleared by the "
         "requester through the Re-submit button. The approver's note "
         "explaining the change lives in the chatter.",
-        copy=False,
-        readonly=True,
     )
     reason = fields.Html()
     quantity = fields.Float()
     currency_id = fields.Many2one(
         comodel_name="res.currency",
+        default=lambda self: self.env.company.currency_id,
+        required=True,
         help="Currency the request amount is expressed in. Defaults to the "
         "company currency; set from the source document by approval.mixin. "
         "Tiers and conditional rules convert this amount into their own "
         "reference currency before comparing thresholds, so a shared "
         "category's amount routing is correct across companies with "
         "different currencies.",
-        default=lambda self: self.env.company.currency_id,
-        required=True,
     )
     amount = fields.Monetary(
+        currency_field="currency_id",
         help="Request amount, in currency_id. Monetary (currency-rounded) "
         "so amount-based tier/rule routing is currency-aware.",
-        currency_field="currency_id",
     )
     approver_ids = fields.One2many(
         comodel_name="approval.approver",
@@ -242,22 +242,22 @@ class ApprovalRequest(models.Model):
         compute="_compute_user_approver_state",
     )
     is_terminal = fields.Boolean(
+        compute="_compute_is_terminal",
         help="True once the request reaches approved, refused or cancelled. "
         "Exists so views can express 'this is over' by NAME: the membership "
         "test was written out as a literal triple in four `invisible` "
         "expressions, which is a second copy of _TERMINAL_STATES that no "
         "amount of Python discipline keeps in step.",
-        compute="_compute_is_terminal",
     )
     can_change_request_owner = fields.Boolean(
         compute="_compute_can_change_request_owner"
     )
     approval_minimum = fields.Integer(
-        help="Effective minimum approvals needed. Defaults from category, "
-        "overridden by matching tier when applicable.",
         default=1,
         copy=True,
         readonly=True,
+        help="Effective minimum approvals needed. Defaults from category, "
+        "overridden by matching tier when applicable.",
     )
     approve_sequentially = fields.Boolean(related="category_id.approve_sequentially")
     group_approval = fields.Selection(related="category_id.group_approval")
@@ -265,33 +265,33 @@ class ApprovalRequest(models.Model):
     approver_group_id = fields.Many2one(related="category_id.approver_group_id")
     approval_type = fields.Selection(
         related="category_id.approval_type",
-        help="Category for filtering (e.g., purchase, expense)",
         store=True,
+        help="Category for filtering (e.g., purchase, expense)",
     )
     target_model = fields.Selection(
         related="category_id.target_model",
-        help="Model to create when approval is granted (if any)",
         store=True,
+        help="Model to create when approval is granted (if any)",
     )
     approval_progress = fields.Float(
-        help="Percentage of approvals completed (approved / total approvers)",
         compute="_compute_approval_progress",
+        help="Percentage of approvals completed (approved / total approvers)",
     )
     pending_approver_ids = fields.Many2many(
         comodel_name="res.users",
-        help="Users who still need to approve this request",
         compute="_compute_pending_approver_ids",
+        help="Users who still need to approve this request",
     )
     approval_deadline = fields.Datetime(
-        help="Deadline for approval decision based on category settings",
         compute="_compute_approval_deadline",
         store=True,
         index=True,
+        help="Deadline for approval decision based on category settings",
     )
     is_overdue = fields.Boolean(
-        help="True if approval deadline has passed and request still pending",
         compute="_compute_is_overdue",
         search="_search_is_overdue",
+        help="True if approval deadline has passed and request still pending",
     )
     sla_status = fields.Selection(
         selection=[
@@ -301,26 +301,28 @@ class ApprovalRequest(models.Model):
             ("met", "SLA Met"),
             ("no_sla", "No SLA"),
         ],
+        compute="_compute_sla_status",
+        search="_search_sla_status",
         help="SLA compliance status for this request. Non-stored: the "
         "value tracks the wall clock (see _compute_sla_status); "
         "filtering goes through _search_sla_status.",
-        compute="_compute_sla_status",
-        search="_search_sla_status",
     )
     sla_elapsed_hours = fields.Float(
-        help="Hours elapsed since request was submitted",
         compute="_compute_sla_elapsed_hours",
+        help="Hours elapsed since request was submitted",
     )
     sla_remaining_hours = fields.Float(
-        help="Hours remaining until SLA target (negative if breached)",
         compute="_compute_sla_remaining_hours",
+        help="Hours remaining until SLA target (negative if breached)",
     )
     can_withdraw = fields.Boolean(
-        help="Whether current user can withdraw their approval on this request.",
         compute="_compute_can_withdraw",
+        help="Whether current user can withdraw their approval on this request.",
     )
     is_pending_my_review = fields.Boolean(
         string="Awaiting My Decision",
+        compute="_compute_is_pending_my_review",
+        search="_search_is_pending_my_review",
         help="True when this request is pending AND the current user is the "
         "effective approver of a row that is itself still pending. "
         "Exists so XML domains (menu actions, search filters) can express "
@@ -328,85 +330,83 @@ class ApprovalRequest(models.Model):
         "hand-written copies drifted from _get_domain_pending_review() and "
         "inverted delegation — the delegate's inbox came up empty while "
         "the delegator, who can no longer act, still saw the request.",
-        compute="_compute_is_pending_my_review",
-        search="_search_is_pending_my_review",
     )
     applied_rule_ids = fields.Many2many(
         comodel_name="approval.rule",
-        help="Conditional rules that added approvers to this request",
         copy=False,
         readonly=True,
+        help="Conditional rules that added approvers to this request",
     )
     category_snapshot = fields.Json(
-        help="Snapshot of category configuration at confirmation time",
         copy=False,
         readonly=True,
+        help="Snapshot of category configuration at confirmation time",
     )
     res_model = fields.Char(
+        index=True,
+        copy=False,
+        readonly=True,
         help="Model name of the source document (e.g., 'purchase.order', "
         "'sale.order'). Never copied: a duplicated request is a fresh, "
         "unlinked draft — inheriting the source pointer would make the "
         "clone's decision drive a document it does not own (see "
         "_notify_source_document_state_change, which additionally "
         "verifies the reverse link before firing any hook).",
-        index=True,
-        copy=False,
-        readonly=True,
     )
     res_id = fields.Many2oneReference(
         model_field="res_model",
-        help="Reference to the source document that requested this "
-        "approval. Never copied (see res_model).",
         copy=False,
         readonly=True,
+        help="Reference to the source document that requested this "
+        "approval. Never copied (see res_model).",
     )
     binding_id = fields.Many2one(
         comodel_name="approval.binding",
-        help="The gated operation this request was raised for, when an "
-        "approval.binding in Request mode raised it. Approving the request "
-        "runs that operation once, as the requester.",
         index="btree_not_null",
         copy=False,
         readonly=True,
         ondelete="set null",
+        help="The gated operation this request was raised for, when an "
+        "approval.binding in Request mode raised it. Approving the request "
+        "runs that operation once, as the requester.",
     )
     subject_key = fields.Char(
-        help="What this request asks about, when its source record holds one "
-        "request per subject (mixin.approval.subjects): a partner asking to join "
-        "a course, a stage an engineering change passes.",
         index="btree_not_null",
         copy=False,
         readonly=True,
+        help="What this request asks about, when its source record holds one "
+        "request per subject (mixin.approval.subjects): a partner asking to join "
+        "a course, a stage an engineering change passes.",
     )
     binding_snapshot = fields.Json(
+        copy=False,
+        readonly=True,
         help="Values the binding's condition read from the source document "
         "when the request was raised. An approval covers the record as it was "
         "approved: once one of these values moves, it no longer does.",
-        copy=False,
-        readonly=True,
     )
     date_binding_replayed = fields.Datetime(
+        copy=False,
+        readonly=True,
         help="When the gated operation ran after approval. Set once, so a "
         "withdrawal followed by a second approval does not run it again.",
-        copy=False,
-        readonly=True,
     )
     binding_replay_error = fields.Text(
-        help="Why the gated operation did not run after approval. The approval "
-        "itself stands.",
         copy=False,
         readonly=True,
+        help="Why the gated operation did not run after approval. The approval "
+        "itself stands.",
     )
     res_model_id = fields.Many2one(
         comodel_name="ir.model",
         string="Source Model",
-        help="Technical model reference for filtering",
         compute="_compute_res_model_id",
         store=True,
+        help="Technical model reference for filtering",
     )
     res_name = fields.Char(
-        help="Display name of the source document",
         compute="_compute_res_name",
+        help="Display name of the source document",
     )
     attachment_ids = fields.One2many(
         comodel_name="ir.attachment",

@@ -21,10 +21,10 @@ class ResUsersSettings(models.Model):
     google_calendar_credential_id = fields.Many2one(
         comodel_name="credential.credential",
         string="Google Credential",
-        help="Holds this user's Google OAuth tokens.",
         copy=False,
         ondelete="restrict",
         groups="base.group_system",
+        help="Holds this user's Google OAuth tokens.",
     )
     google_calendar_rtoken = fields.Char(
         string="Refresh Token",
@@ -52,9 +52,9 @@ class ResUsersSettings(models.Model):
     )
     google_calendar_cal_id = fields.Char(
         string="Calendar ID",
-        help="Last Calendar ID who has been synchronized. If it is changed, we remove all links between GoogleID and Odoo Google Internal ID",
         copy=False,
         groups="base.group_system",
+        help="Last Calendar ID who has been synchronized. If it is changed, we remove all links between GoogleID and Odoo Google Internal ID",
     )
     google_synchronization_stopped = fields.Boolean(
         string="Google Synchronization stopped",

@@ -21,9 +21,9 @@ class MicrosoftCalendarAccountReset(models.TransientModel):
             ("delete_both", "Delete from both"),
         ],
         string="User's Existing Events",
-        help="This will only affect events for which the user is the owner",
         default="dont_delete",
         required=True,
+        help="This will only affect events for which the user is the owner",
     )
     sync_policy = fields.Selection(
         selection=[

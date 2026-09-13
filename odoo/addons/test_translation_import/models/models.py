@@ -15,8 +15,8 @@ class TestTranslationImportModel1(models.Model):
 
     name = fields.Char(
         string="Name",
-        help="Help, English",
         translate=True,
+        help="Help, English",
     )
     selection = fields.Selection(
         selection=[

@@ -27,8 +27,8 @@ class ProjectPhase(models.Model):
     mail_template_id = fields.Many2one(
         comodel_name="mail.template",
         string="Email Template",
-        help="Email sent automatically when a project enters this phase.",
         domain=[("model", "=", "project.project")],
+        help="Email sent automatically when a project enters this phase.",
     )
     fold = fields.Boolean(
         string="Folded",

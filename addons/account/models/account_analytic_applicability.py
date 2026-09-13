@@ -29,8 +29,8 @@ class AccountAnalyticApplicability(models.Model):
         string="Product Category",
     )
     display_account_prefix = fields.Boolean(
-        help="Defines if the field account prefix should be displayed",
         compute="_compute_display_account_prefix",
+        help="Defines if the field account prefix should be displayed",
     )
     account_prefix_placeholder = fields.Char(
         compute="_compute_account_prefix_placeholder"

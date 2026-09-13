@@ -23,9 +23,9 @@ class HrLeaveAccrualLevel(models.Model):
 
     sequence = fields.Integer(
         string="sequence",
-        help="Sequence is generated automatically by start time delta.",
         compute="_compute_sequence",
         store=True,
+        help="Sequence is generated automatically by start time delta.",
     )
     accrual_plan_id = fields.Many2one(
         comodel_name="hr.leave.accrual.plan",
@@ -39,15 +39,15 @@ class HrLeaveAccrualLevel(models.Model):
         export_string_translation=False,
     )
     start_count = fields.Integer(
-        help="The accrual starts after a defined period from the allocation start date. This field defines the number of days, months or years after which accrual is used.",
         export_string_translation=False,
+        help="The accrual starts after a defined period from the allocation start date. This field defines the number of days, months or years after which accrual is used.",
     )
     start_type = fields.Selection(
         selection=[("day", "Days"), ("month", "Months"), ("year", "Years")],
-        help="This field defines the unit of time after which the accrual starts.",
         export_string_translation=False,
         default="day",
         required=True,
+        help="This field defines the unit of time after which the accrual starts.",
     )
     milestone_date = fields.Selection(
         selection=[("creation", "At allocation creation"), ("after", "After")],
@@ -77,11 +77,11 @@ class HrLeaveAccrualLevel(models.Model):
     )
     accrual_basis = fields.Selection(
         selection=[("period", "Per Period"), ("hour", "Per Hour")],
-        help="Whether the added value is granted once per period or for each hour"
-        " planned in it.",
         export_string_translation=False,
         default="period",
         required=True,
+        help="Whether the added value is granted once per period or for each hour"
+        " planned in it.",
     )
     frequency = fields.Selection(
         selection=[
@@ -97,23 +97,23 @@ class HrLeaveAccrualLevel(models.Model):
         inverse="_inverse_frequency",
     )
     cap_accrued_time = fields.Boolean(
-        help="When the field is checked the balance of an allocation using this accrual plan will never exceed the specified amount.",
         export_string_translation=False,
+        help="When the field is checked the balance of an allocation using this accrual plan will never exceed the specified amount.",
     )
     maximum_leave = fields.Float(
-        help="Choose a cap for this accrual.",
         export_string_translation=False,
         digits=(16, 2),
         compute="_compute_maximum_leave",
         default=0,
         store=True,
         readonly=False,
+        help="Choose a cap for this accrual.",
     )
     cap_accrued_time_yearly = fields.Boolean(
-        help="When the field is checked the total amount accrued each year will be capped at the specified amount",
         export_string_translation=False,
         store=True,
         readonly=False,
+        help="When the field is checked the total amount accrued each year will be capped at the specified amount",
     )
     maximum_leave_yearly = fields.Float(
         export_string_translation=False,
@@ -126,28 +126,28 @@ class HrLeaveAccrualLevel(models.Model):
     )
     action_with_unused_accruals = fields.Selection(
         selection=[("lost", "Lost"), ("all", "Carried over")],
-        help="When the Carry-Over Time is reached, according to Plan's setting, select what you want "
-        "to happen with the unused time off: Lost (time will be reset to zero), Carried over (accrued time carried over to "
-        "the next period.)",
         export_string_translation=False,
         compute="_compute_action_with_unused_accruals",
         default="lost",
         store=True,
         required=True,
+        help="When the Carry-Over Time is reached, according to Plan's setting, select what you want "
+        "to happen with the unused time off: Lost (time will be reset to zero), Carried over (accrued time carried over to "
+        "the next period.)",
     )
     carryover_options = fields.Selection(
         selection=[("unlimited", "Unlimited"), ("limited", "Up to")],
-        help="You can limit the accrued time carried over for the next period.",
         export_string_translation=False,
         compute="_compute_carryover_options",
         default="unlimited",
         store=True,
         readonly=False,
         required=True,
+        help="You can limit the accrued time carried over for the next period.",
     )
     postpone_max_days = fields.Integer(
-        help="Set a maximum of accruals an allocation keeps at the end of the year.",
         export_string_translation=False,
+        help="Set a maximum of accruals an allocation keeps at the end of the year.",
     )
     can_modify_value_type = fields.Boolean(
         export_string_translation=False,
@@ -161,16 +161,16 @@ class HrLeaveAccrualLevel(models.Model):
         readonly=False,
     )
     accrual_validity_count = fields.Integer(
-        help="You can define a period of time where the days carried over will be available",
         export_string_translation=False,
         default="1",
+        help="You can define a period of time where the days carried over will be available",
     )
     accrual_validity_type = fields.Selection(
         selection=[("day", "Days"), ("month", "Months")],
-        help="This field defines the unit of time after which the accrual ends.",
         export_string_translation=False,
         default="day",
         required=True,
+        help="This field defines the unit of time after which the accrual ends.",
     )
 
     _start_count_check = models.Constraint(

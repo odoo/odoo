@@ -39,8 +39,8 @@ class ResCompany(models.Model):
     l10n_my_edi_default_import_journal_id = fields.Many2one(
         comodel_name="account.journal",
         string="Default import journal",
-        help="The journal on which invoices imported from MyInvois will be booked. Leave empty to use the default purchase journal.",
         domain="[('type', '=', 'purchase')]",
+        help="The journal on which invoices imported from MyInvois will be booked. Leave empty to use the default purchase journal.",
     )
 
     # --------------------------------

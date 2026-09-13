@@ -28,17 +28,17 @@ class WebsiteSnippetFilter(models.Model):
         ondelete="cascade",
     )
     field_names = fields.Char(
-        help="A list of comma-separated field names",
         default="",
         required=True,
+        help="A list of comma-separated field names",
     )
     filter_id = fields.Many2one(
         comodel_name="ir.filters",
         ondelete="cascade",
     )
     limit = fields.Integer(
-        help="The limit is the maximum number of records retrieved",
         required=True,
+        help="The limit is the maximum number of records retrieved",
     )
     website_id = fields.Many2one(
         comodel_name="website",
@@ -50,8 +50,8 @@ class WebsiteSnippetFilter(models.Model):
     )
     help = fields.Text(
         string="Description",
-        help="Optional help text describing the filter usage and/or purpose.",
         translate=True,
+        help="Optional help text describing the filter usage and/or purpose.",
     )
 
     @api.depends("filter_id", "action_server_id")

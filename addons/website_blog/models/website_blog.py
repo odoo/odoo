@@ -282,10 +282,10 @@ class BlogPost(models.Model):
     published_date = fields.Datetime()
     post_date = fields.Datetime(
         string="Publishing date",
-        help="The blog post will be visible for your visitors as of this date on the website if it is set as published.",
         compute="_compute_post_date",
         inverse="_inverse_post_date",
         store=True,
+        help="The blog post will be visible for your visitors as of this date on the website if it is set as published.",
     )
     create_uid = fields.Many2one(
         comodel_name="res.users",

@@ -44,10 +44,10 @@ class ResCompany(models.Model):
     l10n_it_codice_fiscale = fields.Char(
         related="partner_id.l10n_it_codice_fiscale",
         string="Codice Fiscale",
-        help="Fiscal code of your company",
         size=16,
         store=True,
         readonly=False,
+        help="Fiscal code of your company",
     )
     l10n_it_tax_system = fields.Selection(
         selection=TAX_SYSTEM,
@@ -81,9 +81,9 @@ class ResCompany(models.Model):
     )
     l10n_it_eco_index_number = fields.Char(
         string="Number in register of companies",
+        size=20,
         help="This field must contain the number under which the\
         seller/provider is listed on the register of companies.",
-        size=20,
     )
     l10n_it_eco_index_share_capital = fields.Float(
         string="Share capital actually paid up",

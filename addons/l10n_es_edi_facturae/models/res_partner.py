@@ -23,8 +23,8 @@ class ResPartner(models.Model):
     type = fields.Selection(selection_add=[("facturae_ac", "FACe Center"), ("other",)])
     l10n_es_edi_facturae_ac_center_code = fields.Char(
         string="Code",
-        help="Code of the issuing department.",
         size=10,
+        help="Code of the issuing department.",
     )
     l10n_es_edi_facturae_ac_role_type_ids = fields.Many2many(
         comodel_name="l10n_es_edi_facturae.ac_role_type",
@@ -41,17 +41,17 @@ class ResPartner(models.Model):
     )
     l10n_es_edi_facturae_ac_physical_gln = fields.Char(
         string="Physical GLN",
+        size=14,
         help="Identification of the connection point to the VAN EDI (Global Location Number). Barcode of 13 standard positions. "
         "Codes are registered in Spain by AECOC. The code is made up of the country code (2 positions) Spain is '84' "
         "+ Company code (5 positions) + the remaining positions. The last one is the product + check digit.",
-        size=14,
     )
     l10n_es_edi_facturae_ac_logical_operational_point = fields.Char(
         string="Logical Operational Point",
+        size=14,
         help="Code identifying the company. Barcode of 13 standard positions. Codes are registered in Spain by AECOC. "
         "The code is made up of the country code (2 positions) Spain is '84' + Company code (5 positions) + the remaining positions. "
         "The last one is the product + check digit.",
-        size=14,
     )
     l10n_es_edi_facturae_residence_type = fields.Char(
         string="Facturae EDI Residency Type Code",

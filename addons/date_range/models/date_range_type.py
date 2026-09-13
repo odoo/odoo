@@ -23,13 +23,13 @@ class DateRangeType(models.Model):
         required=True,
     )
     allow_overlap = fields.Boolean(
+        default=False,
         help="If set, date ranges of this type are allowed to overlap each "
         "other. Leave unset to require them to be disjoint.",
-        default=False,
     )
     active = fields.Boolean(
-        help="The active field allows you to hide the date range type without removing it.",
         default=True,
+        help="The active field allows you to hide the date range type without removing it.",
     )
     company_id = fields.Many2one(
         comodel_name="res.company",

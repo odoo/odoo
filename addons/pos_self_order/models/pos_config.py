@@ -44,61 +44,61 @@ class PosConfig(models.Model):
             ("mobile", "QR menu + Ordering"),
             ("kiosk", "Kiosk"),
         ],
-        help="Choose the self ordering mode",
         default="nothing",
         required=True,
+        help="Choose the self ordering mode",
     )
     self_ordering_service_mode = fields.Selection(
         selection=[("counter", "Pickup zone"), ("table", "Table")],
-        help="Choose the kiosk mode",
         default="counter",
         required=True,
+        help="Choose the kiosk mode",
     )
     self_ordering_default_language_id = fields.Many2one(
         comodel_name="res.lang",
         string="Default Language",
-        help="Default language for the kiosk mode",
         default=lambda self: self.env["res.lang"].search(
             [("code", "=", self.env.lang)], limit=1
         ),
+        help="Default language for the kiosk mode",
     )
     self_ordering_available_language_ids = fields.Many2many(
         comodel_name="res.lang",
         string="Available Languages",
-        help="Languages available for the kiosk mode",
         default=_self_order_kiosk_default_languages,
+        help="Languages available for the kiosk mode",
     )
     self_ordering_image_home_ids = fields.Many2many(
         comodel_name="ir.attachment",
         string="Add images",
-        help="Image to display on the self order screen",
         bypass_search_access=True,
+        help="Image to display on the self order screen",
     )
     self_ordering_image_background_ids = fields.Many2many(
         comodel_name="ir.attachment",
         relation="pos_self_order_background_rels",
         string="Set background image",
-        help="Image to be displayed in the background",
         bypass_search_access=True,
+        help="Image to be displayed in the background",
     )
     self_ordering_default_user_id = fields.Many2one(
         comodel_name="res.users",
         string="Default User",
-        help="Access rights of this user will be used when visiting self order website when no session is open.",
         default=_self_order_default_user,
+        help="Access rights of this user will be used when visiting self order website when no session is open.",
     )
     self_ordering_pay_after = fields.Selection(
         selection=lambda self: self._selection_pay_after(),
         string="Pay After:",
-        help="Choose when the customer will pay",
         default="meal",
         required=True,
+        help="Choose when the customer will pay",
     )
     self_ordering_image_brand = fields.Image(
         string="Self Order Kiosk Image Brand",
-        help="Image to display on the self order screen",
         max_width=1200,
         max_height=250,
+        help="Image to display on the self order screen",
     )
     self_ordering_image_brand_name = fields.Char(
         string="Self Order Kiosk Image Brand Name",

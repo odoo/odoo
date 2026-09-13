@@ -50,10 +50,10 @@ class Im_LivechatReportChannel(models.Model):
     )
     time_to_answer = fields.Float(
         string="Response Time",
-        help="Average time in hours to give the first answer to the visitor",
         digits=(16, 6),
         readonly=True,
         aggregator="avg",
+        help="Average time in hours to give the first answer to the visitor",
     )
     start_date_hour = fields.Char(
         string="Hour of start Date of session",
@@ -61,16 +61,16 @@ class Im_LivechatReportChannel(models.Model):
     )
     duration = fields.Float(
         string="Duration (min)",
-        help="Duration of the conversation (in minutes)",
         digits=(16, 2),
         readonly=True,
         aggregator="avg",
+        help="Duration of the conversation (in minutes)",
     )
     nbr_message = fields.Integer(
         string="Messages per Session",
-        help="Number of message in the conversation",
         readonly=True,
         aggregator="avg",
+        help="Number of message in the conversation",
     )
     country_id = fields.Many2one(
         comodel_name="res.country",

@@ -40,9 +40,9 @@ class MailActivityPlan(models.Model):
     res_model = fields.Selection(
         selection=lambda self: self.env["mail.activity"]._selection_activity_models(),
         string="Model",
+        required=True,
         help="Specify a model if the activity should be specific to a model"
         " and not available when managing activities for other models.",
-        required=True,
     )
     steps_count = fields.Count(count_of="template_ids")
     has_user_on_demand = fields.Boolean(

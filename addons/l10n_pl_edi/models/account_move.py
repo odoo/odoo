@@ -42,9 +42,9 @@ class AccountMove(models.Model):
     )
     l10n_pl_edi_register = fields.Boolean(related="company_id.l10n_pl_edi_register")
     l10n_pl_edi_header = fields.Html(
-        help="User description of the current state, with hints to make the flow progress",
         copy=False,
         readonly=True,
+        help="User description of the current state, with hints to make the flow progress",
     )
     l10n_pl_edi_number = fields.Char(
         string="KSeF Number",

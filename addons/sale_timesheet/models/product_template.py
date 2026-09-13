@@ -24,8 +24,8 @@ class ProductTemplate(models.Model):
     )
     service_upsell_threshold = fields.Float(
         string="Threshold",
-        help="Percentage of time delivered compared to the prepaid amount that must be reached for the upselling opportunity activity to be triggered.",
         default=1,
+        help="Percentage of time delivered compared to the prepaid amount that must be reached for the upselling opportunity activity to be triggered.",
     )
     service_upsell_threshold_ratio = fields.Char(
         export_string_translation=False,

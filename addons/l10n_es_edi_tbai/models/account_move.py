@@ -62,16 +62,16 @@ class AccountMove(models.Model):
 
     l10n_es_tbai_is_required = fields.Boolean(
         string="TicketBAI required",
-        help="Is the Basque EDI (TicketBAI) needed ?",
         compute="_compute_l10n_es_tbai_is_required",
+        help="Is the Basque EDI (TicketBAI) needed ?",
     )
 
     l10n_es_tbai_refund_reason = fields.Selection(
         selection=TBAI_REFUND_REASONS,
         string="Invoice Refund Reason Code (TicketBai)",
+        copy=False,
         help="BOE-A-1992-28740. Ley 37/1992, de 28 de diciembre, del Impuesto sobre el "
         "Valor Añadido. Artículo 80. Modificación de la base imponible.",
-        copy=False,
     )
     l10n_es_tbai_reversed_ids = fields.Many2many(
         comodel_name="account.move",
@@ -79,8 +79,8 @@ class AccountMove(models.Model):
         column1="refund_id",
         column2="reversed_move_id",
         string="Refunded Vendor Bills",
-        help="In the case where a vendor refund has multiple original invoices, you can set them here. ",
         domain="[('move_type', '=', 'in_invoice'), ('commercial_partner_id', '=', commercial_partner_id)]",
+        help="In the case where a vendor refund has multiple original invoices, you can set them here. ",
     )
 
     # -------------------------------------------------------------------------

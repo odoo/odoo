@@ -39,15 +39,15 @@ class ApprovalTestDocument(models.Model):
         default=lambda self: self.env.company,
     )
     hook_call_count = fields.Integer(
-        help="Tracks how many times _on_approval_state_changed was called",
         default=0,
+        help="Tracks how many times _on_approval_state_changed was called",
     )
     last_approval_state = fields.Char(
         help="Records the last state received by _on_approval_state_changed"
     )
     progress_call_count = fields.Integer(
-        help="How many times _on_approval_progress was called",
         default=0,
+        help="How many times _on_approval_progress was called",
     )
     test_category_id = fields.Many2one(
         comodel_name="approval.category",
@@ -58,8 +58,8 @@ class ApprovalTestDocument(models.Model):
     )
     keeps_approval_on_change = fields.Boolean()
     operation_count = fields.Integer(
-        help="How many times action_record_operation actually ran",
         default=0,
+        help="How many times action_record_operation actually ran",
     )
 
     def action_record_operation(self) -> None:

@@ -13,8 +13,8 @@ class ApprovalTestSubjectDocument(models.Model):
     )
     test_category_id = fields.Many2one(comodel_name="approval.category")
     outcomes = fields.Char(
-        help="Each notification this record received, in order, as subject:state;",
         default="",
+        help="Each notification this record received, in order, as subject:state;",
     )
     blocked_user_ids = fields.Many2many(
         comodel_name="res.users",

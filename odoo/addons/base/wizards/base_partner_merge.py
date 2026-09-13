@@ -98,10 +98,10 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
     )
     maximum_group = fields.Integer(string="Maximum of Group of Contacts")
     absorb_source_values = fields.Boolean(
+        default=True,
         help="Fill the destination's empty fields from the contacts merged into "
         "it. Turn it off to keep the destination's own identity, which is what a "
         "catch-all contact needs.",
-        default=True,
     )
 
     _MERGE_SIZE_LIMIT = 3

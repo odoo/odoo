@@ -436,9 +436,9 @@ class AccountMove(models.Model):
     reconciled_payment_ids = fields.Many2many(
         comodel_name="account.payment",
         string="Reconciled Payments",
-        help="Payments that have been reconciled with this invoice.",
         compute="_compute_reconciled_payment_ids",
         search="_search_reconciled_payment_ids",
+        help="Payments that have been reconciled with this invoice.",
     )
     payment_count = fields.Count(
         count_of="reconciled_payment_ids",
@@ -483,9 +483,9 @@ class AccountMove(models.Model):
     tax_cash_basis_origin_move_id = fields.Many2one(
         comodel_name="account.move",
         string="Cash Basis Origin",
-        help="The journal entry from which this tax cash basis journal entry has been created.",
         index="btree_not_null",
         readonly=True,
+        help="The journal entry from which this tax cash basis journal entry has been created.",
     )
     tax_cash_basis_created_move_ids = fields.One2many(
         comodel_name="account.move",
@@ -507,10 +507,10 @@ class AccountMove(models.Model):
             ("recurring", "Recurring"),
         ],
         string="Auto-post",
-        help="Specify whether this entry is posted automatically on its accounting date, and any similar recurring invoices.",
         default="no",
         copy=False,
         required=True,
+        help="Specify whether this entry is posted automatically on its accounting date, and any similar recurring invoices.",
     )
     # The cadence is `mixin.recurrence.rule`'s. `auto_post` used to answer three
     # questions at once -- whether the entry posts itself, whether it repeats,
@@ -523,11 +523,11 @@ class AccountMove(models.Model):
     )
     repeat_until = fields.Date(
         string="Auto-post until",
-        help="This recurring move will be posted up to and including this date.",
         compute="_compute_repeat_until",
         store=True,
         copy=False,
         readonly=False,
+        help="This recurring move will be posted up to and including this date.",
     )
     auto_post_origin_id = fields.Many2one(
         comodel_name="account.move",
@@ -554,10 +554,10 @@ class AccountMove(models.Model):
         compute="_compute_suitable_journal_ids",
     )
     journal_id_domain = fields.Binary(
-        help="Dynamic domain limiting journal selection to the journals suitable for "
-        "this move type that the user is allowed to access.",
         compute="_compute_journal_id_domain",
         exportable=False,
+        help="Dynamic domain limiting journal selection to the journals suitable for "
+        "this move type that the user is allowed to access.",
     )
     highest_name = fields.Char(compute="_compute_highest_name")
     made_sequence_gap = fields.Boolean()
@@ -592,10 +592,10 @@ class AccountMove(models.Model):
     )
     no_followup = fields.Boolean(
         string="No Follow-Up",
-        help="Exclude this journal entry from follow-up reports.",
         compute="_compute_no_followup",
         inverse="_inverse_no_followup",
         readonly=False,
+        help="Exclude this journal entry from follow-up reports.",
     )
 
     restrict_mode_hash_table = fields.Boolean(
@@ -614,9 +614,9 @@ class AccountMove(models.Model):
         readonly=True,
     )
     secured = fields.Boolean(
-        help="The entry is secured with an inalterable hash.",
         compute="_compute_secured",
         search="_search_secured",
+        help="The entry is secured with an inalterable hash.",
     )
 
     invoice_line_ids = fields.One2many(
@@ -711,30 +711,27 @@ class AccountMove(models.Model):
     partner_shipping_id = fields.Many2one(
         comodel_name="res.partner",
         string="Delivery Address",
-        help="The delivery address will be used in the computation of the fiscal position.",
         compute="_compute_partner_shipping_id",
         precompute=True,
         store=True,
         readonly=False,
         check_company=True,
+        help="The delivery address will be used in the computation of the fiscal position.",
     )
     allow_external_delivery_address = fields.Boolean(
+        default=False,
+        tracking=True,
         help="Allow selecting a delivery address that does not belong to the "
         "customer's company (e.g. drop-shipping). When disabled, the delivery "
         "address is limited to the customer's own contacts.",
-        default=False,
-        tracking=True,
     )
     partner_shipping_domain = fields.Binary(
-        help="Dynamic domain limiting delivery address selection.",
         compute="_compute_partner_shipping_domain",
+        help="Dynamic domain limiting delivery address selection.",
     )
     partner_bank_id = fields.Many2one(
         comodel_name="res.partner.bank",
         string="Recipient Bank",
-        help="Bank Account Number to which the invoice will be paid. "
-        "A Company bank account if this is a Customer Invoice or Vendor Credit Note, "
-        "otherwise a Partner bank account number.",
         compute="_compute_partner_bank_id",
         store=True,
         index="btree_not_null",
@@ -742,21 +739,23 @@ class AccountMove(models.Model):
         ondelete="restrict",
         check_company=True,
         tracking=True,
+        help="Bank Account Number to which the invoice will be paid. "
+        "A Company bank account if this is a Customer Invoice or Vendor Credit Note, "
+        "otherwise a Partner bank account number.",
     )
     fiscal_position_id = fields.Many2one(
         comodel_name="account.fiscal.position",
-        help="Fiscal positions are used to adapt taxes and accounts for particular "
-        "customers or sales orders/invoices. The default value comes from the customer.",
         compute="_compute_fiscal_position_id",
         precompute=True,
         store=True,
         readonly=False,
         ondelete="restrict",
         check_company=True,
+        help="Fiscal positions are used to adapt taxes and accounts for particular "
+        "customers or sales orders/invoices. The default value comes from the customer.",
     )
 
     payment_reference = fields.Char(
-        help="The payment reference to set on journal items.",
         compute="_compute_payment_reference",
         inverse="_inverse_payment_reference",
         store=True,
@@ -764,6 +763,7 @@ class AccountMove(models.Model):
         copy=False,
         readonly=False,
         tracking=True,
+        help="The payment reference to set on journal items.",
     )
     display_qr_code = fields.Boolean(
         string="Display QR-code",
@@ -778,10 +778,10 @@ class AccountMove(models.Model):
             "res.partner.bank"
         ].get_available_qr_methods_in_sequence(),
         string="Payment QR-code",
+        copy=False,
         help="Type of QR-code to be generated for the payment of this invoice, "
         "when printing it. If left blank, the first available and usable method "
         "will be used.",
-        copy=False,
     )
 
     invoice_outstanding_credits_debits_widget = fields.Binary(
@@ -828,18 +828,18 @@ class AccountMove(models.Model):
     )
     invoice_currency_rate = fields.Float(
         string="Currency Rate",
-        help="Currency rate from company currency to document currency.",
         digits=0,
         compute="_compute_invoice_currency_rate",
         precompute=True,
         store=True,
         copy=False,
         readonly=False,
+        help="Currency rate from company currency to document currency.",
     )
 
     direction_sign = fields.Integer(
-        help="Multiplicator depending on the document type, to convert a price into a balance",
         compute="_compute_direction_sign",
+        help="Multiplicator depending on the document type, to convert a price into a balance",
     )
     amount_untaxed = fields.Monetary(
         string="Untaxed Amount",
@@ -909,10 +909,10 @@ class AccountMove(models.Model):
     )
     tax_totals = fields.Binary(
         string="Invoice Totals",
-        help="Edit Tax amounts if you encounter rounding issues.",
         compute="_compute_tax_totals",
         inverse="_inverse_tax_totals",
         exportable=False,
+        help="Edit Tax amounts if you encounter rounding issues.",
     )
     payment_state = fields.Selection(
         selection=PAYMENT_STATE_SELECTION,
@@ -955,9 +955,9 @@ class AccountMove(models.Model):
     invoice_vendor_bill_id = fields.Many2one(
         comodel_name="account.move",
         string="Vendor Bill",
-        help="Auto-complete from a previous bill or refund.",
         store=False,
         check_company=True,
+        help="Auto-complete from a previous bill or refund.",
     )
     invoice_source_email = fields.Char(
         string="Source Email",
@@ -987,13 +987,13 @@ class AccountMove(models.Model):
         readonly=False,
     )
     is_move_sent = fields.Boolean(
-        help="It indicates that the invoice/payment has been sent or the PDF has been generated.",
         copy=False,
         readonly=True,
+        help="It indicates that the invoice/payment has been sent or the PDF has been generated.",
     )
     is_being_sent = fields.Boolean(
-        help="Is the move being sent asynchronously",
         compute="_compute_is_being_sent",
+        help="Is the move being sent asynchronously",
     )
 
     move_sent_values = fields.Selection(
@@ -1020,19 +1020,19 @@ class AccountMove(models.Model):
     )
     invoice_origin = fields.Char(
         string="Origin",
-        help="The document(s) that generated the invoice.",
         copy=False,
         readonly=True,
         tracking=True,
+        help="The document(s) that generated the invoice.",
     )
     invoice_incoterm_id = fields.Many2one(
         comodel_name="account.incoterms",
         string="Incoterm",
-        help="International Commercial Terms are a series of predefined commercial "
-        "terms used in international transactions.",
         compute="_compute_invoice_incoterm_id",
         store=True,
         readonly=False,
+        help="International Commercial Terms are a series of predefined commercial "
+        "terms used in international transactions.",
     )
     incoterm_location = fields.Char(
         compute="_compute_incoterm_location",
@@ -1067,8 +1067,8 @@ class AccountMove(models.Model):
     )
     bank_partner_id = fields.Many2one(
         comodel_name="res.partner",
-        help="Technical field to get the domain on the bank",
         compute="_compute_bank_partner_id",
+        help="Technical field to get the domain on the bank",
     )
     tax_lock_date_message = fields.Char(compute="_compute_tax_lock_date_message")
     display_inactive_currency_warning = fields.Boolean(

@@ -11,10 +11,10 @@ class ResUsers(models.Model):
     microsoft_calendar_credential_id = fields.Many2one(
         comodel_name="credential.credential",
         string="Microsoft Credential",
-        help="Holds this user's Microsoft OAuth tokens.",
         copy=False,
         ondelete="restrict",
         groups="base.group_system",
+        help="Holds this user's Microsoft OAuth tokens.",
     )
     microsoft_calendar_rtoken = fields.Char(
         string="Microsoft Refresh Token",

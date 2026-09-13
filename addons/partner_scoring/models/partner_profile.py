@@ -10,16 +10,16 @@ class PartnerProfile(models.Model):
 
     name = fields.Char(
         string="Profile Name",
-        help="Name of the customer profile",
         required=True,
+        help="Name of the customer profile",
     )
     active = fields.Boolean(
-        help="If unchecked, the profile will not appear in default views",
         default=True,
+        help="If unchecked, the profile will not appear in default views",
     )
     sequence = fields.Integer(
-        help="Used to order profiles. Lower values have higher precedence.",
         default=10,
+        help="Used to order profiles. Lower values have higher precedence.",
     )
     company_id = fields.Many2one(
         comodel_name="res.company",
@@ -30,8 +30,8 @@ class PartnerProfile(models.Model):
         "classifies nobody.",
     )
     factor = fields.Float(
-        help="Multiplicative percentage factor (e.g., 1.2 for 120%)",
         default=1.0,
+        help="Multiplicative percentage factor (e.g., 1.2 for 120%)",
     )
     min_value = fields.Float(
         string="Minimum Score (%)",

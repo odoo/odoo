@@ -24,14 +24,14 @@ class AccountMove(models.Model):
     reversed_pos_order_id = fields.Many2one(
         comodel_name="pos.order",
         string="Reversed POS Order",
-        help="The pos order that was reverted after closing the session to create an invoice for it.",
         index="btree_not_null",
+        help="The pos order that was reverted after closing the session to create an invoice for it.",
     )
     pos_diff_session_id = fields.Many2one(
         comodel_name="pos.session",
         string="POS Closing Difference",
-        help="Session whose closing produced this payment-method difference entry.",
         index="btree_not_null",
+        help="Session whose closing produced this payment-method difference entry.",
     )
     pos_session_ids = fields.One2many(
         comodel_name="pos.session",

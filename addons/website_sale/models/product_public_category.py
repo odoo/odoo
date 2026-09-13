@@ -73,18 +73,18 @@ class ProductPublicCategory(models.Model):
     )
 
     show_category_title = fields.Boolean(
-        help="Display the category title on the shop page. Corresponds to the 'Show Title' editor option.",
         default=False,
+        help="Display the category title on the shop page. Corresponds to the 'Show Title' editor option.",
     )
 
     show_category_description = fields.Boolean(
-        help="Display the category description on the shop page. Corresponds to the 'Show Description' editor option.",
         default=True,
+        help="Display the category description on the shop page. Corresponds to the 'Show Description' editor option.",
     )
 
     align_category_content = fields.Boolean(
-        help="Align the category content on the shop page. Corresponds to the 'Center Content' editor option.",
         default=False,
+        help="Align the category content on the shop page. Corresponds to the 'Center Content' editor option.",
     )
 
     @api.depends("parent_path")

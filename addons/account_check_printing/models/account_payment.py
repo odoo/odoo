@@ -18,12 +18,12 @@ class AccountPayment(models.Model):
         related="journal_id.check_manual_sequencing"
     )
     check_number = fields.Char(
-        help="The selected journal is configured to print check numbers. If your pre-printed check paper already has numbers "
-        "or if the current numbering is wrong, you can change it in the journal configuration page.",
         compute="_compute_check_number",
         inverse="_inverse_check_number",
         store=True,
         copy=False,
+        help="The selected journal is configured to print check numbers. If your pre-printed check paper already has numbers "
+        "or if the current numbering is wrong, you can change it in the journal configuration page.",
     )
     payment_channel_id = fields.Many2one(index=True)
     show_check_number = fields.Boolean(compute="_compute_show_check_number")

@@ -59,10 +59,10 @@ class IrUiMenu(models.Model):
     web_icon = fields.Char(string="Web Icon File")
     web_keywords = fields.Char(
         string="Search Keywords",
+        translate=True,
         help="Comma-separated words the app launcher matches this menu on, "
         "beyond its name: the vocabulary users type but the menu is not called, "
         'such as "invoice, bill" for Accounting.',
-        translate=True,
     )
     action = fields.Reference(
         selection=[

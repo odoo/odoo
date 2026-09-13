@@ -43,33 +43,33 @@ class MixinExtract(models.AbstractModel):
         readonly=True,
     )
     extract_result = fields.Json(
+        copy=False,
+        readonly=True,
         help="Every value that was read, with which strategy proposed it and "
         "how confident it was.",
-        copy=False,
-        readonly=True,
     )
     extract_missing = fields.Json(
-        help="Required fields no strategy could read, and rules that do not "
-        "hold. What a person has to supply.",
         copy=False,
         readonly=True,
+        help="Required fields no strategy could read, and rules that do not "
+        "hold. What a person has to supply.",
     )
     extract_error = fields.Text(
         copy=False,
         readonly=True,
     )
     extract_pending = fields.Json(
+        copy=False,
+        readonly=True,
         help="The service this document is waiting on, and its handle. Kept so "
         "the next attempt asks again rather than submitting the document a "
         "second time.",
-        copy=False,
-        readonly=True,
     )
     extract_corrections = fields.Json(
-        help="Fields a person changed after extraction, with what was read and "
-        "what it should have been.",
         copy=False,
         readonly=True,
+        help="Fields a person changed after extraction, with what was read and "
+        "what it should have been.",
     )
 
     def write(self, vals):

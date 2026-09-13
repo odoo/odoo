@@ -25,8 +25,8 @@ class MailingSubscription(models.Model):
         ondelete="cascade",
     )
     opt_out = fields.Boolean(
-        help="The contact has chosen not to receive mails anymore from this list",
         default=False,
+        help="The contact has chosen not to receive mails anymore from this list",
     )
     opt_out_reason_id = fields.Many2one(
         comodel_name="mailing.subscription.optout",

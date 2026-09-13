@@ -18,24 +18,23 @@ class ProjectProject(models.Model):
             ("employee_rate", "Employee rate"),
         ],
         string="Pricing",
-        help="The task rate is perfect if you would like to bill different services to different customers at different rates. The fixed rate is perfect if you bill a service at a fixed rate per hour or day worked regardless of the employee who performed it. The employee rate is preferable if your employees deliver the same service at a different rate. For instance, junior and senior consultants would deliver the same service (= consultancy), but at a different rate because of their level of seniority.",
         compute="_compute_pricing_type",
         search="_search_pricing_type",
         default="task_rate",
+        help="The task rate is perfect if you would like to bill different services to different customers at different rates. The fixed rate is perfect if you bill a service at a fixed rate per hour or day worked regardless of the employee who performed it. The employee rate is preferable if your employees deliver the same service at a different rate. For instance, junior and senior consultants would deliver the same service (= consultancy), but at a different rate because of their level of seniority.",
     )
     sale_line_employee_ids = fields.One2many(
         comodel_name="project.sale.line.employee.map",
         inverse_name="project_id",
         string="Sale line/Employee map",
+        export_string_translation=False,
+        copy=False,
         help="Sales order item that will be selected by default on the timesheets of the corresponding employee. It bypasses the sales order item defined on the project and the task, and can be modified on each timesheet entry if necessary. In other words, it defines the rate at which an employee's time is billed based on their expertise, skills or experience, for instance.\n"
         "If you would like to bill the same service at a different rate, you need to create two separate sales order items as each sales order item can only have a single unit price at a time.\n"
         "You can also define the hourly company cost of your employees for their timesheets on this project specifically. It will bypass the timesheet cost set on the employee.",
-        export_string_translation=False,
-        copy=False,
     )
     timesheet_product_id = fields.Many2one(
         comodel_name="product.product",
-        help="Service that will be used by default when invoicing the time spent on a task. It can be modified on each task individually by selecting a specific sales order item.",
         compute="_compute_timesheet_product_id",
         store=True,
         readonly=False,
@@ -45,6 +44,7 @@ class ProjectProject(models.Model):
             ('service_type', '=', 'timesheet'),
         ]""",
         check_company=True,
+        help="Service that will be used by default when invoicing the time spent on a task. It can be modified on each task individually by selecting a specific sales order item.",
     )
     warning_employee_rate = fields.Boolean(
         export_string_translation=False,

@@ -31,13 +31,13 @@ class IrModel(models.Model):
     website_form_default_field_id = fields.Many2one(
         comodel_name="ir.model.fields",
         string="Field for custom form data",
-        help="Specify the field which will contain meta and custom form fields datas.",
         domain="[('model', '=', model), ('ttype', '=', 'text')]",
+        help="Specify the field which will contain meta and custom form fields datas.",
     )
     website_form_label = fields.Char(
         string="Label for form action",
-        help="Form action label. Ex: crm.lead could be 'Send an e-mail' and project.issue could be 'Create an Issue'.",
         translate=True,
+        help="Form action label. Ex: crm.lead could be 'Send an e-mail' and project.issue could be 'Create an Issue'.",
     )
     website_form_key = fields.Char(help="Used in FormBuilder Registry")
 
@@ -252,7 +252,7 @@ class IrModelFields(models.Model):
 
     website_form_blacklisted = fields.Boolean(
         string="Blacklisted in web forms",
-        help="Blacklist this field for web forms",
         default=True,
         index=True,
+        help="Blacklist this field for web forms",
     )

@@ -7,8 +7,8 @@ class HrJob(models.Model):
     survey_id = fields.Many2one(
         comodel_name="survey.survey",
         string="Interview Form",
-        help="Choose an interview form for this job position and you will be able to print/answer this interview from all applicants who apply for this job",
         index="btree_not_null",
+        help="Choose an interview form for this job position and you will be able to print/answer this interview from all applicants who apply for this job",
     )
 
     def action_test_survey(self):

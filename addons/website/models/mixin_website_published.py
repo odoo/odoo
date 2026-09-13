@@ -25,13 +25,13 @@ class MixinWebsitePublished(models.AbstractModel):
     can_publish = fields.Boolean(compute="_compute_can_publish")
     website_url = fields.Char(
         string="Website URL",
-        help="The full relative URL to access the document through the website.",
         compute="_compute_website_url",
+        help="The full relative URL to access the document through the website.",
     )
     website_absolute_url = fields.Char(
         string="Website Absolute URL",
-        help="The full absolute URL to access the document through the website.",
         compute="_compute_website_absolute_url",
+        help="The full absolute URL to access the document through the website.",
     )
 
     @api.depends_context("lang")

@@ -14,18 +14,18 @@ class ResConfigSettings(models.TransientModel):
         comodel_name="res.currency",
         related="company_id.currency_id",
         string="Currency",
-        help="Main currency of the company.",
         readonly=False,
         required=True,
+        help="Main currency of the company.",
     )
     currency_exchange_journal_id = fields.Many2one(
         comodel_name="account.journal",
         related="company_id.currency_exchange_journal_id",
         string="Currency Exchange Journal",
-        help="The accounting journal where automatic exchange differences will be registered",
         readonly=False,
         domain="[('type', '=', 'general')]",
         check_company=True,
+        help="The accounting journal where automatic exchange differences will be registered",
     )
     income_currency_exchange_account_id = fields.Many2one(
         comodel_name="account.account",
@@ -68,9 +68,9 @@ class ResConfigSettings(models.TransientModel):
     account_price_include = fields.Selection(
         related="company_id.account_price_include",
         string="Default Sales Price Include",
-        help="Default on whether the sales price used on the product and invoices with this Company includes its taxes.",
         readonly=False,
         required=True,
+        help="Default on whether the sales price used on the product and invoices with this Company includes its taxes.",
     )
 
     tax_calculation_rounding_method = fields.Selection(
@@ -82,24 +82,24 @@ class ResConfigSettings(models.TransientModel):
         comodel_name="account.account",
         related="company_id.account_journal_suspense_account_id",
         string="Bank Suspense",
-        help="Bank Transactions are posted immediately after import or synchronization. "
-        "Their counterparty is the bank suspense account.\n"
-        "Reconciliation replaces the latter by the definitive account(s).",
         readonly=False,
         domain="[('account_type', 'in', ('asset_current', 'liability_current'))]",
         check_company=True,
+        help="Bank Transactions are posted immediately after import or synchronization. "
+        "Their counterparty is the bank suspense account.\n"
+        "Reconciliation replaces the latter by the definitive account(s).",
     )
     transfer_account_id = fields.Many2one(
         comodel_name="account.account",
         related="company_id.transfer_account_id",
         string="Internal Transfer",
-        help="Intermediary account used when moving from a liquidity account to another.",
         readonly=False,
         domain=[
             ("reconcile", "=", True),
             ("account_type", "=", "asset_current"),
         ],
         check_company=True,
+        help="Intermediary account used when moving from a liquidity account to another.",
     )
     group_cash_rounding = fields.Boolean(
         string="Cash Rounding",
@@ -174,8 +174,8 @@ class ResConfigSettings(models.TransientModel):
         comodel_name="account.incoterms",
         related="company_id.incoterm_id",
         string="Default incoterm",
-        help="International Commercial Terms are a series of predefined commercial terms used in international transactions.",
         readonly=False,
+        help="International Commercial Terms are a series of predefined commercial terms used in international transactions.",
     )
     invoice_terms = fields.Html(
         related="company_id.invoice_terms",
@@ -213,15 +213,15 @@ class ResConfigSettings(models.TransientModel):
     account_use_credit_limit = fields.Boolean(
         related="company_id.account_use_credit_limit",
         string="Sales Credit Limit",
-        help="Enable the use of credit limit on partners.",
         readonly=False,
+        help="Enable the use of credit limit on partners.",
     )
     account_default_credit_limit = fields.Monetary(
         string="Default Credit Limit",
-        help="This is the default credit limit that will be used on partners that do not have a specific limit on them.",
         compute="_compute_account_default_credit_limit",
         inverse="_inverse_account_default_credit_limit",
         readonly=False,
+        help="This is the default credit limit that will be used on partners that do not have a specific limit on them.",
     )
 
     country_code = fields.Char(
@@ -251,19 +251,19 @@ class ResConfigSettings(models.TransientModel):
         comodel_name="account.account",
         related="company_id.account_journal_early_pay_discount_loss_account_id",
         string="Early Discount Loss",
-        help="Account for the difference amount after the expense discount has been granted",
         readonly=False,
         domain="[('account_type', 'in', ('expense', 'expense_other', 'income', 'income_other'))]",
         check_company=True,
+        help="Account for the difference amount after the expense discount has been granted",
     )
     account_journal_early_pay_discount_gain_account_id = fields.Many2one(
         comodel_name="account.account",
         related="company_id.account_journal_early_pay_discount_gain_account_id",
         string="Early Discount Gain",
-        help="Account for the difference amount after the income discount has been granted",
         readonly=False,
         domain="[('account_type', 'in', ('income', 'income_other', 'expense', 'expense_other'))]",
         check_company=True,
+        help="Account for the difference amount after the income discount has been granted",
     )
 
     account_discount_income_allocation_id = fields.Many2one(

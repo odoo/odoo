@@ -16,8 +16,8 @@ class MaintenanceRequest(models.Model):
         check_company=True,
     )
     block_asset = fields.Boolean(
-        help="While scheduled, the asset is unavailable time for planning, work orders and every other reader of its calendar.",
         default=True,
+        help="While scheduled, the asset is unavailable time for planning, work orders and every other reader of its calendar.",
     )
 
     @api.depends("asset_id.maintenance_team_id")

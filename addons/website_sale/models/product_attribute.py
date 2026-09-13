@@ -15,8 +15,8 @@ class ProductAttribute(models.Model):
             ("hover", "Hover"),
         ],
         string="On Product Cards",
-        help="Instantly created variants are available for selection from your /shop page.",
         default="hidden",
+        help="Instantly created variants are available for selection from your /shop page.",
     )
     is_thumbnail_visible = fields.Boolean(
         string="Show Thumbnails",

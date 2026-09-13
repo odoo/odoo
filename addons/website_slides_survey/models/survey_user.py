@@ -12,8 +12,8 @@ class SurveyUser_Input(models.Model):
     slide_partner_id = fields.Many2one(
         comodel_name="slide.slide.partner",
         string="Subscriber information",
-        help="Slide membership information for the logged in user",
         index="btree_not_null",
+        help="Slide membership information for the logged in user",
     )
 
     @api.model_create_multi

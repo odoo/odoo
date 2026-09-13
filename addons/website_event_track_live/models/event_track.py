@@ -9,8 +9,8 @@ class EventTrack(models.Model):
     youtube_video_url = fields.Char(string="YouTube Video Link")
     youtube_video_id = fields.Char(
         string="YouTube video ID",
-        help="Extracted from the video URL and used to infer various links (embed/thumbnail/...)",
         compute="_compute_youtube_video_id",
+        help="Extracted from the video URL and used to infer various links (embed/thumbnail/...)",
     )
     is_youtube_replay = fields.Boolean(
         string="Is YouTube Replay",

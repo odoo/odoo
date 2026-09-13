@@ -121,8 +121,8 @@ class ProjectProject(models.Model):
         copy=False,
         group_expand="_read_group_expand_full",
         ondelete="restrict",
-        groups="project.group_project_stages",
         tracking=True,
+        groups="project.group_project_stages",
     )
     phase_color = fields.Integer(
         related="phase_id.color",
@@ -151,9 +151,9 @@ class ProjectProject(models.Model):
     )
     label_tasks = fields.Char(
         string="Use Tasks as",
-        help="Name used to refer to the tasks of your project e.g. tasks, tickets, sprints, etc...",
         translate=True,
         default=lambda s: s.env._("Tasks"),
+        help="Name used to refer to the tasks of your project e.g. tasks, tickets, sprints, etc...",
     )
     color = fields.Integer(
         string="Color Index",
@@ -166,11 +166,11 @@ class ProjectProject(models.Model):
     )
     date_end = fields.Date(
         string="End Date",
-        help="Date on which this project ends. The timeframe defined on the "
-        "project is taken into account when viewing its planning.",
         index=True,
         copy=False,
         tracking=True,
+        help="Date on which this project ends. The timeframe defined on the "
+        "project is taken into account when viewing its planning.",
     )
     date = fields.Date(
         related="date_end",
@@ -186,6 +186,9 @@ class ProjectProject(models.Model):
             ("portal", " All internal users and invited portal users"),
         ],
         string="Visibility",
+        default="portal",
+        required=True,
+        tracking=True,
         help="Project and Task Visibility:\n"
         "- Invited internal users: Can access only the project or tasks they follow. Assignees automatically get access.\n"
         "- Invited internal and portal users: Same as above, extended to portal users.\n"
@@ -198,9 +201,6 @@ class ProjectProject(models.Model):
         "Other Rules:\n"
         "- Internal users can open a task from a direct link, even without project access.\n"
         "- Project admins have access to private projects, even if not followers.\n",
-        default="portal",
-        required=True,
-        tracking=True,
     )
     privacy_visibility_warning = fields.Char(
         export_string_translation=False,
@@ -442,10 +442,10 @@ class ProjectProject(models.Model):
     )
 
     health_score = fields.Integer(
-        help="Composite 0-100 score based on deadlines, milestones, risk, and staleness.",
         export_string_translation=False,
         compute="_compute_health_indicators",
         store=True,
+        help="Composite 0-100 score based on deadlines, milestones, risk, and staleness.",
     )
     health_status = fields.Selection(
         selection=[
@@ -455,10 +455,10 @@ class ProjectProject(models.Model):
             ("critical", "Critical"),
         ],
         string="Health",
-        help="Derived from health_score: healthy (80-100), attention (60-79), warning (40-59), critical (0-39).",
         export_string_translation=False,
         compute="_compute_health_indicators",
         store=True,
+        help="Derived from health_score: healthy (80-100), attention (60-79), warning (40-59), critical (0-39).",
     )
 
     risk_ids = fields.One2many(
@@ -479,44 +479,44 @@ class ProjectProject(models.Model):
 
     wip_count = fields.Integer(
         string="WIP Count",
-        help="Number of open, non-blocked tasks.",
         export_string_translation=False,
         compute="_compute_flow_metrics",
         store=True,
+        help="Number of open, non-blocked tasks.",
     )
     avg_lead_time = fields.Float(
         string="Avg Lead Time (hours)",
-        help="Average working hours from creation to closure (last 90 days). "
-        "Includes queue wait time.",
         export_string_translation=False,
         digits=(16, 1),
         compute="_compute_flow_metrics",
         store=True,
+        help="Average working hours from creation to closure (last 90 days). "
+        "Includes queue wait time.",
     )
     avg_cycle_time = fields.Float(
         string="Avg Cycle Time (hours)",
-        help="Average working hours from assignment to closure (last 90 days). "
-        "Excludes queue wait time.",
         export_string_translation=False,
         digits=(16, 1),
         compute="_compute_flow_metrics",
         store=True,
+        help="Average working hours from assignment to closure (last 90 days). "
+        "Excludes queue wait time.",
     )
     throughput_week = fields.Float(
         string="Throughput / Week",
-        help="Tasks closed per week (rolling 4-week average).",
         export_string_translation=False,
         digits=(16, 1),
         compute="_compute_flow_metrics",
         store=True,
+        help="Tasks closed per week (rolling 4-week average).",
     )
     deadline_compliance_pct = fields.Float(
         string="Deadline Compliance %",
-        help="Percentage of closed tasks with deadlines that met their deadline.",
         export_string_translation=False,
         digits=(5, 1),
         compute="_compute_flow_metrics",
         store=True,
+        help="Percentage of closed tasks with deadlines that met their deadline.",
     )
 
     is_template = fields.Boolean(

@@ -26,8 +26,8 @@ class QuotationDocument(models.Model):
         required=True,
     )
     active = fields.Boolean(
-        help="If unchecked, it will allow you to hide the header or footer without removing it.",
         default=True,
+        help="If unchecked, it will allow you to hide the header or footer without removing it.",
     )
     sequence = fields.Integer(default=10)
     quotation_template_ids = fields.Many2many(
@@ -45,8 +45,8 @@ class QuotationDocument(models.Model):
         domain=[("document_type", "=", "quotation_document")],
     )
     add_by_default = fields.Boolean(
-        help="If checked, this header or footer will be added by default on new quotes.",
         default=False,
+        help="If checked, this header or footer will be added by default on new quotes.",
     )
 
     @api.constrains("datas")

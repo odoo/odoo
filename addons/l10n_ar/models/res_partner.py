@@ -14,15 +14,15 @@ class ResPartner(models.Model):
 
     l10n_ar_vat = fields.Char(
         string="VAT",
+        compute="_compute_l10n_ar_vat",
         help="Computed field that returns VAT or nothing if this one"
         " is not set for the partner",
-        compute="_compute_l10n_ar_vat",
     )
     l10n_ar_formatted_vat = fields.Char(
         string="Formatted VAT",
+        compute="_compute_l10n_ar_formatted_vat",
         help="Computed field that will convert the"
         " given VAT number to the format {person_category:2}-{number:10}-{validation_number:1}",
-        compute="_compute_l10n_ar_formatted_vat",
     )
 
     l10n_ar_gross_income_number = fields.Char(string="Gross Income Number")
@@ -38,10 +38,10 @@ class ResPartner(models.Model):
     l10n_ar_afip_responsibility_type_id = fields.Many2one(
         comodel_name="l10n_ar.afip.responsibility.type",
         string="ARCA Responsibility Type",
+        index="btree_not_null",
         help="Defined by ARCA to"
         " identify the type of responsibilities that a person or a legal entity could have and that impacts in the"
         " type of operations and requirements they need.",
-        index="btree_not_null",
     )
 
     @api.depends("l10n_ar_vat")

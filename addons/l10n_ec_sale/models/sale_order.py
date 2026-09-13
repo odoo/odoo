@@ -7,8 +7,8 @@ class SaleOrder(models.Model):
     l10n_ec_sri_payment_id = fields.Many2one(
         comodel_name="l10n_ec.sri.payment",
         string="Payment Method (SRI)",
-        help="Ecuador: Payment Methods Defined by the SRI.",
         default=lambda self: self.env["l10n_ec.sri.payment"].sudo().search([], limit=1),
+        help="Ecuador: Payment Methods Defined by the SRI.",
     )
 
     def _prepare_invoice_vals(self):

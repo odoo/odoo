@@ -6,14 +6,14 @@ class PosOrder(models.Model):
 
     table_id = fields.Many2one(
         comodel_name="restaurant.table",
-        help="The table where this order was served",
         index="btree_not_null",
         readonly=True,
+        help="The table where this order was served",
     )
     customer_count = fields.Integer(
         string="Guests",
-        help="The amount of customers that have been served by this order.",
         readonly=True,
+        help="The amount of customers that have been served by this order.",
     )
     course_ids = fields.One2many(
         comodel_name="restaurant.order.course",

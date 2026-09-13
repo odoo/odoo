@@ -28,15 +28,15 @@ class IrDefault(models.Model):
     )
     user_id = fields.Many2one(
         comodel_name="res.users",
-        help="If set, this default only applies for this user.",
         index=True,
         ondelete="cascade",
+        help="If set, this default only applies for this user.",
     )
     company_id = fields.Many2one(
         comodel_name="res.company",
-        help="If set, this default only applies for this company",
         index=True,
         ondelete="cascade",
+        help="If set, this default only applies for this company",
     )
     condition = fields.Char(help="If set, applies the default upon condition.")
     json_value = fields.Char(

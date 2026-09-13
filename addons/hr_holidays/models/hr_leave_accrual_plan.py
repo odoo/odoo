@@ -17,10 +17,10 @@ class HrLeaveAccrualPlan(models.Model):
     name = fields.Char(required=True)
     time_off_type_id = fields.Many2one(
         comodel_name="hr.leave.type",
-        help="""Specify if this accrual plan can only be used with this Time Off Type.
-                Leave empty if this accrual plan can be used with any Time Off Type.""",
         index="btree_not_null",
         check_company=True,
+        help="""Specify if this accrual plan can only be used with this Time Off Type.
+                Leave empty if this accrual plan can be used with any Time Off Type.""",
     )
     employees_count = fields.Integer(
         string="Employees",
@@ -58,11 +58,11 @@ class HrLeaveAccrualPlan(models.Model):
         compute="_compute_show_transition_mode",
     )
     is_based_on_worked_time = fields.Boolean(
-        help="Only excludes requests where the time off type is set as unpaid kind of.",
         export_string_translation=False,
         compute="_compute_is_based_on_worked_time",
         store=True,
         readonly=False,
+        help="Only excludes requests where the time off type is set as unpaid kind of.",
     )
     accrued_gain_time = fields.Selection(
         selection=[

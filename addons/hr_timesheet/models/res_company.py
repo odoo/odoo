@@ -16,10 +16,10 @@ class ResCompany(models.Model):
     project_time_mode_id = fields.Many2one(
         comodel_name="uom.uom",
         string="Project Time Unit",
+        default=_default_project_time_mode_id,
         help="This will set the unit of measure used in projects and tasks.\n"
         "If you use the timesheet linked to projects, don't "
         "forget to setup the right unit of measure in your employees.",
-        default=_default_project_time_mode_id,
     )
     timesheet_encode_uom_id = fields.Many2one(
         comodel_name="uom.uom",
@@ -28,8 +28,8 @@ class ResCompany(models.Model):
     )
     internal_project_id = fields.Many2one(
         comodel_name="project.project",
-        help="Default project value for timesheet generated from time off type.",
         domain=[("is_template", "=", False)],
+        help="Default project value for timesheet generated from time off type.",
     )
 
     @api.constrains("internal_project_id")

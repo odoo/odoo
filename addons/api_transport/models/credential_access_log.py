@@ -12,15 +12,15 @@ class CredentialAccessLog(models.Model):
     service_name = fields.Char(
         related="credential_id.endpoint_id.name",
         string="Service",
-        help="Name of the API service (if credential is linked to one)",
         store=False,
+        help="Name of the API service (if credential is linked to one)",
     )
     field_accessed = fields.Char(
         help="Which credential field was accessed (api_key, bearer_token, etc.)"
     )
     success = fields.Boolean(
-        help="Whether the access was successful",
         default=True,
+        help="Whether the access was successful",
     )
     failure_reason = fields.Char(help="Reason for access failure (if applicable)")
 

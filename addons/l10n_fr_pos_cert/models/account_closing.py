@@ -22,8 +22,8 @@ class AccountSaleClosing(models.Model):
     _description = "Sale Closing"
 
     name = fields.Char(
-        help="Frequency and unique sequence number",
         required=True,
+        help="Frequency and unique sequence number",
     )
     company_id = fields.Many2one(
         comodel_name="res.company",
@@ -32,15 +32,15 @@ class AccountSaleClosing(models.Model):
     )
     date_closing_stop = fields.Datetime(
         string="Closing Date",
-        help="Date to which the values are computed",
         readonly=True,
         required=True,
+        help="Date to which the values are computed",
     )
     date_closing_start = fields.Datetime(
         string="Starting Date",
-        help="Date from which the total interval is computed",
         readonly=True,
         required=True,
+        help="Date from which the total interval is computed",
     )
     frequency = fields.Selection(
         selection=[("daily", "Daily"), ("monthly", "Monthly"), ("annually", "Annual")],
@@ -50,15 +50,15 @@ class AccountSaleClosing(models.Model):
     )
     total_interval = fields.Monetary(
         string="Period Total",
-        help="Total in receivable accounts during the interval, excluding overlapping periods",
         readonly=True,
         required=True,
+        help="Total in receivable accounts during the interval, excluding overlapping periods",
     )
     cumulative_total = fields.Monetary(
         string="Cumulative Grand Total",
-        help="Total in receivable accounts since the beginnig of times",
         readonly=True,
         required=True,
+        help="Total in receivable accounts since the beginnig of times",
     )
     sequence_number = fields.Integer(
         string="Sequence #",
@@ -68,8 +68,8 @@ class AccountSaleClosing(models.Model):
     last_order_id = fields.Many2one(
         comodel_name="pos.order",
         string="Last Pos Order",
-        help="Last Pos order included in the grand total",
         readonly=True,
+        help="Last Pos order included in the grand total",
     )
     last_order_hash = fields.Char(
         string="Last Order entry's inalteralbility hash",
@@ -79,9 +79,9 @@ class AccountSaleClosing(models.Model):
         comodel_name="res.currency",
         related="company_id.currency_id",
         string="Currency",
-        help="The company's currency",
         store=True,
         readonly=True,
+        help="The company's currency",
     )
 
     def _query_for_aml(self, company, first_move_sequence_number, date_start):

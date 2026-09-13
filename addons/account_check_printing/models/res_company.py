@@ -11,15 +11,15 @@ class ResCompany(models.Model):
             ("disabled", "None"),
         ],
         string="Check Layout",
+        default="disabled",
         help="Select the format corresponding to the check paper you will be printing your checks on.\n"
         "In order to disable the printing feature, select 'None'.",
-        default="disabled",
     )
     account_check_printing_date_label = fields.Boolean(
         string="Print Date Label",
+        default=True,
         help="This option allows you to print the date label on the check as per CPA.\n"
         "Disable this if your pre-printed check includes the date label.",
-        default=True,
     )
     account_check_printing_multi_stub = fields.Boolean(
         string="Multi-Pages Check Stub",
@@ -27,16 +27,16 @@ class ResCompany(models.Model):
     )
     account_check_printing_margin_top = fields.Float(
         string="Check Top Margin",
-        help="Adjust the margins of generated checks to make it fit your printer's settings.",
         default=0.25,
+        help="Adjust the margins of generated checks to make it fit your printer's settings.",
     )
     account_check_printing_margin_left = fields.Float(
         string="Check Left Margin",
-        help="Adjust the margins of generated checks to make it fit your printer's settings.",
         default=0.25,
+        help="Adjust the margins of generated checks to make it fit your printer's settings.",
     )
     account_check_printing_margin_right = fields.Float(
         string="Right Margin",
-        help="Adjust the margins of generated checks to make it fit your printer's settings.",
         default=0.25,
+        help="Adjust the margins of generated checks to make it fit your printer's settings.",
     )

@@ -16,20 +16,20 @@ class PaymentProvider(models.Model):
         ondelete={"nuvei": "set default"},
     )
     nuvei_merchant_identifier = fields.Char(
-        help="The code of the merchant account to use with this provider.",
         copy=False,
         required_if_provider="nuvei",
+        help="The code of the merchant account to use with this provider.",
     )
     nuvei_site_identifier = fields.Char(
-        help="The site identifier code associated with the merchant account.",
         copy=False,
-        groups="base.group_system",
         required_if_provider="nuvei",
+        groups="base.group_system",
+        help="The site identifier code associated with the merchant account.",
     )
     nuvei_secret_key = fields.Char(
         copy=False,
-        groups="base.group_system",
         required_if_provider="nuvei",
+        groups="base.group_system",
     )
 
     # === COMPUTE METHODS === #

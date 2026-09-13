@@ -106,13 +106,13 @@ class EventTrack(models.Model):
     )
     kanban_state = fields.Selection(
         selection=[("normal", "Grey"), ("done", "Green"), ("blocked", "Red")],
+        default="normal",
+        copy=False,
+        required=True,
         help="A track's kanban state indicates special situations affecting it:\n"
         " * Grey is the default situation\n"
         " * Red indicates something is preventing the progress of this track\n"
         " * Green indicates the track is ready to be pulled to the next stage",
-        default="normal",
-        copy=False,
-        required=True,
     )
     kanban_state_label = fields.Char(
         compute="_compute_kanban_state_label",
@@ -167,8 +167,8 @@ class EventTrack(models.Model):
     )
     partner_tag_line = fields.Char(
         string="Tag Line",
-        help="Description of the partner (name, function and company name)",
         compute="_compute_partner_tag_line",
+        help="Description of the partner (name, function and company name)",
     )
     image = fields.Image(
         string="Speaker Photo",
@@ -215,13 +215,13 @@ class EventTrack(models.Model):
     is_one_day = fields.Boolean(compute="_compute_is_one_day")
     track_start_remaining = fields.Integer(
         string="Minutes before track starts",
-        help="Remaining time before track starts (seconds)",
         compute="_compute_track_time_data",
+        help="Remaining time before track starts (seconds)",
     )
     track_start_relative = fields.Integer(
         string="Minutes compare to track start",
-        help="Relative time compared to track start (seconds)",
         compute="_compute_track_time_data",
+        help="Relative time compared to track start (seconds)",
     )
     website_image = fields.Image(
         max_width=1024,
@@ -275,13 +275,13 @@ class EventTrack(models.Model):
     website_cta_delay = fields.Integer(string="Show Button")
     is_website_cta_live = fields.Boolean(
         string="Is CTA Live",
-        help="CTA button is available",
         compute="_compute_cta_time_data",
+        help="CTA button is available",
     )
     website_cta_start_remaining = fields.Integer(
         string="Minutes before CTA starts",
-        help="Remaining time before CTA starts (seconds)",
         compute="_compute_cta_time_data",
+        help="Remaining time before CTA starts (seconds)",
     )
 
     @api.depends("name")

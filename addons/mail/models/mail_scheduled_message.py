@@ -76,8 +76,8 @@ class MailScheduledMessage(models.Model):
     )
     is_note = fields.Boolean(
         string="Is a note",
-        help="If the message will be posted as a Note.",
         default=False,
+        help="If the message will be posted as a Note.",
     )
     notification_parameters = fields.Text(string="Notification parameters")
     send_context = fields.Json(string="Sending Context")

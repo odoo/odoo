@@ -11,6 +11,6 @@ class EventTrackLocation(models.Model):
         required=True,
     )
     sequence = fields.Integer(
-        help='Define the order in which the location will appear on "Agenda" page',
         default=10,
+        help='Define the order in which the location will appear on "Agenda" page',
     )

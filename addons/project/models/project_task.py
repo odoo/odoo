@@ -295,19 +295,19 @@ class ProjectTask(models.Model):
     )
     date_closed = fields.Datetime(
         string="Closed Date",
-        help="When the task actually reached a closed state. Derived from "
-        "``state``, the single closure signal every metric reads.",
         compute="_compute_date_closed",
         store=True,
         index=True,
         copy=False,
         readonly=False,
+        help="When the task actually reached a closed state. Derived from "
+        "``state``, the single closure signal every metric reads.",
     )
     date_assign = fields.Datetime(
         string="Assigning Date",
-        help="Date on which this task was last assigned (or unassigned). Based on this, you can get statistics on the time it usually takes to assign tasks.",
         copy=False,
         readonly=True,
+        help="Date on which this task was last assigned (or unassigned). Based on this, you can get statistics on the time it usually takes to assign tasks.",
     )
     date_start = fields.Datetime(
         string="Start date",
@@ -408,11 +408,11 @@ class ProjectTask(models.Model):
     )
     date_last_status_change = fields.Datetime(
         string="Last Status Change",
-        help="Date on which the state of your task has last been modified.\n"
-        "Based on this information you can identify tasks that are stalling and get statistics on the time it usually takes to move tasks from one stage/state to another.",
         index=True,
         copy=False,
         readonly=True,
+        help="Date on which the state of your task has last been modified.\n"
+        "Based on this information you can identify tasks that are stalling and get statistics on the time it usually takes to move tasks from one stage/state to another.",
     )
 
     role_ids = fields.Many2many(
@@ -439,47 +439,47 @@ class ProjectTask(models.Model):
 
     scheduled_hours = fields.Float(
         string="Working Duration",
+        compute="_compute_scheduled_hours",
+        store=True,
         help="Working hours within the task's date range, computed against "
         "the company calendar.  PMBOK: Activity Duration in working time "
         "units.  One person at 100%% allocation could cover this many hours.",
-        compute="_compute_scheduled_hours",
-        store=True,
     )
     planned_resources = fields.Integer(
+        default=1,
+        tracking=True,
         help="Number of parallel resources the PM expects to need to deliver "
         "this task in its scheduled window.  Multiplies scheduled_hours to "
         "derive total effort (planned_hours).  Example: 2-day window (16h) "
         "with planned_resources=2 -> 32h effort = work for two people in "
         "parallel.  PMBOK: planned resource units.",
-        default=1,
-        tracking=True,
     )
     _planned_resources_positive = models.Constraint(
         "CHECK (planned_resources > 0)",
         "Planned Resources must be greater than zero.",
     )
     planned_hours = fields.Float(
-        help="Estimated person-hours to complete the task.  Auto-derived as "
-        "scheduled_hours x planned_resources x (allocated_percentage / 100); "
-        "user can override.  PMBOK: Activity Effort / Work (scope baseline).",
         compute="_compute_planned_hours",
         inverse="_inverse_planned_hours",
         store=True,
         readonly=False,
+        help="Estimated person-hours to complete the task.  Auto-derived as "
+        "scheduled_hours x planned_resources x (allocated_percentage / 100); "
+        "user can override.  PMBOK: Activity Effort / Work (scope baseline).",
     )
     planned_hours_manual = fields.Boolean(
         string="Planned Hours Overridden",
+        export_string_translation=False,
+        copy=False,
         help="Set when a user writes a Planned Hours that contradicts the PMBOK "
         "formula, so the formula stops overwriting their estimate. Cleared by "
         "writing back the value the formula would produce.",
-        export_string_translation=False,
-        copy=False,
     )
     allocated_hours = fields.Float(
+        tracking=True,
         help="Working hours committed across all assigned employees "
         "(sum of reservation_ids.allocated_hours).  PMBOK: Resource "
         "Assignment Work / total person-hours.",
-        tracking=True,
     )
     allocation_state = fields.Selection(
         selection=[
@@ -490,18 +490,18 @@ class ProjectTask(models.Model):
             ("over_allocated", "Over-Allocated"),
         ],
         string="Allocation Status",
+        compute="_compute_allocation_state",
+        store=True,
         help="Resource allocation health relative to plan.  Tracks whether "
         "the task has enough employees committed to cover its planned "
         "effort.  Operational signal for PMs.  Pattern analog to "
         "invoice_state on sale.order.",
-        compute="_compute_allocation_state",
-        store=True,
     )
     subtask_planned_hours = fields.Float(
         string="Sub-tasks Planned Hours",
-        help="Sum of the planned hours for all the sub-tasks (and their own sub-tasks) linked to this task. Usually less than or equal to the planned hours of this task.",
         export_string_translation=False,
         compute="_compute_subtask_planned_hours",
+        help="Sum of the planned hours for all the sub-tasks (and their own sub-tasks) linked to this task. Usually less than or equal to the planned hours of this task.",
     )
     portal_user_names = fields.Char(
         export_string_translation=False,
@@ -525,21 +525,21 @@ class ProjectTask(models.Model):
     personal_triage_id = fields.Many2one(
         comodel_name="project.task.triage",
         string="Personal Stage State",
-        help="The current user's personal stage.",
         compute="_compute_personal_triage_id",
         search="_search_personal_triage_id",
         compute_sudo=False,
         group_expand="_read_group_triage_ids",
+        help="The current user's personal stage.",
     )
     triage_id = fields.Many2one(
         comodel_name="project.triage",
         related="personal_triage_id.triage_id",
         string="Personal Triage",
-        help="The current user's personal triage bucket.",
         store=False,
         readonly=False,
         group_expand="_read_group_triage_ids",
         domain="[('user_id', '=', uid)]",
+        help="The current user's personal triage bucket.",
     )
     email_from = fields.Char()
     email_cc = fields.Char(
@@ -549,9 +549,9 @@ class ProjectTask(models.Model):
     attachment_ids = fields.One2many(
         comodel_name="ir.attachment",
         string="Attachments",
-        help="Attachments that don't come from a message",
         export_string_translation=False,
         compute="_compute_attachment_ids",
+        help="Attachments that don't come from a message",
     )
     displayed_image_id = fields.Many2one(
         comodel_name="ir.attachment",
@@ -631,8 +631,8 @@ class ProjectTask(models.Model):
         comodel_name="project.task.dependency",
         inverse_name="task_id",
         string="Dependency Details",
-        help="Typed dependencies with FS/SS/FF/SF and lag.",
         export_string_translation=False,
+        help="Typed dependencies with FS/SS/FF/SF and lag.",
     )
     dependent_on_me_ids = fields.One2many(
         comodel_name="project.task.dependency",
@@ -643,123 +643,123 @@ class ProjectTask(models.Model):
 
     cpm_date_earliest_start = fields.Datetime(
         string="Earliest Start",
-        help="Computed by critical path analysis (forward pass).",
         export_string_translation=False,
         copy=False,
+        help="Computed by critical path analysis (forward pass).",
     )
     cpm_date_latest_start = fields.Datetime(
         string="Latest Start",
-        help="Computed by critical path analysis (backward pass).",
         export_string_translation=False,
         copy=False,
+        help="Computed by critical path analysis (backward pass).",
     )
     total_float = fields.Float(
         string="Total Float (hours)",
-        help="Latest Start - Earliest Start. Zero = critical path.",
         export_string_translation=False,
         copy=False,
+        help="Latest Start - Earliest Start. Zero = critical path.",
     )
     is_critical_path = fields.Boolean(
         string="On Critical Path",
-        help="True when total_float is zero (no scheduling slack).",
         export_string_translation=False,
         copy=False,
+        help="True when total_float is zero (no scheduling slack).",
     )
     cpm_date_start = fields.Datetime(
         string="CPM Start",
-        help="Calendar-aware start date computed by critical path analysis. "
-        "Distinct from date_start (the user-entered scheduled start).",
         export_string_translation=False,
         copy=False,
+        help="Calendar-aware start date computed by critical path analysis. "
+        "Distinct from date_start (the user-entered scheduled start).",
     )
     cpm_date_end = fields.Datetime(
         string="CPM End",
+        export_string_translation=False,
+        copy=False,
         help="Calendar-aware end date computed by critical path analysis. "
         "Distinct from date_end (the user-entered deadline) and from "
         "date_closed (actual completion).",
-        export_string_translation=False,
-        copy=False,
     )
 
     is_overallocated = fields.Boolean(
         string="Overallocated Assignee",
+        export_string_translation=False,
+        compute="_compute_is_overallocated",
         help="True when any of this task's reservations conflicts in time "
         "with another reservation of the same resource summing more "
         "than 100% allocation (PMBOK concurrent overcommit).",
-        export_string_translation=False,
-        compute="_compute_is_overallocated",
     )
 
     queue_time_hours = fields.Float(
         string="Queue Time (hours)",
-        help="Working hours from task creation to first assignment.",
         digits=(16, 2),
         compute="_compute_elapsed",
         store=True,
         aggregator="avg",
+        help="Working hours from task creation to first assignment.",
     )
     queue_time_days = fields.Float(
         string="Queue Time (days)",
-        help="Working days from task creation to first assignment.",
         compute="_compute_elapsed",
         store=True,
         aggregator="avg",
+        help="Working days from task creation to first assignment.",
     )
     lead_time_hours = fields.Float(
         string="Lead Time (hours)",
-        help="Working hours from task creation to closure. Includes queue wait.",
         digits=(16, 2),
         compute="_compute_elapsed",
         store=True,
         aggregator="avg",
+        help="Working hours from task creation to closure. Includes queue wait.",
     )
     lead_time_days = fields.Float(
         string="Lead Time (days)",
-        help="Working days from task creation to closure. Includes queue wait.",
         compute="_compute_elapsed",
         store=True,
         aggregator="avg",
+        help="Working days from task creation to closure. Includes queue wait.",
     )
     cycle_time_hours = fields.Float(
         string="Cycle Time (hours)",
-        help="Working hours from first assignment to closure. Excludes queue wait.",
         digits=(16, 2),
         compute="_compute_elapsed",
         store=True,
         aggregator="avg",
+        help="Working hours from first assignment to closure. Excludes queue wait.",
     )
     cycle_time_days = fields.Float(
         string="Cycle Time (days)",
-        help="Working days from first assignment to closure. Excludes queue wait.",
         compute="_compute_elapsed",
         store=True,
         aggregator="avg",
+        help="Working days from first assignment to closure. Excludes queue wait.",
     )
 
     deadline_met = fields.Selection(
         selection=[("met", "Met"), ("missed", "Missed")],
         string="Deadline Result",
-        help="Whether this task was closed on or before its deadline. "
-        "Empty when the task has no deadline or is not yet closed — a "
-        "distinct case from 'missed', which a Boolean could not represent.",
         export_string_translation=False,
         compute="_compute_deadline_met",
         store=True,
+        help="Whether this task was closed on or before its deadline. "
+        "Empty when the task has no deadline or is not yet closed — a "
+        "distinct case from 'missed', which a Boolean could not represent.",
     )
 
     cost_of_delay = fields.Float(
         string="Cost of Delay",
+        tracking=True,
         help="Estimated weekly cost of not completing this task (in currency). "
         "Used to compute CD3 score for value-based prioritization.",
-        tracking=True,
     )
     cd3_score = fields.Float(
         string="CD3 Score",
-        help="Cost of Delay Divided by Duration (CD3). Higher = do first. "
-        "Computed as cost_of_delay / planned_hours when both are set.",
         export_string_translation=False,
         compute="_compute_cd3_score",
         store=True,
+        help="Cost of Delay Divided by Duration (CD3). Higher = do first. "
+        "Computed as cost_of_delay / planned_hours when both are set.",
     )
 
     sprint_id = fields.Many2one(
@@ -834,13 +834,13 @@ class ProjectTask(models.Model):
     )
     milestone_id = fields.Many2one(
         comodel_name="project.milestone",
-        help="Deliver your services automatically when a milestone is reached by linking it to a sales order item.",
         compute="_compute_milestone_id",
         store=True,
         index="btree_not_null",
         readonly=False,
         domain="[('project_id', '=', project_id)]",
         tracking=True,
+        help="Deliver your services automatically when a milestone is reached by linking it to a sales order item.",
     )
     has_late_and_unreached_milestone = fields.Boolean(
         export_string_translation=False,
@@ -891,6 +891,7 @@ class ProjectTask(models.Model):
     )
 
     display_name = fields.Char(
+        inverse="_inverse_display_name",
         help="""Use these keywords in the title to set new tasks:\n
             #tags Set tags on the task
             @user Assign the task to a user
@@ -898,7 +899,6 @@ class ProjectTask(models.Model):
             !! Set the task a high priority
             !!! Set the task a urgent priority\n
             Make sure to use the right format and order e.g. Improve the configuration screen #feature #v16 @Mitchell !""",
-        inverse="_inverse_display_name",
     )
     link_preview_name = fields.Char(
         export_string_translation=False,

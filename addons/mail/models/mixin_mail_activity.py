@@ -38,11 +38,11 @@ class MixinMailActivity(models.AbstractModel):
     )
     activity_state = fields.Selection(
         selection=[("overdue", "Overdue"), ("today", "Today"), ("planned", "Planned")],
-        help="Status based on activities\nOverdue: Due date is already passed\n"
-        "Today: Activity date is today\nPlanned: Future activities.",
         compute="_compute_activity_state",
         search="_search_activity_state",
         groups="base.group_user",
+        help="Status based on activities\nOverdue: Due date is already passed\n"
+        "Today: Activity date is today\nPlanned: Future activities.",
     )
     activity_user_id: ResUsers = fields.Many2one(
         comodel_name="res.users",
@@ -89,16 +89,16 @@ class MixinMailActivity(models.AbstractModel):
     )
     activity_exception_decoration = fields.Selection(
         selection=[("warning", "Alert"), ("danger", "Error")],
-        help="Type of the exception activity on record.",
         compute="_compute_activity_exception_type",
         search="_search_activity_exception_decoration",
         groups="base.group_user",
+        help="Type of the exception activity on record.",
     )
     activity_exception_icon = fields.Char(
         string="Icon",
-        help="Icon to indicate an exception activity.",
         compute="_compute_activity_exception_type",
         groups="base.group_user",
+        help="Icon to indicate an exception activity.",
     )
 
     ACTIVITY_STATE_URGENCY = ("overdue", "today", "planned")

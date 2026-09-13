@@ -41,8 +41,8 @@ class PaymentToken(models.Model):
     )
     provider_ref = fields.Char(
         string="Provider Reference",
-        help="The provider reference of the token of the transaction.",
         required=True,
+        help="The provider reference of the token of the transaction.",
     )  # This is not the same thing as the provider reference of the transaction.
     transaction_ids = fields.One2many(
         comodel_name="payment.transaction",

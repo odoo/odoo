@@ -10,9 +10,9 @@ class ResCompany(models.Model):
     l10n_sa_private_key_id = fields.Many2one(
         comodel_name="certificate.key",
         string="ZATCA Private key",
-        help="The private key used to generate the CSR and obtain certificates",
         copy=False,
         domain=[("public", "=", False)],
+        help="The private key used to generate the CSR and obtain certificates",
     )
 
     l10n_sa_api_mode = fields.Selection(
@@ -21,10 +21,10 @@ class ResCompany(models.Model):
             ("preprod", "Simulation (Pre-Production)"),
             ("prod", "Production"),
         ],
-        help="Specifies which API the system should use",
         default="sandbox",
         copy=False,
         required=True,
+        help="Specifies which API the system should use",
     )
 
     l10n_sa_edi_building_number = fields.Char(

@@ -16,11 +16,11 @@ class AccountUpdateTaxTagsWizard(models.TransientModel):
     )
     date_from = fields.Date(
         string="Starting from",
-        help="Date from which journal items will be updated.",
         compute="_compute_date_from",
         store=True,
         readonly=False,
         required=True,
+        help="Date from which journal items will be updated.",
     )
     display_lock_date_warning = fields.Boolean(
         compute="_compute_display_lock_date_warning"

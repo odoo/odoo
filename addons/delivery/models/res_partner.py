@@ -8,8 +8,8 @@ class ResPartner(models.Model):
     property_delivery_carrier_id = fields.Many2one(
         comodel_name="delivery.carrier",
         string="Delivery Method",
-        help="Used in sales orders.",
         company_dependent=True,
+        help="Used in sales orders.",
     )
     is_pickup_location = fields.Boolean()  # Whether it is a pickup point address.
 

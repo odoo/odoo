@@ -47,13 +47,15 @@ class GamificationStreakType(models.Model):
     model_id = fields.Many2one(
         comodel_name="ir.model",
         string="Target Model",
-        help="The model where activity is tracked (e.g. crm.lead, account.move).",
         required=True,
         ondelete="cascade",
+        help="The model where activity is tracked (e.g. crm.lead, account.move).",
     )
     model_name = fields.Char(related="model_id.model")
     domain = fields.Char(
         string="Activity Domain",
+        default="[]",
+        required=True,
         help="Domain to filter records.  May reference 'user' (current user) "
         "and 'date_from' / 'date_to' (the day being checked).\n"
         "Every candidate user whose domain evaluates to the same text shares "
@@ -64,27 +66,25 @@ class GamificationStreakType(models.Model):
         "supported shape for a company-wide/shared streak (e.g. 'did "
         "anyone log a sale today'); it is a misconfiguration if a per-user "
         "streak was intended.",
-        default="[]",
-        required=True,
     )
     date_field_id = fields.Many2one(
         comodel_name="ir.model.fields",
-        help="The date/datetime field used to check daily activity.",
         required=True,
         ondelete="cascade",
+        help="The date/datetime field used to check daily activity.",
     )
 
     # Rewards
     karma_bonus = fields.Integer(
         string="Daily Karma Bonus",
+        default=0,
         help="Karma granted each day the streak is maintained.  "
         "Milestone days (7, 30, 100, 365) multiply this value.",
-        default=0,
     )
     freeze_allowance = fields.Integer(
         string="Freeze Days per Month",
-        help="Number of days per month a user can skip without breaking the streak.",
         default=2,
+        help="Number of days per month a user can skip without breaking the streak.",
     )
 
     streak_ids = fields.One2many(
@@ -244,15 +244,15 @@ class GamificationStreak(models.Model):
     )
     last_checked_date = fields.Date(
         string="Last Checked",
-        help="Day the streak cron last evaluated this streak, whatever the "
-        "outcome. Used to make the cron idempotent.",
         index=True,
         readonly=True,
+        help="Day the streak cron last evaluated this streak, whatever the "
+        "outcome. Used to make the cron idempotent.",
     )
     freeze_remaining = fields.Integer(
         string="Freeze Days Left",
-        help="Days remaining this month where the streak won't break.",
         default=0,
+        help="Days remaining this month where the streak won't break.",
     )
     state = fields.Selection(
         selection=[("active", "Active"), ("broken", "Broken")],

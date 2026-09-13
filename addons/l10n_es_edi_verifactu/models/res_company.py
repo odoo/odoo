@@ -26,9 +26,9 @@ class ResCompany(models.Model):
     )
     l10n_es_edi_verifactu_next_batch_time = fields.Datetime(
         string="Veri*Factu Next Batch Time",
-        help="The Datetime at which the next submission to the AEAT can be made.",
         copy=False,
         readonly=True,
+        help="The Datetime at which the next submission to the AEAT can be made.",
     )
     l10n_es_edi_verifactu_special_vat_regime = fields.Selection(
         selection=[

@@ -20,10 +20,10 @@ class ProductProduct(models.Model):
     )
 
     base_unit_count = fields.Float(
-        help="Display base unit price on your eCommerce pages. Set to 0 to hide it for this"
-        " product.",
         default=1,
         required=True,
+        help="Display base unit price on your eCommerce pages. Set to 0 to hide it for this"
+        " product.",
     )
     base_unit_id = fields.Many2one(
         comodel_name="website.base.unit",
@@ -35,15 +35,15 @@ class ProductProduct(models.Model):
         compute="_compute_base_unit_price",
     )
     base_unit_name = fields.Char(
+        compute="_compute_base_unit_name",
         help="Displays the custom unit for the products if defined or the selected unit of measure"
         " otherwise.",
-        compute="_compute_base_unit_name",
     )
 
     website_url = fields.Char(
         string="Website URL",
-        help="The full URL to access the document through the website.",
         compute="_compute_product_website_url",
+        help="The full URL to access the document through the website.",
     )
 
     def _get_base_unit_price(self, price):

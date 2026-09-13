@@ -30,8 +30,8 @@ class Test_Access_RightSome_Obj(models.Model):
         )
     )
     read_and_write_gated = fields.Integer(
-        groups="test_access_rights.test_group",
         write_groups="base.group_system",
+        groups="test_access_rights.test_group",
     )
 
     def _compute_forbidden_searchable(self):

@@ -16,15 +16,15 @@ class PaymentMethod(models.Model):
         required=True,
     )
     code = fields.Char(
-        help="The technical code of this payment method.",
         required=True,
+        help="The technical code of this payment method.",
     )
     sequence = fields.Integer(default=1)
     primary_payment_method_id = fields.Many2one(
         comodel_name="payment.method",
+        index="btree_not_null",
         help="The primary payment method of the current payment method, if the latter is a brand."
         '\nFor example, "Card" is the primary payment method of the card brand "VISA".',
-        index="btree_not_null",
     )
     brand_ids = fields.One2many(
         comodel_name="payment.method",
@@ -44,10 +44,10 @@ class PaymentMethod(models.Model):
     )
     active = fields.Boolean(default=True)
     image = fields.Image(
-        help="The base image used for this payment method; in a 64x64 px format.",
         max_width=64,
         max_height=64,
         required=True,
+        help="The base image used for this payment method; in a 64x64 px format.",
     )
     image_payment_form = fields.Image(
         related="image",
@@ -76,9 +76,9 @@ class PaymentMethod(models.Model):
             ("partial", "Full & Partial"),
         ],
         string="Manual Capture",
-        help="The payment is authorized and captured in two steps instead of one.",
         default="none",
         required=True,
+        help="The payment is authorized and captured in two steps instead of one.",
     )
     support_refund = fields.Selection(
         selection=[
@@ -87,9 +87,9 @@ class PaymentMethod(models.Model):
             ("partial", "Full & Partial"),
         ],
         string="Refund",
-        help="Refund is a feature allowing to refund customers directly from the payment in Odoo.",
         default="none",
         required=True,
+        help="Refund is a feature allowing to refund customers directly from the payment in Odoo.",
     )
     supported_country_ids = fields.Many2many(
         comodel_name="res.country",
@@ -100,10 +100,10 @@ class PaymentMethod(models.Model):
     supported_currency_ids = fields.Many2many(
         comodel_name="res.currency",
         string="Currencies",
+        context={"active_test": False},
         help="The list of currencies for that are supported by this payment method (if the provider"
         " allows it). When paying with another currency, this payment method is not available "
         "to customers.",
-        context={"active_test": False},
     )
 
     # === COMPUTE METHODS === #

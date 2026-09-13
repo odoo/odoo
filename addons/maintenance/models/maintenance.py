@@ -259,9 +259,9 @@ class MaintenanceRequest(models.Model):
     )
     description = fields.Html()
     request_date = fields.Date(
-        help="Date requested for the maintenance to happen",
         default=fields.Date.context_today,
         tracking=True,
+        help="Date requested for the maintenance to happen",
     )
     owner_user_id = fields.Many2one(
         comodel_name="res.users",
@@ -315,8 +315,8 @@ class MaintenanceRequest(models.Model):
     )
     # active = fields.Boolean(default=True, help="Set active to false to hide the maintenance request without deleting it.")
     archive = fields.Boolean(
-        help="Set archive to true to hide the maintenance request without deleting it.",
         default=False,
+        help="Set archive to true to hide the maintenance request without deleting it.",
     )
     maintenance_type = fields.Selection(
         selection=[("corrective", "Corrective"), ("preventive", "Preventive")],
@@ -328,10 +328,10 @@ class MaintenanceRequest(models.Model):
     )
     schedule_end = fields.Datetime(
         string="Scheduled End",
-        help="Expected completion date and time of the maintenance request.",
         compute="_compute_schedule_end",
         store=True,
         readonly=False,
+        help="Expected completion date and time of the maintenance request.",
     )
     maintenance_team_id = fields.Many2one(
         comodel_name="maintenance.team",
@@ -345,9 +345,9 @@ class MaintenanceRequest(models.Model):
         check_company=True,
     )
     duration = fields.Float(
-        help="Duration in hours.",
         compute="_compute_duration",
         store=True,
+        help="Duration in hours.",
     )
     done = fields.Boolean(related="stage_id.done")
     instruction_type = fields.Selection(

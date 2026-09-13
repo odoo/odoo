@@ -107,8 +107,8 @@ class CrmLead(models.Model):
     )
     user_company_ids = fields.Many2many(
         comodel_name="res.company",
-        help="UX: Limit to lead company or all if no company",
         compute="_compute_user_company_ids",
+        help="UX: Limit to lead company or all if no company",
     )
     team_id = fields.Many2one(
         comodel_name="crm.team",
@@ -276,10 +276,10 @@ class CrmLead(models.Model):
     partner_id = fields.Many2one(
         comodel_name="res.partner",
         string="Contact",
-        help="Linked partner (optional). Usually created when converting the lead. You can find a partner by its Name, TIN, Email or Internal Reference.",
         index=True,
         check_company=True,
         tracking=10,
+        help="Linked partner (optional). Usually created when converting the lead. You can find a partner by its Name, TIN, Email or Internal Reference.",
     )
     partner_is_blacklisted = fields.Boolean(
         related="partner_id.is_blacklisted",
@@ -295,12 +295,12 @@ class CrmLead(models.Model):
     )
     partner_name = fields.Char(
         string="Company Name",
-        help="The name of the future partner company that will be created while converting the lead into opportunity",
         compute="_compute_partner_name",
         store=True,
         index="trigram",
         readonly=False,
         tracking=20,
+        help="The name of the future partner company that will be created while converting the lead into opportunity",
     )
     function = fields.Char(
         string="Job Position",
@@ -348,10 +348,10 @@ class CrmLead(models.Model):
         store=True,
     )
     website = fields.Char(
-        help="Website of the contact",
         compute="_compute_website",
         store=True,
         readonly=False,
+        help="Website of the contact",
     )
     lang_id = fields.Many2one(
         comodel_name="res.lang",

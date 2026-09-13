@@ -66,18 +66,18 @@ class AccountReturn(models.Model):
             ("paid", "Pay"),
         ],
         string="Generic State",
-        help="The state of the return for generic tax report flows",
         default="new",
         tracking=True,
+        help="The state of the return for generic tax report flows",
     )
     generic_state_only_pay = fields.Selection(
         selection=[
             ("new", "New"),
             ("paid", "Pay"),
         ],
-        help="The state of the return for report flows when only payment is needed",
         default="new",
         tracking=True,
+        help="The state of the return for report flows when only payment is needed",
     )
     generic_state_review_submit = fields.Selection(
         selection=[
@@ -85,18 +85,18 @@ class AccountReturn(models.Model):
             ("reviewed", "Review"),
             ("submitted", "Submit"),
         ],
-        help="The state of the return for report flows when review and submission are needed",
         default="new",
         tracking=True,
+        help="The state of the return for report flows when review and submission are needed",
     )
     generic_state_review = fields.Selection(
         selection=[
             ("new", "New"),
             ("reviewed", "Review"),
         ],
-        help="The default state for audit and custom generated return types",
         default="new",
         tracking=True,
+        help="The default state for audit and custom generated return types",
     )
     is_completed = fields.Boolean(
         default=False,
@@ -165,8 +165,8 @@ class AccountReturn(models.Model):
     is_report_set = fields.Boolean(compute="_compute_is_report_set")
     has_move_entries = fields.Boolean(compute="_compute_has_move_entries")
     report_opened_once = fields.Boolean(
-        help="Has the report been opened once",
         default=False,
+        help="Has the report been opened once",
     )
     report_name = fields.Char(
         related="type_id.report_id.display_name",

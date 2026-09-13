@@ -49,9 +49,9 @@ class EventEventTicket(models.Model):
     is_expired = fields.Boolean(compute="_compute_is_expired")
     sale_available = fields.Boolean(
         string="Is Available",
-        help="Whether it is possible to sell these tickets",
         compute="_compute_sale_available",
         compute_sudo=True,
+        help="Whether it is possible to sell these tickets",
     )
     registration_ids = fields.One2many(
         comodel_name="event.registration",
@@ -81,13 +81,13 @@ class EventEventTicket(models.Model):
     )
     limit_max_per_order = fields.Integer(
         string="Limit per Order",
-        help="Maximum of this product per order.\nSet to 0 to ignore this rule",
         default=0,
+        help="Maximum of this product per order.\nSet to 0 to ignore this rule",
     )
     is_sold_out = fields.Boolean(
         string="Sold Out",
-        help="Whether seats are not available for this ticket.",
         compute="_compute_is_sold_out",
+        help="Whether seats are not available for this ticket.",
     )
     # reports
     color = fields.Char(default="#875A7B")

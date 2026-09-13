@@ -37,9 +37,9 @@ class PaymentCaptureWizard(models.TransientModel):
     void_remaining_amount = fields.Boolean()
     currency_id = fields.Many2one(related="transaction_ids.currency_id")
     support_partial_capture = fields.Boolean(
-        help="Whether each of the transactions' provider supports the partial capture.",
         compute="_compute_support_partial_capture",
         compute_sudo=True,
+        help="Whether each of the transactions' provider supports the partial capture.",
     )
     has_draft_children = fields.Boolean(compute="_compute_has_draft_children")
     has_remaining_amount = fields.Boolean(compute="_compute_has_remaining_amount")

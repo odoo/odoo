@@ -77,25 +77,25 @@ class AccountAccount(models.Model):
             ("off_balance", "Off-Balance Sheet"),
         ],
         string="Type",
-        help="Account Type is used for information purpose, to generate "
-        "country-specific legal reports, and set the rules to close a "
-        "fiscal year and generate opening entries.",
         compute="_compute_account_type_and_tags",
         precompute=True,
         store=True,
         index=True,
         readonly=False,
         required=True,
+        help="Account Type is used for information purpose, to generate "
+        "country-specific legal reports, and set the rules to close a "
+        "fiscal year and generate opening entries.",
     )
     include_initial_balance = fields.Boolean(
         string="Bring Accounts Balance Forward",
+        compute="_compute_include_initial_balance",
+        search="_search_include_initial_balance",
         help="Used in reports to know if we should consider journal items "
         "from the beginning of time instead of from the fiscal year "
         "only. Account types that should be reset to zero at each new "
         "fiscal year (like expenses, revenue..) should not have this "
         "option set.",
-        compute="_compute_include_initial_balance",
-        search="_search_include_initial_balance",
     )
     internal_group = fields.Selection(
         selection=[
@@ -111,12 +111,12 @@ class AccountAccount(models.Model):
     )
     reconcile = fields.Boolean(
         string="Allow Reconciliation",
-        help="Check this box if this account allows invoices & payments "
-        "matching of journal items.",
         compute="_compute_reconcile",
         precompute=True,
         store=True,
         readonly=False,
+        help="Check this box if this account allows invoices & payments "
+        "matching of journal items.",
     )
     note = fields.Text(string="Internal Notes")
     company_ids = fields.Many2many(
@@ -138,12 +138,12 @@ class AccountAccount(models.Model):
         comodel_name="account.account.tag",
         relation="account_account_account_tag",
         string="Tags",
-        help="Optional tags you may want to assign for custom reporting",
         compute="_compute_account_type_and_tags",
         precompute=True,
         store=True,
         readonly=False,
         ondelete="restrict",
+        help="Optional tags you may want to assign for custom reporting",
     )
     root_id = fields.Many2one(
         comodel_name="account.root",
@@ -151,11 +151,11 @@ class AccountAccount(models.Model):
         search="_search_account_root",
     )
     non_trade = fields.Boolean(
+        default=False,
         help="If set, this account will belong to Non Trade "
         "Receivable/Payable in reports and filters.\n"
         "If not, this account will belong to Trade "
         "Receivable/Payable in reports and filters.",
-        default=False,
     )
     display_mapping_tab = fields.Boolean(
         default=lambda self: len(self.env.user.company_ids) > 1,

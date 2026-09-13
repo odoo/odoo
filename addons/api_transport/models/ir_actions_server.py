@@ -18,12 +18,12 @@ class IrActionsServer(models.Model):
     webhook_endpoint_id = fields.Many2one(
         comodel_name="api.endpoint.outbound",
         string="Through Endpoint",
+        ondelete="restrict",
         help="Send this webhook through a configured outbound endpoint, so it "
         "carries that endpoint's credential, is subject to its rate limit and is "
         "recorded in its event log. The webhook URL must be on the endpoint's host "
         "or listed in its Allowed Hosts. Leave empty to POST the URL directly with "
         "no authentication, which is what a webhook action does by default.",
-        ondelete="restrict",
     )
 
     @api.constrains("webhook_endpoint_id", "state")

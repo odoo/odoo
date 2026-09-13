@@ -28,10 +28,10 @@ class ProductTemplate(models.Model):
     )
     lot_valuated = fields.Boolean(
         string="Valuation by Lot/Serial",
-        help="If checked, the valuation will be specific by Lot/Serial number.",
         compute="_compute_lot_valuated",
         store=True,
         readonly=False,
+        help="If checked, the valuation will be specific by Lot/Serial number.",
     )
 
     def _search_valuation(self, operator, value):
@@ -227,10 +227,10 @@ class ProductProduct(models.Model):
     company_currency_id = fields.Many2one(
         comodel_name="res.currency",
         string="Valuation Currency",
-        help="Technical field to correctly show the currently selected company's currency that corresponds "
-        "to the totaled value of the product's valuation layers",
         compute="_compute_value",
         compute_sudo=True,
+        help="Technical field to correctly show the currently selected company's currency that corresponds "
+        "to the totaled value of the product's valuation layers",
     )
 
     @api.depends_context("to_date", "company", "allowed_company_ids", "warehouse_id")
@@ -953,52 +953,52 @@ class ProductCategory(models.Model):
 
     anglo_saxon_accounting = fields.Boolean(
         string="Use Anglo-Saxon Accounting",
-        help="If checked, the product will be valued using the Anglo-Saxon accounting method.",
         compute="_compute_anglo_saxon_accounting",
+        help="If checked, the product will be valued using the Anglo-Saxon accounting method.",
     )
     property_valuation = fields.Selection(
         selection=VALUATION_SELECTION,
         string="Inventory Valuation",
-        help="""Periodic: The accounting entries are suggested manually in the inventory valuation report.
-        Perpetual: An accounting entry is automatically created to value the inventory when a product is billed or invoiced.
-        """,
         copy=True,
         company_dependent=True,
         tracking=True,
+        help="""Periodic: The accounting entries are suggested manually in the inventory valuation report.
+        Perpetual: An accounting entry is automatically created to value the inventory when a product is billed or invoiced.
+        """,
     )
     property_cost_method = fields.Selection(
         selection=COST_METHOD_SELECTION,
         string="Costing Method",
-        help="""Standard Price: The products are valued at their standard cost defined on the product.
-        Average Cost (AVCO): The products are valued at weighted average cost.
-        First In First Out (FIFO): The products are valued supposing those that enter the company first will also leave it first.
-        """,
         default=lambda self: self.env.company.cost_method,
         copy=True,
         company_dependent=True,
         tracking=True,
+        help="""Standard Price: The products are valued at their standard cost defined on the product.
+        Average Cost (AVCO): The products are valued at weighted average cost.
+        First In First Out (FIFO): The products are valued supposing those that enter the company first will also leave it first.
+        """,
     )
     property_stock_journal = fields.Many2one(
         comodel_name="account.journal",
         string="Stock Journal",
-        help="When doing automated inventory valuation, this is the Accounting Journal in which entries will be automatically posted when stock moves are processed.",
         company_dependent=True,
+        help="When doing automated inventory valuation, this is the Accounting Journal in which entries will be automatically posted when stock moves are processed.",
     )
     property_stock_valuation_account_id = fields.Many2one(
         comodel_name="account.account",
         string="Stock Valuation Account",
-        help="""When automated inventory valuation is enabled on a product, this account will hold the current value of the products.""",
         company_dependent=True,
         ondelete="restrict",
         check_company=True,
+        help="""When automated inventory valuation is enabled on a product, this account will hold the current value of the products.""",
     )
     property_price_difference_account_id = fields.Many2one(
         comodel_name="account.account",
         string="Price Difference Account",
-        help="""With perpetual valuation, this account will hold the price difference between the standard price and the bill price.""",
         company_dependent=True,
         ondelete="restrict",
         check_company=True,
+        help="""With perpetual valuation, this account will hold the price difference between the standard price and the bill price.""",
     )
     account_stock_variation_id = fields.Many2one(
         comodel_name="account.account",

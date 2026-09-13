@@ -53,8 +53,8 @@ class LoyaltyProgram(models.Model):
     currency_symbol = fields.Char(related="currency_id.symbol")
     pricelist_ids = fields.Many2many(
         comodel_name="product.pricelist",
-        help="This program is specific to this pricelist set.",
         domain="[('currency_id', '=', currency_id)]",
+        help="This program is specific to this pricelist set.",
     )
 
     total_order_count = fields.Integer(compute="_compute_total_order_count")
@@ -106,8 +106,8 @@ class LoyaltyProgram(models.Model):
     coupon_count = fields.Integer(compute="_compute_coupon_count")
     coupon_count_label = fields.Char(
         string="Items Name",
-        help="What this program's cards are called: coupons, gift cards, eWallets...",
         compute="_compute_coupon_count_label",
+        help="What this program's cards are called: coupons, gift cards, eWallets...",
     )
     coupon_count_display = fields.Char(
         string="Items",
@@ -156,20 +156,20 @@ class LoyaltyProgram(models.Model):
     )
     trigger = fields.Selection(
         selection=[("auto", "Automatic"), ("with_code", "Use a code")],
+        compute="_compute_from_program_type",
+        store=True,
+        readonly=False,
         help="""
         Automatic: Customers will be eligible for a reward automatically in their cart.
         Use a code: Customers will be eligible for a reward if they enter a code.
         """,
-        compute="_compute_from_program_type",
-        store=True,
-        readonly=False,
     )
     portal_visible = fields.Boolean(
+        default=False,
         help="""
         Show in web portal, PoS customer ticket, eCommerce checkout, the number of points available
          and used by reward.
         """,
-        default=False,
     )
     portal_point_name = fields.Char(
         translate=True,
@@ -178,25 +178,25 @@ class LoyaltyProgram(models.Model):
         readonly=False,
     )
     is_nominative = fields.Boolean(
-        help="Whether this program's points accumulate on a card held by a customer,"
-        " rather than being spent on the order that earned them.",
         compute="_compute_is_nominative",
         search="_search_is_nominative",
+        help="Whether this program's points accumulate on a card held by a customer,"
+        " rather than being spent on the order that earned them.",
     )
     is_payment_program = fields.Boolean(compute="_compute_is_payment_program")
 
     payment_program_discount_product_id = fields.Many2one(
         comodel_name="product.product",
         string="Discount Product",
-        help="Product used in the sales order to apply the discount.",
         compute="_compute_payment_program_discount_product_id",
         readonly=True,
+        help="Product used in the sales order to apply the discount.",
     )
 
     # Technical field used for a label
     available_on = fields.Boolean(
-        help="Manage where your program should be available for use.",
         store=False,
+        help="Manage where your program should be available for use.",
     )
 
     _check_max_usage = models.Constraint(

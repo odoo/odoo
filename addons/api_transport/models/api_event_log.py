@@ -24,62 +24,62 @@ class ApiEventLog(models.Model):
             ("inbound", "Inbound"),
             ("outbound", "Outbound"),
         ],
-        help="Direction of communication: inbound (receiving) or outbound (sending)",
         index=True,
         required=True,
+        help="Direction of communication: inbound (receiving) or outbound (sending)",
     )
     channel_id = fields.Reference(
         selection="_selection_channel_models",
-        help="Reference to the channel (endpoint or service) for this event",
         index=True,
         required=True,
+        help="Reference to the channel (endpoint or service) for this event",
     )
     company_id = fields.Many2one(
         comodel_name="res.company",
-        help="Company that owns this log entry. Defaults to the channel "
-        "(endpoint) company, but the caller can override at create time "
-        "with the effective request company (e.g. the credential's "
-        "company in multi-tenant outbound calls).",
         compute="_compute_company_id",
         store=True,
         index=True,
         readonly=False,
+        help="Company that owns this log entry. Defaults to the channel "
+        "(endpoint) company, but the caller can override at create time "
+        "with the effective request company (e.g. the credential's "
+        "company in multi-tenant outbound calls).",
     )
     user_id = fields.Many2one(
         comodel_name="res.users",
-        help="User who initiated the request (outbound) or processed the event (inbound)",
         index=True,
+        help="User who initiated the request (outbound) or processed the event (inbound)",
     )
     credential_id = fields.Many2one(
         comodel_name="credential.credential",
-        help="Credential used for this communication",
         index=True,
         ondelete="set null",
+        help="Credential used for this communication",
     )
     display_name = fields.Char(
         compute="_compute_display_name",
         store=True,
     )
     channel_name = fields.Char(
-        help="Cached channel name for faster searches",
         compute="_compute_channel_name",
         store=True,
         index=True,
+        help="Cached channel name for faster searches",
     )
 
     timestamp = fields.Datetime(
-        help="When the event was received (inbound) or request was initiated (outbound)",
         default=fields.Datetime.now,
         index=True,
         required=True,
+        help="When the event was received (inbound) or request was initiated (outbound)",
     )
     date_completed = fields.Datetime(
-        help="Timestamp when processing completed",
         readonly=True,
+        help="Timestamp when processing completed",
     )
     duration_ms = fields.Float(
-        help="Processing time in milliseconds",
         digits=(10, 2),
+        help="Processing time in milliseconds",
     )
     performance_rating = fields.Selection(
         selection=[
@@ -97,10 +97,10 @@ class ApiEventLog(models.Model):
         help="Request body (inbound: received payload, outbound: sent body)"
     )
     request_payload_hash = fields.Char(
-        help="SHA256 hash for duplicate detection",
         compute="_compute_payload_hash",
         store=True,
         index=True,
+        help="SHA256 hash for duplicate detection",
     )
     request_payload_hash_override = fields.Char(
         help="The hash of the body as received, set when the body itself was "
@@ -163,21 +163,21 @@ class ApiEventLog(models.Model):
     )
 
     source_ip = fields.Char(
-        help="IP address of the client that sent the event",
         index=True,
+        help="IP address of the client that sent the event",
     )
 
     event_type = fields.Char(
-        help="Type of event (e.g., 'payment.success', 'push'). Used for inbound webhooks.",
         index=True,
+        help="Type of event (e.g., 'payment.success', 'push'). Used for inbound webhooks.",
     )
     event_id_external = fields.Char(
-        help="Unique event ID from external service for deduplication",
         index=True,
+        help="Unique event ID from external service for deduplication",
     )
     signature_verified = fields.Boolean(
-        help="Whether the inbound request signature was successfully verified",
         default=False,
+        help="Whether the inbound request signature was successfully verified",
     )
     user_agent = fields.Char(help="HTTP User-Agent header from the inbound request")
     processing_result = fields.Text(
@@ -194,10 +194,10 @@ class ApiEventLog(models.Model):
             ("duplicate", "Duplicate"),
             ("retry", "Retry Scheduled"),
         ],
-        help="Current processing state",
         default="pending",
         index=True,
         required=True,
+        help="Current processing state",
     )
     is_success = fields.Boolean(
         compute="_compute_is_success",
@@ -235,8 +235,8 @@ class ApiEventLog(models.Model):
     cache_key = fields.Char(index=True)
 
     trace_id = fields.Char(
-        help="Unique ID for correlating related events",
         index=True,
+        help="Unique ID for correlating related events",
     )
     origin_model = fields.Char(help="Odoo model that triggered this communication")
     origin_record_id = fields.Integer()

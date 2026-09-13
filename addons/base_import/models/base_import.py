@@ -428,8 +428,8 @@ class Base_ImportImport(models.TransientModel):
 
     res_model = fields.Char(string="Model")
     file = fields.Binary(
-        help="File to check and/or import, raw binary (not base64)",
         attachment=False,
+        help="File to check and/or import, raw binary (not base64)",
     )
     file_name = fields.Char()
     file_type = fields.Char()

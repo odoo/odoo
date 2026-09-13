@@ -19,70 +19,70 @@ class WebCwvMetric(models.Model):
     )
     url = fields.Char(
         string="URL",
-        help="Browser path at the time the beacon fired (the query string is "
-        "stripped before persisting).  May be the same path for many records.  "
-        "Capped at 2048 chars at the DB level so a rogue writer cannot bloat "
-        "the row.",
         size=2048,
         index="btree",
         readonly=True,
         required=True,
+        help="Browser path at the time the beacon fired (the query string is "
+        "stripped before persisting).  May be the same path for many records.  "
+        "Capped at 2048 chars at the DB level so a rogue writer cannot bloat "
+        "the row.",
     )
     user_id = fields.Many2one(
         comodel_name="res.users",
-        help="User logged in when the beacon fired; null for anonymous "
-        "frontend traffic.",
         index="btree_not_null",
         readonly=True,
         ondelete="set null",
+        help="User logged in when the beacon fired; null for anonymous "
+        "frontend traffic.",
     )
     lcp = fields.Float(
         string="LCP (ms)",
+        readonly=True,
         help="Largest Contentful Paint — time from navigation start to the "
         "render of the largest visible element.  Lighthouse 'good' is < 2500.",
-        readonly=True,
     )
     fcp = fields.Float(
         string="FCP (ms)",
+        readonly=True,
         help="First Contentful Paint — time from navigation start to first "
         "text/image paint.  Lighthouse 'good' is < 1800.",
-        readonly=True,
     )
     ttfb = fields.Float(
         string="TTFB (ms)",
+        readonly=True,
         help="Time To First Byte — time from request start to the first "
         "byte of the response.  Lighthouse 'good' is < 800.",
-        readonly=True,
     )
     inp = fields.Float(
         string="INP (ms)",
+        readonly=True,
         help="Interaction to Next Paint — reported as the worst-observed "
         "interaction duration over the page lifetime (P100), a strict upper "
         "bound on the canonical P98 metric.  Vendoring the web-vitals library "
         "for a true P98 is a future improvement; the wire format won't change.",
-        readonly=True,
     )
     cls = fields.Float(
         string="CLS",
+        readonly=True,
         help="Cumulative Layout Shift — unitless score (0 is best).  "
         "Lighthouse 'good' is < 0.1.",
-        readonly=True,
     )
     user_agent = fields.Char(
-        help="Truncated to 500 chars at the controller; the 512-char DB cap is "
-        "a backstop for any other write path.",
         size=512,
         readonly=True,
+        help="Truncated to 500 chars at the controller; the 512-char DB cap is "
+        "a backstop for any other write path.",
     )
     pageview_id = fields.Char(
         string="Pageview ID",
+        size=64,
+        readonly=True,
         help="Client-generated id, stable for one page load. Metrics arrive "
         "across several beacons as INP/CLS keep growing after the first "
         "tab-switch; the controller upserts on this key so a pageview "
         "contributes one row (updated to the latest values) instead of "
         "accumulating duplicates.",
-        size=64,
-        readonly=True,
     )
 
     _PAGEVIEW_UNIQUE_INDEX = "web_cwv_metric__pageview_id_uniq"

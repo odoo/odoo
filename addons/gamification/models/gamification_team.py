@@ -54,12 +54,12 @@ class GamificationTeam(models.Model):
     # team list, the kanban card and the form, where computing them costs the two
     # aggregate queries below for the whole recordset at once.
     team_karma = fields.Integer(
-        help="Sum of all members' karma.",
         compute="_compute_team_stats",
+        help="Sum of all members' karma.",
     )
     team_badges = fields.Integer(
-        help="Total badges earned by all team members.",
         compute="_compute_team_stats",
+        help="Total badges earned by all team members.",
     )
 
     challenge_ids = fields.Many2many(

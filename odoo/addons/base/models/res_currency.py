@@ -31,9 +31,9 @@ class ResCurrency(models.Model):
 
     name = fields.Char(
         string="Currency",
-        help="Currency Code (ISO 4217)",
         size=3,
         required=True,
+        help="Currency Code (ISO 4217)",
     )
     iso_numeric = fields.Integer(
         string="Currency numeric code.",
@@ -41,20 +41,20 @@ class ResCurrency(models.Model):
     )
     full_name = fields.Char(string="Name")
     symbol = fields.Char(
-        help="Currency sign, to be used when printing amounts.",
         required=True,
+        help="Currency sign, to be used when printing amounts.",
     )
     rate = fields.Float(
         string="Current Rate",
-        help="The rate of the currency to the currency of rate 1.",
         digits=0,
         compute="_compute_current_rate",
+        help="The rate of the currency to the currency of rate 1.",
     )
     inverse_rate = fields.Float(
-        help="The currency of rate 1 to the rate of the currency.",
         digits=0,
         compute="_compute_current_rate",
         readonly=True,
+        help="The currency of rate 1 to the rate of the currency.",
     )
     rate_string = fields.Char(compute="_compute_current_rate")
     rate_ids = fields.One2many(
@@ -64,21 +64,21 @@ class ResCurrency(models.Model):
     )
     rounding = fields.Float(
         string="Rounding Factor",
-        help="Amounts in this currency are rounded off to the nearest multiple of the rounding factor.",
         digits=(12, 6),
         default=0.01,
+        help="Amounts in this currency are rounded off to the nearest multiple of the rounding factor.",
     )
     decimal_places = fields.Integer(
-        help="Decimal places taken into account for operations on amounts in this currency. It is determined by the rounding factor.",
         compute="_compute_decimal_places",
         store=True,
+        help="Decimal places taken into account for operations on amounts in this currency. It is determined by the rounding factor.",
     )
     active = fields.Boolean(default=True)
     position = fields.Selection(
         selection=[("after", "After Amount"), ("before", "Before Amount")],
         string="Symbol Position",
-        help="Determines where the currency symbol should be placed after or before the amount.",
         default="after",
+        help="Determines where the currency symbol should be placed after or before the amount.",
     )
     date = fields.Date(compute="_compute_date")
     currency_unit_label = fields.Char(
@@ -528,23 +528,23 @@ class ResCurrencyRate(models.Model):
     )
     rate = fields.Float(
         string="Technical Rate",
-        help="The rate of the currency to the currency of rate 1",
         digits=0,
         aggregator="avg",
+        help="The rate of the currency to the currency of rate 1",
     )
     company_rate = fields.Float(
-        help="The rate of the currency to the currency of rate 1",
         digits=0,
         compute="_compute_company_rate",
         inverse="_inverse_company_rate",
         aggregator="avg",
+        help="The rate of the currency to the currency of rate 1",
     )
     inverse_company_rate = fields.Float(
-        help="The currency of rate 1 to the rate of the currency.",
         digits=0,
         compute="_compute_inverse_company_rate",
         inverse="_inverse_inverse_company_rate",
         aggregator="avg",
+        help="The currency of rate 1 to the rate of the currency.",
     )
     currency_id = fields.Many2one(
         comodel_name="res.currency",

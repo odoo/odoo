@@ -47,8 +47,8 @@ class MailAlias(models.Model):
     _rec_names_search = ["alias_full_name"]
 
     alias_name = fields.Char(
-        help="The name of the email alias, e.g. 'jobs' if you want to catch emails for <jobs@example.odoo.com>",
         copy=False,
+        help="The name of the email alias, e.g. 'jobs' if you want to catch emails for <jobs@example.odoo.com>",
     )
     alias_full_name = fields.Char(
         string="Alias Email",
@@ -68,20 +68,20 @@ class MailAlias(models.Model):
     alias_model_id: IrModel = fields.Many2one(
         comodel_name="ir.model",
         string="Aliased Model",
+        required=True,
+        domain="[('field_id.name', '=', 'message_ids'), ('abstract', '=', False), ('transient', '=', False)]",
+        ondelete="cascade",
         help="The model (Odoo Document Kind) to which this alias "
         "corresponds. Any incoming email that does not reply to an "
         "existing record will cause the creation of a new record "
         "of this model (e.g. a Project Task)",
-        required=True,
-        domain="[('field_id.name', '=', 'message_ids'), ('abstract', '=', False), ('transient', '=', False)]",
-        ondelete="cascade",
     )
     alias_defaults = fields.Text(
         string="Default Values",
-        help="A Python dictionary that will be evaluated to provide "
-        "default values when creating new records for this alias.",
         default="{}",
         required=True,
+        help="A Python dictionary that will be evaluated to provide "
+        "default values when creating new records for this alias.",
     )
     alias_force_thread_id = fields.Integer(
         string="Record Thread ID",
@@ -106,12 +106,12 @@ class MailAlias(models.Model):
             ("followers", "Followers only"),
         ],
         string="Alias Contact Security",
+        default="everyone",
+        required=True,
         help="Policy to post a message on the document using the mailgateway.\n"
         "- everyone: everyone can post\n"
         "- partners: only authenticated partners\n"
         "- followers: only followers of the related document or members of following channels\n",
-        default="everyone",
-        required=True,
     )
     alias_incoming_local = fields.Boolean(
         string="Local-part based incoming detection",
@@ -119,8 +119,8 @@ class MailAlias(models.Model):
     )
     alias_bounced_content = fields.Html(
         string="Custom Bounced Message",
-        help="If set, this content will automatically be sent out to unauthorized users instead of the default message.",
         translate=True,
+        help="If set, this content will automatically be sent out to unauthorized users instead of the default message.",
     )
     alias_status = fields.Selection(
         selection=[
@@ -128,8 +128,8 @@ class MailAlias(models.Model):
             ("valid", "Valid"),
             ("invalid", "Invalid"),
         ],
-        help="Alias status assessed on the last message received.",
         default="not_tested",
+        help="Alias status assessed on the last message received.",
     )
 
     ALIAS_STATUS_NEUTRAL = frozenset(

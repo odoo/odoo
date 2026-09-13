@@ -45,30 +45,30 @@ class CredentialCredential(models.Model):
 
     company_id = fields.Many2one(
         comodel_name="res.company",
-        help="Company that owns this credential. Leave empty for system-wide credentials visible to all companies.",
         default=lambda self: self.env.company,
         index=True,
         required=False,
         ondelete="cascade",
+        help="Company that owns this credential. Leave empty for system-wide credentials visible to all companies.",
     )
 
     category_id = fields.Many2one(
         comodel_name="credential.category",
-        help="Type of credential (API Key, OAuth, Certificate, etc.)",
         index=True,
         required=True,
         ondelete="restrict",
+        help="Type of credential (API Key, OAuth, Certificate, etc.)",
     )
     category_code = fields.Char(
         related="category_id.code",
-        help="Technical code of the category for programmatic access",
         store=True,
         index=True,
+        help="Technical code of the category for programmatic access",
     )
     category_description = fields.Text(
         related="category_id.description",
-        help="Description of the credential category",
         store=False,
+        help="Description of the credential category",
     )
     category_icon = fields.Char(
         related="category_id.icon",
@@ -77,62 +77,62 @@ class CredentialCredential(models.Model):
     storage_hint = fields.Selection(
         related="category_id.storage_hint",
         string="Storage Type",
-        help="Recommended storage method from category",
         store=False,
+        help="Recommended storage method from category",
     )
     user_id = fields.Many2one(
         comodel_name="res.users",
         string="Created By",
-        help="User who created this credential",
         default=lambda self: self.env.user,
         index=True,
         readonly=True,
+        help="User who created this credential",
     )
     owner_user_id = fields.Many2one(
         comodel_name="res.users",
         string="Personal Credential Of",
+        index=True,
+        ondelete="cascade",
         help="Make this a personal credential belonging to one user. Calls "
         "that resolve it act as that user rather than as the company. Only "
         "consulted for endpoints that allow personal credentials; leave empty "
         "for the ordinary company-wide credential.",
-        index=True,
-        ondelete="cascade",
     )
     name = fields.Char(
         string="Credential Name",
-        help="Descriptive name for this credential",
         index=True,
         required=True,
+        help="Descriptive name for this credential",
     )
     active = fields.Boolean(
+        default=True,
         help="Only active credentials are used. Archiving is an admin-only "
         "control enforced by record rules / access rights — a field-level "
         "``groups=`` cannot be used here because the ORM's active_test reads "
         "``active`` on every search (including for plain users).",
-        default=True,
     )
     sequence = fields.Integer(
         string="Priority",
-        help="Lower number = higher priority when multiple credentials exist",
         default=10,
+        help="Lower number = higher priority when multiple credentials exist",
     )
     display_name = fields.Char(
         compute="_compute_display_name",
         store=False,
     )
     username = fields.Char(
-        help="Username stored in JSON credential data",
         compute="_compute_credential_accessors",
         inverse="_inverse_username",
         copy=False,
         groups="base.group_system",
+        help="Username stored in JSON credential data",
     )
     password = fields.Char(
-        help="Password stored in JSON credential data",
         compute="_compute_credential_accessors",
         inverse="_inverse_password",
         copy=False,
         groups="base.group_system",
+        help="Password stored in JSON credential data",
     )
     notes = fields.Text(
         help="Additional notes or documentation for this credential.\n\n"
@@ -147,76 +147,76 @@ class CredentialCredential(models.Model):
             ("warning", "Warning"),
             ("error", "Error"),
         ],
-        help="Health status from last validation check",
         default="unknown",
         index=True,
         readonly=True,
+        help="Health status from last validation check",
     )
     health_message = fields.Text(
-        help="Details from last health check",
         readonly=True,
+        help="Details from last health check",
     )
     last_health_check = fields.Datetime(
-        help="Timestamp of most recent health check",
         readonly=True,
+        help="Timestamp of most recent health check",
     )
     last_health_check_latency = fields.Float(
         string="Last Check Latency (ms)",
-        help="Response time of last health check in milliseconds",
         digits=(6, 2),
         readonly=True,
+        help="Response time of last health check in milliseconds",
     )
     last_used_at = fields.Datetime(
         string="Last Used",
-        help="Timestamp of most recent credential usage",
         readonly=True,
+        help="Timestamp of most recent credential usage",
     )
     last_error = fields.Text(
-        help="Error message from last failed operation",
         readonly=True,
+        help="Error message from last failed operation",
     )
     last_error_date = fields.Datetime(
-        help="Date and time of last error",
         readonly=True,
+        help="Date and time of last error",
     )
     total_health_checks = fields.Integer(
-        help="Total number of health check tests performed",
         default=0,
         readonly=True,
+        help="Total number of health check tests performed",
     )
     failed_health_checks = fields.Integer(
-        help="Number of failed health check tests",
         default=0,
         readonly=True,
+        help="Number of failed health check tests",
     )
     health_check_success_rate = fields.Float(
         string="Health Check Success Rate (%)",
-        help="Percentage of successful health checks",
         digits=(5, 2),
         compute="_compute_health_check_success_rate",
         store=True,
+        help="Percentage of successful health checks",
     )
 
     usage_count = fields.Integer(
-        help="Total number of times this credential was used",
         default=0,
         readonly=True,
+        help="Total number of times this credential was used",
     )
     success_count = fields.Integer(
-        help="Number of successful credential uses",
         default=0,
         readonly=True,
+        help="Number of successful credential uses",
     )
     error_count = fields.Integer(
-        help="Number of failed credential uses",
         default=0,
         readonly=True,
+        help="Number of failed credential uses",
     )
     success_rate = fields.Float(
         string="Success Rate (%)",
-        help="Percentage of successful credential uses",
         compute="_compute_success_rate",
         store=True,
+        help="Percentage of successful credential uses",
     )
 
     date_expiration = fields.Datetime(
@@ -225,50 +225,50 @@ class CredentialCredential(models.Model):
     )
     is_expired = fields.Boolean(
         string="Expired",
-        help="Whether the expiration date has passed, read against the current time",
         compute="_compute_is_expired",
         search="_search_is_expired",
+        help="Whether the expiration date has passed, read against the current time",
     )
     days_until_expiry = fields.Integer(
+        compute="_compute_days_until_expiry",
         help=f"Number of days until credential expires. Returns {DAYS_NO_EXPIRY} "
         "if no expiration date is set.",
-        compute="_compute_days_until_expiry",
     )
     date_expiry_warned = fields.Datetime(
         string="Expiry Warning Logged",
+        copy=False,
+        readonly=True,
         help="When cron_check_expiring_credentials last reported this "
         "credential as approaching expiry. Cleared whenever the expiration "
         "date is rewritten, so a renewed credential is warned about again.",
-        copy=False,
-        readonly=True,
     )
 
     allow_key_fallback = fields.Boolean(
         string="Allow Old Key Fallback",
+        default=True,
         help="If enabled, will try decrypting with old key versions when current key fails. "
         "Default from category, can be overridden.",
-        default=True,
     )
     auto_validate_health = fields.Boolean(
         string="Automatic Health Validation",
+        default=False,
         help="If enabled, this credential will be automatically validated by scheduled health checks. "
         "Default from category, can be overridden.",
-        default=False,
     )
 
     decrypt_rate_limit_enabled = fields.Boolean(
         string="Cap Decryptions",
-        help="Cap how often this credential's secret may be decrypted. Default from "
-        "category, can be overridden.",
         default=True,
         groups="credential.group_credential_admin",
+        help="Cap how often this credential's secret may be decrypted. Default from "
+        "category, can be overridden.",
     )
     decrypt_rate_limit_max = fields.Integer(
         string="Decryptions / hour",
-        help="Maximum number of decryption operations allowed per user per hour. "
-        "Default from category, can be overridden.",
         default=100,
         groups="credential.group_credential_admin",
+        help="Maximum number of decryption operations allowed per user per hour. "
+        "Default from category, can be overridden.",
     )
 
     environment = fields.Selection(
@@ -277,109 +277,109 @@ class CredentialCredential(models.Model):
             ("staging", "Staging"),
             ("production", "Production"),
         ],
-        help="Environment for this credential (test, staging, production).",
         default="test",
         index=True,
+        help="Environment for this credential (test, staging, production).",
     )
 
     is_system_wide = fields.Boolean(
         string="System-wide Configuration",
-        help="True if this is a system-wide credential (company_id is not set)",
         compute="_compute_is_system_wide",
         store=True,
+        help="True if this is a system-wide credential (company_id is not set)",
     )
     bypass_format_validation = fields.Boolean(
-        help="Allow non-standard credential formats. Use only for credentials with unusual format requirements.",
         default=False,
         groups="base.group_system",
+        help="Allow non-standard credential formats. Use only for credentials with unusual format requirements.",
     )
 
     api_key = fields.Char(
         string="API Key",
-        help="API Key stored in JSON credential data",
         compute="_compute_credential_accessors",
         inverse="_inverse_api_key",
         copy=False,
         groups="base.group_system",
+        help="API Key stored in JSON credential data",
     )
     api_secret = fields.Char(
         string="API Secret",
-        help="API Secret stored in JSON credential data",
         compute="_compute_credential_accessors",
         inverse="_inverse_api_secret",
         copy=False,
         groups="base.group_system",
+        help="API Secret stored in JSON credential data",
     )
     bearer_token = fields.Char(
-        help="Bearer Token stored in JSON credential data",
         compute="_compute_credential_accessors",
         inverse="_inverse_bearer_token",
         copy=False,
         groups="base.group_system",
+        help="Bearer Token stored in JSON credential data",
     )
 
     oauth_access_token = fields.Char(
         string="OAuth Access Token",
-        help="OAuth Access Token stored in JSON credential data",
         compute="_compute_credential_accessors",
         inverse="_inverse_oauth_access_token",
         copy=False,
         groups="base.group_system",
+        help="OAuth Access Token stored in JSON credential data",
     )
     oauth_refresh_token = fields.Char(
         string="OAuth Refresh Token",
-        help="OAuth Refresh Token stored in JSON credential data",
         compute="_compute_credential_accessors",
         inverse="_inverse_oauth_refresh_token",
         copy=False,
         groups="base.group_system",
+        help="OAuth Refresh Token stored in JSON credential data",
     )
     oauth_client_id = fields.Char(
         string="OAuth Client ID",
-        help="OAuth Client ID stored in JSON credential data",
         compute="_compute_credential_accessors",
         inverse="_inverse_oauth_client_id",
         copy=False,
         groups="base.group_system",
+        help="OAuth Client ID stored in JSON credential data",
     )
     oauth_client_secret = fields.Char(
         string="OAuth Client Secret",
-        help="OAuth Client Secret stored in JSON credential data",
         compute="_compute_credential_accessors",
         inverse="_inverse_oauth_client_secret",
         copy=False,
         groups="base.group_system",
+        help="OAuth Client Secret stored in JSON credential data",
     )
     oauth_token_date_expiration = fields.Datetime(
         string="OAuth Token Expiration",
+        groups="base.group_system",
         help="When the OAuth access token expires. Set by OAuth integration code "
         "when tokens are refreshed (comes from provider's 'expires_in' response).",
-        groups="base.group_system",
     )
 
     secret_values = fields.Json(
-        help="One entry per field the category declares, carrying its label and "
-        "whether it holds a value -- never the value itself. An entry given a "
-        "'value' string is stored; an empty one clears the key; an entry with "
-        "no 'value' is left alone.",
         compute="_compute_secret_values",
         inverse="_inverse_secret_values",
         store=False,
         copy=False,
         readonly=False,
         groups="base.group_system",
+        help="One entry per field the category declares, carrying its label and "
+        "whether it holds a value -- never the value itself. An entry given a "
+        "'value' string is stored; an empty one clears the key; an entry with "
+        "no 'value' is left alone.",
     )
 
     encryption_key_is_current = fields.Boolean(
+        compute="_compute_encryption_key_is_current",
+        store=False,
         help="True when this credential's ciphertext was written with the "
         "current ODOO_API_ENCRYPTION_KEY. Drives the key-rotation warning "
         "banner: only credentials still on an OLD key version show it.",
-        compute="_compute_encryption_key_is_current",
-        store=False,
     )
     last_validated = fields.Datetime(
-        help="Timestamp of last successful credential validation",
         readonly=True,
+        help="Timestamp of last successful credential validation",
     )
 
     _credential_system_unique = models.UniqueIndex(

@@ -13,8 +13,8 @@ class ResCompany(models.Model):
             ("lock", "Confirmed sale orders are not editable"),
         ],
         string="Sale Order Modification",
-        help="Sale Order Modification used when you want to keep sale orders editable after confirmation",
         default="edit",
+        help="Sale Order Modification used when you want to keep sale orders editable after confirmation",
     )
     portal_confirmation_sign = fields.Boolean(
         string="Online Signature",
@@ -23,24 +23,24 @@ class ResCompany(models.Model):
     portal_confirmation_pay = fields.Boolean(string="Online Payment")
     prepayment_percent = fields.Float(
         string="Prepayment percentage",
-        help="The percentage of the amount needed to be paid to confirm quotations.",
         default=1.0,
+        help="The percentage of the amount needed to be paid to confirm quotations.",
     )
     quotation_validity_days = fields.Integer(
         string="Default Quotation Validity",
+        default=30,
         help="Days between quotation proposal and expiration."
         " 0 days means automatic expiration is disabled",
-        default=30,
     )
     sale_discount_product_id = fields.Many2one(
         comodel_name="product.product",
         string="Discount Product",
-        help="Default product used for discounts",
         domain=[
             ("type", "=", "service"),
             ("invoice_policy", "=", "ordered"),
         ],
         check_company=True,
+        help="Default product used for discounts",
     )
     sale_onboarding_payment_method = fields.Selection(
         selection=[
@@ -54,11 +54,11 @@ class ResCompany(models.Model):
     )
     downpayment_account_id = fields.Many2one(
         comodel_name="account.account",
-        help="This account will be used on Downpayment invoices.",
         domain=[
             ("account_type", "in", ("income", "income_other", "liability_current")),
         ],
         tracking=True,
+        help="This account will be used on Downpayment invoices.",
     )
 
     _check_quotation_validity_days = models.Constraint(

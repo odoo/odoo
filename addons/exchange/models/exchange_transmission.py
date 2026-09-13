@@ -22,9 +22,9 @@ class ExchangeTransmission(models.Model):
     # Subject block
     subject_id = fields.Reference(
         selection="_selection_subject_models",
-        help="The business record this transmission is about.",
         index=True,
         required=True,
+        help="The business record this transmission is about.",
     )
     company_id = fields.Many2one(
         comodel_name="res.company",
@@ -54,20 +54,20 @@ class ExchangeTransmission(models.Model):
             ("amend", "Amend"),
             ("query", "Query"),
         ],
-        help="What we are asking the counterparty for. Separate from state "
-        "because an annulment that failed is intent=annul, state=rejected -- "
-        "not a value in the issuing field.",
         default="issue",
         index=True,
         required=True,
+        help="What we are asking the counterparty for. Separate from state "
+        "because an annulment that failed is intent=annul, state=rejected -- "
+        "not a value in the issuing field.",
     )
     document_kind = fields.Selection(
         selection="_selection_document_kind",
+        index=True,
         help="Which document this is, when a counterparty takes more than one "
         "about the same record -- an invoice and its expense classification, a "
         "CFDI and the payment complement. Not a phase and not an ask: the third "
         "axis l10n_mx_edi flattened into its sixteen-value state.",
-        index=True,
     )
     state = fields.Selection(
         selection=[
@@ -78,11 +78,11 @@ class ExchangeTransmission(models.Model):
             ("rejected", "Rejected"),
             ("expired", "Expired"),
         ],
-        help="Where the ask has got to, as the counterparty sees it. Whether "
-        "the call itself completed is on the event log, not here.",
         default="draft",
         index=True,
         required=True,
+        help="Where the ask has got to, as the counterparty sees it. Whether "
+        "the call itself completed is on the event log, not here.",
     )
     is_settled = fields.Boolean(
         compute="_compute_is_settled",
@@ -103,38 +103,38 @@ class ExchangeTransmission(models.Model):
     # Payload block
     attachment_id = fields.Many2one(
         comodel_name="ir.attachment",
-        help="What we sent, exactly as it went.",
         ondelete="set null",
+        help="What we sent, exactly as it went.",
     )
     response_attachment_id = fields.Many2one(
         comodel_name="ir.attachment",
-        help="What came back, exactly as it arrived.",
         ondelete="set null",
+        help="What came back, exactly as it arrived.",
     )
     reference = fields.Char(
+        index=True,
         help="The counterparty's own identifier for this exchange, whatever "
         "it calls it -- uuid, mark, index, zip key, CSV.",
-        index=True,
     )
     message = fields.Text(
-        help="The counterparty's own words. Never paraphrased.",
         readonly=True,
+        help="The counterparty's own words. Never paraphrased.",
     )
 
     # Relation block
     parent_id = fields.Many2one(
         comodel_name="exchange.transmission",
-        help="The transmission this one acts upon: an annulment's issue, an "
-        "amendment's original.",
         index=True,
         ondelete="cascade",
+        help="The transmission this one acts upon: an annulment's issue, an "
+        "amendment's original.",
     )
     chain_previous_id = fields.Many2one(
         comodel_name="exchange.transmission",
-        help="The previous link, for a counterparty that requires each "
-        "document to reference the one before it.",
         index=True,
         ondelete="restrict",
+        help="The previous link, for a counterparty that requires each "
+        "document to reference the one before it.",
     )
 
     # Retry block
@@ -150,11 +150,11 @@ class ExchangeTransmission(models.Model):
     # Transport block
     event_log_id = fields.Many2one(
         comodel_name="api.event.log",
+        index=True,
+        ondelete="set null",
         help="The transport record: whether the call completed. A settled "
         "transmission whose call failed is a contradiction, and the "
         "constraint below says so.",
-        index=True,
-        ondelete="set null",
     )
 
     display_name = fields.Char(compute="_compute_display_name")
