@@ -6,7 +6,7 @@ from typing import Any, Self
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
-from odoo.addons.credential.tools.session_cache import (
+from ..tools.session_cache import (
     get_session_cache,
 )
 

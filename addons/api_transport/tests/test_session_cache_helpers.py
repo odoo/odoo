@@ -1,6 +1,6 @@
 from odoo.tests import TransactionCase, tagged
 
-from odoo.addons.credential.tools.session_cache import (
+from odoo.addons.api_transport.tools.session_cache import (
     SessionCache,
     get_session_cache,
     invalidate_session_cache,

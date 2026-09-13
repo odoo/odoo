@@ -29,12 +29,6 @@ the same mixin used here, with no separate install.
 * Record rules enforce company boundaries
 * Cost segregation per company
 
-**Performance:**
-* LRU session caching with TTL
-* Thread-safe cache operations
-* Connection pooling support
-* Automatic cache invalidation
-
 **Security:**
 * Field-level encryption (Fernet symmetric encryption)
 * Encryption key stored in environment variable (NOT database)
@@ -54,10 +48,11 @@ Other modules build on this module in two ways:
 * Reference ``credential.credential`` records (or extend the model via
   ``_inherit``) to store their secrets encrypted — see ``api_transport``, which
   absorbed both ``api_communication`` and ``api_gateway``.
-* Import the shared primitives from ``tools/`` (authentication/signature
-  verification, session cache, connection manager); rate limiters live in
-  ``rate_limit`` — see ``automation`` webhooks, ``telegram_bot``
-  and ``remote``.
+* Import the signature-verification and JSON-depth helpers from ``tools/``
+  — see ``automation`` webhooks and ``remote``.
+
+Rate limiters live in ``rate_limit``, the outbound session cache in
+``api_transport`` and the device connection manager in ``remote``.
 
 Requires the ``ODOO_API_ENCRYPTION_KEY`` environment variable (a Fernet key);
 old keys stay readable through ``ODOO_API_ENCRYPTION_KEY_V<n>`` during

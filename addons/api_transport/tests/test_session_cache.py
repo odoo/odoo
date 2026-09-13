@@ -2,7 +2,7 @@ import time
 
 from odoo.tests.common import BaseCase
 
-from odoo.addons.credential.tools import SessionCache
+from odoo.addons.api_transport.tools.session_cache import SessionCache
 
 
 class TestSessionCache(BaseCase):

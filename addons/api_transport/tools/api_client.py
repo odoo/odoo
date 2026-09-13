@@ -28,7 +28,7 @@ from .exceptions import (
     ServerError,
 )
 from .payload import split_large_payload
-from odoo.addons.credential.tools.session_cache import (
+from .session_cache import (
     get_session_cache,
 )
 
