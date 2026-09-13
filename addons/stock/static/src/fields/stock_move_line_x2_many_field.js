@@ -34,7 +34,8 @@ export class SMLX2ManyField extends X2ManyField {
     }
 
     async onAdd({ context, editable } = {}) {
-        if (!this.props.record.data.show_quant) {
+        const data = this.props.record.data;
+        if (!data.show_quant) {
             return super.onAdd(...arguments);
         }
         // Compute the quant offset from move lines quantity changes that were not saved yet.
@@ -44,11 +45,12 @@ export class SMLX2ManyField extends X2ManyField {
             ...context,
             single_product: true,
             list_view_ref: "stock.view_stock_quant_tree_simple",
+            show_expiration_date: data.use_expiration_date,
         };
-        const productName = this.props.record.data.product_id.display_name;
+        const productName = data.product_id.display_name;
         const title = _t("Add line: %s", productName);
         let domain = [
-            ["product_id", "=", this.props.record.data.product_id.id],
+            ["product_id", "=", data.product_id.id],
             ["location_id", "child_of", this.props.context.default_location_id],
             ["quantity", ">", 0.0],
         ];
