@@ -15,6 +15,12 @@ class PosConfig(models.Model):
     l10n_eg_edi_pos_token_expiry = fields.Datetime(groups='base.group_system', readonly=True)
     l10n_eg_edi_pos_last_uuid = fields.Char(groups='base.group_system', readonly=True)
 
+    def _load_pos_data_read(self, records, config):
+        read_records = super()._load_pos_data_read(records, config)
+        if read_records and self.env.company.country_id.code == 'EG':
+            read_records[0]['_l10n_eg_edi_invoicing_threshold'] = self.env.company._get_invoicing_threshold()
+        return read_records
+
     def _l10n_eg_edi_pos_get_token(self):
         """
             returns valid_access_token, error_message
@@ -59,16 +65,16 @@ class PosConfig(models.Model):
         """
         self.ensure_one()
         request_data = self._l10n_eg_edi_pos_build_auth_request()
-        response = self.env['account.edi.format']._l10n_eg_eta_connect_to_server(
-            request_data,
-            '/connect/token',
-            'POST',
+        _response, data = self.env['account.move']._l10n_eg_edi_eta_request(
+            url='/connect/token',
+            method='POST',
+            body=request_data['body'],
+            headers=request_data['header'],
             is_access_token_req=True,
-            production_enviroment=not self.l10n_eg_edi_pos_preprod,
+            is_prod=not self.l10n_eg_edi_pos_preprod,
         )
 
-        data = response.get('data') or {}
-        if (error := response.get('error')) or 'access_token' not in data:
+        if (error := data.get('error')) or 'access_token' not in data:
             return "", error or _("ETA authentication response is missing the access token.")
 
         try:

@@ -5,7 +5,7 @@ from odoo import _, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import BinaryBytes
 
-from odoo.addons.l10n_eg_edi_eta.models.account_edi_format import ETA_DOMAINS
+from odoo.addons.l10n_eg_edi_eta.models.account_move import ETA_DOMAINS
 from odoo.addons.l10n_eg_edi_eta.tools.eta_serialize import compute_eta_uuid
 
 
@@ -87,11 +87,11 @@ class PosOrder(models.Model):
             return error
 
         self.l10n_eg_edi_pos_uuid = receipt_uuid
-        response = self._l10n_eg_edi_pos_post_submission(payload, token)
-        envelope = {'request': payload, 'response': response.get('data') or {}}
+        _response, data = self._l10n_eg_edi_pos_post_submission(payload, token)
+        envelope = {'request': payload, 'response': data}
         self.l10n_eg_edi_pos_json_doc_file = BinaryBytes(json.dumps(envelope, ensure_ascii=False, indent=2).encode())
         self.invalidate_recordset(fnames=['l10n_eg_edi_pos_json_doc_file'])
-        error_message = self._l10n_eg_edi_pos_postprocess_response(response)
+        error_message = self._l10n_eg_edi_pos_postprocess_response(data)
         if not error_message:
             attachment = self.env['ir.attachment'].search([
                 ('res_model', '=', self._name),
@@ -120,11 +120,12 @@ class PosOrder(models.Model):
     def _l10n_eg_edi_pos_post_submission(self, payload, token):
         self.ensure_one()
         request_data = self._l10n_eg_edi_pos_build_receipt_request(payload, token)
-        return self.env['account.edi.format']._l10n_eg_eta_connect_to_server(
-            request_data,
-            '/api/v1/receiptsubmissions',
-            'POST',
-            production_enviroment=not self.config_id.l10n_eg_edi_pos_preprod,
+        return self.env['account.move']._l10n_eg_edi_eta_request(
+            url='/api/v1/receiptsubmissions',
+            method='POST',
+            body=request_data['body'],
+            headers=request_data['header'],
+            is_prod=not self.config_id.l10n_eg_edi_pos_preprod,
         )
 
     def action_l10n_eg_edi_pos_resend(self):
@@ -161,7 +162,7 @@ class PosOrder(models.Model):
 
     def _l10n_eg_edi_pos_build_receipt(self):
         self.ensure_one()
-        edi_format = self.env['account.edi.format']
+        account_move = self.env['account.move']
         journal = self.sale_journal
         branch = journal.l10n_eg_branch_id
         item_data, global_discounts, totals, tax_totals = self._l10n_eg_edi_pos_build_item_data()
@@ -186,12 +187,12 @@ class PosOrder(models.Model):
             'buyer': self._l10n_eg_edi_pos_build_buyer(),
             'itemData': item_data,
             'extraReceiptDiscountData': global_discounts,
-            'totalSales': edi_format._l10n_eg_edi_round(totals['total_sale']),
-            'netAmount': edi_format._l10n_eg_edi_round(totals['total_net']),
-            'totalAmount': edi_format._l10n_eg_edi_round(totals['total'] - totals['total_extra_discount']),
+            'totalSales': account_move._l10n_eg_edi_round(totals['total_sale']),
+            'netAmount': account_move._l10n_eg_edi_round(totals['total_net']),
+            'totalAmount': account_move._l10n_eg_edi_round(totals['total'] - totals['total_extra_discount']),
             'taxTotals': list(tax_totals.values()),
             'paymentMethod': self._l10n_eg_edi_pos_get_payment_method(),
-            'totalCommercialDiscount': edi_format._l10n_eg_edi_round(totals['total_discount']),
+            'totalCommercialDiscount': account_move._l10n_eg_edi_round(totals['total_discount']),
         }
 
     def _l10n_eg_edi_pos_build_header(self):
@@ -234,7 +235,7 @@ class PosOrder(models.Model):
             return {'type': 'P', 'paymentNumber': ''}
         buyer_type = self._l10n_eg_edi_pos_get_buyer_type()
         buyer = {'type': buyer_type, 'paymentNumber': ''}
-        if self.amount_total >= self.company_id.l10n_eg_invoicing_threshold or buyer_type != 'P':
+        if self.amount_total >= self.company_id._get_invoicing_threshold() or buyer_type != 'P':
             buyer['id'] = (partner._get_additional_identifier('EG_NIN') if buyer_type == 'P' else partner.vat) or ''
             buyer['name'] = partner.name or ''
         return buyer
@@ -244,13 +245,13 @@ class PosOrder(models.Model):
         item_data, global_discounts = [], []
         totals = {'total': 0.0, 'total_net': 0.0, 'total_discount': 0.0, 'total_sale': 0.0, 'total_extra_discount': 0.0}
         tax_totals = {}
-        edi_format = self.env['account.edi.format']
+        account_move = self.env['account.move']
         for line in self.lines:
-            price_unit = edi_format._l10n_eg_edi_round(line.price_unit, 2)
+            price_unit = account_move._l10n_eg_edi_round(line.price_unit, 2)
             rate_before_discount = (1 - line.discount / 100) if 0 < line.discount < 100 else 1
-            net_sale = abs(edi_format._l10n_eg_edi_round(line.price_subtotal))
-            line_total = abs(edi_format._l10n_eg_edi_round(line.price_subtotal_incl))
-            total_sale = abs(edi_format._l10n_eg_edi_round(line.price_subtotal / rate_before_discount))
+            net_sale = abs(account_move._l10n_eg_edi_round(line.price_subtotal))
+            line_total = abs(account_move._l10n_eg_edi_round(line.price_subtotal_incl))
+            total_sale = abs(account_move._l10n_eg_edi_round(line.price_subtotal / rate_before_discount))
             if self.refunded_order_id or line.price_unit >= 0:
                 taxes = line.tax_ids_after_fiscal_position
                 tax_details = taxes.compute_all(
@@ -268,14 +269,14 @@ class PosOrder(models.Model):
                     sub_type = code_split[1].upper()
                     taxable_items.append({
                         'taxType': tax_type,
-                        'amount': edi_format._l10n_eg_edi_round(abs(tax_data['amount'])),
+                        'amount': account_move._l10n_eg_edi_round(abs(tax_data['amount'])),
                         'subType': sub_type,
                         'rate': abs(tax.amount) if tax.amount_type != 'fixed' else 0,
                     })
                     if tax.id not in tax_totals:
                         tax_totals[tax.id] = {'taxType': tax_type, 'amount': 0.0}
                     tax_totals[tax.id]['amount'] += abs(tax_data['amount'])
-                discount_amount = edi_format._l10n_eg_edi_round(total_sale - net_sale)
+                discount_amount = account_move._l10n_eg_edi_round(total_sale - net_sale)
                 totals['total_discount'] += abs(discount_amount)
                 totals['total_sale'] += total_sale
                 totals['total_net'] += net_sale
@@ -305,9 +306,9 @@ class PosOrder(models.Model):
                     'description': line.full_product_name or line.product_id.display_name,
                 })
         for discount in global_discounts:
-            discount['rate'] = edi_format._l10n_eg_edi_round(discount['amount'] / (totals['total_net'] / 100)) if totals['total_net'] else 0
+            discount['rate'] = account_move._l10n_eg_edi_round(discount['amount'] / (totals['total_net'] / 100)) if totals['total_net'] else 0
         for tax_total in tax_totals.values():
-            tax_total['amount'] = edi_format._l10n_eg_edi_round(tax_total['amount'])
+            tax_total['amount'] = account_move._l10n_eg_edi_round(tax_total['amount'])
         return item_data, global_discounts, totals, tax_totals
 
     def _l10n_eg_edi_pos_get_payment_method(self):
@@ -347,11 +348,10 @@ class PosOrder(models.Model):
             })
             return error_message
 
-        data = response.get('data') or {}
         receipt_uuid = self.l10n_eg_edi_pos_uuid
 
         # rejection
-        if rejected := next((d for d in data.get('rejectedDocuments') or [] if d.get('uuid') == receipt_uuid), None):
+        if rejected := next((d for d in response.get('rejectedDocuments') or [] if d.get('uuid') == receipt_uuid), None):
             error_message = self._l10n_eg_edi_pos_flatten_error(rejected.get('error'))
             self.write({
                 'l10n_eg_edi_pos_state': self._l10n_eg_edi_pos_state_for('rejected'),
@@ -361,11 +361,11 @@ class PosOrder(models.Model):
             return error_message
 
         # acceptance
-        if next((d for d in data.get('acceptedDocuments') or [] if d.get('uuid') == receipt_uuid), None):
+        if next((d for d in response.get('acceptedDocuments') or [] if d.get('uuid') == receipt_uuid), None):
             self.config_id.sudo().l10n_eg_edi_pos_last_uuid = receipt_uuid
             self.write({
                 'l10n_eg_edi_pos_state': self._l10n_eg_edi_pos_state_for('sent'),
-                'l10n_eg_edi_pos_submission_uuid': data.get('submissionId') or '',
+                'l10n_eg_edi_pos_submission_uuid': response.get('submissionId') or '',
                 'l10n_eg_edi_pos_error': '',
             })
             self.l10n_eg_edi_pos_qr = self._l10n_eg_edi_pos_get_qr_url()
@@ -394,7 +394,6 @@ class PosOrder(models.Model):
     def _l10n_eg_edi_pos_check_data(self):
         self.ensure_one()
         errors = []
-        edi_format = self.env['account.edi.format']
         journal = self.sale_journal
         branch = journal.l10n_eg_branch_id
         if not all([branch, journal.l10n_eg_branch_identifier, journal.l10n_eg_activity_type_id]):
@@ -408,13 +407,13 @@ class PosOrder(models.Model):
         elif any(line.qty < 0 for line in self.lines):
             errors.append(_("Negative quantities are only allowed on return orders created from the original receipt."))
 
-        if not self.refunded_order_id and self.amount_total >= self.company_id.l10n_eg_invoicing_threshold and (
+        if not self.refunded_order_id and self.amount_total >= self.company_id._get_invoicing_threshold() and (
             not self.partner_id or (self._l10n_eg_edi_pos_get_buyer_type() == 'P' and not self.partner_id._get_additional_identifier('EG_NIN'))
         ):
             errors.append(_("As the Order Value is equal to or above 150,000 EGP, depending on the nature of the buyer, please either select an Individual Egypt Customer and fill in the \"Tax ID\" with their National ID or an Individual non-Egypt Customer."))
         if branch and self.partner_id and branch.vat and self.partner_id.vat == branch.vat:
             errors.append(_("Cannot issue a receipt to a partner with the same VAT as the branch."))
-        if branch and not edi_format._l10n_eg_validate_info_address(branch):
+        if branch and branch._check_l10n_eg_missing_address_data():
             errors.append(_("The branch partner is missing required address fields."))
 
         for line in self.lines:
