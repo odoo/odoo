@@ -10,24 +10,13 @@ const VERSION_KEY = "webclient_menus_version";
 const HASH_KEY = "webclient_menus_hash";
 const CURRENT_APP_KEY = "menu_id";
 
+function cacheOwner() {
+    return [session.db, user.userId];
+}
+
 /** @returns {string | undefined} */
 function cacheVersion() {
     return session.menus_cache_version;
-}
-
-/**
- * @param {string | null} storedVersion
- * @returns {boolean}
- */
-function isForeignUserVersion(storedVersion) {
-    const separatorIndex = (storedVersion || "").lastIndexOf(":");
-    if (separatorIndex === -1) {
-        return false;
-    }
-    return (
-        /** @type {string} */ (storedVersion).slice(separatorIndex + 1) !==
-        String(user.userId)
-    );
 }
 
 /** @param {string} key */
@@ -43,6 +32,37 @@ function discard() {
     removeKey(HASH_KEY);
 }
 
+/** @param {string} raw */
+function parsePayload(raw) {
+    try {
+        const payload = JSON.parse(raw);
+        const menus =
+            payload && Object.hasOwn(payload, "cacheOwner") ? payload.menus : payload;
+        if (
+            !menus ||
+            typeof menus !== "object" ||
+            Array.isArray(menus) ||
+            !Array.isArray(menus.root?.children) ||
+            !Object.values(menus).every(
+                (menu) =>
+                    menu &&
+                    typeof menu === "object" &&
+                    !Array.isArray(menu) &&
+                    (menu.children === undefined || Array.isArray(menu.children)),
+            )
+        ) {
+            throw new Error("Invalid menu tree");
+        }
+        return payload;
+    } catch {
+        console.warn(
+            "Corrupt webclient_menus in localStorage; discarding the cached copy",
+        );
+        discard();
+        return null;
+    }
+}
+
 export const menuStorage = {
     /** @returns {{ menus: Object | null, raw: string | null, hash: string | undefined }} */
     read() {
@@ -54,13 +74,28 @@ export const menuStorage = {
         } catch {
             return { menus: null, raw: null, hash: undefined };
         }
-        if (!raw || storedVersion !== cacheVersion()) {
-            if (raw && isForeignUserVersion(storedVersion)) {
+        if (!raw) {
+            return { menus: null, raw: null, hash: undefined };
+        }
+        const payload = parsePayload(raw);
+        if (!payload) {
+            return { menus: null, raw: null, hash: undefined };
+        }
+        let menus = payload;
+        if (payload && Object.hasOwn(payload, "cacheOwner")) {
+            if (JSON.stringify(payload.cacheOwner) !== JSON.stringify(cacheOwner())) {
                 return { menus: null, raw: null, hash: undefined };
             }
+            menus = payload.menus;
+            raw = JSON.stringify(menus);
+        } else if (storedVersion !== cacheVersion()) {
+            // Legacy copies are safe only when their full server version matches.
+            return { menus: null, raw: null, hash: undefined };
+        }
+        if (storedVersion !== cacheVersion()) {
             return { menus: null, raw, hash };
         }
-        return { menus: this.parse(raw), raw, hash };
+        return { menus, raw, hash };
     },
 
     /**
@@ -68,15 +103,10 @@ export const menuStorage = {
      * @returns {Object | null}
      */
     parse(raw) {
-        try {
-            return JSON.parse(raw);
-        } catch {
-            console.warn(
-                "Corrupt webclient_menus in localStorage; discarding the cached copy",
-            );
-            discard();
-            return null;
-        }
+        const payload = parsePayload(raw);
+        return payload && Object.hasOwn(payload, "cacheOwner")
+            ? payload.menus
+            : payload;
     },
 
     /**
@@ -89,7 +119,10 @@ export const menuStorage = {
             return;
         }
         try {
-            browser.localStorage.setItem(PAYLOAD_KEY, JSON.stringify(menus));
+            browser.localStorage.setItem(
+                PAYLOAD_KEY,
+                JSON.stringify({ cacheOwner: cacheOwner(), menus }),
+            );
             if (hash) {
                 browser.localStorage.setItem(HASH_KEY, hash);
             } else if (browser.localStorage.getItem(HASH_KEY) !== null) {

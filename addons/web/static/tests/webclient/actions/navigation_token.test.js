@@ -121,3 +121,14 @@ test("two settles in one epoch: the next mint supersedes BOTH, neither leaks", a
     expect(firstState).toBe("SupersededError");
     expect(secondState).toBe("SupersededError");
 });
+
+test("already-stale settlement consumes a source rejection", async () => {
+    const tracker = new NavigationTracker();
+    const stale = tracker.mint();
+    tracker.mint();
+    await expect(stale.settle(Promise.reject(new Error("source")))).rejects.toThrow(
+        SupersededError,
+    );
+    // HOOT's unhandled rejection collector must remain empty after settlement.
+    await new Promise((resolve) => setTimeout(resolve, 0));
+});

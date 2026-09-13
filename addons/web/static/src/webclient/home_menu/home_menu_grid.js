@@ -68,6 +68,24 @@ export class HomeMenuGrid {
         return this.derived.get(key);
     }
 
+    /** @returns {Map<string, { index: number, length: number }>} */
+    get moveBounds() {
+        return this._memo("moveBounds", () => {
+            const pinned = this.layout.config.pinned;
+            const pinnedIds = new Set(pinned);
+            const unpinned = this.apps().flatMap(({ xmlid }) =>
+                xmlid && !pinnedIds.has(xmlid) ? [xmlid] : [],
+            );
+            const bounds = new Map();
+            for (const order of [pinned, unpinned]) {
+                order.forEach((id, index) =>
+                    bounds.set(id, { index, length: order.length }),
+                );
+            }
+            return bounds;
+        });
+    }
+
     /** @param {HomeMenuApp} app */
     badgeOf(app) {
         return appBadge(this.badges(), app);

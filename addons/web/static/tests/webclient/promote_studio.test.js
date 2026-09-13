@@ -4,6 +4,7 @@ import {
     contains,
     defineModels,
     fields,
+    getService,
     models,
     mountView,
     mountWithCleanup,
@@ -13,6 +14,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
+import { PromoteStudioDialog } from "@web/webclient/promote_studio/promote_studio_dialog";
 import { PromoteStudioSystrayItem } from "@web/webclient/promote_studio/promote_studio_systray_item";
 
 class Partner extends models.Model {
@@ -84,3 +86,32 @@ test("a kanban column does not offer Automations to a non-admin", async () => {
     expect(".o-dropdown--menu").toHaveCount(1);
     expect(".o-dropdown--menu .o_column_automations").toHaveCount(0);
 });
+
+for (const stage of ["lookup", "install", "missing"]) {
+    test(`Studio releases its UI block after ${stage} failure`, async () => {
+        let dialog;
+        patchWithCleanup(PromoteStudioDialog.prototype, {
+            setup() {
+                super.setup(...arguments);
+                dialog = this;
+            },
+        });
+        await mountWithCleanup(PromoteStudioSystrayItem);
+        getService("dialog").add(PromoteStudioDialog, { title: "Studio" });
+        await animationFrame();
+        patchWithCleanup(dialog.ormService, {
+            searchRead: async () => {
+                if (stage === "lookup") {
+                    throw new Error("lookup");
+                }
+                return stage === "missing" ? [] : [{ id: 1 }];
+            },
+            call: async () => {
+                throw new Error("install");
+            },
+        });
+        await expect(dialog.onClickInstallStudio()).rejects.toThrow();
+        expect(getService("ui").blockCount).toBe(0);
+        expect(dialog.disableClick).toBe(false);
+    });
+}

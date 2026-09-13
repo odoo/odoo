@@ -21,6 +21,7 @@ class ProfilingService {
         this.lazy_session = lazy_session;
         this.bus = new EventBus();
         this.stateGeneration = 0;
+        this.pendingMutation = Promise.resolve();
 
         const state = reactive(
             {
@@ -77,25 +78,27 @@ class ProfilingService {
         }
     }
 
-    /** @param {Record<string, any>} params */
-    async setProfiling(params) {
+    /** @param {Record<string, any> | (() => Record<string, any>)} params */
+    setProfiling(params) {
         this.stateGeneration++;
-        const kwargs = Object.assign(
-            {
+        const operation = this.pendingMutation.then(async () => {
+            const kwargs = {
                 collectors: this.state.collectors,
                 params: this.state.params,
                 profile: this.state.isEnabled,
-            },
-            params,
-        );
-        const resp = await this.orm.call("ir.profile", "set_profiling", [], kwargs);
-        if (resp.type) {
-            Promise.resolve(this.action.doAction(resp)).catch(console.warn);
-        } else {
-            this.state.session = resp.session;
-            this.state.collectors = resp.collectors;
-            this.state.params = resp.params;
-        }
+                ...(typeof params === "function" ? params() : params),
+            };
+            const resp = await this.orm.call("ir.profile", "set_profiling", [], kwargs);
+            if (resp.type) {
+                Promise.resolve(this.action.doAction(resp)).catch(console.warn);
+            } else {
+                this.state.session = resp.session;
+                this.state.collectors = resp.collectors;
+                this.state.params = resp.params;
+            }
+        });
+        this.pendingMutation = operation.catch(() => {});
+        return operation;
     }
 
     profilingItem() {
@@ -109,19 +112,21 @@ class ProfilingService {
     }
 
     async toggleProfiling() {
-        await this.setProfiling({ profile: !this.state.isEnabled });
+        await this.setProfiling(() => ({ profile: !this.state.isEnabled }));
     }
 
     /** @param {string} collector */
     async toggleCollector(collector) {
-        const nextCollectors = this.state.collectors.slice();
-        const index = nextCollectors.indexOf(collector);
-        if (index >= 0) {
-            nextCollectors.splice(index, 1);
-        } else {
-            nextCollectors.push(collector);
-        }
-        await this.setProfiling({ collectors: nextCollectors });
+        await this.setProfiling(() => {
+            const nextCollectors = this.state.collectors.slice();
+            const index = nextCollectors.indexOf(collector);
+            if (index >= 0) {
+                nextCollectors.splice(index, 1);
+            } else {
+                nextCollectors.push(collector);
+            }
+            return { collectors: nextCollectors };
+        });
     }
 
     /**
@@ -129,10 +134,9 @@ class ProfilingService {
      * @param {any} value
      */
     async setParam(key, value) {
-        /** @type {Record<string, any>} */
-        const nextParams = { ...this.state.params };
-        nextParams[key] = value;
-        await this.setProfiling({ params: nextParams });
+        await this.setProfiling(() => ({
+            params: { ...this.state.params, [key]: value },
+        }));
     }
 
     /**

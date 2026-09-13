@@ -208,7 +208,7 @@ test(`use stored menus, and update on load_menus return`, async () => {
     def.resolve();
     await animationFrame();
     expect(".o_menu_sections").toHaveText("Test1\nTest2");
-    expect(JSON.parse(browser.localStorage.webclient_menus)).toEqual({
+    expect(menuStorage.parse(browser.localStorage.webclient_menus)).toEqual({
         1: {
             actionID: 666,
             appID: 1,
@@ -285,7 +285,9 @@ test(`stale background revalidation cannot overwrite a fresher reload()`, async 
     await animationFrame();
     expect(getService("menu").getMenu(1).name).toBe("FreshApp");
     expect(browser.localStorage.webclient_menus_hash).toBe("freshhash");
-    expect(JSON.parse(browser.localStorage.webclient_menus)[1].name).toBe("FreshApp");
+    expect(menuStorage.parse(browser.localStorage.webclient_menus)[1].name).toBe(
+        "FreshApp",
+    );
 });
 
 test.tags("desktop");
@@ -317,7 +319,7 @@ test(`corrupt stored menus are discarded and refetched (no boot brick)`, async (
     ).toEqual(["App1"]);
     const stored = browser.localStorage.getItem("webclient_menus");
     expect(stored).not.toBe('{"1": {"appID": 1, TRUNCATED');
-    expect(JSON.parse(stored).root.id).toBe("root");
+    expect(menuStorage.parse(stored).root.id).toBe("root");
 });
 
 test.tags("desktop");
@@ -352,11 +354,11 @@ test(`a preload of nothing is an opt-out, not a cache miss`, async () => {
 
 test.tags("desktop");
 test(`cold boot: falls back to stored menus when preload is null and refetch fails`, async () => {
-    browser.localStorage.webclient_menus_version = "stale-version-hash";
-    browser.localStorage.webclient_menus = JSON.stringify({
+    menuStorage.write({
         1: { appID: 1, children: [], name: "StoredApp", id: 1, actionID: 666 },
         root: { id: "root", name: "root", appID: "root", children: [1] },
     });
+    browser.localStorage.webclient_menus_version = "stale-version-hash";
     patchWithCleanup(
         odoo,
         /** @type {any} */ ({ loadMenusPromise: Promise.resolve(null) }),
@@ -613,8 +615,9 @@ test("a cached menu tree with dangling child ids does not crash the consumers", 
 
 test.tags("desktop");
 test("a cached menu payload with no root entry degrades instead of crashing", async () => {
-    const def = new Deferred();
-    onRpc("/web/webclient/load_menus", () => def);
+    onRpc("/web/webclient/load_menus", () => {
+        throw new Error("offline");
+    });
 
     browser.localStorage.webclient_menus_version = STORED_MENU_VERSION;
     browser.localStorage.webclient_menus = JSON.stringify({
@@ -629,8 +632,6 @@ test("a cached menu payload with no root entry degrades instead of crashing", as
     expect(() =>
         computeAppsAndMenuItems(menuService.getMenuAsTree("root")),
     ).not.toThrow();
-
-    def.resolve();
 });
 
 test.tags("desktop");
@@ -650,4 +651,33 @@ test(`menu cache is scoped per user on a shared browser`, async () => {
     expect(read.raw).toBe(null, {
         message: "another user's payload must be discarded, not merely not served",
     });
+});
+
+test("stale menu fallback is scoped to database and user; legacy caches cannot fall back", () => {
+    patchWithCleanup(session, { db: "database_a", menus_cache_version: "a:2" });
+    patchWithCleanup(user, { userId: 2 });
+    menuStorage.write({ root: { children: [] } }, "hash");
+    patchWithCleanup(session, { menus_cache_version: "new:2" });
+    expect(menuStorage.read().raw).not.toBe(null);
+    patchWithCleanup(session, { db: "database_b" });
+    expect(menuStorage.read().raw).toBe(null);
+    patchWithCleanup(session, { db: "database_a" });
+    patchWithCleanup(user, { userId: 3 });
+    expect(menuStorage.read().raw).toBe(null);
+    patchWithCleanup(user, { userId: 2 });
+    browser.localStorage.webclient_menus = JSON.stringify({ root: { children: [] } });
+    expect(menuStorage.read().raw).toBe(null);
+});
+
+test("valid JSON with invalid menu structure is discarded", () => {
+    for (const raw of [
+        "null",
+        "[]",
+        '{"root":{"children":{}}}',
+        '{"root":{"children":[]},"1":null}',
+    ]) {
+        browser.localStorage.webclient_menus = raw;
+        expect(menuStorage.parse(raw)).toBe(null);
+        expect(browser.localStorage.getItem("webclient_menus")).toBe(null);
+    }
 });

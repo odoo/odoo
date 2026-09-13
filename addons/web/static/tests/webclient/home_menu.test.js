@@ -2091,3 +2091,21 @@ test("leaving Home waits for queued saves and unloading warns while unsaved", as
     window.dispatchEvent(savedUnload);
     expect(savedUnload.defaultPrevented).toBe(false);
 });
+
+test("badge cache follows active company order and ignores old in-flight results", async () => {
+    const env = await makeMockEnv();
+    const pending = new Deferred();
+    patchWithCleanup(user, { activeCompanies: [{ id: 1 }] });
+    registry.category("home_menu_badges").add("company_count", {
+        provide: () => (user.activeCompanies[0].id === 1 ? pending : { "app.test": 2 }),
+    });
+    const apps = [{ xmlid: "app.test" }];
+    const first = loadHomeMenuBadges(env, apps);
+    await Promise.resolve();
+    patchWithCleanup(user, { activeCompanies: [{ id: 2 }] });
+    const second = await loadHomeMenuBadges(env, apps);
+    expect(second["app.test"]).toBe(2);
+    pending.resolve({ "app.test": 1 });
+    await first;
+    expect((await loadHomeMenuBadges(env, apps))["app.test"]).toBe(2);
+});

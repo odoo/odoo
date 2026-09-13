@@ -6,30 +6,46 @@ import { AppEvent } from "@web/core/events";
 import { registry } from "@web/core/registry";
 const SHARE_TARGET_ACK_TIMEOUT = 5000;
 
-/** @returns {Promise<File[] | null>} */
-const getShareTargetDataFromServiceWorker = () =>
-    new Promise((resolve) => {
+/** @param {AbortSignal} signal
+ * @returns {Promise<File[] | null>} */
+const getShareTargetDataFromServiceWorker = (signal) =>
+    new Promise((resolve, reject) => {
         const { serviceWorker } = browser.navigator;
-        if (!serviceWorker.controller) {
+        if (!serviceWorker.controller || signal.aborted) {
             resolve(null);
             return;
         }
         const cleanup = () => {
             browser.clearTimeout(timeoutId);
             serviceWorker.removeEventListener("message", onmessage);
+            signal.removeEventListener("abort", onAbort);
+        };
+        const onAbort = () => {
+            cleanup();
+            resolve(null);
         };
         const onmessage = (/** @type {MessageEvent} */ event) => {
-            if (event.data.action === "odoo_share_target_ack") {
+            if (event.data?.action === "odoo_share_target_ack") {
                 cleanup();
-                resolve(event.data.shared_files);
+                resolve(
+                    Array.isArray(event.data.shared_files)
+                        ? event.data.shared_files
+                        : null,
+                );
             }
         };
         const timeoutId = browser.setTimeout(() => {
             cleanup();
             resolve(null);
         }, SHARE_TARGET_ACK_TIMEOUT);
+        signal.addEventListener("abort", onAbort, { once: true });
         serviceWorker.addEventListener("message", onmessage);
-        serviceWorker.controller.postMessage("odoo_share_target");
+        try {
+            serviceWorker.controller.postMessage("odoo_share_target");
+        } catch (error) {
+            cleanup();
+            reject(error);
+        }
     });
 
 const shareTargetRegistry = registry.category("share_target_apps");
@@ -57,6 +73,7 @@ class ShareTargetService {
      */
     constructor(env, { menu }) {
         this.env = env;
+        this.controller = new AbortController();
         this.menu = menu;
         /** @type {File[] | null} */
         this.sharedFiles = null;
@@ -70,7 +87,7 @@ class ShareTargetService {
                 env.bus.addEventListener(
                     AppEvent.WEB_CLIENT_READY,
                     () => this.receiveSharedFiles(app),
-                    { once: true },
+                    { once: true, signal: this.controller.signal },
                 );
             }
         }
@@ -79,13 +96,20 @@ class ShareTargetService {
     /** @param {any} app */
     async receiveSharedFiles(app) {
         try {
-            this.sharedFiles = await getShareTargetDataFromServiceWorker();
-            if (this.sharedFiles?.length) {
+            this.sharedFiles = await getShareTargetDataFromServiceWorker(
+                this.controller.signal,
+            );
+            if (!this.controller.signal.aborted && this.sharedFiles?.length) {
                 await /** @type {any} */ (this.menu).selectMenu(app);
             }
         } catch (error) {
             console.warn("Failed to receive shared files", error);
         }
+    }
+
+    destroy() {
+        this.controller.abort();
+        this.sharedFiles = null;
     }
 
     /** @return {boolean} */

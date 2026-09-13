@@ -109,7 +109,6 @@ export class HomeMenu extends Component {
     /** @type {HomeMenuLayout} */
     layout;
     /** @type {boolean} */
-    focusSelectedTile = false;
     /** @type {ReturnType<typeof useHomeMenuSearch>} */
     search;
 
@@ -414,9 +413,10 @@ export class HomeMenu extends Component {
      * @param {number} delta
      */
     canMoveApp(app, delta) {
-        const order = this.appOrder(app);
-        const index = order.indexOf(app.xmlid ?? "");
-        return index >= 0 && index + delta >= 0 && index + delta < order.length;
+        const bounds = this.grid.moveBounds.get(app.xmlid ?? "");
+        return Boolean(
+            bounds && bounds.index + delta >= 0 && bounds.index + delta < bounds.length,
+        );
     }
 
     /**
@@ -424,6 +424,7 @@ export class HomeMenu extends Component {
      * @param {number} delta
      */
     moveApp(app, delta) {
+        this.grid.clear();
         if (!this.canMoveApp(app, delta)) {
             return;
         }

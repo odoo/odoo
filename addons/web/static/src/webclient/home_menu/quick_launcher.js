@@ -42,8 +42,6 @@ export class QuickLauncher extends Component {
         this.homeMenu = useService("home_menu");
         this.command = useService("command");
         this.state = useState({ badges: {} });
-        this.badgeRequest = 0;
-        this.composing = false;
         const refresh = () => {
             this._loadCatalog();
             this.loadBadges();

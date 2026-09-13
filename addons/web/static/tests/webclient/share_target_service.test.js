@@ -9,6 +9,7 @@ import {
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
+import { makeLogger } from "@web/core/debug/debug_logger";
 import { AppEvent } from "@web/core/events";
 import { registry } from "@web/core/registry";
 
@@ -219,4 +220,51 @@ test("the first claim that matches an installed app wins", async () => {
     await animationFrame();
 
     expect.verifySteps(["postMessage:odoo_share_target", "selectMenu:expenses"]);
+});
+
+test("destroy cancels a pending share acknowledgement and its listener", async () => {
+    mockLocation("?share_target=trigger");
+    const worker = mockServiceWorker();
+    mockExpensesApp();
+    const env = await makeMockEnv();
+    env.bus.trigger(AppEvent.WEB_CLIENT_READY);
+    expect(worker.listenerCount()).toBe(1);
+    getService("shareTarget").destroy();
+    await animationFrame();
+    expect(worker.listenerCount()).toBe(0);
+    expect.verifySteps(["postMessage:odoo_share_target"]);
+});
+
+test("a malformed share acknowledgement cannot trigger navigation", async () => {
+    mockLocation("?share_target=trigger");
+    const worker = mockServiceWorker({
+        reply: { action: "odoo_share_target_ack", shared_files: "invalid" },
+    });
+    mockExpensesApp();
+    const env = await makeMockEnv();
+    env.bus.trigger(AppEvent.WEB_CLIENT_READY);
+    await animationFrame();
+    expect(getService("shareTarget").hasSharedFiles()).toBe(false);
+    expect(worker.listenerCount()).toBe(0);
+    expect.verifySteps(["postMessage:odoo_share_target"]);
+});
+
+test("a failed share request immediately removes its acknowledgement listener", async () => {
+    mockLocation("?share_target=trigger");
+    const worker = mockServiceWorker();
+    patchWithCleanup(browser.navigator.serviceWorker.controller, {
+        postMessage() {
+            throw new Error("worker is redundant");
+        },
+    });
+    mockExpensesApp();
+    const env = await makeMockEnv();
+    env.bus.trigger(AppEvent.WEB_CLIENT_READY);
+    await animationFrame();
+    makeLogger("web.share_target.test").lifecycle("request failed", {
+        listeners: worker.listenerCount(),
+    });
+    expect(worker.listenerCount()).toBe(0);
+    expect(getService("shareTarget").hasSharedFiles()).toBe(false);
+    expect.verifySteps([]);
 });

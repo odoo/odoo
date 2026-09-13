@@ -3,10 +3,12 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
+import { makeLogger } from "@web/core/debug/debug_logger";
 import { Deferred } from "@web/core/utils/concurrency";
 import {
     registerServiceWorker,
     serviceWorkerService,
+    watchServiceWorkerUpdates,
 } from "@web/webclient/service_worker_service";
 
 async function hasSettled(/** @type {Promise<any>} */ promise) {
@@ -58,6 +60,7 @@ describe("service worker activation settlement", () => {
         await registerServiceWorker(settled);
         expect(await hasSettled(settled)).toBe(true);
         expect(Object.keys(serviceWorkerService.start())).toEqual([
+            "controller",
             "registrationSettled",
             "stopWatching",
         ]);
@@ -99,7 +102,7 @@ describe("service worker teardown", () => {
         expect(stopped).toBe(1);
     });
 
-    test("destroy() before registration answers still stops the late watcher", async () => {
+    test("destroy() before registration answers never starts a watcher", async () => {
         let stopped = 0;
         const registration = /** @type {any} */ ({
             waiting: null,
@@ -130,6 +133,78 @@ describe("service worker teardown", () => {
             await Promise.resolve();
         }
 
-        expect(stopped).toBe(1);
+        expect(stopped).toBe(0);
     });
 });
+
+test("already-installing workers are watched, and stop removes worker listeners", () => {
+    const worker = Object.assign(new EventTarget(), {
+        state: "installing",
+        postMessage: () => expect.step("promote"),
+    });
+    const registration = Object.assign(new EventTarget(), {
+        active: {},
+        waiting: null,
+        installing: worker,
+        update: async () => {},
+    });
+    const stop = watchServiceWorkerUpdates(/** @type {any} */ (registration));
+    worker.state = "installed";
+    worker.dispatchEvent(new Event("statechange"));
+    expect.verifySteps(["promote"]);
+    stop();
+    worker.dispatchEvent(new Event("statechange"));
+    expect.verifySteps([]);
+});
+
+for (const phase of ["registration", "readiness"]) {
+    test(`destroy during pending ${phase} releases resources immediately`, async () => {
+        const log = makeLogger("web.service_worker.test");
+        const registered = new Deferred();
+        const ready = new Deferred();
+        let watching = 0;
+        const worker = Object.assign(new EventTarget(), {
+            state: "installing",
+            postMessage: () => expect.step("promote"),
+        });
+        const registration = Object.assign(new EventTarget(), {
+            active: {},
+            waiting: null,
+            installing: worker,
+            update: async () => {},
+        });
+        patchWithCleanup(browser.navigator, {
+            serviceWorker: /** @type {any} */ ({
+                register: () => registered,
+                ready,
+                controller: {},
+            }),
+        });
+        patchWithCleanup(browser, {
+            setInterval: () => {
+                watching++;
+                return 1;
+            },
+            clearInterval: () => {
+                watching--;
+            },
+        });
+        const service = serviceWorkerService.start();
+        if (phase === "readiness") {
+            registered.resolve(registration);
+            await hasSettled(service.registrationSettled);
+            expect(watching).toBe(1);
+        }
+        service.destroy();
+        log.lifecycle("destroyed", { phase, watching });
+        expect(watching).toBe(0);
+        expect(await hasSettled(service.registrationSettled)).toBe(true);
+        registered.resolve(registration);
+        ready.resolve(registration);
+        await hasSettled(service.registrationSettled);
+        worker.state = "installed";
+        worker.dispatchEvent(new Event("statechange"));
+        expect.verifySteps([]);
+        expect(watching).toBe(0);
+    });
+}

@@ -313,7 +313,9 @@ class ClickBot {
     async getNextApp() {
         if (!this.apps || !this.apps.length) {
             await this.openHomeMenu();
-            this.apps = document.querySelectorAll(".o_apps .o_app");
+            this.apps = document.querySelectorAll(
+                ".o_apps .o_app, .o_pinned_apps .o_app",
+            );
         }
         const appName = /** @type {HTMLElement} */ (this.apps[this.state.appIndex])
             ?.dataset?.menuXmlid;

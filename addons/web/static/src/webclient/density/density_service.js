@@ -27,6 +27,7 @@ export function nextDensity(density) {
 class DensityService {
     constructor() {
         this.persistGeneration = 0;
+        this.persistPending = Promise.resolve();
         const userDensity = user.settings?.density;
         const initial = DENSITIES.includes(userDensity) ? userDensity : "default";
         this.state = reactive({ density: initial });
@@ -56,17 +57,19 @@ class DensityService {
         }
         const generation = ++this.persistGeneration;
         this._apply(density);
-        try {
-            await user.setUserSettings("density", density);
-            if (generation === this.persistGeneration) {
+        const persist = async () => {
+            try {
+                await user.setUserSettings("density", density);
                 this.persistedDensity = density;
+            } catch (error) {
+                if (generation === this.persistGeneration) {
+                    this._apply(this.persistedDensity);
+                }
+                console.warn("Could not persist the content density", error);
             }
-        } catch (error) {
-            if (generation === this.persistGeneration) {
-                this._apply(this.persistedDensity);
-            }
-            console.warn("Could not persist the content density", error);
-        }
+        };
+        this.persistPending = this.persistPending.then(persist);
+        await this.persistPending;
     }
 
     async cycle() {

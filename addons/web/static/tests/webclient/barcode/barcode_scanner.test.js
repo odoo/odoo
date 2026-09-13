@@ -326,7 +326,8 @@ test("a successful read clears the failure count", async () => {
     const errors = [];
     await mountScanner({ onError: (/** @type {any} */ e) => errors.push(e) });
 
-    for (let i = 0; i < 9; i++) {
+    // Startup may schedule the first frame after the first clock advance.
+    for (let i = 0; i < 12 && attempts < 9; i++) {
         await advanceTime(100);
     }
     expect(attempts).toBe(9);

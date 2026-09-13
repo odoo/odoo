@@ -23,6 +23,7 @@ import {
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
+import { session } from "@web/session";
 import { ListRenderer } from "@web/views/list/list_renderer";
 import { SUCCESS_SIGNAL } from "@web/webclient/clickbot/clickbot";
 
@@ -113,103 +114,114 @@ beforeEach(() => {
     ]);
 });
 
-test("clickbot clickeverywhere test", async () => {
-    onRpc("has_group", () => true);
-    mockDate("2017-10-08T15:35:11.000");
-    const clickEverywhereDef = new Deferred();
-    patchWithCleanup(browser, {
-        console: {
-            ...browser.console,
-            log: (msg) => {
-                expect.step(msg);
-                if (msg === SUCCESS_SIGNAL) {
+for (const pinned of [false, true]) {
+    test(`clickbot clickeverywhere test (pinned=${pinned})`, async () => {
+        onRpc("has_group", () => true);
+        mockDate("2017-10-08T15:35:11.000");
+        const clickEverywhereDef = new Deferred();
+        patchWithCleanup(browser, {
+            console: {
+                ...browser.console,
+                log: (msg) => {
+                    expect.step(msg);
+                    if (msg === SUCCESS_SIGNAL) {
+                        clickEverywhereDef.resolve();
+                    }
+                },
+                error: (msg) => {
+                    expect.step(msg);
                     clickEverywhereDef.resolve();
-                }
-            },
-            error: (msg) => {
-                expect.step(msg);
-                clickEverywhereDef.resolve();
-            },
-        },
-    });
-    defineMenus([
-        { id: 1, name: "App1", appID: 1, actionID: 1001, xmlid: "app1" },
-        {
-            id: 2,
-            children: [
-                {
-                    id: 3,
-                    name: "menu 1",
-                    appID: 2,
-                    actionID: 1002,
-                    xmlid: "app2_menu1",
                 },
-                {
-                    id: 4,
-                    name: "menu 2",
-                    appID: 2,
-                    actionID: 1022,
-                    xmlid: "app2_menu2",
-                },
-            ],
-            name: "App2",
-            appID: 2,
-            actionID: 1002,
-            xmlid: "app2",
-        },
-    ]);
-    const webClient = await mountWebClient();
-    patchWithCleanup(odoo, {
-        __WOWL_DEBUG__: { root: webClient },
+            },
+        });
+        defineMenus([
+            { id: 1, name: "App1", appID: 1, actionID: 1001, xmlid: "app1" },
+            {
+                id: 2,
+                children: [
+                    {
+                        id: 3,
+                        name: "menu 1",
+                        appID: 2,
+                        actionID: 1002,
+                        xmlid: "app2_menu1",
+                    },
+                    {
+                        id: 4,
+                        name: "menu 2",
+                        appID: 2,
+                        actionID: 1022,
+                        xmlid: "app2_menu2",
+                    },
+                ],
+                name: "App2",
+                appID: 2,
+                actionID: 1002,
+                xmlid: "app2",
+            },
+        ]);
+        if (pinned) {
+            patchWithCleanup(session, {
+                homemenu_default_config: { pinned: ["app1", "app2"] },
+            });
+        }
+        const webClient = await mountWebClient();
+        patchWithCleanup(odoo, {
+            __WOWL_DEBUG__: { root: webClient },
+        });
+        if (pinned) {
+            await webClient.env.services.home_menu.toggle(true);
+            expect(".o_pinned_apps .o_app").toHaveCount(2);
+        }
+        window.clickEverywhere();
+        await clickEverywhereDef;
+        expect.verifySteps([
+            "Testing app menu: app1",
+            "Testing menu App1 app1",
+            'Clicking on: menu item "App1"',
+            "Clicking on: search bar menu dropdown",
+            "Testing 2 filters",
+            'Clicking on: filter "Not Bar"',
+            'Clicking on: filter "Date"',
+            'Clicking on: filter option "October"',
+            "Testing view switch: kanban",
+            "Clicking on: kanban view switcher",
+            "Clicking on: search bar menu dropdown",
+            "Testing 2 filters",
+            'Clicking on: filter "Not Bar"',
+            'Clicking on: filter "Date"',
+            'Clicking on: filter option "October"',
+            "Clicking on: home menu toggle button",
+            "Testing app menu: app2",
+            "Testing menu App2 app2",
+            'Clicking on: menu item "App2"',
+            "Clicking on: search bar menu dropdown",
+            "Testing 2 filters",
+            'Clicking on: filter "Not Bar"',
+            'Clicking on: filter "Date"',
+            'Clicking on: filter option "October"',
+            "Testing menu menu 1 app2_menu1",
+            'Clicking on: menu item "menu 1"',
+            "Clicking on: search bar menu dropdown",
+            "Testing 2 filters",
+            'Clicking on: filter "Not Bar"',
+            'Clicking on: filter "Date"',
+            'Clicking on: filter option "October"',
+            "Testing menu menu 2 app2_menu2",
+            'Clicking on: menu item "menu 2"',
+            "Clicking on: search bar menu dropdown",
+            "Testing 2 filters",
+            'Clicking on: filter "Not Bar"',
+            'Clicking on: filter "Date"',
+            'Clicking on: filter option "October"',
+            "Successfully tested 2 apps",
+            "Successfully tested 2 menus",
+            "Successfully tested 0 modals",
+            "Successfully tested 10 filters",
+            SUCCESS_SIGNAL,
+        ]);
     });
-    window.clickEverywhere();
-    await clickEverywhereDef;
-    expect.verifySteps([
-        "Testing app menu: app1",
-        "Testing menu App1 app1",
-        'Clicking on: menu item "App1"',
-        "Clicking on: search bar menu dropdown",
-        "Testing 2 filters",
-        'Clicking on: filter "Not Bar"',
-        'Clicking on: filter "Date"',
-        'Clicking on: filter option "October"',
-        "Testing view switch: kanban",
-        "Clicking on: kanban view switcher",
-        "Clicking on: search bar menu dropdown",
-        "Testing 2 filters",
-        'Clicking on: filter "Not Bar"',
-        'Clicking on: filter "Date"',
-        'Clicking on: filter option "October"',
-        "Clicking on: home menu toggle button",
-        "Testing app menu: app2",
-        "Testing menu App2 app2",
-        'Clicking on: menu item "App2"',
-        "Clicking on: search bar menu dropdown",
-        "Testing 2 filters",
-        'Clicking on: filter "Not Bar"',
-        'Clicking on: filter "Date"',
-        'Clicking on: filter option "October"',
-        "Testing menu menu 1 app2_menu1",
-        'Clicking on: menu item "menu 1"',
-        "Clicking on: search bar menu dropdown",
-        "Testing 2 filters",
-        'Clicking on: filter "Not Bar"',
-        'Clicking on: filter "Date"',
-        'Clicking on: filter option "October"',
-        "Testing menu menu 2 app2_menu2",
-        'Clicking on: menu item "menu 2"',
-        "Clicking on: search bar menu dropdown",
-        "Testing 2 filters",
-        'Clicking on: filter "Not Bar"',
-        'Clicking on: filter "Date"',
-        'Clicking on: filter option "October"',
-        "Successfully tested 2 apps",
-        "Successfully tested 2 menus",
-        "Successfully tested 0 modals",
-        "Successfully tested 10 filters",
-        SUCCESS_SIGNAL,
-    ]);
-});
+}
 
 test("only one app", async () => {
     onRpc("has_group", () => true);
@@ -474,7 +486,10 @@ test("clickbot show rpc error when an error dialog is detected", async () => {
                 }
             },
             error: (msg) => {
-                msg = msg.toString().replaceAll(/"id":\d+,/g, `"id":null,`);
+                msg = msg
+                    .toString()
+                    .replaceAll(/"id":\d+,/g, `"id":null,`)
+                    .replaceAll(/id="dialog_\d+_title"/g, 'id="dialog_0_title"');
                 if (msg.startsWith(RPC_ERROR_MARKER)) {
                     msg =
                         RPC_ERROR_MARKER +

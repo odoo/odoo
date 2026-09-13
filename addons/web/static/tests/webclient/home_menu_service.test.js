@@ -1,9 +1,12 @@
-import { expect, test } from "@odoo/hoot";
+import { after, expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-dom";
 import { Deferred } from "@odoo/hoot-mock";
+import { EventBus } from "@odoo/owl";
 import { defineMenus, mountWebClient, onRpc } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
+import { makeLogger } from "@web/core/debug/debug_logger";
 import { AppEvent } from "@web/core/events";
+import { homeMenuService } from "@web/webclient/home_menu/home_menu_service";
 import { WebClient } from "@web/webclient/webclient";
 
 test("use stored menus, and update on load_menus return", async () => {
@@ -56,7 +59,7 @@ test("use stored menus, and update on load_menus return", async () => {
     def.resolve();
     await animationFrame();
     expect(".o_app").toHaveCount(2);
-    expect(JSON.parse(browser.localStorage.webclient_menus)).toEqual({
+    expect(JSON.parse(browser.localStorage.webclient_menus).menus).toEqual({
         1: {
             actionID: 1,
             appID: 1,
@@ -85,4 +88,26 @@ test("use stored menus, and update on load_menus return", async () => {
         },
     });
     expect.verifySteps(["Update Menus"]);
+});
+
+test("home menu services can start independently in separate environments", async () => {
+    const log = makeLogger("web.home_menu.test");
+    const makeEnv = (name) => ({
+        bus: new EventBus(),
+        services: {
+            action: {
+                navigation: { epoch: 0 },
+                doAction: async (action) => expect.step(`${name}:${action}`),
+            },
+        },
+    });
+    const first = homeMenuService.start(makeEnv("first"));
+    after(() => first.destroy());
+    const second = homeMenuService.start(makeEnv("second"));
+    after(() => second.destroy());
+    log.lifecycle("both environments started");
+    first.hasHomeMenu = true;
+    expect(second.hasHomeMenu).toBe(false);
+    await second.toggle(true);
+    expect.verifySteps(["second:menu"]);
 });

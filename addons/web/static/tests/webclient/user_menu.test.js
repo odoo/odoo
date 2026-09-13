@@ -230,3 +230,17 @@ test("the user menu toggle is named as a menu, not as an image", async () => {
     expect(".o_user_menu button").toHaveAttribute("aria-label", "User menu");
     expect(".o_user_menu button img").toHaveAttribute("alt", "");
 });
+
+test("a throwing provider does not remove other user menu entries", async () => {
+    userMenuRegistry.add("broken", () => {
+        throw new Error("broken extension");
+    });
+    userMenuRegistry.add("healthy", () => ({
+        type: "item",
+        description: "Healthy",
+        callback() {},
+    }));
+    await mountWithCleanup(UserMenu);
+    await contains(".o_user_menu button").click();
+    expect(".o-dropdown--menu").toHaveText("Healthy");
+});

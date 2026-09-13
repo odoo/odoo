@@ -2,7 +2,7 @@
 
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { queryFirst } from "@odoo/hoot-dom";
-import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
+import { animationFrame, Deferred, runAllTimers } from "@odoo/hoot-mock";
 import { Component, onMounted, xml } from "@odoo/owl";
 import {
     contains,
@@ -18,6 +18,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
+import { SupersededError } from "@web/core/utils/concurrency";
 import { redirect } from "@web/core/utils/urls";
 
 const { ResCompany, ResPartner, ResUsers } = webModels;
@@ -659,4 +660,34 @@ test("a button whose method returns a notification reloads its view", async () =
 
     expect(".o_notification").toHaveCount(1);
     expect.verifySteps(["web_read"]);
+});
+
+test("a delayed returned action cannot replace newer navigation", async () => {
+    const pending = new Deferred();
+    const entered = new Deferred();
+    actionRegistry.add("delayed_return", () => {
+        entered.resolve();
+        return pending;
+    });
+    await mountWebClient();
+    const action = getService("action");
+    const old = action.doAction({ type: "ir.actions.client", tag: "delayed_return" });
+    await entered;
+    await action.doAction(1);
+    const controller = action.currentController;
+    pending.resolve({ type: "ir.actions.client", tag: "menu" });
+    await expect(old).rejects.toThrow(SupersededError);
+    expect(action.currentController).toBe(controller);
+});
+
+test("a function can deliberately perform nested navigation", async () => {
+    actionRegistry.add("nested_navigation", async (env) => {
+        await env.services.action.doAction(1);
+    });
+    await mountWebClient();
+    await getService("action").doAction({
+        type: "ir.actions.client",
+        tag: "nested_navigation",
+    });
+    expect(getService("action").currentController.action.id).toBe(1);
 });

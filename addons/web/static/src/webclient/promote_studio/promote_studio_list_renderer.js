@@ -22,7 +22,6 @@ export const patchListRendererDesktop = () => ({
     /** @this {PromoteStudioListRenderer} */
     setup() {
         super.setup(...arguments);
-        this.actionService = useService("action");
         this.dialogService = useService("dialog");
         const list = this.props.list;
 

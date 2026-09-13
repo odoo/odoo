@@ -37,8 +37,10 @@ export async function executeClientAction(action, options, am) {
         controller.displayName ||= clientAction.displayName?.toString() || "";
         return am.updateUI(controller, options);
     } else {
+        const token = am.navigation.snapshot();
         const next = await /** @type {any} */ (clientAction)(am.env, action, options);
         if (next) {
+            token.throwIfSuperseded();
             const depth = nextActionDepth(options);
             return am.doAction(next, { ...options, _actionDepth: depth });
         }

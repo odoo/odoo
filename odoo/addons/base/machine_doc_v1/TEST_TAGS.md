@@ -5,7 +5,7 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 ## Quick Reference
 
 ```bash
-# All base tests (4052 methods, 836 classes, 137 files)
+# All base tests (4055 methods, 836 classes, 137 files)
 --test-tags '/base' -u base
 
 # Only post_install tests
@@ -146,7 +146,7 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 | `test_ir_logging.py` | `post_install`, `-at_install` | 3 | 7 | TransactionCase |
 | `test_ir_mail_server.py` | `mail_server` | 4 | 36 | TransactionCase, MockSmtplibCase |
 | `test_ir_mail_server_audit.py` | `post_install`, `-at_install` | 35 | 153 | TransactionCase |
-| `test_ir_model.py` | `-at_install`, `post_install`, `test_eval_context` | 14 | 129 | TransactionCase, HttpCase |
+| `test_ir_model.py` | `-at_install`, `post_install`, `test_eval_context` | 14 | 130 | TransactionCase, HttpCase |
 | `test_ir_model_data.py` | `post_install`, `-at_install` | 2 | 5 | TransactionCase |
 | `test_mixin_merge.py` | `post_install`, `-at_install` | 1 | 5 | TransactionCase |
 | `test_neutralize.py` | `post_install`, `-at_install`, `neutralize` | 2 | 2 | TransactionCase, BaseCase |
@@ -183,7 +183,7 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 | `test_test_retry.py` | `test_retry`, `test_retry_success`, `-standard`, `test_retry_failures`, `test_retry_disable` | 12 | 19 | TestRetryCommon, TransactionCase |
 | `test_tests_tags.py` | `nodatabase` | 4 | 14 | TransactionCase, BaseCase |
 | `test_translate.py` | `post_install`, `-at_install` | 12 | 89 | BaseCase, TransactionCase |
-| `test_views.py` | `post_install`, `-at_install`, `-standard`, `migration`, `render_all_views`, `post_install_l10n`, `at_install`, `modifiers` | 51 | 285 | TransactionCase, ViewCase, BaseCase, TransactionCaseWithUserDemo |
+| `test_views.py` | `post_install`, `-at_install`, `-standard`, `migration`, `render_all_views`, `post_install_l10n`, `at_install`, `modifiers` | 51 | 287 | TransactionCase, ViewCase, BaseCase, TransactionCaseWithUserDemo |
 
 ### Untagged Files (61 files)
 
@@ -257,7 +257,7 @@ These run in **both** at_install and post_install phases by default.
 |--------|-------|
 | Total test files | 137 |
 | Total test classes | 836 |
-| Total test methods | 4052 |
+| Total test methods | 4055 |
 | Files with @tagged | 76 (55%) |
 | Files without @tagged | 61 (45%) |
 | Classes using post_install | 300 |

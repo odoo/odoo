@@ -19,7 +19,12 @@ registry
  * @param {ActionManager} am
  * @returns {Promise<any>}
  */
-export function executeReportClientAction(action, options, am) {
+export async function executeReportClientAction(action, options, am) {
+    if (action.target !== "new" && !options.newWindow) {
+        if (!(await am.confirmLeave({ forceLeave: options.forceLeave }))) {
+            return;
+        }
+    }
     const props = {
         ...options.props,
         data: action.data,

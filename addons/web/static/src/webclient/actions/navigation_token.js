@@ -83,6 +83,10 @@ export class NavigationTracker {
     _settle(token, promise) {
         return new Promise((resolve, reject) => {
             if (!token.isCurrent()) {
+                promise.then(
+                    () => {},
+                    () => {},
+                );
                 reject(new SupersededError());
                 return;
             }

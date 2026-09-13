@@ -217,9 +217,15 @@ export function appSearchKey(app) {
  * @param {string[]} order
  */
 export function reorderApps(apps, order) {
+    const ranks = new Map();
+    for (const [index, xmlid] of order.entries()) {
+        if (!ranks.has(xmlid)) {
+            ranks.set(xmlid, index);
+        }
+    }
     apps.sort((a, b) => {
-        const aIndex = a.xmlid === undefined ? -1 : order.indexOf(a.xmlid);
-        const bIndex = b.xmlid === undefined ? -1 : order.indexOf(b.xmlid);
+        const aIndex = ranks.get(a.xmlid) ?? -1;
+        const bIndex = ranks.get(b.xmlid) ?? -1;
         if (aIndex === -1 && bIndex === -1) {
             return 0;
         }
@@ -273,12 +279,12 @@ export function readHomeMenuConfig(raw) {
                 HOME_MENU_CONFIG_VERSION)
     ) {
         const config = /** @type {Record<string, unknown>} */ (value);
+        const hidden = xmlids(config.hidden);
+        const hiddenIds = new Set(hidden);
         return {
             order: xmlids(config.order),
-            pinned: xmlids(config.pinned).filter(
-                (id) => !xmlids(config.hidden).includes(id),
-            ),
-            hidden: xmlids(config.hidden),
+            pinned: xmlids(config.pinned).filter((id) => !hiddenIds.has(id)),
+            hidden,
         };
     }
     return null;

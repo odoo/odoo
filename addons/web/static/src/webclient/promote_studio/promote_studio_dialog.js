@@ -34,24 +34,29 @@ export class PromoteStudioDialog extends Component {
     }
 
     async onClickInstallStudio() {
+        if (this.disableClick) {
+            return;
+        }
         this.disableClick = true;
         this.uiService.block();
-        const [module] = await this.ormService.searchRead(
-            "ir.module.module",
-            [["name", "=", "web_studio"]],
-            ["id"],
-        );
-        if (!module) {
+        try {
+            const [module] = await this.ormService.searchRead(
+                "ir.module.module",
+                [["name", "=", "web_studio"]],
+                ["id"],
+            );
+            if (!module) {
+                throw new Error("web_studio is not available in this database");
+            }
+            await this.ormService.call("ir.module.module", "button_immediate_install", [
+                [module.id],
+            ]);
+            browser.localStorage.setItem("openStudioOnReload", "main");
+            browser.location.reload();
+        } finally {
             this.uiService.unblock();
             this.disableClick = false;
-            throw new Error("web_studio is not available in this database");
         }
-        await this.ormService.call("ir.module.module", "button_immediate_install", [
-            [module.id],
-        ]);
-        this.uiService.unblock();
-        browser.localStorage.setItem("openStudioOnReload", "main");
-        browser.location.reload();
     }
 
     /** @param {MouseEvent} ev */

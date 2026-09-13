@@ -366,6 +366,21 @@ class TestViewInheritance(ViewCase):
         self.assertEqual(counter.hit, hit)
         self.assertEqual(counter.miss, miss)
 
+    def test_infer_type_from_arch_db(self):
+        for view_type in ("form", "list", "search"):
+            with self.subTest(view_type=view_type):
+                view = self.View.create(
+                    {
+                        "name": f"arch_db_{view_type}",
+                        "model": "res.partner",
+                        "arch_db": f'<{view_type}><field name="name"/></{view_type}>',
+                    }
+                )
+                _logger.debug(
+                    "Inferred %s from arch_db for view %s", view.type, view.id
+                )
+                self.assertEqual(view.type, view_type)
+
     def test_no_arch(self):
         self.d1._check_xml()
 

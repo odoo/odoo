@@ -35,11 +35,23 @@ import { useHomeMenuLayoutSync } from "./home_menu_layout.js";
 export class HomeMenuState {
     hasHomeMenu = false;
     hasBackgroundAction = false;
+    /** @type {HomeMenuAction | null} */
+    currentAction = null;
 
     /** @param {import("@web/env").OdooEnv} env */
     constructor(env) {
         this.action = markRaw(env.services.action);
         this.mutex = markRaw(new Mutex());
+        this.bus = markRaw(env.bus);
+        this.onToggle = () => {
+            document.body.classList.toggle("o_home_menu_background", this.hasHomeMenu);
+        };
+        this.bus.addEventListener(AppEvent.HOME_MENU_TOGGLED, this.onToggle);
+    }
+
+    destroy() {
+        this.bus.removeEventListener(AppEvent.HOME_MENU_TOGGLED, this.onToggle);
+        this.currentAction = null;
     }
 
     /** @param {boolean} [show] */
@@ -118,9 +130,6 @@ export function computeHomeMenuProps(menus) {
 
 const log = makeLogger("web.home_menu");
 
-/** @type {HomeMenuAction | null} */
-let current = null;
-
 export class HomeMenuAction extends Component {
     static components = { HomeMenu };
     static target = "current";
@@ -137,21 +146,27 @@ export class HomeMenuAction extends Component {
         this.menus = useService("menu");
         this.homeMenu = useService("home_menu");
         this.homeMenuProps = computeHomeMenuProps(this.menus);
-        current = this;
+        this.homeMenu.currentAction = markRaw(this);
         this.homeMenu.hasHomeMenu = true;
         this.homeMenu.hasBackgroundAction = this.env.config.breadcrumbs.length > 0;
         log.lifecycle("setup", () => ({ crumbs: this.env.config.breadcrumbs.length }));
         onMounted(() => {
-            log.lifecycle("mounted", () => ({ isCurrent: current === this }));
+            log.lifecycle("mounted", () => ({
+                isCurrent: this.homeMenu.currentAction === this,
+            }));
             this.env.bus.trigger(AppEvent.HOME_MENU_TOGGLED);
         });
         onWillUnmount(() => {
-            log.lifecycle("willUnmount", () => ({ isCurrent: current === this }));
+            log.lifecycle("willUnmount", () => ({
+                isCurrent: this.homeMenu.currentAction === this,
+            }));
             this._release();
             this.env.bus.trigger(AppEvent.HOME_MENU_TOGGLED);
         });
         onWillDestroy(() => {
-            log.lifecycle("willDestroy", () => ({ isCurrent: current === this }));
+            log.lifecycle("willDestroy", () => ({
+                isCurrent: this.homeMenu.currentAction === this,
+            }));
             this._release();
         });
         const refresh = () => {
@@ -162,11 +177,11 @@ export class HomeMenuAction extends Component {
         useHomeMenuLayoutSync(refresh);
     }
     _release() {
-        if (current !== this) {
+        if (this.homeMenu.currentAction !== this) {
             return;
         }
         log.logic("release");
-        current = null;
+        this.homeMenu.currentAction = null;
         this.homeMenu.hasHomeMenu = false;
         this.homeMenu.hasBackgroundAction = false;
     }
@@ -177,12 +192,9 @@ export const homeMenuService = {
     /** @param {import("@web/env").OdooEnv} env */
     start(env) {
         const state = reactive(new HomeMenuState(env));
-        registry.category("actions").add("menu", HomeMenuAction);
-        env.bus.addEventListener(AppEvent.HOME_MENU_TOGGLED, () => {
-            document.body.classList.toggle("o_home_menu_background", state.hasHomeMenu);
-        });
         return state;
     },
 };
 
+registry.category("actions").add("menu", HomeMenuAction);
 registry.category("services").add("home_menu", homeMenuService);

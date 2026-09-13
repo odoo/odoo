@@ -1,7 +1,7 @@
 // @ts-check
 
 import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame } from "@odoo/hoot-mock";
+import { animationFrame, Deferred } from "@odoo/hoot-mock";
 import {
     defineModels,
     getService,
@@ -126,7 +126,10 @@ test("a stale failed persist does not clobber a density chosen since", async () 
     const second = density.set("condensed");
     expect(density.current).toBe("condensed");
 
+    await Promise.resolve();
     pending[0]();
+    await first;
+    await Promise.resolve();
     pending[1]();
     await Promise.all([first, second]);
 
@@ -148,10 +151,39 @@ test("two failing persists do not strand a density the server never received", a
 
     const first = density.set("compact");
     const second = density.set("condensed");
+    await Promise.resolve();
     pending[0]();
+    await first;
+    await Promise.resolve();
     pending[1]();
     await Promise.all([first, second]);
 
     expect(density.current).toBe("default");
     expect(document.body.classList.contains("o-density-compact")).toBe(false);
+});
+
+test("a queued failure restores the last successful density write", async () => {
+    await makeMockEnv();
+    const density = getService("density");
+    const finish = new Deferred();
+    patchWithCleanup(user, {
+        setUserSettings: async (_key, value) => {
+            expect.step(value);
+            if (value === "compact") {
+                await finish;
+            } else {
+                throw new Error("refused");
+            }
+        },
+    });
+    const first = density.set("compact");
+    const second = density.set("condensed");
+    await Promise.resolve();
+    expect.verifySteps(["compact"]);
+    expect(density.current).toBe("condensed");
+    finish.resolve();
+    await Promise.all([first, second]);
+    expect.verifySteps(["condensed"]);
+    expect(density.current).toBe("compact");
+    expect(cookie.get("content_density")).toBe("compact");
 });

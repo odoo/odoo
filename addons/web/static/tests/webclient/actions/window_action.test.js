@@ -1247,7 +1247,7 @@ test("execute smart button and fails on mobile", async () => {
     expect(".o_kanban_view").toHaveCount(1);
 
     def.resolve();
-    await animationFrame();
+    await waitFor(".o_form_view");
     expect(".o_form_view").toHaveCount(1);
     expect(".o_form_button_create:not([disabled]):visible").toHaveCount(1);
     expect.verifySteps([
@@ -1262,7 +1262,7 @@ test("execute smart button and fails on mobile", async () => {
         "has_group",
         "web_read",
     ]);
-    expect.verifyErrors(["Oups"]);
+    await expect.waitForErrors(["Oups"]);
 });
 
 test.tags("desktop");

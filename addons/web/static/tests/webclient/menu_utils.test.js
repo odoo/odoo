@@ -385,3 +385,9 @@ test("app ownership and search terms survive icon customization", () => {
     expect(apps[0].module).toBe("stock");
     expect(apps[0].searchTerms).toInclude("stock");
 });
+
+test("rank lookup preserves first duplicate rank and stable unranked order", () => {
+    const apps = makeApps(["unknown1", "b", "a", "unknown2"]);
+    reorderApps(apps, ["a", "b", "a"]);
+    expect(xmlids(apps)).toEqual(["unknown1", "unknown2", "a", "b"]);
+});

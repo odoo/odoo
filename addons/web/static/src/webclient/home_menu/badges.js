@@ -3,8 +3,10 @@
 
 import { onMounted, onWillUnmount, useExternalListener } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
+import { UserEvent } from "@web/core/events";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/translation";
+import { user, userBus } from "@web/core/user";
 
 const badgeProviders = registry.category("home_menu_badges");
 badgeProviders.addValidation({
@@ -63,6 +65,10 @@ export function useHomeMenuBadgeUpdates(env, onChange) {
         }
     };
     onMounted(subscribe);
+    useExternalListener(userBus, UserEvent.ACTIVE_COMPANIES_CHANGED, () => {
+        invalidateHomeMenuBadges(env);
+        onChange();
+    });
     useExternalListener(badgeProviders, "UPDATE", () => {
         subscribe();
         onChange();
@@ -80,9 +86,10 @@ export function loadHomeMenuBadges(env, apps, { refresh = false } = {}) {
     const catalog = [...apps].sort((a, b) =>
         (a.xmlid ?? "").localeCompare(b.xmlid ?? ""),
     );
-    const key = JSON.stringify(
+    const key = JSON.stringify([
+        user.activeCompanies.map(({ id }) => id),
         catalog.map(({ xmlid, module, models }) => [xmlid, module, models]),
-    );
+    ]);
     const owner = env.services ?? env;
     const previous = cache.get(owner);
     const now = Date.now();

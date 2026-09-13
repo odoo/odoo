@@ -882,6 +882,8 @@ class IrUiView(models.Model):
                         if _is_arch_absent(arch):
                             arch = values.get("arch_base")
                         if _is_arch_absent(arch):
+                            arch = values.get("arch_db")
+                        if _is_arch_absent(arch):
                             raise ValidationError(_("Missing view architecture."))
                         values["type"] = etree.fromstring(arch).tag
                         if values["type"] not in valid_types:

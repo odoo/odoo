@@ -5,12 +5,14 @@ import { Component, xml } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { MAX_ACTION_DEPTH } from "@web/webclient/actions/action_constants";
 import { executeClientAction } from "@web/webclient/actions/action_executors/client";
+import { NavigationTracker } from "@web/webclient/actions/navigation_token";
 
 /** @param {Object} [overrides] */
 function makeFakeAm(overrides = {}) {
     /** @type {Record<string, any[]>} */
     const calls = { updateUI: [], doAction: [], confirmLeave: [], actionInfo: [] };
     const am = {
+        navigation: new NavigationTracker(),
         env: { isSmall: false, marker: "the-env" },
         confirmLeave: async (opts) => {
             calls.confirmLeave.push(opts);

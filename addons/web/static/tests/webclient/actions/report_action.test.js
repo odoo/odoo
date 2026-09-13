@@ -16,9 +16,10 @@ import {
     serverState,
     stepAllNetworkCalls,
 } from "@web/../tests/web_test_helpers";
+import { browser } from "@web/core/browser/browser";
 import { router } from "@web/core/browser/router";
+import { AppEvent } from "@web/core/events";
 import { download } from "@web/core/network/download";
-import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { ReportAction } from "@web/webclient/actions/reports/report_action";
 import { downloadReport } from "@web/webclient/actions/reports/utils";
@@ -150,7 +151,7 @@ test("send context in case of html report", async () => {
     patchWithCleanup(ReportAction.prototype, {
         setup() {
             super.setup(...arguments);
-            rpc(this.reportUrl);
+            browser.fetch(this.reportUrl);
             this.reportUrl = "about:blank";
         },
     });
@@ -355,15 +356,15 @@ test("context is correctly passed to the client action report", async (assert) =
     patchWithCleanup(ReportAction.prototype, {
         setup() {
             super.setup(...arguments);
-            rpc(this.reportUrl);
+            browser.fetch(this.reportUrl);
             this.reportUrl = "about:blank";
         },
     });
 
-    onRpc("/report/html", async (request) => {
+    onRpc("/report/html/ennio.morricone/99", async (request) => {
         const search = decodeURIComponent(new URL(request.url).search);
         expect(search).toBe(
-            `?context={"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1]}`,
+            `?context={"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1],"rabbia":"E Tarantella","active_ids":[99]}`,
         );
         return true;
     });
@@ -405,4 +406,19 @@ test("url is valid", async (assert) => {
     const urlState = router.current;
     expect(urlState.action === "report.client_action").toBe(false);
     expect(urlState.action).toBe(12);
+});
+
+test("direct HTML report dispatch respects an inline leave veto", async () => {
+    const webClient = await mountWebClient();
+    const action = getService("action");
+    const controller = action.currentController;
+    const veto = ({ detail }) => detail.push(() => false);
+    webClient.env.bus.addEventListener(AppEvent.CLEAR_UNCOMMITTED_CHANGES, veto);
+    await action.doAction({
+        type: "ir.actions.report",
+        report_type: "qweb-html",
+        report_name: "test",
+    });
+    expect(action.currentController).toBe(controller);
+    webClient.env.bus.removeEventListener(AppEvent.CLEAR_UNCOMMITTED_CHANGES, veto);
 });

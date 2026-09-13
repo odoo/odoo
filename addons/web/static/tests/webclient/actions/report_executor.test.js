@@ -17,6 +17,7 @@ function makeFakeAm(overrides = {}) {
     /** @type {Record<string, any[]>} */
     const calls = { updateUI: [], doAction: [], ui: [], actionInfo: [] };
     const am = {
+        confirmLeave: async () => true,
         env: { marker: "the-env" },
         uiService: {
             block: () => calls.ui.push("block"),
