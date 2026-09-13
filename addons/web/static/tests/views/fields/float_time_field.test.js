@@ -120,20 +120,55 @@ test("FloatTimeField with formula", async () => {
             </form>`,
     });
 
-    await contains(".o_field_float_time[name=qux] input").edit("=2*3");
-    expect(".o_duration_popover").toHaveText("6h");
+    await contains(".o_field_float_time[name=qux] input").edit("=2+3");
+    expect(".o_duration_popover").toHaveText("5h");
     await clickSave();
-    expect(".o_field_float_time[name=qux] input").toHaveValue("6h");
+    expect(".o_field_float_time[name=qux] input").toHaveValue("5h");
 
-    await contains(".o_field_float_time[name=qux] input").edit("=2*");
-    expect(".o_duration_popover").toHaveCount(0);
+    await contains(".o_field_float_time[name=qux] input").edit("=2h+30m");
+    expect(".o_duration_popover").toHaveText("2h 30m");
     await press("enter");
-    expect(".o_field_float_time.o_field_invalid").toHaveCount(1);
+    expect(".o_field_float_time[name=qux] input").toHaveValue("2h 30m");
+
+    await contains(".o_field_float_time[name=qux] input").edit("=2h+30m+1h-15m");
+    expect(".o_duration_popover").toHaveText("3h 15m");
+    await press("enter");
+    expect(".o_field_float_time[name=qux] input").toHaveValue("3h 15m");
+
+    await contains(".o_field_float_time[name=qux] input").edit("+=30m");
+    expect(".o_duration_popover").toHaveText("3h 45m");
+    await press("enter");
+    expect(".o_field_float_time[name=qux] input").toHaveValue("3h 45m");
+
+    await contains(".o_field_float_time[name=qux] input").edit("-=2h");
+    expect(".o_duration_popover").toHaveText("1h 45m");
+    await press("enter");
+    expect(".o_field_float_time[name=qux] input").toHaveValue("1h 45m");
+
+    await contains(".o_field_float_time[name=qux] input").edit("+=1h+45m-2m");
+    expect(".o_duration_popover").toHaveText("3h 28m");
+    await press("enter");
+    expect(".o_field_float_time[name=qux] input").toHaveValue("3h 28m");
+
+    await contains(".o_field_float_time[name=qux] input").edit("=3:30+2:15-:30");
+    expect(".o_duration_popover").toHaveText("5h 15m");
+    await press("enter");
+    expect(".o_field_float_time[name=qux] input").toHaveValue("5h 15m");
 
     await contains(".o_field_float_time[name=qux] input").edit("=2-");
-    expect(".o_duration_popover").toHaveCount(0);
+    expect(".o_duration_popover").toHaveText("2h");
     await press("enter");
-    expect(".o_field_float_time.o_field_invalid").toHaveCount(1);
+    expect(".o_field_float_time[name=qux] input").toHaveValue("2h");
+
+    await contains(".o_field_float_time[name=qux] input").edit("=2h*3-30m");
+    expect(".o_duration_popover").toHaveText("5h 30m");
+    await press("enter");
+    expect(".o_field_float_time[name=qux] input").toHaveValue("5h 30m");
+
+    await contains(".o_field_float_time[name=qux] input").edit("/=2");
+    expect(".o_duration_popover").toHaveText("2h 45m");
+    await press("enter");
+    expect(".o_field_float_time[name=qux] input").toHaveValue("2h 45m");
 });
 
 test("float_time field does not have an inputmode attribute", async () => {
