@@ -184,10 +184,13 @@ class _RequestServeMixin(RequestState):
         cr = None
         try:
             with _debug.perf("http.registry.acquire", db=db) as span:
-                with borrow_request():
-                    registry = Registry(db)
-                cr = registry.cursor(readonly=True)
-                self.registry = registry.check_signaling(cr)
+                with _debug.perf("http.registry.lookup", db=db):
+                    with borrow_request():
+                        registry = Registry(db)
+                with _debug.perf("http.registry.cursor", db=db, readonly=True):
+                    cr = registry.cursor(readonly=True)
+                with _debug.perf("http.registry.signaling", cr=cr, db=db):
+                    self.registry = registry.check_signaling(cr)
                 span.set(reloaded=self.registry is not registry)
             _debug.pipeline(
                 "http.registry.acquired",
