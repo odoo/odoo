@@ -1,4 +1,4 @@
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, t, useProps } from "@odoo/owl";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
@@ -7,13 +7,13 @@ import { rpc } from "@web/core/network/rpc";
 export class SlideUnsubscribeDialog extends Component {
     static template = "website_slides.SlideUnsubscribeDialog";
     static components = { CheckBox, Dialog };
-    static props = {
-        channelId: Number,
-        isFollower: { type: Boolean, optional: true },
-        visibility: String,
-        enroll: { type: String, optional: true },
-        close: Function,
-    };
+    props = useProps({
+        channelId: t.number(),
+        isFollower: t.boolean().optional(),
+        visibility: t.string(),
+        enroll: t.string().optional(),
+        close: t.function(),
+    });
 
     setup() {
         this.state = proxy({

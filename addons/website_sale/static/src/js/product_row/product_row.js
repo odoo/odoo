@@ -1,19 +1,19 @@
-import { Component } from '@odoo/owl';
+import { Component, t, useProps } from '@odoo/owl';
 import { formatCurrency } from '@web/core/currency';
 import comparisonUtils from '@website_sale/js/comparison_utils';
 
 export class ProductRow extends Component {
     static template = 'website_sale.ProductRow';
-    static props = {
-        id: Number,
-        display_name: String,
-        website_url: String,
-        image_url: String,
-        price: Number,
-        strikethrough_price: { type: Number, optional: true },
-        hide_price: Boolean,
-        currency_id: Number,
-    };
+    props = useProps({
+        id: t.number(),
+        display_name: t.string(),
+        website_url: t.string(),
+        image_url: t.string(),
+        price: t.number(),
+        strikethrough_price: t.number().optional(),
+        hide_price: t.boolean(),
+        currency_id: t.number(),
+    });
 
     /**
      * Remove the product from the comparison.

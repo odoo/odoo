@@ -3,7 +3,6 @@ import { Component, onWillStart } from '@odoo/owl';
 
 export class SurveySurveyActionHelper extends Component {
     static template = 'survey.SurveySurveyActionHelper';
-    static props = {};
 
     setup() {
         this.orm = useService('orm');

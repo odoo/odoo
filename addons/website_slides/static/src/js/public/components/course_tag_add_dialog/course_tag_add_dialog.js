@@ -1,4 +1,4 @@
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, t, useProps } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { SelectMenu } from "@web/core/select_menu/select_menu";
@@ -8,12 +8,12 @@ import { rpc } from "@web/core/network/rpc";
 
 export class CourseTagAddDialog extends Component {
     static components = { Dialog, DropdownItem, SelectMenu };
-    static props = {
-        channelId: { type: Number, optional: true },
-        defaultTag: { type: String, optional: true },
-        tagIds: Array,
-        close: Function,
-    };
+    props = useProps({
+        channelId: t.number().optional(),
+        defaultTag: t.string().optional(),
+        tagIds: t.array(),
+        close: t.function(),
+    });
     static template = "website_slides.CourseTagAddDialog";
 
     async setup() {

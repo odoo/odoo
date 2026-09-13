@@ -3,16 +3,16 @@ import { session } from "@web/session";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
 
-import { Component, proxy, signal } from "@odoo/owl";
+import { Component, proxy, signal, t, useProps } from "@odoo/owl";
 
 export class EmailSharingInput extends Component {
     static template = "website_slides.EmailSharingInput";
-    static props = {
-        id: { type: Number },
-        isChannel: { type: Boolean, optional: true },
-        isFullscreen: { type: Boolean, optional: true },
-        category: { type: String, optional: true },
-    };
+    props = useProps({
+        id: t.number(),
+        isChannel: t.boolean().optional(),
+        isFullscreen: t.boolean().optional(),
+        category: t.string().optional(),
+    });
 
     inputRef = signal.ref();
 

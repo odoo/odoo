@@ -1,27 +1,26 @@
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 
 export class ModuleToInstallIcon extends Component {
     static template = "website_slides.ModuleToInstallIcon";
-    static props = {
-        title: String,
-        moduleId: Number,
-        motivational: String,
-        onClickInstallModuleIcon: Function,
-    };
+
+    props = useProps({
+        title: t.string(),
+        moduleId: t.number(),
+        motivational: t.string(),
+        onClickInstallModuleIcon: t.function(),
+    });
 }
 
 export class SlideCategoryIcon extends Component {
     static template = "website_slides.SlideCategoryIcon";
-    static props = {
-        slideCategory: String,
-        categoryData: {
-            type: Object,
-            shape: {
-                icon: String,
-                iconClass: String,
-                label: String,
-            },
-        },
-        onClickSlideCategoryIcon: Function,
-    };
+
+    props = useProps({
+        slideCategory: t.string(),
+        categoryData: t.object({
+            icon: t.string(),
+            iconClass: t.string().optional(),
+            label: t.string(),
+        }),
+        onClickSlideCategoryIcon: t.function(),
+    });
 }

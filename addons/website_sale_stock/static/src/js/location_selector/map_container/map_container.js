@@ -2,41 +2,32 @@ import {
     LocationSchedule
 } from '@website_sale_stock/js/location_selector/location_schedule/location_schedule';
 import { Map } from '@website_sale_stock/js/location_selector/map/map';
-import { Component, onWillStart, proxy } from '@odoo/owl';
+import { Component, onWillStart, proxy, t, useProps } from '@odoo/owl';
 import { AssetsLoadingError, loadCSS, loadJS } from '@web/core/assets';
 import { _t } from '@web/core/l10n/translation';
 
 export class MapContainer extends Component {
     static components = { LocationSchedule, Map };
     static template = 'website_sale_stock.locationSelector.mapContainer';
-    static props = {
-        locations: {
-            type: Array,
-            element: {
-                type: Object,
-                shape: {
-                    id: [String, Number],
-                    name: String,
-                    opening_hours: {
-                        type: Object,
-                        values: { type: Array, element: String },
-                    },
-                    street: String,
-                    city: String,
-                    zip_code: String,
-                    state: { type: String, optional: true },
-                    country_code: String,
-                    additional_data: { type: Object, optional: true },
-                    distance: { type: Number, optional: true },
-                    latitude: [String, Number],
-                    longitude: [String, Number],
-                },
-            },
-        },
-        selectedLocationId: [String, { value: false }],
-        setSelectedLocation: Function,
-        validateSelection: Function,
-    };
+    props = useProps({
+        locations: t.array(t.object({
+            id: t.or([t.string(), t.number()]),
+            name: t.string(),
+            opening_hours: t.record(t.array(t.string())),
+            street: t.string(),
+            city: t.string(),
+            zip_code: t.string(),
+            state: t.string().optional(),
+            country_code: t.string(),
+            additional_data: t.object().optional(),
+            distance: t.number().optional(),
+            latitude: t.or([t.string(), t.number()]),
+            longitude: t.or([t.string(), t.number()]),
+        })),
+        selectedLocationId: t.or([t.string(), t.literal(false)]),
+        setSelectedLocation: t.function(),
+        validateSelection: t.function(),
+    });
 
     setup() {
         this.state = proxy({

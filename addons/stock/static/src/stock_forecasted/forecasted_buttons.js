@@ -1,14 +1,15 @@
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { Component, markup } from "@odoo/owl";
+import { Component, markup, t, useProps } from "@odoo/owl";
 
 export class ForecastedButtons extends Component {
     static template = "stock.ForecastedButtons";
-    static props = {
-        action: Object,
-        resModel: { type: String, optional: true },
-        reloadReport: Function,
-    };
+
+    props = useProps({
+        action: t.object(),
+        resModel: t.string().optional(),
+        reloadReport: t.function(),
+    });
 
     setup() {
         this.actionService = useService("action");
