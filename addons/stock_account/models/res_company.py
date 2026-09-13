@@ -68,7 +68,7 @@ class ResCompany(models.Model):
 
         moves_vals = {
             'journal_id': self.account_stock_journal_id.id,
-            'date': at_date or fields.Date.today(),
+            'date': at_date or fields.Date.context_today(self.with_context(tz=self.tz or self.env.user.tz or 'UTC')),
             'ref': _('Stock Closing'),
             'line_ids': [Command.create(aml_vals) for aml_vals in aml_vals_list],
             'company_id': self.id,
