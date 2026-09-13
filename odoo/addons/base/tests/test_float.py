@@ -4,7 +4,7 @@
 from math import log10
 
 from odoo.tests.common import TransactionCase
-from odoo.tools import float_compare, float_is_zero, float_repr, float_round, float_split, float_split_str
+from odoo.tools import float_compare, float_is_zero, float_repr, float_round, float_split, float_split_str, parse_float
 
 
 class TestFloatPrecision(TransactionCase):
@@ -277,3 +277,18 @@ class TestFloatPrecision(TransactionCase):
         amount_test = currency.amount_to_text(0.28)
         self.assertNotEqual(amount_test, amount_target,
                             "Amount in text should not depend on float representation")
+
+    def test_parse_float(self):
+        self.env['res.lang']._activate_lang('fr_FR')
+        self.env['res.lang']._activate_lang('en_US')
+        fr = self.env['res.lang']._lang_get('fr_FR')
+        en = self.env['res.lang']._lang_get('en_US')
+
+        self.assertEqual(parse_float('123456.78', en), 123_456.78)
+        self.assertEqual(parse_float('123,456.78', en), 123_456.78)
+        self.assertEqual(parse_float('123456,78', en), 12_345_678.00)  # could be an error
+
+        with self.assertRaises(ValueError):
+            parse_float('123456.78', fr)
+        self.assertEqual(parse_float('123456,78', fr), 123_456.78)
+        self.assertEqual(parse_float('123 456,78', fr), 123_456.78)
