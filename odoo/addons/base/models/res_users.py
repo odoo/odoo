@@ -240,7 +240,7 @@ class ResUsers(models.Model):
 
     @tools.ormcache("self.id")
     def _get_company_ids(self) -> tuple[int, ...]:
-        domain = [("active", "=", True), ("user_ids", "in", self.id)]
+        domain = [("active", "=", True), ("user_ids", "in", [self.id])]
         return self.env["res.company"].search(domain)._ids
 
     @api.model

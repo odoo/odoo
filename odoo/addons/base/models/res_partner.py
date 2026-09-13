@@ -1426,7 +1426,7 @@ class ResPartner(models.Model):
             .with_context(active_test=False)
             ._read_group(
                 [
-                    ("group_ids", "in", public_group.id),
+                    ("group_ids", "in", [public_group.id]),
                     ("partner_id", "in", self.ids),
                 ],
                 groupby=["partner_id"],
