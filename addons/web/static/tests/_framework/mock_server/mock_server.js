@@ -989,7 +989,7 @@ export class MockServer {
                 }
                 return jsonRpcParams;
             } else {
-                jsonRpcParams.result = result;
+                jsonRpcParams.result = result === undefined ? null : result;
                 return jsonRpcParams;
             }
         } else if (error) {
