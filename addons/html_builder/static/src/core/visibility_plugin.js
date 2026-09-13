@@ -103,9 +103,12 @@ export class VisibilityPlugin extends Plugin {
         this.config.updateInvisibleElementsPanel();
     }
 
-    cleanForSaveVisibility(rootEl) {
+    cleanForSaveVisibility(rootEl, { saveSnippet } = {}) {
         const invisibleEls = getElementsWithOption(rootEl, invisibleElementsSelector);
         for (const invisibleEl of invisibleEls) {
+            if (saveSnippet && rootEl === invisibleEl) {
+                continue;
+            }
             // Hide the invisible elements.
             this.toggleTargetVisibility(invisibleEl, false, false, true);
             // Remove the `data-invisible` attribute from conditionally hidden
