@@ -18,6 +18,8 @@ class Xmlids:
 
     def of_records(self, records: BaseModel) -> dict[int, list[tuple[str, bool]]]:
         result: dict[int, list[tuple[str, bool]]] = defaultdict(list)
+        if "ir.model.data" not in records.env.registry:
+            return result
         for data in (
             records.env["ir.model.data"]
             .sudo()
@@ -38,6 +40,8 @@ class Xmlids:
         return result
 
     def records_of(self, records: BaseModel) -> BaseModel:
+        if "ir.model.data" not in records.env.registry:
+            return records.browse()
         return (
             records.env["ir.model.data"]
             .sudo()

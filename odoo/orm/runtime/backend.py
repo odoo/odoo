@@ -12,6 +12,7 @@ from decimal import Decimal
 from itertools import batched
 
 from psycopg.errors import (
+    ForeignKeyViolation,
     InvalidTextRepresentation,
     NumericValueOutOfRange,
     UntranslatableCharacter,
@@ -1632,6 +1633,84 @@ class _InMemoryReadGroup:
         return terms
 
 
+class _ForeignKeyPlan:
+    __slots__ = ("backend", "m2m_rows", "nulls", "registry", "rows")
+
+    def __init__(self, backend, registry) -> None:
+        self.backend = backend
+        self.registry = registry
+        self.rows: dict[str, set[int]] = {}
+        self.nulls: dict[str, list[tuple[int, dict]]] = {}
+        self.m2m_rows: dict[str, set[int]] = {}
+
+    def delete(self, model: BaseModel, ids: set[int]) -> None:
+        storage = self.backend.storage
+        seen = self.rows.setdefault(model._table, set())
+        ids = ids.difference(seen)
+        if not ids:
+            return
+        seen.update(ids)
+        for field in model._fields.values():
+            if field.is_many2many and field.store and field.relation and field.column1:
+                self._drop_m2m_rows(field.relation, field.column1, ids)
+        for field in self.registry.fields_by_comodel.get(model._name, ()):
+            if not field.store:
+                continue
+            if field.is_many2many:
+                if field.relation and field.column2:
+                    self._drop_m2m_rows(field.relation, field.column2, ids)
+                continue
+            if not field.is_many2one or field.company_dependent:
+                continue
+            referrer = model.env[field.model_name]
+            if referrer._abstract or not referrer._table:
+                continue
+            table = referrer._table
+            hit = [
+                row_id
+                for row_id in storage.get_table_ids(table)
+                if (row := storage.get_row(table, row_id))
+                and row.get(field.name) in ids
+                and row_id not in self.rows.get(table, ())
+            ]
+            if not hit:
+                continue
+            _debug.logic(
+                "backend.memory.foreign_key",
+                model=model._name,
+                referrer=f"{field.model_name}.{field.name}",
+                action=field.ondelete,
+                rows=len(hit),
+            )
+            if field.ondelete == "cascade":
+                self.delete(referrer, set(hit))
+            elif field.ondelete == "restrict":
+                raise ForeignKeyViolation(
+                    f"update or delete on table {model._table!r} violates foreign "
+                    f"key constraint on table {table!r}: key still referenced by "
+                    f"{field.model_name}.{field.name}"
+                )
+            else:
+                self.nulls.setdefault(table, []).extend(
+                    (row_id, {field.name: None}) for row_id in hit
+                )
+
+    def _drop_m2m_rows(self, relation: str, column: str, ids: set[int]) -> None:
+        self.m2m_rows.setdefault(relation, set()).update(
+            row_id
+            for row_id, row in self.backend._iter_m2m_rows(relation)
+            if row.get(column) in ids
+        )
+
+    def apply(self, storage) -> None:
+        for table, updates in self.nulls.items():
+            storage.update_rows(table, updates)
+        for relation, row_ids in self.m2m_rows.items():
+            storage.remove_rows(relation, list(row_ids))
+        for table, ids in self.rows.items():
+            storage.remove_rows(table, list(ids))
+
+
 class InMemoryBackend:
     supports_column_scan: bool = False
 
@@ -1946,7 +2025,13 @@ class InMemoryBackend:
         return model.browse(locked)
 
     def unlink_rows(self, model: BaseModel, sub_ids: tuple[int, ...]) -> None:
-        self.storage.remove_rows(model._table, list(sub_ids))
+        # what the database's foreign keys do on DELETE -- cascade through,
+        # null out or refuse the referencing many2one columns, and drop the
+        # rows of every many2many relation table naming the ids -- planned
+        # in full first, so a refusal deep in a cascade deletes nothing
+        plan = _ForeignKeyPlan(self, model.env.registry)
+        plan.delete(model, set(sub_ids))
+        plan.apply(self.storage)
 
     def _iter_m2m_rows(self, relation: str):
         for row_id in self.storage.get_table_ids(relation):

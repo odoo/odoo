@@ -46,8 +46,8 @@ class FileStore:
         )
 
     def of_records(self, records: BaseModel) -> BaseModel:
-        # every file behind the records, the field-owned ones included, which the
-        # attachment model's search hides unless told otherwise
+        if "ir.attachment" not in records.env.registry:
+            return records.browse()
         return (
             self._attachments(records.env)
             .with_context(skip_res_field_check=True)
