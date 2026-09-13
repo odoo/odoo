@@ -1,5 +1,13 @@
 import { Registry } from "@odoo/o-spreadsheet";
-import { Component, computed, onWillStart, proxy, useEffect, useListener } from "@odoo/owl";
+import {
+    Component,
+    computed,
+    onWillStart,
+    proxy,
+    useEffect,
+    useListener,
+    useProps,
+} from "@odoo/owl";
 import { SpreadsheetComponent } from "@spreadsheet/actions/spreadsheet_component";
 import { SpreadsheetShareButton } from "@spreadsheet/components/share_button/share_button";
 import { _t } from "@web/core/l10n/translation";
@@ -28,8 +36,9 @@ export class SpreadsheetDashboardAction extends Component {
         SpreadsheetShareButton,
         DashboardSearchBar,
     };
-    static props = { ...standardActionServiceProps };
     static displayName = _t("Dashboards");
+
+    props = useProps(standardActionServiceProps);
 
     activeDashboardId = computed(() => this.loader.activeDashboardId);
     dashboard = computed(() => {

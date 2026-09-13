@@ -1,4 +1,4 @@
-import { Component, signal, status, proxy } from "@odoo/owl";
+import { Component, signal, status, proxy, t, useProps } from "@odoo/owl";
 import { DashboardFacet } from "../dashboard_facet/dashboard_facet";
 import { DashboardDateFilter } from "../dashboard_date_filter/dashboard_date_filter";
 import { DashboardSearchBarMenu } from "../dashboard_search_bar_menu/dashboard_search_bar_menu";
@@ -24,7 +24,10 @@ export class DashboardSearchBar extends Component {
         Dropdown,
         DropdownItem,
     };
-    static props = { model: Object, toggler: Object };
+    props = useProps({
+        model: t.object(),
+        toggler: t.object(),
+    });
 
     inputRef = signal.ref();
 

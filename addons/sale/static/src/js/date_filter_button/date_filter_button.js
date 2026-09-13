@@ -1,4 +1,4 @@
-import { Component } from '@odoo/owl';
+import { Component, t, useProps } from '@odoo/owl';
 import { Dropdown } from '@web/core/dropdown/dropdown';
 import { DropdownItem } from '@web/core/dropdown/dropdown_item';
 import { _t } from '@web/core/l10n/translation';
@@ -13,18 +13,16 @@ export const DATE_OPTIONS = [
 export class DateFilterButton extends Component {
 	static template = 'sale.DateFilterButton';
 	static components = { Dropdown, DropdownItem };
-	static props = {
-		selectedDateFilter: {
-			type: Object,
-			optional: true,
-			shape: {
-				id: String,
-				label: String,
-				periodDays: Number,
-			},
-		},
-		update: Function,
-	};
+	props = useProps({
+		selectedDateFilter: t
+			.object({
+				id: t.string(),
+				label: t.string(),
+				periodDays: t.number(),
+			})
+			.optional(),
+		update: t.function(),
+	});
 
 	get dateFilters() {
 		return DATE_OPTIONS;

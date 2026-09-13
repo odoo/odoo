@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { formatMonetary } from "@web/views/fields/formatters";
@@ -6,7 +6,7 @@ import { formatMonetary } from "@web/views/fields/formatters";
 export class ExtraTotalsField extends Component {
     static template = "sale.ExtraTotalsField";
 
-    static props = standardFieldProps;
+    props = useProps(standardFieldProps);
 
     formatMonetary(amount) {
         return formatMonetary(amount, {

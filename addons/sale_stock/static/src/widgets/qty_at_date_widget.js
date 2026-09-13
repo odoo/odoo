@@ -3,18 +3,18 @@ import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { usePopover } from "@web/core/popover/popover_hook";
-import { Component, computed } from "@odoo/owl";
+import { Component, computed, t, useProps } from "@odoo/owl";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 import { roundPrecision } from "@web/core/utils/numbers";
 import { _t } from "@web/core/l10n/translation";
 
 export class QtyAtDatePopover extends Component {
     static template = "sale_stock.QtyAtDatePopover";
-    static props = {
-        record: Object,
-        calcData: Object,
-        close: Function,
-    };
+    props = useProps({
+        record: t.object(),
+        calcData: t.object(),
+        close: t.function(),
+    });
     setup() {
         this.actionService = useService("action");
     }
@@ -44,7 +44,7 @@ export class QtyAtDatePopover extends Component {
 export class QtyAtDateWidget extends Component {
     static components = { Popover: QtyAtDatePopover };
     static template = "sale_stock.QtyAtDate";
-    static props = {...standardWidgetProps};
+    props = useProps(standardWidgetProps);
 
     calcData = computed(() => this.initCalcData());
 

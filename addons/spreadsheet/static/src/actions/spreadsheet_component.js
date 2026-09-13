@@ -1,6 +1,6 @@
 import { useSpreadsheetNotificationStore } from "@spreadsheet/hooks";
 import { Spreadsheet, Model, stores } from "@odoo/o-spreadsheet";
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 
 const { useStoreProvider, useStore, ViewportsStore, ModelStore } = stores;
 
@@ -12,10 +12,10 @@ const { useStoreProvider, useStore, ViewportsStore, ModelStore } = stores;
 export class SpreadsheetComponent extends Component {
     static template = "spreadsheet.SpreadsheetComponent";
     static components = { Spreadsheet };
-    static props = {
-        model: Model,
-        registerStoreProvider: { type: Function, optional: true },
-    };
+    props = useProps({
+        model: t.instanceOf(Model),
+        registerStoreProvider: t.function().optional(),
+    });
 
     get model() {
         return this.props.model;

@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { FilterValue } from "@spreadsheet/global_filters/components/filter_value/filter_value";
 import {
     getEmptyFilterValue,
@@ -16,12 +16,12 @@ export class DashboardFilterList extends Component {
     static template = "spreadsheet.DashboardFilterList";
     static components = { FilterValue };
 
-    static props = {
-        filtersAndValues: Array,
-        searchableParentRelations: Object,
-        onFilterChange: Function,
-        model: Object,
-    };
+    props = useProps({
+        filtersAndValues: t.array(),
+        searchableParentRelations: t.object(),
+        onFilterChange: t.function(),
+        model: t.object(),
+    });
 
     setup() {
         this.uiService = useService("ui");
