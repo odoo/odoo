@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="oauth_client_registration_action" model="ir.actions.act_window">
+        <field name="name">Register Client</field>
+        <field name="res_model">oauth.client.registration</field>
+        <field name="target">new</field>
+        <field name="view_mode">form</field>
+    </record>
+
+    <record id="oauth_client_registration_view_form" model="ir.ui.view">
+        <field name="name">oauth.client.registration.view.form</field>
+        <field name="model">oauth.client.registration</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <p>
+                        Register a client so it can generate access token through OAuth.
+                    </p>
+                    <group>
+                        <field name="client_name" placeholder="e.g. Claude Desktop"/>
+                        <field name="client_type"/>
+                        <field name="resource_id" options="{'no_create': True, 'no_open': True}"/>
+                    </group>
+                    <group string="Redirect URIs">
+                        <field name="redirect_uris" nolabel="1" colspan="2"
+                            placeholder="The redirect URIs seperated by new lines"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_register" type="object" string="Save" class="btn-primary" data-hotkey="q"/>
+                    <button special="cancel" string="Discard" class="btn-secondary" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="oauth_client_view_list" model="ir.ui.view">
+        <field name="name">oauth.client.list</field>
+        <field name="model">oauth.client</field>
+        <field name="arch" type="xml">
+            <list create="false" delete="false" decoration-muted="not active">
+                <header>
+                    <button name="%(oauth_client_registration_action)d" type="action"
+                        string="Register Client" class="btn-primary" display="always"/>
+                </header>
+                <field name="client_name"/>
+                <field name="client_id"/>
+                <field name="client_type"/>
+                <field name="resource_id"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+</odoo>
