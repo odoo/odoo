@@ -1000,11 +1000,11 @@ class TestPurchase(AccountTestInvoicingCommon):
         po = po_form.save()
         po.action_confirm()
         self.assertEqual(po.state, "done")
-        po.action_print_quotation()
+        po.action_print_order()
         self.assertEqual(po.state, "done")
         po.action_cancel()
         self.assertEqual(po.state, "cancel")
-        po.action_print_quotation()
+        po.action_print_order()
         self.assertEqual(po.state, "cancel")
 
     def test_purchase_warnings(self):

@@ -375,10 +375,9 @@ class PurchaseOrder(models.Model):
         super()._merge_finalize(target, sources)
         target._merge_alternative_po(sources)
 
-    def action_print_quotation(self):
-        return self.action_print_order()
-
     def _get_print_report_xmlid(self):
+        if all(order.state == "done" for order in self):
+            return "purchase.action_report_purchase_order"
         return "purchase.report_purchase_quotation"
 
     def action_send_rfq(self):
@@ -712,9 +711,9 @@ class PurchaseOrder(models.Model):
     def _get_mail_template(self):
         self.check_singleton()
         xmlid = (
-            "purchase.email_template_edi_purchase"
-            if self.env.context.get("send_rfq", False)
-            else "purchase.email_template_edi_purchase_done"
+            "purchase.email_template_edi_purchase_done"
+            if self.state == "done"
+            else "purchase.email_template_edi_purchase"
         )
         return (
             self.env.ref(xmlid, raise_if_not_found=False) or self.env["mail.template"]
