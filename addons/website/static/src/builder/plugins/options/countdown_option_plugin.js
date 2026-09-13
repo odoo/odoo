@@ -6,7 +6,6 @@ import { Plugin } from "@html_editor/plugin";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
-import { renderToElement } from "@web/core/utils/render";
 import { SelectTemplateAction } from "../customize_website_plugin";
 
 export class CountdownOption extends BaseOptionComponent {
@@ -65,6 +64,7 @@ export class CountdownOptionPlugin extends Plugin {
 
 export class BaseCountdownAction extends BuilderAction {
     static id = "baseCountdown";
+    static dependencies = ["websiteBridge"];
     /**
      * Used to preserve modified end messages through end action changes. This
      * allows the user to test options without losing their progress while in
@@ -96,7 +96,10 @@ export class BaseCountdownAction extends BuilderAction {
             if (!endMessageEl) {
                 const existingEndMessage = this.editingElEndMessages.get(editingElement);
                 editingElement.appendChild(
-                    existingEndMessage || renderToElement("website.s_countdown.end_message")
+                    existingEndMessage ||
+                        this.dependencies.websiteBridge.renderToElement(
+                            "website.s_countdown.end_message"
+                        )
                 );
             }
         } else {
@@ -184,13 +187,16 @@ export class SetColorInlineCountdownAction extends StyleAction {
 
 class SetCountdownTitlePositionAction extends ClassAction {
     static id = "setCountdownTitlePosition";
+    static dependencies = ["websiteBridge"];
 
     apply({ editingElement }) {
         super.apply(...arguments);
         // Compatibility for old snippets (without a title element).
         if (!editingElement.querySelector(".s_countdown_title")) {
             const wrapperEl = editingElement.querySelector(".s_countdown_canvas_wrapper");
-            const titleEl = renderToElement("website.s_countdown.title");
+            const titleEl = this.dependencies.websiteBridge.renderToElement(
+                "website.s_countdown.title"
+            );
             wrapperEl.insertAdjacentElement("beforebegin", titleEl);
         }
     }
