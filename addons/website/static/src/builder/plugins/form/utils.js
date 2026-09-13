@@ -632,3 +632,20 @@ export function getDefaultFieldType(field) {
     }
     return field.type;
 }
+
+/**
+ * Ensures a `many2many_selection` field keeps a default selection when
+ * `allowEmpty` is disabled.
+ *
+ * @param {Object} field The field object
+ */
+export function many2manyDefaultSelection(field) {
+    if (
+        field.type === "many2many_selection" &&
+        !field.allowEmpty &&
+        field.records.length &&
+        !field.records.some((rec) => rec.selected)
+    ) {
+        field.records[0].selected = true;
+    }
+}

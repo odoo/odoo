@@ -34,6 +34,7 @@ import {
     rerenderField,
     getFormCacheKey,
     getDescriptionPosition,
+    many2manyDefaultSelection,
 } from "./utils";
 import { SyncCache } from "@html_builder/utils/sync_cache";
 import { _t } from "@web/core/l10n/translation";
@@ -626,6 +627,7 @@ export class FormOptionPlugin extends Plugin {
             field.value = "";
             field.propertyValue = "";
         }
+        many2manyDefaultSelection(field);
         const targetEl = oldFieldEl.querySelector(".s_website_form_input");
         if (targetEl) {
             if (["checkbox", "radio"].includes(targetEl.getAttribute("type"))) {
@@ -838,11 +840,12 @@ export class FormOptionPlugin extends Plugin {
             const field = Object.assign({}, fields[getFieldName(fieldEl)]);
             const type = getFieldType(fieldEl);
 
-            const [optionText, checkType] = selectEl
-                ? [_t("Option List"), "exclusive_boolean"]
+            const isMultiple = ["one2many", "many2many", "many2many_selection"].includes(type);
+            const optionText = selectEl
+                ? _t("Option List")
                 : type === "selection"
-                ? [_t("Radio Button List"), "exclusive_boolean"]
-                : [_t("Checkbox List"), "boolean"];
+                ? _t("Radio Button List")
+                : _t("Checkbox List");
             const defaults = [...fieldEl.querySelectorAll("[checked], [selected]")].map((el) =>
                 isSmallInteger(el.value) ? parseInt(el.value) : el.value
             );
@@ -854,9 +857,9 @@ export class FormOptionPlugin extends Plugin {
             valueList = proxy({
                 title: optionText,
                 addItemTitle: _t("Add New Option"),
-                checkType,
+                checkType: isMultiple ? "boolean" : "exclusive_boolean",
                 defaultItemName: _t("Item"),
-                hasDefault: ["one2many", "many2many"].includes(type) ? "multiple" : "unique",
+                hasDefault: isMultiple ? "multiple" : "unique",
                 defaults: JSON.stringify(defaults),
                 availableRecords: availableRecords,
                 newRecordId: isFieldCustom(fieldEl) ? getNewRecordId(fieldEl) : "",
