@@ -54,13 +54,6 @@ if not any(
 ):
     _psycopg_pool_logger.addFilter(_SuppressKnownPoolWarnings())
 
-_DEFAULT_MAX_IDLE = 60 * 10
-_DEFAULT_MAX_LIFETIME = 3600
-_DEFAULT_BORROW_TIMEOUT = 30.0
-_DEFAULT_REAP_IDLE_TTL = 300.0
-
-_DEFAULT_POOL_WORKERS = 1
-
 _DIRECT_CONNECTION = object()
 
 _DIRECT_IDLE_SESSION_TIMEOUT_MS = 900 * 1000
@@ -136,14 +129,25 @@ class ConnectionPool:
         readonly: bool = False,
         minconn: int = 0,
         *,
-        borrow_timeout: float = _DEFAULT_BORROW_TIMEOUT,
-        max_lifetime: int = _DEFAULT_MAX_LIFETIME,
-        max_idle: int = _DEFAULT_MAX_IDLE,
-        reap_idle_ttl: float = _DEFAULT_REAP_IDLE_TTL,
+        borrow_timeout: float | None = None,
+        max_lifetime: int | None = None,
+        max_idle: int | None = None,
+        reap_idle_ttl: float | None = None,
         budget: ConnectionBudget | None = None,
-        pool_workers: int = _DEFAULT_POOL_WORKERS,
+        pool_workers: int | None = None,
         settings: PoolSettings | None = None,
     ):
+        settings = settings if settings is not None else current()
+        if borrow_timeout is None:
+            borrow_timeout = settings.borrow_timeout
+        if max_lifetime is None:
+            max_lifetime = settings.conn_max_lifetime
+        if max_idle is None:
+            max_idle = settings.conn_max_idle
+        if reap_idle_ttl is None:
+            reap_idle_ttl = settings.pool_reap_idle
+        if pool_workers is None:
+            pool_workers = settings.pool_workers
         if maxconn <= 0:
             raise ValueError(f"ConnectionPool maxconn must be >= 1, got {maxconn}")
         if minconn < 0:
@@ -164,7 +168,7 @@ class ConnectionPool:
         self._max_lifetime = max_lifetime
         self._max_idle = max_idle
         self._pool_workers = pool_workers
-        self._settings = settings if settings is not None else current()
+        self._settings = settings
         self._reaper = IdlePoolReaper(reap_idle_ttl)
         self._lock = threading.Lock()
         self.stats = PoolStats()
@@ -567,10 +571,7 @@ class ConnectionPool:
             try:
                 return pool.getconn(timeout=remaining), pool
             except PoolClosed as e:
-                with self._lock:
-                    if self._pools.get(key) is pool:
-                        del self._pools[key]
-                self._close_pool_safely(pool)
+                self._discard_pool(key, pool)
                 if attempt == 1:
                     _logger.info("Connection to the database failed: %s", e)
                     raise PoolError(str(e)) from e
@@ -588,10 +589,7 @@ class ConnectionPool:
                     waiting=pool.get_stats().get("requests_waiting", 0),
                 )
                 if pool.get_stats().get("pool_size", 0) == 0:
-                    with self._lock:
-                        if self._pools.get(key) is pool:
-                            del self._pools[key]
-                    self._close_pool_safely(pool)
+                    self._discard_pool(key, pool)
                     _debug.lifecycle(
                         "pool.closed_after_timeout", db=dict(key).get("database")
                     )
@@ -610,6 +608,12 @@ class ConnectionPool:
                 _logger.info("Connection to the database failed: %s", e)
                 raise
         raise PoolError("getconn retry budget exhausted")
+
+    def _discard_pool(self, key: frozenset, pool: _PsycopgPool) -> None:
+        with self._lock:
+            if self._pools.get(key) is pool:
+                del self._pools[key]
+        self._close_pool_safely(pool)
 
     def _check_borrowed_connection(
         self, conn: psycopg.Connection, pool: _PsycopgPool

@@ -432,9 +432,7 @@ class TestPipelineAccountsForTheSyncCost(unittest.TestCase):
             f"measuring: {dropped.stderr.strip()}"
         )
 
-    def test_pipelined_execute_values_accounts_for_almost_all_wall_time(self):
-        import time
-
+    def _timed_cursor(self):
         import odoo.tools.config  # noqa: F401  installs the pool settings source
         from odoo.db import db_connect
 
@@ -443,9 +441,13 @@ class TestPipelineAccountsForTheSyncCost(unittest.TestCase):
         # attribute -- that is the contract `_record_metrics` relies on.
         thread.query_count = 0  # type: ignore[attr-defined]
         thread.query_time = 0.0  # type: ignore[attr-defined]
+        return thread, db_connect(self.DBNAME).cursor()
 
-        db = db_connect(self.DBNAME)
-        with db.cursor() as cr:
+    def test_pipelined_execute_values_accounts_for_almost_all_wall_time(self):
+        import time
+
+        thread, cr = self._timed_cursor()
+        with cr:
             cr.execute("CREATE TABLE t_pipeline_sync(id serial primary key, a int)")
             cr.commit()
 
@@ -460,12 +462,80 @@ class TestPipelineAccountsForTheSyncCost(unittest.TestCase):
             cr.rollback()
 
         self.assertGreater(wall, 0)
+        # The remainder is the Python that renders 100 batches, which is client
+        # time and is not booked; an untimed sync reads a few percent, not 75.
         self.assertGreater(
             recorded / wall,
-            0.9,
+            0.75,
             f"only {recorded:.4f}s of {wall:.4f}s wall time was accounted for "
             f"-- the pipeline sync/flush cost is going untimed again",
         )
+
+    def test_python_time_inside_the_block_is_not_query_time(self):
+        import time
+
+        thread, cr = self._timed_cursor()
+        with cr:
+            before_time = thread.query_time  # type: ignore[attr-defined]
+            t0 = time.monotonic()
+            with cr.pipeline():
+                cr.execute("SELECT 1")
+                cr.execute("SELECT 2")
+                time.sleep(0.05)
+                cr.execute("SELECT 3")
+            wall = time.monotonic() - t0
+            recorded = thread.query_time - before_time  # type: ignore[attr-defined]
+            cr.rollback()
+
+        self.assertGreater(recorded, 0.0)
+        self.assertLess(
+            recorded / wall,
+            0.2,
+            f"{recorded:.4f}s of {wall:.4f}s was booked as query time, but the "
+            f"block was 50 ms of sleep: wall-minus-statements is not a sync cost",
+        )
+
+    def test_a_fetch_inside_the_block_is_the_wait_it_is(self):
+        import time
+
+        thread, cr = self._timed_cursor()
+        with cr:
+            before_time = thread.query_time  # type: ignore[attr-defined]
+            t0 = time.monotonic()
+            with cr.pipeline():
+                cr.execute("SELECT pg_sleep(0.02)")
+                cr.execute("SELECT pg_sleep(0.02)")
+                cr.execute("SELECT 3")
+                rows = cr.fetchall()
+            wall = time.monotonic() - t0
+            recorded = thread.query_time - before_time  # type: ignore[attr-defined]
+            cr.rollback()
+
+        self.assertEqual(rows, [(3,)])
+        self.assertGreater(
+            recorded / wall,
+            0.9,
+            f"only {recorded:.4f}s of {wall:.4f}s: psycopg syncs on the first "
+            f"fetch, so that fetch is where the server wait lands",
+        )
+
+    def test_rowcount_inside_the_block_is_the_statements_own(self):
+        _, cr = self._timed_cursor()
+        with cr:
+            cr.execute("CREATE TABLE t_pipeline_rowcount(id int)")
+            cr.execute("INSERT INTO t_pipeline_rowcount SELECT generate_series(1, 7)")
+            with cr.pipeline():
+                cr.execute("UPDATE t_pipeline_rowcount SET id = id WHERE id <= 3")
+                self.assertEqual(cr.rowcount, 3)
+                cr.execute("UPDATE t_pipeline_rowcount SET id = id WHERE id <= 5")
+                self.assertTrue(cr.in_pipeline)
+                self.assertEqual(cr.rowcount, 5)
+                cr.execute("DELETE FROM t_pipeline_rowcount WHERE id > 100")
+                self.assertEqual(cr.rowcount, 0)
+                cr.execute("SELECT id FROM t_pipeline_rowcount ORDER BY id")
+                self.assertEqual([c.name for c in cr.description], ["id"])
+                self.assertEqual(cr.fetchone(), (1,))
+            cr.rollback()
 
 
 class TestEnableLogging(unittest.TestCase):

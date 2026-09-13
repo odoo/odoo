@@ -66,13 +66,15 @@ def register_adapters(conn: psycopg.Connection) -> None:
     conn.adapters.register_loader("numeric", _NumericToFloatLoader)
 
 
-def _configure_connection(conn: psycopg.Connection) -> None:
-    register_adapters(conn)
-
+def _mark_idle(conn: psycopg.Connection) -> None:
     conn.prepare_threshold = _PREPARE_THRESHOLD
     conn.prepared_max = _PREPARED_MAX
-
     setattr(conn, _IDLE_SINCE_ATTR, monotonic())
+
+
+def _configure_connection(conn: psycopg.Connection) -> None:
+    register_adapters(conn)
+    _mark_idle(conn)
     _debug.lifecycle(
         "connection.configured",
         backend_pid=getattr(getattr(conn, "info", None), "backend_pid", None),
@@ -95,9 +97,7 @@ def _reset_connection(conn: psycopg.Connection, *, discard: bool | None = None) 
     conn.autocommit = False
     conn.isolation_level = None
     conn.read_only = None
-    conn.prepare_threshold = _PREPARE_THRESHOLD
-    conn.prepared_max = _PREPARED_MAX
-    setattr(conn, _IDLE_SINCE_ATTR, monotonic())
+    _mark_idle(conn)
     _debug.lifecycle(
         "connection.returned_idle",
         discard=discard,

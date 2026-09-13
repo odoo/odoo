@@ -13,7 +13,7 @@ files here carry one, so this README is the only map.
 | `__init__.py` | Public API only: `db_connect`, `close_db`/`close_all`, `drain_db`/`drain_all`, `get_pool_health`, the process `registry`, and `sql_counter` via module `__getattr__` | no |
 | `endpoints.py` | `EndpointRegistry`: the lazy registry of `ConnectionPool`s keyed `(endpoint, readonly)` and of `ConnectionBudget`s keyed by endpoint, plus the endpoint resolution (`get_endpoint_key`, `get_maxconn_at_endpoint`) both sides of the budget comparison share. Was module state in `__init__.py` | no |
 | `cursor.py` | `BaseCursor` (hooks, flush convergence, savepoint seam) and `Cursor` (the `cr` object: execute/executemany/pipeline, DDL handling, close/commit/rollback guards) | no |
-| `pool.py` | `ConnectionPool` (per-DSN psycopg_pool registry, borrow/give_back, idle-pool reaper, stale-credential eviction, direct maintenance-DB path, `health()`) and `Connection` | no |
+| `pool.py` | `ConnectionPool` (per-DSN psycopg_pool registry, borrow/give_back, idle-pool reaper, stale-credential eviction, direct maintenance-DB path, `get_health()`) and `Connection` | no |
 | `probe.py` | `ReachabilityProbe`: is this DSN connectable, and permanently or not — the pre-flight probe, its leader/follower dedup, the `postgres`-side existence check and the per-key proof. Was inlined in `pool.py` | no |
 | `budget.py` | `ConnectionBudget`: the shared `db_maxconn` cap, its permit `Condition` and its saturation counter | yes |
 | `stats.py` | `PoolStats`: borrow-wait histogram, pool churn and probe-outcome counters behind `ConnectionPool.get_health()` | yes |
@@ -39,9 +39,8 @@ module here imports `odoo.tools`: the `db-imports-only-libs` contract holds the
 package to `odoo.libs`, `odoo.exceptions`, `odoo.release` and the standard
 library.
 
-> **This table is enforced.** `tooling/architecture/package_index_check.py`
-> fails CI if a module in `odoo/db/` is missing from it, or if it names a module
-> that no longer exists. Add the row in the same commit as the module.
+> **Nothing enforces this table** since `tooling/` went (2026-09-11). Add the
+> row in the same commit as the module; a stale row is found by reading.
 
 ## Load-bearing invariants (cross-module)
 
@@ -146,8 +145,8 @@ library.
   its own terms: it costs nothing, the failure it prevents is unrecoverable
   without a restart, and "nothing raises here today" is not a property anyone
   can hold still. Pinned in
-  `tests/test_invariants.py::TestAFailedBorrowNeverKeepsItsPermit`, which
-  asserts structurally that nothing follows the guarded block.
+  `tests/test_invariants.py::TestPermitAccounting`, which walks both paths
+  and asserts the permit is released on every exit.
 - **A saturated pool names its culprits**: every borrow records the connection
   in a `CheckoutTracker` with the holding thread and the borrow site, and every
   return removes it, so what is left is by definition still out. `db_maxconn`
@@ -209,7 +208,7 @@ library.
 - **The pre-flight probe answers a question once**: it converts a permanent
   connect failure into a millisecond error instead of a ~30s `PoolTimeout`, at
   the cost of a full extra connect. A DSN that has connected is recorded in
-  `_reachable_keys`, so a pool *rebuild* (idle reaper, `PoolClosed` race) skips
+  `ReachabilityProbe` as proven, so a pool *rebuild* (idle reaper, `PoolClosed` race) skips
   it — with the default `db_pool_reap_idle` (300s) below `db_conn_max_idle`
   (600s), a quiet database is reaped and rebuilt repeatedly and used to re-probe
   every time. The proof is revoked wherever its premise could have changed:
@@ -243,9 +242,9 @@ library.
   to cost a warm pooled connection on top of the error.
 - **One borrow, one deadline**: `db_borrow_timeout` is taken at the top of
   `ConnectionPool.borrow` and every step that can block derives its own timeout
-  from it — the cold path's pre-flight probe (and its `_database_absent`
+  from it — the cold path's pre-flight probe (and its `is_database_absent`
   fallback), the semaphore wait, `getconn`, and the direct maintenance connect.
-  `_libpq_connect_timeout` clamps each libpq connect and returns `0` to mean
+  `get_libpq_connect_timeout` clamps each libpq connect and returns `0` to mean
   *skip this connect*, never a value to pass on: libpq reads `connect_timeout=0`
   as "wait forever", so handing it a shrinking budget would make the tail of a
   deadline unbounded.
@@ -456,7 +455,7 @@ library.
   pool still considers warm.
   **Maintenance connections are exempt from `db_session_gucs`, deliberately**,
   and both borrow paths now render options through one `_prepare_connection_options`
-  where `_borrow_directly` passes `session_gucs=False`. They used to build the
+  where `_borrow_directly` passes `session_gucs=None`. They used to build the
   string twice and the direct copy simply never gained `_prepare_session_gucs`, which
   reads like drift — but applying them there "for consistency" is a regression,
   measured: under `db_session_gucs = statement_timeout=50ms` a `CREATE DATABASE
@@ -552,6 +551,40 @@ library.
   psycopg reports *that* a queued command failed and not *which*, so a block of
   unrelated statements can only say so, while one whose statements share a
   template should pass it.
+- **A pipeline's server wait is measured where psycopg waits, never inferred
+  from the block's wall time.** In pipeline mode `execute` returns once the
+  command is queued, so a statement's own `delay` is client time and the server
+  work lands in whichever call syncs: the first `fetch*()` after a queued
+  statement (`Cursor._fetch_pipeline`) or the block exit (`Pipeline.__exit__`).
+  The previous accounting booked `wall − Σ statement delays` as query time,
+  which is right for `execute_values` — a block of nothing but statements — and
+  wrong for every ORM block: `Transaction._flush_as` wraps the whole
+  `flush_model` loop in `cr.pipeline()`, so field conversion and value building
+  were reported as `query_time` in the request log. Measured, 50 ms of
+  `time.sleep` between two pipelined statements read **52.5 ms of query time
+  before and 1.7 ms after**. `_wait_in_pipeline` times the fetches while the
+  mode is entered, an `ExitStack` callback pushed right after
+  `enter_context(self._cnx.pipeline())` — so it runs first on the LIFO exit —
+  stamps when the pipeline's own exit starts, and the block books the sum.
+  `execute_values` over 20 000 rows still accounts for 88% of its wall time;
+  the remainder is the Python that renders 100 batches, and it is client time.
+
+  **`rowcount` and `description` sync on demand for the same reason.** psycopg's
+  `rowcount` reads a field that the pipeline has not filled yet: measured, every
+  statement after the mode arms answered **−1**, and `bool(-1)` is `True`, so an
+  `if cr.rowcount:` in a pipelined path passes for zero rows. psycopg's own
+  fetches sync when the cursor has no `pgresult` yet; `Cursor.rowcount` and
+  `Cursor.description` do the same through the public `Pipeline.sync()` of the
+  pipeline the block entered, and the sync counts as a wait. Pinned in
+  `tests/test_cursor.py::TestPipelineAccountsForTheSyncCost`.
+- **The libpq health parameters are ones every supported libpq accepts.**
+  `_HEALTH_PARAMS` reaches libpq as keywords on every connect, pooled and
+  direct, and libpq rejects a keyword it does not know outright — not with a
+  warning, with a failed connect. `min_protocol_version` (libpq 18) sat in that
+  dict at its own default of `3.0`: measured, a connect with it and without it
+  both negotiate protocol 30000, so it bought nothing and made the whole layer
+  refuse to connect through any wheel built on libpq 17. The youngest keyword
+  left is `tcp_user_timeout` (libpq 12); `tests/test_utils.py` pins the set.
 - **A savepoint is never opened inside a pipeline**: a savepoint exists to make
   the next failure recoverable, and in pipeline mode it cannot. PostgreSQL
   discards every queued command after an error until the next sync, and the
@@ -627,12 +660,12 @@ library.
   against the real keyword list.
 - **A gauge that is rendered as a pair is written as a pair.**
   `ReplicaLagGate.record` set `last_lag` and `_lagging` from one measurement
-  with no lock, and `snapshot` renders them side by side, so an operator could
+  with no lock, and `get_snapshot` renders them side by side, so an operator could
   read a 99 s lag beside `lagging: false`. That is not theoretical on the GIL —
   the two stores are separated by a `max()` and a comparison, and one writer
   against one reader produced exactly that pair within 2 s. `record` and
-  `snapshot` take the lock; `allows()` stays lock-free because it reads one
-  flag and runs per read-only cursor.
+  `get_snapshot` take the lock; `is_replica_usable()` stays lock-free because it
+  reads one flag and runs per read-only cursor.
 
   The leak-report throttle (`CheckoutTracker.acquire_report_interval`) is guarded on
   policy rather than on evidence, and says so: 16 threads released from a
@@ -658,12 +691,12 @@ library.
   in-flight registration), leaving a window where a key proven between them
   started a second probe — a full extra connect on the path whose whole
   purpose is to avoid one. One acquisition answers both.
-- **`allow()` must not read through `closed`.** `CircuitBreaker._lock` is a
-  plain `threading.Lock`, and `allow` read `closed` from inside it, so a
-  `closed` property that took the lock would deadlock every caller —
-  demonstrated, `allow()` hung past a 2 s join. The lock-held path reads
+- **`acquire_attempt()` must not read through `closed`.** `CircuitBreaker._lock`
+  is a plain `threading.Lock`, and `acquire_attempt` read `closed` from inside
+  it, so a `closed` property that took the lock would deadlock every caller —
+  demonstrated, it hung past a 2 s join. The lock-held path reads
   `_open` directly; the property exists for callers outside the lock. The
-  cooldown expression that `cooldown_remaining` and `snapshot` had a copy of
+  cooldown expression that `cooldown_remaining` and `get_snapshot` had a copy of
   each is now `_get_cooldown_remaining_locked`, which does not take the lock
   because both of its callers already hold it.
 - **A bug is not an unavailable database.** `_get_connection_with_retry` ended in
@@ -694,7 +727,7 @@ library.
   `self.stats.x += 1` at all. `x += 1` on an attribute is a non-atomic
   read-modify-write, so the counters that exist to diagnose concurrency were the
   ones losing increments, and the borrow-wait histogram could drift out of step
-  with the total it summarises because they were separate writes. `snapshot()`
+  with the total it summarises because they were separate writes. `get_snapshot()`
   reads them all under the same lock for the same reason. The pin that used to
   record this counted how many raw sites happened to sit inside the *pool's*
   lock — which guards `_pools`, not the counters, so any protection was
@@ -713,7 +746,7 @@ library.
   `_LOCALE_INDEPENDENT_AUTH_MARKERS` keys on `pg_hba.conf`, a filename no
   catalogue translates, and it classifies correctly in English, Spanish, French
   and German. The missing-database case does not depend on text at all — the
-  probe falls back to `_database_absent`, which asks `pg_database`. What remains
+  probe falls back to `is_database_absent`, which asks `pg_database`. What remains
   is an **authentication** failure on a server with translations installed: it
   is not recognised and costs the full `db_borrow_timeout` (measured, 0.02 s
   against 30.00 s). There is no client-side fix — `options='-c lc_messages=C'`
@@ -733,9 +766,6 @@ library.
 - **Password hygiene**: every DSN consumer routes through
   `dsn._expand_conninfo`; pool keys carry only a BLAKE2s fingerprint, and
   `Connection.dsn` strips the secret before logging.
-- **`odoo.evented` guard**: `__init__._get_pool` uses
-  `hasattr(odoo, "evented")` because `odoo.db` is importable without
-  `odoo.init`'s monkeypatches (standalone scripts, tools) — not dead code.
 
 ## Tracing (campaign instrumentation, temporary)
 
@@ -765,18 +795,18 @@ campaign ends; the recipe, the cost figures and the first findings are in
   track their checkout and `give_back` releases it before any early exit, the
   leak warning uses its own throttle rather than the reaper's, both borrow paths
   raise the one saturation error and that error names its holders, a password
-  never reaches a pool key, `conninfo_to_dict` has one caller, `_libpq_connect_timeout`
+  never reaches a pool key, `conninfo_to_dict` has one caller, `get_libpq_connect_timeout`
   never returns a value libpq would read as "wait forever", the budget is keyed
   on the resolved endpoint rather than the presence of `db_replica_host`, the
   two schema-cache clears keep their distinct call sites, `_has_schema_changing_statement`
   cannot miss a hidden statement, the `SE` branch that claims `SET` runs no
   regex and `SET` stays out of `_DDL_KEYWORDS`, the lag gauge's pair is
-  written and rendered under one lock while `allows()` stays lock-free, the
+  written and rendered under one lock while `is_replica_usable()` stays lock-free, the
   leak throttle owns a lock that `track`/`release` do not take, the
   saturation error reads its two counters under one acquisition, the probe
   asks proof-and-in-flight in one acquisition and classifies only the
   connect, a bug under `getconn` keeps its type instead of arriving as the
-  `PoolError` four call sites swallow, `allow()` never reads through the `closed` property and the
+  `PoolError` four call sites swallow, `acquire_attempt()` never reads through the `closed` property and the
   cooldown expression exists once, no method or property reached from inside a
   `with self._lock:` block takes that lock itself (checked across
   `ConnectionPool`, `ReachabilityProbe`, `CircuitBreaker` and `ReplicaLagGate`,
@@ -799,18 +829,19 @@ campaign ends; the recipe, the cost figures and the first findings are in
   at all. Each was verified to fail when its invariant is violated.
   Add the check here when you add an invariant above.
 
-- **Tier 1 (no DB, ms)** — `odoo/db/tests/` via `cd odoo && pytest` from the
-  workspace root (the whole Tier-1 invocation, not this directory alone:
-  `pytest odoo/db/tests` on its own reports **22 failures** that are artefacts of
-  the suite's own `sys.modules` stubs shadowing the real `import odoo.db` a
-  handful of tests perform — they all pass in the full run):
+- **Tier 2 real-import, no DB (ms)** — `odoo/db/tests/`, run from `odoo/` as
+  `pytest odoo/db/tests` (it is in no `testpaths` and shares the Tier-2
+  invocation of `pytest.ini`, because a handful of its tests reach state in the
+  package `__init__.py` that the Tier-1 stubs replace; measured 2026-09-13,
+  591 passed named alone). One class, `TestPipelineAccountsForTheSyncCost`,
+  needs a local `createdb` and skips without it:
   pure modules (`ddl`, `dsn`, `errors`, `schema_cache` bookkeeping, `savepoint`
   depth accounting, `bulk`'s argument validation and encoding cost model,
   `utils`' DSN/maintenance-db resolution, `budget`/`stats` accounting, `reaper`
   policy and throttle, `leaks` checkout bookkeeping, `breaker` backoff schedule,
   `lag` ceiling and its sampling, `replica` routing — which connection a
   cursor request lands on and the mode it reports, against two fake
-  connections — one budget per resolved endpoint in `budget_endpoints`)
+  connections — one budget per resolved endpoint in `test_endpoints`)
   plus the two that only need stand-ins — `pool` (budget clamps and sharing,
   idle-pool reaping, permit accounting, reachability proof, close/drain
   matching, against a fake `psycopg_pool.ConnectionPool`) and `lifecycle`

@@ -25,6 +25,7 @@ from odoo import api, tools
 from odoo.db import db_connect, get_or_create_row
 from odoo.db import pool as pool_module
 from odoo.db import schema as sql_schema
+from odoo.db import settings as pool_settings
 from odoo.db import utils as _db_utils
 from odoo.db.cursor import (
     Cursor,
@@ -797,8 +798,8 @@ class TestCursorBulkMethods(BaseCase):
         with registry().cursor() as cr:
             with cr.pipeline():
                 cr.execute("SELECT 1 AS a")
-                self.assertIsNotNone(
-                    cr.description,
+                self.assertFalse(
+                    cr.in_pipeline,
                     "a lone statement in a pipeline block should have run "
                     "outside pipeline mode",
                 )
@@ -809,10 +810,13 @@ class TestCursorBulkMethods(BaseCase):
             with cr.pipeline():
                 cr.execute("SELECT 1 AS a")
                 cr.execute("SELECT 2 AS b")
-                self.assertIsNone(
-                    cr.description,
+                self.assertTrue(
+                    cr.in_pipeline,
                     "the second statement should have run in pipeline mode",
                 )
+                # The queued statement has no result yet; the cursor syncs the
+                # pipeline to answer rather than reporting the stale None.
+                self.assertEqual([c.name for c in cr.description], ["b"])
                 self.assertEqual(cr.fetchall(), [(2,)])
 
     def test_executemany_counts_toward_arming_the_pipeline(self):
@@ -856,10 +860,12 @@ class TestCursorBulkMethods(BaseCase):
                 cr.execute("SELECT 1 AS a")
                 with cr.pipeline():
                     cr.execute("SELECT 2 AS b")
-                    self.assertIsNone(cr.description)
+                    self.assertTrue(cr.in_pipeline)
                     self.assertEqual(cr.fetchall(), [(2,)])
+                self.assertTrue(
+                    cr.in_pipeline, "the inner exit must not leave the mode"
+                )
                 cr.execute("SELECT 3 AS c")
-                self.assertIsNone(cr.description)
                 self.assertEqual(cr.fetchall(), [(3,)])
 
     def test_copy_from_inside_a_pipeline_says_what_is_wrong(self):
@@ -1779,12 +1785,19 @@ class TestPoolBasics(BaseCase):
         self.assertEqual(pool._reaper.check_interval, 22.0)
         pool.close_all()
 
-    def test_tuning_defaults_match_constants(self):
+    def test_tuning_defaults_come_from_the_settings_snapshot(self):
+        settings = pool_settings.current()
         pool = ConnectionPool(maxconn=1)
-        self.assertEqual(pool._borrow_timeout, pool_module._DEFAULT_BORROW_TIMEOUT)
-        self.assertEqual(pool._max_lifetime, pool_module._DEFAULT_MAX_LIFETIME)
-        self.assertEqual(pool._max_idle, pool_module._DEFAULT_MAX_IDLE)
-        self.assertEqual(pool._reaper.ttl, pool_module._DEFAULT_REAP_IDLE_TTL)
+        self.assertEqual(pool._borrow_timeout, settings.borrow_timeout)
+        self.assertEqual(pool._max_lifetime, settings.conn_max_lifetime)
+        self.assertEqual(pool._max_idle, settings.conn_max_idle)
+        self.assertEqual(pool._reaper.ttl, settings.pool_reap_idle)
+        self.assertEqual(pool._pool_workers, settings.pool_workers)
+        pool.close_all()
+        with pool_settings.override(borrow_timeout=12.5, pool_reap_idle=88.0):
+            pool = ConnectionPool(maxconn=1)
+        self.assertEqual(pool._borrow_timeout, 12.5)
+        self.assertEqual(pool._reaper.ttl, 88.0)
         pool.close_all()
 
     def test_reap_check_interval_disabled_when_ttl_zero(self):
@@ -5160,12 +5173,12 @@ class TestCreateModelTableAndConstraintColumns(BaseCase):
         self.assertIsNone(
             diag.column_name,
             "PostgreSQL names no single column for a composite constraint, "
-            "which is the whole reason check_registry exists",
+            "which is the whole reason check_catalog exists",
         )
         self.assertEqual(sql_schema.get_column_names_in_constraint(self.cr, diag), [])
         self.assertEqual(
             sql_schema.get_column_names_in_constraint(
-                self.cr, diag, check_registry=True
+                self.cr, diag, check_catalog=True
             ),
             ["name", "qty"],
             "only the catalog lookup can tell the user which fields clashed",

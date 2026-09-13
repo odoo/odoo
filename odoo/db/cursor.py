@@ -1,7 +1,7 @@
 import logging
 import os
 import threading
-from collections.abc import Collection, Generator, Iterable
+from collections.abc import Callable, Collection, Generator, Iterable
 from contextlib import AbstractContextManager, ExitStack, contextmanager, suppress
 from datetime import datetime
 from inspect import currentframe
@@ -310,9 +310,12 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
 
         self._pipeline_depth = 0
         self._pipeline_stack: ExitStack | None = None
+        self._pipeline: psycopg.Pipeline | None = None
         self._pipeline_statements = 0
         self._pipeline_entered = False
         self._pipeline_statement_time = 0.0
+        self._pipeline_wait_time = 0.0
+        self._pipeline_exit_started = 0.0
 
         self._thread = threading.current_thread()
 
@@ -363,8 +366,33 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
             pool.give_back(self._cnx, keep_in_pool=keep_in_pool)
             raise
 
+    def _wait_in_pipeline[T](self, wait: Callable[..., T], *args: Any) -> T:
+        t0 = monotonic()
+        try:
+            return wait(*args)
+        finally:
+            self._pipeline_wait_time += monotonic() - t0
+
+    def _sync_pipeline_results(self) -> None:
+        pipeline = self._pipeline
+        if pipeline is not None and self._obj.pgresult is None:
+            _debug.pipeline("cursor.pipeline_synced_for_result", db=self.dbname)
+            self._wait_in_pipeline(pipeline.sync)
+
+    def _fetchall(self) -> list[tuple[Any, ...]]:
+        obj = self._obj
+        if self._pipeline_entered:
+            return self._wait_in_pipeline(obj.fetchall)
+        return obj.fetchall()
+
+    def _fetchmany(self, size: int) -> list[tuple[Any, ...]]:
+        obj = self._obj
+        if self._pipeline_entered:
+            return self._wait_in_pipeline(obj.fetchmany, size)
+        return obj.fetchmany(size)
+
     def dictfetchone(self) -> dict[str, Any] | None:
-        row = self._obj.fetchone()
+        row = self.fetchone()
         if row is None:
             return None
         return {
@@ -380,7 +408,7 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
     def dictfetchmany(self, size: int) -> list[dict[str, Any]]:
         if size <= 0:
             return []
-        rows = self._obj.fetchmany(size)
+        rows = self._fetchmany(size)
         _debug.perf.count(
             "cursor.fetch", shape="dictfetchmany", rows=len(rows), size=size
         )
@@ -389,31 +417,38 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
         return self._rows_to_dict_list(rows)
 
     def dictfetchall(self) -> list[dict[str, Any]]:
-        rows = self._obj.fetchall()
+        rows = self._fetchall()
         _debug.perf.count("cursor.fetch", shape="dictfetchall", rows=len(rows))
         if not rows:
             return []
         return self._rows_to_dict_list(rows)
 
     def fetchone(self) -> tuple[Any, ...] | None:
-        return self._obj.fetchone()
+        obj = self._obj
+        if self._pipeline_entered:
+            return self._wait_in_pipeline(obj.fetchone)
+        return obj.fetchone()
 
     def fetchall(self) -> list[tuple[Any, ...]]:
-        rows = self._obj.fetchall()
+        rows = self._fetchall()
         _debug.perf.count("cursor.fetch", shape="fetchall", rows=len(rows))
         return rows
 
     def fetchmany(self, size: int = 0) -> list[tuple[Any, ...]]:
-        rows = self._obj.fetchmany(size)
+        rows = self._fetchmany(size)
         _debug.perf.count("cursor.fetch", shape="fetchmany", rows=len(rows), size=size)
         return rows
 
     @property
     def description(self) -> list[Any] | None:
+        if self._pipeline_entered:
+            self._sync_pipeline_results()
         return self._obj.description
 
     @property
     def rowcount(self) -> int:
+        if self._pipeline_entered:
+            self._sync_pipeline_results()
         return self._obj.rowcount
 
     def nextset(self) -> bool | None:
@@ -818,9 +853,13 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
     def _arm_pipeline(self) -> None:
         self._pipeline_statements += 1
         if self._pipeline_statements == 2 and self._pipeline_stack is not None:
-            self._pipeline_stack.enter_context(self._cnx.pipeline())
+            self._pipeline = self._pipeline_stack.enter_context(self._cnx.pipeline())
+            self._pipeline_stack.callback(self._mark_pipeline_exit_started)
             self._pipeline_entered = True
             _debug.lifecycle("cursor.pipeline_entered", db=self.dbname)
+
+    def _mark_pipeline_exit_started(self) -> None:
+        self._pipeline_exit_started = monotonic()
 
     @contextmanager
     def pipeline(
@@ -840,7 +879,8 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
         self._pipeline_depth = 1
         self._pipeline_statements = 0
         self._pipeline_statement_time = 0.0
-        t0 = monotonic()
+        self._pipeline_wait_time = 0.0
+        self._pipeline_exit_started = 0.0
         failed = None  # debuglog
         if _debug.pipeline.enabled:
             _debug.pipeline(
@@ -867,19 +907,22 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
                 )
             raise
         finally:
-            sync_cost = monotonic() - t0 - self._pipeline_statement_time
-            if sync_cost > 0:
-                self._record_metrics(sync_cost, count=0, statement=False)
+            if self._pipeline_exit_started:
+                self._pipeline_wait_time += monotonic() - self._pipeline_exit_started
+            waited = self._pipeline_wait_time
+            if waited > 0:
+                self._record_metrics(waited, count=0, statement=False)
             _debug.perf.count(
                 "cursor.pipeline",
                 db=self.dbname,
                 statements=self._pipeline_statements,
                 entered=self._pipeline_entered,
                 statement_ms=self._pipeline_statement_time * 1000.0,
-                sync_ms=max(sync_cost, 0.0) * 1000.0,
+                wait_ms=waited * 1000.0,
                 error=failed,
             )
             self._pipeline_stack = None
+            self._pipeline = None
             self._pipeline_depth = 0
             self._pipeline_entered = False
 

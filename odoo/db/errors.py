@@ -58,16 +58,20 @@ def is_handled_by_seam(exc: BaseException) -> bool:
     return getattr(exc, _SEAM_ATTR, False) is True
 
 
+def _classify_sql_error(exc: Exception) -> str:
+    if is_stale_cached_plan(exc):
+        return "stale_plan"
+    if isinstance(exc, PG_RECOVERABLE_EXCEPTIONS):
+        return "recoverable"
+    if isinstance(exc, PG_USER_FAULT_EXCEPTIONS):
+        return "user_fault"
+    return "bad_statement"
+
+
 def _log_sql_error(exc: Exception, query: Any, *, label: str = "query") -> None:
+    klass = _classify_sql_error(exc)
+    constraint = getattr(getattr(exc, "diag", None), "constraint_name", None)
     if _debug.logic.enabled:
-        if is_stale_cached_plan(exc):
-            klass = "stale_plan"  # debuglog
-        elif isinstance(exc, PG_RECOVERABLE_EXCEPTIONS):
-            klass = "recoverable"  # debuglog
-        elif isinstance(exc, PG_USER_FAULT_EXCEPTIONS):
-            klass = "user_fault"  # debuglog
-        else:
-            klass = "bad_statement"  # debuglog
         _debug.logic(
             "errors.sql_error_classified",
             label=label,
@@ -75,22 +79,21 @@ def _log_sql_error(exc: Exception, query: Any, *, label: str = "query") -> None:
             sqlstate=getattr(exc, "sqlstate", None),
             klass=klass,
             retryable=isinstance(exc, PG_RETRY_EXCEPTIONS),
-            constraint=getattr(getattr(exc, "diag", None), "constraint_name", None),
+            constraint=constraint,
         )
-    if is_stale_cached_plan(exc):
+    if klass == "stale_plan":
         _logger.warning(
             "stale cached plan discarded (caller may retry): %s: %s",
             type(exc).__name__,
             query,
         )
-    elif isinstance(exc, PG_RECOVERABLE_EXCEPTIONS):
+    elif klass == "recoverable":
         _logger.warning(
             "recoverable SQL error (caller may retry): %s: %s",
             type(exc).__name__,
             query,
         )
-    elif isinstance(exc, PG_USER_FAULT_EXCEPTIONS):
-        constraint = getattr(getattr(exc, "diag", None), "constraint_name", None)
+    elif klass == "user_fault":
         _logger.warning(
             "constraint violation (surfaced to the user): %s%s: %s",
             type(exc).__name__,

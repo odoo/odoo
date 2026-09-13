@@ -82,7 +82,6 @@ _HEALTH_PARAMS: dict[str, str] = {
     "keepalives_idle": "60",
     "keepalives_interval": "10",
     "keepalives_count": "3",
-    "min_protocol_version": "3.0",
 }
 
 

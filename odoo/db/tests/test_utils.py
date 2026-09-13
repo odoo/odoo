@@ -86,6 +86,24 @@ class TestConnectionInfoForKeywords(unittest.TestCase):
             with self.subTest(key=key):
                 self.assertEqual(info[key], value)
 
+    def test_health_parameters_are_accepted_by_every_supported_libpq(self):
+        # tcp_user_timeout (libpq 12) is the youngest of these; the wheel a
+        # deployment installs picks its own libpq, and a keyword libpq does not
+        # know fails the connect outright ("invalid connection option").
+        # min_protocol_version arrived with libpq 18 and, at its default of
+        # 3.0, negotiated exactly what its absence does.
+        self.assertLessEqual(
+            set(_HEALTH_PARAMS),
+            {
+                "connect_timeout",
+                "tcp_user_timeout",
+                "keepalives",
+                "keepalives_idle",
+                "keepalives_interval",
+                "keepalives_count",
+            },
+        )
+
     def test_application_name_interpolates_the_pid_and_is_truncated(self):
         import os
 

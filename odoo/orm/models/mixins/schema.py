@@ -308,7 +308,7 @@ class SchemaMixin(_ModelStubs):
         }
         if self._table == diag.table_name:
             columns = sql.get_column_names_in_constraint(
-                self.env.cr, diag, check_registry=True
+                self.env.cr, diag, check_catalog=True
             )
         else:
             columns = sql.get_column_names_in_constraint(self.env.cr, diag)

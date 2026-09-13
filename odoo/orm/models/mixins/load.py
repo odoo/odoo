@@ -162,7 +162,7 @@ class LoadMixin(_ModelStubs):
             pg_error_info = {"message": self._sql_error_to_message(exc)}
             if exc.diag.table_name == self._table:
                 e_fields = sql.get_column_names_in_constraint(
-                    self.env.cr, exc.diag, check_registry=True
+                    self.env.cr, exc.diag, check_catalog=True
                 )
                 if len(e_fields) == 1:
                     pg_error_info["field"] = e_fields[0]

@@ -44,6 +44,19 @@ def _get_invalid_name_message(kind: str, value: object) -> str:
     return f"{kind} {value!r} is not a PostgreSQL name: refusing to build DDL from it"
 
 
+def _refuse_column_type(
+    columntype: str, tablename: str, columnname: str | None
+) -> ValueError:
+    _debug.logic(
+        "schema.ddl_refused",
+        table=tablename,
+        column=columnname,
+        kind="column type",
+        value=columntype,
+    )
+    return ValueError(_get_invalid_name_message("column type", columntype))
+
+
 _CONFDELTYPES = {
     "RESTRICT": "r",
     "NO ACTION": "a",
@@ -179,12 +192,9 @@ SQL_ORDER_BY_TYPE = defaultdict(
 def create_model_table(
     cr: BaseCursor, tablename: str, comment: str | None = None, columns: Sequence = ()
 ) -> None:
-    for _, coltype, _ in columns:
+    for colname, coltype, _ in columns:
         if not _SQL_TYPE_TOKEN.fullmatch(coltype):
-            _debug.logic(
-                "schema.ddl_refused", table=tablename, kind="column type", value=coltype
-            )
-            raise ValueError(_get_invalid_name_message("column type", coltype))
+            raise _refuse_column_type(coltype, tablename, colname)
     colspecs = [
         SQL("id SERIAL NOT NULL"),
         *(
@@ -289,14 +299,7 @@ def create_column(
     comment: str | None = None,
 ) -> None:
     if not _SQL_TYPE_TOKEN.fullmatch(columntype):
-        _debug.logic(
-            "schema.ddl_refused",
-            table=tablename,
-            column=columnname,
-            kind="column type",
-            value=columntype,
-        )
-        raise ValueError(_get_invalid_name_message("column type", columntype))
+        raise _refuse_column_type(columntype, tablename, columnname)
     sql = SQL(
         "ALTER TABLE %s ADD COLUMN %s %s %s",
         SQL.identifier(tablename),
@@ -336,14 +339,7 @@ def convert_column(
     cr: BaseCursor, tablename: str, columnname: str, columntype: str
 ) -> None:
     if not _SQL_TYPE_TOKEN.fullmatch(columntype):
-        _debug.logic(
-            "schema.ddl_refused",
-            table=tablename,
-            column=columnname,
-            kind="column type",
-            value=columntype,
-        )
-        raise ValueError(_get_invalid_name_message("column type", columntype))
+        raise _refuse_column_type(columntype, tablename, columnname)
     using = SQL("%s::%s", SQL.identifier(columnname), SQL(columntype))
     _convert_column(cr, tablename, columnname, columntype, using)
 
@@ -374,7 +370,7 @@ def _convert_column(
     cr: BaseCursor, tablename: str, columnname: str, columntype: str, using: SQL
 ) -> None:
     if not _SQL_TYPE_TOKEN.fullmatch(columntype):
-        raise ValueError(_get_invalid_name_message("column type", columntype))
+        raise _refuse_column_type(columntype, tablename, columnname)
     query = SQL(
         "ALTER TABLE %s ALTER COLUMN %s DROP DEFAULT, ALTER COLUMN %s TYPE %s USING %s",
         SQL.identifier(tablename),
@@ -946,7 +942,7 @@ def get_column_names_in_constraint(
     cr: BaseCursor,
     diagnostics: psycopg.errors.Diagnostic,
     *,
-    check_registry: bool = False,
+    check_catalog: bool = False,
 ) -> list[str]:
     if column := diagnostics.column_name:
         _debug.logic(
@@ -957,7 +953,7 @@ def get_column_names_in_constraint(
             via="diagnostic",
         )
         return [column]
-    if not check_registry:
+    if not check_catalog:
         _debug.logic(
             "schema.constraint_columns_resolved",
             constraint=diagnostics.constraint_name,
