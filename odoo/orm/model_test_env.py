@@ -135,8 +135,8 @@ class InMemorySavepoint:
         if self._flush:
             self._cr.clear()
         self._cr.storage.restore(self._snapshot)
-        if self._flush:
-            self._cr.transaction.clear()
+        if self._flush and (transaction := self._cr.transaction) is not None:
+            transaction.clear()
 
     def close(self, *, rollback: bool = True) -> None:
         if self.closed:
@@ -317,11 +317,6 @@ class ModelRegistry(_RegistryFieldsMixin, Mapping):
 
         self._setup_registry(list(model_defs))
         self.modules = self._modules_of(model_defs)
-
-    def mark_modules_loaded(self) -> None:
-        # what load_modules does at the end of a load: constraints and registration
-        # branch on a non-empty loaded_modules, so it stays empty while data loads
-        self.loaded_modules.update(self.modules)
 
     def __getitem__(self, model_name: str) -> type[BaseModel]:
         try:

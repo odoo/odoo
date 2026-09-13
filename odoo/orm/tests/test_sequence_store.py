@@ -9,7 +9,9 @@ from odoo.orm.runtime.backend import (
 
 
 def _store() -> InMemorySequenceStore:
-    return InMemoryBackend(DictBackend()).sequences
+    store = InMemoryBackend(DictBackend()).sequences
+    assert isinstance(store, InMemorySequenceStore)
+    return store
 
 
 def test_both_backends_carry_a_sequence_store():

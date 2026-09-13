@@ -193,7 +193,7 @@ class _RegistrySchemaMixin(_RegistryStubs):
             _schema.error("Unable to add index %r for %s", indexname, self)
 
     def check_indexes(self, cr: Cursor, model_names: Iterable[str]) -> None:
-
+        model_names = list(model_names)
         expected = [
             (get_index_name(Model._table, field.name), Model._table, field)
             for model_name in model_names
@@ -224,7 +224,7 @@ class _RegistrySchemaMixin(_RegistryStubs):
         }
         _debug.pipeline(
             "registry.check_indexes",
-            models=len(list(model_names)),
+            models=len(model_names),
             expected=len(expected),
             existing=len(existing),
         )

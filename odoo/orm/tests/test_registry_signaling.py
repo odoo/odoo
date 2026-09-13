@@ -530,6 +530,9 @@ def test_recorded_failure_is_still_visible_after_a_reload(monkeypatch):
     monkeypatch.setattr(result_module, "_ASSERTION_REPORTS", {})
 
     report = result_module.assertion_report("db_a")
+    assert report is not None
     report.failures_count += 1
     assert not report.wasSuccessful()
-    assert not result_module.assertion_report("db_a").wasSuccessful()
+    reloaded = result_module.assertion_report("db_a")
+    assert reloaded is not None
+    assert not reloaded.wasSuccessful()

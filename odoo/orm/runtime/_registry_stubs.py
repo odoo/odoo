@@ -1,7 +1,7 @@
 import typing
 
 if typing.TYPE_CHECKING:
-    from odoo.db import FunctionStatus
+    from odoo.db import BaseCursor, FunctionStatus
     from odoo.models import BaseModel
 
     from ._init_phase import InitModelsPhase
@@ -9,7 +9,10 @@ if typing.TYPE_CHECKING:
 
 class _RegistryStubs:
     if typing.TYPE_CHECKING:
+        db_name: str
         models: dict[str, type[BaseModel]]
+
+        def cursor(self, /, readonly: bool = False) -> BaseCursor: ...
 
         @property
         def init_phase(self) -> InitModelsPhase:

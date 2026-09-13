@@ -40,7 +40,7 @@ def get_registry_of_model(model_cls: type[BaseModel]) -> Registry:
     return pool
 
 
-def is_model_class(cls: type) -> bool:
+def is_registry_class(cls: type) -> bool:
     return getattr(cls, "pool", None) is not None
 
 
@@ -178,7 +178,7 @@ def _check_model_parent_extension(
 
 
 def _init_model_class_attributes(model_cls: type[BaseModel]):
-    if not is_model_class(model_cls):
+    if not is_registry_class(model_cls):
         raise TypeError(f"{model_cls!r} is not a registry model class")
 
     if model_cls.__dict__.get("_init_attrs_in_progress__", False):

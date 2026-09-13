@@ -129,3 +129,13 @@ def test_invalid_index_value_raises_value_error():
 
     with pytest.raises(ValueError, match="bogus"):
         reg.check_indexes(cr, ["fake.model"])
+
+
+def test_model_names_may_be_an_iterator():
+    reg = _make_registry(_Field("state", True))
+    cr = _IdxCursor([])
+
+    reg.check_indexes(cr, iter(["fake.model"]))
+
+    executed = "\n".join(cr.executed)
+    assert "CREATE INDEX" in executed

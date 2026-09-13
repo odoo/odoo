@@ -13,7 +13,7 @@ def seeded():
     cap_mod._TextTables.by_db[DB] = cap_mod._TextTransforms(
         True, {0xE9: "e"}, {0xC9: "e"}
     )
-    result_module._ASSERTION_REPORTS[DB] = object()
+    result_module._ASSERTION_REPORTS[DB] = result_module.OdooTestResult()
     try:
         yield
     finally:

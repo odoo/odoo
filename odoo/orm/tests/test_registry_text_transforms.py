@@ -1,7 +1,8 @@
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 
 import pytest
 
+from odoo.db import FunctionStatus
 from odoo.orm.runtime import _registry_capabilities as capabilities
 from odoo.orm.runtime.environment import Environment
 
@@ -46,7 +47,9 @@ def test_cached_tables_are_rebuilt_when_unaccent_availability_changes():
 
 def test_libc_normalization_uses_the_database_mapping_without_queries():
     instance = Capabilities()
-    instance._ilike_table = {0xA7CE: "\ua7cf", ord("Æ"): "ae"}
+    instance._text_transforms = capabilities._TextTransforms(
+        True, {}, {0xA7CE: "\ua7cf", ord("Æ"): "ae"}
+    )
     env = Mock(spec=Environment)
     normalize = instance.get_ilike_normalizer(env)
     assert normalize("\ua7ceÆ") == "\ua7cfae"
@@ -55,7 +58,7 @@ def test_libc_normalization_uses_the_database_mapping_without_queries():
 
 def test_contextual_normalization_caches_whole_strings_per_environment():
     instance = Capabilities()
-    instance._ilike_table = None
+    instance._text_transforms = capabilities._TextTransforms(False, {}, None)
     instance.unaccent = capabilities._identity
     first_env = Mock(spec=Environment)
     first_env.execute_query.return_value = [("ος",)]
@@ -84,3 +87,53 @@ def test_failed_probes_do_not_publish_partial_tables():
     with pytest.raises(RuntimeError, match="probe failed"):
         capabilities._get_text_transforms(cursor, DB, True)
     assert DB not in capabilities._TextTables.by_db
+
+
+def test_probe_does_not_build_the_tables_until_a_normalizer_is_asked_for():
+    instance = Capabilities()
+    instance.db_name = DB
+    probe = Mock(spec=["execute", "fetchone", "fetchall", "dictfetchall"])
+    probe.fetchone.return_value = (None,)
+    with (
+        patch.object(
+            capabilities,
+            "get_unaccent_status",
+            return_value=FunctionStatus.INDEXABLE,
+        ),
+        patch.object(capabilities, "has_trigram", return_value=True),
+    ):
+        instance._probe_capabilities(probe, DB)
+    assert instance._text_transforms is None
+    probe.execute.assert_not_called()
+
+    cursor = Mock(spec=["execute", "fetchone", "dictfetchall"])
+    cursor.fetchone.return_value = ("c",)
+    cursor.dictfetchall.return_value = [
+        {"source": "Æ", "unaccented": "AE", "folded": "ae"},
+    ]
+    env = Mock(spec=Environment)
+    env.cr = cursor
+    assert instance.get_ilike_normalizer(env)("Æ") == "ae"
+    assert instance.unaccent_python("Æ") == "AE"
+    assert cursor.execute.call_count == 2
+    assert instance._text_transforms is capabilities._TextTables.by_db[DB]
+
+
+def test_probe_adopts_tables_this_process_already_built_for_the_database():
+    built = capabilities._TextTransforms(True, {ord("Æ"): "AE"}, None)
+    capabilities._TextTables.by_db[DB] = built
+    instance = Capabilities()
+    instance.db_name = DB
+    probe = Mock(spec=["execute", "fetchone", "fetchall", "dictfetchall"])
+    with (
+        patch.object(
+            capabilities,
+            "get_unaccent_status",
+            return_value=FunctionStatus.INDEXABLE,
+        ),
+        patch.object(capabilities, "has_trigram", return_value=False),
+    ):
+        instance._probe_capabilities(probe, DB)
+    assert instance._text_transforms is built
+    assert instance.unaccent_python("Æ") == "AE"
+    probe.execute.assert_not_called()

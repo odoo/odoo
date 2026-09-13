@@ -1,4 +1,5 @@
 import typing
+from contextlib import closing
 from dataclasses import dataclass
 from functools import lru_cache, partial
 
@@ -117,32 +118,53 @@ class _RegistryCapabilitiesMixin(_RegistryStubs):
     has_trigram: bool
     unaccent: typing.Callable[..., SQL | str | psycopg_sql.Composed]
 
-    unaccent_python: typing.Callable[[str], str]
-    _ilike_table: dict[int, str] | None
+    _text_transforms: _TextTransforms | None
 
     def _probe_capabilities(self, cr: BaseCursor, db_name: str) -> None:
         self.has_unaccent = get_unaccent_status(cr)
         self.has_trigram = has_trigram(cr)
-        transforms = _get_text_transforms(cr, db_name, bool(self.has_unaccent))
-
         self.unaccent = _unaccent if self.has_unaccent else _identity
-        self.unaccent_python = (
-            partial(_translate_python, table=transforms.unaccent)
-            if self.has_unaccent
-            else _identity
+        # the character tables cost a scan of every code point; a process that
+        # never filters records in memory with ilike never needs them
+        cached = _TextTables.by_db.get(db_name)
+        self._text_transforms = (
+            cached
+            if cached is not None and cached.unaccent_enabled == bool(self.has_unaccent)
+            else None
         )
-        self._ilike_table = transforms.ilike
         _debug.lifecycle(
             "registry.capabilities_probed",
             db=db_name,
             unaccent=self.has_unaccent.name,
             trigram=self.has_trigram,
-            unaccent_table=len(transforms.unaccent),
+            text_transforms_cached=self._text_transforms is not None,
         )
 
+    def _get_text_transforms(self, cr: BaseCursor | None = None) -> _TextTransforms:
+        transforms = self._text_transforms
+        if transforms is None:
+            unaccent_enabled = bool(self.has_unaccent)
+            if cr is not None:
+                transforms = _get_text_transforms(cr, self.db_name, unaccent_enabled)
+            else:
+                with closing(self.cursor()) as own_cr:
+                    transforms = _get_text_transforms(
+                        own_cr, self.db_name, unaccent_enabled
+                    )
+            self._text_transforms = transforms
+        return transforms
+
+    @property
+    def unaccent_python(self) -> typing.Callable[[str], str]:
+        if not self.has_unaccent:
+            return _identity
+        return partial(_translate_python, table=self._get_text_transforms().unaccent)
+
     def get_ilike_normalizer(self, env: Environment) -> typing.Callable[[str], str]:
-        if self._ilike_table is not None:
-            return partial(_translate_python, table=self._ilike_table)
+        transforms = self._text_transforms or self._get_text_transforms(env.cr)
+        ilike_table = transforms.ilike
+        if ilike_table is not None:
+            return partial(_translate_python, table=ilike_table)
 
         @lru_cache(maxsize=256)
         def normalize(value: str) -> str:

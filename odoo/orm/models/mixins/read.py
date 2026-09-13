@@ -17,7 +17,7 @@ from ._cache_scan import can_scan_read, is_cache_detached
 from ._model_stubs import _ModelStubs
 
 if typing.TYPE_CHECKING:
-    from collections.abc import Collection, Sequence
+    from collections.abc import Collection, Iterable, Sequence
 
     from ...fields.base import Field
     from ...tools import Query
@@ -163,7 +163,9 @@ class ReadMixin(_ModelStubs):
                     field=name,
                     misses=len(miss_indices),
                 )
-                self._read_format_scalar_slow(name, field, results, use_display_name)
+                self._read_format_by_record(
+                    name, field, zip(self, results, strict=True), use_display_name
+                )
             return
         _detached = False
         for id_, vals in zip(ids, results, strict=True):
@@ -184,21 +186,9 @@ class ReadMixin(_ModelStubs):
             else:
                 vals[name] = cache_value
         if _detached:
-            self._read_format_scalar_slow(name, field, results, use_display_name)
-
-    def _read_format_scalar_slow(
-        self, name: str, field: Field, results: list[dict], use_display_name: bool
-    ) -> None:
-        for id_, vals in zip(self._ids, results, strict=True):
-            if not vals:
-                continue
-            try:
-                record = self._read_format_miss_record(id_)
-                vals[name] = field.convert_to_read(
-                    record[name], record, use_display_name
-                )
-            except MissingError:
-                vals.clear()
+            self._read_format_by_record(
+                name, field, zip(self, results, strict=True), use_display_name
+            )
 
     def _read_format_multi(
         self, name: str, field, data: list, use_display_name: bool
@@ -234,15 +224,13 @@ class ReadMixin(_ModelStubs):
         _read_cache = field.read_cache
         convert_to_record = field.convert_to_record
         convert_to_read = field.convert_to_read
+        misses = []
         for record, vals in data:
             if not vals:
                 continue
             hit, cache_value = _read_cache(record._ids[0], env)
             if not hit:
-                try:
-                    vals[name] = convert_to_read(record[name], record, use_display_name)
-                except MissingError:
-                    vals.clear()
+                misses.append((record, vals))
                 continue
             try:
                 vals[name] = convert_to_read(
@@ -253,14 +241,13 @@ class ReadMixin(_ModelStubs):
             except MissingError:
                 vals.clear()
             except KeyError:
-                try:
-                    vals[name] = convert_to_read(record[name], record, use_display_name)
-                except MissingError:
-                    vals.clear()
+                misses.append((record, vals))
+        if misses:
+            self._read_format_by_record(name, field, misses, use_display_name)
 
     @staticmethod
-    def _read_format_unstored(
-        name: str, field, data: list, use_display_name: bool
+    def _read_format_by_record(
+        name: str, field, data: Iterable[tuple], use_display_name: bool
     ) -> None:
         convert = field.convert_to_read
         for record, vals in data:
@@ -312,7 +299,7 @@ class ReadMixin(_ModelStubs):
             elif field.store:
                 self._read_format_stored(name, field, data, use_display_name)
             else:
-                self._read_format_unstored(name, field, data, use_display_name)
+                self._read_format_by_record(name, field, data, use_display_name)
 
         return [vals for record, vals in data if vals]
 

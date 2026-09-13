@@ -1,5 +1,5 @@
 from collections import ChainMap, defaultdict
-from collections.abc import Iterator
+from collections.abc import Iterator, Sized
 from typing import TYPE_CHECKING, Any
 
 from odoo.libs.debug_log import DebugLog
@@ -138,9 +138,7 @@ class FieldCache[F: FieldKey = FieldKey]:
             _debug.lifecycle(
                 "cache.field_invalidated",
                 field=str(field),
-                records=len(ids)
-                if ids is not None and hasattr(ids, "__len__")
-                else None,
+                records=len(ids) if isinstance(ids, Sized) else None,
                 whole=ids is None,
                 contexts=len(contexts) if contexts else 0,
                 kept_dirty=len(dirty) if dirty else 0,

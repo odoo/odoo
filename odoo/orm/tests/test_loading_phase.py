@@ -34,8 +34,8 @@ def test_loading_is_only_reachable_inside_the_window():
         registry.loading
     with registry.loading_window() as phase:
         assert registry.loading is phase
-        phase.state("addon.key", list).append(1)
-        assert registry.loading.state("addon.key", list) == [1]
+        phase.state("addon.key", list[int]).append(1)
+        assert registry.loading.state("addon.key", list[int]) == [1]
     with pytest.raises(RuntimeError):
         registry.loading
 

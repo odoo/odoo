@@ -37,6 +37,21 @@ def _run_batch_then_single(
     return True
 
 
+def missing_record_error(env: Environment, record: object) -> MissingError:
+    return MissingError(
+        "\n".join(
+            [
+                env._("Record does not exist or has been deleted."),
+                env._(
+                    "(Record: %(record)s, User: %(user)s)",
+                    record=record,
+                    user=env.uid,
+                ),
+            ]
+        )
+    )
+
+
 def get_cache_miss_from_storage(
     field: Field, record: BaseModel, env: Environment, record_id
 ):
@@ -50,18 +65,7 @@ def get_cache_miss_from_storage(
     field_cache = field._get_cache(env)
     value = field_cache.get(record_id, SENTINEL)
     if value is SENTINEL:
-        raise MissingError(
-            "\n".join(
-                [
-                    env._("Record does not exist or has been deleted."),
-                    env._(
-                        "(Record: %(record)s, User: %(user)s)",
-                        record=record,
-                        user=env.uid,
-                    ),
-                ]
-            )
-        ) from None
+        raise missing_record_error(env, record) from None
     return value
 
 

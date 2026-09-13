@@ -137,9 +137,6 @@ class BaseString(Field[str | typing.Literal[False]]):
                 return self.convert_to_record(fb_val, record)
         return super()._get_cache_miss(record, env, record_id)
 
-    def _is_translate_fallback_required(self, record_id: typing.Any) -> bool:
-        return _translation.is_fallback_required(self, record_id)
-
     def _get_lang_cache_key(self, env: Environment, lang: str) -> tuple:
         return _translation.get_lang_cache_key(self, env, lang)
 

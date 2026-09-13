@@ -338,21 +338,8 @@ class TraversalMixin(_ModelStubs):
     ) -> Self:
         if len(self) < 2:
             return self
-        if isinstance(key, str):
-            order = key
-            self._sorted_load_fields(order)
-            ids = self._sorted_by_ids(order, reverse)
-            if ids is not None:
-                return self._spawn(self.env, ids, self._prefetch_ids)
-            _debug.logic(
-                "traversal.sorted.slow_path",
-                model=self._name,
-                order=order,
-                records=len(self),
-            )
-            key = self._sorted_order_to_function(order, _checked=True)
-        elif key is None:
-            order = self._order
+        if key is None or isinstance(key, str):
+            order = key or self._order
             self._sorted_load_fields(order)
             ids = self._sorted_by_ids(order, reverse)
             if ids is not None:

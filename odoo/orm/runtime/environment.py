@@ -36,6 +36,7 @@ if typing.TYPE_CHECKING:
     from .._protocols import (
         DecimalPrecisionProtocol,
         IrAttachmentProtocol,
+        IrConfigParameterProtocol,
         IrCronProtocol,
         IrDefaultProtocol,
         IrModelAccessProtocol,
@@ -158,6 +159,11 @@ class Environment(Mapping[str, "BaseModel"]):
     def __getitem__(  # type: ignore[overload-overlap]
         self, model_name: typing.Literal["ir.attachment"]
     ) -> IrAttachmentProtocol: ...
+
+    @typing.overload
+    def __getitem__(  # type: ignore[overload-overlap]
+        self, model_name: typing.Literal["ir.config_parameter"]
+    ) -> IrConfigParameterProtocol: ...
 
     @typing.overload
     def __getitem__(  # type: ignore[overload-overlap]
@@ -397,7 +403,11 @@ class Environment(Mapping[str, "BaseModel"]):
     @functools.cached_property
     def lang(self) -> str | None:
         lang = self.context.get("lang")
-        if lang and lang != "en_US" and not self["res.lang"]._get_data(code=lang):
+        if (
+            lang
+            and lang != "en_US"
+            and not self.registry.locale.is_lang_installed(self, lang)
+        ):
             raise UserError(  # noqa: E8505  see above: this one cannot be translated
                 f"Invalid language code: {lang}"
             )

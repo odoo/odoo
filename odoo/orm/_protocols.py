@@ -132,7 +132,7 @@ class IrModelAccessProtocol(RecordsetProtocol, Protocol):
 class IrRuleProtocol(RecordsetProtocol, Protocol):
     def _get_domain_accessible_records(
         self, model_name: str, mode: str = "read"
-    ) -> Domain | None: ...
+    ) -> Domain: ...
 
     def _prepare_access_error(self, operation: str, records: Any) -> AccessError: ...
 
@@ -169,6 +169,14 @@ class IrUiViewProtocol(RecordsetProtocol, Protocol):
     def _has_valid_custom_views(self, model: Any) -> Any: ...
 
     def _check_module_views(self, module: str) -> None: ...
+
+
+class IrConfigParameterProtocol(RecordsetProtocol, Protocol):
+    def init(self, force: bool = False) -> None: ...
+
+    def get_param(self, key: str, default: str | bool = False) -> str | bool: ...
+
+    def set_param(self, key: str, value: Any) -> str | bool: ...
 
 
 class IrCronProtocol(RecordsetProtocol, Protocol):
@@ -256,6 +264,7 @@ class ResUsersProtocol(RecordsetProtocol, Protocol):
 FRAMEWORK_MODEL_PROTOCOLS: dict[str, type] = {
     "decimal.precision": DecimalPrecisionProtocol,
     "ir.attachment": IrAttachmentProtocol,
+    "ir.config_parameter": IrConfigParameterProtocol,
     "ir.cron": IrCronProtocol,
     "ir.default": IrDefaultProtocol,
     "ir.model": IrModelProtocol,

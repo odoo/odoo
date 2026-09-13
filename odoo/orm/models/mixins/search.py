@@ -153,10 +153,14 @@ class SearchMixin(_ModelStubs):
         return result
 
     @api.model
+    def _get_rec_names_search_fields(self) -> list[str]:
+        if self._rec_names_search:
+            return list(self._rec_names_search)
+        return [self._rec_name] if self._rec_name else []
+
+    @api.model
     def _search_display_name(self, operator: str, value: typing.Any) -> DomainType:
-        search_fnames = self._rec_names_search or (
-            [self._rec_name] if self._rec_name else []
-        )
+        search_fnames = self._get_rec_names_search_fields()
         if search_fnames:
             usable = [
                 fname
@@ -280,10 +284,7 @@ class SearchMixin(_ModelStubs):
                 continue
             seen.add(model_name)
             comodel = self.env[model_name]
-            entries = comodel._rec_names_search or (
-                [comodel._rec_name] if comodel._rec_name else []
-            )
-            for entry in entries:
+            for entry in comodel._get_rec_names_search_fields():
                 try:
                     next_field = comodel._get_rec_names_search_field(entry)
                 except KeyError, ValueError:

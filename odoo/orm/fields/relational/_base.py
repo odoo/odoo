@@ -11,7 +11,7 @@ from collections.abc import (
 from operator import attrgetter
 from typing import override
 
-from odoo.exceptions import AccessError, MissingError
+from odoo.exceptions import AccessError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, OrderedSet, Query, partition, unique
 from odoo.tools.misc import PENDING, SENTINEL, unquote
@@ -25,6 +25,7 @@ from ...domain.constants import (
     SUBDOMAIN_OPERATORS,
 )
 from ...primitives import COLLECTION_TYPES, PREFETCH_MAX, Command, IdType, NewId
+from .._field_cache_miss import missing_record_error
 from ..base import Field, _logger
 from ._commands import CommandDelta
 
@@ -178,18 +179,7 @@ class _Relational(Field["BaseModel"]):
                 remaining.fetch([self.name])
                 field_cache = self._get_cache(env)
                 if record_id not in field_cache:
-                    raise MissingError(
-                        "\n".join(
-                            [
-                                env._("Record does not exist or has been deleted."),
-                                env._(
-                                    "(Record: %(record)s, User: %(user)s)",
-                                    record=record_id,
-                                    user=env.uid,
-                                ),
-                            ]
-                        )
-                    ) from None
+                    raise missing_record_error(env, record_id) from None
             else:
                 remaining = object.__new__(records.__class__)
                 remaining.env = env
