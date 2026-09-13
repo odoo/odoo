@@ -281,6 +281,8 @@ class AccountMove(models.Model):
         "invoice_line_ids.tax_ids",
         "commercial_partner_id.l10n_in_pan_entity_id",
         "invoice_line_ids.price_total",
+        "l10n_in_withhold_move_ids.state",
+        "l10n_in_withhold_move_ids.line_ids.tax_ids",
     )
     def _compute_l10n_in_warning(self):
         indian_invoice = self.filtered(

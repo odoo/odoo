@@ -1208,6 +1208,7 @@ class MrpWorkorder(models.Model):
 
         moves_to_pick.picked = True
         workorders_to_end.end_all()
+        workorders_to_end.flush_recordset(["duration_expected"])
         for workorder in workorders_to_end:
             vals = {
                 "qty_produced": workorder.qty_produced
