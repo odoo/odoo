@@ -173,7 +173,6 @@ class TestProductAttributeValueCommon(BaseCommon):
             'value_ids': [Command.set([cls.size_m.id, cls.size_l.id, cls.size_xl.id])],
         })
 
-
     @classmethod
     def _add_computer_attribute_lines(cls):
         (
@@ -292,6 +291,13 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
 
     _test_user_name = 'Test Product Manager'
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.mouse_tmpl = cls.env['product.template'].create({'name': 'Mouse'})
+        cls.color_attribute = cls.env['product.attribute'].create({'name': 'Color'})
+        cls.tmpl_many_combos = cls.env['product.template'].create({'name': 'many combinations'})
+
     def test_product_template_attribute_values_creation(self):
         self.assertEqual(len(self.computer_ssd_attribute_lines.product_template_value_ids), 2,
             'Product attribute values (ssd) were not automatically created')
@@ -364,11 +370,11 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
         self.assertFalse(self.computer._is_combination_possible(computer_ssd_256 + computer_ram_16))
 
         # CASE: no combination, no variant, just return the only variant
-        mouse = self.env['product.template'].create({'name': 'Mouse'})
+        mouse = self.mouse_tmpl
         self.assertTrue(mouse._is_combination_possible(self.env['product.template.attribute.value']))
 
         # prep work for the last part of the test
-        color_attribute = self.env['product.attribute'].create({'name': 'Color'})
+        color_attribute = self.color_attribute
         color_red = self.env['product.attribute.value'].create({
             'name': 'Red',
             'attribute_id': color_attribute.id,
@@ -476,10 +482,9 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
         # If an exclusion rule deletes all variants at once it does not delete the template.
         # Here we can test `_get_first_possible_combination` with a product template with no variants
         # Deletes all exclusions
-        for exclusion in computer_ram_32.excluded_value_ids:
-            computer_ram_32.write({
-                'excluded_value_ids': [Command.unlink(exclusion.id)]
-            })
+        computer_ram_32.write({
+            'excluded_value_ids': [Command.unlink(exclusion.id) for exclusion in computer_ram_32.excluded_value_ids]
+        })
 
         # Activates all exclusions at once
         computer_ram_32.write({
@@ -500,11 +505,11 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
         self.assertIsNone(next(gen, None))
 
         # Testing parent case
-        mouse = self.env['product.template'].create({'name': 'Mouse'})
+        mouse = self.mouse_tmpl
         self.assertTrue(mouse._is_combination_possible(self.env['product.template.attribute.value']))
 
         # prep work for the last part of the test
-        color_attribute = self.env['product.attribute'].create({'name': 'Color'})
+        color_attribute = self.color_attribute
         color_red = self.env['product.attribute.value'].create({
             'name': 'Red',
             'attribute_id': color_attribute.id,
@@ -538,9 +543,7 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
         self.assertEqual(mouse._get_first_possible_combination(necessary_values=mouse_color_yellow), mouse_color_red + mouse_color_yellow)
 
         # Making sure it's not extremely slow (has to discard invalid combinations early !)
-        product_template = self.env['product.template'].create({
-            'name': 'many combinations',
-        })
+        product_template = self.tmpl_many_combos
 
         for i in range(10):
             # create the attributes
@@ -550,13 +553,12 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
                 'sequence': i,
             })
 
-            for j in range(50):
-                # create the attribute values
-                value = self.env['product.attribute.value'].create([{
-                    'name': "val %s" % j,
-                    'attribute_id': product_attribute.id,
-                    'sequence': j,
-                }])
+            # create the attribute values
+            self.env['product.attribute.value'].create([{
+                'name': "val %s" % j,
+                'attribute_id': product_attribute.id,
+                'sequence': j,
+            } for j in range(50)])
 
             # set attribute and attribute values on the template
             self.env['product.template.attribute.line'].create([{
@@ -632,9 +634,7 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
             computer_ssd_256 + computer_ram_8 + computer_hdd_4)
 
         # Make sure this is not extremely slow:
-        product_template = self.env['product.template'].create({
-            'name': 'many combinations',
-        })
+        product_template = self.tmpl_many_combos
 
         for i in range(10):
             # create the attributes
@@ -644,13 +644,12 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
                 'sequence': i,
             })
 
-            for j in range(10):
-                # create the attribute values
-                self.env['product.attribute.value'].create([{
-                    'name': "val %s/%s" % (i, j),
-                    'attribute_id': product_attribute.id,
-                    'sequence': j,
-                }])
+            # create the attribute values
+            self.env['product.attribute.value'].create([{
+                'name': "val %s/%s" % (i, j),
+                'attribute_id': product_attribute.id,
+                'sequence': j,
+            } for j in range(10)])
 
             # set attribute and attribute values on the template
             self.env['product.template.attribute.line'].create([{

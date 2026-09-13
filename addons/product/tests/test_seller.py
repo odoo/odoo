@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.addons.base.tests.common import DISABLED_MAIL_CREATE_CONTEXT
 from odoo.fields import Command
 from odoo.tests import tagged, TransactionCase
 from odoo.tools import float_compare
@@ -12,6 +13,7 @@ class TestSeller(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env = cls.env['base'].with_context(**DISABLED_MAIL_CREATE_CONTEXT, tracking_disable=True).env
         cls.product_service = cls.env['product.product'].create({
             'name': 'Virtual Home Staging',
         })

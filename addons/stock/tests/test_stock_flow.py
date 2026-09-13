@@ -1738,7 +1738,7 @@ class TestStockFlow(TestStockCommon):
         move_a.move_line_ids.quantity = 4
         move_a.picked = True
         res_dict = picking.button_validate()
-        backorder_wizard = Form(self.env['stock.backorder.confirmation'].with_context(res_dict['context'])).save()
+        backorder_wizard = self.env['stock.backorder.confirmation'].with_context(res_dict['context']).create({})
         backorder_wizard.process_cancel_backorder()
 
         # Checking that no backorders were attached to the picking
@@ -1817,7 +1817,7 @@ class TestStockFlow(TestStockCommon):
         pickings.move_ids.move_line_ids.quantity = 4
         pickings.move_ids.picked = True
         res_dict = pickings.button_validate()
-        backorder_wizard = Form(self.env['stock.backorder.confirmation'].with_context(res_dict['context'])).save()
+        backorder_wizard = self.env['stock.backorder.confirmation'].with_context(res_dict['context']).create({})
 
         self.assertEqual(backorder_wizard.pick_ids, picking_ask, "Only ask backorder for picking with setting 'set'")
         backorder_wizard.process_cancel_backorder()
@@ -2425,14 +2425,14 @@ class TestStockFlow(TestStockCommon):
         for product in products:
             product.route_ids = [(6, 0, warehouse02.resupply_route_ids.ids)]
             self.env['stock.quant']._update_available_quantity(product, wh01_stock_location, 10)
-            self.env['stock.warehouse.orderpoint'].sudo().create({
-                'name': 'RR for %s' % product.name,
-                'warehouse_id': warehouse02.id,
-                'location_id': wh02_stock_location.id,
-                'product_id': product.id,
-                'product_min_qty': 1,
-                'product_max_qty': 5,
-            })
+        self.env['stock.warehouse.orderpoint'].sudo().create([{
+            'name': 'RR for %s' % product.name,
+            'warehouse_id': warehouse02.id,
+            'location_id': wh02_stock_location.id,
+            'product_id': product.id,
+            'product_min_qty': 1,
+            'product_max_qty': 5,
+        } for product in products])
 
         self.env['stock.rule'].run_scheduler()
 
@@ -2648,7 +2648,7 @@ class TestStockFlow(TestStockCommon):
 
         no_tracking_move.picked = True
         action_dict = picking.button_validate()
-        backorder_wizard = Form(self.env['stock.backorder.confirmation'].with_context(action_dict['context'])).save()
+        backorder_wizard = self.env['stock.backorder.confirmation'].with_context(action_dict['context']).create({})
         backorder_wizard.process()
         bo = self.env['stock.picking'].search([('backorder_id', '=', picking.id)])
         self.assertEqual(bo.state, 'assigned')

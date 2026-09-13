@@ -8,7 +8,7 @@ from unittest.mock import patch
 from odoo import Command
 from odoo.exceptions import UserError
 from odoo.fields import Datetime, Date
-from odoo.tests import tagged, Form
+from odoo.tests import Form
 
 from odoo.addons.stock_account.tests.common import TestStockValuationCommon
 
@@ -2313,15 +2313,9 @@ class TestStockValuation(TestStockValuationCommon):
             'rate': 2,
         })
         # Create a new company using the "Unifranc" as currency.
-        company_form = Form(self.env['res.company'].sudo())
-        company_form.name = "BB Inc."
-        company_form.currency_id = currency_1
-        company_1 = company_form.save()
+        company_1 = self.env['res.company'].sudo().create({'name': "BB Inc.", 'currency_id': currency_1.id})
         # Create a new company using the "Doublard" as currency.
-        company_form = Form(self.env['res.company'].sudo())
-        company_form.name = "BB Corp"
-        company_form.currency_id = currency_2
-        company_2 = company_form.save()
+        company_2 = self.env['res.company'].sudo().create({'name': "BB Corp", 'currency_id': currency_2.id})
         self.env.user.sudo().company_ids += company_1 + company_2
         self.env = self.env(context=dict(self.env.context, allowed_company_ids=[self.env.company.id, company_1.id, company_2.id]))
         # Gets warehouses and locations.
