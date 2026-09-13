@@ -43,22 +43,40 @@ test("many reactions from one bundle collapse into a single run", async () => {
     expect(runs).toBe(1);
 });
 
-test("nesting settles only when the outermost evaluation finishes", async () => {
+test("a bundle ending while another evaluates resolves applied, once that one ends", async () => {
     /** @type {any[]} */
     const calls = [];
-    await runInBundleTransaction(async () => {
-        deferUntilBundlesSettled(() => calls.push("outer reaction"));
-        await runInBundleTransaction(async () => {
-            deferUntilBundlesSettled(() => calls.push("inner reaction"));
-        });
-        expect(calls).toEqual([], { message: "the inner end must not settle" });
-        calls.push("outer still evaluating");
+    const { promise: secondModule, resolve: evaluateSecondModule } =
+        Promise.withResolvers();
+    const first = runInBundleTransaction(async () => {
+        deferUntilBundlesSettled(() => calls.push("first reaction"));
+    }).then(() => calls.push("first resolved"));
+    const second = runInBundleTransaction(async () => {
+        deferUntilBundlesSettled(() => calls.push("second reaction"));
+        await secondModule;
+        calls.push("second module evaluated");
     });
+    await Promise.resolve();
+    await Promise.resolve();
+    expect(calls).toEqual([], {
+        message: "the first must not resolve on a half-applied registry",
+    });
+    evaluateSecondModule();
+    await Promise.all([first, second]);
     expect(calls).toEqual([
-        "outer still evaluating",
-        "outer reaction",
-        "inner reaction",
+        "second module evaluated",
+        "first reaction",
+        "second reaction",
+        "first resolved",
     ]);
+});
+
+test("a bundle with nothing to react to does not wait for the others", async () => {
+    const { promise: stall, resolve: unstall } = Promise.withResolvers();
+    const slow = runInBundleTransaction(() => stall);
+    expect(await runInBundleTransaction(async () => "quick")).toBe("quick");
+    unstall();
+    await slow;
 });
 
 test("a bundle that throws still settles its reactions", async () => {
