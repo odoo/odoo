@@ -1874,17 +1874,9 @@ class IrUiView(models.Model):
 
         for elem, elem_info in self._iter_arch_nodes(root, get_node_info):
             handler = ELEMENT_HANDLERS.get(elem.tag)
-            legacy = (
-                getattr(self, f"_postprocess_tag_{elem.tag}", None)
-                if handler is None
-                else None
-            )
-            if handler is not None or legacy is not None:
+            if handler is not None:
                 had_parent = elem.getparent() is not None
-                if handler is not None:
-                    handler.postprocess(self, elem, name_manager, elem_info)
-                else:
-                    legacy(elem, name_manager, elem_info)
+                handler.postprocess(self, elem, name_manager, elem_info)
                 if had_parent and elem.getparent() is None:
                     continue
 
@@ -2055,20 +2047,12 @@ class IrUiView(models.Model):
             answer = handler.editable(self, node, name_manager)
             if answer is not None:
                 return answer
-        func = getattr(self, f"_editable_tag_{node.tag}", None)
-        if func is not None:
-            return func(node, name_manager)
         return node.tag not in self._get_view_type_tags()
 
     def _can_onchange_view(self, node: _Element) -> bool | None:
         handler = ELEMENT_HANDLERS.get(node.tag)
         if handler is not None:
-            answer = handler.can_onchange(self, node)
-            if answer is not None:
-                return answer
-        func = getattr(self, f"_can_onchange_view_{node.tag}", None)
-        if func is not None:
-            return func(node)
+            return handler.can_onchange(self, node)
         return None
 
     def _check_view(
@@ -2131,10 +2115,6 @@ class IrUiView(models.Model):
             handler = ELEMENT_HANDLERS.get(elem.tag)
             if handler is not None:
                 handler.check(self, elem, name_manager, elem_info)
-            elif (
-                legacy := getattr(self, f"_check_view_tag_{elem.tag}", None)
-            ) is not None:
-                legacy(elem, name_manager, elem_info)
 
             if elem_info["validate"]:
                 self._check_attributes(elem, name_manager, elem_info)

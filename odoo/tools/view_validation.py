@@ -31,7 +31,7 @@ _relaxng_cache: dict[str, etree.RelaxNG | None] = {}
 # schema and not because it was added to a decorator in this file.
 #
 # None is a meaningful declaration, not an absence: `form` and `kanban` are
-# qweb-based and validated structurally by ir.ui.view._check_view_tag_*, and
+# qweb-based and validated structurally by the element handlers of ir_ui_view_arch, and
 # saying so here is what lets a gate tell them apart from a type whose author
 # forgot.
 _view_schemas: dict[str, str | None] = {}
