@@ -1,8 +1,6 @@
 import re
 from json import JSONDecodeError
 
-import requests
-
 from odoo import _
 
 SCHEMATRON_ERROR_ID_PATTERN = r"BR-(?:CL-)?\d{3}"
@@ -61,7 +59,7 @@ class ETransportAPI:
             data = data.encode()
 
         if not session:
-            session = requests.Session()
+            session = company.env["ir.egress"].session(purpose="l10n_ro_etransport")
 
         response = session.request(
             method=method, url=url, data=data, headers=headers, timeout=10

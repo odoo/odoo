@@ -398,9 +398,10 @@ class BankAccountVerification(models.Model):
         ):
             raise ValueError("Invalid Polish bank verification API endpoint")
         url = f"https://wl-api.mf.gov.pl{endpoint}"
-        response = requests.request(
+        response = self.env["ir.egress"].request(
             "GET",
             url,
+            purpose="l10n_pl_bank_verification",
             headers={"Content-Type": "application/json"},
             params=params,
             timeout=5,

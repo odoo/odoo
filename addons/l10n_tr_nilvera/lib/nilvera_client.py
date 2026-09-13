@@ -6,6 +6,7 @@ import requests
 
 from odoo import _
 from odoo.exceptions import UserError
+from odoo.libs import guarded_http, netguard
 
 _logger = logging.getLogger(__name__)
 
@@ -28,7 +29,7 @@ class NilveraClient:
         )
         self.timeout_limit = min(timeout_limit or 10, 30)
 
-        self.__session = requests.Session()
+        self.__session = guarded_http.guarded_session(netguard.PUBLIC_ONLY)
         self.__session.headers.update({"Accept": "application/json"})
         if api_key:
             self.__session.headers["Authorization"] = "Bearer " + api_key

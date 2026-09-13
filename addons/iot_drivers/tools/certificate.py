@@ -87,7 +87,7 @@ def download_odoo_certificate(retry=0):
     if not db_uuid:
         return None
     try:
-        response = requests.post(
+        response = requests.post(  # noqa: E8518 - runs on the IoT box, which has no database and so no ir.egress
             "https://www.odoo.com/odoo-enterprise/iot/x509",
             json={"params": {"db_uuid": db_uuid, "enterprise_code": enterprise_code}},
             timeout=95,  # let's encrypt library timeout
@@ -171,7 +171,7 @@ def inform_database(ssl_certificate_end_date, server_url=None):
         return
 
     try:
-        response = requests.post(
+        response = requests.post(  # noqa: E8518 - runs on the IoT box, which has no database and so no ir.egress
             server_url + "/iot/box/update_certificate_status",
             json={
                 "params": {

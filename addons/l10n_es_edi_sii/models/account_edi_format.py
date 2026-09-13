@@ -609,14 +609,14 @@ class AccountEdiFormat(models.Model):
             "TipoComunicacion": "A1" if csv_number else "A0",
         }
 
-        session = requests.Session()
+        session = self.env["ir.egress"].session(purpose="l10n_es_sii", max_bytes=None)
         session.cert = company.l10n_es_sii_certificate_id
         session.mount("https://", CertificateAdapter(ciphers=EUSKADI_CIPHERS))
 
         # `timeout` bounds WSDL/XSD loading, `operation_timeout` the POST/GET
         # itself; both belong to the Transport, not to Client, which takes
         # neither and would raise TypeError on them.
-        transport = zeep.Transport(session=session, timeout=60, operation_timeout=60)
+        transport = zeep.Transport(session=session, timeout=60, operation_timeout=60)  # noqa: E8518 - zeep sends through the ir.egress session it is given
         client = zeep.Client(connection_vals["url"], transport=transport)
 
         if invoices[0].is_sale_document():

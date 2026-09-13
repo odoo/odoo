@@ -63,7 +63,7 @@ class AsyncHTTPHandler(logging.Handler):
             self._flush_thread and self._flush_thread.join()  # let a last flush
 
     def _periodic_flush(self):
-        odoo_session = requests.Session()
+        odoo_session = requests.Session()  # noqa: E8518 - runs on the IoT box, which has no database and so no ir.egress
         while (
             self._odoo_server_url and self._active
         ):  # allow to exit the loop on thread.join

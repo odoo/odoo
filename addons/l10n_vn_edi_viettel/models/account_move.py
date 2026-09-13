@@ -7,11 +7,11 @@ import uuid
 import zipfile
 from datetime import datetime, timedelta
 
-import requests
 from requests import RequestException
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.libs import guarded_http, netguard
 from odoo.tools import float_repr, float_round
 
 SINVOICE_API_URL = "https://api-vinvoice.viettel.vn/services/einvoiceapplication/api/"
@@ -25,15 +25,16 @@ def _l10n_vn_edi_send_request(
 ):
     """Send a request to the API based on the given parameters. In case of errors, the error message is returned."""
     try:
-        response = requests.request(
-            method,
-            url,
-            json=json_data,
-            params=params,
-            headers=headers,
-            cookies=cookies,
-            timeout=SINVOICE_TIMEOUT,
-        )
+        with guarded_http.guarded_session(netguard.PUBLIC_ONLY) as session:
+            response = session.request(
+                method,
+                url,
+                json=json_data,
+                params=params,
+                headers=headers,
+                cookies=cookies,
+                timeout=SINVOICE_TIMEOUT,
+            )
         resp_json = response.json()
         error = None
         if resp_json.get("code") or resp_json.get("error"):

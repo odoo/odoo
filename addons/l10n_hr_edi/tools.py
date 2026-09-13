@@ -74,16 +74,20 @@ def _prepare_request(company, endpoint_type, params=False):
         )
 
     try:
-        response = requests.post(
-            url,
-            json=payload,
-            timeout=TIMEOUT,
-            headers={"content-type": "application/json", "charset": "utf-8"},
-        )
+        with company.env["ir.egress"].session(purpose="l10n_hr_edi") as session:
+            response = session.request(
+                "post",
+                url,
+                data=None,
+                json=payload,
+                timeout=TIMEOUT,
+                headers={"content-type": "application/json", "charset": "utf-8"},
+            )
     except (
         ValueError,
         requests.exceptions.ConnectionError,
         requests.exceptions.MissingSchema,
+        requests.exceptions.InvalidURL,
         requests.exceptions.Timeout,
         requests.exceptions.HTTPError,
     ):

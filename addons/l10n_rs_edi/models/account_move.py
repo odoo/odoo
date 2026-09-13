@@ -1,8 +1,7 @@
 import uuid
 from json import JSONDecodeError
 
-import requests
-from requests.exceptions import ConnectionError, HTTPError, Timeout
+from requests.exceptions import ConnectionError, HTTPError, InvalidURL, Timeout
 
 from odoo import _, api, fields, models
 
@@ -151,11 +150,17 @@ class AccountMove(models.Model):
         }
         error_message = False
         try:
-            response = requests.post(
-                url=url, params=params, headers=headers, data=xml, timeout=30
+            response = self.env["ir.egress"].request(
+                "POST",
+                url,
+                purpose="l10n_rs_edi",
+                params=params,
+                headers=headers,
+                data=xml,
+                timeout=30,
             )
             response.raise_for_status()
-        except (Timeout, ConnectionError, HTTPError) as exception:
+        except (Timeout, ConnectionError, HTTPError, InvalidURL) as exception:
             error_message = _(
                 "There was a problem with the connection with eFaktura: %s", exception
             )

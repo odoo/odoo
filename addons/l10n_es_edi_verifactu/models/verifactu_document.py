@@ -38,7 +38,9 @@ def _get_zeep_operation(company, operation):
     if operation not in ("registration", "registration_xml"):
         raise NotImplementedError(f"Unsupported `operation` {operation!r}")
 
-    session = requests.Session()
+    session = company.env["ir.egress"].session(
+        purpose="l10n_es_verifactu", max_bytes=None
+    )
 
     info = {}
 
@@ -55,7 +57,7 @@ def _get_zeep_operation(company, operation):
     client = zeep.Client(
         wsdl["url"],
         settings=settings,
-        transport=zeep.Transport(session=session, timeout=20, operation_timeout=20),
+        transport=zeep.Transport(session=session, timeout=20, operation_timeout=20),  # noqa: E8518 - zeep sends through the ir.egress session it is given
     )
 
     if operation == "registration":

@@ -1,7 +1,5 @@
 import base64
 
-import requests
-
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
@@ -180,7 +178,7 @@ class AccountMove(models.Model):
             - if 'nok', then the invoice has been refused by ANAF -> create a refused document
             - if 'ok', then the invoice has been accepted by ANAF -> create a success document
         """
-        session = requests.Session()
+        session = self.env["ir.egress"].session(purpose="l10n_ro_edi")
         invoices_to_fetch = self.filtered(
             lambda inv: inv.l10n_ro_edi_state == "invoice_sent"
         )
@@ -272,7 +270,7 @@ class AccountMove(models.Model):
         """Synchronize bills/invoices from SPV"""
         result = _request_ciusro_synchronize_invoices(
             company=self.env.company,
-            session=requests.Session(),
+            session=self.env["ir.egress"].session(purpose="l10n_ro_edi"),
         )
         if "error" in result:
             raise UserError(result["error"])

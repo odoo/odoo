@@ -146,7 +146,9 @@ class ResPartner(models.Model):
         sml_zone = "edel.sml-demo" if edi_mode == "test" else "edel.sml"
         smp_url = f"http://B-{hash_participant}.iso6523-actorid-upis.{sml_zone}.dataudveksling.dk/{endpoint_participant}"
         try:
-            response = requests.get(smp_url, timeout=TIMEOUT)
+            response = self.env["ir.egress"].request(
+                "GET", smp_url, purpose="nemhandel", timeout=TIMEOUT
+            )
             response.raise_for_status()
         except requests.exceptions.RequestException as e:
             _logger.info(e)
@@ -169,7 +171,9 @@ class ResPartner(models.Model):
         endpoint = f"{origin}/api/peppol/1/lookup?{query}"
 
         try:
-            response = requests.get(endpoint, timeout=TIMEOUT)
+            response = self.env["ir.egress"].request(
+                "GET", endpoint, purpose="nemhandel", timeout=TIMEOUT
+            )
         except requests.exceptions.RequestException as e:
             _logger.error(
                 "failed to query nemhandel participant %s: %s", edi_identification, e

@@ -2,7 +2,6 @@ import json
 from base64 import b64decode, b64encode
 from datetime import datetime
 
-import requests
 from lxml import etree
 from markupsafe import Markup
 from requests.exceptions import HTTPError, RequestException
@@ -684,9 +683,10 @@ class AccountJournal(models.Model):
         request_url = urljoin(api_url, request_url)
         status_code = False
         try:
-            request_response = requests.request(
+            request_response = self.env["ir.egress"].request(
                 method,
                 request_url,
+                purpose="l10n_sa_zatca",
                 data=request_data.get("body"),
                 headers={**self._l10n_sa_api_headers(), **request_data.get("header")},
                 timeout=30,

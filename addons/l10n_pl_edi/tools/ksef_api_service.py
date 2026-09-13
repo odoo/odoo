@@ -40,6 +40,11 @@ class KsefApiService:
             else None
         )
 
+    def _egress(self, method, url, **kwargs):
+        return self.env["ir.egress"].request(
+            method, url, purpose="l10n_pl_ksef", **kwargs
+        )
+
     def _get_api_url(self):
         """Gets the correct KSeF API URL from the company's settings."""
         if self.mode == "prod":
@@ -66,7 +71,7 @@ class KsefApiService:
             self._get_headers(self.company.sudo().l10n_pl_edi_access_token)
         )
         try:
-            response = requests.request(method, endpoint, **kwargs)
+            response = self._egress(method, endpoint, **kwargs)
 
             if response.status_code == 401 and not is_auth_retry:
                 _logger.info("KSeF access token expired, refreshing...")
@@ -95,7 +100,7 @@ class KsefApiService:
         endpoint = f"{self.api_url}/security/public-key-certificates"
         headers = {"Accept": "application/json"}
         try:
-            response = requests.get(endpoint, headers=headers, timeout=TIMEOUT)
+            response = self._egress("GET", endpoint, headers=headers, timeout=TIMEOUT)
             response.raise_for_status()
             certs_data = response.json()
 
@@ -203,7 +208,7 @@ class KsefApiService:
         headers = self._get_headers(refresh_token)
 
         try:
-            response = requests.post(endpoint, headers=headers, timeout=TIMEOUT)
+            response = self._egress("POST", endpoint, headers=headers, timeout=TIMEOUT)
             response.raise_for_status()
             response_data = response.json()
 
@@ -337,7 +342,7 @@ class KsefApiService:
         """Fetches a one-time challenge from KSeF."""
         endpoint = f"{self.api_url}/auth/challenge"
         try:
-            response = requests.post(endpoint, timeout=TIMEOUT)
+            response = self._egress("POST", endpoint, timeout=TIMEOUT)
             response.raise_for_status()
             return response.json()
         except requests.exceptions.RequestException as e:
@@ -353,7 +358,8 @@ class KsefApiService:
         endpoint = f"{self.api_url}/auth/xades-signature"
         headers = {"Content-Type": "application/xml;"}
         try:
-            response = requests.post(
+            response = self._egress(
+                "POST",
                 endpoint,
                 data=signed_xml.encode("utf-8"),
                 headers=headers,
@@ -378,7 +384,7 @@ class KsefApiService:
             "EncryptedToken": encrypted_token_b64,
         }
         try:
-            response = requests.post(endpoint, json=payload, timeout=TIMEOUT)
+            response = self._egress("POST", endpoint, json=payload, timeout=TIMEOUT)
             response.raise_for_status()
             return response.json()
         except requests.exceptions.RequestException as e:
@@ -396,7 +402,9 @@ class KsefApiService:
 
         for _attempt in range(5):
             try:
-                response = requests.get(endpoint, headers=headers, timeout=TIMEOUT)
+                response = self._egress(
+                    "GET", endpoint, headers=headers, timeout=TIMEOUT
+                )
                 response.raise_for_status()
                 response_data = response.json()
 
@@ -435,7 +443,7 @@ class KsefApiService:
             "Accept": "application/json",
         }
         try:
-            response = requests.post(endpoint, headers=headers, timeout=TIMEOUT)
+            response = self._egress("POST", endpoint, headers=headers, timeout=TIMEOUT)
             response.raise_for_status()
             return response.json()
         except requests.exceptions.RequestException as e:

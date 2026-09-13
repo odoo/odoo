@@ -25,7 +25,7 @@ class TestSendAndPrintEdiBizkaia(TestEsEdiTbaiCommonBizkaia):
 
         # Post with success
         with patch(
-            "odoo.addons.l10n_es_edi_tbai.models.l10n_es_edi_tbai_document.requests.Session.request",
+            "requests.Session.request",
             return_value=self.mock_response_post_invoice_success,
         ):
             invoice_send_wizard.action_send_and_print()
@@ -34,7 +34,7 @@ class TestSendAndPrintEdiBizkaia(TestEsEdiTbaiCommonBizkaia):
 
         # Cancel with success
         with patch(
-            "odoo.addons.l10n_es_edi_tbai.models.l10n_es_edi_tbai_document.requests.Session.request",
+            "requests.Session.request",
             return_value=self.mock_response_cancel_invoice_success,
         ):
             invoice.l10n_es_tbai_cancel()
@@ -48,7 +48,7 @@ class TestSendAndPrintEdiBizkaia(TestEsEdiTbaiCommonBizkaia):
         # Post with error
         try:
             with patch(
-                "odoo.addons.l10n_es_edi_tbai.models.l10n_es_edi_tbai_document.requests.Session.request",
+                "requests.Session.request",
                 return_value=self.mock_response_post_invoice_failure,
             ):
                 invoice_send_wizard.action_send_and_print()
@@ -59,7 +59,7 @@ class TestSendAndPrintEdiBizkaia(TestEsEdiTbaiCommonBizkaia):
 
         # Post with success
         with patch(
-            "odoo.addons.l10n_es_edi_tbai.models.l10n_es_edi_tbai_document.requests.Session.request",
+            "requests.Session.request",
             return_value=self.mock_response_post_invoice_success,
         ):
             invoice_send_wizard.action_send_and_print()
@@ -72,7 +72,7 @@ class TestSendAndPrintEdiBizkaia(TestEsEdiTbaiCommonBizkaia):
 
         # Post with success
         with patch(
-            "odoo.addons.l10n_es_edi_tbai.models.l10n_es_edi_tbai_document.requests.Session.request",
+            "requests.Session.request",
             return_value=self.mock_response_post_invoice_success,
         ):
             invoice_send_wizard.action_send_and_print()
@@ -80,7 +80,7 @@ class TestSendAndPrintEdiBizkaia(TestEsEdiTbaiCommonBizkaia):
         # Cancel with error
         try:
             with patch(
-                "odoo.addons.l10n_es_edi_tbai.models.l10n_es_edi_tbai_document.requests.Session.request",
+                "requests.Session.request",
                 return_value=self.mock_response_cancel_invoice_failure,
             ):
                 invoice.l10n_es_tbai_cancel()
@@ -96,7 +96,7 @@ class TestSendAndPrintEdiBizkaia(TestEsEdiTbaiCommonBizkaia):
         # Post with request error
         try:
             with patch(
-                "odoo.addons.l10n_es_edi_tbai.models.l10n_es_edi_tbai_document.requests.Session.request",
+                "requests.Session.request",
                 side_effect=self.mock_request_error,
             ):
                 invoice_send_wizard.action_send_and_print()
@@ -111,7 +111,7 @@ class TestSendAndPrintEdiBizkaia(TestEsEdiTbaiCommonBizkaia):
 
         # Post with success
         with patch(
-            "odoo.addons.l10n_es_edi_tbai.models.l10n_es_edi_tbai_document.requests.Session.request",
+            "requests.Session.request",
             return_value=self.mock_response_post_invoice_success,
         ):
             invoice_send_wizard.action_send_and_print()
@@ -119,7 +119,7 @@ class TestSendAndPrintEdiBizkaia(TestEsEdiTbaiCommonBizkaia):
         # Cancel with request error
         try:
             with patch(
-                "odoo.addons.l10n_es_edi_tbai.models.l10n_es_edi_tbai_document.requests.Session.request",
+                "requests.Session.request",
                 side_effect=self.mock_request_error,
             ):
                 invoice.l10n_es_tbai_cancel()

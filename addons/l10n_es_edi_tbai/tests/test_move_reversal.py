@@ -12,7 +12,7 @@ class TestSendAndPrintEdiGipuzkoa(TestEsEdiTbaiCommonGipuzkoa):
         invoice_send_wizard = self._get_invoice_send_wizard(invoice)
 
         with patch(
-            "odoo.addons.l10n_es_edi_tbai.models.l10n_es_edi_tbai_document.requests.Session.request",
+            "requests.Session.request",
             return_value=self.mock_response_post_invoice_success,
         ):
             invoice_send_wizard.action_send_and_print()
@@ -35,7 +35,7 @@ class TestSendAndPrintEdiGipuzkoa(TestEsEdiTbaiCommonGipuzkoa):
 
         send_wizard = self._get_invoice_send_wizard(credit_note)
         with patch(
-            "odoo.addons.l10n_es_edi_tbai.models.l10n_es_edi_tbai_document.requests.Session.request",
+            "requests.Session.request",
             return_value=self.mock_response_post_invoice_success,
         ):
             send_wizard.action_send_and_print()
@@ -43,7 +43,7 @@ class TestSendAndPrintEdiGipuzkoa(TestEsEdiTbaiCommonGipuzkoa):
         self.assertEqual(credit_note.l10n_es_tbai_state, "sent")
 
         with patch(
-            "odoo.addons.l10n_es_edi_tbai.models.l10n_es_edi_tbai_document.requests.Session.request",
+            "requests.Session.request",
             return_value=self.mock_response_cancel_invoice_success,
         ):
             credit_note.l10n_es_tbai_cancel()

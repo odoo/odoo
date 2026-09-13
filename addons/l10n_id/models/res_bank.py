@@ -4,6 +4,7 @@ import requests
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.libs import guarded_http, netguard
 from odoo.libs.web import urljoin
 
 QRIS_TIMEOUT = 35  # They say that the time to get a response vary between 6 to 30s
@@ -13,7 +14,8 @@ def _l10n_id_make_qris_request(endpoint, params):
     """Make an API request to QRIS, using the given path and params."""
     url = urljoin("https://qris.online/restapi/qris/", endpoint)
     try:
-        response = requests.get(url, params=params, timeout=QRIS_TIMEOUT)
+        with guarded_http.guarded_session(netguard.PUBLIC_ONLY) as session:
+            response = session.get(url, params=params, timeout=QRIS_TIMEOUT)
         response.raise_for_status()
         response = response.json()
     except requests.exceptions.HTTPError as err:

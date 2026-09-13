@@ -64,7 +64,7 @@ class L10nHuEdiConnection:
         :param env: the Odoo environment
         """
         self.env = env
-        self.session = requests.Session()
+        self.session = env["ir.egress"].session(purpose="l10n_hu_edi")
 
     def __enter__(self):
         return self

@@ -640,9 +640,13 @@ class L10nHuEdiTestFlowsMocked(L10nHuEdiTestCommon, TestAccountMoveSendCommon):
             def close(self):
                 pass
 
-        with mock.patch(
-            "odoo.addons.l10n_hu_edi.models.l10n_hu_edi_connection.requests.Session",
-            side_effect=MockedSession,
-            autospec=True,
-        ):
+        egress = type(self.env["ir.egress"])
+        original_session = egress.session
+
+        def session(model, **kwargs):
+            if kwargs.get("purpose") == "l10n_hu_edi":
+                return MockedSession()
+            return original_session(model, **kwargs)
+
+        with mock.patch.object(egress, "session", session):
             yield

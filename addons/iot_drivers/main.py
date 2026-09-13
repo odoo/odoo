@@ -107,7 +107,7 @@ class Manager(Thread):
         max_retries = 5
         for attempt in range(1, max_retries + 1):
             try:
-                response = requests.post(
+                response = requests.post(  # noqa: E8518 - runs on the IoT box, which has no database and so no ir.egress
                     server_url + "/iot/setup",
                     json={"params": {"iot_box": iot_box, "devices": devices_list}},
                     timeout=5,

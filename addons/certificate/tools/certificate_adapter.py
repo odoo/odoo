@@ -1,7 +1,6 @@
 from base64 import b64decode
 from ssl import SSLError
 
-import requests
 from cryptography.hazmat.primitives.serialization import load_pem_private_key
 from cryptography.x509 import load_pem_x509_certificate
 from OpenSSL.crypto import X509
@@ -9,14 +8,24 @@ from OpenSSL.crypto import Error as CryptoError
 from urllib3.contrib.pyopenssl import inject_into_urllib3
 from urllib3.util.ssl_ import create_urllib3_context
 
+from odoo.libs import netguard
+from odoo.libs.guarded_http import GuardedAdapter
 
-class CertificateAdapter(requests.adapters.HTTPAdapter):
-    def __init__(self, *args, ciphers=None, ca_certificates=None, **kwargs):
+
+class CertificateAdapter(GuardedAdapter):
+    def __init__(
+        self,
+        *,
+        ciphers=None,
+        ca_certificates=None,
+        policy=netguard.PUBLIC_ONLY,
+        **kwargs,
+    ):
         self._context_args = {}
         if ciphers:
             self._context_args["ciphers"] = ciphers
         self.ca_certificates = ca_certificates
-        super().__init__(*args, **kwargs)
+        super().__init__(policy, **kwargs)
 
     def init_poolmanager(self, *args, **kwargs):
         inject_into_urllib3()

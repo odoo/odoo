@@ -27,11 +27,10 @@ it fails until the floor is lowered in the same change.
 This module was edited as a shared ledger: 24 of its last 40 commits changed
 nothing in it but an integer and the comment above it.
 
-Four gates are floored above zero: `lint_docstring` (a one-sided ratchet that
+Three gates are floored above zero: `lint_docstring` (a one-sided ratchet that
 reads 32 only on a fuller install), `bundle_double_eval` (ESM bundles that
-evaluate twice), and the two migration ledgers `lint_raw_egress` and
-`lint_credential_storage`, whose floors are the calls and columns still to move
-onto `ir.egress` and into the vault. Everything else -- every AST rule,
+evaluate twice), and the migration ledger `lint_credential_storage`, whose floor
+is the columns still to move into the vault. Everything else -- every AST rule,
 every XML rule, the manifest and record-order gates -- is a hard zero. `n-plus-one-query` reached
 zero on 2026-09-12 by reading each of its 295 sites: a loop over the records
 is hoisted, a loop that runs one query per distinct key (company, model,
@@ -87,8 +86,10 @@ one outbound pipeline: `requests` verbs and sessions, `httpx`,
 `urllib.request.urlopen`, zeep's `Transport` and `boto3` clients, with import aliases
 followed. It skips tests and nothing else: `api_transport` builds its sessions on
 `ir.egress` like any other addon, and the pipeline's own transport lives in
-`odoo/libs/guarded_http.py`, outside every addon. Its floor is a migration ledger:
-moving a call onto `ir.egress` lowers it, a new raw call fails it. `secret-in-environ` (E8519) is
+`odoo/libs/guarded_http.py`, outside every addon. It reached zero on 2026-09-13: a call
+that cannot take an `ir.egress` session -- a script run beside the server, the IoT box,
+botocore, a zeep transport handed that session -- carries `# noqa: E8518 - <why>`.
+`secret-in-environ` (E8519) is
 held at zero: a secret-named key written into `os.environ`, which every later
 subprocess of the worker inherits, instead of into the child's own `env=`.
 

@@ -71,7 +71,7 @@ class ConnectionManager(Thread):
         }
 
         try:
-            req = requests.post(
+            req = requests.post(  # noqa: E8518 - runs on the IoT box, which has no database and so no ir.egress
                 "https://iot-proxy.odoo.com/odoo-enterprise/iot/connect-box",
                 json=data,
                 timeout=5,

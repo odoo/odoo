@@ -193,7 +193,7 @@ class BlackBoxDriver(SerialDriver):
     def send_blackbox_response(self, data, retry_nbr=0):
         server_url = helpers.get_odoo_server_url() + "/pos_self_blackbox/confirmation"
         try:
-            response = requests.post(server_url, json=data, timeout=5)
+            response = requests.post(server_url, json=data, timeout=5)  # noqa: E8518 - runs on the IoT box, which has no database and so no ir.egress
             response.raise_for_status()
         except requests.Timeout:
             if retry_nbr < 3:

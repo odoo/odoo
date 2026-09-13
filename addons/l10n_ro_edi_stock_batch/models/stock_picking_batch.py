@@ -1,7 +1,6 @@
 import base64
 
 import markupsafe
-import requests
 
 from odoo import _, fields, models
 from odoo.exceptions import UserError
@@ -264,7 +263,7 @@ class StockPickingBatch(models.Model):
             )
 
     def _l10n_ro_edi_stock_fetch_document_status(self):
-        session = requests.Session()
+        session = self.env["ir.egress"].session(purpose="l10n_ro_etransport")
         documents_to_delete = self.env["l10n_ro_edi.document"]
         to_fetch = self.filtered(lambda b: b.l10n_ro_edi_stock_state == "stock_sent")
 

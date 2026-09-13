@@ -153,7 +153,7 @@ def check_image():
     :rtype: dict
     """
     try:
-        response = requests.get(
+        response = requests.get(  # noqa: E8518 - runs on the IoT box, which has no database and so no ir.egress
             "https://nightly.odoo.com/master/iotbox/SHA1SUMS.txt", timeout=5
         )
         response.raise_for_status()
@@ -368,7 +368,7 @@ def download_iot_handlers(auto=True, server_url=None):
     """
     etag = get_conf("iot_handlers_etag")
     try:
-        response = requests.post(
+        response = requests.post(  # noqa: E8518 - runs on the IoT box, which has no database and so no ir.egress
             server_url + "/iot/get_handlers",
             data={"identifier": get_identifier(), "auto": auto},
             timeout=8,
@@ -497,7 +497,7 @@ def download_from_url(download_url, path_to_filename):
     (Example: 'C:\\Program Files\\Odoo\\downloaded_file.zip')
     """
     try:
-        request_response = requests.get(download_url, timeout=60)
+        request_response = requests.get(download_url, timeout=60)  # noqa: E8518 - runs on the IoT box, which has no database and so no ir.egress
         request_response.raise_for_status()
         write_file(path_to_filename, request_response.content, "wb")
         _logger.info("Downloaded %s from %s", path_to_filename, download_url)
@@ -686,7 +686,7 @@ system_start_time = odoo_start_time - _get_system_uptime()
 def is_ngrok_enabled():
     """Check if a ngrok tunnel is active on the IoT Box"""
     try:
-        response = requests.get("http://localhost:4040/api/tunnels", timeout=5)
+        response = requests.get("http://localhost:4040/api/tunnels", timeout=5)  # noqa: E8518 - runs on the IoT box, which has no database and so no ir.egress
         response.raise_for_status()
         response.json()
         return True

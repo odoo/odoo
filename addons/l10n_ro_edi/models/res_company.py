@@ -150,7 +150,7 @@ class ResCompany(models.Model):
                 ]
             )
         )
-        session = requests.Session()
+        session = self.env["ir.egress"].session(purpose="l10n_ro_edi")
         for company in ro_companies:
             error_cause = ""
             try:

@@ -4,7 +4,6 @@ import json
 import urllib.parse
 from datetime import UTC
 
-import requests
 from cryptography.hazmat.primitives import padding
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 
@@ -63,8 +62,12 @@ def call_ecpay_api(endpoint, json_data, company_id, is_b2b=False):
             },
             "Data": base64.b64encode(encrypted_data).decode("utf-8"),
         }
-        response = requests.post(
-            request_url + endpoint, json=json_body, timeout=TIMEOUT
+        response = company_id.env["ir.egress"].request(
+            "POST",
+            request_url + endpoint,
+            purpose="l10n_tw_ecpay",
+            json=json_body,
+            timeout=TIMEOUT,
         )
         response_json = response.json()
         if response.status_code != 200:

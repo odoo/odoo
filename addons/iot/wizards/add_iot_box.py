@@ -50,8 +50,10 @@ class AddIotBox(models.TransientModel):
             self.serial_number = self.iot_box_to_connect.serial_number
         try:
             icp_sudo = self.env["ir.config_parameter"].sudo()
-            response = requests.post(
+            response = self.env["ir.egress"].request(
+                "POST",
                 "https://iot-proxy.odoo.com/odoo-enterprise/iot/connect-db",
+                purpose="iot_pairing",
                 json={
                     "params": {
                         "pairing_code": self.pairing_code,

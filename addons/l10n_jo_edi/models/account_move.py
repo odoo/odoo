@@ -256,8 +256,13 @@ class AccountMove(models.Model):
             return {"EINV_QR": "Demo JoFotara QR"}  # mocked response
 
         try:
-            response = requests.post(
-                JOFOTARA_URL, json=params, headers=headers, timeout=50
+            response = self.env["ir.egress"].request(
+                "POST",
+                JOFOTARA_URL,
+                purpose="l10n_jo_edi",
+                json=params,
+                headers=headers,
+                timeout=50,
             )
         except requests.exceptions.Timeout:
             return {"error": _("Request timeout! Please try again.")}

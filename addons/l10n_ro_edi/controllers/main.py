@@ -49,8 +49,10 @@ class L10nRoEdiController(http.Controller):
             )
 
         try:
-            response = requests.post(
-                url=URL_ANAF_TOKEN,
+            response = company.env["ir.egress"].request(
+                "POST",
+                URL_ANAF_TOKEN,
+                purpose="l10n_ro_edi",
                 data={
                     "grant_type": "authorization_code",
                     "client_id": company.l10n_ro_edi_client_id,
