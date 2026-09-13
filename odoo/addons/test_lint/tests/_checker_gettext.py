@@ -35,6 +35,7 @@ ERRORS_REQUIRING_GETTEXT = frozenset(
         "AccessError",
         "AccessDenied",
         "MissingError",
+        "RedirectWarning",
     }
 )
 

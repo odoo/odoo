@@ -7,6 +7,7 @@ from . import (
     _checker_config_patch,
     _checker_credential_storage,
     _checker_egress,
+    _checker_field_declaration,
     _checker_gettext,
     _checker_http_json,
     _checker_noqa_rationale,
@@ -252,6 +253,32 @@ RULES: tuple[Rule, ...] = (
         "clear",
     ),
     Rule(
+        "field-redeclared",
+        "E8521",
+        "declare the field once: the class body keeps the last assignment, so "
+        "the earlier declaration is dead while it still reads as the one in force",
+    ),
+    Rule(
+        "default-evaluated-at-import",
+        "E8522",
+        "pass the callable (default=fields.Date.today), not its result: a call in "
+        "the declaration runs once when the module is imported, and every record "
+        "created afterwards gets that same value",
+    ),
+    Rule(
+        "selection-duplicate-key",
+        "E8523",
+        "give each selection key one label: Selection stores the list as a dict, "
+        "so the last label wins and the others are dead",
+    ),
+    Rule(
+        "field-hook-prefix",
+        "E8524",
+        "name the hook for its family -- _compute_*, _inverse_*, _search_*, "
+        "_selection_* -- so a reader and the naming gates can tell a field hook "
+        "from a helper (coding_guidelines.rst 2.4.1)",
+    ),
+    Rule(
         "noqa-rationale",
         "",
         "write the reason after the codes: `# noqa: F401  re-exported by __init__`",
@@ -337,6 +364,10 @@ def _in_an_addon_outside_tests_and_the_transport(unit: Unit) -> bool:
     )
 
 
+def _field_declaration(unit: Unit) -> Iterable[object]:
+    return _checker_field_declaration.check(unit.tree, unit.nodes)
+
+
 def _credential_storage(unit: Unit) -> Iterable[object]:
     return _checker_credential_storage.check(unit.tree, unit.path)
 
@@ -407,6 +438,18 @@ CHECKERS: tuple[Checker, ...] = (
         _credential_storage,
         _in_an_addon_outside_tests,
         frozenset({"credential-storage"}),
+    ),
+    Checker(
+        _field_declaration,
+        _outside_tests,
+        frozenset(
+            {
+                "field-redeclared",
+                "default-evaluated-at-import",
+                "selection-duplicate-key",
+                "field-hook-prefix",
+            }
+        ),
     ),
 )
 

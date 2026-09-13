@@ -1,5 +1,4 @@
 import base64
-from typing import Literal
 
 import markupsafe
 import requests
@@ -9,9 +8,6 @@ from odoo.exceptions import UserError
 
 from odoo.addons.l10n_ro_edi_stock.models.etransport_api import ETransportAPI
 from odoo.addons.l10n_ro_edi_stock.models.mixin_stock_consignment import (
-    LOCATION_TYPE_MAP,
-    OPERATION_SCOPES,
-    OPERATION_TYPE_TO_ALLOWED_SCOPE_CODES,
     STATE_CODES,
     _eu_country_vat,
 )
@@ -26,142 +22,20 @@ class Picking(models.Model):
     )
 
     ################################################################################
-    # Onchange Methods
-    ################################################################################
-
-    @api.onchange("l10n_ro_edi_stock_operation_type")
-    def _l10n_ro_edi_stock_reset_variable_selection_fields(self):
-        self.l10n_ro_edi_stock_operation_scope = False
-
-        # the 'location' value is always valid, regardless of which operation type is chosen
-        self.l10n_ro_edi_stock_start_loc_type = "location"
-        self.l10n_ro_edi_stock_end_loc_type = "location"
-
-    ################################################################################
     # Compute Methods
     ################################################################################
 
-    @api.depends("company_id.account_fiscal_country_id.code")
-    def _compute_l10n_ro_edi_stock_default_location_type(self):
-        for picking in self:
-            if picking.company_id.account_fiscal_country_id.code == "RO":
-                if not picking.l10n_ro_edi_stock_start_loc_type:
-                    picking.l10n_ro_edi_stock_start_loc_type = "location"
-                else:
-                    picking.l10n_ro_edi_stock_start_loc_type = (
-                        picking.l10n_ro_edi_stock_start_loc_type
-                    )
-
-                if not picking.l10n_ro_edi_stock_end_loc_type:
-                    picking.l10n_ro_edi_stock_end_loc_type = "location"
-                else:
-                    picking.l10n_ro_edi_stock_end_loc_type = (
-                        picking.l10n_ro_edi_stock_end_loc_type
-                    )
-            else:
-                picking.l10n_ro_edi_stock_start_loc_type = False
-                picking.l10n_ro_edi_stock_end_loc_type = False
-
-    @api.depends("l10n_ro_edi_stock_operation_type")
-    def _compute_l10n_ro_edi_stock_available_operation_scopes(self):
-        for picking in self:
-            if picking.l10n_ro_edi_stock_operation_type:
-                allowed_scopes = OPERATION_TYPE_TO_ALLOWED_SCOPE_CODES.get(
-                    picking.l10n_ro_edi_stock_operation_type, ("9999",)
-                )
-            else:
-                allowed_scopes = [c for c, _dummy in OPERATION_SCOPES]
-
-            picking.l10n_ro_edi_stock_available_operation_scopes = ",".join(
-                allowed_scopes
-            )
-
-    @api.depends("l10n_ro_edi_stock_operation_type")
-    def _compute_l10n_ro_edi_stock_available_location_types(self):
-        for picking in self:
-            picking.l10n_ro_edi_stock_available_start_loc_types = (
-                picking._l10n_ro_edi_stock_get_available_location_types(
-                    picking.l10n_ro_edi_stock_operation_type, "start"
-                )
-            )
-            picking.l10n_ro_edi_stock_available_end_loc_types = (
-                picking._l10n_ro_edi_stock_get_available_location_types(
-                    picking.l10n_ro_edi_stock_operation_type, "end"
-                )
-            )
-
-    @api.depends(
-        "l10n_ro_edi_stock_document_ids", "company_id.account_fiscal_country_id.code"
-    )
-    def _compute_l10n_ro_edi_stock_current_document_state(self):
-        for picking in self:
-            if picking.company_id.account_fiscal_country_id.code == "RO" and (
-                document := picking._l10n_ro_edi_stock_get_current_document()
-            ):
-                picking.l10n_ro_edi_stock_state = document.state
-            else:
-                picking.l10n_ro_edi_stock_state = False
-
-    @api.depends(
-        "l10n_ro_edi_stock_document_ids", "company_id.account_fiscal_country_id.code"
-    )
-    def _compute_l10n_ro_edi_stock_current_document_uit(self):
-        for picking in self:
-            if picking.company_id.account_fiscal_country_id.code == "RO" and (
-                document := picking._l10n_ro_edi_stock_get_current_document()
-            ):
-                picking.l10n_ro_edi_stock_document_uit = document.l10n_ro_edi_stock_uit
-            else:
-                picking.l10n_ro_edi_stock_document_uit = False
-
-    @api.depends("company_id.account_fiscal_country_id.code")
+    @api.depends("picking_type_code")
     def _compute_l10n_ro_edi_stock_enable(self):
+        super()._compute_l10n_ro_edi_stock_enable()
         for picking in self:
             picking.l10n_ro_edi_stock_enable = (
-                picking.picking_type_code != "internal"
-                and picking.company_id.account_fiscal_country_id.code == "RO"
-            )
-
-    @api.depends("l10n_ro_edi_stock_enable", "state", "l10n_ro_edi_stock_state")
-    def _compute_l10n_ro_edi_stock_enable_send(self):
-        for picking in self:
-            picking.l10n_ro_edi_stock_enable_send = (
                 picking.l10n_ro_edi_stock_enable
-                and picking.state == "done"
-                and picking.l10n_ro_edi_stock_state in (False, "stock_sending_failed")
-                and not picking._l10n_ro_edi_stock_get_last_document("stock_validated")
+                and picking.picking_type_code != "internal"
             )
 
-    @api.depends("company_id", "state", "l10n_ro_edi_stock_state")
-    def _compute_l10n_ro_edi_stock_enable_fetch(self):
-        for picking in self:
-            picking.l10n_ro_edi_stock_enable_fetch = (
-                picking.l10n_ro_edi_stock_enable
-                and picking.l10n_ro_edi_stock_state == "stock_sent"
-            )
-
-    @api.depends("l10n_ro_edi_stock_state")
-    def _compute_l10n_ro_edi_stock_enable_amend(self):
-        for picking in self:
-            picking.l10n_ro_edi_stock_enable_amend = (
-                picking.l10n_ro_edi_stock_enable
-                and (
-                    picking.l10n_ro_edi_stock_state == "stock_validated"
-                    or (
-                        picking.l10n_ro_edi_stock_state == "stock_sending_failed"
-                        and picking._l10n_ro_edi_stock_get_last_document(
-                            "stock_validated"
-                        )
-                    )
-                )
-            )
-
-    @api.depends("l10n_ro_edi_stock_state")
-    def _compute_l10n_ro_edi_stock_fields_readonly(self):
-        for picking in self:
-            picking.l10n_ro_edi_stock_fields_readonly = (
-                picking.l10n_ro_edi_stock_state == "stock_sent"
-            )
+    def _l10n_ro_edi_stock_is_shipped(self) -> bool:
+        return self.state == "done"
 
     ################################################################################
     # Validation methods
@@ -430,41 +304,6 @@ class Picking(models.Model):
     ################################################################################
     # Document Helpers
     ################################################################################
-
-    def _l10n_ro_edi_stock_get_current_document(self):
-        """
-        Returns the most recently created document in l10n_ro_edi_stock_document_ids
-        """
-        self.check_singleton()
-        return (
-            self.l10n_ro_edi_stock_document_ids.sorted()[0]
-            if self.l10n_ro_edi_stock_document_ids
-            else None
-        )
-
-    def _l10n_ro_edi_stock_get_all_documents(self, states):
-        """
-        Returns filtered documents by state
-        """
-        self.check_singleton()
-
-        if isinstance(states, str):
-            states = [states]
-
-        return self.l10n_ro_edi_stock_document_ids.filtered(
-            lambda doc: doc.state in states
-        )
-
-    def _l10n_ro_edi_stock_get_last_document(self, state):
-        """
-        Returns the most recently created document with the given state
-        """
-        self.check_singleton()
-        documents_in_state = self.l10n_ro_edi_stock_document_ids.filtered(
-            lambda doc: doc.state == state
-        ).sorted()
-
-        return documents_in_state and documents_in_state[0]
 
     def _l10n_ro_edi_stock_create_document_stock_sent(self, values: dict[str, object]):
         self.check_singleton()
@@ -815,20 +654,6 @@ class Picking(models.Model):
     ################################################################################
     # Misc helpers
     ################################################################################
-
-    @api.model
-    def _l10n_ro_edi_stock_get_available_location_types(
-        self, operation_type, location: Literal["start", "end"]
-    ) -> str:
-        """
-        :return comma separated list of available location types for the start or end location based on the operation type
-        """
-        if operation_type == LOCATION_TYPE_MAP[location]["customs_code"]:
-            return "location,bcp,customs"
-        elif operation_type in LOCATION_TYPE_MAP[location]["bcp_codes"]:
-            return "location,bcp"
-        else:
-            return "location"
 
     @api.model
     def _l10n_ro_edi_stock_get_cod(self, record):

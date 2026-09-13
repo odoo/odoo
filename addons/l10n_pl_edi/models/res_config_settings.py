@@ -16,7 +16,7 @@ class ResConfigSettings(models.TransientModel):
         "certificate.certificate",
         "KSeF Certificate",
         compute="_compute_l10n_pl_edi_certificate",
-        inverse="_set_l10n_pl_edi_certificate",
+        inverse="_inverse_l10n_pl_edi_certificate",
         readonly=False,
     )
     l10n_pl_edi_access_token = fields.Char(
@@ -42,7 +42,7 @@ class ResConfigSettings(models.TransientModel):
             if not config.l10n_pl_edi_register:
                 config.l10n_pl_edi_certificate = False
 
-    def _set_l10n_pl_edi_certificate(self):
+    def _inverse_l10n_pl_edi_certificate(self):
         for config in self:
             company = config.company_id.sudo()
             if config.l10n_pl_edi_certificate:

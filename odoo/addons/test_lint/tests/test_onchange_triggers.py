@@ -29,6 +29,7 @@ def _triggers(method) -> frozenset[str] | None:
 class TestLintOnchangeTriggers(LintCase):
     def test_lint_onchange_override_does_not_narrow(self):
         registry = Registry(get_db_name())
+        narrowed = []
 
         for model_name, model_cls in registry.items():
             for method_name, winner in inspect.getmembers(model_cls, inspect.isroutine):
@@ -53,7 +54,7 @@ class TestLintOnchangeTriggers(LintCase):
                     dropped = _triggers(parent_method) - winner_triggers
                     if not dropped:
                         continue
-                    self.fail(
+                    narrowed.append(
                         FAILURE_MESSAGE.format(
                             model=model_name,
                             method=method_name,
@@ -66,3 +67,4 @@ class TestLintOnchangeTriggers(LintCase):
                             dropped=", ".join(sorted(dropped)),
                         )
                     )
+        self.assertFalse(narrowed, "\n\n".join(narrowed))

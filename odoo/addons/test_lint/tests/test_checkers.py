@@ -10,6 +10,7 @@ from . import (
     _checker_config_patch,
     _checker_credential_storage,
     _checker_egress,
+    _checker_field_declaration,
     _checker_gettext,
     _checker_http_json,
     _checker_noqa_rationale,
@@ -750,13 +751,48 @@ class TestSqlLint(BaseCase):
 
     def test_a_self_referential_accumulation_terminates(self):
         violations = self._check("""
-        def _build(self, parts, pids):
-            where_clause = " OR ".join(parts)
+        def _build(self, where_sql, pids):
+            where_clause = where_sql
             if pids:
                 where_clause = "(%s) AND (%s)" % (where_clause, "fol.partner_id = ANY(%s)")
             self.env.cr.execute("SELECT id FROM t WHERE " + where_clause)
         """)
-        self.assertTrue(violations, "an accumulated value is not a constant")
+        self.assertTrue(
+            violations, "an accumulation seeded by a parameter is not a constant"
+        )
+
+    def test_an_accumulation_of_constants_stays_constant(self):
+        violations = self._check("""
+        def _get_seen_list(self):
+            target = self.env[self.mailing_model_real]
+            query = "SELECT s.email FROM mailing_trace s JOIN %(target)s t ON (s.res_id = t.id)"
+            if self.ab_testing_enabled:
+                query += " AND s.campaign_id = %%(mailing_campaign_id)s"
+            else:
+                query += " AND s.mass_mailing_id = %%(mailing_id)s"
+            query = query % {"target": target._table}
+            self.env.cr.execute(query, {"mailing_id": self.id})
+        """)
+        self.assertFalse(violations, "every binding of query is a constant or _table")
+
+    def test_a_parameter_appended_to_a_constant_is_not_a_constant(self):
+        violations = self._check("""
+        def _read(self, table):
+            query = "SELECT id FROM "
+            query += table
+            self.env.cr.execute(query)
+        """)
+        self.assertTrue(
+            violations,
+            "resolving the name to its first assignment hid every later binding",
+        )
+
+    def test_the_query_passed_by_keyword_is_still_the_query(self):
+        violations = self._check("""
+        def _read(self, table):
+            self.env.cr.execute(query=f"SELECT id FROM {table}")
+        """)
+        self.assertTrue(violations)
 
     def test_dict_format_const(self):
         violations = self._check("""
@@ -1059,6 +1095,14 @@ class TestGetTextLint(BaseCase):
         """)
         missing = [v for v in violations if v.rule == "missing-gettext"]
         self.assertEqual(len(missing), 0)
+
+    def test_a_redirect_warning_is_user_facing_too(self):
+        violations = list(
+            _checker_gettext.check(
+                ast.parse('raise RedirectWarning("Configure it", action.id, "Go")')
+            )
+        )
+        self.assertEqual([v.rule for v in violations], ["missing-gettext"])
 
     def test_missing_gettext_catching_errors(self):
         violations = self._check("""
@@ -1629,6 +1673,20 @@ class TestShadowedDefinitionLint(BaseCase):
         """)
         )
 
+    def test_a_setter_of_another_property_is_still_a_redefinition(self):
+        violations = self._check("""
+        class C:
+            @property
+            def f(self):
+                return 1
+
+            @g.setter
+            def f(self, value):
+                pass
+        """)
+        self.assertEqual(len(violations), 1)
+        self.assertIn("C.f", violations[0])
+
     def test_a_property_group_is_not_a_finding(self):
         self.assertFalse(
             self._check("""
@@ -1911,3 +1969,131 @@ class TestCredentialStorageLint(BaseCase):
             ),
             [],
         )
+
+
+@no_retry
+class TestFieldDeclarationLint(BaseCase):
+    def _check(self, source):
+        tree = ast.parse(dedent(source))
+        return [
+            (v.rule, v.lineno)
+            for v in _checker_field_declaration.check(
+                tree, _rules.walk_with_parents(tree)
+            )
+        ]
+
+    def test_a_field_declared_twice_is_flagged_at_the_second(self):
+        found = self._check("""
+        class Partner(models.Model):
+            show_credit_limit = fields.Boolean(groups="a")
+            use_credit_limit = fields.Boolean()
+
+            show_credit_limit = fields.Boolean(groups="b")
+        """)
+        self.assertEqual(found, [("field-redeclared", 6)])
+
+    def test_a_field_overwriting_a_plain_attribute_is_flagged_too(self):
+        found = self._check("""
+        class Partner(models.Model):
+            _order = "name"
+            _order = fields.Char()
+        """)
+        self.assertEqual(found, [("field-redeclared", 4)])
+
+    def test_two_plain_attributes_and_two_classes_are_not_a_redeclaration(self):
+        self.assertEqual(
+            self._check("""
+        class A(models.Model):
+            _order = "name"
+            _order = "id"
+            name = fields.Char()
+
+        class B(models.Model):
+            name = fields.Char()
+        """),
+            [],
+        )
+
+    def test_a_default_that_ran_at_import_is_flagged(self):
+        for default in (
+            "fields.Date.today()",
+            "fields.Datetime.now()",
+            "datetime.now()",
+            "uuid.uuid4()",
+            "secrets.token_hex(16)",
+            '_("New")',
+        ):
+            with self.subTest(default=default):
+                found = self._check(f"""
+                class Wizard(models.TransientModel):
+                    date = fields.Date(default={default})
+                """)
+                self.assertEqual(found, [("default-evaluated-at-import", 3)])
+
+    def test_a_callable_or_constant_default_is_fine(self):
+        self.assertEqual(
+            self._check("""
+        class Wizard(models.TransientModel):
+            date = fields.Date(default=fields.Date.today)
+            when = fields.Datetime(default=lambda self: fields.Datetime.now())
+            code = fields.Char(default=",".join(CODES))
+            since = fields.Datetime(default=datetime(2018, 1, 1))
+            label = fields.Char(default=_lt("New"))
+        """),
+            [],
+        )
+
+    def test_a_repeated_selection_key_is_flagged(self):
+        found = self._check("""
+        class Move(models.Model):
+            kind = fields.Selection(
+                [("23", "Credit note"), ("30", "Debit note"), ("23", "Inactive")],
+            )
+            other = fields.Selection(selection=[("a", "A"), ("a", "B")])
+            clean = fields.Selection([("a", "A"), ("b", "B")])
+            dynamic = fields.Selection(selection="_selection_dynamic")
+        """)
+        self.assertEqual(
+            found,
+            [("selection-duplicate-key", 4), ("selection-duplicate-key", 6)],
+        )
+
+    def test_a_hook_outside_its_family_is_flagged(self):
+        found = self._check("""
+        class Users(models.Model):
+            totp_enabled = fields.Boolean(compute="_compute_totp_enabled", search="_totp_enable_search")
+            cert = fields.Binary(compute="_compute_cert", inverse="_set_cert")
+            kind = fields.Selection(selection="_get_kinds")
+            fine = fields.Char(compute="_compute_fine", inverse="_inverse_fine", search="_search_fine")
+            shared = fields.Float(compute="_compute_amounts")
+        """)
+        self.assertEqual(
+            found,
+            [
+                ("field-hook-prefix", 3),
+                ("field-hook-prefix", 4),
+                ("field-hook-prefix", 5),
+            ],
+        )
+
+    def test_the_label_position_of_each_relational_class_is_known(self):
+        call = (
+            ast.parse('fields.Many2many("a", "rel", "c1", "c2", "Label")').body[0].value
+        )
+        self.assertEqual(
+            _checker_field_declaration.string_argument(call).value, "Label"
+        )
+        call = ast.parse('fields.One2many("a", "b_id", "Lines")').body[0].value
+        self.assertEqual(
+            _checker_field_declaration.string_argument(call).value, "Lines"
+        )
+        call = ast.parse('fields.Many2one("a", "Partner")').body[0].value
+        self.assertEqual(
+            _checker_field_declaration.string_argument(call).value, "Partner"
+        )
+        call = ast.parse('fields.Selection([("a", "A")], "Kind")').body[0].value
+        self.assertEqual(_checker_field_declaration.string_argument(call).value, "Kind")
+        call = ast.parse('fields.Char("Name")').body[0].value
+        self.assertEqual(_checker_field_declaration.string_argument(call).value, "Name")
+        call = ast.parse('fields.Many2one("a")').body[0].value
+        self.assertIsNone(_checker_field_declaration.string_argument(call))

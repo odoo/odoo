@@ -1,4 +1,6 @@
-from odoo import fields, models
+from typing import Literal
+
+from odoo import api, fields, models
 
 from odoo.addons.l10n_ro_edi_stock.models.l10n_ro_edi_stock_document import (
     DOCUMENT_STATES,
@@ -262,6 +264,17 @@ STATE_CODES = {
 _eu_country_vat = {"GR": "EL"}
 
 
+def _document_depends(model):
+    # The one2many to l10n_ro_edi.document is declared by each host (its
+    # inverse differs), and stock.picking.batch gets its own only once
+    # l10n_ro_edi_stock_batch is loaded, so the dependency is stated where
+    # the field exists rather than asserted for every host.
+    depends = ["company_id.account_fiscal_country_id.code"]
+    if "l10n_ro_edi_stock_document_ids" in model._fields:
+        depends.append("l10n_ro_edi_stock_document_ids")
+    return depends
+
+
 class MixinStockConsignment(models.AbstractModel):
     _inherit = "mixin.stock.consignment"
 
@@ -345,3 +358,161 @@ class MixinStockConsignment(models.AbstractModel):
     l10n_ro_edi_stock_fields_readonly = fields.Boolean(
         compute="_compute_l10n_ro_edi_stock_fields_readonly"
     )
+
+    @api.onchange("l10n_ro_edi_stock_operation_type")
+    def _l10n_ro_edi_stock_reset_variable_selection_fields(self):
+        self.l10n_ro_edi_stock_operation_scope = False
+
+        # the 'location' value is always valid, regardless of which operation type is chosen
+        self.l10n_ro_edi_stock_start_loc_type = "location"
+        self.l10n_ro_edi_stock_end_loc_type = "location"
+
+    @api.depends("company_id.account_fiscal_country_id.code")
+    def _compute_l10n_ro_edi_stock_default_location_type(self):
+        for record in self:
+            if record.company_id.account_fiscal_country_id.code == "RO":
+                record.l10n_ro_edi_stock_start_loc_type = (
+                    record.l10n_ro_edi_stock_start_loc_type or "location"
+                )
+                record.l10n_ro_edi_stock_end_loc_type = (
+                    record.l10n_ro_edi_stock_end_loc_type or "location"
+                )
+            else:
+                record.l10n_ro_edi_stock_start_loc_type = False
+                record.l10n_ro_edi_stock_end_loc_type = False
+
+    @api.depends("l10n_ro_edi_stock_operation_type")
+    def _compute_l10n_ro_edi_stock_available_operation_scopes(self):
+        for record in self:
+            if record.l10n_ro_edi_stock_operation_type:
+                allowed_scopes = OPERATION_TYPE_TO_ALLOWED_SCOPE_CODES.get(
+                    record.l10n_ro_edi_stock_operation_type, ("9999",)
+                )
+            else:
+                allowed_scopes = [c for c, _dummy in OPERATION_SCOPES]
+
+            record.l10n_ro_edi_stock_available_operation_scopes = ",".join(
+                allowed_scopes
+            )
+
+    @api.depends("l10n_ro_edi_stock_operation_type")
+    def _compute_l10n_ro_edi_stock_available_location_types(self):
+        for record in self:
+            record.l10n_ro_edi_stock_available_start_loc_types = (
+                record._l10n_ro_edi_stock_get_available_location_types(
+                    record.l10n_ro_edi_stock_operation_type, "start"
+                )
+            )
+            record.l10n_ro_edi_stock_available_end_loc_types = (
+                record._l10n_ro_edi_stock_get_available_location_types(
+                    record.l10n_ro_edi_stock_operation_type, "end"
+                )
+            )
+
+    @api.depends(_document_depends)
+    def _compute_l10n_ro_edi_stock_current_document_state(self):
+        for record in self:
+            if record.company_id.account_fiscal_country_id.code == "RO" and (
+                document := record._l10n_ro_edi_stock_get_current_document()
+            ):
+                record.l10n_ro_edi_stock_state = document.state
+            else:
+                record.l10n_ro_edi_stock_state = False
+
+    @api.depends(_document_depends)
+    def _compute_l10n_ro_edi_stock_current_document_uit(self):
+        for record in self:
+            if record.company_id.account_fiscal_country_id.code == "RO" and (
+                document := record._l10n_ro_edi_stock_get_current_document()
+            ):
+                record.l10n_ro_edi_stock_document_uit = document.l10n_ro_edi_stock_uit
+            else:
+                record.l10n_ro_edi_stock_document_uit = False
+
+    @api.depends("company_id.account_fiscal_country_id.code")
+    def _compute_l10n_ro_edi_stock_enable(self):
+        for record in self:
+            record.l10n_ro_edi_stock_enable = (
+                record.company_id.account_fiscal_country_id.code == "RO"
+            )
+
+    @api.depends("l10n_ro_edi_stock_enable", "state", "l10n_ro_edi_stock_state")
+    def _compute_l10n_ro_edi_stock_enable_send(self):
+        for record in self:
+            record.l10n_ro_edi_stock_enable_send = (
+                record.l10n_ro_edi_stock_enable
+                and record._l10n_ro_edi_stock_is_shipped()
+                and record.l10n_ro_edi_stock_state in (False, "stock_sending_failed")
+                and not record._l10n_ro_edi_stock_get_last_document("stock_validated")
+            )
+
+    @api.depends("l10n_ro_edi_stock_enable", "state", "l10n_ro_edi_stock_state")
+    def _compute_l10n_ro_edi_stock_enable_fetch(self):
+        for record in self:
+            record.l10n_ro_edi_stock_enable_fetch = (
+                record.l10n_ro_edi_stock_enable
+                and record.l10n_ro_edi_stock_state == "stock_sent"
+            )
+
+    @api.depends("l10n_ro_edi_stock_state")
+    def _compute_l10n_ro_edi_stock_enable_amend(self):
+        for record in self:
+            record.l10n_ro_edi_stock_enable_amend = (
+                record.l10n_ro_edi_stock_enable
+                and (
+                    record.l10n_ro_edi_stock_state == "stock_validated"
+                    or (
+                        record.l10n_ro_edi_stock_state == "stock_sending_failed"
+                        and record._l10n_ro_edi_stock_get_last_document(
+                            "stock_validated"
+                        )
+                    )
+                )
+            )
+
+    @api.depends("l10n_ro_edi_stock_state")
+    def _compute_l10n_ro_edi_stock_fields_readonly(self):
+        for record in self:
+            record.l10n_ro_edi_stock_fields_readonly = (
+                record.l10n_ro_edi_stock_state == "stock_sent"
+            )
+
+    def _l10n_ro_edi_stock_is_shipped(self) -> bool:
+        raise NotImplementedError
+
+    def _l10n_ro_edi_stock_get_current_document(self):
+        self.check_singleton()
+        return (
+            self.l10n_ro_edi_stock_document_ids.sorted()[0]
+            if self.l10n_ro_edi_stock_document_ids
+            else None
+        )
+
+    def _l10n_ro_edi_stock_get_all_documents(self, states):
+        self.check_singleton()
+
+        if isinstance(states, str):
+            states = [states]
+
+        return self.l10n_ro_edi_stock_document_ids.filtered(
+            lambda doc: doc.state in states
+        )
+
+    def _l10n_ro_edi_stock_get_last_document(self, state):
+        self.check_singleton()
+        documents_in_state = self.l10n_ro_edi_stock_document_ids.filtered(
+            lambda doc: doc.state == state
+        ).sorted()
+
+        return documents_in_state and documents_in_state[0]
+
+    @api.model
+    def _l10n_ro_edi_stock_get_available_location_types(
+        self, operation_type, location: Literal["start", "end"]
+    ) -> str:
+        if operation_type == LOCATION_TYPE_MAP[location]["customs_code"]:
+            return "location,bcp,customs"
+        elif operation_type in LOCATION_TYPE_MAP[location]["bcp_codes"]:
+            return "location,bcp"
+        else:
+            return "location"

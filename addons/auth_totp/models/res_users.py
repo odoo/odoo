@@ -36,7 +36,7 @@ class ResUsers(models.Model):
     totp_enabled = fields.Boolean(
         string="Two-factor authentication",
         compute="_compute_totp_enabled",
-        search="_totp_enable_search",
+        search="_search_totp_enabled",
     )
     totp_trusted_device_ids = fields.One2many(
         "auth_totp.device", "user_id", string="Trusted Devices"
@@ -278,7 +278,7 @@ class ResUsers(models.Model):
                 "UPDATE res_users SET totp_secret = %s WHERE id=%s", (secret, user.id)
             )
 
-    def _totp_enable_search(self, operator, value):
+    def _search_totp_enabled(self, operator, value):
         operands = (
             [value]
             if isinstance(value, str) or not hasattr(value, "__iter__")

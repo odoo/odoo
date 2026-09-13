@@ -7,6 +7,7 @@ from dataclasses import dataclass, field
 _CURSOR_SUFFIXES = (".cr", "._cr", "_cr")
 _CURSOR_NAMES = frozenset({"cr", "_cr", "cursor"})
 _SQL_BUILDERS = frozenset({"odoo.tools", "tools"})
+_QUERY_KEYWORDS = frozenset({"query"})
 
 
 def is_cursor_expression(name: str) -> bool:
@@ -115,9 +116,6 @@ class SqlInjectionChecker:
         )
 
     def _check_sql_injection_risky(self, node: ast.Call) -> bool:
-        if not node.args:
-            return False
-
         match node.func:
             case ast.Attribute(attr=attr) if attr in (
                 "execute",
@@ -131,11 +129,22 @@ class SqlInjectionChecker:
             case _:
                 return False
 
-        first_arg = node.args[0]
+        first_arg = self._query_argument(node)
+        if first_arg is None:
+            return False
         result = self._check_concatenation(first_arg)
         if result is not None:
             return result
         return True
+
+    @staticmethod
+    def _query_argument(node: ast.Call) -> ast.expr | None:
+        if node.args:
+            return node.args[0]
+        for keyword in node.keywords:
+            if keyword.arg in _QUERY_KEYWORDS:
+                return keyword.value
+        return None
 
     def _check_concatenation(self, node: ast.expr) -> bool | None:
         node = self._resolve(node)
@@ -181,15 +190,21 @@ class SqlInjectionChecker:
         return None
 
     def _resolve(self, node: ast.expr) -> ast.expr:
-        if isinstance(node, ast.Name):
-            scope = self._find_enclosing_scope(node)
-            if scope is not None:
-                for target_node in self._find_assignments(scope, node.id):
-                    if isinstance(target_node, ast.Assign):
-                        if any(isinstance(t, ast.Tuple) for t in target_node.targets):
-                            continue
-                        return target_node.value
-        return node
+        if not isinstance(node, ast.Name):
+            return node
+        scope = self._find_enclosing_scope(node)
+        if scope is None:
+            return node
+        # A name bound once, by a plain assignment, is that assignment's
+        # value. Bound more than once (`q = "..."; q += tbl`) it is left to
+        # _is_constexpr, which weighs every binding; resolving to the first
+        # one read `q += tbl` as the constant it started as.
+        bindings = list(self._find_assignments(scope, node.id))
+        if len(bindings) != 1 or not isinstance(bindings[0], ast.Assign):
+            return node
+        if any(isinstance(t, ast.Tuple) for t in bindings[0].targets):
+            return node
+        return bindings[0].value
 
     def _is_constexpr(
         self,
@@ -327,7 +342,11 @@ class SqlInjectionChecker:
 
         key = (id(scope), name)
         if key in self._resolving_names:
-            return False
+            # `q = q % {...}` asks about q while q is being resolved. Assume
+            # the answer is yes: the other bindings decide, since a non-constant
+            # seed fails on its own line and a constant one stays constant
+            # through an accumulation of constants.
+            return True
         self._resolving_names.add(key)
         try:
             return self._resolve_name(node, name, scope, args_allowed=args_allowed)

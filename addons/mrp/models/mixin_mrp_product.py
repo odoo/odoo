@@ -32,6 +32,18 @@ class MixinMrpProduct(models.AbstractModel):
     def _get_mrp_variants(self):
         raise NotImplementedError
 
+    def _compute_bom_count(self):
+        raise NotImplementedError
+
+    def _compute_mrp_product_qty(self):
+        raise NotImplementedError
+
+    def _compute_is_kit(self):
+        raise NotImplementedError
+
+    def _search_is_kit(self, operator, value):
+        raise NotImplementedError
+
     def _compute_used_in_bom_count(self):
         counts = {
             record.id: count

@@ -45,3 +45,4 @@ from . import test_group_refs
 from . import test_record_refs
 from . import test_fixture_models
 from . import test_migration_versions
+from . import test_field_declarations

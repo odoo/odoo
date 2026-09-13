@@ -383,8 +383,8 @@ class TestSchemeDuplication(lint_case.LintCase):
             self.skipTest(
                 f"{len(missing)} of {len(SINGLE_BUNDLE_GAP_FLOOR)} floored "
                 f"module(s) are not installed, so their floors would pass by "
-                f"describing an absence. Run this under asset_lint.yml's INSTALL "
-                f"set. Missing: {', '.join(missing)}"
+                f"describing an absence. Run this on a database that installs "
+                f"every floored module. Missing: {', '.join(missing)}"
             )
 
     def test_every_floor_names_a_module_that_exists(self):

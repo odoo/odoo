@@ -27,10 +27,12 @@ it fails until the floor is lowered in the same change.
 This module was edited as a shared ledger: 24 of its last 40 commits changed
 nothing in it but an integer and the comment above it.
 
-Two gates are floored above zero: `lint_docstring` (a one-sided ratchet that
-reads 32 only on a fuller install) and `bundle_double_eval` (ESM bundles that
-evaluate twice). Everything else -- every AST rule, every XML rule, the
-manifest and record-order gates -- is a hard zero. `n-plus-one-query` reached
+Four gates are floored above zero: `lint_docstring` (a one-sided ratchet that
+reads 32 only on a fuller install), `bundle_double_eval` (ESM bundles that
+evaluate twice), and the two migration ledgers `lint_raw_egress` and
+`lint_credential_storage`, whose floors are the calls and columns still to move
+onto `api_transport` and into the vault. Everything else -- every AST rule,
+every XML rule, the manifest and record-order gates -- is a hard zero. `n-plus-one-query` reached
 zero on 2026-09-12 by reading each of its 295 sites: a loop over the records
 is hoisted, a loop that runs one query per distinct key (company, model,
 timezone, merged domain, a single-record wizard) carries `# noqa: E8507 -
@@ -61,6 +63,7 @@ database, and `test_checkers.py` does exactly that.
 | `_checker_egress.py` | `raw-egress`, `secret-in-environ` |
 | `_checker_credential_storage.py` | `credential-storage` |
 | `_checker_row_counter.py` | `row-counter-in-test` |
+| `_checker_field_declaration.py` | `field-redeclared`, `default-evaluated-at-import`, `selection-duplicate-key`, `field-hook-prefix` |
 
 `tax-company-singular` (E8514) catches `.tax_ids.filtered(lambda t: t.company_id)`
 and the five other tax field names. `account.tax` carries `company_ids`, a
@@ -112,6 +115,31 @@ Four repetitions are legitimate and exempt: a `@typing.overload` stack, a
 `@property` group with its setter/deleter, a `@singledispatchmethod` and its
 `@x.register` implementations, and definitions guarded by `if`/`try` such as
 `if TYPE_CHECKING`, which are alternatives rather than overwrites.
+
+`_checker_field_declaration.py` reads every `name = fields.X(...)` in a class
+body, outside tests. `field-redeclared` (E8521) is the assignment twin of
+`shadowed-definition`: the same name bound twice in one class body, the first
+declaration dead. `default-evaluated-at-import` (E8522) is `default=` handed
+the *result* of a clock or a random source -- `fields.Date.today()`,
+`datetime.now()`, `uuid4()`, `_("...")` -- which ran once when the module was
+imported, so every record gets the value the server started with; the enterprise
+tree carried five. `selection-duplicate-key` (E8523) is a literal selection
+list repeating a key: `Selection.__init__` turns the list into a dict, so the
+last label wins and the others are dead (`l10n_co_edi` shipped `"23"` twice,
+the second marked inactive and never shown). `field-hook-prefix` (E8524) is
+`compute=`, `inverse=`, `search=` or `selection=` naming a method outside the
+family §2.4.1 of `doc/coding_guidelines.rst` reserves for it, so a reader --
+and the naming gates -- can tell a hook from a helper; the hook exists, the
+name does not say so.
+
+**What the AST cannot see, `test_field_declarations.py` reads off the
+registry** (post-install): whether the method a hook names exists at all
+(`lint_field_hook_missing`; `resolve_mro` finds nothing at setup and the first
+read raises `AttributeError`, which is how three fork-made mixins declared
+seventeen computed fields whose computes only their hosts supply), whether an
+`@api.onchange` or `@api.constrains` parameter is a field of a concrete model
+(`lint_field_trigger_unknown`; the ORM logs one warning and never fires the
+method for that name).
 
 `unreadable-source` has no checker file of its own: the engine emits it when a
 file cannot be parsed or tokenised. Both used to be swallowed, and a file whose

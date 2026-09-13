@@ -19,6 +19,9 @@ class MixinDocumentsProduct(models.AbstractModel):
         compute="_compute_product_document_count",
     )
 
+    def _compute_product_document_count(self):
+        raise NotImplementedError
+
     def _get_document_vals_access_rights(self):
         return {
             "access_internal": "view",

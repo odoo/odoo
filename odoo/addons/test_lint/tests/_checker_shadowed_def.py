@@ -27,12 +27,24 @@ def _decorator_names(node: ast.FunctionDef | ast.AsyncFunctionDef) -> set[str]:
     return names
 
 
+def _redecorates(node: ast.FunctionDef | ast.AsyncFunctionDef, name: str) -> bool:
+    for decorator in node.decorator_list:
+        match decorator:
+            case ast.Attribute(value=ast.Name(id=owner), attr=attr) if (
+                attr in RE_DECORATED and owner == name
+            ):
+                return True
+    return False
+
+
 def _is_legitimate(definitions: list[ast.FunctionDef | ast.AsyncFunctionDef]) -> bool:
     decorators = [_decorator_names(node) for node in definitions]
     if all(names & OVERLOAD for names in decorators[:-1]):
         return True
+    # `@other.setter` above a second `f` re-decorates `other`, not `f`: the
+    # first `f` dies exactly as it would under a bare redefinition.
     if decorators[0] & PROPERTY and all(
-        names & RE_DECORATED for names in decorators[1:]
+        _redecorates(node, definitions[0].name) for node in definitions[1:]
     ):
         return True
     return "singledispatchmethod" in decorators[0] and all(
