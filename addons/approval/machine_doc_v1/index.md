@@ -48,6 +48,7 @@ dashboards.
 | `approval_decision_log.py` | `approval.decision.log`, extends `approval.request` | The append-only decision ledger: one `verdict` per fact (approved, refused, withdrawn, granted, revoked, cancelled, reset) with the acting user, the `principal_id` a delegate acted for, the caller's elevation and the `state_after`. Written by every funnel through `_append_decision_log`; `write` and `unlink` refuse always. Read through `approval.request.decision_log_ids` |
 | `mixin_approval_source.py` | `mixin.approval.source` (Abstract) | What every record an approval request is raised for may answer: `_filter_approval_step_user_ids()` (who its own policy lets decide) and `_get_approval_activity_type()` (which activity asks them). Parent of both adopter shapes |
 | `mixin_approval.py` | `mixin.approval` (Abstract) | Mixin for source documents (PO, SO, etc.) to integrate with approvals: one request per document, `approval_request_id` |
+| `mixin_approval_access.py` | `mixin.approval.access` (Abstract) | A record whose access a partner asks for: the subject is the partner and role, and the adopter says whether the access is held and writes the grant on approval |
 | `mixin_approval_subjects.py` | `mixin.approval.subjects` (Abstract) | A record holding one request per subject (`subject_key`): a course and each partner asking to join it, an engineering change and each stage it passes. Raises, looks up and is told about each subject's request |
 | `mixin_approval_state_sync.py` | `mixin.approval.state.sync` (Abstract) | A source document whose own state drives its request: a state change syncs the request (decision, grant, revoke, force, reset), a request-side decision reaches the document through the document's own policy, and the request refuses being moved from the approvals app. Adopted by `hr.leave` and `hr.leave.allocation` |
 | `mixin_approval_threshold.py` | `mixin.approval.threshold` (Abstract) | Base of `approval.rule` and `approval.category.step`: `company_id` + `currency_id`, the numeric condition on the request (`condition_field`, `operator`, `threshold`, `threshold_max`, `_get_field_value()`, `_compare()`), `_convert_request_amount()` (a request's amount is converted into the record's currency before any comparison) and `_intervals_overlap()` |
@@ -208,6 +209,7 @@ approval/
 |   +-- mixin_approval_source.py      # Hooks every approval source answers
 |   +-- mixin_approval.py             # Source document mixin (one request)
 |   +-- mixin_approval_subjects.py    # One request per subject
+|   +-- mixin_approval_access.py      # Access asked for through approval
 |   +-- mixin_approval_state_sync.py  # Document state drives its request
 |   +-- mixin_approval_threshold.py   # Currency-aware threshold base
 |   +-- mixin_approval_domain.py      # Subject-domain parsing + path checks
@@ -247,9 +249,9 @@ approval/
 | XML files (static templates) | 4 |
 | JS files | 25 |
 | SCSS files | 4 |
-| ORM models (new) | 17 in `models/` + 2 wizards + 3 report models |
+| ORM models (new) | 18 in `models/` + 2 wizards + 3 report models |
 | ORM models (extended) | 8 (base, ir.actions.report, ir.actions.server, ir.attachment, mail.activity, mail.activity.type, res.groups, res.users) |
-| Abstract models | 6 (mixin.approval.source, mixin.approval, mixin.approval.state.sync, mixin.approval.subjects, mixin.approval.threshold, mixin.approval.domain) |
+| Abstract models | 7 (mixin.approval.source, mixin.approval, mixin.approval.state.sync, mixin.approval.subjects, mixin.approval.access, mixin.approval.threshold, mixin.approval.domain) |
 | SQL view models | 2 |
 | Transient models | 2 |
 | Test-only models | 3 |

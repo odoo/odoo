@@ -76,6 +76,7 @@ mixin.approval.state.sync (Abstract)   [inherits mixin.approval]
     +-- the document's own state field (declared per adopter) drives approval_request_id
 
 mixin.approval.subjects (Abstract)     [inherits mixin.approval.source]
+mixin.approval.access (Abstract)       [inherits mixin.approval.subjects]
     +-- approval_request_ids -> approval.request (o2m on res_id, one live per subject_key)
 
 approval.refusal.reason
@@ -771,6 +772,38 @@ For a record that holds one request per subject rather than one in all: a course
 | `_get_approval_request(subject_key)` / `_get_live_approval_request(subject_key)` | The latest request for the subject, and that request only while it is new or pending |
 
 `approval.request._get_notifiable_source_document()` tells such a record only about a request that carries a `subject_key`; a request pointed at the record without one reaches nothing, as a `mixin.approval` document is told only about the request it references. Covered by `test_approval/tests/test_approval_subjects.py` against `approval.test.subject.document`.
+
+---
+
+## mixin.approval.access (Abstract)
+
+| Key | Value |
+|-----|-------|
+| Model | `mixin.approval.access` |
+| File | `models/mixin_approval_access.py` |
+| Inherits | `mixin.approval.subjects` |
+
+For a record whose access a partner asks for: a course on invitation, a shared document or folder, a knowledge article. Each ask is a subject, `access:<partner>` or `access:<partner>:<role>`, so a view request and an edit request wait separately. The grant row stays the domain's (a course membership, a `document.access`, a `knowledge.article.member`); the decision is the engine's. There is no shared grant-row mixin, because the rows disagree on roles, expiry and what a row without a role means.
+
+### Adopter hooks
+
+| Hook | Contract |
+|------|----------|
+| `_access_approval_category` | Class attribute: the xmlid of the shipped category. Or override `_get_approval_subject_category` |
+| `_has_access(partner, role)` | Whether the partner already holds the role. Required |
+| `_grant_access(partner, role)` | Writes the grant when a request is approved. Required |
+| `_get_access_request_name(partner, role)` | The request's name; "Access to <record> for <partner>" by default |
+
+### Behaviour
+
+| Method | What it does |
+|--------|--------------|
+| `_get_access_subject_key(partner, role)` / `_get_access_subject(subject_key)` | Encode and decode the subject; a key of another kind decodes to no partner |
+| `_request_access(partner, role)` | Raises the request, refused when `_has_access` already holds or a request for that subject is waiting |
+| `_get_live_access_request(partner, role)` | The waiting request for that subject, read under `sudo` |
+| `_decide_access_request(partner, role, approve)` | A caller who can decide the request records a decision. Otherwise, a caller who may write the record approves without a decision or refuses by force. Anyone else gets an `AccessError`. Returns False when nothing is waiting |
+
+`_on_approval_subject_state_changed` grants on `approved` and nothing else. Covered by `test_approval/tests/test_approval_access.py` against `approval.test.access.document`, and by `website_slides`' `TestCourseAccessRequest`.
 
 ---
 

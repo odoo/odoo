@@ -26,9 +26,10 @@ class SlideChannel(models.Model):
         "mixin.website.seo.metadata",
         "mixin.website.published.multi",
         "mixin.website.searchable",
-        "mixin.approval.subjects",
+        "mixin.approval.access",
     ]
     _order = "sequence, id"
+    _access_approval_category = "website_slides.approval_category_course_access"
     _mail_partner_fields = ()
     _partner_unfollow_enabled = True
 
@@ -1326,10 +1327,10 @@ class SlideChannel(models.Model):
         if self.is_member:
             return {"error": _("Already member")}
         if self.enroll == "invite":
-            key = self._get_access_subject_key(self.env.user.partner_id)
-            if self.sudo()._get_live_approval_request(key):
+            partner = self.env.user.partner_id
+            if self._get_live_access_request(partner):
                 return {"error": _("Already Requested")}
-            self.sudo()._raise_approval_request(key)
+            self.sudo()._request_access(partner)
             return {"done": True}
         return {"done": False}
 
@@ -1338,91 +1339,36 @@ class SlideChannel(models.Model):
         partner = self.env["res.partner"].browse(partner_id).exists()
         if not partner:
             return
-        request = self.sudo()._get_live_approval_request(
-            self._get_access_subject_key(partner)
-        )
-        if not request:
+        if not self._decide_access_request(partner, False, approve=True):
             self._action_add_members(partner, raise_on_access=True)
-            return
-        rows = request._get_rows_decidable_by(self.env.user)
-        if rows:
-            request.action_approve(approver=rows)
-            return
-        self.check_access("write")
-        request._approve_without_decision(
-            _(
-                "%(user)s granted %(partner)s access to %(course)s.",
-                user=self.env.user.name,
-                partner=partner.name,
-                course=self.name,
-            )
-        )
 
     def action_refuse_access(self, partner_id):
         self.check_singleton()
         partner = self.env["res.partner"].browse(partner_id).exists()
-        if not partner:
-            return
-        request = self.sudo()._get_live_approval_request(
-            self._get_access_subject_key(partner)
-        )
-        if not request:
-            return
-        rows = request._get_rows_decidable_by(self.env.user)
-        if rows:
-            request.action_refuse(approver=rows)
-            return
-        self.check_access("write")
-        request._force_terminal(
-            "refused",
-            _(
-                "%(user)s refused %(partner)s access to %(course)s.",
-                user=self.env.user.name,
-                partner=partner.name,
-                course=self.name,
-            ),
-        )
+        if partner:
+            self._decide_access_request(partner, False, approve=False)
 
     def _get_domain_rating(self, record_ids=None):
         return super()._get_domain_rating(record_ids=record_ids) & Domain(
             "is_internal", "=", False
         )
 
-    @api.model
-    def _get_access_subject_key(self, partner):
-        return f"access:{partner.id}"
+    def _has_access(self, partner, role=False):
+        return partner in self.sudo().channel_partner_ids.partner_id
 
-    def _get_access_subject_partner(self, subject_key):
-        prefix, _separator, partner_id = (subject_key or "").partition(":")
-        if prefix != "access" or not partner_id.isdigit():
-            return self.env["res.partner"]
-        return self.env["res.partner"].browse(int(partner_id)).exists()
+    def _grant_access(self, partner, role=False):
+        self._action_add_members(partner)
 
-    def _get_approval_subject_category(self, subject_key):
-        return self.env.ref(
-            "website_slides.approval_category_course_access", raise_if_not_found=False
-        )
-
-    def _prepare_approval_subject_request_values(self, subject_key, category):
-        vals = super()._prepare_approval_subject_request_values(subject_key, category)
-        partner = self._get_access_subject_partner(subject_key)
-        vals["name"] = _(
+    def _get_access_request_name(self, partner, role):
+        return _(
             "Access to %(course)s for %(partner)s",
             course=self.name,
             partner=partner.name,
         )
-        return vals
 
     def _get_approval_activity_values(self, approver):
-        partner = self._get_access_subject_partner(approver.request_id.subject_key)
+        partner, _role = self._get_access_subject(approver.request_id.subject_key)
         return {"request_partner_id": partner.id} if partner else {}
-
-    def _on_approval_subject_state_changed(self, request, new_state):
-        if new_state != "approved":
-            return
-        partner = self._get_access_subject_partner(request.subject_key)
-        if partner:
-            self._action_add_members(partner)
 
     @api.model
     def _backfill_access_requests(self):

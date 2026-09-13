@@ -285,6 +285,12 @@ msgstr ""
 
 #. module: approval
 #. odoo-python
+#: code:addons/approval/models/mixin_approval_access.py:0
+msgid "%(partner)s already has this access to %(record)s."
+msgstr "%(partner)s ya tiene este acceso a %(record)s."
+
+#. module: approval
+#. odoo-python
 #: code:addons/approval/models/approval_request_routing.py:0
 msgid ""
 "%(principal)s's delegation to %(delegate)s was ended: %(delegate)s is now an"
@@ -414,9 +420,21 @@ msgstr ""
 
 #. module: approval
 #. odoo-python
+#: code:addons/approval/models/mixin_approval_access.py:0
+msgid "%(user)s granted %(partner)s access to %(record)s."
+msgstr "%(user)s otorgó a %(partner)s acceso a %(record)s."
+
+#. module: approval
+#. odoo-python
 #: code:addons/approval/models/approval_request_lifecycle.py:0
 msgid "%(user)s has already decided %(steps)s on %(name)s."
 msgstr ""
+
+#. module: approval
+#. odoo-python
+#: code:addons/approval/models/mixin_approval_access.py:0
+msgid "%(user)s refused %(partner)s access to %(record)s."
+msgstr "%(user)s rechazó el acceso de %(partner)s a %(record)s."
 
 #. module: approval
 #. odoo-python
@@ -739,6 +757,12 @@ msgstr ""
 #: model:ir.model,name:approval.model_res_groups
 msgid "Access Groups"
 msgstr ""
+
+#. module: approval
+#. odoo-python
+#: code:addons/approval/models/mixin_approval_access.py:0
+msgid "Access to %(record)s for %(partner)s"
+msgstr "Acceso a %(record)s para %(partner)s"
 
 #. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_decision_log__user_id

@@ -1,4 +1,5 @@
 from . import (
+    test_approval_access,
     test_approval_mixin,
     test_approval_subjects,
     test_binding_adopter,
