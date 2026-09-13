@@ -233,54 +233,80 @@ export class RecordList extends Array {
         const recordList = this._raw;
         return recordList._.data().at(index)?._proxy;
     }
-    /** @param {(record: R, index: number, list: RecordList<R>) => any} fn */
-    map(fn) {
+    /**
+     * @param {(record: R, index: number, list: RecordList<R>) => any} fn
+     * @param {any} [thisArg]
+     */
+    map(fn, thisArg) {
         const recordList = this._raw;
         const listProxy = recordList._proxy;
-        return recordList._.records().map((record, index) => fn(record._proxy, index, listProxy));
+        return recordList._.records().map((record, index) =>
+            fn.call(thisArg, record._proxy, index, listProxy)
+        );
     }
-    /** @param {(record: R, index: number, list: RecordList<R>) => boolean} fn */
-    filter(fn) {
+    /**
+     * @param {(record: R, index: number, list: RecordList<R>) => boolean} fn
+     * @param {any} [thisArg]
+     */
+    filter(fn, thisArg) {
         const recordList = this._raw;
         const listProxy = recordList._proxy;
         const res = [];
         recordList._.records().forEach((record, index) => {
-            if (fn(record._proxy, index, listProxy)) {
+            if (fn.call(thisArg, record._proxy, index, listProxy)) {
                 res.push(record._proxy);
             }
         });
         return res;
     }
-    /** @param {(record: R, index: number, list: RecordList<R>) => void} fn */
-    forEach(fn) {
+    /**
+     * @param {(record: R, index: number, list: RecordList<R>) => void} fn
+     * @param {any} [thisArg]
+     */
+    forEach(fn, thisArg) {
         const recordList = this._raw;
         const listProxy = recordList._proxy;
-        recordList._.records().forEach((record, index) => fn(record._proxy, index, listProxy));
+        recordList._.records().forEach((record, index) =>
+            fn.call(thisArg, record._proxy, index, listProxy)
+        );
     }
-    /** @param {(record: R, index: number, list: RecordList<R>) => boolean} fn */
-    findIndex(fn) {
+    /**
+     * @param {(record: R, index: number, list: RecordList<R>) => boolean} fn
+     * @param {any} [thisArg]
+     */
+    findIndex(fn, thisArg) {
         const recordList = this._raw;
         const listProxy = recordList._proxy;
         return recordList._.records().findIndex((record, index) =>
-            fn(record._proxy, index, listProxy)
+            fn.call(thisArg, record._proxy, index, listProxy)
         );
     }
-    /** @param {(record: R, index: number, list: RecordList<R>) => boolean} fn */
-    find(fn) {
+    /**
+     * @param {(record: R, index: number, list: RecordList<R>) => boolean} fn
+     * @param {any} [thisArg]
+     */
+    find(fn, thisArg) {
         const recordList = this._raw;
         const listProxy = recordList._proxy;
-        return recordList._.records().find((record, index) => fn(record._proxy, index, listProxy))
-            ?._proxy;
+        return recordList._.records().find((record, index) =>
+            fn.call(thisArg, record._proxy, index, listProxy)
+        )?._proxy;
     }
-    /** @param {(record: R, index: number, list: RecordList<R>) => boolean} fn */
-    some(fn) {
-        return this._raw.findIndex(fn) !== -1;
+    /**
+     * @param {(record: R, index: number, list: RecordList<R>) => boolean} fn
+     * @param {any} [thisArg]
+     */
+    some(fn, thisArg) {
+        return this._raw.findIndex(fn, thisArg) !== -1;
     }
-    /** @param {(record: R, index: number, list: RecordList<R>) => boolean} fn */
-    every(fn) {
+    /**
+     * @param {(record: R, index: number, list: RecordList<R>) => boolean} fn
+     * @param {any} [thisArg]
+     */
+    every(fn, thisArg) {
         const recordList = this._raw;
         const listProxy = recordList._proxy;
-        return !recordList.some((record, index) => !fn(record, index, listProxy));
+        return !recordList.some((record, index) => !fn.call(thisArg, record, index, listProxy));
     }
     /**
      * @param {(acc: any, record: R, index: number, list: RecordList<R>) => any} fn

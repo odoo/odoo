@@ -2101,6 +2101,19 @@ describe("RecordList read methods", () => {
                 expect([...messages].map((message) => message.id)).toEqual(ids);
             });
         }
+
+        if (method !== "reduce") {
+            test(`${method} binds the callback to thisArg`, () => {
+                const context = {};
+                const visited = [];
+                thread.messages[method](function (message) {
+                    expect(this).toBe(context);
+                    visited.push(message.id);
+                    return method === "every";
+                }, context);
+                expect(visited).toEqual([1, 2, 3]);
+            });
+        }
     }
 
     test("map preserves records when an immediate onChange deletes their owner", () => {
