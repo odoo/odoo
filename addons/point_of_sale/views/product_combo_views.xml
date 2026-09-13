@@ -12,7 +12,7 @@
             <xpath expr="//field[@name='company_id']" position="replace">
                 <group>
                     <field name="qty_max" string="Maximum items" />
-                    <field name="qty_free" string="Includes free" invisible="is_upsell"/>
+                    <field name="included_qty" string="Included" invisible="is_upsell"/>
                     <field name="is_upsell" widget="boolean_toggle"/>
                 </group>
                 <group>
