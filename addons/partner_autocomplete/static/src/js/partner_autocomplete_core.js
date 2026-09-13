@@ -63,7 +63,7 @@ export function usePartnerAutocomplete() {
         return isGST;
     }
 
-    async function autocomplete(fieldName, value, queryCountryId) {
+    async function autocomplete(fieldName, value, queryCountryId, shouldIncludeBranches) {
         value = value.trim();
 
         const isVat = await isVATNumber(value);
@@ -75,7 +75,7 @@ export function usePartnerAutocomplete() {
 
         fieldName = fieldName === 'name' && (isVat || isGST) ? 'vat' : fieldName;
 
-        return await scope.run(getSuggestions, fieldName, value, queryCountryId);
+        return await scope.run(getSuggestions, fieldName, value, queryCountryId, shouldIncludeBranches);
     }
 
     /**
@@ -148,7 +148,7 @@ export function usePartnerAutocomplete() {
      * @returns {Promise}
      * @private
      */
-    async function getSuggestions(fieldName, value, queryCountryId) {
+    async function getSuggestions(fieldName, value, queryCountryId, shouldIncludeBranches) {
         // Optimization: if the search query starts with the same content as a previous query for
         // which there was no results, there won't be any results for the current query.
         // E.g., if there is no results for query "abc123", there won't be any results for query "abc1234".
@@ -156,7 +156,7 @@ export function usePartnerAutocomplete() {
             return [];
         }
 
-        const prom = orm.silent.call('res.partner', 'autocomplete_by_field', [fieldName.toLowerCase(), value, queryCountryId]);
+        const prom = orm.silent.call('res.partner', 'autocomplete_by_field', [fieldName.toLowerCase(), value, queryCountryId], {include_branches: shouldIncludeBranches});
 
         let suggestions = [];
         try {
