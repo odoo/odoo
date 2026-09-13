@@ -2,7 +2,6 @@ import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { rpc } from "@web/core/network/rpc";
-import { coverSizeClassLabels } from "./cover_properties_option";
 
 export class CoverPropertiesOptionPlugin extends Plugin {
     static id = "coverPropertiesOption";
@@ -86,7 +85,9 @@ export class CoverPropertiesOptionPlugin extends Plugin {
 
         // TODO: `o_record_has_cover` should be handled using model field, not
         // resize_class to avoid all of this.
-        let coverClass = Object.keys(coverSizeClassLabels).find((e) => el.classList.contains(e));
+        let coverClass = ["o_half_screen_height", "o_full_screen_height", "cover_auto"].find((e) =>
+            el.classList.contains(e)
+        );
         if (bg && bg !== "none") {
             coverClass += " o_record_has_cover";
         }

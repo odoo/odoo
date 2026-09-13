@@ -8,9 +8,14 @@ export class BlogPostTagsOption extends BaseOptionComponent {
 
     setup() {
         super.setup();
-        this.domState = useDomState((el) => ({
-            blogId: parseInt(el.dataset.resId),
-        }));
+        this.domState = useDomState((el) => {
+            const coverEl = el.querySelector(
+                ".o_wblog_post_page_cover[data-res-model='blog.post']"
+            );
+            return {
+                blogId: parseInt(coverEl.dataset.resId),
+            };
+        });
     }
 }
 

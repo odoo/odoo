@@ -134,8 +134,8 @@ list of filtered posts (by date or tag).
                 <div t-attf-class="o_wblog_category_cover_container mb-3 mb-md-0 #{'col-md-5' if (not opt_blog_list_view and not opt_blog_sidebar_show) else 'col-md-6'}">
                     <t t-call="website.record_cover"
                         _record="blog"
-                        use_size="False"
-                        additionnal_classes.f="o_cc3 ratio ratio-16x9 overflow-hidden rounded"/>
+                        display_opt_name.translate="Blog Cover"
+                        additionnal_classes.f="ratio ratio-16x9 overflow-hidden rounded"/>
                 </div>
                 <div t-att-class="'col-md-7' if (not opt_blog_list_view and not opt_blog_sidebar_show) else 'col-md-6'">
                     <div class="container position-relative h-100 d-flex flex-column justify-content-around pt-1 pb-2">
@@ -160,11 +160,11 @@ list of filtered posts (by date or tag).
             _record="blog"
             use_filters="True"
             use_text_align="True"
-            use_size="False"
-            additionnal_classes.f="o_wblog_post_page_cover o_record_has_cover cover_auto o_cc3 py-5">
+            display_opt_name.translate="Blog Cover"
+            additionnal_classes.f="o_wblog_post_page_cover o_record_has_cover cover_auto py-5">
             <div class="container position-relative h-100 d-flex flex-column justify-content-around">
                 <div t-attf-class="o_wblog_post_title my-lg-4">
-                    <span t-att-title="blog.name" class="text-white text-decoration-none">
+                    <span t-att-title="blog.name" class="text-decoration-none">
                         <h1 t-field="blog.name" class="o_wblog_post_name text-wrap-pretty" placeholder="Blog Title"/>
                         <div t-field="blog.subtitle" class="o_wblog_post_subtitle" placeholder="Subtitle"/>
                     </span>
@@ -248,8 +248,10 @@ list of filtered posts (by date or tag).
         <t t-set="opt_blog_post_full_width_cover" t-value="is_view_active('website_blog.opt_blog_post_full_width_cover')"/>
         <t t-set="opt_blog_post_large_container" t-value="is_view_active('website_blog.opt_blog_post_large_container')"/>
 
+        <!-- Content footer options -->
         <t t-set="opt_blog_post_footer_share_links_display" t-value="is_view_active('website_blog.opt_blog_post_footer_share_links_display')"/>
         <t t-set="opt_blog_post_footer_tags_display" t-value="is_view_active('website_blog.opt_blog_post_footer_tags_display')"/>
+        <t t-set="opt_blog_post_footer_show" t-value="opt_blog_post_footer_share_links_display or opt_blog_post_footer_tags_display or opt_blog_post_archive_display"/>
 
         <t t-set="opt_blog_post_comment" t-value="is_view_active('website_blog.opt_blog_post_comment')"/>
 
@@ -266,21 +268,24 @@ list of filtered posts (by date or tag).
             opt_blog_post_archive_display
         "/>
 
+        <!-- Blog Post -->
         <section id="o_wblog_post_top">
             <div id="title" class="blog_header" t-ignore="True">
-                <t t-set="_record" t-value="blog_post"/>
                 <t t-call="website.record_cover"
-                    _record="_record"
+                    _record="blog_post"
                     snippet_autofocus="True"
                     use_filters="True"
-                    use_size="False"
+                    use_size="True"
                     display_opt_name.translate="Blog Post Cover"
-                    additionnal_classes.f="o_wblog_post_page_cover o_cc5 pt112 pb112">
-                    <div class="o_container_small text-center position-relative h-100 d-flex flex-column flex-grow-1 justify-content-around">
+                    additionnal_classes.f="o_wblog_post_page_cover">
+                    <div class="o_container_small text-center position-relative h-100 d-flex flex-column flex-grow-1 justify-content-center">
+                        <!-- Title and subtitle -->
                         <div t-attf-class="o_wblog_post_title">
-                            <!-- Title and subtitle -->
                             <h1 t-field="blog_post.name" class="o_wblog_post_name o_editable_no_shadow text-wrap-pretty" data-oe-expression="blog_post.name" t-att-data-blog-id="blog_post.id" placeholder="Blog Post Title"/>
                             <p t-field="blog_post.subtitle" class="o_wblog_post_subtitle o_editable_no_shadow" placeholder="Subtitle"/>
+                        </div>
+                        <!-- Options -->
+                        <div id="o_wblog_post_header_options">
                             <!-- Tags -->
                             <div t-if="opt_blog_post_header_tags_display and blog_post.tag_ids" class="mb-4">
                                 <t t-foreach="blog_post.tag_ids" t-as="one_tag">
@@ -298,7 +303,7 @@ list of filtered posts (by date or tag).
                 </t>
             </div>
         </section>
-        <section id="o_wblog_post_main" t-attf-class="container py-5 #{'anim' in request.params and 'o_wblog_post_main_transition'}">  
+        <section id="o_wblog_post_main" t-attf-class="py-5 #{'anim' in request.params and 'o_wblog_post_main_transition'}">
             <!-- Setting the classes depending on the layout -->
             <t t-if="opt_blog_post_split_cover">
                 <t t-set="containerClasses" t-value="'container'"/>
@@ -306,7 +311,7 @@ list of filtered posts (by date or tag).
                 <t t-set="sidebarColClasses" t-value="'col-lg-4 order-lg-first'"/>
             </t>
             <t t-else="">
-                <t t-set="containerClasses" t-value="'o_container_small gx-0' if not opt_blog_post_sidebar and not opt_blog_post_large_container else 'container'"/>
+                <t t-set="containerClasses" t-value="'o_container_small' if not opt_blog_post_sidebar and not opt_blog_post_large_container else 'container'"/>
                 <t t-set="contentColClasses" t-value="'col-12' if not opt_blog_post_sidebar else ('col-lg-6 offset-lg-1' if not opt_blog_post_large_container else 'col-lg-9')"/>
                 <t t-set="sidebarColClasses" t-valuef="col-lg-3 #{not opt_blog_post_large_container and 'offset-lg-1'}"/>
             </t> 
@@ -334,44 +339,59 @@ list of filtered posts (by date or tag).
     <!-- Breadcrumbs -->
     <t t-if="opt_blog_post_breadcrumb and opt_blog_post_title_inside_cover" t-call="website_blog.post_breadcrumbs" additional_classes.f="mt-0"/>
     <!-- Mobile table of contents: simple card with list of links (sidebar hidden on mobile) -->
-    <t t-if="opt_blog_post_toc_display">
-        <div class="o_wblog_toc o_wblog_toc_mobile d-lg-none p-3 border rounded mb-4">
-            <h2 class="h6">Table of contents</h2>
-            <nav class="o_wblog_toc_nav o_not_editable">
-                <!-- Table of contents will be generated by JavaScript -->
-            </nav>
-        </div>
-    </t>
+    <t id="o_wblog_post_content_mobile_toc_hook"/>
     <!-- Blog content -->
     <div t-field="blog_post.content" class="o_wblog_post_content_field"/>
     <!-- Content footer -->
-    <div id="o_wblog_post_content_footer"
-        t-if="opt_blog_post_footer_share_links_display or opt_blog_post_footer_tags_display or opt_blog_post_archive_display"
-        class="d-flex align-items-center flex-wrap gap-3 justify-content-between mt-5">
+    <div t-if="opt_blog_post_footer_show" id="o_wblog_post_content_footer" class="d-flex align-items-center flex-wrap gap-3 justify-content-between mt-5">
+        <!-- Share links -->
+        <t id="o_wblog_post_footer_share_links_hook"/>
         <!-- Tags -->
-        <div t-if="opt_blog_post_footer_tags_display and blog_post.tag_ids" id="o_wblog_post_content_footer_tags">
+        <div t-if="opt_blog_post_footer_tags_display and blog_post.tag_ids">
             <t t-foreach="blog_post.tag_ids" t-as="one_tag">
                 <a t-attf-class="badge post_link text-decoration-none o_tag o_color_#{one_tag.color}" t-attf-href="#{blog_url(tag=slug(one_tag))}" t-out="one_tag.name"/>
             </t>
         </div>
         <!-- Mobile archive (since the sidebar is hidden on mobile) -->
-        <div t-if="opt_blog_post_archive_display" class="d-lg-none w-100 pt-4">
-            <h2 class="h5 mb-3">Archive</h2>
-            <t t-call="website_blog.date_selector"/>
-        </div>
+        <t id="o_wblog_post_footer_archive_hook"/>
     </div>
 </template>
 
-<template id="blog_post_content_footer_share_links" inherit_id="website_blog.blog_post_content">
-    <xpath expr="//div[@id='o_wblog_post_content_footer_tags']" position="before">
-        <!-- Share links -->
+<template id="blog_post_content_footer_share_links" name="Content Footer Share Links" inherit_id="website_blog.blog_post_content">
+    <xpath expr="//t[@id='o_wblog_post_footer_share_links_hook']" position="replace">
+        <!-- Adding the "Share" snippet via xpath to make it editable -->
         <div t-if="opt_blog_post_footer_share_links_display" t-ignore="true">
-            <t t-snippet-call="website.s_share"
-                string="Share"
+            <t t-snippet-call="website.s_share" string="Share"
                 _classes.f="no_icon_color oe_unremovable oe_unmovable"
                 _icon_classes.f="rounded-circle o_sm_custom_size shadow-sm"
                 _style.f="--fa-icon-size: 40px;"
                 _link_classes.f="o_wblog_share_links"/>
+        </div>
+    </xpath>
+</template>
+
+<template id="blog_post_content_mobile_toc" name="Content Mobile Table of Contents" inherit_id="website_blog.blog_post_content">
+    <xpath expr="//t[@id='o_wblog_post_content_mobile_toc_hook']" position="replace">
+        <t t-if="opt_blog_post_toc_display">
+            <div class="o_wblog_toc o_wblog_toc_mobile d-lg-none p-3 border rounded mb-4">
+                <h2 class="h6">Table of contents</h2>
+                <!-- Placeholder when there is no content to display -->
+                <div class="o_wblog_toc_placeholder d-none bg-light p-3 border rounded o_not_editable">
+                    <h2 class="text-muted h6 mb-0"><em>No titles in the blog post</em></h2>
+                </div>
+                <nav class="o_wblog_toc_nav o_not_editable">
+                    <!-- Table of contents will be generated by JavaScript -->
+                </nav>
+            </div>
+        </t>
+    </xpath>
+</template>
+
+<template id="blog_post_content_footer_archive" name="Content Footer Mobile Archive" inherit_id="website_blog.blog_post_content">
+    <xpath expr="//t[@id='o_wblog_post_footer_archive_hook']" position="replace">
+        <div t-if="opt_blog_post_archive_display" class="d-lg-none w-100 pt-4">
+            <h2 class="h5 mb-3">Archive</h2>
+            <t t-call="website_blog.date_selector"/>
         </div>
     </xpath>
 </template>
@@ -393,32 +413,36 @@ list of filtered posts (by date or tag).
 -->
 <template id="opt_blog_post_regular_cover" name="'Regular' Cover" inherit_id="website_blog.blog_post_complete" active="True">
     <xpath expr="//div[@id='title']" position="replace">
-        <div class="container">
-            <div id="title" t-attf-class="blog_header o_wblog_regular_cover_container #{(opt_blog_post_large_container or opt_blog_post_sidebar) and 'row'}">
-                <div t-attf-class="#{(opt_blog_post_large_container or opt_blog_post_sidebar) and 'col-12 col-lg-8 offset-lg-2' or 'o_container_small'}">
+        <div id="title" t-attf-class="blog_header o_wblog_post_regular_cover_container #{(opt_blog_post_large_container or opt_blog_post_sidebar) and 'container' or 'o_container_small'}">
+            <div class="row">
+                <div t-attf-class="col-12 #{(opt_blog_post_large_container or opt_blog_post_sidebar) and 'col-lg-8 offset-lg-2'}">
                     <!-- Breadcrumbs -->
                     <t t-if="opt_blog_post_breadcrumb" t-call="website_blog.post_breadcrumbs"/>
-                    <!-- Content-->
+                    <!-- Title and subtitle -->
                     <div t-attf-class="o_wblog_post_title #{not opt_blog_post_breadcrumb and 'mt-4'}">
-                        <!-- Title and subtitle -->
                         <h1 t-field="blog_post.name" class="o_wblog_post_name mb-3 text-wrap-pretty" data-oe-expression="blog_post.name" t-att-data-blog-id="blog_post.id" placeholder="Blog Post Title"/>
                         <p t-field="blog_post.subtitle" class="o_wblog_post_subtitle lead" placeholder="Subtitle"/>
+                    </div>
+                    <!-- Options -->
+                    <div id="o_wblog_post_header_options">
                         <!-- Tags -->
                         <div t-if="opt_blog_post_header_tags_display and blog_post.tag_ids" t-attf-class="mb-2">
                             <t t-foreach="blog_post.tag_ids" t-as="one_tag">
                                 <a t-attf-class="badge post_link text-decoration-none o_tag o_color_#{one_tag.color}" t-attf-href="#{blog_url(tag=slug(one_tag))}" t-out="one_tag.name"/>
                             </t>
                         </div>
-                        <!-- Author, share links and comments -->
                         <div t-if="opt_blog_post_header_author_avatar_display or opt_blog_post_header_share_links_display or opt_blog_post_comment"
                             class="d-flex flex-column flex-md-row flex-md-wrap justify-content-between align-items-md-center row-gap-3 mt-5">
+                            <!-- Author and date -->
                             <t t-if="opt_blog_post_header_author_avatar_display" t-call="website_blog.post_published_info"
                                 is_post_page.f="True"
                                 _additionnal_classes.f="o_wblog_post_info d-inline-flex me-2"
                                 opt_posts_loop_show_author.f="True"
                                 opt_posts_loop_show_date.f="True"/>
-                            <div id="o_wblog_post_header_actions" class="d-flex flex-column flex-sm-row align-items-sm-center gap-2 gap-sm-3">
-                                <!-- Share links (xpath) -->
+                            <div class="d-flex flex-column flex-sm-row align-items-sm-center gap-2 gap-sm-3">
+                                <!-- Share links -->
+                                <t id="o_wblog_post_cover_share_links_hook"/>
+                                <!-- Comments count -->
                                 <t t-if="opt_blog_post_comment" t-call="website_blog.blog_post_comment_count" hideText.f="True"/>
                             </div>
                         </div>
@@ -426,18 +450,20 @@ list of filtered posts (by date or tag).
                 </div>
             </div>
         </div>
-        <div t-attf-class="#{not opt_blog_post_full_width_cover and 'container' or 'container-fluid g-0'}">
+        <div t-attf-class="#{opt_blog_post_full_width_cover and 'container-fluid g-0' or 'container'}">
             <t t-call="website.record_cover"
                 _record="blog_post"
-                additionnal_classes.f="o_wblog_post_page_cover o_wblog_post_page_cover_regular o_cc3 mt-5 ratio"
-                use_size="False"/>
+                display_opt_name.translate="Blog Post Cover"
+                additionnal_classes.f="o_wblog_post_page_cover o_wblog_post_page_cover_regular mt-5 ratio"/>
         </div>
     </xpath>
+</template>
+
+<template id="blog_post_regular_cover_share_links" name="Regular Cover Share Links" inherit_id="website_blog.opt_blog_post_regular_cover">
     <!-- Adding the "Share" snippet via xpath to make it editable -->
-    <xpath expr="//div[@id='o_wblog_post_header_actions']/t[@t-call='website_blog.blog_post_comment_count']" position="before">
+    <xpath expr="//div[@id='o_wblog_post_header_options']//t[@id='o_wblog_post_cover_share_links_hook']" position="replace">
         <div t-if="opt_blog_post_header_share_links_display" t-ignore="true">
-            <t t-snippet-call="website.s_share"
-                string="Share"
+            <t t-snippet-call="website.s_share" string="Share"
                 _classes.f="no_icon_color oe_unremovable oe_unmovable"
                 _icon_classes.f="rounded-circle o_sm_custom_size shadow-sm"
                 _style.f="--fa-icon-size: 40px;"
@@ -451,46 +477,52 @@ list of filtered posts (by date or tag).
 -->
 <template id="opt_blog_post_split_cover" name="Split Cover" inherit_id="website_blog.blog_post_complete" active="False">
     <xpath expr="//div[@id='title']" position="replace">
-        <div class="container">
-            <div id="title" class="blog_header o_wblog_split_cover_container row mb-0 mb-lg-4">
-                <div class="col-12 col-lg-4 d-flex flex-column mb-5 mb-lg-0">
+        <div id="title" class="blog_header o_wblog_post_split_cover_container container">
+            <div class="row mb-0 mb-lg-4">
+                <div class="col-lg-4 d-flex flex-column mb-5 mb-lg-0">
                     <!-- Breadcrumb -->
                     <t t-if="opt_blog_post_breadcrumb" t-call="website_blog.post_breadcrumbs" single_breadcrumb="True"/>
-                    <!-- Content -->
+                    <!-- Title and subtitle -->
                     <div t-attf-class="o_wblog_post_title #{not opt_blog_post_breadcrumb and 'mt-4'}">
-                        <!-- Title and subtitle -->
                         <h1 t-field="blog_post.name" class="o_wblog_post_name mb-3 text-wrap-pretty" data-oe-expression="blog_post.name" t-att-data-blog-id="blog_post.id" placeholder="Blog Post Title"/>
-                        <p t-field="blog_post.subtitle" class="o_wblog_post_subtitle lead"  placeholder="Subtitle"/>
+                        <p t-field="blog_post.subtitle" class="o_wblog_post_subtitle lead" placeholder="Subtitle"/>
+                    </div>
+                    <!-- Options -->
+                    <div id="o_wblog_post_header_options" class="d-flex flex-column flex-grow-1">
                         <!-- Tags -->
                         <div t-if="blog_post.tag_ids and opt_blog_post_header_tags_display" class="mb-4">
                             <t t-foreach="blog_post.tag_ids" t-as="one_tag">
                                 <a t-attf-class="badge post_link text-decoration-none o_tag o_color_#{one_tag.color}" t-attf-href="#{blog_url(tag=slug(one_tag))}" t-out="one_tag.name"/>
                             </t>
                         </div>
-                    </div>
-                    <!-- Author, share links and comments -->
-                    <div id="o_wblog_post_header_actions" t-if="opt_blog_post_header_author_avatar_display or opt_blog_post_header_share_links_display or opt_blog_post_comment"
-                        class="d-flex flex-column gap-3 mt-auto">
-                        <t t-if="opt_blog_post_header_author_avatar_display" t-call="website_blog.post_published_info"
-                            is_post_page.f="True"
-                            _additionnal_classes.f="d-inline-flex me-2"
-                            opt_posts_loop_show_author.f="True"
-                            opt_posts_loop_show_date.f="True"/>
-                        <!-- Share links (xpath) -->
-                        <t t-if="opt_blog_post_comment" t-call="website_blog.blog_post_comment_count"/>
+                        <div class="d-flex flex-column gap-3 mt-auto">
+                            <!-- Author and date -->
+                            <t t-if="opt_blog_post_header_author_avatar_display" t-call="website_blog.post_published_info"
+                                is_post_page.f="True"
+                                _additionnal_classes.f="d-inline-flex me-2"
+                                opt_posts_loop_show_author.f="True"
+                                opt_posts_loop_show_date.f="True"/>
+                            <!-- Share Links -->
+                            <t id="o_wblog_post_cover_share_links_hook"/>
+                            <!-- Comments -->
+                            <t t-if="opt_blog_post_comment" t-call="website_blog.blog_post_comment_count"/>
+                        </div>
                     </div>
                 </div>
                 <div class="col-lg-7 offset-lg-1 mt-lg-4">
                     <t t-call="website.record_cover"
                         _record="blog_post"
-                        additionnal_classes.f="o_wblog_post_page_cover o_wblog_post_page_cover_split o_cc3 ratio rounded overflow-hidden"
-                        use_size="False"/>
+                        display_opt_name.translate="Blog Post Cover"
+                        additionnal_classes.f="o_wblog_post_page_cover o_wblog_post_page_cover_split ratio rounded overflow-hidden"/>
                 </div>
             </div>
         </div>
     </xpath>
+</template>
+
+<template id="blog_post_split_cover_share_links" name="Split Cover Share Links" inherit_id="website_blog.opt_blog_post_split_cover">
     <!-- Adding the "Share" snippet via xpath to make it editable -->
-    <xpath expr="//div[@id='o_wblog_post_header_actions']/t[@t-call='website_blog.blog_post_comment_count']" position="before">
+    <xpath expr="//div[@id='o_wblog_post_header_options']//t[@id='o_wblog_post_cover_share_links_hook']" position="replace">
         <div t-if="opt_blog_post_header_share_links_display" t-ignore="true">
             <t t-snippet-call="website.s_share" string="Share"
                 _classes.f="no_icon_color oe_unremovable oe_unmovable"
@@ -587,12 +619,15 @@ list of filtered posts (by date or tag).
         <a t-attf-href="/blog/#{slug(next_post.blog_id)}/#{slug(next_post)}" t-att-title="'Read next: ' + next_post.name" class="d-flex align-items-center gap-4 bg-light rounded-3 p-3 text-reset text-decoration-none">
             <t t-call="website.record_cover"
                 _record="next_post"
-                use_size="False"
-                additionnal_classes.f="o_cc3 flex-basis-50 rounded shadow-sm overflow-hidden h-100 ratio ratio-16x9"/>
+                display_opt_name.translate="Blog Post Cover"
+                additionnal_classes.f="flex-basis-50 rounded shadow-sm overflow-hidden h-100 ratio ratio-16x9"/>
             <div class="d-flex flex-column flex-basis-75">
                 <h3 t-field="next_post.name" class="o_wblog_post_name text-wrap-pretty h5-fs" t-att-data-blog-id="next_post.id" placeholder="Blog Post Title"/>
                 <p t-field="next_post.subtitle" class="o_wblog_post_subtitle o_line_clamp mb-2 small text-muted" placeholder="Subtitle"/>
-                <small t-field="next_post.published_date" class="text-muted" t-options="{'widget': 'date', 'format': 'MMMM d, yyyy'}"/>
+                <small t-if="next_post.publish_on" class="text-muted">
+                    Planned for <t t-out="next_post.publish_on" t-options="{'widget': 'date', 'format': 'MMMM d, yyyy'}"/>
+                </small>
+                <small t-else="" class="text-muted" t-out="next_post.published_date" t-options="{'widget': 'date', 'format': 'MMMM d, yyyy'}"/>
             </div>
         </a>
     </div>
@@ -607,8 +642,8 @@ list of filtered posts (by date or tag).
         <t t-call="website.record_cover"
             _record="next_post"
             use_filters="True"
-            additionnal_classes.f="o_wblog_post_page_cover o_wblog_post_page_cover_footer o_record_has_cover o_cc5 pt112 pb112">
-            <t t-set="_cp" t-value="json.loads(_record.cover_properties)"/>
+            additionnal_classes.f="o_wblog_post_page_cover o_wblog_post_page_cover_footer o_record_has_cover">
+            <t t-set="_cp" t-value="json.loads(next_post.cover_properties)"/>
 
             <a id="o_wblog_next_post_info" class="d-none"
                 t-att-data-size="_cp.get('resize_class')"
@@ -623,22 +658,11 @@ list of filtered posts (by date or tag).
                     <div t-field="next_post.subtitle" class="o_wblog_post_subtitle o_line_clamp" placeholder="Subtitle"/>
                 </div>
 
-                <div t-attf-class="o_wblog_toggle #{next_cover_is_full and 'mb-n5'}">
+                <div t-attf-class="o_wblog_toggle mt-4 mb-n4">
                     <span class="h4 d-inline-block py-1 px-2 rounded-1 cursor-pointer">
-                        <i class="oi oi-3x text-white" data-icon="keyboard_arrow_right" aria-label="Read next" title="Read Next"/>
+                        <i class="oi oi-3x" data-icon="keyboard_arrow_right" aria-label="Read next" title="Read Next"/>
                     </span>
                 </div>
-
-                <!-- Emulate the next post's cover's height. For non-auto covers,
-                the room that will be occupied by the 'scroll-down' link is temporary
-                occupied  by the loader circle. For auto covers, an empty <div>
-                creates enough separation.
-                -->
-                <div t-if="not next_cover_is_auto"
-                    class="o_wblog_next_loader o_wblog_toggle justify-content-center align-items-center mx-auto position-relative d-none">
-                    <div class="rounded-circle bg-black-50"></div>
-                </div>
-                <div t-else="" class="o_wblog_next_fake_btn d-flex o_wblog_toggle"/>
             </div>
         </t>
     </div>

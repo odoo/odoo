@@ -169,6 +169,10 @@
             groups='["website.group_website_designer"]'
             editableOnly="false"/>
     </xpath>
+
+    <xpath expr="//button_style_option" position="attributes">
+        <attribute name="exclude" add=".o_wblog_category a.btn" separator=", "/>
+    </xpath>
 </t>
 
 </templates>

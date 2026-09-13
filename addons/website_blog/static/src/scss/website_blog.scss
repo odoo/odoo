@@ -13,6 +13,14 @@
         text-wrap: pretty;
     }
 
+    .o_wblog_post_author {
+        span[itemprop="name"] {
+            // Override the field style.
+            margin-bottom: 0;
+            font-weight: $font-weight-normal;
+        }
+    }
+
     // Blog Index Pages
     // ==============================================
 
@@ -38,27 +46,23 @@
             width: 7ch;
         }
 
-        .o_wblog_teaser_list {
-            @include media-breakpoint-down(md) {
-                display: none;
-            }
-        }
-
-        .o_wblog_heading_list_no_cover {
-            max-width: 40ch;
-        }
-
-        .o_wblog_teaser_list_no_cover {
-            max-width: 65ch;
-        }
-
         .o_wblog_unpublished {
             @include o-position-absolute(0, 0, auto, auto);
+        }
+
+        .o_wblog_mobile_badge {
+            --badge-padding-x: 0.4em;
         }
 
         .o_wblog_split_grid_sticky {
             @include media-breakpoint-up(xl) {
                 height: calc(100vh - var(--wblog-sticky-top, 0px));
+
+                // Prevent having a big space under the blog posts when there
+                // are no cover images and not a lot of blog posts.
+                &:not(:has(> .o_wblog_post_cover)) {
+                    height: auto;
+                }
             }
 
             // Consider text-muted as text-white, so the muted elements are
@@ -105,6 +109,11 @@
     // Blog Post Pages
     // ==============================================
 
+    .o_wblog_post_page_cover:not(.o_wblog_post_page_cover_regular, .o_wblog_post_page_cover_split),
+    .o_wblog_post_page_cover_footer {
+        padding: 4rem 0;
+    }
+
     .o_wblog_post_page_cover_regular {
         --aspect-ratio: 50%;
 
@@ -128,13 +137,9 @@
     }
 
     // Sidebar and table of contents
-    #o_wblog_post_sidebar {
-        height: 100%;
-
-        #o_wblog_post_sidebar_sticky {
-            max-height: calc(100vh - 100px);
-            overflow-y: auto;
-        }
+    #o_wblog_post_sidebar.o_wblog_post_sidebar_sticky {
+        max-height: calc(100vh - var(--wblog-sticky-top, 0px));
+        overflow-y: auto;
     }
 
     .o_wblog_toc {
@@ -145,6 +150,10 @@
                         padding-left: $spacer * (0.75 + $i);
                     }
                 }
+
+                // Prevent long titles from making the sidebar scroll.
+                overflow-x: hidden;
+                text-overflow: ellipsis;
             }
 
             @include media-breakpoint-up(lg) {
