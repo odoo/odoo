@@ -746,7 +746,7 @@ class TestBackendDifferential(TransactionCase):
         self.assertEqual(obs_b, ["Cafe", "Café"])
         self.assertNotEqual(obs_a, obs_b)
 
-    def test_divergence_parent_store_and_child_of(self):
+    def test_parent_store_and_child_of_agree(self):
 
         def build_tree(env):
             C = env["test_orm.category"]
@@ -759,10 +759,14 @@ class TestBackendDifferential(TransactionCase):
 
         registry = _isolated_registry(TestOrmCategory)
         with model_test_env(registry=registry) as env_a:
-            C_a, root_a, _child_a, grand_a = build_tree(env_a)
-            self.assertFalse(grand_a.parent_path)
-            with self.assertRaises(TypeError):
-                C_a.search([("id", "child_of", root_a.id)])
+            C_a, root_a, child_a, grand_a = build_tree(env_a)
+            self.assertEqual(
+                grand_a.parent_path, f"{root_a.id}/{child_a.id}/{grand_a.id}/"
+            )
+            subtree_a = C_a.search([("id", "child_of", root_a.id)])
+            self.assertEqual(
+                sorted(subtree_a.mapped("name")), ["child", "grand", "root"]
+            )
 
         C_b, root_b, child_b, grand_b = build_tree(self.env)
         self.assertTrue(grand_b.parent_path)

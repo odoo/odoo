@@ -6,7 +6,7 @@ from typing import Self
 
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.profiling import _OrmProfile
-from odoo.tools import SQL, OrderedSet, clean_context
+from odoo.tools import OrderedSet, clean_context
 from odoo.tools.misc import PENDING
 
 from ... import decorators as api
@@ -694,24 +694,8 @@ class CreateMixin(_ModelStubs):
     def _update_parent_path_on_create(self) -> None:
         if not self._parent_store:
             return
-        if not self.env.backend.supports_parent_store:
-            return
 
-        updated = self.env.execute_query(
-            SQL(
-                """ UPDATE %(table)s node
-                SET parent_path=concat((
-                        SELECT parent.parent_path
-                        FROM %(table)s parent
-                        WHERE parent.id=node.%(parent)s
-                    ), node.id, '/')
-                WHERE node.id IN %(ids)s
-                RETURNING node.id, node.parent_path """,
-                table=SQL.identifier(self._table),
-                parent=SQL.identifier(self._parent_name),
-                ids=tuple(self.ids),
-            )
-        )
+        updated = self.env.backend.set_parent_paths(self, self.ids)
 
         _debug.perf.count(
             "create.parent_path_updated",

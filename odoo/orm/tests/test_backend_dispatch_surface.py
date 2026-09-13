@@ -9,7 +9,7 @@ from odoo.orm.runtime.backend import InMemoryBackend
 _ORM_DIR = pathlib.Path(__file__).resolve().parent.parent
 
 # Every place the ORM chooses between the SQL path and env.backend. The surface
-# has grown to twenty sites across twelve files
+# has grown to twenty-one sites across twelve files
 # -- including six in Layer 1, where a field reaches the backend directly
 # rather than through a model mixin. Each entry says what the in-memory branch
 # does NOT do, so a site marked LOSSY is a known gap, not an oversight.
@@ -18,9 +18,7 @@ DISPATCH_SITES: dict[tuple[str, str], str] = {
     ("models/mixins/create.py", "_create"): (
         "in-memory path skips the COPY fast path (performance only)"
     ),
-    ("models/mixins/create.py", "_update_parent_path_on_create"): (
-        "guarded by backend.supports_parent_store"
-    ),
+    ("models/mixins/create.py", "_update_parent_path_on_create"): "equivalent",
     ("models/mixins/read.py", "_fetch_query"): (
         "LOSSY: PostgresBackend.fetch applies bin_size / bin_size_<field> "
         "(pg_size_pretty) and to_flush bookkeeping; InMemoryBackend.fetch "
@@ -31,9 +29,8 @@ DISPATCH_SITES: dict[tuple[str, str], str] = {
         "(COALESCE(...jsonb_build_object('en_US', ...)) || expr) and handles "
         "company_dependent columns; InMemoryBackend.update_rows does neither"
     ),
-    ("models/mixins/write.py", "_get_records_with_parent_changed"): (
-        "guarded by backend.supports_parent_store"
-    ),
+    ("models/mixins/write.py", "_get_records_with_parent_changed"): "equivalent",
+    ("models/mixins/write.py", "_update_parent_path_on_write"): "equivalent",
     ("models/mixins/unlink.py", "_unlink_process_batch"): (
         "LOSSY: PostgresBackend.unlink_rows runs the many2one_company_dependents "
         "guards and the ir.default cleanup through registry.metaschema; "
@@ -232,6 +229,8 @@ _NUMBER_WORDS = {
     "eighteen": 18,
     "nineteen": 19,
     "twenty": 20,
+    "twenty-one": 21,
+    "twenty-two": 22,
 }
 
 
@@ -242,7 +241,7 @@ def test_the_header_count_matches_the_dict():
         .split("DISPATCH_SITES: dict", 1)[0]
     )
     stated = re.search(
-        r"grown to (\w+) sites across (\w+) files\s*"
+        r"grown to ([\w-]+) sites across (\w+) files\s*"
         r"#\s*-- including (\w+) in Layer 1",
         header,
     )

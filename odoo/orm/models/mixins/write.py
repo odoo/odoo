@@ -372,8 +372,6 @@ class WriteMixin(_ModelStubs):
     def _get_records_with_parent_changed(self, vals_list: list[ValuesType]) -> Self:
         if not self._parent_store:
             return self.browse()
-        if not self.env.backend.supports_parent_store:
-            return self.browse()
 
         parent_to_ids = defaultdict(list)
         for id_, vals in zip(self._ids, vals_list, strict=True):
@@ -385,35 +383,15 @@ class WriteMixin(_ModelStubs):
 
         self.flush_recordset([self._parent_name])
 
-        sql_parent = SQL.identifier(self._parent_name)
-        conditions = []
-        for parent_id, ids in parent_to_ids.items():
-            if parent_id:
-                condition = SQL(
-                    "(%s != %s OR %s IS NULL)",
-                    sql_parent,
-                    parent_id,
-                    sql_parent,
-                )
-            else:
-                condition = SQL("%s IS NOT NULL", sql_parent)
-            conditions.append(SQL('("id" = ANY(%s) AND %s)', list(ids), condition))
-
-        rows = self.env.execute_query(
-            SQL(
-                "SELECT id FROM %s WHERE %s ORDER BY id",
-                SQL.identifier(self._table),
-                SQL(" OR ").join(conditions),
-            )
-        )
+        changed = self.env.backend.records_with_parent_changed(self, parent_to_ids)
         _debug.logic(
             "write.parent_candidates_probed",
             model=self._name,
             parents=len(parent_to_ids),
             candidates=sum(len(ids) for ids in parent_to_ids.values()),
-            changed=len(rows),
+            changed=len(changed),
         )
-        return self.browse(row[0] for row in rows)
+        return self.browse(changed)
 
     def _update_parent_path_on_write(self) -> None:
         for parent, records in self.grouped(self._parent_name).items():
@@ -430,23 +408,7 @@ class WriteMixin(_ModelStubs):
                     )
                     raise UserError(_("Recursion Detected."))
 
-            updated = dict(
-                self.env.execute_query(
-                    SQL(
-                        """ UPDATE %(table)s child
-                    SET parent_path = concat(%(prefix)s::text, substr(child.parent_path,
-                            length(node.parent_path) - length(node.id || '/') + 1))
-                    FROM %(table)s node
-                    WHERE node.id IN %(ids)s
-                    AND child.parent_path LIKE concat(node.parent_path, %(wildcard)s::text)
-                    RETURNING child.id, child.parent_path """,
-                        table=SQL.identifier(self._table),
-                        prefix=prefix,
-                        ids=tuple(records.ids),
-                        wildcard="%",
-                    )
-                )
-            )
+            updated = self.env.backend.move_parent_paths(self, records.ids, prefix)
 
             _debug.perf.count(
                 "write.parent_path_rewritten",

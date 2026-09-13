@@ -11,7 +11,6 @@ _MIXINS_DIR = _ORM_DIR / "models" / "mixins"
 _DISPATCH_DIRS = (_MIXINS_DIR, _ORM_DIR / "fields", _ORM_DIR / "domain")
 
 _CAPABILITY_MEMBERS = {
-    "supports_parent_store",
     "supports_record_rules",
     "supports_column_scan",
     "supports_translation_terms",
@@ -49,14 +48,6 @@ def test_every_protocol_method_has_a_dispatch_site():
     assert not unknown_dispatch, (
         f"dispatch to backend methods not on the Protocol: {sorted(unknown_dispatch)}"
     )
-
-
-def test_supports_parent_store_is_consulted():
-    consulted = any(
-        "backend.supports_parent_store" in path.read_text()
-        for path in _MIXINS_DIR.rglob("*.py")
-    )
-    assert consulted, "supports_parent_store attribute is no longer consulted"
 
 
 def test_supports_record_rules_is_consulted():

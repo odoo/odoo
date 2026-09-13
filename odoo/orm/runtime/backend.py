@@ -373,7 +373,6 @@ class StorageBackend(typing.Protocol):
     sequences: SequenceStore
     columns: ColumnStore
 
-    supports_parent_store: bool
     supports_record_rules: bool
 
     supports_column_scan: bool
@@ -469,6 +468,18 @@ class StorageBackend(typing.Protocol):
         query: Query,
     ) -> dict[int, list[int]]: ...
 
+    def set_parent_paths(
+        self, model: BaseModel, ids: typing.Sequence[int]
+    ) -> list[tuple[int, str]]: ...
+
+    def records_with_parent_changed(
+        self, model: BaseModel, parent_to_ids: dict[typing.Any, list[int]]
+    ) -> list[int]: ...
+
+    def move_parent_paths(
+        self, model: BaseModel, ids: typing.Sequence[int], prefix: str
+    ) -> dict[int, str]: ...
+
     def link_m2m_pairs(
         self,
         model: BaseModel,
@@ -554,8 +565,6 @@ def _single_table_where(model: BaseModel, domain: Domain) -> SQL | None:
 class PostgresBackend:
     sequences: SequenceStore = PostgresSequenceStore()
     columns: ColumnStore = PostgresColumnStore()
-
-    supports_parent_store: bool = True
 
     supports_record_rules: bool = True
 
@@ -1171,6 +1180,68 @@ class PostgresBackend:
             affected_recs = referrer.browse(row[0] for row in affected)
             affected_recs.modified([field.name])
 
+    def set_parent_paths(
+        self, model: BaseModel, ids: typing.Sequence[int]
+    ) -> list[tuple[int, str]]:
+        return model.env.execute_query(
+            SQL(
+                """ UPDATE %(table)s node
+                SET parent_path=concat((
+                        SELECT parent.parent_path
+                        FROM %(table)s parent
+                        WHERE parent.id=node.%(parent)s
+                    ), node.id, '/')
+                WHERE node.id IN %(ids)s
+                RETURNING node.id, node.parent_path """,
+                table=SQL.identifier(model._table),
+                parent=SQL.identifier(model._parent_name),
+                ids=tuple(ids),
+            )
+        )
+
+    def records_with_parent_changed(
+        self, model: BaseModel, parent_to_ids: dict[typing.Any, list[int]]
+    ) -> list[int]:
+        sql_parent = SQL.identifier(model._parent_name)
+        conditions = []
+        for parent_id, ids in parent_to_ids.items():
+            if parent_id:
+                condition = SQL(
+                    "(%s != %s OR %s IS NULL)", sql_parent, parent_id, sql_parent
+                )
+            else:
+                condition = SQL("%s IS NOT NULL", sql_parent)
+            conditions.append(SQL('("id" = ANY(%s) AND %s)', list(ids), condition))
+        rows = model.env.execute_query(
+            SQL(
+                "SELECT id FROM %s WHERE %s ORDER BY id",
+                SQL.identifier(model._table),
+                SQL(" OR ").join(conditions),
+            )
+        )
+        return [row[0] for row in rows]
+
+    def move_parent_paths(
+        self, model: BaseModel, ids: typing.Sequence[int], prefix: str
+    ) -> dict[int, str]:
+        return dict(
+            model.env.execute_query(
+                SQL(
+                    """ UPDATE %(table)s child
+                SET parent_path = concat(%(prefix)s::text, substr(child.parent_path,
+                        length(node.parent_path) - length(node.id || '/') + 1))
+                FROM %(table)s node
+                WHERE node.id IN %(ids)s
+                AND child.parent_path LIKE concat(node.parent_path, %(wildcard)s::text)
+                RETURNING child.id, child.parent_path """,
+                    table=SQL.identifier(model._table),
+                    prefix=prefix,
+                    ids=tuple(ids),
+                    wildcard="%",
+                )
+            )
+        )
+
     def read_m2m_groups(
         self,
         records: BaseModel,
@@ -1412,8 +1483,6 @@ class _InMemoryReadGroup:
 
 
 class InMemoryBackend:
-    supports_parent_store: bool = False
-
     supports_record_rules: bool = False
 
     supports_column_scan: bool = False
@@ -1718,6 +1787,63 @@ class InMemoryBackend:
             for _row_id, row in self._iter_m2m_rows(relation)
             if row.get(column1) in wanted
         ]
+
+    def set_parent_paths(
+        self, model: BaseModel, ids: typing.Sequence[int]
+    ) -> list[tuple[int, str]]:
+        table, parent_column = model._table, model._parent_name
+        updated: list[tuple[int, str]] = []
+        for id_ in ids:
+            row = self.storage.get_row(table, id_)
+            if row is None:
+                continue
+            parent_row = (
+                self.storage.get_row(table, row[parent_column])
+                if row.get(parent_column)
+                else None
+            )
+            prefix = (parent_row or {}).get("parent_path") or ""
+            updated.append((id_, f"{prefix}{id_}/"))
+        self.storage.update_rows(
+            table, [(id_, {"parent_path": path}) for id_, path in updated]
+        )
+        return updated
+
+    def records_with_parent_changed(
+        self, model: BaseModel, parent_to_ids: dict[typing.Any, list[int]]
+    ) -> list[int]:
+        table, parent_column = model._table, model._parent_name
+        changed: list[int] = []
+        for parent_id, ids in parent_to_ids.items():
+            for id_ in ids:
+                row = self.storage.get_row(table, id_)
+                if row is None:
+                    continue
+                stored = row.get(parent_column) or None
+                if (stored != parent_id) if parent_id else (stored is not None):
+                    changed.append(id_)
+        return sorted(changed)
+
+    def move_parent_paths(
+        self, model: BaseModel, ids: typing.Sequence[int], prefix: str
+    ) -> dict[int, str]:
+        table = model._table
+        moved: dict[int, str] = {}
+        for node_id in ids:
+            node = self.storage.get_row(table, node_id)
+            node_path = (node or {}).get("parent_path")
+            if not node_path:
+                continue
+            cut = len(node_path) - len(f"{node_id}/")
+            for child_id in self.storage.get_table_ids(table):
+                child = self.storage.get_row(table, child_id)
+                child_path = (child or {}).get("parent_path") or ""
+                if child_path.startswith(node_path):
+                    moved[child_id] = f"{prefix}{child_path[cut:]}"
+        self.storage.update_rows(
+            table, [(id_, {"parent_path": path}) for id_, path in moved.items()]
+        )
+        return moved
 
     def read_m2m_groups(
         self,

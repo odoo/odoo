@@ -286,7 +286,8 @@ def test_persistence_backend_seam_is_wired() -> None:
             f"env.backend must be an InMemoryBackend in the DB-free tier, "
             f"got {backend!r}"
         )
-        assert backend.supports_parent_store is False
+        assert not hasattr(backend, "supports_parent_store")
+        assert callable(backend.set_parent_paths)
         assert env.backend is env.transaction.backend
 
 
