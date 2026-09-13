@@ -1,13 +1,16 @@
+import socket
 from datetime import timedelta
+from unittest.mock import patch
+
+import requests
+from requests.adapters import HTTPAdapter
 
 from odoo import fields
 from odoo.exceptions import ValidationError
 from odoo.tests import HttpCase, tagged
+from odoo.tests.transaction_case import _super_send
+from odoo.tools import mute_logger
 
-from odoo.addons.survey.models.survey_survey import (
-    resolve_webhook_host,
-    webhook_url_problem,
-)
 from odoo.addons.survey.tests import common
 
 
@@ -16,47 +19,85 @@ class TestWebhookTargetRule(common.TestSurveyCommon):
     """One rule, applied at write time and again when the request is actually made."""
 
     def test_private_and_local_targets_are_refused(self):
+        survey = self.env["survey.survey"]
         for url in (
             "http://127.0.0.1/hook",
             "http://localhost/hook",
             "http://10.0.0.1/hook",
             "http://192.168.1.1/hook",
+            "http://100.64.0.1/hook",
             "http://[::1]/hook",
-            "http://internal.local/hook",
+            "http://[64:ff9b::7f00:1]/hook",
             "http://169.254.169.254/latest/meta-data",
             "ftp://example.com/hook",
             "http:///nohost",
         ):
             with self.subTest(url=url):
                 self.assertIsNotNone(
-                    webhook_url_problem(url), f"{url} should have been refused"
+                    survey._webhook_url_problem(url), f"{url} should have been refused"
                 )
 
     def test_a_public_target_is_allowed(self):
-        self.assertIsNone(webhook_url_problem("https://93.184.216.34/hook"))
+        self.assertIsNone(
+            self.env["survey.survey"]._webhook_url_problem("https://93.184.216.34/hook")
+        )
 
     def test_an_unresolvable_host_fails_closed(self):
-        """Returning [] used to mean the address loop never ran, so it was allowed."""
-        self.assertIsNone(
-            resolve_webhook_host("no-such-host.invalid"),
-            "an unresolvable name must report None, not an empty list",
+        self.assertIsNotNone(
+            self.env["survey.survey"]._webhook_url_problem(
+                "http://no-such-host.invalid/hook"
+            )
         )
-        self.assertIsNotNone(webhook_url_problem("http://no-such-host.invalid/hook"))
 
     def test_the_constraint_uses_the_same_rule(self):
         survey = self.env["survey.survey"].create({"title": "Hooked"})
         with self.assertRaises(ValidationError):
             survey.webhook_url = "http://127.0.0.1/hook"
 
-    def test_the_rule_needs_no_cursor(self):
-        """The send path calls it from a post-commit hook, where the cursor is closed."""
-        import inspect
+    def _resolving(self, *answers):
+        remaining = iter(answers)
 
-        source = inspect.getsource(webhook_url_problem) + inspect.getsource(
-            resolve_webhook_host
-        )
-        for orm_token in ("self.env", "search(", "browse(", "sudo()"):
-            self.assertNotIn(orm_token, source)
+        def getaddrinfo(host, port, *args, **kwargs):
+            return [
+                (socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP, "", (a, port))
+                for a in next(remaining)
+            ]
+
+        return patch("socket.getaddrinfo", side_effect=getaddrinfo)
+
+    def _fire_completed_webhook(self, *answers):
+        sent = []
+
+        def send(adapter, request, **kwargs):
+            sent.append((request.netguard_address, request.headers.get("Host")))
+            response = requests.Response()
+            response.status_code = 200
+            response.request = request
+            response.url = request.url
+            response._content = b""
+            return response
+
+        with (
+            self._resolving(*answers),
+            patch.object(requests.Session, "send", _super_send),
+            patch.object(HTTPAdapter, "send", autospec=True, side_effect=send),
+            mute_logger("odoo.addons.survey.models.survey_user_input"),
+        ):
+            survey = self.env["survey.survey"].create(
+                {"title": "Hooked", "webhook_url": "https://hooks.example.com/x"}
+            )
+            answer = self._add_answer(survey, self.customer)
+            answer._fire_webhook("survey_completed")
+            self.env.cr.postcommit.run()
+        return sent
+
+    def test_the_rule_runs_again_when_the_request_is_made(self):
+        sent = self._fire_completed_webhook(["93.184.216.34"], ["127.0.0.1"])
+        self.assertEqual(sent, [])
+
+    def test_the_request_goes_to_the_checked_address(self):
+        sent = self._fire_completed_webhook(["93.184.216.34"], ["93.184.216.34"])
+        self.assertEqual(sent, [("93.184.216.34", "hooks.example.com")])
 
 
 @tagged("post_install", "-at_install", "functional")

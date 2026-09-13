@@ -11,11 +11,10 @@ from markupsafe import Markup, escape
 from odoo import Command, _, api, fields, models, modules
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
+from odoo.libs.guarded_http import RefusedDestination
 from odoo.libs.json import dumps as json_dumps
 from odoo.models import ValuesType
 from odoo.tools.safe_eval import safe_eval
-
-from odoo.addons.survey.models.survey_survey import webhook_url_problem
 
 _logger = logging.getLogger(__name__)
 
@@ -27,6 +26,9 @@ _SCORE_COMPARATORS = {
     ">": op.gt,
     ">=": op.ge,
 }
+
+
+_WEBHOOK_RESPONSE_MAX_BYTES = 64 * 1024
 
 
 class SurveyUser_Input(models.Model):
@@ -648,27 +650,26 @@ class SurveyUser_Input(models.Model):
         payload = self._prepare_webhook_payload(event)
         json_payload = json_dumps(payload)
         input_id = self.id
+        session = self.env["ir.egress"].session(
+            purpose="survey_webhook", max_bytes=_WEBHOOK_RESPONSE_MAX_BYTES
+        )
 
         def do_post():
-            # Re-checked here, not only in the constraint: this runs after commit and
-            # `requests` resolves the name itself, so the answer that validated at write
-            # time is not the answer this connection gets.
-            problem = webhook_url_problem(webhook_url)
-            if problem:
+            try:
+                with session:
+                    session.post(
+                        webhook_url,
+                        data=json_payload,
+                        headers={"Content-Type": "application/json"},
+                        timeout=5,
+                        allow_redirects=False,
+                    )
+            except RefusedDestination as refusal:
                 _logger.warning(
                     "Survey webhook (%s) refused for input %s: %s",
                     event,
                     input_id,
-                    problem,
-                )
-                return
-            try:
-                requests.post(
-                    webhook_url,
-                    data=json_payload,
-                    headers={"Content-Type": "application/json"},
-                    timeout=5,
-                    allow_redirects=False,
+                    refusal,
                 )
             except requests.RequestException:
                 _logger.warning(

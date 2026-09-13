@@ -1,85 +1,22 @@
-import contextlib
-import ipaddress
 import logging
 import random
 import re
-import socket
 import uuid
 from collections import defaultdict
 from typing import Any, Literal, Self
-from urllib.parse import urlencode, urlparse
+from urllib.parse import urlencode
 
 from markupsafe import escape
 
 from odoo import Command, _, api, exceptions, fields, models
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Domain
+from odoo.libs.netguard import DestinationRefused
 from odoo.libs.web import urljoin as url_join
 from odoo.models import ValuesType
 from odoo.tools import escape_psql, is_html_empty
 
 _logger = logging.getLogger(__name__)
-
-
-def resolve_webhook_host(hostname: str) -> list[Any] | None:
-    """Every address the name currently has, or None if it has none.
-
-    Returning [] on a resolution failure meant the caller's address loop never ran and
-    the host was allowed through -- the check failed open on exactly the input it could
-    say least about.
-    """
-    with contextlib.suppress(ValueError):
-        return [ipaddress.ip_address(hostname)]
-    addresses = []
-    try:
-        for family, _type, _proto, _canon, sockaddr in socket.getaddrinfo(
-            hostname, None
-        ):
-            if family in (socket.AF_INET, socket.AF_INET6):
-                with contextlib.suppress(ValueError):
-                    addresses.append(ipaddress.ip_address(sockaddr[0]))
-    except OSError:
-        _logger.info("Could not resolve webhook hostname %s", hostname)
-        return None
-    return addresses or None
-
-
-def webhook_url_problem(url: str) -> tuple[str, dict[str, Any]] | None:
-    """Why this URL may not be posted to, as a reason code and its parameters.
-
-    A code rather than a message because _() takes a literal: the sentences live in
-    SurveySurvey._webhook_url_problem, where the .pot extractor can see them.
-
-    Module-level and ORM-free on purpose: the send path calls it from a post-commit
-    hook, where the cursor is closed. The write-time constraint cannot settle the
-    question on its own -- the name is resolved again when the request is made, so a
-    record that validated can still point at a private address by then.
-    """
-    parsed = urlparse((url or "").strip())
-    if parsed.scheme not in ("https", "http"):
-        return ("bad_scheme", {"scheme": parsed.scheme})
-    hostname = parsed.hostname or ""
-    if not hostname:
-        return ("no_hostname", {})
-    if hostname in ("localhost", "localhost.localdomain") or hostname.endswith(
-        (".local", ".internal", ".localdomain")
-    ):
-        return ("local_hostname", {})
-
-    addresses = resolve_webhook_host(hostname)
-    if addresses is None:
-        return ("unresolvable", {"hostname": hostname})
-    for addr in addresses:
-        if (
-            addr.is_private
-            or addr.is_loopback
-            or addr.is_link_local
-            or addr.is_reserved
-            or addr.is_multicast
-            or addr.is_unspecified
-        ):
-            return ("private_address", {"hostname": hostname, "address": addr})
-    return None
 
 
 class SurveySurvey(models.Model):
@@ -908,28 +845,15 @@ class SurveySurvey(models.Model):
 
     @api.model
     def _webhook_url_problem(self, url: str) -> str | None:
-        reason = webhook_url_problem(url)
-        if reason is None:
-            return None
-        code, params = reason
-        match code:
-            case "bad_scheme":
-                return _(
-                    "Webhook URL must use http or https scheme (got '%(scheme)s').",
-                    **params,
-                )
-            case "no_hostname":
-                return _("Webhook URL must include a hostname.")
-            case "local_hostname":
-                return _("Webhook URL must not target local or internal hostnames.")
-            case "unresolvable":
-                return _("Webhook host %(hostname)s could not be resolved.", **params)
-            case _:
-                return _(
-                    "Webhook URL must not target private or internal networks "
-                    "(%(hostname)s resolves to %(address)s).",
-                    **params,
-                )
+        try:
+            self.env["ir.egress"].check_url((url or "").strip())
+        except DestinationRefused as refusal:
+            return _(
+                "Webhook URL %(url)s may not be called: %(reason)s",
+                url=url,
+                reason=str(refusal),
+            )
+        return None
 
     @api.constrains("scoring_type", "users_can_go_back")
     def _check_scoring_after_page_availability(self) -> None:
