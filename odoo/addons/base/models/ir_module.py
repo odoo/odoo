@@ -4,7 +4,6 @@ import logging
 import os
 import platform
 import shutil
-import warnings
 from collections import OrderedDict, defaultdict
 from textwrap import dedent
 
@@ -552,19 +551,12 @@ class IrModuleModule(models.Model):
             known_deps |= missing_mods.downstream_dependencies(known_deps, exclude_states)
         return known_deps
 
-    def upstream_dependencies(self, known_deps=None,
-                              exclude_states=('installed', 'uninstallable', 'to remove')):
+    def upstream_dependencies(self, exclude_states=('installed', 'uninstallable', 'to remove')):
         """ Return the dependency tree of modules of the modules in `self`, and
         that satisfy the `exclude_states` filter.
         """
         if not self:
             return self
-        if known_deps is not None:
-            warnings.warn(
-                "The `known_deps` parameter is deprecated since Odoo 20.",
-                category=DeprecationWarning,
-                stacklevel=2,
-            )
         self.flush_model(['name', 'state'])
         self.env['ir.module.module.dependency'].flush_model(['module_id', 'name'])
         self.env.cr.execute(SQL(

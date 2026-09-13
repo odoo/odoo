@@ -3,7 +3,6 @@ import base64
 import binascii
 import io
 import typing
-import warnings
 
 from PIL import Image, ImageOps
 # We can preload Ico too because it is considered safe
@@ -437,19 +436,6 @@ def binary_to_image(source: Buffer) -> Image.Image:
         raise UserError(_lt("This file could not be decoded as an image file."))
 
 
-def base64_to_image(base64_source: str | bytes) -> Image.Image:
-    """Return a PIL image from the given `base64_source`.
-
-    :param base64_source: the image base64 encoded
-    :raise: UserError if the base64 is incorrect or the image can't be identified by PIL
-    """
-    warnings.warn("Since 20.0, use directly binary_to_image", DeprecationWarning, stacklevel=2)
-    try:
-        return Image.open(io.BytesIO(base64.b64decode(base64_source)))
-    except (OSError, binascii.Error):
-        raise UserError(_lt("This file could not be decoded as an image file."))
-
-
 def image_apply_opt(image: Image.Image, output_format: str, **params) -> bytes:
     """Return the serialization of the provided `image` to `output_format`
     using `params`.
@@ -464,20 +450,6 @@ def image_apply_opt(image: Image.Image, output_format: str, **params) -> bytes:
     stream = io.BytesIO()
     image.save(stream, format=output_format, **params)
     return stream.getvalue()
-
-
-def image_to_base64(image, output_format, **params):
-    """Return a base64_image from the given PIL `image` using `params`.
-
-    :type image: ~PIL.Image.Image
-    :param str output_format:
-    :param dict params: params to expand when calling :meth:`~PIL.Image.Image.save`
-    :return: the image base64 encoded
-    :rtype: bytes
-    """
-    warnings.warn("Since 20.0, use directly image_apply_opt and encode manually", DeprecationWarning)
-    stream = image_apply_opt(image, output_format, **params)
-    return base64.b64encode(stream)
 
 
 def get_webp_size(source: Buffer) -> tuple[int, int] | None:

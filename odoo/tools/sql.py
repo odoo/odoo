@@ -19,7 +19,6 @@ if typing.TYPE_CHECKING:
 import psycopg2
 from psycopg2.extensions import quote_ident
 
-from .func import deprecated
 from .misc import freehash, named_to_positional_printf
 
 _schema = logging.getLogger('odoo.schema')
@@ -532,47 +531,11 @@ def get_foreign_keys(cr: Cursor, tablename1: str, columnname1: str, tablename2: 
     return [r[0] for r in cr.fetchall()]
 
 
-@deprecated("Removed after 20.0")
-def fix_foreign_key(cr, tablename1, columnname1, tablename2, columnname2, ondelete):
-    """ Update the foreign keys between tables to match the given one, and
-        return ``True`` if the given foreign key has been recreated.
-    """
-    # Do not use 'information_schema' here, as those views are awfully slow!
-    deltype = _CONFDELTYPES.get(ondelete.upper(), 'a')
-    cr.execute(SQL(
-        """ SELECT con.conname, c2.relname, a2.attname, con.confdeltype as deltype
-              FROM pg_constraint as con, pg_class as c1, pg_class as c2,
-                   pg_attribute as a1, pg_attribute as a2
-             WHERE con.contype='f' AND con.conrelid=c1.oid AND con.confrelid=c2.oid
-               AND array_lower(con.conkey, 1)=1 AND con.conkey[1]=a1.attnum
-               AND array_lower(con.confkey, 1)=1 AND con.confkey[1]=a2.attnum
-               AND a1.attrelid=c1.oid AND a2.attrelid=c2.oid
-               AND c1.relname=%s AND a1.attname=%s
-               AND c1.relnamespace = current_schema::regnamespace """,
-        tablename1, columnname1,
-    ))
-    found = False
-    for fk in cr.fetchall():
-        if not found and fk[1:] == (tablename2, columnname2, deltype):
-            found = True
-        else:
-            drop_constraint(cr, tablename1, fk[0])
-    if found:
-        return False
-    add_foreign_key(cr, tablename1, columnname1, tablename2, columnname2, ondelete)
-    return True
-
-
 def index_exists(cr: Cursor, indexname: str) -> bool:
     """ Return whether the given index exists. """
     cr.execute(SQL("SELECT 1 FROM pg_indexes WHERE indexname=%s"
                    " AND schemaname = current_schema", indexname))
     return bool(cr.rowcount)
-
-
-@deprecated("Removed after 20.0")
-def check_index_exist(cr, indexname):
-    assert index_exists(cr, indexname), f"{indexname} does not exist"
 
 
 def index_definition(cr: Cursor, indexname: str) -> tuple[str, str | None] | tuple[None, None]:
@@ -656,25 +619,9 @@ def drop_view_if_exists(cr: Cursor, viewname: str):
         cr.execute(SQL("DROP MATERIALIZED VIEW %s CASCADE", SQL.identifier(viewname)))
 
 
-@deprecated("Since 20.0, use escape_like_value")
-def escape_psql(to_escape: str) -> str:
-    return escape_like_value(to_escape)
-
-
 def escape_like_value(to_escape: str) -> str:
     """ Escapes a string for injection into a LIKE statement. """
     return to_escape.replace('\\', r'\\').replace('%', r'\%').replace('_', r'\_')
-
-
-@deprecated("Removed after 20.0")
-def reverse_order(order):
-    """ Reverse an ORDER BY clause """
-    items = []
-    for item in order.split(','):
-        item = item.lower().split()
-        direction = 'asc' if item[1:] == ['desc'] else 'desc'
-        items.append('%s %s' % (item[0], direction))
-    return ', '.join(items)
 
 
 def increment_fields_skiplock(records, *fields):

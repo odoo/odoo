@@ -16,7 +16,6 @@ from odoo.exceptions import LockError, MissingError
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools import BinaryBytes, safe_eval
-from odoo.tools.func import deprecated
 
 _logger = logging.getLogger(__name__)
 
@@ -1067,12 +1066,6 @@ class BaseAutomation(models.Model):
     @api.model
     def _get_calendar(self, automation, record):
         return automation.trg_date_calendar_id
-
-    @deprecated("Since 19.0, use _cron_process_time_based_automations")
-    def _check(self, automatic=False, use_new_cursor=False):
-        if not automatic:
-            raise RuntimeError("can run time-based automations only in automatic mode")
-        self._cron_process_time_based_actions()
 
     def _search_time_based_automation_records(self, *, until):
         automation = self.ensure_one()

@@ -9,7 +9,6 @@ import threading
 import time
 import typing
 import warnings
-from contextlib import contextmanager
 from urllib.parse import urlsplit
 
 import babel.core
@@ -54,19 +53,6 @@ _logger = logging.getLogger('odoo.http')
 
 CSRF_TOKEN_SALT = 60 * 60 * 24 * 365  # 1 year
 """ The default csrf token lifetime, a salt against BREACH. """
-
-
-@contextmanager
-def borrow_request():
-    """ Get the current request and unexpose it from the local stack. """
-    warnings.warn("Use Context().run() to reset the context", DeprecationWarning, stacklevel=2)
-    from . import request_var  # noqa: PLC0415
-    req = request_var.get()
-    token = request_var.set(None)
-    try:
-        yield req
-    finally:
-        request_var.reset(token)
 
 
 def fragment_to_query_string(func=None, /, *, ignore: AbstractSet = frozenset()):

@@ -1,7 +1,5 @@
 import functools
 import logging
-import warnings
-from collections.abc import Mapping
 
 import geoip2.database
 import geoip2.errors
@@ -52,7 +50,7 @@ def _geoip_country_db():
         return EmptyGeoDB()
 
 
-class GeoIP(Mapping):
+class GeoIP:
     """
     Ip Geolocalization utility, determine information such as the
     country or the timezone of the user based on their IP Address.
@@ -120,36 +118,3 @@ class GeoIP(Mapping):
 
     def __bool__(self):
         return self.country_name is not None
-
-    def __getitem__(self, item):
-        warnings.warn("Since 20.0, dictionnary GeoIP API is deprecated.", DeprecationWarning, stacklevel=2)
-        if item == 'country_name':
-            return self.country_name
-
-        if item == 'country_code':
-            return self.country_code
-
-        if item == 'city':
-            return self.city.name
-
-        if item == 'latitude':
-            return self.location.latitude
-
-        if item == 'longitude':
-            return self.location.longitude
-
-        if item == 'region':
-            return self.subdivisions[0].iso_code if self.subdivisions else None
-
-        if item == 'time_zone':
-            return self.location.time_zone
-
-        raise KeyError(item)
-
-    def __iter__(self):
-        e = "The dictionnary GeoIP API is deprecated."
-        raise NotImplementedError(e)
-
-    def __len__(self):
-        e = "The dictionnary GeoIP API is deprecated."
-        raise NotImplementedError(e)

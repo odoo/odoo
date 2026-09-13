@@ -644,17 +644,6 @@ class IrAttachment(models.Model):
                     "Attachment %(record)s cannot have res_id: %(res_id)s",
                     record=record, res_id=record))
 
-    @api.model
-    def check(self, mode, values=None):
-        """ Restricts the access to an ir.attachment, according to referred mode """
-        warnings.warn("Since 19.0, use check_access", DeprecationWarning, stacklevel=2)
-        # Always require an internal user (aka, employee) to access to a attachment
-        if not (self.env.is_admin() or self.env.user._is_internal()):
-            raise AccessError(_("Sorry, you are not allowed to access this document."))
-        self.check_access(mode)
-        if values and any(self._inaccessible_comodel_records({values.get('res_model'): [values.get('res_id')]}, mode)):
-            raise AccessError(_("Sorry, you are not allowed to access this document."))
-
     def _make_access_error_message(self, operation, domain):
         if not domain.is_false():
             return AccessError(self.env._(
