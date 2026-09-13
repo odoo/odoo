@@ -189,19 +189,18 @@ class FSWatcherBase:
             timer.cancel()
 
     def on_file_changed(self, path: str) -> bool | None:
+        dev_mode = current().dev_mode
         if path.endswith(ASSET_SUFFIXES) and "/static/" in path:
             _debug.logic(
-                "watcher.asset_changed",
-                path=path,
-                handled="assets" in current().dev_mode,
+                "watcher.asset_changed", path=path, handled="assets" in dev_mode
             )
-            if "assets" in current().dev_mode:
+            if "assets" in dev_mode:
                 self.on_asset_file_changed(path)
             return None
         if self._reload_triggered:
             _debug.logic("watcher.change_ignored", path=path, reason="reload_pending")
             return None
-        if "reload" not in current().dev_mode:
+        if "reload" not in dev_mode:
             _debug.logic("watcher.change_ignored", path=path, reason="reload_off")
             return None
         if _debug.logic.enabled and (

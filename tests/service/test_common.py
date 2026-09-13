@@ -72,15 +72,10 @@ class TestVersionPayload:
 
         assert common_mod.exp_version()["server_version"] == odoo.release.version
 
-    def test_rpc_version_1_survives_as_a_snapshot(self, common_mod):
-        snapshot = common_mod.RPC_VERSION_1
-        assert snapshot == common_mod.exp_version()
-        snapshot["server_version"] = "tampered"
+    def test_each_version_payload_is_a_fresh_dict(self, common_mod):
+        payload = common_mod.exp_version()
+        payload["server_version"] = "tampered"
         assert common_mod.exp_version()["server_version"] != "tampered"
-
-    def test_an_unknown_module_attribute_still_raises(self, common_mod):
-        with pytest.raises(AttributeError, match="no attribute 'NoSuchName'"):
-            common_mod.NoSuchName
 
 
 class TestExpAuthenticateExceptionAbsorption:

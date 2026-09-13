@@ -76,8 +76,8 @@ class TestEachListenerIsWiredToItsOwnQueue:
 class TestSpawnersTypeTheirThreadsForTheRightTimeBudget:
     """`check_limits` reads `thread.type` to choose the real-time budget.
 
-    A thread typed "cron" is measured against `get_cron_real_time_budget()`, "job"
-    against `get_job_real_time_budget()`, anything else against `limit_time_real`.
+    A thread typed "cron" is measured against `settings.cron_real_time_budget`, "job"
+    against `settings.job_real_time_budget`, anything else against `limit_time_real`.
     Mistype a thread and it is recycled on the wrong deadline -- and the deadline
     is the thing that restarts the whole server.
     """

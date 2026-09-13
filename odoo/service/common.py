@@ -1,6 +1,6 @@
 import logging
 from collections.abc import Callable
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 import psycopg
 
@@ -30,16 +30,6 @@ def _get_rpc_version_1() -> dict[str, Any]:
         "server_serie": odoo.release.serie,
         "protocol_version": 1,
     }
-
-
-if TYPE_CHECKING:
-    RPC_VERSION_1: dict[str, Any]
-
-
-def __getattr__(name: str) -> Any:
-    if name == "RPC_VERSION_1":
-        return _get_rpc_version_1()
-    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
 
 
 def exp_login(db: str, login: str, password: str) -> int | bool:
@@ -130,7 +120,6 @@ _DISPATCH: dict[str, Callable] = {
 
 
 __all__ = (
-    "RPC_VERSION_1",
     "dispatch",
     "exp_authenticate",
     "exp_login",

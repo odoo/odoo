@@ -98,6 +98,66 @@ def _stop_watcher(watcher: FSWatcherInotify | FSWatcherWatchdog) -> None:
     _debug.lifecycle("server.watcher_stopped", kind=type(watcher).__name__)
 
 
+def _start_watcher(
+    settings: ServerSettings, server: CommonServer
+) -> FSWatcherInotify | FSWatcherWatchdog | None:
+    import odoo
+
+    if not (
+        {"reload", "assets"} & set(settings.dev_mode)
+        and not odoo.evented
+        and server.is_reload_watcher_owner
+    ):
+        return None
+    if not (inotify or watchdog):
+        if _IS_POSIX and platform.system() != "Darwin":
+            module = "inotify"
+        else:
+            module = "run_watchdog"
+        _debug.logic(
+            "server.watcher_unavailable",
+            module=module,
+            assets="assets" in settings.dev_mode,
+        )
+        _logger.warning(
+            "'%s' module not installed. Code autoreload is disabled%s",
+            module,
+            (
+                " — with --dev=assets and no watcher, edited asset sources "
+                "are NOT picked up; use --dev=xml instead"
+                if "assets" in settings.dev_mode
+                else ""
+            ),
+        )
+        return None
+    watcher = None
+    try:
+        watcher = FSWatcherInotify() if inotify else FSWatcherWatchdog()
+        watcher.start()
+    except Exception as exc:
+        _debug.logic(
+            "server.watcher_start_failed",
+            kind="inotify" if inotify else "watchdog",
+            error=type(exc).__name__,
+        )
+        if watcher is not None:
+            _stop_watcher(watcher)
+        _logger.warning(
+            "Could not start the file watcher — the server runs without "
+            "it, so source edits are NOT picked up. On Linux this is "
+            "usually fs.inotify.max_user_watches being exhausted "
+            "(shared with your editor); raise it, or run fewer servers.",
+            exc_info=True,
+        )
+        return None
+    _debug.lifecycle(
+        "server.watcher_started",
+        kind=type(watcher).__name__,
+        dev_mode=list(settings.dev_mode),
+    )
+    return watcher
+
+
 def _run_configured_server(
     settings: ServerSettings, preload: list[str] | None, stop: bool
 ) -> int:
@@ -106,7 +166,6 @@ def _run_configured_server(
         "server.server_wide_modules_loaded",
         modules=len(settings.server_wide_modules),
     )
-    import odoo
     import odoo.http
 
     app = _wrap_app_in_debugger(odoo.http.root, settings)
@@ -115,57 +174,7 @@ def _run_configured_server(
 
     _warn_on_connection_budget()
 
-    watcher = None
-    if (
-        {"reload", "assets"} & set(settings.dev_mode)
-        and not odoo.evented
-        and server.is_reload_watcher_owner
-    ):
-        if inotify or watchdog:
-            try:
-                watcher = FSWatcherInotify() if inotify else FSWatcherWatchdog()
-                watcher.start()
-                _debug.lifecycle(
-                    "server.watcher_started",
-                    kind=type(watcher).__name__,
-                    dev_mode=list(settings.dev_mode),
-                )
-            except Exception as exc:
-                _debug.logic(
-                    "server.watcher_start_failed",
-                    kind="inotify" if inotify else "watchdog",
-                    error=type(exc).__name__,
-                )
-                if watcher is not None:
-                    _stop_watcher(watcher)
-                watcher = None
-                _logger.warning(
-                    "Could not start the file watcher — the server runs without "
-                    "it, so source edits are NOT picked up. On Linux this is "
-                    "usually fs.inotify.max_user_watches being exhausted "
-                    "(shared with your editor); raise it, or run fewer servers.",
-                    exc_info=True,
-                )
-        else:
-            if _IS_POSIX and platform.system() != "Darwin":
-                module = "inotify"
-            else:
-                module = "run_watchdog"
-            _debug.logic(
-                "server.watcher_unavailable",
-                module=module,
-                assets="assets" in settings.dev_mode,
-            )
-            _logger.warning(
-                "'%s' module not installed. Code autoreload is disabled%s",
-                module,
-                (
-                    " — with --dev=assets and no watcher, edited asset sources "
-                    "are NOT picked up; use --dev=xml instead"
-                    if "assets" in settings.dev_mode
-                    else ""
-                ),
-            )
+    watcher = _start_watcher(settings, server)
 
     _debug.pipeline(
         "server.running",

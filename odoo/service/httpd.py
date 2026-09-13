@@ -201,9 +201,19 @@ def _style(message: str, *styles: str) -> str:
     return f"\x1b[{codes}m{message}\x1b[0m"
 
 
+def get_access_log_level(raw_path: str) -> int:
+    # The settings read is the expensive half; only a static path needs it.
+    if "/static/" in raw_path and not current().dev_mode:
+        return logging.DEBUG
+    return logging.INFO
+
+
 def log_access(
     conn: Connection, request_line: str, raw_path: str, status: int, size: int | str
 ) -> None:
+    level = get_access_log_level(raw_path)
+    if not _access_logger.isEnabledFor(level):
+        return
     message = request_line
     if fragment := getattr(current_worker_thread(), "rpc_model_method", ""):
         target, _, protocol = request_line.rpartition(" ")
@@ -212,10 +222,7 @@ def log_access(
         else:
             message = f"{request_line}#{fragment}"
     message = message.translate(_CONTROL_CHARS)
-    if "/static/" in raw_path and not current().dev_mode:
-        level = logging.DEBUG
-    else:
-        level = logging.INFO
+    if level == logging.INFO:
         if status < 200:
             message = _style(message, "bold")
         elif status == 304:
@@ -228,17 +235,16 @@ def log_access(
             message = _style(message, "bold", "red")
         elif status >= 500:
             message = _style(message, "bold", "magenta")
-    if _access_logger.isEnabledFor(level):
-        now = time.localtime()
-        stamp = (
-            f"{now.tm_mday:02d}/{_MONTHS[now.tm_mon]}/{now.tm_year:04d} "
-            f"{now.tm_hour:02d}:{now.tm_min:02d}:{now.tm_sec:02d}"
-        )
-        # Record args are werkzeug's (request line, status, size): access-log filters
-        # match on args[0], and an IPv6 zone id carries a literal %.
-        address = str(conn.addr[0]).replace("%", "%%")
-        template = address + " - - [" + stamp + '] "%s" %s %s'
-        _access_logger.log(level, template, message, status, size)
+    now = time.localtime()
+    stamp = (
+        f"{now.tm_mday:02d}/{_MONTHS[now.tm_mon]}/{now.tm_year:04d} "
+        f"{now.tm_hour:02d}:{now.tm_min:02d}:{now.tm_sec:02d}"
+    )
+    # Record args are werkzeug's (request line, status, size): access-log filters
+    # match on args[0], and an IPv6 zone id carries a literal %.
+    address = str(conn.addr[0]).replace("%", "%%")
+    template = address + " - - [" + stamp + '] "%s" %s %s'
+    _access_logger.log(level, template, message, status, size)
 
 
 def _reset_request_attributes() -> None:
@@ -640,6 +646,8 @@ def _run_exchange(
 
 def _log_exchange(exchange: Exchange) -> None:
     head = exchange.head
+    if not _access_logger.isEnabledFor(get_access_log_level(head.target)):
+        return
     try:
         iri = uri_to_iri(head.target)
     except ValueError:

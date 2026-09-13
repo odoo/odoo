@@ -32,7 +32,6 @@ from ._cron import (
     drain_swept_database,
 )
 from ._env import _IS_POSIX, _IS_WINDOWS
-from ._limits import get_cron_real_time_budget, get_job_real_time_budget
 from .httpd import ThreadedHTTPServer
 from .lifecycle import preload_registries, restart
 
@@ -120,6 +119,7 @@ class ThreadedServer(CommonServer):
         memory_over_limit = self.get_memory_over_soft_limit() is not None
 
         now = time.monotonic()
+        settings = self.settings
         watched = 0  # debuglog
         longest_s = 0.0  # debuglog
         for thread in threading.enumerate():
@@ -131,11 +131,11 @@ class ThreadedServer(CommonServer):
                     watched += 1  # debuglog
                     longest_s = max(longest_s, thread_execution_time)  # debuglog
                     if thread_type == "job":
-                        thread_limit_time_real = get_job_real_time_budget()
+                        thread_limit_time_real = settings.job_real_time_budget
                     elif thread_type == "cron":
-                        thread_limit_time_real = get_cron_real_time_budget()
+                        thread_limit_time_real = settings.cron_real_time_budget
                     else:
-                        thread_limit_time_real = self.settings.limit_time_real
+                        thread_limit_time_real = settings.limit_time_real
                     if (
                         thread_limit_time_real > 0
                         and thread_execution_time > thread_limit_time_real
@@ -440,21 +440,19 @@ class ThreadedServer(CommonServer):
                 lambda sig: self.signal_handler(sig, None), 1
             )
 
-        if _IS_POSIX and self.settings.limit_time_cpu > 0:
+        settings = self.settings
+        if _IS_POSIX and settings.limit_time_cpu > 0:
             self.logger.info(
                 "limit_time_cpu=%ss is not enforced with workers=0: the CPU "
                 "budget is armed per worker process (RLIMIT_CPU in "
                 "odoo.service._worker), and a threaded server has none. Use "
                 "limit_time_real, which this server does enforce per thread.",
-                self.settings.limit_time_cpu,
+                settings.limit_time_cpu,
             )
 
-        _debug.lifecycle(
-            "server.threaded.start",
-            http=self.settings.http_enable and (self.settings.test_enable or not stop),
-            stop_after_init=stop,
-        )
-        if self.settings.http_enable and (self.settings.test_enable or not stop):
+        serve_http = settings.http_enable and (settings.test_enable or not stop)
+        _debug.lifecycle("server.threaded.start", http=serve_http, stop_after_init=stop)
+        if serve_http:
             self.spawn_http_server()
 
     def stop(self) -> None:
