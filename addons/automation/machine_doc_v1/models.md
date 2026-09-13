@@ -95,6 +95,7 @@ server action model AND the workflow node definition.
 | `approval_user_ids` / `approval_note` | Many2many `res.users` / Char | Who must approve, and what the activity asks |
 | `subflow_automation_id` | Many2one `automation.rule` | What a Sub-workflow step runs; a cycle is refused |
 | `wait_delay` / `wait_unit` | Integer / Selection | How long a `wait` node pauses the run; a non-positive delay is refused |
+| `validity_delay` / `validity_unit` | Integer / Selection | How long after its line became ready (`date_ready`) the step may still run; a line reached later is skipped with the reason in `error_message`. Zero never expires; a negative value is refused |
 | `pos_x` | Integer | Node's horizontal position on the workflow canvas |
 | `pos_y` | Integer | Node's vertical position on the workflow canvas |
 | `pos_width` / `pos_height` | Integer | Node's rect on the canvas; 0 means the default, and any other value is checked against `NODE_SIZE_MIN` / `NODE_SIZE_MAX` |
@@ -346,6 +347,7 @@ Fully isolated per-execution — no shared state with the definition.
 | `state` | Selection | waiting/scheduled/ready/paused/in_progress/done/skipped/cancel/error |
 | `error_message` | Text | Error details |
 | `date_resume` | Datetime | When a scheduled step or a paused Wait step is due |
+| `date_ready` | Datetime | When the step became ready; its node's validity counts from here |
 | `date_settled` | Datetime | When the step settled; delays on its outgoing edges count from here |
 | `edge_in_ids` / `edge_out_ids` | One2many `automation.runtime.edge` | DAG dependency at execution level |
 

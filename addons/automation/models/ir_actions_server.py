@@ -63,6 +63,18 @@ class IrActionsServer(models.Model):
         required=True,
     )
 
+    validity_delay = fields.Integer(
+        string="Valid For",
+        default=0,
+        help="How long after the step becomes ready it may still run. A step "
+        "reached later is skipped instead. Zero means it never expires.",
+    )
+    validity_unit = fields.Selection(
+        selection=time_unit_selection("minute", "hour", "day", "week", "month"),
+        default="hour",
+        required=True,
+    )
+
     pos_x = fields.Integer(
         string="Canvas X",
         help="Horizontal position of this node on the workflow canvas",
@@ -174,6 +186,21 @@ class IrActionsServer(models.Model):
                         unit=action.wait_unit,
                     )
                 )
+
+    @api.constrains("validity_delay")
+    def _check_validity_delay(self):
+        for action in self:
+            if action.validity_delay < 0:
+                raise exceptions.ValidationError(
+                    _(
+                        "Step '%(action)s' has a negative validity.",
+                        action=action.name,
+                    ),
+                )
+
+    def _get_validity_delta(self):
+        self.check_singleton()
+        return get_timedelta(self.validity_delay, self.validity_unit)
 
     def _execute_runtime_lines(self, lines):
         self.check_singleton()

@@ -544,7 +544,7 @@ class AutomationRuntime(models.Model):
 
         for line in line_by_action.values():
             if line._predecessors_satisfied():
-                line.state = "ready"
+                line.action_mark_ready()
 
         return self.env["automation.runtime.line"].browse(
             [line.id for line in line_by_action.values()]

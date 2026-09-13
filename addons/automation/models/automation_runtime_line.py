@@ -66,6 +66,12 @@ class AutomationRuntimeLine(models.Model):
         copy=False,
         help="When a scheduled step becomes ready, or a paused Wait step completes",
     )
+    date_ready = fields.Datetime(
+        string="Ready Since",
+        readonly=True,
+        copy=False,
+        help="When the step became ready; its validity counts from here",
+    )
     date_settled = fields.Datetime(
         string="Settled At",
         readonly=True,
@@ -118,7 +124,23 @@ class AutomationRuntimeLine(models.Model):
         return self.edge_out_ids.target_line_id
 
     def action_mark_ready(self):
-        self.write({"state": "ready", "date_resume": False, "error_message": False})
+        self.write(
+            {
+                "state": "ready",
+                "date_ready": self.env.cr.now(),
+                "date_resume": False,
+                "error_message": False,
+            }
+        )
+
+    def _is_expired(self):
+        self.check_singleton()
+        action = self.action_id
+        return bool(
+            action.validity_delay
+            and self.date_ready
+            and self.date_ready + action._get_validity_delta() < self.env.cr.now()
+        )
 
     def action_cancel(self):
         for line in self:
@@ -362,6 +384,22 @@ class AutomationRuntimeLine(models.Model):
 
         if self.state not in ("ready", "in_progress"):
             raise UserError(_("Action is not ready to execute"))
+
+        if self._is_expired():
+            self._skip()
+            action = self.action_id
+            units = dict(
+                action._fields["validity_unit"]._description_selection(self.env)
+            )
+            self.error_message = _(
+                "Skipped: it became ready at %(ready)s, and its validity of "
+                "%(delay)s %(unit)s had passed when it came to run.",
+                ready=self.date_ready,
+                delay=action.validity_delay,
+                unit=units.get(action.validity_unit, action.validity_unit),
+            )
+            self.runtime_id._finish_if_settled()
+            return False
 
         if self.action_id.node_type == "wait":
             return self.action_pause()

@@ -81,6 +81,11 @@
                                 options="{'no_create': True}"
                                 invisible="node_type != 'subflow'"
                                 required="node_type == 'subflow'" />
+                            <label for="validity_delay" />
+                            <div class="o_row">
+                                <field name="validity_delay" class="oe_inline" />
+                                <field name="validity_unit" class="oe_inline" />
+                            </div>
                         </group>
 
                         <group string="Dependency Info" colspan="2">
