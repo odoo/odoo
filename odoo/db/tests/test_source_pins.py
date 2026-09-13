@@ -9,121 +9,15 @@ from odoo.db import (
     breaker,
     bulk,
     cursor,
-    endpoints,
     lag,
     leaks,
     pool,
     probe,
 )
 
+from ._source import _callees, _calls_on, _def_ast, _instance_attrs
+
 _DB_PACKAGE = pathlib.Path(pool.__file__).parent
-
-
-def _callees(func) -> set[str]:
-    return set(inspect.unwrap(func).__code__.co_names)
-
-
-def _def_ast(source: str) -> ast.FunctionDef | ast.ClassDef:
-    node = ast.parse(textwrap.dedent(source)).body[0]
-    if not isinstance(node, (ast.FunctionDef, ast.ClassDef)):
-        raise TypeError(f"expected a def or a class, parsed {type(node).__name__}")
-    return node
-
-
-def _calls_on(func, receiver: str) -> set[str]:
-    tree = ast.parse(textwrap.dedent(inspect.getsource(func)))
-    found = set()
-    for node in ast.walk(tree):
-        if not isinstance(node, ast.Call) or not isinstance(node.func, ast.Attribute):
-            continue
-        owner = node.func.value
-        if (
-            isinstance(owner, ast.Attribute)
-            and owner.attr == receiver
-            and isinstance(owner.value, ast.Name)
-            and owner.value.id == "self"
-        ):
-            found.add(node.func.attr)
-    return found
-
-
-def _instance_attrs(cls) -> set[str]:
-    tree = ast.parse(textwrap.dedent(inspect.getsource(cls)))
-    found = set()
-    for node in ast.walk(tree):
-        targets = []
-        if isinstance(node, ast.Assign):
-            targets = node.targets
-        elif isinstance(node, ast.AnnAssign):
-            targets = [node.target]
-        for t in targets:
-            if (
-                isinstance(t, ast.Attribute)
-                and isinstance(t.value, ast.Name)
-                and t.value.id == "self"
-            ):
-                found.add(t.attr)
-    return found
-
-
-def _methods_calling(cls, name: str) -> set[str]:
-    found = set()
-    for attr in dir(cls):
-        member = inspect.getattr_static(cls, attr, None)
-        member = getattr(member, "__func__", member)
-        code = getattr(member, "__code__", None)
-        if code is not None and name in code.co_names:
-            found.add(attr)
-    return found
-
-
-class TestBudgetAccounting(unittest.TestCase):
-    def test_the_getconn_helpers_never_touch_the_budget(self):
-        for helper in ("_get_connection_with_retry", "_check_borrowed_connection"):
-            with self.subTest(helper=helper):
-                self.assertNotIn(
-                    "_budget", _callees(getattr(pool.ConnectionPool, helper))
-                )
-
-
-class TestStalePlanIsRetriedAtTheRequestLayer(unittest.TestCase):
-    def test_the_one_failure_seam_marks_it(self):
-        self.assertIn(
-            "_invalidate_cached_plans_if_stale",
-            _callees(cursor.Cursor._statement_failed),
-            "nothing else can tell a recoverable 0A000 from a permanent one",
-        )
-
-    def test_every_statement_entry_point_routes_through_that_seam(self):
-        import inspect as _inspect
-
-        for owner, name in (
-            (cursor.Cursor, "execute"),
-            (cursor.Cursor, "executemany"),
-            (cursor.Cursor, "copy"),
-            (bulk._BulkAccessMixin, "copy_from"),
-        ):
-            fn = _inspect.unwrap(getattr(owner, name))
-            for seam in ("_statement_failed", "_statement_done"):
-                with self.subTest(entry_point=name, seam=seam):
-                    self.assertIn(
-                        seam,
-                        fn.__code__.co_names,
-                        "each entry point used to carry its own copy of the "
-                        "envelope: executemany's had dropped the stale-plan "
-                        "mark, copy_from's the failed-statement count, and "
-                        "cr.copy()'s the timing and the error log entirely",
-                    )
-
-    def test_the_marker_requires_prepared_statements(self):
-        src = inspect.getsource(cursor.Cursor._invalidate_cached_plans_if_stale)
-        self.assertIn("_prepared", src)
-        self.assertIn("_names", src)
-        self.assertIn(
-            "PG_STALE_PLAN_EXCEPTIONS",
-            src,
-            "the family must come from errors.py, not be re-listed here",
-        )
 
 
 class TestEveryDsnConsumerExpandsConninfo(unittest.TestCase):
@@ -138,30 +32,6 @@ class TestEveryDsnConsumerExpandsConninfo(unittest.TestCase):
                 if "conninfo_to_dict" in names:
                     importers.append(path.name)
         self.assertEqual(importers, ["dsn.py"])
-
-
-class TestLibpqTimeoutNeverLeaksZero(unittest.TestCase):
-    def test_every_call_site_guards_the_zero(self):
-        guarded = 0
-        skip_tests = 0
-        for module in (pool, probe):
-            source = inspect.getsource(module)
-            tree = ast.parse(source)
-            for node in ast.walk(tree):
-                if isinstance(node, ast.Assign) and isinstance(node.value, ast.Call):
-                    fn = node.value.func
-                    if getattr(fn, "id", None) == "get_libpq_connect_timeout":
-                        guarded += 1
-            skip_tests += source.count("if not probe_timeout")
-            skip_tests += source.count("if not connect_timeout")
-        self.assertGreaterEqual(
-            guarded, 3, "call sites must bind the result so they can test it"
-        )
-        self.assertEqual(
-            skip_tests,
-            guarded,
-            "every get_libpq_connect_timeout result must be tested for the skip case",
-        )
 
 
 class TestSchemaCacheClearsHaveDistinctCallSites(unittest.TestCase):
@@ -269,19 +139,6 @@ class TestSchemaChangeDrainsAtCommit(unittest.TestCase):
         self.assertIn("_schema_changed", inspect.getsource(cursor.Cursor._rollback))
 
 
-class TestOneConnectionOptionsAssembler(unittest.TestCase):
-    def test_both_borrow_paths_use_it(self):
-        for path in ("_get_or_create_pool", "_borrow_directly"):
-            with self.subTest(path=path):
-                self.assertIn(
-                    "_prepare_connection_options",
-                    _callees(getattr(pool.ConnectionPool, path)),
-                    "the two paths built the same libpq options string twice; "
-                    "one assembler, or the exemption goes back to being an "
-                    "accident nobody can see.",
-                )
-
-
 class TestEveryCheckoutIsTracked(unittest.TestCase):
     def test_the_leak_warning_uses_its_own_throttle(self):
         names = _callees(pool.ConnectionPool._warn_about_leaks)
@@ -290,30 +147,6 @@ class TestEveryCheckoutIsTracked(unittest.TestCase):
             "_reaper",
             names,
             "sharing the reaper's slot would let a leak warning silence a sweep",
-        )
-
-
-class TestBudgetBelongsToAServer(unittest.TestCase):
-    def test_the_key_is_the_resolved_endpoint(self):
-        names = _callees(endpoints.EndpointRegistry.get_budget_for_readonly)
-        self.assertIn("get_endpoint_for_readonly", names)
-        self.assertNotIn(
-            "db_replica_host",
-            names,
-            "keying on 'is a replica configured' hands one server two budgets "
-            "whenever the replica resolves back to the primary",
-        )
-
-    def test_the_endpoint_comes_from_the_resolved_connection_info(self):
-        self.assertIn(
-            "get_connection_info_for_database",
-            _callees(endpoints.EndpointRegistry.get_endpoint_for_readonly),
-        )
-
-    def test_the_replica_ceiling_is_gated_on_the_endpoint_differing(self):
-        self.assertIn(
-            "get_endpoint_for_readonly",
-            _callees(endpoints.EndpointRegistry.get_maxconn_at_endpoint),
         )
 
 
@@ -393,19 +226,6 @@ class TestPipelineModeCannotBypassTheFailureSeam(unittest.TestCase):
             "a client-side rejection never reached the wire and is not the "
             "seam's, as in Cursor.pipeline",
         )
-
-
-class TestOneDecodeOfAStatementsText(unittest.TestCase):
-    def test_both_entry_points_read_the_text_through_one_function(self):
-        for name in ("_prepare_ddl_statement", "executemany"):
-            with self.subTest(entry_point=name):
-                self.assertIn(
-                    "_get_statement_text",
-                    _callees(getattr(cursor.Cursor, name)),
-                    "executemany used to spell it str(query), which turns a "
-                    "bytes DDL statement into the repr b'CREATE …' and hides "
-                    "it from classify_statement",
-                )
 
 
 class TestTheBreakerLockIsNotReentrant(unittest.TestCase):

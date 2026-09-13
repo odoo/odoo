@@ -1,3 +1,4 @@
+import ast
 import contextlib
 import inspect
 import os
@@ -14,6 +15,8 @@ from odoo.db import bulk, cursor, ddl, dsn, endpoints, errors, leaks, pool, prob
 from odoo.db.schema_cache import TransactionSchemaCache
 from odoo.db.stats import PoolStats
 from odoo.db.utils import SYSTEM_DBS
+
+from ._source import _callees
 
 
 class _FakeConn:
@@ -257,6 +260,13 @@ class TestPermitAccounting(unittest.TestCase):
         self.assertTrue(stray.closed)
         self.assertEqual(p._budget.in_use, 0, "no permit was taken, none is released")
 
+    def test_the_getconn_helpers_never_touch_the_budget(self):
+        for helper in ("_get_connection_with_retry", "_check_borrowed_connection"):
+            with self.subTest(helper=helper):
+                self.assertNotIn(
+                    "_budget", _callees(getattr(pool.ConnectionPool, helper))
+                )
+
 
 class TestStalePlanIsRetriedAtTheRequestLayer(unittest.TestCase):
     class _Prepared:
@@ -302,6 +312,44 @@ class TestStalePlanIsRetriedAtTheRequestLayer(unittest.TestCase):
         self.assertTrue(err.PG_STALE_PLAN_EXCEPTIONS)
         self.assertTrue(callable(err.is_stale_cached_plan))
 
+    def test_the_one_failure_seam_marks_it(self):
+        self.assertIn(
+            "_invalidate_cached_plans_if_stale",
+            _callees(cursor.Cursor._statement_failed),
+            "nothing else can tell a recoverable 0A000 from a permanent one",
+        )
+
+    def test_every_statement_entry_point_routes_through_that_seam(self):
+        import inspect as _inspect
+
+        for owner, name in (
+            (cursor.Cursor, "execute"),
+            (cursor.Cursor, "executemany"),
+            (cursor.Cursor, "copy"),
+            (bulk._BulkAccessMixin, "copy_from"),
+        ):
+            fn = _inspect.unwrap(getattr(owner, name))
+            for seam in ("_statement_failed", "_statement_done"):
+                with self.subTest(entry_point=name, seam=seam):
+                    self.assertIn(
+                        seam,
+                        fn.__code__.co_names,
+                        "each entry point used to carry its own copy of the "
+                        "envelope: executemany's had dropped the stale-plan "
+                        "mark, copy_from's the failed-statement count, and "
+                        "cr.copy()'s the timing and the error log entirely",
+                    )
+
+    def test_the_marker_requires_prepared_statements(self):
+        src = inspect.getsource(cursor.Cursor._invalidate_cached_plans_if_stale)
+        self.assertIn("_prepared", src)
+        self.assertIn("_names", src)
+        self.assertIn(
+            "PG_STALE_PLAN_EXCEPTIONS",
+            src,
+            "the family must come from errors.py, not be re-listed here",
+        )
+
 
 class TestPasswordNeverReachesAPoolKey(unittest.TestCase):
     SECRET = "s3cr3t-do-not-log"
@@ -343,6 +391,28 @@ class TestLibpqTimeoutNeverLeaksZero(unittest.TestCase):
 
     def test_no_deadline_passes_the_cap_through(self):
         self.assertEqual(probe.get_libpq_connect_timeout(None, 5), 5)
+
+    def test_every_call_site_guards_the_zero(self):
+        guarded = 0
+        skip_tests = 0
+        for module in (pool, probe):
+            source = inspect.getsource(module)
+            tree = ast.parse(source)
+            for node in ast.walk(tree):
+                if isinstance(node, ast.Assign) and isinstance(node.value, ast.Call):
+                    fn = node.value.func
+                    if getattr(fn, "id", None) == "get_libpq_connect_timeout":
+                        guarded += 1
+            skip_tests += source.count("if not probe_timeout")
+            skip_tests += source.count("if not connect_timeout")
+        self.assertGreaterEqual(
+            guarded, 3, "call sites must bind the result so they can test it"
+        )
+        self.assertEqual(
+            skip_tests,
+            guarded,
+            "every get_libpq_connect_timeout result must be tested for the skip case",
+        )
 
 
 class TestSchemaCacheClearsHaveDistinctEffects(unittest.TestCase):
@@ -422,6 +492,17 @@ class TestOneConnectionOptionsAssembler(unittest.TestCase):
                 "-c idle_session_timeout=5",
             )
 
+    def test_both_borrow_paths_use_it(self):
+        for path in ("_get_or_create_pool", "_borrow_directly"):
+            with self.subTest(path=path):
+                self.assertIn(
+                    "_prepare_connection_options",
+                    _callees(getattr(pool.ConnectionPool, path)),
+                    "the two paths built the same libpq options string twice; "
+                    "one assembler, or the exemption goes back to being an "
+                    "accident nobody can see.",
+                )
+
 
 class TestAListValuedGucIsOneEntry(unittest.TestCase):
     def test_a_comma_inside_a_value_does_not_split_the_entry(self):
@@ -498,6 +579,28 @@ class TestBudgetBelongsToAServer(unittest.TestCase):
                 )
         self.assertIsInstance(package.registry, endpoints.EndpointRegistry)
 
+    def test_the_key_is_the_resolved_endpoint(self):
+        names = _callees(endpoints.EndpointRegistry.get_budget_for_readonly)
+        self.assertIn("get_endpoint_for_readonly", names)
+        self.assertNotIn(
+            "db_replica_host",
+            names,
+            "keying on 'is a replica configured' hands one server two budgets "
+            "whenever the replica resolves back to the primary",
+        )
+
+    def test_the_endpoint_comes_from_the_resolved_connection_info(self):
+        self.assertIn(
+            "get_connection_info_for_database",
+            _callees(endpoints.EndpointRegistry.get_endpoint_for_readonly),
+        )
+
+    def test_the_replica_ceiling_is_gated_on_the_endpoint_differing(self):
+        self.assertIn(
+            "get_endpoint_for_readonly",
+            _callees(endpoints.EndpointRegistry.get_maxconn_at_endpoint),
+        )
+
 
 class TestASavepointIsNeverOpenedInsideAPipeline(unittest.TestCase):
     def test_savepoint_refuses_pipeline_mode(self):
@@ -545,6 +648,17 @@ class TestOneDecodeOfAStatementsText(unittest.TestCase):
         )
         self.assertEqual(cursor._get_statement_text(b"\xff\xfe"), "")
         self.assertEqual(cursor._get_statement_text("SELECT 1"), "SELECT 1")
+
+    def test_both_entry_points_read_the_text_through_one_function(self):
+        for name in ("_prepare_ddl_statement", "executemany"):
+            with self.subTest(entry_point=name):
+                self.assertIn(
+                    "_get_statement_text",
+                    _callees(getattr(cursor.Cursor, name)),
+                    "executemany used to spell it str(query), which turns a "
+                    "bytes DDL statement into the repr b'CREATE …' and hides "
+                    "it from classify_statement",
+                )
 
 
 class TestCursorConstructionNeverLeaksAPermit(unittest.TestCase):
