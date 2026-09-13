@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch
 
-from odoo.modules.loading import get_installed_dependents_not_yet_loaded
+from odoo.modules.loading import get_installed_not_yet_loaded
 from odoo.modules.module import _DEFAULT_MANIFEST, Manifest
 from odoo.modules.module_graph import ModuleGraph
 from odoo.tools import mute_logger
@@ -41,8 +41,8 @@ def _make_manifest(name, **kw):
 
 
 class TestDeferredAtInstall(unittest.TestCase):
-    """An at_install suite waits for the installed dependents whose columns the
-    table already carries -- and for nothing else."""
+    """An at_install suite waits for every installed module whose columns the
+    tables already carry and whose models the registry does not hold yet."""
 
     @mute_logger("odoo.modules.module_graph")
     def _graph(self, states):
@@ -60,18 +60,18 @@ class TestDeferredAtInstall(unittest.TestCase):
             node.state = states.get(node.name, "installed")
         return graph
 
-    def test_an_installed_dependent_still_to_load_defers(self):
+    def test_an_installed_module_still_to_load_defers(self):
         graph = self._graph({})
         self.assertEqual(
-            get_installed_dependents_not_yet_loaded(graph, "hr", {"base", "hr"}),
-            ["hr_work_entry", "hr_payroll"],
+            get_installed_not_yet_loaded(graph, "hr", {"base", "hr"}),
+            ["mail", "hr_work_entry", "hr_payroll"],
         )
 
-    def test_the_closure_is_transitive_and_ordered_by_load_order(self):
+    def test_the_pending_list_follows_load_order(self):
         graph = self._graph({})
         with patch.object(ModuleGraph, "installed_outside", return_value=[]):
             self.assertEqual(
-                get_installed_dependents_not_yet_loaded(graph, "base", {"base"}),
+                get_installed_not_yet_loaded(graph, "base", {"base"}),
                 ["hr", "mail", "hr_work_entry", "hr_payroll"],
             )
 
@@ -81,42 +81,49 @@ class TestDeferredAtInstall(unittest.TestCase):
             ModuleGraph, "installed_outside", return_value=["crm", "base", "hr"]
         ):
             self.assertEqual(
-                get_installed_dependents_not_yet_loaded(graph, "base", {"base"}),
+                get_installed_not_yet_loaded(graph, "base", {"base"}),
                 ["hr", "mail", "hr_work_entry", "hr_payroll", "crm"],
             )
 
-    def test_only_base_consults_the_database_for_dependents(self):
+    def test_only_base_consults_the_database(self):
         graph = self._graph({})
         with patch.object(
             ModuleGraph, "installed_outside", return_value=["crm"]
         ) as outside:
-            get_installed_dependents_not_yet_loaded(graph, "hr", {"base", "hr"})
+            get_installed_not_yet_loaded(graph, "hr", {"base", "hr"})
         outside.assert_not_called()
 
-    def test_a_loaded_dependent_no_longer_counts(self):
+    def test_a_loaded_module_no_longer_counts(self):
         graph = self._graph({})
-        loaded = {"base", "hr", "hr_work_entry", "hr_payroll"}
-        self.assertEqual(
-            get_installed_dependents_not_yet_loaded(graph, "hr", loaded), []
-        )
+        loaded = {"base", "hr", "mail", "hr_work_entry", "hr_payroll"}
+        self.assertEqual(get_installed_not_yet_loaded(graph, "hr", loaded), [])
 
-    def test_a_dependent_being_installed_has_no_columns_yet(self):
-        # A fresh `-i hr,hr_work_entry`: hr's tests run at install, as before.
-        graph = self._graph({"hr_work_entry": "to install", "hr_payroll": "to install"})
-        self.assertEqual(
-            get_installed_dependents_not_yet_loaded(graph, "hr", {"base", "hr"}), []
+    def test_a_module_being_installed_has_no_columns_yet(self):
+        # A fresh `-i hr,hr_work_entry,mail`: hr's tests run at install, as before.
+        graph = self._graph(
+            {
+                "hr_work_entry": "to install",
+                "hr_payroll": "to install",
+                "mail": "to install",
+            }
         )
+        self.assertEqual(get_installed_not_yet_loaded(graph, "hr", {"base", "hr"}), [])
 
-    def test_a_dependent_about_to_upgrade_already_has_its_columns(self):
+    def test_a_module_about_to_upgrade_already_has_its_columns(self):
         # `-u hr` on a database holding hr_work_entry marks both to upgrade.
-        graph = self._graph({"hr": "to upgrade", "hr_work_entry": "to upgrade"})
+        graph = self._graph(
+            {"hr": "to upgrade", "hr_work_entry": "to upgrade", "mail": "to install"}
+        )
         self.assertEqual(
-            get_installed_dependents_not_yet_loaded(graph, "hr", {"base", "hr"}),
+            get_installed_not_yet_loaded(graph, "hr", {"base", "hr"}),
             ["hr_work_entry", "hr_payroll"],
         )
 
-    def test_an_unrelated_module_does_not_count(self):
+    def test_an_unrelated_installed_module_counts_too(self):
+        # mail puts a NOT NULL column on res_users without depending on the module
+        # whose tests create a user; the schema is the criterion, not the graph edge.
         graph = self._graph({})
         self.assertEqual(
-            get_installed_dependents_not_yet_loaded(graph, "mail", {"base", "mail"}), []
+            get_installed_not_yet_loaded(graph, "mail", {"base", "mail"}),
+            ["hr", "hr_work_entry", "hr_payroll"],
         )

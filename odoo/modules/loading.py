@@ -785,7 +785,7 @@ class _PackageLoader:
                 reason="no_tests",
             )
             return
-        if pending := self._get_installed_dependents_not_yet_loaded():
+        if pending := self._get_installed_not_yet_loaded():
             # The table already carries those modules' columns -- a NOT NULL
             # one has no field in this registry to give it a value -- so the
             # registry cannot represent the schema the tests would write to.
@@ -829,8 +829,8 @@ class _PackageLoader:
             queries=self.test_queries,
         )
 
-    def _get_installed_dependents_not_yet_loaded(self) -> list[str]:
-        return get_installed_dependents_not_yet_loaded(
+    def _get_installed_not_yet_loaded(self) -> list[str]:
+        return get_installed_not_yet_loaded(
             self.package.module_graph, self.name, self.registry.loaded_modules
         )
 
@@ -889,37 +889,25 @@ class _PackageLoader:
         self.log_cost()
 
 
-def get_installed_dependents_not_yet_loaded(
+def get_installed_not_yet_loaded(
     graph: ModuleGraph, name: str, loaded: Collection[str]
 ) -> list[str]:
-    """The graph's installed modules that depend on ``name`` and load later.
+    """The graph's installed modules that load after ``name``.
 
-    A fresh install has none: a dependent marked "to install" has no column in
-    the table yet, and its own at_install tests are its own. What makes a
-    dependent count is that its schema is already there -- installed, or
-    installed and about to upgrade -- while its models are not.
+    A fresh install has none: a module marked "to install" has no column in any
+    table yet, and its own at_install tests are its own. What makes a module
+    count is that its schema is already there -- installed, or installed and
+    about to upgrade -- while its models are not. Depending on ``name`` is not
+    the criterion: mail puts a NOT NULL column on res_users without depending
+    on the module whose tests create a user.
     """
-    closure: dict[str, bool] = {}
-
-    def is_dependent(node: ModuleNode) -> bool:
-        if node.name in closure:
-            return closure[node.name]
-        closure[node.name] = False
-        closure[node.name] = any(
-            dep.name == name or is_dependent(dep) for dep in node.depends
-        )
-        return closure[node.name]
-
     pending = [
         node.name
         for node in graph
-        if node.name not in loaded
-        and node.state in ("installed", "to upgrade")
-        and is_dependent(node)
+        if node.name not in loaded and node.state in ("installed", "to upgrade")
     ]
     if name == "base":
-        # The bootstrap graph holds base alone, so it cannot name base's
-        # dependents; the database can, and every installed module is one.
+        # The bootstrap graph holds base alone; the database names the rest.
         pending.extend(
             module
             for module in graph.installed_outside()
