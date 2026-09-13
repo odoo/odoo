@@ -402,6 +402,13 @@ export class SelfOrder extends Reactive {
             comboValues
         );
         const newLine = this.models["pos.order.line"].create(values);
+        if (newLine.course_id) {
+            this.currentOrder.lines.forEach((line) => {
+                if (!line.course_id && line.uuid !== newLine.uuid) {
+                    line.course_id = newLine.course_id;
+                }
+            });
+        }
         newLine.full_product_name = constructFullProductName(
             newLine,
             this.models["product.template.attribute.value"].getAllBy("id"),
@@ -829,8 +836,17 @@ export class SelfOrder extends Reactive {
             this.currentOrder.setOrderPrices();
             const tableIdentifier = this.currentTableIdentifier;
             let uuid = this.selectedOrderUuid;
+            // The server sends the order to preparation itself (`_send_order`): it creates
+            // the preparation lines and returns them with the order, so no quantity
+            // difference is left for the ticket the kiosk prints on its confirmation page.
+            // The changes are therefore kept here, while they can still be computed.
+            const preparationChanges =
+                this.config.self_ordering_mode === "kiosk" && this.currentOrder.getChanges();
             if (this.shouldUpdateLastOrderChange()) {
                 this.currentOrder.updateLastOrderChange();
+            }
+            if (this.currentOrder.course_ids.length) {
+                this.currentOrder.course_ids[0].fired = true;
             }
             const data = await rpc(
                 `/pos-self-order/process-order/${this.config.self_ordering_mode}`,
@@ -855,7 +871,11 @@ export class SelfOrder extends Reactive {
             }
 
             this.currentOrder.recomputeChanges();
-            return this.models["pos.order"].getBy("uuid", uuid);
+            const syncedOrder = this.models["pos.order"].getBy("uuid", uuid);
+            if (syncedOrder && preparationChanges) {
+                syncedOrder.uiState.preparationChanges = preparationChanges;
+            }
+            return syncedOrder;
         } catch (error) {
             const order = this.models["pos.order"].getBy("uuid", this.selectedOrderUuid);
             this.handleErrorNotification(error, [order.access_token]);
