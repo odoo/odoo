@@ -1,7 +1,7 @@
 import logging
 
 from .base_lru_cache import BaseLRUCache
-from .registry_singleton import registry_singleton
+from odoo.addons.rate_limit.tools import registry_singleton
 
 _logger = logging.getLogger(__name__)
 

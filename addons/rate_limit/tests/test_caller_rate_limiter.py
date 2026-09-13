@@ -5,7 +5,7 @@ from unittest.mock import Mock
 
 from odoo.tests.common import BaseCase
 
-from odoo.addons.credential.tools.rate_limiter import (
+from odoo.addons.rate_limit.tools.caller_rate_limiter import (
     SlidingWindowLimiter,
     get_caller_rate_limiter,
 )

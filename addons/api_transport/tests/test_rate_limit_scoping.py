@@ -26,7 +26,7 @@ class TestRateLimitScoping(TransactionCase):
             }
         )
 
-    @mute_logger("odoo.addons.credential.tools.endpoint_rate_limiter")
+    @mute_logger("odoo.addons.rate_limit.tools.endpoint_rate_limiter")
     def test_a_company_scoped_bucket_is_not_shared(self):
         endpoint = self._endpoint("scoped")
 
@@ -42,7 +42,7 @@ class TestRateLimitScoping(TransactionCase):
             "company B has its own allowance and A's exhaustion is not its problem",
         )
 
-    @mute_logger("odoo.addons.credential.tools.endpoint_rate_limiter")
+    @mute_logger("odoo.addons.rate_limit.tools.endpoint_rate_limiter")
     def test_an_unscoped_bucket_is_shared(self):
         endpoint = self._endpoint("unscoped")
 
@@ -50,7 +50,7 @@ class TestRateLimitScoping(TransactionCase):
         self.assertTrue(endpoint.check_rate_limit())
         self.assertFalse(endpoint.check_rate_limit())
 
-    @mute_logger("odoo.addons.credential.tools.endpoint_rate_limiter")
+    @mute_logger("odoo.addons.rate_limit.tools.endpoint_rate_limiter")
     def test_the_two_scopes_are_different_buckets(self):
         endpoint = self._endpoint("both")
         buckets = self.env["rate.limit.bucket"].sudo()
@@ -85,7 +85,7 @@ class TestRateLimitScoping(TransactionCase):
             "a disabled limit must not leave rows for the collector to clean",
         )
 
-    @mute_logger("odoo.addons.credential.tools.endpoint_rate_limiter")
+    @mute_logger("odoo.addons.rate_limit.tools.endpoint_rate_limiter")
     def test_the_outbound_client_spends_its_own_company_s_allowance(self):
         endpoint = self._endpoint("client_scope")
         self.env["credential.credential"].create(

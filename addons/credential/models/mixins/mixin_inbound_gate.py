@@ -10,7 +10,7 @@ from ...tools.authentication import (
     is_signature_valid,
     is_timestamp_valid,
 )
-from ...tools.rate_limiter import get_caller_rate_limiter
+from odoo.addons.rate_limit.tools import get_caller_rate_limiter
 
 _logger = logging.getLogger(__name__)
 

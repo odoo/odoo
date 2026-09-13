@@ -4,7 +4,7 @@ import logging
 
 from odoo import api, fields, models
 
-from ...tools.endpoint_rate_limiter import EndpointRateLimiter
+from odoo.addons.rate_limit.tools import EndpointRateLimiter
 
 _logger = logging.getLogger(__name__)
 

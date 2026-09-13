@@ -3,7 +3,6 @@ import json
 import logging
 import re
 from datetime import timedelta
-from types import SimpleNamespace
 from typing import Any, Self
 
 from cryptography.fernet import Fernet, InvalidToken
@@ -11,8 +10,6 @@ from cryptography.fernet import Fernet, InvalidToken
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.http import request
-
-from odoo.addons.credential.tools import get_caller_rate_limiter
 
 _logger = logging.getLogger(__name__)
 
@@ -1131,24 +1128,6 @@ class CredentialCredential(models.Model):
             "window_days": EXPIRY_WARNING_DAYS,
         }
 
-    def cron_cleanup_rate_limiter(self):
-        limiter = get_caller_rate_limiter(self.env)
-        cleaned = limiter.cleanup_old_entries(max_age_hours=24)
-        stats = limiter.get_stats()
-
-        _logger.info(
-            "Rate limiter cleanup complete: removed %d keys, tracking %d active keys with %d total attempts",
-            cleaned,
-            stats["total_keys"],
-            stats["total_attempts_tracked"],
-        )
-
-        return {
-            "cleaned": cleaned,
-            "active_keys": stats["total_keys"],
-            "total_attempts": stats["total_attempts_tracked"],
-        }
-
     @api.model
     def _get_active_for_category(self, code: str) -> Self:
         category = self.env["credential.category"].search(
@@ -1380,22 +1359,12 @@ class CredentialCredential(models.Model):
 
     def _consume_decryption_allowance(self, cap: int) -> bool:
         self.check_singleton()
-        subject = SimpleNamespace(
-            _name=self._DECRYPT_BUCKET_MODEL,
-            id=self.id,
-            rate_limit_requests=cap,
-        )
-        bucket = (
-            self.env["rate.limit.bucket"]
-            .sudo()
-            .get_or_create_bucket(
-                subject,
-                bucket_key=f"{self._DECRYPT_BUCKET_MODEL}:{self.id}:{self.env.uid}",
-            )
-        )
-        return bucket.consume_token(
+        return self.env["rate.limit.bucket"].consume_for_key(
+            f"{self._DECRYPT_BUCKET_MODEL}:{self.id}:{self.env.uid}",
+            subject_model=self._DECRYPT_BUCKET_MODEL,
+            subject_id=self.id,
             capacity=cap,
-            refill_rate=cap / self._DECRYPT_WINDOW_SECONDS,
+            window_seconds=self._DECRYPT_WINDOW_SECONDS,
         )
 
     def _log_access_out_of_band(self, operation: str) -> None:

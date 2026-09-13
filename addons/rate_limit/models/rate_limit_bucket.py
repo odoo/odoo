@@ -5,7 +5,10 @@ from typing import Any
 from odoo import api, fields, models
 from odoo.db import get_or_create_row
 from odoo.exceptions import UserError
+from odoo.libs import token_bucket
 from odoo.service.model import PG_CONCURRENCY_EXCEPTIONS_TO_RETRY
+
+from ..tools.caller_rate_limiter import get_caller_rate_limiter
 
 _logger = logging.getLogger(__name__)
 
@@ -291,8 +294,13 @@ class RateLimitBucket(models.Model):
             )
             return current_tokens
 
-        elapsed_seconds = min(elapsed_seconds, MAX_REFILL_SECONDS)
-        return min(current_tokens + elapsed_seconds * refill_rate, capacity)
+        return token_bucket.refill(
+            current_tokens,
+            elapsed_seconds,
+            rate=refill_rate,
+            capacity=capacity,
+            max_elapsed_seconds=MAX_REFILL_SECONDS,
+        )
 
     def consume_token(
         self,
@@ -331,9 +339,8 @@ class RateLimitBucket(models.Model):
                 refill_rate=refill_rate,
             )
 
-            if new_tokens >= 1.0:
-                final_tokens = new_tokens - 1.0
-
+            final_tokens = token_bucket.take(new_tokens)
+            if final_tokens is not None:
                 self.env.cr.execute(
                     """
                     UPDATE rate_limit_bucket
@@ -456,3 +463,21 @@ class RateLimitBucket(models.Model):
             )
 
         return count
+
+    @api.model
+    def cron_cleanup_caller_rate_limiter(self) -> dict[str, int]:
+        limiter = get_caller_rate_limiter(self.env)
+        cleaned = limiter.cleanup_old_entries(max_age_hours=24)
+        stats = limiter.get_stats()
+        _logger.info(
+            "Rate limiter cleanup complete: removed %d keys, tracking %d active "
+            "keys with %d total attempts",
+            cleaned,
+            stats["total_keys"],
+            stats["total_attempts_tracked"],
+        )
+        return {
+            "cleaned": cleaned,
+            "active_keys": stats["total_keys"],
+            "total_attempts": stats["total_attempts_tracked"],
+        }

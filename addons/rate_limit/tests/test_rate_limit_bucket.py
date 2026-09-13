@@ -9,7 +9,7 @@ from odoo.exceptions import UserError
 from odoo.libs.logging import mute_logger
 from odoo.tests.common import TransactionCase, tagged
 
-from odoo.addons.credential.tools import EndpointRateLimiter
+from odoo.addons.rate_limit.tools import EndpointRateLimiter
 
 
 class TestRateLimitBucket(TransactionCase):
@@ -17,18 +17,10 @@ class TestRateLimitBucket(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.MockEndpoint = cls.env["credential.category"]
+        cls.MockEndpoint = cls.env["res.partner"]
 
     def test_bucket_creation(self):
-        endpoint = self.MockEndpoint.search([], limit=1)
-        if not endpoint:
-            endpoint = self.MockEndpoint.create(
-                {
-                    "name": "Test Endpoint",
-                    "code": "test_endpoint_bucket",
-                    "storage_hint": "simple",
-                },
-            )
+        endpoint = self.MockEndpoint.create({"name": "Test Endpoint"})
 
         bucket = self.env["rate.limit.bucket"].create(
             {
@@ -44,15 +36,7 @@ class TestRateLimitBucket(TransactionCase):
         self.assertTrue(bucket.last_refill)
 
     def test_bucket_reset(self):
-        endpoint = self.MockEndpoint.search([], limit=1)
-        if not endpoint:
-            endpoint = self.MockEndpoint.create(
-                {
-                    "name": "Test Endpoint Reset",
-                    "code": "test_endpoint_reset",
-                    "storage_hint": "simple",
-                },
-            )
+        endpoint = self.MockEndpoint.create({"name": "Test Endpoint Reset"})
 
         bucket = self.env["rate.limit.bucket"].create(
             {
@@ -73,7 +57,7 @@ class TestRateLimitBucket(TransactionCase):
         bucket = self.env["rate.limit.bucket"].create(
             {
                 "bucket_key": "test_bucket_reset_namespace",
-                "endpoint_model": "credential.credential.decrypt",
+                "endpoint_model": "rate_limit.test.namespace",
                 "endpoint_id": 999,
                 "tokens": 0.0,
             },
@@ -84,15 +68,7 @@ class TestRateLimitBucket(TransactionCase):
             bucket.reset_bucket()
 
     def test_bucket_cleanup(self):
-        endpoint = self.MockEndpoint.search([], limit=1)
-        if not endpoint:
-            endpoint = self.MockEndpoint.create(
-                {
-                    "name": "Test Endpoint Cleanup",
-                    "code": "test_endpoint_cleanup",
-                    "storage_hint": "simple",
-                },
-            )
+        endpoint = self.MockEndpoint.create({"name": "Test Endpoint Cleanup"})
 
         old_date = fields.Datetime.now() - timedelta(days=31)
 
@@ -129,18 +105,10 @@ class TestRateLimitBucketTokenConsumption(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.MockEndpoint = cls.env["credential.category"]
+        cls.MockEndpoint = cls.env["res.partner"]
 
     def test_consume_token_success(self):
-        endpoint = self.MockEndpoint.search([], limit=1)
-        if not endpoint:
-            endpoint = self.MockEndpoint.create(
-                {
-                    "name": "Test Consume",
-                    "code": "test_consume_endpoint",
-                    "storage_hint": "simple",
-                },
-            )
+        endpoint = self.MockEndpoint.create({"name": "Test Consume"})
 
         bucket = self.env["rate.limit.bucket"].create(
             {
@@ -160,15 +128,7 @@ class TestRateLimitBucketTokenConsumption(TransactionCase):
         self.assertLess(bucket.tokens, initial_tokens)
 
     def test_consume_token_empty_bucket(self):
-        endpoint = self.MockEndpoint.search([], limit=1)
-        if not endpoint:
-            endpoint = self.MockEndpoint.create(
-                {
-                    "name": "Test Consume Empty",
-                    "code": "test_consume_empty",
-                    "storage_hint": "simple",
-                },
-            )
+        endpoint = self.MockEndpoint.create({"name": "Test Consume Empty"})
 
         bucket = self.env["rate.limit.bucket"].create(
             {
@@ -184,13 +144,7 @@ class TestRateLimitBucketTokenConsumption(TransactionCase):
         self.assertFalse(result)
 
     def _make_bucket(self, name):
-        endpoint = self.MockEndpoint.create(
-            {
-                "name": f"Endpoint for {name}",
-                "code": name,
-                "storage_hint": "simple",
-            },
-        )
+        endpoint = self.MockEndpoint.create({"name": f"Endpoint for {name}"})
         return self.env["rate.limit.bucket"].create(
             {
                 "bucket_key": name,
@@ -232,7 +186,7 @@ class TestRateLimitBucketTokenConsumption(TransactionCase):
 class TestEndpointRateLimiterStrictMode(TransactionCase):
     def test_endpoint_rate_limiter_reads_strict_flag(self):
         strict_endpoint = SimpleNamespace(
-            _name="credential.category",
+            _name="res.partner",
             id=1,
             rate_limit_enabled=True,
             rate_limit_requests=100,
@@ -240,7 +194,7 @@ class TestEndpointRateLimiterStrictMode(TransactionCase):
             rate_limit_strict=True,
         )
         lax_endpoint = SimpleNamespace(
-            _name="credential.category",
+            _name="res.partner",
             id=2,
             rate_limit_enabled=True,
             rate_limit_requests=100,
@@ -268,9 +222,7 @@ class TestEndpointRateLimiterStrictMode(TransactionCase):
         )
 
     def test_consume_for_forwards_strict_to_the_bucket(self):
-        endpoint = self.env["credential.category"].create(
-            {"name": "consume-for probe", "code": "consume_for_probe"}
-        )
+        endpoint = self.env["res.partner"].create({"name": "consume-for probe"})
         bucket_model = self.env["rate.limit.bucket"]
 
         with patch.object(type(bucket_model), "get_or_create_bucket") as get_or_create:
@@ -299,7 +251,7 @@ class TestRateLimitBucketContention(TransactionCase):
 
     def setUp(self):
         super().setUp()
-        endpoint = self.env["credential.category"].search([], limit=1)
+        endpoint = self.env["res.partner"].create({"name": "contention probe"})
         self.bucket = self.env["rate.limit.bucket"].create(
             {
                 "bucket_key": "contention.probe",
@@ -315,14 +267,14 @@ class TestRateLimitBucketContention(TransactionCase):
 
         self.patch(self.registry["rate.limit.bucket"], "_lock_bucket_row", _lock)
 
-    @mute_logger("odoo.addons.credential.models.rate_limit_bucket")
+    @mute_logger("odoo.addons.rate_limit.models.rate_limit_bucket")
     def test_a_serialization_failure_is_reraised_not_denied(self):
         self._raise_on_lock(psycopg.errors.SerializationFailure("40001"))
 
         with self.assertRaises(psycopg.errors.SerializationFailure):
             self.bucket.consume_token(strict=True)
 
-    @mute_logger("odoo.addons.credential.models.rate_limit_bucket")
+    @mute_logger("odoo.addons.rate_limit.models.rate_limit_bucket")
     def test_a_lock_timeout_is_reraised_not_denied(self):
         # The strict path sets `lock_timeout`, so this is the error IT produces.
         self._raise_on_lock(psycopg.errors.LockNotAvailable("55P03"))
@@ -330,14 +282,14 @@ class TestRateLimitBucketContention(TransactionCase):
         with self.assertRaises(psycopg.errors.LockNotAvailable):
             self.bucket.consume_token(strict=True)
 
-    @mute_logger("odoo.addons.credential.models.rate_limit_bucket")
+    @mute_logger("odoo.addons.rate_limit.models.rate_limit_bucket")
     def test_a_deadlock_is_reraised_not_denied(self):
         self._raise_on_lock(psycopg.errors.DeadlockDetected("40P01"))
 
         with self.assertRaises(psycopg.errors.DeadlockDetected):
             self.bucket.consume_token(strict=True)
 
-    @mute_logger("odoo.addons.credential.models.rate_limit_bucket")
+    @mute_logger("odoo.addons.rate_limit.models.rate_limit_bucket")
     def test_a_real_error_still_denies_in_strict_mode(self):
         # The re-raise must not swallow the fail-closed behaviour it sits above:
         # an error that is NOT a row conflict still denies under strict.
@@ -345,7 +297,7 @@ class TestRateLimitBucketContention(TransactionCase):
 
         self.assertFalse(self.bucket.consume_token(strict=True))
 
-    @mute_logger("odoo.addons.credential.models.rate_limit_bucket")
+    @mute_logger("odoo.addons.rate_limit.models.rate_limit_bucket")
     def test_a_real_error_still_allows_when_not_strict(self):
         self._raise_on_lock(ValueError("something actually wrong"))
 
