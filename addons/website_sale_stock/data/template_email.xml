@@ -35,7 +35,7 @@
                             <t t-out="product.description_ecommerce"/>
                         </td>
                         <td width="19%" align="right" style="max-width: 100%; vertical-align: top;">
-                            <t t-out="product.list_price" t-options="{'widget': 'monetary', 'display_currency': product.currency_id}"/>
+                            <t t-out="product_price" t-options="{'widget': 'monetary', 'display_currency': product.currency_id}"/>
                         </td>
                     </tr>
                 </table>

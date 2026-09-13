@@ -56,6 +56,17 @@ class ProductProduct(models.Model):
         website = self.env['website'].get_current_website()
         for product_id in products.ids:
             product = self.env['product.product'].browse(product_id)
+            product_taxes = product.sudo().taxes_id._filter_taxes_by_company(self.env.company)
+            fiscal_position = self.env['account.fiscal.position']._get_fiscal_position(None)
+            taxes = fiscal_position.map_tax(product_taxes)
+            product_price = product.product_tmpl_id._apply_taxes_to_price(
+                product.list_price,
+                product.currency_id,
+                product_taxes,
+                taxes,
+                product,
+                website=website,
+            )
             for partner_id in product.with_context(
                 # Only fetch the ids, all the other fields will be invalidated either way
                 prefetch_fields=False,
@@ -68,7 +79,7 @@ class ProductProduct(models.Model):
                     'res.partner',
                     partner.ids,
                     engine='qweb_view',
-                    add_context={'product': product_ctxt},
+                    add_context={'product': product_ctxt, 'product_price': product_price},
                     options={'post_process': True},
                 )[partner.id]
                 full_mail = product_ctxt.env['mail.render.mixin']._render_encapsulate(
