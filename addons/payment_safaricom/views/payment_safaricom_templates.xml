@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="inline_form">
+        <div name="o_safaricom_form">
+            <div class="mb-3">
+                <label for="o_safaricom_phone_number" class="form-label fw-bold">
+                    Phone Number
+                </label>
+                <input
+                    type="text"
+                    id="o_safaricom_phone_number"
+                    name="o_safaricom_phone_number"
+                    class="form-control"
+                    placeholder="e.g., 254712345678"
+                    t-att-value="env.user.partner_id.phone or ''"
+                    required="required"
+                />
+            </div>
+        </div>
+    </template>
+
+    <!-- Display of /payment/safaricom/pay -->
+    <template id="pay_page" name="M-PESA Payment">
+        <t t-set="page_title">M-PESA Payment</t>
+        <t t-set="additional_title"><t t-out="page_title"/></t>
+        <t t-call="portal.frontend_layout" page_title="page_title" additional_title="additional_title">
+            <div class="wrap">
+                <div class="container">
+                    <div class="row justify-content-center my-5 py-md-5">
+                        <div class="col-12 col-lg-8">
+                            <div
+                                name="o_safaricom_pay"
+                                class="d-flex flex-column"
+                                t-att-data-landing-route="tx.landing_route"
+                                t-att-data-notification-channel="notification_channel"
+                            >
+                                <div class="text-center mb-3">
+                                    <div class="spinner-border mb-4 text-muted"/>
+                                    <h1 class="h3-fs">
+                                        Waiting for your confirmation...
+                                    </h1>
+                                    <p>
+                                        Check your phone and enter your M-PESA PIN to confirm the
+                                        payment.
+                                    </p>
+                                </div>
+                                <div class="o_payment_summary d-flex gap-3">
+                                    <t t-call="payment.summary_item"
+                                        name.f="amount"
+                                        label.translate="Amount"
+                                        value="tx.amount"
+                                        options="{
+                                                    'widget': 'monetary',
+                                                    'display_currency': tx.currency_id,
+                                                }"
+                                    />
+                                    <t t-call="payment.summary_item"
+                                        name.f="reference"
+                                        label.translate="Reference"
+                                        value="tx.reference"
+                                        include_separator="True"/>
+                                </div>
+                                <div class="text-center mt-4">
+                                    <a name="o_safaricom_skip" href="#" class="text-muted me-3 d-none">Skip</a>
+                                    <a name="o_safaricom_cancel" href="#" class="text-muted">Cancel</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

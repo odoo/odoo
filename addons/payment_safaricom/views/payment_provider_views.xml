@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="payment_provider_form" model="ir.ui.view">
+        <field name="name">Safaricom Provider Form</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_form"/>
+        <field name="arch" type="xml">
+            <group name="provider_credentials" position="inside">
+                <field
+                    name="safaricom_transaction_type"
+                    string="Transaction Type"
+                    required="is_live"
+                    invisible="code != 'safaricom'"
+                />
+                <field
+                    name="safaricom_consumer_key"
+                    string="Consumer Key"
+                    required="is_live"
+                    widget="password"
+                    invisible="code != 'safaricom'"
+                />
+                <field
+                    name="safaricom_consumer_secret"
+                    string="Consumer Secret"
+                    required="is_live"
+                    widget="password"
+                    invisible="code != 'safaricom'"
+                />
+                <field
+                    name="safaricom_passkey"
+                    string="Passkey"
+                    required="is_live"
+                    widget="password"
+                    invisible="code != 'safaricom'"
+                />
+                <field
+                    name="safaricom_shortcode"
+                    string="Shortcode"
+                    required="is_live"
+                    invisible="code != 'safaricom'"
+                />
+                <field
+                    name="safaricom_till_number"
+                    string="Till Number"
+                    invisible="safaricom_transaction_type != 'CustomerBuyGoodsOnline' or code != 'safaricom'"
+                    required="safaricom_transaction_type == 'CustomerBuyGoodsOnline' and code == 'safaricom'"
+                />
+            </group>
+        </field>
+    </record>
+</odoo>
