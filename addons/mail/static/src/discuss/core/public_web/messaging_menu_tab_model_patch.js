@@ -30,7 +30,7 @@ const messagingMenuTabPatch = {
     },
 
     /**
-     * @param {import("@mail/core/public_web/messaging_menu/messaging_menu_tab_model").MessagingMenuTabFilter} [filter]
+     * @param {import("models").MessagingMenuTabFilter} [filter]
      * @param {import("models").DiscussChannel[]} [channels]
      */
     getSortedChannels(filter, channels = this.channels) {
