@@ -21,7 +21,7 @@ from odoo.tests import common, tagged
 from odoo.tests.common import get_cache_key_counter
 from odoo.tools import mute_logger, safe_eval, view_validation
 
-from odoo.addons.base.models import ir_ui_view
+from odoo.addons.base.models import ir_ui_view, ir_ui_view_arch
 from odoo.addons.base.models.ir_ui_view_arch import ELEMENT_HANDLERS
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 
@@ -6507,28 +6507,25 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
 
 class CompRegexTest(common.TransactionCase):
     def test_comp_regex(self):
-        self.assertIsNone(re.search(ir_ui_view.COMP_REGEX, ""))
-        self.assertIsNone(re.search(ir_ui_view.COMP_REGEX, "__comp__2"))
-        self.assertIsNone(re.search(ir_ui_view.COMP_REGEX, "__comp___that"))
-        self.assertIsNone(re.search(ir_ui_view.COMP_REGEX, "a__comp__"))
-
-        self.assertIsNotNone(re.search(ir_ui_view.COMP_REGEX, "__comp__"))
-        self.assertIsNotNone(re.search(ir_ui_view.COMP_REGEX, "__comp__ "))
-        self.assertIsNotNone(re.search(ir_ui_view.COMP_REGEX, " __comp__ "))
-        self.assertIsNotNone(re.search(ir_ui_view.COMP_REGEX, "__comp__.props"))
-        self.assertIsNotNone(re.search(ir_ui_view.COMP_REGEX, "__comp__ .props"))
-        self.assertIsNotNone(re.search(ir_ui_view.COMP_REGEX, "__comp__['props']"))
-        self.assertIsNotNone(re.search(ir_ui_view.COMP_REGEX, "__comp__ ['props']"))
-        self.assertIsNotNone(re.search(ir_ui_view.COMP_REGEX, '__comp__["props"]'))
-        self.assertIsNotNone(re.search(ir_ui_view.COMP_REGEX, '__comp__ ["props"]'))
-        self.assertIsNotNone(
-            re.search(ir_ui_view.COMP_REGEX, '    __comp__     ["props"]    ')
-        )
-        self.assertIsNotNone(
-            re.search(ir_ui_view.COMP_REGEX, "record ? __comp__ : false")
-        )
-        self.assertIsNotNone(re.search(ir_ui_view.COMP_REGEX, "!__comp__.props.resId"))
-        self.assertIsNotNone(re.search(ir_ui_view.COMP_REGEX, "{{ __comp__ }}"))
+        regex = ir_ui_view_arch.COMP_REGEX
+        for expr in ("", "__comp__2", "__comp___that", "a__comp__"):
+            self.assertIsNone(re.search(regex, expr), expr)
+        for expr in (
+            "__comp__",
+            "__comp__ ",
+            " __comp__ ",
+            "__comp__.props",
+            "__comp__ .props",
+            "__comp__['props']",
+            "__comp__ ['props']",
+            '__comp__["props"]',
+            '__comp__ ["props"]',
+            '    __comp__     ["props"]    ',
+            "record ? __comp__ : false",
+            "!__comp__.props.resId",
+            "{{ __comp__ }}",
+        ):
+            self.assertIsNotNone(re.search(regex, expr), expr)
 
 
 @common.tagged("at_install", "modifiers")
