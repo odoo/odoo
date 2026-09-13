@@ -80,6 +80,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
 import { currencies } from "@web/core/currency";
+import { makeLogger } from "@web/core/debug/debug_logger";
 import { Domain } from "@web/core/domain";
 import { localization } from "@web/core/l10n/localization";
 import { luxon } from "@web/core/l10n/luxon";
@@ -20175,6 +20176,25 @@ test(`multi edition: many2many_tags add few tags in one time`, async () => {
 
 test.tags("desktop");
 test("multi_edit: must work for copy/paster or operation", async () => {
+    patchWithCleanup(ListController.prototype, {
+        onAskMultiSaveConfirmation(changes, records) {
+            makeLogger("web.model.audit").logic(
+                "datetime confirmation values",
+                JSON.stringify({
+                    changed: changes.datetime.toISO(),
+                    record: records[0].data.datetime.toISO(),
+                    input: queryAllProperties("input[data-field=datetime]", "value"),
+                }),
+            );
+            expect(changes.datetime.toUTC().startOf("minute").toISO()).toBe(
+                "2019-07-14T09:30:00.000Z",
+            );
+            expect(records[0].data.datetime.toMillis()).toBe(
+                changes.datetime.toMillis(),
+            );
+            return super.onAskMultiSaveConfirmation(changes, records);
+        },
+    });
     Foo._records[1].datetime = "1989-05-03 12:51:35";
     Foo._records[2].datetime = "1987-11-13 12:12:34";
     Foo._records[3].datetime = "2019-04-09 03:21:35";
@@ -20194,7 +20214,7 @@ test("multi_edit: must work for copy/paster or operation", async () => {
     await animationFrame();
     await waitFor(`.o_datetime_picker`);
     await contains(`input[data-field=datetime]`).edit("+125d", { confirm: "tab" });
-    expect(`tbody tr:eq(0) td[name=datetime]`).toHaveText("Jul 14, 11:30 AM");
+    expect(".modal .o_field_datetime").toHaveText("Jul 14, 11:30 AM");
     await contains(`.modal button:contains(update)`).click();
     expect(".modal").toHaveCount(0);
     expect(queryAllTexts(`.o_data_cell`)).toEqual([

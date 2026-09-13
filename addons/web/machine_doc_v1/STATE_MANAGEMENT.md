@@ -460,9 +460,37 @@ follows this implicit state graph:
 **Serialization**: All transitions go through `model.mutex.exec()`, ensuring
 only one save/discard/load runs at a time.
 
+**Group identity**: `model/relational_model/group_key.js` supplies the keys for
+group configuration and datapoint reuse. Parsed values retain their types, so an
+unset selection and the literal string `"false"` have separate groups. Encoded
+keys stay client-side; opening information sent to the server uses group values.
+
+**Local list ordering**: `static_list_utils.js` gives unset selection values the
+same empty-string sort convention as local char values. Multi-column ties are
+resolved iteratively. This local ordering convention does not claim PostgreSQL
+NULL-placement or locale-collation parity.
+
+**Created-row reconciliation**: proposed virtual/server ID pairs must occur at
+matching positions when membership arrays are supplied. Validation scans client
+membership until every pair is witnessed and checks only the corresponding server
+positions. Empty batches skip the scan; absent rows are not identity evidence. Rank-order pairing without positional inputs is
+unchanged.
+
+**Field context identity**: `model/relational_model/field_context.js` evaluates
+context on every call and retains only the latest result per field, record, and
+consumer. Field widgets supply themselves as weak cache owners, so two widgets
+with different contexts remain independent and destroyed widgets are not retained.
+Equivalent results reuse that object even when their expression strings differ;
+changed evaluated values replace it. This bounds expression history, not evaluation
+time.
+
 **Urgent save**: On page unload (`beforeunload`), `urgentSave()` uses
 `navigator.sendBeacon()` to fire-and-forget unsaved changes. This bypasses
 the mutex and normal flow.
+
+`UrgentSaveCoordinator` restores its idle state when its notification hook throws.
+Work registered by the hook before throwing is still observed. This cleanup is not
+a deadline for pending work or a guarantee of beacon delivery.
 
 > **Optimistic-locking parity — field-scoped baseline values**: both paths
 > send `kwargs.known_values`, a `{field: originally-loaded value}` map built

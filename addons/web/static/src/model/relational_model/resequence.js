@@ -24,9 +24,19 @@ export function computeResequencePlan({
     asc = true,
 }) {
     const fromIndex = records.findIndex((r) => r.id === movedId);
+    const targetIndex =
+        targetId == null ? -1 : records.findIndex((r) => r.id === targetId);
+    if (fromIndex < 0 || (targetId != null && targetIndex < 0)) {
+        return {
+            toReorder: [],
+            offset: 0,
+            fromIndex,
+            toIndex: fromIndex,
+            reorderAll: false,
+        };
+    }
     let toIndex = 0;
     if (targetId !== null && targetId !== undefined) {
-        const targetIndex = records.findIndex((r) => r.id === targetId);
         toIndex = fromIndex > targetIndex ? targetIndex + 1 : targetIndex;
     }
 
@@ -52,17 +62,7 @@ export function computeResequencePlan({
     const [record] = reordered.splice(fromIndex, 1);
     reordered.splice(toIndex, 0, record);
 
-    let toReorder = reordered;
-    if (!reorderAll) {
-        toReorder = toReorder
-            .slice(firstIndex, lastIndex)
-            .filter((r) => r.id !== movedId);
-        if (fromIndex < toIndex) {
-            toReorder.push(record);
-        } else {
-            toReorder.unshift(record);
-        }
-    }
+    const toReorder = reorderAll ? reordered : reordered.slice(firstIndex, lastIndex);
     if (!asc) {
         toReorder.reverse();
     }
@@ -79,8 +79,8 @@ export function computeResequencePlan({
  * @param {string} params.resModel
  * @param {Record<string, any>} params.orm
  * @param {string} params.fieldName
- * @param {number} params.movedId
- * @param {number} [params.targetId]
+ * @param {number | string} params.movedId
+ * @param {number | string | null} [params.targetId]
  * @param {Boolean} [params.asc]
  * @param {(record: any) => number} [params.getSequence]
  * @param {(record: any) => number} [params.getResId]
@@ -99,11 +99,15 @@ export async function resequenceRecords({
     getResId = (record) => record.id,
     context,
 }) {
-    const { toReorder, offset, fromIndex, toIndex, reorderAll } = computeResequencePlan(
-        { records, movedId, targetId, getSequence, asc },
-    );
+    const { toReorder, offset, fromIndex, toIndex } = computeResequencePlan({
+        records,
+        movedId,
+        targetId,
+        getSequence,
+        asc,
+    });
 
-    if (fromIndex < 0) {
+    if (!toReorder.length) {
         return [];
     }
 
@@ -112,9 +116,6 @@ export async function resequenceRecords({
     if (fromIndex !== toIndex) {
         records.splice(fromIndex, 1);
         records.splice(toIndex, 0, record);
-    }
-    if (!asc && reorderAll) {
-        records.reverse();
     }
 
     const resIds = toReorder.map((d) => getResId(d)).filter((id) => id && !isNaN(id));

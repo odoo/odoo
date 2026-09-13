@@ -9,6 +9,7 @@ describe.current.tags("headless");
 /** @param {{ hasEditedRecord: boolean }} options */
 function makeList({ hasEditedRecord }) {
     const list = Object.create(DynamicList.prototype);
+    list._config = { resModel: "res.partner" };
     let askChangesCalls = 0;
     const record = {
         isInEdition: true,

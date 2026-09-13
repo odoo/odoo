@@ -5,6 +5,7 @@ import {
     cloneGroupTree,
     computeNextConfig,
 } from "@web/model/relational_model/config_transitions";
+import { getGroupKey } from "@web/model/relational_model/group_key";
 import { postprocessReadGroup } from "@web/model/relational_model/group_postprocessor";
 
 describe.current.tags("headless");
@@ -102,10 +103,18 @@ describe("candidate config isolation", () => {
         const candidate = computeNextConfig(committed, {}, DEPS);
 
         expect(candidate.groups).not.toBe(committed.groups);
-        expect(candidate.groups.A).not.toBe(committed.groups.A);
-        expect(candidate.groups.A.list).not.toBe(committed.groups.A.list);
-        expect(candidate.groups.A.list.limit).toBe(committed.groups.A.list.limit);
-        expect(candidate.groups.A.isFolded).toBe(committed.groups.A.isFolded);
+        expect(candidate.groups[getGroupKey("A")]).not.toBe(
+            committed.groups[getGroupKey("A")],
+        );
+        expect(candidate.groups[getGroupKey("A")].list).not.toBe(
+            committed.groups[getGroupKey("A")].list,
+        );
+        expect(candidate.groups[getGroupKey("A")].list.limit).toBe(
+            committed.groups[getGroupKey("A")].list.limit,
+        );
+        expect(candidate.groups[getGroupKey("A")].isFolded).toBe(
+            committed.groups[getGroupKey("A")].isFolded,
+        );
     });
 
     test("computeNextConfig still drops the groups tree when groupBy changes", async () => {
@@ -118,7 +127,7 @@ describe("candidate config isolation", () => {
     test("domain-change offset reset stays on the candidate", async () => {
         const committed = makeCommittedConfig();
         await seedGroups(committed, ["A"]);
-        committed.groups.A.list.offset = 40;
+        committed.groups[getGroupKey("A")].list.offset = 40;
 
         const candidate = computeNextConfig(
             committed,
@@ -126,8 +135,8 @@ describe("candidate config isolation", () => {
             DEPS,
         );
 
-        expect(candidate.groups.A.list.offset).toBe(0);
-        expect(committed.groups.A.list.offset).toBe(40);
+        expect(candidate.groups[getGroupKey("A")].list.offset).toBe(0);
+        expect(committed.groups[getGroupKey("A")].list.offset).toBe(40);
     });
 
     test("a superseded load's postprocess cannot clobber the winning config", async () => {
@@ -146,18 +155,22 @@ describe("candidate config isolation", () => {
         );
 
         await seedGroups(winningCandidate, ["A"]);
-        const winningDomain = winningCandidate.groups.A.list.domain;
+        const winningDomain = winningCandidate.groups[getGroupKey("A")].list.domain;
         expect(JSON.stringify(winningDomain)).toInclude("fresh");
 
         await seedGroups(staleCandidate, ["A"]);
 
-        expect(winningCandidate.groups.A.list.domain).toBe(winningDomain);
-        expect(JSON.stringify(winningCandidate.groups.A.list.domain)).toInclude(
-            "fresh",
+        expect(winningCandidate.groups[getGroupKey("A")].list.domain).toBe(
+            winningDomain,
         );
-        expect(JSON.stringify(winningCandidate.groups.A.list.domain)).not.toInclude(
-            "stale",
-        );
-        expect(JSON.stringify(staleCandidate.groups.A.list.domain)).toInclude("stale");
+        expect(
+            JSON.stringify(winningCandidate.groups[getGroupKey("A")].list.domain),
+        ).toInclude("fresh");
+        expect(
+            JSON.stringify(winningCandidate.groups[getGroupKey("A")].list.domain),
+        ).not.toInclude("stale");
+        expect(
+            JSON.stringify(staleCandidate.groups[getGroupKey("A")].list.domain),
+        ).toInclude("stale");
     });
 });

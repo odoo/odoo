@@ -86,7 +86,7 @@ export async function resequenceStaticList(staticList, movedId, targetId) {
     const order = staticList.orderBy.find((o) => o.name === handleField);
     const asc = !order || order.asc;
 
-    const { toReorder, offset, fromIndex } = computeResequencePlan({
+    const { toReorder, offset } = computeResequencePlan({
         records: staticList.records,
         movedId,
         targetId,
@@ -94,7 +94,7 @@ export async function resequenceStaticList(staticList, movedId, targetId) {
         asc,
     });
 
-    if (fromIndex < 0) {
+    if (!toReorder.length) {
         return;
     }
 

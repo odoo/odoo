@@ -61,9 +61,14 @@ export class UrgentSaveCoordinator extends StateMachine {
         this._reentrantProms = [];
         /** @type {Promise<any>[]} */
         const proms = [];
-        this._bus?.trigger(ModelEvent.WILL_SAVE_URGENTLY, { proms });
         try {
-            await Promise.allSettled(proms);
+            try {
+                this._bus?.trigger(ModelEvent.WILL_SAVE_URGENTLY, { proms });
+            } finally {
+                // A hook may register work before throwing. Observe that work
+                // on the failure path too, then restore the coordinator below.
+                await Promise.allSettled(proms);
+            }
             return await fn();
         } finally {
             let rounds = 0;

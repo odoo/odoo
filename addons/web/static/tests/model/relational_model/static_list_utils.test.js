@@ -1,6 +1,7 @@
 // @ts-check
 
 import { describe, expect, test } from "@odoo/hoot";
+import { makeLogger } from "@web/core/debug/debug_logger";
 import {
     compareRecords,
     computeNextOrderBy,
@@ -21,6 +22,33 @@ const m2oFields = {
 function makeRecord(data) {
     return { resId: data.id, data };
 }
+
+test("unset selections have a consistent position across every input permutation", () => {
+    const fields = { name: { type: "selection" } };
+    const rows = [false, "a", "b"].map((name) => makeRecord({ name }));
+    const permutations = [
+        [0, 1, 2],
+        [0, 2, 1],
+        [1, 0, 2],
+        [1, 2, 0],
+        [2, 0, 1],
+        [2, 1, 0],
+    ];
+    for (const asc of [true, false]) {
+        for (const permutation of permutations) {
+            const sorted = permutation
+                .map((i) => rows[i])
+                .sort((a, b) => compareRecords(a, b, [{ name: "name", asc }], fields))
+                .map((row) => row.data.name);
+            makeLogger("web.model.audit").logic("selection sort permutation", {
+                asc,
+                permutation,
+                sorted,
+            });
+            expect(sorted).toEqual(asc ? [false, "a", "b"] : ["b", "a", false]);
+        }
+    }
+});
 
 describe("compareRecords — char ascending", () => {
     test("returns -1 when r1 < r2", () => {

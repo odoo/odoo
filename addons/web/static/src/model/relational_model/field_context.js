@@ -1,17 +1,13 @@
 // @ts-check
 /** @odoo-module native */
 
+import { makeLogger } from "@web/core/debug/debug_logger";
 import { Domain } from "@web/core/domain";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { deepEqual, shallowEqual } from "@web/core/utils/collections/objects";
 
-/**
- * @param {Object} record
- * @param {string} fieldName
- * @param {string} [rawContext]
- * @returns {Object}
- */
 const CONTEXT_MEMO = new WeakMap();
+const log = makeLogger("web.model.field_context");
 
 function computeFieldContext(record, fieldName, rawContext) {
     const context = {};
@@ -36,23 +32,43 @@ function computeFieldContext(record, fieldName, rawContext) {
     };
 }
 
+/**
+ * Keep the last evaluated context per field and consumer. Weak consumer keys
+ * bound retention to live widgets rather than their expression history.
+ * @param {Object} record
+ * @param {string} fieldName
+ * @param {string} [rawContext]
+ * @param {object} [cacheOwner]
+ * @returns {Object}
+ */
 export function getFieldContext(
     record,
     fieldName,
     rawContext = record.activeFields[fieldName].context,
+    cacheOwner = record,
 ) {
     const fresh = computeFieldContext(record, fieldName, rawContext);
-    let byKey = CONTEXT_MEMO.get(record);
-    if (!byKey) {
-        byKey = new Map();
-        CONTEXT_MEMO.set(record, byKey);
+    let contextsByField = CONTEXT_MEMO.get(record);
+    if (!contextsByField) {
+        contextsByField = new Map();
+        CONTEXT_MEMO.set(record, contextsByField);
     }
-    const key = `${fieldName} ${rawContext ?? ""}`;
-    const previous = byKey.get(key);
-    if (previous && shallowEqual(previous, fresh, deepEqual)) {
+    let contextsByOwner = contextsByField.get(fieldName);
+    if (!contextsByOwner) {
+        contextsByOwner = new WeakMap();
+        contextsByField.set(fieldName, contextsByOwner);
+    }
+    const previous = contextsByOwner.get(cacheOwner);
+    const equivalent = !!previous && shallowEqual(previous, fresh, deepEqual);
+    log.logic("context lookup", () => ({
+        fieldName,
+        previous: !!previous,
+        equivalent,
+    }));
+    if (equivalent) {
         return previous;
     }
-    byKey.set(key, fresh);
+    contextsByOwner.set(cacheOwner, fresh);
     return fresh;
 }
 

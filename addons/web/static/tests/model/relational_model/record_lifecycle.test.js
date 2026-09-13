@@ -3,10 +3,13 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { markRaw } from "@odoo/owl";
 import { MODEL_LIFECYCLE_PROTO } from "@web/../tests/model/relational_model/model_doubles";
+import { makeTestRelationalModel } from "@web/../tests/model/relational_model/model_test_helpers";
 import {
     installEditState,
     RECORD_STATE_TRANSITIONS,
 } from "@web/../tests/model/relational_model/record_doubles";
+import { makeLogger } from "@web/core/debug/debug_logger";
+import { makeActiveField } from "@web/model/relational_model/field_metadata";
 import {
     archive,
     deleteRecord,
@@ -241,7 +244,7 @@ describe("deleteRecord state reset (last record)", () => {
         await deleteRecord(rec);
         expect(loadCalled).toBe(false);
         expect(patchConfigArgs).toEqual({
-            patch: { resId: false },
+            patch: { resId: false, resIds: [] },
         });
         expect(rec._textValues).toEqual({});
         expect(rec._values).toEqual({ id: false, name: false });
@@ -325,4 +328,87 @@ describe("duplicateRecord", () => {
             context: { default_user_id: 3, lang: "fr_FR" },
         });
     });
+});
+
+async function makeLifecycleModel() {
+    const model = await makeTestRelationalModel({
+        loadRecords: async (config) => [{ id: config.resId, name: "Test" }],
+    });
+    model.patchConfig(model.config, {
+        isMonoRecord: true,
+        mode: "readonly",
+        resId: 1,
+        resIds: [1],
+        fields: { name: { name: "name", type: "char" } },
+        activeFields: { name: makeActiveField() },
+    });
+    await model.load();
+    return model;
+}
+
+test("deleting the last record removes its id from the live navigation state", async () => {
+    const model = await makeLifecycleModel();
+    model.orm = { ...model.orm, unlink: async () => true };
+    await model.root.delete();
+    expect(model.root.resId).toBe(false);
+    expect(model.root.resIds).toEqual([]);
+    expect(model.config.resIds).toEqual([]);
+    model.loadNewRecord = async () => ({ name: "" });
+    await model.load();
+    expect(model.root.isInEdition).toBe(true);
+    await model.root.update({ name: "Replacement" }, { withoutOnchange: true });
+    model.orm = {
+        ...model.orm,
+        webSave: async (_model, ids, values) => {
+            expect(ids).toEqual([]);
+            expect(values).toEqual({ name: "Replacement" });
+            return [{ id: 42, name: "Replacement" }];
+        },
+    };
+    await model.root.save();
+    makeLogger("web.model.audit").logic("delete then create navigation", {
+        resId: model.root.resId,
+        resIds: model.root.resIds,
+    });
+    expect(model.root.resIds).toEqual([42]);
+    expect(model.root.resId).toBe(42);
+});
+
+test("duplicating a readonly record loads the actual new root in edit mode", async () => {
+    const model = await makeLifecycleModel();
+    model.orm = { ...model.orm, call: async () => [42] };
+    await model.root.duplicate();
+    expect(model.root.resId).toBe(42);
+    expect(model.root.resIds).toEqual([1, 42]);
+    expect(model.root.isInEdition).toBe(true);
+    expect(model.config.mode).toBe("edit");
+});
+
+test("failed duplicate loading preserves the original root and readonly mode", async () => {
+    const model = await makeLifecycleModel();
+    const original = model.root;
+    model.orm = { ...model.orm, call: async () => [42] };
+    model.loadRecords = async () => {
+        throw new Error("read failed");
+    };
+    let failure;
+    try {
+        await model.root.duplicate();
+    } catch (error) {
+        failure = error;
+    }
+    makeLogger("web.model.audit").logic("duplicate read failure", {
+        failure: failure?.message,
+        mode: model.config.mode,
+        resIds: model.config.resIds,
+    });
+    expect(failure?.message).toBe("read failed");
+    expect(model.root).toBe(original);
+    expect(model.root.resIds).toEqual([1]);
+    expect(model.config.mode).toBe("readonly");
+    model.loadRecords = async () => [{ id: 1, name: "Test" }];
+    await model.load({ mode: "edit" });
+    expect(model.root.isInEdition).toBe(true);
+    await model.load({ mode: "readonly" });
+    expect(model.root.isInEdition).toBe(false);
 });

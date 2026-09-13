@@ -1,10 +1,19 @@
 // @ts-check
 
 import { describe, expect, test } from "@odoo/hoot";
+import { animationFrame } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
-import { defineModels, fields, models } from "@web/../tests/web_test_helpers";
+import {
+    defineModels,
+    fields,
+    models,
+    mountView,
+    patchWithCleanup,
+} from "@web/../tests/web_test_helpers";
+import { makeLogger } from "@web/core/debug/debug_logger";
 import { registry } from "@web/core/registry";
 import {
+    Field,
     fieldVisualFeedback,
     getFieldFromRegistry,
     getPropertyFieldInfo,
@@ -18,6 +27,47 @@ class Partner extends models.Model {
     _records = [{ id: 1, name: "a" }];
 }
 defineModels([Partner]);
+
+test("duplicate field widgets preserve their own context objects across renders", async () => {
+    const seen = [];
+    const owners = [];
+    patchWithCleanup(Field.prototype, {
+        setup() {
+            super.setup(...arguments);
+            owners.push(this);
+        },
+    });
+    class Probe extends Component {
+        static props = ["*"];
+        static template = xml`<span t-esc="props.record.data.name"/>`;
+    }
+    registry.category("fields").add("context_owner_probe", {
+        component: Probe,
+        supportedTypes: ["char"],
+        extractProps(_fieldInfo, dynamicInfo) {
+            seen.push(dynamicInfo.context);
+            return {};
+        },
+    });
+    await mountView({
+        resModel: "res.partner",
+        resId: 1,
+        type: "form",
+        arch: `<form><field name="name" widget="context_owner_probe" context="{'limit': 10}"/><field name="name" widget="context_owner_probe" context="{'limit': 20}"/></form>`,
+    });
+    expect(owners).toHaveLength(2);
+    await Promise.all(owners.map((owner) => owner.render(true)));
+    await animationFrame();
+    makeLogger("web.model.audit").logic(
+        "rendered field context owners",
+        JSON.stringify({ owners: owners.length, reads: seen.length, contexts: seen }),
+    );
+    for (const limit of [10, 20]) {
+        const contexts = seen.filter((context) => context.limit === limit);
+        expect(contexts.length).toBeGreaterThan(1);
+        expect(contexts.every((context) => context === contexts[0])).toBe(true);
+    }
+});
 
 /** @param {Partial<any>} [overrides] */
 /**

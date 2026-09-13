@@ -703,8 +703,22 @@ export class DynamicList extends EditableListDataPoint {
             getSequence,
             getResId,
         });
+        if (!resequencedRecords.length) {
+            return;
+        }
+        const datapointsByResId = new Map();
+        const pendingIds = new Set(resequencedRecords.map((record) => record.id));
+        for (const dp of originalList) {
+            const resId = getResId(dp);
+            if (pendingIds.delete(resId)) {
+                datapointsByResId.set(resId, dp);
+            }
+            if (!pendingIds.size) {
+                break;
+            }
+        }
         for (const dpData of resequencedRecords) {
-            const dp = originalList.find((d) => getResId(d) === dpData.id);
+            const dp = datapointsByResId.get(dpData.id);
             if (dp instanceof RelationalRecord) {
                 dp.applyValues(dpData);
             } else {

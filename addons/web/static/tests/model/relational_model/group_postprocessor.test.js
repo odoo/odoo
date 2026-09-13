@@ -1,7 +1,13 @@
 // @ts-check
 
 import { describe, expect, test } from "@odoo/hoot";
+import { makeTestRelationalModel } from "@web/../tests/model/relational_model/model_test_helpers";
+import { makeLogger } from "@web/core/debug/debug_logger";
+import { computeNextConfig } from "@web/model/relational_model/config_transitions";
+import { DynamicGroupList } from "@web/model/relational_model/dynamic_group_list";
+import { getGroupKey } from "@web/model/relational_model/group_key";
 import { postprocessReadGroup } from "@web/model/relational_model/group_postprocessor";
+import { getWebReadGroupParams } from "@web/model/relational_model/read_group_builder";
 
 /** @returns {import("@web/model/relational_model/relational_model").RelationalModelConfig} */
 function makeConfig() {
@@ -29,6 +35,50 @@ const DEPS = {
     initialGroupsLimit: 10,
     defaultGroupLimit: 10,
 };
+
+test("an unset selection group stays distinct from a literal false selection on reload", async () => {
+    const model = await makeTestRelationalModel({});
+    const config = makeConfig();
+    config.fields.name = {
+        name: "name",
+        type: "selection",
+        selection: [["false", "Literal false"]],
+    };
+    const response = {
+        length: 2,
+        groups: [false, "false"].map((name, index) => ({
+            ...makeGroupData(name),
+            __records: [{ id: index + 1 }],
+        })),
+    };
+    const first = new DynamicGroupList(
+        model,
+        config,
+        await postprocessReadGroup(config, response, DEPS),
+    );
+    const next = computeNextConfig(config, {}, { hasRoot: true });
+    const second = new DynamicGroupList(
+        model,
+        next,
+        await postprocessReadGroup(next, response, DEPS),
+        { previousRoot: first },
+    );
+    makeLogger("web.model.audit").logic("typed selection group identities", {
+        keys: Object.keys(next.groups),
+        domains: second.groups.map((g) => g.list.domain),
+    });
+    expect(second.groups.map((g) => g.value)).toEqual([false, "false"]);
+    expect(second.groups[0].config).not.toBe(second.groups[1].config);
+    expect(
+        getWebReadGroupParams(next, DEPS).params.opening_info.map(
+            (group) => group.value,
+        ),
+    ).toEqual([false, "false"]);
+    for (let i = 0; i < 2; i++) {
+        expect(second.groups[i].list.context.default_name).toBe(i ? "false" : false);
+        expect(second.groups[i].list.records[0]).toBe(first.groups[i].list.records[0]);
+    }
+});
 
 function makeGroupData(name, count = 1) {
     return {
@@ -133,4 +183,81 @@ describe("sticky-empty group re-insertion", () => {
         expect(sticky.groups).toEqual([]);
         expect(groups[1].groups.map((g) => g.value)).toEqual(["x", "y"]);
     });
+});
+
+for (const name of ["constructor", "toString", "__proto__"]) {
+    test(`group value ${name} survives loading and config cloning as an own key`, async () => {
+        const config = makeConfig();
+        const { groups } = await runPostprocess(config, [name]);
+        expect(groups.map((g) => g.value)).toEqual([name]);
+        expect(Object.hasOwn(config.groups, getGroupKey(name))).toBe(true);
+        const next = computeNextConfig(config, {}, { hasRoot: true });
+        expect(Object.hasOwn(next.groups, getGroupKey(name))).toBe(true);
+        expect(next.groups[getGroupKey(name)]).not.toBe(
+            config.groups[getGroupKey(name)],
+        );
+        const reloaded = await runPostprocess(next, [name]);
+        expect(reloaded.groups.map((g) => g.value)).toEqual([name]);
+        expect(Object.getPrototypeOf(config.groups)).toBe(Object.prototype);
+    });
+}
+
+test("prototype-like keys remain separate in real nested group datapoints after reload", async () => {
+    const model = await makeTestRelationalModel({});
+    const config = {
+        ...makeConfig(),
+        fields: {
+            name: { name: "name", type: "char" },
+            child: { name: "child", type: "char" },
+        },
+        groupBy: ["name", "child"],
+    };
+    const names = ["constructor", "toString", "__proto__"];
+    const response = {
+        length: 3,
+        groups: names.map((name, index) => ({
+            ...makeGroupData(name),
+            __groups: {
+                length: 1,
+                groups: [
+                    {
+                        __count: 1,
+                        __extra_domain: [["child", "=", name]],
+                        child: name,
+                        __records: [{ id: index + 1 }],
+                    },
+                ],
+            },
+        })),
+    };
+    const first = new DynamicGroupList(
+        model,
+        config,
+        await postprocessReadGroup(config, response, DEPS),
+    );
+    const next = computeNextConfig(config, {}, { hasRoot: true });
+    const second = new DynamicGroupList(
+        model,
+        next,
+        await postprocessReadGroup(next, response, DEPS),
+        { previousRoot: first },
+    );
+    const ids = second.groups.map((g) => g.list.groups[0].list.records[0].resId);
+    makeLogger("web.model.audit").logic("nested prototype group reload", {
+        names,
+        ids,
+    });
+    expect(ids).toEqual([1, 2, 3]);
+    for (let i = 0; i < names.length; i++) {
+        expect(second.groups[i].value).toBe(names[i]);
+        expect(second.groups[i].list.groups[0].value).toBe(names[i]);
+        expect(second.groups[i].list.groups[0].list.records[0]).toBe(
+            first.groups[i].list.groups[0].list.records[0],
+        );
+        expect(
+            next.groups[getGroupKey(names[i])].list.groups[getGroupKey(names[i])],
+        ).not.toBe(
+            config.groups[getGroupKey(names[i])].list.groups[getGroupKey(names[i])],
+        );
+    }
 });

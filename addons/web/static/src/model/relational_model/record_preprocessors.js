@@ -181,6 +181,11 @@ export async function preprocessX2manyChanges(record, changes) {
  * @param {Record<string, any>} changes
  */
 export function preprocessPropertiesChanges(record, changes) {
+    const relatedChanges = Object.fromEntries(
+        Object.entries(changes).filter(
+            ([name]) => record.fields[name]?.relatedPropertyField,
+        ),
+    );
     for (const [fieldName, value] of Object.entries(changes)) {
         const field = record.fields[fieldName];
         if (field.type === "properties") {
@@ -192,9 +197,32 @@ export function preprocessPropertiesChanges(record, changes) {
                 changes,
                 record.processProperties(value, fieldName, parent, record.data),
             );
-        } else if (field?.relatedPropertyField) {
+        }
+    }
+    // Explicit dotted edits take precedence over the aggregate, regardless of
+    // the insertion order of the keys in an update.
+    Object.assign(changes, relatedChanges);
+    preprocessRelatedPropertyChanges(record, changes, Object.keys(relatedChanges));
+}
+
+/**
+ * Compose the aggregate from the current dotted values. This also runs after
+ * asynchronous relation completion, which can replace those values.
+ * @param {RelationalRecord} record
+ * @param {Record<string, any>} changes
+ * @param {string[]} fieldNames Explicit dotted edits, not fields derived from an aggregate.
+ */
+export function preprocessRelatedPropertyChanges(record, changes, fieldNames) {
+    for (const fieldName of fieldNames) {
+        if (!Object.hasOwn(changes, fieldName)) {
+            continue;
+        }
+        const value = changes[fieldName];
+        const field = record.fields[fieldName];
+        if (field?.relatedPropertyField) {
             const [propertyFieldName, propertyName] = field.name.split(".");
             const propertiesData =
+                changes[propertyFieldName] ||
                 /** @type {Record<string, any>} */ (record.data)[propertyFieldName] ||
                 [];
             if (
@@ -212,10 +240,40 @@ export function preprocessPropertiesChanges(record, changes) {
             }
             changes[propertyFieldName] = propertiesData.map(
                 (/** @type {any} */ property) =>
-                    property.name === propertyName ? { ...property, value } : property,
+                    property.name === propertyName
+                        ? {
+                              ...property,
+                              value:
+                                  field.type === "many2many" && value?.records
+                                      ? getPropertyListValue(
+                                            value,
+                                            record.data[propertyFieldName]?.find(
+                                                (property) =>
+                                                    property.name === propertyName,
+                                            )?.value,
+                                        )
+                                      : value,
+                          }
+                        : property,
             );
         }
     }
+}
+
+/**
+ * Properties serialize complete membership, not the visible page of a list.
+ * @param {import("./static_list").StaticList} list
+ * @param {[number, string][] | false | undefined} previousValue
+ */
+function getPropertyListValue(list, previousValue) {
+    const previousNames = new Map(previousValue || []);
+    return list.currentIds.map((id) => {
+        const record = list.getCachedRecord(id);
+        return [
+            record?.resId || id,
+            record?.data.display_name ?? previousNames.get(/** @type {number} */ (id)),
+        ];
+    });
 }
 
 /**

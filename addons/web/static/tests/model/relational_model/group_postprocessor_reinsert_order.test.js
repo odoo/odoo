@@ -1,6 +1,7 @@
 // @ts-check
 
 import { describe, expect, test } from "@odoo/hoot";
+import { getGroupKey } from "@web/model/relational_model/group_key";
 import { postprocessReadGroup } from "@web/model/relational_model/group_postprocessor";
 
 function makeConfig() {
@@ -101,7 +102,7 @@ describe("sticky-empty merge properties", () => {
                 ? forgettable[Math.floor(rng() * forgettable.length)]
                 : null;
             if (forgotten !== null) {
-                delete config.groups[forgotten];
+                delete config.groups[getGroupKey(forgotten)];
             }
 
             const { groups } = await runPostprocess(config, survivors);

@@ -462,12 +462,14 @@ export class Field extends Component {
                     };
                 }
 
+                const contextOwner = this;
                 const dynamicInfo = {
                     get context() {
                         return getFieldContext(
                             record,
                             fieldInfo.name,
                             fieldInfo.context,
+                            contextOwner,
                         );
                     },
                     domain: this.dynamicDomain,

@@ -26,6 +26,7 @@ import {
     preprocessMany2OneReferenceChanges,
     preprocessPropertiesChanges,
     preprocessReferenceChanges,
+    preprocessRelatedPropertyChanges,
     preprocessX2manyChanges,
 } from "./record_preprocessors.js";
 import { processProperties as processRecordProperties } from "./record_properties.js";
@@ -1052,6 +1053,9 @@ export class RelationalRecord extends DataPoint {
      * @returns {Promise<unknown[]>}
      */
     _preprocessChanges(changes) {
+        const relatedPropertyNames = Object.keys(changes).filter(
+            (name) => this.fields[name]?.relatedPropertyField,
+        );
         return Promise.all([
             preprocessMany2oneChanges(this, changes),
             preprocessMany2OneReferenceChanges(this, changes),
@@ -1059,7 +1063,12 @@ export class RelationalRecord extends DataPoint {
             preprocessX2manyChanges(this, changes),
             preprocessPropertiesChanges(this, changes),
             preprocessHtmlChanges(this, changes),
-        ]);
+        ]).then((results) => {
+            // Keep the initial synchronous composition for urgent saves, but
+            // replace incomplete relation values before a normal save/onchange.
+            preprocessRelatedPropertyChanges(this, changes, relatedPropertyNames);
+            return results;
+        });
     }
 
     /**

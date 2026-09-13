@@ -5,6 +5,7 @@ import { Domain } from "@web/core/domain";
 
 import { makeActiveField } from "./field_metadata.js";
 import { extractInfoFromGroupData } from "./field_values.js";
+import { getGroupKey } from "./group_key.js";
 
 /** @import { RelationalModelConfig } from "./relational_model.js" */
 
@@ -52,8 +53,9 @@ async function loadPropertyGroupBy(ctx, groupByFieldName) {
 function upsertGroupConfig(ctx, currentConfig, group, level) {
     const { commonConfig, deps } = ctx;
     const { groupByFieldName, nextLevelGroupBy } = level;
-    if (!currentConfig.groups[group.value]) {
-        currentConfig.groups[group.value] = {
+    const key = getGroupKey(group.value);
+    if (!Object.hasOwn(currentConfig.groups, key)) {
+        const groupConfig = {
             ...commonConfig,
             groupByFieldName,
             extraDomain: false,
@@ -67,9 +69,10 @@ function upsertGroupConfig(ctx, currentConfig, group, level) {
                     : deps.initialGroupsLimit || deps.defaultGroupLimit,
             },
         };
+        currentConfig.groups[key] = groupConfig;
     }
 
-    const groupConfig = currentConfig.groups[group.value];
+    const groupConfig = currentConfig.groups[key];
     groupConfig.list.orderBy = currentConfig.orderBy;
     groupConfig.initialDomain = group.domain;
     groupConfig.list.domain = groupConfig.extraDomain
@@ -193,16 +196,16 @@ function reinsertEmptiedGroups(config, groups, params) {
         return;
     }
     const currentGroups = /** @type {any[]} */ (config.currentGroups.groups);
-    const mergedKeys = groups.map((g) => JSON.stringify(g.value));
+    const mergedKeys = groups.map((g) => getGroupKey(g.value));
     const survivingKeys = new Set(mergedKeys);
     let cursor = 0;
     for (const group of currentGroups) {
-        const key = JSON.stringify(group.value);
+        const key = getGroupKey(group.value);
         if (survivingKeys.has(key)) {
             cursor = Math.max(cursor, mergedKeys.indexOf(key) + 1);
             continue;
         }
-        if (!(/** @type {Record<string, any>} */ (config.groups)[group.value])) {
+        if (!Object.hasOwn(config.groups, key)) {
             continue;
         }
         const aggregates = { ...group.aggregates };

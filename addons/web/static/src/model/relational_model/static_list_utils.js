@@ -1,13 +1,6 @@
 // @ts-check
 /** @odoo-module native */
 
-/**
- * @param {any} v1
- * @param {any} v2
- * @param {string} fieldType
- * @returns {boolean}
- */
-
 import { x2ManyCommands } from "@web/core/network/commands";
 
 /** @import { DatapointId } from "@web/model/types" */
@@ -22,22 +15,25 @@ export function listId(record) {
     return /** @type {DatapointId} */ (record.resId || record.virtualId);
 }
 
-function compareFieldValues(v1, v2, fieldType) {
+/**
+ * @param {any} value
+ * @param {string} fieldType
+ * @returns {any}
+ */
+function getSortValue(value, fieldType) {
     if (fieldType === "many2one") {
-        v1 = v1 ? v1.display_name : "";
-        v2 = v2 ? v2.display_name : "";
-    } else if (
-        fieldType === "integer" ||
-        fieldType === "float" ||
-        fieldType === "monetary"
-    ) {
-        v1 = v1 ?? 0;
-        v2 = v2 ?? 0;
-    } else {
-        v1 = v1 ?? "";
-        v2 = v2 ?? "";
+        return value ? value.display_name : "";
     }
-    return v1 < v2;
+    if (fieldType === "integer" || fieldType === "float" || fieldType === "monetary") {
+        return value ?? 0;
+    }
+    // An unset selection is false, unlike char values deserialized to "".
+    // Comparing false with nonnumeric strings makes both directions false,
+    // incorrectly tying the unset value with every option.
+    if (fieldType === "selection" && value === false) {
+        return "";
+    }
+    return value ?? "";
 }
 
 /**
@@ -48,20 +44,16 @@ function compareFieldValues(v1, v2, fieldType) {
  * @returns {number}
  */
 export function compareRecords(r1, r2, orderBy, fields) {
-    const { name, asc } = orderBy[0];
-    function getValue(record, fieldName) {
-        return fieldName === "id" ? record.resId : record.data[fieldName];
-    }
-    const v1 = asc ? getValue(r1, name) : getValue(r2, name);
-    const v2 = asc ? getValue(r2, name) : getValue(r1, name);
-    if (compareFieldValues(v1, v2, fields[name].type)) {
-        return -1;
-    }
-    if (compareFieldValues(v2, v1, fields[name].type)) {
-        return 1;
-    }
-    if (orderBy.length > 1) {
-        return compareRecords(r1, r2, orderBy.slice(1), fields);
+    for (const { name, asc } of orderBy) {
+        const type = fields[name].type;
+        const v1 = getSortValue(name === "id" ? r1.resId : r1.data[name], type);
+        const v2 = getSortValue(name === "id" ? r2.resId : r2.data[name], type);
+        if (v1 < v2) {
+            return asc ? -1 : 1;
+        }
+        if (v2 < v1) {
+            return asc ? 1 : -1;
+        }
     }
     return 0;
 }
@@ -154,13 +146,24 @@ export function pairCreatedRows(createVirtualIds, newResIds, positions) {
     const pairs = new Map(
         createVirtualIds.map((virtualId, index) => [virtualId, ranked[index]]),
     );
-    if (positions) {
+    if (positions && pairs.size) {
         const { clientIds, serverIds } = positions;
-        for (const [virtualId, resId] of pairs) {
-            if (clientIds.indexOf(virtualId) !== serverIds.indexOf(resId)) {
+        const unmatched = new Set(pairs.keys());
+        for (let index = 0; index < clientIds.length; index++) {
+            const virtualId = clientIds[index];
+            if (!unmatched.delete(virtualId)) {
+                continue;
+            }
+            if (serverIds[index] !== pairs.get(virtualId)) {
                 return null;
             }
+            if (!unmatched.size) {
+                return pairs;
+            }
         }
+        // Missing positions are not evidence of identity, even when both
+        // memberships omit the row. Every proposed pair must be witnessed.
+        return null;
     }
     return pairs;
 }

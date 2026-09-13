@@ -64,7 +64,7 @@ export async function deleteRecord(record) {
     if (resId) {
         await record.model.load({ resId, resIds });
     } else {
-        record.model.patchConfig(record.config, { resId: false });
+        record.model.patchConfig(record.config, { resId: false, resIds });
         record.resetValues(record.parseServerValues(record.getDefaultValues()));
     }
 }

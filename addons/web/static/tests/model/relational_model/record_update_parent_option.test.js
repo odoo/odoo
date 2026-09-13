@@ -14,6 +14,7 @@ function makeRecord({ urgent = false } = {}) {
     const seen = [];
     const record = Object.create(RelationalRecord.prototype);
     Object.assign(record, {
+        _config: { resModel: "res.partner", resId: 1 },
         model: {
             urgentSave: { isActive: urgent },
             mutex: { exec: (/** @type {() => any} */ fn) => fn() },

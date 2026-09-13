@@ -5,6 +5,7 @@ import { Domain } from "@web/core/domain";
 
 import { DynamicList } from "./dynamic_list.js";
 import { getGroupServerValue } from "./field_values.js";
+import { getGroupKey } from "./group_key.js";
 
 /** @import { DynamicListContract } from "./dynamic_list_contract.js" */
 /** @import { RelationalRecord } from "./record.js" */
@@ -56,11 +57,11 @@ export class DynamicGroupList extends DynamicList {
             this._nbRecordsMatchingDomain = null;
         }
         const previousLists = new Map(
-            this.groups.map((group) => [String(group.value), group.list]),
+            this.groups.map((group) => [getGroupKey(group.value), group.list]),
         );
         this.groups = data.groups.map((g) =>
             this._createGroupDatapoint(g, {
-                previousList: previousLists.get(String(g.value)),
+                previousList: previousLists.get(getGroupKey(g.value)),
             }),
         );
         this.count = data.length;
@@ -288,7 +289,7 @@ export class DynamicGroupList extends DynamicList {
         ]).toList();
         const groupBy = this.groupBy.slice(1);
         const nextConfigGroups = { ...this.config.groups };
-        nextConfigGroups[id] = {
+        nextConfigGroups[getGroupKey(id)] = {
             ...commonConfig,
             context,
             groupByFieldName: this.groupByField.name,
@@ -369,7 +370,7 @@ export class DynamicGroupList extends DynamicList {
     _createGroupDatapoint(data, { previousList } = {}) {
         return new this.model.Class.Group(
             this.model,
-            /** @type {any} */ (this.config.groups[data.value]),
+            /** @type {any} */ (this.config.groups[getGroupKey(data.value)]),
             data,
             { previousList },
         );
@@ -383,7 +384,7 @@ export class DynamicGroupList extends DynamicList {
         }
         const configGroups = { ...this.config.groups };
         for (const group of groups) {
-            delete configGroups[group.value];
+            delete configGroups[getGroupKey(group.value)];
         }
         if (shouldReload) {
             await this.model.reloadWithConfig(

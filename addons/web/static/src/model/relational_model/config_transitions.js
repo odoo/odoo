@@ -40,6 +40,7 @@ export function computeNextConfig(currentConfig, params, deps) {
     config.context = { ...config.context };
 
     if (currentConfig.isMonoRecord) {
+        config.mode = pickParam(params, "mode", config.mode);
         config.resId = pickParam(params, "resId", config.resId);
         config.resIds = pickParam(params, "resIds", config.resIds);
         if (!config.resIds) {
@@ -107,21 +108,21 @@ export function computeNextConfig(currentConfig, params, deps) {
  * @returns {Record<string, any>}
  */
 export function cloneGroupTree(groups) {
-    /** @type {Record<string, any>} */
-    const cloned = {};
-    for (const [value, groupConfig] of Object.entries(groups)) {
-        cloned[value] = {
-            ...groupConfig,
-            list: {
-                ...groupConfig.list,
-                groups: groupConfig.list?.groups
-                    ? cloneGroupTree(groupConfig.list.groups)
-                    : groupConfig.list?.groups,
-            },
-        };
-        if (groupConfig.record) {
-            cloned[value].record = { ...groupConfig.record };
-        }
-    }
-    return cloned;
+    return Object.fromEntries(
+        Object.entries(groups).map(([value, groupConfig]) => {
+            const cloned = {
+                ...groupConfig,
+                list: {
+                    ...groupConfig.list,
+                    groups: groupConfig.list?.groups
+                        ? cloneGroupTree(groupConfig.list.groups)
+                        : groupConfig.list?.groups,
+                },
+            };
+            if (groupConfig.record) {
+                cloned.record = { ...groupConfig.record };
+            }
+            return [value, cloned];
+        }),
+    );
 }

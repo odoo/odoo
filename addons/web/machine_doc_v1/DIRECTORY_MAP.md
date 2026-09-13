@@ -161,7 +161,7 @@
 | `libs/fontawesome7/css/` | misc | 0 | FontAwesome 7 stylesheets |
 | `libs/fontawesome7/webfonts/` | misc | 0 | FontAwesome 7 webfont files |
 | `model/` | entities | 10 | `Model` base + `useReactiveModel`, the sample-data server/generators/coordinator, search-param schema, shared model types |
-| `model/relational_model/` | entities | 41 | Relational data model: `RelationalModel`, `RelationalRecord`, lists and groups, save/validation orchestration, edit-state ownership |
+| `model/relational_model/` | entities | 42 | Relational data model: `RelationalModel`, `RelationalRecord`, lists and groups, save/validation orchestration, edit-state ownership |
 | `public/` | pages | 17 | Public (anonymous) page runtime: the `public.interactions` service, `Interaction`/`Colibri`, frontend boot (`public_boot.js`, `public_boot_instance.js`), early-boot `lazyloader.js` / `minimal_dom.js`, login-page interactions, database manager |
 | `scss/` | misc | 0 | Shared SCSS base (variables, mixins, backend styles) — 32 `.scss`, no JS |
 | `search/` | widgets | 18 | Search model and its mixins (domain, group-by, favorites, properties, query, split-domain), search facets/state/context, arch parser, layout, pager hook |

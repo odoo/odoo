@@ -1,13 +1,64 @@
 // @ts-check
 
 import { describe, expect, test } from "@odoo/hoot";
+import { makeLogger } from "@web/core/debug/debug_logger";
 import {
     getBasicEvalContext,
+    getFieldContext,
     getId,
     isRelational,
 } from "@web/model/relational_model/field_context";
 
 describe.current.tags("headless");
+
+test("two live consumers of one field retain independent context identities", () => {
+    const record = {
+        context: {},
+        fields: { owner: {} },
+        activeFields: { owner: { context: "{}" } },
+        evalContext: {},
+    };
+    const firstWidget = {};
+    const secondWidget = {};
+    const first = getFieldContext(record, "owner", "{'limit': 10}", firstWidget);
+    const second = getFieldContext(record, "owner", "{'limit': 20}", secondWidget);
+    const repeated = getFieldContext(record, "owner", "{'limit': 10}", firstWidget);
+    makeLogger("web.model.audit").logic("field context owner isolation", {
+        first,
+        second,
+        reused: repeated === first,
+    });
+    expect(repeated).toBe(first);
+    expect(getFieldContext(record, "owner", "{'limit': 20}", secondWidget)).toBe(
+        second,
+    );
+});
+
+test("equivalent context expressions preserve identity while changing values invalidate it", () => {
+    const record = {
+        context: {
+            lang: "en_US",
+            default_name: "excluded",
+            search_default_name: 1,
+            form_view_ref: "excluded",
+        },
+        fields: { owner: { context: { lang: "fr_FR" } } },
+        activeFields: { owner: { context: "{}" } },
+        evalContext: { chosen: 7 },
+    };
+    const first = getFieldContext(record, "owner", "{'owner': chosen}");
+    const same = getFieldContext(record, "owner", "{'owner': 7}");
+    expect(first).toEqual({ lang: "fr_FR", owner: 7 });
+    expect(same).toBe(first);
+    record.evalContext.chosen = 8;
+    const changed = getFieldContext(record, "owner", "{'owner': chosen}");
+    makeLogger("web.model.audit").logic("field context invalidation", {
+        first,
+        changed,
+    });
+    expect(changed).toEqual({ lang: "fr_FR", owner: 8 });
+    expect(changed).not.toBe(first);
+});
 
 describe("getId", () => {
     test("returns unique string IDs on successive calls", () => {

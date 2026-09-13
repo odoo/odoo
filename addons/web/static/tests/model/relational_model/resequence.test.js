@@ -1,6 +1,10 @@
 // @ts-check
 
 import { describe, expect, test } from "@odoo/hoot";
+import { makeTestRelationalModel } from "@web/../tests/model/relational_model/model_test_helpers";
+import { makeLogger } from "@web/core/debug/debug_logger";
+import { DynamicRecordList } from "@web/model/relational_model/dynamic_record_list";
+import { makeActiveField } from "@web/model/relational_model/field_metadata";
 import {
     computeResequencePlan,
     resequenceRecords,
@@ -357,5 +361,178 @@ describe("resequence — descending order", () => {
         });
 
         expect(orm.calls.length).toBe(1);
+    });
+});
+
+describe("resequence stale drag inputs", () => {
+    /** @type {[string, number[][], number, number | null][]} */
+    const cases = [
+        ["empty list", [], 99, null],
+        [
+            "missing source",
+            [
+                [1, 10],
+                [2, 20],
+            ],
+            99,
+            1,
+        ],
+        [
+            "missing target",
+            [
+                [1, 10],
+                [2, 20],
+            ],
+            2,
+            99,
+        ],
+    ];
+    for (const [name, specs, movedId, targetId] of cases) {
+        test(`${name} leaves the list and server untouched`, async () => {
+            const records = makeRecords(specs);
+            const orm = makeMockOrm();
+            const plan = computeResequencePlan({
+                records,
+                movedId,
+                targetId,
+                getSequence: (r) => r.sequence,
+            });
+            expect(plan.toReorder).toEqual([]);
+            const result = await resequenceRecords({
+                records,
+                movedId,
+                targetId,
+                orm,
+                resModel: "x",
+                fieldName: "sequence",
+            });
+            expect(result).toEqual([]);
+            expect(orm.calls).toEqual([]);
+            expect(records).toEqual(makeRecords(specs));
+        });
+    }
+});
+
+test("descending full reorder keeps display order opposite to ascending server writes", async () => {
+    const records = makeRecords([
+        [1, 10],
+        [2, 10],
+        [3, 10],
+    ]);
+    const orm = makeMockOrm();
+    const result = await resequenceRecords({
+        records,
+        orm,
+        resModel: "x",
+        fieldName: "sequence",
+        movedId: 3,
+        targetId: null,
+        asc: false,
+    });
+    expect(records.map((r) => r.id)).toEqual([3, 1, 2]);
+    expect(orm.calls[0].resIds).toEqual([2, 1, 3]);
+    const sequences = new Map(result.map((r) => [r.id, r.sequence]));
+    expect(records.map((r) => sequences.get(r.id))).toEqual([12, 11, 10]);
+});
+
+for (const span of [2, 64]) {
+    test(`applying a ${span}-row resequence stops indexing after its last result`, async () => {
+        const model = await makeTestRelationalModel({});
+        model.orm = { ...model.orm, ...makeMockOrm() };
+        const size = 64;
+        let lookups = 0;
+        class CountingList extends DynamicRecordList {
+            _getDPresId(record) {
+                lookups++;
+                return super._getDPresId(record);
+            }
+        }
+        const list = new CountingList(
+            model,
+            {
+                ...model.config,
+                fields: { sequence: { name: "sequence", type: "integer" } },
+                activeFields: { sequence: makeActiveField({ isHandle: true }) },
+                orderBy: [{ name: "sequence", asc: true }],
+            },
+            {
+                records: Array.from({ length: size }, (_, index) => ({
+                    id: index + 1,
+                    sequence: index + 1,
+                })),
+                length: size,
+            },
+        );
+        await list.resequence(list.records[0].id, list.records[span - 1].id);
+        expect(list.records.map((r) => r.resId)).toEqual([
+            ...Array.from({ length: span - 1 }, (_, index) => index + 2),
+            1,
+            ...Array.from({ length: size - span }, (_, index) => index + span + 1),
+        ]);
+        expect(list.records.map((r) => r.data.sequence)).toEqual(
+            Array.from({ length: size }, (_, index) => index + 1),
+        );
+        expect(lookups).toBeLessThan(span * 3);
+        makeLogger("web.model.audit").logic("resequence id lookups", {
+            rows: size,
+            span,
+            lookups,
+        });
+    });
+}
+
+test("all small integer resequences agree with remove-and-insert after server sorting", async () => {
+    let cases = 0;
+    for (const asc of [true, false]) {
+        for (const sequences of [
+            [1, 2, 3, 4],
+            [10, 20, 30, 40],
+            [10, 10, 10, 10],
+            [4, 1, 3, 2],
+        ]) {
+            const initial = asc ? sequences : [...sequences].reverse();
+            for (const movedId of [1, 2, 3, 4]) {
+                for (const targetId of [null, 1, 2, 3, 4]) {
+                    const records = initial.map((sequence, i) => ({
+                        id: i + 1,
+                        sequence,
+                    }));
+                    const expected = records.map((r) => r.id);
+                    if (targetId !== movedId) {
+                        expected.splice(expected.indexOf(movedId), 1);
+                        expected.splice(
+                            targetId === null ? 0 : expected.indexOf(targetId) + 1,
+                            0,
+                            movedId,
+                        );
+                    }
+                    const result = await resequenceRecords({
+                        records,
+                        orm: makeMockOrm(),
+                        resModel: "x",
+                        fieldName: "sequence",
+                        movedId,
+                        targetId,
+                        asc,
+                    });
+                    for (const values of result) {
+                        Object.assign(
+                            records.find((r) => r.id === values.id),
+                            values,
+                        );
+                    }
+                    expect(records.map((r) => r.id)).toEqual(expected);
+                    expect(
+                        [...records]
+                            .sort((a, b) => (asc ? 1 : -1) * (a.sequence - b.sequence))
+                            .map((r) => r.id),
+                    ).toEqual(expected);
+                    cases++;
+                }
+            }
+        }
+    }
+    makeLogger("web.model.audit").logic("resequence independent ordering oracle", {
+        cases,
     });
 });

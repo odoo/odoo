@@ -1,7 +1,12 @@
 // @ts-check
 
 import { describe, expect, test } from "@odoo/hoot";
+import { makeLogger } from "@web/core/debug/debug_logger";
+import { makeActiveField } from "@web/model/relational_model/field_metadata";
+import { StaticList } from "@web/model/relational_model/static_list";
 import { sortBy, sortStaticList } from "@web/model/relational_model/static_list_sort";
+
+import { makeTestRelationalModel } from "./model_test_helpers.js";
 
 describe.current.tags("headless");
 
@@ -171,4 +176,60 @@ describe("sortBy — direction cycling", () => {
         expect(list._loadCalls.length).toBe(1);
         expect(list._loadCalls[0].orderBy).toEqual([{ name: "id", asc: true }]);
     });
+});
+
+test("paginated selection sorting orders loaded and fetched unset values consistently", async () => {
+    const rows = [
+        { id: 1, state: "b" },
+        { id: 2, state: false },
+        { id: 3, state: "a" },
+    ];
+    const requested = [];
+    const model = await makeTestRelationalModel({
+        loadRecords: async ({ resIds }) => {
+            requested.push([...resIds]);
+            return resIds.map((id) => rows.find((row) => row.id === id));
+        },
+    });
+    const list = new StaticList(
+        model,
+        {
+            ...model.config,
+            isRoot: false,
+            offset: 0,
+            limit: 1,
+            resIds: [1, 2, 3],
+            fields: {
+                state: {
+                    name: "state",
+                    type: "selection",
+                    selection: [
+                        ["a", "A"],
+                        ["b", "B"],
+                    ],
+                },
+            },
+            activeFields: { state: makeActiveField() },
+        },
+        rows.slice(0, 1),
+        {
+            parent: {
+                evalContext: {},
+                evalContextWithVirtualIds: {},
+                _isEvalContextReady: true,
+            },
+            onUpdate: async () => {},
+        },
+    );
+    await list.sortBy("state");
+    makeLogger("web.model.audit").logic("paginated selection order", {
+        ids: list.currentIds,
+        requested,
+    });
+    expect(requested[0]).toEqual([2, 3]);
+    expect(list.currentIds).toEqual([2, 3, 1]);
+    expect(list.records.map((row) => row.data.state)).toEqual([false]);
+    await list.sortBy("state");
+    expect(list.currentIds).toEqual([1, 3, 2]);
+    expect(list.records.map((row) => row.data.state)).toEqual(["b"]);
 });

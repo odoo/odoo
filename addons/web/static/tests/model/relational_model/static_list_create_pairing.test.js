@@ -1,6 +1,7 @@
 // @ts-check
 
 import { describe, expect, test } from "@odoo/hoot";
+import { makeLogger } from "@web/core/debug/debug_logger";
 import { pairCreatedRows } from "@web/model/relational_model/static_list_utils";
 
 describe.current.tags("headless");
@@ -99,4 +100,72 @@ describe("pairCreatedRows positional identity", () => {
 
         expect(/** @type {Map<string, number>} */ (pairs).get("virtual_1")).toBe(999);
     });
+});
+
+test("positions absent from both memberships do not establish identity", () => {
+    const result = pairCreatedRows(["virtual_1"], [90], {
+        clientIds: [2, 3],
+        serverIds: [2, 3],
+    });
+    makeLogger("web.model.audit").logic("absent create positions", {
+        paired: result !== null,
+    });
+    expect(result).toBe(null);
+});
+
+test("batch create position validation scans memberships once", () => {
+    const virtualIds = Array.from({ length: 64 }, (_, i) => `virtual_${i}`);
+    const newIds = Array.from({ length: 64 }, (_, i) => 100 + i);
+    const existing = Array.from({ length: 64 }, (_, i) => i + 1);
+    let reads = 0;
+    const handler = {
+        get(target, key, receiver) {
+            if (typeof key === "string" && /^\d+$/.test(key)) {
+                reads++;
+            }
+            return Reflect.get(target, key, receiver);
+        },
+    };
+    const pairs = pairCreatedRows(virtualIds, [...newIds].reverse(), {
+        clientIds: new Proxy([...existing, ...virtualIds], handler),
+        serverIds: new Proxy([...existing, ...newIds], handler),
+    });
+    makeLogger("web.model.audit").logic("create membership lookup budget", {
+        reads,
+        pairs: pairs?.size,
+    });
+    expect(pairs && [...pairs]).toEqual(virtualIds.map((id, i) => [id, newIds[i]]));
+    expect(reads).toBeLessThanOrEqual(256);
+});
+
+test("empty and prefix create batches do not scan unrelated membership tails", () => {
+    const existing = Array.from({ length: 128 }, (_, i) => 1000 + i);
+    for (const hasCreate of [false, true]) {
+        let reads = 0;
+        const handler = {
+            get(target, key, receiver) {
+                if (typeof key === "string" && /^\d+$/.test(key)) {
+                    reads++;
+                }
+                return Reflect.get(target, key, receiver);
+            },
+        };
+        const pairs = pairCreatedRows(
+            hasCreate ? ["virtual_1"] : [],
+            hasCreate ? [90] : [],
+            {
+                clientIds: new Proxy(
+                    hasCreate ? ["virtual_1", ...existing] : existing,
+                    handler,
+                ),
+                serverIds: new Proxy(hasCreate ? [90, ...existing] : existing, handler),
+            },
+        );
+        makeLogger("web.model.audit").logic("create prefix lookup budget", {
+            hasCreate,
+            reads,
+        });
+        expect(pairs && [...pairs]).toEqual(hasCreate ? [["virtual_1", 90]] : []);
+        expect(reads).toBe(hasCreate ? 2 : 0);
+    }
 });

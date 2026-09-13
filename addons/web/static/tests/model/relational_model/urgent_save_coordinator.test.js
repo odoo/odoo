@@ -1,9 +1,32 @@
 // @ts-check
 
 import { describe, expect, test } from "@odoo/hoot";
+import { makeLogger } from "@web/core/debug/debug_logger";
 import { UrgentSaveCoordinator } from "@web/model/relational_model/urgent_save_coordinator";
 
 describe.current.tags("headless");
+
+test("a throwing notification hook leaves urgent saving idle and usable", async () => {
+    let notifications = 0;
+    const coord = new UrgentSaveCoordinator({
+        trigger: (_event, payload) => {
+            if (++notifications === 1) {
+                payload.proms.push(Promise.reject(new Error("registered work failed")));
+                throw new Error("notification failed");
+            }
+        },
+    });
+    await expect(coord.run(async () => "unreachable")).rejects.toThrow(
+        "notification failed",
+    );
+    makeLogger("web.model.audit").logic("urgent notification failure cleanup", {
+        status: coord.status,
+    });
+    expect(coord.isActive).toBe(false);
+    expect(await coord.run(async () => "saved")).toBe("saved");
+    expect(notifications).toBe(2);
+    expect(coord.isActive).toBe(false);
+});
 
 test("new instance starts idle and isActive=false", () => {
     const coord = new UrgentSaveCoordinator();
