@@ -168,6 +168,11 @@ class CalendarEvent(models.Model):
         help="""When synchronization with an external calendar is active, this description is synchronized \
         with the one of the associated meeting in that external calendar. Any update will be propagated there \
         and vice versa.""")
+    is_draft = fields.Boolean(string="Is draft",
+        help="""When True, this field mutes the notifications of the event. It allows to save the event without \
+        confirming it and avoids notifying attendees with update messages because some information was unknown at \
+        the creation of the event. To prevent event's flow issues, the draft state should be set at the creation \
+        of the event and never reset once it is removed.""")
     user_id = fields.Many2one('res.users', 'Organizer', default=lambda self: self.env.user, index='btree_not_null')
     partner_id = fields.Many2one(
         'res.partner', string='Scheduled by', related='user_id.partner_id', readonly=True)
@@ -315,10 +320,15 @@ class CalendarEvent(models.Model):
         'Access token should be unique',
     )
 
-    @api.onchange("allday")
+    _check_no_recurrent_draft = models.Constraint(
+        'CHECK(NOT (is_draft AND recurrency))',
+        'A recurring event cannot be a draft.',
+    )
+
+    @api.onchange("allday", "is_draft")
     def _onchange_allday(self):
         for event in self:
-            event.show_as = 'free' if event.allday else 'busy'
+            event.show_as = 'free' if event.allday or event.is_draft else 'busy'
 
     @api.depends("attendee_ids")
     def _compute_should_show_status(self):
@@ -755,6 +765,7 @@ class CalendarEvent(models.Model):
                 'meeting_activity_ids': vals.get('meeting_activity_ids', defaults.get('meeting_activity_ids')),
                 'allday': vals.get('allday', defaults.get('allday')),
                 'description': vals.get('description', defaults.get('description')),
+                'is_draft': vals.get('is_draft', defaults.get('is_draft')),
                 'name': vals.get('name', defaults.get('name')),
                 # when res_id is not defined or vals['res_id'] == 0, fallback on default
                 'res_id': vals.get('res_id') or defaults.get('res_id'),
@@ -807,7 +818,11 @@ class CalendarEvent(models.Model):
                 }
                 if values['description']:
                     activity_vals['note'] = values['description']
-                if values['name']:
+                if values.get('is_draft') and values['name']:
+                    activity_vals['summary'] = _('[Draft] %s', values['name'])
+                elif values.get('is_draft'):
+                    activity_vals['summary'] = _('[Draft]')
+                elif values['name']:
                     activity_vals['summary'] = values['name']
                 if values['start']:
                     activity_vals['date_deadline'] = self._get_activity_deadline_from_start(fields.Datetime.from_string(values['start']), values['allday'])
@@ -1035,7 +1050,7 @@ class CalendarEvent(models.Model):
                     force_send=True,
                 )
 
-        if 'videocall_location' in values or update_time:
+        if 'videocall_location' in values or values.get('is_draft') is False or update_time:
             self._ensure_videocall_channels()
         if 'name' in values or update_time:
             self._sync_videocall_channels()
@@ -1131,6 +1146,13 @@ class CalendarEvent(models.Model):
         self.env['calendar.alarm_manager']._notify_next_alarm(partner_ids)
         return result
 
+    def _unlink_with_sync_and_recurrence_check(self, recurrence_choice=None):
+        if len(self) == 1 and self.recurrency and recurrence_choice:
+            if self.user_id._has_any_active_synchronization():
+                return self.action_mass_archive(recurrence_choice)
+            return self.action_mass_deletion(recurrence_choice)
+        return self.unlink()
+
     def copy(self, default=None):
         """When an event is copied, the attendees should be recreated to avoid sharing the same attendee records
          between copies
@@ -1144,46 +1166,58 @@ class CalendarEvent(models.Model):
             new_event.write({'partner_ids': [(Command.set(old_event.partner_ids.ids))]})
         return new_events
 
-    def action_unlink_event(self, attendee_id=None, recurrence=False):
+    def action_confirm(self):
+        self.is_draft = False
+
+    def action_open_archive_or_unlink_wizard(self, requested_action, next_action=None):
         """
-        Delete the event after displaying the delete wizard if necessary.
+        This method allows users to manage some actions related to the archiving or deletion from the frontend. If the
+        event belongs to a recurrence, then it shows a form offering to select which event of this one must be archived
+        or deleted. If needed, it displays a wizard to approve the sending of the cancellation emails to the attendees.
+        This wizard also allows to edit the cancellation email if only one event has been selected.
 
-        :param attendee_id: The ID of the attendee for the event
-        :param recurrence: Boolean indicating if the event is recurring
-        :return: Action to delete the event
+        :param requested_action: The action requested from the interface triggering the method and can be "archive" or "unlink"
+        :param next_action: The action to perform once the events are unlinked or archived
+        :return: Action to archive or unlink the event(s)
         """
-        if self.user_id._has_any_active_synchronization() or len(self.ids) > 1:
-            self.unlink()
-            return {
-                'type': 'ir.actions.act_url',
-                'target': 'self',
-                'url': '/odoo/calendar'
-            }
+        if not next_action:
+            next_action = {'type': 'ir.actions.client', 'tag': 'soft_reload'}
 
-        template = self.env.ref('calendar.calendar_template_delete_event', raise_if_not_found=False)
-        if not template:
-            self.unlink()
-            _logger.warning('Template "calendar.calendar_template_delete_event" was not found. Cannot send delete notifications.')
-            return {}
+        if not self.ids:
+            return next_action
 
-        if self.ids and (lang := template._render_lang(self.ids)[self.id]):
-            context = {
-                'default_use_template': bool(template),
-                'default_template_id': template.id,
-                'default_attendee_id': attendee_id,
-                'default_calendar_event_id': self.id,
-                'default_recurrence': recurrence,
-                'model_description': self.with_context(lang=lang),
-            }
-            return {
-                'name': _('Delete Event'),
-                'res_model': 'calendar.popover.delete.wizard',
-                'view_id': self.env.ref('calendar.view_event_delete_wizard_form').id,
-                'type': 'ir.actions.act_window',
-                'context': context,
-                'target': 'new',
-                'views': [(False, 'form')],
-            }
+        action_open_archive_or_unlink_wizard = {
+            'type': 'ir.actions.act_window',
+            'views': [(False, 'form')],
+            'target': 'new',
+        }
+        if len(self) > 1:
+            action_open_archive_or_unlink_wizard.update({
+                'name': _('Archive events') if requested_action == 'archive' else _('Delete events'),
+                'res_model': 'calendar.event.multi.archive.or.unlink.wizard',
+                'context': {
+                    'default_calendar_event_ids': self.ids,
+                    'default_requested_action': requested_action,
+                    # To avoid notify users when sync is activated as the external calendar will do it.
+                    'default_block_mail': self.user_id._has_any_active_synchronization(),
+                    'dialog_size': 'small',
+                    'next_action': next_action,
+                },
+            })
+        else:
+            action_open_archive_or_unlink_wizard.update({
+                'name': _('Archive event') if requested_action == 'archive' else _('Delete event'),
+                'res_model': 'calendar.event.archive.or.unlink.wizard',
+                'context': {
+                    'default_calendar_event_id': self.id,
+                    'default_requested_action': requested_action,
+                    # To avoid notify users when sync is activated as the external calendar will do it.
+                    'default_block_mail': self.partner_id == self.partner_ids or self.user_id._has_any_active_synchronization(),
+                    'form_view_ref': 'calendar.calendar_event_archive_or_unlink_wizard_view_form',
+                    'next_action': next_action,
+                },
+            })
+        return action_open_archive_or_unlink_wizard
 
     def _mail_get_operation_for_mail_message_operation(self, message_operation):
         # reading messages on private events requires write access, not just read access
@@ -1262,6 +1296,8 @@ class CalendarEvent(models.Model):
             if event.stop and event.stop < now:
                 continue
             if event.recurrency and not event.recurrence_id:
+                continue
+            if event.is_draft:
                 continue
             event._create_videocall_channel()
 
@@ -1429,6 +1465,8 @@ class CalendarEvent(models.Model):
         elif recurrence_update_setting == 'future_events':
             future_events = self.recurrence_id.calendar_event_ids.filtered(lambda ev: ev.start >= self.start)
             future_events.unlink()
+        elif recurrence_update_setting == 'self_only':
+            self.unlink()
 
     def action_mass_archive(self, recurrence_update_setting):
         """
@@ -1456,7 +1494,7 @@ class CalendarEvent(models.Model):
 
     def _skip_send_mail_status_update(self):
         """Overridable getter to identify whether to send invitation/cancelation emails."""
-        return False
+        return self.is_draft
 
     def _track_log_get_default_subtype(self, track_init_values):
         if {'start', 'stop', 'location'} & track_init_values.keys():
@@ -1472,8 +1510,13 @@ class CalendarEvent(models.Model):
         for event in self:
             if event.meeting_activity_ids:
                 activity_values = {}
-                if 'name' in fields:
-                    activity_values['summary'] = event.name
+                if 'is_draft' in fields or 'name' in fields:
+                    if event.is_draft and event.name:
+                        activity_values['summary'] = _('[Draft] %s', event.name)
+                    elif event.is_draft:
+                        activity_values['summary'] = _('[Draft]')
+                    elif event.name:
+                        activity_values['summary'] = event.name
                 if 'description' in fields:
                     activity_values['note'] = event.description
                 # protect against loops in case of ill-managed timezones
@@ -1923,6 +1966,8 @@ class CalendarEvent(models.Model):
     def _get_new_invited_attendees(self, current_attendees, previous_attendees, update_vals):
         """Get the attendees who must receive an invitation for a modified calendar event. This method is meant
         to be overridden."""
+        if 'is_draft' in update_vals and not update_vals['is_draft']:
+            return current_attendees
         return current_attendees - previous_attendees
 
     @api.model
