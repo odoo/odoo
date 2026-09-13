@@ -144,7 +144,7 @@ def test_the_guard_would_catch_a_regression():
         "def db_mod():\n    import odoo.service.db as mod\n    return mod\n"
     )
     assert list(
-        _object_targets(db_mod_fixture + 'patch.object(db_mod, "_drop_database")')
+        _object_targets(db_mod_fixture + 'patch.object(db_mod, "drop_database")')
     )
     assert list(
         _object_targets(
@@ -161,13 +161,13 @@ def test_the_guard_would_catch_a_regression():
     assert list(
         _object_targets(
             "from odoo.service import db as db_service\n"
-            'patch.object(db_service, "_drop_database")'
+            'patch.object(db_service, "drop_database")'
         )
     )
     assert not list(
         _object_targets(
             "from odoo.service import db as db_service\n"
-            'patch.object(db_service.lifecycle, "_drop_database")'
+            'patch.object(db_service.lifecycle, "drop_database")'
         )
     )
     assert _module_uses("lifecycle", "_create_empty_database")

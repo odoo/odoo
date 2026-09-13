@@ -444,7 +444,7 @@ def test_manifest_records_the_postgresql_release(version, expected):
 
 
 def test_failed_compensation_reports_the_database_without_masking_original(caplog):
-    with patch.object(lifecycle, "_drop_database", side_effect=OSError("drop denied")):
+    with patch.object(lifecycle, "drop_database", side_effect=OSError("drop denied")):
         lifecycle._rollback_new_database("owned_db", "RESTORE DB")
     assert "owned_db" in caplog.text and "manual cleanup required" in caplog.text
     assert any(record.exc_info for record in caplog.records)

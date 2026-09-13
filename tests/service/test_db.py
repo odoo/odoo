@@ -84,7 +84,7 @@ class TestRestoreDbSubprocessFailure:
                 db_mod.restore, "exp_db_exist", return_value=False
             ),
             "create_empty": patch.object(db_mod.restore, "_create_empty_database"),
-            "drop_database": patch.object(db_mod.lifecycle, "_drop_database"),
+            "drop_database": patch.object(db_mod.lifecycle, "drop_database"),
             "subprocess_run": patch(
                 "odoo.service.db.restore.subprocess.run",
                 return_value=CompletedProcess(args=[], returncode=1, stderr=pg_stderr),
@@ -184,7 +184,7 @@ class TestRestoreDbCleanupOnAnyFailure:
             with (
                 patch.object(db_mod.restore, "exp_db_exist", return_value=False),
                 patch.object(db_mod.restore, "_create_empty_database"),
-                patch.object(db_mod.lifecycle, "_drop_database") as mock_drop,
+                patch.object(db_mod.lifecycle, "drop_database") as mock_drop,
             ):
                 with pytest.raises(RuntimeError, match="Couldn't restore database"):
                     db_mod.restore_db("newdb", invalid_zip)
@@ -197,7 +197,7 @@ class TestRestoreDbCleanupOnAnyFailure:
         with (
             patch.object(db_mod.restore, "exp_db_exist", return_value=False),
             patch.object(db_mod.restore, "_create_empty_database"),
-            patch.object(db_mod.lifecycle, "_drop_database") as mock_drop,
+            patch.object(db_mod.lifecycle, "drop_database") as mock_drop,
             patch(
                 "odoo.service.db.restore.subprocess.run",
                 return_value=CompletedProcess(args=[], returncode=0, stderr=""),
@@ -220,7 +220,7 @@ class TestRestoreDbWallClockTimeout:
         with (
             patch.object(db_mod.restore, "exp_db_exist", return_value=False),
             patch.object(db_mod.restore, "_create_empty_database"),
-            patch.object(db_mod.lifecycle, "_drop_database") as mock_drop,
+            patch.object(db_mod.lifecycle, "drop_database") as mock_drop,
             patch(
                 "odoo.service.db.restore.subprocess.run",
                 side_effect=subprocess.TimeoutExpired(cmd="psql", timeout=1.0),
@@ -235,7 +235,7 @@ class TestRestoreDbWallClockTimeout:
         with (
             patch.object(db_mod.restore, "exp_db_exist", return_value=False),
             patch.object(db_mod.restore, "_create_empty_database"),
-            patch.object(db_mod.lifecycle, "_drop_database"),
+            patch.object(db_mod.lifecycle, "drop_database"),
             patch(
                 "odoo.service.db.restore.subprocess.run",
                 return_value=CompletedProcess(args=[], returncode=1, stderr="x"),
@@ -322,7 +322,7 @@ class TestDbNameValidation:
     @pytest.mark.parametrize("bad_name", ["bad name", "-start", "has/slash"])
     def test_duplicate_rejects_invalid_new_name(self, db_mod, bypass_db_mgmt, bad_name):
         with pytest.raises(ValueError, match="Invalid database name"):
-            db_mod._duplicate_database("source_db", bad_name)
+            db_mod.duplicate_database("source_db", bad_name)
 
 
 class TestRestoreDbTypeCheck:
@@ -972,7 +972,7 @@ class TestRestoreDbZipSlip:
         with (
             patch.object(db_mod.restore, "exp_db_exist", return_value=False),
             patch.object(db_mod.restore, "_create_empty_database"),
-            patch.object(db_mod.lifecycle, "_drop_database") as mock_drop,
+            patch.object(db_mod.lifecycle, "drop_database") as mock_drop,
             patch("odoo.service.db.restore.subprocess.run") as mock_run,
         ):
             with pytest.raises(RuntimeError, match="escapes the extraction directory"):
@@ -1239,7 +1239,7 @@ class TestExpRenameAllowlistGate:
 
         with (
             patch.object(db_mod.listing, "list_dbs", return_value=["exposed"]),
-            patch.object(db_mod.lifecycle, "_rename_database") as mock_inner,
+            patch.object(db_mod.lifecycle, "rename_database") as mock_inner,
         ):
             with pytest.raises(odoo.exceptions.AccessDenied):
                 db_mod.exp_rename("other", "newname")
@@ -1249,7 +1249,7 @@ class TestExpRenameAllowlistGate:
         with (
             patch.object(db_mod.listing, "list_dbs", return_value=["exposed"]),
             patch.object(
-                db_mod.lifecycle, "_rename_database", return_value=True
+                db_mod.lifecycle, "rename_database", return_value=True
             ) as mock_inner,
         ):
             result = db_mod.exp_rename("exposed", "newname")
@@ -1260,7 +1260,7 @@ class TestExpRenameAllowlistGate:
         with (
             patch.object(db_mod.listing, "list_dbs", return_value=["exposed"]),
             patch.object(
-                db_mod.lifecycle, "_rename_database", return_value=True
+                db_mod.lifecycle, "rename_database", return_value=True
             ) as mock_inner,
         ):
             db_mod.exp_rename("exposed", "brand_new_target")
@@ -1269,7 +1269,7 @@ class TestExpRenameAllowlistGate:
     def test_internal_helper_does_not_consult_allowlist(self, db_mod):
         with patch.object(db_mod.listing, "list_dbs") as mock_list:
             with pytest.raises(ValueError):
-                db_mod._rename_database("any_unexposed", "bad name")
+                db_mod.rename_database("any_unexposed", "bad name")
         mock_list.assert_not_called()
 
 
@@ -1279,7 +1279,7 @@ class TestExpDuplicateAllowlistGate:
 
         with (
             patch.object(db_mod.listing, "list_dbs", return_value=["exposed"]),
-            patch.object(db_mod.lifecycle, "_duplicate_database") as mock_inner,
+            patch.object(db_mod.lifecycle, "duplicate_database") as mock_inner,
         ):
             with pytest.raises(odoo.exceptions.AccessDenied):
                 db_mod.exp_duplicate_database("other", "newdb")
@@ -1289,7 +1289,7 @@ class TestExpDuplicateAllowlistGate:
         with (
             patch.object(db_mod.listing, "list_dbs", return_value=["exposed"]),
             patch.object(
-                db_mod.lifecycle, "_duplicate_database", return_value=True
+                db_mod.lifecycle, "duplicate_database", return_value=True
             ) as mock_inner,
         ):
             result = db_mod.exp_duplicate_database(
@@ -1302,7 +1302,7 @@ class TestExpDuplicateAllowlistGate:
         with (
             patch.object(db_mod.listing, "list_dbs", return_value=["exposed"]),
             patch.object(
-                db_mod.lifecycle, "_duplicate_database", return_value=True
+                db_mod.lifecycle, "duplicate_database", return_value=True
             ) as mock_inner,
         ):
             db_mod.exp_duplicate_database("exposed", "brand_new_target")
@@ -1311,7 +1311,7 @@ class TestExpDuplicateAllowlistGate:
     def test_internal_helper_does_not_consult_allowlist(self, db_mod):
         with patch.object(db_mod.listing, "list_dbs") as mock_list:
             with pytest.raises(ValueError):
-                db_mod._duplicate_database("any_unexposed", "bad name")
+                db_mod.duplicate_database("any_unexposed", "bad name")
         mock_list.assert_not_called()
 
 
@@ -1326,7 +1326,7 @@ class TestRestoreDbCleanupHelper:
             patch.object(odoo.tools, "config", config),
             patch.object(db_mod.restore, "exp_db_exist", return_value=False),
             patch.object(db_mod.restore, "_create_empty_database"),
-            patch.object(db_mod.lifecycle, "_drop_database") as mock_drop,
+            patch.object(db_mod.lifecycle, "drop_database") as mock_drop,
             patch(
                 "odoo.service.db.restore.subprocess.run",
                 side_effect=OSError("psql gone"),
@@ -1338,14 +1338,14 @@ class TestRestoreDbCleanupHelper:
         mock_drop.assert_called_once_with("halfbuilt")
         assert config.reads == 1, (
             f"list_db was consulted {config.reads} times; the rollback re-entered "
-            f"a gated verb instead of calling _drop_database directly"
+            f"a gated verb instead of calling drop_database directly"
         )
 
     def test_rollback_does_not_re_enter_the_rpc_verb(self, db_mod, zip_dump):
         with (
             patch.object(db_mod.restore, "exp_db_exist", return_value=False),
             patch.object(db_mod.restore, "_create_empty_database"),
-            patch.object(db_mod.lifecycle, "_drop_database") as mock_drop,
+            patch.object(db_mod.lifecycle, "drop_database") as mock_drop,
             patch.object(db_mod.lifecycle, "exp_drop") as mock_exp_drop,
             patch(
                 "odoo.service.db.restore.subprocess.run",
@@ -1398,7 +1398,7 @@ class TestDropDatabaseRetry:
             yield fake_cr
 
     def test_successful_drop_on_first_try(self, db_mod, drop_env):
-        result = db_mod._drop_database("x")
+        result = db_mod.drop_database("x")
 
         assert result is True
         drop_calls = [
@@ -1409,7 +1409,7 @@ class TestDropDatabaseRetry:
     def test_absent_database_returns_false_without_dropping(self, db_mod, drop_env):
         drop_env.fetchone.return_value = None
 
-        result = db_mod._drop_database("gone")
+        result = db_mod.drop_database("gone")
 
         assert result is False
         assert not [
@@ -1429,7 +1429,7 @@ class TestDropDatabaseRetry:
 
         drop_env.execute.side_effect = execute_side_effect
 
-        result = db_mod._drop_database("x")
+        result = db_mod.drop_database("x")
 
         assert result is True
         drops = [c for c in call_log if "DROP DATABASE" in c]
@@ -1447,7 +1447,7 @@ class TestDropDatabaseRetry:
         drop_env.execute.side_effect = execute_side_effect
 
         with pytest.raises(RuntimeError, match="forever in use"):
-            db_mod._drop_database("x")
+            db_mod.drop_database("x")
 
 
 class TestDbnamePattern:
@@ -1731,15 +1731,15 @@ class TestAdminPasswordPersistFailureRollsBack:
 class TestExpRenameValidation:
     def test_rejects_invalid_new_name(self, db_mod):
         with pytest.raises(ValueError, match="Invalid database name"):
-            db_mod._rename_database("old_name", "has spaces")
+            db_mod.rename_database("old_name", "has spaces")
 
     def test_rejects_empty_new_name(self, db_mod):
         with pytest.raises(ValueError, match="Invalid database name"):
-            db_mod._rename_database("old_name", "")
+            db_mod.rename_database("old_name", "")
 
     def test_rejects_leading_underscore(self, db_mod):
         with pytest.raises(ValueError, match="Invalid database name"):
-            db_mod._rename_database("old_name", "_starts_with_underscore")
+            db_mod.rename_database("old_name", "_starts_with_underscore")
 
 
 class TestPublicApiSurface:
@@ -1880,7 +1880,7 @@ class TestDispatchInvariants:
             handler = db_mod.rpc._DISPATCH[method]
             with (
                 patch.object(db_mod.listing, "list_dbs", return_value=["visible_db"]),
-                patch.object(db_mod.lifecycle, "_drop_database") as dropped,
+                patch.object(db_mod.lifecycle, "drop_database") as dropped,
                 patch("odoo.service.db.dump.subprocess.run") as ran,
             ):
                 with pytest.raises(Exception) as excinfo:
@@ -1948,10 +1948,10 @@ class TestExpDuplicateRollback:
                     "odoo.service.db.lifecycle.shutil.copytree",
                     side_effect=OSError("disk full"),
                 ),
-                patch.object(db_mod.lifecycle, "_drop_database") as mock_drop,
+                patch.object(db_mod.lifecycle, "drop_database") as mock_drop,
             ):
                 with pytest.raises(OSError, match="disk full"):
-                    db_mod._duplicate_database("source", "newdb")
+                    db_mod.duplicate_database("source", "newdb")
 
             mock_drop.assert_called_once_with("newdb")
 
@@ -1963,10 +1963,10 @@ class TestExpDuplicateRollback:
                     "new",
                     side_effect=RuntimeError("registry boom"),
                 ),
-                patch.object(db_mod.lifecycle, "_drop_database") as mock_drop,
+                patch.object(db_mod.lifecycle, "drop_database") as mock_drop,
             ):
                 with pytest.raises(RuntimeError, match="registry boom"):
-                    db_mod._duplicate_database("source", "newdb")
+                    db_mod.duplicate_database("source", "newdb")
 
             mock_drop.assert_called_once_with("newdb")
 
@@ -1980,12 +1980,12 @@ class TestExpDuplicateRollback:
                 ),
                 patch.object(
                     db_mod.lifecycle,
-                    "_drop_database",
+                    "drop_database",
                     side_effect=Exception("drop also failed"),
                 ),
             ):
                 with pytest.raises(RuntimeError, match="original error"):
-                    db_mod._duplicate_database("source", "newdb")
+                    db_mod.duplicate_database("source", "newdb")
 
 
 class TestExpRenameRollback:
@@ -2030,7 +2030,7 @@ class TestExpRenameRollback:
                 side_effect=OSError("permission denied"),
             ):
                 with pytest.raises(RuntimeError, match="permission denied"):
-                    db_mod._rename_database("oldname", "newname")
+                    db_mod.rename_database("oldname", "newname")
 
         rename_calls = [
             c
@@ -2060,7 +2060,7 @@ class TestExpRenameRollback:
                 side_effect=OSError("disk full"),
             ):
                 with pytest.raises(RuntimeError, match="manual intervention required"):
-                    db_mod._rename_database("oldname", "newname")
+                    db_mod.rename_database("oldname", "newname")
 
 
 class TestDropDatabaseRetryBudget:
@@ -2144,7 +2144,7 @@ class TestRestoreDbOnErrorStop:
         with (
             patch.object(db_mod.restore, "exp_db_exist", return_value=False),
             patch.object(db_mod.restore, "_create_empty_database"),
-            patch.object(db_mod.lifecycle, "_drop_database"),
+            patch.object(db_mod.lifecycle, "drop_database"),
             patch(
                 "odoo.service.db.restore.subprocess.run",
                 return_value=CompletedProcess(args=[], returncode=1, stderr="x"),
@@ -2439,9 +2439,9 @@ class TestDatabaseDdlSetsAutocommitFirst:
             patch.object(db_mod.lifecycle.shutil, "copytree"),
         ):
             with contextlib.suppress(Exception):
-                db_mod._duplicate_database("src", "dst")
+                db_mod.duplicate_database("src", "dst")
         self._assert_every_statement_follows_autocommit(
-            connections, "_duplicate_database"
+            connections, "duplicate_database"
         )
 
     def test_drop_database(self, db_mod, bypass_db_mgmt):
@@ -2457,14 +2457,14 @@ class TestDatabaseDdlSetsAutocommitFirst:
             patch.object(db_mod.lifecycle.odoo.db, "close_db"),
             patch.object(db_mod.lifecycle, "_terminate_backends"),
         ):
-            db_mod._drop_database("victim")
+            db_mod.drop_database("victim")
         assert (
             len([e for e in connections if any(k == "execute" for k, _ in e)]) >= 2
         ), (
             "expected the probe AND the drop to issue SQL on separate connections; "
             "if that changed, this test no longer covers both autocommit sites"
         )
-        self._assert_every_statement_follows_autocommit(connections, "_drop_database")
+        self._assert_every_statement_follows_autocommit(connections, "drop_database")
 
     def test_rename_database(self, db_mod, bypass_db_mgmt):
         db_connect, connections = self._recorder()
@@ -2480,8 +2480,8 @@ class TestDatabaseDdlSetsAutocommitFirst:
             patch.object(db_mod.lifecycle, "_terminate_backends"),
             patch.object(db_mod.lifecycle.shutil, "move"),
         ):
-            db_mod._rename_database("old_name", "new_name")
-        self._assert_every_statement_follows_autocommit(connections, "_rename_database")
+            db_mod.rename_database("old_name", "new_name")
+        self._assert_every_statement_follows_autocommit(connections, "rename_database")
 
 
 class TestCreateEmptyDatabaseHardening:
@@ -3054,7 +3054,7 @@ class TestExpDropGate:
         return [
             patch.object(odoo.tools, "config", _MockConfig({"list_db": True})),
             patch.object(db_mod.listing, "list_dbs", return_value=exposed),
-            patch.object(db_mod.lifecycle, "_drop_database", return_value=dropped),
+            patch.object(db_mod.lifecycle, "drop_database", return_value=dropped),
         ]
 
     def test_unexposed_database_raises_access_denied(self, db_mod):
@@ -3072,7 +3072,7 @@ class TestExpDropGate:
         with ExitStack() as stack:
             for p in self._patched(db_mod, ["visible"])[:-1]:
                 stack.enter_context(p)
-            drop = stack.enter_context(patch.object(db_mod.lifecycle, "_drop_database"))
+            drop = stack.enter_context(patch.object(db_mod.lifecycle, "drop_database"))
             with pytest.raises(AccessDenied):
                 db_mod.exp_drop("hidden")
         drop.assert_not_called()
@@ -3095,7 +3095,7 @@ class TestExpDropGate:
         with ExitStack() as stack:
             for p in self._patched(db_mod, ["visible"]):
                 stack.enter_context(p)
-            stack.enter_context(patch.object(db_mod.lifecycle, "_rename_database"))
+            stack.enter_context(patch.object(db_mod.lifecycle, "rename_database"))
             for call in (
                 lambda: db_mod.exp_drop("hidden"),
                 lambda: db_mod.exp_rename("hidden", "other"),

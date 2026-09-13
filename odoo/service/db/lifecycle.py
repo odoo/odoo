@@ -225,7 +225,7 @@ def _rollback_new_database(db_name: str, what: str) -> None:
     _logger.info("%s: rolling back database %r after failure", what, db_name)
     _debug.lifecycle("database.rollback", db=db_name, what=what)
     try:
-        dropped = _drop_database(db_name)
+        dropped = drop_database(db_name)
         _debug.lifecycle("database.rolled_back", db=db_name, what=what, dropped=dropped)
     except Exception:
         _logger.exception(
@@ -285,10 +285,10 @@ def exp_duplicate_database(
     neutralize_database: bool = False,
 ) -> Literal[True]:
     check_db_exposed(db_original_name)
-    return _duplicate_database(db_original_name, db_name, neutralize_database)
+    return duplicate_database(db_original_name, db_name, neutralize_database)
 
 
-def _duplicate_database(
+def duplicate_database(
     db_original_name: str,
     db_name: str,
     neutralize_database: bool = False,
@@ -436,7 +436,7 @@ def _database_exists(db_name: str) -> bool:
         return True
 
 
-def _drop_database(db_name: str) -> bool:
+def drop_database(db_name: str) -> bool:
     if not _database_exists(db_name):
         _debug.logic("database.drop.absent", db=db_name)
         return False
@@ -476,16 +476,16 @@ def _drop_database(db_name: str) -> bool:
 @check_db_management_enabled
 def exp_drop(db_name: str) -> bool:
     check_db_exposed(db_name)
-    return _drop_database(db_name)
+    return drop_database(db_name)
 
 
 @check_db_management_enabled
 def exp_rename(old_name: str, new_name: str) -> Literal[True]:
     check_db_exposed(old_name)
-    return _rename_database(old_name, new_name)
+    return rename_database(old_name, new_name)
 
 
-def _rename_database(old_name: str, new_name: str) -> Literal[True]:
+def rename_database(old_name: str, new_name: str) -> Literal[True]:
     check_db_name(new_name)
 
     old_fs = odoo.tools.config.filestore(old_name)

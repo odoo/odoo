@@ -279,7 +279,7 @@ class TestCommand(BaseCase):
             with (
                 mock.patch.object(dbmod, "exp_db_exist", lambda db: True),
                 mock.patch.object(
-                    dbmod, "_drop_database", lambda db: calls.append("drop") or True
+                    dbmod, "drop_database", lambda db: calls.append("drop") or True
                 ),
                 mock.patch.object(
                     dbmod, "restore_db", lambda **kw: calls.append("restore")
@@ -305,7 +305,7 @@ class TestCommand(BaseCase):
             with (
                 mock.patch.object(dbmod, "exp_db_exist", lambda db: True),
                 mock.patch.object(
-                    dbmod, "_drop_database", lambda db: calls.append("drop") or True
+                    dbmod, "drop_database", lambda db: calls.append("drop") or True
                 ),
                 mock.patch.object(
                     dbmod, "restore_db", lambda **kw: calls.append("restore")
@@ -322,11 +322,11 @@ class TestCommand(BaseCase):
         with (
             mock.patch.object(dbmod, "exp_db_exist", lambda db: db != "missing_src"),
             mock.patch.object(
-                dbmod, "_drop_database", lambda db: calls.append("drop") or True
+                dbmod, "drop_database", lambda db: calls.append("drop") or True
             ),
             mock.patch.object(
                 dbmod,
-                "_duplicate_database",
+                "duplicate_database",
                 lambda *a, **k: calls.append("duplicate"),
             ),
         ):
@@ -338,14 +338,14 @@ class TestCommand(BaseCase):
     def test_db_drop_calls_drop_database_not_exp_drop(self):
         from odoo.cli import db as dbmod
 
-        with mock.patch.object(dbmod, "_drop_database", return_value=True) as drop_mock:
+        with mock.patch.object(dbmod, "drop_database", return_value=True) as drop_mock:
             dbmod.Db().drop(mock.Mock(database="mydb"))
         drop_mock.assert_called_once_with("mydb")
 
     def test_db_drop_reports_missing_database(self):
         from odoo.cli import db as dbmod
 
-        with mock.patch.object(dbmod, "_drop_database", return_value=False):
+        with mock.patch.object(dbmod, "drop_database", return_value=False):
             with self.assertRaises(SystemExit) as ctx:
                 dbmod.Db().drop(mock.Mock(database="missing"))
         self.assertIn("missing", str(ctx.exception.code))
@@ -986,10 +986,10 @@ class TestCommand(BaseCase):
         protected = ["postgres", "template0", "template1", config["db_template"]]
         with (
             mock.patch.object(dbmod, "exp_db_exist", return_value=True),
-            mock.patch.object(dbmod, "_drop_database") as drop_mock,
+            mock.patch.object(dbmod, "drop_database") as drop_mock,
             mock.patch.object(dbmod, "exp_create_database") as create_mock,
-            mock.patch.object(dbmod, "_rename_database") as rename_mock,
-            mock.patch.object(dbmod, "_duplicate_database") as duplicate_mock,
+            mock.patch.object(dbmod, "rename_database") as rename_mock,
+            mock.patch.object(dbmod, "duplicate_database") as duplicate_mock,
         ):
             for name in protected:
                 with self.assertRaises(SystemExit, msg=f"drop {name} not refused"):

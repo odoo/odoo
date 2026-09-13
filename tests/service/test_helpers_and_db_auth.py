@@ -47,7 +47,7 @@ class TestInternalDropIsUngated(unittest.TestCase):
         ):
             probe_cr = db_connect_mock.return_value.cursor.return_value
             probe_cr.fetchone.return_value = None
-            result = db_service._drop_database("never_exposed_db")
+            result = db_service.drop_database("never_exposed_db")
         self.assertFalse(result)
         list_dbs_mock.assert_not_called()
 

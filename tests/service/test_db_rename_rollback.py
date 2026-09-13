@@ -47,7 +47,7 @@ def renaming(tmp_path):
             ),
         ):
             try:
-                result = lifecycle._rename_database("old", "new")
+                result = lifecycle.rename_database("old", "new")
             except Exception as exc:
                 result = exc
         return result, rolled, stores

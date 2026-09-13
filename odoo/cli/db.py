@@ -17,14 +17,14 @@ from ..db import SYSTEM_DBS, db_connect
 from ..libs.debug_log import DebugLog
 from ..modules.neutralize import neutralize_database
 from ..service.db import (
-    _drop_database,
-    _duplicate_database,
-    _rename_database,
     check_db_name,
+    drop_database,
     dump_db,
+    duplicate_database,
     exp_create_database,
     exp_db_exist,
     list_dbs,
+    rename_database,
     restore_db,
 )
 from ..tools import config
@@ -495,7 +495,7 @@ class Db(Command):
             target=args.target,
             neutralize=args.neutralize,
         ):
-            _duplicate_database(
+            duplicate_database(
                 args.source, args.target, neutralize_database=args.neutralize
             )
         _debug.lifecycle(
@@ -512,7 +512,7 @@ class Db(Command):
         self._check_source_exists(args.source)
         self._drop_database_if_exists(args.target)
         with _debug.perf("cli.db.rename", source=args.source, target=args.target):
-            _rename_database(args.source, args.target)
+            rename_database(args.source, args.target)
         _debug.lifecycle("cli.db.renamed", source=args.source, target=args.target)
         if args.neutralize:
             try:
@@ -532,7 +532,7 @@ class Db(Command):
     def drop(self, args: argparse.Namespace) -> None:
         check_db_not_maintenance(args.database)
         _debug.lifecycle("cli.db.drop", db=args.database)
-        if not _drop_database(args.database):
+        if not drop_database(args.database):
             _debug.logic("cli.db.drop.missing", db=args.database)
             sys.exit(f"Database {args.database} does not exist.")
         _debug.lifecycle("cli.db.dropped", db=args.database)
@@ -574,4 +574,4 @@ class Db(Command):
             return
         _debug.lifecycle("cli.db.existing_dropped", db=target)
         with _debug.perf("cli.db.existing_drop", db=target):
-            _drop_database(target)
+            drop_database(target)
