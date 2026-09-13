@@ -1719,6 +1719,16 @@ class TestPointOfSaleFlow(CommonPosTest):
         order = self.env['pos.order'].search([])
         self.assertEqual(order.name, f"/AA - {order.pos_reference.split('-')[-1]} - 1.B")
 
+    def test_create_journal_and_payment_methods_bank_journal_explicit_company_currency(self):
+        """A bank journal whose currency is explicitly set to the company currency
+        (instead of left empty) must still be found and used, not treated as a
+        foreign-currency journal."""
+        self.env['pos.payment.method'].search([]).write({'active': False})
+        self.company_data['default_journal_bank'].currency_id = self.company.currency_id
+        _, pm_ids = self.pos_config_usd._create_journal_and_payment_methods()
+        bank_pm = self.env['pos.payment.method'].browse(pm_ids).filtered(lambda pm: pm.name == 'Card')
+        self.assertEqual(bank_pm.journal_id, self.company_data['default_journal_bank'])
+
     def test_payment_method_sequence(self):
         self.env['pos.payment.method'].search([]).write({'active': False})
         _, pm_ids = self.pos_config_usd._create_journal_and_payment_methods()
