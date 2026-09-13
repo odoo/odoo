@@ -1,7 +1,8 @@
 from odoo import Command, api, models
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import float_is_zero
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class AccountBankStatementLine(models.Model):
@@ -33,7 +34,7 @@ class AccountBankStatementLine(models.Model):
         )
         return transaction_currency.round(balance * company_transaction_rate)
 
-    @dbg.timed
+    @_debug.perf.timed
     def _apply_early_payment_discount(
         self,
         move_line,
@@ -51,13 +52,13 @@ class AccountBankStatementLine(models.Model):
         ) and self._qualifies_for_early_payment(
             transaction_currency, open_amount_currency, epd_amount_currency
         )
-        dbg.logic.debug(
-            "[stline:%s] early payment discount on line %s: eligible=%s open=%s epd=%s",
-            self.id,
-            move_line.id,
-            eligible,
-            open_amount_currency,
-            epd_amount_currency,
+        _debug.logic(
+            "early_payment_discount_line",
+            stline=self,
+            move_line=move_line,
+            eligible=eligible,
+            open=open_amount_currency,
+            epd=epd_amount_currency,
         )
         if eligible:
             if not move_line.currency_id.is_zero(exchange_diff_balance):
@@ -111,7 +112,7 @@ class AccountBankStatementLine(models.Model):
                     )
         return epd_lines_vals, total_amount, total_amount_currency
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_partial_amounts(
         self, current_balance, move_line, open_amount_currency, open_balance
     ):
@@ -145,6 +146,16 @@ class AccountBankStatementLine(models.Model):
         )
 
         tolerance = self._get_payment_tolerance()
+        if _debug.logic.enabled:
+            _debug.logic(
+                "partial_amount_mode_chosen",
+                stline=self,
+                line=move_line,
+                same_currency=move_line.currency_id == transaction_currency,
+                enough_currency=has_enough_curr_debit or has_enough_curr_credit,
+                enough_company=has_enough_comp_debit or has_enough_comp_credit,
+                tolerance=tolerance,
+            )
         if move_line.currency_id == transaction_currency and (
             has_enough_curr_debit or has_enough_curr_credit
         ):
@@ -247,7 +258,7 @@ class AccountBankStatementLine(models.Model):
             return transaction_currency.compare_amounts(remaining, 0.0) <= 0
         return transaction_currency.compare_amounts(remaining, 0.0) >= 0
 
-    @dbg.timed
+    @_debug.perf.timed
     def _set_early_payment_discount_lines(
         self, early_pay_aml_values_list, open_balance
     ):
@@ -277,5 +288,13 @@ class AccountBankStatementLine(models.Model):
                     "group_tax_id": vals.get("group_tax_id"),
                 }
                 for vals in vals_list
+            )
+        if _debug.pipeline.enabled:
+            _debug.pipeline(
+                "early_payment_lines_built",
+                stline=self,
+                groups=sorted(early_payment_values),
+                lines=len(new_lines),
+                open_balance=open_balance,
             )
         return new_lines

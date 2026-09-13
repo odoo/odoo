@@ -1,6 +1,7 @@
 from odoo import Command, api, fields, models
+from odoo.libs.debug_log import DebugLog
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class AccountFullReconcile(models.Model):
@@ -19,14 +20,15 @@ class AccountFullReconcile(models.Model):
     )
 
     @api.model_create_multi
-    @dbg.timed
+    @_debug.perf.timed
     def create(self, vals_list):
-        dbg.lifecycle.debug(
-            "create %s: %d vals, keys=%s",
-            self._name,
-            len(vals_list),
-            dbg.vals_keys(vals_list),
-        )
+        if _debug.lifecycle.enabled:
+            _debug.lifecycle(
+                "create",
+                model=self._name,
+                count=len(vals_list),
+                fields=sorted({key for vals in vals_list for key in vals}),
+            )
 
         def get_ids(commands):
             for command in commands:
@@ -46,11 +48,11 @@ class AccountFullReconcile(models.Model):
         fulls = super(
             AccountFullReconcile, self.with_context(tracking_disable=True)
         ).create(vals_list)
-        dbg.pipeline.debug(
-            "[full:%s] created over %d line group(s), %d partial group(s)",
-            dbg.ids(fulls),
-            len(move_line_ids),
-            len(partial_ids),
+        _debug.pipeline(
+            "created_over_group_group",
+            full=fulls,
+            move_line_ids_count=len(move_line_ids),
+            partial_ids_count=len(partial_ids),
         )
 
         self.env.cr.execute_values(
@@ -66,6 +68,10 @@ class AccountFullReconcile(models.Model):
             ],
             page_size=1000,
         )
+        if _debug.perf.enabled:
+            _debug.perf.count(
+                "full_lines_linked", rows=sum(len(ids) for ids in move_line_ids)
+            )
         fulls.reconciled_line_ids.invalidate_recordset(
             ["full_reconcile_id"], flush=False
         )
@@ -84,6 +90,10 @@ class AccountFullReconcile(models.Model):
             ],
             page_size=1000,
         )
+        if _debug.perf.enabled:
+            _debug.perf.count(
+                "full_partials_linked", rows=sum(len(ids) for ids in partial_ids)
+            )
         fulls.partial_reconcile_ids.invalidate_recordset(
             ["full_reconcile_id"], flush=False
         )
@@ -94,13 +104,13 @@ class AccountFullReconcile(models.Model):
         )
         return fulls
 
-    @dbg.timed
+    @_debug.perf.timed
     def unlink(self):
-        dbg.lifecycle.debug("unlink %s", dbg.rec(self))
+        _debug.lifecycle("unlink", unlink=self)
         amls = self.reconciled_line_ids
         res = super().unlink()
         if self.env.context.get("defer_matching_number_update"):
-            dbg.logic.debug("full unlink: matching number update deferred")
+            _debug.logic("full_unlink_matching_number_update")
             return res
         amls = amls.exists()
         if amls:

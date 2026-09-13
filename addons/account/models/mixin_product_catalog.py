@@ -1,15 +1,18 @@
 from odoo import models
+from odoo.libs.debug_log import DebugLog
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class MixinProductCatalog(models.AbstractModel):
     _inherit = "mixin.product.catalog"
 
-    @dbg.timed
+    @_debug.perf.timed
     def _create_section(self, child_field, name, position, **kwargs):
         parent_field = self._get_parent_field_on_child_model()
 
+        if _debug.logic.enabled and not parent_field:
+            _debug.logic("section_create_skipped", reason="no_parent_field")
         if not parent_field:
             return {}
 
@@ -31,6 +34,13 @@ class MixinProductCatalog(models.AbstractModel):
             }
         )
 
+        _debug.pipeline(
+            "section_created",
+            records=self,
+            section=section,
+            position=position,
+            sequence=sequence,
+        )
         return {
             "id": section.id,
             "sequence": section.sequence,
@@ -57,6 +67,12 @@ class MixinProductCatalog(models.AbstractModel):
         ):
             sequence = section_lines[0].sequence
 
+        _debug.logic(
+            "line_sequence_chosen",
+            section=section_id,
+            sequence=sequence,
+            lines=len(lines),
+        )
         for line in lines.filtered_domain([("sequence", ">=", sequence)]):
             line.sequence += 1
 
@@ -89,6 +105,11 @@ class MixinProductCatalog(models.AbstractModel):
                 "line_count": no_section_count,
             }
 
+        _debug.pipeline(
+            "sections_collected",
+            sections=len(sections),
+            unsectioned=no_section_count,
+        )
         return sorted(sections.values(), key=lambda x: x["sequence"])
 
     def _get_default_create_section_values(self):
@@ -104,7 +125,7 @@ class MixinProductCatalog(models.AbstractModel):
             and line.product_uom_qty > 0
         )
 
-    @dbg.timed
+    @_debug.perf.timed
     def _resequence_sections(self, sections, child_field, **kwargs):
         lines = self[child_field].sorted("sequence")
         move_section, target_section = sections
@@ -136,6 +157,16 @@ class MixinProductCatalog(models.AbstractModel):
         reordered_lines = (
             remaining_lines[:insert_index] + move_block + remaining_lines[insert_index:]
         )
+        _debug.logic(
+            "section_insert_position",
+            document=self,
+            move_section=move_section.get("id"),
+            target_section=target_section.get("id"),
+            insert_after=insert_after,
+            insert_index=insert_index,
+            moved_lines=len(move_block),
+            remaining_lines=len(remaining_lines),
+        )
 
         sections = {}
         for sequence, line in enumerate(reordered_lines, start=1):
@@ -143,4 +174,10 @@ class MixinProductCatalog(models.AbstractModel):
             if line.display_type == "line_section":
                 sections[line.id] = sequence
 
+        _debug.pipeline(
+            "sections_resequenced",
+            document=self,
+            lines=len(reordered_lines),
+            sections=len(sections),
+        )
         return sections

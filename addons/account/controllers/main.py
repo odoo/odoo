@@ -3,19 +3,21 @@ from types import GeneratorType
 
 from odoo import http
 from odoo.http import InternalServerError, prepare_content_disposition_header, request
+from odoo.libs.debug_log import DebugLog
 from odoo.tools.misc import html_escape
 
-from ..tools import debug_log as dbg
 from odoo.addons.account.controllers.download_docs import _get_headers
 from odoo.addons.account.models.account_report_engine import (
     AccountReportFileDownloadException,
 )
 
+_debug = DebugLog(__name__)
+
 
 class AccountReportController(http.Controller):
     @http.route("/account_reports", type="http", auth="user", methods=["POST"])
     def get_report(self, options, file_generator, **kwargs):
-        dbg.pipeline.debug("route AccountReportController.get_report")
+        _debug.pipeline("route", handler="AccountReportController.get_report")
         uid = request.env.uid
         options = json.loads(options)
 
@@ -38,12 +40,12 @@ class AccountReportController(http.Controller):
         )
 
         try:
-            with dbg.timer(
-                request.env,
-                "[report:%s] get_report %s companies=%s",
-                report.id,
-                file_generator,
-                allowed_company_ids,
+            with _debug.perf(
+                "get_report",
+                cr=request.env.cr,
+                report=report,
+                file_generator=file_generator,
+                companies=allowed_company_ids,
             ):
                 generated_file_data = report.dispatch_report_action(
                     options, file_generator
@@ -111,7 +113,9 @@ class AccountReportController(http.Controller):
         auth="user",
     )
     def download_report_attachments(self, attachments):
-        dbg.pipeline.debug("route AccountReportController.download_report_attachments")
+        _debug.pipeline(
+            "route", handler="AccountReportController.download_report_attachments"
+        )
         attachments.check_access("read")
         assert all(
             attachment.res_id and attachment.res_model == "res.partner"

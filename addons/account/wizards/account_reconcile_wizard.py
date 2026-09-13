@@ -2,8 +2,9 @@ from datetime import timedelta
 
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class AccountReconcileWizard(models.TransientModel):
@@ -12,9 +13,9 @@ class AccountReconcileWizard(models.TransientModel):
     _check_company_auto = True
 
     @api.model
-    @dbg.timed
+    @_debug.perf.timed
     def default_get(self, fields):
-        dbg.lifecycle.debug("default_get on %s", dbg.rec(self))
+        _debug.lifecycle("default_get", records=self)
         res = super().default_get(fields)
         if "move_line_ids" not in fields:
             return res
@@ -41,6 +42,12 @@ class AccountReconcileWizard(models.TransientModel):
                     lambda line: line.account_id != move_line_ids[0].account_id
                 )
             }
+        _debug.logic(
+            "reconcile_accounts_checked",
+            lines=move_line_ids,
+            accounts=len(accounts),
+            shadowed=bool(shadowed_aml_values),
+        )
         move_line_ids._check_amls_exigibility_for_reconciliation(
             shadowed_aml_values=shadowed_aml_values
         )
@@ -264,13 +271,16 @@ class AccountReconcileWizard(models.TransientModel):
             )
 
     @api.constrains("edit_mode_amount_currency")
-    @dbg.timed
+    @_debug.perf.timed
     def _check_min_max_edit_mode_amount_currency(self):
         for wizard in self:
             if wizard.edit_mode:
                 if wizard.edit_mode_reco_currency_id.is_zero(
                     wizard.edit_mode_amount_currency
                 ):
+                    _debug.logic(
+                        "edit_mode_amount_rejected", recwizard=wizard, reason="zero"
+                    )
                     raise UserError(
                         _("The amount of the write-off of a single line cannot be 0.")
                     )
@@ -279,21 +289,31 @@ class AccountReconcileWizard(models.TransientModel):
                     or wizard.move_line_ids.amount_currency > 0.0
                 )
                 if is_debit_line and wizard.edit_mode_amount_currency < 0.0:
+                    _debug.logic(
+                        "edit_mode_amount_rejected",
+                        recwizard=wizard,
+                        reason="negative_on_debit_line",
+                    )
                     raise UserError(
                         _(
                             "The amount of the write-off of a single debit line should be strictly positive."
                         )
                     )
                 if not is_debit_line and wizard.edit_mode_amount_currency > 0.0:
+                    _debug.logic(
+                        "edit_mode_amount_rejected",
+                        recwizard=wizard,
+                        reason="positive_on_credit_line",
+                    )
                     raise UserError(
                         _(
                             "The amount of the write-off of a single credit line should be strictly negative."
                         )
                     )
 
-    @dbg.timed
+    @_debug.perf.timed
     def _action_view_wizard(self):
-        dbg.lifecycle.debug("_action_view_wizard on %s", dbg.rec(self))
+        _debug.lifecycle("_action_view_wizard", records=self)
         self.check_singleton()
         return {
             "name": _("Write-Off Entry"),
@@ -313,7 +333,7 @@ class AccountReconcileWizard(models.TransientModel):
             return lock_dates[-1][0] + timedelta(days=1)
         return None
 
-    @dbg.timed
+    @_debug.perf.timed
     def reconcile(self):
         self.check_singleton()
         move_lines_to_reconcile = self.move_line_ids._origin
@@ -321,14 +341,14 @@ class AccountReconcileWizard(models.TransientModel):
         do_write_off = self.edit_mode or (
             self.is_write_off_required and not self.allow_partials
         )
-        dbg.logic.debug(
-            "[recwizard:%s] reconcile %s transfer=%s write_off=%s partials=%s edit=%s",
-            self.id,
-            dbg.rec(move_lines_to_reconcile),
-            do_transfer,
-            do_write_off,
-            self.allow_partials,
-            self.edit_mode,
+        _debug.logic(
+            "reconcile",
+            recwizard=self,
+            move_lines_to_reconcile=move_lines_to_reconcile,
+            transfer=do_transfer,
+            write_off=do_write_off,
+            partials=self.allow_partials,
+            edit=self.edit_mode,
         )
         if do_transfer:
             transfer_move = self.create_transfer()

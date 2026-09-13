@@ -5,11 +5,12 @@ import markupsafe
 
 from odoo import _, api, fields, models
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
 from odoo.tools.misc import formatLang
 from odoo.tools.safe_eval import safe_eval
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class AccountMove(models.Model):
@@ -19,12 +20,9 @@ class AccountMove(models.Model):
         string="Payment State Before Switch", copy=False
     )
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_view_bank_reconciliation_widget(self):
-        dbg.lifecycle.debug(
-            "action_view_bank_reconciliation_widget on %s",
-            dbg.rec(self),
-        )
+        _debug.lifecycle("action_view_bank_reconciliation_widget", records=self)
         return self.statement_line_id._action_view_bank_reconciliation_widget(
             default_context={
                 "search_default_journal_id": self.statement_line_id.journal_id.id,
@@ -33,19 +31,18 @@ class AccountMove(models.Model):
             }
         )
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_view_bank_reconciliation_widget_statement(self):
-        dbg.lifecycle.debug(
-            "action_view_bank_reconciliation_widget_statement on %s",
-            dbg.rec(self),
+        _debug.lifecycle(
+            "action_view_bank_reconciliation_widget_statement", records=self
         )
         return self.statement_line_id._action_view_bank_reconciliation_widget(
             extra_domain=[("statement_id", "in", self.statement_id.ids)],
         )
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_view_business_doc(self):
-        dbg.lifecycle.debug("action_view_business_doc on %s", dbg.rec(self))
+        _debug.lifecycle("action_view_business_doc", records=self)
         if self.statement_line_id:
             return self.action_view_bank_reconciliation_widget()
         else:
@@ -75,9 +72,17 @@ class AccountMove(models.Model):
                 for line in move.invoice_line_ids - previous_lines:
                     line._onchange_name_predictive()
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_domain_outstanding_bank_statement_lines(self):
         self.check_singleton()
+        if _debug.logic.enabled:
+            _debug.logic(
+                "outstanding_stline_scope",
+                move=self,
+                partner=self.commercial_partner_id,
+                company=self.company_id,
+                inbound=self.is_inbound(),
+            )
         return [
             ("parent_state", "=", "posted"),
             ("partner_id", "=", self.commercial_partner_id.id),
@@ -127,7 +132,7 @@ class AccountMove(models.Model):
                 lines_by_move[move.id] = lines
         return lines_by_move
 
-    @dbg.timed
+    @_debug.perf.timed
     def _compute_invoice_outstanding_credits_debits_widget(self):
         super()._compute_invoice_outstanding_credits_debits_widget()
         candidates = self.filtered(
@@ -142,10 +147,11 @@ class AccountMove(models.Model):
             return
 
         lines_by_move = candidates._get_outstanding_bank_statement_lines()
-        dbg.logic.debug(
-            "outstanding statement lines: %s",
-            dbg.lazy(lambda: {m: len(l) for m, l in lines_by_move.items()}),
-        )
+        if _debug.logic.enabled:
+            _debug.logic(
+                "outstanding_statement_lines",
+                lines_per_move={m: len(l) for m, l in lines_by_move.items()},
+            )
 
         for move in candidates:
             payments_widget_vals = {
@@ -212,9 +218,9 @@ class AccountMove(models.Model):
 
         return exclude_amount
 
-    @dbg.timed
+    @_debug.perf.timed
     def js_add_outstanding_line(self, line_id):
-        dbg.lifecycle.debug("js_add_outstanding_line on %s", dbg.rec(self))
+        _debug.lifecycle("js_add_outstanding_line", records=self)
         super().js_add_outstanding_line(line_id)
         line = self.env["account.move.line"].browse(line_id)
         if line.account_id.account_type == "asset_cash" and line.statement_line_id:
@@ -231,9 +237,9 @@ class AccountMove(models.Model):
             )
         return None
 
-    @dbg.timed
+    @_debug.perf.timed
     def js_remove_outstanding_partial(self, partial_id):
-        dbg.lifecycle.debug("js_remove_outstanding_partial on %s", dbg.rec(self))
+        _debug.lifecycle("js_remove_outstanding_partial", records=self)
         if st_line := self.statement_line_id:
             partial = self.env["account.partial.reconcile"].browse(partial_id)
             st_line.remove_reconciled_line(
@@ -296,7 +302,7 @@ class AccountMoveLine(models.Model):
         return sql_order
 
     @api.depends("balance")
-    @dbg.timed
+    @_debug.perf.timed
     def _compute_full_amount_switch_html(self):
         for line in self:
             if (
@@ -364,6 +370,13 @@ class AccountMoveLine(models.Model):
                     ),
                 ]
 
+            _debug.logic(
+                "full_amount_switch_mode",
+                line=line,
+                reconciled=reconciled_lines,
+                invoice=is_invoice,
+                messages=len(lines),
+            )
             display_name_html = markupsafe.Markup("""
                     <a name='action_redirect_to_move' type='object' class="btn btn-link p-0 align-baseline fst-italic">%(display_name)s</a>
                 """) % {
@@ -400,11 +413,16 @@ class AccountMoveLine(models.Model):
             )
 
     @api.model
-    @dbg.timed
+    @_debug.perf.timed
     def _action_view_unreconciled(self, extra_domain=None, extra_context=None):
-        dbg.lifecycle.debug("_action_view_unreconciled on %s", dbg.rec(self))
+        _debug.lifecycle("_action_view_unreconciled", records=self)
         action = self.env["ir.actions.act_window"]._get_action_dict_by_xml_id(
             "account.action_move_line_posted_unreconciled"
+        )
+        _debug.logic(
+            "unreconciled_action_scoped",
+            extra_domain=bool(extra_domain),
+            extra_context=bool(extra_context),
         )
         if extra_domain:
             stored = safe_eval(action.get("domain") or "[]", dict(self.env.context))
@@ -418,9 +436,9 @@ class AccountMoveLine(models.Model):
             }
         return action
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_reconcile(self):
-        dbg.lifecycle.debug("action_reconcile on %s", dbg.rec(self))
+        _debug.lifecycle("action_reconcile", records=self)
         self = self.filtered(lambda x: x.balance or x.amount_currency)
         if not self:
             return None
@@ -439,7 +457,7 @@ class AccountMoveLine(models.Model):
             else wizard.reconcile()
         )
 
-    @dbg.timed
+    @_debug.perf.timed
     def _read_group_select(self, aggregate_spec, query):
         fname, __, func = models.parse_read_group_spec(aggregate_spec)
         if func != "sum_rounded":
@@ -464,11 +482,12 @@ class AccountMoveLine(models.Model):
             ),
         )
 
-    @dbg.timed
+    @_debug.perf.timed
     def _read_group_groupby(self, alias, groupby_spec, query):
         if ":" in groupby_spec:
             fname, method = groupby_spec.split(":")
             if method == "abs_rounded":
+                _debug.logic("groupby_rerouted", field=fname, method=method)
                 currency_alias = query.get_table_alias(self._table, "currency_id")
                 query.add_join(
                     "LEFT JOIN",

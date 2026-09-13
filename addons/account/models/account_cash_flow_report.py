@@ -1,7 +1,8 @@
 from odoo import _, models
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, Query
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class AccountCashFlowReportHandler(models.AbstractModel):
@@ -9,7 +10,7 @@ class AccountCashFlowReportHandler(models.AbstractModel):
     _inherit = ["account.report.custom.handler"]
     _description = "Cash Flow Report Custom Handler"
 
-    @dbg.timed
+    @_debug.perf.timed
     def _dynamic_lines_generator(
         self, report, options, all_column_groups_expression_totals, warnings=None
     ):
@@ -18,6 +19,12 @@ class AccountCashFlowReportHandler(models.AbstractModel):
 
         layout_data = self._get_layout_data()
         report_data = self._get_report_data(report, options, layout_data)
+        _debug.pipeline(
+            "report_data_built",
+            report=report,
+            layout_lines=len(layout_data),
+            sections_with_data=len(report_data),
+        )
 
         for layout_line_id, layout_line_data in layout_data.items():
             lines.append(
@@ -58,6 +65,12 @@ class AccountCashFlowReportHandler(models.AbstractModel):
         unexplained_difference_line = self._get_unexplained_difference_line(
             report, options, report_data
         )
+        _debug.pipeline(
+            "cash_flow_lines_generated",
+            report=report,
+            lines=len(lines),
+            unexplained_difference=bool(unexplained_difference_line),
+        )
 
         if unexplained_difference_line:
             lines.append((0, unexplained_difference_line))
@@ -74,11 +87,17 @@ class AccountCashFlowReportHandler(models.AbstractModel):
             additional_journals_domain=[("type", "in", ("bank", "cash", "general"))],
         )
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_report_data(self, report, options, layout_data):
         report_data = {}
 
         payment_account_ids = self._get_account_ids(report, options)
+        _debug.logic(
+            "liquidity_accounts_checked",
+            report=report,
+            payment_accounts=len(payment_account_ids),
+            skipped=not payment_account_ids,
+        )
         if not payment_account_ids:
             return report_data
 
@@ -112,9 +131,14 @@ class AccountCashFlowReportHandler(models.AbstractModel):
             for aml_data in aml_groupby_account.values():
                 self._dispatch_aml_data(tags_ids, aml_data, layout_data, report_data)
 
+        _debug.pipeline(
+            "report_data_dispatched",
+            report=report,
+            sections_with_data=len(report_data),
+        )
         return report_data
 
-    @dbg.timed
+    @_debug.perf.timed
     def _add_report_data(self, layout_line_id, aml_data, layout_data, report_data):
         """Add or update the report_data dictionary with aml_data.
 
@@ -204,7 +228,7 @@ class AccountCashFlowReportHandler(models.AbstractModel):
         """Get the account tag ids that are relevant for the cash flow report."""
         return self._get_tags_ids().values()
 
-    @dbg.timed
+    @_debug.perf.timed
     def _dispatch_aml_data(self, tags_ids, aml_data, layout_data, report_data):
         # Dispatch the aml_data in the correct layout_line
         if aml_data["account_account_type"] == "asset_receivable":
@@ -259,7 +283,7 @@ class AccountCashFlowReportHandler(models.AbstractModel):
     # -------------------------------------------------------------------------
     # QUERIES
     # -------------------------------------------------------------------------
-    @dbg.timed
+    @_debug.perf.timed
     def _get_account_ids(self, report, options):
         """Retrieve the liquidity accounts to be part of the cash flow statement: the default accounts of the
         selected bank/cash/general journals and the outstanding accounts of their payment method lines.
@@ -278,6 +302,12 @@ class AccountCashFlowReportHandler(models.AbstractModel):
             else "account_journal.type IN ('bank', 'cash', 'general')"
         )
         where_params = [list(selected_journal_ids)] if selected_journal_ids else []
+        _debug.logic(
+            "liquidity_journal_scope",
+            report=report,
+            selected_journals=len(selected_journal_ids),
+            fallback_all_liquidity_journals=not selected_journal_ids,
+        )
 
         self.env.cr.execute(
             f"""
@@ -299,6 +329,13 @@ class AccountCashFlowReportHandler(models.AbstractModel):
 
         res = self.env.cr.fetchall()[0]
         payment_account_ids = set((res[0] or []) + (res[1] or []))
+        _debug.pipeline(
+            "liquidity_accounts_fetched",
+            report=report,
+            default_accounts=len(res[0] or []),
+            payment_accounts=len(res[1] or []),
+            distinct_accounts=len(payment_account_ids),
+        )
 
         if not payment_account_ids:
             return ()
@@ -331,7 +368,7 @@ class AccountCashFlowReportHandler(models.AbstractModel):
             search_condition=query.where_clause,
         )
 
-    @dbg.timed
+    @_debug.perf.timed
     def _compute_liquidity_balance(
         self, report, options, payment_account_ids, date_scope
     ):
@@ -399,11 +436,18 @@ class AccountCashFlowReportHandler(models.AbstractModel):
                 )
             )
 
+        _debug.pipeline(
+            "liquidity_balance_query",
+            report=report,
+            date_scope=date_scope,
+            column_groups=len(queries),
+            accounts=len(payment_account_ids),
+        )
         self.env.cr.execute(SQL(" UNION ALL ").join(queries))
 
         return self.env.cr.dictfetchall()
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_liquidity_moves(
         self, report, options, payment_account_ids, cash_flow_tag_ids
     ):
@@ -558,9 +602,16 @@ class AccountCashFlowReportHandler(models.AbstractModel):
                 aml_data["column_group_key"]
             ]["balance"] -= aml_data["balance"]
 
+        _debug.perf.count("liquidity_move_rows_fetched", rows=self.env.cr.rowcount)
+        _debug.pipeline(
+            "liquidity_moves_grouped",
+            report=report,
+            column_groups=len(queries),
+            accounts=len(reconciled_aml_groupby_account),
+        )
         return list(reconciled_aml_groupby_account.values())
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_reconciled_moves(
         self, report, options, payment_account_ids, cash_flow_tag_ids
     ):
@@ -669,6 +720,26 @@ class AccountCashFlowReportHandler(models.AbstractModel):
                 aml_data["account_id"]
             )
 
+        _debug.perf.count("reconciled_partial_rows_fetched", rows=self.env.cr.rowcount)
+        if _debug.pipeline.enabled:
+            _debug.pipeline(
+                "reconciled_partials_fetched",
+                report=report,
+                moves_per_column_group={
+                    key: len(moves)
+                    for key, moves in reconciled_percentage_per_move.items()
+                },
+                accounts_per_column_group={
+                    key: len(accounts)
+                    for key, accounts in reconciled_account_ids.items()
+                },
+            )
+        _debug.logic(
+            "reconciled_moves_checked",
+            report=report,
+            skipped=not reconciled_percentage_per_move,
+            column_groups=len(reconciled_percentage_per_move),
+        )
         if not reconciled_percentage_per_move:
             return []
 
@@ -720,6 +791,7 @@ class AccountCashFlowReportHandler(models.AbstractModel):
                     aml_data["move_id"]
                 ][aml_data["account_id"]][1] += aml_data["balance"]
 
+        _debug.perf.count("reconciled_move_balances_fetched", rows=self.env.cr.rowcount)
         reconciled_aml_per_account = {}
 
         queries = []
@@ -858,12 +930,18 @@ class AccountCashFlowReportHandler(models.AbstractModel):
                 "balance"
             ] -= aml_balance
 
+        _debug.perf.count("reconciled_aml_rows_fetched", rows=self.env.cr.rowcount)
+        _debug.pipeline(
+            "reconciled_moves_grouped",
+            report=report,
+            accounts=len(reconciled_aml_per_account),
+        )
         return list(reconciled_aml_per_account.values())
 
     # -------------------------------------------------------------------------
     # COLUMNS / LINES
     # -------------------------------------------------------------------------
-    @dbg.timed
+    @_debug.perf.timed
     def _get_layout_data(self):
         # Indentation of the following dict reflects the structure of the report.
         return {
@@ -960,7 +1038,7 @@ class AccountCashFlowReportHandler(models.AbstractModel):
             },
         }
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_layout_line(
         self, report, options, layout_line_id, layout_line_data, report_data
     ):
@@ -1030,7 +1108,7 @@ class AccountCashFlowReportHandler(models.AbstractModel):
             "columns": column_values,
         }
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_unexplained_difference_line(self, report, options, report_data):
         unexplained_difference = False
         column_values = []
@@ -1075,6 +1153,12 @@ class AccountCashFlowReportHandler(models.AbstractModel):
                 )
             )
 
+        _debug.logic(
+            "unexplained_difference_checked",
+            report=report,
+            unexplained_difference=unexplained_difference,
+            columns=len(column_values),
+        )
         if unexplained_difference:
             return {
                 "id": report._get_generic_line_id(

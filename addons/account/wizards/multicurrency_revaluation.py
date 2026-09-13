@@ -5,9 +5,10 @@ from dateutil.relativedelta import relativedelta
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Command, Date
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import format_date
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class AccountMulticurrencyRevaluationWizard(models.TransientModel):
@@ -55,9 +56,9 @@ class AccountMulticurrencyRevaluationWizard(models.TransientModel):
     )
 
     @api.model
-    @dbg.timed
+    @_debug.perf.timed
     def default_get(self, fields):
-        dbg.lifecycle.debug("default_get on %s", dbg.rec(self))
+        _debug.lifecycle("default_get", records=self)
         rec = super().default_get(fields)
         if "reversal_date" in fields:
             report_options = self.env.context[
@@ -72,13 +73,14 @@ class AccountMulticurrencyRevaluationWizard(models.TransientModel):
                 "line_ids"
             ]
         ):
+            _debug.logic("revaluation_defaults_rejected", reason="no_adjustment_needed")
             raise UserError(_("No adjustment needed"))
         return rec
 
     @api.depends(
         "expense_provision_account_id", "income_provision_account_id", "reversal_date"
     )
-    @dbg.timed
+    @_debug.perf.timed
     def _compute_show_warning_move_id(self):
         for record in self:
             last_move = (
@@ -110,7 +112,7 @@ class AccountMulticurrencyRevaluationWizard(models.TransientModel):
         "date",
         "journal_id",
     )
-    @dbg.timed
+    @_debug.perf.timed
     def _compute_preview_data(self):
         preview_columns = [
             {"field": "account_id", "label": _("Account")},
@@ -159,7 +161,7 @@ class AccountMulticurrencyRevaluationWizard(models.TransientModel):
             )
 
     @api.model
-    @dbg.timed
+    @_debug.perf.timed
     def _get_move_vals(self):
         def _get_model_id(parsed_line, selected_model):
             for _dummy, parsed_res_model, parsed_res_id in parsed_line:
@@ -185,6 +187,12 @@ class AccountMulticurrencyRevaluationWizard(models.TransientModel):
             "unfold_all": True,
         }
         report_lines = report._get_lines(options)
+        _debug.pipeline(
+            "revaluation_report_lines_loaded",
+            report=report,
+            included_line=included_line_id,
+            report_lines=len(report_lines),
+        )
         move_lines = []
 
         for report_line in report._get_unfolded_lines(
@@ -246,6 +254,12 @@ class AccountMulticurrencyRevaluationWizard(models.TransientModel):
                     )
                 )
 
+        _debug.pipeline(
+            "revaluation_move_lines_built",
+            report=report,
+            move_lines=len(move_lines),
+            adjusted_accounts=len(move_lines) // 2,
+        )
         return {
             "ref": _(
                 "Foreign currencies adjustment entry as of %s",
@@ -256,15 +270,15 @@ class AccountMulticurrencyRevaluationWizard(models.TransientModel):
             "line_ids": move_lines,
         }
 
-    @dbg.timed
+    @_debug.perf.timed
     def create_entries(self):
         self.check_singleton()
         move_vals = self._get_move_vals()
-        dbg.pipeline.debug(
-            "[revaluation:%s] create_entries: %d line(s), reversal on %s",
-            self.id,
-            len(move_vals["line_ids"]),
-            self.reversal_date,
+        _debug.pipeline(
+            "create_entries_reversal",
+            revaluation=self,
+            line_ids_count=len(move_vals["line_ids"]),
+            reversal_date=self.reversal_date,
         )
         if move_vals["line_ids"]:
             move = (

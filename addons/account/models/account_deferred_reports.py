@@ -6,13 +6,15 @@ from dateutil.relativedelta import relativedelta
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, groupby
 
-from ..tools import debug_log as dbg
 from odoo.addons.account.models.account_move_deferred import (
     DEFERRED_DATE_MAX,
     DEFERRED_DATE_MIN,
 )
+
+_debug = DebugLog(__name__)
 
 
 class AccountDeferredReportHandler(models.AbstractModel):
@@ -49,7 +51,7 @@ class AccountDeferredReportHandler(models.AbstractModel):
             ("move_id.date", "<=", options["date"]["date_to"]),
         ]
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_domain_deferred_lines(
         self, report, options, filter_already_generated=False, filter_not_started=False
     ):
@@ -91,10 +93,17 @@ class AccountDeferredReportHandler(models.AbstractModel):
             )
         if filter_not_started:
             domain &= Domain("deferred_start_date", ">", options["date"]["date_to"])
+        _debug.logic(
+            "deferred_domain_built",
+            report=report,
+            account_types=account_types,
+            filter_already_generated=filter_already_generated,
+            filter_not_started=filter_not_started,
+        )
         return domain
 
     @api.model
-    @dbg.timed
+    @_debug.perf.timed
     def _get_select(self, options):
         account_name = self.env["account.account"]._field_to_sql(
             "account_move_line__account_id", "name"
@@ -142,7 +151,7 @@ class AccountDeferredReportHandler(models.AbstractModel):
             SQL("%s AS account_name", account_name),
         ]
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_lines(self, report, options, filter_already_generated=False):
         if "report_deferred_lines" not in self.env.cr.cache:
             self._update_deferred_lines_cache(report, options, filter_already_generated)
@@ -189,6 +198,7 @@ class AccountDeferredReportHandler(models.AbstractModel):
         self.env.cr.cache["report_deferred_lines"] = {
             r["line_id"]: r for r in self.env.cr.dictfetchall()
         }
+        _debug.perf.count("deferred_lines_fetched", rows=self.env.cr.rowcount)
 
     @api.model
     def _get_grouping_fields_deferred_lines(
@@ -216,7 +226,7 @@ class AccountDeferredReportHandler(models.AbstractModel):
         return tuple(line[k] for k in self._get_grouping_fields_deferral_lines())
 
     @api.model
-    @dbg.timed
+    @_debug.perf.timed
     def _group_deferred_amounts_by_grouping_field(
         self,
         deferred_amounts_by_line,
@@ -260,13 +270,21 @@ class AccountDeferredReportHandler(models.AbstractModel):
                     self.env.company.currency_id.round(current_key_totals[period])
                 )
             totals_per_key[key] = current_key_totals
+        _debug.pipeline(
+            "deferred_amounts_grouped",
+            grouping_field=grouping_field,
+            filter_already_generated=filter_already_generated,
+            is_reverse=is_reverse,
+            periods=len(periods),
+            keys=len(totals_per_key),
+        )
         return totals_per_key, totals_aggregated_by_period
 
     ###########################
     # DEFERRED REPORT DISPLAY #
     ###########################
 
-    @dbg.timed
+    @_debug.perf.timed
     def _custom_options_initializer(self, report, options, previous_options):
         super()._custom_options_initializer(
             report, options, previous_options=previous_options
@@ -367,8 +385,20 @@ class AccountDeferredReportHandler(models.AbstractModel):
                 "AccountReportFilters": "account.DeferredFilters",
             },
         }
+        if _debug.logic.enabled:
+            _debug.logic(
+                "deferred_options_resolved",
+                report=report,
+                report_type=options["deferred_report_type"],
+                grouping_field=options["deferred_grouping_field"],
+                columns=len(options["columns"]),
+                manual_generation=any(
+                    button.get("action") == "action_generate_entry"
+                    for button in options.get("buttons", [])
+                ),
+            )
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_audit_cell(self, options, params):
         """Open a list of invoices/bills and/or deferral entries for the clicked cell in a deferred report.
 
@@ -378,7 +408,7 @@ class AccountDeferredReportHandler(models.AbstractModel):
                                  `column_group_key`: the column group key of the cell
                                  `expression_label`: the expression label of the cell
         """
-        dbg.lifecycle.debug("action_audit_cell on %s", dbg.rec(self))
+        _debug.lifecycle("action_audit_cell", records=self)
         report = self.env["account.report"].browse(options["report_id"])
         column_values = next(
             (
@@ -390,6 +420,13 @@ class AccountDeferredReportHandler(models.AbstractModel):
                 )
             ),
             None,
+        )
+        _debug.logic(
+            "audit_column_resolved",
+            report=report,
+            found=bool(column_values),
+            column_group=params.get("column_group_key"),
+            expression_label=params.get("expression_label"),
         )
         if not column_values:
             return None
@@ -426,6 +463,13 @@ class AccountDeferredReportHandler(models.AbstractModel):
         # We're getting all lines from the concerned moves. They are filtered later for flexibility.
         original_moves = (
             self.env["account.move.line"].search(original_move_lines_domain).move_id
+        )
+        _debug.pipeline(
+            "audit_original_moves_found",
+            report=report,
+            grouping_field=options["deferred_grouping_field"],
+            grouping_record=grouping_record_id,
+            original_moves=original_moves,
         )
 
         # Lines shown per column, grouped by their journal entry and filtered by the column date bounds:
@@ -471,6 +515,19 @@ class AccountDeferredReportHandler(models.AbstractModel):
                 ("date", ">=", column_date_from),
                 ("date", "<=", column_date_to),
             ]
+        if _debug.logic.enabled:
+            _debug.logic(
+                "audit_domain_mode",
+                report=report,
+                expression_label=column_values["expression_label"],
+                mode="not_started"
+                if column_values["expression_label"] == "not_started"
+                else "candidates"
+                if not original_moves.deferred_move_ids
+                else "dated",
+                date_from=column_date_from,
+                date_to=column_date_to,
+            )
         domain += self._get_domain_fully_inside_period(options)
 
         return {
@@ -529,10 +586,16 @@ class AccountDeferredReportHandler(models.AbstractModel):
                 warnings["account.deferred_report_info_fully_generated"] = {
                     "alert_type": "info"
                 }
+            _debug.logic(
+                "generation_warning_decided",
+                report=report,
+                to_generate=bool(moves_lines_to_generate),
+                already_generated=already_generated,
+            )
 
-    @dbg.timed
+    @_debug.perf.timed
     def open_journal_items(self, options, params):
-        dbg.lifecycle.debug("open_journal_items on %s", dbg.rec(self))
+        _debug.lifecycle("open_journal_items", records=self)
         report = self.env["account.report"].browse(options["report_id"])
         record_model, record_id = report._get_model_info_from_id(params.get("line_id"))
         domain = self._get_domain_deferred_lines(report, options)
@@ -542,6 +605,12 @@ class AccountDeferredReportHandler(models.AbstractModel):
             domain &= Domain("product_id", "=", record_id)
         elif record_model == "product.category" and record_id:
             domain &= Domain("product_category_id", "=", record_id)
+        _debug.logic(
+            "journal_items_scoped",
+            report=report,
+            record_model=record_model,
+            record_id=record_id,
+        )
         return {
             "type": "ir.actions.act_window",
             "name": _("Deferred Entries"),
@@ -560,7 +629,7 @@ class AccountDeferredReportHandler(models.AbstractModel):
             },
         }
 
-    @dbg.timed
+    @_debug.perf.timed
     def _dynamic_lines_generator(
         self, report, options, all_column_groups_expression_totals, warnings=None
     ):
@@ -585,6 +654,12 @@ class AccountDeferredReportHandler(models.AbstractModel):
             ]
 
         lines = self._get_lines(report, options)
+        _debug.pipeline(
+            "deferred_lines_loaded",
+            report=report,
+            lines=len(lines),
+            columns=len(options["columns"]),
+        )
         periods = [
             (
                 fields.Date.from_string(column["date_from"]),
@@ -612,6 +687,13 @@ class AccountDeferredReportHandler(models.AbstractModel):
         grouping_model = self.env["account.move.line"][
             options["deferred_grouping_field"]
         ]._name
+        _debug.logic(
+            "deferred_grouping_chosen",
+            report=report,
+            grouping_field=options["deferred_grouping_field"],
+            grouping_model=grouping_model,
+            groups=len(totals_per_grouping_field),
+        )
         for totals_grouping_field in totals_per_grouping_field.values():
             grouping_record = self.env[grouping_model].browse(
                 totals_grouping_field[options["deferred_grouping_field"]]
@@ -651,15 +733,21 @@ class AccountDeferredReportHandler(models.AbstractModel):
                 )
             )
 
+        _debug.pipeline(
+            "deferred_report_lines_built",
+            report=report,
+            report_lines=len(report_lines),
+            total_line=bool(totals_per_grouping_field),
+        )
         return report_lines
 
     #######################
     # DEFERRED GENERATION #
     #######################
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_generate_entry(self, options):
-        dbg.lifecycle.debug("action_generate_entry on %s", dbg.rec(self))
+        _debug.lifecycle("action_generate_entry", records=self)
         new_deferred_moves = self._generate_deferral_entry(options)
         report = self.env["account.report"].browse(options["report_id"])
         domain = report._get_domain_generated_deferral_entries(options)
@@ -669,7 +757,7 @@ class AccountDeferredReportHandler(models.AbstractModel):
 
         raise UserError(_("No entry to generate."))
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_moves_to_defer(self, options):
         date_from = fields.Date.to_date(DEFERRED_DATE_MIN)
         date_to = fields.Date.from_string(options["date"]["date_to"])
@@ -704,9 +792,18 @@ class AccountDeferredReportHandler(models.AbstractModel):
             self._get_deferred_report_type() == "expense",
             ref,
         )
+        _debug.pipeline(
+            "moves_to_defer_prepared",
+            report=report,
+            candidate_lines=len(lines),
+            deferred_account=deferred_account,
+            move_lines=len(move_lines),
+            original_moves=len(original_move_ids),
+            date_to=date_to,
+        )
         return move_lines, original_move_ids, ref, ref_rev, date_to
 
-    @dbg.timed
+    @_debug.perf.timed
     def _generate_deferral_entry(self, options):
         journal = (
             self.env.company.deferred_expense_journal_id
@@ -724,6 +821,13 @@ class AccountDeferredReportHandler(models.AbstractModel):
             raise UserError(
                 _("You cannot generate entries for a period that is locked.")
             )
+        _debug.logic(
+            "deferral_entry_needed",
+            report=options.get("report_id"),
+            journal=journal,
+            move_lines=len(move_lines),
+            skipped=not move_lines,
+        )
         if not move_lines:
             return self.env["account.move"]
 
@@ -770,6 +874,14 @@ class AccountDeferredReportHandler(models.AbstractModel):
         )
         new_deferred_moves.invalidate_recordset()
         new_deferred_moves._post(soft=True)
+        _debug.pipeline(
+            "deferral_entry_generated",
+            report=options.get("report_id"),
+            journal=journal,
+            deferred_move=deferred_move,
+            reverse_move=reverse_move,
+            original_moves=len(original_move_ids),
+        )
         return new_deferred_moves
 
     @api.model
@@ -783,7 +895,7 @@ class AccountDeferredReportHandler(models.AbstractModel):
         }
 
     @api.model
-    @dbg.timed
+    @_debug.perf.timed
     def _get_deferred_lines(self, lines, deferred_account, period, is_reverse, ref):
         """Build the deferred lines of a single given period.
 
@@ -810,6 +922,12 @@ class AccountDeferredReportHandler(models.AbstractModel):
             )
         )
         totals_aggregated = deferred_amounts_totals["totals_aggregated"]
+        _debug.logic(
+            "deferral_needed",
+            period=period,
+            keys=len(deferred_amounts_by_key),
+            fully_recognized=totals_aggregated == deferred_amounts_totals[period],
+        )
         if totals_aggregated == deferred_amounts_totals[period]:
             return [], set()
 
@@ -843,6 +961,12 @@ class AccountDeferredReportHandler(models.AbstractModel):
                     account_id
                 ] += distribution * full_ratio
 
+        _debug.pipeline(
+            "analytic_distribution_split",
+            lines=len(lines),
+            keys_with_analytic=len(anal_dist_by_key),
+            deferral_keys_with_analytic=len(deferred_anal_dist),
+        )
         remaining_balance = 0
         deferred_lines = []
         original_move_ids = set()
@@ -895,6 +1019,14 @@ class AccountDeferredReportHandler(models.AbstractModel):
             )
             remaining_balance += balance
 
+        _debug.pipeline(
+            "deferred_lines_built",
+            deferred_lines=len(deferred_lines),
+            deferral_lines=len(deferral_lines),
+            deferral_groups=len(grouped_by_key),
+            original_moves=len(original_move_ids),
+            remaining_balance=remaining_balance,
+        )
         if not self.env.company.currency_id.is_zero(remaining_balance):
             deferral_lines.append(
                 Command.create(

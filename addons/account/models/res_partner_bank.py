@@ -6,11 +6,13 @@ import werkzeug.exceptions
 
 from odoo import SUPERUSER_ID, api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
 from odoo.tools.image import image_data_uri
 
-from ..tools import debug_log as dbg
 from odoo.addons.base.models.res_bank import sanitize_account_number
+
+_debug = DebugLog(__name__)
 
 MONEY_TRANSFER_SERVICES = {
     "967": "Wise",
@@ -70,7 +72,7 @@ class ResPartnerBank(models.Model):
     )
 
     @api.constrains("journal_id")
-    @dbg.timed
+    @_debug.perf.timed
     def _check_journal_id(self):
         for bank in self:
             if len(bank.journal_id) > 1:
@@ -78,7 +80,7 @@ class ResPartnerBank(models.Model):
                     self.env._("A bank account can belong to only one journal.")
                 )
 
-    @dbg.timed
+    @_debug.perf.timed
     def _check_allow_out_payment(self):
         for bank in self:
             if bank.allow_out_payment and not bank._can_user_trust():
@@ -89,7 +91,7 @@ class ResPartnerBank(models.Model):
                 )
 
     @api.depends("acc_number")
-    @dbg.timed
+    @_debug.perf.timed
     def _compute_duplicate_bank_partner_ids(self):
         id2duplicates = dict(
             self.env.execute_query(
@@ -115,6 +117,11 @@ class ResPartnerBank(models.Model):
                 )
             )
         )
+        _debug.pipeline(
+            "duplicate_accounts_read",
+            banks=self,
+            with_duplicates=len(id2duplicates),
+        )
         for bank in self:
             duplicate_record = id2duplicates.get(bank._origin.id) or []
             bank.duplicate_bank_partner_ids = (
@@ -126,7 +133,7 @@ class ResPartnerBank(models.Model):
     @api.depends(
         "partner_id.country_id", "sanitized_acc_number", "allow_out_payment", "acc_type"
     )
-    @dbg.timed
+    @_debug.perf.timed
     def _compute_display_account_warning(self):
         for bank in self:
             if (
@@ -170,7 +177,7 @@ class ResPartnerBank(models.Model):
         for bank in self:
             bank.lock_trust_fields = bool(bank._origin) and bool(bank.allow_out_payment)
 
-    @dbg.timed
+    @_debug.perf.timed
     def _prepare_qr_code_vals(
         self,
         amount,
@@ -182,6 +189,7 @@ class ResPartnerBank(models.Model):
         silent_errors=True,
     ):
         if not self:
+            _debug.logic("qr_skipped", reason="no_bank_account")
             return None
 
         self.check_singleton()
@@ -197,6 +205,13 @@ class ResPartnerBank(models.Model):
             candidate_methods = [(qr_method, dict(available_qr_methods)[qr_method])]
         else:
             candidate_methods = available_qr_methods
+        _debug.logic(
+            "qr_candidates_resolved",
+            bank=self,
+            forced=qr_method,
+            available=len(available_qr_methods),
+            candidates=len(candidate_methods),
+        )
         for candidate_method, candidate_name in candidate_methods:
             error_message = self._get_error_messages_for_qr(
                 candidate_method, debtor_partner, currency
@@ -212,6 +227,9 @@ class ResPartnerBank(models.Model):
                 )
 
                 if not error_message:
+                    _debug.logic(
+                        "qr_method_chosen", bank=self, qr_method=candidate_method
+                    )
                     return {
                         "qr_method": candidate_method,
                         "amount": amount,
@@ -221,6 +239,12 @@ class ResPartnerBank(models.Model):
                         "structured_communication": structured_communication,
                     }
 
+            _debug.logic(
+                "qr_method_rejected",
+                bank=self,
+                qr_method=candidate_method,
+                raises=not silent_errors,
+            )
             if not silent_errors:
                 raise UserError(
                     self.env._(
@@ -230,6 +254,7 @@ class ResPartnerBank(models.Model):
                     + error_message
                 )
 
+        _debug.logic("qr_no_method", bank=self, candidates=len(candidate_methods))
         return None
 
     def prepare_qr_code_url(
@@ -336,10 +361,12 @@ class ResPartnerBank(models.Model):
             free_communication,
             structured_communication,
         )
+        _debug.logic("qr_params_resolved", qr_method=qr_method, has_params=bool(params))
         if params:
             try:
                 barcode = self.env["ir.actions.report"].prepare_barcode(**params)
             except ValueError, AttributeError:
+                _debug.logic("qr_barcode_failed", qr_method=qr_method)
                 raise werkzeug.exceptions.HTTPException(
                     description="Cannot convert into barcode."
                 ) from None
@@ -385,20 +412,21 @@ class ResPartnerBank(models.Model):
             )
         )
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_view_business_doc(self):
-        dbg.lifecycle.debug("action_view_business_doc on %s", dbg.rec(self))
+        _debug.lifecycle("action_view_business_doc", records=self)
         return self._get_records_action()
 
     @api.model_create_multi
-    @dbg.timed
+    @_debug.perf.timed
     def create(self, vals_list):
-        dbg.lifecycle.debug(
-            "create %s: %d vals, keys=%s",
-            self._name,
-            len(vals_list),
-            dbg.vals_keys(vals_list),
-        )
+        if _debug.lifecycle.enabled:
+            _debug.lifecycle(
+                "create",
+                model=self._name,
+                count=len(vals_list),
+                fields=sorted({key for vals in vals_list for key in vals}),
+            )
         to_trust = []
         for vals in vals_list:
             to_trust.append(vals.get("allow_out_payment"))
@@ -407,6 +435,12 @@ class ResPartnerBank(models.Model):
         self._raise_if_archived_account_exists(vals_list)
 
         accounts = super().create(vals_list)
+        if _debug.logic.enabled:
+            _debug.logic(
+                "trust_requested",
+                accounts=accounts,
+                requested=sum(1 for trust in to_trust if trust),
+            )
         for account, trust in zip(accounts, to_trust, strict=True):
             if trust and account._can_user_trust():
                 account.allow_out_payment = True
@@ -417,13 +451,19 @@ class ResPartnerBank(models.Model):
             account.partner_id._message_log(body=msg)
         return accounts
 
-    @dbg.timed
+    @_debug.perf.timed
     def _raise_if_archived_account_exists(self, vals_list):
         pairs = [
             (vals["partner_id"], vals["acc_number"])
             for vals in vals_list
             if vals.get("partner_id") and vals.get("acc_number")
         ]
+        _debug.logic(
+            "archived_check_scope",
+            pairs=len(pairs),
+            vals=len(vals_list),
+            skipped=not pairs,
+        )
         if not pairs:
             return
         archived = self.env["res.partner.bank"].search(
@@ -441,6 +481,12 @@ class ResPartnerBank(models.Model):
                 (partner_id, sanitize_account_number(acc_number))
             )
             if existing:
+                _debug.logic(
+                    "archived_account_conflict",
+                    bank=existing,
+                    partner_id=partner_id,
+                    archived=len(archived),
+                )
                 raise UserError(
                     self.env._(
                         "A bank account with Account Number %(number)s already exists"
@@ -451,9 +497,9 @@ class ResPartnerBank(models.Model):
                     )
                 )
 
-    @dbg.timed
+    @_debug.perf.timed
     def write(self, vals):
-        dbg.lifecycle.debug("write on %s: keys=%s", dbg.rec(self), dbg.keys(vals))
+        _debug.lifecycle("write", records=self, fields=sorted(vals))
         account_initial_values = defaultdict(dict)
         tracking_fields = [
             field_name
@@ -475,6 +521,13 @@ class ResPartnerBank(models.Model):
                 "allow_out_payment" in vals and vals["allow_out_payment"] is False
             )
 
+        _debug.logic(
+            "trust_lock_decided",
+            banks=self,
+            trusted=trusted_accounts,
+            allow_changes=should_allow_changes,
+            tracking_fields=len(tracking_fields),
+        )
         lock_fields = {"acc_number", "sanitized_acc_number", "partner_id", "acc_type"}
         if not should_allow_changes and any(
             account[fname]
@@ -485,6 +538,9 @@ class ResPartnerBank(models.Model):
             for fname in lock_fields & set(vals)
             for account in trusted_accounts
         ):
+            _debug.logic(
+                "trusted_account_edit_blocked", banks=self, trusted=trusted_accounts
+            )
             raise UserError(
                 self.env._(
                     "You cannot modify the account number or partner of an account that has been trusted."
@@ -494,6 +550,7 @@ class ResPartnerBank(models.Model):
         if "allow_out_payment" in vals and any(
             not bank._can_user_trust() for bank in self
         ):
+            _debug.logic("trust_rights_missing", banks=self)
             raise UserError(
                 self.env._("You do not have the rights to trust or un-trust accounts.")
             )
@@ -521,9 +578,9 @@ class ResPartnerBank(models.Model):
                     )
         return res
 
-    @dbg.timed
+    @_debug.perf.timed
     def unlink(self):
-        dbg.lifecycle.debug("unlink %s", dbg.rec(self))
+        _debug.lifecycle("unlink", unlink=self)
         for account in self:
             msg = self.env._(
                 "Bank Account %(link)s with number %(number)s archived",
@@ -534,9 +591,9 @@ class ResPartnerBank(models.Model):
         return super().unlink()
 
     @api.model
-    @dbg.timed
+    @_debug.perf.timed
     def default_get(self, fields):
-        dbg.lifecycle.debug("default_get on %s", dbg.rec(self))
+        _debug.lifecycle("default_get", records=self)
         if "acc_number" not in fields:
             return super().default_get(fields)
 

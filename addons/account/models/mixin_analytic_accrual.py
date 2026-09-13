@@ -2,15 +2,16 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class MixinAnalytic(models.AbstractModel):
     _inherit = "mixin.analytic"
 
     @api.model
-    @dbg.timed
+    @_debug.perf.timed
     def _read_group_for_accrual(
         self,
         domain,
@@ -29,6 +30,12 @@ class MixinAnalytic(models.AbstractModel):
             for field in fields_to_patch
             if f"{field}:sum" in aggregates
         }
+        _debug.logic(
+            "accrual_aggregates_patched",
+            patched=len(patched_fields),
+            skipped_aggregates=len(aggregates_to_skip),
+            groupby=groupby,
+        )
         if not patched_fields:
             return super()._read_group(
                 domain, groupby, aggregates, having, offset, limit, order
@@ -46,6 +53,11 @@ class MixinAnalytic(models.AbstractModel):
         )
 
         accrual_records = self.search(Domain.AND([domain, self._get_domain_accrual()]))
+        _debug.pipeline(
+            "accrual_rows_fetched",
+            rows=len(rows),
+            accrual_records=accrual_records,
+        )
 
         patched_rows = []
         for row in rows:

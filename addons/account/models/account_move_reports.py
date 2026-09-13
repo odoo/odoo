@@ -1,6 +1,7 @@
 from odoo import _, fields, models
+from odoo.libs.debug_log import DebugLog
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class AccountMove(models.Model):
@@ -10,9 +11,9 @@ class AccountMove(models.Model):
         comodel_name="account.return", index="btree_not_null", copy=False
     )
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_view_tax_return(self):
-        dbg.lifecycle.debug("action_view_tax_return on %s", dbg.rec(self))
+        _debug.lifecycle("action_view_tax_return", records=self)
         return {
             "type": "ir.actions.act_window",
             "name": self.closing_return_id.name,
@@ -35,11 +36,16 @@ class AccountMove(models.Model):
             ],
         }
 
-    @dbg.timed
+    @_debug.perf.timed
     def unlink(self):
-        dbg.lifecycle.debug("unlink %s", dbg.rec(self))
+        _debug.lifecycle("unlink", unlink=self)
         for move in self:
             if move.closing_return_id:
+                _debug.logic(
+                    "closing_entry_unlinked",
+                    move=move,
+                    tax_return=move.closing_return_id,
+                )
                 if len(move.closing_return_id.company_ids) == 1:
                     move.closing_return_id.message_post(
                         body=_("Closing entry deleted"),
@@ -55,22 +61,22 @@ class AccountMove(models.Model):
                     )
         return super().unlink()
 
-    @dbg.timed
+    @_debug.perf.timed
     def _post_entries(self):
-        dbg.lifecycle.debug("_post_entries on %s", dbg.rec(self))
+        _debug.lifecycle("_post_entries", records=self)
         posted_moves = super()._post_entries()
         posted_moves._update_accounts_audit_status()
         return posted_moves
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_draft(self):
-        dbg.lifecycle.debug("action_draft on %s", dbg.rec(self))
+        _debug.lifecycle("action_draft", records=self)
         posted_moves = self.filtered(lambda move: move.state == "posted")
         res = super().action_draft()
         posted_moves._update_accounts_audit_status()
         return res
 
-    @dbg.timed
+    @_debug.perf.timed
     def _update_accounts_audit_status(self):
         if not self:
             return
@@ -87,6 +93,7 @@ class AccountMove(models.Model):
             )
         )
 
+        _debug.logic("audit_statuses_found", moves=self, statuses=all_statuses)
         if not all_statuses:
             return
 
@@ -112,5 +119,11 @@ class AccountMove(models.Model):
             )
             statuses_to_update |= matching_statuses
 
+        _debug.pipeline(
+            "audit_statuses_reset",
+            moves=self,
+            audits=audits,
+            statuses=statuses_to_update,
+        )
         if statuses_to_update:
             statuses_to_update.status = "todo"

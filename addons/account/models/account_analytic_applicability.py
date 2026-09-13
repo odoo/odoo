@@ -1,8 +1,9 @@
 import re
 
 from odoo import _, api, fields, models
+from odoo.libs.debug_log import DebugLog
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class AccountAnalyticApplicability(models.Model):
@@ -36,7 +37,7 @@ class AccountAnalyticApplicability(models.Model):
     )
 
     @api.depends("account_prefix", "business_domain")
-    @dbg.timed
+    @_debug.perf.timed
     def _compute_account_prefix_placeholder(self):
         account_expense = self.env["account.account"].search(
             [
@@ -51,6 +52,12 @@ class AccountAnalyticApplicability(models.Model):
                 ("account_type", "=", "income"),
             ],
             limit=1,
+        )
+        _debug.logic(
+            "placeholder_accounts_found",
+            expense=account_expense,
+            income=account_income,
+            applicabilities=len(self),
         )
 
         for applicability in self:
@@ -71,6 +78,12 @@ class AccountAnalyticApplicability(models.Model):
                 except ValueError:
                     pass
 
+            _debug.logic(
+                "placeholder_prefixes_chosen",
+                domain=applicability.business_domain,
+                account=account,
+                prefixes=account_prefixes,
+            )
             applicability.account_prefix_placeholder = _(
                 "e.g. %(prefix)s", prefix=account_prefixes
             )
@@ -90,11 +103,23 @@ class AccountAnalyticApplicability(models.Model):
             if account.code and account.code.startswith(account_prefixes):
                 score += 1
             else:
+                _debug.logic(
+                    "applicability_rejected",
+                    applicability=self,
+                    reason="account_prefix",
+                    account=account,
+                )
                 return -1
         if self.product_categ_id:
             if product and product.categ_id == self.product_categ_id:
                 score += 1
             else:
+                _debug.logic(
+                    "applicability_rejected",
+                    applicability=self,
+                    reason="product_category",
+                    product=product,
+                )
                 return -1
         return score
 

@@ -3,14 +3,15 @@ import datetime
 from dateutil.relativedelta import relativedelta
 
 from odoo import models
+from odoo.libs.debug_log import DebugLog
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class IrModuleModule(models.Model):
     _inherit = "ir.module.module"
 
-    @dbg.timed
+    @_debug.perf.timed
     def _load_module_terms(self, modules, langs, overwrite=False):
         super()._load_module_terms(modules, langs, overwrite=overwrite)
         if (

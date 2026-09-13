@@ -2,8 +2,9 @@ from datetime import date
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.libs.debug_log import DebugLog
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class ResConfigSettings(models.TransientModel):
@@ -113,7 +114,7 @@ class ResConfigSettings(models.TransientModel):
             settings.module_sign = sign_installed or settings.company_id.sign_invoice
 
     @api.constrains("fiscalyear_last_day", "fiscalyear_last_month")
-    @dbg.timed
+    @_debug.perf.timed
     def _check_fiscalyear(self):
         for wiz in self:
             try:
@@ -128,14 +129,15 @@ class ResConfigSettings(models.TransientModel):
                 ) from e
 
     @api.model_create_multi
-    @dbg.timed
+    @_debug.perf.timed
     def create(self, vals_list):
-        dbg.lifecycle.debug(
-            "create %s: %d vals, keys=%s",
-            self._name,
-            len(vals_list),
-            dbg.vals_keys(vals_list),
-        )
+        if _debug.lifecycle.enabled:
+            _debug.lifecycle(
+                "create",
+                model=self._name,
+                count=len(vals_list),
+                fields=sorted({key for vals in vals_list for key in vals}),
+            )
         for vals in vals_list:
             fiscalyear_last_day = (
                 vals.pop("fiscalyear_last_day", False)
@@ -151,5 +153,11 @@ class ResConfigSettings(models.TransientModel):
             if fiscalyear_last_month != self.env.company.fiscalyear_last_month:
                 vals["fiscalyear_last_month"] = fiscalyear_last_month
             if vals:
+                _debug.logic(
+                    "company_fiscalyear_updated",
+                    company=self.env.company,
+                    day_changed="fiscalyear_last_day" in vals,
+                    month_changed="fiscalyear_last_month" in vals,
+                )
                 self.env.company.write(vals)
         return super().create(vals_list)

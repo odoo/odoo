@@ -4,13 +4,14 @@ from itertools import batched
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.libs.text import name_length_band, similarity_ratio
 from odoo.models import PREFETCH_MAX
 from odoo.tools import SQL, format_amount
 
-from ..tools import debug_log as dbg
-
 _logger = logging.getLogger(__name__)
+
+_debug = DebugLog(__name__)
 
 
 DEFAULT_NAME_SIMILARITY_THRESHOLD = 0.9
@@ -123,7 +124,7 @@ class ProductTemplate(models.Model):
         for record in self:
             record.tax_string = record._prepare_tax_string(record.list_price)
 
-    @dbg.timed
+    @_debug.perf.timed
     def _prepare_tax_string(self, price):
         currency = self.currency_id
         res = self.taxes_id._filter_taxes_by_company(self.env.company).compute_all(
@@ -152,7 +153,7 @@ class ProductTemplate(models.Model):
             tax_string = " "
         return tax_string
 
-    @dbg.timed
+    @_debug.perf.timed
     def _check_uom_not_used_on_a_posted_entry(self):
         if not self:
             return
@@ -172,6 +173,7 @@ class ProductTemplate(models.Model):
         )
         row = self.env.cr.fetchone()
         if row:
+            _debug.logic("uom_change_rejected", templates=self, used_template=row[0])
             raise ValidationError(
                 _(
                     "%(product)s is already used on posted journal entries.\n"
@@ -211,14 +213,15 @@ class ProductTemplate(models.Model):
         )
 
     @api.model_create_multi
-    @dbg.timed
+    @_debug.perf.timed
     def create(self, vals_list):
-        dbg.lifecycle.debug(
-            "create %s: %d vals, keys=%s",
-            self._name,
-            len(vals_list),
-            dbg.vals_keys(vals_list),
-        )
+        if _debug.lifecycle.enabled:
+            _debug.lifecycle(
+                "create",
+                model=self._name,
+                count=len(vals_list),
+                fields=sorted({key for vals in vals_list for key in vals}),
+            )
         products = super().create(vals_list)
         products_without_company = products.filtered(lambda p: not p.company_id)
         if products_without_company:
@@ -227,14 +230,19 @@ class ProductTemplate(models.Model):
                 .sudo()
                 .search(["!", ("id", "child_of", self.env.companies.ids)])
             )
+            _debug.logic(
+                "default_taxes_forced",
+                products=products_without_company,
+                other_companies=other_companies,
+            )
             if other_companies:
                 products_without_company.sudo()._force_default_tax(other_companies)
         products.sudo()._clear_taxes_of_combo_products()
         return products
 
-    @dbg.timed
+    @_debug.perf.timed
     def write(self, vals):
-        dbg.lifecycle.debug("write on %s: keys=%s", dbg.rec(self), dbg.keys(vals))
+        _debug.lifecycle("write", records=self, fields=sorted(vals))
         if "uom_id" in vals:
             self.filtered(
                 lambda product: product.uom_id.id != vals["uom_id"]
@@ -268,7 +276,7 @@ class ProductProduct(models.Model):
     def _get_product_accounts(self, fiscal_pos=None):
         return self.product_tmpl_id._get_product_accounts(fiscal_pos=fiscal_pos)
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_tax_included_unit_price(
         self,
         company,
@@ -301,6 +309,12 @@ class ProductProduct(models.Model):
             elif document_type == "purchase":
                 product_price_unit = self.with_company(company).standard_price
             else:
+                _debug.logic(
+                    "unit_price_skipped",
+                    product=self,
+                    document_type=document_type,
+                    reason="no_price_source",
+                )
                 return 0.0
         if product_taxes is None:
             if document_type == "sale":
@@ -326,6 +340,17 @@ class ProductProduct(models.Model):
                 product_price_unit, currency, company, document_date, round=False
             )
 
+        _debug.logic(
+            "unit_price_resolved",
+            product=self,
+            company=company,
+            document_type=document_type,
+            taxes=product_taxes,
+            fiscal_position=fiscal_position,
+            currency=currency,
+            product_currency=product_currency,
+            price=product_price_unit,
+        )
         return product_price_unit
 
     def _get_tax_included_unit_price_from_price(
@@ -437,6 +462,13 @@ class ProductProduct(models.Model):
                     best_ratio = ratio
                     best_product = product
             products.invalidate_recordset()
+        _debug.pipeline(
+            "name_similarity_matched",
+            candidates=len(candidate_ids),
+            threshold=threshold,
+            best=best_product,
+            ratio=best_ratio,
+        )
         return best_product
 
     def _get_import_criteria_from_name(self, product_values):
@@ -478,7 +510,7 @@ class ProductProduct(models.Model):
         return extra_domain, order_fields
 
     @api.model
-    @dbg.timed
+    @_debug.perf.timed
     def _get_product_from_search_plan(
         self, search_plan, company, product_values, extra_domain=None
     ):
@@ -510,13 +542,13 @@ class ProductProduct(models.Model):
                 else:
                     continue
                 if product:
-                    dbg.logic.debug(
-                        "[import] product %s matched by %s",
-                        product.id,
-                        criteria.get("domain") or search_method.__name__,
+                    _debug.logic(
+                        "import_product_matched",
+                        product=product,
+                        criteria=criteria.get("domain") or search_method.__name__,
                     )
                     return product
-        dbg.logic.debug("[import] no product matched %s", dbg.keys(product_values))
+        _debug.logic("import_no_product_matched", fields=sorted(product_values))
         return self.browse()
 
     @api.model

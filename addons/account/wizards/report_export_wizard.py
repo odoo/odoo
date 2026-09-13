@@ -5,8 +5,9 @@ from urllib.parse import parse_qs, urlparse
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class Account_ReportsExportWizard(models.TransientModel):
@@ -28,14 +29,15 @@ class Account_ReportsExportWizard(models.TransientModel):
     )
 
     @api.model_create_multi
-    @dbg.timed
+    @_debug.perf.timed
     def create(self, vals_list):
-        dbg.lifecycle.debug(
-            "create %s: %d vals, keys=%s",
-            self._name,
-            len(vals_list),
-            dbg.vals_keys(vals_list),
-        )
+        if _debug.lifecycle.enabled:
+            _debug.lifecycle(
+                "create",
+                model=self._name,
+                count=len(vals_list),
+                fields=sorted({key for vals in vals_list for key in vals}),
+            )
         wizards = super().create(vals_list)
         for wizard in wizards:
             wizard.doc_name = wizard.report_id.name
@@ -55,6 +57,18 @@ class Account_ReportsExportWizard(models.TransientModel):
                             "export_wizard_id": wizard.id,
                         }
                     )
+        if _debug.pipeline.enabled:
+            _debug.pipeline(
+                "export_formats_created",
+                wizards=wizards,
+                formats_per_wizard=sum(
+                    1
+                    for button_dict in self.env.context.get(
+                        "account_report_generation_options", {}
+                    ).get("buttons", [])
+                    if button_dict.get("file_export_type")
+                ),
+            )
         return wizards
 
     def export_report(self):
@@ -100,10 +114,15 @@ class Account_ReportsExportWizardFormat(models.TransientModel):
         ondelete="cascade",
     )
 
-    @dbg.timed
+    @_debug.perf.timed
     def apply_export(self, report_action):
         self.check_singleton()
 
+        _debug.logic(
+            "export_action_kind",
+            format=self,
+            action_type=report_action.get("type"),
+        )
         if report_action["type"] == "ir_actions_account_report_download":
             # file_generator functions are always public for ir_actions_account_report_download
             report_options = json.loads(report_action["data"]["options"])
@@ -127,6 +146,13 @@ class Account_ReportsExportWizardFormat(models.TransientModel):
             file_name = f"{self.export_wizard_id.doc_name or self.export_wizard_id.report_id.name}.{export_result['file_type']}"
             mimetype = self.export_wizard_id.report_id.get_export_mime_type(
                 export_result["file_type"]
+            )
+            _debug.pipeline(
+                "export_file_generated",
+                report=report,
+                file_generator=file_generator,
+                file_type=export_result.get("file_type"),
+                mimetype=mimetype,
             )
 
         elif report_action["type"] == "ir.actions.act_url":

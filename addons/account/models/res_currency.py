@@ -2,9 +2,10 @@ from dataclasses import dataclass
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, date_utils
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 CURRENCY_TABLE_COLUMNS = (
     "company_id",
@@ -42,9 +43,9 @@ class ResCurrency(models.Model):
                 record._origin.rounding != record.rounding
             )
 
-    @dbg.timed
+    @_debug.perf.timed
     def write(self, vals):
-        dbg.lifecycle.debug("write on %s: keys=%s", dbg.rec(self), dbg.keys(vals))
+        _debug.lifecycle("write", records=self, fields=sorted(vals))
         if "rounding" in vals:
             new_decimal_places = self._decimal_places_for_rounding(vals["rounding"])
             for record in self:
@@ -52,6 +53,11 @@ class ResCurrency(models.Model):
                     new_decimal_places < record.decimal_places
                     and record._has_accounting_entries()
                 ):
+                    _debug.logic(
+                        "rounding_reduction_rejected",
+                        currency=record,
+                        decimal_places=new_decimal_places,
+                    )
                     raise UserError(
                         _(
                             "You cannot reduce the number of decimal places of a currency which has already been used to make accounting entries."
@@ -87,7 +93,7 @@ class ResCurrency(models.Model):
         )
         return SQL("account_currency_table")
 
-    @dbg.timed
+    @_debug.perf.timed
     def _check_currency_table_monocurrency(self, companies):
         return len(companies.currency_id) == 1
 
@@ -116,7 +122,7 @@ class ResCurrency(models.Model):
             ),
         )
 
-    @dbg.timed
+    @_debug.perf.timed
     def _create_currency_table(self, companies, date_periods, use_cta_rates=False):
         main_company = self.env.company
         domestic_currency_companies = companies.filtered(
@@ -182,18 +188,19 @@ class ResCurrency(models.Model):
                 query=currency_table_build_query,
             )
         )
+        _debug.perf.count("currency_table_rows_inserted", rows=cr.rowcount)
         cr.execute(
             SQL(
                 "CREATE INDEX account_currency_table_index ON account_currency_table (company_id, rate_type, date_from, date_next)"
             )
         )
         cr.execute(SQL("ANALYZE account_currency_table"))
-        dbg.pipeline.debug(
-            "currency table built: companies=%s periods=%d cta=%s builders=%d",
-            dbg.ids(companies),
-            len(date_periods),
-            use_cta_rates,
-            len(table_builders),
+        _debug.pipeline(
+            "currency_table_built",
+            companies=companies,
+            periods=len(date_periods),
+            cta=use_cta_rates,
+            builders=len(table_builders),
         )
 
     def _get_table_builder_domestic_currency(self, companies, use_cta_rates) -> SQL:
@@ -204,7 +211,7 @@ class ResCurrency(models.Model):
             ),
         )
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_table_builder_current(
         self,
         scope: CurrencyTableScope,
@@ -237,7 +244,7 @@ class ResCurrency(models.Model):
             main_company_unit_factor=main_company_unit_factor,
         )
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_table_builder_historical(
         self,
         scope: CurrencyTableScope,
@@ -245,6 +252,12 @@ class ResCurrency(models.Model):
         main_company_unit_factor,
         date_exclude,
     ) -> SQL:
+        _debug.logic(
+            "historical_rates_window",
+            date_to=date_to,
+            date_exclude=date_exclude,
+            exclusion_applied=bool(date_exclude),
+        )
         return SQL(
             """
                 SELECT
@@ -274,7 +287,7 @@ class ResCurrency(models.Model):
             else SQL(),
         )
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_table_builder_average(
         self,
         scope: CurrencyTableScope,
@@ -283,6 +296,13 @@ class ResCurrency(models.Model):
         date_to,
         main_company_unit_factor,
     ) -> SQL:
+        _debug.logic(
+            "average_rates_window",
+            period_key=period_key,
+            date_from=date_from,
+            date_to=date_to,
+            date_from_defaulted=not date_from,
+        )
         if not date_from:
             date_from = date_utils.start_of(fields.Date.from_string(date_to), "year")
 

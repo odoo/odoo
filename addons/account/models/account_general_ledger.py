@@ -7,9 +7,10 @@ from textwrap import shorten
 
 from odoo import _, fields, models
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, float_repr
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class AccountGeneralLedgerReportHandler(models.AbstractModel):
@@ -17,7 +18,7 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
     _inherit = ["account.report.custom.handler"]
     _description = "General Ledger Custom Handler"
 
-    @dbg.timed
+    @_debug.perf.timed
     def _custom_options_initializer(self, report, options, previous_options):
         options["buttons"].append(
             {
@@ -49,6 +50,15 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
 
         if options.get("force_not_unfold_all"):
             options["unfold_all"] = False
+        _debug.logic(
+            "gl_options_resolved",
+            report=report,
+            multi_currency=options.get("multi_currency", False),
+            export_mode=options["export_mode"],
+            unfold_all=options["unfold_all"],
+            force_not_unfold_all=bool(options.get("force_not_unfold_all")),
+            unfolded_lines=len(options.get("unfolded_lines") or ()),
+        )
 
         options["custom_display_config"] = {
             "templates": {
@@ -76,9 +86,9 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
             ],
         }
 
-    @dbg.timed
+    @_debug.perf.timed
     def open_unallocated_items_journal_items(self, options, params):
-        dbg.lifecycle.debug("open_unallocated_items_journal_items on %s", dbg.rec(self))
+        _debug.lifecycle("open_unallocated_items_journal_items", records=self)
         report = self.env["account.report"].browse(options["report_id"])
         return report.open_unallocated_items_journal_items(options, params)
 
@@ -110,7 +120,7 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
 
         return action
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_custom_groupby_map(self):
         def custom_label_builder(grouping_keys):
             """Batch label builder for the accumulated-balance groupby: labels journal item rows with their move line name, and balance rows with "Initial Balance"."""
@@ -133,6 +143,12 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
                     record.display_name, width=200
                 )
 
+            _debug.pipeline(
+                "accumulated_labels_built",
+                labels=len(keys_names_in_sequence),
+                aml_rows=len(aml_keys),
+                balance_rows=len(keys_names_in_sequence) - len(aml_keys),
+            )
             return keys_names_in_sequence
 
         def domain_builder(grouping_key):
@@ -157,7 +173,7 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
             },
         }
 
-    @dbg.timed
+    @_debug.perf.timed
     def _report_custom_engine_general_ledger(
         self,
         expressions,
@@ -232,6 +248,16 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
                 if row.get("currency_id"):
                     rows_by_key[aml_key]["currency_id"] += row["currency_id"]
 
+        _debug.pipeline(
+            "gl_engine_rows_grouped",
+            report=options.get("report_id"),
+            groupby=current_groupby,
+            next_groupby=next_groupby,
+            keys=len(rows_by_key),
+            offset=offset,
+            limit=limit,
+            aggregated=not current_groupby,
+        )
         if not current_groupby:
             return rows_by_key[
                 None
@@ -239,7 +265,7 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
 
         return [(key, entry) for key, entry in rows_by_key.items()]
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_query(
         self, options, current_groupby, order_by_account=False, offset=0, limit=None
     ):
@@ -363,6 +389,20 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
             order_clause = []
         if current_groupby == "id_with_accumulated_balance":
             order_clause.append(SQL("2 NULLS FIRST, move_name, 1 NULLS FIRST"))
+        _debug.logic(
+            "gl_query_built",
+            report=report,
+            groupby=current_groupby,
+            groupby_columns=len(groupby),
+            order_by_account=order_by_account,
+            order_clauses=len(order_clause),
+            search_bar_restricted=options.get("export_mode") == "print"
+            and bool(options.get("filter_search_bar"))
+            and current_groupby not in ("id_with_accumulated_balance", "id"),
+            fiscalyear_date_from=current_fiscalyear_date_from,
+            offset=offset,
+            limit=limit,
+        )
 
         return SQL(
             """
@@ -410,7 +450,7 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
             limit=limit,
         )
 
-    @dbg.timed
+    @_debug.perf.timed
     def _report_expand_unfoldable_line_with_groupby(
         self,
         line_dict_id,
@@ -426,6 +466,14 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
         report = self.env["account.report"].browse(options["report_id"])
         result = report._report_expand_unfoldable_line_with_groupby(
             line_dict_id, groupby, options, progress, offset, unfold_all_batch_data
+        )
+        _debug.logic(
+            "expand_accumulated_balance",
+            report=report,
+            groupby=groupby,
+            accumulate=groupby == "id_with_accumulated_balance",
+            offset=offset,
+            batched=unfold_all_batch_data is not None,
         )
         if groupby != "id_with_accumulated_balance":
             return result
@@ -467,6 +515,15 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
                         )
                     )
 
+        _debug.pipeline(
+            "accumulated_balance_applied",
+            report=report,
+            lines=len(processed_lines),
+            has_balance_line=has_balance_line,
+            limit_to_load=limit_to_load,
+            export_mode=options["export_mode"],
+            column_groups=len(col_group_keys),
+        )
         return {
             **result,
             "lines": processed_lines,
@@ -492,7 +549,7 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
                 col["is_zero"] = not bool(col["no_format"])
         return total_line_columns
 
-    @dbg.timed
+    @_debug.perf.timed
     def _custom_line_postprocessor(self, report, options, lines):
         """Append the unallocated earnings lines, attach the chatter to journal item lines and move the total
         line to the bottom, as it must always be last in the general ledger.
@@ -517,6 +574,12 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
             )
         else:
             unaffected_earning_lines = []
+        _debug.logic(
+            "unallocated_earnings_resolved",
+            report=report,
+            lines=len(lines),
+            unaffected_earning_lines=len(unaffected_earning_lines),
+        )
 
         for line in lines + unaffected_earning_lines:
             markup, model, res_id = report._parse_line_id(line["id"])[-1]
@@ -549,6 +612,13 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
                 line["chatter"] = {"id": json.loads(res_id)[1]}
                 account_move_lines.append(line)
 
+        _debug.pipeline(
+            "gl_lines_classified",
+            report=report,
+            processed_lines=len(processed_lines),
+            main_line=main_line_dict is not None,
+            chatter_lines=len(account_move_lines),
+        )
         if account_move_lines:
             line_ids = (line["chatter"]["id"] for line in account_move_lines)
             account_moves = {
@@ -564,6 +634,11 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
         if self.env.company.totals_below_sections and not options.get(
             "ignore_totals_below_sections"
         ):
+            _debug.logic(
+                "totals_below_sections_kept",
+                report=report,
+                unaffected_earning_lines=len(unaffected_earning_lines),
+            )
             if unaffected_earning_lines:
                 total_line = processed_lines.pop(-1)
                 total_line["columns"] = self._adjust_total_with_unaffected_earnings(
@@ -574,6 +649,11 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
             return processed_lines
 
         processed_lines.extend(unaffected_earning_lines)
+        _debug.logic(
+            "total_line_appended",
+            report=report,
+            main_line=main_line_dict is not None,
+        )
         if main_line_dict:
             processed_lines.append(
                 {
@@ -588,7 +668,7 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
 
         return processed_lines
 
-    @dbg.timed
+    @_debug.perf.timed
     def _custom_unfold_all_batch_data_generator(
         self, report, options, lines_to_expand_by_function
     ):
@@ -613,6 +693,12 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
                 )
             )
             if not expressions:
+                _debug.logic(
+                    "unfold_batch_skipped",
+                    report=report,
+                    reason="no_gl_custom_expressions",
+                    report_line=report_line_id,
+                )
                 continue
 
             for (
@@ -667,6 +753,16 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
                             engine_result_dict["account_id"], []
                         ).append(engine_result_dict)
 
+                    _debug.pipeline(
+                        "unfold_batch_engine_results",
+                        report=report,
+                        report_line=report_line_id,
+                        column_group=column_group_key,
+                        date_scope=date_scope,
+                        account_rows=len(engine_account_lines),
+                        aml_rows=len(engine_aml_lines),
+                        accounts_with_amls=len(aml_data_by_account),
+                    )
                     for account_id, engine_result_list in aml_data_by_account.items():
                         account_aml_expression_totals = results.setdefault(
                             f"[{report_line_id}]account_id:{account_id}=>id_with_accumulated_balance",
@@ -689,6 +785,16 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
                                     )
                                 )
 
+        _debug.pipeline(
+            "unfold_batch_generated",
+            report=report,
+            lines_to_expand=len(
+                lines_to_expand_by_function.get(
+                    "_report_expand_unfoldable_line_with_groupby", []
+                )
+            ),
+            groupby_keys=len(results),
+        )
         return results
 
     def generate_csv_export(self, options):
@@ -805,6 +911,13 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
                 ]
             else:
                 header += col_names
+            _debug.logic(
+                "csv_header_built",
+                report=options.get("report_id"),
+                columns=len(col_names),
+                amount_currency_column=currency_idx is not None,
+                currencies=len(cur_data),
+            )
 
             yield csv_format(header)
 
@@ -831,6 +944,14 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
                         accounts.append(res_id)
                     account_lines.append(agg_line)
 
+            _debug.pipeline(
+                "csv_account_lines_collected",
+                report=report,
+                agg_lines=len(agg_lines),
+                account_lines=len(account_lines),
+                accounts=len(accounts),
+                skipped=not account_lines,
+            )
             if not account_lines:
                 return
 
@@ -850,7 +971,14 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
             aml_query = handler._get_query(
                 options, "id_with_accumulated_balance", order_by_account=True
             )
+            _debug.pipeline(
+                "csv_aml_stream_started",
+                report=report,
+                accounts_with_codes=len(accounts_with_codes),
+            )
+
             handler.env.cr.execute(SQL("%s", aml_query))
+            _debug.perf.count("csv_aml_rows_fetched", rows=handler.env.cr.rowcount)
             progress = 0
             while aml_line := handler.env.cr.dictfetchone():
                 while account_id != aml_line["account_id"]:

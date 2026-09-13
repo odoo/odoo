@@ -1,10 +1,12 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.libs.debug_log import DebugLog
 
-from ..tools import debug_log as dbg
 from odoo.addons.account.tools.reconciliation import (
     group_lines_by_matching_number,
 )
+
+_debug = DebugLog(__name__)
 
 
 def _get_partial_company(partial):
@@ -111,7 +113,7 @@ class AccountPartialReconcile(models.Model):
     )
 
     @api.constrains("debit_currency_id", "credit_currency_id")
-    @dbg.timed
+    @_debug.perf.timed
     def _check_required_computed_currencies(self):
         bad_partials = self.filtered(
             lambda partial: (
@@ -127,7 +129,7 @@ class AccountPartialReconcile(models.Model):
             )
 
     @api.constrains("debit_move_id", "credit_move_id", "company_id")
-    @dbg.timed
+    @_debug.perf.timed
     def _check_company_consistency(self):
         bad_partials = self.filtered(
             lambda partial: (
@@ -144,7 +146,7 @@ class AccountPartialReconcile(models.Model):
             )
 
     @api.constrains("debit_move_id", "credit_move_id")
-    @dbg.timed
+    @_debug.perf.timed
     def _check_move_line_consistency(self):
         def points(line, currency, sign):
             return (
@@ -186,9 +188,9 @@ class AccountPartialReconcile(models.Model):
         for partial in self:
             partial.company_id = _get_partial_company(partial)
 
-    @dbg.timed
+    @_debug.perf.timed
     def unlink(self):
-        dbg.lifecycle.debug("unlink %s", dbg.rec(self))
+        _debug.lifecycle("unlink", unlink=self)
         if not self:
             return True
 
@@ -201,12 +203,12 @@ class AccountPartialReconcile(models.Model):
         full_to_unlink = self.full_reconcile_id
 
         all_reconciled = self.debit_move_id | self.credit_move_id
-        dbg.pipeline.debug(
-            "[partial:%s] unlink: reverse %s, drop full %s, payments back to in_process %s",
-            dbg.ids(self),
-            dbg.rec(moves_to_reverse),
-            dbg.rec(full_to_unlink),
-            dbg.rec(to_update_payments),
+        _debug.pipeline(
+            "unlink_reverse_drop_full_payments",
+            partial=self,
+            moves_to_reverse=moves_to_reverse,
+            full_to_unlink=full_to_unlink,
+            to_update_payments=to_update_payments,
         )
 
         res = super().unlink()
@@ -238,21 +240,22 @@ class AccountPartialReconcile(models.Model):
         return res
 
     @api.model_create_multi
-    @dbg.timed
+    @_debug.perf.timed
     def create(self, vals_list):
-        dbg.lifecycle.debug(
-            "create %s: %d vals, keys=%s",
-            self._name,
-            len(vals_list),
-            dbg.vals_keys(vals_list),
-        )
+        if _debug.lifecycle.enabled:
+            _debug.lifecycle(
+                "create",
+                model=self._name,
+                count=len(vals_list),
+                fields=sorted({key for vals in vals_list for key in vals}),
+            )
         partials = super().create(vals_list)
         paid_payments = partials._get_to_update_payments(from_state="in_process")
-        if paid_payments:
-            dbg.lifecycle.debug(
-                "[partial:%s] payments in_process -> paid %s",
-                dbg.ids(partials),
-                dbg.rec(paid_payments),
+        if _debug.lifecycle.enabled and paid_payments:
+            _debug.lifecycle(
+                "payments_in_process_paid",
+                partial=partials,
+                paid_payments=paid_payments,
             )
         paid_payments.state = "paid"
         self._update_matching_number(partials.debit_move_id | partials.credit_move_id)
@@ -295,13 +298,19 @@ class AccountPartialReconcile(models.Model):
             return None
         return amount if payment.payment_type == "inbound" else -amount
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_to_update_payments(self, from_state):
         self = self.union()
         candidate_payments = self._prefetch_payment_state_fields().filtered(
             lambda payment: (
                 not payment.outstanding_account_id and payment.state == from_state
             )
+        )
+        _debug.pipeline(
+            "payment_state_candidates",
+            partial=self,
+            from_state=from_state,
+            candidates=candidate_payments,
         )
 
         to_update_ids = set()
@@ -327,15 +336,22 @@ class AccountPartialReconcile(models.Model):
                 payment.amount_signed, grouped_amounts[payment.id]
             ):
                 to_update_ids.add(payment.id)
+        _debug.logic(
+            "payment_state_matches",
+            partial=self,
+            from_state=from_state,
+            grouped=len(grouped_amounts),
+            to_update=len(to_update_ids),
+        )
         return self.env["account.payment"].browse(to_update_ids)
 
     @api.model
-    @dbg.timed
+    @_debug.perf.timed
     def _update_matching_number(self, amls):
         if not amls:
             return
         amls = amls._all_reconciled_lines()
-        dbg.pipeline.debug("_update_matching_number over %s", dbg.rec(amls))
+        _debug.pipeline("_update_matching_number_over", amls=amls)
         while amls:
             amls.lock_for_update(allow_referencing=True)
             amls.invalidate_recordset(["matching_number"])
@@ -369,6 +385,11 @@ class AccountPartialReconcile(models.Model):
         )
         processed_amls = self.env["account.move.line"].browse(
             [_id for ids in number2lines.values() for _id in ids]
+        )
+        _debug.perf.count(
+            "matching_numbers_written",
+            rows=len(processed_amls),
+            numbers=len(number2lines),
         )
         processed_amls.invalidate_recordset(["matching_number"])
         (amls - processed_amls).matching_number = False

@@ -1,7 +1,8 @@
 from odoo import Command, _, models
 from odoo.exceptions import UserError, ValidationError
+from odoo.libs.debug_log import DebugLog
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class AccountBankStatementLine(models.Model):
@@ -29,7 +30,7 @@ class AccountBankStatementLine(models.Model):
             ),
         }
 
-    @dbg.timed
+    @_debug.perf.timed
     def _set_move_line_to_statement_line_move(self, lines_to_set, lines_to_add):
         self.check_singleton()
 
@@ -39,12 +40,12 @@ class AccountBankStatementLine(models.Model):
         ]
 
         open_balance = sum(lines_to_set.mapped("balance")) + lines_to_add_balance
-        dbg.pipeline.debug(
-            "[stline:%s] set lines: keep %s, add %d, open balance %s",
-            self.id,
-            dbg.rec(lines_to_set),
-            len(lines_to_add),
-            open_balance,
+        _debug.pipeline(
+            "set_lines_keep_add_open",
+            stline=self,
+            lines_to_set=lines_to_set,
+            lines_to_add_count=len(lines_to_add),
+            open_balance=open_balance,
         )
         if not self.company_currency_id.is_zero(open_balance):
             if not self.foreign_currency_id:
@@ -81,7 +82,7 @@ class AccountBankStatementLine(models.Model):
                 )
             )
         move = self.move_id.with_context(force_delete=True, skip_readonly_check=True)
-        with dbg.timer(self.env, "[stline:%s] rewrite move lines", self.id):
+        with _debug.perf("rewrite_move_lines", cr=self.env.cr, stline=self):
             move.line_ids = lines_commands
 
         if self.env.context.get("recompute_partner"):
@@ -113,7 +114,7 @@ class AccountBankStatementLine(models.Model):
             liquidity_lines + other_lines, lines_to_add
         )
 
-    @dbg.timed
+    @_debug.perf.timed
     def set_account_bank_statement_line(self, aml_id, account_id):
         account = self.env["account.account"].browse(account_id)
         statement_lines = self
@@ -128,6 +129,12 @@ class AccountBankStatementLine(models.Model):
                     transactions=len(statement_lines),
                 )
             )
+        _debug.pipeline(
+            "account_assignment_started",
+            stline=statement_lines,
+            account=account,
+            lines=len(base_lines),
+        )
         for statement_line, base_line in zip(statement_lines, base_lines, strict=True):
             reserved_accounts = (
                 statement_line.journal_id.suspense_account_id
@@ -150,6 +157,16 @@ class AccountBankStatementLine(models.Model):
                     -1:
                 ]
 
+            if _debug.logic.enabled:
+                _debug.logic(
+                    "account_assignment_outcome",
+                    stline=statement_line,
+                    account=account,
+                    with_taxes=bool(account.tax_ids),
+                    confirm_only=account.account_type
+                    in {"asset_receivable", "liability_payable"}
+                    or account in reserved_accounts,
+                )
             if (
                 account.account_type in {"asset_receivable", "liability_payable"}
                 or account in reserved_accounts
@@ -162,7 +179,7 @@ class AccountBankStatementLine(models.Model):
             )
         return statement_lines
 
-    @dbg.timed
+    @_debug.perf.timed
     def set_line_bank_statement_line(self, move_lines_ids):
         self.check_singleton()
         move_lines = self.env["account.move.line"].search(
@@ -171,6 +188,12 @@ class AccountBankStatementLine(models.Model):
                 ("reconciled", "=", False),
             ],
             order="sequence DESC, id",
+        )
+        _debug.pipeline(
+            "unreconciled_lines_found",
+            stline=self,
+            move_lines=move_lines,
+            skipped=not move_lines,
         )
         if not move_lines:
             return
@@ -268,12 +291,21 @@ class AccountBankStatementLine(models.Model):
             ):
                 break
 
+        _debug.logic(
+            "matched_lines_balanced",
+            stline=self,
+            new_lines=len(new_lines),
+            open_balance=open_balance,
+            partial_applied=partial_applied,
+            has_exchange_diff=has_exchange_diff,
+            stop_at_first_partial=bool(stop_reco_at_first_partial),
+        )
         self.with_context(
             no_exchange_difference_no_recursive=not has_exchange_diff,
             recompute_partner=True,
         )._add_move_line_to_statement_line_move(new_lines)
 
-    @dbg.timed
+    @_debug.perf.timed
     def remove_reconciled_line(self, move_line_ids):
         self.check_singleton()
         if (
@@ -287,6 +319,16 @@ class AccountBankStatementLine(models.Model):
 
         move_lines_to_remove = self.env["account.move.line"].browse(move_line_ids)
         if (
+            _debug.logic.enabled
+            and move_lines_to_remove.tax_line_id
+            and not move_lines_to_remove.account_id.reconcile
+        ):
+            _debug.logic(
+                "tax_line_removal_ignored",
+                stline=self,
+                move_lines=move_lines_to_remove,
+            )
+        if (
             move_lines_to_remove.tax_line_id
             and not move_lines_to_remove.account_id.reconcile
         ):
@@ -299,6 +341,14 @@ class AccountBankStatementLine(models.Model):
                 self._prepare_for_tax_lines_recomputation()
             )
 
+        _debug.pipeline(
+            "reconciled_lines_removing",
+            stline=self,
+            move_lines=move_lines_to_remove,
+            reco_model=reco_model_id,
+            with_taxes=bool(move_lines_to_remove_has_tax),
+            kept_other=len(other_lines),
+        )
         move_lines_to_remove.remove_move_reconcile()
         self._set_move_line_to_statement_line_move(
             liquidity_line + other_lines - move_lines_to_remove,
@@ -313,7 +363,7 @@ class AccountBankStatementLine(models.Model):
                 original_base_lines, original_tax_lines, move_lines_to_remove
             )
 
-    @dbg.timed
+    @_debug.perf.timed
     def edit_reconcile_line(self, move_line_id, record_data):
         self.check_singleton()
         if (
@@ -332,6 +382,18 @@ class AccountBankStatementLine(models.Model):
                 skip_analytic_sync=True
             ).unlink()
 
+        if (
+            _debug.logic.enabled
+            and move_line_to_edit.tax_line_id
+            and any(
+                record_data.get(key) for key in ["tax_ids", "partner_id", "account_id"]
+            )
+        ):
+            _debug.logic(
+                "tax_line_edit_ignored",
+                stline=self,
+                line=move_line_to_edit,
+            )
         if move_line_to_edit.tax_line_id and any(
             record_data.get(key) for key in ["tax_ids", "partner_id", "account_id"]
         ):
@@ -364,6 +426,17 @@ class AccountBankStatementLine(models.Model):
         edited_move_reconciled_line_ids = (
             move_line_to_edit.reconciled_lines_ids - exchange_line
         ).ids
+        if _debug.logic.enabled:
+            _debug.logic(
+                "edit_mode_resolved",
+                stline=self,
+                line=move_line_to_edit,
+                edited_keys=sorted(record_data),
+                exchange_move=exchange_move,
+                exchange_lines=len(exchange_line),
+                tax_recompute=original_base_lines is not None,
+                reconciled_kept=len(edited_move_reconciled_line_ids),
+            )
         move_line_to_edit.remove_move_reconcile()
         move_line_to_edit_vals = move_line_to_edit._get_aml_values(**record_data)
         if edited_move_reconciled_line_ids:

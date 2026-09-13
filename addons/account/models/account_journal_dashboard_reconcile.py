@@ -1,15 +1,16 @@
 from odoo import models
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import formatLang
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class AccountJournal(models.Model):
     _inherit = "account.journal"
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_view_reconcile(self):
-        dbg.lifecycle.debug("action_view_reconcile on %s", dbg.rec(self))
+        _debug.lifecycle("action_view_reconcile", records=self)
         self.check_singleton()
 
         if self.type in ("bank", "cash", "credit"):
@@ -25,9 +26,9 @@ class AccountJournal(models.Model):
         else:
             return self.env["account.move.line"]._action_view_unreconciled()
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_view_to_check(self):
-        dbg.lifecycle.debug("action_view_to_check on %s", dbg.rec(self))
+        _debug.lifecycle("action_view_to_check", records=self)
         self.check_singleton()
         return self.env[
             "account.bank.statement.line"
@@ -39,9 +40,9 @@ class AccountJournal(models.Model):
             },
         )
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_view_bank_transactions(self):
-        dbg.lifecycle.debug("action_view_bank_transactions on %s", dbg.rec(self))
+        _debug.lifecycle("action_view_bank_transactions", records=self)
         self.check_singleton()
         return self.env[
             "account.bank.statement.line"
@@ -53,9 +54,9 @@ class AccountJournal(models.Model):
             kanban_first=False,
         )
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_view_reconcile_statement(self):
-        dbg.lifecycle.debug("action_view_reconcile_statement on %s", dbg.rec(self))
+        _debug.lifecycle("action_view_reconcile_statement", records=self)
         return self.env[
             "account.bank.statement.line"
         ]._action_view_bank_reconciliation_widget(
@@ -65,9 +66,9 @@ class AccountJournal(models.Model):
             },
         )
 
-    @dbg.timed
+    @_debug.perf.timed
     def open_invalid_statements_action(self):
-        dbg.lifecycle.debug("open_invalid_statements_action on %s", dbg.rec(self))
+        _debug.lifecycle("open_invalid_statements_action", records=self)
         self.check_singleton()
         if self.env["account.bank.statement"].search(
             [("journal_id", "=", self.id), ("first_line_index", "=", False)], limit=1
@@ -85,9 +86,9 @@ class AccountJournal(models.Model):
             kanban_first=False,
         )
 
-    @dbg.timed
+    @_debug.perf.timed
     def open_action(self):
-        dbg.lifecycle.debug("open_action on %s", dbg.rec(self))
+        _debug.lifecycle("open_action", records=self)
         if self.type in ("bank", "cash", "credit") and not self.env.context.get(
             "action_name"
         ):

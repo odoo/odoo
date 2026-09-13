@@ -4,11 +4,13 @@ from json import dumps
 from odoo import _, api, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import float_repr
 
-from ..tools import debug_log as dbg
 from .account_move import MAX_HASH_VERSION
 from .account_move import AccountMove as AccountMoveMain
+
+_debug = DebugLog(__name__)
 
 
 class AccountMove(models.Model):
@@ -42,15 +44,15 @@ class AccountMove(models.Model):
     def _hash_moves(self, **kwargs):
         chains_to_hash = self._get_chains_to_hash(**kwargs)
         grant_secure_group_access = False
-        dbg.pipeline.debug(
-            "_hash_moves on %s: %d chain(s)", dbg.rec(self), len(chains_to_hash)
+        _debug.pipeline(
+            "_hash_moves", records=self, chains_to_hash_count=len(chains_to_hash)
         )
         for chain in chains_to_hash:
-            dbg.pipeline.debug(
-                "hashing chain %s restrict_mode=%s warnings=%s",
-                dbg.rec(chain["moves"]),
-                chain["journal_restrict_mode"],
-                chain.get("warnings"),
+            _debug.pipeline(
+                "hashing_chain",
+                moves=chain["moves"],
+                restrict_mode=chain["journal_restrict_mode"],
+                warnings=chain.get("warnings"),
             )
             move_hashes = chain["moves"].sudo()._get_hashes(chain["previous_hash"])
             for move, move_hash in move_hashes.items():
@@ -87,6 +89,7 @@ class AccountMove(models.Model):
         warnings = set()
         if not moves_to_hash:
             warnings.add("no_document")
+            _debug.logic("chain_empty", last_move=last_move_hashed)
             return warnings
 
         seq_numbers = moves_to_hash.mapped("sequence_number")
@@ -108,9 +111,16 @@ class AccountMove(models.Model):
         )
         if has_unreconciled:
             warnings.add("unreconciled")
+        _debug.logic(
+            "chain_warnings_collected",
+            moves=moves_to_hash,
+            last_move=last_move_hashed,
+            start=start,
+            warnings=warnings,
+        )
         return warnings
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_chain_info(
         self, force_hash=False, include_pre_last_hash=False, early_stop=False
     ):
@@ -135,11 +145,11 @@ class AccountMove(models.Model):
         )
         journal = last_move_in_chain.journal_id
         if not self._is_move_restricted(last_move_in_chain, force_hash=force_hash):
-            dbg.logic.debug(
-                "[journal:%s] chain %s not restricted (force=%s), no hashing",
-                journal.id,
-                last_move_in_chain.sequence_prefix,
-                force_hash,
+            _debug.logic(
+                "chain_not_restricted_no_hashing",
+                journal=journal,
+                sequence_prefix=last_move_in_chain.sequence_prefix,
+                force=force_hash,
             )
             return False
 
@@ -184,13 +194,13 @@ class AccountMove(models.Model):
             )
 
         moves = moves_to_hash.sudo(False)
-        dbg.logic.debug(
-            "[journal:%s] chain %s: last hashed #%s, %d to hash, warnings=%s",
-            journal.id,
-            last_move_in_chain.sequence_prefix,
-            last_move_hashed.sequence_number,
-            len(moves_to_hash),
-            info.get("warnings"),
+        _debug.logic(
+            "chain_last_hashed_hash",
+            journal=journal,
+            sequence_prefix=last_move_in_chain.sequence_prefix,
+            sequence_number=last_move_hashed.sequence_number,
+            moves_to_hash_count=len(moves_to_hash),
+            warnings=info.get("warnings"),
         )
         info.update(
             {
@@ -200,7 +210,7 @@ class AccountMove(models.Model):
         )
         return info
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_chains_to_hash(
         self,
         force_hash=False,
@@ -220,10 +230,8 @@ class AccountMove(models.Model):
                 )
 
                 if not chain_info:
-                    dbg.logic.debug(
-                        "[journal:%s] nothing to hash for %s",
-                        journal.id,
-                        dbg.rec(chain_moves),
+                    _debug.logic(
+                        "nothing_hash", journal=journal, chain_moves=chain_moves
                     )
                     continue
                 if early_stop:
@@ -257,7 +265,7 @@ class AccountMove(models.Model):
             return False
         return res
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_hashes(self, previous_hash):
         hash_version = self.env.context.get("hash_version", MAX_HASH_VERSION)
 
@@ -271,6 +279,12 @@ class AccountMove(models.Model):
 
         move2hash = {}
         previous_hash = previous_hash or ""
+        _debug.pipeline(
+            "hash_chain_start",
+            moves=self,
+            hash_version=hash_version,
+            chained=bool(previous_hash),
+        )
 
         for move in self:
             if previous_hash and previous_hash.startswith("$"):
@@ -297,4 +311,10 @@ class AccountMove(models.Model):
                 f"${hash_version}${hash_string}" if hash_version >= 4 else hash_string
             )
             previous_hash = move2hash[move]
+        _debug.pipeline(
+            "hashes_computed",
+            moves=self,
+            count=len(move2hash),
+            hash_version=hash_version,
+        )
         return move2hash

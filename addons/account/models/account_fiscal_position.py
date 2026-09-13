@@ -2,9 +2,10 @@ from collections import defaultdict
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import unique
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class AccountFiscalPosition(models.Model):
@@ -112,7 +113,7 @@ class AccountFiscalPosition(models.Model):
     )
 
     @api.constrains("zip_from", "zip_to")
-    @dbg.timed
+    @_debug.perf.timed
     def _check_zip(self):
         for position in self:
             if (
@@ -126,7 +127,7 @@ class AccountFiscalPosition(models.Model):
                 )
 
     @api.constrains("country_id", "country_group_id", "state_ids", "foreign_vat")
-    @dbg.timed
+    @_debug.perf.timed
     def _check_foreign_vat_country(self):
         foreign_vat_positions = self.search(
             [
@@ -134,6 +135,9 @@ class AccountFiscalPosition(models.Model):
                 ("foreign_vat", "!=", False),
                 ("country_id", "in", self.country_id.ids),
             ]
+        )
+        _debug.pipeline(
+            "foreign_vat_candidates", positions=self, candidates=foreign_vat_positions
         )
         for record in self:
             if not record.foreign_vat:
@@ -152,6 +156,9 @@ class AccountFiscalPosition(models.Model):
                 and not record.state_ids
                 and fiscal_country.state_ids
             ):
+                _debug.logic(
+                    "foreign_vat_rejected", fpos=record, reason="domestic_no_state"
+                )
                 raise ValidationError(
                     _(
                         "You cannot create a fiscal position with a foreign VAT within your fiscal country without assigning it a state."
@@ -176,21 +183,28 @@ class AccountFiscalPosition(models.Model):
                     record._check_company_domain(record.company_id)
                 )
             ):
+                _debug.logic(
+                    "foreign_vat_rejected",
+                    fpos=record,
+                    reason="duplicate_in_country",
+                )
                 raise ValidationError(
                     _(
                         "A fiscal position with a foreign VAT already exists in this country."
                     )
                 )
+            _debug.logic("foreign_vat_accepted", fpos=record, country=record.country_id)
 
     @api.model_create_multi
-    @dbg.timed
+    @_debug.perf.timed
     def create(self, vals_list):
-        dbg.lifecycle.debug(
-            "create %s: %d vals, keys=%s",
-            self._name,
-            len(vals_list),
-            dbg.vals_keys(vals_list),
-        )
+        if _debug.lifecycle.enabled:
+            _debug.lifecycle(
+                "create",
+                model=self._name,
+                count=len(vals_list),
+                fields=sorted({key for vals in vals_list for key in vals}),
+            )
         for vals in vals_list:
             zip_from = vals.get("zip_from")
             zip_to = vals.get("zip_to")
@@ -200,11 +214,22 @@ class AccountFiscalPosition(models.Model):
                 )
         return super().create(vals_list)
 
-    @dbg.timed
+    @_debug.perf.timed
     def write(self, vals):
-        dbg.lifecycle.debug("write on %s: keys=%s", dbg.rec(self), dbg.keys(vals))
+        _debug.lifecycle("write", records=self, fields=sorted(vals))
         zip_from = vals.get("zip_from")
         zip_to = vals.get("zip_to")
+        _debug.logic(
+            "zip_write_mode",
+            records=self,
+            mode=(
+                "untouched"
+                if not (zip_from or zip_to)
+                else "both"
+                if zip_from and zip_to
+                else "per_record"
+            ),
+        )
         if not (zip_from or zip_to):
             return super().write(vals)
 
@@ -236,7 +261,7 @@ class AccountFiscalPosition(models.Model):
             position.states_count = len(position.country_id.state_ids)
 
     @api.depends("foreign_vat", "country_id", "company_id")
-    @dbg.timed
+    @_debug.perf.timed
     def _compute_foreign_vat_header_mode(self):
         AccountTax = self.env["account.tax"]
         country_taxes = AccountTax.search(
@@ -395,7 +420,7 @@ class AccountFiscalPosition(models.Model):
         ]
 
     @api.model
-    @dbg.timed
+    @_debug.perf.timed
     def _get_fiscal_position(self, partner, delivery=None, company=None):
         if not partner:
             return self.env["account.fiscal.position"]
@@ -422,18 +447,16 @@ class AccountFiscalPosition(models.Model):
             or partner.with_company(company).property_account_position_id
         )
         if manual_fiscal_position:
-            dbg.logic.debug(
-                "[partner:%s] fiscal position: manual %s (intra_eu=%s)",
-                partner.id,
-                manual_fiscal_position.id,
-                intra_eu,
+            _debug.logic(
+                "fiscal_position_manual",
+                partner=partner,
+                manual_fiscal_position=manual_fiscal_position,
+                intra_eu=intra_eu,
             )
             return manual_fiscal_position
 
         if not partner.country_id:
-            dbg.logic.debug(
-                "[partner:%s] fiscal position: no country, none", partner.id
-            )
+            _debug.logic("fiscal_position_no_country_none", partner=partner)
             return self.env["account.fiscal.position"]
 
         all_auto_apply_fpos = self.search(
@@ -441,19 +464,19 @@ class AccountFiscalPosition(models.Model):
         )
 
         fpos = all_auto_apply_fpos._get_first_matching_fpos(delivery, company)
-        dbg.logic.debug(
-            "[partner:%s] fiscal position: auto %s of %d candidate(s), delivery=%s intra_eu=%s",
-            partner.id,
-            fpos.id,
-            len(all_auto_apply_fpos),
-            delivery.id,
-            intra_eu,
+        _debug.logic(
+            "fiscal_position_auto",
+            partner=partner,
+            fpos=fpos,
+            all_auto_apply_fpos_count=len(all_auto_apply_fpos),
+            delivery=delivery,
+            intra_eu=intra_eu,
         )
         return fpos
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_view_related_taxes(self):
-        dbg.lifecycle.debug("action_view_related_taxes on %s", dbg.rec(self))
+        _debug.lifecycle("action_view_related_taxes", records=self)
         list_view = self.env.ref(
             "account.account_tax_fiscal_position_view_tree", raise_if_not_found=False
         )
@@ -472,9 +495,9 @@ class AccountFiscalPosition(models.Model):
             "context": {"active_test": False},
         }
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_create_foreign_taxes(self):
-        dbg.lifecycle.debug("action_create_foreign_taxes on %s", dbg.rec(self))
+        _debug.lifecycle("action_create_foreign_taxes", records=self)
         self.check_singleton()
         template = self._get_foreign_tax_chart_template(self.country_id)
         if not template["installed"]:

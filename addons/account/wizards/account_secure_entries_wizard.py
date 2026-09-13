@@ -3,8 +3,9 @@ from datetime import timedelta
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Command, Domain
+from odoo.libs.debug_log import DebugLog
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class AccountSecureEntriesWizard(models.TransientModel):
@@ -64,7 +65,7 @@ class AccountSecureEntriesWizard(models.TransientModel):
                 )
 
     @api.depends("company_id", "company_id.user_hard_lock_date")
-    @dbg.timed
+    @_debug.perf.timed
     def _compute_max_hash_date(self):
         today = fields.Date.context_today(self)
         for wizard in self:
@@ -85,7 +86,7 @@ class AccountSecureEntriesWizard(models.TransientModel):
             else:
                 wizard.max_hash_date = False
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_chains_to_hash(self, company_id, hash_date):
         self.check_singleton()
         res = []
@@ -117,10 +118,17 @@ class AccountSecureEntriesWizard(models.TransientModel):
                 not_hashable_unlocked_moves = self.env["account.move"]
             chain_info["not_hashable_unlocked_moves"] = not_hashable_unlocked_moves
             res.append(chain_info)
+        _debug.pipeline(
+            "chains_to_hash_collected",
+            secure=self,
+            company=company_id,
+            hash_date=hash_date,
+            chains=len(res),
+        )
         return res
 
     @api.depends("company_id", "company_id.user_hard_lock_date", "hash_date")
-    @dbg.timed
+    @_debug.perf.timed
     def _compute_data(self):
         for wizard in self:
             unreconciled_bank_statement_line_ids = []
@@ -160,6 +168,14 @@ class AccountSecureEntriesWizard(models.TransientModel):
                 Command.set(not_hashable_unlocked_moves)
             ]
             wizard.move_to_hash_ids = [Command.set(move_to_hash_ids)]
+            _debug.pipeline(
+                "secure_data_computed",
+                secure=wizard,
+                chains=len(chains_to_hash),
+                unreconciled_st_lines=len(unreconciled_bank_statement_line_ids),
+                moves_to_hash=len(move_to_hash_ids),
+                not_hashable=len(not_hashable_unlocked_moves),
+            )
 
     def _get_unreconciled_statement_warning(self):
         ignored_sequence_prefixes = list(
@@ -182,7 +198,7 @@ class AccountSecureEntriesWizard(models.TransientModel):
             ),
         }
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_sequence_gap_warning(self):
         or_domains = []
         for chain in self.chains_to_hash_with_gaps:
@@ -197,6 +213,11 @@ class AccountSecureEntriesWizard(models.TransientModel):
                     ("sequence_number", ">=", first_move.sequence_number),
                 ]
             )
+        _debug.pipeline(
+            "sequence_gap_domains_built",
+            secure=self,
+            chains=len(or_domains),
+        )
         domain = Domain.OR(or_domains)
         return {
             "message": _(
@@ -215,10 +236,16 @@ class AccountSecureEntriesWizard(models.TransientModel):
             },
         }
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_warnings(self):
         self.check_singleton()
         warnings = {}
+        _debug.logic(
+            "secure_warnings_scope",
+            secure=self,
+            hash_date=self.hash_date,
+            skipped=not self.hash_date,
+        )
         if not self.hash_date:
             return warnings
 
@@ -260,6 +287,12 @@ class AccountSecureEntriesWizard(models.TransientModel):
                 "action_text": _("Review Entries"),
                 "action": self.action_show_moves(moves_to_hash_after_selected_date),
             }
+        if _debug.logic.enabled:
+            _debug.logic(
+                "secure_warnings_built",
+                secure=self,
+                warnings=sorted(warnings),
+            )
         return warnings
 
     @api.depends(
@@ -297,9 +330,9 @@ class AccountSecureEntriesWizard(models.TransientModel):
             self.company_id, self.hash_date, [("state", "=", "draft")]
         )
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_show_moves(self, moves):
-        dbg.lifecycle.debug("action_show_moves on %s", dbg.rec(self))
+        _debug.lifecycle("action_show_moves", records=self)
         self.check_singleton()
         return {
             "view_mode": "list",
@@ -317,12 +350,9 @@ class AccountSecureEntriesWizard(models.TransientModel):
             ],
         }
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_show_draft_moves_in_hashed_period(self):
-        dbg.lifecycle.debug(
-            "action_show_draft_moves_in_hashed_period on %s",
-            dbg.rec(self),
-        )
+        _debug.lifecycle("action_show_draft_moves_in_hashed_period", records=self)
         self.check_singleton()
         return {
             "view_mode": "list",
@@ -340,9 +370,9 @@ class AccountSecureEntriesWizard(models.TransientModel):
             ],
         }
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_secure_entries(self):
-        dbg.lifecycle.debug("action_secure_entries on %s", dbg.rec(self))
+        _debug.lifecycle("action_secure_entries", records=self)
         self.check_singleton()
 
         if not self.hash_date:
@@ -351,15 +381,13 @@ class AccountSecureEntriesWizard(models.TransientModel):
             )
 
         if not self.move_to_hash_ids:
-            dbg.logic.debug(
-                "[secure:%s] nothing to hash up to %s", self.id, self.hash_date
-            )
+            _debug.logic("nothing_hash_up", secure=self, hash_date=self.hash_date)
             return
 
-        dbg.pipeline.debug(
-            "[secure:%s] hashing %s up to %s",
-            self.id,
-            dbg.rec(self.move_to_hash_ids),
-            self.hash_date,
+        _debug.pipeline(
+            "hashing_up",
+            secure=self,
+            move_to_hash_ids=self.move_to_hash_ids,
+            hash_date=self.hash_date,
         )
         self.move_to_hash_ids._hash_moves(force_hash=True, raise_if_gap=False)

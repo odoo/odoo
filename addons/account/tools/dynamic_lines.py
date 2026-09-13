@@ -1,4 +1,6 @@
-from . import debug_log as dbg
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 def filter_trivial(mapping):
@@ -13,12 +15,12 @@ def plan_dynamic_line_sync(
     values_differ,
 ):
     if needed_after == needed_before:
-        dbg.logic.debug("plan_dynamic_line_sync: needed values unchanged")
+        _debug.logic("plan_dynamic_line_sync_needed_values_unchanged")
         return None
     if not needed_before and (
         filter_trivial(existing_after) != filter_trivial(existing_before)
     ):
-        dbg.logic.debug("plan_dynamic_line_sync: existing lines changed by hand, kept")
+        _debug.logic("plan_dynamic_line_sync_existing_lines_changed_hand")
         return None
 
     lines_by_after_key = {}

@@ -6,10 +6,12 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import _, fields, models
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import date_utils
 
-from ..tools import debug_log as dbg
 from odoo.addons.account.tools import format_structured_reference_iso
+
+_debug = DebugLog(__name__)
 
 
 class AccountMove(models.Model):
@@ -46,6 +48,13 @@ class AccountMove(models.Model):
                 ]
             else:
                 domain += [(0, "=", 1)]
+        _debug.logic(
+            "reference_domain_built",
+            move=self,
+            journal=self.journal_id,
+            is_payment=is_payment,
+            clauses=len(domain),
+        )
         return domain
 
     def _get_sequence_anti_regex(self, sequence_number_reset):
@@ -72,6 +81,11 @@ class AccountMove(models.Model):
             .search(domain + [("date", "<=", self.date)], order="date desc", limit=1)
             .name
         )
+        _debug.logic(
+            "reference_move_before_date",
+            move=self,
+            found=bool(reference_move_name),
+        )
         if not reference_move_name:
             reference_move_name = (
                 self.sudo().search(domain, order="date asc", limit=1).name
@@ -92,13 +106,27 @@ class AccountMove(models.Model):
             and not self.env.context.get("no_anti_regex")
         ):
             where_string += " AND sequence_prefix !~ %(anti_regex)s "
+        _debug.logic(
+            "strict_sequence_clause_built",
+            move=self,
+            reset=sequence_number_reset,
+            date_start=date_start,
+            date_end=date_end,
+            anti_regex=bool(anti_regex),
+        )
         return where_string
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_domain_last_sequence(self, relaxed=False):
         # pylint: disable=sql-injection
         self.check_singleton()
         if not self.date or not self.journal_id:
+            _debug.logic(
+                "last_sequence_domain_empty",
+                seq_model=self._name,
+                seq_id=self,
+                has_date=bool(self.date),
+            )
             return "WHERE FALSE", {}
         where_string = "WHERE journal_id = %(journal_id)s AND name != '/'"
         param = {"journal_id": self.journal_id.id}
@@ -127,9 +155,19 @@ class AccountMove(models.Model):
                 param["partner_id"] = self.partner_id.commercial_partner_id.id
             else:
                 where_string += " AND false "
+        _debug.logic(
+            "last_sequence_domain_built",
+            seq_model=self._name,
+            seq_id=self,
+            relaxed=relaxed,
+            is_payment=bool(is_payment),
+            refund_sequence=self.journal_id.refund_sequence,
+            self_billing=self.journal_id.is_self_billing,
+            params=len(param),
+        )
         return where_string, param
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_starting_sequence(self):
         self.check_singleton()
         move_date = self.date or self.invoice_date or fields.Date.context_today(self)
@@ -184,10 +222,24 @@ class AccountMove(models.Model):
             self.journal_id.payment_sequence and self.origin_payment_id
         ) or self.env.context.get("is_payment"):
             starting_sequence = "P" + starting_sequence
+        _debug.logic(
+            "starting_sequence_chosen",
+            seq_model=self._name,
+            seq_id=self,
+            staggered_year=is_staggered_year,
+            journal_type=self.journal_id.type,
+            starting_sequence=starting_sequence,
+        )
         return starting_sequence
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_sequence_date_range(self, reset):
+        _debug.logic(
+            "sequence_date_range_reset",
+            seq_model=self._name,
+            reset=reset,
+            fiscal=reset in ("year_range", "year_range_month"),
+        )
         if reset not in ("year_range", "year_range_month"):
             return super()._get_sequence_date_range(reset)
 
@@ -205,6 +257,15 @@ class AccountMove(models.Model):
         fiscalyear_last_month_max_day = calendar.monthrange(
             self.date.year, fiscalyear_last_month
         )[1]
+        _debug.logic(
+            "fiscal_month_split",
+            seq_model=self._name,
+            seq_id=self,
+            split=fiscalyear_last_day < fiscalyear_last_month_max_day
+            and fiscalyear_last_month == self.date.month,
+            fiscalyear_last_day=fiscalyear_last_day,
+            fiscalyear_last_month=fiscalyear_last_month,
+        )
         if (
             fiscalyear_last_day < fiscalyear_last_month_max_day
             and fiscalyear_last_month == self.date.month

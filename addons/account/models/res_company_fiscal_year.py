@@ -1,10 +1,11 @@
 from datetime import timedelta
 
 from odoo import _, fields, models
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import date_utils
 from odoo.tools.misc import DEFAULT_SERVER_DATE_FORMAT
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class ResCompany(models.Model):
@@ -75,9 +76,9 @@ class ResCompany(models.Model):
         required=True,
     )
 
-    @dbg.timed
+    @_debug.perf.timed
     def write(self, vals):
-        dbg.lifecycle.debug("write on %s: keys=%s", dbg.rec(self), dbg.keys(vals))
+        _debug.lifecycle("write", records=self, fields=sorted(vals))
         old_threshold_vals = {}
         for record in self.exists():
             old_threshold_vals[record] = record.invoicing_switch_threshold
@@ -89,6 +90,13 @@ class ResCompany(models.Model):
                 "invoicing_switch_threshold" in vals
                 and old_threshold_vals[record] != record.invoicing_switch_threshold
             ):
+                _debug.logic(
+                    "invoicing_switch_moved",
+                    company=record,
+                    previous=old_threshold_vals[record],
+                    threshold=record.invoicing_switch_threshold,
+                    mode="apply" if record.invoicing_switch_threshold else "clear",
+                )
                 self.env["account.move.line"].flush_model(["move_id", "parent_state"])
                 self.env["account.move"].flush_model(
                     [
@@ -116,6 +124,11 @@ class ResCompany(models.Model):
                     """,
                         params,
                     )
+                    _debug.perf.count(
+                        "legacy_lines_reposted",
+                        company=record,
+                        rows=self.env.cr.rowcount,
+                    )
                     self.env.cr.execute(
                         """
                         update account_move
@@ -127,6 +140,11 @@ class ResCompany(models.Model):
                         and company_id = %(company_id)s
                     """,
                         params,
+                    )
+                    _debug.perf.count(
+                        "legacy_moves_reposted",
+                        company=record,
+                        rows=self.env.cr.rowcount,
                     )
                     self.env.cr.execute(
                         """
@@ -140,6 +158,11 @@ class ResCompany(models.Model):
                     """,
                         params,
                     )
+                    _debug.perf.count(
+                        "pre_threshold_lines_cancelled",
+                        company=record,
+                        rows=self.env.cr.rowcount,
+                    )
                     self.env.cr.execute(
                         """
                         update account_move
@@ -151,6 +174,11 @@ class ResCompany(models.Model):
                         and company_id = %(company_id)s
                     """,
                         params,
+                    )
+                    _debug.perf.count(
+                        "pre_threshold_moves_cancelled",
+                        company=record,
+                        rows=self.env.cr.rowcount,
                     )
                 else:
                     params = {"company_id": record.id}
@@ -165,6 +193,11 @@ class ResCompany(models.Model):
                     """,
                         params,
                     )
+                    _debug.perf.count(
+                        "legacy_lines_restored",
+                        company=record,
+                        rows=self.env.cr.rowcount,
+                    )
                     self.env.cr.execute(
                         """
                         update account_move
@@ -176,6 +209,11 @@ class ResCompany(models.Model):
                     """,
                         params,
                     )
+                    _debug.perf.count(
+                        "legacy_moves_restored",
+                        company=record,
+                        rows=self.env.cr.rowcount,
+                    )
 
                 self.env["account.move.line"].invalidate_model(["parent_state"])
                 self.env["account.move"].invalidate_model(
@@ -184,7 +222,7 @@ class ResCompany(models.Model):
 
         return rslt
 
-    @dbg.timed
+    @_debug.perf.timed
     def compute_fiscalyear_dates(self, current_date):
         self.check_singleton()
         date_str = current_date.strftime(DEFAULT_SERVER_DATE_FORMAT)
@@ -196,6 +234,13 @@ class ResCompany(models.Model):
                 ("date_to", ">=", date_str),
             ],
             limit=1,
+        )
+        _debug.logic(
+            "fiscalyear_record_lookup",
+            company=self,
+            date=date_str,
+            fiscalyear=fiscalyear,
+            found=bool(fiscalyear),
         )
         if fiscalyear:
             return {
@@ -235,6 +280,14 @@ class ResCompany(models.Model):
         if fiscalyear_to:
             date_to = fiscalyear_to.date_from - timedelta(days=1)
 
+        _debug.logic(
+            "fiscalyear_dates_computed",
+            company=self,
+            date_from=date_from,
+            date_to=date_to,
+            clipped_from=bool(fiscalyear_from),
+            clipped_to=bool(fiscalyear_to),
+        )
         return {"date_from": date_from, "date_to": date_to}
 
     def _get_unreconciled_statement_lines_redirect_action(

@@ -1,14 +1,15 @@
 from odoo import _, api, models
+from odoo.libs.debug_log import DebugLog
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class AccountBankStatement(models.Model):
     _inherit = "account.bank.statement"
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_view_bank_reconcile_widget(self):
-        dbg.lifecycle.debug("action_view_bank_reconcile_widget on %s", dbg.rec(self))
+        _debug.lifecycle("action_view_bank_reconcile_widget", records=self)
         self.check_singleton()
         return self.env[
             "account.bank.statement.line"
@@ -21,12 +22,9 @@ class AccountBankStatement(models.Model):
             extra_domain=[("statement_id", "=", self.id)],
         )
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_view_journal_invalid_statements(self):
-        dbg.lifecycle.debug(
-            "action_view_journal_invalid_statements on %s",
-            dbg.rec(self),
-        )
+        _debug.lifecycle("action_view_journal_invalid_statements", records=self)
         self.check_singleton()
         return {
             "name": _("Invalid Bank Statements"),
@@ -39,9 +37,9 @@ class AccountBankStatement(models.Model):
             },
         }
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_generate_attachment(self):
-        dbg.lifecycle.debug("action_generate_attachment on %s", dbg.rec(self))
+        _debug.lifecycle("action_generate_attachment", records=self)
         ir_actions_report_sudo = self.env["ir.actions.report"].sudo()
         statement_report_action = self.env.ref(
             "account.action_report_account_statement"
@@ -66,15 +64,21 @@ class AccountBankStatement(models.Model):
         return statement_report_action.report_action(docids=self)
 
     @api.model_create_multi
-    @dbg.timed
+    @_debug.perf.timed
     def create(self, vals_list):
-        dbg.lifecycle.debug(
-            "create %s: %d vals, keys=%s",
-            self._name,
-            len(vals_list),
-            dbg.vals_keys(vals_list),
-        )
+        if _debug.lifecycle.enabled:
+            _debug.lifecycle(
+                "create",
+                model=self._name,
+                count=len(vals_list),
+                fields=sorted({key for vals in vals_list for key in vals}),
+            )
         statements = super().create(vals_list)
+        _debug.logic(
+            "statement_pdf_generation",
+            statements=statements,
+            skipped=bool(self.env.context.get("skip_pdf_attachment_generation")),
+        )
         if not self.env.context.get("skip_pdf_attachment_generation"):
             statements.filtered(
                 lambda statement: (

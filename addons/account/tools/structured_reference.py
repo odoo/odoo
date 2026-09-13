@@ -4,6 +4,10 @@ from itertools import zip_longest
 from stdnum import iso11649, luhn
 from stdnum.iso7064 import mod_97_10
 
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
+
 __all__ = [
     "format_structured_reference_iso",
     "is_valid_structured_reference",
@@ -82,12 +86,15 @@ def is_valid_structured_reference_nl(reference):
     sanitized_reference = sanitize_structured_reference(reference)
 
     if re.fullmatch(r"\d{7}", sanitized_reference):
+        _debug.logic("nl_short_reference_accepted", length=7)
         return True
 
     if not re.fullmatch(r"\d{9,16}", sanitized_reference):
+        _debug.logic("nl_digits_rejected", reason="not_9_to_16_digits")
         return False
 
     if len(sanitized_reference) == 15:
+        _debug.logic("nl_length_rejected", reason="length_15")
         return False
 
     check, reference_to_check = sanitized_reference[0], sanitized_reference[1:]
@@ -104,6 +111,7 @@ def is_valid_structured_reference_nl(reference):
     elif computed_check == 10:
         computed_check = 1
 
+    _debug.logic("nl_check_digit_compared", computed=computed_check, given=check)
     return computed_check == int(check)
 
 
@@ -113,6 +121,7 @@ def is_valid_structured_reference_si(reference):
     if sanitized_reference.startswith("SI01"):
         sanitized_reference = sanitized_reference[4:]
     else:
+        _debug.logic("si_prefix_rejected", reason="prefix")
         return False
 
     if sanitized_reference.count("-") > 2:
@@ -120,6 +129,7 @@ def is_valid_structured_reference_si(reference):
 
     match = re.match(r"^(\d+)-(\d+)-(\d+)$", sanitized_reference)
     if not match:
+        _debug.logic("si_shape_rejected", reason="groups")
         return False
 
     core = sanitized_reference.replace("-", "")
@@ -138,6 +148,11 @@ def is_valid_structured_reference_si(reference):
     if expected_check_digit in (10, 11):
         expected_check_digit = 0
 
+    _debug.logic(
+        "si_check_digit_compared",
+        given=given_check_digit,
+        expected=expected_check_digit,
+    )
     return given_check_digit == str(expected_check_digit)
 
 

@@ -7,12 +7,13 @@ from psycopg import errors as pgerrors
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, date_utils, frozendict
 from odoo.tools.misc import format_date
 
-from ..tools import debug_log as dbg
-
 _logger = logging.getLogger(__name__)
+
+_debug = DebugLog(__name__)
 
 
 class MixinSequence(models.AbstractModel):
@@ -45,9 +46,15 @@ class MixinSequence(models.AbstractModel):
     sequence_prefix = fields.Char(compute="_compute_split_sequence", store=True)
     sequence_number = fields.Integer(compute="_compute_split_sequence", store=True)
 
-    @dbg.timed
+    @_debug.perf.timed
     def init(self):
-        dbg.lifecycle.debug("init on %s", dbg.rec(self))
+        _debug.lifecycle("init", records=self)
+        _debug.logic(
+            "sequence_indexes_wanted",
+            seq_model=self._name,
+            abstract=self._abstract,
+            sequence_index=self._sequence_index,
+        )
         if not self._abstract and self._sequence_index:
             index_name = self._table + "_sequence_index"
             self.env.cr.execute(
@@ -81,6 +88,11 @@ class MixinSequence(models.AbstractModel):
                     column=self._sequence_field,
                 )
             )
+            _debug.logic(
+                "sequence_unique_index_checked",
+                seq_model=self._name,
+                found=bool(unique_index),
+            )
             if not unique_index:
                 _logger.warning(
                     "A unique index for `mixin.sequence` is missing on %s. "
@@ -91,9 +103,9 @@ class MixinSequence(models.AbstractModel):
     def _get_sequence_cache(self):
         return self.env.cr.cache.setdefault("mixin.sequence", {})
 
-    @dbg.timed
+    @_debug.perf.timed
     def write(self, vals):
-        dbg.lifecycle.debug("write on %s: keys=%s", dbg.rec(self), dbg.keys(vals))
+        _debug.lifecycle("write", records=self, fields=sorted(vals))
         if self._sequence_field in vals and self.env.context.get(
             "clear_sequence_mixin_cache", True
         ):
@@ -168,6 +180,13 @@ class MixinSequence(models.AbstractModel):
                 and record_date > constraint_date
                 and not record._sequence_matches_date()
             ):
+                _debug.logic(
+                    "sequence_date_mismatch",
+                    seq_model=record._name,
+                    seq_id=record,
+                    sequence=sequence,
+                    date=record_date,
+                )
                 raise ValidationError(
                     _(
                         "The %(date_field)s (%(date)s) you've entered isn't aligned with the existing sequence number (%(sequence)s). Clear the sequence number to proceed.\n"
@@ -194,6 +213,12 @@ class MixinSequence(models.AbstractModel):
                 matcher = compiled[pattern] = re.compile(pattern)
             matching = matcher.match(sequence)
             if matching is None:
+                _debug.logic(
+                    "sequence_regex_mismatch",
+                    seq_model=record._name,
+                    seq_id=record,
+                    sequence=sequence,
+                )
                 raise ValidationError(
                     self.env._(
                         "The sequence regex %(regex)s does not match the current "
@@ -207,7 +232,7 @@ class MixinSequence(models.AbstractModel):
             record.sequence_number = int(matching.group("seq") or 0)
 
     @api.model
-    @dbg.timed
+    @_debug.perf.timed
     def _deduce_sequence_number_reset(self, name):
         for regex, ret_val, requirements in [
             (
@@ -238,9 +263,22 @@ class MixinSequence(models.AbstractModel):
                         != int(groupdict["year_end"])
                     )
                 ):
+                    _debug.logic(
+                        "sequence_year_range_rejected",
+                        seq_model=self._name,
+                        name=name,
+                        reset=ret_val,
+                    )
                     continue
                 if all(groupdict.get(req) is not None for req in requirements):
+                    _debug.logic(
+                        "sequence_reset_deduced",
+                        seq_model=self._name,
+                        name=name,
+                        reset=ret_val,
+                    )
                     return ret_val
+        _debug.logic("sequence_reset_undeducible", seq_model=self._name, name=name)
         raise ValidationError(
             _(
                 "The sequence regex should at least contain the seq grouping keys. For instance:\n"
@@ -248,7 +286,7 @@ class MixinSequence(models.AbstractModel):
             )
         )
 
-    @dbg.timed
+    @_debug.perf.timed
     def _prepare_regex_non_capturing(self, regex):
         return re.sub(r"\?P<\w+>", "?:", regex)
 
@@ -269,6 +307,11 @@ class MixinSequence(models.AbstractModel):
             self._sequence_field not in self._fields
             or not self._fields[self._sequence_field].store
         ):
+            _debug.logic(
+                "sequence_field_not_stored",
+                seq_model=self._name,
+                field=self._sequence_field,
+            )
             raise ValidationError(_("%s is not a stored field", self._sequence_field))
         where_string, param = self._get_domain_last_sequence(relaxed)
         if self._origin.id:
@@ -286,11 +329,18 @@ class MixinSequence(models.AbstractModel):
                 LIMIT 1
         """
 
+        _debug.pipeline(
+            "last_sequence_query_built",
+            seq_model=self._name,
+            seq_id=self,
+            relaxed=relaxed,
+            with_prefix=with_prefix,
+        )
         self.flush_model([self._sequence_field, "sequence_number", "sequence_prefix"])
         self.env.cr.execute(query, param)
         return (self.env.cr.fetchone() or [None])[0]
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_sequence_format_param(self, previous):
         sequence_number_reset = self._deduce_sequence_number_reset(previous)
         regex = self._sequence_fixed_regex
@@ -312,6 +362,11 @@ class MixinSequence(models.AbstractModel):
             and "prefix1" in format_values
             and "suffix" in format_values
         ):
+            _debug.logic(
+                "sequence_suffix_moved_to_prefix",
+                seq_model=self._name,
+                previous=previous,
+            )
             format_values["prefix1"] = format_values["suffix"]
             format_values["suffix"] = ""
         for field in ("seq", "year", "month", "year_end"):
@@ -334,9 +389,16 @@ class MixinSequence(models.AbstractModel):
             else "{%s}" % s
             for s in placeholders
         )
+        _debug.logic(
+            "sequence_format_parsed",
+            seq_model=self._name,
+            previous=previous,
+            reset=sequence_number_reset,
+            format=format,
+        )
         return format, format_values
 
-    @dbg.timed
+    @_debug.perf.timed
     def _locked_increment(self, format_string, format_values):
         cache = self._get_sequence_cache()
         seq = format_values["seq"]
@@ -347,12 +409,12 @@ class MixinSequence(models.AbstractModel):
         )
         if cache_key in cache:
             cache[cache_key] += 1
-            dbg.logic.debug(
-                "[seq:%s:%s] cache hit %s -> %d",
-                self._name,
-                self.id,
-                cache_key[0],
-                cache[cache_key],
+            _debug.logic(
+                "sequence_cache_hit",
+                seq_model=self._name,
+                seq_id=self,
+                cache_key=cache_key[0],
+                sequence_number=cache[cache_key],
             )
             return format_string.format(**format_values, seq=cache[cache_key])
 
@@ -373,13 +435,19 @@ class MixinSequence(models.AbstractModel):
                         log_exceptions=False,
                     )
                     cache[cache_key] = seq
-                    dbg.lifecycle.debug(
-                        "[seq:%s:%s] assigned %s", self._name, self.id, sequence
+                    _debug.lifecycle(
+                        "sequence_assigned",
+                        seq_model=self._name,
+                        seq_id=self,
+                        sequence=sequence,
                     )
                     return sequence
                 except pgerrors.ExclusionViolation, pgerrors.UniqueViolation:
-                    dbg.logic.debug(
-                        "[seq:%s:%s] %s taken, retrying", self._name, self.id, sequence
+                    _debug.logic(
+                        "sequence_taken_retrying",
+                        seq_model=self._name,
+                        seq_id=self,
+                        sequence=sequence,
                     )
                     sp.rollback()
 
@@ -396,7 +464,7 @@ class MixinSequence(models.AbstractModel):
 
         self._update_split_sequence()
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_next_sequence_format(self):
         last_sequence = self._get_last_sequence()
         new = not last_sequence
@@ -406,13 +474,13 @@ class MixinSequence(models.AbstractModel):
             )
 
         format_string, format_values = self._get_sequence_format_param(last_sequence)
-        dbg.logic.debug(
-            "[seq:%s:%s] new_chain=%s last=%s format=%s",
-            self._name,
-            self.id,
-            new,
-            last_sequence,
-            format_string,
+        _debug.logic(
+            "sequence_format",
+            seq_model=self._name,
+            seq_id=self,
+            new_chain=new,
+            last=last_sequence,
+            format=format_string,
         )
         if new:
             if not self[self._sequence_date_field]:
@@ -461,9 +529,19 @@ class MixinSequence(models.AbstractModel):
         for values in batched.values():
             seq_list = values["seq_list"]
             if max(seq_list) - min(seq_list) != len(seq_list) - 1:
+                _debug.logic(
+                    "seq_chain_has_gap",
+                    seq_model=self._name,
+                    seq_id=values["last_rec"],
+                    batches=len(batched),
+                )
                 return False
 
             record = values["last_rec"]
             if not record._is_last_from_seq_chain():
+                _debug.logic("seq_chain_not_last", seq_model=self._name, seq_id=record)
                 return False
+        _debug.logic(
+            "seq_chain_end_confirmed", seq_model=self._name, batches=len(batched)
+        )
         return True

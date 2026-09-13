@@ -1,19 +1,22 @@
 import time
 
 from odoo import Command, _, api, models
+from odoo.libs.debug_log import DebugLog
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class AccountChartTemplate(models.AbstractModel):
     _inherit = "account.chart.template"
 
     @api.model
-    @dbg.timed
+    @_debug.perf.timed
     def _account_reconcile_install_demo(self, companies):
         if not isinstance(companies, models.BaseModel):
             companies = self.env["res.company"].browse(companies)
+        _debug.pipeline("reconcile_demo_started", company=companies)
         for company in companies:
+            _debug.pipeline("reconcile_demo_loading", company=company)
             self.with_company(company).sudo()._load_data(
                 {
                     "account.move": {

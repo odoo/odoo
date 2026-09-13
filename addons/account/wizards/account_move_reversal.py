@@ -1,9 +1,11 @@
 from odoo import Command, api, fields, models
 from odoo.exceptions import UserError, ValidationError
+from odoo.libs.debug_log import DebugLog
 from odoo.tools.translate import _
 
-from ..tools import debug_log as dbg
 from odoo.addons.account.tools.display_types import NON_ACCOUNTABLE_DISPLAY_TYPES
+
+_debug = DebugLog(__name__)
 
 
 class AccountMoveReversal(models.TransientModel):
@@ -68,7 +70,7 @@ class AccountMoveReversal(models.TransientModel):
             record.available_journal_ids = allowed
 
     @api.constrains("journal_id", "move_ids")
-    @dbg.timed
+    @_debug.perf.timed
     def _check_journal_type(self):
         for record in self:
             if record.journal_id.type not in record.move_ids.journal_id.mapped("type"):
@@ -77,9 +79,9 @@ class AccountMoveReversal(models.TransientModel):
                 )
 
     @api.model
-    @dbg.timed
+    @_debug.perf.timed
     def default_get(self, fields_list):
-        dbg.lifecycle.debug("default_get on %s", dbg.rec(self))
+        _debug.lifecycle("default_get", records=self)
         res = super().default_get(fields_list)
         move_ids = (
             self.env["account.move"].browse(self.env.context.get("active_ids"))
@@ -88,11 +90,17 @@ class AccountMoveReversal(models.TransientModel):
         )
 
         if len(move_ids.company_id) > 1:
+            _debug.logic(
+                "reversal_defaults_rejected", move=move_ids, reason="multi_company"
+            )
             raise UserError(
                 _("All selected moves for reversal must belong to the same company.")
             )
 
         if any(move.state != "posted" for move in move_ids):
+            _debug.logic(
+                "reversal_defaults_rejected", move=move_ids, reason="not_posted"
+            )
             raise UserError(_("To reverse a journal entry, it has to be posted first."))
         if "company_id" in fields_list:
             res["company_id"] = move_ids.company_id.id or self.env.company.id
@@ -101,7 +109,7 @@ class AccountMoveReversal(models.TransientModel):
         return res
 
     @api.depends("move_ids")
-    @dbg.timed
+    @_debug.perf.timed
     def _compute_from_moves(self):
         for record in self:
             move_ids = record.move_ids._origin
@@ -124,7 +132,7 @@ class AccountMoveReversal(models.TransientModel):
                 )
             )
 
-    @dbg.timed
+    @_debug.perf.timed
     def _prepare_default_reversal(self, move):
         reverse_date = self.date
         mixed_payment_term = (
@@ -190,6 +198,11 @@ class AccountMoveReversal(models.TransientModel):
             "type": "ir.actions.act_window",
             "res_model": "account.move",
         }
+        _debug.logic(
+            "reversal_redirect_chosen",
+            move=moves_to_redirect,
+            single_form=len(moves_to_redirect) == 1,
+        )
         if len(moves_to_redirect) == 1:
             action.update(
                 {
@@ -211,7 +224,7 @@ class AccountMoveReversal(models.TransientModel):
                 }
         return action
 
-    @dbg.timed
+    @_debug.perf.timed
     def reverse_moves(self, is_modify=False):
         self.check_singleton()
         moves = self.move_ids
@@ -224,21 +237,21 @@ class AccountMoveReversal(models.TransientModel):
             for move in moves
         ]
         batches = self._get_reversal_batches(moves, default_values_list, is_modify)
-        dbg.pipeline.debug(
-            "[reversal:%s] %s modify=%s -> %d batch(es)",
-            self.id,
-            dbg.rec(moves),
-            is_modify,
-            len(batches),
+        _debug.pipeline(
+            "reverse_moves",
+            reversal=self,
+            moves=moves,
+            modify=is_modify,
+            batches_count=len(batches),
         )
 
         moves_to_redirect = self.env["account.move"]
         for batch_moves, batch_default_values, is_cancel_needed in batches:
-            dbg.logic.debug(
-                "[reversal:%s] batch %s cancel=%s",
-                self.id,
-                dbg.rec(batch_moves),
-                is_cancel_needed,
+            _debug.logic(
+                "batch",
+                reversal=self,
+                batch_moves=batch_moves,
+                cancel=is_cancel_needed,
             )
             new_moves = batch_moves._reverse_moves(
                 batch_default_values, cancel=is_cancel_needed

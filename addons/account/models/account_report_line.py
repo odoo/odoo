@@ -3,12 +3,14 @@ from collections import defaultdict
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.libs.debug_log import DebugLog
 
-from ..tools import debug_log as dbg
 from odoo.addons.account.models.account_report import (
     DOMAIN_REGEX,
     REFERENCE_UNSAFE_CHARS_REGEX,
 )
+
+_debug = DebugLog(__name__)
 
 
 def _replace_codes_in_formula(formula, code_mapping):
@@ -148,7 +150,7 @@ class AccountReportLine(models.Model):
     )
 
     @api.constrains("code")
-    @dbg.timed
+    @_debug.perf.timed
     def _check_code(self):
         for report_line in self:
             if report_line.code and REFERENCE_UNSAFE_CHARS_REGEX.search(
@@ -194,7 +196,7 @@ class AccountReportLine(models.Model):
             report_line.user_groupby = report_line.groupby
 
     @api.constrains("parent_id")
-    @dbg.timed
+    @_debug.perf.timed
     def _check_groupby_no_child(self):
         for report_line in self:
             if report_line.parent_id.groupby or report_line.parent_id.user_groupby:
@@ -206,12 +208,12 @@ class AccountReportLine(models.Model):
                 )
 
     @api.constrains("groupby", "user_groupby")
-    @dbg.timed
+    @_debug.perf.timed
     def _check_groupby(self):
         self.expression_ids._check_engine()
 
     @api.constrains("parent_id", "report_id")
-    @dbg.timed
+    @_debug.perf.timed
     def _check_parent_report(self):
         for line in self:
             if line.parent_id and line.parent_id.report_id != line.report_id:
@@ -228,7 +230,7 @@ class AccountReportLine(models.Model):
                 )
 
     @api.constrains("parent_id")
-    @dbg.timed
+    @_debug.perf.timed
     def _check_parent_line(self):
         for line in self.filtered(lambda x: x.parent_id == x):
             raise ValidationError(
@@ -239,7 +241,7 @@ class AccountReportLine(models.Model):
                 _("Report lines cannot form a recursive parent hierarchy.")
             )
 
-    @dbg.timed
+    @_debug.perf.timed
     def _copy_hierarchy(self, copied_report):
         line_ids = set(self.ids)
         lines_by_parent_id = defaultdict(self.browse)
@@ -262,6 +264,13 @@ class AccountReportLine(models.Model):
 
         for root in lines_by_parent_id[False]:
             allocate_codes(root)
+        _debug.pipeline(
+            "hierarchy_codes_allocated",
+            report=copied_report,
+            lines=self,
+            roots=len(lines_by_parent_id[False]),
+            renamed_codes=len(code_mapping),
+        )
 
         copied_line_by_id = {}
         generation = lines_by_parent_id[False]
@@ -282,6 +291,12 @@ class AccountReportLine(models.Model):
             next_generation = self.browse()
             for line in generation:
                 next_generation |= lines_by_parent_id[line.id]
+            _debug.pipeline(
+                "hierarchy_generation_copied",
+                report=copied_report,
+                copied=len(vals_list),
+                next_generation=len(next_generation),
+            )
             generation = next_generation
 
         source_expressions = self.expression_ids
@@ -297,6 +312,12 @@ class AccountReportLine(models.Model):
                             vals[key] = _replace_codes_in_formula(
                                 vals[key], code_mapping
                             )
+            _debug.pipeline(
+                "hierarchy_expressions_copied",
+                report=copied_report,
+                expressions=source_expressions,
+                copied_lines=len(copied_line_by_id),
+            )
             self.env["account.report.expression"].create(vals_list)
 
         return code_mapping
@@ -316,7 +337,7 @@ class AccountReportLine(models.Model):
     def _inverse_external_formula(self):
         self._create_report_expression(engine="external")
 
-    @dbg.timed
+    @_debug.perf.timed
     def _create_report_expression(self, engine):
         vals_list = []
         xml_ids = self.expression_ids.filtered(
@@ -385,11 +406,17 @@ class AccountReportLine(models.Model):
             else:
                 balance_expression.write(vals)
 
+        _debug.pipeline(
+            "report_expressions_synced",
+            engine=engine,
+            lines=self,
+            created=len(vals_list),
+        )
         if vals_list:
             self.env["account.report.expression"].create(vals_list)
 
     @api.ondelete(at_uninstall=False)
-    @dbg.timed
+    @_debug.perf.timed
     def _unlink_child_expressions(self):
-        dbg.lifecycle.debug("_unlink_child_expressions on %s", dbg.rec(self))
+        _debug.lifecycle("_unlink_child_expressions", records=self)
         self.expression_ids.unlink()

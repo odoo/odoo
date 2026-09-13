@@ -2,23 +2,25 @@ import re
 from collections import defaultdict
 
 from odoo import SUPERUSER_ID, Command, _, models
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import float_is_zero
 
-from ..tools import debug_log as dbg
 from odoo.addons.account.tools.structured_reference import is_valid_structured_reference
+
+_debug = DebugLog(__name__)
 
 
 class AccountBankStatementLine(models.Model):
     _inherit = "account.bank.statement.line"
 
-    @dbg.timed
+    @_debug.perf.timed
     def _action_manual_reco_model(self, reco_model_id):
-        dbg.lifecycle.debug("_action_manual_reco_model on %s", dbg.rec(self))
+        _debug.lifecycle("_action_manual_reco_model", records=self)
         self.move_id.line_ids.filtered(
             lambda x: x.account_id == x.move_id.journal_id.suspense_account_id
         ).reconcile_model_id = reco_model_id
 
-    @dbg.timed
+    @_debug.perf.timed
     def _create_automatic_reconciliation_model(self, account_move_line, account):
         self._handle_reconciliation_rule(account_move_line, account.id)
         new_rule = self._check_and_create_reconciliation_rule(
@@ -43,15 +45,15 @@ class AccountBankStatementLine(models.Model):
             and account_id not in aml.reconcile_model_id.line_ids.account_id.ids
         )
         if should_delete_rule:
-            dbg.logic.debug(
-                "[stline:%s] auto rule %s no longer matches account %s, deleting",
-                self.id,
-                aml.reconcile_model_id.id,
-                account_id,
+            _debug.logic(
+                "auto_rule_no_longer_matches",
+                stline=self,
+                reconcile_model_id=aml.reconcile_model_id,
+                account_id=account_id,
             )
             aml.reconcile_model_id.sudo().unlink()
 
-    @dbg.timed
+    @_debug.perf.timed
     def _check_and_create_reconciliation_rule(self, account_id, company_id):
         bank_stmt_line_domain = [
             ("company_id", "=", company_id),
@@ -64,11 +66,11 @@ class AccountBankStatementLine(models.Model):
             bank_stmt_line_domain, limit=5, order="internal_index desc"
         )
         if len(previous_statement_lines) <= 1:
-            dbg.logic.debug(
-                "[stline:%s] no auto rule: %d previous line(s) on account %s",
-                self.id,
-                len(previous_statement_lines),
-                account_id,
+            _debug.logic(
+                "no_auto_rule_line_account",
+                stline=self,
+                previous_statement_lines_count=len(previous_statement_lines),
+                account_id=account_id,
             )
             return None
 
@@ -94,17 +96,17 @@ class AccountBankStatementLine(models.Model):
         rule_data = self._prepare_reconciliation_rule_data(
             previous_statement_lines, account_id
         )
-        dbg.logic.debug(
-            "[stline:%s] auto rule candidate: substring=%r partners=%s",
-            self.id,
-            rule_data.get("common_substring"),
-            rule_data.get("partner_ids"),
+        _debug.logic(
+            "auto_rule_candidate",
+            stline=self,
+            substring=rule_data.get("common_substring"),
+            partners=rule_data.get("partner_ids"),
         )
         if rule_data.get("common_substring"):
             return self._create_reconciliation_rule(rule_data)
         return None
 
-    @dbg.timed
+    @_debug.perf.timed
     def _prepare_reconciliation_rule_data(self, statement_lines, account_id):
         payment_refs = [line.payment_ref.strip() for line in statement_lines]
         common_substring = self._get_common_substring(payment_refs)
@@ -121,7 +123,7 @@ class AccountBankStatementLine(models.Model):
             else [],
         }
 
-    @dbg.timed
+    @_debug.perf.timed
     def _create_reconciliation_rule(self, rule_data):
         vals = {
             "created_automatically": True,
@@ -150,7 +152,7 @@ class AccountBankStatementLine(models.Model):
             .create(vals)
         )
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_common_substring(self, labels):
         def normalise_label(label):
             is_valid = is_valid_structured_reference(label)
@@ -181,6 +183,12 @@ class AccountBankStatementLine(models.Model):
                             yield current_substring
 
         normalised = [normalise_label(label.upper()) for label in labels if label]
+        if _debug.logic.enabled:
+            _debug.logic(
+                "labels_normalised",
+                labels=len(normalised),
+                identical=all(label == normalised[0] for label in normalised[1:]),
+            )
         if all(label == normalised[0] for label in normalised[1:]):
             return normalised[0]
         normalised.sort(key=len)
@@ -191,12 +199,25 @@ class AccountBankStatementLine(models.Model):
                 substring in label for label in normalised[2:]
             ):
                 longest_substring = substring
+        _debug.logic(
+            "common_substring_searched",
+            labels=len(normalised),
+            substring_length=len(longest_substring),
+        )
         return longest_substring or None
 
-    @dbg.timed
+    @_debug.perf.timed
     def _create_account_model_fee(self, account_id):
         self.check_singleton()
         tolerance = self._get_payment_tolerance()
+        if _debug.logic.enabled:
+            _debug.logic(
+                "fee_model_amounts_checked",
+                stline=self,
+                amount=self.amount,
+                residual=self.amount_residual,
+                tolerance=tolerance,
+            )
         if (
             self.currency_id.compare_amounts(self.amount, 0) < 0
             or self.currency_id.compare_amounts(self.amount_residual, 0) < 0
@@ -238,6 +259,13 @@ class AccountBankStatementLine(models.Model):
         ):
             name = f"Fees ({journal.name} - {journal.code})"
 
+        _debug.lifecycle(
+            "fee_model_creating",
+            stline=self,
+            journal=journal,
+            name=name,
+            account_id=account_id,
+        )
         ReconcileModel.create(
             {
                 "company_id": journal.company_id.id,

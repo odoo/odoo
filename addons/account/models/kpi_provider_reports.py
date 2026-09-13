@@ -4,7 +4,10 @@ from datetime import UTC, datetime
 
 from odoo import api, models
 from odoo.libs.datetime import timezone
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
+
+_debug = DebugLog(__name__)
 
 
 class KpiProvider(models.AbstractModel):
@@ -88,6 +91,12 @@ def get_kpi_summary(cr, uid):
         )
     )
     existing_columns = {x[0] for x in cr.fetchall()}
+    if _debug.logic.enabled:
+        _debug.logic(
+            "tax_return_kpi_columns_checked",
+            uid=uid,
+            missing=sorted(expected_columns - existing_columns),
+        )
     if expected_columns - existing_columns:
         # Needed columns are not present -> module is not installed
         return []
@@ -103,6 +112,7 @@ def get_kpi_summary(cr, uid):
     external_ids = {
         (model, res_id): complete_name for model, res_id, complete_name in cr.fetchall()
     }
+    _debug.perf.count("tax_return_external_ids_fetched", rows=len(external_ids))
 
     # The user's own "today", resolved in Python. Reading the timezone costs one
     # indexed lookup and settles three things the SQL could not:
@@ -131,6 +141,13 @@ def get_kpi_summary(cr, uid):
     row = cr.fetchone()
     # Using python-generated dates to respect what freezegun has frozen in tests
     today = datetime.now(UTC).astimezone(timezone((row and row[0]) or "UTC")).date()
+    _debug.logic(
+        "tax_return_kpi_today",
+        uid=uid,
+        tz=(row and row[0]) or "UTC",
+        today=today,
+        external_ids=len(external_ids),
+    )
     cr.execute(
         SQL(
             """
@@ -172,6 +189,13 @@ def get_kpi_summary(cr, uid):
     for return_info in cr.dictfetchall():
         key = _tax_return_grouping_key(external_ids, return_info)
         returns_by_external_id[key].append(return_info)
+    if _debug.pipeline.enabled:
+        _debug.pipeline(
+            "tax_returns_grouped",
+            uid=uid,
+            groups=len(returns_by_external_id),
+            returns=sum(len(returns) for returns in returns_by_external_id.values()),
+        )
 
     return [
         {

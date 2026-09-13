@@ -2,8 +2,9 @@ from collections import Counter
 
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import RedirectWarning, UserError
+from odoo.libs.debug_log import DebugLog
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class AccountMoveSendBatchWizard(models.TransientModel):
@@ -16,9 +17,9 @@ class AccountMoveSendBatchWizard(models.TransientModel):
     alerts = fields.Json(compute="_compute_alerts")
 
     @api.model
-    @dbg.timed
+    @_debug.perf.timed
     def default_get(self, fields_list):
-        dbg.lifecycle.debug("default_get on %s", dbg.rec(self))
+        _debug.lifecycle("default_get", records=self)
         results = super().default_get(fields_list)
         if "move_ids" in fields_list and "move_ids" not in results:
             move_ids = self.env.context.get("active_ids", [])
@@ -26,7 +27,7 @@ class AccountMoveSendBatchWizard(models.TransientModel):
         return results
 
     @api.depends("move_ids")
-    @dbg.timed
+    @_debug.perf.timed
     def _compute_summary_data(self):
         extra_edis = self._get_all_extra_edis()
         sending_methods = dict(
@@ -51,6 +52,13 @@ class AccountMoveSendBatchWizard(models.TransientModel):
                     ]
                 )
 
+            if _debug.pipeline.enabled:
+                _debug.pipeline(
+                    "send_summary_counted",
+                    move=wizard.move_ids._origin,
+                    edis=dict(edi_counter),
+                    sending_methods=dict(sending_method_counter),
+                )
             summary_data = {}
             for edi, edi_count in edi_counter.items():
                 summary_data[edi] = {
@@ -75,17 +83,23 @@ class AccountMoveSendBatchWizard(models.TransientModel):
             wizard.alerts = self._get_alerts(wizard.move_ids._origin, moves_data)
 
     @api.constrains("move_ids")
-    @dbg.timed
+    @_debug.perf.timed
     def _check_move_ids_constraints(self):
         for wizard in self:
             self._check_move_constraints(wizard.move_ids)
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_send_and_print(self, force_synchronous=False, allow_fallback_pdf=False):
-        dbg.lifecycle.debug("action_send_and_print on %s", dbg.rec(self))
+        _debug.lifecycle("action_send_and_print", records=self)
         self.check_singleton()
         if self.alerts:
             self._raise_danger_alerts(self.alerts)
+        _debug.logic(
+            "batch_send_mode_chosen",
+            move=self.move_ids,
+            synchronous=force_synchronous,
+            allow_fallback_pdf=allow_fallback_pdf,
+        )
         if force_synchronous:
             self.env["mixin.account.move.send"]._generate_and_send_invoices(
                 self.move_ids, allow_fallback_pdf=allow_fallback_pdf
@@ -118,6 +132,11 @@ class AccountMoveSendBatchWizard(models.TransientModel):
             "author_user_id": self.env.user.id,
             "author_partner_id": self.env.user.partner_id.id,
         }
+        _debug.pipeline(
+            "batch_send_queued",
+            move=self.move_ids,
+            cron=account_move_send_cron,
+        )
         account_move_send_cron._trigger()
         return {
             "type": "ir.actions.client",

@@ -3,9 +3,10 @@ from importlib import import_module
 from inspect import getmembers, isclass, isfunction, ismodule
 
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
 from odoo.tools.misc import get_flag
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 def _flag(country_code):
@@ -52,7 +53,7 @@ class IrModuleModule(models.Model):
     )
 
     @api.depends("state", "category_id")
-    @dbg.timed
+    @_debug.perf.timed
     def _compute_account_templates(self):
         chart_category = self.env.ref(
             "base.module_category_accounting_localizations_account_charts",
@@ -65,6 +66,7 @@ class IrModuleModule(models.Model):
                 try:
                     python_module = import_module(f"odoo.addons.{module.name}.models")
                 except ModuleNotFoundError:
+                    _debug.logic("template_models_missing", module_name=module.name)
                     templates = {}
                 else:
                     templates = {
@@ -89,6 +91,13 @@ class IrModuleModule(models.Model):
                     templates.items(), key=lambda kv: kv[1]["sequence"]
                 )
             }
+        if _debug.pipeline.enabled:
+            _debug.pipeline(
+                "account_templates_computed",
+                modules=len(self),
+                declaring=sum(1 for module in self if module.account_templates),
+                templates=sum(len(module.account_templates or ()) for module in self),
+            )
 
     def _account_template_to_auto_install(self):
         company_country_id = self.env.company.country_id.id
@@ -105,9 +114,9 @@ class IrModuleModule(models.Model):
             None,
         )
 
-    @dbg.timed
+    @_debug.perf.timed
     def write(self, vals):
-        dbg.lifecycle.debug("write on %s: keys=%s", dbg.rec(self), dbg.keys(vals))
+        _debug.lifecycle("write", records=self, fields=sorted(vals))
         was_installed = len(self) == 1 and self.state in (
             "installed",
             "to upgrade",
@@ -132,7 +141,7 @@ class IrModuleModule(models.Model):
             self.env.registry._auto_install_template = try_loading
         return res
 
-    @dbg.timed
+    @_debug.perf.timed
     def _load_module_terms(self, modules, langs, overwrite=False):
         super()._load_module_terms(modules, langs, overwrite=overwrite)
         if "account" in modules:
@@ -148,9 +157,9 @@ class IrModuleModule(models.Model):
                     load_account_translations
                 )
 
-    @dbg.timed
+    @_debug.perf.timed
     def _register_hook(self):
-        dbg.lifecycle.debug("_register_hook on %s", dbg.rec(self))
+        _debug.lifecycle("_register_hook", records=self)
         super()._register_hook()
         if hasattr(self.env.registry, "_delayed_account_translator"):
             self.env.registry._delayed_account_translator(self.env)

@@ -1,6 +1,7 @@
 from odoo import _, models
+from odoo.libs.debug_log import DebugLog
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class CustomerStatementCustomHandler(models.AbstractModel):
@@ -34,9 +35,9 @@ class CustomerStatementCustomHandler(models.AbstractModel):
                 "pdf_export_main"
             ] = "account.pdf_export_main_customer_report"
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_send_statements(self, options):
-        dbg.lifecycle.debug("action_send_statements on %s", dbg.rec(self))
+        _debug.lifecycle("action_send_statements", records=self)
         template = self.env.ref("account.email_template_customer_statement", False)
         partners = self.env["res.partner"].browse(options.get("partner_ids", []))
         return {

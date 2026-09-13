@@ -5,11 +5,12 @@ from markupsafe import Markup, escape
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
+from odoo.libs.debug_log import DebugLog
 from odoo.libs.numbers import float_repr
 from odoo.tools import frozendict, groupby
 from odoo.tools.misc import format_date, formatLang
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class AccountAutomaticEntryWizard(models.TransientModel):
@@ -131,7 +132,7 @@ class AccountAutomaticEntryWizard(models.TransientModel):
                 )
 
     @api.constrains("percentage", "action")
-    @dbg.timed
+    @_debug.perf.timed
     def _check_percentage(self):
         for record in self:
             if (
@@ -190,7 +191,7 @@ class AccountAutomaticEntryWizard(models.TransientModel):
             )
 
     @api.constrains("date", "move_line_ids")
-    @dbg.timed
+    @_debug.perf.timed
     def _check_date(self):
         for wizard in self:
             for move in wizard.move_line_ids.move_id:
@@ -206,9 +207,9 @@ class AccountAutomaticEntryWizard(models.TransientModel):
                     )
 
     @api.model
-    @dbg.timed
+    @_debug.perf.timed
     def default_get(self, fields_list):
-        dbg.lifecycle.debug("default_get on %s", dbg.rec(self))
+        _debug.lifecycle("default_get", records=self)
         res = super().default_get(fields_list)
         if not set(fields_list) & {"move_line_ids", "company_id"}:
             return res
@@ -253,6 +254,13 @@ class AccountAutomaticEntryWizard(models.TransientModel):
             for line in move_line_ids
         ):
             allowed_actions.discard("change_period")
+        if _debug.logic.enabled:
+            _debug.logic(
+                "allowed_actions_resolved",
+                lines=len(move_line_ids),
+                default_action=self.env.context.get("default_action"),
+                allowed=sorted(allowed_actions),
+            )
         if not allowed_actions:
             raise UserError(_("No possible action found with the selected lines."))
         res["action"] = allowed_actions.pop()
@@ -266,7 +274,7 @@ class AccountAutomaticEntryWizard(models.TransientModel):
             else _("Cut-off {label} {percent}%")
         )
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_change_account_groupings(self):
         counterpart_balances = defaultdict(lambda: defaultdict(lambda: 0))
         counterpart_distribution_amount = defaultdict(lambda: defaultdict(dict))
@@ -316,9 +324,22 @@ class AccountAutomaticEntryWizard(models.TransientModel):
                     and frozendict(line.analytic_distribution),
                 )
             ] += line
+        if _debug.pipeline.enabled:
+            _debug.pipeline(
+                "change_account_groups_built",
+                autoentry=self,
+                destination_account=self.destination_account_id,
+                destination_currency_forced=bool(
+                    self.destination_account_id.currency_id
+                    and self.destination_account_id.currency_id
+                    != self.company_id.currency_id
+                ),
+                counterpart_groups=len(counterpart_balances),
+                source_groups=len(grouped_source_lines),
+            )
         return counterpart_balances, grouped_source_lines
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_change_account_counterpart_line_vals(self, counterpart_balances):
         line_vals = []
         for (
@@ -373,9 +394,15 @@ class AccountAutomaticEntryWizard(models.TransientModel):
                         "analytic_distribution": analytic_distribution,
                     }
                 )
+        _debug.pipeline(
+            "counterpart_lines_built",
+            autoentry=self,
+            groups=len(counterpart_balances),
+            lines=len(line_vals),
+        )
         return line_vals
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_change_account_source_line_vals(self, grouped_source_lines):
         line_vals = []
         for (
@@ -413,9 +440,15 @@ class AccountAutomaticEntryWizard(models.TransientModel):
                         "analytic_distribution": analytic_distribution,
                     }
                 )
+        _debug.pipeline(
+            "source_lines_built",
+            autoentry=self,
+            groups=len(grouped_source_lines),
+            lines=len(line_vals),
+        )
         return line_vals
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_move_dict_vals_change_account(self):
         counterpart_balances, grouped_source_lines = (
             self._get_change_account_groupings()
@@ -434,6 +467,13 @@ class AccountAutomaticEntryWizard(models.TransientModel):
             companies, key=lambda company: len(company.parent_ids)
         )
 
+        _debug.pipeline(
+            "change_account_move_vals_built",
+            autoentry=self,
+            lines=len(line_vals),
+            company=lowest_child_company,
+            candidate_companies=companies,
+        )
         return [
             {
                 "currency_id": self.journal_id.currency_id.id
@@ -452,7 +492,7 @@ class AccountAutomaticEntryWizard(models.TransientModel):
             }
         ]
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_move_line_dict_vals_change_period(self, aml, date):
         accrual_account = (
             self.revenue_accrual_account
@@ -542,7 +582,7 @@ class AccountAutomaticEntryWizard(models.TransientModel):
         )
         return reference_move._get_accounting_date(date, False)
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_move_dict_vals_change_period(self):
         lock_safe_dates = {
             date: self._get_lock_safe_date(date)
@@ -587,6 +627,17 @@ class AccountAutomaticEntryWizard(models.TransientModel):
                     self._get_move_line_dict_vals_change_period(aml, date)
                 )
 
+        if _debug.pipeline.enabled:
+            _debug.pipeline(
+                "change_period_move_vals_built",
+                autoentry=self,
+                moves=len(move_data),
+                source_dates=len(lock_safe_dates),
+                lock_shifted_dates=sum(
+                    1 for date, safe in lock_safe_dates.items() if date != safe
+                ),
+                lines=len(self.move_line_ids),
+            )
         return list(move_data.values())
 
     @api.depends(
@@ -600,7 +651,7 @@ class AccountAutomaticEntryWizard(models.TransientModel):
         "action",
         "destination_account_id",
     )
-    @dbg.timed
+    @_debug.perf.timed
     def _compute_move_data(self):
         for record in self:
             if record.action == "change_period":
@@ -609,6 +660,11 @@ class AccountAutomaticEntryWizard(models.TransientModel):
                     != record.move_line_ids[0].account_id.account_type
                     for line in record.move_line_ids
                 ):
+                    _debug.logic(
+                        "move_data_rejected",
+                        autoentry=record,
+                        reason="mixed_account_types",
+                    )
                     raise UserError(
                         _("All accounts on the lines must be of the same type.")
                     )
@@ -621,7 +677,7 @@ class AccountAutomaticEntryWizard(models.TransientModel):
                 )
 
     @api.depends("move_data")
-    @dbg.timed
+    @_debug.perf.timed
     def _compute_preview_move_data(self):
         for record in self:
             preview_columns = [
@@ -650,6 +706,13 @@ class AccountAutomaticEntryWizard(models.TransientModel):
                     )
                 ]
             preview_discarded = max(0, len(move_vals) - len(preview_vals))
+            _debug.pipeline(
+                "preview_built",
+                autoentry=record,
+                action=record.action,
+                moves=len(move_vals),
+                discarded=preview_discarded,
+            )
 
             record.preview_move_data = json.dumps(
                 {
@@ -665,13 +728,14 @@ class AccountAutomaticEntryWizard(models.TransientModel):
 
     def do_action(self):
         move_vals = json.loads(self.move_data)
-        dbg.pipeline.debug(
-            "[autoentry:%s] do_action %s on %d line(s): %d move(s) to create",
-            self.id,
-            self.action,
-            len(self.move_line_ids),
-            len(move_vals),
-        )
+        if _debug.pipeline.enabled:
+            _debug.pipeline(
+                "do_action_create",
+                autoentry=self,
+                action=self.action,
+                move_line_ids_count=len(self.move_line_ids),
+                move_vals_count=len(move_vals),
+            )
         self = self.with_context(skip_computed_taxes=True)
         if self.action == "change_period":
             return self._do_action_change_period(move_vals)
@@ -679,7 +743,7 @@ class AccountAutomaticEntryWizard(models.TransientModel):
             return self._do_action_change_account(move_vals)
         return None
 
-    @dbg.timed
+    @_debug.perf.timed
     def _reconcile_accrual_lines(
         self,
         accrual_account,
@@ -700,9 +764,9 @@ class AccountAutomaticEntryWizard(models.TransientModel):
             lambda line: not line.currency_id.is_zero(line.balance)
         ).reconcile()
 
-    @dbg.timed
+    @_debug.perf.timed
     def _post_accrual_messages(self, move, accrual_move, destination_move, amount):
-        dbg.lifecycle.debug("_post_accrual_messages on %s", dbg.rec(self))
+        _debug.lifecycle("_post_accrual_messages", records=self)
         body = Markup(
             "%(title)s<ul><li>%(link1)s %(second)s</li><li>%(link2)s %(third)s</li></ul>"
         ) % {
@@ -754,7 +818,7 @@ class AccountAutomaticEntryWizard(models.TransientModel):
             action.update({"view_mode": "form", "res_id": created_moves.id})
         return action
 
-    @dbg.timed
+    @_debug.perf.timed
     def _do_action_change_period(self, move_vals):
         accrual_account = (
             self.revenue_accrual_account
@@ -764,11 +828,11 @@ class AccountAutomaticEntryWizard(models.TransientModel):
 
         created_moves = self.env["account.move"].create(move_vals)
         created_moves._post()
-        dbg.pipeline.debug(
-            "[autoentry:%s] change_period: created %s accrual_account=%s",
-            self.id,
-            dbg.rec(created_moves),
-            accrual_account.id,
+        _debug.pipeline(
+            "change_period_created",
+            autoentry=self,
+            created_moves=created_moves,
+            accrual_account=accrual_account,
         )
 
         destination_move = created_moves[0]
@@ -788,11 +852,11 @@ class AccountAutomaticEntryWizard(models.TransientModel):
                 and accrual_move.state == "posted"
                 and destination_move.state == "posted"
             ):
-                dbg.logic.debug(
-                    "[autoentry:%s] reconciling accrual %s with destination %s",
-                    self.id,
-                    accrual_move.id,
-                    destination_move.id,
+                _debug.logic(
+                    "reconciling_accrual_destination",
+                    autoentry=self,
+                    accrual_move=accrual_move,
+                    destination_move=destination_move,
                 )
                 self._reconcile_accrual_lines(
                     accrual_account,
@@ -814,7 +878,7 @@ class AccountAutomaticEntryWizard(models.TransientModel):
 
         return self._get_generated_entries_action(created_moves)
 
-    @dbg.timed
+    @_debug.perf.timed
     def _do_action_change_account(self, move_vals):
         new_move = self.env["account.move"].create(move_vals)
         new_move._post()
@@ -826,6 +890,18 @@ class AccountAutomaticEntryWizard(models.TransientModel):
         for line in self.move_line_ids - destination_lines:
             grouped_lines[(line.partner_id, line.currency_id, line.account_id)] += line
 
+        if _debug.logic.enabled:
+            _debug.logic(
+                "change_account_reconcile_plan",
+                autoentry=self,
+                move=new_move,
+                groups=len(grouped_lines),
+                reconcilable_groups=sum(
+                    1 for (_p, _c, account) in grouped_lines if account.reconcile
+                ),
+                destination_lines=len(destination_lines),
+                destination_reconcilable=self.destination_account_id.reconcile,
+            )
         for (partner, currency, account), lines in grouped_lines.items():
             if account.reconcile:
                 to_reconcile = lines + new_move.line_ids.filtered(

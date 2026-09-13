@@ -1,14 +1,17 @@
 from odoo.http import route
+from odoo.libs.debug_log import DebugLog
 
-from ..tools import debug_log as dbg
 from odoo.addons.product.controllers.catalog import ProductCatalogController
+
+_debug = DebugLog(__name__)
 
 
 class ProductCatalogAccountController(ProductCatalogController):
     @route("/product/catalog/get_sections", auth="user", type="jsonrpc", readonly=True)
     def product_catalog_get_sections(self, res_model, order_id, child_field, **kwargs):
-        dbg.pipeline.debug(
-            "route ProductCatalogAccountController.product_catalog_get_sections"
+        _debug.pipeline(
+            "route",
+            handler="ProductCatalogAccountController.product_catalog_get_sections",
         )
         order = self._get_order(res_model, order_id)
         return order.with_company(order.company_id)._get_sections(child_field, **kwargs)
@@ -23,8 +26,9 @@ class ProductCatalogAccountController(ProductCatalogController):
         position,
         **kwargs,
     ):
-        dbg.pipeline.debug(
-            "route ProductCatalogAccountController.product_catalog_create_section"
+        _debug.pipeline(
+            "route",
+            handler="ProductCatalogAccountController.product_catalog_create_section",
         )
         order = self._get_order(res_model, order_id)
         return order.with_company(order.company_id)._create_section(
@@ -43,8 +47,9 @@ class ProductCatalogAccountController(ProductCatalogController):
         child_field,
         **kwargs,
     ):
-        dbg.pipeline.debug(
-            "route ProductCatalogAccountController.product_catalog_resequence_sections"
+        _debug.pipeline(
+            "route",
+            handler="ProductCatalogAccountController.product_catalog_resequence_sections",
         )
         order = self._get_order(res_model, order_id)
         return order.with_company(order.company_id)._resequence_sections(

@@ -1,6 +1,7 @@
 from odoo import api, models
+from odoo.libs.debug_log import DebugLog
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class AccountReconcileWizard(models.TransientModel):
@@ -9,6 +10,12 @@ class AccountReconcileWizard(models.TransientModel):
     def _get_reco_currency(self, amls, aml_values_map):
         company_currency = amls.company_currency_id
         foreign_currencies = amls.currency_id - company_currency
+        _debug.logic(
+            "reco_currency_inputs",
+            amls=amls,
+            company_currency=company_currency,
+            foreign_currencies=foreign_currencies,
+        )
         if len(foreign_currencies) == 0:
             return company_currency
         if len(foreign_currencies) == 1:
@@ -25,6 +32,11 @@ class AccountReconcileWizard(models.TransientModel):
                     lines_with_residuals
                     and len(lines_with_residuals.currency_id - company_currency) > 1
                 ):
+                    _debug.logic(
+                        "reco_currency_ambiguous",
+                        amls=amls,
+                        residual_lines=lines_with_residuals,
+                    )
                     return False
         return (lines_with_residuals.currency_id - company_currency) or company_currency
 
@@ -51,8 +63,14 @@ class AccountReconcileWizard(models.TransientModel):
     def _get_reco_rate_bounds(self, amls, reco_currency):
         most_recent_line = max(amls, key=lambda aml: aml.date)
         if not most_recent_line.amount_currency:
+            _debug.logic(
+                "reco_rate_bounds_chosen", line=most_recent_line, source="no_amount"
+            )
             return 0.0, 0.0, 0.0
         if most_recent_line.currency_id == reco_currency:
+            _debug.logic(
+                "reco_rate_bounds_chosen", line=most_recent_line, source="line_rate"
+            )
             rate = abs(most_recent_line.balance / most_recent_line.amount_currency)
             rate_tolerance = (
                 amls.company_currency_id.rounding
@@ -66,10 +84,17 @@ class AccountReconcileWizard(models.TransientModel):
             amls.company_id,
             most_recent_line.date,
         )
+        _debug.logic(
+            "reco_rate_bounds_chosen",
+            line=most_recent_line,
+            source="conversion_rate",
+            currency=reco_currency,
+            rate=rate,
+        )
         return rate, rate, rate
 
     @api.depends("move_line_ids")
-    @dbg.timed
+    @_debug.perf.timed
     def _compute_reco_wizard_data(self):
         for wizard in self:
             amls = wizard.move_line_ids._origin
@@ -85,12 +110,25 @@ class AccountReconcileWizard(models.TransientModel):
             else:
                 wizard.reco_account_id = accounts
 
+            _debug.logic(
+                "transfer_requirement_decided",
+                recwizard=wizard,
+                amls=len(amls),
+                accounts=len(accounts),
+                transfer_required=wizard.is_transfer_required,
+            )
             shadowed_aml_values = {
                 aml: {"account_id": wizard.reco_account_id} for aml in amls
             }
             aml_values_map = wizard._get_simulated_residuals(amls, shadowed_aml_values)
 
             reco_currency = wizard._get_reco_currency(amls, aml_values_map)
+            _debug.logic(
+                "reco_currency_candidate",
+                recwizard=wizard,
+                currency=reco_currency,
+                skipped=not reco_currency,
+            )
             if not reco_currency:
                 continue
 
@@ -117,6 +155,11 @@ class AccountReconcileWizard(models.TransientModel):
             else:
                 continue
 
+            _debug.logic(
+                "reco_currency_chosen",
+                recwizard=wizard,
+                currency=reco_currency,
+            )
             rate, rate_lower_bound, rate_upper_bound = wizard._get_reco_rate_bounds(
                 amls, reco_currency
             )
@@ -153,6 +196,14 @@ class AccountReconcileWizard(models.TransientModel):
             )
             wizard.amount = amls.company_currency_id.round(amount_raw)
             wizard.force_partials = False
+            _debug.pipeline(
+                "reco_amounts_computed",
+                recwizard=wizard,
+                rate=rate,
+                amls_at_rate=len(amls_at_the_reconciliation_rate),
+                amount_currency=wizard.amount_currency,
+                amount=wizard.amount,
+            )
 
     @api.depends("move_line_ids")
     def _compute_edit_mode_amount_currency(self):
@@ -163,7 +214,7 @@ class AccountReconcileWizard(models.TransientModel):
                 wizard.edit_mode_amount_currency = 0.0
 
     @api.depends("edit_mode_amount_currency")
-    @dbg.timed
+    @_debug.perf.timed
     def _compute_edit_mode_amount(self):
         for wizard in self:
             if wizard.edit_mode:

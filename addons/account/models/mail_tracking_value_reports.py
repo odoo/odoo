@@ -1,4 +1,7 @@
 from odoo import models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class MailTrackingValue(models.Model):
@@ -27,4 +30,7 @@ class MailTrackingValue(models.Model):
                 formatted_map[tracking.id]["fieldInfo"]["changedField"] = fields_string[
                     "state"
                 ]
+        _debug.pipeline(
+            "return_trackings_formatted", trackings=self, returns=len(return_map)
+        )
         return formatted_list

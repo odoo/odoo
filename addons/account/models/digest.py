@@ -1,7 +1,8 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import AccessError
+from odoo.libs.debug_log import DebugLog
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class DigestDigest(models.Model):
@@ -13,7 +14,7 @@ class DigestDigest(models.Model):
     )
 
     @api.depends_context("uid")
-    @dbg.timed
+    @_debug.perf.timed
     def _compute_kpi_account_total_revenue_value(self):
         if not self.env.user.has_group("account.group_account_invoice"):
             raise AccessError(

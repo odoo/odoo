@@ -4,8 +4,9 @@ from collections import defaultdict
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
+from odoo.libs.debug_log import DebugLog
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 FIGURE_TYPE_SELECTION_VALUES = [
     ("monetary", "Monetary"),
@@ -275,7 +276,7 @@ class AccountReport(models.Model):
         fields.Boolean, "filter_budgets", "Budgets"
     )
 
-    @dbg.timed
+    @_debug.perf.timed
     def _compute_report_option_filter(self, field_name, default_value=False):
         sections = self.filtered("section_main_report_ids")
         accessible_report_ids = (
@@ -338,16 +339,24 @@ class AccountReport(models.Model):
             report.use_sections = bool(report.section_report_ids)
 
     @api.constrains("root_report_id")
-    @dbg.timed
+    @_debug.perf.timed
     def _check_root_report_id(self):
         for report in self:
             if report.root_report_id.root_report_id:
+                _debug.logic(
+                    "root_report_rejected", report=report, reason="root_has_root"
+                )
                 raise ValidationError(
                     _(
                         "Only a report without a root report of its own can be selected as root report."
                     )
                 )
             if report.root_report_id and report.variant_report_ids:
+                _debug.logic(
+                    "variant_root_rejected",
+                    report=report,
+                    variants=report.variant_report_ids,
+                )
                 raise ValidationError(
                     _(
                         'Report "%(report)s" is the root report of %(count)s other '
@@ -358,7 +367,7 @@ class AccountReport(models.Model):
                 )
 
     @api.constrains("line_ids")
-    @dbg.timed
+    @_debug.perf.timed
     def _check_parent_sequence(self):
         for report in self:
             seen_ids = set()
@@ -375,7 +384,7 @@ class AccountReport(models.Model):
                 seen_ids.add(line.id)
 
     @api.constrains("section_report_ids")
-    @dbg.timed
+    @_debug.perf.timed
     def _check_section_report_ids(self):
         for record in self:
             if not record.section_report_ids:
@@ -391,7 +400,7 @@ class AccountReport(models.Model):
                 )
 
     @api.constrains("availability_condition", "country_id", "chart_template")
-    @dbg.timed
+    @_debug.perf.timed
     def _check_availability_condition(self):
         for record in self:
             if record.availability_condition == "country" and not record.country_id:
@@ -412,20 +421,23 @@ class AccountReport(models.Model):
         if self.availability_condition != "country":
             self.country_id = None
 
-    @dbg.timed
+    @_debug.perf.timed
     def write(self, vals):
-        dbg.lifecycle.debug("write on %s: keys=%s", dbg.rec(self), dbg.keys(vals))
+        _debug.lifecycle("write", records=self, fields=sorted(vals))
         if "country_id" in vals:
             self._move_tax_tags_to_country(vals["country_id"])
         return super().write(vals)
 
-    @dbg.timed
+    @_debug.perf.timed
     def _move_tax_tags_to_country(self, country_id):
         moving_reports = self.filtered(lambda x: x.country_id.id != country_id)
         tax_tags_expressions = moving_reports.line_ids.expression_ids.filtered(
             lambda x: x.engine == "tax_tags"
         )
         if not tax_tags_expressions:
+            _debug.logic(
+                "tag_move_skipped", report=self, reason="no_tax_tags_expressions"
+            )
             return
 
         tag_model = self.env["account.account.tag"].with_context(
@@ -433,6 +445,7 @@ class AccountReport(models.Model):
         )
         source_tags = tax_tags_expressions._get_matching_tags()
         if not source_tags:
+            _debug.logic("tag_move_skipped", report=self, reason="no_matching_tags")
             return
 
         reports_by_tag = defaultdict(self.env["account.report"].browse)
@@ -456,6 +469,14 @@ class AccountReport(models.Model):
             users = reports_by_tag[(tag.name, tag.country_id.id)]
             if tag.name not in destination_names and users <= moving_reports:
                 tags_to_move += tag
+        _debug.logic(
+            "tags_partitioned",
+            report=self,
+            country_id=country_id,
+            source_tags=source_tags,
+            destination_names=len(destination_names),
+            tags_to_move=tags_to_move,
+        )
         tags_to_move.write({"country_id": country_id})
 
         missing_names = (
@@ -464,6 +485,12 @@ class AccountReport(models.Model):
             - set(tags_to_move.mapped("name"))
         )
         expression_model = self.env["account.report.expression"]
+        _debug.pipeline(
+            "missing_tags_creating",
+            report=self,
+            country_id=country_id,
+            missing_names=len(missing_names),
+        )
         tag_model.create(
             [
                 tag_vals
@@ -472,18 +499,18 @@ class AccountReport(models.Model):
             ]
         )
 
-    @dbg.timed
+    @_debug.perf.timed
     def copy_data(self, default=None):
-        dbg.lifecycle.debug("copy_data on %s", dbg.rec(self))
+        _debug.lifecycle("copy_data", records=self)
         vals_list = super().copy_data(default=default)
         return [
             dict(vals, name=report._get_copied_name())
             for report, vals in zip(self, vals_list, strict=True)
         ]
 
-    @dbg.timed
+    @_debug.perf.timed
     def copy(self, default=None):
-        dbg.lifecycle.debug("copy on %s", dbg.rec(self))
+        _debug.lifecycle("copy", records=self)
         new_reports = super().copy(default=default)
         for old_report, new_report in zip(self, new_reports, strict=True):
             old_report.line_ids._copy_hierarchy(new_report)
@@ -491,9 +518,9 @@ class AccountReport(models.Model):
         return new_reports
 
     @api.ondelete(at_uninstall=False)
-    @dbg.timed
+    @_debug.perf.timed
     def _unlink_if_no_variant(self):
-        dbg.lifecycle.debug("_unlink_if_no_variant on %s", dbg.rec(self))
+        _debug.lifecycle("_unlink_if_no_variant", records=self)
         if self.variant_report_ids:
             raise UserError(_("You can't delete a report that has variants."))
         self.line_ids.unlink()

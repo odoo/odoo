@@ -7,14 +7,16 @@ from urllib.parse import urlencode
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.libs.web import urls
 from odoo.tools import email_normalize, email_normalize_all, groupby, is_encodable
 from odoo.tools.misc import hash_sign
 from odoo.tools.translate import LazyTranslate
 
-from ..tools import debug_log as dbg
 from odoo.addons.account.tools.display_types import NON_ACCOUNTABLE_DISPLAY_TYPES
 from odoo.addons.base.models.mixin_catalog import name_uniq_index
+
+_debug = DebugLog(__name__)
 
 _lt = LazyTranslate(__name__)
 
@@ -563,6 +565,13 @@ class AccountJournal(models.Model):
             elif manage_providers and values["mode"] == "electronic":
                 unique_ids.add(pay_method.id)
                 electronic_names.add(pay_method.code)
+        _debug.logic(
+            "payment_methods_mapped",
+            methods=len(mapping),
+            unique=len(unique_ids),
+            electronic=len(electronic_names),
+            manage_providers=manage_providers,
+        )
         return mapping, unique_ids, electronic_names
 
     def _get_providers_per_code(self, electronic_names):
@@ -585,10 +594,22 @@ class AccountJournal(models.Model):
             ).add(provider.id)
         return providers_per_code
 
-    @dbg.timed
+    @_debug.perf.timed
     def _update_company_journals(self, mapping, unique_ids, manage_providers):
+        if _debug.logic.enabled and (not unique_ids or not self.company_id):
+            _debug.logic(
+                "company_journals_skipped",
+                methods=len(unique_ids or ()),
+                companies=self.company_id,
+            )
         if not unique_ids or not self.company_id:
             return
+        _debug.pipeline(
+            "company_journals_query",
+            methods=len(unique_ids),
+            manage_providers=manage_providers,
+            journals=self,
+        )
         fnames = ["payment_method_id", "journal_id"]
         if manage_providers:
             fnames.append("payment_provider_id")
@@ -624,9 +645,10 @@ class AccountJournal(models.Model):
             else:
                 journal_ids = company_journals.setdefault(company_id, [])
             journal_ids.append(journal_id)
+        _debug.perf.count("payment_channels_fetched", rows=self.env.cr.rowcount)
 
     @api.depends("outbound_payment_channel_ids", "inbound_payment_channel_ids")
-    @dbg.timed
+    @_debug.perf.timed
     def _compute_available_payment_method_ids(self):
         info = self._get_journals_payment_method_information()
         pay_methods = info.pay_methods
@@ -636,6 +658,13 @@ class AccountJournal(models.Model):
 
         journal_bank_cash = self.filtered(lambda j: j.type in LIQUIDITY_TYPES)
         journal_other = self - journal_bank_cash
+        _debug.pipeline(
+            "available_methods_split",
+            liquidity=journal_bank_cash,
+            other=journal_other,
+            methods=len(pay_methods),
+            manage_providers=manage_providers,
+        )
         journal_other.available_payment_method_ids = False
 
         for journal in journal_bank_cash:
@@ -688,6 +717,14 @@ class AccountJournal(models.Model):
                 elif values["mode"] == "multi":
                     commands.append(Command.link(pay_method.id))
 
+            _debug.logic(
+                "available_methods_resolved",
+                journal=journal,
+                company=company,
+                linked=len(commands) - 1,
+                protected_methods=len(protected_payment_method_ids),
+                protected_providers=len(protected_provider_ids),
+            )
             journal.available_payment_method_ids = commands
 
     @api.depends("type", "currency_id")
@@ -698,7 +735,7 @@ class AccountJournal(models.Model):
     def _compute_outbound_payment_channel_ids(self):
         self._compute_payment_channel_ids("outbound")
 
-    @dbg.timed
+    @_debug.perf.timed
     def _compute_payment_channel_ids(self, payment_type):
         field_name = f"{payment_type}_payment_channel_ids"
         for journal in self:
@@ -729,6 +766,12 @@ class AccountJournal(models.Model):
                             }
                         )
                     )
+            _debug.logic(
+                "default_channels_built",
+                journal=journal,
+                payment_type=payment_type,
+                created=len(commands) - 1,
+            )
             journal[field_name] = commands
 
     @api.depends("outbound_payment_channel_ids", "inbound_payment_channel_ids")
@@ -803,6 +846,14 @@ class AccountJournal(models.Model):
                 defaults["loss_account_id"] = (
                     company.default_cash_difference_expense_account_id.id
                 )
+        _debug.logic(
+            "type_defaults_resolved",
+            type=journal_type,
+            company=company,
+            default_account=defaults["default_account_id"],
+            profit_account=defaults["profit_account_id"],
+            loss_account=defaults["loss_account_id"],
+        )
         return defaults
 
     @api.onchange("type")
@@ -845,7 +896,7 @@ class AccountJournal(models.Model):
         return f"{self._get_type_label(journal_type)} ({suffix})"
 
     @api.constrains("type", "bank_account_id")
-    @dbg.timed
+    @_debug.perf.timed
     def _check_bank_account(self):
         for journal in self:
             if journal.type == "bank" and journal.bank_account_id:
@@ -853,6 +904,11 @@ class AccountJournal(models.Model):
                     journal.bank_account_id.company_id
                     and journal.bank_account_id.company_id != journal.company_id
                 ):
+                    _debug.logic(
+                        "bank_account_company_mismatch",
+                        journal=journal,
+                        bank_account=journal.bank_account_id,
+                    )
                     raise ValidationError(
                         _(
                             "The bank account of a bank journal must belong to the same company (%s).",
@@ -860,6 +916,11 @@ class AccountJournal(models.Model):
                         )
                     )
                 if journal.bank_account_id.partner_id != journal.company_id.partner_id:
+                    _debug.logic(
+                        "bank_account_holder_mismatch",
+                        journal=journal,
+                        bank_account=journal.bank_account_id,
+                    )
                     raise ValidationError(
                         _(
                             "The holder of a journal's bank account must be the company (%s).",
@@ -868,7 +929,7 @@ class AccountJournal(models.Model):
                     )
 
     @api.constrains("company_id")
-    @dbg.timed
+    @_debug.perf.timed
     def _check_company_consistency(self):
         move_companies_by_journal = defaultdict(set)
         for journal, move_company in self.env["account.move"]._read_group(
@@ -921,9 +982,14 @@ class AccountJournal(models.Model):
         )
 
     @api.constrains("allowed_account_ids")
-    @dbg.timed
+    @_debug.perf.timed
     def _check_allowed_accounts_cover_existing_items(self):
         journals = self.filtered("allowed_account_ids")
+        _debug.logic(
+            "allowed_accounts_scope",
+            journals=journals,
+            skipped=not journals,
+        )
         if not journals:
             return
         per_journal = Domain.OR(
@@ -952,6 +1018,11 @@ class AccountJournal(models.Model):
             ),
             limit=1,
         )
+        _debug.logic(
+            "allowed_accounts_checked",
+            journals=journals,
+            offending=offending,
+        )
         if offending:
             raise ValidationError(
                 _(
@@ -963,7 +1034,7 @@ class AccountJournal(models.Model):
             )
 
     @api.constrains("type", "default_account_id")
-    @dbg.timed
+    @_debug.perf.timed
     def _check_type_default_account_id_type(self):
         for journal in self:
             if journal.type in (
@@ -980,7 +1051,7 @@ class AccountJournal(models.Model):
                 )
 
     @api.constrains("inbound_payment_channel_ids", "outbound_payment_channel_ids")
-    @dbg.timed
+    @_debug.perf.timed
     def _check_payment_channel_ids_multiplicity(self):
         info = self._get_journals_payment_method_information()
         pay_methods = info.pay_methods
@@ -1009,6 +1080,12 @@ class AccountJournal(models.Model):
                             )
                         )
 
+        _debug.pipeline(
+            "channel_names_unique",
+            journals=self,
+            methods=len(pay_methods),
+            manage_providers=manage_providers,
+        )
         failing_unicity_payment_methods = self.env["account.payment.method"]
         for company in self.company_id:
             for pay_method in pay_methods:
@@ -1028,6 +1105,11 @@ class AccountJournal(models.Model):
                         if len(linked) > 1:
                             failing_unicity_payment_methods |= pay_method
 
+        _debug.logic(
+            "method_unicity_checked",
+            journals=self,
+            failing=failing_unicity_payment_methods,
+        )
         if failing_unicity_payment_methods:
             raise ValidationError(
                 _(
@@ -1037,7 +1119,7 @@ class AccountJournal(models.Model):
             )
 
     @api.constrains("active")
-    @dbg.timed
+    @_debug.perf.timed
     def _check_auto_post_draft_entries(self):
         archived = self.filtered(lambda j: not j.active)
         if archived:
@@ -1046,6 +1128,9 @@ class AccountJournal(models.Model):
             )
 
             if pending_moves:
+                _debug.logic(
+                    "archive_blocked_draft_moves", journal=archived, move=pending_moves
+                )
                 raise ValidationError(
                     _(
                         "You can not archive a journal containing draft journal entries.\n\n"
@@ -1080,9 +1165,9 @@ class AccountJournal(models.Model):
         for journal in self:
             journal.available_invoice_template_pdf_report_ids = reports
 
-    @dbg.timed
+    @_debug.perf.timed
     def unlink(self):
-        dbg.lifecycle.debug("unlink %s", dbg.rec(self))
+        _debug.lifecycle("unlink", unlink=self)
         orphaned_bank_accounts = self.bank_account_id
         if orphaned_bank_accounts:
             orphaned_bank_accounts -= (
@@ -1102,9 +1187,9 @@ class AccountJournal(models.Model):
         orphaned_bank_accounts.unlink()
         return ret
 
-    @dbg.timed
+    @_debug.perf.timed
     def copy_data(self, default=None):
-        dbg.lifecycle.debug("copy_data on %s", dbg.rec(self))
+        _debug.lifecycle("copy_data", records=self)
         default = dict(default or {})
         vals_list = super().copy_data(default)
         used_by_company = {}
@@ -1122,6 +1207,13 @@ class AccountJournal(models.Model):
             used.add(vals["code"])
             if "name" not in default:
                 vals["name"] = _("%s (copy)", journal.name or "")
+        _debug.logic(
+            "copy_codes_regenerated",
+            journals=self,
+            regenerated="code" not in default,
+            renamed="name" not in default,
+            companies=len(used_by_company),
+        )
         return vals_list
 
     def copy_translations(self, new, excluded=()):
@@ -1132,9 +1224,9 @@ class AccountJournal(models.Model):
             lambda record, term: record.env._("%s (copy)", term or ""),
         )
 
-    @dbg.timed
+    @_debug.perf.timed
     def write(self, vals):
-        dbg.lifecycle.debug("write on %s: keys=%s", dbg.rec(self), dbg.keys(vals))
+        _debug.lifecycle("write", records=self, fields=sorted(vals))
         journals_changing_type = (
             self.filtered(lambda journal: journal.type != vals["type"])
             if "type" in vals
@@ -1146,17 +1238,15 @@ class AccountJournal(models.Model):
             or not self.env["mail.alias"]._sanitize_alias_name(vals["alias_name"])
         )
         alias_names = {}
-        if journals_changing_type:
-            dbg.logic.debug(
-                "write: journal type change %s -> %s on %s",
-                dbg.lazy(lambda: set(journals_changing_type.mapped("type"))),
-                vals["type"],
-                dbg.rec(journals_changing_type),
+        if _debug.logic.enabled and journals_changing_type:
+            _debug.logic(
+                "write_journal",
+                change=set(journals_changing_type.mapped("type")),
+                type=vals["type"],
+                journals_changing_type=journals_changing_type,
             )
-        if unusable_alias:
-            dbg.logic.debug(
-                "write: alias_name %r unusable, deriving", vals["alias_name"]
-            )
+        if _debug.logic.enabled and unusable_alias:
+            _debug.logic("write_unusable_deriving", alias_name=vals["alias_name"])
         if unusable_alias and "type" not in vals:
             taken = {}
             for journal in self:
@@ -1185,8 +1275,18 @@ class AccountJournal(models.Model):
         self._sync_after_write(vals, journals_changing_type)
         return result
 
-    @dbg.timed
+    @_debug.perf.timed
     def _check_write_preconditions(self, vals):
+        _debug.logic(
+            "write_preconditions",
+            journals=self,
+            bank_account=vals.get("bank_account_id"),
+            company_in_vals="company_id" in vals,
+            hash_disable=(
+                "restrict_mode_hash_table" in vals
+                and not vals.get("restrict_mode_hash_table")
+            ),
+        )
         if vals.get("bank_account_id"):
             bank_account = self.env["res.partner.bank"].browse(vals["bank_account_id"])
             for journal in self:
@@ -1221,7 +1321,7 @@ class AccountJournal(models.Model):
                     )
                 )
 
-    @dbg.timed
+    @_debug.perf.timed
     def _sync_bank_account_before_write(self, vals):
         for journal in self:
             if "company_id" in vals and journal.company_id.id != vals["company_id"]:
@@ -1230,6 +1330,9 @@ class AccountJournal(models.Model):
                     journal.bank_account_id.company_id
                     and journal.bank_account_id.company_id != company
                 ):
+                    _debug.logic(
+                        "bank_account_company_moved", journal=journal, company=company
+                    )
                     journal.bank_account_id.write(
                         {
                             "company_id": company.id,
@@ -1243,9 +1346,10 @@ class AccountJournal(models.Model):
                 and journal.bank_account_id.allow_out_payment
                 and journal.bank_account_id.acc_number != vals["bank_acc_number"]
             ):
+                _debug.logic("bank_out_payment_revoked", journal=journal)
                 journal.bank_account_id.allow_out_payment = False
 
-    @dbg.timed
+    @_debug.perf.timed
     def _sync_after_write(self, vals, journals_changing_type):
         if "type" in vals and not self.env.context.get(
             "account_journal_skip_alias_sync"
@@ -1278,10 +1382,7 @@ class AccountJournal(models.Model):
                 {fname: value for fname, value in defaults.items() if fname not in vals}
             )
             if journal.type in LIQUIDITY_TYPES and not journal.default_account_id:
-                dbg.logic.debug(
-                    "[journal:%s] liquidity type without default account, creating one",
-                    journal.id,
-                )
+                _debug.logic("liquidity_type_without_default_account", journal=journal)
                 journal.default_account_id = self._find_or_create_default_account(
                     journal.company_id,
                     journal.type,
@@ -1327,6 +1428,7 @@ class AccountJournal(models.Model):
     @api.model
     def _alias_prepare_alias_name(self, alias_name, name, code, jtype, company):
         if jtype not in ("purchase", "sale"):
+            _debug.logic("alias_skipped", reason="journal_type", type=jtype)
             return False
 
         alias_name = next(
@@ -1349,12 +1451,16 @@ class AccountJournal(models.Model):
             )
             if f"-{company_identifier}" not in alias_name:
                 alias_name = f"{alias_name}-{company_identifier}"
+        _debug.logic(
+            "alias_name_prepared", type=jtype, company=company, alias=alias_name
+        )
         return self.env["mail.alias"]._sanitize_alias_name(alias_name)
 
     @api.model
     def _get_unique_alias_name(self, vals, company, taken_alias_names=()):
         alias_name = self.env["mail.alias"]._sanitize_alias_name(vals["alias_name"])
         if not alias_name:
+            _debug.logic("alias_unsanitizable", company=company, code=vals.get("code"))
             return False
         alias_domain_name = company.alias_domain_id.name
 
@@ -1372,6 +1478,12 @@ class AccountJournal(models.Model):
             domain, limit=1
         )
         if taken:
+            _debug.logic(
+                "alias_name_taken",
+                alias=alias_name,
+                company=company,
+                code=vals.get("code"),
+            )
             alias_name = self.env["mail.alias"]._sanitize_alias_name(
                 f"{alias_name}-{vals.get('code')}"
             )
@@ -1403,7 +1515,15 @@ class AccountJournal(models.Model):
             suffix = str(num)
             candidate = f"{prefix[: size - len(suffix)]}{suffix}"
             if candidate not in used:
+                _debug.logic(
+                    "journal_code_generated",
+                    prefix=prefix,
+                    company=company,
+                    code=candidate,
+                    used=len(used),
+                )
                 return candidate
+        _debug.logic("journal_code_range_exhausted", prefix=prefix, company=company)
         raise UserError(
             _(
                 "Could not generate a unique journal code from prefix %(prefix)s: "
@@ -1429,7 +1549,7 @@ class AccountJournal(models.Model):
         )
 
     @api.model
-    @dbg.timed
+    @_debug.perf.timed
     def _prepare_account_vals(self, company, code, vals, account_type):
         return {
             "name": vals.get("name"),
@@ -1440,12 +1560,12 @@ class AccountJournal(models.Model):
         }
 
     @api.model
-    @dbg.timed
+    @_debug.perf.timed
     def _prepare_liquidity_account_vals(self, company, code, vals):
         return self._prepare_account_vals(company, code, vals, "asset_cash")
 
     @api.model
-    @dbg.timed
+    @_debug.perf.timed
     def _prepare_credit_account_vals(self, company, code, vals):
         return self._prepare_account_vals(company, code, vals, "liability_credit_card")
 
@@ -1468,11 +1588,17 @@ class AccountJournal(models.Model):
                 )
             )
             if existing:
+                _debug.logic(
+                    "default_account_reused",
+                    company=company,
+                    type=journal_type,
+                    account=existing,
+                )
                 return existing.id
         return self._create_default_account(company, journal_type, vals)
 
     @api.model
-    @dbg.timed
+    @_debug.perf.timed
     def _create_default_account(self, company, journal_type, vals):
         if journal_type not in LIQUIDITY_TYPES:
             raise UserError(
@@ -1490,6 +1616,13 @@ class AccountJournal(models.Model):
             )
         )
         digits = len(random_account.code) if random_account else 6
+        _debug.logic(
+            "default_account_digits",
+            company=company,
+            journal_type=journal_type,
+            digits=digits,
+            from_existing=bool(random_account),
+        )
 
         if journal_type == "cash":
             account_prefix = (
@@ -1516,7 +1649,21 @@ class AccountJournal(models.Model):
                 company, default_account_code, vals
             )
 
+        _debug.pipeline(
+            "default_account_code_found",
+            company=company,
+            journal_type=journal_type,
+            prefix=account_prefix,
+            start_code=start_code,
+            code=default_account_code,
+        )
         default_account = self.env["account.account"].create(default_account_vals)
+        _debug.logic(
+            "default_account_created",
+            company=company,
+            account=default_account,
+            xmlid_registered=bool(default_account),
+        )
         if default_account:
             self.env["ir.model.data"]._update_xmlids(
                 [
@@ -1550,7 +1697,7 @@ class AccountJournal(models.Model):
         return codes
 
     @api.model
-    @dbg.timed
+    @_debug.perf.timed
     def _update_missing_values(self, vals, reservations=None):
         journal_type = vals.get("type")
         is_import = "import_file" in self.env.context
@@ -1608,15 +1755,15 @@ class AccountJournal(models.Model):
             vals["name"] = vals.get("name_placeholder") or self._get_default_name(
                 journal_type, vals.get("code")
             )
-        dbg.logic.debug(
-            "journal defaults type=%s company=%s: code=%s name=%r alias=%s default_account=%s import=%s",
-            journal_type,
-            company.id,
-            vals.get("code"),
-            vals.get("name"),
-            vals.get("alias_name"),
-            vals.get("default_account_id"),
-            is_import,
+        _debug.logic(
+            "journal_defaults",
+            type=journal_type,
+            company=company,
+            code=vals.get("code"),
+            name=vals.get("name"),
+            alias=vals.get("alias_name"),
+            default_account=vals.get("default_account_id"),
+            import_=is_import,
         )
 
     @api.model
@@ -1630,29 +1777,39 @@ class AccountJournal(models.Model):
             else ""
         )
         taken_codes = self._reserved_codes(reservations, company)
+        _debug.logic(
+            "journal_code_candidate",
+            company=company,
+            candidate=candidate,
+            taken=bool(candidate) and candidate in taken_codes,
+        )
         if not candidate or candidate in taken_codes:
             candidate = self._get_next_journal_default_code(
                 journal_type, company, used_codes=taken_codes
             )
         vals["code"] = candidate
         taken_codes.add(candidate)
+        _debug.logic(
+            "journal_code_assigned", type=journal_type, company=company, code=candidate
+        )
 
     @api.model_create_multi
-    @dbg.timed
+    @_debug.perf.timed
     def create(self, vals_list):
-        dbg.lifecycle.debug(
-            "create %s: %d vals, keys=%s",
-            self._name,
-            len(vals_list),
-            dbg.vals_keys(vals_list),
-        )
+        if _debug.lifecycle.enabled:
+            _debug.lifecycle(
+                "create",
+                model=self._name,
+                count=len(vals_list),
+                fields=sorted({key for vals in vals_list for key in vals}),
+            )
         reservations = self._reserve_batch(vals_list)
         for vals in vals_list:
             self._update_missing_values(vals, reservations=reservations)
-        dbg.logic.debug(
-            "create: codes %s",
-            dbg.lazy(lambda: [(v.get("type"), v.get("code")) for v in vals_list]),
-        )
+        if _debug.logic.enabled:
+            _debug.logic(
+                "create", codes=[(v.get("type"), v.get("code")) for v in vals_list]
+            )
 
         journals = super(
             AccountJournal, self.with_context(mail_create_nolog=True)
@@ -1697,9 +1854,9 @@ class AccountJournal(models.Model):
                 name = f"{name} ({journal.currency_id.name})"
             journal.display_name = name
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_configure_bank_journal(self):
-        dbg.lifecycle.debug("action_configure_bank_journal on %s", dbg.rec(self))
+        _debug.lifecycle("action_configure_bank_journal", records=self)
         return (
             self.env["res.company"]
             .with_context(default_linked_journal_id=self.id)
@@ -1707,7 +1864,7 @@ class AccountJournal(models.Model):
         )
 
     @api.model
-    @dbg.timed
+    @_debug.perf.timed
     def _prepare_no_journal_error_msg(self, company_name, journal_types):
         return _(
             "No journal could be found in company %(company_name)s for any of those types: %(journal_types)s",
@@ -1715,7 +1872,7 @@ class AccountJournal(models.Model):
             journal_types=", ".join(journal_types),
         )
 
-    @dbg.timed
+    @_debug.perf.timed
     def _create_document_from_attachment(self, attachment_ids):
         if not self:
             self = self.env["account.journal"].browse(
@@ -1756,11 +1913,11 @@ class AccountJournal(models.Model):
                 )
             )
 
-        dbg.pipeline.debug(
-            "[journal:%s] _create_document_from_attachment: %d attachment(s) move_type=%s",
-            self.id,
-            len(attachments),
-            move_type,
+        _debug.pipeline(
+            "_create_document_from_attachment",
+            journal=self,
+            attachments_count=len(attachments),
+            move_type=move_type,
         )
         invoices = (
             self.env["account.move"]
@@ -1770,9 +1927,7 @@ class AccountJournal(models.Model):
             )
             ._create_records_from_attachments(attachments)
         )
-        dbg.pipeline.debug(
-            "[journal:%s] documents created %s", self.id, dbg.rec(invoices)
-        )
+        _debug.pipeline("documents_created", journal=self, invoices=invoices)
 
         for invoice in invoices:
             invoice._autopost_bill()
@@ -1858,7 +2013,7 @@ class AccountJournal(models.Model):
         )
         return self.filtered_domain(method_domain)
 
-    @dbg.timed
+    @_debug.perf.timed
     def _process_reference_for_sale_order(self, order_reference):
         self.check_singleton()
         return order_reference
@@ -1883,13 +2038,19 @@ class AccountJournal(models.Model):
         for move in moves:
             self._notify_invoice_subscribers(move)
 
-    @dbg.timed
+    @_debug.perf.timed
     def _notify_invoice_subscribers(self, invoice, mail_params=None):
         self.check_singleton()
         invoice.check_singleton()
 
         recipients = set(
             email_normalize_all(self.incoming_einvoice_notification_email or "")
+        )
+        _debug.logic(
+            "subscribers_resolved",
+            journal=self,
+            move=invoice,
+            recipients=len(recipients),
         )
         if not recipients:
             return
@@ -1901,6 +2062,13 @@ class AccountJournal(models.Model):
         ):
             return
 
+        _debug.pipeline(
+            "subscribers_notifying",
+            journal=self,
+            move=invoice,
+            recipients=len(recipients),
+            template=template,
+        )
         base_url = self.get_base_url()
         for recipient in recipients:
             unsubscribe_token = hash_sign(

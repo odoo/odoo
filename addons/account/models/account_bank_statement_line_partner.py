@@ -1,9 +1,10 @@
 from collections import defaultdict
 
 from odoo import api, models
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class AccountBankStatementLine(models.Model):
@@ -43,9 +44,14 @@ class AccountBankStatementLine(models.Model):
             if (partner_id := self._first_unambiguous_partner(row, ranks))
         }
 
-    @dbg.timed
+    @_debug.perf.timed
     def _partners_by_transaction_name(self):
         lines = self.filtered("partner_name")
+        _debug.pipeline(
+            "partner_name_lookup_started",
+            stline=self,
+            with_partner_name=len(lines),
+        )
         if not lines:
             return {}
         query = SQL(
@@ -79,9 +85,14 @@ class AccountBankStatementLine(models.Model):
             if (partner_id := self._first_unambiguous_partner(row, ranks))
         }
 
-    @dbg.timed
+    @_debug.perf.timed
     def _partners_by_earlier_transactions(self):
         lines = self.filtered("partner_name")
+        _debug.pipeline(
+            "earlier_transactions_lookup_started",
+            stline=self,
+            with_partner_name=len(lines),
+        )
         if not lines:
             return {}
         query = SQL(
@@ -114,6 +125,11 @@ class AccountBankStatementLine(models.Model):
         by_name = {
             row["partner_name"]: row for row in self.env.execute_query_dict(query)
         }
+        _debug.pipeline(
+            "earlier_transactions_names_resolved",
+            stline=self,
+            unambiguous_names=len(by_name),
+        )
         return {
             line.id: match["partner_id"]
             for line in lines
@@ -136,11 +152,11 @@ class AccountBankStatementLine(models.Model):
             decided = defaultdict(list)
             for st_line_id, partner_id in getattr(lines, lookup)().items():
                 decided[partner_id].append(st_line_id)
-            dbg.logic.debug(
-                "_set_partner_from_transaction %s: %d line(s) -> %d partner(s)",
-                lookup,
-                len(lines),
-                len(decided),
+            _debug.logic(
+                "_set_partner_from_transaction",
+                lookup=lookup,
+                lines_count=len(lines),
+                decided_count=len(decided),
             )
             for partner_id, st_line_ids in decided.items():
                 self.browse(st_line_ids).partner_id = partner_id

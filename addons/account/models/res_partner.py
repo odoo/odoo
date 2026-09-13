@@ -5,12 +5,14 @@ from collections import defaultdict
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
 
-from ..tools import debug_log as dbg
 from odoo.addons.account.models.account_move import BYPASS_LOCK_CHECK
 
 _logger = logging.getLogger(__name__)
+
+_debug = DebugLog(__name__)
 
 
 _ref_company_registry = {
@@ -290,9 +292,15 @@ class ResPartner(models.Model):
         return "%s, %s" % (order_by_field, res) if res else order_by_field
 
     @api.depends_context("company")
-    @dbg.timed
+    @_debug.perf.timed
     def _compute_credit_debit(self):
         self.debit = self.credit = False
+        _debug.logic(
+            "credit_debit_scope",
+            partners=self,
+            skipped=not self.ids,
+            reason="no_stored_ids" if not self.ids else None,
+        )
         if not self.ids:
             return
         query = self.env["account.move.line"]._search(
@@ -372,6 +380,13 @@ class ResPartner(models.Model):
 
         if ASSET_DIFFERENCE_COMPARISONS[operator](0.0, operand):
             negated = ASSET_DIFFERENCE_NEGATIONS[operator]
+            _debug.logic(
+                "asset_difference_negated",
+                account_type=account_type,
+                operator=operator,
+                negated=negated,
+                operand=operand,
+            )
             return Domain(
                 "id",
                 "not any!",
@@ -384,12 +399,12 @@ class ResPartner(models.Model):
         )
 
     @api.model
-    @dbg.timed
+    @_debug.perf.timed
     def _search_credit(self, operator, operand):
         return self._asset_difference_search("asset_receivable", operator, operand)
 
     @api.model
-    @dbg.timed
+    @_debug.perf.timed
     def _search_debit(self, operator, operand):
         return self._asset_difference_search("liability_payable", operator, operand)
 
@@ -408,7 +423,7 @@ class ResPartner(models.Model):
 
     @api.depends_context("company", "tz")
     @api.depends("credit")
-    @dbg.timed
+    @_debug.perf.timed
     def _compute_days_sales_outstanding(self):
         commercial_partners = {
             commercial_partner: (invoice_date_min, amount_total_signed_sum)
@@ -430,6 +445,12 @@ class ResPartner(models.Model):
             )
         }
         today = fields.Date.context_today(self)
+        _debug.pipeline(
+            "dso_invoice_groups_read",
+            partners=self,
+            commercial_groups=len(commercial_partners),
+            today=today,
+        )
         for partner in self:
             oldest_invoice_date, total_invoiced_tax_included = commercial_partners.get(
                 partner.commercial_partner_id, (today, 0)
@@ -597,9 +618,9 @@ class ResPartner(models.Model):
             "credit_limit",
         ]
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_view_partner_invoices(self):
-        dbg.lifecycle.debug("action_view_partner_invoices on %s", dbg.rec(self))
+        _debug.lifecycle("action_view_partner_invoices", records=self)
         self.check_singleton()
         action = self.env["ir.actions.actions"]._get_action_dict_by_xml_id(
             "account.action_move_out_invoice_type"
@@ -619,9 +640,9 @@ class ResPartner(models.Model):
         }
         return action
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_view_partner_bills(self):
-        dbg.lifecycle.debug("action_view_partner_bills on %s", dbg.rec(self))
+        _debug.lifecycle("action_view_partner_bills", records=self)
         self.check_singleton()
         action = self.env["ir.actions.actions"]._get_action_dict_by_xml_id(
             "account.res_partner_action_supplier_bills"
@@ -668,9 +689,9 @@ class ResPartner(models.Model):
             [("partner_id", "child_of", self.commercial_partner_id.id)]
         )
 
-    @dbg.timed
+    @_debug.perf.timed
     def write(self, vals):
-        dbg.lifecycle.debug("write on %s: keys=%s", dbg.rec(self), dbg.keys(vals))
+        _debug.lifecycle("write", records=self, fields=sorted(vals))
         partner2move_lines = {}
         if "parent_id" in vals:
             parent_write = self.filtered(
@@ -683,6 +704,11 @@ class ResPartner(models.Model):
                     .search([("partner_id", "in", parent_write.ids)])
                     .grouped("partner_id")
                 )
+                _debug.logic(
+                    "parent_change_move_lines",
+                    partners=parent_write,
+                    with_lines=len(partner2move_lines),
+                )
                 self._check_parent_vat_matches(vals["parent_id"], partner2move_lines)
 
         res = super().write(vals)
@@ -691,7 +717,7 @@ class ResPartner(models.Model):
             self._update_accounting_commercial_partner(partner2move_lines)
         return res
 
-    @dbg.timed
+    @_debug.perf.timed
     def _check_parent_vat_matches(self, parent_id, partner2move_lines):
         if not parent_id:
             return
@@ -706,6 +732,7 @@ class ResPartner(models.Model):
             None,
         )
         if mismatched is not None:
+            _debug.logic("parent_vat_mismatch", partner=mismatched, parent=parent_id)
             raise UserError(
                 _(
                     "You cannot set a partner as an invoicing address of another if they have a different %(vat_label)s.",
@@ -726,15 +753,14 @@ class ResPartner(models.Model):
             )
 
         unlocked = {"bypass_lock_check": BYPASS_LOCK_CHECK}
-        dbg.pipeline.debug(
-            "_update_accounting_commercial_partner: %s",
-            dbg.lazy(
-                lambda: {
+        if _debug.pipeline.enabled:
+            _debug.pipeline(
+                "_update_accounting_commercial_partner",
+                lines_moves_by_partner={
                     cp.id: (len(lines), len(moves_by_commercial[cp]))
                     for cp, lines in lines_by_commercial.items()
-                }
-            ),
-        )
+                },
+            )
         for commercial_partner, move_lines in lines_by_commercial.items():
             move_lines.with_context(**unlocked).partner_id = commercial_partner
         for commercial_partner, moves in moves_by_commercial.items():
@@ -750,14 +776,15 @@ class ResPartner(models.Model):
         updated._message_log_batch(bodies=dict.fromkeys(updated.ids, body))
 
     @api.model_create_multi
-    @dbg.timed
+    @_debug.perf.timed
     def create(self, vals_list):
-        dbg.lifecycle.debug(
-            "create %s: %d vals, keys=%s",
-            self._name,
-            len(vals_list),
-            dbg.vals_keys(vals_list),
-        )
+        if _debug.lifecycle.enabled:
+            _debug.lifecycle(
+                "create",
+                model=self._name,
+                count=len(vals_list),
+                fields=sorted({key for vals in vals_list for key in vals}),
+            )
         rank_field = SEARCH_MODE_RANK_FIELDS.get(
             self.env.context.get("res_partner_search_mode")
         )
@@ -766,9 +793,9 @@ class ResPartner(models.Model):
         return super().create(vals_list)
 
     @api.ondelete(at_uninstall=False)
-    @dbg.timed
+    @_debug.perf.timed
     def _unlink_if_partner_in_account_move(self):
-        dbg.lifecycle.debug("_unlink_if_partner_in_account_move on %s", dbg.rec(self))
+        _debug.lifecycle("_unlink_if_partner_in_account_move", records=self)
         moves = (
             self.env["account.move"]
             .sudo()
@@ -785,7 +812,7 @@ class ResPartner(models.Model):
                 _("The partner cannot be deleted because it is used in Accounting")
             )
 
-    @dbg.timed
+    @_debug.perf.timed
     def _increase_rank(self, field: str, n: int = 1):
         assert field in ("customer_rank", "supplier_rank")
         if not self:
@@ -801,13 +828,20 @@ class ResPartner(models.Model):
             else:
                 record[field] += n
 
+        _debug.logic(
+            "rank_increase_routed",
+            partners=self,
+            field=field,
+            n=n,
+            deferred=len(data),
+            already_registered=already_registered,
+            register_hook=not (already_registered or not data),
+        )
         if already_registered or not data:
             return
 
-        dbg.lifecycle.debug(
-            "_increase_rank %s registered at postcommit for %d partner(s)",
-            field,
-            len(data),
+        _debug.lifecycle(
+            "_increase_rank_registered_postcommit", field=field, data_count=len(data)
         )
 
         @postcommit.add
@@ -828,6 +862,12 @@ class ResPartner(models.Model):
                             values=list(data.values()),
                         )
                     )
+                    _debug.pipeline(
+                        "rank_increments_flushed",
+                        field=field,
+                        partners=len(data),
+                        rows=cr.rowcount,
+                    )
                 data.clear()
             except Exception:
                 _logger.warning(
@@ -845,7 +885,7 @@ class ResPartner(models.Model):
 
         return frontend_writable_fields
 
-    @dbg.timed
+    @_debug.perf.timed
     def _check_vat(self, validation="error"):
         for partner in self:
             vat, _country_code = self._run_vat_checks(
@@ -858,7 +898,7 @@ class ResPartner(models.Model):
                 partner.vat = vat
 
     @api.model
-    @dbg.timed
+    @_debug.perf.timed
     def _run_vat_checks(self, country, vat, partner_name="", validation="error"):
         assert validation in (False, "error", "setnull")
         return vat, (country and country.code) or ""
@@ -872,7 +912,7 @@ class ResPartner(models.Model):
         return []
 
     @api.model
-    @dbg.timed
+    @_debug.perf.timed
     def _get_import_criteria_from_vat(self, customer_values):
         vat = customer_values.get("vat")
         if not vat:
@@ -943,6 +983,13 @@ class ResPartner(models.Model):
                 }
             )
 
+        _debug.pipeline(
+            "vat_criteria_built",
+            criteria=len(criteria),
+            country_prefix=country_prefix,
+            country_variants=bool(extra_vat_values),
+            numeric_regex=bool(vat_only_numeric),
+        )
         return {
             "criteria": criteria,
         }
@@ -1031,7 +1078,7 @@ class ResPartner(models.Model):
         )
 
     @api.model
-    @dbg.timed
+    @_debug.perf.timed
     def _update_customer_values_from_search_plan(
         self, search_plan, company, customer_values_list
     ):
@@ -1042,6 +1089,12 @@ class ResPartner(models.Model):
                 [*self._check_company_domain(company), ("company_id", "!=", False)],
                 [("company_id", "=", False)],
             ]
+        )
+        _debug.pipeline(
+            "customer_search_started",
+            company=company,
+            plans=len(search_plan),
+            customers=len(customer_values_list),
         )
         for customer_values in customer_values_list:
             partner = None
@@ -1079,6 +1132,16 @@ class ResPartner(models.Model):
 
                 if partner:
                     break
+        if _debug.pipeline.enabled:
+            _debug.pipeline(
+                "customer_search_done",
+                company=company,
+                customers=len(customer_values_list),
+                matched=sum(
+                    1 for values in customer_values_list if values.get("customer")
+                ),
+                cache_keys=len(cache),
+            )
 
     def _get_import_customer_search_plan(self, domain=None):
         return [
@@ -1124,12 +1187,12 @@ class ResPartner(models.Model):
             customer_values_list=[customer_values],
         )
         partner = customer_values.get("customer") or self.browse()
-        dbg.logic.debug(
-            "[import] partner match name=%r vat=%r email=%r -> %s",
-            name,
-            vat,
-            email,
-            partner.id,
+        _debug.logic(
+            "import_match",
+            by_name=bool(name),
+            by_vat=bool(vat),
+            by_email=bool(email),
+            partner=partner,
         )
         return partner
 
@@ -1190,9 +1253,9 @@ class ResPartner(models.Model):
             [("move_type", "in", ("out_invoice", "out_refund"))],
         )
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_view_business_doc(self):
-        dbg.lifecycle.debug("action_view_business_doc on %s", dbg.rec(self))
+        _debug.lifecycle("action_view_business_doc", records=self)
         return self._get_records_action()
 
     @api.model
@@ -1212,4 +1275,5 @@ class ResPartner(models.Model):
                 formats=list(formats),
             )
         )
+        _debug.perf.count("edi_formats_cleared", rows=self.env.cr.rowcount)
         self.invalidate_model(["invoice_edi_format_store"])

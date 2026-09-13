@@ -4,8 +4,9 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class AccountReturnCreationWizard(models.TransientModel):
@@ -99,7 +100,7 @@ class AccountReturnCreationWizard(models.TransientModel):
             self.date_from = self.date_to = False
 
     @api.depends("category")
-    @dbg.timed
+    @_debug.perf.timed
     def _compute_available_return_type_ids(self):
         return_type_by_country_and_category = self.env[
             "account.return.type"
@@ -157,6 +158,16 @@ class AccountReturnCreationWizard(models.TransientModel):
                     lambda rt: rt.report_id != generic_tax_report
                 )
 
+            _debug.pipeline(
+                "available_return_types_resolved",
+                company=wizard.company_id,
+                category=wizard.category,
+                country_types=len(wizard_country_return_types),
+                foreign_countries=len(foreign_vat_fpos_countries),
+                foreign_types=len(foreign_return_types),
+                countryless_types=len(return_types_without_country),
+                generic_report_dropped=bool(has_current_country_tax_return_type),
+            )
             wizard.available_return_type_ids = (
                 wizard_country_return_types
                 + foreign_return_types
@@ -164,7 +175,7 @@ class AccountReturnCreationWizard(models.TransientModel):
             )
 
     @api.depends("date_from", "date_to", "return_type_id")
-    @dbg.timed
+    @_debug.perf.timed
     def _compute_warnings(self):
         returns_companies_map = {
             (date_from, date_to, tuple(type_id.ids)): returns.mapped("company_ids")
@@ -182,6 +193,18 @@ class AccountReturnCreationWizard(models.TransientModel):
             wizard.show_warning_existing_return = False
             wizard.show_warning_overlap = False
 
+            if _debug.logic.enabled and (
+                not wizard.date_from
+                or not wizard.date_to
+                or not wizard.return_type_id
+                or wizard.category == "audit"
+            ):
+                _debug.logic(
+                    "return_warnings_skipped",
+                    returntype=wizard.return_type_id,
+                    category=wizard.category,
+                    has_dates=bool(wizard.date_from and wizard.date_to),
+                )
             if (
                 not wizard.date_from
                 or not wizard.date_to
@@ -226,10 +249,17 @@ class AccountReturnCreationWizard(models.TransientModel):
 
             if wizard.show_warning_existing_return:
                 wizard.show_warning_overlap = False
+            _debug.logic(
+                "return_warnings_computed",
+                returntype=wizard.return_type_id,
+                wrong_dates=wizard.show_warning_wrong_dates,
+                existing_return=wizard.show_warning_existing_return,
+                overlap=wizard.show_warning_overlap,
+            )
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_create_manual_account_returns(self):
-        dbg.lifecycle.debug("action_create_manual_account_returns on %s", dbg.rec(self))
+        _debug.lifecycle("action_create_manual_account_returns", records=self)
         self.check_singleton()
 
         if self.show_warning_wrong_dates and not self.env.context.get(
@@ -261,6 +291,14 @@ class AccountReturnCreationWizard(models.TransientModel):
             and self.return_type_id.report_id.filter_multi_company == "tax_units"
         )
         company = tax_unit.main_company_id if apply_tax_unit else root_company
+        _debug.logic(
+            "return_company_resolved",
+            returntype=self.return_type_id,
+            root_company=root_company,
+            tax_unit=tax_unit,
+            apply_tax_unit=bool(apply_tax_unit),
+            company=company,
+        )
         if not company.has_access("read"):
             raise UserError(
                 self.env._(
@@ -299,6 +337,12 @@ class AccountReturnCreationWizard(models.TransientModel):
             if not self[k]
         )
         returns_created.refresh_checks()
+        _debug.pipeline(
+            "manual_returns_created",
+            tax_return=returns_created,
+            category=self.category,
+            count=len(returns_created),
+        )
         if len(returns_created) == 1:
             action = (
                 returns_created[0].action_view_account_return()

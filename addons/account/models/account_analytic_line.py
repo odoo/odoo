@@ -1,7 +1,8 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.libs.debug_log import DebugLog
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class AccountAnalyticLine(models.Model):
@@ -53,7 +54,7 @@ class AccountAnalyticLine(models.Model):
     )
 
     @api.constrains("move_line_id", "general_account_id")
-    @dbg.timed
+    @_debug.perf.timed
     def _check_general_account_id(self):
         for line in self:
             if (
@@ -65,21 +66,22 @@ class AccountAnalyticLine(models.Model):
                 )
 
     @api.model_create_multi
-    @dbg.timed
+    @_debug.perf.timed
     def create(self, vals_list):
-        dbg.lifecycle.debug(
-            "create %s: %d vals, keys=%s",
-            self._name,
-            len(vals_list),
-            dbg.vals_keys(vals_list),
-        )
+        if _debug.lifecycle.enabled:
+            _debug.lifecycle(
+                "create",
+                model=self._name,
+                count=len(vals_list),
+                fields=sorted({key for vals in vals_list for key in vals}),
+            )
         analytic_lines = super().create(vals_list)
         analytic_lines.move_line_id._update_analytic_distribution()
         return analytic_lines
 
-    @dbg.timed
+    @_debug.perf.timed
     def write(self, vals):
-        dbg.lifecycle.debug("write on %s: keys=%s", dbg.rec(self), dbg.keys(vals))
+        _debug.lifecycle("write", records=self, fields=sorted(vals))
         affected_move_lines = self.move_line_id
         res = super().write(vals)
         if any(
@@ -91,9 +93,9 @@ class AccountAnalyticLine(models.Model):
             affected_move_lines._update_analytic_distribution()
         return res
 
-    @dbg.timed
+    @_debug.perf.timed
     def unlink(self):
-        dbg.lifecycle.debug("unlink %s", dbg.rec(self))
+        _debug.lifecycle("unlink", unlink=self)
         affected_move_lines = self.move_line_id
         res = super().unlink()
         affected_move_lines._update_analytic_distribution()
@@ -112,6 +114,7 @@ class AccountAnalyticLine(models.Model):
     @api.onchange("product_id", "product_uom_id", "unit_amount", "currency_id")
     def on_change_unit_amount(self):
         if not self.product_id:
+            _debug.logic("unit_amount_skipped", line=self, reason="no_product")
             return {}
 
         prod_accounts = self.product_id.product_tmpl_id.with_company(
@@ -119,6 +122,7 @@ class AccountAnalyticLine(models.Model):
         )._get_product_accounts()
         unit = self.product_uom_id
         account = prod_accounts["expense"]
+        _debug.logic("uom_resolved", line=self, fallback=not unit, account=account)
         if not unit:
             unit = self.product_id.uom_id
 

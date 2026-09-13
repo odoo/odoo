@@ -1,9 +1,11 @@
 from odoo import _, api, fields, models
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, Query
 
-from ..tools import debug_log as dbg
 from odoo.addons.web.controllers.utils import clean_action
+
+_debug = DebugLog(__name__)
 
 
 class AccountReport(models.AbstractModel):
@@ -25,12 +27,19 @@ class AccountReport(models.AbstractModel):
         sequence_map[self._init_options_analytic_groupby] = 995
         return sequence_map
 
-    @dbg.timed
+    @_debug.perf.timed
     def _init_options_analytic_groupby(self, options, previous_options):
+        if _debug.logic.enabled and not self.filter_analytic_groupby:
+            _debug.logic("analytic_groupby_skipped", report=self, reason="filter_off")
         if not self.filter_analytic_groupby:
             return
         enable_analytic_accounts = self.env.user.has_group(
             "analytic.group_analytic_accounting"
+        )
+        _debug.logic(
+            "analytic_groupby_access",
+            report=self,
+            allowed=enable_analytic_accounts,
         )
         if not enable_analytic_accounts:
             return
@@ -65,9 +74,16 @@ class AccountReport(models.AbstractModel):
             selected_analytic_plans.mapped("name")
         )
 
+        _debug.pipeline(
+            "analytic_groupby_options_built",
+            report=self,
+            accounts=selected_analytic_accounts,
+            plans=selected_analytic_plans,
+            include_without_aml=options["include_analytic_without_aml"],
+        )
         self._create_column_analytic(options)
 
-    @dbg.timed
+    @_debug.perf.timed
     def _create_column_analytic(self, options):
         """Creates the analytic columns for each plan or account in the filters.
 
@@ -118,9 +134,23 @@ class AccountReport(models.AbstractModel):
             }
             for account in accounts
         )
+        _debug.pipeline(
+            "analytic_headers_built",
+            report=self,
+            plans=plans,
+            accounts=accounts,
+            headers=len(analytic_headers),
+        )
         if analytic_headers:
             has_selected_budgets = any(
                 budget for budget in options.get("budgets", []) if budget["selected"]
+            )
+            _debug.logic(
+                "analytic_headers_placement",
+                report=self,
+                budgets=has_selected_budgets,
+                same_level=has_selected_budgets
+                and not options["selected_horizontal_group_id"],
             )
 
             if has_selected_budgets and not options["selected_horizontal_group_id"]:
@@ -138,7 +168,7 @@ class AccountReport(models.AbstractModel):
                 ]
 
     @api.model
-    @dbg.timed
+    @_debug.perf.timed
     def _create_aml_shadowing_query_for_analytic_groupby(self):
         """Prepare a SQL subquery exposing account_analytic_line data under the account_move_line schema.
 
@@ -180,6 +210,12 @@ class AccountReport(models.AbstractModel):
                     '"account_move_line".%s', SQL.identifier(aml_field)
                 )
 
+        _debug.pipeline(
+            "analytic_shadowing_columns",
+            plans=len(project_plan) + len(other_plans),
+            stored_aml_fields=len(all_stored_aml_fields),
+            mapped_fields=len(change_equivalence_dict),
+        )
         _stored_fields, fields_to_insert = self.env[
             "account.move.line"
         ]._prepare_aml_shadowing_for_report(
@@ -200,7 +236,7 @@ class AccountReport(models.AbstractModel):
             fields_to_insert=fields_to_insert,
         )
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_report_query(self, options, date_scope, domain=None) -> Query:
         # Override to add the context key which will eventually trigger the shadowing of the table
         context_self = self.with_context(
@@ -210,6 +246,13 @@ class AccountReport(models.AbstractModel):
         # We add the domain filter for analytic_distribution here, as the search is not available
         query = super(AccountReport, context_self)._get_report_query(
             options, date_scope, domain
+        )
+        _debug.logic(
+            "analytic_filter_mode",
+            report=self,
+            groupby=options.get("analytic_groupby_option"),
+            filtered=bool(options.get("analytic_accounts")),
+            shadowed="analytic_accounts_list" in options,
         )
         if options.get("analytic_accounts"):
             if "analytic_accounts_list" in options:
@@ -238,11 +281,17 @@ class AccountReport(models.AbstractModel):
 
         return query
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_audit_cell(self, options, params):
-        dbg.lifecycle.debug("action_audit_cell on %s", dbg.rec(self))
+        _debug.lifecycle("action_audit_cell", records=self)
         column_group_options = self._get_column_group_options(
             options, params["column_group_key"]
+        )
+        _debug.logic(
+            "audit_cell_target",
+            report=self,
+            analytic_groupby=bool(column_group_options.get("analytic_groupby_option")),
+            coverage=options.get("column_percent_comparison") == "analytic_coverage",
         )
 
         if not column_group_options.get("analytic_groupby_option"):
@@ -311,6 +360,12 @@ class AccountReport(models.AbstractModel):
                     expression = [expression]  # just for the extend
                 domain.extend(expression)
 
+            _debug.pipeline(
+                "audit_cell_domain_translated",
+                report=self,
+                domain_terms=len(domain),
+                include_without_aml=options.get("include_analytic_without_aml"),
+            )
             action = clean_action(
                 self.env.ref(
                     "analytic.account_analytic_line_action_entries"
@@ -369,7 +424,7 @@ class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
 
     @api.model
-    @dbg.timed
+    @_debug.perf.timed
     def _search(self, *args, **kwargs):
         """Shadow the account_move_line table with analytic data when a report needs analytic columns."""
         # Done here so every query built for the report transparently reads the analytic

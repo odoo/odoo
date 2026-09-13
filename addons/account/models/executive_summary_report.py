@@ -1,13 +1,14 @@
 from odoo import fields, models
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class AccountReport(models.Model):
     _inherit = "account.report"
 
-    @dbg.timed
+    @_debug.perf.timed
     def _report_custom_engine_executive_summary_ndays(
         self,
         expressions,

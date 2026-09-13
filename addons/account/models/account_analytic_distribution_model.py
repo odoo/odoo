@@ -1,8 +1,9 @@
 import re
 
 from odoo import _, api, fields, models
+from odoo.libs.debug_log import DebugLog
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class AccountAnalyticDistributionModel(models.Model):
@@ -50,14 +51,14 @@ class AccountAnalyticDistributionModel(models.Model):
             )
         )
 
-    @dbg.timed
+    @_debug.perf.timed
     def _create_domain(self, fname, value):
         if fname == "account_prefix":
             return []
         return super()._create_domain(fname, value)
 
     @api.depends("analytic_precision")
-    @dbg.timed
+    @_debug.perf.timed
     def _compute_prefix_placeholder(self):
         expense_account = self.env["account.account"].search(
             [
@@ -66,6 +67,7 @@ class AccountAnalyticDistributionModel(models.Model):
             ],
             limit=1,
         )
+        _debug.logic("expense_account_resolved", account=expense_account)
         for model in self:
             account_prefixes = "60, 61, 62"
             if expense_account:

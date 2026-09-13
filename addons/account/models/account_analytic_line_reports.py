@@ -1,7 +1,8 @@
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, Query
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class AccountAnalyticLine(models.Model):
@@ -12,12 +13,15 @@ class AccountAnalyticLine(models.Model):
         compute="_compute_analytic_coverage",
     )
 
-    @dbg.timed
+    @_debug.perf.timed
     def _field_to_sql(
         self, alias: str, fname: str, query: (Query | None) = None
     ) -> SQL:
         if fname == "analytic_coverage":
             plan_id = self.env.context.get("selected_analytic_plan")
+            _debug.logic(
+                "analytic_coverage_sql_mode", plan=plan_id, constant=not plan_id
+            )
             if not plan_id:
                 return SQL("0.0")
 

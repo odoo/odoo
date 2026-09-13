@@ -1,4 +1,6 @@
-from . import debug_log as dbg
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 def amount_range_after_rate(currency_from, currency_to, amount, rate):
@@ -31,13 +33,14 @@ def pick_reconciliation_currency(
 
 def prepare_partial_amounts(context):
     at_par = context["recon_currency"] == context["company_currency"]
-    dbg.logic.debug(
-        "prepare_partial_amounts debit=%s credit=%s at_par=%s recon_currency=%s",
-        dbg.lazy(lambda: getattr(context.get("debit_aml"), "id", None)),
-        dbg.lazy(lambda: getattr(context.get("credit_aml"), "id", None)),
-        at_par,
-        dbg.lazy(lambda: getattr(context["recon_currency"], "id", None)),
-    )
+    if _debug.logic.enabled:
+        _debug.logic(
+            "prepare_partial_amounts",
+            debit=getattr(context.get("debit_aml"), "id", None),
+            credit=getattr(context.get("credit_aml"), "id", None),
+            at_par=at_par,
+            recon_currency=getattr(context["recon_currency"], "id", None),
+        )
     if at_par:
         return _partial_amounts_at_par(context)
     return _partial_amounts_across_rates(context)
@@ -69,6 +72,13 @@ def _partial_amounts_at_par(context):
     else:
         partial_credit_amount_currency = 0.0
 
+    _debug.logic(
+        "at_par_currency_amounts",
+        exchange_line_mode=context["exchange_line_mode"],
+        partial_amount=min_recon_amount,
+        debit_rate=debit_rate,
+        credit_rate=credit_rate,
+    )
     return {
         "partial_amount": min_recon_amount,
         "partial_debit_amount_currency": partial_debit_amount_currency,
@@ -112,9 +122,16 @@ def _partial_amounts_across_rates(context):
         partial_amount = min(
             context["remaining_debit_amount"], -context["remaining_credit_amount"]
         )
+        _debug.logic("rate_ranges_overlap_snapped", partial_amount=partial_amount)
         partial_debit_amount = partial_amount
         partial_credit_amount = partial_amount
 
+    _debug.logic(
+        "across_rates_amounts",
+        partial_amount=partial_amount,
+        partial_debit_amount=partial_debit_amount,
+        partial_credit_amount=partial_credit_amount,
+    )
     return {
         "partial_amount": partial_amount,
         "partial_debit_amount_currency": (
@@ -184,4 +201,9 @@ def group_lines_by_matching_number(partial_edges):
     for line_id in parent:
         root_id = find(line_id)
         number2lines.setdefault(component_number[root_id], []).append(line_id)
+    _debug.pipeline(
+        "matching_numbers_grouped",
+        lines=len(parent),
+        components=len(number2lines),
+    )
     return number2lines

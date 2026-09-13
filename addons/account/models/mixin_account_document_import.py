@@ -9,14 +9,16 @@ from markupsafe import Markup
 
 from odoo import api, models, modules, tools
 from odoo.exceptions import RedirectWarning
+from odoo.libs.debug_log import DebugLog
 from odoo.libs.documents import Document, canonical_mimetypes
 from odoo.libs.filesystem import guess_mimetype
 from odoo.tools import groupby
 
-from ..tools import debug_log as dbg
 from odoo.addons.account.tools.import_file_type import is_pdf
 
 _logger = logging.getLogger(__name__)
+
+_debug = DebugLog(__name__)
 
 
 def _can_commit():
@@ -73,7 +75,7 @@ class MixinAccountDocumentImport(models.AbstractModel):
     _description = "Business document import mixin"
 
     @api.model
-    @dbg.timed
+    @_debug.perf.timed
     def _create_records_from_attachments(self, attachments, grouping_method=None):
         if grouping_method is None:
             grouping_method = self._group_files_data_by_origin_attachment
@@ -83,12 +85,12 @@ class MixinAccountDocumentImport(models.AbstractModel):
         files_data.extend(self._unwrap_attachments(files_data))
 
         file_data_groups = grouping_method(files_data)
-        dbg.pipeline.debug(
-            "[import] %d attachment(s) -> %d file(s) after unwrap -> %d group(s) via %s",
-            len(attachments),
-            len(files_data),
-            len(file_data_groups),
-            grouping_method.__name__,
+        _debug.pipeline(
+            "import_after_unwrap",
+            attachments_count=len(attachments),
+            files_data_count=len(files_data),
+            file_data_groups_count=len(file_data_groups),
+            name=grouping_method.__name__,
         )
 
         records = self.create([{}] * len(file_data_groups))
@@ -150,6 +152,13 @@ class MixinAccountDocumentImport(models.AbstractModel):
         for file_data in files_data_with_origin_attachment:
             self._add_attachment_to_group_with_same_origin_attachment(file_data, groups)
 
+        _debug.pipeline(
+            "files_data_grouped",
+            files=len(files_data),
+            with_origin=len(files_data_with_origin_attachment),
+            without_origin=len(files_data_without_origin_attachment),
+            groups=len(groups),
+        )
         return groups
 
     def _add_attachment_to_group_of_different_type(
@@ -176,9 +185,21 @@ class MixinAccountDocumentImport(models.AbstractModel):
                 ),
                 reverse=True,
             )
+            _debug.logic(
+                "attachment_joined_group",
+                name=incoming_file_data.get("name"),
+                type=incoming_type,
+                candidate_groups=len(groups_with_different_type),
+            )
             sorted_by_similarity[0].append(incoming_file_data)
             return
 
+        _debug.logic(
+            "attachment_new_group",
+            name=incoming_file_data.get("name"),
+            type=incoming_type,
+            groups=len(groups),
+        )
         groups.append([incoming_file_data])
 
     def _add_attachment_to_group_with_same_origin_attachment(
@@ -200,7 +221,7 @@ class MixinAccountDocumentImport(models.AbstractModel):
         matcher = difflib.SequenceMatcher(a=filename1, b=filename2, autojunk=False)
         return matcher.find_longest_match().size
 
-    @dbg.timed
+    @_debug.perf.timed
     def _extend_with_attachments(self, files_data, new=False):
         def _get_attachment_name(file_data):
             params = {
@@ -235,18 +256,17 @@ class MixinAccountDocumentImport(models.AbstractModel):
         )
 
         file_data = sorted_files_data[0]
-        dbg.logic.debug(
-            "[import] %s: decoders %s, chosen %s (type=%s)",
-            dbg.rec(self),
-            dbg.lazy(
-                lambda: [
+        if _debug.logic.enabled:
+            _debug.logic(
+                "import_chosen",
+                records=self,
+                decoders=[
                     (fd["name"], (fd["decoder_info"] or {}).get("priority"))
                     for fd in sorted_files_data
-                ]
-            ),
-            file_data["name"],
-            file_data.get("import_file_type"),
-        )
+                ],
+                name=file_data["name"],
+                type=file_data.get("import_file_type"),
+            )
 
         if (
             file_data["decoder_info"] is None
@@ -264,11 +284,11 @@ class MixinAccountDocumentImport(models.AbstractModel):
                     self, file_data, new
                 )
                 if reason_cannot_decode:
-                    dbg.logic.debug(
-                        "[import] %s: decoder refused %s: %s",
-                        dbg.rec(self),
-                        file_data["name"],
-                        reason_cannot_decode,
+                    _debug.logic(
+                        "import_decoder_refused",
+                        records=self,
+                        name=file_data["name"],
+                        reason_cannot_decode=reason_cannot_decode,
                     )
                     self.message_post(
                         body=self.env._(
@@ -332,6 +352,12 @@ class MixinAccountDocumentImport(models.AbstractModel):
                     "res_id": 0,
                 }
             )
+        _debug.pipeline(
+            "record_attachments_fixed",
+            records=self,
+            attached=attachments_to_attach,
+            unattached=attachments_to_unattach,
+        )
 
     def _fix_attachments_on_record_from_files_data(
         self, valid_files_data, extra_files_data
@@ -381,7 +407,7 @@ class MixinAccountDocumentImport(models.AbstractModel):
         )
 
     @api.model
-    @dbg.timed
+    @_debug.perf.timed
     def _import_file_type_rules(self):
         return [("pdf", is_pdf)]
 
@@ -433,6 +459,13 @@ class MixinAccountDocumentImport(models.AbstractModel):
         if embedded and recurse:
             embedded.extend(self._unwrap_attachments(embedded))
 
+        if _debug.pipeline.enabled and embedded:
+            _debug.pipeline(
+                "attachment_unwrapped",
+                name=file_data.get("name"),
+                embedded=len(embedded),
+                recurse=recurse,
+            )
         return embedded
 
     @api.model

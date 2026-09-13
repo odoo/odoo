@@ -2,17 +2,20 @@ from datetime import date, timedelta
 
 from odoo import api, fields, models
 from odoo.fields import Command
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, float_is_zero
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class AccountMove(models.Model):
     _inherit = "account.move"
 
     @api.model
-    @dbg.timed
+    @_debug.perf.timed
     def _get_frequent_account_and_taxes(self, company_id, partner_id, move_type):
+        if _debug.logic.enabled and not partner_id:
+            _debug.logic("frequent_account_skipped", reason="no_partner")
         if not partner_id:
             return 0, False, False
         domain = [
@@ -58,11 +61,27 @@ class AccountMove(models.Model):
                 where_clause=query.where_clause or SQL("TRUE"),
             )
         )
+        _debug.logic(
+            "frequent_account_found",
+            company=company_id,
+            partner=partner_id,
+            move_type=move_type,
+            count=rows[0][0] if rows else 0,
+            account=rows[0][1] if rows else False,
+        )
         return rows[0] if rows else (0, False, False)
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_quick_edit_suggestions(self):
         self.check_singleton()
+        if _debug.logic.enabled and (
+            not self.quick_edit_mode or not self.quick_edit_total_amount
+        ):
+            _debug.logic(
+                "quick_edit_skipped",
+                move=self,
+                reason="mode_off" if not self.quick_edit_mode else "no_total",
+            )
         if not self.quick_edit_mode or not self.quick_edit_total_amount:
             return False
         count, account_id, tax_ids = self._get_frequent_account_and_taxes(
@@ -92,12 +111,31 @@ class AccountMove(models.Model):
                 )
             taxes = self.fiscal_position_id.map_tax(taxes)
 
+        _debug.logic(
+            "quick_edit_account_source",
+            move=self,
+            from_history=bool(count),
+            account=account_id,
+            taxes=taxes,
+        )
         term = self.invoice_payment_term_id
         discount_percentage = term.discount_percentage if term.early_discount else 0
         remaining_amount = (
             self.quick_edit_total_amount - self.tax_totals["total_amount_currency"]
         )
 
+        if _debug.logic.enabled:
+            _debug.logic(
+                "quick_edit_price_mode",
+                move=self,
+                mixed_epd=bool(
+                    discount_percentage
+                    and term.early_pay_discount_computation == "mixed"
+                    and len(taxes) == 1
+                    and taxes.amount_type == "percent"
+                ),
+                remaining=remaining_amount,
+            )
         if (
             discount_percentage
             and term.early_pay_discount_computation == "mixed"
@@ -178,7 +216,7 @@ class AccountMove(models.Model):
             return
         self._check_total_amount(self.quick_edit_total_amount)
 
-    @dbg.timed
+    @_debug.perf.timed
     def _check_total_amount(self, amount_total):
         if not self.tax_totals or not amount_total:
             return

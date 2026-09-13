@@ -2,9 +2,10 @@ import re
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.libs.debug_log import DebugLog
 from odoo.libs.numbers import parse_amount
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class AccountReconcileModelLine(models.Model):
@@ -83,13 +84,18 @@ class AccountReconcileModelLine(models.Model):
             )
 
     @api.constrains("amount_string", "amount_type")
-    @dbg.timed
+    @_debug.perf.timed
     def _check_amount(self):
         for record in self:
             if record.amount_type == "regex":
                 try:
                     re.compile(record.amount_string)
                 except re.error as err:
+                    _debug.logic(
+                        "reco_model_line_rejected",
+                        reco_model_line=record,
+                        reason="bad_regex",
+                    )
                     raise ValidationError(
                         self.env._(
                             "%(model)s: the amount regex is not valid.",
@@ -99,6 +105,11 @@ class AccountReconcileModelLine(models.Model):
                 continue
 
             if parse_amount(record.amount_string) is None:
+                _debug.logic(
+                    "reco_model_line_rejected",
+                    reco_model_line=record,
+                    reason="unparsable_amount",
+                )
                 raise ValidationError(
                     self.env._(
                         "%(model)s: %(value)s is not a valid amount. Write a finite "
@@ -108,6 +119,11 @@ class AccountReconcileModelLine(models.Model):
                     )
                 )
             if not record.amount:
+                _debug.logic(
+                    "reco_model_line_rejected",
+                    reco_model_line=record,
+                    reason="zero_amount",
+                )
                 raise ValidationError(
                     self.env._(
                         "%(model)s: the amount of a %(kind)s line cannot be zero.",
@@ -209,12 +225,15 @@ class AccountReconcileModel(models.Model):
     )
 
     @api.constrains("match_label", "match_label_param")
-    @dbg.timed
+    @_debug.perf.timed
     def _check_match_label_param(self):
         for record in self:
             if not record.match_label:
                 continue
             if not record.match_label_param:
+                _debug.logic(
+                    "reco_model_rejected", reco_model=record, reason="empty_label_param"
+                )
                 raise ValidationError(
                     self.env._(
                         "%(model)s: the label filter is set to %(mode)s but no text "
@@ -231,6 +250,11 @@ class AccountReconcileModel(models.Model):
                 try:
                     re.compile(record.match_label_param)
                 except re.error as err:
+                    _debug.logic(
+                        "reco_model_rejected",
+                        reco_model=record,
+                        reason="bad_label_regex",
+                    )
                     raise ValidationError(
                         self.env._(
                             "%(model)s: the label regex is not valid.",
@@ -269,19 +293,19 @@ class AccountReconcileModel(models.Model):
                 is_partner_mapping and model.line_ids[0].partner_id.id
             )
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_set_manual(self):
-        dbg.lifecycle.debug("action_set_manual on %s", dbg.rec(self))
+        _debug.lifecycle("action_set_manual", records=self)
         self.trigger = "manual"
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_set_auto_reconcile(self):
-        dbg.lifecycle.debug("action_set_auto_reconcile on %s", dbg.rec(self))
+        _debug.lifecycle("action_set_auto_reconcile", records=self)
         self.trigger = "auto_reconcile"
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_reconcile_stat(self):
-        dbg.lifecycle.debug("action_reconcile_stat on %s", dbg.rec(self))
+        _debug.lifecycle("action_reconcile_stat", records=self)
         self.check_singleton()
         action = self.env["ir.actions.actions"]._get_action_dict_by_xml_id(
             "account.action_move_journal_line"
@@ -312,9 +336,9 @@ class AccountReconcileModel(models.Model):
             name, rounds = longer, rounds + 1
         return rounds
 
-    @dbg.timed
+    @_debug.perf.timed
     def copy_data(self, default=None):
-        dbg.lifecycle.debug("copy_data on %s", dbg.rec(self))
+        _debug.lifecycle("copy_data", records=self)
         default = dict(default or {})
         vals_list = super().copy_data(default)
         if default.get("name"):

@@ -4,11 +4,13 @@ from markupsafe import Markup
 
 from odoo import SUPERUSER_ID, _, api, fields, models
 from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.libs.debug_log import DebugLog
 from odoo.tools.translate import LazyGettext
 
-from ..tools import debug_log as dbg
 from .account_audit_account_status import STATUS_SELECTION
 from .account_return_check_template import CHECK_TYPES
+
+_debug = DebugLog(__name__)
 
 
 class AccountReturnCheck(models.Model):
@@ -88,14 +90,15 @@ class AccountReturnCheck(models.Model):
     cycle = fields.Selection(related="template_id.cycle")
 
     @api.model_create_multi
-    @dbg.timed
+    @_debug.perf.timed
     def create(self, vals_list):
-        dbg.lifecycle.debug(
-            "create %s: %d vals, keys=%s",
-            self._name,
-            len(vals_list),
-            dbg.vals_keys(vals_list),
-        )
+        if _debug.lifecycle.enabled:
+            _debug.lifecycle(
+                "create",
+                model=self._name,
+                count=len(vals_list),
+                fields=sorted({key for vals in vals_list for key in vals}),
+            )
         new_vals_list = [
             {
                 key: self.env._(value) if isinstance(value, LazyGettext) else value  # pylint: disable=E8502
@@ -119,12 +122,17 @@ class AccountReturnCheck(models.Model):
                         value, LazyGettext
                     ):
                         record[check_field] = value._translate(lang=lang_code)
+        _debug.pipeline(
+            "check_translations_applied",
+            checks=records,
+            langs=len(all_langs),
+        )
 
         return records
 
-    @dbg.timed
+    @_debug.perf.timed
     def write(self, vals):
-        dbg.lifecycle.debug("write on %s: keys=%s", dbg.rec(self), dbg.keys(vals))
+        _debug.lifecycle("write", records=self, fields=sorted(vals))
         for check in self:
             user = self.env.user
             if "supervisor_id" in vals and not user.has_groups(
@@ -142,6 +150,14 @@ class AccountReturnCheck(models.Model):
                         self.env._(
                             "You're only allowed to change the check state when the return hasn't been reviewed."
                         )
+                    )
+                if _debug.logic.enabled:
+                    _debug.logic(
+                        "check_result_changed",
+                        check=check,
+                        old=check.result,
+                        new=vals.get("result"),
+                        by_superuser=user.id == SUPERUSER_ID,
                     )
 
                 if user.id != SUPERUSER_ID:
@@ -196,10 +212,16 @@ class AccountReturnCheck(models.Model):
 
             type = vals.get("type", check.type)
             if type != "file" and check.attachment_ids:
+                _debug.logic("check_attachments_dropped", check=check, type=type)
                 check.attachment_ids.unlink()
 
             if "attachment_ids" in vals and type == "file":
                 check.refresh_result = not bool(check.attachment_ids)
+                _debug.logic(
+                    "file_check_refresh_toggled",
+                    check=check,
+                    attachments=check.attachment_ids,
+                )
 
         return result
 
@@ -214,7 +236,7 @@ class AccountReturnCheck(models.Model):
             )
 
     @api.constrains("code")
-    @dbg.timed
+    @_debug.perf.timed
     def _check_code(self):
         for record in self:
             if (
@@ -234,7 +256,7 @@ class AccountReturnCheck(models.Model):
         for check in self:
             check.approver_supervisor_ids = check.approver_ids | check.supervisor_id
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_evaluation_context(self):
         def generate_journals_options():
             options = self.env.ref("account.trial_balance_report").get_options({})
@@ -247,6 +269,12 @@ class AccountReturnCheck(models.Model):
             return journals
 
         company = self.return_id.company_id
+        _debug.logic(
+            "evaluation_context_built",
+            check=self,
+            tax_return=self.return_id,
+            company=company,
+        )
         return {
             "active_id": self.return_id.id,
             "active_ids": [self.return_id.id],
@@ -285,7 +313,7 @@ class AccountReturnCheck(models.Model):
         except (SyntaxError, TypeError, ValueError) as error:
             raise ValidationError(_("Invalid code")) from error
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_review(self):
         """Preprocess and return the action that must be triggered when clicking a check.
 
@@ -293,7 +321,7 @@ class AccountReturnCheck(models.Model):
         """
         # Actions coming from data carry their domain and context as strings, so they must be
         # evaluated against _get_evaluation_context before being returned.
-        dbg.lifecycle.debug("action_review on %s", dbg.rec(self))
+        _debug.lifecycle("action_review", records=self)
         self.check_singleton()
 
         if (
@@ -307,6 +335,12 @@ class AccountReturnCheck(models.Model):
             )
             other_companies_partners_ids = (
                 other_companies.sudo().mapped("partner_id").ids
+            )
+            _debug.logic(
+                "review_intercompany_partners",
+                check=self,
+                tax_return=self.return_id,
+                other_companies=other_companies,
             )
 
             return {
@@ -323,6 +357,16 @@ class AccountReturnCheck(models.Model):
             action = {**self.action}
 
             evaluation_context = self._get_evaluation_context()
+            if _debug.logic.enabled:
+                _debug.logic(
+                    "review_action_string_expressions",
+                    check=self,
+                    keys=",".join(
+                        key
+                        for key in ("context", "domain", "params")
+                        if isinstance(self.action.get(key), str)
+                    ),
+                )
 
             if "context" in self.action and isinstance(self.action["context"], str):
                 action["context"] = self._parse_expression(
@@ -372,22 +416,30 @@ class AccountReturnCheck(models.Model):
 
             action["active_id"] = self.return_id.id
             action["active_model"] = self.return_id._name
+            _debug.logic(
+                "review_action_resolved",
+                check=self,
+                template=self.template_id,
+                action_type=action.get("type"),
+                has_domain=bool(action.get("domain")),
+            )
 
             return action
+        _debug.logic("review_skipped", check=self, reason="no_action")
         return None
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_view_document(self):
-        dbg.lifecycle.debug("action_view_document on %s", dbg.rec(self))
+        _debug.lifecycle("action_view_document", records=self)
         return {
             "type": "ir.actions.act_url",
             "url": f"/web/content/{self.attachment_ids.id}",
             "target": "download",
         }
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_unlink_attachments(self):
-        dbg.lifecycle.debug("action_unlink_attachments on %s", dbg.rec(self))
+        _debug.lifecycle("action_unlink_attachments", records=self)
         self.check_singleton()
         self.attachment_ids.unlink()
         self.refresh_result = True

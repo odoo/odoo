@@ -1,9 +1,10 @@
 from markupsafe import Markup
 
 from odoo import _, api, fields, models
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import format_date
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 AUTO_STATEMENT_PROCESSING_BATCH_SIZE = 100
 
@@ -29,14 +30,14 @@ class AccountBankStatementLine(models.Model):
         related="move_id.attachment_ids",
     )
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_save_close(self):
-        dbg.lifecycle.debug("action_save_close on %s", dbg.rec(self))
+        _debug.lifecycle("action_save_close", records=self)
         return {"type": "ir.actions.act_window_close"}
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_save_new(self):
-        dbg.lifecycle.debug("action_save_new on %s", dbg.rec(self))
+        _debug.lifecycle("action_save_new", records=self)
         action = self.env["ir.actions.act_window"]._get_action_dict_by_xml_id(
             "account.action_bank_statement_line_form_bank_rec_widget"
         )
@@ -45,13 +46,13 @@ class AccountBankStatementLine(models.Model):
         }
         return action
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_button_draft(self):
-        dbg.lifecycle.debug("action_button_draft on %s", dbg.rec(self))
+        _debug.lifecycle("action_button_draft", records=self)
         return self.move_id.action_draft()
 
     @api.depends("statement_id")
-    @dbg.timed
+    @_debug.perf.timed
     def _compute_bank_statement_attachment_ids(self):
         attachments = (
             self.env["ir.attachment"]
@@ -71,14 +72,11 @@ class AccountBankStatementLine(models.Model):
             )
 
     @api.model
-    @dbg.timed
+    @_debug.perf.timed
     def _action_view_bank_reconciliation_widget(
         self, extra_domain=None, default_context=None, name=None, kanban_first=True
     ):
-        dbg.lifecycle.debug(
-            "_action_view_bank_reconciliation_widget on %s",
-            dbg.rec(self),
-        )
+        _debug.lifecycle("_action_view_bank_reconciliation_widget", records=self)
         if default_context is None:
             default_context = {}
         action_reference = "account.action_bank_statement_line_transactions" + (
@@ -94,6 +92,12 @@ class AccountBankStatementLine(models.Model):
             )
         )
 
+        _debug.logic(
+            "widget_action_resolved",
+            action_reference=action_reference,
+            journal=default_journal,
+            extra_domain=bool(extra_domain),
+        )
         action.update(
             {
                 "name": name or _("Bank Matching"),
@@ -108,9 +112,9 @@ class AccountBankStatementLine(models.Model):
 
         return action
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_view_recon_st_line(self):
-        dbg.lifecycle.debug("action_view_recon_st_line on %s", dbg.rec(self))
+        _debug.lifecycle("action_view_recon_st_line", records=self)
         self.check_singleton()
         return self.env[
             "account.bank.statement.line"
@@ -163,23 +167,24 @@ class AccountBankStatementLine(models.Model):
 
         return invoices._get_records_action()
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_unreconcile_entry(self):
-        dbg.lifecycle.debug("action_unreconcile_entry on %s", dbg.rec(self))
+        _debug.lifecycle("action_unreconcile_entry", records=self)
         self.check_singleton()
 
         _liquidity_lines, _suspense_lines, other_lines = self._seek_for_lines()
         other_lines.remove_move_reconcile()
 
     @api.model_create_multi
-    @dbg.timed
+    @_debug.perf.timed
     def create(self, vals_list):
-        dbg.lifecycle.debug(
-            "create %s: %d vals, keys=%s",
-            self._name,
-            len(vals_list),
-            dbg.vals_keys(vals_list),
-        )
+        if _debug.lifecycle.enabled:
+            _debug.lifecycle(
+                "create",
+                model=self._name,
+                count=len(vals_list),
+                fields=sorted({key for vals in vals_list for key in vals}),
+            )
         statement_lines = super().create(vals_list)
         if not self.env.context.get("no_retrieve_partner"):
             statement_lines._set_partner_from_transaction()
@@ -191,10 +196,10 @@ class AccountBankStatementLine(models.Model):
         )
 
         if self.env.context.get("auto_statement_processing", False) and statement_lines:
-            dbg.pipeline.debug(
-                "[stline:%s] auto statement processing in batches of %d",
-                dbg.ids(statement_lines),
-                AUTO_STATEMENT_PROCESSING_BATCH_SIZE,
+            _debug.pipeline(
+                "auto_statement_processing_batches",
+                stline=statement_lines,
+                auto_statement_processing_batch_size=AUTO_STATEMENT_PROCESSING_BATCH_SIZE,
             )
             for index in range(
                 0, len(statement_lines), AUTO_STATEMENT_PROCESSING_BATCH_SIZE
@@ -208,7 +213,7 @@ class AccountBankStatementLine(models.Model):
     def _format_transaction_details(self):
         return self._format_statement_line_data()
 
-    @dbg.timed
+    @_debug.perf.timed
     def _format_statement_line_data(self):
         def _get_formatted_transaction_details(data, prefix=""):
             keys = (
@@ -262,6 +267,11 @@ class AccountBankStatementLine(models.Model):
                 formatted_statement_line_data,
                 _get_formatted_transaction_details(self.transaction_details),
             )
+        _debug.logic(
+            "statement_line_formatted",
+            stline=self,
+            with_transaction_details=bool(self.transaction_details),
+        )
         return formatted_statement_line_data
 
     @api.depends("amount")

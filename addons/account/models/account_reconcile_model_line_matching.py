@@ -4,15 +4,16 @@ from math import copysign
 
 from odoo import Command, api, models
 from odoo.exceptions import RedirectWarning, UserError
+from odoo.libs.debug_log import DebugLog
 from odoo.libs.numbers import split_amount_str
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class AccountReconcileModelLine(models.Model):
     _inherit = "account.reconcile.model.line"
 
-    @dbg.timed
+    @_debug.perf.timed
     def _prepare_aml_vals(self, partner):
         self.check_singleton()
 
@@ -23,6 +24,13 @@ class AccountReconcileModelLine(models.Model):
             )
             if fiscal_position:
                 taxes = fiscal_position.map_tax(taxes)
+            _debug.logic(
+                "reco_line_taxes_mapped",
+                reco_model_line=self,
+                partner=partner,
+                fiscal_position=fiscal_position,
+                taxes=taxes,
+            )
 
         values = {
             "name": self.label,
@@ -36,7 +44,7 @@ class AccountReconcileModelLine(models.Model):
             values["account_id"] = self.account_id.id
         return values
 
-    @dbg.timed
+    @_debug.perf.timed
     def _apply_in_manual_widget(
         self, residual_amount_currency, residual_balance, partner, st_line
     ):
@@ -68,6 +76,14 @@ class AccountReconcileModelLine(models.Model):
                 )
             )
 
+        _debug.logic(
+            "manual_line_amount_computed",
+            stline=st_line,
+            reco_model_line=self,
+            amount_type=self.amount_type,
+            balance=balance,
+            amount_currency=amount_currency,
+        )
         return {
             **self._prepare_aml_vals(partner),
             "currency_id": currency.id,
@@ -75,7 +91,7 @@ class AccountReconcileModelLine(models.Model):
             "amount_currency": amount_currency,
         }
 
-    @dbg.timed
+    @_debug.perf.timed
     def _apply_in_bank_widget(
         self, residual_amount_currency, residual_balance, partner, st_line
     ):
@@ -126,20 +142,20 @@ class AccountReconcileModelLine(models.Model):
 
         if not aml_values.get("name"):
             aml_values["name"] = st_line.payment_ref
-        dbg.logic.debug(
-            "[stline:%s] reco model line %s (%s): balance=%s amount_currency=%s account=%s",
-            st_line.id,
-            self.id,
-            self.amount_type,
-            aml_values.get("balance"),
-            aml_values.get("amount_currency"),
-            aml_values.get("account_id"),
+        _debug.logic(
+            "reco_model",
+            stline=st_line,
+            line=self,
+            amount_type=self.amount_type,
+            balance=aml_values.get("balance"),
+            amount_currency=aml_values.get("amount_currency"),
+            account=aml_values.get("account_id"),
         )
 
         return aml_values
 
     @api.model
-    @dbg.timed
+    @_debug.perf.timed
     def _get_amount_currency_by_regex(
         self, st_line, residual_amount_currency, amount_string
     ):
@@ -177,6 +193,12 @@ class AccountReconcileModelLine(models.Model):
                             extracted_match_group.group()
                         )
                         extracted_balance = float(f"{int_part}.{dec_part}")
+                    _debug.logic(
+                        "regex_amount_extracted",
+                        stline=st_line,
+                        groups=len(groups),
+                        extracted=extracted_balance,
+                    )
                     return copysign(extracted_balance * sign, residual_amount_currency)
                 except IndexError:
                     raise RedirectWarning(
@@ -197,4 +219,5 @@ class AccountReconcileModelLine(models.Model):
                         self.model_id._get_records_action(),
                         self.env._("Open reconcile model"),
                     ) from None
+        _debug.logic("regex_amount_not_found", stline=st_line)
         return 0.0

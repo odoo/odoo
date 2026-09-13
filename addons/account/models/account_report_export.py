@@ -15,13 +15,13 @@ from PIL import ImageFont
 from odoo import _, api, models
 from odoo.exceptions import RedirectWarning, UserError
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.libs.documents import mimetype_for
 from odoo.libs.numbers import float_repr
 from odoo.tools import html2plaintext
 from odoo.tools.mail import html_to_inner_content
 from odoo.tools.misc import file_path, format_date
 
-from ..tools import debug_log as dbg
 from .account_report import (
     ACCOUNT_CODES_ENGINE_SPLIT_REGEX,
     ACCOUNT_CODES_ENGINE_TERM_REGEX,
@@ -30,6 +30,8 @@ from .account_report_engine import (
     ACCOUNT_CODES_ENGINE_TAG_ID_PREFIX_REGEX,
     AccountReportFileDownloadException,
 )
+
+_debug = DebugLog(__name__)
 
 # Side margins are explicit: a company paperformat with margin_left/right at 0 lets a
 # table wider than the sheet bleed into the printer's non-printable edge and lose the
@@ -47,18 +49,20 @@ class AccountReportExport(models.Model):
     _inherit = "account.report"
 
     @api.model
-    @dbg.timed
+    @_debug.perf.timed
     def _cron_account_report_send(self, job_count=10):
         """Handle Send & Print async processing.
         :param job_count: maximum number of jobs to process if specified.
         """
-        dbg.lifecycle.debug("_cron_account_report_send on %s", dbg.rec(self))
+        _debug.lifecycle("_cron_account_report_send", records=self)
         to_process = self.env["account.report"].search(
             [("send_and_print_values", "!=", False)],
         )
         if not to_process:
+            _debug.logic("send_skipped", reason="nothing_queued", job_count=job_count)
             return
 
+        _debug.pipeline("send_queue_loaded", reports=to_process, job_count=job_count)
         processed_count = 0
         need_retrigger = False
 
@@ -88,6 +92,15 @@ class AccountReportExport(models.Model):
                     )
                     processed_count += 1
                 report_partner_ids.remove(partner_id)
+            _debug.pipeline(
+                "report_send_batch",
+                report=report,
+                partners=len(partner_ids),
+                existing_partners=len(existing_partner_ids),
+                remaining_partners=len(report_partner_ids),
+                processed=processed_count,
+                need_retrigger=need_retrigger,
+            )
             if report_partner_ids:
                 send_and_print_vals["report_options"]["partner_ids"] = (
                     report_partner_ids
@@ -96,6 +109,12 @@ class AccountReportExport(models.Model):
             else:
                 report.send_and_print_values = False
 
+        _debug.logic(
+            "send_retrigger_decided",
+            need_retrigger=need_retrigger,
+            processed=processed_count,
+            job_count=job_count,
+        )
         if need_retrigger:
             self.env.ref("account.ir_cron_account_report_send")._trigger()
 
@@ -130,6 +149,7 @@ class AccountReportExport(models.Model):
         """
         if options.get("tax_unit", "company_only") != "company_only":
             tax_unit = self.env["account.tax.unit"].browse(options["tax_unit"])
+            _debug.logic("sender_company_tax_unit", tax_unit=tax_unit)
             return tax_unit.main_company_id
 
         report_companies = self.env["res.company"].browse(
@@ -142,21 +162,24 @@ class AccountReportExport(models.Model):
             and options_main_company._get_branches_with_same_vat() == report_companies
         ):
             # The line with the smallest number of parents in the VAT sub-hierarchy is assumed to be the root
+            _debug.logic("sender_company_vat_root", companies=report_companies)
             return report_companies.sorted(lambda x: len(x.parent_ids))[0]
         elif options_main_company._is_every_branch_selected():
+            _debug.logic("sender_company_branch_root", company=options_main_company)
             return options_main_company.root_id
 
+        _debug.logic("sender_company_main", company=options_main_company)
         return options_main_company
 
     def export_file(self, options, file_generator, next_action=None):
         self.check_singleton()
 
         export_options = {**options, "export_mode": "file"}
-        dbg.pipeline.debug(
-            "[report:%s] export_file via %s next=%s",
-            self.id,
-            file_generator,
-            next_action,
+        _debug.pipeline(
+            "export_file",
+            report=self,
+            file_generator=file_generator,
+            next=next_action,
         )
 
         return {
@@ -168,7 +191,7 @@ class AccountReportExport(models.Model):
             },
         }
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_report_send_recipients(self, options):
         custom_handler_model = self._get_custom_handler_model()
         if custom_handler_model and hasattr(
@@ -177,7 +200,7 @@ class AccountReportExport(models.Model):
             return self.env[custom_handler_model]._get_report_send_recipients(options)
         return self.env["res.partner"]
 
-    @dbg.timed
+    @_debug.perf.timed
     def export_to_pdf(self, options):
         self.check_singleton()
 
@@ -199,6 +222,12 @@ class AccountReportExport(models.Model):
             )
         else:
             reports_to_print = self
+        _debug.logic(
+            "pdf_reports_selected",
+            report=self,
+            by_sections=bool(print_options["sections"]),
+            reports=reports_to_print,
+        )
 
         reports_options = []
         reports_options.extend(
@@ -237,6 +266,12 @@ class AccountReportExport(models.Model):
                     )
                     else report
                 )
+                _debug.logic(
+                    "pdf_handler_chosen",
+                    report=report,
+                    custom_handler=custom_handler_model,
+                    handler=handler,
+                )
                 bodies.append(
                     handler._get_pdf_export_html(
                         report_options,
@@ -253,12 +288,12 @@ class AccountReportExport(models.Model):
                 else body
                 for body in bodies
             ]
-            with dbg.timer(
-                self.env,
-                "[report:%s] pdf render x%d bodies landscape=%s",
-                self.id,
-                len(bodies_list),
-                is_landscape,
+            with _debug.perf(
+                "pdf_render",
+                cr=self.env.cr,
+                report=self,
+                bodies_list_count=len(bodies_list),
+                landscape=is_landscape,
             ):
                 files_stream.append(
                     io.BytesIO(
@@ -271,6 +306,13 @@ class AccountReportExport(models.Model):
                     )
                 )
 
+        _debug.pipeline(
+            "pdf_streams_rendered",
+            report=self,
+            streams=len(files_stream),
+            merged=len(files_stream) > 1,
+            has_footer=bool(footer),
+        )
         if len(files_stream) > 1:
             result_stream = action_report._merge_pdfs(files_stream)
             result = result_stream.getvalue()
@@ -287,7 +329,7 @@ class AccountReportExport(models.Model):
             "file_type": "pdf",
         }
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_pdf_export_html(
         self, options, lines, additional_context=None, template=None
     ):
@@ -319,6 +361,14 @@ class AccountReportExport(models.Model):
             lines = self.sort_lines(lines, options)
 
         lines = self._format_lines_for_display(lines, options)
+        _debug.pipeline(
+            "pdf_html_lines_formatted",
+            report=self,
+            template=template,
+            lines=len(lines),
+            sorted=bool(options.get("order_column")),
+            last_annotations=bool(options.get("show_last_annotations")),
+        )
 
         render_values["lines"] = lines
 
@@ -347,7 +397,7 @@ class AccountReportExport(models.Model):
         # Render.
         return self.env["ir.qweb"]._render(template, render_values)
 
-    @dbg.timed
+    @_debug.perf.timed
     def _prepare_annotations_list_for_pdf_export(
         self, date_options, lines, annotations_per_line_id
     ):
@@ -389,9 +439,15 @@ class AccountReportExport(models.Model):
                             else None,
                         }
                     )
+        _debug.pipeline(
+            "pdf_annotations_prepared",
+            lines=len(lines),
+            annotated_lines=len(annotations_per_line_id),
+            annotations=len(annotations_to_render),
+        )
         return annotations_to_render
 
-    @dbg.timed
+    @_debug.perf.timed
     def export_to_xlsx(self, options, response=None):
         def add_worksheet_unique_name(workbook, sheet_name):
             existing_names = set(workbook.sheetnames.keys())
@@ -426,6 +482,12 @@ class AccountReportExport(models.Model):
                 )
             else:
                 reports_to_print = self
+            _debug.logic(
+                "xlsx_reports_selected",
+                report=self,
+                by_sections=bool(print_options["sections"]),
+                reports=reports_to_print,
+            )
 
             reports_options = []
             for report in reports_to_print:
@@ -435,11 +497,11 @@ class AccountReportExport(models.Model):
                 reports_options.append(report_options)
                 # Use custom handler's XLSX export method if available
                 custom_handler_model = report._get_custom_handler_model()
-                with dbg.timer(
-                    self.env,
-                    "[report:%s] xlsx sheet custom=%s",
-                    report.id,
-                    custom_handler_model,
+                with _debug.perf(
+                    "xlsx_sheet",
+                    cr=self.env.cr,
+                    report=report,
+                    custom=custom_handler_model,
                 ):
                     if custom_handler_model and hasattr(
                         self.env[custom_handler_model], "_write_report_to_xlsx_sheet"
@@ -459,6 +521,12 @@ class AccountReportExport(models.Model):
         output.seek(0)
         generated_file = output.read()
         output.close()
+        _debug.pipeline(
+            "xlsx_workbook_written",
+            report=self,
+            sheets=len(reports_options),
+            size=len(generated_file),
+        )
 
         return {
             "file_name": self.get_default_report_filename(options, "xlsx"),
@@ -467,7 +535,7 @@ class AccountReportExport(models.Model):
         }
 
     @api.model
-    @dbg.timed
+    @_debug.perf.timed
     def _set_xlsx_cell_sizes(self, sheet, fonts, col, row, value, style, has_colspan):
         """This small helper will resize the cells if needed, to allow to get a better output."""
 
@@ -523,7 +591,7 @@ class AccountReportExport(models.Model):
                 fonts[font_type] = ImageFont.load_default()
         return fonts
 
-    @dbg.timed
+    @_debug.perf.timed
     def _write_report_to_xlsx_sheet(self, options, workbook, sheet):
         fonts = self._get_xlsx_export_fonts()
 
@@ -670,6 +738,12 @@ class AccountReportExport(models.Model):
         print_mode_self = self.with_context(no_format=True)
         lines = self._filter_out_folded_children(print_mode_self._get_lines(options))
         report_annotations = self.get_annotations(options, lines)
+        _debug.pipeline(
+            "xlsx_lines_fetched",
+            report=self,
+            lines=len(lines),
+            annotated_lines=len(report_annotations),
+        )
 
         # For reports with lines generated for accounts, the account name and codes are shown in a single column.
         # To help user post-process the report if they need, we should in such a case split the account name and code in two columns.
@@ -690,6 +764,12 @@ class AccountReportExport(models.Model):
         else:
             sheet.set_column(0, 0, 50)
 
+        _debug.logic(
+            "xlsx_columns_layout",
+            report=self,
+            account_code_split=len(account_lines_split_names),
+            currency_code_columns=not options.get("no_xlsx_currency_code_columns"),
+        )
         if not options.get("no_xlsx_currency_code_columns"):
             self._add_xlsx_currency_codes_columns(options, lines)
 
@@ -825,6 +905,14 @@ class AccountReportExport(models.Model):
 
         # Disable bold styling for the max level.
         max_level = max(line.get("level", -1) for line in lines) if lines else -1
+        _debug.logic(
+            "xlsx_max_level_unbolded",
+            report=self,
+            max_level=max_level,
+            applied=max_level in {0, 1, 2},
+            sorted=bool(options.get("order_column")),
+            header_rows=y_offset,
+        )
         if max_level in {0, 1, 2}:
             # Total lines are supposed to be a level above, so we don't touch them.
             for wb_format in (
@@ -954,8 +1042,14 @@ class AccountReportExport(models.Model):
                     "\n".join(line_annotation_text),
                     annotation_format,
                 )
+        _debug.pipeline(
+            "xlsx_sheet_written",
+            report=self,
+            lines=len(lines),
+            columns=len(options["columns"]),
+        )
 
-    @dbg.timed
+    @_debug.perf.timed
     def _add_xlsx_currency_codes_columns(self, options, lines):
         """Adds a 'Currency Code' column for each column displaying amounts in foreign currencies. This is done because
         the raw number is displayed on the xlsx file, making it impossible to know the currency used.
@@ -981,6 +1075,13 @@ class AccountReportExport(models.Model):
                 )
 
         options["columns"] = new_columns
+        _debug.pipeline(
+            "xlsx_currency_columns_added",
+            report=self,
+            currency_labels=len(required_currency_code_columns),
+            columns=len(new_columns),
+            lines=len(lines),
+        )
 
         # Add 'Currency Code' values to each line
         for line in lines:
@@ -1000,7 +1101,7 @@ class AccountReportExport(models.Model):
 
             line["columns"] = new_column_values
 
-    @dbg.timed
+    @_debug.perf.timed
     def _add_options_xlsx_sheet(self, workbook, options_list):
         """Adds a new sheet for xlsx report exports with a summary of all filters and options activated at the moment of the export."""
         filters_sheet = workbook.add_worksheet(_("Filters"))
@@ -1013,6 +1114,7 @@ class AccountReportExport(models.Model):
         y_offset = 0
 
         if len(options_list) == 1:
+            _debug.logic("options_sheet_single_report", report=self)
             self.env["account.report"].browse(
                 options_list[0]["report_id"]
             )._write_report_options_to_xlsx_sheet(
@@ -1033,6 +1135,13 @@ class AccountReportExport(models.Model):
                 common_options_values[key] = first_value
             else:
                 uncommon_options_keys.add(key)
+        _debug.pipeline(
+            "options_sheet_keys_split",
+            report=self,
+            reports=len(options_list),
+            common=len(common_options_values),
+            uncommon=len(uncommon_options_keys),
+        )
 
         # Write common options to the sheet.
         filters_sheet.write(y_offset, 0, _("All"), name_style)
@@ -1057,7 +1166,7 @@ class AccountReportExport(models.Model):
             else:
                 y_offset = new_offset
 
-    @dbg.timed
+    @_debug.perf.timed
     def _write_report_options_to_xlsx_sheet(
         self, options, sheet, y_offset, options_to_print=None
     ):
@@ -1080,6 +1189,7 @@ class AccountReportExport(models.Model):
             """Check if the option should be printed based on options_to_print."""
             return not options_to_print or option_key in options_to_print
 
+        start_y_offset = y_offset  # debuglog
         # Company
         if is_option_printable("companies"):
             companies = options["companies"]
@@ -1156,9 +1266,15 @@ class AccountReportExport(models.Model):
         if filter_names:
             y_offset = write_filter_lines(_("Options"), filter_names, y_offset)
 
+        _debug.pipeline(
+            "report_options_written",
+            report=self,
+            rows=y_offset - start_y_offset,
+            restricted=bool(options_to_print),
+        )
         return y_offset
 
-    @dbg.timed
+    @_debug.perf.timed
     def get_vat_for_export(self, options, raise_warning=True):
         """Returns the VAT number to use when exporting this report with the provided
         options. If filter_multi_company is set to 'tax_units', the selected tax unit's VAT
@@ -1172,6 +1288,9 @@ class AccountReportExport(models.Model):
             and options["tax_unit"] != "company_only"
         ):
             tax_unit = self.env["account.tax.unit"].browse(options["tax_unit"])
+            _debug.logic(
+                "vat_source", report=self, source="tax_unit", tax_unit=tax_unit
+            )
             return tax_unit.vat
 
         company = self._get_sender_company_for_export(options)
@@ -1186,6 +1305,12 @@ class AccountReportExport(models.Model):
                 limit=1,
             )
             if foreign_vat_fpos:
+                _debug.logic(
+                    "vat_source",
+                    report=self,
+                    source="foreign_vat_fpos",
+                    fiscal_position=foreign_vat_fpos,
+                )
                 return foreign_vat_fpos.foreign_vat
 
         if not company.vat and raise_warning:
@@ -1195,9 +1320,16 @@ class AccountReportExport(models.Model):
                 action.id,
                 _("Company Settings"),
             )
+        _debug.logic(
+            "vat_source",
+            report=self,
+            source="company",
+            company=company,
+            missing=not company.vat,
+        )
         return company.vat
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_download_xlsx_accounts_coverage_report(self):
         """Generate an XLSX file used to debug the report, issuing the following warnings when applicable:
 
@@ -1205,10 +1337,7 @@ class AccountReportExport(models.Model):
         - an account is reported in multiple lines of the report (orange)
         - an account is reported in a line of the report but does not exist in the Chart of Accounts (yellow)
         """
-        dbg.lifecycle.debug(
-            "action_download_xlsx_accounts_coverage_report on %s",
-            dbg.rec(self),
-        )
+        _debug.lifecycle("action_download_xlsx_accounts_coverage_report", records=self)
         self.check_singleton()
         if not self.is_account_coverage_report_available:
             raise UserError(
@@ -1243,13 +1372,19 @@ class AccountReportExport(models.Model):
                 "datas": base64.encodebytes(output.getvalue()),
             }
         )
+        _debug.pipeline(
+            "coverage_xlsx_written",
+            report=self,
+            rows=len(lines),
+            attachment=attachment_id,
+        )
         return {
             "type": "ir.actions.act_url",
             "url": f"/web/content/{attachment_id.id}",
             "target": "download",
         }
 
-    @dbg.timed
+    @_debug.perf.timed
     def _generate_accounts_coverage_report_xlsx_lines(self):
         """Generate the lines of the accounts coverage XLSX file, issuing the following warnings when applicable:
 
@@ -1305,6 +1440,12 @@ class AccountReportExport(models.Model):
         )
 
         expressions = self.line_ids.expression_ids._expand_aggregations()
+        _debug.pipeline(
+            "coverage_expressions_expanded",
+            report=self,
+            expressions=expressions,
+            linked_tags=len(tag_ids_linked_to_account),
+        )
         for i, expr in enumerate(expressions):
             reported_accounts = AccountAccount
             if expr.engine == "domain":
@@ -1331,6 +1472,9 @@ class AccountReportExport(models.Model):
                     if operand[0] == "code" and not AccountAccount.search_count(
                         [operand], limit=1
                     ):
+                        _debug.logic(
+                            "coverage_code_missing", expression=expr, code=operand[2]
+                        )
                         non_existing_codes[operand[2]] |= expr.report_line_id
                     elif operand[0] == "tag_ids":
                         tag_ids = operand[2]
@@ -1350,6 +1494,12 @@ class AccountReportExport(models.Model):
                                     expr.report_line_id
                                 )
                         else:
+                            _debug.logic(
+                                "coverage_tag_bad_operator",
+                                expression=expr,
+                                operator=operand[1],
+                                tags=len(tag_ids),
+                            )
                             for tag in self.env["account.account.tag"].browse(tag_ids):
                                 lines_using_bad_operator_per_tag[
                                     f"{tag.name} ({tag.id}) - Operator: {operand[1]}"
@@ -1451,6 +1601,17 @@ class AccountReportExport(models.Model):
                             expr.report_line_id | expr2.report_line_id
                         )
 
+        _debug.pipeline(
+            "coverage_expressions_scanned",
+            report=self,
+            reported_accounts=len(all_reported_accounts),
+            account_code_terms=len(reported_account_codes),
+            candidate_duplicates=len(candidate_duplicate_codes),
+            same_line_duplicates=len(duplicate_codes_same_line),
+            non_existing_codes=len(non_existing_codes),
+            non_linked_tags=len(lines_per_non_linked_tag),
+            bad_operator_tags=len(lines_using_bad_operator_per_tag),
+        )
         # Check that the duplicates are not false positives because of the balance character
         for (
             candidate_duplicate_code,
@@ -1472,6 +1633,12 @@ class AccountReportExport(models.Model):
             ):
                 duplicate_codes[candidate_duplicate_code] |= candidate_duplicate_lines
 
+        _debug.logic(
+            "coverage_duplicates_verified",
+            report=self,
+            candidates=len(candidate_duplicate_codes),
+            verified=len(duplicate_codes),
+        )
         # Check that all codes in CoA are correctly reported
         if self.root_report_id == self.env.ref("account.profit_and_loss"):
             accounts_in_coa = AccountAccount.search(
@@ -1491,6 +1658,12 @@ class AccountReportExport(models.Model):
                     ("account_type", "!=", "off_balance"),
                 ]
             )
+            _debug.logic(
+                "coverage_coa_scope",
+                report=self,
+                scope="profit_and_loss",
+                coa_accounts=len(accounts_in_coa),
+            )
         else:  # Balance Sheet
             accounts_in_coa = AccountAccount.search(
                 [
@@ -1509,6 +1682,12 @@ class AccountReportExport(models.Model):
                     ),
                 ]
             )
+            _debug.logic(
+                "coverage_coa_scope",
+                report=self,
+                scope="balance_sheet",
+                coa_accounts=len(accounts_in_coa),
+            )
 
         # Compute codes that exist in the CoA but are not reported in the report.
         # account.account.code is computed per company and is False for an account
@@ -1525,6 +1704,12 @@ class AccountReportExport(models.Model):
             {code for code in all_reported_accounts.mapped("code") if code}
             | non_reported_codes
             | non_existing_codes.keys()
+        )
+        _debug.pipeline(
+            "coverage_codes_collected",
+            report=self,
+            codes=len(all_reported_codes),
+            non_reported=len(non_reported_codes),
         )
         errors_trie = self._get_accounts_coverage_report_errors_trie(
             all_reported_codes,
@@ -1543,7 +1728,7 @@ class AccountReportExport(models.Model):
         return self._get_accounts_coverage_report_coverage_lines("", errors_trie)
 
     @api.depends("country_id", "chart_template", "root_report_id")
-    @dbg.timed
+    @_debug.perf.timed
     def _compute_is_account_coverage_report_available(self):
         for report in self:
             report.is_account_coverage_report_available = (
@@ -1561,7 +1746,7 @@ class AccountReportExport(models.Model):
                 self.env.ref("account.balance_sheet", raise_if_not_found=False),
             )
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_accounts_coverage_report_errors_trie(
         self,
         all_reported_codes,
@@ -1619,6 +1804,12 @@ class AccountReportExport(models.Model):
                     reported_code[:j],
                     {"children": {}, "lines": lines, "errors": errors},
                 )
+        _debug.pipeline(
+            "coverage_errors_trie_built",
+            report=self,
+            codes=len(all_reported_codes),
+            roots=len(errors_trie["children"]),
+        )
         return errors_trie
 
     @api.model
@@ -1669,7 +1860,7 @@ class AccountReportExport(models.Model):
                 trie["errors"] = children_errors
         return trie
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_accounts_coverage_report_coverage_lines(
         self, subcode, trie, coverage_lines=None
     ):
@@ -1733,14 +1924,20 @@ class AccountReportExport(models.Model):
                         ERRORS[error]["color"],
                     ]
                 )
+        if _debug.pipeline.enabled and not subcode:
+            _debug.pipeline(
+                "coverage_lines_built", report=self, lines=len(coverage_lines)
+            )
         return coverage_lines
 
     def get_default_report_filename(self, options, extension):
         """The default to be used for the file when downloading pdf,xlsx,..."""
         self.check_singleton()
         if title := options.get("report_title"):
+            _debug.logic("filename_from_title", report=self, extension=extension)
             return title
         if "sections_source_id" not in options:
+            _debug.logic("filename_generic", report=self, extension=extension)
             return _("report.%(file_extension)s", file_extension=extension)
 
         def _transform_period(period=""):
@@ -1761,6 +1958,12 @@ class AccountReportExport(models.Model):
         else:
             sections_source = self
 
+        _debug.logic(
+            "filename_from_sections",
+            report=self,
+            sections_source=sections_source,
+            extension=extension,
+        )
         return f"{sections_source.name.lower().replace(' ', '_')}_{_transform_period(period)}{_get_company_name(options['companies'])}.{extension}"
 
     def _get_layout_footer(self, rcontext):
@@ -1778,7 +1981,7 @@ class AccountReportExport(models.Model):
             )
             return footer_html.decode()
 
-    @dbg.timed
+    @_debug.perf.timed
     def _generate_file_data_with_error_check(
         self, options, content_generator, generator_params, errors
     ):
@@ -1809,6 +2012,7 @@ class AccountReportExport(models.Model):
             errors = []
         self.check_singleton()
         if any(error_value.get("level") == "danger" for error_value in errors.values()):
+            _debug.logic("file_generation_blocked", report=self, errors=len(errors))
             raise AccountReportFileDownloadException(errors)
 
         content = content_generator(**generator_params)
@@ -1821,6 +2025,13 @@ class AccountReportExport(models.Model):
             "file_type": generator_params["file_type"],
         }
 
+        _debug.pipeline(
+            "file_data_generated",
+            report=self,
+            file_type=generator_params["file_type"],
+            size=len(file_data["file_content"]),
+            non_blocking_errors=len(errors),
+        )
         if errors:
             raise AccountReportFileDownloadException(errors, file_data)
 

@@ -1,8 +1,9 @@
 import json
 
 from odoo import _, api, fields, models
+from odoo.libs.debug_log import DebugLog
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class AccountReturnSubmissionWizard(models.TransientModel):
@@ -12,9 +13,9 @@ class AccountReturnSubmissionWizard(models.TransientModel):
     instructions = fields.Html(string="Instructions")
     return_id = fields.Many2one(comodel_name="account.return", required=True)
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_proceed_with_submission(self):
-        dbg.lifecycle.debug("action_proceed_with_submission on %s", dbg.rec(self))
+        _debug.lifecycle("action_proceed_with_submission", records=self)
         self.check_singleton()
         return self.return_id._proceed_with_submission()
 

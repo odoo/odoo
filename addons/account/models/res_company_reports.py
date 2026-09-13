@@ -3,9 +3,11 @@ import datetime
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
 
-from ..tools import debug_log as dbg
 from .account_return_type import PERIODS
+
+_debug = DebugLog(__name__)
 
 
 class ResCompany(models.Model):
@@ -84,7 +86,7 @@ class ResCompany(models.Model):
     def _get_countries_allowing_tax_representative(self):
         return set()
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_tax_closing_journal(self):
         if not self.account_tax_return_journal_id:
             closing_journal = self.env["account.journal"]
@@ -110,6 +112,11 @@ class ResCompany(models.Model):
                     )
                 )
             if not closing_journal:
+                _debug.logic(
+                    "tax_closing_journal_loaded_from_chart",
+                    company=self,
+                    chart=self.chart_template,
+                )
                 ChartTemplate = self.env["account.chart.template"].with_company(self)
                 ChartTemplate._load_data(
                     {
@@ -122,18 +129,25 @@ class ResCompany(models.Model):
                     }
                 )
                 closing_journal = ChartTemplate.ref("tax_returns")
+            _debug.logic(
+                "tax_closing_journal_resolved",
+                company=self,
+                journal=closing_journal,
+            )
             self.account_tax_return_journal_id = closing_journal
+
         return self.account_tax_return_journal_id
 
     @api.model_create_multi
-    @dbg.timed
+    @_debug.perf.timed
     def create(self, vals_list):
-        dbg.lifecycle.debug(
-            "create %s: %d vals, keys=%s",
-            self._name,
-            len(vals_list),
-            dbg.vals_keys(vals_list),
-        )
+        if _debug.lifecycle.enabled:
+            _debug.lifecycle(
+                "create",
+                model=self._name,
+                count=len(vals_list),
+                fields=sorted({key for vals in vals_list for key in vals}),
+            )
         companies = super().create(vals_list)
         companies._initiate_account_onboardings()
 
@@ -141,15 +155,21 @@ class ResCompany(models.Model):
         self.env["account.return.type"]._sync_all_returns(companies.root_id)
         return companies
 
-    @dbg.timed
+    @_debug.perf.timed
     def write(self, vals):
-        dbg.lifecycle.debug("write on %s: keys=%s", dbg.rec(self), dbg.keys(vals))
+        _debug.lifecycle("write", records=self, fields=sorted(vals))
         companies = self.exists()
         root_companies_before = companies.root_id
         res = super().write(vals)
 
         roots_to_recompute = root_companies_before | companies.root_id
         if "account_opening_date" in vals:
+            _debug.logic(
+                "returns_sync_decided",
+                companies=companies,
+                roots=roots_to_recompute,
+                reason="opening_date",
+            )
             self.env["account.return.type"].with_context(
                 # 2 years to make sure we cover all cases, such as yearly returns with a deadline of more than 1 year.
                 forced_date_from=self.account_opening_date - relativedelta(years=2),
@@ -166,6 +186,12 @@ class ResCompany(models.Model):
             }
             and self.account_opening_date
         ):
+            _debug.logic(
+                "returns_sync_decided",
+                companies=companies,
+                roots=roots_to_recompute,
+                reason="periodicity_or_hierarchy",
+            )
             self.env["account.return.type"]._sync_all_returns(roots_to_recompute)
 
         return res
@@ -203,4 +229,11 @@ class ResCompany(models.Model):
             if parents_vat_set == current_vat_check_set:
                 same_vat_branch_ids.append(branch.id)
 
+        _debug.logic(
+            "same_vat_branches_found",
+            company=self,
+            accessible_only=accessible_only,
+            candidates=len(candidate_branches),
+            matched=len(same_vat_branch_ids),
+        )
         return self.browse(same_vat_branch_ids)

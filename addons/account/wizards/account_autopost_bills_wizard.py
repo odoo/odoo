@@ -1,6 +1,7 @@
 from odoo import fields, models
+from odoo.libs.debug_log import DebugLog
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class AccountAutopostBillsWizard(models.TransientModel):
@@ -13,20 +14,20 @@ class AccountAutopostBillsWizard(models.TransientModel):
         "Number of bills previously unmodified from this partner"
     )
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_automate_partner(self):
-        dbg.lifecycle.debug("action_automate_partner on %s", dbg.rec(self))
+        _debug.lifecycle("action_automate_partner", records=self)
         for wizard in self:
             wizard.partner_id.autopost_bills = "always"
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_ask_later(self):
-        dbg.lifecycle.debug("action_ask_later on %s", dbg.rec(self))
+        _debug.lifecycle("action_ask_later", records=self)
         for wizard in self:
             wizard.partner_id.autopost_bills = "ask"
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_never_automate_partner(self):
-        dbg.lifecycle.debug("action_never_automate_partner on %s", dbg.rec(self))
+        _debug.lifecycle("action_never_automate_partner", records=self)
         for wizard in self:
             wizard.partner_id.autopost_bills = "never"

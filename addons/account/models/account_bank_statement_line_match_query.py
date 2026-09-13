@@ -3,11 +3,12 @@ import re
 from collections import defaultdict
 
 from odoo import SUPERUSER_ID, api, models
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
 
-from ..tools import debug_log as dbg
-
 _logger = logging.getLogger(__name__)
+
+_debug = DebugLog(__name__)
 
 
 class AccountBankStatementLine(models.Model):
@@ -44,7 +45,7 @@ class AccountBankStatementLine(models.Model):
             right=right,
         )
 
-    @dbg.timed
+    @_debug.perf.timed
     def _match_outstanding_accounts(
         self, st_move_ids, outstanding_accounts, remaining_st_line_ids
     ):
@@ -70,6 +71,14 @@ class AccountBankStatementLine(models.Model):
                 processed_st_line_ids.add(st_line.id)
 
         remaining_st_line_ids -= processed_st_line_ids
+        _debug.pipeline(
+            "outstanding_references_matched",
+            automatch=self,
+            outstanding_accounts=outstanding_accounts,
+            matched=len(processed_st_line_ids),
+            remaining=len(remaining_st_line_ids),
+            amount_fallback=bool(remaining_st_line_ids),
+        )
         if remaining_st_line_ids:
             remaining_st_line_ids -= self._handle_reconciliation_matching_amount(
                 st_move_ids,
@@ -79,7 +88,7 @@ class AccountBankStatementLine(models.Model):
             )
         return remaining_st_line_ids
 
-    @dbg.timed
+    @_debug.perf.timed
     def _match_payment_references(
         self, st_move_ids, account_ids, remaining_st_line_ids
     ):
@@ -106,10 +115,10 @@ class AccountBankStatementLine(models.Model):
                     to_process.pop((st_line_id, matching_word), None)
                     to_process.pop((st_line_id, word), None)
             st_lines_refs[st_line_id].append(matching_word)
-        dbg.logic.debug(
-            "[automatch] payment references: %d row(s) -> %d kept after surrounding/overlap filter",
-            len(matched_rows),
-            len(to_process),
+        _debug.logic(
+            "automatch_payment_references_after_surrounding",
+            matched_rows_count=len(matched_rows),
+            to_process_count=len(to_process),
         )
 
         ref_amls_left = {}
@@ -124,10 +133,10 @@ class AccountBankStatementLine(models.Model):
                     aml_amount_residual
                 )
             elif st_line.currency_id.compare_amounts(left, 0) <= 0:
-                dbg.logic.debug(
-                    "[automatch:%s] payment ref: amount exhausted, aml %s skipped",
-                    st_line_id,
-                    aml_id,
+                _debug.logic(
+                    "payment_ref_amount_exhausted_aml",
+                    automatch=st_line_id,
+                    aml_id=aml_id,
                 )
                 continue
             else:
@@ -153,7 +162,7 @@ class AccountBankStatementLine(models.Model):
             .payment_account_id
         ) - self.journal_id.default_account_id
 
-    @dbg.timed
+    @_debug.perf.timed
     def _partner_mapping(self, reco_models):
         reco_model_model = self.env["account.reconcile.model"]
         reco_model_model.flush_model()
@@ -201,6 +210,14 @@ class AccountBankStatementLine(models.Model):
         mapped = defaultdict(list)
         for st_line_id, mapped_partner_id in self.env.cr.fetchall():
             mapped[mapped_partner_id].append(st_line_id)
+        if _debug.pipeline.enabled:
+            _debug.pipeline(
+                "partners_mapped_by_models",
+                automatch=self,
+                reco_models=len(reco_models),
+                partners=len(mapped),
+                st_lines=sum(len(ids) for ids in mapped.values()),
+            )
         for mapped_partner_id, st_line_ids in mapped.items():
             self.browse(st_line_ids).partner_id = mapped_partner_id
             _logger.info(
@@ -209,12 +226,19 @@ class AccountBankStatementLine(models.Model):
                 mapped_partner_id,
             )
 
-    @dbg.timed
+    @_debug.perf.timed
     def _end_to_end_uuid(self, st_move_ids, account_ids):
         processed_st_line_ids = set()
         st_lines_with_end_to_end_uuid_ids = (
             "end_to_end_uuid" in self._fields and self.filtered("end_to_end_uuid").ids
         )
+        if _debug.logic.enabled:
+            _debug.logic(
+                "end_to_end_uuid_candidates",
+                automatch=self,
+                field_present="end_to_end_uuid" in self._fields,
+                candidates=len(st_lines_with_end_to_end_uuid_ids or ()),
+            )
         if st_lines_with_end_to_end_uuid_ids:
             self.env.cr.execute(
                 SQL(
@@ -257,6 +281,7 @@ class AccountBankStatementLine(models.Model):
                     ),
                 )
             )
+            _debug.perf.count("end_to_end_amls_fetched", rows=self.env.cr.rowcount)
 
             for st_line_id, aml_ids in self.env.cr.fetchall():
                 st_line = self.browse(st_line_id).with_prefetch(self._prefetch_ids)
@@ -265,6 +290,11 @@ class AccountBankStatementLine(models.Model):
                 ).set_line_bank_statement_line(aml_ids)
                 processed_st_line_ids.add(st_line_id)
 
+            _debug.pipeline(
+                "end_to_end_amls_matched",
+                automatch=self,
+                matched=len(processed_st_line_ids),
+            )
             if (
                 st_lines_with_end_to_end_uuid_ids := set(
                     st_lines_with_end_to_end_uuid_ids
@@ -298,6 +328,9 @@ class AccountBankStatementLine(models.Model):
                         ],
                     )
                 )
+                _debug.perf.count(
+                    "end_to_end_payments_fetched", rows=self.env.cr.rowcount
+                )
                 for st_line_id, payment_id in self.env.cr.fetchall():
                     st_line = self.browse(st_line_id).with_prefetch(self._prefetch_ids)
                     payment = (
@@ -312,9 +345,14 @@ class AccountBankStatementLine(models.Model):
                         SUPERUSER_ID
                     )._reconcile_with_payments(payment, amls_to_create)
                     processed_st_line_ids.add(st_line_id)
+            _debug.pipeline(
+                "end_to_end_payments_matched",
+                automatch=self,
+                processed=len(processed_st_line_ids),
+            )
         return processed_st_line_ids
 
-    @dbg.timed
+    @_debug.perf.timed
     def _match_accounts_query(
         self, st_move_ids, account_ids, remaining_st_line_ids, outstanding_account=False
     ):
@@ -367,7 +405,15 @@ class AccountBankStatementLine(models.Model):
             ),
             extra_condition=extra_condition,
         )
+        _debug.pipeline(
+            "reference_match_query_built",
+            automatch=self,
+            outstanding=outstanding_account,
+            st_lines=len(remaining_st_line_ids),
+            accounts=len(account_ids),
+        )
         self.env.cr.execute(query)
+        _debug.perf.count("reference_match_rows_fetched", rows=self.env.cr.rowcount)
         return self.env.cr.fetchall()
 
     @api.model

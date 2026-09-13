@@ -8,11 +8,11 @@ from itertools import chain
 from odoo import _, api, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.libs.numbers import float_round
 from odoo.tools import SQL, Query
 from odoo.tools.safe_eval import expr_eval, safe_eval
 
-from ..tools import debug_log as dbg
 from .account_report_engine import (
     ACCOUNT_CODES_ENGINE_TAG_ID_PREFIX_REGEX,
     NO_NEXT_GROUPBY_ENGINES,
@@ -22,11 +22,13 @@ from odoo.addons.account.models.account_report import (
     ACCOUNT_CODES_ENGINE_TERM_REGEX,
 )
 
+_debug = DebugLog(__name__)
+
 
 class AccountReportExpressionEval(models.Model):
     _inherit = "account.report"
 
-    @dbg.timed
+    @_debug.perf.timed
     def _compute_expression_totals_for_each_column_group(
         self,
         expressions,
@@ -156,6 +158,30 @@ class AccountReportExpressionEval(models.Model):
                     expanded_cross, grouped_formulas, force_date_scope=forced_date_scope
                 )
 
+        if _debug.pipeline.enabled:
+            _debug.pipeline(
+                "formulas_grouped",
+                report=self,
+                expressions=len(expressions),
+                groupby=groupby_to_expand,
+                include_default_vals=include_default_vals,
+                cross_report_expanded=sum(
+                    1
+                    for expression in expressions
+                    if expression.engine == "aggregation"
+                    and expression.subformula
+                    and expression.subformula.startswith("cross_report")
+                ),
+                batches_per_engine={
+                    engine: len(batches) for engine, batches in grouped_formulas.items()
+                },
+                column_groups=len(options.get("column_groups", {})),
+                col_groups_restrict=col_groups_restrict,
+                forced=bool(forced_all_column_groups_expression_totals),
+                offset=offset,
+                limit=limit,
+            )
+
         # Treat each formula batch for each column group
         all_column_groups_expression_totals = {}
         # The records a batched domain resolves to depend on the formula alone, never on
@@ -172,6 +198,14 @@ class AccountReportExpressionEval(models.Model):
             else:
                 forced_column_group_totals = None
 
+            if _debug.logic.enabled and col_groups_restrict:
+                _debug.logic(
+                    "column_group_restricted",
+                    report=self,
+                    group_key=group_key,
+                    computed=group_key in col_groups_restrict,
+                    reused_forced=forced_column_group_totals is not None,
+                )
             if not col_groups_restrict or group_key in col_groups_restrict:
                 current_group_expression_totals = self._compute_expression_totals_for_single_column_group(
                     group_options,
@@ -189,9 +223,15 @@ class AccountReportExpressionEval(models.Model):
                 current_group_expression_totals
             )
 
+        _debug.pipeline(
+            "column_groups_totals_computed",
+            report=self,
+            column_groups=len(all_column_groups_expression_totals),
+            batch_ids_cached=len(batch_ids_cache),
+        )
         return all_column_groups_expression_totals
 
-    @dbg.timed
+    @_debug.perf.timed
     def _compute_expression_totals_for_single_column_group(
         self,
         column_group_options,
@@ -242,6 +282,14 @@ class AccountReportExpressionEval(models.Model):
             column_group_expression_totals,
             cross_report_expression_totals=None,
         ):
+            _debug.logic(
+                "totals_update",
+                report=self,
+                results=len(formula_results),
+                integer_rounding=column_group_options.get("integer_rounding_enabled"),
+                rounding_method=column_group_options.get("integer_rounding"),
+                cross_report=cross_report_expression_totals is not None,
+            )
             for (_key, expressions), result in formula_results.items():
                 for expression in expressions:
                     subformula_error_format = _(
@@ -339,6 +387,15 @@ class AccountReportExpressionEval(models.Model):
                         # Entering this else means this expression needs to be evaluated because of a cross_report aggregation
                         cross_report_expression_totals[expression] = expression_result
 
+            _debug.pipeline(
+                "totals_updated",
+                report=self,
+                totals=len(column_group_expression_totals),
+                cross_report_totals=len(cross_report_expression_totals)
+                if cross_report_expression_totals is not None
+                else None,
+            )
+
         # Batch each engine that can be
         column_group_expression_totals = (
             dict(forced_column_group_expression_totals)
@@ -353,6 +410,20 @@ class AccountReportExpressionEval(models.Model):
             .selection
             if selection_val[0] != "aggregation"
         ]
+        if _debug.pipeline.enabled:
+            _debug.pipeline(
+                "column_group_started",
+                report=self,
+                column_group=column_group_options.get("owner_column_group"),
+                date=column_group_options.get("date", {}).get("string"),
+                forced_totals=len(column_group_expression_totals),
+                batches_per_engine={
+                    engine: len(grouped_formulas[engine])
+                    for engine in batchable_engines
+                    if grouped_formulas.get(engine)
+                },
+                aggregation_batches=len(grouped_formulas.get("aggregation", {})),
+            )
         for engine in batchable_engines:
             for (
                 date_scope,
@@ -407,6 +478,21 @@ class AccountReportExpressionEval(models.Model):
                     )
                     aggregation_formulas_dict[aggreation_formula_dict_key] |= expression
 
+        if _debug.pipeline.enabled:
+            _debug.pipeline(
+                "aggregations_collected",
+                report=self,
+                batch_totals=len(column_group_expression_totals),
+                cross_report_scopes=len(cross_report_expr_totals_by_scope),
+                cross_report_totals=sum(
+                    len(scope_totals)
+                    for scope_totals in cross_report_expr_totals_by_scope.values()
+                ),
+                aggregation_formulas=len(aggregation_formulas_dict),
+                forced_scope_formulas=sum(
+                    1 for _formula, scope in aggregation_formulas_dict if scope
+                ),
+            )
         if aggregation_formulas_dict:
             aggregation_formula_results = self._compute_totals_no_batch_aggregation(
                 column_group_options,
@@ -418,9 +504,15 @@ class AccountReportExpressionEval(models.Model):
                 aggregation_formula_results, column_group_expression_totals
             )
 
+        _debug.pipeline(
+            "column_group_totals_computed",
+            report=self,
+            column_group=column_group_options.get("owner_column_group"),
+            totals=len(column_group_expression_totals),
+        )
         return column_group_expression_totals
 
-    @dbg.timed
+    @_debug.perf.timed
     def _compute_totals_no_batch_aggregation(
         self,
         column_group_options,
@@ -612,6 +704,16 @@ class AccountReportExpressionEval(models.Model):
             len(aggregations_terms_to_evaluate) + len(formulas_dict) + 1
         )
         expansion_rounds = defaultdict(int)
+        _debug.pipeline(
+            "aggregation_maps_built",
+            report=self,
+            formulas=len(formulas_dict),
+            current_values=len(current_report_eval_dict),
+            current_codes=len(current_report_codes_map),
+            cross_report_scopes=len(other_reports_eval_dict),
+            terms_to_evaluate=len(aggregations_terms_to_evaluate),
+            max_expansion_rounds=max_expansion_rounds,
+        )
         while to_treat:
             formula, unexpanded_formula, forced_date_scope = to_treat.popleft()
 
@@ -620,6 +722,13 @@ class AccountReportExpressionEval(models.Model):
                 expansion_rounds[unexpanded_formula, forced_date_scope]
                 > max_expansion_rounds
             ):
+                _debug.logic(
+                    "cyclic_aggregation_detected",
+                    report=self,
+                    formula=unexpanded_formula,
+                    date_scope=forced_date_scope,
+                    max_expansion_rounds=max_expansion_rounds,
+                )
                 raise UserError(
                     _(
                         "Cyclic aggregation: %(expressions)s cannot be computed, because its formula %(formula)s references expressions that reference it back.",
@@ -664,6 +773,13 @@ class AccountReportExpressionEval(models.Model):
                         if term in aggregations_terms_to_evaluate:
                             # Then, the term is probably an aggregation with bounds that still needs to be computed. We need to keep on looping
                             continue
+                        _debug.logic(
+                            "term_unresolvable",
+                            report=self,
+                            term=term,
+                            formula=unexpanded_formula,
+                            date_scope=forced_date_scope,
+                        )
                         raise UserError(
                             _(
                                 "Could not expand term %(term)s while evaluating formula %(unexpanded_formula)s",
@@ -693,6 +809,12 @@ class AccountReportExpressionEval(models.Model):
                                     label=expr.label,
                                 )
                             ) from None
+                    _debug.logic(
+                        "zero_division_ignored",
+                        report=self,
+                        formula=unexpanded_formula,
+                        date_scope=forced_date_scope,
+                    )
                     # Arbitrary choice; for clarity of the report. A 0 division could typically happen when there is no result in the period.
                     formula_result = 0
 
@@ -736,6 +858,13 @@ class AccountReportExpressionEval(models.Model):
                             # The criterium expression has not be evaluated yet. Postpone the evaluation of this formula, and skip this expression
                             # for now. We still try to evaluate other expressions using this formula if any; this means those expressions will
                             # be processed a second time later, giving the same result. This is a rare corner case, and not so costly anyway.
+                            _debug.logic(
+                                "other_expr_criterium_postponed",
+                                report=self,
+                                expression=expression,
+                                criterium_code=criterium_code,
+                                criterium_label=criterium_label,
+                            )
                             to_treat.append(
                                 (formula, unexpanded_formula, forced_date_scope)
                             )
@@ -796,9 +925,18 @@ class AccountReportExpressionEval(models.Model):
                             expression.id
                         ] = expression_result
 
+        if _debug.pipeline.enabled:
+            _debug.pipeline(
+                "aggregations_resolved",
+                report=self,
+                results=len(rslt),
+                rounds=sum(expansion_rounds.values()),
+                deepest_rounds=max(expansion_rounds.values(), default=0),
+                integer_rounding=column_group_options.get("integer_rounding_enabled"),
+            )
         return rslt
 
-    @dbg.timed
+    @_debug.perf.timed
     def _aggregation_apply_bounds(
         self, column_group_options, subformula, unbounded_value
     ):
@@ -838,6 +976,13 @@ class AccountReportExpressionEval(models.Model):
                 )
             precision = int(matches["precision"])
             rounding_method = matches["rounding_method"] or "HALF-DOWN"
+            _debug.logic(
+                "rounding_subformula_applied",
+                report=self,
+                precision=precision,
+                rounding_method=rounding_method,
+                negative_precision=precision < 0,
+            )
             # We support rounding with a negative amount, similarly to how it works with python's round method.
             # As we also want to support using a rounding method, we will play a bit with the number and round using float_round
             if precision < 0:
@@ -920,24 +1065,36 @@ class AccountReportExpressionEval(models.Model):
 
             # Evaluate result
             criterium = group_values["criterium"]
+            _debug.logic(
+                "bound_evaluated",
+                report=self,
+                criterium=criterium,
+                value=unbounded_value,
+                amount_1=amount_1,
+                amount_2=amount_2,
+                converted_currencies=currency_codes,
+            )
             if criterium == "if_below":
                 if company_currency.compare_amounts(unbounded_value, amount_1) >= 0:
+                    _debug.logic("below_bound_suppressed", report=self)
                     return None
             elif criterium == "if_above":
                 if company_currency.compare_amounts(unbounded_value, amount_1) <= 0:
+                    _debug.logic("above_bound_suppressed", report=self)
                     return None
             elif criterium == "if_between":
                 if (
                     company_currency.compare_amounts(unbounded_value, amount_1) < 0
                     or company_currency.compare_amounts(unbounded_value, amount_2) > 0
                 ):
+                    _debug.logic("between_bound_suppressed", report=self)
                     return None
             else:
                 raise UserError(_("Unknown bound criterium: %s", criterium))
 
         return unbounded_value
 
-    @dbg.timed
+    @_debug.perf.timed
     def _compute_formula_batch(
         self,
         column_group_options,
@@ -982,14 +1139,14 @@ class AccountReportExpressionEval(models.Model):
             (e.g. 'sum', 'sum_if_pos', ...)
         """
         engine_function_name = f"_compute_formula_batch_with_engine_{formula_engine}"
-        with dbg.timer(
-            self.env,
-            "[report:%s] engine=%s scope=%s formulas=%d groupby=%s",
-            self.id,
-            formula_engine,
-            date_scope,
-            len(formulas_dict),
-            current_groupby,
+        with _debug.perf(
+            "_compute_formula_batch",
+            cr=self.env.cr,
+            report=self,
+            engine=formula_engine,
+            scope=date_scope,
+            formulas=len(formulas_dict),
+            groupby=current_groupby,
         ):
             return getattr(self, engine_function_name)(
                 column_group_options,
@@ -1003,7 +1160,7 @@ class AccountReportExpressionEval(models.Model):
                 batch_ids_cache=batch_ids_cache,
             )
 
-    @dbg.timed
+    @_debug.perf.timed
     def _compute_formula_batch_with_engine_tax_tags(
         self,
         options,
@@ -1032,6 +1189,17 @@ class AccountReportExpressionEval(models.Model):
         for expressions in formulas_dict.values():
             all_expressions |= expressions
         tags = all_expressions._get_matching_tags()
+        _debug.pipeline(
+            "tax_tags_matched",
+            report=self,
+            date_scope=date_scope,
+            formulas=len(formulas_dict),
+            expressions=len(all_expressions),
+            tags=len(tags),
+            groupby=current_groupby,
+            offset=offset,
+            limit=limit,
+        )
 
         query = self._get_report_query(options, date_scope)
         groupby_sql = (
@@ -1096,7 +1264,9 @@ class AccountReportExpressionEval(models.Model):
             else {"result": 0, "has_sublines": False}
             for formula_str, formula_expr in formulas_dict.items()
         }
+        tag_rows = 0  # debuglog
         for tax_tag, balance, aml_count, *grouping_key in self.env.execute_query(sql):
+            tag_rows += 1  # debuglog
             if expression := formulas_dict.get(f"-{tax_tag}"):
                 balance *= -1
             else:
@@ -1106,10 +1276,20 @@ class AccountReportExpressionEval(models.Model):
                 rslt[tax_tag, expression].append((grouping_key[0], rslt_dict))
             else:
                 rslt[tax_tag, expression] = rslt_dict
+        _debug.perf.count("tax_tag_rows_fetched", rows=tag_rows)
 
+        if _debug.pipeline.enabled:
+            _debug.pipeline(
+                "tax_tags_results",
+                report=self,
+                results=len(rslt),
+                groups=sum(len(v) for v in rslt.values() if isinstance(v, list))
+                if current_groupby
+                else None,
+            )
         return rslt
 
-    @dbg.timed
+    @_debug.perf.timed
     def _compute_formula_batch_with_engine_domain(
         self,
         options,
@@ -1223,6 +1403,22 @@ class AccountReportExpressionEval(models.Model):
             else:
                 non_batchable_domains_data.append((domain, formula, expressions))
 
+        if _debug.logic.enabled:
+            _debug.logic(
+                "domains_batched",
+                report=self,
+                date_scope=date_scope,
+                groupby=current_groupby,
+                next_groupby=next_groupby,
+                formulas=len(formulas_dict),
+                batches=sorted(
+                    f"{model}.{field}:{len(domains)}"
+                    for (model, field), domains in batchable_domains_data.items()
+                ),
+                non_batchable=len(non_batchable_domains_data),
+                paginated=bool(offset or limit),
+            )
+
         rslt = {}
         for (batch_model, batch_aml_field), batch_domains in chain(
             batchable_domains_data.items(),
@@ -1306,6 +1502,14 @@ class AccountReportExpressionEval(models.Model):
 
             self.env.cr.execute(query)
             all_query_res = self.env.cr.dictfetchall()
+            _debug.perf.count(
+                "domain_rows_fetched",
+                report=self,
+                batch_model=batch_model,
+                batch_field=batch_aml_field,
+                domains=len(batch_domains),
+                rows=len(all_query_res),
+            )
 
             results_by_batch_grouping_key = {}
             if batch_model:
@@ -1410,9 +1614,17 @@ class AccountReportExpressionEval(models.Model):
                         _format_result_depending_on_groupby(formula_rslt)
                     )
 
+        _debug.pipeline(
+            "domain_results",
+            report=self,
+            results=len(rslt),
+            batch_ids_cached=len(batch_ids_cache)
+            if batch_ids_cache is not None
+            else None,
+        )
         return rslt
 
-    @dbg.timed
+    @_debug.perf.timed
     def _compute_formula_batch_with_engine_account_codes(
         self,
         options,
@@ -1535,6 +1747,17 @@ class AccountReportExpressionEval(models.Model):
                         continue
                     accounts_prefix_map[account["id"]].add(prefix_key)
 
+        _debug.pipeline(
+            "account_prefixes_mapped",
+            report=self,
+            date_scope=date_scope,
+            groupby=current_groupby,
+            formulas=len(prefix_details_by_formula),
+            accounts=len(accounts),
+            tags=len(tags_map),
+            matched_accounts=len(accounts_prefix_map),
+        )
+
         # Run main query
         query = self._get_report_query(options, date_scope)
 
@@ -1568,6 +1791,13 @@ class AccountReportExpressionEval(models.Model):
             )
         else:
             tail_query_additional_groupby_where_sql = SQL()
+        _debug.logic(
+            "account_codes_pagination",
+            report=self,
+            offset=offset,
+            limit=limit,
+            groupby_subquery=bool(tail_query_additional_groupby_where_sql),
+        )
 
         extra_groupby_sql = (
             SQL(", %s", current_groupby_aml_sql) if current_groupby_aml_sql else SQL()
@@ -1632,6 +1862,12 @@ class AccountReportExpressionEval(models.Model):
                         },
                     )
                 )
+        _debug.perf.count("account_codes_rows_fetched", rows=self.env.cr.rowcount)
+        _debug.pipeline(
+            "account_codes_rows_parsed",
+            report=self,
+            prefixes_with_results=len(res_by_prefix_account_id),
+        )
 
         for formula, prefix_details in prefix_details_by_formula.items():
             rslt_key = (formula, formulas_dict[formula])
@@ -1687,9 +1923,10 @@ class AccountReportExpressionEval(models.Model):
                                 rslt_groups_by_grouping_keys[group_key] = rslt_group
                                 rslt_destination.append((group_key, rslt_group))
 
+        _debug.pipeline("account_codes_results", report=self, results=len(rslt))
         return rslt
 
-    @dbg.timed
+    @_debug.perf.timed
     def _compute_formula_batch_with_engine_external(
         self,
         options,
@@ -1727,6 +1964,13 @@ class AccountReportExpressionEval(models.Model):
         external_value_domain = [("date", "<=", date_to)]
         if date_from:
             external_value_domain.append(("date", ">=", date_from))
+        _debug.logic(
+            "external_date_bounds",
+            report=self,
+            date_scope=date_scope,
+            date_from=date_from,
+            date_to=date_to,
+        )
 
         # Company clause
         external_value_domain.append(
@@ -1816,6 +2060,14 @@ class AccountReportExpressionEval(models.Model):
                         )
                     )
 
+        _debug.pipeline(
+            "external_queries_built",
+            report=self,
+            formulas=len(formulas_dict),
+            numeric=len(num_queries),
+            string=len(string_queries),
+            monetary=len(monetary_queries),
+        )
         # Convert to dict to have expression ids as keys
         query_results_dict = {}
         for query_list in (num_queries, string_queries, monetary_queries):
@@ -1824,6 +2076,9 @@ class AccountReportExpressionEval(models.Model):
                     SQL(" UNION ALL ").join(SQL("(%s)", query) for query in query_list)
                 )
                 query_results_dict.update(dict(query_results))
+        _debug.perf.count(
+            "external_values_fetched", report=self, rows=len(query_results_dict)
+        )
 
         # Build result dict
         rslt = {}
@@ -1841,7 +2096,7 @@ class AccountReportExpressionEval(models.Model):
 
         return rslt
 
-    @dbg.timed
+    @_debug.perf.timed
     def _compute_formula_batch_with_engine_custom(
         self,
         options,
@@ -1874,9 +2129,17 @@ class AccountReportExpressionEval(models.Model):
                 limit=limit,
                 warnings=warnings,
             )
+        _debug.pipeline(
+            "custom_engine_results",
+            report=self,
+            date_scope=date_scope,
+            groupby=current_groupby,
+            formulas=len(formulas_dict),
+            results=len(rslt),
+        )
         return rslt
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_domain_expression_audit_aml(self, expression_to_audit, options):
         """Returns the domain used to audit a single provided expression.
 
@@ -1884,6 +2147,14 @@ class AccountReportExpressionEval(models.Model):
         everything for them (so, audit shows all the lines that are considered by the formula). To avoid confusion from the user
         when auditing such lines, a default group by account can be used in the list view.
         """
+        _debug.logic(
+            "audit_domain_engine",
+            report=self,
+            expression=expression_to_audit,
+            engine=expression_to_audit.engine,
+            supported=expression_to_audit.engine
+            in ("account_codes", "tax_tags", "domain"),
+        )
         if expression_to_audit.engine == "account_codes":
             formula = expression_to_audit.formula.replace(" ", "")
 
@@ -1927,6 +2198,11 @@ class AccountReportExpressionEval(models.Model):
 
                     account_codes_domains.append(account_codes_domain)
 
+            _debug.pipeline(
+                "account_codes_audit_domain",
+                expression=expression_to_audit,
+                tokens=len(account_codes_domains),
+            )
             return Domain.OR(account_codes_domains)
 
         if expression_to_audit.engine == "tax_tags":
@@ -1952,13 +2228,18 @@ class AccountReportExpressionEval(models.Model):
         )
 
     @api.model
-    @dbg.timed
+    @_debug.perf.timed
     def _currency_table_aml_join(
         self,
         options,
         aml_alias=SQL("account_move_line"),  # noqa: B008  SQL is immutable, one shared default is safe
     ) -> SQL:
         """Returns the JOIN condition to the currency table in a query needing to use it to convert aml balances from one currency to another."""
+        _debug.logic(
+            "currency_table_join",
+            table_type=options.get("currency_table", {}).get("type"),
+            period_key=options.get("date", {}).get("currency_table_period_key"),
+        )
         if options["currency_table"]["type"] == "cta":
             return SQL(
                 """
@@ -2010,9 +2291,16 @@ class AccountReportExpressionEval(models.Model):
 
         return SQL("account_currency_table")
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_report_query(self, options, date_scope, domain=None) -> Query:
         """Get a Query object that references the records needed for this report."""
+        _debug.logic(
+            "report_query_scope",
+            report=self,
+            date_scope=date_scope,
+            extra_domain=domain is not None,
+            budget=options.get("compute_budget"),
+        )
         domain = self._get_domain_options(options, date_scope) & Domain(
             domain or Domain.TRUE
         )
@@ -2071,9 +2359,20 @@ class AccountReportExpressionEval(models.Model):
 
         cache_key = (batch_model, repr(domain))
         if batch_ids_cache is not None and cache_key in batch_ids_cache:
+            _debug.perf.count(
+                "batch_ids_cache_hit",
+                rows=len(batch_ids_cache[cache_key]),
+                batch_model=batch_model,
+            )
             return batch_ids_cache[cache_key]
 
         ids = self.env[batch_model].with_context(active_test=False).search(domain).ids
+        _debug.perf.count(
+            "batch_ids_searched",
+            rows=len(ids),
+            batch_model=batch_model,
+            cached=batch_ids_cache is not None,
+        )
         if batch_ids_cache is not None:
             batch_ids_cache[cache_key] = ids
         return ids
@@ -2091,7 +2390,7 @@ class AccountReportExpressionEval(models.Model):
             )
         return False
 
-    @dbg.timed
+    @_debug.perf.timed
     def _check_groupby_fields(self, groupby_fields_name: list[str] | str):
         """Checks that each string in the groupby_fields_name list is a valid groupby value for an accounting report.
         So it must be:
@@ -2106,6 +2405,12 @@ class AccountReportExpressionEval(models.Model):
             )
 
         custom_handler_name = self._get_custom_handler_model()
+        _debug.logic(
+            "groupby_fields_checking",
+            report=self,
+            fields=groupby_fields_name,
+            custom_handler=custom_handler_name,
+        )
 
         for field_name in (fname.strip() for fname in groupby_fields_name):
             groupby_field = self.env["account.move.line"]._fields.get(field_name)

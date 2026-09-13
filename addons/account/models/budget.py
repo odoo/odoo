@@ -4,9 +4,10 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import date_utils, float_is_zero, float_round
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class AccountReportBudget(models.Model):
@@ -35,20 +36,21 @@ class AccountReportBudget(models.Model):
                 raise ValidationError(_("Please enter a valid budget name."))
 
     @api.model_create_multi
-    @dbg.timed
+    @_debug.perf.timed
     def create(self, vals_list):
-        dbg.lifecycle.debug(
-            "create %s: %d vals, keys=%s",
-            self._name,
-            len(vals_list),
-            dbg.vals_keys(vals_list),
-        )
+        if _debug.lifecycle.enabled:
+            _debug.lifecycle(
+                "create",
+                model=self._name,
+                count=len(vals_list),
+                fields=sorted({key for vals in vals_list for key in vals}),
+            )
         for values in vals_list:
             if name := values.get("name"):
                 values["name"] = name.strip()
         return super().create(vals_list)
 
-    @dbg.timed
+    @_debug.perf.timed
     def _create_or_update_budget_items(
         self, value_to_set, account_id, rounding, date_from, date_to
     ):
@@ -83,6 +85,15 @@ class AccountReportBudget(models.Model):
         total_amount = sum(existing_budget_items.mapped("amount"))
 
         value_to_compute = value_to_set - total_amount
+        _debug.logic(
+            "budget_delta_computed",
+            budget=self,
+            account_id=account_id,
+            date_from=date_from,
+            date_to=date_to,
+            existing_items=len(existing_budget_items),
+            delta=value_to_compute,
+        )
         if float_is_zero(value_to_compute, precision_digits=rounding):
             # In case the computed amount equals 0, we do an early return as
             # it's not necessary to create new budget item
@@ -129,23 +140,30 @@ class AccountReportBudget(models.Model):
                     )
                 )
 
+        _debug.pipeline(
+            "budget_item_commands_built",
+            budget=self,
+            months=len(start_month_dates),
+            existing_months=len(existing_budget_items_by_date),
+            commands=len(budget_items_commands),
+        )
         if budget_items_commands:
             self.item_ids = budget_items_commands
             # Make sure that the model is flushed before continuing the code and fetching these new items
             self.env["account.report.budget.item"].flush_model()
 
-    @dbg.timed
+    @_debug.perf.timed
     def copy_data(self, default=None):
-        dbg.lifecycle.debug("copy_data on %s", dbg.rec(self))
+        _debug.lifecycle("copy_data", records=self)
         vals_list = super().copy_data(default=default)
         return [
             dict(vals, name=self.env._("%s (copy)", budget.name))
             for budget, vals in zip(self, vals_list, strict=False)
         ]
 
-    @dbg.timed
+    @_debug.perf.timed
     def copy(self, default=None):
-        dbg.lifecycle.debug("copy on %s", dbg.rec(self))
+        _debug.lifecycle("copy", records=self)
         new_budgets = super().copy(default)
         for old_budget, new_budget in zip(self, new_budgets, strict=False):
             for item in old_budget.item_ids:

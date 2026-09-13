@@ -1,7 +1,8 @@
 from odoo import api, fields, models
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class AccountPaymentMethod(models.Model):
@@ -20,14 +21,15 @@ class AccountPaymentMethod(models.Model):
     )
 
     @api.model_create_multi
-    @dbg.timed
+    @_debug.perf.timed
     def create(self, vals_list):
-        dbg.lifecycle.debug(
-            "create %s: %d vals, keys=%s",
-            self._name,
-            len(vals_list),
-            dbg.vals_keys(vals_list),
-        )
+        if _debug.lifecycle.enabled:
+            _debug.lifecycle(
+                "create",
+                model=self._name,
+                count=len(vals_list),
+                fields=sorted({key for vals in vals_list for key in vals}),
+            )
         payment_methods = super().create(vals_list)
         methods_info = self._get_payment_method_information()
         return self._auto_link_payment_methods(payment_methods, methods_info)
@@ -76,6 +78,13 @@ class AccountPaymentMethod(models.Model):
         if with_country and (country_id := information.get("country_id")):
             domain &= Domain("company_id.account_fiscal_country_id", "=", country_id)
 
+        _debug.logic(
+            "payment_method_domain_built",
+            code=code,
+            journal_types=journal_types,
+            currency_filtered=bool(with_currency and information.get("currency_ids")),
+            country_filtered=bool(with_country and information.get("country_id")),
+        )
         return domain
 
     @api.model
@@ -88,9 +97,9 @@ class AccountPaymentMethod(models.Model):
     def _get_sdd_payment_method_code(self):
         return []
 
-    @dbg.timed
+    @_debug.perf.timed
     def unlink(self):
-        dbg.lifecycle.debug("unlink %s", dbg.rec(self))
+        _debug.lifecycle("unlink", unlink=self)
         self.env["account.payment.channel"].search(
             [("payment_method_id", "in", self.ids)]
         ).unlink()

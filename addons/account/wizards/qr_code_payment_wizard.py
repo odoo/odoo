@@ -2,8 +2,9 @@ from lxml import html
 from markupsafe import Markup
 
 from odoo import _, api, fields, models
+from odoo.libs.debug_log import DebugLog
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class QRCodePaymentWizard(models.TransientModel):
@@ -14,7 +15,7 @@ class QRCodePaymentWizard(models.TransientModel):
     qr_code = fields.Html(compute="_compute_qr_code")
 
     @api.depends("partner_bank_id", "communication", "amount_to_pay")
-    @dbg.timed
+    @_debug.perf.timed
     def _compute_qr_code(self):
         for wizard in self:
             qr_html = False
@@ -38,6 +39,7 @@ class QRCodePaymentWizard(models.TransientModel):
                             <p><strong>{txt}</strong></p>
                         </div>
                     """).format(b64_qr=b64_qr, txt=txt)
+            _debug.logic("qr_code_built", records=wizard, generated=bool(qr_html))
             wizard.qr_code = qr_html
 
     def _get_b64_qr_data(self):

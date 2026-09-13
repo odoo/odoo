@@ -1,7 +1,8 @@
 from odoo import _, fields, models
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class AccountFollowupCustomHandler(models.AbstractModel):
@@ -9,7 +10,7 @@ class AccountFollowupCustomHandler(models.AbstractModel):
     _inherit = "account.partner.ledger.report.handler"
     _description = "Follow-Up Report Custom Handler"
 
-    @dbg.timed
+    @_debug.perf.timed
     def _custom_options_initializer(self, report, options, previous_options):
         super()._custom_options_initializer(report, options, previous_options)
 
@@ -52,6 +53,15 @@ class AccountFollowupCustomHandler(models.AbstractModel):
             options["forced_domain"] = options.get("forced_domain", []) + [
                 ("no_followup", "=", False)
             ]
+        _debug.logic(
+            "followup_options_resolved",
+            report=report,
+            partners=len(options["partner_ids"]),
+            hide_partner_totals=options.get("hide_partner_totals", False),
+            unreconciled=options.get("unreconciled"),
+            export_mode=options["export_mode"],
+            report_switched=options["report_id"] != previous_options.get("report_id"),
+        )
 
     def _filter_overdue_amls_from_results(self, aml_results):
         return list(
@@ -74,7 +84,7 @@ class AccountFollowupCustomHandler(models.AbstractModel):
             )
         )
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_partner_aml_report_lines(
         self,
         report,
@@ -141,6 +151,17 @@ class AccountFollowupCustomHandler(models.AbstractModel):
 
         overdue_aml_values = self._filter_overdue_amls_from_results(aml_results)
         due_aml_values = self._filter_due_amls_from_results(aml_results)
+        _debug.pipeline(
+            "followup_amls_split",
+            report=report,
+            partner_line=partner_line_id,
+            aml_results=len(aml_results),
+            overdue=len(overdue_aml_values),
+            due=len(due_aml_values),
+            offset=offset,
+            overdue_line_unfolded=bool(overdue_line_id),
+            due_line_unfolded=bool(due_line_id),
+        )
 
         if overdue_aml_values:
             overdue_lines, next_progress, treated_results_count, has_more = (
@@ -171,6 +192,14 @@ class AccountFollowupCustomHandler(models.AbstractModel):
             )
             lines.extend(due_lines)
 
+        _debug.pipeline(
+            "followup_lines_built",
+            report=report,
+            partner_line=partner_line_id,
+            lines=len(lines),
+            treated=treated_results_count,
+            has_more=has_more,
+        )
         return lines, next_progress, treated_results_count, has_more
 
     def _get_unfolded_partner_status_lines(self, report, options, partner_line_id):
@@ -198,9 +227,9 @@ class AccountFollowupCustomHandler(models.AbstractModel):
             order_by=super()._get_order_by_aml_values(),
         )
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_send_follow_up(self, options):
-        dbg.lifecycle.debug("action_send_follow_up on %s", dbg.rec(self))
+        _debug.lifecycle("action_send_follow_up", records=self)
         template = self.env.ref(
             "account.email_template_customer_follow_up_report", False
         )

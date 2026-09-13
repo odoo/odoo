@@ -3,10 +3,12 @@ from datetime import date
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.tools.misc import format_datetime
 
-from ..tools import debug_log as dbg
 from odoo.addons.account.models.res_company import SOFT_LOCK_DATE_FIELDS
+
+_debug = DebugLog(__name__)
 
 
 class AccountLock_Exception(models.Model):
@@ -119,7 +121,7 @@ class AccountLock_Exception(models.Model):
                 else:
                     exception[field] = date.max
 
-    @dbg.timed
+    @_debug.perf.timed
     def _search_state(self, operator, value):
         if operator != "in":
             return NotImplemented
@@ -136,9 +138,10 @@ class AccountLock_Exception(models.Model):
                 Domain("end_datetime", "=", False)
                 | Domain("end_datetime", ">=", self.env.cr.now())
             )
+        _debug.logic("state_search_domain_built", states=value, domain=domain)
         return domain
 
-    @dbg.timed
+    @_debug.perf.timed
     def _search_lock_date(self, field, operator, value):
         if operator not in ["<", "<="] or not value:
             return NotImplemented
@@ -150,19 +153,19 @@ class AccountLock_Exception(models.Model):
             ("lock_date", operator, value),
         ]
 
-    @dbg.timed
+    @_debug.perf.timed
     def _search_fiscalyear_lock_date(self, operator, value):
         return self._search_lock_date("fiscalyear_lock_date", operator, value)
 
-    @dbg.timed
+    @_debug.perf.timed
     def _search_tax_lock_date(self, operator, value):
         return self._search_lock_date("tax_lock_date", operator, value)
 
-    @dbg.timed
+    @_debug.perf.timed
     def _search_sale_lock_date(self, operator, value):
         return self._search_lock_date("sale_lock_date", operator, value)
 
-    @dbg.timed
+    @_debug.perf.timed
     def _search_purchase_lock_date(self, operator, value):
         return self._search_lock_date("purchase_lock_date", operator, value)
 
@@ -173,14 +176,15 @@ class AccountLock_Exception(models.Model):
         )
 
     @api.model_create_multi
-    @dbg.timed
+    @_debug.perf.timed
     def create(self, vals_list):
-        dbg.lifecycle.debug(
-            "create %s: %d vals, keys=%s",
-            self._name,
-            len(vals_list),
-            dbg.vals_keys(vals_list),
-        )
+        if _debug.lifecycle.enabled:
+            _debug.lifecycle(
+                "create",
+                model=self._name,
+                count=len(vals_list),
+                fields=sorted({key for vals in vals_list for key in vals}),
+            )
         for vals in vals_list:
             if "lock_date" not in vals or "lock_date_field" not in vals:
                 changed_fields = [
@@ -191,25 +195,31 @@ class AccountLock_Exception(models.Model):
                         _("A single exception must change exactly one lock date field.")
                     )
                 field = changed_fields[0]
+                _debug.logic("lock_date_field_deduced", field=field)
                 vals["lock_date_field"] = field
                 vals["lock_date"] = vals.pop(field)
             company = self.env["res.company"].browse(
                 vals.get("company_id", self.env.company.id)
             )
+            _debug.logic(
+                "company_lock_date_source",
+                company=company,
+                field=vals.get("lock_date_field"),
+                from_company="company_lock_date" not in vals,
+            )
             if "company_lock_date" not in vals:
                 vals["company_lock_date"] = company[vals["lock_date_field"]]
 
         exceptions = super().create(vals_list)
-        dbg.lifecycle.debug(
-            "lock exceptions %s: %s",
-            dbg.ids(exceptions),
-            dbg.lazy(
-                lambda: [
+        if _debug.lifecycle.enabled:
+            _debug.lifecycle(
+                "lock_exceptions",
+                exceptions=exceptions,
+                keys=[
                     (e.company_id.id, e.lock_date_field, e.lock_date, e.user_id.id)
                     for e in exceptions
-                ]
-            ),
-        )
+                ],
+            )
 
         for exception in exceptions:
             company = exception.company_id
@@ -232,6 +242,14 @@ class AccountLock_Exception(models.Model):
                 else ""
             )
             reason_string = _(" for '%s'", exception.reason) if exception.reason else ""
+            _debug.logic(
+                "lock_exception_scope",
+                exception=exception,
+                company=company,
+                field=field,
+                everyone=not exception.user_id,
+                has_end=bool(exception.end_datetime),
+            )
             company_chatter_message = _(
                 "%(exception)s for %(user)s%(end_datetime_string)s%(reason)s.",
                 exception=exception._get_html_link(title=_("Exception")),
@@ -246,12 +264,13 @@ class AccountLock_Exception(models.Model):
                 tracking_value_ids=tracking_value_ids,
             )
 
+        _debug.pipeline("lock_exceptions_announced", exceptions=exceptions)
         exceptions._invalidate_affected_user_lock_dates()
         return exceptions
 
-    @dbg.timed
+    @_debug.perf.timed
     def copy(self, default=None):
-        dbg.lifecycle.debug("copy on %s", dbg.rec(self))
+        _debug.lifecycle("copy", records=self)
         raise UserError(_("You cannot duplicate a Lock Date Exception."))
 
     def _recreate(self):
@@ -259,19 +278,18 @@ class AccountLock_Exception(models.Model):
             return self.env["account.lock_exception"]
         vals_list = self.with_context(active_test=False).copy_data()
         new_records = self.create(vals_list)
-        dbg.pipeline.debug(
-            "_recreate lock exceptions %s -> %s", dbg.ids(self), dbg.ids(new_records)
-        )
+        _debug.pipeline("_recreate_lock", exceptions=self, new_records=new_records)
         self.sudo().action_revoke()
         return new_records
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_revoke(self):
-        dbg.lifecycle.debug("action_revoke on %s", dbg.rec(self))
+        _debug.lifecycle("action_revoke", records=self)
         if (
             not self.env.user.has_group("account.group_account_manager")
             and not self.env.su
         ):
+            _debug.logic("revoke_denied", exceptions=self, reason="not_account_manager")
             raise UserError(
                 _(
                     "You cannot revoke Lock Date Exceptions. Ask someone with the 'Adviser' role."
@@ -296,7 +314,7 @@ class AccountLock_Exception(models.Model):
             & Domain("state", "=", "active")
         )
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_domain_audit_trail_during_exception(self):
         self.check_singleton()
 
@@ -310,6 +328,14 @@ class AccountLock_Exception(models.Model):
 
         min_date = self.lock_date
         max_date = self.company_lock_date
+        _debug.logic(
+            "audit_trail_bounds",
+            exception=self,
+            user_scoped=bool(self.user_id),
+            ended=bool(self.end_datetime),
+            min_date=min_date,
+            max_date=max_date,
+        )
         move_date_domain = []
         tracking_old_datetime_domain = []
         tracking_new_datetime_domain = []
@@ -351,12 +377,9 @@ class AccountLock_Exception(models.Model):
             *Domain.AND(move_date_domain),
         ]
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_show_audit_trail_during_exception(self):
-        dbg.lifecycle.debug(
-            "action_show_audit_trail_during_exception on %s",
-            dbg.rec(self),
-        )
+        _debug.lifecycle("action_show_audit_trail_during_exception", records=self)
         self.check_singleton()
         return {
             "name": _("Journal Items"),

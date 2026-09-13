@@ -1,16 +1,17 @@
 from collections import defaultdict
 
 from odoo import Command, _, models
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import groupby
 from odoo.tools.misc import formatLang
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class AccountReconcileWizard(models.TransientModel):
     _inherit = "account.reconcile.wizard"
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_transfer_data(self, amls):
         self.check_singleton()
         accounts = amls.account_id
@@ -44,6 +45,15 @@ class AccountReconcileWizard(models.TransientModel):
             transfer_currency = amls.company_currency_id
             transfer_amount_currency = sum(aml.balance for aml in amls_to_transfer)
 
+        _debug.logic(
+            "transfer_direction_chosen",
+            recwizard=self,
+            from_account=transfer_from_account,
+            to_account=transfer_to_account,
+            amls_to_transfer=len(amls_to_transfer),
+            currency=transfer_currency,
+            amount_currency=transfer_amount_currency,
+        )
         amount_formatted = formatLang(
             self.env, abs(transfer_amount_currency), currency_obj=transfer_currency
         )
@@ -94,7 +104,7 @@ class AccountReconcileWizard(models.TransientModel):
             }
         return source_commands, to_absorb
 
-    @dbg.timed
+    @_debug.perf.timed
     def _match_transfer_partners(self, to_absorb):
         self.check_singleton()
         other_lines = self.move_line_ids.filtered(
@@ -138,9 +148,17 @@ class AccountReconcileWizard(models.TransientModel):
                     "balance": amount,
                     "amount_currency": amount_currency,
                 }
+        _debug.pipeline(
+            "transfer_partners_matched",
+            recwizard=self,
+            other_lines=len(other_lines),
+            matched=len(destination_data),
+            unabsorbed=len(to_absorb),
+            room_buckets=len(room_per_partner),
+        )
         return destination_data, room_per_partner
 
-    @dbg.timed
+    @_debug.perf.timed
     def _place_transfer_remainders(self, to_absorb, room_per_partner, destination_data):
         self.check_singleton()
         for partner, currency, sign in to_absorb:
@@ -175,8 +193,14 @@ class AccountReconcileWizard(models.TransientModel):
                 destination_data[partner, currency, sign]["amount_currency"] += (
                     amount_currency
                 )
+        _debug.pipeline(
+            "transfer_remainders_placed",
+            recwizard=self,
+            remainders=len(to_absorb),
+            destinations=len(destination_data),
+        )
 
-    @dbg.timed
+    @_debug.perf.timed
     def create_transfer(self):
         self.check_singleton()
         source_commands, to_absorb = self._get_transfer_source_lines()
@@ -205,6 +229,13 @@ class AccountReconcileWizard(models.TransientModel):
                 "date": self._get_date_after_lock_date() or self.date,
                 "line_ids": source_commands + destination_commands,
             }
+        )
+        _debug.pipeline(
+            "transfer_move_created",
+            recwizard=self,
+            move=transfer_move,
+            source_lines=len(source_commands),
+            destination_lines=len(destination_commands),
         )
         transfer_move.action_post()
         return transfer_move

@@ -1,6 +1,7 @@
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class BaseDocumentLayout(models.TransientModel):
@@ -17,9 +18,9 @@ class BaseDocumentLayout(models.TransientModel):
         inverse="_inverse_account_number",
     )
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_save_layout(self):
-        dbg.lifecycle.debug("action_save_layout on %s", dbg.rec(self))
+        _debug.lifecycle("action_save_layout", records=self)
         res = super().action_save_layout()
         if step := self.env.ref(
             "account.onboarding_onboarding_step_base_document_layout",
@@ -57,6 +58,12 @@ class BaseDocumentLayout(models.TransientModel):
                 }
             )
 
+        _debug.logic(
+            "layout_render_information",
+            records=self,
+            with_invoice="o" in res,
+            with_payment_info="account_number" in res,
+        )
         return res
 
     @api.depends("partner_id", "account_number")
@@ -71,16 +78,22 @@ class BaseDocumentLayout(models.TransientModel):
     def _compute_preview(self):
         super()._compute_preview()
 
-    @dbg.timed
+    @_debug.perf.timed
     def _inverse_account_number(self):
         for record in self:
             if record.partner_id.bank_ids and record.account_number:
                 bank = record.partner_id.bank_ids[0]
                 if bank.acc_number != record.account_number:
+                    _debug.logic(
+                        "layout_bank_account_renumbered",
+                        partner=record.partner_id,
+                        bank=bank,
+                    )
                     bank.allow_out_payment = False
                     bank.acc_number = record.account_number
                     bank.allow_out_payment = True
             elif record.account_number:
+                _debug.logic("layout_bank_account_created", partner=record.partner_id)
                 record.partner_id.bank_ids += self.env[
                     "res.partner.bank"
                 ]._get_or_create_bank_account(

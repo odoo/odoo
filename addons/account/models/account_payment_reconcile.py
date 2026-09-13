@@ -1,20 +1,18 @@
 from collections import defaultdict
 
 from odoo import Command, models
+from odoo.libs.debug_log import DebugLog
 from odoo.libs.numbers import float_compare
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class AccountPayment(models.Model):
     _inherit = "account.payment"
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_view_manual_reconciliation_widget(self):
-        dbg.lifecycle.debug(
-            "action_view_manual_reconciliation_widget on %s",
-            dbg.rec(self),
-        )
+        _debug.lifecycle("action_view_manual_reconciliation_widget", records=self)
         self.check_singleton()
         if not self.partner_id:
             return self.env["account.move.line"]._action_view_unreconciled()
@@ -27,9 +25,9 @@ class AccountPayment(models.Model):
             extra_context=extra_context,
         )
 
-    @dbg.timed
+    @_debug.perf.timed
     def button_open_statement_lines(self):
-        dbg.lifecycle.debug("button_open_statement_lines on %s", dbg.rec(self))
+        _debug.lifecycle("button_open_statement_lines", records=self)
         self.check_singleton()
 
         default_statement_line = self.reconciled_statement_line_ids[-1]
@@ -55,7 +53,7 @@ class AccountPayment(models.Model):
             )
         ).sorted("date")
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_amls_for_payment_without_move(self, date=None):
         valid_payment_states = ["draft", *self._valid_payment_states()]
         lines_to_create = []
@@ -93,11 +91,11 @@ class AccountPayment(models.Model):
 
             if not payment.currency_id.is_zero(remaining):
                 line2amount[False] -= remaining
-            dbg.logic.debug(
-                "[payment:%s] amls without move: %d term line(s), unallocated=%s",
-                payment.id,
-                len(payment_term_lines),
-                remaining,
+            _debug.logic(
+                "amls_without_move_line",
+                payment=payment,
+                payment_term_lines_count=len(payment_term_lines),
+                unallocated=remaining,
             )
 
             for line, amount in line2amount.items():
@@ -160,13 +158,13 @@ class AccountPayment(models.Model):
         payment_with_move = line.move_id.matched_payment_ids.filtered(
             lambda pay: pay.move_id and pay.state in valid_payment_states
         )
-        dbg.logic.debug(
-            "[payment:%s] superseded by payment with move %s on line %s: amount=%s current=%s",
-            self.id,
-            dbg.rec(payment_with_move),
-            line.id,
-            self.amount_signed,
-            current_amount,
+        _debug.logic(
+            "superseded_move",
+            payment=self,
+            payment_with_move=payment_with_move,
+            line=line,
+            amount=self.amount_signed,
+            current=current_amount,
         )
         if self.currency_id.compare_amounts(self.amount_signed, current_amount) == 0:
             self.action_cancel()
@@ -190,7 +188,7 @@ class AccountPayment(models.Model):
                 ),
             )
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_amls_for_reconciliation(self, st_line):
         def get_current_amount(payment, line_amount, remaining):
             return (
@@ -241,7 +239,22 @@ class AccountPayment(models.Model):
                 )
 
         valid_payment_states = ["draft", *self._valid_payment_states()]
+        _debug.pipeline(
+            "payment_liquidity_lines_collected",
+            stline=st_line,
+            payment=self,
+            with_move=len(payments_with_move),
+            amls=len(amls_to_create),
+            has_exchange_diff=has_exchange_diff,
+        )
         for payment in self - payments_with_move:
+            if _debug.logic.enabled and payment.state not in valid_payment_states:
+                _debug.logic(
+                    "moveless_payment_state_skipped",
+                    stline=st_line,
+                    payment=payment,
+                    state=payment.state,
+                )
             if payment.state not in valid_payment_states:
                 continue
 
@@ -297,6 +310,15 @@ class AccountPayment(models.Model):
                 remaining -= current_amount
                 amls_to_create.extend(amls_to_add)
 
+            if _debug.logic.enabled:
+                _debug.logic(
+                    "moveless_payment_remainder",
+                    stline=st_line,
+                    payment=payment,
+                    term_lines=len(payment_term_lines),
+                    remaining=remaining,
+                    to_partner_account=not payment.currency_id.is_zero(remaining),
+                )
             if not payment.currency_id.is_zero(remaining):
                 partner_account = (
                     payment.partner_id.property_account_payable_id
@@ -319,4 +341,11 @@ class AccountPayment(models.Model):
                         "payment_lines_ids": [Command.set(payment.ids)],
                     }
                 )
+        _debug.pipeline(
+            "payment_reconciliation_amls_built",
+            stline=st_line,
+            payment=self,
+            amls=len(amls_to_create),
+            has_exchange_diff=has_exchange_diff,
+        )
         return amls_to_create, has_exchange_diff

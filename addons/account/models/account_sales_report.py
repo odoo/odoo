@@ -1,9 +1,10 @@
 from collections import defaultdict
 
 from odoo import _, api, fields, models
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class AccountEcSalesReportHandler(models.AbstractModel):
@@ -11,7 +12,7 @@ class AccountEcSalesReportHandler(models.AbstractModel):
     _inherit = ["account.report.custom.handler"]
     _description = "EC Sales Report Custom Handler"
 
-    @dbg.timed
+    @_debug.perf.timed
     def _dynamic_lines_generator(
         self, report, options, all_column_groups_expression_totals, warnings=None
     ):
@@ -37,6 +38,15 @@ class AccountEcSalesReportHandler(models.AbstractModel):
             v.get("id"): v.get("selected")
             for v in options.get("ec_tax_filter_selection", [])
         }
+        if _debug.logic.enabled:
+            _debug.logic(
+                "ec_categories_selected",
+                report=report,
+                selected=sorted(
+                    str(key) for key, value in ec_tax_filter_selection.items() if value
+                ),
+                country_specific_codes=sorted(str(key) for key in operation_categories),
+            )
         for partner, results in self._query_partners(report, options, warnings):
             for tax_ec_category in ("goods", "triangular", "services"):
                 if not ec_tax_filter_selection[tax_ec_category]:
@@ -93,6 +103,12 @@ class AccountEcSalesReportHandler(models.AbstractModel):
                         )
                     )
 
+        _debug.pipeline(
+            "ec_sales_lines_built",
+            report=report,
+            partner_lines=len(lines),
+            total_line=bool(lines),
+        )
         # Report total line.
         if lines:
             lines.append(
@@ -114,7 +130,7 @@ class AccountEcSalesReportHandler(models.AbstractModel):
             ],
         }
 
-    @dbg.timed
+    @_debug.perf.timed
     def _custom_options_initializer(self, report, options, previous_options):
         """Add the invoice lines search domain that is specific to the country: typically the taxes tag_ids
         relative to the country for the triangular, sale of goods or services.
@@ -172,8 +188,15 @@ class AccountEcSalesReportHandler(models.AbstractModel):
         report._init_options_journals(options, previous_options=previous_options)
 
         options["enable_export_buttons_for_common_vat_in_branches"] = True
+        _debug.pipeline(
+            "ec_sales_options_built",
+            report=report,
+            goods_taxes=len(options["sales_report_taxes"]["goods"]),
+            ec_countries=len(country_ids),
+            other_countries=len(other_country_ids),
+        )
 
-    @dbg.timed
+    @_debug.perf.timed
     def _init_core_custom_options(self, report, options, previous_options):
         """Add the invoice lines search domain that is common to all countries.
 
@@ -200,13 +223,20 @@ class AccountEcSalesReportHandler(models.AbstractModel):
             options["ec_tax_filter_selection"] = filtered_ec_tax_filter_selection
         else:
             options["ec_tax_filter_selection"] = ec_tax_filter_selection
+        _debug.logic(
+            "ec_tax_filter_resolved",
+            report=report,
+            previous_items=len(ec_tax_filter_selection),
+            kept_items=len(options["ec_tax_filter_selection"]),
+            from_previous="ec_tax_filter_selection" in previous_options,
+        )
         options["custom_display_config"] = {
             "components": {
                 "AccountReportFilters": "SalesReportFilters",
             },
         }
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_report_line_partner(
         self, report, options, partner, partner_values, markup=""
     ):
@@ -236,7 +266,7 @@ class AccountEcSalesReportHandler(models.AbstractModel):
             "caret_options": "ec_sales",
         }
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_report_line_total(self, report, options, totals_by_column_group):
         """Convert the total values to a report line.
 
@@ -263,7 +293,7 @@ class AccountEcSalesReportHandler(models.AbstractModel):
             "columns": column_values,
         }
 
-    @dbg.timed
+    @_debug.perf.timed
     def _query_partners(self, report, options, warnings=None):
         """Execute the queries, perform all the computation, then return a list of tuple
         (partner, fetched_values) sorted by the res.partner model _order:
@@ -368,6 +398,15 @@ class AccountEcSalesReportHandler(models.AbstractModel):
         dictfetchall = self.env.cr.dictfetchall()
         for res in dictfetchall:
             update_partner_sums(res)
+        if _debug.pipeline.enabled:
+            _debug.pipeline(
+                "ec_partner_sums_grouped",
+                report=report,
+                rows=len(dictfetchall),
+                partners=len(groupby_partners),
+                distinct_vats=len(vat_set),
+                warnings=sorted(warnings) if warnings is not None else None,
+            )
 
         if groupby_partners:
             partners = (
@@ -382,7 +421,7 @@ class AccountEcSalesReportHandler(models.AbstractModel):
             (partner, groupby_partners[partner.id]) for partner in partners.sorted()
         ]
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_query_sums(self, report, options) -> SQL:
         """Construct a query retrieving all the aggregated sums to build the report. It includes:
         - sums for all partners.
@@ -412,6 +451,15 @@ class AccountEcSalesReportHandler(models.AbstractModel):
             tax_elem_table_name = self.env["account.account.tag"]._field_to_sql(
                 "account_account_tag", "name"
             )
+        _debug.logic(
+            "ec_tax_element_source",
+            report=report,
+            use_taxes_instead_of_tags=bool(
+                options.get("sales_report_taxes", {}).get("use_taxes_instead_of_tags")
+            ),
+            allowed_ids=len(allowed_ids),
+            service_ids=len(service_ids),
+        )
 
         for (
             column_group_key,
@@ -490,7 +538,7 @@ class AccountEcSalesReportHandler(models.AbstractModel):
         }
 
     @api.model
-    @dbg.timed
+    @_debug.perf.timed
     def _get_ec_country_codes(self, options):
         """Return the country codes of the EC countries.
 
@@ -539,9 +587,15 @@ class AccountEcSalesReportHandler(models.AbstractModel):
 
         return rslt
 
-    @dbg.timed
+    @_debug.perf.timed
     def get_warning_act_window(self, options, params):
         act_window = {"type": "ir.actions.act_window", "context": {}}
+        _debug.logic(
+            "ec_warning_action",
+            report=options.get("report_id"),
+            warning_type=params["type"],
+            target_model=params.get("model"),
+        )
         if params["type"] == "no_vat":
             aml_domains = [
                 ("partner_id.vat", "=", None),
@@ -591,6 +645,12 @@ class AccountEcSalesReportHandler(models.AbstractModel):
             ]
         )
 
+        _debug.pipeline(
+            "ec_warning_amls_found",
+            report=options.get("report_id"),
+            amls=amls,
+            tax_or_tag_field=tax_or_tag_field,
+        )
         if params["model"] == "move":
             act_window.update(
                 {

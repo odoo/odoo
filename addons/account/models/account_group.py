@@ -1,9 +1,10 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class AccountGroup(models.Model):
@@ -70,13 +71,15 @@ class AccountGroup(models.Model):
         """
         self.env.cr.execute(query, {"ids": list(self.ids)})
         res = self.env.cr.fetchall()
+        _debug.perf.count("overlapping_groups_fetched", rows=len(res))
         if res:
+            _debug.logic("group_overlap_rejected", groups=self, overlaps=len(res))
             raise ValidationError(
                 _("Account Groups with the same granularity can't overlap"),
             )
 
     @api.constrains("parent_id")
-    @dbg.timed
+    @_debug.perf.timed
     def _check_parent_not_circular(self):
         if self._has_cycle():
             raise ValidationError(
@@ -84,29 +87,30 @@ class AccountGroup(models.Model):
             )
 
     @api.model_create_multi
-    @dbg.timed
+    @_debug.perf.timed
     def create(self, vals_list):
-        dbg.lifecycle.debug(
-            "create %s: %d vals, keys=%s",
-            self._name,
-            len(vals_list),
-            dbg.vals_keys(vals_list),
-        )
+        if _debug.lifecycle.enabled:
+            _debug.lifecycle(
+                "create",
+                model=self._name,
+                count=len(vals_list),
+                fields=sorted({key for vals in vals_list for key in vals}),
+            )
         groups = super().create([self._sanitize_vals(vals) for vals in vals_list])
         groups._adapt_parent_account_group()
         return groups
 
-    @dbg.timed
+    @_debug.perf.timed
     def write(self, vals):
-        dbg.lifecycle.debug("write on %s: keys=%s", dbg.rec(self), dbg.keys(vals))
+        _debug.lifecycle("write", records=self, fields=sorted(vals))
         res = super().write(self._sanitize_vals(vals))
         if "code_prefix_start" in vals or "code_prefix_end" in vals:
             self._adapt_parent_account_group()
         return res
 
-    @dbg.timed
+    @_debug.perf.timed
     def unlink(self):
-        dbg.lifecycle.debug("unlink %s", dbg.rec(self))
+        _debug.lifecycle("unlink", unlink=self)
         children = self.env["account.group"].search(
             [("parent_id", "in", self.ids)],
         )
@@ -143,7 +147,7 @@ class AccountGroup(models.Model):
             )
 
     @api.model
-    @dbg.timed
+    @_debug.perf.timed
     def _search_display_name(self, operator, value):
         if operator in Domain.NEGATIVE_OPERATORS:
             return NotImplemented
@@ -161,12 +165,21 @@ class AccountGroup(models.Model):
             ]
         return [("name", operator, value)]
 
-    @dbg.timed
+    @_debug.perf.timed
     def _adapt_parent_account_group(self, company=None):
+        if _debug.logic.enabled and self.env.context.get("delay_account_group_sync"):
+            _debug.logic("parent_sync_skipped", reason="delayed", groups=self)
         if self.env.context.get("delay_account_group_sync"):
             return
 
         company_ids = company.ids if company else self.company_id.ids
+        _debug.logic(
+            "parent_sync_scope",
+            groups=self,
+            company=company,
+            companies=len(company_ids),
+            explicit_company=bool(company),
+        )
         if not company_ids:
             return
 
@@ -205,6 +218,7 @@ class AccountGroup(models.Model):
         self.env.cr.execute(query)
 
         updated_rows = self.env.cr.fetchall()
+        _debug.perf.count("group_parents_relinked", rows=len(updated_rows))
         if updated_rows:
             self.invalidate_model(["parent_id"])
 

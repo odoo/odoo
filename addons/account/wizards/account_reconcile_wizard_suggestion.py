@@ -1,7 +1,8 @@
 from odoo import _, api, models
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class AccountReconcileWizard(models.TransientModel):
@@ -22,7 +23,7 @@ class AccountReconcileWizard(models.TransientModel):
             )
 
     @api.depends("company_id", "move_line_ids.partner_id", "amount")
-    @dbg.timed
+    @_debug.perf.timed
     def _compute_reco_model_autocomplete_ids(self):
         for wizard in self:
             domain = [
@@ -74,6 +75,11 @@ class AccountReconcileWizard(models.TransientModel):
                     )
                 )
             ]
+            _debug.pipeline(
+                "reco_model_suggestions_found",
+                recwizard=wizard,
+                models=len(reco_model_ids),
+            )
             wizard.reco_model_autocomplete_ids = self.env[
                 "account.reconcile.model"
             ].browse(reco_model_ids)

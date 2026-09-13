@@ -1,6 +1,7 @@
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class AccountReturnGenericPaymentWizard(models.TransientModel):
@@ -35,7 +36,7 @@ class AccountReturnGenericPaymentWizard(models.TransientModel):
     )
     return_id = fields.Many2one(comodel_name="account.return", required=True)
 
-    @dbg.timed
+    @_debug.perf.timed
     def _generate_communication(self):
         return False
 
@@ -55,15 +56,15 @@ class AccountReturnGenericPaymentWizard(models.TransientModel):
         for wizard in self:
             wizard.communication = wizard._generate_communication()
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_mark_as_paid(self):
-        dbg.lifecycle.debug("action_mark_as_paid on %s", dbg.rec(self))
+        _debug.lifecycle("action_mark_as_paid", records=self)
         self.check_singleton()
         return self.return_id._action_finalize_payment()
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_send_email_instructions(self):
-        dbg.lifecycle.debug("action_send_email_instructions on %s", dbg.rec(self))
+        _debug.lifecycle("action_send_email_instructions", records=self)
         self.check_singleton()
         template = self.env.ref(
             "account.email_template_generic_tax_instructions",

@@ -3,9 +3,10 @@ from collections import defaultdict
 from odoo import _, api, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class AccountTaxReportHandler(models.AbstractModel):
@@ -13,7 +14,7 @@ class AccountTaxReportHandler(models.AbstractModel):
     _inherit = ["account.report.custom.handler"]
     _description = "Account Report Handler for Tax Reports"
 
-    @dbg.timed
+    @_debug.perf.timed
     def _customize_warnings(
         self, report, options, all_column_groups_expression_totals, warnings
     ):
@@ -50,6 +51,12 @@ class AccountTaxReportHandler(models.AbstractModel):
         )
         if rows:
             warnings["account.tax_report_warning_inactive_tags"] = {}
+        _debug.logic(
+            "tax_warnings_resolved",
+            report=report,
+            draft_in_period="account.common_warning_draft_in_period" in warnings,
+            inactive_tags=bool(rows),
+        )
 
     def _get_domain_amls_with_archived_tags(self, options):
         domain = [
@@ -61,9 +68,9 @@ class AccountTaxReportHandler(models.AbstractModel):
             domain.append(("date", "<=", options["date"]["date_to"]))
         return domain
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_view_amls_with_archived_tags(self, options, params=None):
-        dbg.lifecycle.debug("action_view_amls_with_archived_tags on %s", dbg.rec(self))
+        _debug.lifecycle("action_view_amls_with_archived_tags", records=self)
         return {
             "name": _("Journal items with archived tax tags"),
             "type": "ir.actions.act_window",
@@ -101,7 +108,7 @@ class AccountGenericTaxReportHandler(models.AbstractModel):
             ]
         }
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_dynamic_lines(self, report, options, grouping, warnings=None):
         """Compute the report lines for the generic tax report.
 
@@ -132,6 +139,14 @@ class AccountGenericTaxReportHandler(models.AbstractModel):
         else:
             groupby_fields = [("src_tax", "type_tax_use"), ("src_tax", "id")]
             comodels = [None, "account.tax"]
+        _debug.logic(
+            "tax_grouping_chosen",
+            report=report,
+            grouping=grouping,
+            levels=len(groupby_fields),
+            tax_details_engine=grouping in ("tax_account", "account_tax"),
+            column_groups=len(options_by_column_group),
+        )
 
         if grouping in ("tax_account", "account_tax"):
             tax_amount_hierarchy = self._read_generic_tax_report_amounts(
@@ -155,6 +170,13 @@ class AccountGenericTaxReportHandler(models.AbstractModel):
                         update_record_ids_gb_recursively(v["children"], level=level + 1)
 
         update_record_ids_gb_recursively(tax_amount_hierarchy)
+        if _debug.pipeline.enabled:
+            _debug.pipeline(
+                "tax_hierarchy_read",
+                report=report,
+                grouping=grouping,
+                records_per_level=[len(ids) for ids in record_ids_gb],
+            )
 
         sorting_map_list = []
         for i, comodel in enumerate(comodels):
@@ -193,6 +215,12 @@ class AccountGenericTaxReportHandler(models.AbstractModel):
             tax_amount_hierarchy,
             warnings=warnings,
         )
+        _debug.pipeline(
+            "tax_dynamic_lines_built",
+            report=report,
+            grouping=grouping,
+            lines=len(lines),
+        )
         return lines
 
     # -------------------------------------------------------------------------
@@ -200,7 +228,7 @@ class AccountGenericTaxReportHandler(models.AbstractModel):
     # -------------------------------------------------------------------------
 
     @api.model
-    @dbg.timed
+    @_debug.perf.timed
     def _read_generic_tax_report_amounts_no_tax_details(
         self, report, options, options_by_column_group
     ):
@@ -239,6 +267,17 @@ class AccountGenericTaxReportHandler(models.AbstractModel):
             group_of_taxes_info[row["id"]] = row
             for child_id in row["child_tax_ids"]:
                 child_to_group_of_taxes[child_id] = row["id"]
+        _debug.perf.count("groups_of_taxes_rows_fetched", rows=self.env.cr.rowcount)
+        if _debug.pipeline.enabled:
+            _debug.pipeline(
+                "groups_of_taxes_fetched",
+                report=report,
+                groups=len(group_of_taxes_info),
+                groups_to_expand=sum(
+                    1 for info in group_of_taxes_info.values() if info["to_expand"]
+                ),
+                child_taxes=len(child_to_group_of_taxes),
+            )
 
         results = defaultdict(
             lambda: {  # key: type_tax_use
@@ -378,9 +417,31 @@ class AccountGenericTaxReportHandler(models.AbstractModel):
                         "base_amount"
                     ][column_group_key] += row["base_amount"]
 
+            _debug.perf.count(
+                "base_amount_rows_fetched",
+                column_group=column_group_key,
+                rows=self.env.cr.rowcount,
+            )
+            _debug.pipeline(
+                "base_amounts_read",
+                report=report,
+                column_group=column_group_key,
+                tax_types=len(results),
+                groups_with_extra_base=len(group_of_taxes_with_extra_base_amount),
+            )
             # Fetch the tax amounts.
 
             select_deductible = join_deductible = group_by_deductible = SQL()
+            _debug.logic(
+                "tax_deductibility_columns",
+                report=report,
+                column_group=column_group_key,
+                enabled=bool(
+                    column_group_options.get(
+                        "account_journal_report_tax_deductibility_columns"
+                    )
+                ),
+            )
             if column_group_options.get(
                 "account_journal_report_tax_deductibility_columns"
             ):
@@ -473,9 +534,22 @@ class AccountGenericTaxReportHandler(models.AbstractModel):
                             column_group_key
                         ] += row["tax_amount"] * row["trl_factor"]
 
+            _debug.perf.count(
+                "tax_amount_rows_fetched",
+                column_group=column_group_key,
+                rows=self.env.cr.rowcount,
+            )
+
+        if _debug.pipeline.enabled:
+            _debug.pipeline(
+                "tax_amounts_read",
+                report=report,
+                tax_types=sorted(str(key) for key in results),
+                taxes=sum(len(node["children"]) for node in results.values()),
+            )
         return results
 
-    @dbg.timed
+    @_debug.perf.timed
     def _read_generic_tax_report_amounts(
         self, report, options_by_column_group, groupby_fields
     ):
@@ -531,6 +605,13 @@ class AccountGenericTaxReportHandler(models.AbstractModel):
             for group in group_of_taxes:
                 if set(group.children_tax_ids.mapped("type_tax_use")) != {"none"}:
                     group_of_taxes_to_expand.add(group.id)
+        _debug.logic(
+            "tax_details_groupby_resolved",
+            report=report,
+            groupby=groupby_fields,
+            fetch_group_of_taxes=fetch_group_of_taxes,
+            groups_to_expand=len(group_of_taxes_to_expand),
+        )
 
         res = {}
         for column_group_key, options in options_by_column_group.items():
@@ -613,9 +694,22 @@ class AccountGenericTaxReportHandler(models.AbstractModel):
                     node = sub_node["children"]
                     row_keys.add(cumulated_row_key_tuple)
 
+            _debug.perf.count(
+                "tax_detail_rows_fetched",
+                column_group=column_group_key,
+                rows=self.env.cr.rowcount,
+            )
+            _debug.pipeline(
+                "tax_details_rows_read",
+                report=report,
+                column_group=column_group_key,
+                distinct_row_keys=len(row_keys),
+                top_level_nodes=len(res),
+            )
+
         return res
 
-    @dbg.timed
+    @_debug.perf.timed
     def _update_lines_recursively(
         self,
         report,
@@ -738,8 +832,16 @@ class AccountGenericTaxReportHandler(models.AbstractModel):
                 parent_line_id=report_line["id"],
                 warnings=warnings,
             )
+        if _debug.pipeline.enabled and index == 0:
+            _debug.pipeline(
+                "tax_lines_populated",
+                report=report,
+                levels=len(groupby_fields),
+                top_level_keys=len(sorted_keys),
+                lines=len(lines),
+            )
 
-    @dbg.timed
+    @_debug.perf.timed
     def _prepare_report_line(
         self,
         report,
@@ -812,7 +914,7 @@ class AccountGenericTaxReportHandler(models.AbstractModel):
 
         return report_line
 
-    @dbg.timed
+    @_debug.perf.timed
     def _check_line_consistency(self, report, options, report_line, tax, warnings=None):
         tax_applied = (
             tax.amount
@@ -858,6 +960,13 @@ class AccountGenericTaxReportHandler(models.AbstractModel):
 
                 # Error is bigger than 0.1%. We can not ignore it.
                 if error > 0.001:
+                    _debug.logic(
+                        "tax_line_inconsistent",
+                        report=report,
+                        tax=tax,
+                        column_group=column_group_key,
+                        error=error,
+                    )
                     report_line["alert"] = True
                     warnings["account.tax_report_warning_lines_consistency"] = {
                         "alert_type": "danger"
@@ -869,7 +978,7 @@ class AccountGenericTaxReportHandler(models.AbstractModel):
     # BUTTONS & CARET OPTIONS
     # -------------------------------------------------------------------------
 
-    @dbg.timed
+    @_debug.perf.timed
     def caret_option_audit_tax(self, options, params):
         report = self.env["account.report"].browse(options["report_id"])
         model, tax_id = report._get_model_info_from_id(params["line_id"])
@@ -890,6 +999,12 @@ class AccountGenericTaxReportHandler(models.AbstractModel):
                 ("tax_ids.type_tax_use", "=", tax.type_tax_use),
                 ("tax_repartition_line_id", "!=", False),
             ]
+        _debug.logic(
+            "tax_audit_scope",
+            report=report,
+            tax=tax,
+            group_of_taxes=tax.amount_type == "group",
+        )
 
         domain = Domain(
             report._get_domain_options(options, "strict_range")

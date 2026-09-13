@@ -5,10 +5,11 @@ from markupsafe import Markup
 
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
+from odoo.libs.debug_log import DebugLog
 from odoo.libs.numbers import float_compare
 from odoo.tools import date_utils, format_date, formatLang
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class AccountPaymentTerm(models.Model):
@@ -176,7 +177,7 @@ class AccountPaymentTerm(models.Model):
         "discount_days",
     )
     @api.depends_context("lang")
-    @dbg.timed
+    @_debug.perf.timed
     def _compute_example_previews(self):
         for record in self:
             currency = record.currency_id
@@ -202,6 +203,12 @@ class AccountPaymentTerm(models.Model):
                 }
 
             if not record.line_ids:
+                _debug.logic(
+                    "example_preview_skipped",
+                    term=record,
+                    reason="no_lines",
+                    early_discount=record.early_discount,
+                )
                 continue
 
             terms = record._compute_terms(
@@ -234,6 +241,12 @@ class AccountPaymentTerm(models.Model):
                     }
                 )
             record.example_preview = example_preview
+            _debug.pipeline(
+                "example_preview_built",
+                term=record,
+                early_discount=record.early_discount,
+                installments=len(terms.get("line_ids") or ()),
+            )
 
     @api.model
     def _get_amount_by_date(self, terms):
@@ -249,7 +262,7 @@ class AccountPaymentTerm(models.Model):
     @api.constrains(
         "line_ids", "early_discount", "discount_percentage", "discount_days"
     )
-    @dbg.timed
+    @_debug.perf.timed
     def _check_lines(self):
         precision = self._get_percent_precision()
         for terms in self:
@@ -257,22 +270,35 @@ class AccountPaymentTerm(models.Model):
                 line.value_amount for line in terms.line_ids if line.value == "percent"
             )
             if float_compare(total_percent, 100.0, precision_digits=precision) != 0:
+                _debug.logic(
+                    "term_rejected",
+                    term=terms,
+                    reason="percent_total",
+                    total_percent=total_percent,
+                )
                 raise ValidationError(
                     _(
                         "The Payment Term must have at least one percent line and the sum of the percent must be 100%."
                     )
                 )
             if len(terms.line_ids) > 1 and terms.early_discount:
+                _debug.logic(
+                    "term_rejected", term=terms, reason="early_discount_multi_line"
+                )
                 raise ValidationError(
                     _(
                         "The Early Payment Discount functionality can only be used with payment terms using a single 100% line. "
                     )
                 )
             if terms.early_discount and terms.discount_percentage <= 0.0:
+                _debug.logic(
+                    "term_rejected", term=terms, reason="early_discount_percentage"
+                )
                 raise ValidationError(
                     _("The Early Payment Discount must be strictly positive.")
                 )
             if terms.early_discount and terms.discount_days <= 0:
+                _debug.logic("term_rejected", term=terms, reason="early_discount_days")
                 raise ValidationError(
                     _("The Early Payment Discount days must be strictly positive.")
                 )
@@ -298,7 +324,7 @@ class AccountPaymentTerm(models.Model):
             company_currency.round(foreign_amount / rate) if rate else 0.0
         )
 
-    @dbg.timed
+    @_debug.perf.timed
     def _compute_terms(
         self,
         *,
@@ -377,23 +403,22 @@ class AccountPaymentTerm(models.Model):
             residual_amount_currency -= term_vals["foreign_amount"]
             pay_term["line_ids"].append(term_vals)
 
-        dbg.logic.debug(
-            "[term:%s] _compute_terms ref=%s total=%s discount=%s%% until %s -> %s",
-            self.id,
-            date_ref,
-            total_amount_currency,
-            pay_term["discount_percentage"],
-            pay_term["discount_date"],
-            dbg.lazy(
-                lambda: [(t["date"], t["foreign_amount"]) for t in pay_term["line_ids"]]
-            ),
-        )
+        if _debug.logic.enabled:
+            _debug.logic(
+                "_compute_terms",
+                term=self,
+                ref=date_ref,
+                total=total_amount_currency,
+                discount=pay_term["discount_percentage"],
+                discount_date=pay_term["discount_date"],
+                terms=[(t["date"], t["foreign_amount"]) for t in pay_term["line_ids"]],
+            )
         return pay_term
 
     @api.ondelete(at_uninstall=False)
-    @dbg.timed
+    @_debug.perf.timed
     def _unlink_except_referenced_terms(self):
-        dbg.lifecycle.debug("_unlink_except_referenced_terms on %s", dbg.rec(self))
+        _debug.lifecycle("_unlink_except_referenced_terms", records=self)
         if self.env["account.move"].search_count(
             [("invoice_payment_term_id", "in", self.ids)], limit=1
         ):
@@ -409,9 +434,9 @@ class AccountPaymentTerm(models.Model):
             return False
         return date_ref + relativedelta(days=self.discount_days)
 
-    @dbg.timed
+    @_debug.perf.timed
     def copy_data(self, default=None):
-        dbg.lifecycle.debug("copy_data on %s", dbg.rec(self))
+        _debug.lifecycle("copy_data", records=self)
         default = dict(default or {})
         vals_list = super().copy_data(default=default)
         return [
@@ -519,7 +544,7 @@ class AccountPaymentTermLine(models.Model):
         return due_date + relativedelta(days=self.nb_days)
 
     @api.constrains("days_next_month")
-    @dbg.timed
+    @_debug.perf.timed
     def _check_days_next_month(self):
         for record in self:
             if not 0 <= record.days_next_month <= 31:
@@ -533,7 +558,7 @@ class AccountPaymentTermLine(models.Model):
             )
 
     @api.constrains("value", "value_amount", "payment_id")
-    @dbg.timed
+    @_debug.perf.timed
     def _check_percent(self):
         for term_line in self:
             if term_line.value == "percent" and not (

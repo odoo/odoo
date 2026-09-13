@@ -8,14 +8,16 @@ from collections.abc import Collection
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, LazyTranslate, date_utils
 from odoo.tools.misc import format_date
 
-from ..tools import debug_log as dbg
 from odoo.addons.base.models.mixin_catalog import name_uniq_index
 
 _lt = LazyTranslate(__name__)
 _logger = logging.getLogger(__name__)
+
+_debug = DebugLog(__name__)
 
 ACCOUNT_CODES_ENGINE_TAG_ID_PREFIX_REGEX = re.compile(
     r"tag\(((?P<id>\d+)|(?P<ref>\w+\.\w+))\)"
@@ -85,7 +87,7 @@ class AccountReport(models.Model):
     )
 
     @api.constrains("custom_handler_model_id")
-    @dbg.timed
+    @_debug.perf.timed
     def _check_custom_handler_model_id(self):
         for report in self:
             if report.custom_handler_model_id:
@@ -101,18 +103,18 @@ class AccountReport(models.Model):
                         )
                     )
 
-    @dbg.timed
+    @_debug.perf.timed
     def unlink(self):
-        dbg.lifecycle.debug("unlink %s", dbg.rec(self))
+        _debug.lifecycle("unlink", unlink=self)
         for report in self:
             action, menuitem = report._get_existing_menuitem()
             menuitem.unlink()
             action.unlink()
         return super().unlink()
 
-    @dbg.timed
+    @_debug.perf.timed
     def write(self, vals):
-        dbg.lifecycle.debug("write on %s: keys=%s", dbg.rec(self), dbg.keys(vals))
+        _debug.lifecycle("write", records=self, fields=sorted(vals))
         if "active" in vals:
             reports = {r.id: r.name for r in self}
             actions = (
@@ -146,17 +148,24 @@ class AccountReport(models.Model):
                     ),
                 ]
             ).active = vals["active"]
+            _debug.logic(
+                "menus_active_synced",
+                records=self,
+                actions=actions,
+                active=vals.get("active"),
+            )
         return super().write(vals)
 
     @api.model_create_multi
-    @dbg.timed
+    @_debug.perf.timed
     def create(self, vals_list):
-        dbg.lifecycle.debug(
-            "create %s: %d vals, keys=%s",
-            self._name,
-            len(vals_list),
-            dbg.vals_keys(vals_list),
-        )
+        if _debug.lifecycle.enabled:
+            _debug.lifecycle(
+                "create",
+                model=self._name,
+                count=len(vals_list),
+                fields=sorted({key for vals in vals_list for key in vals}),
+            )
         reports = super().create(vals_list)
 
         reports_by_impacted_field = {}
@@ -172,6 +181,11 @@ class AccountReport(models.Model):
         ):
             asr_section_reports = reports.filtered_domain(
                 self._get_domain_asr_sections(root_annual_statements)
+            )
+            _debug.logic(
+                "asr_sections_detected",
+                reports=reports,
+                asr_section_reports=asr_section_reports,
             )
 
             if asr_section_reports:
@@ -189,6 +203,11 @@ class AccountReport(models.Model):
                             name, self.env["account.report"]
                         )
                         if reports_to_recompute:
+                            _debug.logic(
+                                "asr_filter_recomputed",
+                                field=name,
+                                reports=reports_to_recompute,
+                            )
                             self.env.add_to_compute(field, reports_to_recompute)
                             reports_to_recompute._recompute_field(field)
 
@@ -206,7 +225,7 @@ class AccountReport(models.Model):
             ),  # the report has to be localized
         ]
 
-    @dbg.timed
+    @_debug.perf.timed
     def _link_annual_statements(self, root_annual_statements):
         Report = self.env["account.report"].with_context(active_test=False)
         existing_statements = Report.search(
@@ -235,6 +254,11 @@ class AccountReport(models.Model):
                         ],
                     }
                 )
+                _debug.logic(
+                    "annual_statements_created",
+                    report=asr_section_report,
+                    annual_statements=annual_statements,
+                )
 
             annual_statements.section_report_ids -= asr_section_report.root_report_id
 
@@ -245,6 +269,12 @@ class AccountReport(models.Model):
             else:
                 annual_statements.section_report_ids += asr_section_report
                 asr_section_report.sequence = asr_section_report.root_report_id.sequence
+            _debug.logic(
+                "annual_statements_linked",
+                report=asr_section_report,
+                annual_statements=annual_statements,
+                use_sections=asr_section_report.use_sections,
+            )
 
     ####################################################
     # CRON
@@ -347,7 +377,7 @@ class AccountReport(models.Model):
     # QUERIES
     ####################################################
 
-    @dbg.timed
+    @_debug.perf.timed
     def _create_aml_shadowing_query_for_budget(self, options):
         _stored_fields, fields_to_insert = self.env[
             "account.move.line"
@@ -425,6 +455,13 @@ class AccountReport(models.Model):
                 )
             )
 
+        _debug.logic(
+            "budget_shadowing_built",
+            report=self,
+            budgets=len(available_budget_ids),
+            show_all_accounts=bool(options.get("show_all_accounts")),
+            queries=len(queries),
+        )
         return SQL("(%s)", SQL(" UNION ALL ").join(queries))
 
     ####################################################
@@ -445,7 +482,7 @@ class AccountReport(models.Model):
             or None
         )
 
-    @dbg.timed
+    @_debug.perf.timed
     def _add_common_warnings(self, options, warnings):
         # Display a warning if we're displaying only the data of the current company, but it's also part of a tax unit
         if options.get("available_tax_units") and options["tax_unit"] == "company_only":
@@ -481,9 +518,20 @@ class AccountReport(models.Model):
                 )
             if self.env["account.move"].search_count(domain, limit=1):
                 warnings["account.common_warning_draft_in_period"] = {}
+        if _debug.logic.enabled:
+            _debug.logic(
+                "common_warnings_checked",
+                report=self,
+                tax_unit=options.get("tax_unit"),
+                draft_check=bool(
+                    options.get("date") and options.get("all_entries") is not None
+                ),
+                warnings=sorted(warnings),
+            )
 
     def _add_account_status_on_lines(self, lines, options):
         if not options["audit"]["id"]:
+            _debug.logic("account_status_skipped", report=self, reason="no_audit")
             return lines
 
         accounts_to_search = set()
@@ -498,6 +546,11 @@ class AccountReport(models.Model):
                 ("account_id", "in", tuple(accounts_to_search)),
             ],
             fields=["id", "account_id", "audit_id", "status"],
+        )
+        _debug.perf.count(
+            "account_statuses_fetched",
+            rows=len(account_statuses),
+            accounts=len(accounts_to_search),
         )
 
         account_statuses = {
@@ -522,6 +575,9 @@ class AccountReport(models.Model):
             if isinstance(markup, dict) and markup.get("groupby") == "account_code":
                 account_codes.append(line["name"])
         if not account_codes:
+            _debug.logic(
+                "consolidation_names_skipped", report=self, reason="no_code_lines"
+            )
             return
 
         account_code_to_account_name_dict = {
@@ -535,6 +591,11 @@ class AccountReport(models.Model):
                 ]
             )
         }
+        _debug.perf.count(
+            "consolidation_accounts_fetched",
+            rows=len(account_code_to_account_name_dict),
+            codes=len(account_codes),
+        )
         for line in lines:
             markup = self._get_markup(line["id"])
             if isinstance(markup, dict) and markup.get("groupby") == "account_code":
@@ -543,7 +604,7 @@ class AccountReport(models.Model):
                 if account_code and account_name:
                     line["name"] = f"{account_code} {account_name}"
 
-    @dbg.timed
+    @_debug.perf.timed
     def _create_carryover_external_values(self, options):
         """Generates the account.report.external.value objects corresponding to this report's carryover under the provided options.
 
@@ -582,6 +643,14 @@ class AccountReport(models.Model):
             expression: expression_totals[expression]["value"]
             for expression in carryover_expressions
         }
+        _debug.pipeline(
+            "carryover_totals_computed",
+            report=self,
+            carryover_expressions=carryover_expressions,
+            expressions_to_evaluate=len(expressions_to_evaluate),
+            companies=len(options["companies"]),
+            split_per_company=len(options["companies"]) > 1,
+        )
 
         if len(options["companies"]) == 1:
             company = self.env["res.company"].browse(
@@ -622,6 +691,12 @@ class AccountReport(models.Model):
 
             # Adjust multicompany amounts on main company
             main_company = self._get_sender_company_for_export(options)
+            _debug.logic(
+                "carryover_adjusted_on_main",
+                report=self,
+                main_company=main_company,
+                expressions=carryover_expressions,
+            )
             for expr in carryover_expressions:
                 difference = (
                     carryover_values[expr] - multi_company_carryover_values_sum[expr]
@@ -634,7 +709,7 @@ class AccountReport(models.Model):
                 )
 
     @api.model
-    @dbg.timed
+    @_debug.perf.timed
     def _create_default_external_values(
         self, date_from, date_to, is_tax_report=False, company=None
     ):
@@ -648,6 +723,12 @@ class AccountReport(models.Model):
         """
         if date_from >= date_to:
             # This can happen when setting the lock date back in the past
+            _debug.logic(
+                "default_values_skipped",
+                reason="empty_period",
+                date_from=date_from,
+                date_to=date_to,
+            )
             return
 
         options_dict = {}
@@ -685,6 +766,14 @@ class AccountReport(models.Model):
 
                 if report._is_available_for(options_dict[report]):
                     default_expr_by_report[report].append(expr)
+        _debug.pipeline(
+            "default_expressions_grouped",
+            company=company,
+            is_tax_report=is_tax_report,
+            default_expressions=len(default_expressions),
+            options_built=len(options_dict),
+            reports=len(default_expr_by_report),
+        )
 
         external_values_create_vals = []
         for report, report_default_expressions in default_expr_by_report.items():
@@ -718,6 +807,13 @@ class AccountReport(models.Model):
                     expressions_to_compute[default_expression] = (
                         target_external_expression.id
                     )
+            _debug.logic(
+                "default_values_to_compute",
+                report=report,
+                to_compute=len(expressions_to_compute),
+                already_set=len(report_default_expressions)
+                - len(expressions_to_compute),
+            )
 
             # Evaluate the expressions for the report to fetch the value of the default expression
             # These have to be computed for each fiscal position
@@ -745,9 +841,14 @@ class AccountReport(models.Model):
                     }
                 )
 
+        _debug.pipeline(
+            "default_values_prepared",
+            company=company,
+            count=len(external_values_create_vals),
+        )
         self.env["account.report.external.value"].create(external_values_create_vals)
 
-    @dbg.timed
+    @_debug.perf.timed
     def _create_carryover_for_company(
         self, options, company, carryover_per_expression, label=None
     ):
@@ -777,7 +878,7 @@ class AccountReport(models.Model):
 
         self.env["account.report.external.value"].create(external_values_create_vals)
 
-    @dbg.timed
+    @_debug.perf.timed
     def get_report_information(self, options):
         """Return the dictionary of information consumed by the AccountReport component."""
         self.check_singleton()
@@ -785,11 +886,11 @@ class AccountReport(models.Model):
 
         warnings = {}
         self._init_currency_table(options)
-        with dbg.timer(
-            self.env,
-            "[report:%s] expression totals x%d",
-            self.id,
-            len(self.line_ids.expression_ids),
+        with _debug.perf(
+            "expression_totals",
+            cr=self.env.cr,
+            report=self,
+            expression_ids_count=len(self.line_ids.expression_ids),
         ):
             all_column_groups_expression_totals = (
                 self._compute_expression_totals_for_each_column_group(
@@ -802,18 +903,19 @@ class AccountReport(models.Model):
             all_column_groups_expression_totals
         )
 
-        with dbg.timer(self.env, "[report:%s] _get_lines", self.id):
+        with _debug.perf("_get_lines", cr=self.env.cr, report=self):
             lines = self._get_lines(
                 options,
                 all_column_groups_expression_totals=all_column_groups_expression_totals,
                 warnings=warnings,
             )
-        dbg.pipeline.debug(
-            "[report:%s] get_report_information: %d line(s), warnings=%s",
-            self.id,
-            len(lines),
-            dbg.keys(warnings),
-        )
+        if _debug.pipeline.enabled:
+            _debug.pipeline(
+                "get_report_information",
+                report=self,
+                lines_count=len(lines),
+                warnings=sorted(warnings),
+            )
         return {
             "caret_options": self._get_caret_options(),
             "column_headers_render_data": self._get_column_headers_render_data(options),
@@ -838,7 +940,7 @@ class AccountReport(models.Model):
         """
         return self.get_report_information(options)
 
-    @dbg.timed
+    @_debug.perf.timed
     def _is_available_for(self, options):
         """Called on report variants to know whether they are available for the provided options or not, computed for their root report,
         computing their availability_condition field.
@@ -887,6 +989,13 @@ class AccountReport(models.Model):
                 lambda r: r.chart_template in chart_templates
             )
 
+        _debug.logic(
+            "availability_resolved",
+            reports=self,
+            available=reports,
+            by_country=reports_by_country,
+            by_coa=reports_by_coa,
+        )
         return reports
 
     def _format_lines_for_display(self, lines, options):
@@ -923,7 +1032,7 @@ class AccountReport(models.Model):
             domain += [("company_id", "=", company_id)]
         return domain
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_unallocated_earnings_lines(self, options, date_scope, auditable=False):
         def get_column_group_result(query_options, date_scope):
             query = self._get_report_query(
@@ -963,11 +1072,17 @@ class AccountReport(models.Model):
             )
 
         if not self.custom_handler_model_id:
+            _debug.logic("unallocated_earnings_no_handler", report=self)
             return []
         if (
             options.get("filter_search_bar")
             and options.get("filter_search_bar") not in str(UNDISTR_LINE_NAME).lower()
         ):
+            _debug.logic(
+                "unallocated_earnings_search_mismatch",
+                report=self,
+                filter_search_bar=options.get("filter_search_bar"),
+            )
             return []
 
         unallocated_earnings_lines = defaultdict(dict)
@@ -989,6 +1104,11 @@ class AccountReport(models.Model):
                 },
                 date_scope,
             )
+            _debug.perf.count(
+                "unallocated_earnings_rows",
+                rows=len(data),
+                column_group_key=column_group_key,
+            )
 
             for company_line in data:
                 line_id = self._get_generic_line_id(
@@ -999,6 +1119,14 @@ class AccountReport(models.Model):
                 company_to_line_id[company_line["company_id"]] = line_id
                 unallocated_earnings_lines[column_group_key] |= {line_id: company_line}
 
+        _debug.pipeline(
+            "unallocated_earnings_fetched",
+            report=self,
+            date_scope=date_scope,
+            column_groups=len(unallocated_earnings_lines),
+            companies=len(company_to_line_id),
+            auditable=auditable,
+        )
         return [
             {
                 "id": line_id,
@@ -1033,7 +1161,7 @@ class AccountReport(models.Model):
             for company_id, line_id in company_to_line_id.items()
         ]
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_partner_and_general_ledger_initial_balance_line(
         self, options, parent_line_id, eval_dict, account_currency=None, level_shift=0
     ):
@@ -1079,7 +1207,7 @@ class AccountReport(models.Model):
             "columns": line_columns,
         }
 
-    @dbg.timed
+    @_debug.perf.timed
     def _set_budget_column_comparisons(self, options, line):
         """Set the percentage values in the budget columns."""
         for col_index, col in enumerate(line["columns"]):
@@ -1168,7 +1296,7 @@ class AccountReport(models.Model):
             else column_value,
         }
 
-    @dbg.timed
+    @_debug.perf.timed
     def _create_hierarchy(self, lines, options):
         """Compute the hierarchy based on account groups when the option is activated.
 
@@ -1179,6 +1307,7 @@ class AccountReport(models.Model):
         according to the account.group's and their prefixes.
         """
         if not lines:
+            _debug.logic("hierarchy_skipped", report=self, reason="no_lines")
             return lines
 
         def get_account_group_hierarchy(account):
@@ -1361,6 +1490,13 @@ class AccountReport(models.Model):
             if res_model == "account.account":
                 account_ids.append(model_id)
         self.env["account.account"].browse(account_ids).fetch(["group_id"])
+        _debug.pipeline(
+            "hierarchy_input",
+            report=self,
+            lines=len(lines),
+            account_lines=len(account_ids),
+        )
+        hierarchy_segments = 1  # debuglog
 
         new_lines, total_lines = [], []
 
@@ -1439,14 +1575,22 @@ class AccountReport(models.Model):
                 root_account_groups = self.env["account.group"]
                 account_groups = self.env["account.group"]
                 hierarchy = create_hierarchy_dict()
+                hierarchy_segments += 1  # debuglog
 
         render_lines(
             root_account_groups, current_level, root_line_id, skip_no_group=False
         )
 
+        _debug.pipeline(
+            "hierarchy_built",
+            report=self,
+            segments=hierarchy_segments,
+            new_lines=len(new_lines),
+            total_lines=len(total_lines),
+        )
         return new_lines + total_lines
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_annotations_domain_date_from(self, options):
         if (
             options["date"]["filter"] in {"today", "custom"}
@@ -1466,6 +1610,11 @@ class AccountReport(models.Model):
                 field_names=["date_from"],
             )
             if fiscal_year:
+                _debug.logic(
+                    "date_from_fiscal_year",
+                    report=self,
+                    fiscal_year=fiscal_year,
+                )
                 return datetime.datetime.combine(
                     fiscal_year.date_from, datetime.time.min
                 )
@@ -1474,6 +1623,11 @@ class AccountReport(models.Model):
                 datetime.datetime.strptime(options["date"]["date_to"], "%Y-%m-%d"),
                 day=self.env.company.fiscalyear_last_day,
                 month=int(self.env.company.fiscalyear_last_month),
+            )
+            _debug.logic(
+                "date_from_company_fiscal",
+                report=self,
+                date_from=period_date_from,
             )
             return period_date_from
 
@@ -1493,6 +1647,12 @@ class AccountReport(models.Model):
             )
         else:
             period_date_from = date_from
+        _debug.logic(
+            "date_from_period_type",
+            report=self,
+            period_type=options["date"]["period_type"],
+            date_from=period_date_from,
+        )
         return period_date_from
 
     @api.model
@@ -1520,6 +1680,12 @@ class AccountReport(models.Model):
             .browse(aml_id_to_report_lines_map.keys())
             .read(["id", "move_id"])
         }
+        _debug.pipeline(
+            "annotation_chatter_mapped",
+            report=self,
+            lines=len(lines),
+            amls=len(aml_id_to_account_move_id),
+        )
         for aml_id, aml_lines in aml_id_to_report_lines_map.items():
             for line in aml_lines:
                 line["chatter"] = {
@@ -1549,10 +1715,12 @@ class AccountReportLine(models.Model):
         ):
             for line in self:
                 if "account_or_unaff_id" in (line.groupby or ""):
+                    _debug.logic("legacy_groupby_rewritten", report_line=line)
                     line.groupby = line.groupby.replace(
                         "account_or_unaff_id", "account_id"
                     )
                 if "account_or_unaff_id" in (line.user_groupby or ""):
+                    _debug.logic("legacy_user_groupby_rewritten", report_line=line)
                     line.user_groupby = line.user_groupby.replace(
                         "account_or_unaff_id", "account_id"
                     )
@@ -1565,14 +1733,14 @@ class AccountReportLine(models.Model):
             )
 
     @api.constrains("groupby", "user_groupby")
-    @dbg.timed
+    @_debug.perf.timed
     def _check_groupby(self):
         super()._check_groupby()
         for report_line in self:
             report_line.report_id._check_groupby_fields(report_line.user_groupby)
             report_line.report_id._check_groupby_fields(report_line.groupby)
 
-    @dbg.timed
+    @_debug.perf.timed
     def _expand_groupby(
         self,
         line_dict_id,
@@ -1626,6 +1794,18 @@ class AccountReportLine(models.Model):
         if sub_groupby_domain:
             forced_domain = options.get("forced_domain", []) + sub_groupby_domain
             options = {**options, "forced_domain": forced_domain}
+        _debug.logic(
+            "groupby_parsed",
+            report=self.report_id,
+            report_line=self,
+            line_dict_id=line_dict_id,
+            current_groupby=current_groupby,
+            next_groupby=next_groupby,
+            groupby_model=groupby_model,
+            parent_groupbys=parent_groupby_nber,
+            prefix_groups=prefix_groups_count,
+            sub_groupby_domain_len=len(sub_groupby_domain),
+        )
 
         # If the report transmitted custom_unfold_all_batch_data dictionary, use it
         full_sub_groupby_key = (
@@ -1646,6 +1826,16 @@ class AccountReportLine(models.Model):
                     limit=limit + 1 if limit and load_one_more else limit,
                 )
             )
+        _debug.logic(
+            "groupby_totals_source",
+            report_line=self,
+            source="unfold_all_batch"
+            if cached_result is not None
+            else ("test_unfold_all" if options.get("test_unfold_all") else "computed"),
+            offset=offset,
+            limit=limit,
+            load_one_more=load_one_more,
+        )
 
         # Put similar grouping keys from different totals/periods together, so that we don't display multiple
         # lines for the same grouping key
@@ -1785,6 +1975,13 @@ class AccountReportLine(models.Model):
                 )
             group_lines_by_keys[grouping_key] = group_line_dict
 
+        _debug.pipeline(
+            "groupby_lines_built",
+            report_line=self,
+            groups=len(group_lines_by_keys),
+            column_groups=len(all_column_groups_expression_totals),
+            percent_comparison=options.get("column_percent_comparison"),
+        )
         draft_entries = {}  # move state used order to color the line if it's draft
         # Sort grouping keys in the right order and generate line names
         keys_and_names_in_sequence = {}  # Order of this dict will matter
@@ -1850,6 +2047,14 @@ class AccountReportLine(models.Model):
                         keys_and_names_in_sequence[non_relational_key] = str(
                             non_relational_key
                         )
+        _debug.logic(
+            "group_names_strategy",
+            report_line=self,
+            strategy="label_builder"
+            if custom_groupby_name_builder
+            else ("records" if groupby_model else "raw_values"),
+            named=len(keys_and_names_in_sequence),
+        )
 
         # Build result: add a name to the groupby lines and handle totals below section for multi-level groupby
         group_lines = []
@@ -1863,9 +2068,16 @@ class AccountReportLine(models.Model):
         if options.get("hierarchy"):
             group_lines = self.report_id._create_hierarchy(group_lines, options)
 
+        _debug.pipeline(
+            "groupby_expanded",
+            report_line=self,
+            group_lines=len(group_lines),
+            drafts=len(draft_entries),
+            hierarchy=bool(options.get("hierarchy")),
+        )
         return group_lines
 
-    @dbg.timed
+    @_debug.perf.timed
     def _parse_groupby(self, options, groupby_to_expand=None):
         """Retrieves the information needed to handle the groupby feature on the current line.
 
@@ -1920,6 +2132,14 @@ class AccountReportLine(models.Model):
         else:
             groupby_model = None
 
+        _debug.logic(
+            "groupby_parsed",
+            report_line=self,
+            current_groupby=current_groupby,
+            next_groupby=next_groupby,
+            groupby_model=groupby_model,
+            custom=current_groupby in custom_groupby_map,
+        )
         return {
             "current_groupby": current_groupby,
             "next_groupby": next_groupby,
@@ -1943,9 +2163,9 @@ class AccountReportLine(models.Model):
 
         return self.user_groupby
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_reset_custom_groupby(self):
-        dbg.lifecycle.debug("action_reset_custom_groupby on %s", dbg.rec(self))
+        _debug.lifecycle("action_reset_custom_groupby", records=self)
         self.check_singleton()
         self.user_groupby = self.groupby
 
@@ -1953,9 +2173,9 @@ class AccountReportLine(models.Model):
 class AccountReportExpression(models.Model):
     _inherit = "account.report.expression"
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_view_carryover_lines(self, options, column_group_key=None):
-        dbg.lifecycle.debug("action_view_carryover_lines on %s", dbg.rec(self))
+        _debug.lifecycle("action_view_carryover_lines", records=self)
         if column_group_key:
             options = self.report_line_id.report_id._get_column_group_options(
                 options, column_group_key
@@ -1982,26 +2202,27 @@ class AccountReportExternalValue(models.Model):
     _inherit = "account.report.external.value"
 
     @api.model_create_multi
-    @dbg.timed
+    @_debug.perf.timed
     def create(self, vals_list):
-        dbg.lifecycle.debug(
-            "create %s: %d vals, keys=%s",
-            self._name,
-            len(vals_list),
-            dbg.vals_keys(vals_list),
-        )
+        if _debug.lifecycle.enabled:
+            _debug.lifecycle(
+                "create",
+                model=self._name,
+                count=len(vals_list),
+                fields=sorted({key for vals in vals_list for key in vals}),
+            )
         records = super().create(vals_list)
         self._check_lock_date_violation(
             set(self._prepare_vals_to_check_for_lock_date(records))
         )
         return records
 
-    @dbg.timed
+    @_debug.perf.timed
     def write(self, vals):
         # We need to build vals_to_check before the super() call because of the 'target_report_expression_id' field :
         # if the user tries to modify this specific field, it'll potentially change the linked report id, and so he can
         # bypass the lock dates from the original report (if it was a tax report for example)
-        dbg.lifecycle.debug("write on %s: keys=%s", dbg.rec(self), dbg.keys(vals))
+        _debug.lifecycle("write", records=self, fields=sorted(vals))
         vals_to_check = set(self._prepare_vals_to_check_for_lock_date(self))
         res = super().write(vals)
         # Then we add the modified records
@@ -2032,7 +2253,7 @@ class AccountReportExternalValue(models.Model):
                 external_value.company_id,  # company
             )
 
-    @dbg.timed
+    @_debug.perf.timed
     def _check_lock_date_violation(self, vals_to_check):
         """Raise if a company has a lock date after the date we want to create/write the values for.
 

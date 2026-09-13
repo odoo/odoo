@@ -1,6 +1,7 @@
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class AccountMove(models.Model):
@@ -18,7 +19,7 @@ class AccountMove(models.Model):
 
     @api.depends("state", "move_type", "invoice_user_id", "company_id.signing_user")
     @api.depends_context("uid")
-    @dbg.timed
+    @_debug.perf.timed
     def _compute_signing_user(self):
         unsigned = self.filtered(
             lambda move: not move.is_sale_document() or move.state != "posted"
@@ -47,7 +48,7 @@ class AccountMove(models.Model):
         "state", "signing_user", "company_id.sign_invoice", "invoice_pdf_report_id"
     )
     @api.depends_context("uid")
-    @dbg.timed
+    @_debug.perf.timed
     def _compute_signature_area(self):
         is_portal_user = self.env.user.has_group("base.group_portal")
         moves_not_to_sign = self.filtered(

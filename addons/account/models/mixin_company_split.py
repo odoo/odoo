@@ -3,9 +3,10 @@ import json
 
 from odoo import Command, _, models
 from odoo.exceptions import RedirectWarning, UserError
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, Query
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class MixinCompanySplit(models.AbstractModel):
@@ -24,9 +25,9 @@ class MixinCompanySplit(models.AbstractModel):
     def _unmerge_split_sidecars(self, new_record_by_company):
         return
 
-    @dbg.timed
+    @_debug.perf.timed
     def action_unmerge(self):
-        dbg.lifecycle.debug("action_unmerge on %s", dbg.rec(self))
+        _debug.lifecycle("action_unmerge", records=self)
         self._check_action_unmerge_possible()
         self._action_unmerge_get_user_confirmation()
 
@@ -41,11 +42,17 @@ class MixinCompanySplit(models.AbstractModel):
 
         return {"type": "ir.actions.client", "tag": "soft_reload"}
 
-    @dbg.timed
+    @_debug.perf.timed
     def _check_action_unmerge_possible(self):
         self.check_access("write")
 
         if forbidden_companies := (self.sudo().company_ids - self.env.user.company_ids):
+            _debug.logic(
+                "unmerge_rejected",
+                records=self,
+                reason="forbidden_companies",
+                companies=forbidden_companies,
+            )
             raise UserError(
                 _(
                     "You do not have the right to perform this operation as "
@@ -55,6 +62,9 @@ class MixinCompanySplit(models.AbstractModel):
             )
         for record in self:
             if len(record.company_ids) == 1:
+                _debug.logic(
+                    "unmerge_rejected", records=record, reason="single_company"
+                )
                 raise UserError(
                     _(
                         "Account %s cannot be unmerged as it already belongs "
@@ -64,12 +74,9 @@ class MixinCompanySplit(models.AbstractModel):
                     )
                 )
 
-    @dbg.timed
+    @_debug.perf.timed
     def _action_unmerge_get_user_confirmation(self):
-        dbg.lifecycle.debug(
-            "_action_unmerge_get_user_confirmation on %s",
-            dbg.rec(self),
-        )
+        _debug.lifecycle("_action_unmerge_get_user_confirmation", records=self)
         if self.env.context.get("account_unmerge_confirm"):
             return
 
@@ -97,9 +104,9 @@ class MixinCompanySplit(models.AbstractModel):
             },
         )
 
-    @dbg.timed
+    @_debug.perf.timed
     def _action_unmerge(self):
-        dbg.lifecycle.debug("_action_unmerge on %s", dbg.rec(self))
+        _debug.lifecycle("_action_unmerge", records=self)
         self.check_singleton()
 
         self._check_action_unmerge_possible()
@@ -113,12 +120,15 @@ class MixinCompanySplit(models.AbstractModel):
         new_records = self.browse().union(
             *new_record_by_company.values(),
         )
-        dbg.pipeline.debug(
-            "[unmerge] %s base company %s -> %s",
-            dbg.rec(self),
-            base_company.id,
-            dbg.lazy(lambda: {c.id: r.id for c, r in new_record_by_company.items()}),
-        )
+        if _debug.pipeline.enabled:
+            _debug.pipeline(
+                "unmerge",
+                records=self,
+                base_company=base_company,
+                record_by_company={
+                    c.id: r.id for c, r in new_record_by_company.items()
+                },
+            )
 
         self.env.invalidate_all()
         new_id_by_company_id = {
@@ -153,6 +163,7 @@ class MixinCompanySplit(models.AbstractModel):
         elif "company_id" in self.env[model]:
             company_id_field = "company_id"
         else:
+            _debug.logic("unmerge_model_without_company", model=model)
             return None
         with contextlib.suppress(ValueError):
             query = Query(
@@ -203,7 +214,7 @@ class MixinCompanySplit(models.AbstractModel):
             new_by_company[company] = new
         return new_by_company
 
-    @dbg.timed
+    @_debug.perf.timed
     def _unmerge_remap_many2x_fields(self, new_id_by_company_id):
         new_id_by_company_id_json = json.dumps(new_id_by_company_id)
         many2x_fields = self.env["ir.model.fields"].search(
@@ -214,12 +225,26 @@ class MixinCompanySplit(models.AbstractModel):
                 ("company_dependent", "=", False),
             ]
         )
+        _debug.pipeline(
+            "unmerge_many2x_fields_found",
+            records=self,
+            fields=len(many2x_fields),
+            companies=len(new_id_by_company_id),
+        )
         for field_to_update in many2x_fields:
             model = field_to_update.model
             if not self.env[model]._auto:
                 continue
             if not (query_company_id := self._unmerge_company_id_subquery(model)):
                 continue
+            if _debug.logic.enabled:
+                _debug.logic(
+                    "unmerge_many2x_field_remapped",
+                    records=self,
+                    model=model,
+                    field=field_to_update.name,
+                    ttype=field_to_update.ttype,
+                )
             if field_to_update.ttype == "many2one":
                 table = self.env[model]._table
                 target_column = field_to_update.name
@@ -253,6 +278,12 @@ class MixinCompanySplit(models.AbstractModel):
                     ),
                 )
             )
+        if _debug.pipeline.enabled:
+            _debug.pipeline(
+                "unmerge_company_dependent_many2one_remapping",
+                records=self,
+                fields=len(self.env.registry.many2one_company_dependents[self._name]),
+            )
         for field in self.env.registry.many2one_company_dependents[self._name]:
             self.env.cr.execute(
                 SQL(
@@ -280,7 +311,7 @@ class MixinCompanySplit(models.AbstractModel):
                 )
             )
 
-    @dbg.timed
+    @_debug.perf.timed
     def _unmerge_remap_reference_fields(self, new_id_by_company_id):
         new_id_by_company_id_json = json.dumps(new_id_by_company_id)
         reference_fields = self.env["ir.model.fields"].search(
@@ -289,12 +320,24 @@ class MixinCompanySplit(models.AbstractModel):
                 ("store", "=", True),
             ]
         )
+        _debug.pipeline(
+            "unmerge_reference_fields_found",
+            records=self,
+            fields=len(reference_fields),
+        )
         for field_to_update in reference_fields:
             model = field_to_update.model
             if not self.env[model]._auto:
                 continue
             if not (query_company_id := self._unmerge_company_id_subquery(model)):
                 continue
+            if _debug.logic.enabled:
+                _debug.logic(
+                    "unmerge_reference_field_remapped",
+                    records=self,
+                    model=model,
+                    field=field_to_update.name,
+                )
             self.env.cr.execute(
                 SQL(
                     """
@@ -320,7 +363,7 @@ class MixinCompanySplit(models.AbstractModel):
                 )
             )
 
-    @dbg.timed
+    @_debug.perf.timed
     def _unmerge_remap_many2one_reference_fields(self, new_id_by_company_id):
         new_id_by_company_id_json = json.dumps(new_id_by_company_id)
         many2one_reference_fields = self.env["ir.model.fields"].search(
@@ -328,6 +371,11 @@ class MixinCompanySplit(models.AbstractModel):
                 ("ttype", "=", "many2one_reference"),
                 ("store", "=", True),
             ]
+        )
+        _debug.pipeline(
+            "unmerge_many2one_reference_fields_found",
+            records=self,
+            fields=len(many2one_reference_fields),
         )
         for field_to_update in many2one_reference_fields:
             model = field_to_update.model
@@ -341,6 +389,12 @@ class MixinCompanySplit(models.AbstractModel):
                 continue
             if not (query_company_id := self._unmerge_company_id_subquery(model)):
                 continue
+            _debug.logic(
+                "unmerge_many2one_reference_field_remapped",
+                records=self,
+                model=model,
+                model_field=model_field,
+            )
             self.env.cr.execute(
                 SQL(
                     """
@@ -368,10 +422,21 @@ class MixinCompanySplit(models.AbstractModel):
                 )
             )
 
-    @dbg.timed
+    @_debug.perf.timed
     def _unmerge_migrate_company_dependent_fields(
         self, new_records, new_id_by_company_id
     ):
+        if _debug.logic.enabled:
+            _debug.logic(
+                "unmerge_company_dependent_fields",
+                records=self,
+                new_records=new_records,
+                fields=[
+                    name
+                    for name, field in self._fields.items()
+                    if field.company_dependent
+                ],
+            )
         if not any(field.company_dependent for field in self._fields.values()):
             return
         new_id_by_company_id_json = json.dumps(new_id_by_company_id)
@@ -410,6 +475,9 @@ class MixinCompanySplit(models.AbstractModel):
                 new_ids=tuple(new_records.ids),
             )
         )
+        _debug.perf.count(
+            "company_dependent_values_migrated", rows=self.env.cr.rowcount
+        )
         self.env.cr.execute(
             SQL(
                 "UPDATE %(table)s SET %(fields_drop)s WHERE id = %(id)s",
@@ -427,6 +495,7 @@ class MixinCompanySplit(models.AbstractModel):
                 id=self.id,
             )
         )
+        _debug.perf.count("company_dependent_values_dropped", rows=self.env.cr.rowcount)
 
     def _unmerge_split_xmlids(self, base_company, new_id_by_company_id):
         self.env["ir.model.data"].invalidate_model()
@@ -455,6 +524,7 @@ class MixinCompanySplit(models.AbstractModel):
                 record_id=self.id,
             )
         )
+        _debug.perf.count("xmlids_split", rows=self.env.cr.rowcount)
 
     def _unmerge_reassign_company_fields(self, base_company):
         write_vals = {"company_ids": [Command.set(base_company.ids)]}

@@ -1,12 +1,13 @@
 from odoo import models
+from odoo.libs.debug_log import DebugLog
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class AccountTax(models.Model):
     _inherit = "account.tax"
 
-    @dbg.timed
+    @_debug.perf.timed
     def _prepare_base_line_for_taxes_computation(self, record, **kwargs):
         results = super()._prepare_base_line_for_taxes_computation(record, **kwargs)
         results["deferred_start_date"] = self._get_base_line_field_value_from_record(
@@ -17,7 +18,7 @@ class AccountTax(models.Model):
         )
         return results
 
-    @dbg.timed
+    @_debug.perf.timed
     def _prepare_tax_line_for_taxes_computation(self, record, **kwargs):
         results = super()._prepare_tax_line_for_taxes_computation(record, **kwargs)
         results["deferred_start_date"] = self._get_base_line_field_value_from_record(
@@ -28,14 +29,14 @@ class AccountTax(models.Model):
         )
         return results
 
-    @dbg.timed
+    @_debug.perf.timed
     def _prepare_base_line_grouping_key(self, base_line):
         results = super()._prepare_base_line_grouping_key(base_line)
         results["deferred_start_date"] = base_line["deferred_start_date"]
         results["deferred_end_date"] = base_line["deferred_end_date"]
         return results
 
-    @dbg.timed
+    @_debug.perf.timed
     def _prepare_base_line_tax_repartition_grouping_key(
         self, base_line, base_line_grouping_key, tax_data, tax_rep_data
     ):
@@ -58,7 +59,7 @@ class AccountTax(models.Model):
             results["deferred_end_date"] = False
         return results
 
-    @dbg.timed
+    @_debug.perf.timed
     def _prepare_tax_line_repartition_grouping_key(self, tax_line):
         results = super()._prepare_tax_line_repartition_grouping_key(tax_line)
         results["deferred_start_date"] = tax_line["deferred_start_date"]

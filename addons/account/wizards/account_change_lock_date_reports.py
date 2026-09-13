@@ -1,6 +1,7 @@
 from odoo import models
+from odoo.libs.debug_log import DebugLog
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class AccountChangeLockDate(models.TransientModel):
@@ -8,7 +9,7 @@ class AccountChangeLockDate(models.TransientModel):
 
     _inherit = "account.change.lock.date"
 
-    @dbg.timed
+    @_debug.perf.timed
     def _create_default_report_external_values(self, lock_date_field):
         """Create the default report external values of the period being locked.
 

@@ -1,8 +1,9 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import float_round
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class AccountCashRounding(models.Model):
@@ -52,7 +53,7 @@ class AccountCashRounding(models.Model):
     )
 
     @api.constrains("rounding")
-    @dbg.timed
+    @_debug.perf.timed
     def _check_rounding(self):
         for record in self:
             if record.rounding <= 0:

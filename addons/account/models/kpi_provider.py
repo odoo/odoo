@@ -1,5 +1,8 @@
 from odoo import api, models
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
+
+_debug = DebugLog(__name__)
 
 
 class KpiProvider(models.AbstractModel):
@@ -40,6 +43,12 @@ def get_kpi_summary(cr, uid):
         )
     )
     existing_columns = {x[0] for x in cr.fetchall()}
+    if _debug.logic.enabled:
+        _debug.logic(
+            "kpi_columns_checked",
+            uid=uid,
+            missing=sorted(expected_columns - existing_columns),
+        )
     if expected_columns - existing_columns:
         return []
 
@@ -73,6 +82,7 @@ def get_kpi_summary(cr, uid):
             uid=uid,
         )
     )
+    _debug.perf.count("kpi_journal_rows_fetched", rows=cr.rowcount)
 
     return [
         {

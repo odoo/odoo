@@ -5,10 +5,11 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import date_utils, format_date
 from odoo.tools.misc import formatLang
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 def _ellipsis(string, size):
@@ -132,7 +133,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
             )[:1]
 
     @api.depends("date", "journal_id", "account_id", "amount", "res_model", "res_ids")
-    @dbg.timed
+    @_debug.perf.timed
     def _compute_preview_data(self):
         for record in self:
             preview_vals = [
@@ -202,6 +203,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
     def _get_accrual_orders_and_lines(self):
         selected = self._get_selected_records()
         if selected is None:
+            _debug.logic("accrual_orders_rejected", accrual=self, reason="no_selection")
             raise UserError(_("Select the orders to accrue first."))
         selected = selected.with_company(self.company_id)
         if self.res_model in ("purchase.order.line", "sale.order.line"):
@@ -213,10 +215,16 @@ class AccountAccruedOrdersWizard(models.TransientModel):
         is_purchase = orders._name == "purchase.order"
 
         if orders.filtered(lambda o: o.company_id != self.company_id):
+            _debug.logic(
+                "accrual_orders_rejected", accrual=self, reason="multi_company"
+            )
             raise UserError(
                 _("Entries can only be created for a single company at a time.")
             )
         if len(orders.currency_id) > 1:
+            _debug.logic(
+                "accrual_orders_rejected", accrual=self, reason="multi_currency"
+            )
             raise UserError(
                 _("Cannot create an accrual entry with orders in different currencies.")
             )
@@ -258,7 +266,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
             )
         )
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_purchase_accrual_line_amounts(self, order, order_line):
         product = order_line.product_id
         _expense_account, stock_variation_account = (
@@ -300,7 +308,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
         )
         return amount, amount_currency, account, label
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_sale_accrual_line_amounts(
         self, order, order_line, amounts_by_perpetual_account
     ):
@@ -406,9 +414,15 @@ class AccountAccruedOrdersWizard(models.TransientModel):
                     orders, -amount, 0.0, expense_account.id, is_purchase, label=label
                 )
             )
+        _debug.pipeline(
+            "perpetual_valuation_lines_built",
+            accrual=self,
+            account_pairs=len(amounts_by_perpetual_account),
+            lines=len(values),
+        )
         return values
 
-    @dbg.timed
+    @_debug.perf.timed
     def _get_move_vals(self):
         self.check_singleton()
         orders, lines, is_purchase = self._get_accrual_orders_and_lines()
@@ -417,6 +431,15 @@ class AccountAccruedOrdersWizard(models.TransientModel):
         total_balance = 0.0
         amounts_by_perpetual_account = defaultdict(float)
 
+        if _debug.logic.enabled:
+            _debug.logic(
+                "accrual_mode_chosen",
+                accrual=self,
+                is_purchase=is_purchase,
+                orders=len(orders),
+                lines=len(lines),
+                manual_amount=len(orders) == 1 and bool(self.amount),
+            )
         for order, product_lines in lines.grouped("order_id").items():
             if len(orders) == 1 and product_lines and self.amount and order.line_ids:
                 total_balance = self.amount
@@ -437,6 +460,14 @@ class AccountAccruedOrdersWizard(models.TransientModel):
                     total_balance += order_balance
                     orders_with_entries |= order
 
+        _debug.pipeline(
+            "accrual_order_lines_built",
+            accrual=self,
+            orders_with_entries=orders_with_entries,
+            move_lines=len(move_lines),
+            total_balance=total_balance,
+            perpetual_account_pairs=len(amounts_by_perpetual_account),
+        )
         if not self.company_id.currency_id.is_zero(total_balance):
             move_lines.append(
                 Command.create(
@@ -461,6 +492,11 @@ class AccountAccruedOrdersWizard(models.TransientModel):
             )
         ]
 
+        _debug.pipeline(
+            "accrual_move_lines_completed",
+            accrual=self,
+            move_lines=len(move_lines),
+        )
         move_type = _("Expense") if is_purchase else _("Revenue")
         move_vals = {
             "ref": _(
@@ -492,12 +528,12 @@ class AccountAccruedOrdersWizard(models.TransientModel):
         if self.reversal_date <= self.date:
             raise UserError(_("Reversal date must be posterior to date."))
         move_vals, orders_with_entries = self._get_move_vals()
-        dbg.pipeline.debug(
-            "[accrual:%s] %d line(s) for %s, reversal on %s",
-            self.id,
-            len(move_vals.get("line_ids", [])),
-            dbg.rec(orders_with_entries),
-            self.reversal_date,
+        _debug.pipeline(
+            "reversal",
+            accrual=self,
+            count=len(move_vals.get("line_ids", [])),
+            orders_with_entries=orders_with_entries,
+            reversal_date=self.reversal_date,
         )
         move = self.env["account.move"].create(move_vals)
         move._post()

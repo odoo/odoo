@@ -1,6 +1,7 @@
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class ResPartner(models.Model):
@@ -13,9 +14,9 @@ class ResPartner(models.Model):
     def _get_followup_responsible(self, multiple_responsible=False):
         return self.env.user
 
-    @dbg.timed
+    @_debug.perf.timed
     def open_customer_statement(self):
-        dbg.lifecycle.debug("open_customer_statement on %s", dbg.rec(self))
+        _debug.lifecycle("open_customer_statement", records=self)
         action = self.env["ir.actions.actions"]._get_action_dict_by_xml_id(
             "account.action_account_report_customer_statement"
         )
@@ -28,9 +29,9 @@ class ResPartner(models.Model):
         }
         return action
 
-    @dbg.timed
+    @_debug.perf.timed
     def open_follow_up_report(self):
-        dbg.lifecycle.debug("open_follow_up_report on %s", dbg.rec(self))
+        _debug.lifecycle("open_follow_up_report", records=self)
         action = self.env["ir.actions.actions"]._get_action_dict_by_xml_id(
             "account.action_account_report_followup"
         )
@@ -43,9 +44,9 @@ class ResPartner(models.Model):
         }
         return action
 
-    @dbg.timed
+    @_debug.perf.timed
     def open_partner(self):
-        dbg.lifecycle.debug("open_partner on %s", dbg.rec(self))
+        _debug.lifecycle("open_partner", records=self)
         return {
             "type": "ir.actions.act_window",
             "res_model": "res.partner",
@@ -103,6 +104,13 @@ class ResPartner(models.Model):
             # Print the followup in the customer's language
             report = report.with_context(lang=self.lang)
 
+        _debug.logic(
+            "statement_attachment_options",
+            partner=self,
+            report=report,
+            lang=self.lang,
+            options_given=bool(options),
+        )
         if not options:
             options = self._get_partner_account_report_options(report)
         attachment_file = report.export_to_pdf(options)

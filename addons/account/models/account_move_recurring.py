@@ -1,7 +1,8 @@
 from odoo import models
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class AccountMove(models.Model):
@@ -25,7 +26,7 @@ class AccountMove(models.Model):
         periods = elapsed // self.repeat_interval + 1
         return date_origin + self._get_recurrence_delta() * periods
 
-    @dbg.timed
+    @_debug.perf.timed
     def _copy_recurring_entries(self):
         moves_next_dates = []
         for record in self:
@@ -69,17 +70,17 @@ class AccountMove(models.Model):
         )
         for record, next_date in moves_next_dates:
             if recurrence_exists.get(record.id):
-                dbg.logic.debug(
-                    "[move:%s] recurrence for %s already exists, not copied",
-                    record.id,
-                    next_date,
+                _debug.logic(
+                    "recurrence_already_exists_not_copied",
+                    move=record,
+                    next_date=next_date,
                 )
                 continue
-            dbg.pipeline.debug(
-                "[move:%s] copying recurring entry to %s (%s)",
-                record.id,
-                next_date,
-                record.auto_post,
+            _debug.pipeline(
+                "copying_recurring_entry",
+                move=record,
+                next_date=next_date,
+                auto_post=record.auto_post,
             )
             record.copy(
                 default=record._get_fields_to_copy_recurring_entries(
@@ -115,4 +116,10 @@ class AccountMove(models.Model):
                     + (self.invoice_date_due - self.date)
                 }
             )
+        _debug.logic(
+            "recurring_dates_carried",
+            move=self,
+            invoice_date="invoice_date" in values,
+            invoice_date_due="invoice_date_due" in values,
+        )
         return values

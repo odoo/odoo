@@ -1,9 +1,10 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, Query
 
-from ..tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class AccountAccountTag(models.Model):
@@ -18,14 +19,15 @@ class AccountAccountTag(models.Model):
     )
 
     @api.model_create_multi
-    @dbg.timed
+    @_debug.perf.timed
     def create(self, vals_list):
-        dbg.lifecycle.debug(
-            "create %s: %d vals, keys=%s",
-            self._name,
-            len(vals_list),
-            dbg.vals_keys(vals_list),
-        )
+        if _debug.lifecycle.enabled:
+            _debug.lifecycle(
+                "create",
+                model=self._name,
+                count=len(vals_list),
+                fields=sorted({key for vals in vals_list for key in vals}),
+            )
         tags = super().create(vals_list)
         if tax_tags := tags.filtered(
             lambda tag: tag.applicability == "taxes",
@@ -34,9 +36,9 @@ class AccountAccountTag(models.Model):
         return tags
 
     @api.ondelete(at_uninstall=False)
-    @dbg.timed
+    @_debug.perf.timed
     def _unlink_except_master_tags(self):
-        dbg.lifecycle.debug("_unlink_except_master_tags on %s", dbg.rec(self))
+        _debug.lifecycle("_unlink_except_master_tags", records=self)
         master_xmlids = [
             "account_tag_operating",
             "account_tag_financing",
@@ -58,7 +60,7 @@ class AccountAccountTag(models.Model):
 
     @api.depends("applicability", "country_id")
     @api.depends_context("company")
-    @dbg.timed
+    @_debug.perf.timed
     def _compute_display_name(self):
         if not self.env.company.multi_vat_foreign_country_ids:
             return super()._compute_display_name()
@@ -79,7 +81,7 @@ class AccountAccountTag(models.Model):
         return None
 
     @api.depends("name")
-    @dbg.timed
+    @_debug.perf.timed
     def _compute_report_expression(self):
         query = self._search([("id", "in", self.ids)])
         id2expression = {
@@ -100,6 +102,7 @@ class AccountAccountTag(models.Model):
                 ),
             )
         }
+        _debug.perf.count("tag_report_expressions_fetched", rows=len(id2expression))
         for tag in self:
             tag.report_expression_id, tag.balance_negate = id2expression.get(
                 tag._origin.id, (False, False)
@@ -185,7 +188,7 @@ class AccountAccountTag(models.Model):
             )
         )
 
-    @dbg.timed
+    @_debug.perf.timed
     def _translate_tax_tags(self, langs=None, tag_ids=None):
         langs = langs or (
             code
@@ -222,4 +225,10 @@ class AccountAccountTag(models.Model):
                         else SQL("")
                     ),
                 )
+            )
+            _debug.perf.count(
+                "tax_tag_names_translated",
+                lang=lang,
+                restricted=bool(tag_ids),
+                rows=self.env.cr.rowcount,
             )
