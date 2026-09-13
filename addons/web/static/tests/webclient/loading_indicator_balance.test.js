@@ -9,11 +9,14 @@ import {
     onRpc,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
+import { browser } from "@web/core/browser/browser";
+import { makeLogger } from "@web/core/debug/debug_logger";
 import { rpc } from "@web/core/network/rpc";
 import { config as transitionConfig } from "@web/core/transition";
 import { LoadingIndicator } from "@web/webclient/loading_indicator/loading_indicator";
 
 describe.current.tags("desktop");
+const log = makeLogger("web.core.audit");
 
 async function withIndicator(/** @type {() => any} */ run) {
     await makeMockServer();
@@ -46,6 +49,20 @@ test("a failing call leaves nothing in flight", async () => {
     });
     expect(indicator.rpcIds.size).toBe(0);
     expect(".o_loading_indicator").toHaveCount(0);
+});
+
+test("a synchronously throwing transport leaves nothing in flight", async () => {
+    const indicator = await withIndicator(async () => {
+        patchWithCleanup(browser, {
+            fetch() {
+                throw new TypeError("transport wrapper failed");
+            },
+        });
+        await rpc("/probe", {}).catch(() => {});
+    });
+    expect(indicator.rpcIds.size).toBe(0);
+    expect(".o_loading_indicator").toHaveCount(0);
+    log.logic("sync transport loading balance", { pending: indicator.rpcIds.size });
 });
 
 test("an aborted call leaves nothing in flight", async () => {

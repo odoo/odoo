@@ -1,13 +1,22 @@
 // @ts-check
 
-import { after, beforeEach, Deferred, describe, expect, test, tick } from "@odoo/hoot";
+import {
+    after,
+    beforeEach,
+    Deferred,
+    describe,
+    expect,
+    runAllTimers,
+    test,
+    tick,
+} from "@odoo/hoot";
 import { mockFetch } from "@odoo/hoot-mock";
 import { mockIndexedDBForTests } from "@web/../tests/_framework/mock_indexed_db.hoot";
 import { isolateLogging } from "@web/../tests/core/debug/logging_helpers";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
 import { enableLogging, makeLogger } from "@web/core/debug/debug_logger";
-import { rpc, rpcBus, RPCError } from "@web/core/network/rpc";
+import { ConnectionLostError, rpc, rpcBus, RPCError } from "@web/core/network/rpc";
 import { RPCCache } from "@web/core/network/rpc_cache";
 import { globalSingleton } from "@web/core/utils/global_singleton";
 
@@ -350,3 +359,75 @@ test("a later retry setup failure settles the chain instead of escaping its time
         settled: outcome === setupError,
     });
 });
+
+for (const inherited of [false, true]) {
+    test(`capture a ${inherited ? "inherited" : "non-enumerable"} supported option once`, async () => {
+        let reads = 0;
+        const options = Object.defineProperty({}, "silent", {
+            get() {
+                reads++;
+                return true;
+            },
+        });
+        const settings = inherited ? Object.create(options) : options;
+        const flags = [];
+        const onRequest = ({ detail }) => flags.push(detail.settings.silent);
+        rpcBus.addEventListener("RPC:REQUEST", onRequest);
+        after(() => rpcBus.removeEventListener("RPC:REQUEST", onRequest));
+        mockFetch(() => ({ result: true }));
+        expect(await rpc("/option-accessor", {}, settings)).toBe(true);
+        expect(flags).toEqual([true]);
+        expect(reads).toBe(1);
+        log.logic("option capture", { inherited, reads, flags });
+    });
+}
+
+for (const retry of [0, 1]) {
+    test(`synchronously throwing transport balances events (retry=${retry})`, async () => {
+        const requests = [];
+        const responses = [];
+        const onRequest = ({ detail }) => requests.push(detail.data.id);
+        const onResponse = ({ detail }) => responses.push(detail.data.id);
+        rpcBus.addEventListener("RPC:REQUEST", onRequest);
+        rpcBus.addEventListener("RPC:RESPONSE", onResponse);
+        after(() => {
+            rpcBus.removeEventListener("RPC:REQUEST", onRequest);
+            rpcBus.removeEventListener("RPC:RESPONSE", onResponse);
+        });
+        patchWithCleanup(browser, {
+            fetch() {
+                throw new TypeError("transport wrapper failed");
+            },
+        });
+        /** @type {unknown} */
+        let outcome;
+        let returnedPromise = false;
+        let done;
+        try {
+            const pending = rpc(
+                "/sync-transport",
+                {},
+                {
+                    retry: retry ? { retries: retry, baseMs: 1, maxMs: 1 } : 0,
+                },
+            );
+            returnedPromise = typeof pending?.then === "function";
+            done = pending.catch((error) => {
+                outcome = error;
+            });
+        } catch (error) {
+            outcome = error;
+        }
+        await runAllTimers();
+        await done;
+        expect(returnedPromise).toBe(true);
+        expect(outcome).toBeInstanceOf(ConnectionLostError);
+        expect(requests).toHaveLength(retry + 1);
+        expect(responses).toEqual(requests);
+        log.logic("transport lifecycle balance", {
+            returnedPromise,
+            requests,
+            responses,
+        });
+    });
+}

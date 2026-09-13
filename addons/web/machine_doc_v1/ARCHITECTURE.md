@@ -256,7 +256,7 @@ Promise.
 
 **Context merging rule** (`orm_service.js`): `fullContext = {...user.context, ...(kwargs.context||{})}`. Spread order means **caller keys win on collision** — `user.context` values can be overridden, though the keys themselves cannot be deleted (omit from caller context to inherit, set to a new value to override).
 
-**rpc.js settings whitelist** (`rpc.js`): `cache, silent, headers, timeout, retry, dedup, signal`. Any other key throws. `cache` + `retry` compose: cache wraps retry so warm hits skip the retry layer entirely. `timeout` (milliseconds) installs an `AbortSignal.timeout()` that combines with the caller-controlled abort signal via `AbortSignal.any()`. No `credentials`.
+**rpc.js settings whitelist** (`rpc.js`): `cache, silent, headers, timeout, retry, dedup, signal`. Unknown enumerable own keys throw. `cache` + `retry` compose: cache wraps retry so warm hits skip the retry layer entirely. `timeout` (milliseconds) installs an `AbortSignal.timeout()` that combines with the caller-controlled abort signal via `AbortSignal.any()`. No `credentials`.
 
 RPC interception runs once per logical call, before parameters are serialized.
 The captured JSON value supplies both cache/dedup identity and every transport
@@ -271,6 +271,10 @@ identity or poison the cache variant chosen for the original call. Each request
 and response event gets its own settings copy; abort signals and callbacks keep
 their identity internally. Synchronous transport setup failures in a retry chain
 reject its promise, including when setup fails inside a backoff timer.
+Supported top-level settings are read by name once, including non-enumerable
+and inherited accessors. If a transport wrapper throws synchronously after
+request notification, the normal failure path still emits the matching response
+and applies transport-error classification and retry policy.
 
 Cached responses with custom headers are isolated by canonical header values in
 RAM, even when disk caching is requested. The transport's forced JSON Content-Type

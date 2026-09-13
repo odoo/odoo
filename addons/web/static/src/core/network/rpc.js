@@ -479,7 +479,14 @@ function makeRequestHeaders(headers) {
  * @returns {{[key: string]: any}}
  */
 function copyRPCSettings(settings) {
-    const copy = { ...settings };
+    /** @type {{[key: string]: any}} */
+    const copy = {};
+    for (const key of RPC_SETTINGS) {
+        const value = settings[key];
+        if (value !== undefined) {
+            copy[key] = value;
+        }
+    }
     if (copy.headers !== undefined) {
         copy.headers = makeRequestHeaders(copy.headers);
     }
@@ -827,8 +834,16 @@ function _rpcOnce(url, serializedParams, settings) {
         method: params?.method,
     }));
 
-    browser
-        .fetch(url, init)
+    /** @type {Promise<Response>} */
+    let responsePromise;
+    try {
+        responsePromise = browser.fetch(url, init);
+    } catch (error) {
+        // Wrappers can throw before returning a promise. Route these through
+        // the normal failure path so every emitted request has a response.
+        responsePromise = Promise.reject(error);
+    }
+    responsePromise
         .then(async (response) => {
             if (aborted) {
                 return;
