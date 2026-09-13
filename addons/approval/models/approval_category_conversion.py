@@ -533,6 +533,28 @@ class ApprovalCategoryConversion(models.Model):
         return {"converted": converted, "blocked": blocked}
 
     @api.model
+    def _get_list_routing_census(self) -> dict:
+        categories = self.sudo().search([("step_ids", "=", False)])
+        undecided = (
+            self.env["approval.request"]
+            .sudo()
+            .search([("state", "in", ("new", "pending"))])
+        )
+        requests = undecided.filtered(
+            lambda request: (
+                request.category_id in categories
+                or (request.state == "pending" and not request.approver_ids.step_ids)
+            )
+        )
+        trace.STEPS.note(
+            "list_routing_census",
+            categories=categories.ids,
+            requests=len(requests),
+            undecided=len(undecided),
+        )
+        return {"categories": categories, "requests": requests}
+
+    @api.model
     def _route_rules_of_step_categories_by_steps(self):
         rules = self.env["approval.rule"].search(
             [

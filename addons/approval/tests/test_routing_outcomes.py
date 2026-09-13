@@ -1236,6 +1236,20 @@ class TestConvertingEveryCategory(RoutingOutcomesCase):
         self.assertEqual(request.state, "approved")
         self.assertFalse(self._flat_category().step_ids)
 
+    def test_the_census_counts_what_still_routes_by_a_list(self):
+        flat = self._flat_category()
+        converted = self._flat_category()
+        confirmed_flat = self._prepare_request(converted)
+        converted.action_convert_routing_to_steps()
+        on_steps = self._prepare_request(converted)
+        draft_on_list = self._prepare_request(flat, confirm=False)
+        census = self.env["approval.category"]._get_list_routing_census()
+        self.assertIn(flat, census["categories"])
+        self.assertNotIn(converted, census["categories"])
+        self.assertIn(confirmed_flat, census["requests"])
+        self.assertIn(draft_on_list, census["requests"])
+        self.assertNotIn(on_steps, census["requests"])
+
     def test_a_draft_raised_before_the_conversion_routes_by_the_steps(self):
         category = self._flat_category()
         request = self._prepare_request(category, confirm=False)

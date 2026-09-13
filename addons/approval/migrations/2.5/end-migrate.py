@@ -23,3 +23,17 @@ def migrate(cr, version):
             rule.id,
             rule.category_id.name,
         )
+    census = env["approval.category"]._get_list_routing_census()
+    for category in census["categories"]:
+        _logger.warning(
+            "approval category %s (#%s) still routes by its approver list: %s",
+            category.name,
+            category.id,
+            " ".join(category._get_steps_conversion_blockers()),
+        )
+    _logger.info(
+        "approval: %s undecided request(s) still route by an approver list, "
+        "%s categor(ies) still do",
+        len(census["requests"]),
+        len(census["categories"]),
+    )
