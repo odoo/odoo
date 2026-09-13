@@ -95,8 +95,8 @@ def _prepare_fast_get(
         if record is None:
             return self
         env = record.env
-        if self.groups and not env.su and not record._has_field_access(self, "read"):
-            record._check_field_access(self, "read")
+        if self.groups:
+            self.check_read_access(record)
         ids = record._ids
         if len(ids) != 1:
             return self._get_not_singleton(record, owner)

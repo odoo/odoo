@@ -7,7 +7,7 @@ _CANONICAL = 'self.groups and not env.su and not {rec}._has_field_access(self, "
 _ALLOWED = {_CANONICAL.format(rec="record"), _CANONICAL.format(rec="records")}
 
 _EXPECTED_SITES = {
-    ("base.py", 2),
+    ("base.py", 1),
 }
 
 
