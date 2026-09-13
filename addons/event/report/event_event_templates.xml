@@ -9,7 +9,32 @@
             <!-- Front (Left) -->
             <div class="page col-6 o_event_badge_height o_event_foldable_badge_left_quarter pt-2">
                 <div class="oe_structure"/>
-                <t t-call="event.event_report_template_badge_card"/>
+                <t t-if="not is_html_empty(event.ticket_instructions)">
+                    <div class="o_event_badge_ticket_wrapper" t-att-style="'background-image: url(%s);' % badge_image_url if badge_image_url else ''">
+                        <div class="position-relative h-100">
+                            <!-- Instructions -->
+                            <div class="small p-4" t-out="event.ticket_instructions"/>
+                            <div class="position-absolute bottom-0 w-100 text-center">
+                                <!-- Tags -->
+                                <div t-if="attendee" class="text-center">
+                                    <span
+                                        t-foreach="attendee.registration_answer_choice_ids" t-as="answer"
+                                        t-if="len(answer.question_id.answer_ids) &gt; 1" t-out="answer.display_name"/>
+                                        class="px-2 py-1 d-inline-block bg-200 text-black m-1 o_event_foldable_badge_answer"
+                                </div>
+                                <!-- Ticket Type -->
+                                <t t-set="first_ticket" t-value="event.event_ticket_ids[0] if event.event_ticket_ids else None"/>
+                                <t t-set="ticket" t-value="attendee.event_ticket_id if attendee else first_ticket"/>
+                                <div t-if="ticket" class="text-center w-100" t-attf-style="background-color: {{ticket.color or '#875A7B'}};">
+                                    <div class="p-2 fs-5" t-out="ticket.name"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+                <t t-else="">
+                    <t t-call="event.event_report_template_badge_card"/>
+                </t>
             </div>
             <!-- Front (Right) -->
             <div class="page col-6 o_event_badge_height position-relative pt-2">
@@ -42,7 +67,7 @@
                         <div t-if="attendee" class="mt-3 py-2">
                             <span t-foreach="attendee.registration_answer_choice_ids"
                                 class="px-2 py-1 d-inline-block bg-200 text-black m-1 o_event_foldable_badge_answer"
-                                t-as="answer" t-out="answer.display_name"/>
+                                t-as="answer" t-if="len(answer.question_id.answer_ids) > 1" t-out="answer.display_name"/>
                         </div>
                         <div t-else="">
                             <span t-foreach="event.question_ids.filtered(lambda q: q.question_type == 'simple_choice' and q.answer_ids)"
@@ -349,7 +374,7 @@
             </div>
             <div class="position-absolute bottom-0 w-100 text-center">
                 <img t-if="event.organizer_id.image_256" class="o_event_badge_logo text-center mb-2" t-att-src="image_data_uri(event.organizer_id.image_256)"/>
-                <span t-if="event.badge_format != 'A4_french_fold'" class="o_event_badge_barcode_container mb-2">
+                <span class="o_event_badge_barcode_container mb-2">
                     <img t-att-class="'mb-2' + (' ms-5' if event.organizer_id.image_256 else '')" t-attf-src="/report/barcode/QR/{{attendee.barcode if attendee else '12345678901234567890'}}?&amp;width=116&amp;height=116&amp;quiet=0" alt="QR Code"/>
                     <t t-if="event.use_barcode">
                         <t t-if="attendee">
