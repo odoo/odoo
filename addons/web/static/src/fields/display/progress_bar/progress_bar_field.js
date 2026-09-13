@@ -138,11 +138,10 @@ export class ProgressBarField extends Component {
         if (this.maxValueLiteral !== undefined) {
             return this.maxValueLiteral;
         }
-        return (
-            /** @type {Record<string, any>} */ (this.props.record.data)[
-                this.maxValueFieldName
-            ] || 100
-        );
+        const value = /** @type {Record<string, any>} */ (this.props.record.data)[
+            this.maxValueFieldName
+        ];
+        return value === false ? 0 : (value ?? 100);
     }
 
     /** @returns {string} */

@@ -10,10 +10,11 @@
                 <t t-foreach="options" t-as="option" t-key="option[0]">
                     <span
                         class="o_selection_badge btn btn-secondary mb-1"
-                        t-att-class="{ 'active': value === option[0], 'btn-sm': props.size === 'sm', 'btn-lg': props.size === 'lg' }"
+                        t-att-class="{ 'disabled': !isReady, 'active': value === option[0], 'btn-sm': props.size === 'sm', 'btn-lg': props.size === 'lg' }"
+                        t-att-aria-disabled="!isReady ? 'true' : 'false'"
                         t-att-value="stringify(option[0])"
                         role="radio"
-                        tabindex="0"
+                        t-att-tabindex="isReady ? 0 : -1"
                         t-att-aria-checked="value === option[0] ? 'true' : 'false'"
                         t-esc="option[1]"
                         t-on-click="() => this.onChange(option[0])"

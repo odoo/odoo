@@ -19,7 +19,7 @@
                     t-ref="after"
                     type="button"
                     class="btn btn-secondary dropdown-toggle o_arrow_button o_first"
-                    t-att-disabled="props.isDisabled"
+                    t-att-disabled="!isReady || props.isDisabled"
                     aria-label="More..."
                 >
                     ...
@@ -39,7 +39,7 @@
                         o_arrow_button_current: item.isSelected,
                         o_last: item_last,
                     }"
-                    t-att-disabled="props.isDisabled || item.isSelected"
+                    t-att-disabled="!isReady || props.isDisabled || item.isSelected"
                     role="radio"
                     t-att-aria-checked="item.isSelected.toString()"
                     t-att-aria-current="item.isSelected and 'step'"
@@ -53,7 +53,7 @@
                     t-ref="before"
                     type="button"
                     class="btn btn-secondary dropdown-toggle o_arrow_button o_last"
-                    t-att-disabled="props.isDisabled"
+                    t-att-disabled="!isReady || props.isDisabled"
                     aria-label="More..."
                 >
                     ...
@@ -71,7 +71,7 @@
                     type="button" 
                     class="btn btn-secondary dropdown-toggle"
                     t-att-class="{'o_arrow_button': env.isSmall, 'o_last': selectedIndex === 0 , 'o_first': selectedIndex === allItems.length - 1}"
-                    t-att-disabled="props.isDisabled"
+                    t-att-disabled="!isReady || props.isDisabled"
                 >
                     <t t-out="getCurrentLabel()" />
                 </button>

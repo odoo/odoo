@@ -1,12 +1,20 @@
 // @ts-check
 /** @odoo-module native */
 
-import { Component, onWillUpdateProps, useEffect, useRef, useState } from "@odoo/owl";
+import {
+    Component,
+    onWillDestroy,
+    onWillUpdateProps,
+    useEffect,
+    useRef,
+    useState,
+} from "@odoo/owl";
 import { CheckBox } from "@web/components/checkbox/checkbox";
 import { DomainSelector } from "@web/components/domain_selector/domain_selector";
 import { Dropdown } from "@web/components/dropdown/dropdown";
 import { DropdownItem } from "@web/components/dropdown/dropdown_item";
 import { ModelSelector } from "@web/components/model_selector/model_selector";
+import { makeLogger } from "@web/core/debug/debug_logger";
 import { Domain } from "@web/core/domain";
 import { getSelectCreateDialog } from "@web/core/record_dialog_port";
 import { _t } from "@web/core/translation";
@@ -18,6 +26,8 @@ import { Many2XAutocomplete } from "@web/fields/relational/many2x_autocomplete";
 import { PropertyDefinitionSelection } from "./property_definition_selection.js";
 import { PropertyTags } from "./property_tags.js";
 import { PropertyValue } from "./property_value.js";
+
+const log = makeLogger("web.field.property_definition");
 
 export class PropertyDefinition extends Component {
     static template = "web.PropertyDefinition";
@@ -60,6 +70,10 @@ export class PropertyDefinition extends Component {
 
         this.keepLastCount = new KeepLast({ rejectSuperseded: true });
         this.keepLastModelDescription = new KeepLast({ rejectSuperseded: true });
+        onWillDestroy(() => {
+            this.keepLastCount.cancel();
+            this.keepLastModelDescription.cancel();
+        });
 
         this.propertyDefinitionRef = useRef("propertyDefinition");
         this.addDialog = useOwnedDialogs();
@@ -213,14 +227,15 @@ export class PropertyDefinition extends Component {
         this._commitDefinition(propertyDefinition, { replace: true });
         if (!propertyDefinition.comodel) {
             this.state.resModel = "";
-            this.state.resModelDescription = "";
+            this._invalidateRelationMetadata();
         }
         this.state.typeLabel = this._typeLabel(newType);
     }
 
-    /** @param {string} newModel */
+    /** @param {{ label: string, technical: string }} newModel */
     async onModelChange(newModel) {
-        const { label, technical } = /** @type {any} */ (newModel);
+        const { label, technical } = newModel;
+        this.keepLastModelDescription.cancel();
 
         const modelChanged = technical !== this.state.resModel;
 
@@ -308,10 +323,22 @@ export class PropertyDefinition extends Component {
         this.state.propertyDefinition = propertyDefinition;
     }
 
+    _invalidateRelationMetadata() {
+        this.keepLastCount.cancel();
+        this.keepLastModelDescription.cancel();
+        this.state.resModelDescription = "";
+        this.state.matchingRecordsCount = undefined;
+    }
+
     /** @param {object} propertyDefinition */
     async _syncStateWithProps(propertyDefinition) {
         const newModel = propertyDefinition.comodel;
         const currentModel = this.state.resModel;
+        const domainChanged =
+            propertyDefinition.domain !== this.state.propertyDefinition.domain;
+        if (newModel !== currentModel) {
+            this._invalidateRelationMetadata();
+        }
 
         this.state.propertyDefinition = propertyDefinition;
         this.state.typeLabel = this._typeLabel(propertyDefinition.type);
@@ -339,17 +366,20 @@ export class PropertyDefinition extends Component {
 
             await this._updateMatchingRecordsCount();
         } else if (!newModel) {
-            this.state.resModelDescription = "";
+            this._invalidateRelationMetadata();
+        } else if (domainChanged) {
+            await this._updateMatchingRecordsCount();
         }
     }
 
     async _updateMatchingRecordsCount() {
+        this.keepLastCount.cancel();
         if (this.state.resModel && this.state.resModel.length) {
-            const domainList = new Domain(
-                this.state.propertyDefinition.domain || "[]",
-            ).toList();
-
             try {
+                const domainList = new Domain(
+                    this.state.propertyDefinition.domain || "[]",
+                ).toList();
+                log.pipeline("count requested", { model: this.state.resModel });
                 this.state.matchingRecordsCount = await this.keepLastCount.add(
                     this.orm.call(
                         this.state.propertyDefinition.comodel,
@@ -361,6 +391,10 @@ export class PropertyDefinition extends Component {
                 if (error instanceof SupersededError) {
                     return;
                 }
+                log.pipeline("count unavailable", {
+                    model: this.state.resModel,
+                    error,
+                });
                 this.state.matchingRecordsCount = undefined;
             }
         } else {

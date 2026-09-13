@@ -8,8 +8,9 @@
             <t t-foreach="options" t-as="option" t-key="option[0]">
                 <span
                     class="o_selection_badge btn btn-secondary mb-1"
-                    t-att-class="{ 'active': value === option[0], 'btn-sm': props.size === 'sm', 'btn-lg': props.size === 'lg' }"
-                    t-att-value="stringify(option[0])"
+                    t-att-class="{ 'disabled': !isReady, 'active': value === option[0], 'btn-sm': props.size === 'sm', 'btn-lg': props.size === 'lg' }"
+                    t-att-aria-disabled="!isReady ? 'true' : 'false'"
+                        t-att-value="stringify(option[0])"
                     t-on-click="() => this.onChange(option[0])"
                 >
                     <span t-att-class="`fa ${option[2]} pe-1`"/>

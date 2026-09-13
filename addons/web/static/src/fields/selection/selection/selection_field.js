@@ -34,6 +34,9 @@ export class SelectionField extends SelectionLikeField {
         return this.env.isSmall && hasTouch();
     }
     onChange(value) {
+        if (!this.isReady || this.props.readonly) {
+            return;
+        }
         const options = { save: this.props.autosave };
         switch (this.type) {
             case "many2one": {

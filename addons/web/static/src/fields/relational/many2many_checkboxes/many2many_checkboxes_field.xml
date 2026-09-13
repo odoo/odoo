@@ -7,7 +7,7 @@
                 <div>
                     <CheckBox
                         value="isSelected(item)"
-                        disabled="props.readonly"
+                        disabled="props.readonly || !specialData.isReady"
                         onChange="(ev) => this.onChange(item[0], ev)"
                     >
                         <t t-esc="item[1]" />

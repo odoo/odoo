@@ -49,6 +49,9 @@ export class RadioField extends SelectionLikeField {
 
     /** @param {[any, string]} value */
     onChange(value) {
+        if (!this.isReady || this.props.readonly) {
+            return;
+        }
         switch (this.type) {
             case "selection":
                 this.field.update(value[0]);

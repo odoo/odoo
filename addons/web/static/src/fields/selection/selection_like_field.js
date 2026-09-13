@@ -4,17 +4,18 @@
 import { Domain } from "@web/core/domain";
 import { FieldComponent } from "@web/fields/field_component";
 import { fieldHandleFor } from "@web/fields/field_handle";
+import { completeSelectedOptions } from "@web/fields/relational/selection_options";
 import { useSpecialData } from "@web/fields/relational/special_data";
 import { getFieldDomain } from "@web/model/relational_model";
 
 export class SelectionLikeField extends FieldComponent {
-    /** @type {{ data: [number, string][] }} */
+    /** @type {{ data: [number, string][], isReady: boolean }} */
     specialData;
 
     setup() {
         this.type = this.field.type;
         if (this.type === "many2one") {
-            this.specialData = useSpecialData((orm, props) => {
+            this.specialData = useSpecialData(async (orm, props) => {
                 const field = fieldHandleFor(props.record, props.name);
                 const { relation } = field.definition;
                 let domain = getFieldDomain(props.record, props.name, props.domain);
@@ -24,9 +25,20 @@ export class SelectionLikeField extends FieldComponent {
                         props.record.evalContext,
                     );
                 }
-                return orm.call(relation, "name_search", ["", domain], {
-                    context: props.context || {},
+                const context = props.context || {};
+                const options = await orm.call(relation, "name_search", ["", domain], {
+                    context,
                 });
+                return completeSelectedOptions(
+                    options,
+                    value ? [value.id] : [],
+                    (option) => option[0],
+                    (ids) =>
+                        orm.call(relation, "name_search", ["", [["id", "in", ids]]], {
+                            context,
+                            limit: ids.length,
+                        }),
+                );
             });
         }
     }
@@ -43,6 +55,10 @@ export class SelectionLikeField extends FieldComponent {
             default:
                 return [];
         }
+    }
+
+    get isReady() {
+        return this.type !== "many2one" || this.specialData.isReady;
     }
 
     get string() {

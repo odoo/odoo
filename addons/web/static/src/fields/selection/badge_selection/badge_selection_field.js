@@ -37,6 +37,9 @@ export class BadgeSelectionField extends SelectionLikeField {
 
     /** @param {string | number | false} value */
     onChange(value) {
+        if (!this.isReady || this.props.readonly) {
+            return;
+        }
         switch (this.type) {
             case "many2one": {
                 if (value === this.value) {

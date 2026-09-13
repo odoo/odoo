@@ -1,7 +1,7 @@
 // @ts-check
 /** @odoo-module native */
 
-import { useState } from "@odoo/owl";
+import { onWillDestroy, toRaw, useState } from "@odoo/owl";
 import { _t } from "@web/core/translation";
 import { KeepLast, SupersededError } from "@web/core/utils/concurrency";
 import { useService } from "@web/core/utils/hooks";
@@ -50,6 +50,17 @@ export class ReferenceField extends FieldComponent {
         });
         this.nameService = useService("name");
         const keepLast = new KeepLast({ rejectSuperseded: true });
+        onWillDestroy(() => keepLast.cancel());
+        let currentRecord;
+        const trackRecord = (record) => {
+            const rawRecord = toRaw(record);
+            if (rawRecord === currentRecord) {
+                return false;
+            }
+            keepLast.cancel();
+            currentRecord = rawRecord;
+            return true;
+        };
 
         const SUPERSEDED = Symbol("superseded");
         /**
@@ -72,29 +83,44 @@ export class ReferenceField extends FieldComponent {
             /** @type {string | false | undefined} */
             let currentValue = undefined;
             useRecordObserver(async (record, props) => {
-                if (currentValue !== record.data[props.name]) {
+                if (trackRecord(record)) {
+                    currentValue = undefined;
+                }
+                const requestedValue = record.data[props.name];
+                if (currentValue !== requestedValue) {
                     const formatted = await latest(this._fetchReferenceCharData(props));
-                    if (formatted === SUPERSEDED) {
+                    if (
+                        formatted === SUPERSEDED ||
+                        record.data[props.name] !== requestedValue
+                    ) {
                         return;
                     }
                     this.state.formattedCharValue = formatted;
-                    currentValue = record.data[props.name];
+                    currentValue = requestedValue;
                 }
             });
         } else if (this.props.modelField) {
             useRecordObserver(async (record, props) => {
-                if (this.currentModelId !== record.data[props.modelField]?.id) {
+                if (trackRecord(record)) {
+                    this.currentModelId = undefined;
+                    this.state.modelName = undefined;
+                }
+                const requestedModelId = record.data[props.modelField]?.id;
+                if (this.currentModelId !== requestedModelId) {
                     const modelName = await latest(
                         this._fetchModelTechnicalName(props),
                     );
-                    if (modelName === SUPERSEDED) {
+                    if (
+                        modelName === SUPERSEDED ||
+                        record.data[props.modelField]?.id !== requestedModelId
+                    ) {
                         return;
                     }
                     this.state.modelName = modelName;
                     if (this.currentModelId !== undefined) {
                         record.update({ [props.name]: false });
                     }
-                    this.currentModelId = record.data[props.modelField]?.id;
+                    this.currentModelId = requestedModelId;
                 }
             });
         }

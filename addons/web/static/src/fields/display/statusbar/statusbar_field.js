@@ -18,6 +18,7 @@ import { registerField } from "@web/fields/_registry";
 import { FieldComponent } from "@web/fields/field_component";
 import { fieldHandleFor } from "@web/fields/field_handle";
 import { archAttribute } from "@web/fields/field_options";
+import { completeSelectedOptions } from "@web/fields/relational/selection_options";
 import { useSpecialData } from "@web/fields/relational/special_data";
 import { standardFieldProps } from "@web/fields/standard_field_props";
 import { getFieldDomain } from "@web/model/relational_model";
@@ -165,10 +166,20 @@ export class StatusBarField extends FieldComponent {
                     record.evalContext,
                 );
             }
-            return orm.searchRead(relation, domain, fieldNames, {
+            const options = await orm.searchRead(relation, domain, fieldNames, {
                 context,
                 limit: /** @type {any} */ (this.constructor).RELATION_LIMIT,
             });
+            return completeSelectedOptions(
+                options,
+                value ? [value.id] : [],
+                (option) => option.id,
+                (ids) =>
+                    orm.searchRead(relation, [["id", "in", ids]], fieldNames, {
+                        context,
+                        limit: ids.length,
+                    }),
+            );
         });
     }
 
@@ -193,7 +204,7 @@ export class StatusBarField extends FieldComponent {
             {
                 category: "smart_action",
                 hotkey: "alt+shift+x",
-                isAvailable: () => !this.props.isDisabled,
+                isAvailable: () => this.isReady && !this.props.isDisabled,
             },
         );
         useCommand(
@@ -207,7 +218,7 @@ export class StatusBarField extends FieldComponent {
                 category: "smart_action",
                 hotkey: "alt+x",
                 isAvailable: () => {
-                    if (this.props.isDisabled) {
+                    if (!this.isReady || this.props.isDisabled) {
                         return false;
                     }
                     const items = this.getAllItems();
@@ -345,7 +356,7 @@ export class StatusBarField extends FieldComponent {
         if (item.isSelected) {
             classNames.push("active");
         }
-        if (item.isSelected || this.props.isDisabled) {
+        if (item.isSelected || !this.isReady || this.props.isDisabled) {
             classNames.push("disabled");
         }
         return classNames.join(" ");
@@ -363,8 +374,15 @@ export class StatusBarField extends FieldComponent {
         return { inline, before, after, folded };
     }
 
+    get isReady() {
+        return !this.specialData || this.specialData.isReady;
+    }
+
     /** @param {StatusBarItem} item */
     async selectItem(item) {
+        if (!this.isReady || this.props.isDisabled) {
+            return;
+        }
         const value =
             this.fieldDefinition.type === "many2one"
                 ? { id: item.value, display_name: item.label }

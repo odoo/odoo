@@ -13,7 +13,7 @@
                         type="radio"
                         class="form-check-input o_radio_input"
                         t-att-checked="item[0] === value"
-                        t-att-disabled="props.readonly"
+                        t-att-disabled="props.readonly || !isReady"
                         t-att-name="id"
                         t-att-data-value="item[0]"
                         t-att-data-index="item_index"

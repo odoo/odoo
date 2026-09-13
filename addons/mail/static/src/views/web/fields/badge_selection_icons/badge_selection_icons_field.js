@@ -17,11 +17,15 @@ export class BadgeSelectionWithIconsField extends BadgeSelectionField {
     static props = {
         ...BadgeSelectionField.props,
         iconField: { type: String },
-        defaultIcon: { type: String, optional: true, default: "fa-check" },
+        defaultIcon: { type: String, optional: true },
     };
     static template = "mail.BadgeSelectionIconsField";
+    static defaultProps = {
+        ...BadgeSelectionField.defaultProps,
+        defaultIcon: "fa-check",
+    };
 
-    async setup() {
+    setup() {
         this.type = this.props.record.fields[this.props.name].type;
         this.specialData = useSpecialData(
             /**
@@ -35,13 +39,11 @@ export class BadgeSelectionWithIconsField extends BadgeSelectionField {
                     domain: domain,
                     fields: ["id", "name", props.iconField],
                 });
-                return ret.map((opt) => {
-                    const option = Object.values(opt);
-                    if (!option[2]) {
-                        option[2] = props.defaultIcon;
-                    }
-                    return option;
-                });
+                return ret.map((option) => [
+                    option.id,
+                    option.name,
+                    option[props.iconField] || props.defaultIcon,
+                ]);
             },
         );
     }

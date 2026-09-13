@@ -119,7 +119,7 @@
 | `fields/media/image_url/` | features | 1 | Image display field loading from a URL stored in a Char column |
 | `fields/media/pdf_viewer/` | features | 1 | Embedded PDF viewer field for Binary columns using PDF.js |
 | `fields/media/signature/` | features | 1 | Signature pad field capturing and storing handwritten signatures |
-| `fields/relational/` | features | 8 | Shared relational machinery: the `many2x` autocomplete, x2many CRUD/dialog plumbing, special-data loading, active-action resolution, plus the `many2one` / `many2many_tags` / `x2many` faces |
+| `fields/relational/` | features | 9 | Shared relational machinery: the `many2x` autocomplete, x2many CRUD/dialog plumbing, special-data loading, active-action resolution, plus the `many2one` / `many2many_tags` / `x2many` faces |
 | `fields/relational/many2many_binary/` | features | 1 | File attachment list field for Many2many relations to `ir.attachment` |
 | `fields/relational/many2many_checkboxes/` | features | 1 | Checkbox group field for Many2many relations |
 | `fields/relational/many2many_tags/` | features | 2 | Many2many tags field and its kanban colour-only variant |

@@ -7,6 +7,7 @@ import { _t } from "@web/core/translation";
 import { registerField } from "@web/fields/_registry";
 import { FieldComponent } from "@web/fields/field_component";
 import { useDebouncedFieldCommit } from "@web/fields/hooks/debounced_field_commit";
+import { completeSelectedOptions } from "@web/fields/relational/selection_options";
 import { standardFieldProps } from "@web/fields/standard_field_props";
 import { getFieldDomain } from "@web/model/relational_model";
 
@@ -31,20 +32,16 @@ export class Many2ManyCheckboxesField extends FieldComponent {
                 context,
                 limit: /** @type {any} */ (this.constructor).RECORD_LIMIT,
             });
-            const shownIds = new Set(items.map((item) => item[0]));
-            const missingSelectedIds = props.record.data[props.name].currentIds.filter(
-                (id) => !shownIds.has(id),
+            return completeSelectedOptions(
+                items,
+                props.record.data[props.name].currentIds,
+                (item) => item[0],
+                (ids) =>
+                    orm.call(relation, "name_search", ["", [["id", "in", ids]]], {
+                        context,
+                        limit: ids.length,
+                    }),
             );
-            if (missingSelectedIds.length) {
-                const missing = await orm.call(
-                    relation,
-                    "name_search",
-                    ["", [["id", "in", missingSelectedIds]]],
-                    { context },
-                );
-                return [...items, ...missing];
-            }
-            return items;
         });
         this.pending = useState({ add: [], remove: [] });
         this.debouncedCommitChanges = useDebouncedFieldCommit(
@@ -93,6 +90,9 @@ export class Many2ManyCheckboxesField extends FieldComponent {
      * @param {boolean} checked
      */
     onChange(resId, checked) {
+        if (!this.specialData.isReady || this.props.readonly) {
+            return;
+        }
         const [undo, stage] = checked
             ? [this.pending.remove, this.pending.add]
             : [this.pending.add, this.pending.remove];

@@ -51,8 +51,8 @@ function drawFullSize(image) {
  */
 function drawScaled(image, ratio) {
     const canvas = document.createElement("canvas");
-    canvas.width = image.width * ratio;
-    canvas.height = image.height * ratio;
+    canvas.width = Math.max(1, Math.round(image.width * ratio));
+    canvas.height = Math.max(1, Math.round(image.height * ratio));
     const ctx = /** @type {any} */ (canvas.getContext("2d"));
     ctx.fillStyle = "transparent";
     ctx.fillRect(0, 0, canvas.width, canvas.height);

@@ -1,11 +1,20 @@
 // @ts-check
 
-import { expect, test } from "@odoo/hoot";
+import { afterEach, beforeEach, expect, test } from "@odoo/hoot";
+import { enableLogging, getStatus, makeLogger } from "@web/core/debug/debug_logger";
 import {
     convertUploadToWebp,
     createWebpVariantAttachments,
     ImageDecodeError,
 } from "@web/fields/media/image/image_variants";
+
+const log = makeLogger("web.field.image_variants");
+let previousLogSpec;
+beforeEach(() => {
+    previousLogSpec = getStatus().spec;
+    enableLogging("web.field.image_variants", { persist: false });
+});
+afterEach(() => enableLogging(previousLogSpec, { persist: false }));
 
 const PNG_5X5 =
     "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==";
@@ -101,3 +110,34 @@ test("createWebpVariantAttachments stores the original verbatim and a jpeg fallb
         message: "the fallback hangs off the webp of its own size",
     });
 });
+
+for (const [width, height] of [
+    [4000, 1],
+    [1, 4000],
+    [1, 1],
+    [4000, 2000],
+]) {
+    test(`image variants remain decodable for ${width}x${height}`, async () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        const data = canvas.toDataURL("image/webp").split(",")[1];
+        const orm = makeOrmSpy([[1], [2, 3, 4, 5, 6], []]);
+        await createWebpVariantAttachments(orm, { data, name: "image.webp" });
+        for (const { records } of orm.calls) {
+            for (const record of records) {
+                expect(Boolean(record.datas)).toBe(true);
+                const image = document.createElement("img");
+                image.src = `data:${record.mimetype};base64,${record.datas}`;
+                await image.decode();
+                log.logic("decoded variant", {
+                    width: image.naturalWidth,
+                    height: image.naturalHeight,
+                    mimetype: record.mimetype,
+                });
+                expect(image.naturalWidth).toBeGreaterThan(0);
+                expect(image.naturalHeight).toBeGreaterThan(0);
+            }
+        }
+    });
+}

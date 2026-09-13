@@ -1,7 +1,7 @@
 // @ts-check
 /** @odoo-module native */
 
-import { useState } from "@odoo/owl";
+import { onWillDestroy, useState } from "@odoo/owl";
 import { DomainSelector } from "@web/components/domain_selector/domain_selector";
 import { useGetDefaultLeafDomain } from "@web/components/domain_selector/utils";
 import { DomainSelectorDialog } from "@web/components/domain_selector_dialog/domain_selector_dialog";
@@ -49,6 +49,10 @@ export class DomainField extends FieldComponent {
 
         this.keepLastCount = new KeepLast({ rejectSuperseded: true });
         this.keepLastFacets = new KeepLast({ rejectSuperseded: true });
+        onWillDestroy(() => {
+            this.keepLastCount.cancel();
+            this.keepLastFacets.cancel();
+        });
 
         this.state = useState({
             isValid: null,
@@ -180,6 +184,7 @@ export class DomainField extends FieldComponent {
     }
 
     async loadFacets(props = this.props) {
+        this.keepLastFacets.cancel();
         const resModel = this.getResModel(props);
 
         if (!resModel || typeof resModel !== "string") {
@@ -222,6 +227,7 @@ export class DomainField extends FieldComponent {
     }
 
     async checkProps(props = this.props) {
+        this.keepLastCount.cancel();
         const resModel = this.getResModel(props);
         if (!resModel) {
             this.updateState({});

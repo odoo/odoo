@@ -560,6 +560,16 @@ Global events are defined in `core/events.js` and exported from `@web/core`.
 
 ## Server-side `__version` stamp for cached endpoints
 
+`useSpecialData` exposes `{ data, isReady }`. It retains the previous data while
+loading replacement choices, but only the latest request may mark them ready.
+Choice widgets disable interaction while `isReady` is false, including their
+event handlers so an already-open menu cannot select an obsolete choice.
+Prop updates and reactive record dependencies trigger loads; rendering the
+result does not trigger another load. Identical ORM requests share the model's
+cache. Disk-cache refreshes notify only current subscribers, and changing inputs
+or destroying a widget removes its subscriptions. Debug namespace:
+`web.field.special_data` (`load`, `superseded`, `ready`, `failed`).
+
 `update: "always"` consumers ask the cache to revalidate against the server on
 every read; the cache calls back with `(value, hasChanged)`.
 
