@@ -613,6 +613,17 @@ class ApprovalApprover(models.Model):
             if (
                 request.group_approval == "exclusive"
                 and not request.category_id.notify_pool_members
+                and self.source_rule_id
+            ):
+                trace.ACTIVITY.event(
+                    "asked_in_a_group_queue",
+                    approver=self.id,
+                    request=request.id,
+                    rule=self.source_rule_id.id,
+                )
+            if (
+                request.group_approval == "exclusive"
+                and not request.category_id.notify_pool_members
                 and not self.source_rule_id
             ):
                 # A security group is a pool anyone in it may decide from To

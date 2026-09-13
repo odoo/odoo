@@ -1039,9 +1039,14 @@ class ApprovalRequest(models.Model):
         self.check_singleton()
         required = set(step.member_ids.filtered("required").user_id.ids)
         if step.subject_user_required:
-            required |= step.sudo()._get_source_user_ids(
-                self.get_source_document(), self
+            named = step.sudo()._get_source_user_ids(self.get_source_document(), self)
+            trace.STEPS.event(
+                "named_users_required",
+                request=self.id,
+                step=step.id,
+                named=sorted(named),
             )
+            required |= named
         if not required:
             return self.env["approval.approver"]
         return self.approver_ids.filtered(

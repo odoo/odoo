@@ -160,7 +160,7 @@ class ApprovalRule(models.Model):
                 )
 
     def _get_reading_steps(self):
-        return (
+        steps = (
             self.env["approval.category.step"]
             .with_context(active_test=False)
             .search(
@@ -171,11 +171,19 @@ class ApprovalRule(models.Model):
                 ]
             )
         )
+        trace.RULES.event("rules_read_by_steps", rules=self.ids, steps=steps.ids)
+        return steps
 
     def write(self, vals):
         if ("active" in vals and not vals["active"]) or (
             "action_type" in vals and vals["action_type"] != "condition"
         ):
+            trace.RULES.event(
+                "rule_retirement_checked",
+                rules=self.ids,
+                active=vals.get("active"),
+                action=vals.get("action_type"),
+            )
             self._check_no_step_reads_it()
         return super().write(vals)
 

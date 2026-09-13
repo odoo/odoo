@@ -89,6 +89,16 @@ class ApprovalCategoryConversion(models.Model):
                     maximum=_MAX_COMBINATIONS,
                 )
             )
+        trace.STEPS.event(
+            "conversion_blockers",
+            category=self.id,
+            blockers=len(blockers),
+            adds=len(added),
+            bands=len(bands),
+            combinations=combinations,
+            sequential=self.approve_sequentially,
+            group=self.group_approval == "exclusive",
+        )
         return blockers
 
     def _get_routing_rules(self):
@@ -115,14 +125,25 @@ class ApprovalCategoryConversion(models.Model):
             or (rule.company_id and rule.company_id != self.company_id)
             for rule in rules
         ):
-            return False
-        if added and bands:
-            return False
-        if bands:
-            return self._are_rules_ranges(bands)
-        if len(added) > 1:
-            return self._are_rules_tiers(added)
-        return not added or added.operator in _COMPLEMENT
+            routes, shape = False, "rule_not_on_an_always_measured_figure"
+        elif added and bands:
+            routes, shape = False, "adds_beside_bands"
+        elif bands:
+            routes, shape = self._are_rules_ranges(bands), "bands"
+        elif len(added) > 1:
+            routes, shape = self._are_rules_tiers(added), "adds"
+        elif added:
+            routes, shape = added.operator in _COMPLEMENT, "one_add"
+        else:
+            routes, shape = True, "no_rule"
+        trace.STEPS.event(
+            "figure_routing",
+            category=self.id,
+            routes=routes,
+            shape=shape,
+            rules=rules.ids,
+        )
+        return routes
 
     def _prepare_steps_from_flat_routing(self) -> list[dict]:
         self.check_singleton()
@@ -134,19 +155,33 @@ class ApprovalCategoryConversion(models.Model):
         if self.group_approval == "exclusive":
             listed = []
         if not self._routes_by_figures(added, bands):
-            return self._prepare_rule_combination_steps(listed, added, bands)
-        if bands:
-            return self._prepare_ranged_band_steps(listed, bands)
-        if len(added) > 1:
-            return self._prepare_tiered_steps(listed, added)
-        if added:
+            translation = "rule_combinations"
+            steps = self._prepare_rule_combination_steps(listed, added, bands)
+        elif bands:
+            translation = "ranged_bands"
+            steps = self._prepare_ranged_band_steps(listed, bands)
+        elif len(added) > 1:
+            translation = "tiers"
+            steps = self._prepare_tiered_steps(listed, added)
+        elif added:
+            translation = "one_add_rule"
             with_rule = listed + self._get_rule_approvers(added)
-            return self._prepare_pooled_steps(
+            steps = self._prepare_pooled_steps(
                 listed, self.approval_minimum, self._complement_condition(added)
             ) + self._prepare_pooled_steps(
                 with_rule, self.approval_minimum, self._rule_condition(added)
             )
-        return self._prepare_pooled_steps(listed, self.approval_minimum, {})
+        else:
+            translation = "approver_list"
+            steps = self._prepare_pooled_steps(listed, self.approval_minimum, {})
+        trace.STEPS.event(
+            "flat_translation",
+            category=self.id,
+            translation=translation,
+            listed=len(listed),
+            steps=len(steps),
+        )
+        return steps
 
     def _prepare_rule_combination_steps(self, listed, added, bands) -> list[dict]:
         rules = self.env["approval.rule"]
@@ -177,6 +212,14 @@ class ApprovalCategoryConversion(models.Model):
                         ],
                     }
                     steps += self._prepare_pooled_steps(approvers, minimum, condition)
+        trace.STEPS.event(
+            "rule_combinations",
+            category=self.id,
+            cases=len(cases) * 2 ** len(added),
+            bands=ordered_bands.ids,
+            adds=added.ids,
+            steps=len(steps),
+        )
         return steps
 
     @staticmethod
@@ -328,6 +371,18 @@ class ApprovalCategoryConversion(models.Model):
             **self._get_conversion_group_vals(),
         }
         has_required = any(is_required for _user, is_required, _sequence in members)
+        trace.STEPS.event(
+            "pool_prepared",
+            category=self.id,
+            members=len(members),
+            required=sum(1 for _user, is_required, _sequence in members if is_required),
+            minimum=minimum,
+            in_order=self.approve_sequentially,
+            group=pool_source.get("group_id"),
+            path=pool_source.get("subject_user_path"),
+            conditioned=sorted(condition),
+            required_sources=len(steps),
+        )
         if self.approve_sequentially:
             steps.append(
                 self._prepare_conversion_step(
@@ -405,11 +460,25 @@ class ApprovalCategoryConversion(models.Model):
                         "sequence": sequence,
                     }
                 )
+                trace.STEPS.event(
+                    "approver_added_to_list",
+                    category=category.id,
+                    user=user.id,
+                    required=required,
+                )
                 continue
             pool = (
                 category.step_ids.filtered("counts_added_approvers")
                 or category.step_ids
             )[:1]
+            trace.STEPS.event(
+                "approver_added_to_step",
+                category=category.id,
+                user=user.id,
+                required=required,
+                step=pool.id,
+                counts_added=pool.counts_added_approvers,
+            )
             pool.member_ids = [
                 Command.create(
                     {"user_id": user.id, "required": required, "sequence": sequence}
@@ -514,5 +583,11 @@ class ApprovalCategoryConversion(models.Model):
                 }
             )
             read = category.step_ids.when_rule_ids | category.step_ids.unless_rule_ids
+            trace.STEPS.event(
+                "conversion_rules_settled",
+                category=category.id,
+                conditions=read.ids,
+                archived=(rules - read).ids,
+            )
             read.write({"action_type": "condition"})
             (rules - read).write({"active": False})
