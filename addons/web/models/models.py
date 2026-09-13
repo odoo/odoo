@@ -2262,12 +2262,11 @@ class Base(models.AbstractModel):
                 lines = self[field_name].browse(line_ids)
                 lines.fetch(sub_fields_spec.keys())
                 # copy the cache of lines to their corresponding new records;
-                # this avoids computing computed stored fields on new_lines;
-                # copy all fields that are in the cache
+                # this avoids computing computed stored fields on new_lines
                 new_lines = lines.browse(map(NewId, line_ids))
                 for field in lines._fields.values():
                     field_cache = field._get_cache(env)
-                    if not field_cache:
+                    if not (field.store and field_cache):
                         continue
                     for new_line, line_id in zip(new_lines, lines._ids):
                         value = field_cache.get(line_id, SENTINEL)

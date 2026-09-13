@@ -1011,7 +1011,7 @@ class TestOnchange(SavepointCaseWithUserDemo):
             #  - result: {'total': 10, 'line_ids': [(1, ..., {'subtotal': 10})]}
             #
             form.base = 1
-            self.assertEqual(form.total, 20)
+            self.assertEqual(form.total, 10)
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
