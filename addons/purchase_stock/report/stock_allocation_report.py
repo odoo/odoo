@@ -6,7 +6,7 @@ class StockAllocationReport(models.AbstractModel):
 
     def _get_record_source(self, record):
         moves = self._get_moves(record)
-        if purchase_order := moves.purchase_line_id.order_id[:1]:
+        if purchase_order := moves.purchase_line_id._filtered_access('read').order_id[:1]:
             return {
                 'id': purchase_order.id,
                 'name': purchase_order.display_name,

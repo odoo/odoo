@@ -6,6 +6,7 @@ from datetime import timedelta
 from odoo import api, fields, models, _, Command
 from odoo.fields import Domain
 from odoo.tools import OrderedSet
+from odoo.tools.sql import SQL
 from odoo.exceptions import UserError, ValidationError
 
 VALUATION_DICT = {
@@ -52,6 +53,10 @@ class StockMove(models.Model):
         currency_field='company_currency_id',
         string='Remaining Value', compute='_compute_remaining_value')
 
+    origin_company_id = fields.Many2one('res.company', string='Origin Company', compute='_compute_origin_company_id', search='_search_origin_company_id', compute_sudo=True,
+                                        help='Only set if the move is generated from a document belonging to another company')
+    order_partner_id = fields.Many2one('res.partner', compute='_compute_order_partner_id', compute_sql='_compute_sql_order_partner_id', compute_sudo=True,
+                                      help="If the move originates from a document from another company, contains that company's partner, otherwise the move's partner.")
     analytic_account_line_ids = fields.Many2many('account.analytic.line', copy=False)
     account_move_id = fields.Many2one('account.move', 'stock_move_id', copy=False, index="btree_not_null")
     invoice_line_ids = fields.One2many('account.move.line', 'stock_move_id', 'Invoice Line', index='btree_not_null')
@@ -105,6 +110,24 @@ class StockMove(models.Model):
     def _compute_is_valued(self):
         for move in self:
             move.is_valued = move.is_in or move.is_out or move.is_dropship
+
+    def _compute_origin_company_id(self):
+        self.origin_company_id = False
+
+    def _search_origin_company_id(self, operator, value):
+        domains = self._get_origin_company_domains(operator, value)
+        if not domains:
+            return Domain.FALSE
+
+        return [('id', 'in', self._search(Domain.OR(domains)))]
+
+    @api.depends('partner_id')
+    def _compute_order_partner_id(self):
+        for move in self:
+            move.order_partner_id = move.partner_id
+
+    def _compute_sql_order_partner_id(self, table):
+        return SQL("%s", table.partner_id)
 
     def _compute_value_manual(self):
         for move in self:
@@ -475,7 +498,15 @@ class StockMove(models.Model):
             if return_data.get('description'):
                 descriptions.append(return_data['description'])
 
-        # 4. standard_price
+        # 4. from previous move in another company
+        if remaining_qty:
+            previous_moves_data = self._get_value_from_previous_company(remaining_qty)
+            value += previous_moves_data['value']
+            remaining_qty -= previous_moves_data['quantity']
+            if previous_moves_data.get('description'):
+                descriptions.append(previous_moves_data['description'])
+
+        # 5. standard_price
         if remaining_qty:
             std_price_data = self._get_value_from_std_price(remaining_qty, forced_std_price)
             value += std_price_data['value']
@@ -563,6 +594,18 @@ class StockMove(models.Model):
             ),
         }
 
+    def _get_value_from_previous_company(self, quantity):
+        if not self.move_orig_ids or self.move_orig_ids.company_id == self.company_id or len(self.move_orig_ids) > 1:
+            return dict(VALUATION_DICT)
+        origin_moves = self.move_orig_ids
+        origin_quantity = sum(origin_moves.mapped(lambda m: m.uom_id._compute_quantity(m.quantity, m.product_id.uom_id)))
+        # Since move value is signed and previous move is from another operation, we must invert it.
+        return {
+            'value': -1 * sum(origin_moves.mapped('value')) * quantity / origin_quantity if origin_quantity else 0,
+            'quantity': quantity,
+            'description': self.env._('Value from previous move %(references)s', references=list(set(origin_moves.mapped('reference')))),
+        }
+
     def _get_value_from_extra(self, quantity):
         return dict(VALUATION_DICT)
 
@@ -585,7 +628,7 @@ class StockMove(models.Model):
                 continue
             if move_line._should_exclude_for_valuation():
                 continue
-            if not move_line.location_id._should_be_valued() and move_line.location_dest_id._should_be_valued():
+            if not move_line.with_company(move_line.company_id).location_id._should_be_valued() and move_line.with_company(move_line.company_id).location_dest_id._should_be_valued():
                 res.add(move_line.id)
         return self.env['stock.move.line'].browse(res)
 
@@ -615,7 +658,7 @@ class StockMove(models.Model):
                 continue
             if move_line._should_exclude_for_valuation():
                 continue
-            if move_line.location_id._should_be_valued() and not move_line.location_dest_id._should_be_valued():
+            if move_line.with_company(move_line.company_id).location_id._should_be_valued() and not move_line.with_company(move_line.company_id).location_dest_id._should_be_valued():
                 res |= move_line
         return res
 
@@ -749,3 +792,8 @@ class StockMove(models.Model):
         self._clear_journal_entries()
         super()._action_reset_to_draft()
         self._reset_valuation(date)
+
+    def _get_origin_company_domains(self, operator, value):
+        """ Overriden in `sale_stock` & `purchase_stock`
+        """
+        return []
