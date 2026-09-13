@@ -122,3 +122,32 @@ class TestWebsiteSaleDeliveryController(PaymentCommon, WebsiteSaleCommon):
             order._recompute_cart()
 
         self.assertEqual(order.amount_delivery, 10.0)
+
+    def test_recompute_cart_keeps_selected_delivery_date(self):
+        self.free_delivery.write({
+            'enable_delivery_estimate': True,
+            'delivery_estimate_lead_days': 1,
+            'delivery_estimate_range_days': 90,
+            'delivery_calendar_id': self.env['resource.calendar'].search([], limit=1).id,
+        })
+        available_days = self.free_delivery._get_estimate_delivery_days()
+        with self.mock_request(sale_order_id=self.cart.id) as request:
+            order = request.cart
+            order._set_delivery_method(self.free_delivery)
+
+            # the customer picks a date, as `/website_sale/set_delivery_date` does
+            order.commitment_date = available_days[-1]
+            order._recompute_cart()
+            self.assertEqual(
+                order.commitment_date.date().isoformat(),
+                available_days[-1],
+                "The date picked by the customer is kept",
+            )
+
+            order.commitment_date = '2020-01-01'
+            order._recompute_cart()
+            self.assertEqual(
+                order.commitment_date.date().isoformat(),
+                available_days[0],
+                "A date that is no longer offered is reset to the earliest one",
+            )
