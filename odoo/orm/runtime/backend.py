@@ -377,8 +377,6 @@ class StorageBackend(typing.Protocol):
 
     supports_column_scan: bool
 
-    supports_translation_terms: bool
-
     supports_recursive_queries: bool
 
     def create_rows(
@@ -569,8 +567,6 @@ class PostgresBackend:
     supports_record_rules: bool = True
 
     supports_column_scan: bool = True
-
-    supports_translation_terms: bool = True
 
     supports_recursive_queries: bool = True
 
@@ -1486,8 +1482,6 @@ class InMemoryBackend:
     supports_record_rules: bool = False
 
     supports_column_scan: bool = False
-
-    supports_translation_terms: bool = False
 
     supports_recursive_queries: bool = False
 

@@ -13,7 +13,6 @@ _DISPATCH_DIRS = (_MIXINS_DIR, _ORM_DIR / "fields", _ORM_DIR / "domain")
 _CAPABILITY_MEMBERS = {
     "supports_record_rules",
     "supports_column_scan",
-    "supports_translation_terms",
     "supports_recursive_queries",
 }
 _ATTRIBUTE_MEMBERS = _CAPABILITY_MEMBERS | {"sequences", "columns"}

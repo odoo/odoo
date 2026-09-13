@@ -9,8 +9,8 @@ from odoo.orm.runtime.backend import InMemoryBackend
 _ORM_DIR = pathlib.Path(__file__).resolve().parent.parent
 
 # Every place the ORM chooses between the SQL path and env.backend. The surface
-# has grown to twenty-one sites across twelve files
-# -- including six in Layer 1, where a field reaches the backend directly
+# has grown to twenty sites across twelve files
+# -- including five in Layer 1, where a field reaches the backend directly
 # rather than through a model mixin. Each entry says what the in-memory branch
 # does NOT do, so a site marked LOSSY is a known gap, not an oversight.
 # test_the_header_count_matches_the_dict parses these lines: the words are asserted.
@@ -51,14 +51,6 @@ DISPATCH_SITES: dict[tuple[str, str], str] = {
     ),
     ("fields/relational/many2many.py", "read"): "equivalent",
     ("fields/relational/many2many.py", "_apply_relation_delta"): "equivalent",
-    ("fields/_field_translation.py", "get_mirrored_ids_by_language"): (
-        "LOSSY: the SQL branch reads the stored jsonb translations and returns "
-        "every other language whose term is an *echo* of `lang`'s, so a write "
-        "in `lang` propagates to them.  The in-memory branch has no jsonb "
-        "column to compare against and returns {} unconditionally, so on that "
-        "backend no translation ever follows a write.  A DB-free test of "
-        "translation propagation therefore cannot fail for the right reason"
-    ),
     ("fields/_field_translation.py", "get_stored_translations"): (
         "equivalent: both branches read the stored column through "
         "backend.columns; the in-memory store may hold a plain string, which "

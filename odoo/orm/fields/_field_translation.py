@@ -468,7 +468,7 @@ def get_mirrored_ids_by_language(
     dirty_ids: typing.Any,
 ) -> dict[str, list]:
     ids = [id_ for id_ in records._ids if id_]
-    if not ids or not records.env.backend.supports_translation_terms:
+    if not ids:
         return {}
     if lang == "en_US" and not records.env.registry.locale.is_lang_installed(
         records.env, "en_US"
