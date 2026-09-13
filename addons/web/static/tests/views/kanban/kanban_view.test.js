@@ -3156,6 +3156,7 @@ test("quick create stays open in its column when the groups reload", async () =>
     expect(".o_kanban_quick_create").toHaveCount(1);
 });
 
+test.tags("desktop");
 test("quick create when first column is folded", async () => {
     await mountView({
         type: "kanban",
