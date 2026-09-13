@@ -8,6 +8,7 @@ import re
 import threading
 import typing
 from contextlib import nullcontext
+from http import HTTPStatus
 from os.path import join as opj
 from urllib.parse import urlparse
 
@@ -18,10 +19,12 @@ from werkzeug.exceptions import (
     Forbidden,
     HTTPException,
     NotFound,
+    Unauthorized,
     UnsupportedMediaType,
 )
 from werkzeug.security import safe_join
 from werkzeug.urls import url_encode  # TODO: use urllib
+from werkzeug.wrappers import Response as WZ_Response  # To set cookie without env
 
 # TODO: drop the fallback
 try:
@@ -56,7 +59,13 @@ from .requestlib import (
 from .response import Response
 from .retrying import retrying
 from .routing_map import ROUTING_KEYS, _generate_routing_rules
-from .session import SessionExpiredException, get_default_session, logout, session_store
+from .session import (
+    SessionExpiredException,
+    get_default_session,
+    get_device,
+    logout,
+    session_store,
+)
 from .stream import STATIC_CACHE, Stream
 
 if typing.TYPE_CHECKING:
@@ -243,6 +252,36 @@ class Application:
 
         headers['Content-Security-Policy'] = "default-src 'none'"
 
+    def _get_dbsc_response(self) -> WZ_Response | None:
+        session = request.session
+
+        if request.httprequest.path in ('/dbsc/register', '/dbsc/refresh'):
+            if not session.uid:
+                raise Unauthorized()
+            return None
+
+        if session.uid is None or session.get('_trace_disable'):
+            return None
+
+        current_device = get_device(session, request)  # Session can be dirty if new device
+        if current_device.get('dbsc_trusted', True):
+            return None
+
+        # The session (DBSC linked) is used with an untrusted device.
+        # We must trigger an hardware check.
+
+        if not request.httprequest.cookies.get('dbsc'):
+            _logger.warning("Untrusted device detected in session %s: %s %s",
+                session.sid[:8], current_device['ip_address'], current_device['user_agent'])
+            request.db = None  # To properly logout (no environment)
+            raise SessionExpiredException()
+
+        # Make a temporary redirect response to replay the same **deferred** request.
+        response = WZ_Response("Re-authentication Required (DBSC)", status=HTTPStatus.TEMPORARY_REDIRECT)
+        response.headers['Location'] = request.httprequest.url
+        response.set_cookie('dbsc', '', max_age=0)
+        return response
+
     def __call__(self, environ: WSGIEnvironment, start_response: StartResponse) -> Iterable[bytes]:
         """
         WSGI application entry point.
@@ -272,7 +311,9 @@ class Application:
                 _set_session_and_dbname(request)
                 threading.current_thread().url = httprequest.url
 
-                if self.get_static_file(httprequest.path):
+                if response := self._get_dbsc_response():
+                    pass
+                elif self.get_static_file(httprequest.path):
                     response = serve_static(request)
                 elif request.db:
                     try:

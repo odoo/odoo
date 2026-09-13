@@ -1,11 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import jwt
 import logging
 from datetime import datetime, timedelta
+from typing import Self
 
 from odoo import api, fields, models, tools
 from odoo.http import request
 from odoo.http.session import (
+    SESSION_LIFETIME,
     STORED_SESSION_BYTES,
     collapse_ip_address,
     get_session_max_inactivity,
@@ -16,6 +19,8 @@ from odoo.http.session import (
 from odoo.modules import module
 from odoo.tools import SQL
 from odoo.tools._vendor.useragents import UserAgent
+from odoo.tools.constants import GC_UNLINK_LIMIT
+from odoo.tools.misc import consteq
 from odoo.tools.translate import _
 
 from .res_users import check_identity
@@ -374,3 +379,71 @@ class ResSession(models.Model):
         must_logout = bool(self.filtered('is_current'))
         if must_logout:
             logout(request.session)
+
+
+class ResDeviceDBSC(models.Model):
+    _name = 'res.device.dbsc'
+    _description = 'Device DBSC'
+
+    session_identifier = fields.Char('Session Identifier', required=True, index='btree')
+    public_key = fields.Json(string='Public Key (JWK)', required=True)
+    algorithm = fields.Char(string='Algorithm', required=True)
+    last_use = fields.Datetime('Last Use', required=True, default=fields.Datetime.now)
+
+    _identifier_uniq = models.Constraint(
+        'unique (session_identifier)',
+        "A session device can only have one bound public key.",
+    )
+
+    @api.autovacuum
+    def _gc_device_dbsc(self):
+        limit = fields.Datetime.now() - timedelta(seconds=2 * SESSION_LIFETIME)
+        self.search([('last_use', '<', limit)], limit=GC_UNLINK_LIMIT).unlink()
+
+    @api.model
+    def _dbsc_register(self, session_identifier: str, jws: str, challenge: str) -> Self:
+        try:
+            header = jwt.get_unverified_header(jws)
+            if header.get('typ') != 'dbsc+jwt':
+                return self.browse()
+
+            jwk = header.get('jwk')
+            if not jwk:
+                return self.browse()
+            jwt_claims = jwt.decode(
+                jws,
+                key=jwt.PyJWK.from_dict(jwk).key,
+                algorithms=['ES256', 'RS256'],  # Don't trust the alg in header and use asymmetric algs
+                options={'require': ['jti']}
+            )
+        except jwt.PyJWTError:
+            _logger.warning("DBSC registration rejected", exc_info=True)
+            return self.browse()
+
+        if not consteq(jwt_claims['jti'], challenge):
+            return self.browse()
+
+        return self.create({
+            'session_identifier': session_identifier,
+            'public_key': jwk,
+            'algorithm': header['alg'],  # Header is verified
+        })
+
+    def _dbsc_refresh(self, jws: str, challenge: str) -> bool:
+        self.ensure_one()
+        try:
+            jwt_claims = jwt.decode(
+                jws,
+                key=jwt.PyJWK.from_dict(self.public_key).key,
+                algorithms=[self.algorithm],
+                options={'require': ['jti']}
+            )
+        except jwt.PyJWTError:
+            _logger.warning("DBSC refresh rejected", exc_info=True)
+            return False
+
+        if not consteq(jwt_claims['jti'], challenge):
+            return False
+
+        self.last_use = fields.Datetime.now()
+        return True
