@@ -1,0 +1,15 @@
+.o_whiteboard_buttons {
+    display: none !important;
+    width: stretch;
+    width: -webkit-fill-available;
+    width: -moz-available;
+}
+
+:hover > .o_whiteboard_buttons {
+    display: flex !important;
+}
+
+.o_field_widget [data-embedded="whiteboard"] iframe {
+    min-height: -webkit-calc(100vh - 250px);
+    min-height: calc(100vh - 250px);    
+}
