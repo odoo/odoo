@@ -21,13 +21,14 @@ export async function handleSaleDetails(pos, hardwareProxy, dialog) {
             formatCurrency: pos.env.utils.formatCurrency,
         })
     );
-    const { successful, message } = await hardwareProxy.printer.printReceipt(report);
-    if (!successful) {
+    const result = await hardwareProxy.printer.printReceipt(report);
+    if (!result.successful) {
         dialog.add(AlertDialog, {
-            title: message.title,
-            body: message.body,
+            title: result.message.title,
+            body: result.message.body,
         });
     }
+    return result;
 }
 export class SaleDetailsButton extends Component {
     static template = "point_of_sale.SaleDetailsButton";
