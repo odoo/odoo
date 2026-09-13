@@ -348,9 +348,13 @@ class IrDefault(models.Model):
 
     @tools.ormcache("model_name", "field_name")
     def _get_field_column_fallbacks(self, model_name: str, field_name: str) -> str:
-        cr = self.env.cr
-        cr.execute("SELECT ARRAY_AGG(id) FROM res_company")
-        company_ids = cr.fetchone()[0] or []
+        company_ids = (
+            self.env["res.company"]
+            .sudo()
+            .with_context(active_test=False)
+            .search([])
+            .ids
+        )
         field = self.env[model_name]._fields[field_name]
         self_super = self.with_user(SUPERUSER_ID)
         return json.dumps(
