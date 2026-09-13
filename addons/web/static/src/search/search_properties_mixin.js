@@ -2,6 +2,7 @@
 /** @odoo-module native */
 
 import { makeLogger } from "@web/core/debug/debug_logger";
+import { deepEqual } from "@web/core/utils/collections/objects";
 
 import { findGroupByGroupId } from "./search_group_by.js";
 
@@ -30,9 +31,62 @@ function compatiblePropertyDefinition(previous, next) {
     return previous.type === next.type && previous.comodel === next.comodel;
 }
 
+/** @param {Record<string, any>} previous @param {Record<string, any>} next */
+function compatibleGroupingDefinition(previous, next) {
+    if (!compatiblePropertyDefinition(previous, next)) {
+        return false;
+    }
+    const key =
+        previous.type === "selection"
+            ? "selection"
+            : previous.type === "tags"
+              ? "tags"
+              : null;
+    if (!key) {
+        return true;
+    }
+    const choices = (/** @type {Record<string, any>} */ definition) =>
+        new Map(
+            (definition[key] || []).map(([value, ...metadata]) => [value, metadata]),
+        );
+    return deepEqual(choices(previous), choices(next));
+}
+
+/**
+ * Refresh display labels without changing saved criteria, including removed choices.
+ * @param {any[]} query
+ * @param {number} searchItemId
+ * @param {Record<string, any>} definition
+ */
+function refreshChoiceLabels(query, searchItemId, definition) {
+    const options =
+        definition.type === "selection"
+            ? definition.selection
+            : definition.type === "tags"
+              ? definition.tags
+              : [];
+    const labels = new Map((options || []).map(([value, label]) => [value, label]));
+    let changed = false;
+    for (const item of query) {
+        const value = item.autocompleteValue;
+        if (
+            item.searchItemId === searchItemId &&
+            value &&
+            labels.has(value.value) &&
+            value.label !== labels.get(value.value)
+        ) {
+            value.label = labels.get(value.value);
+            changed = true;
+        }
+    }
+    return changed;
+}
+
 /**
  * Group-by paths cannot distinguish definition records. Keep one entry for
- * compatible names, and exclude paths whose types or relations disagree.
+ * compatible names, and exclude paths whose types, relations or choices disagree.
+ * The ORM resolves one definition for the entire path, so unioning choices would
+ * still put values exclusive to another definition into the unset group.
  * @param {import("@web/core/field_service").PropertyDefinitionRecord[]} records
  */
 function groupablePropertyRecords(records) {
@@ -43,7 +97,7 @@ function groupablePropertyRecords(records) {
             const previous = byName.get(definition.name);
             if (
                 previous &&
-                !compatiblePropertyDefinition(previous.definition, definition)
+                !compatibleGroupingDefinition(previous.definition, definition)
             ) {
                 ambiguous.add(definition.name);
             }
@@ -84,6 +138,7 @@ export const SearchPropertiesMixin = (Base) =>
             const isCurrent = () =>
                 propertySearchRequests.get(parent) === request &&
                 this.searchItems[searchItem.id] === parent &&
+                this.searchViewFields[searchItem.fieldName] === field &&
                 (this.globalContext.active_id || false) === activeId;
             const release = () => {
                 if (propertySearchRequests.get(parent) === request) {
@@ -164,6 +219,13 @@ export const SearchPropertiesMixin = (Base) =>
                             this.query.some(
                                 (item) => item.searchItemId === existingSearchItem.id,
                             );
+                        // Always visit the query, even when its title already changed.
+                        activeLabelChanged =
+                            refreshChoiceLabels(
+                                this.query,
+                                existingSearchItem.id,
+                                definition,
+                            ) || activeLabelChanged;
                         existingSearchItem.propertyFieldDefinition = definition;
                         existingSearchItem.description = description;
                         searchItemIds.add(existingSearchItem.id);
@@ -237,7 +299,7 @@ export const SearchPropertiesMixin = (Base) =>
 
             const fields = Object.values(this.searchViewFields);
 
-            /** @type {Map<string, Promise<void>>} */
+            /** @type {Map<string, {field: Record<string, any>, promise: Promise<void>}>} */
             const inFlight = (this._filledPropertyFields ??= new Map());
 
             const proms = [];
@@ -249,17 +311,21 @@ export const SearchPropertiesMixin = (Base) =>
                     field.name,
                     this.globalContext.active_id || false,
                 ]);
-                let prom = inFlight.get(requestKey);
-                if (!prom) {
-                    prom = this._updatePropertyFieldSearchItems(field);
-                    prom.catch(() => {}).finally(() => {
-                        if (inFlight.get(requestKey) === prom) {
-                            inFlight.delete(requestKey);
-                        }
-                    });
-                    inFlight.set(requestKey, prom);
+                let entry = inFlight.get(requestKey);
+                if (!entry || entry.field !== field) {
+                    const promise = this._updatePropertyFieldSearchItems(field);
+                    entry = { field, promise };
+                    const request = entry;
+                    promise
+                        .catch(() => {})
+                        .finally(() => {
+                            if (inFlight.get(requestKey) === request) {
+                                inFlight.delete(requestKey);
+                            }
+                        });
+                    inFlight.set(requestKey, entry);
                 }
-                proms.push(prom);
+                proms.push(entry.promise);
             }
             await Promise.all(proms);
         }

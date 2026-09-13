@@ -653,3 +653,172 @@ test("a newly ambiguous property retires its active group-by", async () => {
     expect(model.query).toEqual([]);
     expect(model.searchViewFields["properties.p1"]).toBe(undefined);
 });
+
+for (const type of ["selection", "tags"]) {
+    for (const options of [[["b", "Second"]], [["a", "Different meaning"]]]) {
+        test(`same-typed ${type} definitions with incompatible choices cannot group (${options[0][0]})`, async () => {
+            const model = await createSearchModel();
+            const optionKey = type === "selection" ? "selection" : "tags";
+            model._fetchPropertiesDefinition = async (_model, field) =>
+                field !== "properties"
+                    ? []
+                    : [
+                          {
+                              definitionRecordId: 1,
+                              definitionRecordName: "First",
+                              definitions: [
+                                  {
+                                      name: "p1",
+                                      string: "P1",
+                                      type,
+                                      [optionKey]: [["a", "First"]],
+                                  },
+                              ],
+                          },
+                          {
+                              definitionRecordId: 2,
+                              definitionRecordName: "Second",
+                              definitions: [
+                                  {
+                                      name: "p1",
+                                      string: "P1",
+                                      type,
+                                      [optionKey]: options,
+                                  },
+                              ],
+                          },
+                      ];
+            await model.updateSearchViewItemsProperty();
+            expect(model.getSearchItems((item) => item.isProperty)).toEqual([]);
+        });
+    }
+}
+
+test("choice ordering alone does not make a shared property grouping ambiguous", async () => {
+    const model = await createSearchModel();
+    const options = [
+        ["a", "Alpha"],
+        ["b", "Beta"],
+    ];
+    model._fetchPropertiesDefinition = async (_model, field) =>
+        field !== "properties"
+            ? []
+            : [
+                  {
+                      definitionRecordId: 1,
+                      definitionRecordName: "First",
+                      definitions: [
+                          {
+                              name: "p1",
+                              string: "P1",
+                              type: "selection",
+                              selection: options,
+                          },
+                      ],
+                  },
+                  {
+                      definitionRecordId: 2,
+                      definitionRecordName: "Second",
+                      definitions: [
+                          {
+                              name: "p1",
+                              string: "P1",
+                              type: "selection",
+                              selection: [...options].reverse(),
+                          },
+                      ],
+                  },
+              ];
+    await model.updateSearchViewItemsProperty();
+    expect(model.getSearchItems((item) => item.isProperty)).toHaveLength(1);
+});
+
+for (const type of ["selection", "tags"]) {
+    test(`refreshing active ${type} choices refreshes facet values without changing the domain`, async () => {
+        const model = await createSearchModel();
+        const [parent] = model.getSearchItems(
+            (item) => item.fieldName === "properties",
+        );
+        const optionKey = type === "selection" ? "selection" : "tags";
+        let definition = {
+            name: "p1",
+            string: "Status",
+            type,
+            [optionKey]: [["a", "Old"]],
+        };
+        model._fetchPropertiesDefinition = async () => [
+            {
+                definitionRecordId: 1,
+                definitionRecordName: "Parent",
+                definitions: [definition],
+            },
+        ];
+        const [item] = await model.getSearchItemsProperties(parent);
+        await model.addAutoCompletionValues(item.id, {
+            label: "Old",
+            value: "a",
+            operator: type === "tags" ? "in" : "=",
+        });
+        const domain = model.domain;
+        expect(model.facets[0].values).toEqual(["Old"]);
+        definition = { ...definition, [optionKey]: [["a", "New"]] };
+        await model.getSearchItemsProperties(parent);
+        makeLogger("web.search.correctness").logic("active-choice-refresh", () => ({
+            type,
+            facets: model.facets,
+        }));
+        expect(model.facets[0].values).toEqual(["New"]);
+        expect(model.domain).toEqual(domain);
+        expect(model.query[0].searchItemId).toBe(item.id);
+        definition = { ...definition, [optionKey]: [] };
+        await model.getSearchItemsProperties(parent);
+        expect(model.facets[0].values).toEqual(["New"]);
+        expect(model.domain).toEqual(domain);
+        expect(model.query[0].searchItemId).toBe(item.id);
+    });
+}
+
+test("replacing property field metadata starts a new group fill instead of sharing the obsolete fill", async () => {
+    const model = await createSearchModel();
+    const older = new Deferred();
+    let calls = 0;
+    model._fetchPropertiesDefinition = async (_model, field) =>
+        field !== "properties"
+            ? []
+            : ++calls === 1
+              ? older
+              : [
+                    {
+                        definitionRecordId: 1,
+                        definitionRecordName: "Current",
+                        definitions: [{ name: "p2", string: "New", type: "char" }],
+                    },
+                ];
+    const pending = model.updateSearchViewItemsProperty();
+    model.searchViewFields.properties = { ...model.searchViewFields.properties };
+    const current = model.updateSearchViewItemsProperty();
+    expect(calls).toBe(2);
+    older.resolve([]);
+    await Promise.all([pending, current]);
+    expect(
+        model.getSearchItems((item) => item.isProperty).map((item) => item.fieldName),
+    ).toEqual(["properties.p2"]);
+});
+
+test("a property search response for replaced field metadata is discarded", async () => {
+    const model = await createSearchModel();
+    const [parent] = model.getSearchItems((item) => item.fieldName === "properties");
+    const older = new Deferred();
+    model._fetchPropertiesDefinition = () => older;
+    const pending = model.getSearchItemsProperties(parent);
+    model.searchViewFields.properties = { ...model.searchViewFields.properties };
+    older.resolve([
+        {
+            definitionRecordId: 1,
+            definitionRecordName: "Old",
+            definitions: [{ name: "p1", string: "Old", type: "char" }],
+        },
+    ]);
+    expect(await pending).toEqual([]);
+    expect(model.getSearchItems((item) => item.type === "field_property")).toEqual([]);
+});

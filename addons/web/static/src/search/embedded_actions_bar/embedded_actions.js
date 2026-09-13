@@ -520,9 +520,8 @@ export class EmbeddedActions {
 
     /** @param {EmbeddedAction} action */
     async removeAction(action) {
-        const { visibleEmbeddedActions, embeddedActions, currentEmbeddedAction } =
-            this.embeddedInfos;
         await this.orm.unlink("ir.embedded.actions", [action.id]);
+        const { visibleEmbeddedActions, embeddedActions } = this.embeddedInfos;
         this.embeddedInfos.visibleEmbeddedActions = visibleEmbeddedActions.filter(
             (id) => id !== action.id,
         );
@@ -540,7 +539,7 @@ export class EmbeddedActions {
                 { type: "warning" },
             );
         }
-        if (action.id === currentEmbeddedAction?.id) {
+        if (action.id === this.embeddedInfos.currentEmbeddedAction?.id) {
             this.actionService.doAction(relationId(action.parent_action_id), {
                 additionalContext: this._actionContext(action),
                 stackPosition: "replaceCurrentAction",

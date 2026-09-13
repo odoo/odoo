@@ -217,6 +217,76 @@ describe("EmbeddedActionsConfigHandler.setEmbeddedActionsConfig", () => {
     });
 });
 
+test("deletion preserves a reorder and visibility change completed while unlink waited", async () => {
+    const pendingUnlink = new Deferred();
+    const self = {
+        embeddedInfos: {
+            embeddedActions: [{ id: 7 }, { id: 8 }, { id: 9 }],
+            visibleEmbeddedActions: [7, 8],
+            currentEmbeddedAction: { id: 8 },
+        },
+        orm: { unlink: () => pendingUnlink },
+        configHandler: { setEmbeddedActionsConfig: async () => true },
+        sortActions: EmbeddedActions.prototype.sortActions,
+    };
+    const deletion = EmbeddedActions.prototype.removeAction.call(self, {
+        id: 7,
+        name: "Deleted action",
+        parent_action_id: 1,
+        parent_res_model: "foo",
+        action_id: 2,
+    });
+    const element = document.createElement("button");
+    element.dataset.embeddedIndex = "2";
+    await EmbeddedActions.prototype.reorderFromDrop.call(self, { element });
+    await EmbeddedActions.prototype.toggleActionVisibility.call(self, 9);
+    pendingUnlink.resolve();
+    await deletion;
+    makeLogger("web.search.correctness").logic("deletion-after-layout-change", () => ({
+        state: self.embeddedInfos,
+    }));
+    expect(self.embeddedInfos.embeddedActions.map(({ id }) => id)).toEqual([9, 8]);
+    expect(self.embeddedInfos.visibleEmbeddedActions).toEqual([8, 9]);
+});
+
+test("deletion does not navigate away from an action selected while layout saving waited", async () => {
+    const pendingSave = new Deferred();
+    const saving = new Deferred();
+    const action = {
+        id: 7,
+        name: "Deleted",
+        parent_action_id: 1,
+        parent_res_model: "foo",
+        action_id: 2,
+    };
+    let navigations = 0;
+    const self = {
+        embeddedInfos: {
+            embeddedActions: [action],
+            visibleEmbeddedActions: [7],
+            currentEmbeddedAction: action,
+        },
+        orm: { unlink: async () => true },
+        configHandler: {
+            setEmbeddedActionsConfig: () => {
+                saving.resolve();
+                return pendingSave;
+            },
+        },
+        actionService: { doAction: () => navigations++ },
+        _actionContext: () => ({}),
+    };
+    const deletion = EmbeddedActions.prototype.removeAction.call(self, action);
+    await saving;
+    self.embeddedInfos.currentEmbeddedAction = { ...action, id: 8 };
+    pendingSave.resolve(true);
+    await deletion;
+    makeLogger("web.search.correctness").logic("deletion-after-navigation", () => ({
+        navigations,
+    }));
+    expect(navigations).toBe(0);
+});
+
 describe("EmbeddedActions.toggleActionVisibility", () => {
     test("toggles and persists a copy on success", async () => {
         /** @type {any} */
