@@ -17,11 +17,10 @@ class HrVersion(models.Model):
 
     def _get_default_work_entry_type_id(self):
         country_code = self.country_code
-        country_attendance = self.env['hr.work.entry.type'].search([
+        attendance = self.env['hr.work.entry.type'].search([
             ('code', '=', 'WORK100'),
             ('country_code', '=', country_code),
         ], limit=1)
-        attendance = country_attendance or self.env.ref('hr_work_entry.generic_work_entry_type_attendance', raise_if_not_found=False)
         return attendance.id if attendance else False
 
     def _get_leave_work_entry_type_dates(self, leave, date_from, date_to, employee):
@@ -52,7 +51,10 @@ class HrVersion(models.Model):
                 interval_start = interval[0].astimezone(UTC).replace(tzinfo=None)
                 interval_stop = interval[1].astimezone(UTC).replace(tzinfo=None)
                 return self._get_leave_work_entry_type_dates(leave[2], interval_start, interval_stop, self.employee_id)
-        return self.env.ref('hr_work_entry.generic_work_entry_type_leave')
+        return self.env['hr.work.entry.type'].search([
+            ('code', '=', 'LEAVE100'),
+            ('country_code', '=', self.country_code),
+        ], limit=1)
 
     def _get_sub_leave_domain(self):
         return Domain('calendar_id', 'in', [False] + self.resource_calendar_id.ids)

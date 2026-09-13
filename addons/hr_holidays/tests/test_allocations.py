@@ -308,7 +308,12 @@ class TestAllocations(TestHrHolidaysCommon):
             'company_ids': [(4, self.employee.company_id.id)]
         })
 
-        work_entry_type = self.env.ref('hr_work_entry.generic_work_entry_type_compensatory')
+        work_entry_type = self.env['hr.work.entry.type'].create({
+            'name': 'Compensatory Time Off',
+            'code': 'LEAVE105',
+            'count_as': 'absence',
+            'requires_allocation': True,
+        })
         allocation = self.env['hr.leave.allocation'].create({
             'name': 'Alloc',
             'employee_id': self.employee.id,
@@ -390,7 +395,12 @@ class TestAllocations(TestHrHolidaysCommon):
         """
             This test makes sure that the time off balance showed on the time off management kanban card is correct
         """
-        work_entry_type = self.env.ref('hr_work_entry.generic_work_entry_type_compensatory')
+        work_entry_type = self.env['hr.work.entry.type'].create({
+            'name': 'Compensatory Time Off',
+            'code': 'LEAVE105',
+            'count_as': 'absence',
+            'requires_allocation': True,
+        })
 
         invalid_allocation = self.env['hr.leave.allocation'].sudo().create({
             'name': 'Alloc',

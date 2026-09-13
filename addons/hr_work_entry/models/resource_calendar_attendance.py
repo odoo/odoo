@@ -22,10 +22,7 @@ class ResourceCalendarAttendance(models.Model):
     def _compute_allowed_work_entry_type_ids(self):
         for attendance in self:
             country = attendance.calendar_id.company_id.sudo().country_id
-            if not country or not self.env['hr.work.entry.type'].search_count([('country_id', '=', country.id)], limit=1):
-                domain = [('country_id', '=', False)]
-            else:
-                domain = [('country_id', '=', country.id)]
+            domain = [('country_id', '=', country.id)] if country else [('id', '=', False)]
             attendance.allowed_work_entry_type_ids = self.env['hr.work.entry.type'].search(domain)
 
     def _compute_display_name(self):

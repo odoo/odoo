@@ -14,8 +14,5 @@ class ResCompany(models.Model):
     def _compute_allowed_work_entry_type_ids(self):
         for company in self:
             country = company.country_id or self.env.company.country_id
-            if not country or not self.env['hr.work.entry.type'].search_count([('country_id', '=', country.id)], limit=1):
-                domain = [('country_id', '=', False)]
-            else:
-                domain = [('country_id', '=', country.id)]
+            domain = [('country_id', '=', country.id)] if country else [('id', '=', False)]
             company.allowed_work_entry_type_ids = self.env['hr.work.entry.type'].search(domain)

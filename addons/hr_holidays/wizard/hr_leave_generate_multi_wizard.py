@@ -47,10 +47,7 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
     def _compute_allowed_work_entry_type_ids(self):
         for wizard in self:
             country = wizard.company_id.country_id or self.env.company.country_id
-            if not country or not self.env['hr.work.entry.type'].search_count([('country_id', '=', country.id)], limit=1):
-                domain = [('country_id', '=', False)]
-            else:
-                domain = [('country_id', '=', country.id)]
+            domain = [('country_id', '=', country.id)] if country else [('id', '=', False)]
             wizard.allowed_work_entry_type_ids = self.env['hr.work.entry.type'].search(domain)
 
     def _prepare_employees_holiday_values(self, employees, date_from_tz, date_to_tz):

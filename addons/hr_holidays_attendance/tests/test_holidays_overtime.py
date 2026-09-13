@@ -540,7 +540,7 @@ class TestHolidaysOvertime(HttpCase, TransactionCase):
         self.employee.contract_date_start = datetime(2026, 1, 1)
         self.env.user.tz = 'UTC'
         self.employee.tz = 'UTC'
-        self.employee.ruleset_id = self.ref('hr_attendance.hr_attendance_default_ruleset')
+        self.employee.ruleset_id = self.ruleset
 
         leave = self.env['hr.leave'].create({
             'name': 'Vacation Yippie',
@@ -576,7 +576,7 @@ class TestHolidaysOvertime(HttpCase, TransactionCase):
         self.employee.contract_date_start = datetime(2026, 1, 1)
         self.env.user.tz = 'Europe/Brussels'
         self.employee.tz = 'Europe/Brussels'
-        self.employee.ruleset_id = self.env.ref('hr_attendance.hr_attendance_default_ruleset')
+        self.employee.ruleset_id = self.ruleset
 
         with freeze_time('2026-01-14'):
             self.env['hr.attendance']._cron_absence_detection()
