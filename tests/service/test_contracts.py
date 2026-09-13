@@ -1,4 +1,3 @@
-import inspect
 import os
 import pathlib
 import selectors
@@ -13,8 +12,6 @@ import pytest
 
 from odoo.db import PoolError
 from odoo.service import common
-
-from .conftest import requires_inotify
 
 
 class TestPsycopgConnectFailureHierarchy:
@@ -145,40 +142,28 @@ class TestSignalsDoNotSurfaceAsEINTR:
         assert OSError().errno is None
 
 
-@requires_inotify
-class TestInotifyPrivateSurface:
-    @pytest.fixture
-    def trees(self, tmp_path):
-        from odoo.service._watcher import INOTIFY_LISTEN_EVENTS, InotifyTrees
+class TestInotifyIsTheForksOwn:
+    """The third-party `inotify` package used to be reached into by name-mangled
+    attribute (`_Inotify__watches_r`, `_Inotify__inotify_fd`, `_Inotify__epoll`)
+    from two subclasses that existed to close the descriptors it leaked."""
 
-        trees = InotifyTrees(
-            [str(tmp_path)], mask=INOTIFY_LISTEN_EVENTS, block_duration_s=0.05
-        )
-        try:
-            yield trees
-        finally:
-            trees.close()
-
-    def test_inotify_trees_still_exposes_i_and_mask(self, trees):
-        assert hasattr(trees, "_i"), "InotifyTrees._i moved"
-        assert hasattr(trees, "_mask"), "InotifyTrees._mask moved"
-
-    def test_the_watch_descriptor_map_is_still_name_mangled_watches_r(self, trees):
-        mapping = getattr(trees._i, "_Inotify__watches_r", None)
-        assert isinstance(mapping, dict), "Inotify.__watches_r moved or changed type"
-
-    def test_remove_watch_still_takes_superficial(self, trees):
-        parameters = inspect.signature(trees._i.remove_watch).parameters
-        assert "superficial" in parameters, "Inotify.remove_watch signature changed"
-        assert parameters["superficial"].default is False
-
-    def test_the_adapter_is_the_only_place_that_reaches_in(self):
+    def test_the_watcher_imports_no_third_party_inotify(self):
         from odoo.service import _watcher
 
         source = pathlib.Path(_watcher.__file__).read_text(encoding="utf-8")
-        body = source.split("class _InotifyInternals", 1)[1]
-        after_adapter = body.split("class FSWatcherInotify", 1)[1]
-        for spelling in ("_Inotify__watches_r", "._i", "._mask"):
-            assert spelling not in after_adapter, (
-                f"{spelling} is reached outside _InotifyInternals again"
-            )
+        assert "from odoo.libs import inotify" in source
+        for spelling in ("import inotify\n", "from inotify", "_Inotify__"):
+            assert spelling not in source, spelling
+
+    def test_the_library_owns_both_descriptors(self, tmp_path):
+        from odoo.libs import inotify
+
+        if not inotify.AVAILABLE:
+            pytest.skip("inotify is a Linux facility")
+        ino = inotify.Inotify()
+        fds = ino.descriptors()
+        assert len(fds) == 2
+        ino.close()
+        for fd in fds:
+            with pytest.raises(OSError):
+                os.fstat(fd)

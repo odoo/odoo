@@ -49,7 +49,7 @@ odoo/
 ├── service/        Process lifecycle + the servers
 │   ├── server, _base_server, _threaded (ThreadedServer + EventServer),
 │   │   _prefork, _census (the master's worker counts, a file its
-│   │   children read for /web/metrics), _worker, _watcher, _transport (one
+│   │   children read for /web/metrics), _worker, _watcher (on libs/inotify), _transport (one
 │   │   HTTP/1.1 exchange: head, body reader, WSGI environ, response framing,
 │   │   the access log; what a prefork worker serves a connection with),
 │   │   httpd (the threaded server: selector, pool, keep-alive), _cron, lifecycle,

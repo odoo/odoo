@@ -63,24 +63,29 @@ class TestInotifyLimitDiagnosis:
 
 @requires_inotify
 class TestBuildWatcher:
-    def _build(self, exc):
+    def _build(self, exc, tmp_path):
+        from odoo.libs import inotify
+
         obj = object.__new__(_watcher.FSWatcherInotify)
-        with patch.object(_watcher, "InotifyTrees", side_effect=exc):
-            obj._arm_watcher(["/some/path"])
+        obj.block_duration_s = 0.5
+        with patch.object(inotify.Inotify, "add_watch", side_effect=exc):
+            obj._arm_watcher([str(tmp_path)])
         return obj
 
-    def test_an_unrecognised_failure_is_re_raised_unchanged(self):
+    def test_an_unrecognised_failure_is_re_raised_unchanged(self, tmp_path):
         original = RuntimeError("something else entirely")
         with pytest.raises(RuntimeError) as caught:
-            self._build(original)
+            self._build(original, tmp_path)
         assert caught.value is original, (
             "wrapping an unrelated fault in an inotify-capacity message sends "
             "the reader after the wrong sysctl"
         )
 
-    def test_a_capacity_failure_is_re_raised_as_enospc_with_the_diagnosis(self):
+    def test_a_capacity_failure_is_re_raised_as_enospc_with_the_diagnosis(
+        self, tmp_path
+    ):
         with pytest.raises(OSError) as caught:
-            self._build(OSError(errno.ENOSPC, "no space"))
+            self._build(OSError(errno.ENOSPC, "no space"), tmp_path)
         assert caught.value.errno == errno.ENOSPC
         assert "fs.inotify" in str(caught.value)
         assert isinstance(caught.value.__cause__, OSError), (
@@ -88,62 +93,67 @@ class TestBuildWatcher:
             "the only thing that says which watch it died on"
         )
 
-    def test_a_successful_build_registers_the_overflow_sentinel(self):
-        obj = object.__new__(_watcher.FSWatcherInotify)
-        trees = MagicMock()
+    def test_a_failed_build_leaves_no_instance_behind(self, tmp_path):
+        from odoo.libs import inotify
+
+        closed = []
+        real_close = inotify.Inotify.close
+
+        def close(self):
+            closed.append(self)
+            real_close(self)
+
         with (
-            patch.object(_watcher, "InotifyTrees", return_value=trees),
-            patch.object(_watcher, "_InotifyInternals") as internals,
+            patch.object(inotify.Inotify, "close", close),
+            pytest.raises(RuntimeError),
         ):
-            obj._arm_watcher(["/a", "/b"])
-        assert obj.roots == ["/a", "/b"]
-        internals.return_value.register_path.assert_called_once_with(
-            _watcher.OVERFLOW_WD, _watcher.OVERFLOW_PATH
-        )
+            self._build(RuntimeError("boom"), tmp_path)
+        assert len(closed) == 1
+
+    def test_a_successful_build_arms_every_root(self, tmp_path):
+        (tmp_path / "a" / "models").mkdir(parents=True)
+        (tmp_path / "b").mkdir()
+        obj = object.__new__(_watcher.FSWatcherInotify)
+        obj.block_duration_s = 0.5
+        obj._arm_watcher([str(tmp_path / "a"), str(tmp_path / "b")])
+        try:
+            assert obj.roots == [str(tmp_path / "a"), str(tmp_path / "b")]
+            assert obj.watcher.watched == {
+                str(tmp_path / "a"),
+                str(tmp_path / "a" / "models"),
+                str(tmp_path / "b"),
+            }
+        finally:
+            obj._release_watcher()
 
 
 @requires_inotify
 class TestWatchDirectory:
-    def _watcher_with(self, internals):
+    def _watcher_with(self, watcher):
         obj = object.__new__(_watcher.FSWatcherInotify)
-        obj.internals = internals
+        obj.watcher = watcher
         return obj
 
-    def test_a_fresh_directory_is_watched_once(self):
-        internals = MagicMock()
-        internals.add_watch.return_value = 7
-        self._watcher_with(internals)._watch_directory(Path("/tmp/x"))
-        internals.add_watch.assert_called_once_with("/tmp/x")
-        internals.remove_watch_superficially.assert_not_called()
-
-    def test_a_path_the_kernel_still_holds_is_purged_and_re_added(self):
-        internals = MagicMock()
-        internals.add_watch.side_effect = [None, 7]
-        self._watcher_with(internals)._watch_directory(Path("/tmp/x"))
-        internals.remove_watch_superficially.assert_called_once_with("/tmp/x")
-        assert internals.add_watch.call_count == 2, (
-            "a directory the kernel moved or recreated keeps its old watch "
-            "descriptor; without the purge the re-add is a no-op and every "
-            "edit below it is lost"
+    def test_a_directory_is_armed_with_the_listen_mask(self):
+        watcher = MagicMock()
+        self._watcher_with(watcher)._watch_directory(Path("/tmp/x"))
+        watcher.add_watch.assert_called_once_with(
+            Path("/tmp/x"), _watcher.INOTIFY_LISTEN_EVENTS
         )
 
-    def test_a_failing_purge_does_not_stop_the_re_add(self):
-        internals = MagicMock()
-        internals.add_watch.side_effect = [None, 7]
-        internals.remove_watch_superficially.side_effect = RuntimeError("gone")
-        self._watcher_with(internals)._watch_directory(Path("/tmp/x"))
-        assert internals.add_watch.call_count == 2
+    def test_a_released_watcher_takes_no_watch(self):
+        self._watcher_with(None)._watch_directory(Path("/tmp/x"))
 
     def test_an_unwatchable_directory_warns_rather_than_killing_the_watcher(
         self, caplog, sysctl
     ):
-        internals = MagicMock()
-        internals.add_watch.side_effect = OSError(errno.ENOSPC, "no space")
+        watcher = MagicMock()
+        watcher.add_watch.side_effect = OSError(errno.ENOSPC, "no space")
         with (
             sysctl(max_user_instances=128, max_user_watches=65536),
             caplog.at_level(logging.WARNING, logger="odoo.service.server"),
         ):
-            self._watcher_with(internals)._watch_directory(Path("/tmp/x"))
+            self._watcher_with(watcher)._watch_directory(Path("/tmp/x"))
         message = caplog.text
         assert "cannot watch /tmp/x" in message
         assert "fs.inotify" in message, (

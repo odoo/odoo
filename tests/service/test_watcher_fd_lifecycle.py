@@ -40,7 +40,7 @@ class TestInotifyDescriptorLifecycle:
         before = _inotify_fds()
         watcher = _make_watcher(tmp_path, monkeypatch)
         retained_tree = watcher.watcher
-        descriptors = watcher.internals.get_descriptors()
+        descriptors = watcher.watcher.descriptors()
         watcher.stop()
         assert _inotify_fds() == before
         for fd in descriptors:
@@ -54,15 +54,22 @@ class TestInotifyDescriptorLifecycle:
     def test_failed_construction_closes_descriptors_before_traceback_dies(
         self, tmp_path, monkeypatch
     ):
+        from odoo.libs import inotify
+
         before = _inotify_fds()
         descriptors = []
+        armed = []
+        real_add_watch = inotify.Inotify.add_watch
 
-        def fail_after_arming(tree, paths):
-            tree._load_tree(paths[0])
-            descriptors.extend(_watcher._InotifyInternals(tree).get_descriptors())
-            raise RuntimeError("failure after allocating watches")
+        def fail_after_arming(self, path, mask):
+            wd = real_add_watch(self, path, mask)
+            armed.append(wd)
+            descriptors.extend(self.descriptors())
+            if len(armed) == 2:
+                raise RuntimeError("failure after allocating watches")
+            return wd
 
-        monkeypatch.setattr(_watcher.InotifyTrees, "_load_trees", fail_after_arming)
+        monkeypatch.setattr(inotify.Inotify, "add_watch", fail_after_arming)
         with pytest.raises(RuntimeError, match="failure after allocating") as retained:
             _make_watcher(tmp_path, monkeypatch)
         assert retained.value.__traceback__ is not None
@@ -91,14 +98,11 @@ class TestInotifyDescriptorLifecycle:
         watcher.start()
         watcher.stop()
         assert watcher.watcher is None
-        assert watcher.internals is None, (
-            "internals still holds _trees, which is what kept the fd alive"
-        )
 
     def test_the_descriptors_carry_cloexec(self, tmp_path, monkeypatch):
         watcher = _make_watcher(tmp_path, monkeypatch)
         try:
-            fds = watcher.internals.get_descriptors()
+            fds = watcher.watcher.descriptors()
             assert fds
             for fd in fds:
                 assert os.get_inheritable(fd) is False, (
@@ -163,7 +167,7 @@ class TestReloadDoesNotAccumulateDescriptors:
 
 
 def _watched_paths(watcher):
-    return set(watcher.internals._inotify._Inotify__watches)
+    return set(watcher.watcher.watched)
 
 
 class TestOnlyDirectoriesThatCanChangeAreWatched:

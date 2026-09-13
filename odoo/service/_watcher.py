@@ -5,9 +5,9 @@ import logging
 import os
 import threading
 from collections.abc import Iterator
-from contextlib import suppress
 from pathlib import Path
 
+from odoo.libs import inotify as _inotify_lib
 from odoo.libs.debug_log import DebugLog
 
 import odoo.addons
@@ -15,22 +15,15 @@ from . import _process_state
 from .lifecycle import restart
 from .settings import current
 
-if os.name == "posix":
-    try:
-        import inotify
-        from inotify.adapters import Inotify, TerminalEventException
-        from inotify.adapters import InotifyTrees as _InotifyTrees
-        from inotify.constants import (
-            IN_CREATE,
-            IN_MODIFY,
-            IN_MOVED_TO,
-        )
+inotify = _inotify_lib if _inotify_lib.AVAILABLE else None
 
-        INOTIFY_LISTEN_EVENTS = IN_MODIFY | IN_CREATE | IN_MOVED_TO
-    except ImportError:
-        inotify = None  # type: ignore[assignment]
-else:
-    inotify = None  # type: ignore[assignment]
+INOTIFY_LISTEN_EVENTS = (
+    _inotify_lib.IN_MODIFY
+    | _inotify_lib.IN_CREATE
+    | _inotify_lib.IN_MOVED_TO
+    | _inotify_lib.IN_DELETE
+    | _inotify_lib.IN_ISDIR
+)
 
 if not inotify:
     try:
@@ -89,8 +82,6 @@ def iter_watch_dirs(root: str | os.PathLike[str]) -> Iterator[str]:
             continue
         stack.extend(reversed(children))
 
-
-OVERFLOW_WD = -1
 
 OVERFLOW_PATH = "<inotify-overflow>"
 
@@ -203,8 +194,9 @@ class FSWatcherBase:
         self._cancel_burst_flush()
         self._flush_asset_invalidation()
         with self._burst_lock:
-            self._burst_active = False
-        _debug.lifecycle("watcher.burst_ended")
+            was_active, self._burst_active = self._burst_active, False
+        if was_active:
+            _debug.lifecycle("watcher.burst_ended")
 
     def _arm_burst_flush(self) -> None:
         if not self._needs_burst_timer:
@@ -323,122 +315,28 @@ class FSWatcherWatchdog(FSWatcherBase):
         )
 
 
-if inotify:
-
-    class _OwnedInotify(Inotify):
-        def __init__(self, **kwargs):
-            try:
-                super().__init__(**kwargs)
-            except BaseException:
-                self.close()
-                raise
-
-        def close(self) -> None:
-            epoll = getattr(self, "_Inotify__epoll", None)
-            fd = getattr(self, "_Inotify__inotify_fd", None)
-            self._Inotify__epoll = None
-            self._Inotify__inotify_fd = None
-            try:
-                if epoll is not None:
-                    epoll.close()
-            finally:
-                if fd is not None:
-                    os.close(fd)
-
-        def __del__(self):
-            with suppress(Exception):
-                self.close()
-
-    class InotifyTrees(_InotifyTrees):
-        def __init__(self, paths, mask, block_duration_s):
-            self._mask = (
-                mask
-                | inotify.constants.IN_ISDIR
-                | inotify.constants.IN_CREATE
-                | inotify.constants.IN_DELETE
-            )
-            self._i = _OwnedInotify(block_duration_s=block_duration_s)
-            try:
-                self._load_trees(paths)
-            except BaseException:
-                self.close()
-                raise
-
-        def _load_tree(self, path):
-            # The library's walk stats every entry of every directory and
-            # watches __pycache__, .git and the rest; this one prunes them.
-            for directory in iter_watch_dirs(path):
-                try:
-                    self._i.add_watch(directory, self._mask)
-                except inotify.calls.InotifyError as exc:
-                    if exc.errno == errno.ENOENT:
-                        continue
-                    raise
-
-        def close(self) -> None:
-            self._i.close()
-
-
-class _InotifyInternals:
-    def __init__(self, trees: InotifyTrees) -> None:
-        self._trees = trees
-
-    @property
-    def _inotify(self):
-        return self._trees._i
-
-    @property
-    def mask(self) -> int:
-        return self._trees._mask
-
-    def register_path(self, wd: int, path: str) -> None:
-        self._inotify._Inotify__watches_r[wd] = path
-
-    def add_watch(self, path: str):
-        return self._inotify.add_watch(path, self.mask)
-
-    def remove_watch_superficially(self, path: str) -> None:
-        self._inotify.remove_watch(path, superficial=True)
-
-    def get_descriptors(self) -> tuple[int, ...]:
-        inot = self._inotify
-        fds = [inot._Inotify__inotify_fd]
-        epoll = getattr(inot, "_Inotify__epoll", None)
-        if epoll is not None:
-            fds.append(epoll.fileno())
-        return tuple(fds)
-
-    def set_cloexec(self) -> None:
-        for fd in self.get_descriptors():
-            try:
-                os.set_inheritable(fd, False)
-            except OSError:
-                _logger.debug(
-                    "autoreload: could not set FD_CLOEXEC on fd %d", fd, exc_info=True
-                )
-
-
 class FSWatcherInotify(FSWatcherBase):
     _needs_burst_timer = False
 
-    def __init__(self) -> None:
+    def __init__(self, block_duration_s: float = 0.5) -> None:
         super().__init__()
         self.started = False
         self.thread: threading.Thread | None = None
-        self.watcher: InotifyTrees | None = None
-        self.internals: _InotifyInternals | None = None
-        inotify.adapters._LOGGER.setLevel(logging.ERROR)
+        self.watcher: _inotify_lib.Inotify | None = None
+        self.block_duration_s = block_duration_s
         paths = self.get_watch_paths()
         _logger.info("Watching %d folder(s) for changes", len(paths))
         self._arm_watcher(paths)
 
-    def _arm_watcher(self, paths: list[str], block_duration_s: float = 0.5) -> None:
+    def _arm_watcher(self, paths: list[str]) -> None:
         self.roots = paths
+        watcher = _inotify_lib.Inotify()
         try:
-            self.watcher = InotifyTrees(
-                paths, mask=INOTIFY_LISTEN_EVENTS, block_duration_s=block_duration_s
-            )
+            for root in paths:
+                for directory in iter_watch_dirs(root):
+                    watcher.add_watch(directory, INOTIFY_LISTEN_EVENTS)
         except Exception as exc:
+            watcher.close()
             diagnosis = get_inotify_limit_diagnosis(exc)
             _debug.logic(
                 "watcher.inotify_arm_failed",
@@ -449,11 +347,12 @@ class FSWatcherInotify(FSWatcherBase):
             if not diagnosis:
                 raise
             raise OSError(errno.ENOSPC, diagnosis) from exc
-        self.internals = _InotifyInternals(self.watcher)
-        self.internals.set_cloexec()
-        self.internals.register_path(OVERFLOW_WD, OVERFLOW_PATH)
+        self.watcher = watcher
         _debug.lifecycle(
-            "watcher.inotify_armed", roots=len(paths), block_s=block_duration_s
+            "watcher.inotify_armed",
+            roots=len(paths),
+            watches=len(watcher.watched),
+            block_s=self.block_duration_s,
         )
 
     def _sync_watches_after_overflow(self) -> None:
@@ -470,20 +369,14 @@ class FSWatcherInotify(FSWatcherBase):
         self.on_asset_file_changed(OVERFLOW_PATH)
 
     def _watch_directory(self, directory: Path) -> None:
-        path = str(directory)
+        watcher = self.watcher
+        if watcher is None:
+            _debug.logic(
+                "watcher.watch_skipped", path=str(directory), reason="released"
+            )
+            return
         try:
-            internals = self.internals
-            if internals is None:
-                _debug.logic("watcher.watch_skipped", path=path, reason="released")
-                return
-            if internals.add_watch(path) is not None:
-                return
-            try:
-                internals.remove_watch_superficially(path)
-            except Exception:
-                _logger.debug("autoreload: stale watch purge for %s", path)
-            _debug.logic("watcher.watch_readded", path=path)
-            internals.add_watch(path)
+            watcher.add_watch(directory, INOTIFY_LISTEN_EVENTS)
         except Exception as exc:
             _logger.warning(
                 "autoreload: cannot watch %s; edits below it will not be seen. %s",
@@ -491,7 +384,9 @@ class FSWatcherInotify(FSWatcherBase):
                 get_inotify_limit_diagnosis(exc) or "See the traceback for the cause.",
                 exc_info=True,
             )
-            _debug.logic("watcher.watch_failed", path=path, error=type(exc).__name__)
+            _debug.logic(
+                "watcher.watch_failed", path=str(directory), error=type(exc).__name__
+            )
 
     def run(self) -> None:
         try:
@@ -512,40 +407,40 @@ class FSWatcherInotify(FSWatcherBase):
         watcher = self.watcher
         if watcher is None:
             return
-        dir_creation_events = {"IN_MOVED_TO", "IN_CREATE"}
         while self.started:
             try:
-                for event in watcher.event_gen(timeout_s=0, yield_nones=False):
-                    _, type_names, path, filename = event
-                    if "IN_ISDIR" not in type_names:
-                        if "IN_DELETE" not in type_names:
-                            full_path = str(Path(path, filename))
-                            _debug.pipeline(
-                                "watcher.event",
-                                backend="inotify",
-                                kind=",".join(type_names),
-                                path=full_path,
-                            )
-                            if self.on_file_changed(full_path):
-                                return
-                    elif dir_creation_events.intersection(type_names):
-                        if filename in get_unwatched_dirs():
-                            continue
-                        created_dir = Path(path, filename)
-                        _debug.pipeline(
-                            "watcher.directory_created", path=str(created_dir)
-                        )
-                        for directory in iter_watch_dirs(created_dir):
-                            self._watch_directory(Path(directory))
-                            for entry in Path(directory).iterdir():
-                                if entry.is_file() and self.on_file_changed(str(entry)):
-                                    return
-            except TerminalEventException as exc:
-                if str(exc) != "IN_Q_OVERFLOW":
-                    raise
+                events = watcher.read(self.block_duration_s)
+            except _inotify_lib.QueueOverflow:
                 _debug.logic("watcher.queue_overflow")
                 self._sync_watches_after_overflow()
+                continue
+            for event in events:
+                if not event.is_dir:
+                    if event.is_deletion:
+                        continue
+                    _debug.pipeline(
+                        "watcher.event",
+                        backend="inotify",
+                        mask=event.mask,
+                        path=event.full_path,
+                    )
+                    if self.on_file_changed(event.full_path):
+                        return
+                elif event.is_creation and self._handle_created_directory(event):
+                    return
             self._end_burst()
+
+    def _handle_created_directory(self, event: _inotify_lib.Event) -> bool:
+        if event.name in get_unwatched_dirs():
+            return False
+        created_dir = Path(event.full_path)
+        _debug.pipeline("watcher.directory_created", path=str(created_dir))
+        for directory in iter_watch_dirs(created_dir):
+            self._watch_directory(Path(directory))
+            for entry in Path(directory).iterdir():
+                if entry.is_file() and self.on_file_changed(str(entry)):
+                    return True
+        return False
 
     def start(self) -> None:
         self.started = True
@@ -586,9 +481,7 @@ class FSWatcherInotify(FSWatcherBase):
         _debug.lifecycle("watcher.stopped", backend="inotify", joined=True)
 
     def _release_watcher(self) -> None:
-        watcher = getattr(self, "watcher", None)
-        self.internals = None
-        self.watcher = None
+        watcher, self.watcher = getattr(self, "watcher", None), None
         if watcher is not None:
             watcher.close()
             _debug.lifecycle("watcher.released", backend="inotify")

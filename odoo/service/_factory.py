@@ -1,14 +1,12 @@
 from __future__ import annotations
 
 import logging
-import platform
 from typing import Any
 
 from odoo.libs.debug_log import DebugLog
 
 from . import _process_state
 from ._base_server import CommonServer
-from ._env import _IS_POSIX
 from ._prefork import PreforkServer
 from ._process_state import set_server
 from ._threaded import EventServer, ThreadedServer
@@ -110,18 +108,16 @@ def _start_watcher(
     ):
         return None
     if not (inotify or watchdog):
-        if _IS_POSIX and platform.system() != "Darwin":
-            module = "inotify"
-        else:
-            module = "run_watchdog"
+        # inotify is the kernel's own on Linux; anywhere else the watchdog
+        # package is the only backend, and it is a dev requirement.
         _debug.logic(
             "server.watcher_unavailable",
-            module=module,
+            module="watchdog",
             assets="assets" in settings.dev_mode,
         )
         _logger.warning(
             "'%s' module not installed. Code autoreload is disabled%s",
-            module,
+            "watchdog",
             (
                 " — with --dev=assets and no watcher, edited asset sources "
                 "are NOT picked up; use --dev=xml instead"
