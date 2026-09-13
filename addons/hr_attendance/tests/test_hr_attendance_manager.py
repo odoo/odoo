@@ -4,6 +4,7 @@ from odoo import Command
 from odoo.exceptions import AccessError
 from odoo.tests import new_test_user
 from odoo.tests.common import TransactionCase, tagged
+from datetime import date, datetime
 
 
 @tagged('post_install', '-at_install')
@@ -90,3 +91,24 @@ class TestAttendanceManager(TransactionCase):
         self.marc_employee.attendance_manager_id = self.ryan.id
         self.assertTrue(marc_public_employee.with_user(self.ryan).action_open_last_month_attendances())
         self.assertTrue(ryan_public_employee.with_user(self.ryan).action_open_last_month_attendances())
+
+    def test_fully_flexible_employee_attendance_create_and_edit_rights(self):
+        """
+        Ensure that an attendance manager without `hr.group_hr_user` can create/edit
+        a fully flexible employee's attendance without hitting an AccessError on
+        the restricted is_fully_flexible field.
+        """
+        employee_fully_flexi = self.env['hr.employee'].create({
+            'name': 'Fully flexible employee',
+            'resource_calendar_id': False,
+            'contract_date_start': date(2026, 1, 1),
+            'attendance_manager_id': self.luisa.id,
+        })
+        attendance_fully_flexi = self.env['hr.attendance'].with_user(self.luisa).create({
+            'employee_id': employee_fully_flexi.id,
+            'check_in': datetime(2026, 9, 8, 8, 0),
+            'check_out': datetime(2026, 9, 8, 16, 0),
+        })
+
+        attendance_fully_flexi.with_user(self.luisa).check_out = datetime(2026, 9, 8, 17, 0)
+        self.assertEqual(attendance_fully_flexi.check_out, datetime(2026, 9, 8, 17, 0))
