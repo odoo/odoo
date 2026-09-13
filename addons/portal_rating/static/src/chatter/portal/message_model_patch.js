@@ -11,14 +11,14 @@ patch(Message.prototype, {
     },
 
     shouldHideFromMessageListOnDelete(_env) {
-        if (this.thread?.ratingChatter && this.rating_value !== null) {
+        if (this.thread?.ratingChatter && this.rating_id) {
             return true;
         }
         return super.shouldHideFromMessageListOnDelete(...arguments);
     },
 
     async remove(options = {}) {
-        if (this.thread?.ratingChatter && this.rating_value !== null) {
+        if (this.thread?.ratingChatter && this.rating_id) {
             const { thread } = this;
             const data = await super.remove({ ...options, removeFromThread: false });
             this.store.env.bus.trigger("MAIL:RELOAD-THREAD", {

@@ -208,4 +208,5 @@ class RatingRating(models.Model):
         return data_by_model
 
     def _store_rating_fields(self, res: Store.FieldList):
+        res.one("message_id", [])
         res.extend(["rating", "rating_image_url", "rating_text"])
