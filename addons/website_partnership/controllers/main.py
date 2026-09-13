@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.http import request, route
-from odoo.fields import Domain
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website_partner.controllers.main import WebsitePartnerPage
 
@@ -33,29 +32,24 @@ class WebsitePartnership(WebsitePartnerPage):
             })
         return grades
 
-    def _get_partners(self, base_partner_domain_post, pager, references_per_page=20, search_order=""):
+    def _get_partners(self, search, offset, limit, order, options):
         # search partners matching current search parameters
-        partner_ids = request.env['res.partner'].sudo().search(
-            base_partner_domain_post, order=search_order,
-            offset=pager['offset'], limit=references_per_page)
-        return partner_ids.sudo()
+        partner_count, details, fuzzy_search_term = self.env.website._search_with_fuzzy(
+            search_type='partners',
+            search=search,
+            offset=offset,
+            limit=limit,
+            order=order,
+            options=options
+        )
+        partners = details[0].get('results')
+        return partner_count, partners, fuzzy_search_term
 
-    def _get_base_partner_domain(self, search, searched_fields=()):
-        base_partner_domain = Domain.AND([
-            Domain('grade_id', '!=', False),
-            Domain('website_published', '=', True),
-            Domain('grade_id.active', '=', True),
-        ])
-        if not request.env.user.has_group('website.group_website_restricted_editor'):
-            base_partner_domain = Domain.AND([base_partner_domain, Domain('grade_id.website_published', '=', True)])
-        if self.env.website.is_view_active("website_partnership.search_setting") and search:
-            base_partner_domain = Domain.AND([base_partner_domain, Domain.OR(
-                Domain(field, 'ilike', search)
-                for field in searched_fields
-            )])
-        if self.env.website.is_view_active("website_partnership.companies_only_setting"):
-            base_partner_domain = Domain.AND([base_partner_domain, Domain('is_company', '=', True)])
-        return base_partner_domain
+    def _get_partners_search_options(self, grade=None, **post):
+        return {
+            'allowFuzzy': not post.get('noFuzzy'),
+            'grade': request.env['ir.http']._slug(grade) if grade else None,
+        }
 
     def _get_partners_detail_values(self, partner_id, **post):
         values = super()._get_partners_detail_values(partner_id, **post)
@@ -63,31 +57,38 @@ class WebsitePartnership(WebsitePartnerPage):
             values.update({'current_grade': request.env['res.partner.grade'].browse(int(grade_id)).exists()})
         return values
 
-    def _get_partners_values(self, grade=None, page=0, references_per_page=20, **post):
+    def _get_partners_values(self, grade=None, page=1, references_per_page=20, **post):
         search = post.get('search', "")
-
-        base_partner_domain = self._get_base_partner_domain(search, searched_fields=('name', 'website_description'))
-
-        grades = self._get_grades(grade, list(base_partner_domain))
-
-        # current search, modify the base_partner_domain
-        if self.env.website.is_view_active("website_partnership.categories_setting") and grade:
-            base_partner_domain = Domain.AND([base_partner_domain, Domain('grade_id', '=', grade.id)])
-
-        # format pager
         slug = request.env['ir.http']._slug
-        url = f"/partners/grade/{slug(grade)}" if grade else "/partners"
-        url_args = {}
-        if search:
-            url_args['search'] = search
-        partner_count = request.env['res.partner'].sudo().search_count(base_partner_domain)
+        options = self._get_partners_search_options(grade=grade, **post)
+        order = 'is_published desc, %s, id desc' % post.get('order', "name ASC")
+        partner_count, partners, fuzzy_search_term = self._get_partners(
+            search=search,
+            offset=(page - 1) * references_per_page,
+            limit=references_per_page,
+            order=order,
+            options=options
+        )
+        search_details = self.env.website._search_get_details(search_type='partners', order=order, options={'allowFuzzy': not post.get('noFuzzy')})
+        post['search'] = fuzzy_search_term or search
+        final_search_domain = self.env.website._search_build_domain(
+            domain_list=search_details[0].get('base_domain', []),
+            search=fuzzy_search_term or search,
+            fields=search_details[0].get('search_fields'),
+            extra=search_details[0].get('search_extra', [])
+        )
+        grades = self._get_grades(grade, final_search_domain)
         pager = self.env.website.pager(
-            url=url, total=partner_count, page=page, step=references_per_page, scope=7,
-            url_args=url_args)
-
-        partners = self._get_partners(base_partner_domain, pager, references_per_page=references_per_page, search_order="complete_name ASC, id ASC")
-
-        keep = QueryURL('/partners', ['grade'],
+            url=f"/partners/grade/{slug(grade)}" if grade else "/partners",
+            total=partner_count,
+            page=page,
+            step=references_per_page,
+            scope=7,
+            url_args=post
+        )
+        keep = QueryURL(
+            '/partners',
+            ['grade'],
             grade=grade,
             **{key: value for key, value in post.items() if (key == 'search')}
         )
@@ -100,6 +101,8 @@ class WebsitePartnership(WebsitePartnerPage):
             'searches': post,
             'search': search,
             'keep_partners_url': keep,
+            'search_count': partner_count,
+            'original_search': fuzzy_search_term and search,
         }
         return values
 
@@ -110,7 +113,7 @@ class WebsitePartnership(WebsitePartnerPage):
         '/partners/grade/<model("res.partner.grade"):grade>',
         '/partners/grade/<model("res.partner.grade"):grade>/page/<int:page>',
     ], type='http', auth="public", website=True, readonly=True, list_as_website_content=_lt("Partners"))
-    def partners(self, grade=None, page=0, **post):
+    def partners(self, grade=None, page=1, **post):
         values = self._get_partners_values(
             grade=grade,
             page=page,

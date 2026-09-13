@@ -179,6 +179,32 @@ class WebsiteAccount(CustomerPortal):
 class WebsiteCrmPartnerAssign(WebsitePartnership, GoogleMap):
     _references_per_page = 40
 
+    def _get_countries(self, country, country_domain):
+        partner_obj = request.env['res.partner']
+
+        # Group by country
+        country_groups = partner_obj.sudo()._read_group(
+            country_domain, ["country_id"], ["__count"], order="country_id")
+
+        countries = [{
+            'country_id_count': sum(count for __, count in country_groups),
+            'country_id': (0, _("All Countries")),
+            'active': country is None,
+        }]
+        for g_country, count in country_groups:
+            countries.append({
+                'country_id_count': count,
+                'country_id': (g_country.id, g_country.display_name),
+                'active': country and g_country.id == country.id,
+            })
+        return countries
+
+    def _get_partners_search_options(self, grade=None, country=None, **post):
+        options = super()._get_partners_search_options(grade=grade, **post)
+        options['country'] = request.env['ir.http']._slug(country) if country else None
+        options['industry'] = post.get('industry')
+        return options
+
     def _get_gmap_domains(self, **kw):
         if kw.get('dom', '') != "website_crm_partner_assign.partners":
             return super()._get_gmap_domains(**kw)
@@ -226,89 +252,75 @@ class WebsiteCrmPartnerAssign(WebsitePartnership, GoogleMap):
             values.update({'current_country': request.env['res.country'].browse(int(country_id)).exists()})
         return values
 
-    def _get_partners_values(self, country=None, grade=None, page=0, references_per_page=20, **post):
+    def _get_partners_values(self, country=None, grade=None, page=1, references_per_page=20, **post):
         country_all = post.pop('country_all', False)
-        partner_obj = request.env['res.partner']
         country_obj = request.env['res.country']
-
-        industries = request.env['res.partner.industry'].sudo().search([])
-        industry_param = request.env['ir.http']._unslug(post.pop('industry', ''))[1]
-        current_industry = industry_param in industries.ids and industries.browse(int(industry_param))
-
         search = post.get('search', '')
-
-        base_partner_domain = self._get_base_partner_domain(search, searched_fields=('name', 'website_description', 'street', 'street2', 'city', 'zip', 'state_id', 'country_id'))
-
+        order = 'is_published desc, %s, id desc' % post.get('order', "name ASC")
+        industries = request.env['res.partner.industry'].sudo().search([])
+        industry_param = request.env['ir.http']._unslug(post.get('industry', ''))[1]
+        current_industry = industry_param in industries.ids and industries.browse(int(industry_param))
         if not country and not country_all:
             if request.geoip.country_code:
                 country = country_obj.search([('code', '=', request.geoip.country_code)], limit=1)
-        # Group by country
-        country_domain = list(base_partner_domain)
-        if grade:
-            country_domain += [('grade_id', '=', grade.id)]
-        country_groups = partner_obj.sudo()._read_group(
-            country_domain + [('country_id', '!=', False)],
-            ["country_id"], ["__count"], order="country_id")
 
-        # Fallback on all countries if no partners found for the country and
-        # there are matching partners for other countries.
-        fallback_all_countries = country and country.id not in (c.id for c, __ in country_groups)
+        search_details = self.env.website._search_get_details(search_type='partners', order=order, options={'allowFuzzy': not post.get('noFuzzy')})
+        fuzzy_search_term = self.env.website._search_find_fuzzy_term(search_details, search)
+        if fuzzy_search_term:
+            if fuzzy_search_term.lower() == search.lower():
+                fuzzy_search_term = False
+        post['search'] = fuzzy_search_term or search
+        final_search_domain = self.env.website._search_build_domain(
+            domain_list=search_details[0].get('base_domain', []),
+            search=fuzzy_search_term or search,
+            fields=search_details[0].get('search_fields'),
+            extra=search_details[0].get('search_extra', [])
+        )
+        # Group by country
+        country_domain = list(final_search_domain)
+        if grade:
+            country_domain += [('grade_id', '=', grade.id), ('country_id', '!=', False)]
+        countries = self._get_countries(country, Domain(country_domain))
+
+        fallback_all_countries = country and country.id not in (c['country_id'][0] for c in countries)
         if fallback_all_countries:
             country = None
 
-        grade_domain = list(base_partner_domain)
+        grade_domain = list(final_search_domain)
         if country:
             grade_domain += [('country_id', '=', country.id)]
-        grades = self._get_grades(grade, grade_domain)
-
-        countries = [{
-            'country_id_count': sum(count for __, count in country_groups),
-            'country_id': (0, _("All Countries")),
-            'active': country is None,
-        }]
-        for g_country, count in country_groups:
-            countries.append({
-                'country_id_count': count,
-                'country_id': (g_country.id, g_country.display_name),
-                'active': country and g_country.id == country.id,
-            })
-
-        # current search, modify the base_partner_domain
-        if self.env.website.is_view_active("website_partnership.categories_setting") and grade:
-            base_partner_domain = Domain.AND([base_partner_domain, Domain('grade_id', '=', grade.id)])
-        if self.env.website.is_view_active("website_crm_partner_assign.countries_setting") and country:
-            base_partner_domain = Domain.AND([base_partner_domain, Domain('country_id', '=', country.id)])
-        if self.env.website.is_view_active("website_crm_partner_assign.industries_setting") and current_industry:
-            base_partner_domain = Domain.AND([base_partner_domain, Domain('implemented_partner_ids.industry_id', 'in', current_industry.id)])
-
-        # format pager
-        slug = request.env['ir.http']._slug
+        grades = self._get_grades(grade, Domain(grade_domain))
+        options = self._get_partners_search_options(grade=grade, country=country, **post)
+        partner_count, partners, fuzzy_search_term = self._get_partners(
+            search=search,
+            offset=(page - 1) * references_per_page,
+            limit=references_per_page,
+            order=order,
+            options=options
+        )
         url = '/partners'
         if grade:
-            url += '/grade/' + slug(grade)
+            url += '/grade/' + request.env['ir.http']._slug(grade)
         if country:
-            url += '/country/' + slug(country)
+            url += '/country/' + request.env['ir.http']._slug(country)
 
-        url_args = {}
-        if search:
-            url_args['search'] = search
-        if country_all:
-            url_args['country_all'] = True
-        if current_industry:
-            url_args['industry'] = slug(current_industry)
-
-        partner_count = partner_obj.sudo().search_count(base_partner_domain)
         pager = self.env.website.pager(
-            url=url, total=partner_count, page=page, step=references_per_page, scope=7,
-            url_args=url_args)
+            url=url,
+            total=partner_count,
+            page=page,
+            step=references_per_page,
+            scope=7,
+            url_args=post
+        )
 
         google_maps_api_key = self.env.website.google_maps_api_key
-        partners = self._get_partners(base_partner_domain, pager, references_per_page=references_per_page, search_order="grade_sequence ASC, implemented_partner_count DESC, complete_name ASC, id ASC")
 
-        keep = QueryURL('/partners', ['grade', 'country'],
+        keep = QueryURL(
+            '/partners',
+            ['grade', 'country'],
             grade=grade,
             country=country,
-            **{key: value for key, value in post.items() if (key in ['search', 'country_all', 'industry'])}
+            **{key: value for key, value in post.items() if (key in ['search', 'country_all'])}
         )
 
         values = {
@@ -327,6 +339,8 @@ class WebsiteCrmPartnerAssign(WebsitePartnership, GoogleMap):
             'google_maps_api_key': google_maps_api_key,
             'fallback_all_countries': fallback_all_countries,
             'keep_partners_url': keep,
+            'search_count': partner_count,
+            'original_search': fuzzy_search_term and search,
             'structured_data': partners._render_jsonld(),
         }
         return values
@@ -344,7 +358,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnership, GoogleMap):
         '/partners/grade/<model("res.partner.grade"):grade>/country/<model("res.country"):country>',
         '/partners/grade/<model("res.partner.grade"):grade>/country/<model("res.country"):country>/page/<int:page>',
     ], type='http', sitemap=sitemap_partners)
-    def partners(self, country=None, grade=None, page=0, **post):
+    def partners(self, country=None, grade=None, page=1, **post):
         values = self._get_partners_values(
             country=country,
             grade=grade,
