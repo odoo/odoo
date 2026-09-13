@@ -6,7 +6,7 @@ import { patch } from "@web/core/utils/patch";
 
 patch(Thread.prototype, {
     setup() {
-        super.setup();
+        super.setup(...arguments);
         const { promise, resolve } = Promise.withResolvers();
         /**
          * Promise that resolves once a newly persisted thread is ready to swap
@@ -18,6 +18,15 @@ patch(Thread.prototype, {
         this.readyToSwapPromise = promise;
         this.resolveReadyToSwap = resolve;
         this._prevComposerDisabled = false;
+        this.onChange(
+            () => [this.composerDisabled],
+            function onChangeComposerDisabled(composerDisabled) {
+                if (!composerDisabled && this._prevComposerDisabled) {
+                    this.composer.autofocus++;
+                }
+                this._prevComposerDisabled = composerDisabled;
+            }
+        );
     },
     /** @returns {Promise<import("models").Message} */
     async post(body, postData, extraData = {}) {
@@ -75,19 +84,12 @@ patch(Thread.prototype, {
             return false;
         }
         const step = this.channel?.chatbot?.currentStep;
-        return (
+        return Boolean(
             this.channel?.chatbot?.isProcessingAnswer ||
-            (step &&
-                !step.operatorFoundEver &&
-                (step.completed || !step.expectAnswer || step.answer_ids.length > 0))
+                (step &&
+                    !step.operatorFoundEver &&
+                    (step.completed || !step.expectAnswer || step.answer_ids.length > 0))
         );
-    },
-
-    composerDisabledonUpdate() {
-        if (!this.composerDisabled && this._prevComposerDisabled) {
-            this.composer.autofocus++;
-        }
-        this._prevComposerDisabled = this.composerDisabled;
     },
     get shouldTranslateNewMessages() {
         if (

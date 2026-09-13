@@ -13,17 +13,16 @@ const commandRegistry = registry.category("discuss.channel_commands");
 const threadPatch = {
     setup() {
         super.setup();
-        this.channel = fields.One("discuss.channel", {
-            inverse: "thread",
-            /** @this {import("models").Thread} */
-            compute() {
-                return this.model === "discuss.channel" ? this.id : undefined;
-            },
-        });
+        this.channel = fields.One("discuss.channel", { inverse: "thread" });
+        this.onRelationChange(
+            () => this.channel,
+            ({ removed }) => {
+                if (removed.length && !this.channel) {
+                    this.delete();
+                }
+            }
+        );
         this.firstUnreadMessage = fields.One("mail.message", {
-            compute() {
-                return this.channel?.firstUnreadMessage;
-            },
             inverse: "threadAsFirstUnread",
         });
         // Send the mark as read and the mark as unread one at a time: the server
@@ -31,6 +30,12 @@ const threadPatch = {
         this.markReadSequential = useSequential();
         this.markingAsRead = false;
         this.scrollUnread = true;
+        this.assignComputed("channel", function computeChannel() {
+            return this.model === "discuss.channel" ? this.id : undefined;
+        });
+        this.assignComputed("firstUnreadMessage", function computeFirstUnreadMessage() {
+            return this.channel?.firstUnreadMessage;
+        });
     },
     /** @override */
     async checkReadAccess() {
