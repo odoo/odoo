@@ -84,62 +84,50 @@ class AccountAccount(models.Model):
         if not self:
             return
 
-        self.env["account.account"].flush_model(["currency_id"])
-        self.env["account.journal"].flush_model(
-            [
-                "currency_id",
-                "default_account_id",
-                "suspense_account_id",
+        journals = (
+            self.env["account.journal"]
+            .sudo()
+            .search(
+                [("currency_id", "!=", False), ("default_account_id", "in", self.ids)]
+            )
+        )
+        mismatched = [
+            (journal.default_account_id, journal)
+            for journal in journals
+            if journal.currency_id != journal.company_id.currency_id
+            and journal.default_account_id.currency_id != journal.currency_id
+        ]
+        if not mismatched:
+            channels = (
+                self.env["account.payment.channel"]
+                .sudo()
+                .search(
+                    [
+                        ("payment_account_id", "in", self.ids),
+                        ("journal_id.currency_id", "!=", False),
+                        (
+                            "payment_method_id.payment_type",
+                            "in",
+                            ("inbound", "outbound"),
+                        ),
+                    ]
+                )
+            )
+            mismatched = [
+                (channel.payment_account_id, channel.journal_id)
+                for channel in channels
+                if channel.journal_id.currency_id
+                != channel.journal_id.company_id.currency_id
+                and channel.payment_account_id.currency_id
+                != channel.journal_id.currency_id
             ]
-        )
-        self.env["account.payment.method"].flush_model(["payment_type"])
-        self.env["account.payment.channel"].flush_model(
-            [
-                "payment_method_id",
-                "payment_account_id",
-            ]
-        )
-
-        self.env.cr.execute(
-            """
-            SELECT
-                account.id,
-                journal.id
-            FROM account_journal journal
-            JOIN res_company company ON company.id = journal.company_id
-            JOIN account_account account ON account.id = journal.default_account_id
-            WHERE journal.currency_id IS NOT NULL
-            AND journal.currency_id != company.currency_id
-            AND account.currency_id != journal.currency_id
-            AND account.id = ANY(%(accounts)s)
-
-            UNION ALL
-
-            SELECT
-                account.id,
-                journal.id
-            FROM account_journal journal
-            JOIN res_company company ON company.id = journal.company_id
-            JOIN account_payment_channel apml ON apml.journal_id = journal.id
-            JOIN account_payment_method apm on apm.id = apml.payment_method_id
-            JOIN account_account account ON account.id = apml.payment_account_id
-            WHERE journal.currency_id IS NOT NULL
-            AND journal.currency_id != company.currency_id
-            AND account.currency_id != journal.currency_id
-            AND apm.payment_type IN ('inbound', 'outbound')
-            AND account.id = ANY(%(accounts)s)
-        """,
-            {"accounts": list(self.ids)},
-        )
-        res = self.env.cr.fetchone()
         _debug.logic(
             "journal_currency_checked",
             accounts=self,
-            mismatch=res,
+            mismatch=bool(mismatched),
         )
-        if res:
-            account = self.env["account.account"].browse(res[0])
-            journal = self.env["account.journal"].browse(res[1])
+        if mismatched:
+            account, journal = mismatched[0]
             raise ValidationError(
                 _(
                     "The foreign currency set on the journal '%(journal)s' and "
@@ -181,29 +169,23 @@ class AccountAccount(models.Model):
         if not self:
             return
 
-        self.env["account.account"].flush_model(["account_type"])
-        self.env["account.journal"].flush_model(
-            [
-                "type",
-                "default_account_id",
-            ]
+        used = (
+            self.env["account.journal"]
+            .sudo()
+            .search_count(
+                [
+                    ("type", "in", ("sale", "purchase")),
+                    ("default_account_id", "in", self.ids),
+                    (
+                        "default_account_id.account_type",
+                        "in",
+                        ("asset_receivable", "liability_payable"),
+                    ),
+                ],
+                limit=1,
+            )
         )
-        self.env.cr.execute(
-            """
-            SELECT account.id
-            FROM account_account account
-            JOIN account_journal journal
-                ON journal.default_account_id = account.id
-            WHERE account.id = ANY(%s)
-            AND account.account_type
-                IN ('asset_receivable', 'liability_payable')
-            AND journal.type IN ('sale', 'purchase')
-            LIMIT 1;
-        """,
-            [list(self.ids)],
-        )
-
-        if self.env.cr.fetchone():
+        if used:
             _debug.logic(
                 "account_type_rejected", accounts=self, reason="sale_purchase_journal"
             )
@@ -218,28 +200,22 @@ class AccountAccount(models.Model):
     @api.constrains("account_type")
     @_debug.perf.timed
     def _check_account_is_bank_journal_bank_account(self):
-        self.env["account.account"].flush_model(["account_type"])
-        self.env["account.journal"].flush_model(
-            [
-                "type",
-                "default_account_id",
-            ]
+        used = (
+            self.env["account.journal"]
+            .sudo()
+            .search_count(
+                [
+                    ("default_account_id", "in", self.ids),
+                    (
+                        "default_account_id.account_type",
+                        "in",
+                        ("asset_receivable", "liability_payable"),
+                    ),
+                ],
+                limit=1,
+            )
         )
-        self.env.cr.execute(
-            """
-            SELECT journal.id
-              FROM account_journal journal
-              JOIN account_account account
-                ON journal.default_account_id = account.id
-             WHERE account.account_type
-                IN ('asset_receivable', 'liability_payable')
-               AND account.id = ANY(%s)
-             LIMIT 1;
-        """,
-            [list(self.ids)],
-        )
-
-        if self.env.cr.fetchone():
+        if used:
             _debug.logic(
                 "account_type_rejected", accounts=self, reason="bank_journal_account"
             )

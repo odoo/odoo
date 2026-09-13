@@ -3,7 +3,6 @@ import re
 from collections import defaultdict
 from datetime import date
 
-from psycopg import errors as pgerrors
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
@@ -424,37 +423,25 @@ class MixinSequence(models.AbstractModel):
             return format_string.format(**format_values, seq=cache[cache_key])
 
         self.flush_recordset()
-        with self.env.cr.savepoint(flush=False) as sp:
-            while True:
-                seq += 1
-                sequence = format_string.format(**format_values, seq=seq)
-                try:
-                    self.env.cr.execute(
-                        SQL(
-                            "UPDATE %(table)s SET %(fname)s = %(sequence)s WHERE id = %(id)s",
-                            table=SQL.identifier(self._table),
-                            fname=SQL.identifier(self._sequence_field),
-                            sequence=sequence,
-                            id=self.id,
-                        ),
-                        log_exceptions=False,
-                    )
-                    cache[cache_key] = seq
-                    _debug.lifecycle(
-                        "sequence_assigned",
-                        seq_model=self._name,
-                        seq_id=self,
-                        sequence=sequence,
-                    )
-                    return sequence
-                except pgerrors.ExclusionViolation, pgerrors.UniqueViolation:
-                    _debug.logic(
-                        "sequence_taken_retrying",
-                        seq_model=self._name,
-                        seq_id=self,
-                        sequence=sequence,
-                    )
-                    sp.rollback()
+        columns = self.env.backend.columns
+        while True:
+            seq += 1
+            sequence = format_string.format(**format_values, seq=seq)
+            if columns.try_write(self, self._sequence_field, self.id, sequence):
+                cache[cache_key] = seq
+                _debug.lifecycle(
+                    "sequence_assigned",
+                    seq_model=self._name,
+                    seq_id=self,
+                    sequence=sequence,
+                )
+                return sequence
+            _debug.logic(
+                "sequence_taken_retrying",
+                seq_model=self._name,
+                seq_id=self,
+                sequence=sequence,
+            )
 
     def _set_next_sequence(self):
         self.check_singleton()

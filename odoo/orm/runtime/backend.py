@@ -11,6 +11,7 @@ from datetime import timedelta as _timedelta
 from decimal import Decimal
 from itertools import batched
 
+from psycopg import errors as pgerrors
 from psycopg.errors import (
     ForeignKeyViolation,
     InvalidTextRepresentation,
@@ -20,8 +21,6 @@ from psycopg.errors import (
 from psycopg.types.json import Json, Jsonb, JsonDumper
 
 from odoo.exceptions import LockError, UserError
-from psycopg import errors as pgerrors
-
 from odoo.libs.accel import fast_clone
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.profiling import _OrmProfile
