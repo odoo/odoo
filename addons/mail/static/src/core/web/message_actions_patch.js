@@ -60,7 +60,7 @@ registerMessageAction("reply-all", {
             email,
             message,
             name: name || email,
-            signature: thread.store.self_partner?.main_user_id?.getSignatureBlock(),
+            signature: thread.store.selfUser?.getSignatureBlock(),
         });
         const context = {
             default_body: body,
@@ -92,7 +92,7 @@ registerMessageAction("forward", {
             email,
             message,
             name: name || email,
-            signature: thread.store.self_partner?.main_user_id?.getSignatureBlock(),
+            signature: thread.store.selfUser?.getSignatureBlock(),
         });
         const attachmentIds = message.attachment_ids.map((a) => a.id);
         const newAttachmentIds = await store.env.services.orm.call(

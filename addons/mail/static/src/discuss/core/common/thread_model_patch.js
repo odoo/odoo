@@ -609,9 +609,7 @@ const threadPatch = {
             thread: this.localId,
             channel_type: this.channel_type,
             force,
-            isAdmin: Boolean(
-                this.create_uid?.eq(this.store.self_partner?.main_user_id),
-            ),
+            isAdmin: Boolean(this.create_uid?.eq(this.store.selfUser)),
         }));
         if (!force) {
             const prompt =
@@ -619,7 +617,7 @@ const threadPatch = {
                     ? _t(
                           "You are about to leave this group conversation and will no longer have access to it unless you are invited again. Are you sure you want to continue?",
                       )
-                    : this.create_uid?.eq(this.store.self_partner?.main_user_id)
+                    : this.create_uid?.eq(this.store.selfUser)
                       ? _t(
                             "You are the administrator of this channel. Are you sure you want to leave?",
                         )

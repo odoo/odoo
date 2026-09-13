@@ -15,7 +15,7 @@
                     isToMany="true"
                     fieldString.translate="Expertise"
                     update.bind="addExpertises"
-                    quickCreate="store.self_partner?.main_user_id?.is_livechat_manager ? (name) => this.createAndLinkExpertise(name) : null"
+                    quickCreate="store.selfUser?.is_livechat_manager ? (name) => this.createAndLinkExpertise(name) : null"
                     getDomain="() => []"
                 >
                     <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">

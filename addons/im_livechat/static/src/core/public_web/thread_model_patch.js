@@ -127,7 +127,7 @@ patch(Thread.prototype, {
     },
     get matchesSelfExpertise() {
         return (
-            this.store.self_partner?.main_user_id &&
+            this.store.selfUser &&
             this.livechat_expertise_ids.some((expertise) =>
                 expertise.in(
                     this.store.self_partner.main_user_id.livechat_expertise_ids,

@@ -56,7 +56,7 @@ export class DiscussCorePublicWeb {
         if (
             thread &&
             invitedByUserId &&
-            invitedByUserId !== this.store.self_partner?.main_user_id?.id &&
+            invitedByUserId !== this.store.selfUser?.id &&
             !invite_to_rtc_call
         ) {
             this.notificationService.add(

@@ -97,7 +97,6 @@ patch(MessagingMenu.prototype, {
         };
     },
     get _tabs() {
-        const usesInbox = this.store.self.main_user_id?.notification_type === "inbox";
         return [
             {
                 icon: "fa-regular fa-bell",
@@ -106,7 +105,7 @@ patch(MessagingMenu.prototype, {
                 label: _t("Notifications"),
                 sequence: 10,
             },
-            usesInbox
+            this.store.selfUsesInbox
                 ? {
                       counter: this.store.inbox.counter,
                       icon: "fa-solid fa-inbox",

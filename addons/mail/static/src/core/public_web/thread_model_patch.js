@@ -79,7 +79,7 @@ const modelPatch = {
         this.store.discuss.activeTab = !this.store.env.services.ui.isSmall
             ? "notification"
             : this.isMailbox
-              ? this.store.self_partner?.main_user_id?.notification_type === "inbox"
+              ? this.store.selfUsesInbox
                   ? "inbox"
                   : "starred"
               : ["chat", "group"].includes(this.channel_type)

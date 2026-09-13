@@ -155,7 +155,7 @@ registerThreadAction("delete-thread", {
     condition({ owner, store, thread }) {
         return (
             thread?.parent_channel_id &&
-            store.self_partner?.main_user_id?.eq(thread.create_uid) &&
+            store.selfUser?.eq(thread.create_uid) &&
             !owner.isDiscussContent
         );
     },

@@ -79,11 +79,17 @@ export class Store extends BaseStore {
     get self() {
         return this.self_partner || this.self_guest;
     }
+    get selfUser() {
+        return this.self_partner?.main_user_id;
+    }
     get selfIsInternalUser() {
         return Boolean(this.self_partner?.isInternalUser);
     }
     get selfIsAdmin() {
-        return Boolean(this.self_partner?.main_user_id?.is_admin);
+        return Boolean(this.selfUser?.is_admin);
+    }
+    get selfUsesInbox() {
+        return this.selfUser?.notification_type === "inbox";
     }
     allChannels = fields.Many("Thread", {
         inverse: "storeAsAllChannels",
@@ -527,9 +533,7 @@ export class Store extends BaseStore {
                 try {
                     isTabFocused = parent.document.hasFocus();
                 } catch {}
-                const isInbox =
-                    this.store.self_partner?.main_user_id?.notification_type ===
-                        "inbox" && model !== "discuss.channel";
+                const isInbox = this.store.selfUsesInbox && model !== "discuss.channel";
                 debugLog.logic("serviceWorker notification-display-request", () => ({
                     model,
                     res_id,
