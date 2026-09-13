@@ -6,6 +6,7 @@
     'category': 'Supply Chain/Inventory',
     'depends': ['repair', 'mrp'],
     'data': [
+        'views/product_views.xml',
         'views/production_views.xml',
         'views/repair_views.xml',
     ],

@@ -11,6 +11,19 @@ class RepairOrder(models.Model):
         compute='_compute_production_count',
         groups='mrp.group_mrp_user',
     )
+    component_product_ids = fields.Many2many('product.product', compute='_compute_component_product_ids')
+    filter_on_components = fields.Boolean(compute='_compute_component_product_ids')
+
+    @api.depends('product_id')
+    def _compute_component_product_ids(self):
+        self.component_product_ids = False
+        self.filter_on_components = False
+        for repair in self:
+            bom = self.env['mrp.bom']._bom_find(repair.product_id, company_id=self.company_id.id)[repair.product_id]
+            product_ids = [line.product_id.id for line in bom.bom_line_ids] if bom else []
+            if product_ids:
+                repair.component_product_ids = product_ids
+                repair.filter_on_components = len(product_ids)
 
     @api.depends('reference_ids.production_ids')
     def _compute_production_count(self):
