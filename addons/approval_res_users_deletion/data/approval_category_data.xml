@@ -12,9 +12,7 @@
         <field name="privacy_visibility">private</field>
     </record>
 
-    <record
-        id="approval_category_step_account_deletion"
-        model="approval.category.step">
+    <record id="approval_category_step_account_deletion" model="approval.category.step">
         <field name="name">Administrator</field>
         <field name="category_id" ref="approval_category_account_deletion" />
         <field name="group_id" ref="base.group_system" />
@@ -22,8 +20,10 @@
         <field name="sequence" eval="10" />
     </record>
 
-    <!-- Self-service deletions go through as before; archive this rule to have
-         an administrator review each request. -->
+    <!--
+        Self-service deletions go through as before; archive this rule to have
+        an administrator review each request.
+    -->
     <record id="approval_rule_account_deletion_self_service" model="approval.rule">
         <field name="name">Self-service deletion</field>
         <field name="category_id" ref="approval_category_account_deletion" />

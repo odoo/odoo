@@ -20,7 +20,11 @@ deletion queue is base's, the engine is optional, and a database that never had
 """,
     "author": "AgroMarin",
     "license": "LGPL-3",
-    "depends": ["approval"],
-    "data": ["data/approval_category_data.xml"],
+    "depends": [
+        "approval",
+    ],
+    "data": [
+        "data/approval_category_data.xml",
+    ],
     "auto_install": True,
 }
