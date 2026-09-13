@@ -12,3 +12,4 @@ from . import test_timed_event_edges
 from . import test_queued_dispatch
 from . import test_step_validity
 from . import test_runtime_sync
+from . import test_registry_hooks

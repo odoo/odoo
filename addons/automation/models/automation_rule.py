@@ -541,20 +541,23 @@ class AutomationRule(models.Model):
         automation_rules = super().create(vals_list)
         self.env.registry.clear_cache()
         self._update_cron()
-        self._update_registry()
+        if automation_rules._patches_models():
+            self._update_registry()
         if automation_rules._has_trigger_onchange():
             self.env.registry.clear_cache("templates")
         return automation_rules
 
     def write(self, vals: dict):
         clear_templates = self._has_trigger_onchange()
+        patched_before = self._patches_models()
         res = super().write(vals)
         self.env.registry.clear_cache()
         if set(vals).intersection(self.CRITICAL_FIELDS):
             if "model_id" in vals:
                 self._clean_action_server_ids()
             self._update_cron()
-            self._update_registry()
+            if patched_before or self._patches_models():
+                self._update_registry()
             if clear_templates or self._has_trigger_onchange():
                 self.env.registry.clear_cache("templates")
         elif set(vals).intersection(self.RANGE_FIELDS):
@@ -564,10 +567,12 @@ class AutomationRule(models.Model):
 
     def unlink(self):
         clear_templates = self._has_trigger_onchange()
+        patched = self._patches_models()
         res = super().unlink()
         self.env.registry.clear_cache()
         self._update_cron()
-        self._update_registry()
+        if patched:
+            self._update_registry()
         if clear_templates:
             self.env.registry.clear_cache("templates")
         return res
@@ -1908,6 +1913,14 @@ class AutomationRule(models.Model):
                     {"repeat_unit": repeat_unit, "repeat_interval": repeat_interval},
                 )
             cron.write(vals)
+
+    def _patches_models(self):
+        return any(
+            rule.trigger in CREATE_WRITE_SET
+            or rule.trigger in ("on_unlink", "on_change")
+            or rule.trigger in MAIL_TRIGGERS
+            for rule in self
+        )
 
     def _update_registry(self):
         if self.env.registry.ready and not self.env.context.get("import_file"):
