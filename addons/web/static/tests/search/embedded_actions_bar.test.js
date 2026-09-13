@@ -9,6 +9,8 @@ import {
     mountWithSearch,
     onRpc,
 } from "@web/../tests/web_test_helpers";
+import { makeLogger } from "@web/core/debug/debug_logger";
+import { Deferred } from "@web/core/utils/concurrency";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import {
     EmbeddedActions,
@@ -237,6 +239,51 @@ describe("EmbeddedActions.toggleActionVisibility", () => {
             self.embeddedInfos.visibleEmbeddedActions,
         );
     });
+
+    for (const outcomes of [
+        [false, true],
+        [false, false],
+        [true, false],
+    ]) {
+        test(`overlapping visibility writes agree with persisted settings (${outcomes})`, async () => {
+            const gates = [new Deferred(), new Deferred()];
+            let calls = 0;
+            const handler = makeConfigHandler({
+                initialConfig: { "1+": { embedded_actions_visibility: [7] } },
+                orm: {
+                    call: async () => {
+                        if (!(await gates[calls++])) {
+                            throw new Error("save refused");
+                        }
+                    },
+                },
+            });
+            const self = {
+                embeddedInfos: { visibleEmbeddedActions: [7] },
+                configHandler: handler,
+            };
+            const first = EmbeddedActions.prototype.toggleActionVisibility.call(
+                self,
+                7,
+            );
+            const second = EmbeddedActions.prototype.toggleActionVisibility.call(
+                self,
+                8,
+            );
+            expect(self.embeddedInfos.visibleEmbeddedActions).toEqual([8]);
+            gates[0].resolve(outcomes[0]);
+            await first;
+            expect(self.embeddedInfos.visibleEmbeddedActions).toEqual([8]);
+            gates[1].resolve(outcomes[1]);
+            await second;
+            expect(self.embeddedInfos.visibleEmbeddedActions).toEqual(
+                outcomes[1] ? [8] : outcomes[0] ? [] : [7],
+            );
+            expect(self.embeddedInfos.visibleEmbeddedActions).toEqual(
+                handler.getEmbeddedActionsConfig("embedded_actions_visibility"),
+            );
+        });
+    }
 
     test("persistence failure restores the visible actions (hide case)", async () => {
         const self = {
@@ -505,6 +552,66 @@ describe("EmbeddedActions.reorderFromDrop", () => {
             false,
             103,
         ]);
+    });
+
+    for (const outcomes of [
+        [false, true],
+        [false, false],
+        [true, false],
+    ]) {
+        test(`overlapping reorders recover the last saved order (${outcomes})`, async () => {
+            const gates = [new Deferred(), new Deferred()];
+            let calls = 0;
+            const self = makeReorderSelf([7, 8, 9], () => gates[calls++]);
+            const first = EmbeddedActions.prototype.reorderFromDrop.call(self, {
+                element: tab(2),
+            });
+            const second = EmbeddedActions.prototype.reorderFromDrop.call(self, {
+                element: tab(2),
+            });
+            expect(self.embeddedInfos.embeddedActions.map((a) => a.id)).toEqual([
+                8, 9, 7,
+            ]);
+            gates[0].resolve(outcomes[0]);
+            await first;
+            expect(self.embeddedInfos.embeddedActions.map((a) => a.id)).toEqual([
+                8, 9, 7,
+            ]);
+            gates[1].resolve(outcomes[1]);
+            await second;
+            const expected = outcomes[1]
+                ? [8, 9, 7]
+                : outcomes[0]
+                  ? [9, 7, 8]
+                  : [7, 8, 9];
+            makeLogger("web.search.improve").logic("reorder-settled", () => ({
+                outcomes,
+                actual: self.embeddedInfos.embeddedActions,
+            }));
+            expect(self.embeddedInfos.embeddedActions.map((a) => a.id)).toEqual(
+                expected,
+            );
+        });
+    }
+
+    test("a failed reorder does not resurrect an action deleted between drops", async () => {
+        const gates = [new Deferred(), new Deferred()];
+        let calls = 0;
+        const self = makeReorderSelf([7, 8, 9], () => gates[calls++]);
+        const first = EmbeddedActions.prototype.reorderFromDrop.call(self, {
+            element: tab(2),
+        });
+        self.embeddedInfos.embeddedActions = self.embeddedInfos.embeddedActions.filter(
+            ({ id }) => id !== 7,
+        );
+        const second = EmbeddedActions.prototype.reorderFromDrop.call(self, {
+            element: tab(1),
+        });
+        gates[0].resolve(false);
+        await first;
+        gates[1].resolve(false);
+        await second;
+        expect(self.embeddedInfos.embeddedActions.map(({ id }) => id)).toEqual([8, 9]);
     });
 
     test("a position outside the bar is ignored", async () => {

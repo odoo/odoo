@@ -1,6 +1,7 @@
 import json
 
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
 from odoo.tests.common import HttpCase, TransactionCase, tagged
 
 
@@ -218,3 +219,72 @@ class TestWebReadGroupVersion(TransactionCase):
         )
         v2 = self._call()["__version"]
         self.assertNotEqual(v1, v2)
+
+
+@tagged("web_unit", "web_search_panel")
+class TestSearchPanelHierarchy(TransactionCase):
+    def test_cycle_terminates_without_mutating_input(self):
+        class BoundedRecord(dict):
+            reads = 0
+
+            def __getitem__(self, key):
+                if key == "parent_id":
+                    self.reads += 1
+                    if self.reads > 10:
+                        raise AssertionError(
+                            "cyclic hierarchy repeatedly revisited a row"
+                        )
+                return super().__getitem__(key)
+
+        for parents in ([1], [2, 1], [2, 1, 2]):
+            with self.subTest(parents=parents):
+                records = [
+                    BoundedRecord(id=index, parent_id=(parent, "Parent"))
+                    for index, parent in enumerate(parents, 1)
+                ]
+                original = [dict(record) for record in records]
+                result = self.env[
+                    "res.partner"
+                ]._search_panel_sanitize_parent_hierarchy(
+                    records,
+                    "parent_id",
+                    [record["id"] for record in records],
+                )
+                DebugLog("web.search.improve").logic("sanitized-cycle", records=result)
+                self.assertEqual(records, original)
+                by_id = {record["id"]: record for record in result}
+                self.assertEqual(len(result), len(records))
+                for start in by_id:
+                    seen = set()
+                    current = start
+                    while current:
+                        self.assertNotIn(current, seen)
+                        seen.add(current)
+                        parent = by_id[current]["parent_id"]
+                        current = parent and parent[0]
+
+    def test_missing_ancestor_still_excludes_its_whole_branch(self):
+        records = [
+            {"id": 1, "parent_id": (99, "Hidden")},
+            {"id": 2, "parent_id": (1, "Child")},
+            {"id": 3, "parent_id": False},
+        ]
+        result = self.env["res.partner"]._search_panel_sanitize_parent_hierarchy(
+            records,
+            "parent_id",
+            [1, 2, 3],
+        )
+        self.assertEqual(result, [records[2]])
+
+    def test_shared_ancestors_keep_input_order(self):
+        records = [
+            {"id": 2, "parent_id": (1, "Parent")},
+            {"id": 1, "parent_id": False},
+            {"id": 3, "parent_id": (1, "Parent")},
+        ]
+        result = self.env["res.partner"]._search_panel_sanitize_parent_hierarchy(
+            records,
+            "parent_id",
+            [2, 3],
+        )
+        self.assertEqual(result, records)

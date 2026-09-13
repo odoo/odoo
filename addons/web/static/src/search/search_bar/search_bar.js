@@ -853,6 +853,13 @@ export class SearchBar extends Component {
     }
 
     onInputDropdownChanged(isOpen) {
+        if (isOpen !== this.inputDropdownState.isOpen) {
+            log.logic("dropdown-state-stale", () => ({
+                isOpen,
+                current: this.inputDropdownState.isOpen,
+            }));
+            return;
+        }
         if (!isOpen && status(this) === "mounted") {
             this.resetState({ focus: false });
         } else if (this.navigator) {

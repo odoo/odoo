@@ -1,10 +1,13 @@
 // @ts-check
 /** @odoo-module native */
 
-import { groupBy } from "@web/core/utils/collections/arrays";
+import { makeLogger } from "@web/core/debug/debug_logger";
 
 import { findGroupByGroupId } from "./search_group_by.js";
-import { fireAndForgetNotify } from "./search_notification.js";
+
+const log = makeLogger("web.search.properties");
+/** @type {WeakMap<object, object>} */
+const propertySearchRequests = new WeakMap();
 
 /**
  * @param {Record<string, any>} definition
@@ -15,6 +18,44 @@ function propertyDescription(definition, definitionRecordName) {
     return definitionRecordName
         ? `${definition.string} (${definitionRecordName})`
         : definition.string;
+}
+
+/**
+ * A changed type or relation invalidates saved operators, values and intervals.
+ * Labels and choice metadata can be refreshed without changing query identity.
+ * @param {Record<string, any>} previous
+ * @param {Record<string, any>} next
+ */
+function compatiblePropertyDefinition(previous, next) {
+    return previous.type === next.type && previous.comodel === next.comodel;
+}
+
+/**
+ * Group-by paths cannot distinguish definition records. Keep one entry for
+ * compatible names, and exclude paths whose types or relations disagree.
+ * @param {import("@web/core/field_service").PropertyDefinitionRecord[]} records
+ */
+function groupablePropertyRecords(records) {
+    const byName = new Map();
+    const ambiguous = new Set();
+    for (const record of records) {
+        for (const definition of record.definitions) {
+            const previous = byName.get(definition.name);
+            if (
+                previous &&
+                !compatiblePropertyDefinition(previous.definition, definition)
+            ) {
+                ambiguous.add(definition.name);
+            }
+            byName.set(definition.name, { record, definition });
+        }
+    }
+    if (ambiguous.size) {
+        log.logic("ambiguous-property-grouping", () => ({ names: [...ambiguous] }));
+    }
+    return [...byName.values()]
+        .filter(({ definition }) => !ambiguous.has(definition.name))
+        .map(({ record, definition }) => ({ ...record, definitions: [definition] }));
 }
 
 /**
@@ -32,21 +73,66 @@ export const SearchPropertiesMixin = (Base) =>
                 return [];
             }
             const field = this.searchViewFields[searchItem.fieldName];
+            const parent = this.searchItems[searchItem.id];
+            if (!parent || parent.fieldName !== searchItem.fieldName || !field) {
+                return [];
+            }
             const definitionRecord = field.definition_record;
-            const result = await this._fetchPropertiesDefinition(
-                this.resModel,
-                searchItem.fieldName,
-            );
+            const activeId = this.globalContext.active_id || false;
+            const request = {};
+            propertySearchRequests.set(parent, request);
+            const isCurrent = () =>
+                propertySearchRequests.get(parent) === request &&
+                this.searchItems[searchItem.id] === parent &&
+                (this.globalContext.active_id || false) === activeId;
+            const release = () => {
+                if (propertySearchRequests.get(parent) === request) {
+                    propertySearchRequests.delete(parent);
+                }
+            };
+            let result;
+            try {
+                result = await this._fetchPropertiesDefinition(
+                    this.resModel,
+                    searchItem.fieldName,
+                );
+            } catch (error) {
+                const current = isCurrent();
+                release();
+                if (current) {
+                    throw error;
+                }
+                log.logic("search-definitions-superseded", () => ({
+                    field: searchItem.fieldName,
+                    failed: true,
+                }));
+                return [];
+            }
+            const current = isCurrent();
+            release();
+            if (!current) {
+                log.logic("search-definitions-superseded", () => ({
+                    field: searchItem.fieldName,
+                    failed: false,
+                }));
+                return [];
+            }
 
+            let activeLabelChanged = false;
             const searchItemIds = new Set();
-            /** @type {Record<string, any>} */
-            const existingFieldProperties = {};
+            const existingFieldProperties = new Map();
             for (const item of Object.values(this.searchItems)) {
                 if (
                     item.type === "field_property" &&
                     item.propertyItemId === searchItem.id
                 ) {
-                    existingFieldProperties[item.propertyFieldDefinition.name] = item;
+                    existingFieldProperties.set(
+                        JSON.stringify([
+                            item.propertyDomain[2],
+                            item.propertyFieldDefinition.name,
+                        ]),
+                        item,
+                    );
                 }
             }
 
@@ -59,12 +145,27 @@ export const SearchPropertiesMixin = (Base) =>
                     if (definition.type === "separator") {
                         continue;
                     }
-                    const existingSearchItem = existingFieldProperties[definition.name];
-                    if (existingSearchItem) {
-                        existingSearchItem.description = propertyDescription(
+                    const existingSearchItem = existingFieldProperties.get(
+                        JSON.stringify([definitionRecordId, definition.name]),
+                    );
+                    if (
+                        existingSearchItem &&
+                        compatiblePropertyDefinition(
+                            existingSearchItem.propertyFieldDefinition,
+                            definition,
+                        )
+                    ) {
+                        const description = propertyDescription(
                             definition,
                             definitionRecordName,
                         );
+                        activeLabelChanged ||=
+                            existingSearchItem.description !== description &&
+                            this.query.some(
+                                (item) => item.searchItemId === existingSearchItem.id,
+                            );
+                        existingSearchItem.propertyFieldDefinition = definition;
+                        existingSearchItem.description = description;
                         searchItemIds.add(existingSearchItem.id);
                         continue;
                     }
@@ -91,11 +192,17 @@ export const SearchPropertiesMixin = (Base) =>
                 }
             }
 
-            const staleIds = Object.values(existingFieldProperties)
+            const staleIds = [...existingFieldProperties.values()]
                 .filter((/** @type {any} */ item) => !searchItemIds.has(item.id))
                 .map((/** @type {any} */ item) => item.id);
-            if (this._forgetSearchItems(staleIds)) {
-                fireAndForgetNotify(this._notify());
+            const queryChanged = this._forgetSearchItems(staleIds);
+            log.logic("search-definitions-refreshed", () => ({
+                field: searchItem.fieldName,
+                queryChanged,
+                activeLabelChanged,
+            }));
+            if (queryChanged || activeLabelChanged) {
+                await this._notify({ reloadSections: queryChanged });
             }
             return this.getSearchItems((/** @type {any} */ searchItem) =>
                 searchItemIds.has(searchItem.id),
@@ -115,8 +222,10 @@ export const SearchPropertiesMixin = (Base) =>
                 return false;
             }
             const queryLength = this.query.length;
+            const retiredIds = new Set(ids);
             this.query = this.query.filter(
-                (/** @type {any} */ queryElem) => !ids.includes(queryElem.searchItemId),
+                (/** @type {any} */ queryElem) =>
+                    !retiredIds.has(queryElem.searchItemId),
             );
             return this.query.length !== queryLength;
         }
@@ -136,15 +245,19 @@ export const SearchPropertiesMixin = (Base) =>
                 if (field.type !== "properties") {
                     continue;
                 }
-                let prom = inFlight.get(field.name);
+                const requestKey = JSON.stringify([
+                    field.name,
+                    this.globalContext.active_id || false,
+                ]);
+                let prom = inFlight.get(requestKey);
                 if (!prom) {
                     prom = this._updatePropertyFieldSearchItems(field);
                     prom.catch(() => {}).finally(() => {
-                        if (inFlight.get(field.name) === prom) {
-                            inFlight.delete(field.name);
+                        if (inFlight.get(requestKey) === prom) {
+                            inFlight.delete(requestKey);
                         }
                     });
-                    inFlight.set(field.name, prom);
+                    inFlight.set(requestKey, prom);
                 }
                 proms.push(prom);
             }
@@ -153,10 +266,34 @@ export const SearchPropertiesMixin = (Base) =>
 
         /** @param {Record<string, any>} field */
         async _updatePropertyFieldSearchItems(field) {
-            const result = await this._fetchPropertiesDefinition(
-                this.resModel,
-                field.name,
-            );
+            const activeId = this.globalContext.active_id || false;
+            const isCurrent = () =>
+                this.searchViewFields[field.name] === field &&
+                (this.globalContext.active_id || false) === activeId;
+            let records;
+            try {
+                records = await this._fetchPropertiesDefinition(
+                    this.resModel,
+                    field.name,
+                );
+            } catch (error) {
+                if (isCurrent()) {
+                    throw error;
+                }
+                log.logic("group-definitions-superseded", () => ({
+                    field: field.name,
+                    failed: true,
+                }));
+                return;
+            }
+            if (!isCurrent()) {
+                log.logic("group-definitions-superseded", () => ({
+                    field: field.name,
+                    failed: false,
+                }));
+                return;
+            }
+            const result = groupablePropertyRecords(records);
 
             const isPropertyGroupBy = (/** @type {any} */ item) =>
                 item.isProperty && ["groupBy", "dateGroupBy"].includes(item.type);
@@ -165,6 +302,7 @@ export const SearchPropertiesMixin = (Base) =>
                     .filter(isPropertyGroupBy)
                     .map((/** @type {any} */ item) => [item.fieldName, item]),
             );
+            let activeLabelChanged = false;
             const liveIds = new Set();
             const liveFieldNames = new Set();
             let groupByGroupId = findGroupByGroupId(this.searchItems);
@@ -177,6 +315,7 @@ export const SearchPropertiesMixin = (Base) =>
                 for (const definition of definitions) {
                     const fullName = `${field.name}.${definition.name}`;
                     liveFieldNames.add(fullName);
+                    const previousField = this.searchViewFields[fullName];
                     this.searchViewFields[fullName] = {
                         name: fullName,
                         readonly: false,
@@ -195,7 +334,27 @@ export const SearchPropertiesMixin = (Base) =>
                         continue;
                     }
                     const existing = existingByFieldName.get(fullName);
-                    if (existing) {
+                    if (
+                        existing &&
+                        previousField &&
+                        compatiblePropertyDefinition(
+                            {
+                                type: existing.fieldType,
+                                comodel: previousField.relation,
+                            },
+                            definition,
+                        )
+                    ) {
+                        activeLabelChanged ||=
+                            existing.description !== definition.string &&
+                            this.query.some(
+                                (item) => item.searchItemId === existing.id,
+                            );
+                        Object.assign(existing, {
+                            description: definition.string,
+                            definitionRecordId,
+                            definitionRecordName,
+                        });
                         liveIds.add(existing.id);
                         continue;
                     }
@@ -235,8 +394,16 @@ export const SearchPropertiesMixin = (Base) =>
                 }
             }
 
-            if (this._forgetSearchItems(staleIds)) {
-                await this._notify();
+            const queryChanged = this._forgetSearchItems(staleIds);
+            log.logic("definitions-refreshed", () => ({
+                field: field.name,
+                live: liveIds.size,
+                retired: staleIds.length,
+                queryChanged,
+                activeLabelChanged,
+            }));
+            if (queryChanged || activeLabelChanged) {
+                await this._notify({ reloadSections: queryChanged });
             }
         }
 
@@ -252,22 +419,10 @@ export const SearchPropertiesMixin = (Base) =>
                 domain.push(["id", "=", activeId]);
             }
 
-            const definitions = await this.fieldService.loadPropertyDefinitions(
+            return this.fieldService.loadPropertyDefinitionsByRecord(
                 resModel,
                 fieldName,
                 domain,
             );
-            const result = groupBy(
-                Object.values(definitions),
-                (definition) => definition.record_id,
-            );
-            const entries = /** @type {[string, Record<string, any>[]][]} */ (
-                Object.entries(result)
-            );
-            return entries.map(([recordId, definitions]) => ({
-                definitionRecordId: Number.parseInt(recordId, 10),
-                definitionRecordName: definitions[0]?.record_name,
-                definitions,
-            }));
         }
     };

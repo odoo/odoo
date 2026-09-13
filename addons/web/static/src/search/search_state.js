@@ -188,7 +188,7 @@ function sectionsToState(sections) {
             }
         }
     }
-    return result;
+    return toWire(result);
 }
 
 /**
@@ -196,7 +196,7 @@ function sectionsToState(sections) {
  * @returns {Map<number, Record<string, any>>}
  */
 function sectionsFromState(sections) {
-    const result = arrayToMap(sections);
+    const result = arrayToMap(toWire(sections));
     for (const [, section] of result) {
         section.values = arrayToMap(section.values);
         if (section.groups) {

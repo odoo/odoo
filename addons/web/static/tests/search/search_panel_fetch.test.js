@@ -1,6 +1,10 @@
 // @ts-check
 
 import { describe, expect, test } from "@odoo/hoot";
+import { makeLogger } from "@web/core/debug/debug_logger";
+import { RPCCache } from "@web/core/network/rpc_cache";
+
+const auditLog = makeLogger("web.search.audit");
 import {
     createCategoryTree,
     createFilterTree,
@@ -170,8 +174,25 @@ describe("createCategoryTree hierarchy", () => {
             { id: 1, parent_id: 2 },
             { id: 2, parent_id: 1 },
         ]);
-        expect(category.values.has(1)).toBe(true);
-        expect(category.values.has(2)).toBe(true);
+        auditLog.logic("category-cycle", () => ({ roots: category.rootIds }));
+        expect(reachable(category)).toEqual(new Set([false, 1, 2]));
+    });
+
+    test("a self cycle and its descendants remain reachable", () => {
+        const category = buildTree([
+            { id: 1, parent_id: 1 },
+            { id: 2, parent_id: 1 },
+        ]);
+        expect(reachable(category)).toEqual(new Set([false, 1, 2]));
+        expect(category.values.get(1).parentId).toBe(false);
+    });
+
+    test("disabling hierarchy ignores parent links in the response", () => {
+        const category = buildTree([{ id: 1 }, { id: 2, parent_id: 1 }], {
+            hierarchize: false,
+        });
+        expect(category.rootIds).toEqual([false, 1, 2]);
+        expect(category.values.get(1).childrenIds).toEqual([]);
     });
 
     test("the All row survives a refetch with its children reset", () => {
@@ -226,4 +247,51 @@ describe("createCategoryTree hierarchy", () => {
         );
         expect(seen).toEqual([false, 1, 2]);
     });
+});
+
+test("independent filters never share checkbox state through an RPC payload", () => {
+    const result = { values: [{ id: 1, group_id: 10, group_name: "Group" }] };
+    const first = { groupBy: "category_id", values: new Map() };
+    const second = { groupBy: "category_id", values: new Map() };
+    createFilterTree(first, result);
+    first.values.get(1).checked = true;
+    createFilterTree(second, result);
+    auditLog.logic("response-ownership", () => ({
+        firstChecked: first.values.get(1).checked,
+        secondChecked: second.values.get(1).checked,
+        response: result,
+    }));
+    expect(first.values.get(1).checked).toBe(true);
+    expect(second.values.get(1).checked).toBe(false);
+    expect("checked" in result.values[0]).toBe(false);
+    expect(first.groups.get(10).values.get(1)).toBe(first.values.get(1));
+});
+
+test("filter tree accepts frozen RPC values", () => {
+    const value = Object.freeze({ id: 1 });
+    const filter = { values: new Map([[1, { id: 1, checked: true }]]) };
+    createFilterTree(filter, { values: [value] });
+    expect(filter.values.get(1).checked).toBe(true);
+});
+
+test("RPC cache isolates panel subscribers even when a consumer mutates its response", async () => {
+    const cache = new RPCCache("search-challenge", 1, null);
+    let reads = 0;
+    const read = () =>
+        cache.read("panel", "same-key", async () => {
+            reads++;
+            return { values: [{ id: 1 }] };
+        });
+    const first = await read();
+    first.values[0].checked = true;
+    const second = await read();
+    second.values[0].checked = false;
+    auditLog.logic("cache-counterexample", () => ({
+        reads,
+        first: first.values,
+        second: second.values,
+    }));
+    expect(reads).toBe(1);
+    expect(first.values[0].checked).toBe(true);
+    expect(second.values[0].checked).toBe(false);
 });

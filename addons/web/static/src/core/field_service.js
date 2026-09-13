@@ -17,6 +17,29 @@
 import { Domain } from "@web/core/domain";
 import { registry } from "@web/core/registry";
 
+/**
+ * @typedef {Object} PropertyDefinitionRecord
+ * @property {number} definitionRecordId
+ * @property {string} definitionRecordName
+ * @property {Record<string, any>[]} definitions
+ */
+
+/**
+ * Field paths identify properties by name, whereas search filters also need the
+ * definition record. Preserve the historical last-name-wins path index here.
+ * @param {PropertyDefinitionRecord[]} records
+ * @returns {Record<string, any>}
+ */
+function indexPropertyDefinitions(records) {
+    const definitions = Object.create(null);
+    for (const record of records) {
+        for (const definition of record.definitions) {
+            definitions[definition.name] = definition;
+        }
+    }
+    return definitions;
+}
+
 const BASE_DEFINITION_MODEL = "properties.base.definition";
 const BASE_DEFINITION_FIELD = "properties_definition";
 
@@ -70,9 +93,9 @@ class FieldService {
      * @param {Record<string, any>} fieldDefs
      * @param {string} name
      * @param {import("@web/core/domain").DomainListRepr} [domain=[]]
-     * @returns {Promise<Record<string, any>>}
+     * @returns {Promise<PropertyDefinitionRecord[]>}
      */
-    async _loadPropertyDefinitions(resModel, fieldDefs, name, domain = []) {
+    async _loadPropertyDefinitionsByRecord(resModel, fieldDefs, name, domain = []) {
         const fieldDef = getOwnFieldDef(fieldDefs, name);
         if (!fieldDef) {
             throw new Error(`Model "${resModel}" has no field "${name}"`);
@@ -120,21 +143,18 @@ class FieldService {
             });
         }
 
-        /** @type {Record<string, any>} */
-        const definitions = Object.create(null);
-        for (const record of result.records) {
-            for (const definition of record[definitionRecordField]) {
-                definitions[definition.name] = {
-                    is_property: true,
-                    searchable: true,
-                    record_id: record.id,
-                    record_name: record.display_name,
-                    ...(definition.comodel ? { relation: definition.comodel } : {}),
-                    ...definition,
-                };
-            }
-        }
-        return definitions;
+        return result.records.map((record) => ({
+            definitionRecordId: record.id,
+            definitionRecordName: record.display_name,
+            definitions: record[definitionRecordField].map((definition) => ({
+                is_property: true,
+                searchable: true,
+                record_id: record.id,
+                record_name: record.display_name,
+                ...(definition.comodel ? { relation: definition.comodel } : {}),
+                ...definition,
+            })),
+        }));
     }
 
     /**
@@ -144,8 +164,25 @@ class FieldService {
      * @returns {Promise<Record<string, any>>}
      */
     async loadPropertyDefinitions(resModel, fieldName, domain) {
+        return indexPropertyDefinitions(
+            await this.loadPropertyDefinitionsByRecord(resModel, fieldName, domain),
+        );
+    }
+
+    /**
+     * @param {string} resModel
+     * @param {string} fieldName
+     * @param {import("@web/core/domain").DomainListRepr} [domain]
+     * @returns {Promise<PropertyDefinitionRecord[]>}
+     */
+    async loadPropertyDefinitionsByRecord(resModel, fieldName, domain) {
         const fieldDefs = await this.loadFields(resModel);
-        return this._loadPropertyDefinitions(resModel, fieldDefs, fieldName, domain);
+        return this._loadPropertyDefinitionsByRecord(
+            resModel,
+            fieldDefs,
+            fieldName,
+            domain,
+        );
     }
 
     /**
@@ -192,10 +229,12 @@ class FieldService {
         } else if (fieldDef.type === "properties") {
             subResult = await this._loadPath(
                 followRelationalProperties ? resModel : "*",
-                await this._loadPropertyDefinitions(
-                    /** @type {string} */ (resModel),
-                    fieldDefs,
-                    name,
+                indexPropertyDefinitions(
+                    await this._loadPropertyDefinitionsByRecord(
+                        /** @type {string} */ (resModel),
+                        fieldDefs,
+                        name,
+                    ),
                 ),
                 remainingNames,
                 followRelationalProperties,
@@ -311,6 +350,7 @@ export const fieldService = {
         "loadFields",
         "loadPath",
         "loadPropertyDefinitions",
+        "loadPropertyDefinitionsByRecord",
         "loadPathDescription",
     ],
     /**

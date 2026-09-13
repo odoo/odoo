@@ -1,6 +1,42 @@
 // @ts-check
 /** @odoo-module native */
 
+import { makeLogger } from "@web/core/debug/debug_logger";
+
+const log = makeLogger("web.search.panel.tree");
+
+/**
+ * Break one parent edge per cycle before building children. Every row then has
+ * a finite path to a root, even for custom server payloads with cyclic parents.
+ * @param {Map<any, any>} values
+ */
+function normalizeCategoryParents(values) {
+    const resolved = new Set([false]);
+    for (const id of values.keys()) {
+        const path = new Set();
+        let current = id;
+        while (current && !resolved.has(current)) {
+            const value = values.get(current);
+            if (path.has(current)) {
+                log.logic("parent-cycle", () => ({
+                    id: current,
+                    parentId: value.parentId,
+                }));
+                value.parentId = false;
+                break;
+            }
+            path.add(current);
+            if (!values.has(value.parentId)) {
+                value.parentId = false;
+            }
+            current = value.parentId;
+        }
+        for (const pathId of path) {
+            resolved.add(pathId);
+        }
+    }
+}
+
 /**
  * @param {any[]} groupIds
  * @param {Map<any, {name: string, sequence?: number}>} groups
@@ -55,9 +91,10 @@ export function createCategoryTree(category, result, ensureCategoryValue) {
         category.values.set(value.id, {
             ...value,
             childrenIds: [],
-            parentId: value[parentField] || false,
+            parentId: category.hierarchize ? value[parentField] || false : false,
         });
     }
+    normalizeCategoryParents(category.values);
     for (const value of values) {
         const { parentId } = category.values.get(value.id);
         if (parentId && category.values.has(parentId)) {
@@ -89,10 +126,10 @@ export function createFilterTree(filter, result) {
         delete filter.errorMsg;
     }
 
-    values.forEach((/** @type {any} */ value) => {
-        const oldValue = filter.values.get(value.id);
-        value.checked = oldValue ? oldValue.checked : false;
-    });
+    values = values.map((/** @type {any} */ value) => ({
+        ...value,
+        checked: filter.values.get(value.id)?.checked ?? false,
+    }));
 
     filter.values = new Map();
     const groupIds = [];

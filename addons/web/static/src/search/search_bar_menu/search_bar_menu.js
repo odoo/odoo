@@ -1,15 +1,17 @@
 // @ts-check
 /** @odoo-module native */
 
-import { Component, onWillStart, useState } from "@odoo/owl";
+import { Component, onWillDestroy, onWillStart, useState } from "@odoo/owl";
 import { AccordionItem } from "@web/components/dropdown/accordion_item";
 import { CheckboxItem } from "@web/components/dropdown/checkbox_item";
 import { Dropdown } from "@web/components/dropdown/dropdown";
 import { DropdownItem } from "@web/components/dropdown/dropdown_item";
 import { useAction } from "@web/core/action_port";
 import { isActivationKey } from "@web/core/browser/hotkeys";
+import { makeLogger } from "@web/core/debug/debug_logger";
 import { SearchModelEvent } from "@web/core/events";
 import { registry } from "@web/core/registry";
+import { KeepLast, SupersededError } from "@web/core/utils/concurrency";
 import { useBus } from "@web/core/utils/hooks";
 import { CustomGroupByItem } from "@web/search/custom_group_by_item/custom_group_by_item";
 /** @import { EnrichedSearchItem } from "@web/search/search_types" */
@@ -22,6 +24,8 @@ import {
     isGroupableField,
     MENU_REGISTRY_VALIDATION,
 } from "@web/search/utils/misc";
+
+const log = makeLogger("web.search.menu");
 
 const favoriteMenuRegistry = registry.category("favoriteMenu");
 
@@ -61,16 +65,37 @@ export class SearchBarMenu extends Component {
         this.facet_icons = FACET_ICONS;
         this.actionService = useAction();
         this.state = useState({ sharedFavoritesExpanded: false });
-        onWillStart(async () => {
-            this.otherItems = await this._registryItems();
-        });
+        const keepLast = new KeepLast({ rejectSuperseded: true });
+        const refreshRegistryItems = async () => {
+            let generation;
+            try {
+                const pending = keepLast.add(this._registryItems());
+                generation = keepLast.generation;
+                const items = await pending;
+                if (generation !== keepLast.generation) {
+                    log.logic("visibility-continuation-superseded");
+                    return;
+                }
+                this.otherItems = items;
+            } catch (error) {
+                if (
+                    error instanceof SupersededError ||
+                    (generation !== undefined && generation !== keepLast.generation)
+                ) {
+                    log.logic("visibility-superseded");
+                    return;
+                }
+                throw error;
+            }
+            log.logic("visibility-applied", () => ({ count: this.otherItems.length }));
+            this.render();
+        };
+        onWillStart(refreshRegistryItems);
+        onWillDestroy(() => keepLast.cancel());
         // the registry predicates read the search model, not this component's
         // props (a parent's slot object is new on every render), so they are
         // re-asked when the model changes and not per keystroke in the bar
-        useBus(this.env.searchModel, SearchModelEvent.UPDATE, async () => {
-            this.otherItems = await this._registryItems();
-            this.render();
-        });
+        useBus(this.env.searchModel, SearchModelEvent.UPDATE, refreshRegistryItems);
     }
 
     /** @returns {Promise<{Component: Function, groupNumber: number, key: string}[]>} */

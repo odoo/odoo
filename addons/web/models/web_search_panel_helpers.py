@@ -3,9 +3,12 @@ from typing import Any
 from odoo import api, models
 from odoo.api import DomainType
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 
 from .web_read import lazymapping
 from .web_read_group_helpers import AND
+
+_log = DebugLog(__name__)
 
 
 class Base(models.AbstractModel):
@@ -125,6 +128,15 @@ class Base(models.AbstractModel):
             ancestor_chain = {}
             chain_is_fully_included = True
             while chain_is_fully_included and record_id:
+                if record_id in ancestor_chain:
+                    # Repair only the response graph: do not mutate stored data or
+                    # the caller's records. One broken edge makes the cycle a tree.
+                    record = allowed_records[record_id]
+                    allowed_records[record_id] = {**record, parent_name: False}
+                    _log.logic(
+                        "parent-cycle", record_id=record_id, parent_name=parent_name
+                    )
+                    break
                 known_status = records_to_keep.get(record_id)
                 if known_status is not None:
                     chain_is_fully_included = known_status
@@ -139,7 +151,11 @@ class Base(models.AbstractModel):
             for r_id in ancestor_chain:
                 records_to_keep[r_id] = chain_is_fully_included
 
-        return [rec for rec in records if records_to_keep.get(rec["id"])]
+        return [
+            allowed_records[rec["id"]]
+            for rec in records
+            if records_to_keep.get(rec["id"])
+        ]
 
     @api.model
     def _search_panel_get_selection_range(

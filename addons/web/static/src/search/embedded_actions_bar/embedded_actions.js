@@ -4,10 +4,68 @@
 import { reactive, useComponent } from "@odoo/owl";
 import { useAction } from "@web/core/action_port";
 import { makeContext } from "@web/core/context";
+import { makeLogger } from "@web/core/debug/debug_logger";
 import { _t } from "@web/core/translation";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { ConfirmationDialog } from "@web/ui/dialog";
+
+const log = makeLogger("web.search.embedded");
+
+/** @type {WeakMap<object, Map<string, {confirmed: any[], pending: number}>>} */
+const layoutWrites = new WeakMap();
+
+/**
+ * The config handler serializes writes. Keep their last acknowledged snapshot
+ * separately from optimistic UI state, including when several writes fail.
+ * @param {any} owner
+ * @param {string} field
+ * @param {any[]} previous
+ * @param {Record<string, any>} config
+ */
+async function persistLayout(owner, field, previous, config) {
+    let writes = layoutWrites.get(owner);
+    if (!writes) {
+        writes = new Map();
+        layoutWrites.set(owner, writes);
+    }
+    let state = writes.get(field);
+    if (!state) {
+        state = { confirmed: previous, pending: 0 };
+        writes.set(field, state);
+    }
+    state.pending++;
+    const optimistic = owner.embeddedInfos[field];
+    let saved = false;
+    try {
+        saved = await owner.configHandler.setEmbeddedActionsConfig(config);
+        return saved;
+    } finally {
+        if (saved) {
+            state.confirmed = optimistic;
+        } else if (owner.embeddedInfos[field] === optimistic) {
+            if (field === "embeddedActions") {
+                // A layout rollback must not recreate actions deleted while saving,
+                // or discard newly created actions and refreshed action metadata.
+                owner.sortActions(state.confirmed.map(({ id }) => id));
+            } else {
+                const actions = owner.embeddedInfos.embeddedActions;
+                const liveIds = actions && new Set(actions.map(({ id }) => id));
+                owner.embeddedInfos[field] = liveIds
+                    ? state.confirmed.filter((id) => liveIds.has(id))
+                    : state.confirmed;
+            }
+        }
+        log.logic("layout-settled", () => ({
+            field,
+            saved,
+            pending: state.pending - 1,
+        }));
+        if (!--state.pending) {
+            writes.delete(field);
+        }
+    }
+}
 
 /**
  * @typedef EmbeddedAction
@@ -333,19 +391,14 @@ export class EmbeddedActions {
      * @returns {Promise<void>}
      */
     async toggleActionVisibility(actionId) {
-        const wasVisible = this.embeddedInfos.visibleEmbeddedActions.includes(actionId);
+        const previous = this.embeddedInfos.visibleEmbeddedActions;
+        const wasVisible = previous.includes(actionId);
         this.embeddedInfos.visibleEmbeddedActions = wasVisible
             ? this.embeddedInfos.visibleEmbeddedActions.filter((id) => id !== actionId)
             : [...this.embeddedInfos.visibleEmbeddedActions, actionId];
-        const saved = await this.configHandler.setEmbeddedActionsConfig({
+        await persistLayout(this, "visibleEmbeddedActions", previous, {
             embedded_actions_visibility: [...this.embeddedInfos.visibleEmbeddedActions],
         });
-        if (!saved) {
-            const current = this.embeddedInfos.visibleEmbeddedActions;
-            this.embeddedInfos.visibleEmbeddedActions = wasVisible
-                ? [...current, actionId]
-                : current.filter((id) => id !== actionId);
-        }
     }
 
     /** @returns {boolean} */
@@ -520,11 +573,17 @@ export class EmbeddedActions {
 
     /** @param {(number|false)[]} order */
     sortActions(order) {
+        const positions = new Map();
+        for (const [index, id] of order.entries()) {
+            if (!positions.has(id)) {
+                positions.set(id, index);
+            }
+        }
         this.embeddedInfos.embeddedActions = [
             ...this.embeddedInfos.embeddedActions,
         ].sort((a, b) => {
-            const indexA = order.indexOf(a.id);
-            const indexB = order.indexOf(b.id);
+            const indexA = positions.get(a.id) ?? -1;
+            const indexB = positions.get(b.id) ?? -1;
             if (indexA === -1 && indexB === -1) {
                 return 0;
             }
@@ -563,12 +622,9 @@ export class EmbeddedActions {
         const insertAt = previousId === undefined ? 0 : order.indexOf(previousId) + 1;
         order.splice(insertAt, 0, elementId);
         this.sortActions(order);
-        const saved = await this.configHandler.setEmbeddedActionsConfig({
+        await persistLayout(this, "embeddedActions", previousActions, {
             embedded_actions_order: order,
         });
-        if (!saved) {
-            this.embeddedInfos.embeddedActions = previousActions;
-        }
     }
 }
 

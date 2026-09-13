@@ -1,6 +1,9 @@
 // @ts-check
 
 import { describe, expect, test } from "@odoo/hoot";
+import { makeLogger } from "@web/core/debug/debug_logger";
+
+const auditLog = makeLogger("web.search.audit");
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import {
     isInvisible,
@@ -374,4 +377,31 @@ describe("properties concern", () => {
         propertiesFromState({}, target);
         expect(target.searchViewFields["properties.my_char"]).toBe(live);
     });
+});
+
+test("panel snapshots isolate nested hierarchy and group arrays in both directions", () => {
+    const source = makeSource();
+    const section = source.sections.get(1);
+    section.rootIds = [false, 10];
+    section.sortedGroupIds = ["g1"];
+    section.values.get(10).childrenIds = [11];
+    const exported = panelToState(source);
+    const target = /** @type {Record<string, any>} */ ({});
+    panelFromState(exported, target);
+    const restored = target.sections.get(1);
+    restored.rootIds.push(20);
+    restored.sortedGroupIds.push("g2");
+    restored.values.get(10).childrenIds.push(12);
+    auditLog.logic("snapshot-isolation", () => ({
+        liveRoots: section.rootIds,
+        savedRoots: exported.sections[0][1].rootIds,
+        restoredRoots: restored.rootIds,
+    }));
+    expect(section.rootIds).toEqual([false, 10]);
+    expect(section.sortedGroupIds).toEqual(["g1"]);
+    expect(section.values.get(10).childrenIds).toEqual([11]);
+    expect(exported.sections[0][1].rootIds).toEqual([false, 10]);
+    expect(exported.sections[0][1].values[0][1].childrenIds).toEqual([11]);
+    section.rootIds.push(30);
+    expect(exported.sections[0][1].rootIds).toEqual([false, 10]);
 });

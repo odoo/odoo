@@ -2,7 +2,7 @@
 
 import { after, expect, test } from "@odoo/hoot";
 import { queryFirst } from "@odoo/hoot-dom";
-import { mockDate } from "@odoo/hoot-mock";
+import { animationFrame, Deferred, mockDate } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
 import { editValue } from "@web/../tests/components/tree_editor/condition_tree_editor_test_helpers";
 import {
@@ -13,9 +13,11 @@ import {
     mockService,
     mountWithSearch,
     onRpc,
+    patchWithCleanup,
     toggleMenuItem,
     toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
+import { makeLogger } from "@web/core/debug/debug_logger";
 import { registry } from "@web/core/registry";
 import { SearchBar } from "@web/search/search_bar/search_bar";
 import { SearchBarMenu } from "@web/search/search_bar_menu/search_bar_menu";
@@ -346,3 +348,103 @@ test("favoriteMenu: isDisplayed is re-asked on a search change, not on every sea
     await contains(".o_searchview_input").edit("ab");
     expect(asked).toBe(2);
 });
+
+test("favoriteMenu: an older visibility result cannot replace a newer search", async () => {
+    /** @type {boolean | Promise<unknown>} */
+    let result = true;
+    registerProbeFavorite(() => result);
+    const menu = await mountWithSearch(SearchBarMenu, {
+        resModel: "foo",
+        searchViewId: false,
+        searchViewArch: `<search><field name="foo"/></search>`,
+    });
+    const older = new Deferred();
+    result = older;
+    menu.env.searchModel.search();
+    result = false;
+    menu.env.searchModel.search();
+    await animationFrame();
+    expect(menu.otherItems.some((item) => item.key === "probe-item")).toBe(false);
+    older.resolve(true);
+    await animationFrame();
+    makeLogger("web.search.audit").logic("menu-visibility", () => ({
+        keys: menu.otherItems.map((item) => item.key),
+    }));
+    expect(menu.otherItems.some((item) => item.key === "probe-item")).toBe(false);
+});
+
+test("favoriteMenu: destruction between promise settlement and continuation drops the result", async () => {
+    const menu = await mountWithSearch(SearchBarMenu, {
+        resModel: "foo",
+        searchViewId: false,
+        searchViewArch: `<search><field name="foo"/></search>`,
+    });
+    const pending = new Deferred();
+    patchWithCleanup(menu, { _registryItems: () => pending });
+    const before = menu.otherItems;
+    menu.env.searchModel.search();
+    pending.resolve([]);
+    await Promise.resolve();
+    menu.__owl__.app.destroy();
+    await animationFrame();
+    makeLogger("web.search.challenge").logic("menu-destroyed-continuation", () => ({
+        unchanged: menu.otherItems === before,
+    }));
+    expect(menu.otherItems).toBe(before);
+});
+
+test("favoriteMenu: a new search between settlement and continuation drops the older result", async () => {
+    const menu = await mountWithSearch(SearchBarMenu, {
+        resModel: "foo",
+        searchViewId: false,
+        searchViewArch: `<search><field name="foo"/></search>`,
+    });
+    const older = new Deferred();
+    const newer = new Deferred();
+    let pending = older;
+    patchWithCleanup(menu, { _registryItems: () => pending });
+    const before = menu.otherItems;
+    menu.env.searchModel.search();
+    older.resolve([]);
+    await Promise.resolve();
+    pending = newer;
+    menu.env.searchModel.search();
+    await animationFrame();
+    makeLogger("web.search.challenge").logic("menu-settled-stale", () => ({
+        unchanged: menu.otherItems === before,
+    }));
+    expect(menu.otherItems).toBe(before);
+    newer.resolve([]);
+    await animationFrame();
+    expect(menu.otherItems).toEqual([]);
+});
+
+for (const destroy of [false, true]) {
+    test(`favoriteMenu: a settled rejection is ignored after ${destroy ? "destruction" : "a newer search"}`, async () => {
+        const menu = await mountWithSearch(SearchBarMenu, {
+            resModel: "foo",
+            searchViewId: false,
+            searchViewArch: `<search><field name="foo"/></search>`,
+        });
+        const older = new Deferred();
+        let pending = older;
+        patchWithCleanup(menu, { _registryItems: () => pending });
+        const before = menu.otherItems;
+        menu.env.searchModel.search();
+        older.reject(new Error("obsolete visibility failure"));
+        await Promise.resolve();
+        if (destroy) {
+            menu.__owl__.app.destroy();
+        } else {
+            pending = new Deferred();
+            menu.env.searchModel.search();
+        }
+        await animationFrame();
+        expect(menu.otherItems).toBe(before);
+        if (!destroy) {
+            pending.resolve([]);
+            await animationFrame();
+            expect(menu.otherItems).toEqual([]);
+        }
+    });
+}

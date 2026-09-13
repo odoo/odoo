@@ -8,18 +8,19 @@ import { makeLogger } from "@web/core/debug/debug_logger";
 const log = makeLogger("web.timing");
 
 /**
- * @template {(...args: any[]) => any} T
- * @param {T} callback
+ * @template {any[]} Args
+ * @template Result
+ * @param {(...args: Args) => Result} callback
  * @param {() => Promise<void>} [synchronize]
- * @returns {(...args: Parameters<T>) => Promise<Awaited<ReturnType<T>>>}
+ * @returns {(...args: Args) => Promise<Awaited<Result>>}
  */
 export function batched(callback, synchronize = () => Promise.resolve()) {
     let scheduled = false;
-    /** @type {any[]} */
+    /** @type {Args} */
     let lastArgs;
     /** @type {{ resolve: (value: any) => void, reject: (reason?: any) => void }[]} */
     let awaiters = [];
-    return (/** @type {any[]} */ ...args) => {
+    return (/** @type {Args} */ ...args) => {
         lastArgs = args;
         const { promise, resolve, reject } = Promise.withResolvers();
         awaiters.push({ resolve, reject });

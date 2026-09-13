@@ -15,7 +15,20 @@ import { FAVORITE_PRIVATE_GROUP, FAVORITE_SHARED_GROUP } from "./search_state.js
  */
 function parseFavoriteContext(rawContext) {
     try {
-        return { context: evaluateExpr(rawContext, user.context), isInvalid: false };
+        const context = evaluateExpr(rawContext, user.context);
+        if (!context || typeof context !== "object" || Array.isArray(context)) {
+            return { context: {}, isInvalid: true };
+        }
+        const groupBys = context.group_by;
+        if (
+            groupBys &&
+            typeof groupBys !== "string" &&
+            (!Array.isArray(groupBys) ||
+                groupBys.some((value) => typeof value !== "string"))
+        ) {
+            return { context: {}, isInvalid: true };
+        }
+        return { context, isInvalid: false };
     } catch {
         return { context: {}, isInvalid: true };
     }

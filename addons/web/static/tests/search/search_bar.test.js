@@ -49,6 +49,7 @@ import {
     validateSearch,
 } from "@web/../tests/web_test_helpers";
 import { cookie } from "@web/core/browser/cookie";
+import { makeLogger } from "@web/core/debug/debug_logger";
 import { SearchBar } from "@web/search/search_bar/search_bar";
 import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
 class Partner extends models.Model {
@@ -2345,4 +2346,124 @@ test("an expansion naming a field that vanished from the view is dropped", async
     await searchBar.computeState({ expanded: [item.id], query: "A" });
 
     expect(searchBar.state.expanded).toEqual([]);
+});
+
+test("property choices refresh through the field service and remain selectable", async () => {
+    let selection = [["a", "Old"]];
+    let reads = 0;
+    onRpc("web_search_read", ({ kwargs }) => {
+        if (kwargs.specification.child_properties) {
+            reads++;
+            return {
+                records: [
+                    {
+                        id: 1,
+                        display_name: "Parent",
+                        child_properties: [
+                            {
+                                name: "p1",
+                                string: "Status",
+                                type: "selection",
+                                selection,
+                            },
+                        ],
+                    },
+                ],
+            };
+        }
+    });
+    const bar = await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchMenuTypes: [],
+        searchViewId: false,
+        searchViewArch: `<search><field name="properties"/></search>`,
+    });
+    await contains(".o_cp_searchview").click();
+    await editSearch("Old");
+    await contains(".o_expand").click();
+    expect(".o_searchview_autocomplete").toHaveText(/Old/);
+    selection = [
+        ["a", "Renamed"],
+        ["b", "Added"],
+    ];
+    await editSearch("Added");
+    await contains(".o_expand").click();
+    makeLogger("web.search.challenge").logic("property-choice-state", () => ({
+        state: bar.state,
+        subItems: bar.subItems,
+        items: bar.items,
+        open: bar.inputDropdownState.isOpen,
+    }));
+    expect(".o_searchview_autocomplete").toHaveText(/Status.*Added/);
+    await contains(".o-dropdown-item:contains(Added)").click();
+    makeLogger("web.search.challenge").logic("property-choice-selected", () => ({
+        reads,
+        domain: bar.env.searchModel.domain,
+    }));
+    expect(bar.env.searchModel.domain).toEqual([
+        "&",
+        ["bar", "=", 1],
+        ["properties.p1", "=", "b"],
+    ]);
+    expect(reads).toBeGreaterThan(1);
+});
+
+test("replacing search text ignores a delayed close from the previous query", async () => {
+    const bar = await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchMenuTypes: [],
+        searchViewId: false,
+        searchViewArch: `<search><field name="foo"/></search>`,
+    });
+    await editSearch("Old");
+    await editSearch("New");
+    await animationFrame();
+    makeLogger("web.search.challenge").logic("replacement-query", () => ({
+        query: bar.state.query,
+        input: bar.inputRef.el.value,
+    }));
+    expect(bar.state.query).toBe("New");
+    expect(".o_searchview_input").toHaveValue("New");
+    expect(".o_searchview_autocomplete").toHaveText(/New/);
+});
+
+test("same-named properties from two parents are both visible and select the chosen parent", async () => {
+    onRpc("web_search_read", ({ kwargs }) => {
+        if (kwargs.specification.child_properties) {
+            return {
+                records: [1, 2].map((id) => ({
+                    id,
+                    display_name: `Parent ${id}`,
+                    child_properties: [
+                        {
+                            name: "shared",
+                            string: "Status",
+                            type: "selection",
+                            selection: [["a", "Available"]],
+                        },
+                    ],
+                })),
+            };
+        }
+    });
+    const bar = await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchMenuTypes: [],
+        searchViewId: false,
+        searchViewArch: `<search><field name="properties"/></search>`,
+    });
+    await contains(".o_cp_searchview").click();
+    await editSearch("Available");
+    await contains(".o_expand").click();
+    expect(".o_searchview_autocomplete").toHaveText(/Parent 1/);
+    expect(".o_searchview_autocomplete").toHaveText(/Parent 2/);
+    await contains(".o-dropdown-item:contains(Parent 2)").click();
+    makeLogger("web.search.continue").logic("colliding-property-selected", () => ({
+        domain: bar.env.searchModel.domain,
+    }));
+    expect(bar.env.searchModel.domain).toEqual([
+        "&",
+        ["bar", "=", 2],
+        ["properties.shared", "=", "a"],
+    ]);
 });

@@ -343,7 +343,7 @@ describe("_createCategoryTree", () => {
     });
 
     test("builds correct rootIds list (false + top-level ids)", () => {
-        const cat = makeCategory(1, { hierarchize: false });
+        const cat = makeCategory(1, { hierarchize: true });
         const sections = new Map([[1, cat]]);
         const model = makeSearchModel(sections);
 

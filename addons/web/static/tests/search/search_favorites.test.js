@@ -1,6 +1,9 @@
 // @ts-check
 
 import { describe, expect, test } from "@odoo/hoot";
+import { makeLogger } from "@web/core/debug/debug_logger";
+
+const auditLog = makeLogger("web.search.audit");
 import { user } from "@web/core/user";
 import {
     getIrFilterDescription,
@@ -124,6 +127,10 @@ describe("irFilterToFavorite", () => {
             makeIrFilter({ sort: "false", is_default: true }),
         );
 
+        auditLog.logic("favorite-context", () => ({
+            context: favorite.context,
+            invalid: favorite.isInvalid,
+        }));
         expect(favorite.isDefault).toBe(undefined);
     });
 
@@ -327,3 +334,34 @@ describe("reconciliateFavorites", () => {
         expect(created[0].id).toBe(7);
     });
 });
+
+for (const context of ["None", "False", "7", "'text'", "[]", "{'group_by': [7]}"]) {
+    test(`quarantines a structurally invalid favorite context: ${context}`, () => {
+        const favorite = irFilterToFavorite(
+            makeIrFilter({ context, is_default: true }),
+        );
+        expect(favorite.isInvalid).toBe(true);
+        auditLog.logic("favorite-context", () => ({
+            context: favorite.context,
+            invalid: favorite.isInvalid,
+        }));
+        expect(favorite.isDefault).toBe(undefined);
+        expect(favorite.context).toEqual({});
+        expect(favorite.groupBys).toEqual([]);
+    });
+}
+
+for (const groupBy of ["False", "None", "[]", "'foo'", "['foo']"]) {
+    test(`favorite context preserves supported group-by value ${groupBy}`, () => {
+        const favorite = irFilterToFavorite(
+            makeIrFilter({
+                context: `{'group_by': ${groupBy}, 'keep': 42}`,
+                is_default: true,
+            }),
+        );
+        auditLog.logic("valid-favorite-counterexample", () => ({ groupBy, favorite }));
+        expect(favorite.isInvalid).toBe(false);
+        expect(favorite.isDefault).toBe(true);
+        expect(favorite.context.keep).toBe(42);
+    });
+}
