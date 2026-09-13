@@ -3350,6 +3350,14 @@ class AccountMoveLine(models.Model):
         """ Returns the analytic distribution set on the record which triggered the creation of this line. """
         return {}
 
+    def _should_use_related_analytic_distribution(self):
+        """ Whether the related analytic distribution (see _related_analytic_distribution)
+        should be folded into this line's own one, Modules can override this to skip it when
+        a better source already covers the same case (like dropshipping, where one stock move
+        is linked to both a sale and a purchase line, and we don't want to add both
+        distributions on top of each other) """
+        return True
+
     def _update_analytic_distribution(self):
         if self.env.context.get('skip_analytic_sync'):
             return
