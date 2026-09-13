@@ -10,6 +10,11 @@ class ResCountry(models.Model):
         country_ids = self._get_referenced_ids(data, "res.partner", "country_id")
         country_ids.add(config.company_id.country_id.id)
         country_ids.add(config.company_id.account_fiscal_country_id.id)
+        states = self.env["res.country.state"]
+        state_ids = states._get_referenced_state_ids(data, config)
+        country_ids.update(
+            states.search([("id", "in", list(state_ids))]).country_id.ids
+        )
         country_ids.discard(False)
         return country_ids
 

@@ -192,7 +192,7 @@ class PosPaymentMethod(models.Model):
     def _onchange_use_payment_terminal(self):
         pass
 
-    @api.depends("config_ids")
+    @api.depends("config_ids.session_ids.state")
     def _compute_open_session_ids(self):
         all_configs = self.config_ids
         open_sessions = self.env["pos.session"].search(
@@ -271,7 +271,7 @@ class PosPaymentMethod(models.Model):
             "pos.payment.method.write: %s keys=%s open_sessions=%s",
             dbg.rec(self),
             dbg.keys(vals),
-            dbg.rec(self.open_session_ids),
+            dbg.lazy(lambda: dbg.rec(self.open_session_ids)),
         )
         if self._is_write_forbidden(set(vals.keys())):
             raise UserError(

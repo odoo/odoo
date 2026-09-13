@@ -567,7 +567,6 @@ class PosConfig(models.Model):
         self, product_tmpl_ids, product_ids
     ):
         self.check_singleton()
-        today = fields.Date.today()
         items = self.env["product.pricelist.item"].search(
             [
                 "&",
@@ -580,12 +579,6 @@ class PosConfig(models.Model):
                 ("product_id", "=", False),
                 ("product_tmpl_id", "in", product_tmpl_ids),
                 ("product_id", "in", product_ids),
-                "|",
-                ("date_start", "=", False),
-                ("date_start", "<=", today),
-                "|",
-                ("date_end", "=", False),
-                ("date_end", ">=", today),
             ]
         )
         return {
@@ -1543,43 +1536,35 @@ class PosConfig(models.Model):
             }
 
     def get_limited_product_count(self):
-        config_param = (
-            self.env["ir.config_parameter"]
-            .sudo()
-            .get_param(
-                "point_of_sale.limited_product_count", DEFAULT_LIMIT_LOAD_PRODUCT
-            )
+        return self._get_pos_loading_limit(
+            "limited_product_count", DEFAULT_LIMIT_LOAD_PRODUCT
         )
-        try:
-            return int(config_param)
-        except TypeError, ValueError, OverflowError:
-            dbg.logic.debug(
-                "limited_product_count %r unusable: default %s",
-                config_param,
-                DEFAULT_LIMIT_LOAD_PRODUCT,
-            )
-            return DEFAULT_LIMIT_LOAD_PRODUCT
 
     def _get_limited_partner_count(self):
+        return self._get_pos_loading_limit(
+            "limited_customer_count", DEFAULT_LIMIT_LOAD_PARTNER
+        )
+
+    def _get_pos_loading_limit(self, name, default):
         config_param = (
             self.env["ir.config_parameter"]
             .sudo()
-            .get_param(
-                "point_of_sale.limited_customer_count", DEFAULT_LIMIT_LOAD_PARTNER
-            )
+            .get_param(f"point_of_sale.{name}", default)
         )
         try:
-            return int(config_param)
+            count = int(config_param)
         except TypeError, ValueError, OverflowError:
-            dbg.logic.debug(
-                "limited_customer_count %r unusable: default %s",
-                config_param,
-                DEFAULT_LIMIT_LOAD_PARTNER,
-            )
-            return DEFAULT_LIMIT_LOAD_PARTNER
+            count = -1
+        # PostgreSQL's LIMIT accepts a signed bigint, unlike Python's unbounded int.
+        if 0 <= count < 2**63:
+            return count
+        dbg.logic.debug("%s %r unusable: default %s", name, config_param, default)
+        return default
 
     @dbg.timed
     def get_limited_partners_loading(self, offset=0):
+        self.check_singleton()
+        partner_query = self.env["res.partner"]._search([])
         self.env["res.partner"].flush_model(["active", "name", "company_id"])
         self.env["pos.order"].flush_model(["partner_id", "company_id"])
         return self.env.execute_query(
@@ -1596,10 +1581,12 @@ class PosConfig(models.Model):
              LEFT JOIN pm ON partner.id = pm.partner_id
                  WHERE (partner.company_id = %(company)s OR partner.company_id IS NULL)
                    AND partner.active
+                   AND partner.id IN (%(accessible_partners)s)
               ORDER BY COALESCE(pm.order_count, 0) DESC, partner.name, partner.id
                  LIMIT %(limit)s OFFSET %(offset)s
                 """,
                 company=self.company_id.id,
+                accessible_partners=partner_query.select(),
                 limit=self._get_limited_partner_count(),
                 offset=offset,
             )

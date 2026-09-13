@@ -1,4 +1,5 @@
-from odoo import api, fields, models
+from odoo import api, models
+from odoo.fields import Domain
 
 
 class ProductPricelist(models.Model):
@@ -21,29 +22,27 @@ class ProductPricelistItem(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data, config):
-        product_tmpl_ids = [p["product_tmpl_id"] for p in data["product.product"]]
-        product_ids = [p["id"] for p in data["product.product"]]
-        product_categ = [c["id"] for c in data["product.category"]]
+        template_domain = self.env["product.template"]._load_pos_data_domain(
+            data, config
+        )
+        template_domain = Domain.OR(
+            [
+                template_domain,
+                [("id", "in", [row["id"] for row in data.get("product.template", [])])],
+            ]
+        )
         pricelist_ids = [p["id"] for p in data["product.pricelist"]]
-        now = fields.Datetime.now()
-        return [
-            ("pricelist_id", "in", pricelist_ids),
-            "|",
-            ("product_tmpl_id", "=", False),
-            ("product_tmpl_id", "in", product_tmpl_ids),
-            "|",
-            ("product_id", "=", False),
-            ("product_id", "in", product_ids),
-            "|",
-            ("date_start", "=", False),
-            ("date_start", "<=", now),
-            "|",
-            ("date_end", "=", False),
-            ("date_end", ">=", now),
-            "|",
-            ("categ_id", "=", False),
-            ("categ_id", "in", product_categ),
-        ]
+        return (
+            Domain("pricelist_id", "in", pricelist_ids)
+            & (
+                Domain("product_tmpl_id", "=", False)
+                | Domain("product_tmpl_id", "any", template_domain)
+            )
+            & (
+                Domain("product_id", "=", False)
+                | Domain("product_id.product_tmpl_id", "any", template_domain)
+            )
+        )
 
     @api.model
     def _load_pos_data_fields(self, config):

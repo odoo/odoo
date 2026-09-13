@@ -6,6 +6,8 @@ import { _t } from "@web/core/translation";
 import { roundPrecision } from "@web/core/utils/format/numbers";
 
 import { Base } from "../related_models/index.js";
+
+import { DateTime } from "luxon";
 const log = makeLogger("pos.product.pricing");
 
 export class ProductTemplateAccounting extends Base {
@@ -106,9 +108,15 @@ export class ProductTemplateAccounting extends Base {
         const generalRulesIds = pricelist.getGeneralRulesIdsByCategories(
             this.parentCategories,
         );
+        const now = DateTime.now();
         const rules = this.models["product.pricelist.item"]
             .readMany([...productRulesSet, ...tmplRulesSet, ...generalRulesIds])
-            .filter((r) => !r.min_quantity || r.min_quantity <= quantity);
+            .filter(
+                (r) =>
+                    (!r.min_quantity || r.min_quantity <= quantity) &&
+                    (!r.date_start || r.date_start <= now) &&
+                    (!r.date_end || r.date_end >= now),
+            );
 
         const rule = rules.length && rules[0];
         log.logic("getPrice: rule", () => ({

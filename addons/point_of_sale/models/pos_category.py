@@ -17,6 +17,8 @@ class PosCategory(models.Model):
 
     _color_default_indices = tuple(range(11))
 
+    display_name = fields.Char(recursive=True)
+
     name = fields.Char(
         string="Category Name",
         translate=True,
@@ -104,16 +106,16 @@ class PosCategory(models.Model):
             "hour_after",
         ]
 
-    def _get_hierarchy(self) -> list[str]:
-        self.check_singleton()
-        return (self.parent_id._get_hierarchy() if self.parent_id else []) + [
-            (self.name or "")
-        ]
-
-    @api.depends("parent_id")
+    @api.depends("name", "parent_id.display_name")
+    @api.depends_context("lang")
     def _compute_display_name(self):
+        super()._compute_display_name()
         for cat in self:
-            cat.display_name = " / ".join(cat._get_hierarchy())
+            cat.display_name = " / ".join(
+                [cat.parent_id.display_name, cat.name or ""]
+                if cat.parent_id
+                else [cat.name or ""]
+            )
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_session_open(self):
@@ -152,13 +154,6 @@ class PosCategory(models.Model):
     def _compute_has_image(self):
         for category in self:
             category.has_image = bool(category.image_128)
-
-    def _get_descendants(self):
-        available_categories = self
-        for child in self.child_ids:
-            available_categories |= child
-            available_categories |= child._get_descendants()
-        return available_categories
 
     @api.constrains("hour_until", "hour_after")
     def _check_hour(self):

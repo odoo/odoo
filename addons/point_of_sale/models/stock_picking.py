@@ -9,6 +9,17 @@ from ..tools import debug_log as dbg
 _logger = logging.getLogger(__name__)
 
 
+def _get_pos_stock_group_key(product, attributes):
+    return (
+        product.id,
+        frozenset(
+            value.id
+            for value in attributes
+            if value.attribute_id.create_variant == "no_variant"
+        ),
+    )
+
+
 class StockPicking(models.Model):
     _inherit = "stock.picking"
 
@@ -174,9 +185,8 @@ class StockPicking(models.Model):
     def _create_move_from_pos_order_lines(self, lines):
         self.check_singleton()
         lines_by_product_and_attributes = lines.grouped(
-            lambda line: (
-                line.product_id.id,
-                tuple(sorted(line.attribute_value_ids.ids)),
+            lambda line: _get_pos_stock_group_key(
+                line.product_id, line.attribute_value_ids
             )
         )
         moves = self.env["stock.move"].create(
@@ -450,10 +460,17 @@ class StockMove(models.Model):
     def _add_move_lines_from_pos_order_lines(
         self, order_lines, are_quantities_done=True
     ):
-        order_lines_by_product = order_lines.grouped(lambda line: line.product_id.id)
+        order_lines_by_group = order_lines.grouped(
+            lambda line: _get_pos_stock_group_key(
+                line.product_id, line.attribute_value_ids
+            )
+        )
         untracked_moves = self.filtered(
             lambda move: (
-                move.product_id.id not in order_lines_by_product
+                _get_pos_stock_group_key(
+                    move.product_id, move.never_product_template_attribute_value_ids
+                )
+                not in order_lines_by_group
                 or move.product_id.tracking == "none"
                 or not (
                     move.picking_type_id.use_existing_lots
@@ -475,20 +492,26 @@ class StockMove(models.Model):
         lots = tracked_moves._get_or_create_lots_for_pos_order_lines(order_lines)
         if are_quantities_done:
             tracked_moves._create_move_lines_for_pos_order_lines(
-                order_lines_by_product, lots
+                order_lines_by_group, lots
             )
         else:
-            tracked_moves._reserve_lots_for_pos_order_lines(
-                order_lines_by_product, lots
-            )
+            tracked_moves._reserve_lots_for_pos_order_lines(order_lines_by_group, lots)
 
-    def _create_move_lines_for_pos_order_lines(self, order_lines_by_product, lots):
+    def _create_move_lines_for_pos_order_lines(self, order_lines_by_group, lots):
         lot_by_product_and_name = {(lot.product_id.id, lot.name): lot for lot in lots}
         quants_by_lot = self._get_pos_source_quants_by_lot(lots)
         self.move_line_ids.unlink()
+        remaining_by_quant = {
+            quant.id: quant.quantity
+            for quants in quants_by_lot.values()
+            for quant in quants
+        }
         move_line_vals = []
         for move in self:
-            for order_line in order_lines_by_product[move.product_id.id]:
+            key = _get_pos_stock_group_key(
+                move.product_id, move.never_product_template_attribute_value_ids
+            )
+            for order_line in order_lines_by_group[key]:
                 for pack_lot in order_line.pack_lot_ids.filtered("lot_name"):
                     remaining = self._get_pos_lot_quantity(order_line)
                     lot = lot_by_product_and_name.get(
@@ -510,7 +533,10 @@ class StockMove(models.Model):
                             move.location_id.parent_path
                         ):
                             continue
-                        taken = min(remaining, quant.quantity)
+                        taken = min(remaining, remaining_by_quant[quant.id])
+                        if uom.compare(taken, 0) <= 0:
+                            continue
+                        remaining_by_quant[quant.id] -= taken
                         remaining -= taken
                         move_line_vals.append(
                             {
@@ -537,10 +563,13 @@ class StockMove(models.Model):
         )
         self.env["stock.move.line"].create(move_line_vals)
 
-    def _reserve_lots_for_pos_order_lines(self, order_lines_by_product, lots):
+    def _reserve_lots_for_pos_order_lines(self, order_lines_by_group, lots):
         lot_by_product_and_name = {(lot.product_id.id, lot.name): lot for lot in lots}
         for move in self:
-            for order_line in order_lines_by_product[move.product_id.id]:
+            key = _get_pos_stock_group_key(
+                move.product_id, move.never_product_template_attribute_value_ids
+            )
+            for order_line in order_lines_by_group[key]:
                 for pack_lot in order_line.pack_lot_ids.filtered("lot_name"):
                     lot = lot_by_product_and_name.get(
                         (order_line.product_id.id, pack_lot.lot_name)

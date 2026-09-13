@@ -48,6 +48,9 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             sales = self._get_sales_totals(orders, currency)
         with dbg.timer(self.env, "[report] counted payments"):
             payments = self._get_counted_payments(orders, sessions)
+            self._update_payment_rows_with_report_currency(
+                payments, orders, sessions, currency
+            )
 
         return {
             "state": sessions.state if len(sessions) == 1 else "multiple",
@@ -69,7 +72,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             "discount_amount": sales["discount_amount"],
             **self._prepare_products_section(configs, sales["sold"], sales["refunded"]),
             **self._prepare_payments_section(payments, session_ids),
-            **self._prepare_invoice_section(sessions),
+            **self._prepare_invoice_section(sessions, currency),
         }
 
     @api.model
@@ -107,6 +110,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
         return args, {}
 
     def _get_date_start_and_date_stop(self, date_start, date_stop):
+        default_start = not date_start
         if date_start:
             date_start = fields.Datetime.from_string(date_start)
         else:
@@ -115,6 +119,14 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             ).replace(tzinfo=self.env.tz)
             date_start = today.astimezone(UTC).replace(tzinfo=None)
 
+        # Add a calendar day before converting: DST days are not 24 hours.
+        default_stop = (
+            (today + self._get_default_report_span())
+            .astimezone(UTC)
+            .replace(tzinfo=None)
+            if default_start
+            else date_start + self._get_default_report_span()
+        )
         if date_stop:
             date_stop = fields.Datetime.from_string(date_stop)
             if date_stop < date_start:
@@ -123,9 +135,9 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
                     date_stop,
                     date_start,
                 )
-                date_stop = date_start + self._get_default_report_span()
+                date_stop = default_stop
         else:
-            date_stop = date_start + self._get_default_report_span()
+            date_stop = default_stop
 
         return date_start, date_stop
 
@@ -192,26 +204,21 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
         precision = self.env["decimal.precision"].get_precision("Product Unit")
 
         for order in orders:
-            order_currency = order.pricelist_id.currency_id or order.currency_id
-            if report_currency != order_currency:
-                total += order_currency._convert(
-                    order.amount_total,
-                    report_currency,
-                    order.company_id,
-                    order.date_order or fields.Date.today(),
-                )
-            else:
-                total += order.amount_total
+            total += self._convert_order_amount(
+                order.amount_total, order, report_currency
+            )
 
             session_currency = order.session_id.currency_id
             for line in order.lines:
                 accumulator = refunded if line.order_id.is_refund else sold
                 self._update_products_and_taxes(
-                    line, accumulator, session_currency, precision
+                    line, accumulator, session_currency, precision, report_currency
                 )
                 if line.discount > 0:
                     discounted_orders.add(order.id)
-                    discount_amount += line._get_discount_amount()
+                    discount_amount += self._convert_order_amount(
+                        line._get_discount_amount(), order, report_currency
+                    )
 
         dbg.logic.debug(
             "[report] totals: total=%s sold categories=%d refunded categories=%d"
@@ -230,6 +237,17 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             "discount_amount": discount_amount,
         }
 
+    def _convert_order_amount(self, amount, order, currency, round=True):
+        if order.currency_id == currency:
+            return amount
+        return order.currency_id._convert(
+            amount,
+            currency,
+            order.company_id,
+            order.date_order or fields.Date.today(),
+            round=round,
+        )
+
     def _prepare_sales_accumulator(self):
         return {"products": {}, "base_amount": 0.0, "taxes": {}}
 
@@ -244,17 +262,31 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             / 100.0
         )
 
-    def _update_products_and_taxes(self, line, accumulator, currency, precision):
+    def _update_products_and_taxes(
+        self, line, accumulator, currency, precision, report_currency=None
+    ):
+        report_currency = report_currency or currency
+
+        def convert(amount, round=True):
+            return self._convert_order_amount(
+                amount, line.order_id, report_currency, round=round
+            )
+
         category = line.product_id.product_tmpl_id.pos_categ_ids[:1]
         combo_products_label = (
             " (" + ", ".join(line.combo_line_ids.product_id.mapped("name")) + ")"
             if line.combo_line_ids
             else ""
         )
-        key = (line.product_id, line.price_unit, line.discount, combo_products_label)
+        key = (
+            line.product_id,
+            convert(line.price_unit, round=False),
+            line.discount,
+            combo_products_label,
+        )
 
         quantity = self._get_line_quantity(line)
-        total_amount = self._get_product_total_amount(line)
+        total_amount = convert(self._get_product_total_amount(line))
         taxes = accumulator["taxes"]
         if line.tax_ids_after_fiscal_position:
             line_taxes = line.tax_ids_after_fiscal_position.sudo().compute_all(
@@ -264,18 +296,18 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
                 product=line.product_id,
                 partner=line.order_id.partner_id or False,
             )
-            base_amount = line_taxes["total_excluded"]
+            base_amount = convert(line_taxes["total_excluded"])
             base_by_tax = {}
             for tax in line_taxes["taxes"]:
                 taxes.setdefault(
                     tax["id"],
                     {"name": tax["name"], "tax_amount": 0.0, "base_amount": 0.0},
                 )
-                taxes[tax["id"]]["tax_amount"] += tax["amount"]
+                taxes[tax["id"]]["tax_amount"] += convert(tax["amount"])
                 base_by_tax[tax["id"]] = tax["base"]
 
             for tax_id, tax_base in base_by_tax.items():
-                taxes[tax_id]["base_amount"] += currency.round(tax_base)
+                taxes[tax_id]["base_amount"] += convert(currency.round(tax_base))
         else:
             base_amount = total_amount
             taxes.setdefault(
@@ -477,16 +509,12 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
         )
         move_by_key = {}
         journal_by_method = {method.id: method.journal_id.id for method in methods}
+        moves_by_ref_and_journal = {}
+        for move in moves:
+            moves_by_ref_and_journal.setdefault((move.ref, move.journal_id.id), move)
         for key, ref in ref_by_key.items():
             journal_id = journal_by_method.get(key[1])
-            match = next(
-                (
-                    move
-                    for move in moves
-                    if move.ref == ref and move.journal_id.id == journal_id
-                ),
-                None,
-            )
+            match = moves_by_ref_and_journal.get((ref, journal_id))
             if match is not None:
                 move_by_key[key] = match
         return move_by_key
@@ -603,6 +631,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
         payment["count"] = True
 
     def _count_non_cash_payment(self, payment, diff_move, account_payments):
+        session = self.env["pos.session"].browse(payment["session"])
         journal = self.env["pos.payment.method"].browse(payment["id"]).journal_id
         diff_accounts = diff_move.line_ids.account_id
         is_loss = bool(journal.loss_account_id & diff_accounts)
@@ -610,8 +639,11 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
 
         if is_loss or is_profit:
             payment["final_count"] = payment["total"]
-            payment["money_difference"] = (
-                -diff_move.amount_total if is_loss else diff_move.amount_total
+            payment["money_difference"] = diff_move.company_currency_id._convert(
+                -diff_move.amount_total if is_loss else diff_move.amount_total,
+                session.currency_id,
+                session.company_id,
+                diff_move.date,
             )
             payment["money_counted"] = (
                 payment["final_count"] + payment["money_difference"]
@@ -633,7 +665,15 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             )
             return
         payment["final_count"] = payment["total"]
-        payment["money_counted"] = sum(settled_by.mapped("amount_signed"))
+        payment["money_counted"] = sum(
+            settled.currency_id._convert(
+                settled.amount_signed,
+                session.currency_id,
+                session.company_id,
+                settled.date,
+            )
+            for settled in settled_by
+        )
         payment["money_difference"] = payment["money_counted"] - payment["final_count"]
         payment["cash_moves"] = self._prepare_counting_difference_moves(
             payment["money_difference"], payment["money_difference"] < 0
@@ -673,11 +713,65 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             "total_paid": sum(payment["total"] for payment in payments),
         }
 
-    def _prepare_invoice_section(self, sessions):
-        return {
-            "invoice_list": [
-                {"name": session.name, "invoices": session._get_invoice_total_list()}
-                for session in sessions
-            ],
-            "invoice_total": sum(session._get_total_invoice() for session in sessions),
+    def _update_payment_rows_with_report_currency(
+        self, payments, orders, sessions, currency
+    ):
+        """Count in the session currency, then present every amount in report currency.
+
+        Sales payments use their order date, like sales totals. Cash counts use
+        the closing date (or opening date while open). Counting differences
+        stay independent of exchange-rate changes between sales and closing.
+        """
+        totals = {}
+        for payment in orders.payment_ids:
+            key = (payment.session_id.id, payment.payment_method_id.id)
+            totals[key] = totals.get(key, 0.0) + self._convert_order_amount(
+                payment.amount, payment.pos_order_id, currency
+            )
+        sessions_by_id = {
+            session.id: session for session in sessions | orders.session_id
         }
+        for row in payments:
+            session = sessions_by_id[row["session"]]
+            date = session.stop_at or session.start_at or fields.Date.today()
+
+            def convert(amount, session=session, date=date):
+                if session.currency_id == currency:
+                    return amount
+                return session.currency_id._convert(
+                    amount, currency, session.company_id, date
+                )
+
+            converted_total = convert(row["total"])
+            row["total"] = totals.get((session.id, row["id"]), converted_total)
+            for key in ("final_count", "money_counted", "money_difference"):
+                if key in row:
+                    row[key] = convert(row[key])
+            for movement in row.get("cash_moves", []):
+                movement["amount"] = convert(movement["amount"])
+            if row.get("count"):
+                row["money_difference"] = row["money_counted"] - row["final_count"]
+
+    def _prepare_invoice_section(self, sessions, currency=None):
+        currency = currency or self._get_report_currency(sessions.config_id)
+        invoice_list = []
+        invoice_total = 0.0
+        for session in sessions:
+            invoices = []
+            for order in session._get_invoiced_orders():
+                move = order.account_move
+                total = move.company_currency_id._convert(
+                    move.amount_total_signed, currency, move.company_id, move.date
+                )
+                invoices.append(
+                    {
+                        "total": total,
+                        "name": move.name,
+                        "order_ref": order.pos_reference,
+                    }
+                )
+                invoice_total += self._convert_order_amount(
+                    order.amount_paid, order, currency
+                )
+            invoice_list.append({"name": session.name, "invoices": invoices})
+        return {"invoice_list": invoice_list, "invoice_total": invoice_total}

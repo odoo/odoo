@@ -7,55 +7,29 @@ const log = makeLogger("pos.pricelist");
 export class ProductPricelist extends Base {
     static pythonModel = "product.pricelist";
 
-    setup() {
-        super.setup(...arguments);
-
-        this.uiState = {
-            generalRulesIdsByCateg: {},
-            generalRulesIds: {},
-        };
-
-        this.computeGeneralRulesByCateg();
-    }
-
     getGeneralRulesIdsByCategories(categoryIds) {
-        const rules = {};
-
-        for (const id of categoryIds) {
-            if (this.uiState.generalRulesIdsByCateg[id]) {
-                Object.assign(rules, this.uiState.generalRulesIdsByCateg[id]);
-            }
-        }
-
-        Object.assign(rules, this.uiState.generalRulesIds);
-        return Object.values(rules);
-    }
-
-    computeGeneralRulesByCateg() {
-        for (const idx in this.item_ids) {
-            const index = parseInt(idx);
-            const item = this.item_ids[index];
-            if (item.product_id || item.product_tmpl_id) {
-                continue;
-            }
-
-            if (item.categ_id) {
-                if (!this.uiState.generalRulesIdsByCateg[item.categ_id.id]) {
-                    this.uiState.generalRulesIdsByCateg[item.categ_id.id] = {};
-                }
-
-                this.uiState.generalRulesIdsByCateg[item.categ_id.id][index] = item.id;
-                continue;
-            }
-
-            this.uiState.generalRulesIds[index] = item.id;
-        }
-        log.lifecycle("computeGeneralRulesByCateg", () => ({
+        const categories = new Set(categoryIds);
+        const rules = this.item_ids.filter(
+            (item) =>
+                !item.product_id &&
+                !item.product_tmpl_id &&
+                (!item.categ_id || categories.has(item.categ_id.id)),
+        );
+        log.logic("getGeneralRulesIdsByCategories", () => ({
             pricelist: this.id,
             items: this.item_ids.length,
-            general: Object.keys(this.uiState.generalRulesIds).length,
-            categories: Object.keys(this.uiState.generalRulesIdsByCateg).length,
+            applicable: rules.length,
         }));
+        // Match product.pricelist.item ordering even after incremental inserts.
+        return rules
+            .toSorted(
+                (a, b) =>
+                    Number(Boolean(b.categ_id)) - Number(Boolean(a.categ_id)) ||
+                    (b.min_quantity || 0) - (a.min_quantity || 0) ||
+                    (b.categ_id?.id || 0) - (a.categ_id?.id || 0) ||
+                    b.id - a.id,
+            )
+            .map((rule) => rule.id);
     }
 }
 

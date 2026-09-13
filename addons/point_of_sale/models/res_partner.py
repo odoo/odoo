@@ -8,6 +8,14 @@ class ResPartner(models.Model):
     _name = "res.partner"
     _inherit = ["res.partner", "mixin.pos.load"]
 
+    _pos_data_incremental = True
+    _pos_data_incremental_fields = (
+        "write_date",
+        "country_id.write_date",
+        "state_id.write_date",
+        "state_id.country_id.write_date",
+    )
+
     pos_order_count = fields.Integer(
         compute="_compute_pos_order_count",
         groups="point_of_sale.group_pos_user",
@@ -34,7 +42,17 @@ class ResPartner(models.Model):
         "customers or sales orders/invoices. The default value comes from the customer.",
     )
 
-    @api.depends(lambda self: self._display_address_depends())
+    @api.depends(
+        lambda self: [
+            *self._display_address_depends(),
+            "country_id.name",
+            "country_id.code",
+            "country_id.address_format",
+            "state_id.name",
+            "state_id.code",
+        ]
+    )
+    @api.depends_context("lang")
     def _compute_pos_contact_address(self):
         for partner in self:
             partner.pos_contact_address = partner._display_address(without_company=True)
@@ -57,6 +75,9 @@ class ResPartner(models.Model):
     @dbg.timed
     def get_new_partner(self, config_id, domain, offset):
         config = self.env["pos.config"].browse(config_id)
+        config.check_access("read")
+        self = self._with_pos_company(config)
+        domain = list(domain)
         if len(domain) == 0:
             limited_partner_ids = {
                 partner[0] for partner in config.get_limited_partners_loading(offset)
@@ -74,8 +95,15 @@ class ResPartner(models.Model):
             dbg.rec(new_partners),
             dbg.rec(fiscal_positions),
         )
+        partner_data = {"res.partner": self._load_pos_data_read(new_partners, config)}
         return {
-            "res.partner": self._load_pos_data_read(new_partners, config),
+            **partner_data,
+            "res.country": self.env["res.country"]._load_pos_data_search_read(
+                partner_data, config
+            ),
+            "res.country.state": self.env[
+                "res.country.state"
+            ]._load_pos_data_search_read(partner_data, config),
             "phone.number": new_partners.phone_ids._load_pos_data_read(
                 new_partners.phone_ids, config
             ),
@@ -106,6 +134,8 @@ class ResPartner(models.Model):
         )
         return [("id", "in", list(partner_ids))]
 
+    @api.depends_context("company")
+    @api.depends("property_account_position_id", "country_id", "state_id", "zip", "vat")
     def _compute_fiscal_position_id(self):
         for partner in self:
             partner.fiscal_position_id = (

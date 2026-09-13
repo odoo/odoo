@@ -844,73 +844,88 @@ class PosSession(models.Model):
             self.update_stock_at_closing,
         )
         if has_activity:
-            self.cash_real_transaction = sum(
-                self.sudo().statement_line_ids.mapped("amount")
-            )
-            self._check_no_draft_orders()
-            self._check_invoices_are_posted()
-            cash_difference_before_statements = self.cash_register_difference
-            dbg.logic.debug(
-                "[session:%s] cash: real_transaction=%s difference=%s",
-                self.name,
-                self.cash_real_transaction,
-                cash_difference_before_statements,
-            )
-            if self.update_stock_at_closing:
-                with dbg.timer(self.env, "[session:%s] closing pickings", self.name):
-                    self._create_picking_at_end_of_session()
-                    self._get_closed_orders().filtered(
-                        lambda o: not o.is_total_cost_computed
-                    )._update_total_cost_at_session_closing(self.picking_ids.move_ids)
-            data = (
-                record.with_company(record.company_id)
-                .with_context(check_move_validity=False, skip_invoice_sync=True)
-                ._create_account_move(
-                    balancing_account, amount_to_balance, bank_payment_method_diffs
+            with self.env.cr.savepoint() as closing_savepoint:
+                self.cash_real_transaction = sum(
+                    self.sudo().statement_line_ids.mapped("amount")
                 )
-            )
-
-            balance = sum(record.move_id.line_ids.mapped("balance"))
-            dbg.logic.debug(
-                "[session:%s] closing entry %s: %d lines, balance=%s",
-                self.name,
-                dbg.rec(record.move_id),
-                len(record.move_id.line_ids),
-                balance,
-            )
-            try:
-                with self.move_id._check_balanced({"records": self.move_id.sudo()}):
-                    pass
-            except UserError:
+                self._check_no_draft_orders()
+                self._check_invoices_are_posted()
+                cash_difference_before_statements = self.cash_register_difference
                 dbg.logic.debug(
-                    "[session:%s] closing entry unbalanced by %s: rollback and"
-                    " force-close wizard",
+                    "[session:%s] cash: real_transaction=%s difference=%s",
                     self.name,
-                    balance,
+                    self.cash_real_transaction,
+                    cash_difference_before_statements,
                 )
-                self.env.cr.rollback()
-                return self._open_force_close_wizard(balance, bank_payment_method_diffs)
+                if self.update_stock_at_closing:
+                    with dbg.timer(
+                        self.env, "[session:%s] closing pickings", self.name
+                    ):
+                        self._create_picking_at_end_of_session()
+                        self._get_closed_orders().filtered(
+                            lambda o: not o.is_total_cost_computed
+                        )._update_total_cost_at_session_closing(
+                            self.picking_ids.move_ids
+                        )
+                data = (
+                    record.with_company(record.company_id)
+                    .with_context(check_move_validity=False, skip_invoice_sync=True)
+                    ._create_account_move(
+                        balancing_account, amount_to_balance, bank_payment_method_diffs
+                    )
+                )
 
-            self.sudo()._post_statement_difference(cash_difference_before_statements)
-            if record.move_id.line_ids:
-                with dbg.timer(self.env, "[session:%s] post closing entry", self.name):
-                    record.move_id.with_company(self.company_id)._post()
-            else:
+                balance = sum(record.move_id.line_ids.mapped("balance"))
                 dbg.logic.debug(
-                    "[session:%s] empty closing entry %s unlinked",
+                    "[session:%s] closing entry %s: %d lines, balance=%s",
                     self.name,
                     dbg.rec(record.move_id),
+                    len(record.move_id.line_ids),
+                    balance,
                 )
-                record.move_id.sudo().unlink()
-            paid_orders = record.order_ids.filtered(lambda order: order.state == "paid")
-            dbg.lifecycle.debug(
-                "[session:%s] orders paid -> done: %s", self.name, dbg.rec(paid_orders)
-            )
-            paid_orders.write({"state": "done"})
-            with dbg.timer(self.env, "[session:%s] reconcile", self.name):
-                self.sudo().with_company(self.company_id)._reconcile_account_move_lines(
-                    data
+                try:
+                    with self.move_id._check_balanced({"records": self.move_id.sudo()}):
+                        pass
+                except UserError:
+                    dbg.logic.debug(
+                        "[session:%s] closing entry unbalanced by %s: roll back closing savepoint and"
+                        " force-close wizard",
+                        self.name,
+                        balance,
+                    )
+                    closing_savepoint.rollback()
+                    return self._open_force_close_wizard(
+                        balance, bank_payment_method_diffs
+                    )
+
+                self.sudo()._post_statement_difference(
+                    cash_difference_before_statements
                 )
+                if record.move_id.line_ids:
+                    with dbg.timer(
+                        self.env, "[session:%s] post closing entry", self.name
+                    ):
+                        record.move_id.with_company(self.company_id)._post()
+                else:
+                    dbg.logic.debug(
+                        "[session:%s] empty closing entry %s unlinked",
+                        self.name,
+                        dbg.rec(record.move_id),
+                    )
+                    record.move_id.sudo().unlink()
+                paid_orders = record.order_ids.filtered(
+                    lambda order: order.state == "paid"
+                )
+                dbg.lifecycle.debug(
+                    "[session:%s] orders paid -> done: %s",
+                    self.name,
+                    dbg.rec(paid_orders),
+                )
+                paid_orders.write({"state": "done"})
+                with dbg.timer(self.env, "[session:%s] reconcile", self.name):
+                    self.sudo().with_company(
+                        self.company_id
+                    )._reconcile_account_move_lines(data)
         else:
             self.sudo()._post_statement_difference(self.cash_register_difference)
 
@@ -1925,6 +1940,7 @@ class PosSession(models.Model):
             .create(
                 {
                     "amount": abs(amounts["amount"]),
+                    "currency_id": self.currency_id.id,
                     "journal_id": payment_method.journal_id.id,
                     "force_outstanding_account_id": outstanding_account.id,
                     "destination_account_id": destination_account.id,
@@ -1977,7 +1993,15 @@ class PosSession(models.Model):
             outstanding_line.balance
             + self._convert_amount_to_company_currency(diff_amount, self.stop_at, False)
         )
-        new_balance_compare_to_zero = self.currency_id.compare_amounts(new_balance, 0)
+        new_amount_currency = (
+            outstanding_line.amount_currency
+            + self.currency_id._convert(
+                diff_amount, outstanding_line.currency_id, self.company_id, self.stop_at
+            )
+        )
+        new_balance_compare_to_zero = self.company_id.currency_id.compare_amounts(
+            new_balance, 0
+        )
         dbg.logic.debug(
             "[session:%s] diff %s applied on %s: outstanding balance %s -> %s",
             self.name,
@@ -1994,6 +2018,7 @@ class PosSession(models.Model):
                     Command.update(
                         outstanding_line.id,
                         {
+                            "amount_currency": new_amount_currency,
                             "debit": (new_balance_compare_to_zero > 0 and new_balance)
                             or 0.0,
                             "credit": (new_balance_compare_to_zero < 0 and -new_balance)
@@ -2005,7 +2030,7 @@ class PosSession(models.Model):
         )
         account_payment.write(
             {
-                "amount": abs(new_balance),
+                "amount": abs(new_amount_currency),
             }
         )
         account_payment.move_id.action_post()
@@ -2026,6 +2051,7 @@ class PosSession(models.Model):
         account_payment = self.env["account.payment"].create(
             {
                 "amount": abs(amounts["amount"]),
+                "currency_id": self.currency_id.id,
                 "partner_id": accounting_partner.id,
                 "journal_id": payment_method.journal_id.id,
                 "force_outstanding_account_id": outstanding_account.id,
@@ -2888,19 +2914,6 @@ class PosSession(models.Model):
 
     def _get_invoiced_orders(self):
         return self.order_ids.filtered("is_invoiced")
-
-    def _get_invoice_total_list(self):
-        return [
-            {
-                "total": order.account_move.amount_total_signed,
-                "name": order.account_move.name,
-                "order_ref": order.pos_reference,
-            }
-            for order in self._get_invoiced_orders()
-        ]
-
-    def _get_total_invoice(self):
-        return sum(self._get_invoiced_orders().mapped("amount_paid"))
 
     def log_partner_message(self, partner_id, action, message_type):
         if message_type == "ACTION_CANCELLED":

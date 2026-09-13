@@ -9,6 +9,9 @@ class MixinPosLoad(models.AbstractModel):
     _name = "mixin.pos.load"
     _description = "PoS data loading mixin"
 
+    _pos_data_incremental = False
+    _pos_data_incremental_fields = ("write_date",)
+
     @api.model
     def _load_pos_data_search_read(self, data, config):
         if not config:
@@ -46,13 +49,22 @@ class MixinPosLoad(models.AbstractModel):
 
         last_server_date = self.env.context.get("pos_last_server_date", False)
         limited_loading = self.env.context.get("pos_limited_loading", True)
-        model_included = self._name not in ["pos.session", "pos.config"]
+        model_included = self._pos_data_incremental
 
         if limited_loading and last_server_date and model_included:
             dbg.logic.debug(
-                "[load:%s] incremental: write_date > %s", self._name, last_server_date
+                "[load:%s] incremental: %s > %s",
+                self._name,
+                self._pos_data_incremental_fields,
+                last_server_date,
             )
-            domain = Domain.AND([domain, [("write_date", ">", last_server_date)]])
+            changes = Domain.OR(
+                [
+                    [(field, ">", last_server_date)]
+                    for field in self._pos_data_incremental_fields
+                ]
+            )
+            domain = Domain.AND([domain, changes])
 
         return domain
 
