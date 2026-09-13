@@ -5,14 +5,13 @@
             <t t-set-slot="header">
                 <h3> <t t-out="this.headerTitle " /> </h3>
             </t>
-            <div class="btn-group d-flex flex-column gap-2" role="group">
+            <div class="d-flex flex-row flex-wrap gap-2 o_snooze_options" role="group">
                 <t t-foreach="this.getSnoozeOptions()" t-as="option" t-key="option.value">
-                    <div class="row">
-                        <label class="col form-check-label" t-attf-for="{{option.id}}"> <t t-out="option.label" /> </label>
-                        <div class="col text-end pe-4">
-                            <input type="radio" class="form-check-input" name="btnradio" t-att-id="option.id" t-att-checked="this.state.hours === option.value" t-on-click="() => this.select(option.value)" />
-                        </div>
-                    </div>
+                    <button type="button"
+                        t-attf-class="btn btn-secondary o_snooze_option {{ this.state.hours === option.value ? 'o_snooze_option_selected' : '' }}"
+                            t-on-click="() => this.select(option.value)">
+                        <t t-out="option.label"/>
+                    </button>
                 </t>
 
             </div>
