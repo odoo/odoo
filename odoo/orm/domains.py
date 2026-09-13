@@ -1390,6 +1390,10 @@ def _optimize_any_domain_at_level(level: OptimizationLevel, condition, model):
         comodel = model.env[field.comodel_name]
     except KeyError:
         condition._raise("Cannot determine the comodel relation")
+    if field.type in ('many2many', 'one2many'):
+        comodel = comodel.with_context(**field.context)
+    else:
+        comodel = comodel.with_context(active_test=False)
     domain = domain._optimize(comodel, level)
     # const if the domain is empty, the result is a constant
     # if the domain is True, we keep it as is
