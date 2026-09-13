@@ -1182,6 +1182,11 @@ class IrFieldsConverter(models.AbstractModel):
     def _str_to_many2many(
         self, field: ConvertibleField, value: list[dict]
     ) -> tuple[Any, list]:
+        if isinstance(value, list) and any(
+            isinstance(record, dict) and set(record) - REFERENCING_FIELDS
+            for record in value
+        ):
+            return self._str_to_many2many_subrecords(field, value)
         record = self._get_record_single(value)
         ids, warnings = self._get_reference_ids(field, record, multi=True)
 
@@ -1201,6 +1206,26 @@ class IrFieldsConverter(models.AbstractModel):
             return [Command.link(id) for id in ids], warnings
         else:
             return [Command.set(ids)], warnings
+
+    @api.model
+    def _str_to_many2many_subrecords(
+        self, field: ConvertibleField, value: list[dict]
+    ) -> tuple[Any, list]:
+        commands, warnings = self._subrecords_to_commands(
+            field, self._get_records_nested(value)
+        )
+        if commands is SKIP:
+            return SKIP, warnings
+        update = bool(self.env.context.get("update_many2many"))
+        _debug.logic(
+            "many2many_subrecords_converted",
+            field=field.name,
+            commands=len(commands),
+            mode="link" if update else "set",
+        )
+        if not update:
+            commands.insert(0, Command.clear())
+        return commands, warnings
 
     @api.model
     def _add_error_subfield(
@@ -1231,17 +1256,30 @@ class IrFieldsConverter(models.AbstractModel):
     def _str_to_one2many(
         self, field: ConvertibleField, records: list[dict]
     ) -> tuple[Any, list]:
-        commands = []
-        warnings = []
-
         records = self._get_records_nested(records)
         if len(records) == 1 and set(records[0]) <= REFERENCING_FIELDS:
             record = records[0]
             subfield = self._get_subfield_referencing(record)
-            records = (
+            records = [
                 {subfield: item} for item in self._split_references(record[subfield])
-            )
+            ]
+        commands, warnings = self._subrecords_to_commands(field, records)
+        if commands is SKIP:
+            return SKIP, warnings
+        _debug.pipeline(
+            "one2many_converted",
+            field=field.name,
+            commands=len(commands),
+            warnings=len(warnings),
+        )
+        return commands, warnings
 
+    @api.model
+    def _subrecords_to_commands(
+        self, field: ConvertibleField, records: list[dict]
+    ) -> tuple[Any, list]:
+        commands: list = []
+        warnings: list = []
         parent_fields_hierarchy = self.env.context.get(
             "parent_fields_hierarchy", []
         ) + [field.name]
@@ -1279,11 +1317,4 @@ class IrFieldsConverter(models.AbstractModel):
                     commands.append(Command.update(id, writable))
             else:
                 commands.append(Command.create(writable))
-
-        _debug.pipeline(
-            "one2many_converted",
-            field=field.name,
-            commands=len(commands),
-            warnings=len(warnings),
-        )
         return commands, warnings
