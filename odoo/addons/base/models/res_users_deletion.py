@@ -37,8 +37,12 @@ class ResUsersDeletion(models.Model):
                 user_deletion.user_id_int = user_deletion.user_id.id
 
     @api.model
+    def _get_domain_deletion_due(self) -> list:
+        return [("state", "=", "todo")]
+
+    @api.model
     def _gc_portal_users(self, batch_size: int = 50) -> None:
-        delete_requests = self.search([("state", "=", "todo")])
+        delete_requests = self.search(self._get_domain_deletion_due())
 
         done_requests = delete_requests.filtered(lambda request: not request.user_id)
         done_requests.state = "done"
