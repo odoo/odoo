@@ -1,12 +1,24 @@
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { CalendarRenderer } from "@web/views/calendar/calendar_renderer";
+import { CalendarCommonRenderer } from "@web/views/calendar/calendar_common/calendar_common_renderer";
 import { AttendanceCalendarOverview } from "../../components/attendance_calendar/attendance_calendar_overview";
+import { AttendanceCalendarPopover } from "./attendance_calendar_popover";
+
+class AttendanceCalendarCommonRenderer extends CalendarCommonRenderer {
+    static components = {
+        ...CalendarCommonRenderer.components,
+        Popover: AttendanceCalendarPopover,
+    };
+}
 
 export class AttendanceCalendarRenderer extends CalendarRenderer {
     static template = "hr_attendance.AttendanceCalendarRenderer";
     static components = {
         ...CalendarRenderer.components,
         AttendanceCalendarOverview,
+        day: AttendanceCalendarCommonRenderer,
+        week: AttendanceCalendarCommonRenderer,
+        month: AttendanceCalendarCommonRenderer,
     };
 
     get dateRange() {

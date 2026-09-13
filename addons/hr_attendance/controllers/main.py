@@ -3,7 +3,7 @@
 import base64
 import binascii
 import re
-
+import datetime
 from requests.exceptions import RequestException
 
 import odoo.release
@@ -31,7 +31,7 @@ class HrAttendance(http.Controller):
     ):
         response = {}
         if employee:
-            attendance_fields = ['check_in', 'check_out', 'worked_hours']
+            attendance_fields = ['check_in', 'check_out', 'worked_hours', 'work_entry_type_id', 'wet_color', 'wet_display_code']
             if include_attendance_details:
                 attendance_fields += [
                     'break_duration',
@@ -73,10 +73,15 @@ class HrAttendance(http.Controller):
                     'check_in': employee.last_attendance_id.check_in,
                     'check_out': employee.last_attendance_id.check_out,
                 },
-                'overtime_today': sum(request.env['hr.attendance.overtime.line'].sudo().search([
-                    ('employee_id', '=', employee.id), ('date', '=', fields.Date.context_today(request.env.user))]).mapped('duration')) or 0,
+                'overtime_today': sum(request.env['hr.attendance'].sudo().search([
+                    ('employee_id', '=', employee.id),
+                    ('is_time_rule_output', '=', True),
+                    ('source_attendance_id', '!=', False),
+                    ('check_in', '<', datetime.datetime.combine(fields.Date.context_today(request.env.user), datetime.time.max)),
+                    ('check_out', '>', datetime.datetime.combine(fields.Date.context_today(request.env.user), datetime.time.min)),
+                ]).mapped('worked_hours')) or 0,
                 'use_pin': employee.company_id.attendance_kiosk_use_pin,
-                'display_overtime': employee.company_id.hr_attendance_display_overtime,
+                'display_overtime': True,
                 'device_tracking_enabled': employee.company_id.attendance_device_tracking,
                 'is_employee_single_checkin': not employee.version_id.is_flexible and employee.company_id.single_check_in,
                 'break_management_enabled': employee.company_id.attendance_break_management,
@@ -349,10 +354,7 @@ class HrAttendance(http.Controller):
             or attendance.employee_id != employee
             or attendance != employee.last_attendance_id
             or not attendance.check_out
-            or (
-                attendance.overtime_status == 'approved'
-                and company.attendance_overtime_validation == 'by_manager'
-            )
+            or attendance.state == 'validated'
         ):
             return {}
         attendance.write({'break_duration': break_duration})
