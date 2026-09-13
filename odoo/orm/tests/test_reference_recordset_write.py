@@ -1,3 +1,5 @@
+import pytest
+
 from odoo import fields, models
 from odoo.orm.model_test_env import model_test_env
 
@@ -62,3 +64,22 @@ def test_create_with_string_reference_still_works():
             {"name": "h", "ref": f"refw.target,{target.id}"}
         )
         assert holder.ref == target
+
+
+def test_a_new_record_is_refused_at_assignment_not_at_the_read():
+    with model_test_env(Target, Holder) as env:
+        unsaved = env["refw.target"].new({"name": "t"})
+        holder = env["refw.holder"].create({"name": "h"})
+        with pytest.raises(ValueError, match="save the record first"):
+            holder.ref = unsaved
+        with pytest.raises(ValueError, match="save the record first"):
+            env["refw.holder"].new({"ref": unsaved})
+        assert not holder.ref
+
+
+def test_an_empty_recordset_still_clears_the_field():
+    with model_test_env(Target, Holder) as env:
+        target = env["refw.target"].create({"name": "t"})
+        holder = env["refw.holder"].create({"name": "h", "ref": target})
+        holder.ref = env["refw.target"]
+        assert not holder.ref

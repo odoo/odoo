@@ -49,6 +49,12 @@ class Reference(Selection["BaseModel | None"]):
         self, value: typing.Any, record: ModelLike, validate: bool = True
     ) -> str | None:
         if is_recordset(value):
+            if value and not isinstance(value.id, int):
+                # the cache holds "model,id" and the read parses the id back;
+                # a NewId has no such form, and the read would fail far from here
+                raise ValueError(
+                    f"{self} cannot reference {value}: save the record first"
+                )
             if not validate:
                 return f"{value._name},{value.id}" if value else None
             if value._name in self.get_values(record.env) and len(value) <= 1:
