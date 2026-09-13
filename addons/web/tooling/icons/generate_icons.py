@@ -208,7 +208,7 @@ def load_wishlist() -> list[str]:
     if not wishlist_path.is_file():
         sys.exit(f"Wishlist not found: {wishlist_path}")
     with wishlist_path.open(encoding='utf-8') as fh:
-        return sorted(line.strip() for line in fh if line.strip() and not line.startswith('#'))
+        return [line.strip() for line in fh if line.strip() and not line.startswith('#')]
 
 
 def fetch_google_font(style: str, icon_names: list[str]) -> TTFont:
@@ -837,6 +837,11 @@ def build_font(
     with_backend_font: bool = False,
 ):
     print(f"Building {style} font…")  # noqa: T201
+    # The wishlist order is the order the picker lists the icons in, and is only
+    # kept for the returned metadata: the font is built from a sorted copy, its
+    # glyphs being numbered in the order they are handed over (see
+    # :data:`icons_suffixed`).
+    icons_order, wishlist = wishlist, sorted(wishlist)
     print("  Downloading font from Google…")  # noqa: T201
     font = fetch_google_font(style, wishlist)
 
@@ -920,7 +925,7 @@ def build_font(
     strip_font_metadata(merged, style)
     # After the metadata strip, see :func:`add_fill_axis`.
     add_fill_axis(merged, filled_glyphs)
-    icons = {name: {'has_fill': name in icons_with_fill} for name in wishlist if name in glyphs_map}
+    icons = {name: {'has_fill': name in icons_with_fill} for name in icons_order if name in glyphs_map}
 
     print("  Saving fonts…")  # noqa: T201
     ms_dir.mkdir(parents=True, exist_ok=True)
@@ -969,22 +974,36 @@ def write_font_face_css(ms_dir, style_lower: str, font_file: str, backend_font_p
 
 ICON_SEARCH_CODE = '''
 
+# Resolved to their English source: no language is detectable at import time,
+# and :func:`search_icons` translates the tags when it is given the means to.
 _ICONS_INDEX = [
-    (name, icon['has_fill'], f"{name} {icon['tags']}".lower())
+    (name, icon['has_fill'], f"{name} {icon['tags']._translate('en_US')}".lower())
     for name, icon in ICONS.items()
 ]
 
 
-def search_icons(needle=''):
+def search_icons(needle='', translate=None):
     """Yield the ``(name, has_fill)`` of every icon matching ``needle``.
 
-    The needle is matched against the icon name and its search tags; an empty
-    needle matches every icon.  The haystacks are lowercased once, at import.
+    The needle is split on spaces and every word must be found in the icon name
+    or in its English search tags; an empty needle matches every icon.  Pass
+    ``env._`` as *translate* to look the missing words up in the tags translated
+    in the language of ``env`` too, the English ones staying searchable whatever
+    the language.
     """
-    needle = needle.strip().lower()
+    terms = needle.lower().split()
+    if not terms:
+        yield from ((name, icon['has_fill']) for name, icon in ICONS.items())
+        return
     for name, has_fill, haystack in _ICONS_INDEX:
-        if not needle or needle in haystack:
-            yield name, has_fill
+        missing = [term for term in terms if term not in haystack]
+        if missing:
+            if translate is None:
+                continue
+            translated = translate(ICONS[name]['tags']).lower()
+            if any(term not in translated for term in missing):
+                continue
+        yield name, has_fill
 '''
 
 
@@ -1015,14 +1034,14 @@ def write_python_icon_list(
 
     ms_entries = [
         f"    {icon_name!r}: {{'has_fill': {icon['has_fill']}, "
-        f"'codepoint': 0x{codepoints[icon_name]:04X}, 'tags': {icon.get('tags', '')!r}}},"
+        f"'codepoint': 0x{codepoints[icon_name]:04X}, 'tags': _lt({icon.get('tags', '')!r})}},"
         for icon_name, icon in icons.items()
     ]
     glyph_codepoints = {glyph: codepoint for codepoint, glyph in oi_codepoints.items()}
     oi_entries = [
         f"    {name!r}: {{'has_fill': False, "
-        f"'codepoint': 0x{glyph_codepoints[glyph]:04X}, 'tags': {oi_tags.get(name, '')!r}}},"
-        for name, glyph in sorted(oi_ligatures.items())
+        f"'codepoint': 0x{glyph_codepoints[glyph]:04X}, 'tags': _lt({oi_tags.get(name, '')!r})}},"
+        for name, glyph in oi_ligatures.items()
     ]
     entries = '\n'.join(ms_entries + oi_entries)
     dst_path.write_text(
@@ -1035,11 +1054,14 @@ def write_python_icon_list(
         "\n"
         "Maps each icon name to its ``has_fill`` flag and the space-separated ``tags``\n"
         "used to search it. The tags are only ever matched server-side (see the\n"
-        "``/html_editor/icons_search`` controller), so they never reach the browser.\n"
+        "``/html_editor/icons_search`` controller), so they never reach the browser,\n"
+        "and they are translatable so that a search matches in the user's language.\n"
         "Use :func:`search_icons` to match a needle against both.\n"
         '"""\n'
         "\n"
-        "from odoo.tools import frozendict\n"
+        "from odoo.tools import LazyTranslate, frozendict\n"
+        "\n"
+        "_lt = LazyTranslate(__name__)\n"
         "\n"
         f"ICONS = frozendict({{\n{entries}\n}})\n"
         + ICON_SEARCH_CODE,
@@ -1233,6 +1255,10 @@ def build_odoo_ui_icons_font(module_path):
     font.flavor = 'woff'
     woff_path = fonts_dir / f'{family}_backend.woff'
     save_font(font, woff_path)
+
+    # Back to the config order, the font having been built by codepoint: it is
+    # the order the icon picker lists them in.
+    ligatures = {prefix + icon['css']: ligatures[prefix + icon['css']] for icon in icons}
 
     # The name is searched on its own (see the `/html_editor/icons_search`
     # controller), so it earns nothing as a tag of itself.
