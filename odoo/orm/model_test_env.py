@@ -385,7 +385,7 @@ class ModelRegistry(_RegistryFieldsMixin, Mapping):
         return index_model_names_by_inheritance_root(self.models)
 
     @cached_property
-    def _prefetch_fields_by_model(self) -> dict[str, tuple[tuple[Field, ...], bool]]:
+    def _prefetch_fields_by_model(self) -> dict[tuple[str, Any], tuple[Field, ...]]:
         return {}
 
     prefetch_fields = _RegistryModelsMixin.prefetch_fields

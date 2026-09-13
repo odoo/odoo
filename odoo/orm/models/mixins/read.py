@@ -15,6 +15,7 @@ from ..._typing import ValuesType
 from ...primitives import LOG_ACCESS_COLUMNS
 from ._cache_scan import can_scan_read, is_cache_detached
 from ._model_stubs import _ModelStubs
+from .access import AccessMixin
 
 if typing.TYPE_CHECKING:
     from collections.abc import Collection, Iterable, Sequence
@@ -314,12 +315,7 @@ class ReadMixin(_ModelStubs):
 
     def _fetch_field(self, field: Field) -> None:
         if self.env.context.get("prefetch_fields", True) and field.prefetch:
-            fnames = [
-                name
-                for name, f in self._fields.items()
-                if f.prefetch == field.prefetch
-                if self._has_field_access(f, "read")
-            ]
+            fnames = [f.name for f in self._readable_prefetch_fields(field.prefetch)]
             if field.name not in fnames:
                 fnames.append(field.name)
         else:
@@ -405,20 +401,23 @@ class ReadMixin(_ModelStubs):
                     self.env, "read", forbidden
                 )
 
+    def _readable_prefetch_fields(self, prefetch: typing.Any) -> tuple[Field, ...]:
+        fields = self.pool.prefetch_fields(self._name, prefetch)
+        if self.env.su:
+            return fields
+        if type(self)._has_field_access is not AccessMixin._has_field_access:
+            return tuple(f for f in fields if self._has_field_access(f, "read"))
+        return tuple(
+            f for f in fields if not f.groups or self._has_field_access(f, "read")
+        )
+
     def _get_fields_to_fetch(
         self,
         field_names: Collection[str] | None = None,
         ignore_when_in_cache: bool = False,
     ) -> list[Field]:
         if field_names is None:
-            fields, guarded = self.pool.prefetch_fields(self._name)
-            if not guarded or self.env.su:
-                return list(fields)
-            return [
-                field
-                for field in fields
-                if not field.groups or self._has_field_access(field, "read")
-            ]
+            return list(self._readable_prefetch_fields(True))
 
         if not field_names:
             return []

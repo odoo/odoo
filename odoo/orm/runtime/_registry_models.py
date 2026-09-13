@@ -76,21 +76,25 @@ class _RegistryModelsMixin(_RegistryStubs):
         return index_model_names_by_inheritance_root(self.models)
 
     @functools.cached_property
-    def _prefetch_fields_by_model(self) -> dict[str, tuple[tuple[Field, ...], bool]]:
+    def _prefetch_fields_by_model(
+        self,
+    ) -> dict[tuple[str, typing.Any], tuple[Field, ...]]:
         return {}
 
-    def prefetch_fields(self, model_name: str) -> tuple[tuple[Field, ...], bool]:
+    def prefetch_fields(
+        self, model_name: str, prefetch: typing.Any = True
+    ) -> tuple[Field, ...]:
+        key = (model_name, prefetch)
         try:
-            return self._prefetch_fields_by_model[model_name]
+            return self._prefetch_fields_by_model[key]
         except KeyError:
             fields = tuple(
                 field
                 for field in self.models[model_name]._fields.values()
-                if field.prefetch is True
+                if field.prefetch == prefetch
             )
-            entry = (fields, any(field.groups for field in fields))
-            self._prefetch_fields_by_model[model_name] = entry
-            return entry
+            self._prefetch_fields_by_model[key] = fields
+            return fields
 
     def _get_ancestors(self, model_cls: type[BaseModel]) -> set[str]:
         seen: set[str] = set()
