@@ -579,6 +579,10 @@ registry.category("web_tour.tours").add("test_product_long_press", {
                 content: "Check that VAT value is correct in the product details popup",
                 trigger: ".section-financials .vat-value:contains('$ 5.00')",
             },
+            {
+                content: "Check that the price incl. tax sums up the price and both taxes",
+                trigger: ".section-financials .price-incl-tax:contains('$ 115.00')",
+            },
             Chrome.endTour(),
         ].flat(),
 });
