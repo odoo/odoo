@@ -5,6 +5,27 @@ import { LruCache } from "@web/core/utils/lru_cache";
 
 describe.current.tags("headless");
 
+test("capacity must be a nonnegative integer", () => {
+    for (const limit of [-1, -Infinity, NaN, Infinity, 1.5]) {
+        expect(() => new LruCache(limit)).toThrow(RangeError);
+    }
+});
+
+test("invalid capacity reassignment preserves the previous capacity and entries", () => {
+    const cache = new LruCache(1);
+    cache.set("old", 1);
+    for (const limit of [-1, -Infinity, NaN, Infinity, 1.5]) {
+        expect(() => {
+            cache.limit = limit;
+        }).toThrow(RangeError);
+        expect(cache.limit).toBe(1);
+        expect(cache.peek("old")).toBe(1);
+    }
+    cache.set("new", 2);
+    expect(cache.size).toBe(1);
+    expect(cache.has("old")).toBe(false);
+});
+
 /**
  * @param {number} limit
  * @param {number} n

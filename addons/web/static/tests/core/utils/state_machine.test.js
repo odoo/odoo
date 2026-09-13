@@ -36,6 +36,27 @@ test("a declared transition moves the status", () => {
     expect(m.status).toBe("idle");
 });
 
+test("prototype members are not declared events or source states", () => {
+    const machine = new ProbeMachine();
+    for (const event of ["toString", "constructor", "__proto__"]) {
+        expect(() => machine._transition(event)).toThrow(InvalidProbeTransitionError);
+        expect(machine.status).toBe("idle");
+    }
+    machine.status = "__proto__";
+    expect(() => machine._transition("toString")).toThrow(InvalidProbeTransitionError);
+    expect(machine.status).toBe("__proto__");
+});
+
+test("explicitly declared prototype-shaped names remain valid", () => {
+    class NamedMachine extends StateMachine {
+        static transitions = { ["__proto__"]: { constructor: "done" } };
+        status = "__proto__";
+    }
+    const machine = new NamedMachine();
+    machine._transition("constructor");
+    expect(machine.status).toBe("done");
+});
+
 test("an undeclared event throws the subclass's error and leaves the status put", () => {
     const m = new ProbeMachine();
     let caught;

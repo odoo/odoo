@@ -3,13 +3,13 @@
 import { after, describe, expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
 import { Component, useState, xml } from "@odoo/owl";
+import { isolateLogging } from "@web/../tests/core/debug/logging_helpers";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import {
     disableLogging,
     enableLogging,
     getStats,
     makeLogger,
-    resetStats,
 } from "@web/core/debug/debug_logger";
 import { useLifecycleLog } from "@web/core/debug/logger_hooks";
 
@@ -35,10 +35,7 @@ function labels(captured) {
 }
 
 function cleanLogging() {
-    after(() => {
-        disableLogging({ persist: false });
-        resetStats();
-    });
+    after(isolateLogging());
 }
 
 function makeProbe() {

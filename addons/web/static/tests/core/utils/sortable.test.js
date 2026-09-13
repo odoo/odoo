@@ -275,7 +275,8 @@ test("Sorting in groups with distinct per-axis scrolling", async () => {
         expect(".scroll_parent_y").toHaveProperty("scrollTop", 50, {
             message: "Positive horizontal scrolling right - scrollTop",
         });
-        expect(".root").toHaveProperty("scrollLeft", 75, {
+        const root = queryFirst(".root");
+        expect(root).toHaveProperty("scrollLeft", root.scrollWidth - root.clientWidth, {
             message: "Positive horizontal scrolling right - scrollLeft",
         });
     });
@@ -312,9 +313,14 @@ test("Sorting in groups with distinct per-axis scrolling", async () => {
     });
 
     await dragAndExpect(".item21", { y: 1000 }, () => {
-        expect(".scroll_parent_y").toHaveProperty("scrollTop", 215, {
-            message: "Positive vertical scrolling bottom - scrollTop",
-        });
+        const parent = queryFirst(".scroll_parent_y");
+        expect(parent).toHaveProperty(
+            "scrollTop",
+            parent.scrollHeight - parent.clientHeight,
+            {
+                message: "Positive vertical scrolling bottom - scrollTop",
+            },
+        );
         expect(".root").toHaveProperty("scrollLeft", 16, {
             message: "Positive vertical scrolling bottom - scrollLeft",
         });

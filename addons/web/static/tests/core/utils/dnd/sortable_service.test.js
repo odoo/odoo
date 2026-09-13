@@ -1,9 +1,12 @@
 // @ts-check
 
 import { describe, expect, getFixture, test } from "@odoo/hoot";
+import { advanceTime } from "@odoo/hoot-mock";
 import { getService, makeMockEnv } from "@web/../tests/web_test_helpers";
+import { makeLogger } from "@web/core/debug/debug_logger";
 
 describe.current.tags("headless");
+const log = makeLogger("web.core.audit");
 
 test("double cleanup() is a no-op (does not crash)", async () => {
     await makeMockEnv();
@@ -64,15 +67,22 @@ test("cleanup() disarms the element: a later pointerdown starts nothing", async 
     const handle = sortable.create({
         ref: { el: root },
         elements: ".item",
-        onWillStartDrag: () => expect.step("will-start"),
+        delay: 10,
+        onWillStartDrag: () => {
+            log.logic("sortable service starts while armed");
+            expect.step("will-start");
+        },
     });
     const { cleanup } = handle.enable();
     await pointerDown(item);
+    await advanceTime(10);
     await pointerUp(item);
     expect.verifySteps(["will-start"]);
 
     cleanup();
     await pointerDown(item);
+    await advanceTime(10);
     await pointerUp(item);
     expect.verifySteps([]);
+    log.logic("sortable service stays disarmed after initiation delay");
 });

@@ -24,6 +24,33 @@ import {
 describe.current.tags("headless");
 
 describe("batched", () => {
+    for (const asynchronous of [false, true]) {
+        test(`a ${asynchronous ? "rejecting" : "throwing"} synchronizer rejects the batch and permits recovery`, async () => {
+            patchWithCleanup(console, { error: () => {} });
+            const failure = new Error("synchronization failed");
+            let shouldFail = true;
+            const fn = batched(
+                (value) => value * 2,
+                () => {
+                    if (shouldFail) {
+                        if (asynchronous) {
+                            return Promise.reject(failure);
+                        }
+                        throw failure;
+                    }
+                    return Promise.resolve();
+                },
+            );
+            const outcomes = await Promise.allSettled([fn(1), fn(2)]);
+            expect(outcomes).toEqual([
+                { status: "rejected", reason: failure },
+                { status: "rejected", reason: failure },
+            ]);
+            shouldFail = false;
+            expect(await fn(3)).toBe(6);
+        });
+    }
+
     test("a throwing callback is mirrored to console.error and still rejects", async () => {
         const errors = [];
         patchWithCleanup(console, {
@@ -240,6 +267,84 @@ describe("batched", () => {
 });
 
 describe("debounce", () => {
+    test("a throwing delay leaves the previous invocation scheduled and permits recovery", async () => {
+        let fail = false;
+        const calls = [];
+        const fn = debounce(
+            (value) => {
+                calls.push(value);
+                return value;
+            },
+            () => {
+                if (fail) {
+                    throw new Error("delay failed");
+                }
+                return 10;
+            },
+        );
+        const previous = fn(1);
+        fail = true;
+        await expect(fn(2)).rejects.toThrow("delay failed");
+        await advanceTime(10);
+        expect(await previous).toBe(1);
+        expect(calls).toEqual([1]);
+        fail = false;
+        const next = fn(3);
+        await advanceTime(10);
+        expect(await next).toBe(3);
+        expect(calls).toEqual([1, 3]);
+    });
+
+    for (const flush of [false, true]) {
+        test(`a ${flush ? "flushed" : "trailing"} callback can schedule the next invocation`, async () => {
+            const calls = [];
+            /** @type {Promise<number> | undefined} */
+            let next;
+            const fn = debounce(function (value) {
+                calls.push([this.name, value]);
+                if (value === 1) {
+                    next = fn.call({ name: "second" }, 2);
+                }
+                return value;
+            }, 10);
+            const first = fn.call({ name: "first" }, 1);
+            if (flush) {
+                fn.cancel(true);
+            } else {
+                await advanceTime(10);
+            }
+            expect(await first).toBe(1);
+            await advanceTime(10);
+            expect(await next).toBe(2);
+            expect(calls).toEqual([
+                ["first", 1],
+                ["second", 2],
+            ]);
+        });
+    }
+
+    test("a leading callback schedules reentrant work on the trailing edge", async () => {
+        const calls = [];
+        /** @type {Promise<number> | undefined} */
+        let next;
+        const fn = debounce(
+            (value) => {
+                calls.push(value);
+                if (value === 1) {
+                    next = fn(2);
+                }
+                return value;
+            },
+            10,
+            { leading: true, trailing: true },
+        );
+        expect(await fn(1)).toBe(1);
+        expect(calls).toEqual([1]);
+        await advanceTime(10);
+        expect(await next).toBe(2);
+        expect(calls).toEqual([1, 2]);
+    });
+
     test("each call restarts the wait, so the first deadline is abandoned", async () => {
         const myFunc = (/** @type {number} */ n) => {
             expect.step(`myFunc:${n}`);

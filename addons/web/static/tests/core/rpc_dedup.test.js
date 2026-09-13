@@ -6,6 +6,49 @@ import { getKey } from "@web/core/network/rpc_dedup";
 describe.current.tags("headless");
 
 describe("getKey", () => {
+    test("sparse arrays preserve their wire length and null slots", () => {
+        const partial = [1, 2, 3];
+        delete partial[1];
+        for (const ids of [Array(1), Array(3), partial]) {
+            expect(getKey("/rpc", { ids })).toBe(
+                getKey("/rpc", { ids: JSON.parse(JSON.stringify(ids)) }),
+            );
+            expect(getKey("/rpc", { ids })).not.toBe(getKey("/rpc", { ids: [] }));
+        }
+    });
+
+    test("boxed primitives have the same key as their wire values", () => {
+        for (const value of [Object(1), Object(2), Object(false), Object("text")]) {
+            expect(getKey("/rpc", { value })).toBe(
+                getKey("/rpc", { value: JSON.parse(JSON.stringify(value)) }),
+            );
+        }
+        expect(getKey("/rpc", { value: Object(1) })).not.toBe(
+            getKey("/rpc", { value: Object(2) }),
+        );
+    });
+
+    test("toJSON receives the containing property or array index", () => {
+        const value = { toJSON: (key) => key };
+        const params = { value, array: [value], nested: { other: value } };
+        expect(getKey("/rpc", params)).toBe(
+            getKey("/rpc", JSON.parse(JSON.stringify(params))),
+        );
+    });
+
+    test("shared references serialize but circular references reject", () => {
+        const shared = { z: 1, a: 2 };
+        expect(getKey("/rpc", [shared, shared])).toBe(
+            getKey("/rpc", [
+                { a: 2, z: 1 },
+                { a: 2, z: 1 },
+            ]),
+        );
+        const circular = {};
+        circular.self = circular;
+        expect(() => getKey("/rpc", circular)).toThrow(TypeError);
+    });
+
     test("produces identical keys for identical inputs", () => {
         const k1 = getKey("/web/dataset/call_kw", { model: "res.partner" });
         const k2 = getKey("/web/dataset/call_kw", { model: "res.partner" });

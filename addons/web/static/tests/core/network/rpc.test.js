@@ -30,6 +30,23 @@ const onRpcResponse = (listener) => after(on(rpcBus, "RPC:RESPONSE", listener));
 
 describe.current.tags("headless");
 
+for (const settings of [{ dedup: true }, { cache: true }]) {
+    test(`${settings.dedup ? "dedup" : "cache"} keeps empty and sparse request arrays distinct`, async () => {
+        rpc.setCache(new RPCCache("wireIdentity", 1));
+        mockFetch((_, { body }) => {
+            const { params } = JSON.parse(String(body));
+            expect.step(`fetch ${params.ids.length}`);
+            return { result: params.ids.length };
+        });
+        const results = await Promise.all([
+            rpc("/array-length", { ids: [] }, settings),
+            rpc("/array-length", { ids: Array(1) }, settings),
+        ]);
+        expect(results).toEqual([0, 1]);
+        expect.verifySteps(["fetch 0", "fetch 1"]);
+    });
+}
+
 test("can perform a simple rpc", async () => {
     mockFetch((_, { body }) => {
         const bodyObject = JSON.parse(String(body));

@@ -5,37 +5,25 @@
  * @param {any} value
  * @returns {string | undefined}
  */
-export function stableStringify(value, seen = new Set()) {
-    if (value && typeof value.toJSON === "function") {
-        value = value.toJSON();
-    }
-    if (
-        value === undefined ||
-        typeof value === "function" ||
-        typeof value === "symbol"
-    ) {
-        return undefined;
-    }
+export function stableStringify(value) {
+    const serialized = JSON.stringify(value);
+    return serialized === undefined
+        ? undefined
+        : stringifyOrdered(JSON.parse(serialized));
+}
+
+/** @param {any} value @returns {string} */
+function stringifyOrdered(value) {
     if (value === null || typeof value !== "object") {
         return JSON.stringify(value);
     }
-    if (seen.has(value)) {
-        throw new TypeError("getKey: converting circular structure to a cache key");
-    }
-    seen.add(value);
     if (Array.isArray(value)) {
-        const out = `[${value.map((v) => stableStringify(v, seen) ?? "null").join(",")}]`;
-        seen.delete(value);
-        return out;
+        return `[${value.map(stringifyOrdered).join(",")}]`;
     }
     const parts = [];
     for (const key of Object.keys(value).sort()) {
-        const serialized = stableStringify(value[key], seen);
-        if (serialized !== undefined) {
-            parts.push(`${JSON.stringify(key)}:${serialized}`);
-        }
+        parts.push(`${JSON.stringify(key)}:${stringifyOrdered(value[key])}`);
     }
-    seen.delete(value);
     return `{${parts.join(",")}}`;
 }
 

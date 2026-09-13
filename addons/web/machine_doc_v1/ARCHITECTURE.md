@@ -80,7 +80,7 @@ Top-level layout of `addons/web/` (detailed maps are separate docs):
 | `models/` | 25 `.py` — ORM extensions (24 model classes: web_read, web_read_group, ir_http, …) | `MODEL_MAP.md` |
 | `static/src/` | 868 JavaScript/OWL source files across 248 directories (FSD layers) | `DIRECTORY_MAP.md` |
 | `static/lib/` | 18 directories (17 vendored libraries + generated `popper_compat/`) — DO NOT MODIFY | `static/lib/versions.json` |
-| `static/tests/` | 799 `.js` (incl. 735 `*.test.js` Hoot suites), mirroring the `static/src/` tree | `TEST_TAGS.md` |
+| `static/tests/` | 801 `.js` (incl. 736 `*.test.js` Hoot suites), mirroring the `static/src/` tree | `TEST_TAGS.md` |
 | `tests/` | 62 Python test files (`test_*.py`) | `TEST_TAGS.md` |
 | `machine_doc_v1/` | This directory: `COMPONENT_DIAGRAM.md` (18 audit areas) · `FLOW_DIAGRAM.md` (14 sequence diagrams) · `LAZY_VIEW_LOADING.md` · `VIEW_TEARDOWN_COST.md` (both decision records: investigated, not pursued) · `LIST_EDIT_RENDER_COST.md` (decision record: row-level waste fixed, renderer-level amplification measured and not pursued) · the maps below · `factcheck.sh` | — |
 | `views/` · `data/` · `security/` · `i18n/` | XML templates, data fixtures, `ir.model.access.csv`, translations | — |
@@ -246,17 +246,31 @@ Promise.
 
 **Methods NOT on `orm`**: `nameSearch`, `name_create`, `readGroup` (use `orm.call(model, "name_search", ...)` etc.). `UPDATE_METHODS` constant (create/write/unlink/web_save/web_save_multi/action_archive/action_unarchive) is exported for cache-invalidation consumers AND used inside orm_service itself: it seeds the private `NON_IDEMPOTENT_METHODS` superset (`orm_service.js`, = `UPDATE_METHODS` + `web_resequence` + `name_create`), which `call()` checks to hard-reject `retry`/`dedup`/`cache` on write-class methods (throws before anything reaches the network).
 
-**`orm.cache({type:"disk"})`** — proxy pattern (`orm_service.js`): `Object.assign(Object.create(this), {_cache: options})`. Every `call()` passes `cache: this._cache` to `rpc()`, where `rpcCache.read(table, key, fetcher, options)` is invoked. **table** = python method name (e.g. `"fields_get"`). **key** = `JSON.stringify({url, params})`. Options pass through — `{type:"disk"}` and `{type:"ram"}` both valid; `cache:true` uses defaults. `{immutable:true}` makes warm hits share a single deep-frozen cached payload (`rpc_cache.js` — `immutable ? deepFreeze : deepCopy`) instead of deep-copying per read; only for consumers that never mutate the result (adopted by `field_service`).
+**`orm.cache({type:"disk"})`** — proxy pattern (`orm_service.js`): `Object.assign(Object.create(this), {_cache: options})`. Every `call()` passes `cache: this._cache` to `rpc()`, where `rpcCache.read(table, key, fetcher, options)` is invoked. **table** = python method name (e.g. `"fields_get"`). **key** = the canonical, property-order-independent JSON identity of the route and captured parameters (`rpc_dedup.js`). Options pass through — `{type:"disk"}` and `{type:"ram"}` both valid; `cache:true` uses defaults. `{immutable:true}` makes warm hits share a single deep-frozen cached payload (`rpc_cache.js` — `immutable ? deepFreeze : deepCopy`) instead of deep-copying per read; only for consumers that never mutate the result (adopted by `field_service`).
 
 **`orm.silent`** — same proxy pattern (`orm_service.js`) adds `_silent:true` to the RPC settings. It suppresses the **loading indicator** (`webclient/loading_indicator/loading_indicator.js`) and the **slow-rpc patience toast** (`core/network/slow_rpc_service.js`) — the only two `RPC:REQUEST`/`RPC:RESPONSE` consumers that check `settings.silent`. **It does NOT suppress error dialogs**: neither `core/errors/error_service.js` nor `components/errors/error_handlers.js` reads `silent`, so a failing `orm.silent` call still opens the normal error dialog. **Composable but not chainable with itself**: `orm.silent.cache({type:"disk"})` works; re-invoking `.silent` or `.cache()` re-creates, doesn't stack.
 
-**`orm.dedup`** — same proxy pattern (`orm_service.js`) adds `_dedup: true` to subsequent calls. Concurrent callers issuing the same `(url, params)` key share a single in-flight fetch (stampede prevention for **uncached** reads). Redundant when chained onto `.cache(...)` — the cache layer already prevents duplicate fires. Abort semantics are shared: aborting any caller cancels the underlying fetch and rejects every observer with `ConnectionAbortedError`. Never apply to writes.
+**`orm.dedup`** — same proxy pattern (`orm_service.js`) adds `_dedup: true` to subsequent calls. Concurrent callers issuing the same `(url, params)` key share a single in-flight fetch (stampede prevention for **uncached** reads). Redundant when chained onto `.cache(...)` — the cache layer already prevents duplicate fires. Each caller owns its subscription: aborting one rejects that caller with `ConnectionAbortedError`; the underlying fetch is cancelled when its last subscriber detaches. Never apply to writes.
 
 **`orm.retry(options)`** — same proxy pattern (`orm_service.js`) adds `_retry: options` to subsequent calls. Accepts a number (interpreted as retries with default backoff) or a partial config `{retries, baseMs, maxMs}`. Composes with `silent` and `cache`: `orm.silent.cache({type:"disk"}).retry(1).call(...)` is the canonical boot-path-resilient idiom (see `core/field_service.js`, `views/view_service.js`). Caller is responsible for ensuring the call is idempotent — never apply to writes (create/write/unlink/web_save/web_save_multi/web_resequence/name_create).
 
 **Context merging rule** (`orm_service.js`): `fullContext = {...user.context, ...(kwargs.context||{})}`. Spread order means **caller keys win on collision** — `user.context` values can be overridden, though the keys themselves cannot be deleted (omit from caller context to inherit, set to a new value to override).
 
-**rpc.js settings whitelist** (`rpc.js`): `cache, silent, headers, timeout, retry, dedup`. Any other key throws. `cache` + `retry` compose: cache wraps retry so warm hits skip the retry layer entirely. `timeout` (milliseconds) installs an `AbortSignal.timeout()` that combines with the caller-controlled abort signal via `AbortSignal.any()`. No `credentials`.
+**rpc.js settings whitelist** (`rpc.js`): `cache, silent, headers, timeout, retry, dedup, signal`. Any other key throws. `cache` + `retry` compose: cache wraps retry so warm hits skip the retry layer entirely. `timeout` (milliseconds) installs an `AbortSignal.timeout()` that combines with the caller-controlled abort signal via `AbortSignal.any()`. No `credentials`.
+
+RPC interception runs once per logical call, before parameters are serialized.
+The captured JSON value supplies both cache/dedup identity and every transport
+attempt. Stateful getters, `toJSON`, caller mutations during retry backoff, and
+RPC event listeners cannot change a retry's body. `toJSON` receives the real
+`params` property name; omitted parameters remain omitted. Each attempt still
+has a fresh request ID and separate event data. Null or omitted parameters do
+not change a server error into a retryable transport failure.
+Header values and cache/retry option containers are captured before parameter
+serialization too. Mutating caller options cannot change a retry's header
+identity or poison the cache variant chosen for the original call. Each request
+and response event gets its own settings copy; abort signals and callbacks keep
+their identity internally. Synchronous transport setup failures in a retry chain
+reject its promise, including when setup fails inside a backoff timer.
 
 Cached responses with custom headers are isolated by canonical header values in
 RAM, even when disk caching is requested. The transport's forced JSON Content-Type
@@ -469,7 +483,7 @@ an in-tree fork; only `hoot` and `hoot-dom` are internal, versioned with the for
 | Python (models) | 25 (24 model files + `__init__.py`) |
 | Python (tests) | 62 (`test_*.py`; 63 files incl. `__init__.py`) |
 | JavaScript (src) | 868 (866 carry `@ts-check`; `module_loader.js` + `service_worker.js` are the two exclusions) |
-| JavaScript (tests) | 799 (incl. 735 `*.test.js` Hoot suites) |
+| JavaScript (tests) | 801 (incl. 736 `*.test.js` Hoot suites) |
 | JavaScript (vendored libs) | 94 |
 | SCSS/CSS | 213 (34 in `static/src/scss/` shared base; remaining 179 co-located with JS components) |
 | XML (views/ + data/ + static/src OWL templates) | 293 (14 views + 5 data + 274 OWL templates) |

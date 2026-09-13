@@ -472,6 +472,25 @@ function makeRequestHeaders(headers) {
     return result;
 }
 
+/**
+ * Copy the mutable option containers, preserving callback and signal identity.
+ * Header values are normalized now so later coercion cannot change identity.
+ * @param {{[key: string]: any}} settings
+ * @returns {{[key: string]: any}}
+ */
+function copyRPCSettings(settings) {
+    const copy = { ...settings };
+    if (copy.headers !== undefined) {
+        copy.headers = makeRequestHeaders(copy.headers);
+    }
+    for (const key of ["cache", "retry"]) {
+        if (copy[key] && typeof copy[key] === "object") {
+            copy[key] = { ...copy[key] };
+        }
+    }
+    return copy;
+}
+
 /** @param {HeadersInit} [headers] @returns {number | undefined} */
 function headerCacheScope(headers) {
     if (!headers) {
@@ -507,39 +526,49 @@ export function rpc(url, params = {}, settings = {}) {
  * @param {{[key: string]: any}} settings
  * @returns {Promise<any>}
  */
-/**
- * @param {string} url
- * @param {{[key: string]: any}} params
- * @param {{[key: string]: any}} settings
- * @returns {Promise<any>}
- */
 rpc._rpc = function (url, params, settings) {
     checkRPCSettings(settings);
-    if (settings.dedup) {
-        return _rpcDeduped(url, params, settings);
-    }
-    if (settings.cache && _rpcState.rpcCache) {
-        return _rpcCached(url, params, settings, _rpcState.rpcCache);
-    }
-    if (settings.retry) {
-        return _rpcWithRetry(url, params, settings);
-    }
-    return _rpcOnce(url, params, settings);
+    const capturedSettings = copyRPCSettings(settings);
+    // Preserve the JSON property name passed to toJSON, including omission of
+    // params itself. Cache delays and retries must never re-read caller objects.
+    const serializedParams = JSON.stringify({ params });
+    log.pipeline("snapshot", () => ({ url, codeUnits: serializedParams.length }));
+    return dispatchRequest(url, serializedParams, capturedSettings);
 };
 
 /**
  * @param {string} url
- * @param {{[key: string]: any}} params
+ * @param {string} serializedParams
  * @param {{[key: string]: any}} settings
  * @returns {Promise<any>}
  */
-function _rpcDeduped(url, params, settings) {
+function dispatchRequest(url, serializedParams, settings) {
+    if (settings.dedup) {
+        return _rpcDeduped(url, serializedParams, settings);
+    }
+    if (settings.cache && _rpcState.rpcCache) {
+        return _rpcCached(url, serializedParams, settings, _rpcState.rpcCache);
+    }
+    if (settings.retry) {
+        return _rpcWithRetry(url, serializedParams, settings);
+    }
+    return _rpcOnce(url, serializedParams, settings);
+}
+
+/**
+ * @param {string} url
+ * @param {string} serializedParams
+ * @param {{[key: string]: any}} settings
+ * @returns {Promise<any>}
+ */
+function _rpcDeduped(url, serializedParams, settings) {
+    const { params } = JSON.parse(serializedParams);
     const key = `${getKey(url, params)}|${dedupSettingsFingerprint(settings)}`;
     let entry = inflightDedup.get(key);
     log.logic("dedup", () => ({ url, joined: Boolean(entry), key }));
     if (!entry) {
         const shared = /** @type {any} */ (
-            rpc._rpc(url, params, omit(settings, "dedup", "signal"))
+            dispatchRequest(url, serializedParams, omit(settings, "dedup", "signal"))
         );
         const created = {
             shared,
@@ -565,12 +594,13 @@ function _rpcDeduped(url, params, settings) {
 
 /**
  * @param {string} url
- * @param {{[key: string]: any}} params
+ * @param {string} serializedParams
  * @param {{[key: string]: any}} settings
  * @param {RPCCache} rpcCache
  * @returns {Promise<any>}
  */
-function _rpcCached(url, params, settings, rpcCache) {
+function _rpcCached(url, serializedParams, settings, rpcCache) {
+    const { params } = JSON.parse(serializedParams);
     const cacheSettings =
         typeof settings.cache === "boolean" ? {} : { ...settings.cache };
     const headerScope = headerCacheScope(settings.headers);
@@ -602,7 +632,7 @@ function _rpcCached(url, params, settings, rpcCache) {
     const fallback = (/** @type {object} */ request) => {
         ownRequest = request ?? null;
         const inner = /** @type {any} */ (
-            rpc._rpc(url, params, omit(settings, "cache", "signal"))
+            dispatchRequest(url, serializedParams, omit(settings, "cache", "signal"))
         );
         innerProm = inner;
         if (typeof inner.abort === "function") {
@@ -674,11 +704,11 @@ function _rpcCached(url, params, settings, rpcCache) {
 }
 
 /**
- * @param {object} data
+ * @param {string} body
  * @param {{[key: string]: any}} settings
  * @returns {{ controller: AbortController, timeoutSignal: AbortSignal | null, init: RequestInit }}
  */
-function makeFetchRequest(data, settings) {
+function makeFetchRequest(body, settings) {
     const headers = makeRequestHeaders(settings.headers);
     const controller = new AbortController();
     /** @type {AbortSignal | null} */
@@ -695,7 +725,7 @@ function makeFetchRequest(data, settings) {
     return {
         controller,
         timeoutSignal,
-        init: { method: "POST", headers, body: JSON.stringify(data), signal },
+        init: { method: "POST", headers, body, signal },
     };
 }
 
@@ -736,20 +766,28 @@ function stampVersion(parsed) {
 
 /**
  * @param {string} url
- * @param {{[key: string]: any}} params
+ * @param {string} serializedParams
  * @param {{[key: string]: any}} settings
  * @returns {Promise<any>}
  */
-function _rpcOnce(url, params, settings) {
-    const data = {
+function _rpcOnce(url, serializedParams, settings) {
+    const envelope = {
         id: _rpcState.rpcId++,
         jsonrpc: "2.0",
         method: "call",
-        params,
     };
-    const { controller, timeoutSignal, init } = makeFetchRequest(data, settings);
+    // Event listeners receive their own parsed data; mutating it cannot alter
+    // the captured wire value or a later retry. Splice only JSON-produced text.
+    const data = { ...JSON.parse(serializedParams), ...envelope };
+    const { params } = data;
+    const serializedEnvelope = JSON.stringify(envelope);
+    const body =
+        serializedParams === "{}"
+            ? serializedEnvelope
+            : serializedEnvelope.slice(0, -1) + "," + serializedParams.slice(1);
+    const { controller, timeoutSignal, init } = makeFetchRequest(body, settings);
     let aborted = false;
-    const busSettings = settings.signal ? omit(settings, "signal") : settings;
+    const busSettings = () => copyRPCSettings(omit(settings, "signal"));
     const { promise, resolve, reject } = Promise.withResolvers();
     let settled = false;
     const settleResolve = (/** @type {any} */ value) => {
@@ -764,7 +802,12 @@ function _rpcOnce(url, params, settings) {
     /** @param {Error} error */
     const fail = (error) => {
         endSpan({ id: data.id, error: error.name });
-        rpcBus.trigger(RpcEvent.RESPONSE, { data, url, settings: busSettings, error });
+        rpcBus.trigger(RpcEvent.RESPONSE, {
+            data,
+            url,
+            settings: busSettings(),
+            error,
+        });
         settleReject(error);
     };
     /**
@@ -776,7 +819,7 @@ function _rpcOnce(url, params, settings) {
             ? new ServerOverloadError(url, response.status)
             : new InvalidResponseError(url, response.status);
 
-    rpcBus.trigger(RpcEvent.REQUEST, { data, url, settings: busSettings });
+    rpcBus.trigger(RpcEvent.REQUEST, { data, url, settings: busSettings() });
     log.pipeline("request", () => ({
         id: data.id,
         url,
@@ -832,14 +875,14 @@ function _rpcOnce(url, params, settings) {
                 rpcBus.trigger(RpcEvent.RESPONSE, {
                     data,
                     url,
-                    settings: busSettings,
+                    settings: busSettings(),
                     result,
                 });
                 settleResolve(result);
                 return;
             }
             const error = makeErrorFromResponse(parsed.error);
-            error.model = data.params.model;
+            error.model = params?.model;
             fail(error);
         })
         .catch((err) => {
@@ -857,7 +900,12 @@ function _rpcOnce(url, params, settings) {
         controller.abort();
         endSpan({ id: data.id, aborted: true });
         const error = new ConnectionAbortedError("fetch abort");
-        rpcBus.trigger(RpcEvent.RESPONSE, { data, url, settings: busSettings, error });
+        rpcBus.trigger(RpcEvent.RESPONSE, {
+            data,
+            url,
+            settings: busSettings(),
+            error,
+        });
         if (rejectError) {
             settleReject(error);
         }
@@ -867,11 +915,11 @@ function _rpcOnce(url, params, settings) {
 
 /**
  * @param {string} url
- * @param {{[key: string]: any}} params
+ * @param {string} serializedParams
  * @param {{[key: string]: any}} settings
  * @returns {Promise<any>}
  */
-function _rpcWithRetry(url, params, settings) {
+function _rpcWithRetry(url, serializedParams, settings) {
     const config = normalizeRetry(settings.retry);
     const innerSettings = omit(settings, "retry");
     const { promise, resolve, reject } = Promise.withResolvers();
@@ -898,9 +946,17 @@ function _rpcWithRetry(url, params, settings) {
             return;
         }
         attempt++;
-        const inner = /** @type {RpcPromise<unknown>} */ (
-            _rpcOnce(url, params, innerSettings)
-        );
+        /** @type {RpcPromise<unknown>} */
+        let inner;
+        try {
+            inner = /** @type {RpcPromise<unknown>} */ (
+                _rpcOnce(url, serializedParams, innerSettings)
+            );
+        } catch (error) {
+            log.logic("retry.setup_failed", () => ({ url, attempt, error }));
+            settleReject(error);
+            return;
+        }
         currentInner = inner;
         inner.then(
             (/** @type {unknown} */ result) => {

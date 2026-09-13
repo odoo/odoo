@@ -46,7 +46,13 @@ export class StateMachine extends SignalStore {
         const cls = /** @type {typeof StateMachine} */ (
             /** @type {unknown} */ (this.constructor)
         );
-        const next = cls.transitions[this.status]?.[event];
+        const transitions = Object.hasOwn(cls.transitions, this.status)
+            ? cls.transitions[this.status]
+            : undefined;
+        const next =
+            transitions && Object.hasOwn(transitions, event)
+                ? transitions[event]
+                : undefined;
         if (next === undefined) {
             throw new cls.invalidTransitionError(this.status, event);
         }

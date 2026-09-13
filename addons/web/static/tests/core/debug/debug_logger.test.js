@@ -1,6 +1,7 @@
 // @ts-check
 
 import { after, describe, expect, test } from "@odoo/hoot";
+import { isolateLogging } from "@web/../tests/core/debug/logging_helpers";
 import {
     disableLogging,
     enableLogging,
@@ -8,7 +9,6 @@ import {
     getStatus,
     makeLogger,
     parseSpec,
-    resetStats,
     resolveKinds,
 } from "@web/core/debug/debug_logger";
 
@@ -34,11 +34,30 @@ function labels(captured) {
 }
 
 function cleanLogging() {
-    after(() => {
-        disableLogging({ persist: false });
-        resetStats();
-    });
+    after(isolateLogging());
 }
+
+test("logging cleanup restores a disabled specification without enabling all namespaces", () => {
+    cleanLogging();
+    disableLogging({ persist: false });
+    const restore = isolateLogging();
+    enableLogging("test.temporary", { persist: false });
+    restore();
+    expect(getStatus().spec).toBe("");
+    expect(makeLogger("unrelated.namespace").enabled).toBe(false);
+});
+
+test("logging cleanup restores a nonempty specification exactly", () => {
+    cleanLogging();
+    const spec = "test.*:logic,-test.excluded";
+    enableLogging(spec, { persist: false });
+    const restore = isolateLogging();
+    disableLogging({ persist: false });
+    restore();
+    expect(getStatus().spec).toBe(spec);
+    expect(makeLogger("test.allowed").isEnabled("logic")).toBe(true);
+    expect(makeLogger("test.excluded").enabled).toBe(false);
+});
 
 describe("spec", () => {
     test("a bare namespace enables every kind", () => {

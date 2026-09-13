@@ -15,6 +15,18 @@ export class LruCache {
         this._entries = new Map();
     }
 
+    get limit() {
+        return this._limit;
+    }
+
+    /** @param {number} limit */
+    set limit(limit) {
+        if (!Number.isInteger(limit) || limit < 0) {
+            throw new RangeError("LruCache capacity must be a nonnegative integer");
+        }
+        this._limit = limit;
+    }
+
     /** @returns {number} */
     get size() {
         return this._entries.size;

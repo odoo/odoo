@@ -3,6 +3,9 @@
 
 import { onWillUnmount, useComponent } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
+import { makeLogger } from "@web/core/debug/debug_logger";
+
+const log = makeLogger("web.timing");
 
 /**
  * @template {(...args: any[]) => any} T
@@ -22,18 +25,29 @@ export function batched(callback, synchronize = () => Promise.resolve()) {
         awaiters.push({ resolve, reject });
         if (!scheduled) {
             scheduled = true;
+            const settlers = awaiters;
+            log.pipeline("batch.schedule");
             (async () => {
-                await synchronize();
-                scheduled = false;
-                const settlers = awaiters;
-                awaiters = [];
                 try {
+                    await synchronize();
+                    scheduled = false;
+                    awaiters = [];
                     const result = await callback(...lastArgs);
+                    log.pipeline("batch.resolve", () => ({ callers: settlers.length }));
                     for (const settler of settlers) {
                         settler.resolve(result);
                     }
                 } catch (error) {
+                    // A callback may already have scheduled another batch.
+                    if (awaiters === settlers) {
+                        scheduled = false;
+                        awaiters = [];
+                    }
                     console.error(error);
+                    log.pipeline("batch.reject", () => ({
+                        callers: settlers.length,
+                        error,
+                    }));
                     for (const settler of settlers) {
                         settler.reject(error);
                     }
@@ -97,50 +111,64 @@ function debounceEdges(options) {
  */
 export function debounce(func, delay, options) {
     /** @type {any} */
-    let handle;
+    let handle = null;
     const funcName = func.name ? `${func.name} (debounce)` : "debounce";
     const getDelay = typeof delay === "function" ? delay : () => delay;
     const useAnimationFrame = delay === "animationFrame";
     const setFnName = useAnimationFrame ? "requestAnimationFrame" : "setTimeout";
     const clearFnName = useAnimationFrame ? "cancelAnimationFrame" : "clearTimeout";
     /** @type {any[] | null} */
-    let lastArgs;
+    let lastArgs = null;
     const { leading, trailing } = debounceEdges(options);
 
     /** @type {any} */
-    let lastSelf;
+    let lastSelf = null;
     /** @type {{ resolve: Function, reject: Function }[]} */
     let pending = [];
+
+    /** @param {boolean} execute */
+    function settlePending(execute) {
+        const awaiters = pending;
+        const args = lastArgs;
+        const self = lastSelf;
+        // Release the old invocation before user code can enqueue another one.
+        pending = [];
+        lastArgs = null;
+        lastSelf = null;
+        log.pipeline("debounce.settle", () => ({
+            name: funcName,
+            callers: awaiters.length,
+            execute: Boolean(execute && trailing && args),
+        }));
+        if (execute && trailing && args) {
+            executeAndSettle(func, self, args, awaiters);
+        } else {
+            for (const { resolve } of awaiters) {
+                resolve(undefined);
+            }
+        }
+    }
 
     return Object.assign(
         {
             /** @type {any} */
             [funcName](/** @type {any[]} */ ...args) {
-                lastSelf = this;
                 return new Promise((resolve, reject) => {
-                    if (leading && !handle) {
-                        executeAndSettle(func, this, args, [{ resolve, reject }]);
-                    } else {
+                    const timeout = getDelay();
+                    const callLeading = leading && handle === null;
+                    if (!callLeading) {
                         pending.push({ resolve, reject });
                         lastArgs = args;
+                        lastSelf = this;
                     }
                     browser[clearFnName](handle);
                     handle = /** @type {any} */ (browser)[setFnName](() => {
                         handle = null;
-                        if (trailing && lastArgs) {
-                            const awaiters = pending;
-                            pending = [];
-                            executeAndSettle(func, lastSelf, lastArgs, awaiters);
-                            lastArgs = null;
-                        } else {
-                            const awaiters = pending;
-                            pending = [];
-                            lastArgs = null;
-                            for (const { resolve } of awaiters) {
-                                resolve(undefined);
-                            }
-                        }
-                    }, getDelay());
+                        settlePending(true);
+                    }, timeout);
+                    if (callLeading) {
+                        executeAndSettle(func, this, args, [{ resolve, reject }]);
+                    }
                 });
             },
         }[funcName],
@@ -148,19 +176,7 @@ export function debounce(func, delay, options) {
             cancel(execNow = false) {
                 browser[clearFnName](handle);
                 handle = null;
-                if (execNow && trailing && lastArgs) {
-                    const awaiters = pending;
-                    pending = [];
-                    executeAndSettle(func, lastSelf, lastArgs, awaiters);
-                } else if (pending.length) {
-                    const awaiters = pending;
-                    pending = [];
-                    for (const { resolve } of awaiters) {
-                        resolve(undefined);
-                    }
-                }
-                lastArgs = null;
-                lastSelf = null;
+                settlePending(execNow);
             },
         },
     );
