@@ -4,9 +4,11 @@ from datetime import datetime, date, timedelta, UTC
 from unittest.mock import patch
 from zoneinfo import ZoneInfo
 
+import psycopg2
 from dateutil.relativedelta import relativedelta
 
-from odoo.tests.common import tagged, new_test_user
+from odoo.tests.common import TransactionCase, tagged, new_test_user
+from odoo.tools import mute_logger
 from odoo.exceptions import ValidationError
 from odoo.addons.google_calendar.models.res_users import ResUsers
 from odoo.addons.google_calendar.tests.test_sync_common import TestSyncGoogle, patch_api
@@ -2646,3 +2648,142 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         self.assertEqual(len(events), 3, "The new recurrence must have three events.")
         check_organizer_as_single_attendee(self, recurrence, self.organizer_user)
         self.assertGoogleAPINotCalled()
+
+
+class TestDuplicatePrevention(TransactionCase):
+
+    def _event_values(self, **kwargs):
+        values = {
+            'name': 'Google meeting',
+            'start': '2026-08-12 10:00:00',
+            'stop': '2026-08-12 11:00:00',
+            'google_id': 'GID-SHARED',
+            'need_sync': False,
+        }
+        values.update(kwargs)
+        return values
+
+    def _recurrence_values(self, **kwargs):
+        values = {
+            'rrule_type': 'weekly',
+            'mon': True,
+            'end_type': 'count',
+            'count': 3,
+            'google_id': 'GID-RECURRENCE',
+            'need_sync': False,
+        }
+        values.update(kwargs)
+        return values
+
+    def test_two_active_events_same_google_id_are_rejected(self):
+        """ Two active events cannot share the same Google id. """
+        self.env['calendar.event'].create(self._event_values())
+        self.env.flush_all()
+
+        with self.assertRaises(psycopg2.errors.UniqueViolation), mute_logger('odoo.sql_db'):
+            with self.env.cr.savepoint():
+                self.env['calendar.event'].create(self._event_values(
+                    start='2026-08-19 10:00:00', stop='2026-08-19 11:00:00',
+                ))
+                self.env.flush_all()
+
+    def test_two_active_recurrences_same_google_id_are_rejected(self):
+        self.env['calendar.recurrence'].create(self._recurrence_values())
+        self.env.flush_all()
+
+        with self.assertRaises(psycopg2.errors.UniqueViolation), mute_logger('odoo.sql_db'):
+            with self.env.cr.savepoint():
+                self.env['calendar.recurrence'].create(self._recurrence_values())
+                self.env.flush_all()
+
+    def test_records_outside_the_index_scope_do_not_conflict(self):
+        """ Everything the partial index deliberately leaves out stays allowed. """
+        CalendarEvent = self.env['calendar.event']
+        CalendarRecurrence = self.env['calendar.recurrence']
+
+        # the archived copy left behind by _apply_recurrence, excluded by `AND active`
+        with self.subTest('archived event'):
+            CalendarEvent.create(self._event_values(google_id='GID-A', active=False))
+            CalendarEvent.create(self._event_values(google_id='GID-A'))
+            self.env.flush_all()
+
+        with self.subTest('archived recurrence'):
+            CalendarRecurrence.create(self._recurrence_values(google_id='GID-B', active=False))
+            CalendarRecurrence.create(self._recurrence_values(google_id='GID-B'))
+            self.env.flush_all()
+
+        # pure Odoo events, excluded by `WHERE google_id IS NOT NULL`
+        with self.subTest('no google id'):
+            CalendarEvent.create(self._event_values(google_id=False))
+            CalendarEvent.create(self._event_values(google_id=False))
+            self.env.flush_all()
+
+        # each occurrence of a series carries its own google id
+        with self.subTest('distinct google ids'):
+            CalendarEvent.create(self._event_values(google_id='GID-C'))
+            CalendarEvent.create(self._event_values(google_id='GID-D'))
+            self.env.flush_all()
+
+    def test_create_from_google_skips_existing_google_id(self):
+        """
+        An event already imported by a concurrent sync is skipped, not duplicated,
+        and does not prevent the other events of the batch from being created.
+        """
+        CalendarEvent = self.env['calendar.event']
+        CalendarEvent.create(self._event_values(
+            name='Already imported by another sync', google_id='GID-CONCURRENT',
+        ))
+        self.env.flush_all()
+
+        # the conflicting event sits between two sound ones, which must both survive
+        # the failed batch and be created by the fallback
+        google_ids = ['GID-BEFORE', 'GID-CONCURRENT', 'GID-AFTER']
+        gevents = GoogleEvent([{'id': google_id} for google_id in google_ids])
+        vals_list = [
+            self._event_values(name=google_id, google_id=google_id)
+            for google_id in google_ids
+        ]
+
+        with mute_logger('odoo.sql_db'):
+            created = CalendarEvent._create_from_google(gevents, vals_list)
+
+        self.assertEqual(
+            created.mapped('google_id'), ['GID-BEFORE', 'GID-AFTER'],
+            "only the conflicting event is left out",
+        )
+        self.assertEqual(
+            CalendarEvent.search_count([('google_id', '=', 'GID-CONCURRENT')]), 1,
+            "the concurrent event must not be duplicated",
+        )
+
+    def test_create_from_google_batches_without_conflict(self):
+        """ Without a conflict, the whole batch is created in a single shot. """
+        CalendarEvent = self.env['calendar.event']
+        google_ids = ['GID-1', 'GID-2', 'GID-3']
+        gevents = GoogleEvent([{'id': google_id} for google_id in google_ids])
+        vals_list = [
+            self._event_values(name=google_id, google_id=google_id)
+            for google_id in google_ids
+        ]
+
+        with patch.object(
+            CalendarEvent.env.cr, 'savepoint', wraps=CalendarEvent.env.cr.savepoint,
+        ) as mock_savepoint:
+            created = CalendarEvent._create_from_google(gevents, vals_list)
+
+        self.assertEqual(created.mapped('google_id'), google_ids)
+        self.assertEqual(mock_savepoint.call_count, 1, "no per-event fallback is paid for")
+
+    def test_create_from_google_reraises_unrelated_violations(self):
+        """ A unique violation coming from another index is not a concurrent sync. """
+        CalendarEvent = self.env['calendar.event']
+        self.env.cr.execute(
+            "CREATE UNIQUE INDEX calendar_event_name_uniq ON calendar_event (name)")
+        CalendarEvent.create(self._event_values(name='Taken', google_id='GID-TAKEN'))
+        self.env.flush_all()
+
+        gevents = GoogleEvent([{'id': 'GID-OTHER'}])
+        vals_list = [self._event_values(name='Taken', google_id='GID-OTHER')]
+
+        with self.assertRaises(psycopg2.errors.UniqueViolation), mute_logger('odoo.sql_db'):
+            CalendarEvent._create_from_google(gevents, vals_list)

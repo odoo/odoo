@@ -42,6 +42,11 @@ class CalendarEvent(models.Model):
     microsoft_recurrence_master_id = fields.Char('Microsoft Recurrence Master Id')
     microsoft_sync_active = fields.Boolean('Microsoft Sync Active', compute='_compute_microsoft_sync_active')
 
+    _ms_universal_event_id_uniq = models.UniqueIndex(
+        "(ms_universal_event_id) WHERE ms_universal_event_id IS NOT NULL AND active",
+        "This Outlook event is already synchronized with another event in Odoo.",
+    )
+
     @api.depends('user_id.microsoft_calendar_rtoken', 'user_id.microsoft_synchronization_stopped')
     def _compute_microsoft_sync_active(self):
         # Check token and sync status manually to avoid calling

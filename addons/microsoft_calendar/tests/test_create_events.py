@@ -2,9 +2,12 @@
 
 from unittest.mock import patch, call
 from datetime import timedelta, datetime
+
+import psycopg2
 from freezegun import freeze_time
 
 from odoo import Command, fields
+from odoo.tools import mute_logger
 
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.microsoft_calendar.utils.microsoft_calendar import MicrosoftCalendarService
@@ -12,7 +15,7 @@ from odoo.addons.microsoft_calendar.utils.microsoft_event import MicrosoftEvent
 from odoo.addons.microsoft_calendar.models.res_users import ResUsers
 from odoo.addons.microsoft_calendar.tests.common import TestCommon, mock_get_token, _modified_date_in_the_future
 from odoo.exceptions import ValidationError, UserError
-from odoo.tests.common import tagged
+from odoo.tests.common import TransactionCase, tagged
 
 
 @tagged('post_install', '-at_install')
@@ -682,9 +685,7 @@ class TestCreateEvents(TestCommon):
         record = self.env["calendar.event"].with_user(self.organizer_user).create(self.simple_event_values)
 
         # Mock values to simulate Microsoft event creation
-        event_id = "123"
-        event_iCalUId = "456"
-        mock_insert.return_value = (event_id, event_iCalUId)
+        mock_insert.side_effect = lambda *args, **kwargs: (f"123-{mock_insert.call_count}", f"456-{mock_insert.call_count}")
         record2 = record.copy()
         # Prepare the mock event response from Microsoft
         self.response_from_outlook_organizer = {
@@ -854,3 +855,133 @@ class TestCreateEvents(TestCommon):
             all(events.mapped('microsoft_id')),
             "This event should be synced. It was written to after the user's microsoft_last_sync_date."
         )
+
+
+class TestDuplicatePrevention(TransactionCase):
+
+    def _event_values(self, **kwargs):
+        values = {
+            'name': 'Outlook meeting',
+            'start': '2026-08-12 10:00:00',
+            'stop': '2026-08-12 11:00:00',
+            'ms_universal_event_id': 'UID-SHARED',
+            'need_sync_m': False,
+        }
+        values.update(kwargs)
+        return values
+
+    def _recurrence_values(self, **kwargs):
+        values = {
+            'rrule_type': 'weekly',
+            'mon': True,
+            'end_type': 'count',
+            'count': 3,
+            'ms_universal_event_id': 'UID-RECURRENCE',
+            'need_sync_m': False,
+        }
+        values.update(kwargs)
+        return values
+
+    def test_two_active_events_same_uid_are_rejected(self):
+        """ Two active events cannot share the same iCalUId. """
+        self.env['calendar.event'].create(self._event_values())
+        self.env.flush_all()
+
+        with self.assertRaises(psycopg2.errors.UniqueViolation), mute_logger('odoo.sql_db'):
+            with self.env.cr.savepoint():
+                self.env['calendar.event'].create(self._event_values(
+                    start='2026-08-19 10:00:00', stop='2026-08-19 11:00:00',
+                ))
+                self.env.flush_all()
+
+    def test_records_outside_the_index_scope_do_not_conflict(self):
+        """ Everything the partial index deliberately leaves out stays allowed. """
+        CalendarEvent = self.env['calendar.event']
+        CalendarRecurrence = self.env['calendar.recurrence']
+
+        # the archived row left behind by _apply_recurrence, excluded by `AND active`
+        with self.subTest('archived event'):
+            CalendarEvent.create(self._event_values(ms_universal_event_id='UID-A', active=False))
+            CalendarEvent.create(self._event_values(ms_universal_event_id='UID-A'))
+            self.env.flush_all()
+
+        with self.subTest('archived recurrence'):
+            CalendarRecurrence.create(self._recurrence_values(ms_universal_event_id='UID-B', active=False))
+            CalendarRecurrence.create(self._recurrence_values(ms_universal_event_id='UID-B'))
+            self.env.flush_all()
+
+        # pure Odoo events, excluded by `WHERE ms_universal_event_id IS NOT NULL`
+        with self.subTest('no uid'):
+            CalendarEvent.create(self._event_values(ms_universal_event_id=False))
+            CalendarEvent.create(self._event_values(ms_universal_event_id=False))
+            self.env.flush_all()
+
+        # each occurrence of a series carries its own iCalUId
+        with self.subTest('distinct uids'):
+            CalendarEvent.create(self._event_values(ms_universal_event_id='UID-C'))
+            CalendarEvent.create(self._event_values(ms_universal_event_id='UID-D'))
+            self.env.flush_all()
+
+    def test_two_active_recurrences_same_uid_are_rejected(self):
+        self.env['calendar.recurrence'].create(self._recurrence_values())
+        self.env.flush_all()
+
+        with self.assertRaises(psycopg2.errors.UniqueViolation), mute_logger('odoo.sql_db'):
+            with self.env.cr.savepoint():
+                self.env['calendar.recurrence'].create(self._recurrence_values())
+                self.env.flush_all()
+
+    def test_create_from_microsoft_skips_existing_uid(self):
+        """
+        An event already imported by a concurrent sync is skipped, not duplicated,
+        and does not prevent the other events of the batch from being created.
+        """
+        CalendarEvent = self.env['calendar.event']
+        CalendarEvent.create(self._event_values(
+            name='Already imported by another sync', ms_universal_event_id='UID-CONCURRENT',
+        ))
+        self.env.flush_all()
+
+        # the conflicting event sits between two sound ones, which must both survive
+        # the failed batch and be created by the fallback
+        uids = ['UID-BEFORE', 'UID-CONCURRENT', 'UID-AFTER']
+        vals_list = [self._event_values(name=uid, ms_universal_event_id=uid) for uid in uids]
+
+        with mute_logger('odoo.sql_db'):
+            created = CalendarEvent._create_from_microsoft_skipping_duplicates(None, vals_list)
+
+        self.assertEqual(
+            created.mapped('ms_universal_event_id'), ['UID-BEFORE', 'UID-AFTER'],
+            "only the conflicting event is left out",
+        )
+        self.assertEqual(
+            CalendarEvent.search_count([('ms_universal_event_id', '=', 'UID-CONCURRENT')]), 1,
+            "the concurrent event must not be duplicated",
+        )
+
+    def test_create_from_microsoft_batches_without_conflict(self):
+        """ Without a conflict, the whole batch is created in a single shot. """
+        CalendarEvent = self.env['calendar.event']
+        uids = ['UID-1', 'UID-2', 'UID-3']
+        vals_list = [self._event_values(name=uid, ms_universal_event_id=uid) for uid in uids]
+
+        with patch.object(
+            CalendarEvent.env.cr, 'savepoint', wraps=CalendarEvent.env.cr.savepoint,
+        ) as mock_savepoint:
+            created = CalendarEvent._create_from_microsoft_skipping_duplicates(None, vals_list)
+
+        self.assertEqual(created.mapped('ms_universal_event_id'), uids)
+        self.assertEqual(mock_savepoint.call_count, 1, "no per-event fallback is paid for")
+
+    def test_create_from_microsoft_reraises_unrelated_violations(self):
+        """ A unique violation coming from another index is not a concurrent sync. """
+        CalendarEvent = self.env['calendar.event']
+        self.env.cr.execute(
+            "CREATE UNIQUE INDEX calendar_event_name_uniq ON calendar_event (name)")
+        CalendarEvent.create(self._event_values(name='Taken', ms_universal_event_id='UID-TAKEN'))
+        self.env.flush_all()
+
+        vals_list = [self._event_values(name='Taken', ms_universal_event_id='UID-OTHER')]
+
+        with self.assertRaises(psycopg2.errors.UniqueViolation), mute_logger('odoo.sql_db'):
+            CalendarEvent._create_from_microsoft_skipping_duplicates(None, vals_list)
