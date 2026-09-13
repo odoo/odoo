@@ -282,19 +282,8 @@ class AccountMove(models.Model):
                             )
         return err_messages
 
-    def download_efaktur(self):
-        """OVERRIDE l10n_id_efaktur
-
-        Change the flow of efaktur downloading. Collects data needed for efaktur and generate the
-        xml file.
-        """
-        # Pre-download checks
-
-        # Should prevent users from generating e-Faktur document on invoices across multi-company.
-        # Allowing it will cause issues on the invoice/eFaktur document record rule
-        if len(self.company_id) > 1:
-            raise UserError(_("You are not allowed to generate e-Faktur document from invoices coming from different companies"))
-
+    def _check_efaktur_eligibility(self):
+        """ Check list assertion for e-Faktur eligibility. Returns a list of error messages if any """
         err_messages = []
 
         if not self.company_id.vat:
@@ -331,6 +320,20 @@ class AccountMove(models.Model):
 
         # Check tax groups
         err_messages.extend(self._validate_tax_groups())
+        return err_messages
+
+    def download_efaktur(self):
+        """OVERRIDE l10n_id_efaktur
+
+        Change the flow of efaktur downloading. Collects data needed for efaktur and generate the
+        xml file.
+        """
+        # Should prevent users from generating e-Faktur document on invoices across multi-company.
+        # Allowing it will cause issues on the invoice/eFaktur document record rule
+        if len(self.company_id) > 1:
+            raise UserError(_("You are not allowed to generate e-Faktur document from invoices coming from different companies"))
+
+        err_messages = self._check_efaktur_eligibility()
 
         if err_messages:
             err_messages = [_('Unable to download E-faktur for the following reason(s):')] + err_messages
