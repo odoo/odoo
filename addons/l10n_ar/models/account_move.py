@@ -369,15 +369,16 @@ class AccountMove(models.Model):
         return posted
 
     def _reverse_moves(self, default_values_list=None, cancel=False):
-        if not default_values_list:
-            default_values_list = [{} for move in self]
-        for move, default_values in zip(self, default_values_list):
-            default_values.update(
-                {
-                    "l10n_ar_afip_service_start": move.l10n_ar_afip_service_start,
-                    "l10n_ar_afip_service_end": move.l10n_ar_afip_service_end,
-                }
+        default_values_list = [
+            {
+                **default_values,
+                "l10n_ar_afip_service_start": move.l10n_ar_afip_service_start,
+                "l10n_ar_afip_service_end": move.l10n_ar_afip_service_end,
+            }
+            for move, default_values in zip(
+                self, default_values_list or [{} for move in self], strict=True
             )
+        ]
         return super()._reverse_moves(
             default_values_list=default_values_list, cancel=cancel
         )
@@ -403,7 +404,7 @@ class AccountMove(models.Model):
             )
             current_pos = int(number.split("-")[0])
             if current_pos != rec.journal_id.l10n_ar_afip_pos_number:
-                invoices = self.search(
+                invoices = self.search(  # noqa: E8507 - one probe per reviewed move, on its own point of sale
                     [
                         ("journal_id", "=", rec.journal_id.id),
                         ("posted_before", "=", True),

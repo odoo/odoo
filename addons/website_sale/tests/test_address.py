@@ -3,6 +3,7 @@ from unittest.mock import patch
 
 from werkzeug.exceptions import Forbidden
 
+from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.tests import tagged
 
@@ -263,7 +264,7 @@ class TestCheckoutAddress(WebsiteSaleCommon):
         self.assertEqual(so.company_id, self.website.company_id)
 
         with self.assertRaises(
-            ValueError,
+            UserError,
             msg="Should not be able to create SO with company different than the website company",
         ):
             self._create_so(
@@ -276,7 +277,7 @@ class TestCheckoutAddress(WebsiteSaleCommon):
         self.assertEqual(so.company_id, self.website.company_id)
 
         with self.assertRaises(
-            ValueError,
+            UserError,
             msg="Should not be able to create SO with company different than the website company",
         ):
             self._create_so(

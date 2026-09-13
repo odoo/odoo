@@ -1251,10 +1251,11 @@ class AccountReportExpressionEval(models.Model):
             ),
             currency_table_join=self._currency_table_aml_join(options),
             search_condition=query.where_clause,
-            groupby_clause=SQL(
-                "formula %(groupby_sql)s",
-                groupby_sql=SQL(", %s", groupby_sql) if groupby_sql else SQL(),
-            ),
+            # Ordinals, not the alias and not the expression: the joins can carry
+            # a `formula` column (account_tax has one) and PostgreSQL resolves a
+            # GROUP BY name to an input column first, while the expression holds
+            # a bound parameter, so a second spelling of it is a second parameter.
+            groupby_clause=SQL("1, 4") if groupby_sql else SQL("1"),
             tail_query=tail_query,
         )
 
