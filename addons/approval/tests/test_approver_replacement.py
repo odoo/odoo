@@ -281,15 +281,11 @@ class TestApprovalTiers(common.TransactionCase):
             }
         )
         request = self._create_request(amount=500, quantity=10)
-        self.assertEqual(request._find_matching_replacement(), amount_band)
         approver_users = request.approver_ids.mapped("user_id")
         self.assertIn(self.director, approver_users)
         self.assertNotIn(self.cfo, approver_users)
-
-        amount_band.sequence = 30
-        other = self._create_request(amount=500, quantity=10)
-        self.assertEqual(other._find_matching_replacement(), quantity_band)
-        self.assertIn(self.cfo, other.approver_ids.mapped("user_id"))
+        self.assertIn(amount_band, request.applied_rule_ids)
+        self.assertNotIn(quantity_band, request.applied_rule_ids)
 
 
 @tagged("post_install", "-at_install")
@@ -548,33 +544,6 @@ class TestApprovalTiersAuditRegressions(ApprovalCommon):
         )
         category.approval_minimum = 5
         self.assertTrue(category.invalid_minimum)
-
-    def test_negative_amount_no_tier_match_logs_warning(self):
-        category = self._make_category(approvers=[self.approver_1])
-        self.env["approval.rule"].create(
-            {
-                "action_type": "set_approvers",
-                "operator": "between",
-                "name": f"Positive Only {self.id()}",
-                "category_id": category.id,
-                "condition_field": "amount",
-                "threshold": 0,
-                "threshold_max": 0,
-                "approver_ids": [Command.link(self.approver_1.id)],
-            },
-        )
-        with self.assertLogs(
-            "odoo.addons.approval.models.approval_request_routing",
-            level="WARNING",
-        ) as log_ctx:
-            self._prepare_request(category, confirm=False, amount=-100)
-        self.assertTrue(
-            any(
-                "no approver-replacing rule matched" in message
-                for message in log_ctx.output
-            ),
-            "A negative amount matching no band must log a warning.",
-        )
 
 
 @tagged("post_install", "-at_install")

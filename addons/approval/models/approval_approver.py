@@ -298,6 +298,17 @@ class ApprovalApprover(models.Model):
             if delegation
             else {}
         )
+        if vals.get("state") == "approved" and "decided_step_ids" not in vals:
+            undecided = self.filtered(lambda row: row.step_ids - row.decided_step_ids)
+            trace.DECISION.event(
+                "approved_without_named_steps",
+                rows=self.ids,
+                completed=undecided.ids,
+            )
+            for row in undecided:
+                super(ApprovalApprover, row).write(
+                    {"decided_step_ids": [Command.set(row.step_ids.ids)]}
+                )
         result = super().write(self._stamp_pending_since(vals))
         if delegation:
             self._hand_activities_to_effective_approver(previous_delegates)

@@ -187,7 +187,9 @@ class ApprovalRequestLifecycle(models.Model):
             self._check_approve_sequentially_can_approve(candidate)
         if steps:
             approver = candidate.filtered(
-                lambda a: a.state in ("pending", "approved") and steps <= a.step_ids
+                lambda a: (
+                    a.state in ("pending", "waiting", "approved") and steps <= a.step_ids
+                )
             )
             trace.DECISION.event(
                 "rows_for_steps",
@@ -200,6 +202,7 @@ class ApprovalRequestLifecycle(models.Model):
             approver = candidate.filtered(
                 lambda a: (
                     a.state == "pending"
+                    or (a.state == "waiting" and a.step_ids)
                     or (
                         decision == "approve"
                         and a.state == "approved"
@@ -321,6 +324,7 @@ class ApprovalRequestLifecycle(models.Model):
                 self._flip_unsettled_approvers("refused")
         self._get_user_approval_activities(user=acting_user).sudo().action_feedback()
         if decision == "approve" and self.state == "pending":
+            self._refresh_turn_states()
             self.approver_ids.filtered(
                 lambda a: a.state == "pending" and a.step_ids,
             ).sudo()._create_activity()
@@ -830,6 +834,9 @@ class ApprovalRequestLifecycle(models.Model):
             to_wait.sudo().write({"state": "waiting"})
         to_open._create_activity()
         to_open.sudo().write({"state": "pending"})
+        self.filtered(
+            lambda request: request.approver_ids.step_ids
+        )._refresh_turn_states()
 
     def action_cancel(self) -> None:
         self._check_moved_from_source_document()
@@ -1108,6 +1115,7 @@ class ApprovalRequestLifecycle(models.Model):
                 if request.approver_ids.step_ids:
                     # A withdrawal can hand a turn back: whoever it passed to is no
                     # longer asked.
+                    request._refresh_turn_states()
                     request._retire_unasked_approval_activities()
 
             acting_user = req_approver[:1]._get_effective_approver()
@@ -1190,6 +1198,8 @@ class ApprovalRequestLifecycle(models.Model):
                         lambda row: not row.source_synced
                     ).user_id.ids
                 )
+                if not self._allows_self_approval() and not self.binding_id:
+                    pool.discard(self.request_owner_id.id)
             if len(pool) < step.minimum:
                 trace.REFUSAL.event(
                     "step_unmeetable",
@@ -1361,6 +1371,7 @@ class ApprovalRequestLifecycle(models.Model):
             parked = self.approver_ids.filtered(lambda a: a.state == "waiting")
             parked.sudo().write({"state": "pending"})
             parked._create_activity()
+        self._refresh_turn_states()
         self._retire_unasked_approval_activities()
         acting_user = self.env.user
         self.sudo().message_post(
@@ -1464,7 +1475,7 @@ class ApprovalRequestLifecycle(models.Model):
         self.check_singleton()
         stale = self._get_approval_activities().filtered(
             lambda activity: (
-                activity.approver_id.state == "pending"
+                activity.approver_id.state in ("pending", "waiting")
                 and activity.approver_id.step_ids
                 and not activity.approver_id._is_notifiable()
             )

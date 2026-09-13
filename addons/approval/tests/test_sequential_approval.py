@@ -1,4 +1,4 @@
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tests import common, tagged
 
 
@@ -229,13 +229,13 @@ class TestSequentialApproval(common.TransactionCase):
         request = self._create_sequential_request()
         request.action_confirm()
 
-        with self.assertRaises(ValidationError) as cm:
+        with self.assertRaises(UserError) as cm:
             request.with_user(self.approver_2).action_approve()
 
         self.assertIn(
-            "cannot approve before the previous approver",
+            "decide in order",
             str(cm.exception).lower(),
-            "Error should mention cannot approve before previous approver",
+            "Error should say the members decide in order",
         )
 
     def test_sequential_blocks_third_approving_when_waiting(self):
@@ -244,13 +244,10 @@ class TestSequentialApproval(common.TransactionCase):
 
         request.with_user(self.approver_1).action_approve()
 
-        with self.assertRaises(ValidationError) as cm:
+        with self.assertRaises(UserError) as cm:
             request.with_user(self.approver_3).action_approve()
 
-        self.assertIn(
-            "cannot approve before the previous approver",
-            str(cm.exception).lower(),
-        )
+        self.assertIn("decide in order", str(cm.exception).lower())
 
     def test_parallel_allows_any_order(self):
         request = self._create_parallel_request()

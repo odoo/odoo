@@ -147,8 +147,12 @@ class ApprovalRequestRouting(models.Model):
             # its pending requests onto the steps (_adopt_list_routing_into_steps).
             trace.STEPS.event("confirmed_flat", request=self.id, state=self.state)
             return self.env["approval.category.step"]
-        applicable = self.category_id.step_ids.filtered(
-            lambda step: step._is_applicable_to_request(self),
+        steps = self.category_id.step_ids
+        matched = self._get_step_rule_matches(
+            steps.when_rule_ids | steps.unless_rule_ids
+        )
+        applicable = steps.filtered(
+            lambda step: step._is_applicable_to_request(self, matched),
         ).sorted(lambda step: (step.sequence, step.id))
         trace.STEPS.event(
             "applicable",
@@ -158,6 +162,16 @@ class ApprovalRequestRouting(models.Model):
         )
         return applicable
 
+    def _get_step_rule_matches(self, rules):
+        self.check_singleton()
+        remembered = self.env.context.get("approval_rule_matches", {}).get(self.id)
+        if remembered is not None:
+            return rules & rules.browse(remembered)
+        matched = rules.sudo().filtered(
+            lambda rule: self._rule_applies_to_company(rule) and rule._evaluate(self)
+        )
+        return matched.with_env(rules.env)
+
     def _get_additional_approvers(self) -> list[tuple[int, bool, int]]:
         self.check_singleton()
         return []
@@ -165,7 +179,7 @@ class ApprovalRequestRouting(models.Model):
     def _applied_rule_ids_after_sync(self, matched_rules):
         self.check_singleton()
         preserved = self.applied_rule_ids.filtered(
-            lambda r: r.action_type != "add_approver",
+            lambda r: r.action_type not in ("add_approver", "condition"),
         )
         kept = preserved | matched_rules
         trace.RULES.event(
@@ -426,6 +440,7 @@ class ApprovalRequestRouting(models.Model):
         self = self.filtered(lambda r: r.state == "new")
         if not self:
             return
+        self.category_id._route_by_steps_on_first_use()
         minimum_updates: dict[int, int] = {}
         rows_to_delete: list[int] = []
         rows_to_create: list[dict[str, Any]] = []
@@ -436,6 +451,15 @@ class ApprovalRequestRouting(models.Model):
         group_sequence = self._get_sequence_group()
 
         for request in self:
+            step_rules = request.category_id.step_ids.when_rule_ids | (
+                request.category_id.step_ids.unless_rule_ids
+            )
+            request = request.with_context(
+                approval_rule_matches={
+                    **request.env.context.get("approval_rule_matches", {}),
+                    request.id: request._get_step_rule_matches(step_rules).ids,
+                }
+            )
             desired = request._compute_desired_approvers(group_sequence)
             approver_staging = desired.staging
             users_to_approver = desired.existing_by_user
@@ -602,12 +626,15 @@ class ApprovalRequestRouting(models.Model):
         self.approver_ids.filtered(
             lambda row: row.state == "pending"
         )._create_activity()
+        self._refresh_turn_states()
         self._retire_unasked_approval_activities()
         return True
 
     def _extend_approvers_live_one(self, group_sequence: int) -> models.BaseModel:
         self.check_singleton()
         desired = self._compute_desired_approvers(group_sequence)
+        if self.approver_ids.step_ids:
+            return self._reroute_steps_live(desired)
         replacement = desired.replacement
         matched_rules = desired.matched_rules
         superseded_delegations = desired.superseded_delegations
@@ -666,6 +693,70 @@ class ApprovalRequestRouting(models.Model):
             message_type="notification",
         )
         self._log_cycle("reroute", added=len(created))
+        return created
+
+    def _reroute_steps_live(self, desired) -> models.BaseModel:
+        self.check_singleton()
+        Step = self.env["approval.category.step"]
+        previous = self.approver_ids.step_ids
+        current = self._get_applicable_steps()
+        arrived = current - previous
+        departed = previous - current
+        trace.STEPS.event(
+            "steps_rerouted_live",
+            request=self.id,
+            arrived=arrived.ids,
+            departed=departed.ids,
+        )
+        if not arrived and not departed:
+            return self.env["approval.approver"]
+        for row in self.approver_ids:
+            vals = desired.staging.get(row.user_id.id)
+            staged = Step.browse(vals["step_ids"]) if vals else Step
+            steps = (row.step_ids & current) | (staged & arrived)
+            decided = row.decided_step_ids & current
+            if row.state == "approved" and not decided and row.decided_step_ids:
+                decided = staged & arrived
+            row.sudo().write(
+                {
+                    "step_ids": [Command.set(steps.ids)],
+                    "decided_step_ids": [Command.set(decided.ids)],
+                }
+            )
+        missing = {
+            user_id: vals
+            for user_id, vals in desired.to_create.items()
+            if set(vals["step_ids"]) & set(arrived.ids)
+        }
+        created = self._create_live_approver_rows(missing)
+        for row in created:
+            row.write({"step_ids": [Command.set(missing[row.user_id.id]["step_ids"])]})
+        self.sudo().write(
+            {
+                "approval_minimum": sum(current.mapped("minimum")),
+                "applied_rule_ids": [
+                    Command.link(rule.id) for rule in current.when_rule_ids
+                ],
+            }
+        )
+        self.invalidate_recordset()
+        self._refresh_turn_states()
+        self.approver_ids.filtered(
+            lambda row: row.state == "pending"
+        )._create_activity()
+        self._retire_unasked_approval_activities()
+        if created:
+            self.message_post(
+                body=self.env._(
+                    "Approver(s) added because the request changed: %(names)s.\n\n"
+                    "The steps of category '%(category)s' now ask for them. "
+                    "Approvals already given stand.",
+                    names=", ".join(sorted(created.user_id.mapped("name"))),
+                    category=self.category_id.name,
+                ),
+                message_type="notification",
+            )
+            self._log_cycle("reroute", added=len(created))
         return created
 
     def _create_live_approver_rows(self, missing: dict[int, dict]):
@@ -855,13 +946,14 @@ class ApprovalRequestRouting(models.Model):
 
         steps = self._get_applicable_steps()
         if steps:
-            matched_rules = self.env["approval.rule"]
+            routing_rules = self.env["approval.rule"]
+            matched_rules = steps.when_rule_ids
             additional = []
         else:
-            matched_rules = self._matched_add_approver_rules()
+            routing_rules = matched_rules = self._matched_add_approver_rules()
             additional = self._get_additional_approvers()
 
-        for rule in matched_rules:
+        for rule in routing_rules:
             for user_id, required, sequence in rule._get_approver_tuples():
                 self._merge_approver_to_staging(
                     approver_staging, user_id, required, sequence
@@ -887,6 +979,10 @@ class ApprovalRequestRouting(models.Model):
                     member.user_id.id: (member.sequence, member.id)
                     for member in step.member_ids
                 }
+                required = set(step.member_ids.filtered("required").user_id.ids)
+                named = step.sudo()._get_source_user_ids(document, self)
+                if step.subject_user_required:
+                    required |= named
                 pool = step._get_pool_user_ids(document, self.company_id, self)
                 for user_id in sorted(
                     pool,
@@ -896,8 +992,14 @@ class ApprovalRequestRouting(models.Model):
                         user_id,
                     ),
                 ):
+                    if user_id in member_order:
+                        sequence = member_order[user_id][0]
+                    elif user_id in named and step.in_order:
+                        sequence = step.subject_user_sequence
+                    else:
+                        sequence = step.sequence
                     self._merge_approver_to_staging(
-                        approver_staging, user_id, False, step.sequence
+                        approver_staging, user_id, user_id in required, sequence
                     )
                     step_ids_by_user.setdefault(user_id, set()).add(step.id)
         elif self.group_approval != "exclusive":
@@ -934,7 +1036,7 @@ class ApprovalRequestRouting(models.Model):
                     group_sequence,
                 )
 
-        rule_user_to_rule_id = self._matched_add_approver_rule_by_user(matched_rules)
+        rule_user_to_rule_id = self._matched_add_approver_rule_by_user(routing_rules)
         replacement_user_ids = (
             set(replacement.approver_ids.ids) if replacement else set()
         )
@@ -947,7 +1049,7 @@ class ApprovalRequestRouting(models.Model):
 
         managed_user_ids = self._get_managed_approver_user_ids(
             replacement=replacement,
-            matched_rules=matched_rules,
+            matched_rules=routing_rules,
         )
         for user_id, existing_approver in users_to_approver.items():
             if user_id in approver_staging:

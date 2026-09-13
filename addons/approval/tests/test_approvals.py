@@ -96,7 +96,7 @@ class TestRequest(common.TransactionCase):
         self.assertFalse(record.date_confirmed)
         self.assertTrue(all(a.state == "new" for a in record.approver_ids))
 
-        category_test.approval_minimum = 2
+        category_test.step_ids.minimum = 2
         record.action_confirm()
         self.assertEqual(record.state, "pending")
         record.action_approve(first_approver)
@@ -163,7 +163,7 @@ class TestRequest(common.TransactionCase):
         record.action_approve(first_approver)
         self.assertEqual(record.state, "approved")
 
-        record.approval_minimum = 2
+        category_test.step_ids.minimum = 2
         record.action_withdraw(first_approver)
         record.action_withdraw(second_approver)
         self.assertEqual(record.state, "pending")

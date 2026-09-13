@@ -181,9 +181,13 @@ class ApprovalCategoryConversion(models.Model):
             translation = "one_add_rule"
             with_rule = listed + self._get_rule_approvers(added)
             steps = self._prepare_pooled_steps(
-                listed, self.approval_minimum, self._complement_condition(added)
+                listed,
+                self.approval_minimum,
+                {**self._complement_condition(added), **self._rule_links(unless=added)},
             ) + self._prepare_pooled_steps(
-                with_rule, self.approval_minimum, self._rule_condition(added)
+                with_rule,
+                self.approval_minimum,
+                {**self._rule_condition(added), **self._rule_links(when=added)},
             )
         else:
             translation = "approver_list"
@@ -288,19 +292,31 @@ class ApprovalCategoryConversion(models.Model):
                 steps += self._prepare_pooled_steps(
                     listed,
                     self.approval_minimum,
-                    {**base, **self._interval_condition(cursor, low)},
+                    {
+                        **base,
+                        **self._interval_condition(cursor, low),
+                        **self._rule_links(unless=bands),
+                    },
                 )
             steps += self._prepare_pooled_steps(
                 self._get_band_approvers(band),
                 band.approval_minimum,
-                {**base, **self._interval_condition(low, high)},
+                {
+                    **base,
+                    **self._interval_condition(low, high),
+                    **self._rule_links(when=band),
+                },
             )
             cursor = high
         if cursor < infinity:
             steps += self._prepare_pooled_steps(
                 listed,
                 self.approval_minimum,
-                {**base, **self._interval_condition(cursor, infinity)},
+                {
+                    **base,
+                    **self._interval_condition(cursor, infinity),
+                    **self._rule_links(unless=bands),
+                },
             )
         return steps
 
@@ -317,7 +333,13 @@ class ApprovalCategoryConversion(models.Model):
         steps = self._prepare_pooled_steps(
             listed,
             self.approval_minimum,
-            {**base, "operator": "lt", "threshold": thresholds[0], "threshold_max": 0},
+            {
+                **base,
+                "operator": "lt",
+                "threshold": thresholds[0],
+                "threshold_max": 0,
+                **self._rule_links(unless=tiers),
+            },
         )
         for index, low in enumerate(thresholds):
             high = thresholds[index + 1] if index + 1 < len(thresholds) else 0
@@ -335,6 +357,7 @@ class ApprovalCategoryConversion(models.Model):
                     "operator": "between",
                     "threshold": low,
                     "threshold_max": high,
+                    **self._rule_links(when=matched, unless=tiers - matched),
                 },
             )
         return steps
@@ -445,6 +468,15 @@ class ApprovalCategoryConversion(models.Model):
         }
 
     @staticmethod
+    def _rule_links(when=None, unless=None) -> dict:
+        links = {}
+        if when:
+            links["when_rule_ids"] = [Command.set(when.ids)]
+        if unless:
+            links["unless_rule_ids"] = [Command.set(unless.ids)]
+        return links
+
+    @staticmethod
     def _rule_condition(rule) -> dict:
         return {
             "condition_field": rule.condition_field,
@@ -543,6 +575,22 @@ class ApprovalCategoryConversion(models.Model):
         trace.STEPS.note("group_categories_unordered", categories=categories.ids)
         categories.write({"approve_sequentially": False})
         return categories
+
+    def _route_by_steps_on_first_use(self) -> None:
+        listed = self.sudo().filtered(
+            lambda category: (
+                not category.step_ids and not category._has_steps_from_its_module()
+            )
+        )
+        for category in listed.with_context(approval_conversion_uncapped=True):
+            blockers = category._get_steps_conversion_blockers()
+            trace.STEPS.event(
+                "converted_on_first_use",
+                category=category.id,
+                blockers=len(blockers),
+            )
+            if not blockers:
+                category.action_convert_routing_to_steps()
 
     def _adopt_list_routed_requests(self):
         domain = [("state", "=", "pending"), ("category_id.step_ids", "!=", False)]

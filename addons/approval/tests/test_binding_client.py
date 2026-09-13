@@ -327,7 +327,9 @@ class TestApprovalBindingClient(common.TransactionCase):
         self.assertEqual(result["request"]["state"], "refused")
         self.assertTrue(result["request"]["can_reopen"])
         step = result["steps"][0]
-        self.assertEqual((step["id"], step["minimum"]), (False, 1))
+        self.assertEqual(
+            (step["id"], step["minimum"]), (self.flat_category.step_ids.id, 1)
+        )
         refusal = step["decisions"][0]
         self.assertEqual(refusal["state"], "refused")
         self.assertFalse(self._spec(partner, self.requester)["request"]["can_reopen"])

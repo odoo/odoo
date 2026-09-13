@@ -119,14 +119,7 @@ class TestResetToDraft(ApprovalCommon):
 
     def test_reset_resyncs_current_category_config(self):
         category, request = self._refused_request()
-        self.env["approval.category.approver"].create(
-            {
-                "category_id": category.id,
-                "user_id": self.approver_2.id,
-                "required": False,
-                "sequence": 20,
-            },
-        )
+        category._add_approver(self.approver_2, sequence=20)
 
         request.with_user(self.manager_user).action_reset_to_draft()
 
@@ -257,14 +250,7 @@ class TestPendingIntegrity(ApprovalCommon):
         request = self._prepare_request(category)
         self.assertEqual(request.state, "pending")
 
-        self.env["approval.category.approver"].create(
-            {
-                "category_id": category.id,
-                "user_id": self.approver_2.id,
-                "required": False,
-                "sequence": 20,
-            },
-        )
+        category._add_approver(self.approver_2, sequence=20)
         request._sync_approvers()
 
         self.assertEqual(request.state, "pending")
@@ -328,15 +314,11 @@ class TestDelegationPaths(ApprovalCommon):
         )
         request = self._prepare_request(category)
         rows = request.approver_ids.sorted("sequence")
+        self.assertEqual(rows.mapped("state"), ["pending", "waiting", "waiting"])
         rows[0].sudo().state = "approved"
-        rows[1].sudo().state = "approved"
 
-        request.sudo()._update_next_approvers_state(
-            rows[0] | rows[1],
-            "pending",
-            only_next_approver=True,
-        )
-        self.assertEqual(rows[2].state, "pending")
+        request.sudo()._refresh_turn_states()
+        self.assertEqual(rows[1:].mapped("state"), ["pending", "waiting"])
 
 
 @tagged("post_install", "-at_install")
@@ -511,10 +493,10 @@ class TestApproverRowIntegrity(ApprovalCommon):
     def test_sync_still_reconciles_after_reset(self):
         request = self._refused_two_approver_request()
         category = request.category_id
-        category.approver_ids.filtered(
-            lambda ca: ca.user_id == self.approver_2,
+        category.step_ids.member_ids.filtered(
+            lambda member: member.user_id == self.approver_2,
         ).unlink()
-        category.approval_minimum = 1
+        category.step_ids.minimum = 1
         request.with_user(self.manager_user).action_reset_to_draft()
         self.assertEqual(request.approver_ids.user_id, self.approver_1)
 
@@ -533,8 +515,8 @@ class TestSyncProvenance(ApprovalCommon):
         )
         self.assertTrue(all(request.approver_ids.mapped("source_synced")))
 
-        category.approver_ids.filtered(
-            lambda ca: ca.user_id == self.approver_1,
+        category.step_ids.member_ids.filtered(
+            lambda member: member.user_id == self.approver_1,
         ).unlink()
         request.write({"amount": 200})
 

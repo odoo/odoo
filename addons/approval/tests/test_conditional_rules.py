@@ -388,28 +388,24 @@ class TestLiveRerouting(ApprovalCommon):
         added = request.approver_ids.filtered(
             lambda a: a.user_id == self.late_approver,
         )
-        self.assertEqual(added.state, "waiting")
-        self.assertGreaterEqual(added.sequence, 20)
-
-        request.with_user(self.approver_2).action_approve()
+        second = request.approver_ids.filtered(
+            lambda a: a.user_id == self.approver_2,
+        )
         self.assertEqual(added.state, "pending")
-        self.assertEqual(request.state, "pending")
+        self.assertEqual(second.state, "waiting")
 
         request.with_user(self.late_approver).action_approve()
+        self.assertEqual(second.state, "pending")
+        self.assertEqual(request.state, "pending")
+
+        request.with_user(self.approver_2).action_approve()
         self.assertEqual(request.state, "approved")
 
     def test_live_reroute_ignores_configuration_added_after_submission(self):
         category = self._make_category("Live Config", approvers=[self.approver_1])
         self._urgent_rule(category, required=False)
         request = self._prepare_request(category, priority="1")
-        self.env["approval.category.approver"].create(
-            {
-                "category_id": category.id,
-                "user_id": self.approver_2.id,
-                "required": False,
-                "sequence": 20,
-            },
-        )
+        category._add_approver(self.approver_2, sequence=20)
         category.approval_minimum = 3
 
         request.with_user(self.owner_user).write({"priority": "3"})

@@ -488,11 +488,11 @@ class ApprovalCategoryStep(models.Model):
                 ),
             )
 
-    def _is_applicable_to_request(self, request) -> bool:
+    def _is_applicable_to_request(self, request, matched_rules=None) -> bool:
         self.check_singleton()
         if self.condition_field and not self._matches_request_figure(request):
             return False
-        if not self._matches_request_rules(request):
+        if not self._matches_request_rules(request, matched_rules):
             return False
         if not self.subject_domain:
             return True
@@ -500,16 +500,14 @@ class ApprovalCategoryStep(models.Model):
             self._get_subject(request.get_source_document(), request)
         )
 
-    def _matches_request_rules(self, request) -> bool:
+    def _matches_request_rules(self, request, matched=None) -> bool:
         self.check_singleton()
         if not self.when_rule_ids and not self.unless_rule_ids:
             return True
-        rules = (self.when_rule_ids | self.unless_rule_ids).sudo()
-        matched = rules.filtered(
-            lambda rule: (
-                request._rule_applies_to_company(rule) and rule._evaluate(request)
+        if matched is None:
+            matched = request._get_step_rule_matches(
+                self.when_rule_ids | self.unless_rule_ids
             )
-        )
         matches = self.when_rule_ids <= matched and not (self.unless_rule_ids & matched)
         trace.STEPS.event(
             "rule_conditions",

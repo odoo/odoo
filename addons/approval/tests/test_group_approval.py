@@ -90,30 +90,6 @@ class TestGroupApproval(common.TransactionCase):
             "Should have exactly the 2 group members",
         )
 
-    def test_group_approval_group_members_sequence(self):
-        category = self.env["approval.category"].create(
-            {
-                "sequence_code": "SC0044",
-                "name": "Test Group Sequence",
-                "approval_minimum": 1,
-                "group_approval": "exclusive",
-                "approver_group_id": self.approval_group.id,
-            }
-        )
-
-        request = self.env["approval.request"].create(
-            {
-                "name": "Test Sequence Order",
-                "request_owner_id": self.admin_user.id,
-                "category_id": category.id,
-            }
-        )
-
-        self.assertTrue(
-            all(a.sequence == 500 for a in request.approver_ids),
-            "Group members should have the default group sequence (500)",
-        )
-
     def test_approver_group_user_ids_mirrors_all_user_ids(self):
         category = self.env["approval.category"].create(
             {

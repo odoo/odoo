@@ -1,3 +1,4 @@
+import re
 from datetime import timedelta
 
 from odoo import fields
@@ -359,13 +360,7 @@ class TestApproverComputation(common.TransactionCase):
 
         self.assertEqual(len(request.approver_ids), 0)
 
-        self.env["approval.category.approver"].create(
-            {
-                "user_id": self.category_user.id,
-                "category_id": category.id,
-                "required": True,
-            }
-        )
+        category._add_approver(self.category_user, required=True)
 
         request.invalidate_recordset(["approver_ids"])
         request._sync_approvers()
@@ -460,7 +455,7 @@ class TestApproverComputationAuditRegressions(ApprovalCommon):
 
         self.assertIn(self.approver_1, request.approver_ids.user_id)
 
-        category.approver_ids.unlink()
+        category.step_ids.member_ids.unlink()
         request.sudo()._sync_approvers()
         request.invalidate_recordset(["approver_ids"])
 
@@ -514,9 +509,7 @@ class TestManualApproverHeuristic(ApprovalCommon):
         category = self._make_category(name="M8 Own", approvers=[self.approver_2])
         request = self._prepare_request(category, confirm=False)
 
-        self.env["approval.category.approver"].create(
-            {"category_id": category.id, "user_id": self.approver_1.id},
-        )
+        category._add_approver(self.approver_1)
         request.sudo()._sync_approvers()
         request.invalidate_recordset(["approver_ids"])
         self.assertIn(
@@ -525,8 +518,8 @@ class TestManualApproverHeuristic(ApprovalCommon):
             "the category now lists approver_1, so a re-sync injects the row",
         )
 
-        category.approver_ids.filtered(
-            lambda a: a.user_id == self.approver_1,
+        category.step_ids.member_ids.filtered(
+            lambda member: member.user_id == self.approver_1,
         ).unlink()
         request.sudo()._sync_approvers()
         request.invalidate_recordset(["approver_ids"])
@@ -826,7 +819,7 @@ class TestApproverSyncPlanLogging(ApprovalCommon):
         def execute(cr_self, query, params=None, log_exceptions=True):
             text = getattr(query, "code", None) or str(query)
             flat = " ".join(str(text).split()).upper()
-            if "APPROVAL_APPROVER" in flat:
+            if re.search(r'"?APPROVAL_APPROVER"?(?![_A-Z])', flat):
                 for verb in ("INSERT INTO", "DELETE FROM", "UPDATE"):
                     if verb in flat:
                         verbs.append(verb.split()[0].lower())
@@ -881,6 +874,7 @@ class TestApproverSyncPlanLogging(ApprovalCommon):
             name="Plan Batch Cursor",
             approvers=[self.approver_1, self.approver_2],
         )
+        category._route_by_steps_on_first_use()
 
         verbs = self._executed_statements(
             lambda: self.env["approval.request"].create(
@@ -978,7 +972,7 @@ class TestApproverSyncPlanLogging(ApprovalCommon):
             ],
         )
         self.env.flush_all()
-        category.approver_ids.write({"required": True, "sequence": 42})
+        category.step_ids.member_ids.write({"required": True, "sequence": 42})
 
         steps = self._plan_steps(requests._sync_approvers)
 
@@ -1017,15 +1011,8 @@ class TestApproverSyncOnConfirm(ApprovalCommon):
         request = self._prepare_request(category, confirm=False)
         self.assertEqual(request.approver_ids.user_id, self.approver_1)
 
-        category.approval_minimum = 2
-        self.env["approval.category.approver"].create(
-            {
-                "category_id": category.id,
-                "user_id": self.approver_2.id,
-                "required": True,
-                "sequence": 20,
-            },
-        )
+        category.step_ids.minimum = 2
+        category._add_approver(self.approver_2, required=True, sequence=20)
 
         request.action_confirm()
 
@@ -1057,10 +1044,10 @@ class TestApproverSyncOnConfirm(ApprovalCommon):
         )
         request = self._prepare_request(category, confirm=False)
 
-        category.approver_ids.filtered(
-            lambda a: a.user_id == self.approver_2,
+        category.step_ids.member_ids.filtered(
+            lambda member: member.user_id == self.approver_2,
         ).unlink()
-        category.approval_minimum = 1
+        category.step_ids.minimum = 1
 
         request.action_confirm()
 
@@ -1080,14 +1067,7 @@ class TestApproverSyncOnConfirm(ApprovalCommon):
             approvers=[(self.approver_1, True, 10)],
         )
         request = self._prepare_request(category, confirm=False)
-        self.env["approval.category.approver"].create(
-            {
-                "category_id": category.id,
-                "user_id": self.approver_2.id,
-                "required": False,
-                "sequence": 20,
-            },
-        )
+        category._add_approver(self.approver_2, sequence=20)
 
         request.action_confirm()
 

@@ -32,13 +32,7 @@ class TestOnePersonOneApproval(ApprovalCommon):
         row_1 = request.approver_ids
         self._delegate(row_1, self.approver_2)
 
-        self.env["approval.category.approver"].create(
-            {
-                "category_id": category.id,
-                "user_id": self.approver_2.id,
-                "required": True,
-            },
-        )
+        category._add_approver(self.approver_2, required=True)
         request.write({"amount": 1.0})
 
         effective = [a._get_effective_approver() for a in request.approver_ids]
@@ -63,13 +57,7 @@ class TestOnePersonOneApproval(ApprovalCommon):
         )
         request = self._prepare_request(category, confirm=False)
         self._delegate(request.approver_ids, self.approver_2)
-        self.env["approval.category.approver"].create(
-            {
-                "category_id": category.id,
-                "user_id": self.approver_2.id,
-                "required": True,
-            },
-        )
+        category._add_approver(self.approver_2, required=True)
         request.write({"amount": 1.0})
         request.action_confirm()
 

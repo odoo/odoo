@@ -173,7 +173,7 @@ State is a **stored computed field** (`_compute_state`). It is never written dir
 It recomputes whenever `approver_ids.state`, `approver_ids.required`, or `approval_minimum` change.
 
 Request states: `new`, `pending`, `approved`, `refused`, `cancelled`.
-Approver states: `new`, `pending`, `waiting`, `approved`, `refused`, `cancelled`.
+Approver states: `new`, `pending`, `waiting`, `approved`, `refused`, `cancelled`. On a request its steps route, `waiting` is a row whose every undecided step decides in order and is not at its turn (`approval.request._refresh_turn_states`, run when a round opens, after an approval or a withdrawal, and after a reroute or an adoption); a waiting row reaches the decision funnel only to be refused as out of turn. A row written straight to `approved` decides every step it is on.
 Each row stamps `pending_since` when it ENTERS `pending` and
 `decision_date` when a genuine approve/refuse takes it out again (both
 cleared by reset-to-draft, both in `_WORKFLOW_MANAGED_FIELDS`). The pair

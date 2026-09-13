@@ -1085,6 +1085,34 @@ class ApprovalRequest(models.Model):
         )
         return turn
 
+    def _refresh_turn_states(self) -> None:
+        for request in self.filtered(lambda request: request.state == "pending"):
+            rows = request.approver_ids.filtered(
+                lambda row: row.state in ("pending", "waiting") and row.step_ids
+            )
+            waiting = rows.filtered(
+                lambda row, request=request: (
+                    all(
+                        step.in_order and not request._is_row_turn(row, step)
+                        for step in row.step_ids - row.decided_step_ids
+                    )
+                    and row.step_ids - row.decided_step_ids
+                )
+            )
+            to_wait = waiting.filtered(lambda row: row.state == "pending")
+            to_open = (rows - waiting).filtered(lambda row: row.state == "waiting")
+            trace.STEPS.event(
+                "turn_states",
+                request=request.id,
+                waiting=to_wait.ids,
+                opened=to_open.ids,
+            )
+            if to_wait:
+                to_wait.sudo().write({"state": "waiting", "pending_since": False})
+            if to_open:
+                to_open.sudo().write({"state": "pending"})
+                to_open._create_activity()
+
     def _is_row_turn(self, row, step) -> bool:
         self.check_singleton()
         return not step.in_order or self._get_step_turn_row(step) == row

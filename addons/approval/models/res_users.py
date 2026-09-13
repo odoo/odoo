@@ -80,6 +80,7 @@ class ResUsers(models.Model):
                 row.sudo().write(
                     {
                         "user_id": successor.id,
+                        "source_synced": False,
                         "delegate_id": False,
                         "delegate_start_date": False,
                         "delegate_end_date": False,

@@ -1,3 +1,6 @@
+from contextlib import contextmanager, nullcontext
+from unittest.mock import patch
+
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command
 from odoo.tests import Form, tagged
@@ -177,6 +180,19 @@ class RoutingOutcomesCase(ApprovalCommon):
     same scripts; a merge of the two is held to both classes.
     """
 
+    route_by_list = False
+
+    @contextmanager
+    def _routing_by_list(self):
+        """A category keeps its approver list through its first requests, as on a
+        database whose requests were raised before it converted."""
+        with patch.object(
+            self.env.registry["approval.category"],
+            "_route_by_steps_on_first_use",
+            lambda categories: None,
+        ):
+            yield
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -209,6 +225,7 @@ class RoutingOutcomesCase(ApprovalCommon):
                 keys.add(key)
             except DECLINED:
                 pass
+            self.env.invalidate_all()
         return keys
 
     def _notified(self, request):
@@ -233,6 +250,19 @@ class RoutingOutcomesCase(ApprovalCommon):
         after_confirm=None,
         added_by_hand=(),
         between=None,
+    ):
+        with self._routing_by_list() if self.route_by_list else nullcontext():
+            self._run_script(
+                category,
+                script_name,
+                request_vals,
+                after_confirm,
+                added_by_hand,
+                between,
+            )
+
+    def _run_script(
+        self, category, script_name, request_vals, after_confirm, added_by_hand, between
     ):
         request = self._prepare_request(category, confirm=False, **(request_vals or {}))
         for key in added_by_hand:
@@ -259,6 +289,8 @@ class RoutingOutcomesCase(ApprovalCommon):
 
 @tagged("post_install", "-at_install")
 class TestFlatRoutingOutcomes(RoutingOutcomesCase):
+    route_by_list = True
+
     def _flat(self, approvers, **vals):
         category = self._make_category(
             f"Flat routing {self._next_sequence_code()}",
@@ -1174,6 +1206,39 @@ class TestAdoptedMidwayRoutingOutcomes(TestAdoptedRoutingOutcomes):
 
 
 @tagged("post_install", "-at_install")
+class TestFirstUseRoutingOutcomes(TestFlatRoutingOutcomes):
+    """Every flat scenario reads as its flat script when the category converts at
+    its first request, as every category still on a list now does."""
+
+    allow_inherited_tests_method = True
+    route_by_list = False
+
+    def _run(
+        self,
+        category,
+        script_name,
+        request_vals=None,
+        after_confirm=None,
+        added_by_hand=(),
+        between=None,
+    ):
+        def converted_at_first_use(request):
+            self.assertTrue(category.step_ids)
+            self.assertTrue(request.approver_ids.step_ids)
+            if after_confirm:
+                after_confirm(request)
+
+        return super()._run(
+            category,
+            script_name,
+            request_vals,
+            converted_at_first_use,
+            added_by_hand,
+            between,
+        )
+
+
+@tagged("post_install", "-at_install")
 class TestConvertingEveryCategory(RoutingOutcomesCase):
     def _flat_category(self, **vals):
         return self._make_category(
@@ -1224,41 +1289,43 @@ class TestConvertingEveryCategory(RoutingOutcomesCase):
         self.assertFalse(on_their_list.mapped("name"))
 
     def test_a_request_submitted_on_the_list_continues_by_the_steps(self):
-        category = self._flat_category()
-        category.approval_minimum = 2
-        request = self._prepare_request(category)
-        request.with_user(self.people["a"]).action_approve()
-        category.action_convert_routing_to_steps()
-        request.invalidate_recordset()
-        self.assertTrue(request.approver_ids.step_ids)
-        self.assertEqual(request.state, "pending")
-        request.with_user(self.people["b"]).action_approve()
-        self.assertEqual(request.state, "approved")
+        with self._routing_by_list():
+            category = self._flat_category()
+            category.approval_minimum = 2
+            request = self._prepare_request(category)
+            request.with_user(self.people["a"]).action_approve()
+            category.action_convert_routing_to_steps()
+            request.invalidate_recordset()
+            self.assertTrue(request.approver_ids.step_ids)
+            self.assertEqual(request.state, "pending")
+            request.with_user(self.people["b"]).action_approve()
+            self.assertEqual(request.state, "approved")
 
     def test_a_request_confirmed_on_the_list_keeps_its_rule_approvers(self):
-        category = self._flat_category(has_amount="required")
-        self.env["approval.rule"].create(
-            {
-                "name": "Routing rule before the conversion",
-                "category_id": category.id,
-                "condition_type": "threshold",
-                "condition_field": "amount",
-                "operator": "gte",
-                "threshold": 1000,
-                "action_type": "add_approver",
-                "approver_ids": [(6, 0, [self.people["c"].id])],
-            }
-        )
-        request = self._prepare_request(category, amount=5000)
-        self.assertIn(self.people["c"], request.approver_ids.user_id)
-        category.action_convert_routing_to_steps()
-        request.priority = "1"
-        request.invalidate_recordset()
-        self.assertIn(self.people["c"], request.approver_ids.user_id)
-        request.with_user(self.people["a"]).action_approve()
-        self.assertEqual(request.state, "pending")
-        request.with_user(self.people["c"]).action_approve()
-        self.assertEqual(request.state, "approved")
+        with self._routing_by_list():
+            category = self._flat_category(has_amount="required")
+            self.env["approval.rule"].create(
+                {
+                    "name": "Routing rule before the conversion",
+                    "category_id": category.id,
+                    "condition_type": "threshold",
+                    "condition_field": "amount",
+                    "operator": "gte",
+                    "threshold": 1000,
+                    "action_type": "add_approver",
+                    "approver_ids": [(6, 0, [self.people["c"].id])],
+                }
+            )
+            request = self._prepare_request(category, amount=5000)
+            self.assertIn(self.people["c"], request.approver_ids.user_id)
+            category.action_convert_routing_to_steps()
+            request.priority = "1"
+            request.invalidate_recordset()
+            self.assertIn(self.people["c"], request.approver_ids.user_id)
+            request.with_user(self.people["a"]).action_approve()
+            self.assertEqual(request.state, "pending")
+            request.with_user(self.people["c"]).action_approve()
+            self.assertEqual(request.state, "approved")
 
     def test_the_rules_steps_apply_by_stay_conditions(self):
         category = self._flat_category(has_amount="required", has_quantity="required")
@@ -1365,35 +1432,36 @@ class TestConvertingEveryCategory(RoutingOutcomesCase):
         self.assertFalse(self._flat_category().step_ids)
 
     def test_the_census_counts_what_still_routes_by_a_list(self):
-        flat = self._flat_category()
-        converted = self._flat_category()
-        submitted = self._prepare_request(converted)
-        converted.action_convert_routing_to_steps()
-        given_steps_by_hand = self._flat_category()
-        confirmed_flat = self._prepare_request(given_steps_by_hand)
-        self.env["approval.category.step"].create(
-            {
-                "category_id": given_steps_by_hand.id,
-                "name": "Added by hand",
-                "minimum": 1,
-                "user_ids": [(6, 0, [self.people["c"].id])],
-            }
-        )
-        on_steps = self._prepare_request(converted)
-        draft_on_list = self._prepare_request(flat, confirm=False)
-        census = self.env["approval.category"]._get_list_routing_census()
-        self.assertIn(flat, census["categories"])
-        self.assertNotIn(converted, census["categories"])
-        self.assertIn(confirmed_flat, census["requests"])
-        self.assertIn(draft_on_list, census["requests"])
-        self.assertNotIn(on_steps, census["requests"])
-        self.assertNotIn(submitted, census["requests"])
-        adopted = given_steps_by_hand._adopt_list_routed_requests()
-        self.assertEqual(adopted, confirmed_flat)
-        self.assertNotIn(
-            confirmed_flat,
-            self.env["approval.category"]._get_list_routing_census()["requests"],
-        )
+        with self._routing_by_list():
+            flat = self._flat_category()
+            converted = self._flat_category()
+            submitted = self._prepare_request(converted)
+            converted.action_convert_routing_to_steps()
+            given_steps_by_hand = self._flat_category()
+            confirmed_flat = self._prepare_request(given_steps_by_hand)
+            self.env["approval.category.step"].create(
+                {
+                    "category_id": given_steps_by_hand.id,
+                    "name": "Added by hand",
+                    "minimum": 1,
+                    "user_ids": [(6, 0, [self.people["c"].id])],
+                }
+            )
+            on_steps = self._prepare_request(converted)
+            draft_on_list = self._prepare_request(flat, confirm=False)
+            census = self.env["approval.category"]._get_list_routing_census()
+            self.assertIn(flat, census["categories"])
+            self.assertNotIn(converted, census["categories"])
+            self.assertIn(confirmed_flat, census["requests"])
+            self.assertIn(draft_on_list, census["requests"])
+            self.assertNotIn(on_steps, census["requests"])
+            self.assertNotIn(submitted, census["requests"])
+            adopted = given_steps_by_hand._adopt_list_routed_requests()
+            self.assertEqual(adopted, confirmed_flat)
+            self.assertNotIn(
+                confirmed_flat,
+                self.env["approval.category"]._get_list_routing_census()["requests"],
+            )
 
     def test_a_security_group_category_has_no_order(self):
         category = self._flat_category(
@@ -1412,11 +1480,12 @@ class TestConvertingEveryCategory(RoutingOutcomesCase):
         self.assertFalse(category.steps_conversion_blockers)
 
     def test_a_draft_raised_before_the_conversion_routes_by_the_steps(self):
-        category = self._flat_category()
-        request = self._prepare_request(category, confirm=False)
-        category.action_convert_routing_to_steps()
-        request.action_confirm()
-        self.assertTrue(request.approver_ids.step_ids)
+        with self._routing_by_list():
+            category = self._flat_category()
+            request = self._prepare_request(category, confirm=False)
+            category.action_convert_routing_to_steps()
+            request.action_confirm()
+            self.assertTrue(request.approver_ids.step_ids)
 
     def test_an_approver_list_line_is_refused_on_a_category_routed_by_steps(self):
         category = self._flat_category()
