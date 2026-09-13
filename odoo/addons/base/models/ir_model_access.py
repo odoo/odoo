@@ -58,14 +58,17 @@ class IrModelAccess(models.Model):
     @api.model
     def group_names_with_access(self, model_name: str, access_mode: str) -> list[str]:
         self._check_access_mode(access_mode)
-        accesses = self.sudo().search(
-            [("model_id.model", "=", model_name), (f"perm_{access_mode}", "=", True)]
+        rows = self.sudo()._read_group(
+            [
+                ("model_id.model", "=", model_name),
+                (f"perm_{access_mode}", "=", True),
+                ("group_id", "!=", False),
+            ],
+            ["group_id", "group_id.privilege_id.name", "group_id.name"],
+            [],
         )
         names = sorted(
-            (
-                (group.privilege_id.name or None, group.name)
-                for group in accesses.group_id
-            ),
+            ((privilege or None, group) for _group, privilege, group in rows),
             key=lambda pair: (pair[0] is None, pair[0] or "", pair[1]),
         )
         return [
