@@ -2464,7 +2464,23 @@ class TestSecondaryBundleServesEveryPage(TransactionCase):
     BUNDLE = "web.assets_tests"
     BACKEND = "web.assets_web"
     FRONTEND = "web.assets_frontend_lazy"
-    STUB_RE = re.compile(r'odoo\.loader\.modules\.get\("([^"]+)"\)')
+    BRIDGE_RE = re.compile(r"\[asset\.loader\] bridge (\S+?): provider not registered")
+    STRICT_RE = re.compile(
+        r'"(\S+?)(?:" \+ ")? is not registered: the bundle importing'
+    )
+
+    def _pipeline_stubs(self, code):
+        return set(self.BRIDGE_RE.findall(code)) | set(self.STRICT_RE.findall(code))
+
+    def _pregenerate(self):
+        IrQweb = self.env["ir.qweb"]
+        IrQweb._get_native_module_nodes_cached(
+            self.BUNDLE,
+            assets_params=self.params,
+            with_test_satellites=self.satellites,
+            page_scope=(),
+        )
+        IrQweb._pregenerate_secondary_page_scopes(self.BUNDLE)
 
     @classmethod
     def setUpClass(cls):
@@ -2525,12 +2541,7 @@ class TestSecondaryBundleServesEveryPage(TransactionCase):
         if not self._specs(self.FRONTEND) or not self._specs(self.BACKEND):
             self.skipTest("parent bundles resolved empty (web assets unavailable)")
         IrQweb = self.env["ir.qweb"]
-        IrQweb._get_native_module_nodes_cached(
-            self.BUNDLE,
-            assets_params=self.params,
-            with_test_satellites=self.satellites,
-            page_scope=(),
-        )
+        self._pregenerate()
 
         backend_url, backend_code = self._render_on_page(self.BACKEND, readonly=False)
         frontend_url, frontend_code = self._render_on_page(self.FRONTEND, readonly=True)
@@ -2540,30 +2551,32 @@ class TestSecondaryBundleServesEveryPage(TransactionCase):
             (self.BACKEND, backend_code),
             (self.FRONTEND, frontend_code),
         ):
-            stubs = set(self.STUB_RE.findall(code))
+            stubs = self._pipeline_stubs(code)
             self.assertTrue(stubs, f"no loader stubs in the {page} artifact")
             self.assertLessEqual(
                 stubs,
                 self._specs(page),
                 msg=f"the {page} artifact aliases a module that page does not carry",
             )
+        inlined = {
+            page: set(
+                IrQweb._get_secondary_inlined_reach(
+                    self.BUNDLE, self.params, page_scope=(page,)
+                )
+            )
+            for page in (self.BACKEND, self.FRONTEND)
+        }
         self.assertLess(
-            set(self.STUB_RE.findall(frontend_code)),
-            set(self.STUB_RE.findall(backend_code)),
-            "the backend page shares more of its own modules than a page "
-            "every declared parent can serve",
+            len(inlined[self.BACKEND]),
+            len(inlined[self.FRONTEND]),
+            "the backend page provides more of what the bundle reaches, so its "
+            "artifact carries fewer modules of its own",
         )
 
     def test_the_backend_variant_does_not_evict_the_frontend_one(self):
         if not self._specs(self.FRONTEND) or not self._specs(self.BACKEND):
             self.skipTest("parent bundles resolved empty (web assets unavailable)")
-        IrQweb = self.env["ir.qweb"]
-        IrQweb._get_native_module_nodes_cached(
-            self.BUNDLE,
-            assets_params=self.params,
-            with_test_satellites=self.satellites,
-            page_scope=(),
-        )
+        self._pregenerate()
         with self.assertNoLogs(f"{ASSET_ROOT}.fallback", level=logging.INFO):
             first_url, _ = self._render_on_page(self.FRONTEND, readonly=True)
             self._render_on_page(self.BACKEND, readonly=False)

@@ -1480,82 +1480,82 @@ class IrQweb(models.AbstractModel):
         sourcemap: str | None = None,
         source_key: str | None = None,
     ) -> str:
-        url = self._save_esm_attachment_by_output(bundle, content, metafile, sourcemap)
-        if source_key:
-            self._save_esm_index(
-                bundle, source_key, url, bool(metafile), bool(sourcemap)
-            )
-        return url
-
-    def _save_esm_index(
-        self, bundle: str, source_key: str, url: str, metafile: bool, sourcemap: bool
-    ) -> None:
-        if self._read_generated_asset(esm_index.index_url(bundle, source_key)) is None:
-            self._save_esm_attachment_rows(
-                [esm_index.index_row(bundle, source_key, url, metafile, sourcemap)],
-                bundle=bundle,
-            )
-
-    def _save_esm_attachment_by_output(
-        self,
-        bundle: str,
-        content: str,
-        metafile: str | None = None,
-        sourcemap: str | None = None,
-    ) -> str:
-        IrAttachment = self.env["ir.attachment"]
         content_bytes = content.encode("utf-8")
         content_hash = cache_hash(content_bytes)[:16]
         url = f"/web/assets/esm/{content_hash}/{bundle}.esm.js"
+        rows: list[dict] = []
+        touch_ids: list[int] = []
 
-        existing = IrAttachment.sudo().search(
-            IrAttachment._get_domain_generated_assets(url),
-            limit=1,
+        code_is_new = self._plan_esm_row(
+            rows, touch_ids, url, f"{bundle}.esm.js", "text/javascript", content_bytes
         )
-        if existing:
-            self._remove_esm_readonly_declines(bundle)
-            log_event(
-                _attach_log,
-                logging.DEBUG,
-                "reuse",
-                bundle=bundle,
-                url=url,
-                bytes=len(content_bytes),
+        sidecars = esm_index.sidecar_urls(url)
+        json_mimetype = mimetype_for("json")
+        sidecar_saved = []  # debuglog
+        for name, text in (("metafile", metafile), ("sourcemap", sourcemap)):
+            if text and self._plan_esm_row(
+                rows,
+                touch_ids,
+                sidecars[name],
+                sidecars[name].rsplit("/", 1)[-1],
+                json_mimetype,
+                text.encode("utf-8"),
+            ):
+                sidecar_saved.append(name)
+        if source_key and (
+            self._read_generated_asset(esm_index.index_url(bundle, source_key)) is None
+        ):
+            rows.append(
+                esm_index.index_row(
+                    bundle, source_key, url, bool(metafile), bool(sourcemap)
+                )
             )
-            self._save_esm_attachment_rows(
-                [],
-                touch_ids=existing.ids,
-                bundle=bundle,
-            )
-            return url
 
-        self._save_esm_attachment_rows(
-            [
-                {
-                    "name": f"{bundle}.esm.js",
-                    "mimetype": "text/javascript",
-                    "res_model": "ir.ui.view",
-                    "res_id": False,
-                    "type": "binary",
-                    "public": True,
-                    "raw": content_bytes,
-                    "url": url,
-                }
-            ],
-            bundle=bundle,
-        )
+        self._save_esm_attachment_rows(rows, touch_ids=touch_ids, bundle=bundle)
         self._remove_esm_readonly_declines(bundle)
-        self._log_esm_artifacts_superseded(bundle, url)
+        if code_is_new:
+            self._log_esm_artifacts_superseded(bundle, url)
         log_event(
             _attach_log,
-            logging.INFO,
-            "save",
+            logging.INFO if code_is_new else logging.DEBUG,
+            "save" if code_is_new else "reuse",
             bundle=bundle,
             url=url,
             bytes=len(content_bytes),
+            sidecars=",".join(sidecar_saved) or None,
+            indexed=bool(source_key),
         )
-        self._save_esm_sidecars(bundle, url, metafile, sourcemap)
         return url
+
+    def _plan_esm_row(
+        self,
+        rows: list[dict],
+        touch_ids: list[int],
+        url: str,
+        name: str,
+        mimetype: str,
+        content: bytes,
+    ) -> bool:
+        IrAttachment = self.env["ir.attachment"]
+        existing = IrAttachment.sudo().search(
+            IrAttachment._get_domain_generated_assets(url), limit=1
+        )
+        if existing:
+            touch_ids.extend(existing.ids)
+            return False
+        rows.append(
+            {
+                "name": name,
+                "mimetype": mimetype,
+                "res_model": "ir.ui.view",
+                "res_id": False,
+                "type": "binary",
+                "public": True,
+                "raw": content,
+                "url": url,
+            }
+        )
+        return True
 
     def _log_esm_artifacts_superseded(self, bundle: str, keep_url: str) -> None:
         if not _attach_log.isEnabledFor(logging.INFO):
@@ -1583,79 +1583,6 @@ class IrQweb(models.AbstractModel):
                 bundle=bundle,
                 count=stale_count,
             )
-
-    def _save_esm_sidecars(
-        self,
-        bundle: str,
-        url: str,
-        metafile: str | None,
-        sourcemap: str | None,
-    ) -> None:
-        mimetype = mimetype_for("json")
-        if metafile:
-            self._save_esm_sidecar(
-                bundle,
-                url.removesuffix(".esm.js") + ".meta.json",
-                metafile.encode("utf-8"),
-                mimetype=mimetype,
-            )
-        if sourcemap:
-            self._save_esm_sidecar(
-                bundle,
-                url + ".map",
-                sourcemap.encode("utf-8"),
-                mimetype=mimetype,
-            )
-
-    def _save_esm_sidecar(
-        self,
-        bundle: str,
-        url: str,
-        content: bytes,
-        mimetype: str,
-    ) -> None:
-        IrAttachment = self.env["ir.attachment"]
-        existing = IrAttachment.sudo().search(
-            IrAttachment._get_domain_generated_assets(url),
-            limit=1,
-        )
-        if existing:
-            log_event(
-                _attach_log,
-                logging.DEBUG,
-                "sidecar_reuse",
-                bundle=bundle,
-                url=url,
-            )
-            self._save_esm_attachment_rows(
-                [],
-                touch_ids=existing.ids,
-                bundle=bundle,
-            )
-            return
-        self._save_esm_attachment_rows(
-            [
-                {
-                    "name": url.rsplit("/", 1)[-1],
-                    "mimetype": mimetype,
-                    "res_model": "ir.ui.view",
-                    "res_id": False,
-                    "type": "binary",
-                    "public": True,
-                    "raw": content,
-                    "url": url,
-                }
-            ],
-            bundle=bundle,
-        )
-        log_event(
-            _attach_log,
-            logging.INFO,
-            "sidecar_save",
-            bundle=bundle,
-            url=url,
-            bytes=len(content),
-        )
 
     @staticmethod
     def _drop_rows_already_present(cr, vals_list: list[dict]) -> list[dict]:
