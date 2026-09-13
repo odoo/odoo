@@ -142,3 +142,16 @@ def test_a_hardlink_is_not_in_scope_and_that_is_correct(filestore):
         "if this ever starts being skipped, the reason will not be the "
         "containment check -- find out what changed before relying on it"
     )
+
+
+def test_members_are_ordered_by_path_whatever_the_directory_listing_order(filestore):
+    store, _, _ = filestore
+    for name in ("zz", "aa", "mm"):
+        (store / name).mkdir()
+        (store / name / "b.bin").write_bytes(b"b")
+        (store / name / "a.bin").write_bytes(b"a")
+    buf = io.BytesIO()
+    with zipfile.ZipFile(buf, "w") as zipf:
+        _add_filestore_to_zip(zipf, str(store))
+    names = zipfile.ZipFile(buf).namelist()
+    assert names == sorted(names)

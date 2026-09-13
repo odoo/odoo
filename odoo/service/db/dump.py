@@ -23,6 +23,8 @@ from ._checks import check_db_management_enabled, check_db_name
 from .listing import check_db_exposed
 
 if TYPE_CHECKING:
+    from collections.abc import Iterator
+
     from odoo.db import BaseCursor
 else:
     BaseCursor = Any
@@ -245,33 +247,47 @@ def _run_pg_dump_streaming(cmd: list[str], env: dict, stream: IO[bytes]) -> None
         raise _prepare_pg_dump_failed_error(proc.returncode, b"".join(stderr_chunks))
 
 
-def _add_filestore_to_zip(zipf: zipfile.ZipFile, filestore: str) -> None:
-    root = Path(filestore)
-    if not root.is_dir():
-        _debug.logic("database.dump.filestore_absent", filestore=filestore)
-        return
+def _iter_filestore_files(root: str) -> Iterator[str]:
     root_real = os.path.realpath(root)
-    with _debug.perf("database.dump.filestore_added", filestore=filestore) as span:
-        files = 0  # debuglog
-        for dirpath, _dirnames, filenames in os.walk(root):
-            for fname in sorted(filenames):
-                fpath = Path(dirpath, fname)
-                real = os.path.realpath(fpath)
+    stack = [root]
+    while stack:
+        with os.scandir(stack.pop()) as it:
+            entries = sorted(it, key=lambda entry: entry.name)
+        stack.extend(
+            entry.path
+            for entry in reversed(entries)
+            if entry.is_dir(follow_symlinks=False)
+        )
+        for entry in entries:
+            if entry.is_file(follow_symlinks=False):
+                yield entry.path
+            elif entry.is_symlink():
+                real = os.path.realpath(entry.path)
                 if not Path(real).is_file():
                     continue
                 if os.path.commonpath([root_real, real]) != root_real:
                     _logger.warning(
                         "DUMP DB: skipping filestore entry %r, it resolves outside "
                         "the filestore (%r)",
-                        str(fpath),
+                        entry.path,
                         real,
                     )
                     _debug.logic(
-                        "database.dump.filestore_entry_skipped", path=str(fpath)
+                        "database.dump.filestore_entry_skipped", path=entry.path
                     )
                     continue
-                zipf.write(fpath, str(Path("filestore", fpath.relative_to(root))))
-                files += 1  # debuglog
+                yield entry.path
+
+
+def _add_filestore_to_zip(zipf: zipfile.ZipFile, filestore: str) -> None:
+    if not Path(filestore).is_dir():
+        _debug.logic("database.dump.filestore_absent", filestore=filestore)
+        return
+    with _debug.perf("database.dump.filestore_added", filestore=filestore) as span:
+        files = 0  # debuglog
+        for path in _iter_filestore_files(filestore):
+            zipf.write(path, "filestore/" + os.path.relpath(path, filestore))
+            files += 1  # debuglog
         span.set(files=files)
 
 
