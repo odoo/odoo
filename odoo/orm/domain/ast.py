@@ -849,6 +849,30 @@ class DomainCustom(Domain):
         return self._sql(model, alias, query)
 
 
+def _ids_matched_without_query(domain: Domain, universe: frozenset) -> set | None:
+    if domain.is_false():
+        return set()
+    if isinstance(domain, DomainCondition):
+        if domain.field_expr != "id" or not isinstance(
+            domain.value, (list, tuple, set, frozenset, OrderedSet, FrozenOrderedSet)
+        ):
+            return None
+        if domain.operator == "in":
+            return set(universe.intersection(domain.value))
+        return None
+    if isinstance(domain, (DomainAnd, DomainOr)):
+        parts: list[set] = []
+        for child in domain.children:
+            part = _ids_matched_without_query(child, universe)
+            if part is None:
+                return None
+            parts.append(part)
+        if isinstance(domain, DomainAnd):
+            return set(universe.intersection(*parts))
+        return set().union(*parts)
+    return None
+
+
 class DomainCondition(Domain):
     __slots__ = (
         "_field_instance",
@@ -1211,10 +1235,19 @@ class DomainCondition(Domain):
         real_ids = [id_ for id_ in records._ids if id_]
         matched: set = set()
         if real_ids:
-            query = records.with_context(active_test=False)._search(
-                DomainCondition("id", "in", OrderedSet(real_ids)) & self
-            )
-            matched = set(query.get_result_ids())
+            scoped = records.with_context(active_test=False)
+            candidates = DomainCondition("id", "in", OrderedSet(real_ids)) & self
+            answered = None
+            if scoped.env.su:
+                with _recursion_error_as_value_error():
+                    answered = _ids_matched_without_query(
+                        self.optimize_full(scoped), frozenset(real_ids)
+                    )
+            if answered is None:
+                query = scoped._search(candidates)
+                matched = set(query.get_result_ids())
+            else:
+                matched = answered
             _debug.logic(
                 "domain.predicate.search_defined_query",
                 model=records._name,

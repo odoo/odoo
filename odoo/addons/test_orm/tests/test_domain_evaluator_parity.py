@@ -827,3 +827,32 @@ class TestDomainPartition(_DomainGeneratorMixin, TransactionCase):
                     f"search_count disagrees with search on {list(domain)!r} "
                     f"(seed={self.SEED + 1}, index={index})",
                 )
+
+
+class TestSearchDefinedPredicateQueries(TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        discussion = cls.env["test_orm.discussion"].create(
+            {"name": "sizes", "participants": [(4, cls.env.user.id)]}
+        )
+        cls.messages = cls.env["test_orm.message"].create(
+            [
+                {"discussion": discussion.id, "body": body}
+                for body in ("ab", "abcd", "abcdef")
+            ]
+        )
+        cls.env.flush_all()
+
+    def test_an_id_set_from_the_search_method_is_not_queried_again(self):
+        messages = self.messages.sudo()
+        domain = [("size", ">", 3)]
+        expected = messages.search([("id", "in", messages.ids), *domain])
+        messages.invalidate_recordset()
+        with self.assertQueryCount(1):
+            self.assertEqual(messages.filtered_domain(domain), expected)
+
+    def test_a_search_method_answer_is_still_limited_to_the_filtered_records(self):
+        messages = self.messages.sudo()
+        subset = messages[:2]
+        self.assertEqual(subset.filtered_domain([("size", ">", 1)]), subset)
