@@ -13,6 +13,9 @@ import { makeOverlayPresenter } from "@web/ui/overlay/presenter";
  * @typedef {BottomSheetService["add"]} BottomSheetServiceAddFunction
  */
 
+/** @type {Set<BottomSheetService>} */
+const activeServices = new Set();
+
 class BottomSheetService {
     /** @param {{ overlay: any }} services */
     constructor({ overlay }) {
@@ -37,11 +40,17 @@ class BottomSheetService {
     }
 
     syncBodyClasses() {
-        document.body.classList.toggle("bottom-sheet-open", this.openCount > 0);
-        document.body.classList.toggle(
-            "bottom-sheet-open-multiple",
-            this.openCount > 1,
-        );
+        if (this.openCount) {
+            activeServices.add(this);
+        } else {
+            activeServices.delete(this);
+        }
+        let openCount = 0;
+        for (const service of activeServices) {
+            openCount += service.openCount;
+        }
+        document.body.classList.toggle("bottom-sheet-open", openCount > 0);
+        document.body.classList.toggle("bottom-sheet-open-multiple", openCount > 1);
     }
 
     /**

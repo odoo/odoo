@@ -1,11 +1,12 @@
 // @ts-check
 
-import { describe, expect, getFixture, test } from "@odoo/hoot";
+import { describe, destroy, expect, getFixture, test } from "@odoo/hoot";
 import { press, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, onWillRender, useState, xml } from "@odoo/owl";
+import { Component, onMounted, onWillRender, useState, xml } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { AppEvent } from "@web/core/events";
+import { attachShadowRoot } from "@web/core/utils/dom/ui";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { MainComponentsContainer } from "@web/ui/main_components_container";
 import { useActiveElement } from "@web/ui/ui_service";
@@ -19,6 +20,64 @@ import {
 } from "../web_test_helpers.js";
 
 describe.current.tags("desktop");
+
+test("focus trapping wraps between buttons inside a shadow root", async () => {
+    class Scope extends Component {
+        static template = xml`<div t-ref="scope"><div class="shadow-target"/></div>`;
+        static props = {};
+        setup() {
+            onMounted(() => {
+                const root = attachShadowRoot(queryOne(".shadow-target"));
+                const first = document.createElement("button");
+                const last = document.createElement("button");
+                root.append(first, last);
+            });
+            useActiveElement("scope");
+        }
+    }
+    await mountWithCleanup(Scope);
+    const root = /** @type {ShadowRoot} */ (queryOne(".shadow-target").shadowRoot);
+    const [first, last] = root.querySelectorAll("button");
+    last.focus();
+    const tab = new KeyboardEvent("keydown", {
+        key: "Tab",
+        bubbles: true,
+        composed: true,
+        cancelable: true,
+    });
+    last.dispatchEvent(tab);
+    expect(tab.defaultPrevented).toBe(true);
+    expect(root.activeElement).toBe(first);
+    first.dispatchEvent(
+        new KeyboardEvent("keydown", {
+            key: "Tab",
+            shiftKey: true,
+            bubbles: true,
+            composed: true,
+            cancelable: true,
+        }),
+    );
+    expect(root.activeElement).toBe(last);
+});
+
+test("closing a focus scope restores the opener inside a shadow root", async () => {
+    const host = document.createElement("div");
+    getFixture().append(host);
+    const root = attachShadowRoot(host);
+    const opener = document.createElement("button");
+    root.append(opener);
+    opener.focus();
+    class Scope extends Component {
+        static template = xml`<div t-ref="scope"><button>inside</button></div>`;
+        static props = {};
+        setup() {
+            useActiveElement("scope");
+        }
+    }
+    const scope = await mountWithCleanup(Scope);
+    destroy(scope);
+    expect(root.activeElement).toBe(opener);
+});
 
 test("block and unblock once ui with ui service", async () => {
     await mountWithCleanup(MainComponentsContainer);

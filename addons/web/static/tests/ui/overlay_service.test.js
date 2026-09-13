@@ -469,3 +469,40 @@ test("a throwing onRemove removes the overlay and hands the caller the error", a
     expect(".overlayed").toHaveCount(0);
     expect.verifySteps(["onRemove", "onClose blew up"]);
 });
+
+test("unregistering a container twice preserves another registration for the same root", async () => {
+    await makeMockEnv();
+    const overlay = getService("overlay");
+    const first = overlay.registerContainer("shared-root");
+    const second = overlay.registerContainer("shared-root");
+    first();
+    first();
+    expect([...overlay.containerRoots.values()]).toEqual(["shared-root"]);
+    second();
+    expect([...overlay.containerRoots.values()]).toEqual([]);
+});
+
+test("an old container disposer cannot unregister its replacement", async () => {
+    await makeMockEnv();
+    const overlay = getService("overlay");
+    const old = overlay.registerContainer("replacement-root");
+    old();
+    const replacement = overlay.registerContainer("replacement-root");
+    old();
+    expect([...overlay.containerRoots.values()]).toEqual(["replacement-root"]);
+    replacement();
+    expect([...overlay.containerRoots.values()]).toEqual([]);
+});
+
+test("unregistering a later duplicate root preserves the first fallback owner's order", async () => {
+    await makeMockEnv();
+    const overlay = getService("overlay");
+    const first = overlay.registerContainer("first");
+    const middle = overlay.registerContainer("middle");
+    const last = overlay.registerContainer("first");
+    last();
+    expect([...overlay.containerRoots.values()]).toEqual(["first", "middle"]);
+    first();
+    expect([...overlay.containerRoots.values()]).toEqual(["middle"]);
+    middle();
+});

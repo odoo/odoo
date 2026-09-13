@@ -35,6 +35,85 @@ class FooterComponent extends Component {
     static props = ["*"];
 }
 
+test("an Enter waiting on a cancelled search cannot execute after palette destruction", async () => {
+    await mountWithCleanup(MainComponentsContainer);
+    const close = getService("dialog").add(CommandPalette, {
+        config: {
+            configByNamespace: { default: { debounceDelay: 1000 } },
+            providers: [
+                {
+                    provide: () => [
+                        { name: "Run", action: () => expect.step("executed") },
+                    ],
+                },
+            ],
+        },
+    });
+    await animationFrame();
+    await contains(".o_command_palette_search input").edit("queued", {
+        confirm: false,
+    });
+    await press("enter");
+    await close();
+    await animationFrame();
+    await advanceTime(1100);
+    expect(".o_command_palette").toHaveCount(0);
+    expect.verifySteps([]);
+});
+
+test("an Enter waiting on a running provider cannot execute after palette destruction", async () => {
+    await mountWithCleanup(MainComponentsContainer);
+    const done = new Deferred();
+    const commands = [{ name: "Run", action: () => expect.step("executed") }];
+    const close = getService("dialog").add(CommandPalette, {
+        config: {
+            providers: [
+                {
+                    provide: (_env, { searchValue }) => {
+                        expect.step(searchValue ? "search started" : "initial");
+                        return searchValue ? done : commands;
+                    },
+                },
+            ],
+        },
+    });
+    await animationFrame();
+    expect.verifySteps(["initial"]);
+    await contains(".o_command_palette_search input").edit("Run", { confirm: false });
+    await advanceTime(1);
+    expect.verifySteps(["search started"]);
+    await press("enter");
+    await close();
+    await animationFrame();
+    done.resolve(commands);
+    await animationFrame();
+    expect.verifySteps([]);
+});
+
+test("closing the palette cancels a queued provider search", async () => {
+    await mountWithCleanup(MainComponentsContainer);
+    const close = getService("dialog").add(CommandPalette, {
+        config: {
+            configByNamespace: { default: { debounceDelay: 1000 } },
+            providers: [
+                {
+                    provide: () => {
+                        expect.step("provide");
+                        return [];
+                    },
+                },
+            ],
+        },
+    });
+    await animationFrame();
+    expect.verifySteps(["provide"]);
+    await contains(".o_command_palette_search input").edit("queued");
+    await close();
+    await animationFrame();
+    await advanceTime(1100);
+    expect.verifySteps([]);
+});
+
 test("empty providers", async () => {
     await mountWithCleanup(MainComponentsContainer);
     const config = {

@@ -5,7 +5,12 @@ import { useEffect, useRef } from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/browser/hotkeys";
 import { makeLogger } from "@web/core/debug/debug_logger";
 import { useOwnedActiveElement } from "@web/core/utils/active_element_scope";
-import { getTabableElements, isFocusable } from "@web/core/utils/dom/ui";
+import {
+    getActiveElement,
+    getDeepActiveElement,
+    getTabableElements,
+    isFocusable,
+} from "@web/core/utils/dom/ui";
 import { useService } from "@web/core/utils/hooks";
 import { describeNode } from "@web/ui/describe_node";
 
@@ -35,14 +40,14 @@ function trapFocus(e) {
     }
     switch (hotkey) {
         case "tab":
-            if (document.activeElement === lastTabableEl) {
+            if (getDeepActiveElement(el) === lastTabableEl) {
                 firstTabableEl?.focus();
                 e.preventDefault();
                 e.stopPropagation();
             }
             break;
         case "shift+tab":
-            if (document.activeElement === firstTabableEl) {
+            if (getDeepActiveElement(el) === firstTabableEl) {
                 lastTabableEl?.focus();
                 e.preventDefault();
                 e.stopPropagation();
@@ -65,7 +70,7 @@ export function useActiveElement(refName) {
             if (el) {
                 const [firstTabableEl] = getFirstAndLastTabableElements(el);
                 const takesFocus = Boolean(firstTabableEl) || isFocusable(el);
-                const oldActiveElement = document.activeElement;
+                const oldActiveElement = getDeepActiveElement(el.ownerDocument);
                 scope.el = el;
                 uiService.activateElement(el);
 
@@ -73,11 +78,11 @@ export function useActiveElement(refName) {
 
                 let focused = "kept";
                 if (firstTabableEl) {
-                    if (!el.contains(document.activeElement)) {
+                    if (!el.contains(getActiveElement(el))) {
                         firstTabableEl.focus();
                         focused = "firstTabable";
                     }
-                } else if (isFocusable(el) && el !== document.activeElement) {
+                } else if (isFocusable(el) && el !== getActiveElement(el)) {
                     el.focus();
                     focused = "self";
                 }
@@ -95,8 +100,8 @@ export function useActiveElement(refName) {
                     let restored = "none";
                     if (
                         takesFocus &&
-                        (el.contains(document.activeElement) ||
-                            document.activeElement === document.body)
+                        (el.contains(getActiveElement(el)) ||
+                            getActiveElement(el) === el.ownerDocument.body)
                     ) {
                         if (oldActiveElement?.isConnected) {
                             /** @type {HTMLElement} */ (oldActiveElement).focus();
@@ -114,7 +119,7 @@ export function useActiveElement(refName) {
                     log.logic("deactivate", () => ({
                         el: describeNode(el),
                         restored,
-                        to: describeNode(document.activeElement),
+                        to: describeNode(getDeepActiveElement(el.ownerDocument)),
                     }));
                 };
             }

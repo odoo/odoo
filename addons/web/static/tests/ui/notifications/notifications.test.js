@@ -16,6 +16,43 @@ import { notificationService } from "@web/ui/notification/notification_service";
 import { OverlayContainer } from "@web/ui/overlay/overlay_container";
 import { serviceBackedItems } from "@web/ui/service_backed_items";
 
+test("onClose can destroy the service and create a replacement without closing twice", async () => {
+    const {
+        services: { notification },
+    } = await makeMockEnv();
+    let calls = 0;
+    const close = notification.add("first", {
+        onClose: () => {
+            if (++calls === 1) {
+                notification.destroy();
+                notification.add("replacement", { sticky: true });
+            }
+        },
+    });
+    close();
+    expect(calls).toBe(1);
+    expect(
+        Object.values(notification.notifications).map((entry) => entry.props.message),
+    ).toEqual(["replacement"]);
+});
+
+test("closing a notification is reentrant and invokes onClose once", async () => {
+    const env = await makeMockEnv();
+    let calls = 0;
+    const close = env.services.notification.add("reentrant", {
+        onClose: () => {
+            calls++;
+            if (calls === 1) {
+                close();
+            }
+        },
+    });
+    close();
+    close();
+    expect(calls).toBe(1);
+    expect(Object.keys(env.services.notification.notifications)).toHaveLength(0);
+});
+
 test("can display a basic notification", async () => {
     await makeMockEnv();
     const { Component: NotificationContainer, props } = registry

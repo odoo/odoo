@@ -1,7 +1,7 @@
 // @ts-check
 
 import { destroy, expect, getFixture, test } from "@odoo/hoot";
-import { animationFrame } from "@odoo/hoot-mock";
+import { animationFrame, Deferred } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
 import {
     contains,
@@ -11,6 +11,118 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { MainComponentsContainer } from "@web/ui/main_components_container";
 import { makePopover, usePopover } from "@web/ui/popover/popover_hook";
+
+class ChallengeContent extends Component {
+    static template = xml`<div t-att-data-name="props.name">content</div>`;
+    static props = ["*"];
+}
+
+test("a failed add does not leave the hook claiming an open popover", () => {
+    const popover = makePopover(
+        () => {
+            throw new Error("add failed");
+        },
+        ChallengeContent,
+        {},
+    );
+    expect(() => popover.open(getFixture(), {})).toThrow("add failed");
+    expect(popover.isOpen).toBe(false);
+    expect(popover.close()).toBe(undefined);
+});
+
+test("an obsolete detached-target close cannot lose the replacement popover", async () => {
+    await mountWithCleanup(MainComponentsContainer);
+    const popover = makePopover(
+        (...args) => getService("popover").add(...args),
+        ChallengeContent,
+        {},
+    );
+    popover.open(document.createElement("button"), { name: "detached" });
+    popover.open(getFixture(), { name: "connected" });
+    await animationFrame();
+    expect(".o_popover [data-name=connected]").toHaveCount(1);
+    expect(popover.isOpen).toBe(true);
+    await popover.close();
+    await animationFrame();
+    expect(".o_popover").toHaveCount(0);
+});
+
+test("reopening from onClose does not orphan a popover", async () => {
+    await mountWithCleanup(MainComponentsContainer);
+    let calls = 0;
+    const popover = makePopover(
+        (...args) => getService("popover").add(...args),
+        ChallengeContent,
+        {
+            onClose: () => {
+                if (++calls === 1) {
+                    popover.open(getFixture(), { name: "callback" });
+                }
+            },
+        },
+    );
+    popover.open(getFixture(), { name: "first" });
+    await animationFrame();
+    popover.open(getFixture(), { name: "outer" });
+    await animationFrame();
+    expect(".o_popover").toHaveCount(1);
+    expect(".o_popover [data-name=callback]").toHaveCount(1);
+    await popover.close();
+    await animationFrame();
+    expect(".o_popover").toHaveCount(0);
+});
+
+test("the hook propagates a rejected close and still removes its overlay", async () => {
+    const done = new Deferred();
+    class Owner extends Component {
+        static template = xml`<button>target</button>`;
+        static props = ["*"];
+        setup() {
+            this.popover = usePopover(ChallengeContent, { onClose: () => done });
+        }
+    }
+    const owner = await mountWithCleanup(Owner);
+    owner.popover.open(getFixture(), {});
+    await animationFrame();
+    const failure = new Error("close rejected");
+    const outcome = owner.popover.close().then(
+        () => "resolved",
+        (error) => error,
+    );
+    done.reject(failure);
+    expect(await outcome).toBe(failure);
+    await animationFrame();
+    expect(".o_popover").toHaveCount(0);
+});
+
+test("closing through the hook waits for the owner's async callback", async () => {
+    const done = new Deferred();
+    class Content extends Component {
+        static template = xml`<div>content</div>`;
+        static props = ["*"];
+    }
+    class Owner extends Component {
+        static template = xml`<button>target</button>`;
+        static props = ["*"];
+        setup() {
+            this.popover = usePopover(Content, {
+                onClose: () => done,
+            });
+        }
+    }
+    const owner = await mountWithCleanup(Owner);
+    owner.popover.open(getFixture(), {});
+    await animationFrame();
+    let closed = false;
+    const closing = owner.popover.close().then(() => {
+        closed = true;
+    });
+    await animationFrame();
+    expect(closed).toBe(false);
+    done.resolve();
+    await closing;
+    expect(closed).toBe(true);
+});
 
 test("close popover when component is unmounted", async () => {
     const target = getFixture();

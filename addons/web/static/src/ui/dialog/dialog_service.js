@@ -48,6 +48,11 @@ class DialogWrapper extends Component {
 
 const log = makeLogger("web.ui.dialog");
 
+/** @type {Set<DialogService>} */
+const activeServices = new Set();
+/** @type {{ top: number, left: number } | null} */
+let scrollOrigin = null;
+
 export class DialogService {
     /**
      * @param {import("@web/env").OdooEnv} env
@@ -59,8 +64,15 @@ export class DialogService {
         /** @type {Array<{ id: number, close: Function, isActive: boolean, scrollToOrigin?: () => void }>} */
         this.stack = [];
         this.nextId = 0;
-        /** @type {{ top: number, left: number } | null} */
-        this.scrollOrigin = null;
+    }
+
+    syncBodyClass() {
+        if (this.stack.length) {
+            activeServices.add(this);
+        } else {
+            activeServices.delete(this);
+        }
+        document.body.classList.toggle("modal-open", activeServices.size > 0);
     }
 
     deactivate() {
@@ -96,17 +108,10 @@ export class DialogService {
             }),
         );
 
-        if (!this.stack.length) {
-            this.scrollOrigin = { top: browser.scrollY, left: browser.scrollX };
-        }
-        this.deactivate();
-        this.stack.push(subEnv);
-        document.body.classList.add("modal-open");
-
         subEnv.scrollToOrigin = () => {
-            if (!this.stack.length && this.scrollOrigin) {
-                browser.scrollTo(this.scrollOrigin);
-                this.scrollOrigin = null;
+            if (!activeServices.size && scrollOrigin) {
+                browser.scrollTo(scrollOrigin);
+                scrollOrigin = null;
             }
         };
 
@@ -133,15 +138,22 @@ export class DialogService {
                             /** @type {{ isActive: boolean }} */ (
                                 this.stack.at(-1)
                             ).isActive = true;
-                        } else {
-                            document.body.classList.remove("modal-open");
                         }
+                        this.syncBodyClass();
                     }
                 },
                 rootId: options.rootId,
                 sequence: options.sequence,
             },
         );
+
+        // Commit service state only after the overlay and its props were created.
+        if (!activeServices.size) {
+            scrollOrigin = { top: browser.scrollY, left: browser.scrollX };
+        }
+        this.deactivate();
+        this.stack.push(subEnv);
+        this.syncBodyClass();
 
         return close;
     }
@@ -160,8 +172,10 @@ export class DialogService {
         this.closeAll().catch(() => {});
         this.stack.length = 0;
         this.nextId = 0;
-        this.scrollOrigin = null;
-        document.body.classList.remove("modal-open");
+        this.syncBodyClass();
+        if (!activeServices.size) {
+            scrollOrigin = null;
+        }
     }
 }
 

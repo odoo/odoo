@@ -14,6 +14,7 @@ import {
     readJSONStorage,
     writeJSONStorage,
 } from "@web/core/browser/storage_json";
+import { makeLogger } from "@web/core/debug/debug_logger";
 import { get } from "@web/core/network/http_service";
 import { registry } from "@web/core/registry";
 
@@ -23,22 +24,24 @@ const serviceRegistry = registry.category("services");
 
 const INSTALLATION_STATE_KEY = "pwaService.installationState";
 
+const log = makeLogger("web.ui.pwa");
+
 /** @type {Event | null} */
-let BEFOREINSTALLPROMPT_EVENT;
-/** @type {((ev: Event) => void) | undefined} */
-let REGISTER_BEFOREINSTALLPROMPT_EVENT;
+let pendingPrompt = null;
+/** @type {Set<PwaService>} */
+const activeServices = new Set();
 
 browser.addEventListener("beforeinstallprompt", (ev) => {
-    if (REGISTER_BEFOREINSTALLPROMPT_EVENT) {
-        return REGISTER_BEFOREINSTALLPROMPT_EVENT(ev);
-    } else {
-        BEFOREINSTALLPROMPT_EVENT = ev;
+    pendingPrompt = ev;
+    log.lifecycle("prompt received", () => ({ services: activeServices.size }));
+    for (const service of activeServices) {
+        service._handleBeforeInstallPrompt(ev, service._getInstallationState());
     }
 });
 
 export function _resetPwaInstallPrompt() {
-    BEFOREINSTALLPROMPT_EVENT = null;
-    REGISTER_BEFOREINSTALLPROMPT_EVENT = undefined;
+    pendingPrompt = null;
+    activeServices.clear();
 }
 
 class PwaService {
@@ -55,8 +58,6 @@ class PwaService {
         this._manifestPromise = null;
         /** @type {any} */
         this.nativePrompt = undefined;
-        /** @type {((ev: Event) => void) | undefined} */
-        this._registeredPrompt = undefined;
 
         this.canPromptToInstall = false;
         this.isAvailable = false;
@@ -88,16 +89,11 @@ class PwaService {
         const installationState = this._getInstallationState();
 
         if (this.isSupportedOnBrowser) {
-            if (BEFOREINSTALLPROMPT_EVENT) {
-                this._handleBeforeInstallPrompt(
-                    BEFOREINSTALLPROMPT_EVENT,
-                    installationState,
-                );
-                BEFOREINSTALLPROMPT_EVENT = null;
+            activeServices.add(this);
+            if (pendingPrompt) {
+                this._handleBeforeInstallPrompt(pendingPrompt, installationState);
             }
-            this._registeredPrompt = (/** @type {Event} */ ev) =>
-                this._handleBeforeInstallPrompt(ev, this._getInstallationState());
-            REGISTER_BEFOREINSTALLPROMPT_EVENT = this._registeredPrompt;
+            log.lifecycle("subscribe", () => ({ services: activeServices.size }));
             if (isBrowserSafari()) {
                 this.canPromptToInstall = installationState !== "dismissed";
                 this.isAvailable = true;
@@ -189,26 +185,33 @@ class PwaService {
         }
         if (this.nativePrompt) {
             const prompt = this.nativePrompt;
-            this.nativePrompt = null;
-            try {
-                const res = await prompt.prompt();
-                this._setInstallationState(res.outcome);
-                if (onDone) {
-                    onDone(res);
-                }
-            } finally {
-                this.canPromptToInstall = false;
+            // A browser prompt belongs to the window and may be consumed only once,
+            // even when several service instances expose an install action.
+            if (pendingPrompt === prompt) {
+                pendingPrompt = null;
             }
+            for (const service of activeServices) {
+                if (service.nativePrompt === prompt) {
+                    service.nativePrompt = null;
+                    service.canPromptToInstall = false;
+                    service.isAvailable = false;
+                }
+            }
+            log.lifecycle("prompt consumed", () => ({ services: activeServices.size }));
+            const res = await prompt.prompt();
+            this._setInstallationState(res.outcome);
+            await onDone?.(res);
         } else if (isBrowserSafari()) {
             this.dialog.add(
                 InstallPrompt,
                 {},
                 {
-                    onClose: () => {
-                        if (onDone) {
-                            onDone({});
+                    onClose: async () => {
+                        try {
+                            await onDone?.({});
+                        } finally {
+                            this.decline();
                         }
-                        this.decline();
                     },
                 },
             );
@@ -218,12 +221,19 @@ class PwaService {
     decline() {
         this._setInstallationState("dismissed");
         this.canPromptToInstall = false;
+        for (const service of activeServices) {
+            if (service.startUrl === this.startUrl) {
+                service.canPromptToInstall = false;
+            }
+        }
     }
 
     destroy() {
-        if (REGISTER_BEFOREINSTALLPROMPT_EVENT === this._registeredPrompt) {
-            REGISTER_BEFOREINSTALLPROMPT_EVENT = undefined;
-        }
+        activeServices.delete(this);
+        this.nativePrompt = null;
+        this.canPromptToInstall = false;
+        this.isAvailable = false;
+        log.lifecycle("destroy", () => ({ services: activeServices.size }));
     }
 }
 

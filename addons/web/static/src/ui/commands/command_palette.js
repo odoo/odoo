@@ -7,6 +7,7 @@ import {
     markRaw,
     onWillDestroy,
     onWillStart,
+    status,
     useExternalListener,
     useRef,
     useState,
@@ -290,6 +291,7 @@ export class CommandPalette extends Component {
         this.root = useRef("root");
         this.listboxRef = useRef("listbox");
 
+        onWillDestroy(() => this.lastDebounceSearch?.cancel());
         onWillStart(() => this.setCommandPaletteConfig(this.props.config));
     }
 
@@ -387,20 +389,14 @@ export class CommandPalette extends Component {
             commands = fuzzyLookup(options.searchValue, commands, (c) => c.name);
         } else {
             if (namespaceConfig.categories) {
-                /** @type {CommandItem[]} */
-                let commandsSorted = [];
                 categoryKeys = [...namespaceConfig.categories];
                 categoryNames = namespaceConfig.categoryNames || {};
                 if (!categoryKeys.includes("default")) {
                     categoryKeys.push("default");
                 }
-                for (const bucket of groupCommandsByCategory(
-                    commands,
-                    categoryKeys,
-                ).values()) {
-                    commandsSorted = [...commandsSorted, ...bucket];
-                }
-                commands = commandsSorted;
+                commands = [
+                    ...groupCommandsByCategory(commands, categoryKeys).values(),
+                ].flat();
             }
         }
 
@@ -536,6 +532,10 @@ export class CommandPalette extends Component {
     /** @param {boolean} [ctrlKey] */
     async executeSelectedCommand(ctrlKey) {
         await this.searchValuePromise;
+        if (status(this) === "destroyed") {
+            log.logic("skipExecution", { reason: "destroyed" });
+            return;
+        }
         const selectedCommand = this.selectedCommand;
         if (selectedCommand) {
             if (!ctrlKey) {

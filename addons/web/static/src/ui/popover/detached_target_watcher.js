@@ -1,6 +1,10 @@
 // @ts-check
 /** @odoo-module native */
 
+import { makeLogger } from "@web/core/debug/debug_logger";
+
+const log = makeLogger("web.ui.popover.target");
+
 /** @type {Map<Node, { observer: MutationObserver, watchers: Map<Node, Set<() => void>> }>} */
 const watchersByRoot = new Map();
 
@@ -11,16 +15,16 @@ function checkRoot(root) {
         return;
     }
     /** @type {Node[] | undefined} */
-    let detached;
+    let changedTargets;
     for (const target of entry.watchers.keys()) {
-        if (!target.isConnected) {
-            (detached ??= []).push(target);
+        if (!target.isConnected || target.getRootNode() !== root) {
+            (changedTargets ??= []).push(target);
         }
     }
-    if (!detached) {
+    if (!changedTargets) {
         return;
     }
-    for (const target of detached) {
+    for (const target of changedTargets) {
         const callbacks = entry.watchers.get(target);
         if (!callbacks) {
             continue;
@@ -32,12 +36,12 @@ function checkRoot(root) {
 }
 
 /**
+ * @param {Node} root
  * @param {Node} target
- * @param {() => void} onDetached
+ * @param {() => void} onChanged
  * @returns {() => void}
  */
-export function watchForDetachedTarget(target, onDetached) {
-    const root = target.isConnected ? target.getRootNode() : document;
+function watchRoot(root, target, onChanged) {
     let entry = watchersByRoot.get(root);
     if (!entry) {
         const observer = new MutationObserver(() => checkRoot(root));
@@ -50,7 +54,7 @@ export function watchForDetachedTarget(target, onDetached) {
         callbacks = new Set();
         entry.watchers.set(target, callbacks);
     }
-    callbacks.add(onDetached);
+    callbacks.add(onChanged);
 
     return () => {
         const current = watchersByRoot.get(root);
@@ -58,7 +62,7 @@ export function watchForDetachedTarget(target, onDetached) {
         if (!current || !targetCallbacks) {
             return;
         }
-        targetCallbacks.delete(onDetached);
+        targetCallbacks.delete(onChanged);
         if (!targetCallbacks.size) {
             current.watchers.delete(target);
         }
@@ -66,6 +70,52 @@ export function watchForDetachedTarget(target, onDetached) {
             current.observer.disconnect();
             watchersByRoot.delete(root);
         }
+    };
+}
+
+/**
+ * @param {Node} target
+ * @param {() => void} onDetached
+ * @returns {() => void}
+ */
+export function watchForDetachedTarget(target, onDetached) {
+    /** @type {Node} */
+    let root;
+    let disposed = false;
+    let disposeRoot = () => {};
+    let disposeHost = () => {};
+
+    function checkTarget() {
+        if (disposed) {
+            return;
+        }
+        if (!target.isConnected) {
+            log.lifecycle("detached");
+            onDetached();
+        } else if (target.getRootNode() !== root) {
+            subscribe();
+        }
+    }
+
+    function subscribe() {
+        disposeRoot();
+        disposeHost();
+        root = target.isConnected
+            ? target.getRootNode()
+            : (target.ownerDocument ?? document);
+        disposeRoot = watchRoot(root, target, checkTarget);
+        // A host is removed in its parent's tree, not inside its shadow root.
+        const host = /** @type {ShadowRoot} */ (root).host;
+        disposeHost = host ? watchForDetachedTarget(host, checkTarget) : () => {};
+        log.lifecycle("watch", { shadow: Boolean(host), roots: watchersByRoot.size });
+    }
+
+    subscribe();
+    return () => {
+        disposed = true;
+        disposeRoot();
+        disposeHost();
+        log.lifecycle("unwatch", { roots: watchersByRoot.size });
     };
 }
 

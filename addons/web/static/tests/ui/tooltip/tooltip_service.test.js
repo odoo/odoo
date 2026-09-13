@@ -25,6 +25,67 @@ import { getDetachedTargetObserverCount } from "@web/ui/popover/detached_target_
 import { popoverService } from "@web/ui/popover/popover_service";
 import { OPEN_DELAY, SHOW_AFTER_DELAY } from "@web/ui/tooltip/tooltip_service";
 
+test("tooltip cleanup preserves title and descriptions updated by the owner", async () => {
+    class Content extends Component {
+        static template = xml`<button data-tooltip="help" title="old" aria-describedby="original">target</button>`;
+        static props = {};
+    }
+    await mountWithCleanup(Content);
+    const target = queryOne("[data-tooltip]");
+    target.focus();
+    await runAllTimers();
+    const id = queryOne(".o-tooltip").id;
+    target.setAttribute("title", "new title");
+    target.setAttribute("aria-describedby", `updated ${id} additional`);
+    getService("tooltip").cleanup();
+    expect(target).toHaveAttribute("title", "new title");
+    expect(target).toHaveAttribute("aria-describedby", "updated additional");
+});
+
+test("tooltip cleanup does not resurrect a description removed by the owner", async () => {
+    class Content extends Component {
+        static template = xml`<button data-tooltip="help" aria-describedby="original">target</button>`;
+        static props = {};
+    }
+    await mountWithCleanup(Content);
+    const target = queryOne("[data-tooltip]");
+    target.focus();
+    await runAllTimers();
+    target.removeAttribute("aria-describedby");
+    getService("tooltip").cleanup();
+    expect(target).not.toHaveAttribute("aria-describedby");
+});
+
+test("moving keyboard focus inside a tooltip wrapper preserves its description", async () => {
+    class Content extends Component {
+        static props = ["*"];
+        static template = xml`<span data-tooltip="help"><button class="first">first</button><button class="second">second</button></span>`;
+    }
+    await mountWithCleanup(Content);
+    queryOne(".first").focus();
+    await runAllTimers();
+    const id = queryOne(".o-tooltip").id;
+    queryOne(".second").focus();
+    await animationFrame();
+    expect(".o-tooltip").toHaveCount(1);
+    expect(".o-tooltip").toHaveAttribute("id", id);
+    expect("[data-tooltip]").toHaveAttribute("aria-describedby", id);
+});
+
+test("a tooltip on a wrapper closes when keyboard focus leaves its child", async () => {
+    class Content extends Component {
+        static props = ["*"];
+        static template = xml`<div><span data-tooltip="help"><button class="inside">inside</button></span><button class="outside">outside</button></div>`;
+    }
+    await mountWithCleanup(Content);
+    queryOne(".inside").focus();
+    await runAllTimers();
+    expect(".o-tooltip").toHaveCount(1);
+    queryOne(".outside").focus();
+    await animationFrame();
+    expect(".o-tooltip").toHaveCount(0);
+});
+
 test.tags("desktop");
 test("basic rendering", async () => {
     class MyComponent extends Component {

@@ -30,8 +30,8 @@ class OverlayService {
         this.overlays = reactive(/** @type {Record<number, any>} */ ({}));
         /** @type {Map<number, Promise<void>>} */
         this.removing = new Map();
-        /** @type {(string | undefined)[]} */
-        this.containerRootIds = reactive([]);
+        /** @type {Map<symbol, string | undefined>} */
+        this.containerRoots = reactive(new Map());
 
         mainComponents.add("OverlayContainer", mainComponentEntry(OverlayContainer));
     }
@@ -41,12 +41,20 @@ class OverlayService {
      * @returns {() => void}
      */
     registerContainer(rootId) {
-        this.containerRootIds.push(rootId);
+        const registration = Symbol();
+        this.containerRoots.set(registration, rootId);
+        log.lifecycle("register container", () => ({
+            rootId,
+            registrations: this.containerRoots.size,
+        }));
         return () => {
-            const index = this.containerRootIds.indexOf(rootId);
-            if (index !== -1) {
-                this.containerRootIds.splice(index, 1);
+            if (!this.containerRoots.delete(registration)) {
+                return;
             }
+            log.lifecycle("unregister container", () => ({
+                rootId,
+                registrations: this.containerRoots.size,
+            }));
         };
     }
 

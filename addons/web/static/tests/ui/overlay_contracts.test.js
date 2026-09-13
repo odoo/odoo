@@ -11,6 +11,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { MainComponentsContainer } from "@web/ui/main_components_container";
 import { OverlayContainer } from "@web/ui/overlay/overlay_container";
+import { Popover } from "@web/ui/popover/popover";
 
 class Carrier {
     constructor() {
@@ -20,6 +21,32 @@ class Carrier {
         return this.secret;
     }
 }
+
+test("presenter option validation follows a prop schema patched after first use", async () => {
+    await mountWithCleanup(MainComponentsContainer);
+    const target = document.createElement("button");
+    getFixture().append(target);
+    const service = getService("popover");
+    const close = service.add(
+        target,
+        probeComponent(() => {}),
+    );
+    await close();
+    const warnings = [];
+    patchWithCleanup(console, { warn: (message) => warnings.push(message) });
+    patchWithCleanup(Popover.props, {
+        patchedOption: { type: String, optional: true },
+    });
+    const remove = service.add(
+        target,
+        probeComponent(() => {}),
+        {},
+        // This test extends the runtime schema beyond the static option type.
+        /** @type {any} */ ({ patchedOption: "value" }),
+    );
+    await remove();
+    expect(warnings).toEqual([]);
+});
 
 /**
  * @param {(props: any) => void} onSetup

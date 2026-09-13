@@ -11,14 +11,8 @@ const PRESENTER_SUPPLIED = ["close", "component", "componentProps", "slots", "ta
 /** @type {Set<import("@odoo/owl").ComponentConstructor>} */
 const PRESENTED_COMPONENTS = new Set();
 
-/** @type {{ size: number, options: Set<string> } | null} */
-let acceptedCache = null;
-
 /** @returns {Set<string>} */
 function acceptedOptions() {
-    if (acceptedCache?.size === PRESENTED_COMPONENTS.size) {
-        return acceptedCache.options;
-    }
     const accepted = new Set(SERVICE_OPTIONS);
     for (const component of PRESENTED_COMPONENTS) {
         for (const name of Object.keys(/** @type {any} */ (component).props ?? {})) {
@@ -28,7 +22,6 @@ function acceptedOptions() {
     for (const name of PRESENTER_SUPPLIED) {
         accepted.delete(name);
     }
-    acceptedCache = { size: PRESENTED_COMPONENTS.size, options: accepted };
     return accepted;
 }
 
@@ -106,7 +99,6 @@ export function makeOverlayPresenter({
     onClosed,
 }) {
     PRESENTED_COMPONENTS.add(component);
-    acceptedCache = null;
     return (target, hostedComponent, props = {}, options = {}) => {
         warnUnknownOptions(scope ?? "overlay", options, acceptedOptions());
         if (target instanceof Node && !target.isConnected) {

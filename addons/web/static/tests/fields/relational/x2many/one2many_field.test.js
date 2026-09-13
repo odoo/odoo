@@ -2104,20 +2104,23 @@ test("discard with nested o2m form view dialog", async () => {
     expect(".o_data_row [name='name']").toHaveText("second record");
 
     await contains(".o_data_row .o_data_cell").click();
-    expect("#dialog_0 [name='name'] input").toHaveValue("second record");
+    const outer = `#${queryOne(".o_dialog").id}`;
+    expect(`${outer} [name='name'] input`).toHaveValue("second record");
 
-    await contains("#dialog_0 .o_data_row .o_data_cell").click();
-    expect("#dialog_1 [name='name'] input").toHaveValue("aaa");
+    await contains(`${outer} .o_data_row .o_data_cell`).click();
+    const inner = `#${queryOne(".o_dialog:not(.o_inactive_modal)").id}`;
+    expect(`${inner} [name='name'] input`).toHaveValue("aaa");
 
-    await contains("#dialog_1 [name='name'] input").edit("leonardo");
-    await contains("#dialog_1 .o_form_button_save").click();
-    expect("#dialog_1").toHaveCount(0);
-    expect("#dialog_0 .o_data_row [name='name']").toHaveText("leonardo");
+    await contains(`${inner} [name='name'] input`).edit("leonardo");
+    await contains(`${inner} .o_form_button_save`).click();
+    expect(`${inner}`).toHaveCount(0);
+    expect(`${outer} .o_data_row [name='name']`).toHaveText("leonardo");
 
-    await contains("#dialog_0 .o_data_row .o_data_cell").click();
-    expect("#dialog_2 [name='name'] input").toHaveValue("leonardo");
-    await contains("#dialog_2 .o_form_button_cancel").click();
-    await contains("#dialog_0 .o_form_button_cancel").click();
+    await contains(`${outer} .o_data_row .o_data_cell`).click();
+    const reopened = `#${queryOne(".o_dialog:not(.o_inactive_modal)").id}`;
+    expect(`${reopened} [name='name'] input`).toHaveValue("leonardo");
+    await contains(`${reopened} .o_form_button_cancel`).click();
+    await contains(`${outer} .o_form_button_cancel`).click();
     await contains(".o_data_row .o_data_cell").click();
     expect(".modal .o_data_row [name='name']").toHaveText("aaa");
 });

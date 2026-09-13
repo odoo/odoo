@@ -1,8 +1,9 @@
 // @ts-check
 
 import { beforeEach, expect, test } from "@odoo/hoot";
-import { advanceTime, animationFrame, runAllTimers } from "@odoo/hoot-mock";
+import { advanceTime, animationFrame, freezeTime } from "@odoo/hoot-mock";
 import { getService, mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { makeLogger } from "@web/core/debug/debug_logger";
 import { MainComponentsContainer } from "@web/ui/main_components_container";
 
 beforeEach(async () => {
@@ -68,8 +69,19 @@ test("a caller's own message replaces the escalating ladder", async () => {
 });
 
 test("the message ladder escalates at its stated onsets", async () => {
+    freezeTime();
+    const started = Date.now();
+    const log = makeLogger("web.ui.block_test");
+    const advanceTo = async (milliseconds) => {
+        await advanceTime(started + milliseconds - Date.now());
+        await animationFrame();
+        log.logic("boundary", () => ({
+            elapsed: Date.now() - started,
+            message: message(),
+        }));
+    };
     getService("ui").block();
-    await animationFrame();
+    await advanceTo(0);
     expect(message()).toBe("Loading...");
 
     /** @type {[number, string][]} */
@@ -81,20 +93,15 @@ test("the message ladder escalates at its stated onsets", async () => {
         [420, "Take a minute to get a coffee,because it's loading..."],
         [3600, "Maybe you should consider reloading the application by pressing F5..."],
     ];
-    let elapsed = 0;
     for (const [onset, expected] of ladder) {
-        await advanceTime((onset - elapsed) * 1000 - 500);
-        await animationFrame();
+        await advanceTo(onset * 1000 - 500);
         expect(message()).not.toBe(expected);
 
-        await advanceTime(500);
-        await animationFrame();
+        await advanceTo(onset * 1000);
         expect(message()).toBe(expected);
-        elapsed = onset;
     }
 
-    await runAllTimers();
-    await animationFrame();
+    await advanceTo(7200 * 1000);
     expect(message()).toBe(/** @type {any[]} */ (ladder.at(-1))[1]);
 });
 

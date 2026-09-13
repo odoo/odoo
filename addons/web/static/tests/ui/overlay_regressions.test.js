@@ -18,7 +18,7 @@ import {
     webModels,
 } from "@web/../tests/web_test_helpers";
 import { Dropdown } from "@web/components/dropdown/dropdown";
-import { getTabableElements } from "@web/core/utils/dom/ui";
+import { attachShadowRoot, getTabableElements } from "@web/core/utils/dom/ui";
 import { ConfirmationDialog } from "@web/ui/dialog/confirmation_dialog";
 import { Dialog } from "@web/ui/dialog/dialog";
 import { RainbowMan } from "@web/ui/effects/rainbow_man";
@@ -58,6 +58,73 @@ class DialogContent extends Component {
     static components = { Dialog };
     static props = ["*"];
 }
+
+test("detachment tracking notices removal of a shadow host", async () => {
+    const host = document.createElement("div");
+    getFixture().append(host);
+    const root = attachShadowRoot(host);
+    const target = document.createElement("button");
+    root.append(target);
+    const dispose = watchForDetachedTarget(target, () => expect.step("detached"));
+    try {
+        await animationFrame();
+        expect.verifySteps([]);
+        host.remove();
+        await animationFrame();
+        expect.verifySteps(["detached"]);
+    } finally {
+        dispose();
+    }
+    expect(getDetachedTargetObserverCount()).toBe(0);
+});
+
+test("detachment tracking follows a target moved into another shadow root", async () => {
+    const first = document.createElement("div");
+    const second = document.createElement("div");
+    getFixture().append(first, second);
+    const firstRoot = attachShadowRoot(first);
+    const secondRoot = attachShadowRoot(second);
+    const target = document.createElement("button");
+    firstRoot.append(target);
+    const dispose = watchForDetachedTarget(target, () => expect.step("detached"));
+    try {
+        secondRoot.append(target);
+        await animationFrame();
+        expect.verifySteps([]);
+        target.remove();
+        await animationFrame();
+        expect.verifySteps(["detached"]);
+    } finally {
+        dispose();
+    }
+    expect(getDetachedTargetObserverCount()).toBe(0);
+});
+
+test("nested shadow roots share ancestor observers and release them independently", async () => {
+    const outer = document.createElement("div");
+    getFixture().append(outer);
+    const outerRoot = attachShadowRoot(outer);
+    const inner = document.createElement("div");
+    outerRoot.append(inner);
+    const innerRoot = attachShadowRoot(inner, { mode: "closed" });
+    const target = document.createElement("button");
+    innerRoot.append(target);
+    const first = watchForDetachedTarget(target, () => expect.step("first"));
+    const second = watchForDetachedTarget(target, () => expect.step("second"));
+    try {
+        expect(getDetachedTargetObserverCount()).toBe(3);
+        first();
+        first();
+        expect(getDetachedTargetObserverCount()).toBe(3);
+        outer.remove();
+        await animationFrame();
+        expect.verifySteps(["second"]);
+    } finally {
+        first();
+        second();
+    }
+    expect(getDetachedTargetObserverCount()).toBe(0);
+});
 
 test.tags("mobile");
 test("closing a mobile dropdown does not reload the action behind it", async () => {
@@ -673,6 +740,12 @@ test("only the first shadow container adopts, so two of them do not double-rende
     getService("dialog").add(DialogContent, {});
     await animationFrame();
 
+    expect("#o-shadow-a:shadow .o_dialog").toHaveCount(1);
+    expect("#o-shadow-b:shadow .o_dialog").toHaveCount(0);
+
+    const removeDuplicate = getService("overlay").registerContainer("o-shadow-a");
+    removeDuplicate();
+    await animationFrame();
     expect("#o-shadow-a:shadow .o_dialog").toHaveCount(1);
     expect("#o-shadow-b:shadow .o_dialog").toHaveCount(0);
 

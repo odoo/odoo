@@ -1,6 +1,6 @@
 // @ts-check
 
-import { beforeEach, expect, getFixture, test } from "@odoo/hoot";
+import { after, beforeEach, expect, getFixture, test } from "@odoo/hoot";
 import { click, press, queryAll, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
@@ -13,6 +13,7 @@ import {
 import { browser } from "@web/core/browser/browser";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { Dialog } from "@web/ui/dialog/dialog";
+import { DialogService } from "@web/ui/dialog/dialog_service";
 import { MainComponentsContainer } from "@web/ui/main_components_container";
 import { OverlayContainer } from "@web/ui/overlay/overlay_container";
 import { rootIdOf } from "@web/ui/overlay/root_id";
@@ -20,6 +21,27 @@ import { usePopover } from "@web/ui/popover/popover_hook";
 
 beforeEach(async () => {
     await mountWithCleanup(MainComponentsContainer);
+});
+
+test("closing one dialog service preserves the other service's body lock", async () => {
+    class Content extends Component {
+        static template = xml`<Dialog>content</Dialog>`;
+        static components = { Dialog };
+        static props = ["*"];
+    }
+    const first = getService("dialog");
+    const second = new DialogService(getMockEnv(), { overlay: getService("overlay") });
+    try {
+        const closeFirst = first.add(Content);
+        const closeSecond = second.add(Content);
+        await animationFrame();
+        await closeFirst();
+        expect(document.body).toHaveClass("modal-open");
+        await closeSecond();
+        expect(document.body).not.toHaveClass("modal-open");
+    } finally {
+        second.destroy();
+    }
 });
 
 test("Simple rendering with a single dialog", async () => {
@@ -346,6 +368,41 @@ test("closing stacked dialogs restores the scroll position from before the first
     expect(scrollCalls[0].top).toBe(500);
 });
 
+test.tags("mobile");
+test("closing dialogs across services restores scroll only after the last one", async () => {
+    const scrollCalls = [];
+    patchWithCleanup(browser, {
+        scrollTo: (arg) => scrollCalls.push(arg),
+    });
+    const setScrollY = (value) =>
+        Object.defineProperty(window, "scrollY", { value, configurable: true });
+
+    class DialogComp extends Component {
+        static template = xml`<Dialog><div class="mydialog">dialog</div></Dialog>`;
+        static components = { Dialog };
+        static props = ["*"];
+    }
+
+    const second = new DialogService(getMockEnv(), { overlay: getService("overlay") });
+    after(() => second.destroy());
+    setScrollY(500);
+    const closeFirst = getService("dialog").add(DialogComp, {});
+    await animationFrame();
+
+    setScrollY(0);
+    const closeSecond = second.add(DialogComp, {});
+    await animationFrame();
+
+    closeFirst();
+    await animationFrame();
+    expect(scrollCalls).toHaveLength(0);
+    closeSecond();
+    await animationFrame();
+
+    expect(scrollCalls).toHaveLength(1);
+    expect(scrollCalls[0].top).toBe(500);
+});
+
 test("a component overriding the header slot can reuse web.Dialog.header", async () => {
     class HeaderOverridingDialog extends Component {
         static components = { Dialog };
@@ -554,4 +611,66 @@ test("a dialog opened with no rootId stays in the main document", async () => {
     expect(".o_dialog").toHaveCount(1);
     expect(shadow.querySelectorAll(".o_dialog")).toHaveLength(0);
     app.destroy();
+});
+
+test("dialogs from separate services have distinct IDs and accessible names", async () => {
+    class Content extends Component {
+        static template = xml`<Dialog title="props.title">content</Dialog>`;
+        static components = { Dialog };
+        static props = ["*"];
+    }
+    const second = new DialogService(getMockEnv(), { overlay: getService("overlay") });
+    after(() => second.destroy());
+    getService("dialog").add(Content, { title: "First owner" });
+    second.add(Content, { title: "Second owner" });
+    await animationFrame();
+    expect(new Set(queryAll(".o_dialog").map((el) => el.id)).size).toBe(2);
+    expect(
+        queryAll(".modal").map((el) =>
+            document
+                .getElementById(el.getAttribute("aria-labelledby"))
+                ?.textContent.trim(),
+        ),
+    ).toEqual(["First owner", "Second owner"]);
+});
+
+test("a failed dialog add preserves the active dialog and releases no extra body lock", async () => {
+    class Content extends Component {
+        static template = xml`<Dialog title="props.title">content</Dialog>`;
+        static components = { Dialog };
+        static props = ["*"];
+    }
+    const dialog = getService("dialog");
+    const close = dialog.add(Content, { title: "Existing" });
+    await animationFrame();
+    const failure = new Error("Cannot build dialog props");
+    expect(() =>
+        dialog.add(Content, {
+            get title() {
+                throw failure;
+            },
+        }),
+    ).toThrow(failure);
+    expect(dialog.stack).toHaveLength(1);
+    expect(dialog.stack[0].isActive).toBe(true);
+    await close();
+    expect(document.body).not.toHaveClass("modal-open");
+});
+
+test("a failed first dialog add does not acquire the body lock", async () => {
+    class Content extends Component {
+        static template = xml`<div/>`;
+        static props = ["*"];
+    }
+    const failure = new Error("Cannot build dialog props");
+    const dialog = getService("dialog");
+    expect(() =>
+        dialog.add(Content, {
+            get title() {
+                throw failure;
+            },
+        }),
+    ).toThrow(failure);
+    expect(dialog.stack).toHaveLength(0);
+    expect(document.body).not.toHaveClass("modal-open");
 });

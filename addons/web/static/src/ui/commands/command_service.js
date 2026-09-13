@@ -85,14 +85,16 @@ class CommandService {
         this.registeredCommands = new Map();
         /** @type {Record<string, any> | null} */
         this._configByNamespace = null;
-        for (const reg of [
+        this.configRegistries = [
             commandProviderRegistry,
             commandCategoryRegistry,
             commandSetupRegistry,
-        ]) {
-            reg.addEventListener("UPDATE", () => {
-                this._configByNamespace = null;
-            });
+        ];
+        this.invalidateConfig = () => {
+            this._configByNamespace = null;
+        };
+        for (const reg of this.configRegistries) {
+            reg.addEventListener("UPDATE", this.invalidateConfig);
         }
         this.nextToken = 0;
         this.isPaletteOpened = false;
@@ -323,6 +325,11 @@ class CommandService {
     }
 
     destroy() {
+        for (const reg of this.configRegistries) {
+            reg.removeEventListener("UPDATE", this.invalidateConfig);
+        }
+        this._configByNamespace = null;
+        log.lifecycle("destroy");
         this.removeMainPaletteHotkey();
         for (const token of [...this.registeredCommands.keys()]) {
             this.unregisterCommand(token);

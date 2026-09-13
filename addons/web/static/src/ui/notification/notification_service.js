@@ -111,14 +111,14 @@ class NotificationService {
         log.lifecycle("close", () => ({ id, known: Boolean(this.notifications[id]) }));
         if (this.notifications[id]) {
             const notification = this.notifications[id];
+            // Release ownership before calling user code, which may close again.
+            delete this.notifications[id];
             try {
                 if (notification.onClose) {
                     notification.onClose();
                 }
             } catch (error) {
                 reportUncaught(error);
-            } finally {
-                delete this.notifications[id];
             }
         }
     }

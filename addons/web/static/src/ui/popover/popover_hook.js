@@ -2,10 +2,13 @@
 /** @odoo-module native */
 
 import { onWillUnmount, status, useComponent } from "@odoo/owl";
+import { makeLogger } from "@web/core/debug/debug_logger";
 import { reportUncaught } from "@web/core/errors/error_utils";
 import { useService } from "@web/core/utils/hooks";
 
 /** @import { PopoverServiceAddFunction, PopoverServiceAddOptions } from "@web/ui/popover/popover_service" */
+
+const log = makeLogger("web.ui.popover.hook");
 
 /**
  * @typedef PopoverHookReturnType
@@ -21,24 +24,47 @@ import { useService } from "@web/core/utils/hooks";
  * @returns {PopoverHookReturnType}
  */
 export function makePopover(addFn, component, options) {
-    /** @type {((removeParams?: any) => Promise<void>) | null} */
-    let removeFn = null;
+    /** @type {{ remove?: (removeParams?: any) => Promise<void> } | null} */
+    let current = null;
     function close(/** @type {any} */ removeParams = undefined) {
-        return removeFn?.(removeParams);
+        return current?.remove?.(removeParams);
     }
     return {
         open(target, props) {
-            close()?.catch(reportUncaught);
+            const previous = current;
+            const opening = {};
+            current = opening;
+            previous?.remove?.().catch(reportUncaught);
+            // Closing the previous instance can synchronously open a newer one.
+            if (current !== opening) {
+                log.lifecycle("superseded");
+                return;
+            }
             const newOptions = Object.create(options);
             newOptions.onClose = (/** @type {any} */ removeParams) => {
-                removeFn = null;
-                options.onClose?.(removeParams);
+                log.lifecycle("closed", { current: current === opening });
+                if (current === opening) {
+                    current = null;
+                }
+                return options.onClose?.(removeParams);
             };
-            removeFn = addFn(/** @type {any} */ (target), component, props, newOptions);
+            try {
+                opening.remove = addFn(
+                    /** @type {any} */ (target),
+                    component,
+                    props,
+                    newOptions,
+                );
+            } catch (error) {
+                if (current === opening) {
+                    current = null;
+                }
+                throw error;
+            }
         },
         close,
         get isOpen() {
-            return Boolean(removeFn);
+            return Boolean(current);
         },
     };
 }
@@ -67,7 +93,7 @@ export function usePopover(component, options = {}) {
     const newOptions = Object.create(options);
     newOptions.onClose = (/** @type {any} */ removeParams) => {
         if (status(owner) !== "destroyed") {
-            options.onClose?.(removeParams);
+            return options.onClose?.(removeParams);
         }
     };
     const popover = makePopover(add, component, newOptions);

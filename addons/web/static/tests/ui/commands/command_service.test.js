@@ -16,11 +16,14 @@ import {
     getService,
     makeMockEnv,
     mountWithCleanup,
+    patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 import { registry } from "@web/core/registry";
 import { getTabableElements } from "@web/core/utils/dom/ui";
+import { makeEnv } from "@web/env";
 import { HotkeyCommandItem } from "@web/ui/commands";
 import { useCommand } from "@web/ui/commands/command_hook";
+import { commandService } from "@web/ui/commands/command_service";
 import { useActiveElement } from "@web/ui/ui_service";
 
 class TestComponent extends Component {
@@ -37,6 +40,32 @@ class Parent extends Component {
 
 const commandProviderRegistry = registry.category("command_provider");
 const commandSetupRegistry = registry.category("command_setup");
+
+test("destroy releases every registry subscription", () => {
+    const subscriptions = [];
+    for (const name of ["command_provider", "command_categories", "command_setup"]) {
+        const listeners = new Set();
+        subscriptions.push(listeners);
+        patchWithCleanup(registry.category(name), {
+            addEventListener(type, callback, options) {
+                listeners.add(callback);
+                super.addEventListener(type, callback, options);
+            },
+            removeEventListener(type, callback, options) {
+                listeners.delete(callback);
+                super.removeEventListener(type, callback, options);
+            },
+        });
+    }
+    const service = commandService.start(makeEnv(), {
+        dialog: {},
+        hotkey: { add: () => () => {} },
+        ui: {},
+    });
+    expect(subscriptions.map((listeners) => listeners.size)).toEqual([1, 1, 1]);
+    service.destroy();
+    expect(subscriptions.map((listeners) => listeners.size)).toEqual([0, 0, 0]);
+});
 
 describe.current.tags("desktop");
 

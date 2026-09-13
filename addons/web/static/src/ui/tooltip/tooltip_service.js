@@ -44,7 +44,8 @@ class TrackedTooltip {
         this.closePopover = null;
         /** @type {string | null} */
         this.borrowedDescribedBy = null;
-        this.isDescribing = false;
+        /** @type {string | null} */
+        this.tooltipId = null;
 
         this.borrowedTitle = el.getAttribute("title");
         if (this.borrowedTitle !== null) {
@@ -58,7 +59,7 @@ class TrackedTooltip {
     describe() {
         const tooltipId = `o_tooltip_${nextTooltipId++}`;
         this.borrowedDescribedBy = this.el.getAttribute("aria-describedby");
-        this.isDescribing = true;
+        this.tooltipId = tooltipId;
         this.el.setAttribute(
             "aria-describedby",
             this.borrowedDescribedBy
@@ -70,17 +71,35 @@ class TrackedTooltip {
 
     release() {
         if (this.borrowedTitle !== null) {
-            this.el.setAttribute("title", this.borrowedTitle);
+            if (!this.el.hasAttribute("title")) {
+                this.el.setAttribute("title", this.borrowedTitle);
+            }
             this.borrowedTitle = null;
         }
-        if (this.isDescribing) {
-            if (this.borrowedDescribedBy === null) {
-                this.el.removeAttribute("aria-describedby");
-            } else {
-                this.el.setAttribute("aria-describedby", this.borrowedDescribedBy);
+        if (this.tooltipId !== null) {
+            const current = this.el.getAttribute("aria-describedby");
+            const borrowed = this.borrowedDescribedBy;
+            const installed = borrowed
+                ? `${borrowed} ${this.tooltipId}`
+                : this.tooltipId;
+            if (current === installed) {
+                if (borrowed === null) {
+                    this.el.removeAttribute("aria-describedby");
+                } else {
+                    this.el.setAttribute("aria-describedby", borrowed);
+                }
+            } else if (current?.split(/\s+/).includes(this.tooltipId)) {
+                const remaining = current
+                    .split(/\s+/)
+                    .filter((id) => id && id !== this.tooltipId);
+                if (remaining.length) {
+                    this.el.setAttribute("aria-describedby", remaining.join(" "));
+                } else {
+                    this.el.removeAttribute("aria-describedby");
+                }
             }
             this.borrowedDescribedBy = null;
-            this.isDescribing = false;
+            this.tooltipId = null;
         }
         this.unwatch?.();
         this.unwatch = null;
@@ -280,7 +299,17 @@ class TooltipService {
     }
 
     cleanupTooltip(/** @type {Event} */ ev) {
-        if (this.tracked?.el === ev.target) {
+        const el = this.tracked?.el;
+        if (!el) {
+            return;
+        }
+        const target = /** @type {Node | null} */ (ev.target);
+        const relatedTarget = /** @type {FocusEvent | MouseEvent} */ (ev).relatedTarget;
+        if (
+            (el === target || (ev.type === "focusout" && el.contains(target))) &&
+            !(relatedTarget instanceof Node && el.contains(relatedTarget))
+        ) {
+            log.lifecycle("leave", { type: ev.type });
             this.cleanup();
         }
     }

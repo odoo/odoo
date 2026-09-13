@@ -4,9 +4,14 @@ import { afterEach, expect, getFixture, test } from "@odoo/hoot";
 import { click, press } from "@odoo/hoot-dom";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
-import { getService, mountWithCleanup } from "@web/../tests/web_test_helpers";
+import {
+    getMockEnv,
+    getService,
+    mountWithCleanup,
+} from "@web/../tests/web_test_helpers";
 import { Dropdown } from "@web/components/dropdown/dropdown";
 import { DropdownItem } from "@web/components/dropdown/dropdown_item";
+import { registry } from "@web/core/registry";
 import { MainComponentsContainer } from "@web/ui/main_components_container";
 
 class DropdownParent extends Component {
@@ -23,6 +28,33 @@ class DropdownParent extends Component {
 
 afterEach(() => {
     document.body.classList.remove("bottom-sheet-open", "bottom-sheet-open-multiple");
+});
+
+test("bottom sheet body classes count sheets from all service instances", async () => {
+    await mountWithCleanup(MainComponentsContainer);
+    class Content extends Component {
+        static template = xml`<div>content</div>`;
+        static props = ["*"];
+    }
+    const first = getService("bottom_sheet");
+    const second = registry
+        .category("services")
+        .get("bottom_sheet")
+        .start(getMockEnv(), { overlay: getService("overlay") });
+    try {
+        const closeFirst = first.add(getFixture(), Content);
+        const closeSecond = second.add(getFixture(), Content);
+        expect(document.body).toHaveClass("bottom-sheet-open-multiple");
+        await closeFirst();
+        expect(document.body).toHaveClass("bottom-sheet-open");
+        expect(document.body).not.toHaveClass("bottom-sheet-open-multiple");
+        first.destroy();
+        expect(document.body).toHaveClass("bottom-sheet-open");
+        await closeSecond();
+        expect(document.body).not.toHaveClass("bottom-sheet-open");
+    } finally {
+        second.destroy();
+    }
 });
 
 test("closing a bottom sheet decrements the count and clears the body class", async () => {

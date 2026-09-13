@@ -127,14 +127,14 @@ export class OverlayContainer extends Component {
     state;
     /** @type {Record<string | number, any>} */
     overlays;
-    /** @type {(string | undefined)[]} */
-    containerRootIds;
+    /** @type {Map<symbol, string | undefined>} */
+    containerRoots;
 
     setup() {
         this.root = useRef("root");
         this.state = useState({ rootId: this.props.rootId });
         this.overlays = useState(serviceBackedItems(this, this.props.overlays));
-        this.containerRootIds = useState(this.service?.containerRootIds ?? []);
+        this.containerRoots = useState(this.service?.containerRoots ?? new Map());
         useChildSubEnv({ [OVERLAY_ITEMS]: [] });
         if (!this.props.rootId) {
             useEffect(
@@ -162,7 +162,7 @@ export class OverlayContainer extends Component {
         if (rootId === undefined) {
             return false;
         }
-        const rootIds = this.containerRootIds;
+        const rootIds = [...this.containerRoots.values()];
         return !rootIds.includes(undefined) && rootIds.indexOf(rootId) === 0;
     }
 
