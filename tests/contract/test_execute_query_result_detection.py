@@ -36,21 +36,34 @@ class TestNoResultSetIsSignalledWithoutASqlstate:
 
 
 @requires_pg
-class TestDescriptionIsNotASubstituteInsideAPipeline:
+class TestDescriptionAgreesWithFetchallInsideAPipelineToo:
     def test_outside_a_pipeline_description_agrees_with_fetchall(self, scratch_cursor):
         scratch_cursor.execute("SELECT 1 AS a")
         assert scratch_cursor.description is not None
         assert scratch_cursor.fetchall() == [(1,)]
 
-    def test_inside_a_pipeline_description_is_none_while_rows_exist(
+    def test_inside_a_pipeline_the_raw_description_is_none_while_rows_exist(
         self, scratch_cursor
     ):
+        # psycopg's own cursor does not sync for `description`; this is the
+        # staleness `Cursor.description` exists to hide.
         cr = scratch_cursor
         with cr.pipeline():
             cr.execute("SELECT 1 AS a")
             cr.execute("SELECT 2 AS b")
-            assert cr.description is None, (
-                "if this ever becomes non-None, the pipeline caveat in "
-                "Environment.execute_query can be revisited"
-            )
+            assert cr.in_pipeline
+            assert cr._obj.description is None
             assert cr.fetchall() == [(2,)]
+
+    def test_inside_a_pipeline_the_cursor_syncs_to_answer(self, scratch_cursor):
+        cr = scratch_cursor
+        with cr.pipeline():
+            cr.execute("SELECT 1 AS a")
+            cr.execute("SELECT 2 AS b")
+            assert [c.name for c in cr.description] == ["b"]
+            assert cr.rowcount == 1
+            assert cr.fetchall() == [(2,)]
+            cr.execute("CREATE TEMP TABLE probe_pipe (id int)")
+            cr.execute("UPDATE probe_pipe SET id = id WHERE false")
+            assert cr.description is None
+            assert cr.rowcount == 0
