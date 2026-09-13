@@ -13,7 +13,7 @@ registry.category("web_tour.tours").add("generic_localization_tour", {
             Chrome.startPoS().map((step) => ({ ...step, timeout: 20000 })),
             Dialog.confirm("Open Register"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("AAAA Generic Partner"),
+            ProductScreen.clickCustomer("AAAA Generic Partner", { seachMore: false }),
             ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
             ProductScreen.clickDisplayedProduct("Wall Shelf Unit"),
             ProductScreen.clickPayButton(),

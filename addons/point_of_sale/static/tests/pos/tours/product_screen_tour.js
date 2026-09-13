@@ -726,11 +726,11 @@ registry.category("web_tour.tours").add("CustomerPopupTour", {
             ProductScreen.clickPartnerButton(),
             negateStep(PartnerList.checkCustomerShown("Z partner to search")),
             PartnerList.searchCustomerValue("Z partner to search", true),
-            ProductScreen.clickCustomer("Z partner to search"),
+            ProductScreen.clickCustomer("Z partner to search", { searchMore: false }),
             ProductScreen.clickPartnerButton(),
             negateStep(PartnerList.checkCustomerShown("Z partner to scroll")),
             PartnerList.scrollBottom(),
-            ProductScreen.clickCustomer("Z partner to scroll"),
+            ProductScreen.clickCustomer("Z partner to scroll", { searchMore: false }),
         ].flat(),
 });
 
