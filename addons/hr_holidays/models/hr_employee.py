@@ -35,8 +35,26 @@ class HrEmployee(models.Model):
             ('validate', 'Approved'),
             ('cancel', 'Cancelled'),
         ], groups="hr.group_hr_user")
-    leave_date_from = fields.Date('From Date', compute='_compute_leave_status', groups="hr.group_hr_user")
+    leave_date_from = fields.Datetime('From Date', compute='_compute_leave_status', groups="hr.group_hr_user",
+        help="Start date of the current validated leave, or of tomorrow's if none is ongoing.")
     leave_date_to = fields.Date('To Date', compute='_compute_leave_status')
+    leave_request_date_from_period = fields.Selection(
+        [('am', 'Morning'), ('pm', 'Afternoon')],
+        string="Date Period Start",
+        default='am',
+        compute="_compute_leave_status"
+    )
+    leave_request_duration = fields.Selection(
+        [
+            ("full", "Full Day"),
+            ("am", "Morning"),
+            ("pm", "Afternoon"),
+            ("specific", "Specific"),
+        ],
+        default="full",
+        string="Duration",
+        compute='_compute_leave_status'
+    )
     allocation_count = fields.Float('Total number of days allocated.', compute='_compute_allocation_count',
                                     groups="hr.group_hr_user")
     allocations_count = fields.Integer('Total number of allocations', compute="_compute_allocation_count",
@@ -50,6 +68,11 @@ class HrEmployee(models.Model):
         ('presence_holiday_present', 'Present but on leave')])
     member_of_department = fields.Boolean('Member of Department', compute='_compute_member_of_department', search='_search_part_of_department')
     hr_responsible_id = fields.Many2one(domain=lambda self: self.env['hr.version']._get_hr_responsible_domain())
+    # Only meaningful when the next working day is not tomorrow, i.e. when a non-working day
+    # (e.g. a weekend) sits between today and it. The tomorrow case is already covered by
+    # leave_date_from.
+    next_working_day_on_leave = fields.Date(compute="_compute_next_working_day_on_leave",
+        help="Date of the employee's next working day, set only if a validated leave starts on that day.")
 
     def _compute_current_work_entry_type_id(self):
         self.current_work_entry_type_id = False
@@ -63,6 +86,32 @@ class HrEmployee(models.Model):
         for holiday in holidays:
             employee = self.filtered(lambda e: e.id == holiday.employee_id.id)
             employee.current_work_entry_type_id = holiday.work_entry_type_id.id
+
+    def _compute_next_working_day_on_leave(self):
+        # sudo : needed to fetch other employee future leaves
+        first_leave_by_employee = dict(self.env['hr.leave'].sudo()._read_group(
+            [
+                ('employee_id', 'in', self.ids),
+                ('date_from', '>=', fields.Datetime.now()),
+                ('date_from', '<=', fields.Datetime.now() + timedelta(days=7)),
+                ('state', '=', 'validate'),
+            ],
+            ("employee_id",),
+            ["date_from:min"],
+        ))
+        next_working_day_by_employee = self._get_first_working_interval_batch({
+            # Tomorrow is handled by leave_date_from (hence the +1 day).
+            # `next_working_day_on_leave` is to handle working schedule gap like weekends
+            employee.id: fields.Datetime.now() + timedelta(days=1)
+            for employee in first_leave_by_employee
+        }, compute_leaves=False)
+        for employee in self:
+            next_working_day = next_working_day_by_employee.get(employee.id)
+            next_leave_day = first_leave_by_employee.get(employee)
+            if next_working_day and next_leave_day and next_working_day.date() == next_leave_day.date():
+                employee.next_working_day_on_leave = next_leave_day
+            else:
+                employee.next_working_day_on_leave = None
 
     def _compute_presence_state(self):
         super()._compute_presence_state()
@@ -122,7 +171,7 @@ class HrEmployee(models.Model):
             employee.show_hr_icon_display = True
 
     @api.model
-    def _get_first_working_interval_batch(self, min_dts):
+    def _get_first_working_interval_batch(self, min_dts, compute_leaves=True):
         # find the first working interval after a given date
         if not min_dts:
             return min_dts
@@ -161,7 +210,7 @@ class HrEmployee(models.Model):
                     employees = self.browse(employee_ids).with_prefetch(remaining._ids)
                     resources_per_tz = employees._get_resources_per_tz(min_dt)
                     work_intervals = calendar._work_intervals_batch(
-                        min_dt, datetime.combine(max_end, time.max, UTC) + timedelta(1), resources_per_tz=resources_per_tz)
+                        min_dt, datetime.combine(max_end, time.max, UTC) + timedelta(1), resources_per_tz=resources_per_tz, compute_leaves=compute_leaves)
                     # intersect work intervals with periods
                     for resource_id, work_interval in work_intervals.items():
                         employee_id = self.env['resource.resource'].browse(resource_id).employee_id.id
@@ -175,7 +224,7 @@ class HrEmployee(models.Model):
                         ) for p in period if p[2] == calendar]
                         if work_interval:
                             collect_employees({employee_id: work_interval})
-            remaining = self.filtered(lambda e: e.id not in result)
+            remaining = remaining.filtered(lambda e: e.id not in result)
             if not remaining:
                 return result
 
@@ -186,12 +235,12 @@ class HrEmployee(models.Model):
             ).items():
                 resources_per_tz = employees._get_resources_per_tz(min_dt)
                 work_intervals = calendar._work_intervals_batch(
-                    min_dt, min_dt + timedelta(days=lookahead_day), resources_per_tz=resources_per_tz)
+                    min_dt, min_dt + timedelta(days=lookahead_day), resources_per_tz=resources_per_tz, compute_leaves=compute_leaves)
                 collect_employees({
                     self.env['resource.resource'].browse(resource_id).employee_id.id: interval
                     for resource_id, interval in work_intervals.items()
                 })
-            remaining = self.filtered(lambda e: e.id not in result)
+            remaining = remaining.filtered(lambda e: e.id not in result)
             if not remaining:
                 return result
         return result
@@ -199,14 +248,17 @@ class HrEmployee(models.Model):
     def _compute_leave_status(self):
         # Used SUPERUSER_ID to forcefully get status of other user's leave, to bypass record rule
         now = fields.Datetime.now()
-        holidays = self.env['hr.leave'].sudo().search([
+        leaves = self.env['hr.leave'].sudo().search([
             ('employee_id', 'in', self.ids),
-            ('date_from', '<=', now),
-            ('date_to', '>=', now),
+            ('date_from', '<=', fields.Date.today() + timedelta(days=1.0)),
+            ('date_to', '>=', fields.Date.today()),
             ('state', '=', 'validate'),
         ], order='date_to desc')
+        upcoming_leaves = leaves.filtered(lambda leave: leave.date_from > now)
+        holidays = leaves - upcoming_leaves
 
         holidays_by_employee_id = holidays.grouped(lambda leave: leave.employee_id.id)
+        upcoming_leaves_by_employee_id = upcoming_leaves.grouped(lambda leave: leave.employee_id.id)
         leave_end_by_employee_id = {
             employee_id: emp_holidays[0].date_to
             for employee_id, emp_holidays in holidays_by_employee_id.items()
@@ -242,12 +294,26 @@ class HrEmployee(models.Model):
 
         employees_not_on_leave.update({
             'leave_date_from': False,
+            'leave_request_date_from_period': False,
+            'leave_request_duration': False,
             'current_leave_state': False,
             'is_absent': False,
         })
 
         employees_with_leave_end = self.browse(leave_end_by_employee_id)
         (employees_not_on_leave - employees_with_leave_end).leave_date_to = False
+
+        # employees not off right now, but whose leave starts within the next day
+        for employee in employees_not_on_leave:
+            emp_leaves = upcoming_leaves_by_employee_id.get(employee.id)
+            if not emp_leaves:
+                continue
+            latest_emp_leave = emp_leaves[0]
+            employee.leave_date_from = min(emp_leaves.mapped('date_from'))
+            employee.leave_date_to = latest_emp_leave.date_to.date()
+            employee.leave_request_date_from_period = latest_emp_leave.request_date_from_period
+            employee.leave_request_duration = latest_emp_leave.request_duration
+            employee.current_leave_state = latest_emp_leave.state
 
         back_on_by_employee_id = employees_with_leave_end._get_first_working_interval_batch(leave_end_by_employee_id)
         for employee in employees_with_leave_end:
@@ -256,8 +322,11 @@ class HrEmployee(models.Model):
             emp_holidays = holidays_by_employee_id.get(employee.id)
             if not emp_holidays:  # the employee is off because of a public holiday
                 continue
-            employee.leave_date_from = min(emp_holidays.mapped('date_from')).date()
-            employee.current_leave_state = emp_holidays[0].state
+            latest_emp_holiday = emp_holidays[0]
+            employee.leave_date_from = min(emp_holidays.mapped('date_from'))
+            employee.leave_request_date_from_period = latest_emp_holiday.request_date_from_period
+            employee.leave_request_duration = latest_emp_holiday.request_duration
+            employee.current_leave_state = latest_emp_holiday.state
             employee.is_absent = any(e_h.work_entry_type_id.count_as == 'absence' for e_h in emp_holidays)
 
     @api.depends('parent_id')
@@ -831,10 +900,18 @@ class HrEmployee(models.Model):
     def _store_avatar_card_fields(self, res: Store.FieldList):
         super()._store_avatar_card_fields(res)
         res.attr("leave_date_to")
+        res.attr("leave_date_from")
+        res.attr("leave_request_date_from_period")
+        res.attr("next_working_day_on_leave")
+        res.attr("leave_request_duration")
 
     def _store_im_status_fields(self, res: Store.FieldList):
         super()._store_im_status_fields(res)
         res.attr("leave_date_to")
+        res.attr("leave_date_from")
+        res.attr("leave_request_date_from_period")
+        res.attr("next_working_day_on_leave")
+        res.attr("leave_request_duration")
 
     def _get_hours_for_date(self, target_date, day_period=None, count_non_working_days=False):
         """
