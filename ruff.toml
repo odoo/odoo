@@ -811,6 +811,7 @@ ignore = [
 # CLI/scripts — print() is legitimate user output in CLI commands
 "**/odoo-bin" = ["E402", "T201"]
 "odoo/cli/**" = ["T201"]           # print() is legitimate user output in CLI commands
+"odoo/tools/view_ir/_generate.py" = ["T201"]  # `python -m` generator: print() is its user-facing output
 # compare.py is a standalone `#!/usr/bin/env python3` report generator with its own
 # argparse main() — it happens to live inside an addon, but it is a CLI script like
 # everything else in this list, and its 25 print() calls ARE the report.

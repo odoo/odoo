@@ -1,6 +1,6 @@
 # Directory Map
 
-> **248 entries** (247 subdirectories + `(root)`) | Maps directory → layer + responsibility
+> **249 entries** (248 subdirectories + `(root)`) | Maps directory → layer + responsibility
 >
 > Layers (Feature-Sliced Design): shared → entities → features → widgets → pages
 >
@@ -212,6 +212,7 @@
 | `views/form/status_bar_buttons/` | widgets | 1 | Status-bar action buttons with overflow dropdown |
 | `views/form_with_html_expander/` | widgets | 3 | Form view whose HTML description field grows to fill the sheet on XXL viewports: controller, renderer, view definition |
 | `views/graph/` | widgets | 8 | Graph view: arch parser, model, controller, renderer (lazy `loadChartJS`), chart config, search model |
+| `views/ir/` | widgets | 0 | Generated TypeScript types of the view IR (`view_ir.d.ts`, from `odoo/tools/view_ir/schema.json` via `python -m odoo.tools.view_ir._generate`); no runtime code yet — the client-side consumer arrives with the IR-fed parsers |
 | `views/kanban/` | widgets | 18 | Kanban view: arch parser, compiler, model wiring, renderer, record and header components, quick creates, progress-bar hook with local drag-move reconcile, sortable/keyboard hooks (selection now via the shared multi-record layer) |
 | `views/list/` | widgets | 22 | List view: arch parser, controller, renderer, per-row `ListRecordRow`, column widths and utilities, aggregates, grouping, sorting, selection, virtualization, keyboard nav/edit, focus geometry, styling |
 | `views/list/export_all/` | widgets | 1 | Cog-menu item triggering direct XLSX export of all records |

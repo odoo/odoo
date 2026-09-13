@@ -1,0 +1,1287 @@
+{
+  "$comment": "View IR schema — extracted from the workspace corpus by agromarin-knowledge/workspaces/workspace-LMMG/view_ir_schema_extract.py, curated there. Attribute values are kept in source form (strings); types say how to read and validate them.",
+  "version": 1,
+  "attr_types": {
+    "str": "free text; translatable when the attribute is string/help/placeholder/title",
+    "bool": "1/0/True/False/true/false",
+    "int": "decimal integer",
+    "pyexpr": "Python expression over record fields and context, or a bool literal",
+    "domain": "Python literal domain, or a pyexpr yielding one",
+    "context": "Python dict literal, or a pyexpr yielding one",
+    "json": "Python/JSON dict literal",
+    "ident": "field, method or node name",
+    "groups": "comma-separated res.groups xmlids, each optionally prefixed with !",
+    "xmlid": "module.name external id",
+    "qweb": "QWeb directive value (t-* attributes)",
+    "enum": "one of the listed values (a JSON array in place of the type name)"
+  },
+  "common_attrs": {
+    "invisible": "pyexpr",
+    "groups": "groups",
+    "class": "str",
+    "name": "ident",
+    "id": "str",
+    "string": "str",
+    "colspan": "int",
+    "position": [
+      "after",
+      "before",
+      "inside",
+      "replace",
+      "attributes",
+      "move"
+    ],
+    "style": "str",
+    "title": "str",
+    "help": "str",
+    "role": "str",
+    "aria-*": "str",
+    "data-*": "str",
+    "t-*": "qweb"
+  },
+  "html": {
+    "tags": [
+      "a",
+      "abbr",
+      "article",
+      "aside",
+      "b",
+      "bdi",
+      "blockquote",
+      "br",
+      "caption",
+      "code",
+      "details",
+      "div",
+      "em",
+      "figure",
+      "h1",
+      "h2",
+      "h3",
+      "h4",
+      "h5",
+      "h6",
+      "hr",
+      "i",
+      "iframe",
+      "img",
+      "input",
+      "li",
+      "link",
+      "main",
+      "nav",
+      "ol",
+      "option",
+      "p",
+      "pre",
+      "progress",
+      "script",
+      "section",
+      "select",
+      "small",
+      "span",
+      "strong",
+      "sub",
+      "summary",
+      "sup",
+      "table",
+      "tbody",
+      "td",
+      "textarea",
+      "tfoot",
+      "th",
+      "thead",
+      "time",
+      "tr",
+      "u",
+      "ul",
+      "video"
+    ],
+    "attrs": {
+      "class": "str",
+      "style": "str",
+      "id": "str",
+      "role": "str",
+      "title": "str",
+      "dir": "str",
+      "href": "str",
+      "target": "str",
+      "src": "str",
+      "alt": "str",
+      "width": "str",
+      "height": "str",
+      "tabindex": "int",
+      "download": "str",
+      "for": "ident",
+      "type": "str",
+      "name": "ident",
+      "colspan": "int",
+      "rowspan": "int",
+      "invisible": "pyexpr",
+      "groups": "groups",
+      "aria-*": "str",
+      "data-*": "str",
+      "t-*": "qweb",
+      "context": "context",
+      "string": "str",
+      "icon": "str",
+      "position": [
+        "after",
+        "before",
+        "inside",
+        "replace",
+        "attributes",
+        "move"
+      ],
+      "loading": "str",
+      "rel": "str",
+      "disabled": "str",
+      "open": "str",
+      "lang": "str",
+      "translate": "str",
+      "placeholder": "str",
+      "value": "str",
+      "checked": "str",
+      "readonly": "pyexpr",
+      "required": "pyexpr",
+      "autocomplete": "str",
+      "frameborder": "str",
+      "allowfullscreen": "str",
+      "sandbox": "str",
+      "datetime": "str",
+      "cx": "str",
+      "cy": "str",
+      "r": "str",
+      "d": "str",
+      "fill": "str",
+      "stroke": "str",
+      "viewBox": "str",
+      "xmlns": "str",
+      "stroke-width": "str",
+      "transform": "str",
+      "content": "str",
+      "media": "str",
+      "async": "str",
+      "defer": "str",
+      "crossorigin": "str",
+      "max": "str",
+      "min": "str",
+      "step": "str",
+      "size": "str",
+      "hidden": "str"
+    }
+  },
+  "patch": {
+    "nodes": {
+      "xpath": {
+        "attrs": {
+          "expr": "str",
+          "position": [
+            "after",
+            "before",
+            "inside",
+            "replace",
+            "attributes",
+            "move"
+          ]
+        }
+      },
+      "attribute": {
+        "attrs": {
+          "name": "ident",
+          "add": "str",
+          "remove": "str",
+          "separator": "str"
+        }
+      },
+      "data": {
+        "attrs": {}
+      }
+    },
+    "attrs": {
+      "position": [
+        "after",
+        "before",
+        "inside",
+        "replace",
+        "attributes",
+        "move"
+      ],
+      "version": "str"
+    }
+  },
+  "types": {
+    "form": {
+      "root": "form",
+      "nodes": {
+        "board": {
+          "attrs": {},
+          "children": [
+            "column"
+          ]
+        },
+        "button": {
+          "attrs": {
+            "accesskey": "str",
+            "barcode_trigger": "str",
+            "close": "bool",
+            "column_invisible": "pyexpr",
+            "confirm": "str",
+            "confirm-label": "str",
+            "confirm-title": "str",
+            "context": "context",
+            "default_focus": "bool",
+            "disabled": "str",
+            "icon": "str",
+            "special": [
+              "cancel",
+              "save"
+            ],
+            "target": "str",
+            "type": "str"
+          },
+          "children": [
+            "field",
+            "html"
+          ]
+        },
+        "chatter": {
+          "attrs": {
+            "open_attachments": "bool",
+            "reload_on_attachment": "bool",
+            "reload_on_follower": "bool",
+            "reload_on_post": "bool"
+          }
+        },
+        "column": {
+          "attrs": {}
+        },
+        "control": {
+          "attrs": {},
+          "children": [
+            "button",
+            "create"
+          ]
+        },
+        "create": {
+          "attrs": {
+            "context": "context"
+          }
+        },
+        "field": {
+          "attrs": {
+            "add-label": "str",
+            "alt": "str",
+            "avg": "str",
+            "can_create": "str",
+            "column_invisible": "pyexpr",
+            "columns": "str",
+            "context": "context",
+            "decoration-*": "pyexpr",
+            "default_focus": "bool",
+            "digits": "str",
+            "domain": "domain",
+            "filename": "str",
+            "force_save": "bool",
+            "hideAddButton": "str",
+            "iconField": "str",
+            "label": "str",
+            "mode": "str",
+            "month_field": "str",
+            "no_label": "str",
+            "nolabel": "bool",
+            "onchange_on_keydown": "str",
+            "optional": "str",
+            "options": "json",
+            "password": "bool",
+            "placeholder": "str",
+            "readonly": "pyexpr",
+            "required": "pyexpr",
+            "statusbar_visible": "str",
+            "sum": "str",
+            "teamField": "str",
+            "type": "str",
+            "widget": "str",
+            "width": "str"
+          },
+          "children": [
+            "form",
+            "kanban",
+            "list"
+          ]
+        },
+        "footer": {
+          "attrs": {},
+          "children": [
+            "button",
+            "field",
+            "html",
+            "t",
+            "widget"
+          ]
+        },
+        "form": {
+          "attrs": {
+            "create": "bool",
+            "delete": "bool",
+            "disable_autofocus": "bool",
+            "duplicate": "bool",
+            "edit": "bool",
+            "js_class": "str"
+          },
+          "children": [
+            "board",
+            "button",
+            "chatter",
+            "field",
+            "footer",
+            "group",
+            "header",
+            "html",
+            "label",
+            "notebook",
+            "separator",
+            "sheet",
+            "t",
+            "widget"
+          ]
+        },
+        "group": {
+          "attrs": {
+            "col": "int",
+            "readonly": "pyexpr"
+          },
+          "children": [
+            "button",
+            "field",
+            "group",
+            "html",
+            "label",
+            "newline",
+            "notebook",
+            "separator",
+            "setting",
+            "t",
+            "widget"
+          ]
+        },
+        "header": {
+          "attrs": {},
+          "children": [
+            "button",
+            "field",
+            "html",
+            "separator",
+            "t",
+            "widget"
+          ]
+        },
+        "kanban": {
+          "attrs": {
+            "can_open": "bool",
+            "create": "bool"
+          },
+          "children": [
+            "control",
+            "field",
+            "t",
+            "templates"
+          ]
+        },
+        "label": {
+          "attrs": {
+            "for": "ident",
+            "readonly": "pyexpr"
+          },
+          "children": [
+            "html"
+          ]
+        },
+        "list": {
+          "attrs": {
+            "create": "bool",
+            "decoration-*": "pyexpr",
+            "default_order": "str",
+            "delete": "bool",
+            "edit": "bool",
+            "editable": [
+              "top",
+              "bottom"
+            ],
+            "limit": "int",
+            "no_open": "bool",
+            "open_form_view": "bool"
+          },
+          "children": [
+            "button",
+            "control",
+            "field",
+            "widget"
+          ]
+        },
+        "newline": {
+          "attrs": {}
+        },
+        "notebook": {
+          "attrs": {},
+          "children": [
+            "field",
+            "page"
+          ]
+        },
+        "page": {
+          "attrs": {},
+          "children": [
+            "button",
+            "field",
+            "group",
+            "html",
+            "label",
+            "separator"
+          ]
+        },
+        "separator": {
+          "attrs": {}
+        },
+        "setting": {
+          "attrs": {
+            "documentation": "str"
+          },
+          "children": [
+            "field",
+            "group",
+            "html",
+            "label"
+          ]
+        },
+        "sheet": {
+          "attrs": {},
+          "children": [
+            "button",
+            "chatter",
+            "field",
+            "footer",
+            "group",
+            "header",
+            "html",
+            "label",
+            "notebook",
+            "separator",
+            "t",
+            "widget"
+          ]
+        },
+        "t": {
+          "attrs": {},
+          "children": [
+            "button",
+            "field",
+            "footer",
+            "group",
+            "html",
+            "label",
+            "notebook",
+            "t",
+            "widget"
+          ]
+        },
+        "template": {
+          "attrs": {}
+        },
+        "templates": {
+          "attrs": {},
+          "children": [
+            "html",
+            "t"
+          ]
+        },
+        "widget": {
+          "attrs": {
+            "action": "ident",
+            "bg_color": "str",
+            "btn_class": "str",
+            "btn_name": "ident",
+            "field_to_edit": "ident",
+            "fulfilled_at": "str",
+            "highlight": "bool",
+            "icon": "str",
+            "label": "str",
+            "options": "json",
+            "path": "str",
+            "text": "str"
+          }
+        }
+      }
+    },
+    "list": {
+      "root": "list",
+      "nodes": {
+        "button": {
+          "attrs": {
+            "confirm": "str",
+            "context": "context",
+            "display": [
+              "always"
+            ],
+            "icon": "str",
+            "type": "str"
+          }
+        },
+        "control": {
+          "attrs": {},
+          "children": [
+            "create"
+          ]
+        },
+        "create": {
+          "attrs": {}
+        },
+        "field": {
+          "attrs": {
+            "avg": "str",
+            "column_invisible": "pyexpr",
+            "context": "context",
+            "decoration-*": "pyexpr",
+            "digits": "str",
+            "domain": "domain",
+            "filename": "str",
+            "force_save": "bool",
+            "nolabel": "bool",
+            "optional": [
+              "show",
+              "hide"
+            ],
+            "options": "json",
+            "password": "bool",
+            "placeholder": "str",
+            "readonly": "pyexpr",
+            "required": "pyexpr",
+            "sum": "str",
+            "widget": "str",
+            "width": "str"
+          }
+        },
+        "groupby": {
+          "attrs": {
+            "expand": "pyexpr"
+          },
+          "children": [
+            "button",
+            "field"
+          ]
+        },
+        "header": {
+          "attrs": {},
+          "children": [
+            "button"
+          ]
+        },
+        "list": {
+          "attrs": {
+            "action": "ident",
+            "count_limit": "int",
+            "create": "bool",
+            "decoration-*": "pyexpr",
+            "default_group_by": "str",
+            "default_order": "str",
+            "delete": "bool",
+            "duplicate": "bool",
+            "edit": "bool",
+            "editable": [
+              "top",
+              "bottom"
+            ],
+            "expand": "pyexpr",
+            "export_xlsx": "bool",
+            "group_create": "bool",
+            "group_delete": "bool",
+            "group_edit": "bool",
+            "groups_limit": "int",
+            "import": "bool",
+            "js_class": "str",
+            "limit": "int",
+            "multi_edit": "bool",
+            "no_open": "bool",
+            "open_form_view": "bool",
+            "sample": "bool",
+            "type": "str"
+          },
+          "children": [
+            "button",
+            "control",
+            "field",
+            "groupby",
+            "header",
+            "widget"
+          ]
+        },
+        "widget": {
+          "attrs": {}
+        }
+      }
+    },
+    "search": {
+      "root": "search",
+      "nodes": {
+        "field": {
+          "attrs": {
+            "context": "context",
+            "domain": "domain",
+            "enable_counters": "bool",
+            "filter_domain": "domain",
+            "icon": "str",
+            "operator": "str",
+            "select": "str",
+            "widget": "str"
+          }
+        },
+        "filter": {
+          "attrs": {
+            "context": "context",
+            "date": "ident",
+            "default_period": "str",
+            "domain": "domain",
+            "end_month": "str",
+            "end_year": "str",
+            "start_month": "str",
+            "start_year": "str"
+          },
+          "children": [
+            "filter"
+          ]
+        },
+        "group": {
+          "attrs": {
+            "col": "int"
+          },
+          "children": [
+            "field",
+            "filter",
+            "newline",
+            "separator"
+          ]
+        },
+        "newline": {
+          "attrs": {}
+        },
+        "search": {
+          "attrs": {},
+          "children": [
+            "field",
+            "filter",
+            "group",
+            "searchpanel",
+            "separator"
+          ]
+        },
+        "searchpanel": {
+          "attrs": {
+            "view_types": "str"
+          },
+          "children": [
+            "field"
+          ]
+        },
+        "separator": {
+          "attrs": {
+            "orientation": [
+              "horizontal",
+              "vertical"
+            ]
+          }
+        }
+      }
+    },
+    "kanban": {
+      "root": "kanban",
+      "nodes": {
+        "bottom": {
+          "attrs": {},
+          "children": [
+            "button"
+          ]
+        },
+        "button": {
+          "attrs": {
+            "context": "context",
+            "disabled": "str",
+            "display": [
+              "always"
+            ],
+            "type": "str"
+          },
+          "children": [
+            "field",
+            "html",
+            "t"
+          ]
+        },
+        "control": {
+          "attrs": {},
+          "children": [
+            "create"
+          ]
+        },
+        "create": {
+          "attrs": {}
+        },
+        "field": {
+          "attrs": {
+            "alt": "str",
+            "decoration-*": "pyexpr",
+            "digits": "str",
+            "domain": "domain",
+            "force_save": "bool",
+            "graph_type": "str",
+            "nolabel": "bool",
+            "options": "json",
+            "readonly": "pyexpr",
+            "required": "pyexpr",
+            "widget": "str"
+          }
+        },
+        "footer": {
+          "attrs": {},
+          "children": [
+            "button",
+            "field",
+            "html",
+            "label",
+            "t",
+            "widget"
+          ]
+        },
+        "header": {
+          "attrs": {},
+          "children": [
+            "button"
+          ]
+        },
+        "kanban": {
+          "attrs": {
+            "action": "ident",
+            "archivable": "bool",
+            "can_open": "bool",
+            "create": "bool",
+            "default_group_by": "str",
+            "default_order": "str",
+            "delete": "bool",
+            "edit": "bool",
+            "examples": "str",
+            "group_create": "bool",
+            "group_delete": "bool",
+            "group_edit": "bool",
+            "groups_draggable": "bool",
+            "highlight_color": "str",
+            "import": "bool",
+            "js_class": "str",
+            "limit": "int",
+            "on_create": "str",
+            "quick_create": "bool",
+            "quick_create_view": "xmlid",
+            "records_draggable": "bool",
+            "sample": "bool",
+            "type": "str"
+          },
+          "children": [
+            "control",
+            "field",
+            "header",
+            "progressbar",
+            "t",
+            "templates"
+          ]
+        },
+        "label": {
+          "attrs": {
+            "for": "ident"
+          }
+        },
+        "progressbar": {
+          "attrs": {
+            "colors": "json",
+            "field": "ident"
+          }
+        },
+        "t": {
+          "attrs": {},
+          "children": [
+            "button",
+            "field",
+            "footer",
+            "html",
+            "t",
+            "widget"
+          ]
+        },
+        "templates": {
+          "attrs": {},
+          "children": [
+            "field",
+            "html",
+            "progressbar",
+            "t"
+          ]
+        },
+        "widget": {
+          "attrs": {
+            "bg_color": "str",
+            "btnClass": "str"
+          }
+        }
+      }
+    },
+    "graph": {
+      "root": "graph",
+      "nodes": {
+        "field": {
+          "attrs": {
+            "interval": "str",
+            "operator": "str",
+            "type": [
+              "row",
+              "col",
+              "measure"
+            ],
+            "widget": "str"
+          }
+        },
+        "graph": {
+          "attrs": {
+            "cumulated": "str",
+            "cumulated_start": "str",
+            "disable_linking": "bool",
+            "js_class": "str",
+            "order": "str",
+            "sample": "bool",
+            "stacked": "bool",
+            "type": [
+              "bar",
+              "line",
+              "pie",
+              "scatter"
+            ]
+          },
+          "children": [
+            "field"
+          ]
+        }
+      }
+    },
+    "pivot": {
+      "root": "pivot",
+      "nodes": {
+        "field": {
+          "attrs": {
+            "interval": "str",
+            "options": "json",
+            "type": [
+              "row",
+              "col",
+              "measure"
+            ],
+            "widget": "str"
+          }
+        },
+        "pivot": {
+          "attrs": {
+            "default_order": "str",
+            "disable_linking": "bool",
+            "display_quantity": "bool",
+            "js_class": "str",
+            "sample": "bool",
+            "stacked": "bool"
+          },
+          "children": [
+            "field"
+          ]
+        }
+      }
+    },
+    "calendar": {
+      "root": "calendar",
+      "nodes": {
+        "calendar": {
+          "attrs": {
+            "aggregate": "str",
+            "all_day": "ident",
+            "color": "ident",
+            "create": "bool",
+            "create_name_field": "str",
+            "date_delay": "ident",
+            "date_start": "ident",
+            "date_stop": "ident",
+            "delete": "bool",
+            "edit": "bool",
+            "event_limit": "int",
+            "event_open_popup": "bool",
+            "form_view_id": "xmlid",
+            "hide_date": "str",
+            "hide_time": "bool",
+            "js_class": "str",
+            "mode": "str",
+            "month_overflow": "str",
+            "multi_create_view": "xmlid",
+            "quick_create": "bool",
+            "quick_create_view_id": "str",
+            "scales": "str",
+            "show_date_picker": "bool",
+            "show_unusual_days": "bool"
+          },
+          "children": [
+            "field"
+          ]
+        },
+        "field": {
+          "attrs": {
+            "avatar_field": "ident",
+            "color": "ident",
+            "filter_field": "ident",
+            "filters": "str",
+            "options": "json",
+            "widget": "str",
+            "write_field": "ident",
+            "write_model": "ident"
+          }
+        }
+      }
+    },
+    "activity": {
+      "root": "activity",
+      "nodes": {
+        "activity": {
+          "attrs": {
+            "create": "bool",
+            "js_class": "str"
+          },
+          "children": [
+            "field",
+            "templates"
+          ]
+        },
+        "field": {
+          "attrs": {
+            "decoration-*": "pyexpr",
+            "display": "str",
+            "domain": "domain",
+            "muted": "pyexpr",
+            "options": "json",
+            "required": "pyexpr",
+            "widget": "str"
+          }
+        },
+        "templates": {
+          "attrs": {},
+          "children": [
+            "html"
+          ]
+        }
+      }
+    },
+    "gantt": {
+      "root": "gantt",
+      "nodes": {
+        "button": {
+          "attrs": {
+            "type": "str"
+          }
+        },
+        "field": {
+          "attrs": {}
+        },
+        "footer": {
+          "attrs": {
+            "replace": "bool"
+          },
+          "children": [
+            "button"
+          ]
+        },
+        "gantt": {
+          "attrs": {
+            "cell_create": "bool",
+            "color": "ident",
+            "create": "bool",
+            "date_start": "ident",
+            "date_stop": "ident",
+            "decoration-*": "pyexpr",
+            "default_group_by": "str",
+            "default_range": "str",
+            "default_scale": "str",
+            "delete": "bool",
+            "dependency_field": "ident",
+            "dependency_inverted_field": "ident",
+            "display_unavailability": "bool",
+            "form_view_id": "xmlid",
+            "js_class": "str",
+            "kanban_view_id": "xmlid",
+            "multi_create_view": "xmlid",
+            "pill_label": "str",
+            "plan": "bool",
+            "precision": "json",
+            "progress": "ident",
+            "progress_bar": "str",
+            "sample": "bool",
+            "scales": "str",
+            "total_row": "bool"
+          },
+          "children": [
+            "field",
+            "templates"
+          ]
+        },
+        "t": {
+          "attrs": {}
+        },
+        "templates": {
+          "attrs": {},
+          "children": [
+            "html"
+          ]
+        }
+      }
+    },
+    "grid": {
+      "root": "grid",
+      "nodes": {
+        "field": {
+          "attrs": {
+            "section": "ident",
+            "type": [
+              "row",
+              "col",
+              "measure"
+            ],
+            "widget": "str"
+          },
+          "children": [
+            "range"
+          ]
+        },
+        "grid": {
+          "attrs": {
+            "barchart_total": "bool",
+            "create_inline": "bool",
+            "display_empty": "bool",
+            "editable": "str",
+            "form_view_id": "xmlid",
+            "js_class": "str"
+          },
+          "children": [
+            "field"
+          ]
+        },
+        "range": {
+          "attrs": {
+            "default": "str",
+            "hotkey": "str",
+            "span": "str",
+            "step": "str"
+          }
+        }
+      }
+    },
+    "map": {
+      "root": "map",
+      "nodes": {
+        "field": {
+          "attrs": {}
+        },
+        "map": {
+          "attrs": {
+            "allow_resequence": "bool",
+            "default_order": "str",
+            "js_class": "str",
+            "res_partner": "ident",
+            "routing": "bool"
+          },
+          "children": [
+            "field"
+          ]
+        }
+      }
+    },
+    "cohort": {
+      "root": "cohort",
+      "nodes": {
+        "cohort": {
+          "attrs": {
+            "date_start": "ident",
+            "date_stop": "ident",
+            "interval": "str",
+            "mode": "str",
+            "sample": "bool"
+          },
+          "children": [
+            "field"
+          ]
+        },
+        "field": {
+          "attrs": {}
+        }
+      }
+    },
+    "hierarchy": {
+      "root": "hierarchy",
+      "nodes": {
+        "button": {
+          "attrs": {
+            "icon": "str",
+            "type": "str"
+          },
+          "children": [
+            "t"
+          ]
+        },
+        "field": {
+          "attrs": {
+            "options": "json",
+            "widget": "str"
+          }
+        },
+        "hierarchy": {
+          "attrs": {
+            "child_field": "ident",
+            "draggable": "bool",
+            "js_class": "str"
+          },
+          "children": [
+            "field",
+            "templates"
+          ]
+        },
+        "t": {
+          "attrs": {},
+          "children": [
+            "html"
+          ]
+        },
+        "templates": {
+          "attrs": {},
+          "children": [
+            "t"
+          ]
+        }
+      }
+    },
+    "geoengine": {
+      "root": "geoengine",
+      "nodes": {
+        "field": {
+          "attrs": {
+            "select": "str"
+          }
+        },
+        "geoengine": {
+          "attrs": {
+            "editable": "str",
+            "features_list": "str",
+            "features_list_field": "ident",
+            "webgl_trail": "bool"
+          },
+          "children": [
+            "field",
+            "templates"
+          ]
+        },
+        "t": {
+          "attrs": {},
+          "children": [
+            "html",
+            "t"
+          ]
+        },
+        "templates": {
+          "attrs": {},
+          "children": [
+            "t"
+          ]
+        }
+      }
+    },
+    "threed": {
+      "root": "threed",
+      "nodes": {
+        "camera": {
+          "attrs": {
+            "fov": "str"
+          }
+        },
+        "field": {
+          "attrs": {
+            "axis": "str",
+            "type": "str"
+          },
+          "children": [
+            "planimetry"
+          ]
+        },
+        "ground": {
+          "attrs": {},
+          "children": [
+            "field"
+          ]
+        },
+        "header": {
+          "attrs": {},
+          "children": [
+            "html"
+          ]
+        },
+        "legend": {
+          "attrs": {}
+        },
+        "objects": {
+          "attrs": {},
+          "children": [
+            "field"
+          ]
+        },
+        "planimetry": {
+          "attrs": {
+            "image_field": "ident",
+            "name_field": "ident",
+            "sizex_field": "ident",
+            "sizey_field": "ident",
+            "sizez_field": "ident"
+          }
+        },
+        "scene": {
+          "attrs": {},
+          "children": [
+            "ground",
+            "objects"
+          ]
+        },
+        "t": {
+          "attrs": {
+            "server_action": "xmlid"
+          },
+          "children": [
+            "header",
+            "html",
+            "t"
+          ]
+        },
+        "templates": {
+          "attrs": {},
+          "children": [
+            "t"
+          ]
+        },
+        "threed": {
+          "attrs": {
+            "no_area_loaded": "str",
+            "no_item": "str"
+          },
+          "children": [
+            "camera",
+            "legend",
+            "scene",
+            "templates"
+          ]
+        }
+      }
+    }
+  }
+}
