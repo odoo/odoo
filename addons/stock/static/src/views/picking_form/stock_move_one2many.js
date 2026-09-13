@@ -1,9 +1,7 @@
 import { registry } from "@web/core/registry";
 import { ListRenderer } from "@web/views/list/list_renderer";
 import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
-import { ProductNameAndDescriptionListRendererMixin } from "@product/product_name_and_description/product_name_and_description";
 import { user } from "@web/core/user";
-import { patch } from "@web/core/utils/patch";
 import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
 import { onWillStart } from "@odoo/owl";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
@@ -17,8 +15,6 @@ export class MovesListRenderer extends ListRenderer {
         this.addDialog = useOwnedDialogs();
         this.orm = useService("orm");
         this.actionService = useService("action");
-        this.descriptionColumn = "description_picking";
-        this.productColumns = ["product_id", "product_template_id"];
 
         onWillStart(async () => {
             this.hasPackageActive = await user.hasGroup("stock.group_tracking_lot");
@@ -78,8 +74,6 @@ export class MovesListRenderer extends ListRenderer {
         return result;
     }
 }
-
-patch(MovesListRenderer.prototype, ProductNameAndDescriptionListRendererMixin);
 
 export class StockMoveX2ManyField extends X2ManyField {
     static components = { ...X2ManyField.components, ListRenderer: MovesListRenderer };

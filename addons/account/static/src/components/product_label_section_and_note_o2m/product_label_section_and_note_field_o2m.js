@@ -8,8 +8,6 @@ import { registry } from "@web/core/registry";
 export class ProductLabelSectionAndNoteListRender extends SectionAndNoteListRenderer {
     setup() {
         super.setup();
-        this.descriptionColumn = "name";
-        this.labelColumn = "label";
         // product_template_id is added for purchase_product_matrix's PO view and sale's SO view
         this.productColumns = ["product_id", "product_template_id"];
     }
@@ -30,27 +28,48 @@ export class ProductLabelSectionAndNoteListRender extends SectionAndNoteListRend
 
     getActiveColumns() {
         let activeColumns = super.getActiveColumns();
-        const productCol = activeColumns.find((col) => this.productColumns.includes(col.name));
-        const hasDescriptionCol = activeColumns.some((col) => col.name === this.descriptionColumn);
+        const productColActive = this.isProductFieldActive();
+        const descriptionFieldActive =
+            this.optionalActiveFields["name"] || !("name" in this.optionalActiveFields);
 
-        if (productCol) {
+        // Hide the product_and_description column group if neither the product nor the description
+        // field is active.
+        if (!productColActive && !descriptionFieldActive) {
             activeColumns = activeColumns.filter(
-                (col) => ![this.labelColumn, this.descriptionColumn].includes(col.name)
+                (col) => col.name != this.productAndDescriptionColumn
             );
-            this.titleField = productCol.name;
-        } else if (hasDescriptionCol) {
-            activeColumns = activeColumns.filter((col) => col.name !== this.descriptionColumn);
-            this.titleField = this.labelColumn;
-        } else {
-            activeColumns = activeColumns.filter((col) => col.name !== this.labelColumn);
         }
 
-        const columnIsProductAndLabel = !!productCol && hasDescriptionCol;
-        this.props.list.records.forEach((record) => {
-            record.columnIsProductAndLabel = columnIsProductAndLabel;
-        });
-
         return activeColumns;
+    }
+
+    isColumnGroupFieldVisible(column, fieldInfo, record) {
+        if (fieldInfo.name === "name" && this.isSectionOrNote(record)) {
+            return true;
+        }
+
+        const visible = super.isColumnGroupFieldVisible(column, fieldInfo, record);
+        if (column.name !== this.productAndDescriptionColumn || !visible) {
+            return visible;
+        }
+
+        const isProductFieldActive = this.isProductFieldActive();
+        if (fieldInfo.name === "label") {
+            return !isProductFieldActive;
+        }
+        if (fieldInfo.name === "name") {
+            return isProductFieldActive;
+        }
+        // Hide the template field if variant one is active (for sale, purchase)
+        if (fieldInfo.name === "product_template_id") {
+            return !this.optionalActiveFields["product_id"];
+        }
+
+        return true;
+    }
+
+    isProductFieldActive() {
+        return this.productColumns.some((fieldName) => this.optionalActiveFields[fieldName]);
     }
 }
 

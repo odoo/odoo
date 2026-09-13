@@ -13,8 +13,11 @@ export const purchaseForm = {
             const getFieldValue = (fieldName) => {
                 let selector = `td[name="${fieldName}"]`;
                 if (fieldName === "product_id") {
-                    // Special case for the product field because it can be replace by another field
-                    selector += ",td[name='product_template_id']";
+                    // Special case of the product field who sits inside <column> and may be
+                    // replaced with product_template_id.
+                    selector =
+                        "td[name='product_and_description'] div[name='product_id']," +
+                        "td[name='product_and_description'] div[name='product_template_id']";
                 }
                 const fieldEl = anchor.querySelector(selector);
                 return fieldEl ? fieldEl.innerText.replace(/\s/g, " ") : false;
