@@ -44,12 +44,10 @@
 
 <t t-name="html_builder.TextEffectOption">
     <t t-if="this.state.showPresetDropdown">
-        <div data-prevent-closing-overlay="true">
             <t t-call="html_builder.TextEffectPresetSelection"/>
-        </div>
     </t>
     <t t-else="">
-        <div data-prevent-closing-overlay="true" class="o-hb-text-effect-options p-2">
+        <div class="o-hb-text-effect-options p-2">
             <BuilderContext action="'updateTextEffect'">
                 <div class="d-flex align-items-center justify-content-between mb-2">
                     <div class="d-flex align-items-center gap-1">
