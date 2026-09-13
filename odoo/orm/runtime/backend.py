@@ -2053,10 +2053,19 @@ class InMemoryBackend:
                         e,
                     )
                     field_caches[field] = env.core.get_field_data(field)
+        prefetch_langs = bool(env.context.get("prefetch_langs"))
         for record_id in record_ids:
             row = self.storage.get_row(model._table, record_id)
             if row is not None:
                 for field in column_fields:
+                    if field.translate and prefetch_langs:
+                        # the whole translation object, spread over the
+                        # language caches the way the SQL read is inserted
+                        field._insert_cache(
+                            model.browse((record_id,)),
+                            [_unwrap_json(row.get(field.name))],
+                        )
+                        continue
                     value = _get_column_read_value(field, row.get(field.name), env)
                     fc = field_caches[field]
                     fc.setdefault(

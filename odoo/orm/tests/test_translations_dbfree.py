@@ -14,6 +14,7 @@ class Doc(models.Model):
     _log_access = False
 
     title = fields.Char(translate=True)
+    body = fields.Html(translate=True)
 
 
 @pytest.fixture
@@ -70,3 +71,33 @@ def test_a_search_in_a_language_reads_that_language(env):
     assert Doc.with_context(lang="fr_FR").search([("title", "ilike", "bonj")]) == doc
     assert not Doc.search([("title", "ilike", "bonj")])
     assert Doc.search([("title", "=", "Hello")]) == doc
+
+
+def test_get_field_translations_reads_every_language_of_the_stored_object(env):
+    doc = env["trd.doc"].create({"title": "Hello"})
+    doc.with_context(lang="fr_FR").title = "Bonjour"
+    env.flush_all()
+    env.invalidate_all()
+    translations, context = doc.get_field_translations("title")
+    assert sorted(translations, key=lambda t: t["lang"]) == [
+        {"lang": "en_US", "source": "Hello", "value": "Hello"},
+        {"lang": "fr_FR", "source": "Hello", "value": "Bonjour"},
+    ]
+    assert context == {"translation_type": "char", "translation_show_source": False}
+    # a read of the whole object under prefetch_langs leaves the plain reads intact
+    assert doc.with_context(lang="fr_FR").title == "Bonjour"
+    assert doc.title == "Hello"
+
+
+def test_a_term_translated_html_answers_its_terms(env):
+    doc = env["trd.doc"].create({"body": "<p>Hello</p><p>World</p>"})
+    env.flush_all()
+    assert doc.update_field_translations("body", {"fr_FR": {"Hello": "Bonjour"}})
+    assert doc.with_context(lang="fr_FR").body == "<p>Bonjour</p><p>World</p>"
+    assert doc.body == "<p>Hello</p><p>World</p>"
+    translations, context = doc.get_field_translations("body", ["fr_FR"])
+    assert {t["source"]: t["value"] for t in translations} == {
+        "Hello": "Bonjour",
+        "World": "",
+    }
+    assert context["translation_show_source"] is True
