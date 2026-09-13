@@ -261,3 +261,74 @@ class TestPoSController(TestPointOfSaleHttpCommon):
         self.assertEqual(self.partner_1.vat, 'VAT_TEST_NUMBER_123')
         self.assertEqual(self.partner_1.name, 'New Name')
         self.assertEqual(self.partner_1.zip, '12345')
+
+    def _create_portal_pos_order(self, partner, pos_reference, invoiced=False, amount=10.0, **values):
+        """Create a paid order the same way the Point of Sale UI does."""
+        config = self.main_pos_config
+        if not config.current_session_id:
+            config.open_ui()
+
+        cash_payment_method = config.payment_method_ids.filtered(lambda pm: pm.type == 'cash')[:1]
+        product = self.desk_pad.product_variant_id
+
+        order_data = self.env['pos.order'].sync_from_ui([{
+            'name': pos_reference,
+            'pos_reference': pos_reference,
+            'session_id': config.current_session_id.id,
+            'partner_id': partner.id,
+            'user_id': self.env.uid,
+            'to_invoice': invoiced,
+            'amount_total': amount,
+            'amount_paid': amount,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
+            'lines': [(0, 0, {
+                'product_id': product.id,
+                'qty': 1,
+                'price_unit': amount,
+                'price_subtotal': amount,
+                'price_subtotal_incl': amount,
+                'tax_ids': [(6, 0, [])],
+            })],
+            'payment_ids': [(0, 0, {
+                'amount': amount,
+                'name': odoo.fields.Datetime.now(),
+                'payment_method_id': cash_payment_method.id,
+            })],
+            **values,
+        }])
+        return self.env['pos.order'].browse(order_data['pos.order'][0]['id'])
+
+    def test_portal_my_store_orders(self):
+        """The portal lists the current partner's paid orders only."""
+        portal_user = self._create_new_portal_user()
+        other_partner = self.env['res.partner'].create({'name': 'Other Customer'})
+
+        own_order = self._create_portal_pos_order(portal_user.partner_id, '1000-001-00001')
+        own_draft_order = self._create_portal_pos_order(portal_user.partner_id, '1000-001-00002', state='draft')
+        other_order = self._create_portal_pos_order(other_partner, '1000-001-00003')
+
+        self.authenticate(portal_user.login, portal_user.login)
+        response = self.url_open('/my/store-orders')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(own_order.pos_reference, response.text)
+        self.assertNotIn(own_draft_order.pos_reference, response.text, "an unpaid order is not settled yet")
+        self.assertNotIn(other_order.pos_reference, response.text, "orders of another partner stay private")
+
+    def test_portal_store_orders_list_tour(self):
+        """Sorting, filtering and the receipt links of the portal order list."""
+        portal_user = self._create_new_portal_user()
+
+        self._create_portal_pos_order(portal_user.partner_id, '1000-002-00001', amount=20.0, date_order='2026-01-01 10:00:00')
+        self._create_portal_pos_order(portal_user.partner_id, '1000-002-00002', date_order='2026-02-01 10:00:00')
+        self._create_portal_pos_order(
+            portal_user.partner_id,
+            '1000-002-00003',
+            amount=15.0,
+            date_order='2025-12-01 10:00:00',
+            invoiced=True
+        )
+        self.main_pos_config.current_session_id.close_session_from_ui()
+
+        self.start_tour('/my/home', 'test_portal_store_orders_list_tour', login=portal_user.login)

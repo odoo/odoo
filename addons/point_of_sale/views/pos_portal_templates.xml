@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_my_pos_orders" name="My POS Orders">
+        <t t-call="portal.portal_layout" breadcrumbs_searchbar="True">
+            <t t-call="portal.portal_searchbar" title.translate="Your Store Orders"/>
+            <div t-if="not pos_orders" class="alert alert-warning" role="alert">
+                There are currently no in store orders for your account.
+            </div>
+            <t t-if="pos_orders" t-call="portal.portal_table">
+                <thead>
+                    <tr class="active">
+                        <th>Receipt Number</th>
+                        <th class="text-end">Order Date</th>
+                        <th class="text-end">Total</th>
+                        <th/>
+                    </tr>
+                </thead>
+                <t t-foreach="pos_orders" t-as="order">
+                    <tr>
+                        <td t-out="order.pos_reference" />
+                        <td class="text-end">
+                            <span t-field="order.date_order" t-options="{'widget': 'date'}"/>&amp;nbsp;
+                            <span class="d-none d-md-inline" t-field="order.date_order" t-options="{'time_only': True}"/>
+                        </td>
+                        <td class="text-end">
+                            <span t-field="order.amount_total"/>
+                        </td>
+                        <td class="text-center px-1">
+                            <div class="d-flex gap-1 justify-content-center align-items-center">
+                                <a class="text-decoration-none" t-att-href="order.get_receipt_url(download=True)" title="Download receipt">
+                                    <i class="oi oi-fw fs-4" data-icon="download"/>
+                                </a>
+                                <a class="text-decoration-none" t-att-href="order.get_portal_invoice_url()" target="_blank" title="Invoice">
+                                    <i class="oi oi-fw fs-4" data-icon="description"/>
+                                    Invoice
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>
