@@ -661,6 +661,7 @@ class AutomationRule(models.Model):
         runtime = self._pick_runtime(runtime_id)
         state_per_action = {line.action_id.id: line.state for line in runtime.line_ids}
         recorded_ids = self._recorded_step_ids(nodes)
+        event_labels = self._workflow_event_labels()
         return {
             "automation_id": self.id,
             "runtime_id": runtime.id or None,
@@ -694,6 +695,7 @@ class AutomationRule(models.Model):
                         node.approval_user_ids.mapped("display_name")
                     ),
                     "subflow_name": node.subflow_automation_id.display_name or "",
+                    "detail": node._workflow_step_detail(),
                 }
                 for node in nodes
             ],
@@ -704,10 +706,16 @@ class AutomationRule(models.Model):
                     "target": edge.target_node_id.id,
                     **edge._runtime_copy_vals(),
                     "label": edge.label,
+                    "event_label": event_labels.get(
+                        (edge.condition, edge.event_code), ""
+                    ),
                 }
                 for edge in self.edge_ids
             ],
         }
+
+    def _workflow_event_labels(self):
+        return {}
 
     def set_workflow_viewport(self, x, y, scale):
         """Remember where this reader left the canvas of this automation.

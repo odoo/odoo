@@ -257,6 +257,33 @@ describe("workflow canvas edge label", () => {
         ).toBe("no open within 3 weeks");
     });
 
+    test("an event an application named is drawn by its name", () => {
+        expect(
+            edgeLabel({
+                condition: "event",
+                event_code: "mail_open",
+                event_label: "Mail: opened",
+                delay: 1,
+                delay_unit: "hour",
+            }),
+        ).toBe("Mail: opened, then 1 hours");
+        expect(
+            edgeLabel({
+                condition: "no_event",
+                event_code: "mail_open",
+                event_label: "Mail: not opened",
+                delay: 2,
+                delay_unit: "day",
+            }),
+        ).toBe("Mail: not opened within 2 days");
+    });
+
+    test("a plain action shows the detail its application gives it", () => {
+        expect(stepDetail({ node_type: "action", detail: "Email: Welcome" })).toBe(
+            "Email: Welcome",
+        );
+    });
+
     test("a delayed plain edge says how long it waits", () => {
         expect(
             edgeLabel({ condition: "on_success", delay: 1, delay_unit: "month" }),

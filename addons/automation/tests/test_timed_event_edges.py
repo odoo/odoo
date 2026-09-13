@@ -270,9 +270,14 @@ class TestEdgeTimingTravels(TimedEdgeCase):
             delay_unit="day",
         )
 
-        (edge,) = self.automation.get_workflow_graph()["edges"]
+        graph = self.automation.get_workflow_graph()
+        (edge,) = graph["edges"]
 
         self.assertEqual(
             (edge["event_code"], edge["delay"], edge["delay_unit"]),
             ("open", 2, "day"),
         )
+        self.assertEqual(
+            edge["event_label"], "", "only an application knows how to name its events"
+        )
+        self.assertEqual({node["detail"] for node in graph["nodes"]}, {""})

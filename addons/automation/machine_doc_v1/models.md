@@ -125,9 +125,17 @@ the result at the midpoint `getConnectionGeometry` already computes.
 `wait_delay` and `wait_unit` for a Wait, `approver_names` for an Approval, and
 `subflow_name` for a Sub-workflow. The canvas renders one line from whichever
 applies, so a reader sees "36 hours", the approvers by name, or the automation a
-Sub-workflow runs, rather than the bare type word. A plain Action draws no such
-line. The type word alone was what the canvas showed before, which told a reader
+Sub-workflow runs, rather than the bare type word. A plain Action draws the `detail`
+its application gives it through `ir.actions.server._workflow_step_detail()`
+(empty by default; a marketing activity answers "Email: <mailing>"). The type word alone was what the canvas showed before, which told a reader
 that a step waits without telling them how long.
+
+An application also names its events. `automation.rule._workflow_event_labels()`
+maps `(condition, event_code)` to a label, empty by default, and the payload sends
+each edge's `event_label`. The canvas then draws "Mail: opened, then 1 hours" or
+"Mail: not opened within 2 days" instead of the raw code, in the words the
+campaign's own activity tree uses, which is how decision D12 keeps the campaign
+kanban and this canvas speaking one vocabulary over one graph.
 
 ### Removal from the canvas
 

@@ -223,6 +223,9 @@ class IrActionsServer(models.Model):
         self.check_singleton()
         return get_timedelta(self.validity_delay, self.validity_unit)
 
+    def _workflow_step_detail(self):
+        return ""
+
     def _execute_runtime_lines(self, lines):
         self.check_singleton()
         for line in lines:

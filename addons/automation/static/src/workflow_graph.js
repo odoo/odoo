@@ -55,11 +55,17 @@ export function edgeLabel(edge) {
             ? `${edge.delay} ${timeUnitLabel(edge.delay_unit) || ""}`.trim()
             : "";
     if (edge.condition === "event" && edge.event_code) {
+        const event = edge.event_label || edge.event_code;
         return delay
-            ? String(_t("%(event)s, then %(delay)s", { event: edge.event_code, delay }))
-            : edge.event_code;
+            ? String(_t("%(event)s, then %(delay)s", { event, delay }))
+            : event;
     }
     if (edge.condition === "no_event" && edge.event_code) {
+        if (edge.event_label) {
+            return String(
+                _t("%(event)s within %(delay)s", { event: edge.event_label, delay }),
+            );
+        }
         return String(
             _t("no %(event)s within %(delay)s", { event: edge.event_code, delay }),
         );
@@ -111,7 +117,7 @@ export function stepDetail(step) {
     if (step.node_type === "subflow") {
         return step.subflow_name || "";
     }
-    return "";
+    return step.detail || "";
 }
 
 export function runtimeStateLabel(state) {
