@@ -358,6 +358,11 @@ library.
   two of the three defects lived, and costs nothing at all on the success path
   because it is not called; `_statement_done` owns the `finally`, and takes
   `debug` from its caller rather than asking `isEnabledFor` a second time.
+  The remaining copy — the `try/except/finally` that `execute` and
+  `executemany` each wrap around those two — was measured too (2026-09-13):
+  a `_run_statement(run, …)` helper taking a closure, all-positional, read
+  **1518 → 1860 ns** per statement wire-stubbed, +340 ns for the frame and the
+  closure. The two copies stay, and the seam pins hold them to one shape.
 - **`executemany` counts toward arming the pipeline**: `pipeline()` enters
   psycopg's mode on the second *statement*, and the counter was called from
   `execute` alone, so a block made of `executemany` calls never armed. Not
